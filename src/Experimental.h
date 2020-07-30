@@ -123,15 +123,6 @@
 // Allow keyboard seeking before initial playback position
 //#define EXPERIMENTAL_SEEK_BEHIND_CURSOR
 
-// Michael Chinen, 08.Oct 2009
-// Use on-demand importing for FLAC. Has issues with opening projects that
-// have not been fully imported in builds without FLAC support, so disabled for
-// 2.0 release
-//#define EXPERIMENTAL_OD_FLAC
-// similarly for FFmpeg:
-// Won't build on Fedora 17 or Windows VC++, per http://bugzilla.audacityteam.org/show_bug.cgi?id=539.
-//#define EXPERIMENTAL_OD_FFMPEG 1
-
 // Paul Licameli (PRL) 5 Oct 2014
 #define EXPERIMENTAL_SPECTRAL_EDITING
 
@@ -252,11 +243,6 @@
 
 // PRL 31 July 2018
 #define EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
-
-// JKC 29 July 2019
-// OD_DATA made experimental.  It is on the way out because
-// it is dangerous and has too many bugs.  See bug 536 for example. 
-//#do not define EXPERIMENTAL_OD_DATA
 
 // Jonatã Bolzan Loss 31 Dec 2019
 #define EXPERIMENTAL_TIMER_TOOLBAR

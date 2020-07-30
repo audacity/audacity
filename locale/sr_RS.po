@@ -5,9 +5,9 @@
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2011—2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.0\n"
+"Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-06-09 10:48+0100\n"
 "PO-Revision-Date: 2016-11-27 20:07+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
@@ -18,384 +18,349 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-#, c-format
-msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "Већ постоји датотека „%s“, да ли заиста желите да је замените?"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Confirm"
-msgstr "Потврди"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-msgid "Please choose an existing file."
-msgstr "Изаберите постојећу датотеку."
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AdornedRulerPanel.cpp
-#: src/AudioIO.cpp src/AutoRecoveryDialog.cpp src/ProjectAudioManager.cpp
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "Грешка"
-
-#: lib-src/FileDialog/mac/FileDialogPrivate.mm
-msgid "File type:"
-msgstr "Врста датотеке:"
-
-#: lib-src/FileDialog/win/FileDialogPrivate.cpp
-#, c-format
-msgid "File dialog failed with error code %0lx."
-msgstr "Прозорче датотеке није успело са шифром грешке %0lx."
-
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
 msgstr "&Радни сто Никвиста..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
 msgstr "&Поништи\tКтрл+Z"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
 msgstr "&Поврати\tКтрл+Y"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
 msgstr "&Исеци\t\tКтрл+X"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Copy\tCtrl+C"
 msgstr "&Умножи\t\tКтрл+C"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Paste\tCtrl+V"
 msgstr "&Убаци\t\tКтрл+V"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
 msgstr "&Очисти\t\tКтрл+L"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select A&ll\tCtrl+A"
 msgstr "Изабери &све\tКтрл+A"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
 msgstr "&Нађи...\tКтрл+F"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
 msgstr "&Упореди заграде\tF8"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
 msgstr "&Горњи С-изр\tF9"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Higher S-expr\tF10"
 msgstr "&Већи С-изр\tF10"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Previous S-expr\tF11"
 msgstr "&Претходни С-изр\tF11"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Next S-expr\tF12"
 msgstr "&Следећи С-изр\tF12"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
 msgstr "&Иди на"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select &Font..."
 msgstr "&Врста слова..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Vertically"
 msgstr "Подели &усправно"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Horizontally"
 msgstr "Подели &водоравно"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show S&cript"
 msgstr "Прикажи &скрипту"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show &Output"
 msgstr "Прикажи &излаз"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Large Icons"
 msgstr "&Веће иконице"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Small Icons"
 msgstr "&Мале иконице"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Toolbar"
 msgstr "Траке алата"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
 msgstr "&Иди\tF5"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Stop\tF6"
 msgstr "&Стани\tF6"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&About"
 msgstr "&О програму"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script"
 msgstr "Скрипта"
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #: src/effects/BassTreble.cpp
 msgid "Output"
 msgstr "Излаз"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Load Nyquist script"
 msgstr "Учитајте скрипту Никвиста"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 "Скрипте Никвиста (*.ny)|*.ny|Скрипте Лиспа (*.lsp)|*.lsp|Све датотеке|*"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
 msgstr "Скрипта није сачувана."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
 #: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/ImportPCM.cpp src/widgets/Warning.cpp
+#: src/import/ImportPCM.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Упозорење"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Save Nyquist script"
 msgstr "Сачувајте скрипту Никвиста"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
 msgstr "Нађи прозорче"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
 msgstr "Харвеј Лубин (грб)"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
 msgstr "Збирка Танго иконица (иконице алатнице)"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Leland Lucius"
 msgstr "Леланд Лусјус"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "(C) 2009 by Leland Lucius"
 msgstr "© 2009 Леланд Лусјус"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
 "Спољни модул Аудаситија који обезбеђује једноставно ИДЕ за писање ефеката."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
 msgstr "Радни сто Никвист ефекта"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
 msgstr "Нисам пронашао поклапања"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Code has been modified. Are you sure?"
 msgstr "Шифре су измењене.  Да ли сте сигурни?"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
 msgstr "Без наслова"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench - "
 msgstr "Радни сто Никвист ефекта — "
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "New"
 msgstr "Ново"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New script"
 msgstr "Нова скрипта"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open"
 msgstr "Отвори"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "Отворите скрипту"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 msgid "Save"
 msgstr "Сачувај"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
 msgstr "Сачувајте скрипту"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save As"
 msgstr "Сачувај као"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script as..."
 msgstr "Сачувај скрипту као..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 msgid "Copy"
 msgstr "Умножите"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Copy to clipboard"
 msgstr "Умножите у оставу"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Исеци"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cut to clipboard"
 msgstr "Исеците у оставу"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Убаци"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Paste from clipboard"
 msgstr "Убаците из оставе"
 
 #. i18n-hint verb; to empty or erase
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 msgid "Clear"
 msgstr "Очисти"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Clear selection"
 msgstr "Очистите избор"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 msgid "Select All"
 msgstr "Изабери све"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select all text"
 msgstr "Изаберите сав текст"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Undo"
 msgstr "Поништите"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Undo last change"
 msgstr "Опозовите последњу измену"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
 msgstr "Вратите"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
 msgstr "Вратите претходну измену"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
 msgstr "Нађи"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find text"
 msgstr "Нађите текст"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Match"
 msgstr "Упореди"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
 msgstr "Идите на упоредну заграду"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Top"
 msgstr "Врх"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to top S-expr"
 msgstr "Идите на врх С-израза"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr "Горе"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to higher S-expr"
 msgstr "Идите на највиши С-израз"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Previous"
 msgstr "Претходно"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr "Идите на претходни С-израз"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Next"
 msgstr "Следеће"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr "Идите на следећи С-израз"
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "Почетак"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Start script"
 msgstr "Покрените скрипту"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
 #: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Заустави"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Stop script"
 msgstr "Зауставите скрипту"
 
@@ -486,41 +451,70 @@ msgstr "&Графички"
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
 msgstr ""
 
+#. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-msgid "About Audacity"
-msgstr "О Аудаситију"
+#, fuzzy, c-format
+msgid "About %s"
+msgstr "О програму"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
 msgstr "У реду"
 
+#. i18n-hint: First and third %s will be the program's name,
+#. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
-"Audacity is a free program written by a worldwide team of [[https://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
-"audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
-"other Unix-like systems)."
+"%s is a free program written by a worldwide team of %s. %s is %s for "
+"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
 "Аудасити је слободан програм који је написала екипа програмера [[http://www."
 "audacityteam.org/about/credits|добровољаца]] широм света. Аудасити је "
 "[[http://www.audacityteam.org/download|доступан]] за Виндоуз, Мек и ГНУ/"
 "Линукс (и остале Униксолике системе)."
 
+#. i18n-hint: substitutes into "a worldwide team of %s"
+#: src/AboutDialog.cpp
+msgid "volunteers"
+msgstr ""
+
+#. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
 #, fuzzy
+msgid "available"
+msgstr "Променљив"
+
+#. i18n-hint first and third %s will be "forum", second "wiki"
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
-"forum.audacityteam.org/|forum]]."
+"our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Ако пронађете грешку или ако имате неки предлог, пишите нам, на енглеском, "
 "на нашу [[mailto:feedback@audacityteam.org|адресу утисака]]. За помоћ, "
 "погледајте савете и трикове на нашем [[http://wiki.audacityteam.org/|"
 "викију]] или посетите наш [[http://forum.audacityteam.org/|форум]]."
+
+#. i18n-hint substitutes into "write to our %s"
+#: src/AboutDialog.cpp
+msgctxt "dative"
+msgid "forum"
+msgstr ""
+
+#. i18n-hint substitutes into "view the tips and tricks on our %s"
+#: src/AboutDialog.cpp
+msgid "wiki"
+msgstr ""
+
+#. i18n-hint substitutes into "visit our %s"
+#: src/AboutDialog.cpp
+msgctxt "accusative"
+msgid "forum"
+msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -534,15 +528,15 @@ msgstr ""
 "Мирослав Николић <miroslavnikolic@rocketmail.com>"
 
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "<h3>Audacity "
-msgstr "Аудасити"
+msgid "<h3>"
+msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
-"Audacity the free, open source, cross-platform software for recording and "
-"editing sounds."
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
 msgstr ""
 "Слободан, отвореног кода, вишеплатформски програм за снимање и уређивање "
 "звука."
@@ -555,16 +549,20 @@ msgstr "Заслуге"
 msgid "DarkAudacity Customisation"
 msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Audacity Team Members"
+#, fuzzy, c-format
+msgid "%s Team Members"
 msgstr "Чланови тима Аудаситија"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
 msgstr "Почасни:"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Distinguished Audacity Team members, not currently active"
+#, fuzzy, c-format
+msgid "Distinguished %s Team members, not currently active"
 msgstr "Истакнути чланови тима Аудаситија, тренутно неактивни"
 
 #: src/AboutDialog.cpp
@@ -583,40 +581,36 @@ msgstr "Преводиоци"
 msgid "Libraries"
 msgstr "Библиотеке"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity includes code from the following projects:"
+#, fuzzy, c-format
+msgid "%s includes code from the following projects:"
 msgstr "Одважност се заснива на коду из следећих пројеката:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
 msgstr "Посебно се захваљујемо:"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity website: "
+#, fuzzy, c-format
+msgid "%s website: "
 msgstr "Прво покретање Аудаситија"
 
+#. i18n-hint Audacity's name substitutes for first and third %s,
+#. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid ""
-"<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2018 Audacity Team.<br>"
-msgstr "Ауторска права софтвера <b>Audacity<sup>&reg;</sup></b>"
+#, c-format
+msgid "%s software is copyright %s 1999-2018 %s Team."
+msgstr ""
 
+#. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid ""
-"&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
-"Mazzoni.<br><br>"
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 "Назив <b>Audacity<sup>&reg;</sup></b> је регистровани заштитни знак Доминика "
 "Мацонија."
-
-#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
-msgid "Audacity"
-msgstr "Аудасити"
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -724,11 +718,13 @@ msgid "Commit Id:"
 msgstr "Иб предаје:"
 
 #: src/AboutDialog.cpp
-msgid "Debug build"
-msgstr "изградња за уклањање грешака"
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "Release build"
+#, fuzzy, c-format
+msgid "Release build (debug level %d)"
 msgstr "изградња издања"
 
 #: src/AboutDialog.cpp
@@ -874,6 +870,19 @@ msgid ""
 msgstr ""
 "Не могу да закључам област\n"
 "после краја објекта."
+
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/AutoRecoveryDialog.cpp
+#: src/ProjectAudioManager.cpp src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "Грешка"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -2249,6 +2258,16 @@ msgid "&Copy Names to Clipboard"
 msgstr "Умножите у оставу"
 
 #: src/Dependencies.cpp
+#, c-format
+msgid "\"%s\", \"%s\", \"%s\"\n"
+msgstr ""
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "Missing"
+msgstr "Недостају датотеке"
+
+#: src/Dependencies.cpp
 msgid ""
 "If you proceed, your project will not be saved to disk. Is this what you "
 "want?"
@@ -2329,22 +2348,6 @@ msgstr "Чувам датотеке података пројекта"
 msgid "Cleaning up cache directories"
 msgstr "Чистим директоријуме оставе"
 
-#: src/DirManager.cpp
-msgid "mkdir in DirManager::MakeBlockFilePath failed."
-msgstr ""
-"Није успело „mkdir“ у „УправникДиректоријума::НаправиПутањуБлокДатотеке“."
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Audacity found an orphan block file: %s. \n"
-"Please consider saving and reloading the project to perform a complete "
-"project check."
-msgstr ""
-"Аудасити је пронашао напуштену блок датотеку: %s. \n"
-"Размотрите чување и поновно учитавање пројекта зарад извршавања потпуне "
-"провере пројекта."
-
 #. i18n-hint: This is the pattern for filenames that are created
 #. * when a file needs to be backed up to a different name.  For
 #. * example, mysong would become mysong-old1, mysong-old2, etc.
@@ -2356,49 +2359,14 @@ msgid "%s-old%d"
 msgstr "%s-старо%d"
 
 #: src/DirManager.cpp
-msgid "Unable to open/create test file."
-msgstr "Не могу да отворим/створим пробну датотеку."
-
-#. i18n-hint: %s is the name of a file.
-#: src/DirManager.cpp
-#, c-format
-msgid "Unable to remove '%s'."
-msgstr "Не могу да уклоним „%s“."
-
-#: src/DirManager.cpp
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "Преименована датотека: %s\n"
 
 #: src/DirManager.cpp
 #, c-format
-msgid "Unable to rename '%s' to '%s'."
-msgstr "Не могу да преименујем „%s“ у „%s“."
-
-#: src/DirManager.cpp
-#, c-format
 msgid "Changed block %s to new alias name\n"
 msgstr "Измених блок „%s“ у нови назив алијаса\n"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing aliased audio file: '%s'"
-msgstr "Недостаје алијазована звучна датотека: „%s“"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing alias (.auf) block file: '%s'"
-msgstr "Недостаје блок датотека алијаса (.auf): „%s“"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing data block file: '%s'"
-msgstr "Недостаје блок датотека података: „%s“"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Orphan block file: '%s'"
-msgstr "Напуштена блок датотека: „%s“"
 
 #: src/DirManager.cpp src/ProjectFSCK.cpp
 msgid "Inspecting project file data"
@@ -2661,7 +2629,9 @@ msgstr "&Немој умножавати никакав звук"
 msgid "As&k"
 msgstr "&Питај корисника"
 
-#: src/FileNames.cpp
+#: src/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
 msgid "All files"
 msgstr "Све датотеке|*"
@@ -3160,24 +3130,28 @@ msgstr "(спољни програм)"
 msgid "Unable to determine"
 msgstr "Не могу да одредим"
 
-#: src/Internat.cpp src/import/ImportRaw.cpp
-msgid "bytes"
+#: src/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
 msgstr "бајта"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
-msgid "KB"
-msgstr "KB"
+#, c-format
+msgid "%s KB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
-msgid "MB"
-msgstr "MB"
+#, c-format
+msgid "%s MB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
-msgid "GB"
-msgstr "GB"
+#, c-format
+msgid "%s GB"
+msgstr ""
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3190,6 +3164,7 @@ msgstr "Нумера"
 
 #. i18n-hint: (noun)
 #: src/LabelDialog.cpp src/menus/LabelMenus.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Натпис"
@@ -3280,6 +3255,11 @@ msgid ""
 msgstr ""
 "Језик који сте изабрали, %s (%s), није исти као језик на систему, %s (%s)."
 
+#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+msgid "Confirm"
+msgstr "Потврди"
+
 #: src/Languages.cpp
 #, fuzzy
 msgid "Simplified"
@@ -3316,22 +3296,6 @@ msgstr "Караоке%s Аудаситија"
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
 msgstr "&Караоке..."
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in items at %s specify conflicting placements"
-msgstr ""
 
 #: src/Menus.cpp
 #, c-format
@@ -3459,11 +3423,6 @@ msgid "Module Unsuitable"
 msgstr "Неприкладан модул"
 
 #: src/ModuleManager.cpp
-#, c-format
-msgid "Unable to load the module \"%s\". Error: %s"
-msgstr ""
-
-#: src/ModuleManager.cpp
 #, fuzzy, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
@@ -3472,12 +3431,6 @@ msgid ""
 msgstr ""
 "Модул „%s“ не обезбеђује ниску издања.\n"
 "Неће бити учитан."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" does not provide a version string. It will not be loaded."
-msgstr "Модул „%s“ не обезбеђује ниску издања.  Неће бити учитан."
 
 #: src/ModuleManager.cpp
 #, fuzzy, c-format
@@ -3493,24 +3446,8 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, fuzzy, c-format
 msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-"loaded."
-msgstr "Модул „%s“ одговара издању %s Аудаситија.  Неће бити учитан."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
-"It will not be loaded."
-msgstr ""
-"Модул „%s“ не обезбеђује ниску издања.\n"
-"Неће бити учитан."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
 "Модул „%s“ не обезбеђује ниску издања.\n"
@@ -3558,13 +3495,6 @@ msgid ""
 msgstr ""
 "Модул „%s“ не обезбеђује ниску издања.\n"
 "Неће бити учитан."
-
-#: src/ModuleManager.cpp
-#, fuzzy, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions. It will "
-"not be loaded."
-msgstr "Модул „%s“ не обезбеђује ниску издања.  Неће бити учитан."
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3815,8 +3745,11 @@ msgid ""
 "%s"
 msgstr "Нисам успео да уклоним „%s“"
 
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
 #: src/PluginManager.cpp
 #, fuzzy
+msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "Укључи линије &одсецања"
@@ -3854,6 +3787,27 @@ msgid ""
 msgstr ""
 "Грешка отварања звучног уређаја. Покушајте да измените домаћина звука, "
 "уређај пуштања и проток узорка пројекта."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr ""
+"Да примените филтер, све изабране нумере морају бити истог протока узорка."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3960,11 +3914,6 @@ msgid "Warning - Missing Aliased File(s)"
 msgstr "Упозорење — Недостајуће алијазоване датотеке"
 
 #: src/ProjectFSCK.cpp
-msgid "   Project check replaced missing aliased file(s) with silence."
-msgstr ""
-"   Провера пројекта је заменила недостајуће алијазоване датотеке тишинама."
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3992,11 +3941,6 @@ msgstr "Одмах затвори пројекат без будућих изм�
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Alias Summary File(s)"
 msgstr "Упозорење — Недостаје датотека сажетка алијаса"
-
-#: src/ProjectFSCK.cpp
-msgid "   Project check regenerated missing alias summary file(s)."
-msgstr ""
-"   Провера пројекта је поново створила недостајућу датотеку сажетка алијаса."
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -4036,21 +3980,6 @@ msgid "Warning - Missing Audio Data Block File(s)"
 msgstr "Упозорење — Недостаје блок датотека података звука"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"   Project check replaced missing audio data block file(s) with silence."
-msgstr ""
-"   Провера пројекта је заменила недостајућу блок датотеку података звука "
-"тишинама."
-
-#: src/ProjectFSCK.cpp
-msgid ""
-"   Project check ignored orphan block file(s). They will be deleted when "
-"project is saved."
-msgstr ""
-"   Провера пројекта је занемарила напуштену блок датотеку. Биће обрисана "
-"када пројекат буде био сачуван."
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -4080,13 +4009,6 @@ msgid "Cleaning up unused directories in project data"
 msgstr "Чистим некоришћене директоријуме у подацима пројекта"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Project check found file inconsistencies inspecting the loaded project data."
-msgstr ""
-"Провера пројекта је пронашла недоследности датотеке проверавајући учитане "
-"податке пројекта."
-
-#: src/ProjectFSCK.cpp
 #, fuzzy
 msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
@@ -4102,9 +4024,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr "Упозорење: Проблем у самосталном опоравку"
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr "<без наслова>"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "Пројекти"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4562,6 +4489,22 @@ msgstr "Водоравно"
 #, fuzzy
 msgid "Vertical Scrollbar"
 msgstr "Усправно"
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in group at %s was merged with a previously defined group"
+msgstr ""
+
+#: src/Registry.cpp
+#, c-format
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in items at %s specify conflicting placements"
+msgstr ""
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -5119,6 +5062,34 @@ msgstr ""
 "Аудасити не може да сачува датотеку:\n"
 "  %s"
 
+#. i18n-hint: describing the "classic" or traditional
+#. appearance of older versions of Audacity
+#: src/Theme.cpp
+#, fuzzy
+msgid "Classic"
+msgstr "Уобичајени филтери"
+
+#. i18n-hint: Light meaning opposite of dark
+#: src/Theme.cpp
+msgid "Light"
+msgstr "Лагано"
+
+#: src/Theme.cpp
+msgid "Dark"
+msgstr ""
+
+#. i18n-hint: greater difference between foreground and
+#. background colors
+#: src/Theme.cpp
+#, fuzzy
+msgid "High Contrast"
+msgstr "Супротност..."
+
+#. i18n-hint: user defined
+#: src/Theme.cpp
+msgid "Custom"
+msgstr ""
+
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -5625,6 +5596,11 @@ msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+msgid "Audacity"
+msgstr "Аудасити"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -6089,7 +6065,10 @@ msgstr "Дуге нумере"
 msgid "Blue"
 msgstr ""
 
-#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+#. i18n-hint:  This really means the color, not as in "white noise"
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgctxt "color"
 msgid "White"
 msgstr "Бело"
 
@@ -6649,16 +6628,17 @@ msgstr "Процењени врхунац почетка: %s%d (%.3f Hz)"
 msgid "Pitch"
 msgstr "Врхунац"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "from"
 msgstr "од"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
 #, fuzzy
+msgctxt "change pitch"
 msgid "&from"
 msgstr "од"
 
@@ -6666,15 +6646,17 @@ msgstr "од"
 msgid "from Octave"
 msgstr "од октаве"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "to"
 msgstr "до"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
 #, fuzzy
+msgctxt "change pitch"
 msgid "&to"
 msgstr "до"
 
@@ -6707,9 +6689,7 @@ msgstr ""
 msgid "to (Hz)"
 msgstr "до (Hz)"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#: src/effects/Loudness.cpp
+#: src/effects/ChangePitch.cpp src/effects/Loudness.cpp
 #, fuzzy
 msgid "t&o"
 msgstr "до"
@@ -6776,14 +6756,33 @@ msgstr "Умножавач брзине:"
 msgid "Standard Vinyl rpm:"
 msgstr "Стандардна Винил о/м:"
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Са о/м"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&from"
+msgstr "од"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "На о/м"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&to"
+msgstr "до"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
@@ -6798,10 +6797,24 @@ msgstr "Тренутно трајање:"
 msgid "Current length of selection."
 msgstr "Тренутно трајање избора."
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "from"
+msgstr "од"
+
 #: src/effects/ChangeSpeed.cpp
 #, fuzzy
 msgid "&New Length:"
 msgstr "Ново трајање:"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "to"
+msgstr "до"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6824,19 +6837,47 @@ msgstr "Измени такт без мењања врхунца"
 msgid "Beats per minute"
 msgstr "Тактова у минуту"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
 msgstr "Тактова у минуту, од"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&from"
+msgstr "од"
+
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
 msgstr "Тактова у минуту, до"
 
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&to"
+msgstr "до"
+
 #: src/effects/ChangeTempo.cpp
 msgid "Length (seconds)"
 msgstr "Трајање (у секундама)"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "from"
+msgstr "од"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "t&o"
+msgstr "до"
 
 #: src/effects/ChangeTempo.cpp
 #, fuzzy, c-format
@@ -7620,13 +7661,13 @@ msgstr "Уграђени ефекти"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Export Effect Parameters"
-msgstr "&Уреди параметре"
+msgid "Presets"
+msgstr "Подешен"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "Текстуалне датотеке (*.txt)|*.txt|Све датотеке|*"
+msgid "Export Effect Parameters"
+msgstr "&Уреди параметре"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -8484,9 +8525,12 @@ msgstr "Нормализујте"
 msgid "Loudness LUFS"
 msgstr ""
 
-#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
 msgid "LUFS"
+msgstr ""
+
+#: src/effects/Loudness.cpp
+msgid "RMS dB"
 msgstr ""
 
 #: src/effects/Loudness.cpp
@@ -8507,15 +8551,25 @@ msgstr ""
 msgid "(Maximum 0dB)"
 msgstr ".  Највише 0dB."
 
-#: src/effects/Loudness.cpp
-msgid "RMS dB"
-msgstr ""
-
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "White"
+msgstr "Бело"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
 msgid "Pink"
 msgstr "Розе"
 
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
 msgid "Brownian"
 msgstr "Браон"
 
@@ -9370,7 +9424,10 @@ msgstr "Поврати оосновно"
 msgid "%.3f"
 msgstr "%.3f"
 
-#: src/effects/Silence.cpp src/menus/EditMenus.cpp
+#. i18n-hint: noun
+#: src/effects/Silence.cpp
+#, fuzzy
+msgctxt "generator"
 msgid "Silence"
 msgstr "Утишај"
 
@@ -9551,11 +9608,6 @@ msgid "Adds the ability to use VST effects in Audacity."
 msgstr "Додаје могућност коришћења ВСТ ефеката у Аудаситију."
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr "Није успело прибележавање ВСТ прикључка за „%s“\n"
-
-#: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
 msgstr "Прегледам ВСТ шкољку"
 
@@ -9671,10 +9723,6 @@ msgstr "Грешка учитавања ВСТ подешености"
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to load presets file."
 msgstr "Не могу да учитам датотеку претподешавања."
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr "Није успело покретање ВСТ прикључка\n"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
@@ -9839,13 +9887,6 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
-msgid "Couldn't create the \"%s\" directory"
-msgstr ""
-"Не могу да направим директоријум:\n"
-"  %s"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
 msgid "Export Audio Unit Preset As %s:"
 msgstr "Извези подешености звучне јединице"
 
@@ -9968,7 +10009,7 @@ msgstr "Подешавања ефекта ЛВ2"
 
 #: src/effects/lv2/LV2Effect.cpp
 #, fuzzy, c-format
-msgid "&Buffer Size (8 to %d) samples):"
+msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Величина међумеморије (од 8 до 1048576 узорка):"
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -9989,26 +10030,12 @@ msgstr ""
 "ЛВ2 ефекти могу да имају графичко сучеље за подешавање вредности параметара."
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 sequence buffer overflow"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
 #, fuzzy, c-format
-msgid "%s requires unsupported feature %s"
-msgstr "%d криве су извезене у %s"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
 msgid "%s requires unsupported feature %s\n"
-msgstr "%d криве су извезене у %s"
-
-#: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
-msgid "%s requires unsupported option %s"
 msgstr "%d криве су извезене у %s"
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10108,14 +10135,6 @@ msgstr ""
 msgid "Debug Output: "
 msgstr "Излаз Никвиста: "
 
-#. i18n-hint: An effect "returned" a message.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"'%s' returned:\n"
-"%s"
-msgstr ""
-
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Processing complete."
 msgstr "Обрада је готова."
@@ -10184,15 +10203,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
 msgstr "Ово издање Аудаситија није састављено са %s подршком."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-"Control not created."
-msgstr ""
-"Лоша одредница врсте „контроле“ Никвиста: „%s“ у датотеци прикључка „%s“.\n"
-"Контрола није направљена."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -10294,12 +10304,6 @@ msgstr "Вредност није у опсегу: од %s до %s"
 #, fuzzy
 msgid "Value Error"
 msgstr "Грешка ЛОФ-а"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Invalid wildcard string in 'path' control.'\n"
-"Using empty string instead."
-msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp plug-ins/sample-data-export.ny
 #, fuzzy
@@ -10728,7 +10732,8 @@ msgstr "Протоци узорка"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "%i kb/s"
@@ -11422,12 +11427,6 @@ msgstr "Извозим изабрани звук као ФЛАЦ"
 #, fuzzy
 msgid "Exporting the audio as FLAC"
 msgstr "Извозим изабрани звук као ФЛАЦ"
-
-#. i18n-hint kbps abbreviates "thousands of bits per second"
-#: src/export/ExportMP2.cpp
-#, fuzzy, c-format
-msgid "%d kpbs"
-msgstr "%i kb/s"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -12222,11 +12221,6 @@ msgstr ""
 "%s,\n"
 "али ниједан од њих не разуме овај формат датотеке."
 
-#: src/import/Import.cpp src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr "Увозим %s"
-
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "ФФмпег сагласне датотеке"
@@ -12339,6 +12333,14 @@ msgstr "Не могу да отворим датотеку "
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
 msgstr "МП3 датотеке"
+
+#: src/import/ImportMP3.cpp
+#, fuzzy, c-format
+msgid ""
+"MP3 Decoding Failed:\n"
+"\n"
+"%s"
+msgstr "Дешифровање није успело\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12622,6 +12624,11 @@ msgstr "&Читај датотеке управно са оригинала (б�
 msgid "Don't &warn again and always use my choice above"
 msgstr "Не упозоравај &ме више и увек користи мој избор"
 
+#: src/import/ImportPlugin.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr "Увозим %s"
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "КвикТајм датотеке"
@@ -12710,6 +12717,10 @@ msgid "Start offset:"
 msgstr "Почетни помак:"
 
 #: src/import/ImportRaw.cpp
+msgid "bytes"
+msgstr "бајта"
+
+#: src/import/ImportRaw.cpp
 msgid "Amount to import:"
 msgstr "Износ за увоз:"
 
@@ -12739,7 +12750,7 @@ msgstr "лево"
 msgid "%s right"
 msgstr "десно"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
 #. first number gives the position of that clip in a sequence
@@ -12748,10 +12759,6 @@ msgstr "десно"
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d of %d clip %s"
@@ -12770,19 +12777,15 @@ msgstr "Почетак"
 msgid "end"
 msgstr "Крај"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
@@ -12791,14 +12794,10 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. first number identifies one of a sequence of clips,
 #. last number counts the clips,
 #. string names a track
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%d of %d clip %s"
@@ -12949,6 +12948,13 @@ msgstr "Обриши поделу"
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "Утишане су изабране нумере за %.2f секунде при %.2f"
+
+#. i18n-hint: verb
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgctxt "command"
+msgid "Silence"
+msgstr "Утишај"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -13463,7 +13469,8 @@ msgstr ""
 msgid "&Check for Updates..."
 msgstr "&Провери има ли ажурирања..."
 
-#: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
 msgstr "Натпис је додат"
 
@@ -13788,6 +13795,11 @@ msgstr "&Примени"
 #, fuzzy
 msgid "Palette..."
 msgstr "&Обриши..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Reset &Configuration"
+msgstr "Потврда брисања правила"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14814,7 +14826,7 @@ msgstr "Изаберите звучну нумеру."
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Изаберите звучну нумеру."
 
 #: src/menus/TransportMenus.cpp
@@ -15190,8 +15202,10 @@ msgstr "Уређаји"
 msgid "Preferences for Device"
 msgstr "Поставке: "
 
-#. i18n-hint: refers to Audacity's user interface settings
-#: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
+#. i18n-hint Software interface to audio devices
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgctxt "device"
 msgid "Interface"
 msgstr "Сучеље"
 
@@ -15534,6 +15548,13 @@ msgstr "Потврда брисања правила"
 msgid "Ext Import"
 msgstr "Проширења увоза"
 
+#. i18n-hint: refers to Audacity's user interface settings
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgctxt "GUI"
+msgid "Interface"
+msgstr "Сучеље"
+
 #: src/prefs/GUIPrefs.cpp
 #, fuzzy
 msgid "Preferences for GUI"
@@ -15578,34 +15599,6 @@ msgstr "на рачунару"
 #: src/prefs/GUIPrefs.cpp
 msgid "From Internet"
 msgstr "на Интернету"
-
-#. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
-#: src/prefs/GUIPrefs.cpp
-#, fuzzy
-msgid "Classic"
-msgstr "Уобичајени филтери"
-
-#. i18n-hint: Light meaning opposite of dark
-#: src/prefs/GUIPrefs.cpp
-msgid "Light"
-msgstr "Лагано"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Dark"
-msgstr ""
-
-#. i18n-hint: greater difference between foreground and
-#. background colors
-#: src/prefs/GUIPrefs.cpp
-#, fuzzy
-msgid "High Contrast"
-msgstr "Супротност..."
-
-#. i18n-hint: user defined
-#: src/prefs/GUIPrefs.cpp
-msgid "Custom"
-msgstr ""
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -15821,21 +15814,10 @@ msgid "&Defaults"
 msgstr "&Основно"
 
 #: src/prefs/KeyConfigPrefs.cpp
+#, c-format
 msgid ""
 "\n"
-"   *   \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\"  (because the shortcut '"
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "' is used by \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\")\n"
+"   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -15847,19 +15829,12 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Грешка увоза пречица тастатуре"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "The file with the shortcuts contains illegal shortcut duplicates for \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\" and \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
+#, c-format
 msgid ""
-"\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
+"and \"%s\".\n"
 "Nothing is imported."
-msgstr "Ништа за враћање"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15894,15 +15869,25 @@ msgid "You must select a binding before assigning a shortcut"
 msgstr "Морате изабрати свезу пре додељивања пречице"
 
 #: src/prefs/KeyConfigPrefs.cpp
+msgid ""
+"\n"
+"\n"
+"\t and\n"
+"\n"
+"\t"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
 #, fuzzy, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
+"\n"
 "\n"
 "Click OK to assign the shortcut to\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
@@ -16006,6 +15991,13 @@ msgstr "МИДИ уређаји"
 #, fuzzy
 msgid "Preferences for MidiIO"
 msgstr "Поставке: "
+
+#. i18n-hint Software interface to MIDI
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgctxt "MIDI"
+msgid "Interface"
+msgstr "Сучеље"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -16141,6 +16133,9 @@ msgid "Set Selection Range"
 msgstr "Подешавање опсега избора"
 
 #: src/prefs/MousePrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Left-Click"
 msgstr "Помак + леви тастер"
 
@@ -17297,10 +17292,16 @@ msgid "Sync-Lock Tracks"
 msgstr "Усклади-закључај нумере"
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom In"
 msgstr "Увећајте"
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Out"
 msgstr "Умањите"
 
@@ -17470,7 +17471,7 @@ msgstr "Проток пројекта (Hz):"
 msgid "Snap-To"
 msgstr "Приони на"
 
-#: src/toolbars/SelectionBar.cpp src/toolbars/TimerToolBar.cpp
+#: src/toolbars/SelectionBar.cpp src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Audio Position"
 msgstr "Положај звука:"
@@ -17564,14 +17565,14 @@ msgstr "Опсег:"
 msgid "Spe&ctral Selection Toolbar"
 msgstr "Трака алата избора &спектра"
 
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Time"
 msgstr "Време линије:"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "&Time Toolbar"
 msgstr "&Уређаји"
@@ -17786,23 +17787,25 @@ msgid "Right-click for menu."
 msgstr "Десни тастер"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom Reset\tShift-Right-Click"
-msgstr "Помак + леви тастер"
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr ""
+#, fuzzy
+msgid "Zoom Reset"
+msgstr "Умањите"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Out\tShift-Left-Click"
+msgid "Shift-Right-Click"
 msgstr "Помак + леви тастер"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Left-Click/Left-Drag"
+msgstr "Шифт + лево превлачење"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17875,12 +17878,8 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Reset"
-msgstr "Умањите"
-
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-msgid "Zoom to Fit\tShift-Right-Click"
-msgstr ""
+msgid "Zoom to Fit"
+msgstr "Увећавање над тачком"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18500,6 +18499,19 @@ msgstr "Д"
 msgid "%.2fx"
 msgstr "%.2f dB"
 
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#, c-format
+msgid "File '%s' already exists, do you really want to overwrite it?"
+msgstr "Већ постоји датотека „%s“, да ли заиста желите да је замените?"
+
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+msgid "Please choose an existing file."
+msgstr "Изаберите постојећу датотеку."
+
+#: src/widgets/FileDialog/mac/FileDialogPrivate.mm
+msgid "File type:"
+msgstr "Врста датотеке:"
+
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
 msgstr "&Очисти"
@@ -18890,6 +18902,11 @@ msgid "0100000.0100 Hz"
 msgstr "0100000.0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
+msgid "centihertz"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in kilohertz
+#: src/widgets/NumericTextCtrl.cpp
 msgid "kHz"
 msgstr "kHz"
 
@@ -18900,6 +18917,10 @@ msgstr "kHz"
 msgid "01000.01000 kHz|0.001"
 msgstr "0100.01000 kHz|0.001"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hertz"
+msgstr ""
+
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
 #: src/widgets/NumericTextCtrl.cpp
@@ -18908,10 +18929,15 @@ msgstr "октаве"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100.01000 octaves|1.442695041"
 msgstr "100.01000 октаве|1.442695041"
+
+#. i18n-hint: an octave is a doubling of frequency
+#: src/widgets/NumericTextCtrl.cpp
+#, fuzzy
+msgid "thousandths of octaves"
+msgstr "хиљаду "
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18922,10 +18948,15 @@ msgstr "полутонови + стотинке"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 12 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones .0100 cents|17.312340491"
 msgstr "1000 полутонова .0100 стотих|17.312340491"
+
+#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
+#: src/widgets/NumericTextCtrl.cpp
+#, fuzzy
+msgid "hundredths of cents"
+msgstr "стотину "
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18935,10 +18966,15 @@ msgstr "десетинке"
 
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (10)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "10.01000 decades|0.434294482"
 msgstr "10.0100 десетинке|0.434294482"
+
+#. i18n-hint: a decade is a tenfold increase of frequency
+#: src/widgets/NumericTextCtrl.cpp
+#, fuzzy
+msgid "thousandths of decades"
+msgstr "хиљаду "
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18948,13 +18984,10 @@ msgstr "(Користите приручни изборник да измени�
 msgid "centiseconds"
 msgstr "стотинке"
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hundredths of "
-msgstr "стотину "
-
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of "
-msgstr "хиљаду "
+#: src/widgets/PopupMenuTable.h
+#, c-format
+msgid "%s (%s)"
+msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -19045,13 +19078,9 @@ msgid "Value must not be less than %s"
 msgstr "Вредност не сме бити мања од %s"
 
 #: src/widgets/valnum.cpp
-#, c-format
-msgid "Value must not be greather than %s"
+#, fuzzy, c-format
+msgid "Value must not be greater than %s"
 msgstr "Вредност не сме бити већа од %s"
-
-#: src/widgets/valnum.cpp
-msgid "e"
-msgstr "e"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
@@ -19643,6 +19672,11 @@ msgid "Equalization XML file"
 msgstr "Уједначавање"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
+#, fuzzy
+msgid "XML file"
+msgstr "МП3 датотеке"
+
+#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
 msgstr ""
 
@@ -20066,6 +20100,32 @@ msgstr "Изаберите ток(ове) за увоз"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy
+msgid "Plug-in"
+msgstr "Прикључци Никвиста"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Lisp file"
+msgstr "МП3 датотеке"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "HTML file"
+msgstr "МП3 датотеке"
+
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Text file"
+msgstr "Датотеке назива:"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "All supported"
+msgstr "Све датотеке|*|Све подржане датотеке|"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
 msgid "Allow overwriting"
 msgstr "Допусти одсецање"
 
@@ -20350,6 +20410,16 @@ msgstr "&Избор мерења"
 #, fuzzy
 msgid "Export data to"
 msgstr "Извезите звук"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "CSV files"
+msgstr "ФЛАЦ датотеке"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "HTML files"
+msgstr "МП3 датотеке"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
@@ -20921,6 +20991,177 @@ msgstr "Учесталост (Hz):"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "File dialog failed with error code %0lx."
+#~ msgstr "Прозорче датотеке није успело са шифром грешке %0lx."
+
+#~ msgid "About Audacity"
+#~ msgstr "О Аудаситију"
+
+#, fuzzy
+#~ msgid "<h3>Audacity "
+#~ msgstr "Аудасити"
+
+#, fuzzy
+#~ msgid ""
+#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
+#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
+#~ msgstr "Ауторска права софтвера <b>Audacity<sup>&reg;</sup></b>"
+
+#~ msgid "Debug build"
+#~ msgstr "изградња за уклањање грешака"
+
+#~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
+#~ msgstr ""
+#~ "Није успело „mkdir“ у „УправникДиректоријума::НаправиПутањуБлокДатотеке“."
+
+#~ msgid ""
+#~ "Audacity found an orphan block file: %s. \n"
+#~ "Please consider saving and reloading the project to perform a complete "
+#~ "project check."
+#~ msgstr ""
+#~ "Аудасити је пронашао напуштену блок датотеку: %s. \n"
+#~ "Размотрите чување и поновно учитавање пројекта зарад извршавања потпуне "
+#~ "провере пројекта."
+
+#~ msgid "Unable to open/create test file."
+#~ msgstr "Не могу да отворим/створим пробну датотеку."
+
+#~ msgid "Unable to remove '%s'."
+#~ msgstr "Не могу да уклоним „%s“."
+
+#~ msgid "Unable to rename '%s' to '%s'."
+#~ msgstr "Не могу да преименујем „%s“ у „%s“."
+
+#~ msgid "Missing aliased audio file: '%s'"
+#~ msgstr "Недостаје алијазована звучна датотека: „%s“"
+
+#~ msgid "Missing alias (.auf) block file: '%s'"
+#~ msgstr "Недостаје блок датотека алијаса (.auf): „%s“"
+
+#~ msgid "Missing data block file: '%s'"
+#~ msgstr "Недостаје блок датотека података: „%s“"
+
+#~ msgid "Orphan block file: '%s'"
+#~ msgstr "Напуштена блок датотека: „%s“"
+
+#~ msgid "KB"
+#~ msgstr "KB"
+
+#~ msgid "MB"
+#~ msgstr "MB"
+
+#~ msgid "GB"
+#~ msgstr "GB"
+
+#, fuzzy
+#~ msgid ""
+#~ "The module \"%s\" does not provide a version string. It will not be "
+#~ "loaded."
+#~ msgstr "Модул „%s“ не обезбеђује ниску издања.  Неће бити учитан."
+
+#, fuzzy
+#~ msgid ""
+#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
+#~ "loaded."
+#~ msgstr "Модул „%s“ одговара издању %s Аудаситија.  Неће бити учитан."
+
+#, fuzzy
+#~ msgid ""
+#~ "The module \"%s\" failed to initialize.\n"
+#~ "It will not be loaded."
+#~ msgstr ""
+#~ "Модул „%s“ не обезбеђује ниску издања.\n"
+#~ "Неће бити учитан."
+
+#, fuzzy
+#~ msgid ""
+#~ "The module \"%s\" does not provide any of the required functions. It will "
+#~ "not be loaded."
+#~ msgstr "Модул „%s“ не обезбеђује ниску издања.  Неће бити учитан."
+
+#~ msgid "   Project check replaced missing aliased file(s) with silence."
+#~ msgstr ""
+#~ "   Провера пројекта је заменила недостајуће алијазоване датотеке тишинама."
+
+#~ msgid "   Project check regenerated missing alias summary file(s)."
+#~ msgstr ""
+#~ "   Провера пројекта је поново створила недостајућу датотеку сажетка "
+#~ "алијаса."
+
+#~ msgid ""
+#~ "   Project check replaced missing audio data block file(s) with silence."
+#~ msgstr ""
+#~ "   Провера пројекта је заменила недостајућу блок датотеку података звука "
+#~ "тишинама."
+
+#~ msgid ""
+#~ "   Project check ignored orphan block file(s). They will be deleted when "
+#~ "project is saved."
+#~ msgstr ""
+#~ "   Провера пројекта је занемарила напуштену блок датотеку. Биће обрисана "
+#~ "када пројекат буде био сачуван."
+
+#~ msgid ""
+#~ "Project check found file inconsistencies inspecting the loaded project "
+#~ "data."
+#~ msgstr ""
+#~ "Провера пројекта је пронашла недоследности датотеке проверавајући учитане "
+#~ "податке пројекта."
+
+#, fuzzy
+#~ msgid "Presets (*.txt)|*.txt|All files|*"
+#~ msgstr "Текстуалне датотеке (*.txt)|*.txt|Све датотеке|*"
+
+#~ msgid "VST plugin registration failed for %s\n"
+#~ msgstr "Није успело прибележавање ВСТ прикључка за „%s“\n"
+
+#~ msgid "VST plugin initialization failed\n"
+#~ msgstr "Није успело покретање ВСТ прикључка\n"
+
+#, fuzzy
+#~ msgid "Couldn't create the \"%s\" directory"
+#~ msgstr ""
+#~ "Не могу да направим директоријум:\n"
+#~ "  %s"
+
+#, fuzzy
+#~ msgid "%s requires unsupported feature %s"
+#~ msgstr "%d криве су извезене у %s"
+
+#, fuzzy
+#~ msgid "%s requires unsupported option %s"
+#~ msgstr "%d криве су извезене у %s"
+
+#, fuzzy
+#~ msgid ""
+#~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
+#~ "Control not created."
+#~ msgstr ""
+#~ "Лоша одредница врсте „контроле“ Никвиста: „%s“ у датотеци прикључка "
+#~ "„%s“.\n"
+#~ "Контрола није направљена."
+
+#, fuzzy
+#~ msgid "%d kpbs"
+#~ msgstr "%i kb/s"
+
+#, fuzzy
+#~ msgid ""
+#~ "\".\n"
+#~ "Nothing is imported."
+#~ msgstr "Ништа за враћање"
+
+#, fuzzy
+#~ msgid "Zoom Reset\tShift-Right-Click"
+#~ msgstr "Помак + леви тастер"
+
+#, fuzzy
+#~ msgid "Zoom Out\tShift-Left-Click"
+#~ msgstr "Помак + леви тастер"
+
+#~ msgid "e"
+#~ msgstr "e"
+
 #~ msgid "incorporating"
 #~ msgstr "укључује"
 
@@ -21162,9 +21403,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Remove Center Classic: Mono"
 #~ msgstr "Уклоњена је линија одсецања"
-
-#~ msgid "Decoding failed\n"
-#~ msgstr "Дешифровање није успело\n"
 
 #, fuzzy
 #~ msgid "Could not decode file: %s"

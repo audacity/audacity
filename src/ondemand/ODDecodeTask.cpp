@@ -104,7 +104,11 @@ void ODDecodeTask::DoSomeInternal()
          {
             auto waveTrack = mWaveTracks[i].lock();
             if(waveTrack)
+            {
+#if 0 // LLL: Commented out while removing OD files handling               
                waveTrack->AddInvalidRegion(blockStartSample,blockEndSample);
+#endif
+            }
          }
          mWaveTrackMutex.Unlock();
       }

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """Automate Audacity via mod-script-pipe.
@@ -93,7 +93,7 @@ else:
     EOL = '\n'
 
 
-class PipeClient(object):
+class PipeClient():
     """Write / read client access to Audacity via named pipes.
 
     Normally there should be just one instance of this class. If
@@ -204,17 +204,19 @@ class PipeClient(object):
         # Connection should occur as soon as _write_pipe has connected.
         read_pipe = open(READ_NAME, 'r')
         message = ''
-        while True:
+        pipe_ok = True
+        while pipe_ok:
             line = read_pipe.readline()
             # Stop timer as soon as we get first line of response.
             stop_time = time.time()
-            while line != '\n':
+            while pipe_ok and line != '\n':
                 message += line
                 line = read_pipe.readline()
                 if line == '':
                     # No data in read_pipe indicates that the pipe is broken
                     # (Audacity may have crashed).
                     PipeClient.reader_pipe_broken.set()
+                    pipe_ok = False
             if self.timer:
                 xtime = (stop_time - self._start_time) * 1000
                 message += 'Execution time: {0:.2f}ms'.format(xtime)
@@ -236,18 +238,17 @@ class PipeClient(object):
         """
         if not PipeClient.reply_ready.isSet():
             return ''
-        else:
-            return self.reply
+        return self.reply
 
 
 def bool_from_string(strval):
     """Return boolean value from string"""
     if strval.lower() in ('true', 't', '1', 'yes', 'y'):
         return True
-    elif strval.lower() in ('false', 'f', '0', 'no', 'n'):
+    if strval.lower() in ('false', 'f', '0', 'no', 'n'):
         return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+    raise argparse.ArgumentTypeError('Boolean value expected.')
+
 
 def main():
     """Interactive command-line for PipeClient"""
@@ -271,10 +272,9 @@ def main():
     while True:
         reply = ''
         if sys.version_info[0] < 3:
-            #pylint: disable=undefined-variable
-            message = raw_input("\nEnter command or 'Q' to quit: ")
+            message = input("\nEnter command or 'Q' to quit: ")
         else:
-            message = input( #pylint: disable=bad-builtin
+            message = input(
                 "\nEnter command or 'Q' to quit: ")
         start = time.time()
         if message.upper() == 'Q':

@@ -54,7 +54,6 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "../EffectManager.h"
-#include "../../DirManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
 #include "../../NoteTrack.h"
@@ -751,7 +750,7 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'PROJECTS)\n"),
          (int) AllProjects{}.size());
-      mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), project->GetProjectName());
+      mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), EscapeString(project->GetProjectName()));
 
       int numTracks = 0;
       int numWave = 0;
@@ -1178,7 +1177,7 @@ bool NyquistEffect::ProcessOne()
       );
 
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
-      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), mCurTrack[0]->GetName());
+      cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurTrack[0]->GetName()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type);
       // Note: "View" property may change when Audacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view);
@@ -3212,8 +3211,8 @@ void NyquistEffect::resolveFilePath(wxString& path, FileExtension extension /* e
       {"*home*", wxGetHomeDir()},
       {"~", wxGetHomeDir()},
       {"*default*", FileNames::DefaultToDocumentsFolder("").GetPath()},
-      {"*export*", FileNames::DefaultToDocumentsFolder(wxT("/Export/Path")).GetPath()},
-      {"*save*", FileNames::DefaultToDocumentsFolder(wxT("/SaveAs/Path")).GetPath()},
+      {"*export*", FileNames::FindDefaultPath(FileNames::Operation::Export)},
+      {"*save*", FileNames::FindDefaultPath(FileNames::Operation::Save)},
       {"*config*", FileNames::DataDir()}
    };
 

@@ -17,9 +17,7 @@ Paul Licameli split from ProjectManager.cpp
 #include <wx/statusbr.h>
 
 #include "AudioIO.h"
-#include "AutoRecovery.h"
 #include "CommonCommandFlags.h"
-#include "DirManager.h"
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "Project.h"
@@ -30,6 +28,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectStatus.h"
 #include "TimeTrack.h"
 #include "TrackPanelAx.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "toolbars/ToolManager.h"
@@ -734,6 +733,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(*p).Set(first);
+         if (TrackList::Get(*p).back())
+            TrackList::Get(*p).back()->EnsureVisible();
       }
 
       //Automated Input Level Adjustment Initialization
@@ -853,17 +854,14 @@ void ProjectAudioManager::OnAudioIORate(int rate)
 
 void ProjectAudioManager::OnAudioIOStartRecording()
 {
-   auto &projectFileIO = ProjectFileIO::Get( mProject );
-   // Before recording is started, auto-save the file. The file will have
-   // empty tracks at the bottom where the recording will be put into
-   projectFileIO.AutoSave();
+   // Auto-save was done here before, but it is unnecessary, provided there
+   // are sufficient autosaves when pushing or modifying undo states.
 }
 
 // This is called after recording has stopped and all tracks have flushed.
 void ProjectAudioManager::OnAudioIOStopRecording()
 {
    auto &project = mProject;
-   auto &dirManager = DirManager::Get( project );
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &window = GetProjectFrame( project );
@@ -871,38 +869,6 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    // Only push state if we were capturing and not monitoring
    if (projectAudioIO.GetAudioIOToken() > 0)
    {
-      auto &tracks = TrackList::Get( project );
-      auto gAudioIO = AudioIO::Get();
-      auto &intervals = gAudioIO->LostCaptureIntervals();
-      if (intervals.size()) {
-         // Make a track with labels for recording errors
-         auto uTrack = TrackFactory::Get( project ).NewLabelTrack();
-         auto pTrack = uTrack.get();
-         tracks.Add( uTrack );
-         /* i18n-hint:  A name given to a track, appearing as its menu button.
-          The translation should be short or else it will not display well.
-          At most, about 11 Latin characters.
-          Dropout is a loss of a short sequence of audio sample data from the
-          recording */
-         pTrack->SetName(_("Dropouts"));
-         long counter = 1;
-         for (auto &interval : intervals)
-            pTrack->AddLabel(
-               SelectedRegion{ interval.first,
-                  interval.first + interval.second },
-               wxString::Format(wxT("%ld"), counter++));
-         ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
-Recorded audio was lost at the labeled locations. Possible causes:\n\
-\n\
-Other applications are competing with Audacity for processor time\n\
-\n\
-You are saving directly to a slow external storage device\n\
-"
-         ),
-         false,
-         XXO("Turn off dropout detection"));
-      }
-
       auto &history = ProjectHistory::Get( project );
 
       if (IsTimerRecordCancelled()) {
@@ -911,33 +877,59 @@ You are saving directly to a slow external storage device\n\
          // Reset timer record
          ResetTimerRecordCancelled();
       }
-      else
+      else {
          // Add to history
-         history.PushState(XO("Recorded Audio"), XO("Record"));
+         // We want this to have NOFAIL-GUARANTEE if we get here from exception
+         // handling of recording, and that means we rely on the last autosave
+         // successully committed to the database, not risking a failure
+         history.PushState(XO("Recorded Audio"), XO("Record"),
+            UndoPush::NOAUTOSAVE);
+
+         // Now, we may add a label track to give information about
+         // dropouts.  We allow failure of this.
+         auto &tracks = TrackList::Get( project );
+         auto gAudioIO = AudioIO::Get();
+         auto &intervals = gAudioIO->LostCaptureIntervals();
+         if (intervals.size()) {
+            // Make a track with labels for recording errors
+            auto uTrack = TrackFactory::Get( project ).NewLabelTrack();
+            auto pTrack = uTrack.get();
+            tracks.Add( uTrack );
+            /* i18n-hint:  A name given to a track, appearing as its menu button.
+             The translation should be short or else it will not display well.
+             At most, about 11 Latin characters.
+             Dropout is a loss of a short sequence of audio sample data from the
+             recording */
+            pTrack->SetName(_("Dropouts"));
+            long counter = 1;
+            for (auto &interval : intervals)
+               pTrack->AddLabel(
+                  SelectedRegion{ interval.first,
+                     interval.first + interval.second },
+                  wxString::Format(wxT("%ld"), counter++));
+
+            history.ModifyState( true ); // this might fail and throw
+
+            ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
+Recorded audio was lost at the labeled locations. Possible causes:\n\
+\n\
+Other applications are competing with Audacity for processor time\n\
+\n\
+You are saving directly to a slow external storage device\n\
+"
+               ),
+               false,
+               XXO("Turn off dropout detection"));
+         }
+      }
    }
-
-   // Write all cached files to disk, if any
-   dirManager.WriteCacheToDisk();
-
-   // Now we auto-save again to get the project to a "normal" state again.
-   projectFileIO.AutoSave();
 }
 
-void ProjectAudioManager::OnAudioIONewBlockFiles(
-   const AutoSaveFile & blockFileLog)
+void ProjectAudioManager::OnAudioIONewBlocks(const WaveTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   // New blockfiles have been created, so add them to the auto-save file
-   const auto &autoSaveFileName = projectFileIO.GetAutoSaveFileName();
-   if ( !autoSaveFileName.empty() )
-   {
-      wxFFile f{ autoSaveFileName, wxT("ab") };
-      if (!f.IsOpened())
-         return; // Keep recording going, there's not much we can do here
-      blockFileLog.Append(f);
-      f.Close();
-   }
+   projectFileIO.AutoSave(true);
 }
 
 void ProjectAudioManager::OnCommitRecording()

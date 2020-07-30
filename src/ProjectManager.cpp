@@ -14,13 +14,9 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
-#include "AutoRecovery.h"
-#include "BlockFile.h"
 #include "Clipboard.h"
-#include "DirManager.h"
 #include "FileNames.h"
 #include "Menus.h"
-#include "MissingAliasFileDialog.h"
 #include "ModuleManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -40,7 +36,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "ondemand/ODManager.h"
 #include "prefs/QualityPrefs.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
@@ -324,11 +319,8 @@ public:
       // Experiment shows that this function can be reached while there is no
       // catch block above in wxWidgets.  So stop all exceptions here.
       return GuardedCall< bool > ( [&] {
-         //sort by OD non OD.  load Non OD first so user can start editing asap.
          wxArrayString sortednames(filenames);
-         sortednames.Sort(CompareNoCaseFileName);
-
-         ODManager::Pauser pauser;
+         sortednames.Sort(FileNames::CompareNoCase);
 
          auto cleanup = finally( [&] {
             ProjectWindow::Get( *mProject ).HandleResize(); // Adjust scrollers for NEW track sizes.
@@ -393,6 +385,7 @@ void InitProjectWindow( ProjectWindow &window )
    //
    // Create the ToolDock
    //
+   ToolManager::Get( project ).CreateWindows();
    ToolManager::Get( project ).LayoutToolBars();
 
    //
@@ -542,9 +535,9 @@ AudacityProject *ProjectManager::New()
    auto &window = ProjectWindow::Get( *p );
    InitProjectWindow( window );
 
-   ProjectFileIO::Get( *p ).SetProjectTitle();
-   
-   MissingAliasFilesDialog::SetShouldShow(true);
+   auto &projectFileManager = ProjectFileManager::Get( *p );
+   projectFileManager.OpenProject();
+
    MenuManager::Get( project ).CreateMenusAndCommands( project );
    
    projectHistory.InitialState();
@@ -596,10 +589,6 @@ AudacityProject *ProjectManager::New()
    return p;
 }
 
-// LL: All objects that have a reference to the DirManager should
-//     be deleted before the final mDirManager->Deref() in this
-//     routine.  Failing to do so can cause unwanted recursion
-//     and/or attempts to DELETE objects twice.
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
@@ -680,7 +669,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          }
       }
    }
-
 #ifdef __WXMAC__
    // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
    // closing a project that was made full-screen (as by clicking the green dot
@@ -697,10 +685,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Stop the timer since there's no need to update anything anymore
    mTimer.reset();
-
-   // The project is now either saved or the user doesn't want to save it,
-   // so there's no need to keep auto save info around anymore
-   projectFileIO.DeleteCurrentAutoSaveFile();
 
    // DMM: Save the size of the last window the user closes
    //
@@ -721,17 +705,53 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 #endif
 
    // DanH: If we're definitely about to quit, clear the clipboard.
-   //       Doing this after Deref'ing the DirManager causes problems.
+   auto &clipboard = Clipboard::Get();
    if ((AllProjects{}.size() == 1) &&
       (quitOnClose || AllProjects::Closing()))
-      Clipboard::Get().Clear();
+      clipboard.Clear();
+   else {
+      auto clipboardProject = clipboard.Project().lock();
+      if ( clipboardProject.get() == &mProject ) {
+         // Closing the project from which content was cut or copied.
+         // For 3.0.0, clear the clipboard, because accessing clipboard contents
+         // would depend on a database connection to the closing project, but
+         // that connection should closed now so that the project file can be
+         // freely moved.
+         // Notes:
+         // 1) maybe clipboard contents could be saved by migrating them to
+         // another temporary database, but that extra effort is beyond the
+         // scope of 3.0.0.
+         // 2) strictly speaking this is necessary only when the clipboard
+         // contains WaveTracks.
+         clipboard.Clear();
+      }
+   }
 
    // JKC: For Win98 and Linux do not detach the menu bar.
    // We want wxWidgets to clean it up for us.
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
-   projectFileManager.CloseLock();
+   // Compact the project.
+   projectFileManager.CompactProject();
+
+   // Set (or not) the bypass flag to indicate that deletes that would happen during
+   // the UndoManager::ClearStates() below are not necessary.
+   projectFileIO.SetBypass();
+
+   {
+      AutoCommitTransaction trans(projectFileIO, "Shutdown");
+
+      // This can reduce reference counts of sample blocks in the project's
+      // tracks.
+      UndoManager::Get( project ).ClearStates();
+
+      // Delete all the tracks to free up memory
+      tracks.Clear();
+   }
+
+   // We're all done with the project file, so close it now
+   projectFileManager.CloseProject();
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
@@ -751,22 +771,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    window.DestroyChildren();
 
    TrackFactory::Destroy( project );
-
-   // Delete all the tracks to free up memory and DirManager references.
-   tracks.Clear();
-
-   // This must be done before the following Deref() since it holds
-   // references to the DirManager.
-   UndoManager::Get( project ).ClearStates();
-
-   // MM: Tell the DirManager it can now DELETE itself
-   // if it finds it is no longer needed. If it is still
-   // used (f.e. by the clipboard), it will recognize this
-   // and will destroy itself later.
-   //
-   // LL: All objects with references to the DirManager should
-   //     have been deleted before this.
-   DirManager::Destroy( project );
 
    // Remove self from the global array, but defer destruction of self
    auto pSelf = AllProjects{}.Remove( project );
@@ -836,17 +840,14 @@ void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 void ProjectManager::OpenFiles(AudacityProject *proj)
 {
    auto selectedFiles =
-      ProjectFileManager::ShowOpenDialog( FileNames::AudacityProjects );
+      ProjectFileManager::ShowOpenDialog(FileNames::Operation::Open);
    if (selectedFiles.size() == 0) {
       Importer::SetLastOpenType({});
       return;
    }
 
-   //sort selected files by OD status.
-   //For the open menu we load OD first so user can edit asap.
    //first sort selectedFiles.
-   selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pauser pauser;
+   selectedFiles.Sort(FileNames::CompareNoCase);
 
    auto cleanup = finally( [] {
       Importer::SetLastOpenType({});
@@ -858,8 +859,6 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       // Make sure it isn't already open.
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
-
-      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
 
       // DMM: If the project is dirty, that means it's been touched at
       // all, and it's not safe to open a NEW project directly in its
@@ -919,8 +918,6 @@ void ProjectManager::ResetProjectToEmpty() {
    SelectUtilities::DoSelectAll( project );
    TrackUtilities::DoRemoveTracks( project );
 
-   // A new DirManager.
-   DirManager::Reset( project );
    TrackFactory::Reset( project );
 
    projectFileManager.Reset();
@@ -942,7 +939,6 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   auto &dirManager = DirManager::Get( project );
    auto mixerToolBar = &MixerToolBar::Get( project );
    mixerToolBar->UpdateControls();
    
@@ -950,7 +946,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    // gAudioIO->GetNumCaptureChannels() should only be positive
    // when we are recording.
    if (projectAudioIO.GetAudioIOToken() > 0 && gAudioIO->GetNumCaptureChannels() > 0) {
-      wxLongLong freeSpace = dirManager.GetFreeDiskSpace();
+      wxLongLong freeSpace = ProjectFileIO::Get(project).GetFreeDiskSpace();
       if (freeSpace >= 0) {
 
          int iRecordingMins = GetEstimatedRecordingMinsLeftOnDisk(gAudioIO->GetNumCaptureChannels());
@@ -959,36 +955,6 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 
          // Do not change mLastMainStatusMessage
          SetStatusText(sMessage, mainStatusBarField);
-      }
-   }
-   else if(ODManager::IsInstanceCreated())
-   {
-      //if we have some tasks running, we should say something about it.
-      int numTasks = ODManager::Instance()->GetTotalNumTasks();
-      if(numTasks)
-      {
-         TranslatableString msg;
-         float ratioComplete= ODManager::Instance()->GetOverallPercentComplete();
-
-         if(ratioComplete>=1.0f)
-         {
-            //if we are 100 percent complete and there is still a task in the queue, we should wake the ODManager
-            //so it can clear it.
-            //signal the od task queue loop to wake up so it can remove the tasks from the queue and the queue if it is empty.
-            ODManager::Instance()->SignalTaskQueueLoop();
-
-            msg = XO("On-demand import and waveform calculation complete.");
-         }
-         else if(numTasks>1)
-            msg = XO(
-"Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete.")
-               .Format( numTasks, ratioComplete * 100.0 );
-         else
-            msg = XO(
-"Import complete. Running an on-demand waveform calculation. %2.0f%% complete.")
-               .Format( ratioComplete * 100.0 );
-
-         SetStatusText(msg, mainStatusBarField);
       }
    }
 
@@ -1066,7 +1032,7 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    }
 
    // Find out how much free space we have on disk
-   wxLongLong lFreeSpace = DirManager::Get( project ).GetFreeDiskSpace();
+   wxLongLong lFreeSpace = ProjectFileIO::Get( project ).GetFreeDiskSpace();
    if (lFreeSpace < 0) {
       return 0;
    }

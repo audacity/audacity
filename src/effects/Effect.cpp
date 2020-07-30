@@ -31,6 +31,7 @@
 #include "../Mix.h"
 #include "../PluginManager.h"
 #include "../ProjectAudioManager.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
@@ -38,7 +39,6 @@
 #include "../WaveTrack.h"
 #include "../wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
-#include "../ondemand/ODManager.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -679,28 +679,24 @@ void Effect::ExportPresets()
    wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
-   auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
-
-   FileDialogWrapper dlog(nullptr,
-                     XO("Export Effect Parameters"),
-                     path.GetFullPath(),
-                     wxEmptyString,
-                     PresetTypes(),
-                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER);
- 
-   if (dlog.ShowModal() != wxID_OK) {
+   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+                                     XO("Export Effect Parameters"),
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     PresetTypes(),
+                                     wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+                                     nullptr);
+   if (path.empty()) {
       return;
    }
 
-   path = dlog.GetPath();
-   gPrefs->Write(wxT("Presets/Path"), path.GetPath());
-
    // Create/Open the file
-   wxFFile f(path.GetFullPath(), wxT("wb"));
+   wxFFile f(path, wxT("wb"));
    if (!f.IsOpened())
    {
       AudacityMessageBox(
-         XO("Could not open file: \"%s\"").Format( path.GetFullPath() ),
+         XO("Could not open file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
          NULL);
@@ -711,7 +707,7 @@ void Effect::ExportPresets()
    if (f.Error())
    {
       AudacityMessageBox(
-         XO("Error writing to file: \"%s\"").Format( path.GetFullPath() ),
+         XO("Error writing to file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
          NULL);
@@ -728,26 +724,19 @@ void Effect::ImportPresets()
 {
    wxString params;
 
-   auto path = FileNames::DefaultToDocumentsFolder(wxT("Presets/Path"));
-
-   FileDialogWrapper dlog(nullptr,
-                     XO("Import Effect Parameters"),
-                     path.GetPath(),
-                     wxEmptyString,
-                     PresetTypes(),
-                     wxFD_OPEN | wxRESIZE_BORDER);
- 
-   if (dlog.ShowModal() != wxID_OK) {
+   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+                                     XO("Import Effect Parameters"),
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     wxEmptyString,
+                                     PresetTypes(),
+                                     wxFD_OPEN | wxRESIZE_BORDER,
+                                     nullptr);
+   if (path.empty()) {
       return;
    }
 
-   path = dlog.GetPath();
-   if( !path.IsOk())
-      return;
-
-   gPrefs->Write(wxT("Presets/Path"), path.GetPath());
-
-   wxFFile f(path.GetFullPath());
+   wxFFile f(path);
    if (f.IsOpened()) {
       if (f.ReadAll(&params)) {
          wxString ident = params.BeforeFirst(':');
@@ -763,14 +752,14 @@ void Effect::ImportPresets()
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
                   XO("%s: is not a valid presets file.\n")
-                  .Format(path.GetFullName()));
+                  .Format(wxFileNameFromPath(path)));
             }
             else
             {
                Effect::MessageBox(
                   /* i18n-hint %s will be replaced by a file name */
                   XO("%s: is for a different Effect, Generator or Analyzer.\n")
-                  .Format(path.GetFullName()));
+                  .Format(wxFileNameFromPath(path)));
             }
             return;
          }
@@ -1223,6 +1212,11 @@ bool Effect::DoEffect(double projectRate,
    mProjectRate = projectRate;
    mTracks = list;
 
+   // This is for performance purposes only, no additional recovery implied
+   auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
+   auto &pIO = ProjectFileIO::Get(pProject);
+   AutoCommitTransaction trans(pIO, "Effect");
+
    // Update track/group counts
    CountWaveTracks();
 
@@ -1246,7 +1240,6 @@ bool Effect::DoEffect(double projectRate,
          // LastUsedDuration may have been modified by Preview.
          SetDuration(oldDuration);
       }
-
       End();
       ReplaceProcessedTracks( false );
    } );
@@ -1317,7 +1310,9 @@ bool Effect::DoEffect(double projectRate,
       };
       auto vr = valueRestorer( mProgress, &progress );
 
-      returnVal = Process();
+      {
+         returnVal = Process();
+      }
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -2250,13 +2245,6 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       {
          // Replace mTracks entry with the NEW track
          mTracks->Replace(t, o);
-
-         // If the track is a wave track,
-         // Swap the wavecache track the ondemand task uses, since now the NEW
-         // one will be kept in the project
-         if (ODManager::IsInstanceCreated()) {
-            ODManager::Instance()->ReplaceWaveTrack( t, o );
-         }
       }
    }
 
@@ -2456,7 +2444,7 @@ void Effect::Preview(bool dryOnly)
       t1 = std::min(mT0 + previewLen, mT1);
 
       // Start audio playing
-      AudioIOStartStreamOptions options { pProject, rate };
+      auto options = DefaultPlayOptions(*pProject);
       int token =
          gAudioIO->StartStream(tracks, mT0, t1, options);
 

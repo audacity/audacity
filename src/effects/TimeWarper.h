@@ -61,7 +61,7 @@ of the warped region.
 class TimeWarper /* not final */
 {
 public:
-   virtual ~TimeWarper() { }
+   virtual ~TimeWarper();
    virtual double Warp(double originalTime) const = 0;
 };
 

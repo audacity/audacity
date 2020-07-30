@@ -90,24 +90,10 @@ static void SaveOtherFormat(int val)
 
 static int LoadEncoding(int type)
 {
-   // LLL: Temporary hack until I can figure out how to add an "ExportPCMCommand"
-   //      to create a 32-bit float WAV file.  It tells the ExportPCM exporter
-   //      to use float when exporting the next WAV file.
-   //
-   //      This was done as part of the resolution for bug #2062.
-   //
-   // See: ProjectFileManager.cpp, ProjectFileManager::SaveCopyWaveTracks()
-   if (gPrefs->HasEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat")))
-   {
-      gPrefs->DeleteEntry(wxT("/FileFormats/ExportFormat_SF1_ForceFloat"));
-      gPrefs->Flush();
-
-      return SF_FORMAT_FLOAT;
-   }
-
    return gPrefs->Read(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),
                                         sf_header_shortname(type), type), (long int) 0);
 }
+
 static void SaveEncoding(int type, int val)
 {
    gPrefs->Write(wxString::Format(wxT("/FileFormats/ExportFormat_SF1_Type/%s_%x"),

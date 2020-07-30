@@ -26,9 +26,10 @@ but it will probably work fine if you use it on a high level.
 
 #ifndef __AUDACITY_PROFILER__
 #define __AUDACITY_PROFILER__
+#include <mutex>
 #include <vector>
 #include <time.h>
-#include "ondemand/ODTaskThread.h"
+#include "MemoryX.h"
 
 
 #define BEGIN_TASK_PROFILING(TASK_DESCRIPTION) Profiler::Instance()->Begin(__FILE__,__LINE__,TASK_DESCRIPTION)
@@ -61,7 +62,7 @@ class Profiler
    //List of current Task to do.
    std::vector<std::unique_ptr<TaskProfile>> mTasks;
    //mutex for above variable
-   ODLock mTasksMutex;
+   std::mutex mTasksMutex;
 
 };
 

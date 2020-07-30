@@ -13,7 +13,6 @@
 #include "Project.h"
 
 #include "KeyboardCapture.h"
-#include "ondemand/ODTaskThread.h"
 
 #include <wx/display.h>
 #include <wx/frame.h>
@@ -48,7 +47,7 @@ auto AllProjects::rend() const -> const_reverse_iterator
 
 auto AllProjects::Remove( AudacityProject &project ) -> value_type
 {
-   ODLocker locker{ &Mutex() };
+   std::lock_guard<std::mutex> guard{ Mutex() };
    auto start = begin(), finish = end(), iter = std::find_if(
       start, finish,
       [&]( const value_type &ptr ){ return ptr.get() == &project; }
@@ -62,7 +61,7 @@ auto AllProjects::Remove( AudacityProject &project ) -> value_type
 
 void AllProjects::Add( const value_type &pProject )
 {
-   ODLocker locker{ &Mutex() };
+   std::lock_guard<std::mutex> guard{ Mutex() };
    gAudacityProjects.push_back( pProject );
 }
 
@@ -88,11 +87,11 @@ bool AllProjects::Close( bool force )
    return true;
 }
 
-ODLock &AllProjects::Mutex()
+std::mutex &AllProjects::Mutex()
 {
-   static ODLock theMutex;
+   static std::mutex theMutex;
    return theMutex;
-};
+}
 
 int AudacityProject::mProjectCounter=0;// global counter.
 
@@ -139,16 +138,14 @@ void AudacityProject::SetPanel( wxWindow *pPanel )
    mPanel = pPanel;
 }
 
-wxString AudacityProject::GetProjectName() const
+const wxString &AudacityProject::GetProjectName() const
 {
-   wxString name = wxFileNameFromPath(mFileName);
+   return mName;
+}
 
-   // Chop off the extension
-   size_t len = name.length();
-   if (len > 4 && name.Mid(len - 4) == wxT(".aup"))
-      name = name.Mid(0, len - 4);
-
-   return name;
+void AudacityProject::SetProjectName(const wxString &name)
+{
+   mName = name;
 }
 
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )

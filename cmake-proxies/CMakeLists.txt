@@ -133,6 +133,7 @@ addlib( lame               lame        LAME        YES   YES   "lame >= 3.100" )
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
+addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.32.0" )
 
 # Optional libraries
 #

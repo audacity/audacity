@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.0\n"
+"Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-04-08 19:39+0100\n"
+"POT-Creation-Date: 2020-06-09 10:48+0100\n"
 "PO-Revision-Date: 2008-06-26 15:07+0700\n"
 "Last-Translator: Nguyen Dinh Trung <nguyendinhtrung141@gmail.com>\n"
 "Language-Team: \n"
@@ -14,419 +14,382 @@ msgstr ""
 "X-Poedit-Country: Vietnam\n"
 "X-Poedit-Bookmarks: 207,293,1198,-1,-1,84,-1,1309,382,385\n"
 
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-#, c-format
-msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr ""
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/LangChoice.cpp
-#: src/effects/VST/VSTEffect.cpp
-msgid "Confirm"
-msgstr "Xác nhận"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp
-#, fuzzy
-msgid "Please choose an existing file."
-msgstr "Xin hãy chọn một hành động cần thực thi"
-
-#: lib-src/FileDialog/gtk/FileDialogPrivate.cpp src/AdornedRulerPanel.cpp
-#: src/AudioIO.cpp src/AutoRecoveryDialog.cpp src/ProjectAudioManager.cpp
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "Lỗi"
-
-#: lib-src/FileDialog/mac/FileDialogPrivate.mm
-#, fuzzy
-msgid "File type:"
-msgstr "Loại nhiễu"
-
-#: lib-src/FileDialog/win/FileDialogPrivate.cpp
-#, c-format
-msgid "File dialog failed with error code %0lx."
-msgstr ""
-
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Redo\tCtrl+Y"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cu&t\tCtrl+X"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Copy\tCtrl+C"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "&Paste\tCtrl+V"
 msgstr "&Dán"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Cle&ar\tCtrl+L"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Select A&ll\tCtrl+A"
 msgstr "Chọn"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Find...\tCtrl+F"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Matching Paren\tF8"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Higher S-expr\tF10"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Previous S-expr\tF11"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Next S-expr\tF12"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Select &Font..."
 msgstr "Phông chữ..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Split &Vertically"
 msgstr "Vừa chiều n&gang"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Split &Horizontally"
 msgstr "Stereo ngang"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Show S&cript"
 msgstr "Hiển thị đầu ra"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Show &Output"
 msgstr "Hiển thị đầu ra"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Large Icons"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Small Icons"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Toolbar"
 msgstr "Công cụ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "&Stop\tF6"
 msgstr "Dừng"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&About"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script"
 msgstr ""
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #: src/effects/BassTreble.cpp
 #, fuzzy
 msgid "Output"
 msgstr "Biên độ phát đo được"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Load Nyquist script"
 msgstr "Dấu nhắc Nyquist..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
 #: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/ImportPCM.cpp src/widgets/Warning.cpp
+#: src/import/ImportPCM.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Cảnh báo"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Save Nyquist script"
 msgstr "Dấu nhắc Nyquist..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Leland Lucius"
 msgstr "bởi Leland Lucius"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "(C) 2009 by Leland Lucius"
 msgstr "bởi Leland Lucius"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Nyquist Effect Workbench"
 msgstr "Đang áp dụng hiệu ứng Nyquist..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Nyquist Effect Workbench - "
 msgstr "Đang áp dụng hiệu ứng Nyquist..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
 msgid "New"
 msgstr "&Mới"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New script"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Open"
 msgstr "&Mở..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Open script"
 msgstr "Mở gần đây"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #, fuzzy
 msgid "Save"
 msgstr "&Lưu..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Save script"
 msgstr "Dấu nhắc Nyquist..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Save As"
 msgstr "Lưu mới..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Save script as..."
 msgstr "Lưu &như dự án mới..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 msgid "Copy"
 msgstr "Chép"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Copy to clipboard"
 msgstr "Cắt vào bảng kẹp tạm"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Cut"
 msgstr "Cắt"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Cut to clipboard"
 msgstr "Cắt vào bảng kẹp tạm"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
 msgid "Paste"
 msgstr "Dán"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Paste from clipboard"
 msgstr "Đã dán từ bảng kẹp tạm"
 
 #. i18n-hint verb; to empty or erase
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
 #, fuzzy
 msgid "Clear"
 msgstr "&Xoá"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Clear selection"
 msgstr "Thay vùng chọn bằng khoảng lặng"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
 #, fuzzy
 msgid "Select All"
 msgstr "Chọn"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Select all text"
 msgstr "Chọn"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Undo"
 msgstr "Huỷ bỏ"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Undo last change"
 msgstr "Thay đổi định dạng"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
 #: src/widgets/KeyView.cpp
 msgid "Redo"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Redo previous change"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Find text"
 msgstr "&Tìm nốt nhạc"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Match"
 msgstr "Lệnh Gộp"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Top"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to top S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to higher S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Previous"
 msgstr "Công cụ trước"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr ""
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Next"
 msgstr "Công cụ kế"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr ""
 
 #. i18n-hint noun
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
 msgstr "Bắt đầu"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Start script"
 msgstr "Dấu nhắc Nyquist..."
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
 #: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
 msgid "Stop"
 msgstr "Dừng"
 
-#: lib-src/mod-nyq-bench/NyqBench.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Stop script"
 msgstr "Dấu nhắc Nyquist..."
@@ -518,31 +481,61 @@ msgstr "EQ đồ hoạ"
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
 msgstr ""
 
+#. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "About Audacity"
-msgstr "&Thông tin về Audacity..."
+#, c-format
+msgid "About %s"
+msgstr ""
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
 msgstr "OK"
 
+#. i18n-hint: First and third %s will be the program's name,
+#. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
+#, c-format
 msgid ""
-"Audacity is a free program written by a worldwide team of [[https://www."
-"audacityteam.org/about/credits|volunteers]]. Audacity is [[https://www."
-"audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and "
-"other Unix-like systems)."
+"%s is a free program written by a worldwide team of %s. %s is %s for "
+"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
 
+#. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
+msgid "volunteers"
+msgstr ""
+
+#. i18n-hint: substitutes into "Audacity is %s"
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "available"
+msgstr "Biến thiên"
+
+#. i18n-hint first and third %s will be "forum", second "wiki"
+#: src/AboutDialog.cpp
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
-"our [[https://forum.audacityteam.org/|forum]]. For help, view the tips and "
-"tricks on our [[https://wiki.audacityteam.org/|wiki]] or visit our [[https://"
-"forum.audacityteam.org/|forum]]."
+"our %s. For help, view the tips and tricks on our %s or visit our %s."
+msgstr ""
+
+#. i18n-hint substitutes into "write to our %s"
+#: src/AboutDialog.cpp
+msgctxt "dative"
+msgid "forum"
+msgstr ""
+
+#. i18n-hint substitutes into "view the tips and tricks on our %s"
+#: src/AboutDialog.cpp
+msgid "wiki"
+msgstr ""
+
+#. i18n-hint substitutes into "visit our %s"
+#: src/AboutDialog.cpp
+msgctxt "accusative"
+msgid "forum"
 msgstr ""
 
 #. i18n-hint: The translation of "translator_credits" will appear
@@ -555,14 +548,15 @@ msgid "translator_credits"
 msgstr "Vietnamese translation by Nguyễn Đình Trung"
 
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "<h3>Audacity "
-msgstr "Thanh công cụ %s của Audacity"
+msgid "<h3>"
+msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
+#, c-format
 msgid ""
-"Audacity the free, open source, cross-platform software for recording and "
-"editing sounds."
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -573,17 +567,20 @@ msgstr "Công trạng"
 msgid "DarkAudacity Customisation"
 msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity Team Members"
-msgstr "Nhóm phát triển Audacity %s"
+#, fuzzy, c-format
+msgid "%s Team Members"
+msgstr "Những thành viên khác của nhóm phát triển danh dự"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
 msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid "Distinguished Audacity Team members, not currently active"
+#, c-format
+msgid "Distinguished %s Team members, not currently active"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -604,37 +601,34 @@ msgstr "Vietnamese translation by Nguyễn Đình Trung"
 msgid "Libraries"
 msgstr ""
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity includes code from the following projects:"
+#, fuzzy, c-format
+msgid "%s includes code from the following projects:"
 msgstr "Audacity dựa trên mã nguồn của những dự án sau:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
 msgstr "Rất cám ơn:"
 
+#. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy
-msgid "Audacity website: "
+#, fuzzy, c-format
+msgid "%s website: "
 msgstr "Chạy Audacity lần đầu tiên"
 
+#. i18n-hint Audacity's name substitutes for first and third %s,
+#. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-msgid ""
-"<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright "
-"&copy; 1999-2018 Audacity Team.<br>"
+#, c-format
+msgid "%s software is copyright %s 1999-2018 %s Team."
 msgstr ""
 
+#. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-msgid ""
-"&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic "
-"Mazzoni.<br><br>"
+#, c-format
+msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
-
-#: src/AboutDialog.cpp src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsDialog.cpp plug-ins/beat.ny
-#, fuzzy
-msgid "Audacity"
-msgstr "Thanh công cụ %s của Audacity"
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -746,11 +740,13 @@ msgid "Commit Id:"
 msgstr "Lệnh:"
 
 #: src/AboutDialog.cpp
-msgid "Debug build"
-msgstr "Bản sửa lỗi"
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr ""
 
 #: src/AboutDialog.cpp
-msgid "Release build"
+#, fuzzy, c-format
+msgid "Release build (debug level %d)"
 msgstr "Bản phát hành"
 
 #: src/AboutDialog.cpp
@@ -896,6 +892,19 @@ msgid ""
 "Cannot lock region beyond\n"
 "end of project."
 msgstr ""
+
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/AutoRecoveryDialog.cpp
+#: src/ProjectAudioManager.cpp src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "Lỗi"
 
 #: src/AudacityApp.cpp
 #, fuzzy, c-format
@@ -2229,6 +2238,16 @@ msgid "&Copy Names to Clipboard"
 msgstr "Cắt vào bảng kẹp tạm"
 
 #: src/Dependencies.cpp
+#, c-format
+msgid "\"%s\", \"%s\", \"%s\"\n"
+msgstr ""
+
+#: src/Dependencies.cpp
+#, fuzzy
+msgid "Missing"
+msgstr "Dùng:"
+
+#: src/Dependencies.cpp
 msgid ""
 "If you proceed, your project will not be saved to disk. Is this what you "
 "want?"
@@ -2293,18 +2312,6 @@ msgstr "Đang lưu các dữ liệu của dự án"
 msgid "Cleaning up cache directories"
 msgstr "Xoá thư mục đệm"
 
-#: src/DirManager.cpp
-msgid "mkdir in DirManager::MakeBlockFilePath failed."
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid ""
-"Audacity found an orphan block file: %s. \n"
-"Please consider saving and reloading the project to perform a complete "
-"project check."
-msgstr ""
-
 #. i18n-hint: This is the pattern for filenames that are created
 #. * when a file needs to be backed up to a different name.  For
 #. * example, mysong would become mysong-old1, mysong-old2, etc.
@@ -2316,49 +2323,13 @@ msgid "%s-old%d"
 msgstr "%s-old%d"
 
 #: src/DirManager.cpp
-#, fuzzy
-msgid "Unable to open/create test file."
-msgstr "Không mở/tạo được tập tin kiểm tra"
-
-#. i18n-hint: %s is the name of a file.
-#: src/DirManager.cpp
-#, fuzzy, c-format
-msgid "Unable to remove '%s'."
-msgstr "Không thể xoá bỏ '%s'"
-
-#: src/DirManager.cpp
 #, c-format
 msgid "Renamed file: %s\n"
 msgstr "Tập tin đã đổi tên: %s\n"
 
 #: src/DirManager.cpp
-#, fuzzy, c-format
-msgid "Unable to rename '%s' to '%s'."
-msgstr "Không thể đổi tên '%s' thành '%s'"
-
-#: src/DirManager.cpp
 #, c-format
 msgid "Changed block %s to new alias name\n"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing aliased audio file: '%s'"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing alias (.auf) block file: '%s'"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Missing data block file: '%s'"
-msgstr ""
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Orphan block file: '%s'"
 msgstr ""
 
 #: src/DirManager.cpp src/ProjectFSCK.cpp
@@ -2603,7 +2574,9 @@ msgstr ""
 msgid "As&k"
 msgstr ""
 
-#: src/FileNames.cpp
+#: src/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
 #, fuzzy
 msgid "All files"
 msgstr "Tất cả (*)|*"
@@ -3077,24 +3050,28 @@ msgstr "(chương trình bên ngoài)"
 msgid "Unable to determine"
 msgstr "Không quyết định được"
 
-#: src/Internat.cpp src/import/ImportRaw.cpp
-msgid "bytes"
+#: src/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
 msgstr "bytes"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
-msgid "KB"
-msgstr "KB"
+#, c-format
+msgid "%s KB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
-msgid "MB"
-msgstr "MB"
+#, c-format
+msgid "%s MB"
+msgstr ""
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
-msgid "GB"
-msgstr "GB"
+#, c-format
+msgid "%s GB"
+msgstr ""
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3107,6 +3084,7 @@ msgstr "Dải âm"
 
 #. i18n-hint: (noun)
 #: src/LabelDialog.cpp src/menus/LabelMenus.cpp
+#: src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Nhãn"
@@ -3198,6 +3176,11 @@ msgid ""
 "language, %s (%s)."
 msgstr ""
 
+#: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+msgid "Confirm"
+msgstr "Xác nhận"
+
 #: src/Languages.cpp
 #, fuzzy
 msgid "Simplified"
@@ -3231,22 +3214,6 @@ msgstr ""
 
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "Plug-in items at %s specify conflicting placements"
 msgstr ""
 
 #: src/Menus.cpp
@@ -3373,21 +3340,10 @@ msgstr ""
 
 #: src/ModuleManager.cpp
 #, c-format
-msgid "Unable to load the module \"%s\". Error: %s"
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
 msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
 "It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide a version string. It will not be loaded."
 msgstr ""
 
 #: src/ModuleManager.cpp
@@ -3401,22 +3357,8 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-"loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
-"It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" failed to initialize.\n"
 "It will not be loaded."
 msgstr ""
 
@@ -3458,13 +3400,6 @@ msgid ""
 "The module \"%s\" does not provide any of the required functions.\n"
 "\n"
 "It will not be loaded."
-msgstr ""
-
-#: src/ModuleManager.cpp
-#, c-format
-msgid ""
-"The module \"%s\" does not provide any of the required functions. It will "
-"not be loaded."
 msgstr ""
 
 #. i18n-hint: This is for screen reader software and indicates that
@@ -3714,8 +3649,11 @@ msgid ""
 "%s"
 msgstr "Không thể xoá bỏ '%s'"
 
+#. i18n-hint A plug-in is an optional added program for a sound
+#. effect, or generator, or analyzer
 #: src/PluginManager.cpp
 #, fuzzy
+msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "Không thể nạp phần bổ sung Vamp"
@@ -3752,6 +3690,26 @@ msgid ""
 msgstr ""
 "Lỗi mở thiết bị âm thanh. Xin hãy kiểm tra thiết lập đầu ra và tốc độ lấy "
 "mẫu của dự án."
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "The tracks selected for recording must all have the same sampling rate"
+msgstr "Để vẽ phổ, tất cả các dải được chọn phải có cùng tốc độ lấy mẫu"
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Mismatched Sampling Rates"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid ""
+"Too few tracks are selected for recording at this sample rate.\n"
+"(Audacity requires two channels at the same sample rate for\n"
+"each stereo track)"
+msgstr ""
+
+#: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
+msgid "Too Few Compatible Tracks Selected"
+msgstr ""
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3840,10 +3798,6 @@ msgid "Warning - Missing Aliased File(s)"
 msgstr ""
 
 #: src/ProjectFSCK.cpp
-msgid "   Project check replaced missing aliased file(s) with silence."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3870,10 +3824,6 @@ msgid "Warning - Missing Alias Summary File(s)"
 msgstr ""
 
 #: src/ProjectFSCK.cpp
-msgid "   Project check regenerated missing alias summary file(s)."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
 "Project check of \"%s\" folder \n"
@@ -3896,17 +3846,6 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
-msgstr ""
-
-#: src/ProjectFSCK.cpp
-msgid ""
-"   Project check replaced missing audio data block file(s) with silence."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
-msgid ""
-"   Project check ignored orphan block file(s). They will be deleted when "
-"project is saved."
 msgstr ""
 
 #: src/ProjectFSCK.cpp
@@ -3936,11 +3875,6 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid ""
-"Project check found file inconsistencies inspecting the loaded project data."
-msgstr ""
-
-#: src/ProjectFSCK.cpp
-msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
@@ -3950,9 +3884,14 @@ msgstr ""
 msgid "Warning: Problems in Automatic Recovery"
 msgstr ""
 
-#: src/ProjectFileIO.cpp
+#: src/ProjectFileIO.cpp src/menus/WindowMenus.cpp
 msgid "<untitled>"
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "[Project %02i] "
+msgstr "Vừa dự án"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4341,6 +4280,22 @@ msgstr "Stereo ngang"
 #, fuzzy
 msgid "Vertical Scrollbar"
 msgstr "Stereo dọc"
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in group at %s was merged with a previously defined group"
+msgstr ""
+
+#: src/Registry.cpp
+#, c-format
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+
+#: src/Registry.cpp
+#, c-format
+msgid "Plug-in items at %s specify conflicting placements"
+msgstr ""
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -4899,6 +4854,32 @@ msgstr ""
 "Không lưu được tập tin: \n"
 "  %s"
 
+#. i18n-hint: describing the "classic" or traditional
+#. appearance of older versions of Audacity
+#: src/Theme.cpp
+msgid "Classic"
+msgstr ""
+
+#. i18n-hint: Light meaning opposite of dark
+#: src/Theme.cpp
+msgid "Light"
+msgstr "Nhẹ"
+
+#: src/Theme.cpp
+msgid "Dark"
+msgstr ""
+
+#. i18n-hint: greater difference between foreground and
+#. background colors
+#: src/Theme.cpp
+msgid "High Contrast"
+msgstr ""
+
+#. i18n-hint: user defined
+#: src/Theme.cpp
+msgid "Custom"
+msgstr ""
+
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
@@ -5418,6 +5399,12 @@ msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#, fuzzy
+msgid "Audacity"
+msgstr "Thanh công cụ %s của Audacity"
+
+#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5873,7 +5860,10 @@ msgstr "&Tắt tiếng mọi dải âm"
 msgid "Blue"
 msgstr ""
 
-#: src/commands/ScreenshotCommand.cpp src/effects/Noise.cpp
+#. i18n-hint:  This really means the color, not as in "white noise"
+#: src/commands/ScreenshotCommand.cpp
+#, fuzzy
+msgctxt "color"
 msgid "White"
 msgstr "Trắng"
 
@@ -6425,15 +6415,15 @@ msgstr ""
 msgid "Pitch"
 msgstr "Độ cao của âm (EAC)"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+msgctxt "change pitch"
 msgid "from"
 msgstr ""
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+msgctxt "change pitch"
 msgid "&from"
 msgstr ""
 
@@ -6442,15 +6432,17 @@ msgstr ""
 msgid "from Octave"
 msgstr "Giảm 1 bát độ"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
+#, fuzzy
+msgctxt "change pitch"
 msgid "to"
 msgstr "đến"
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/ChangeTempo.cpp
+#. i18n-hint: changing musical pitch "from" one value "to" another
+#: src/effects/ChangePitch.cpp
 #, fuzzy
+msgctxt "change pitch"
 msgid "&to"
 msgstr "đến"
 
@@ -6486,9 +6478,7 @@ msgstr ""
 msgid "to (Hz)"
 msgstr ""
 
-#. i18n-hint: changing a quantity "from" one value "to" another
-#: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
-#: src/effects/Loudness.cpp
+#: src/effects/ChangePitch.cpp src/effects/Loudness.cpp
 #, fuzzy
 msgid "t&o"
 msgstr "đến"
@@ -6554,14 +6544,32 @@ msgstr "Xuất ra nhiều tập tin"
 msgid "Standard Vinyl rpm:"
 msgstr ""
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr ""
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+msgctxt "change speed"
+msgid "&from"
+msgstr ""
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr ""
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "&to"
+msgstr "đến"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
@@ -6579,10 +6587,23 @@ msgstr ""
 msgid "Current length of selection."
 msgstr "Chỉ giữ lại vùng chọn"
 
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+msgctxt "change speed"
+msgid "from"
+msgstr ""
+
 #: src/effects/ChangeSpeed.cpp
 #, fuzzy
 msgid "&New Length:"
 msgstr "Độ dài"
+
+#. i18n-hint: changing speed of audio "from" one value "to" another
+#: src/effects/ChangeSpeed.cpp
+#, fuzzy
+msgctxt "change speed"
+msgid "to"
+msgstr "đến"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
@@ -6606,19 +6627,45 @@ msgstr "Thay đổi nhịp điệu mà không đổi độ cao"
 msgid "Beats per minute"
 msgstr ""
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
 msgstr ""
 
-#. i18n-hint: changing a quantity "from" one value "to" another
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+msgctxt "change tempo"
+msgid "&from"
+msgstr ""
+
+#. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
 msgstr ""
 
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "&to"
+msgstr "đến"
+
 #: src/effects/ChangeTempo.cpp
 msgid "Length (seconds)"
 msgstr "Độ dài (giây)"
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+msgctxt "change tempo"
+msgid "from"
+msgstr ""
+
+#. i18n-hint: changing tempo "from" one value "to" another
+#: src/effects/ChangeTempo.cpp
+#, fuzzy
+msgctxt "change tempo"
+msgid "t&o"
+msgstr "đến"
 
 #: src/effects/ChangeTempo.cpp
 #, fuzzy, c-format
@@ -7410,13 +7457,13 @@ msgstr ""
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Export Effect Parameters"
-msgstr "&Sửa tham số"
+msgid "Presets"
+msgstr "Thiết lập sẵn"
 
 #: src/effects/Effect.cpp
 #, fuzzy
-msgid "Presets (*.txt)|*.txt|All files|*"
-msgstr "Tập tin văn bản (*.txt)|*.txt|Tất cả (*.*)|*.*"
+msgid "Export Effect Parameters"
+msgstr "&Sửa tham số"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 #: src/xml/XMLFileReader.cpp
@@ -8279,9 +8326,12 @@ msgstr "Chuẩn hoá"
 msgid "Loudness LUFS"
 msgstr ""
 
-#. i18n-hint: LUFS is a particular method for measuring loudnesss
 #: src/effects/Loudness.cpp
 msgid "LUFS"
+msgstr ""
+
+#: src/effects/Loudness.cpp
+msgid "RMS dB"
 msgstr ""
 
 #: src/effects/Loudness.cpp
@@ -8300,16 +8350,25 @@ msgstr ""
 msgid "(Maximum 0dB)"
 msgstr ""
 
-#: src/effects/Loudness.cpp
-msgid "RMS dB"
-msgstr ""
-
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "White"
+msgstr "Trắng"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: src/effects/Noise.cpp
+#, fuzzy
+msgctxt "noise"
 msgid "Pink"
 msgstr "Hồng"
 
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
 #, fuzzy
+msgctxt "noise"
 msgid "Brownian"
 msgstr "Nâu"
 
@@ -9190,7 +9249,10 @@ msgstr "Mặc đị&nh"
 msgid "%.3f"
 msgstr ""
 
-#: src/effects/Silence.cpp src/menus/EditMenus.cpp
+#. i18n-hint: noun
+#: src/effects/Silence.cpp
+#, fuzzy
+msgctxt "generator"
 msgid "Silence"
 msgstr "Im lặng"
 
@@ -9370,11 +9432,6 @@ msgid "Adds the ability to use VST effects in Audacity."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
-#, c-format
-msgid "VST plugin registration failed for %s\n"
-msgstr ""
-
-#: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
 msgstr ""
 
@@ -9493,10 +9550,6 @@ msgstr ""
 #, fuzzy
 msgid "Unable to load presets file."
 msgstr "Không mở/tạo được tập tin kiểm tra"
-
-#: src/effects/VST/VSTEffect.cpp
-msgid "VST plugin initialization failed\n"
-msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
 #: src/effects/lv2/LV2Effect.cpp
@@ -9669,13 +9722,6 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, fuzzy, c-format
-msgid "Couldn't create the \"%s\" directory"
-msgstr ""
-"Không tạo được thư muc:\n"
-"  %s"
-
-#: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy, c-format
 msgid "Export Audio Unit Preset As %s:"
 msgstr "Xuất tập tin"
 
@@ -9805,7 +9851,7 @@ msgstr "Thiết lập hiệu ứng"
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
-msgid "&Buffer Size (8 to %d) samples):"
+msgid "&Buffer Size (8 to %d) samples:"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -9824,26 +9870,12 @@ msgid ""
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid "LV2 sequence buffer overflow"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
-msgid "%s requires unsupported feature %s"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
 msgid "%s requires unsupported feature %s\n"
-msgstr ""
-
-#: src/effects/lv2/LV2Effect.cpp
-#, c-format
-msgid "%s requires unsupported option %s"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -9938,14 +9970,6 @@ msgstr ""
 msgid "Debug Output: "
 msgstr "Đầu ra Nyquist:"
 
-#. i18n-hint: An effect "returned" a message.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"'%s' returned:\n"
-"%s"
-msgstr ""
-
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
 msgid "Processing complete."
@@ -10015,13 +10039,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
 msgstr "Phiên bản Audacity này không hỗ trợ %s khi biên dịch."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid ""
-"Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-"Control not created."
-msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -10116,12 +10133,6 @@ msgstr "Không thể đổi tên '%s' thành '%s'"
 #, fuzzy
 msgid "Value Error"
 msgstr "Lỗi LOF"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Invalid wildcard string in 'path' control.'\n"
-"Using empty string instead."
-msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp plug-ins/sample-data-export.ny
 #, fuzzy
@@ -10534,7 +10545,8 @@ msgstr "Tốc độ lấy mẫu"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP3.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
+#: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "kbps"
@@ -11153,12 +11165,6 @@ msgstr "Xuất âm thanh đã chọn thành FLAC"
 #, fuzzy
 msgid "Exporting the audio as FLAC"
 msgstr "Xuất âm thanh đã chọn thành FLAC"
-
-#. i18n-hint kbps abbreviates "thousands of bits per second"
-#: src/export/ExportMP2.cpp
-#, fuzzy, c-format
-msgid "%d kpbs"
-msgstr "kbps"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -11925,11 +11931,6 @@ msgid ""
 "but none of them understood this file format."
 msgstr ""
 
-#: src/import/Import.cpp src/import/ImportRaw.cpp
-#, c-format
-msgid "Importing %s"
-msgstr ""
-
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr ""
@@ -12039,6 +12040,14 @@ msgstr "Không thể mở tập tin: \"%s\""
 #: src/import/ImportMP3.cpp
 msgid "MP3 files"
 msgstr "Tập tin MP3"
+
+#: src/import/ImportMP3.cpp
+#, fuzzy, c-format
+msgid ""
+"MP3 Decoding Failed:\n"
+"\n"
+"%s"
+msgstr "Kết thúc thu âm"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12305,6 +12314,11 @@ msgstr ""
 msgid "Don't &warn again and always use my choice above"
 msgstr ""
 
+#: src/import/ImportPlugin.cpp src/import/ImportRaw.cpp
+#, c-format
+msgid "Importing %s"
+msgstr ""
+
 #: src/import/ImportQT.cpp
 msgid "QuickTime files"
 msgstr "Tập tin QuickTime"
@@ -12393,6 +12407,10 @@ msgid "Start offset:"
 msgstr "Offset bắt đầu:"
 
 #: src/import/ImportRaw.cpp
+msgid "bytes"
+msgstr "bytes"
+
+#: src/import/ImportRaw.cpp
 msgid "Amount to import:"
 msgstr "Số lượng cần nhập:"
 
@@ -12421,7 +12439,7 @@ msgstr "trái"
 msgid "%s right"
 msgstr "phải"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
 #. first number gives the position of that clip in a sequence
@@ -12430,10 +12448,6 @@ msgstr "phải"
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessage"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d of %d clip %s"
@@ -12451,19 +12465,15 @@ msgstr "Bắt đầu"
 msgid "end"
 msgstr "Kết thúc"
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. First two %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
 #. first and second numbers give the position of those clips in
-#. a seqeunce of clips,
+#. a sequence of clips,
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
 #.
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringClipBoundaryMessageLong"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
@@ -12471,14 +12481,10 @@ msgid_plural "%s %d and %s %d of %d clips %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#. i18n-hint: in the string after this one,
+#. i18n-hint:
 #. first number identifies one of a sequence of clips,
 #. last number counts the clips,
 #. string names a track
-#: src/menus/ClipMenus.cpp
-msgid "dummyStringOnSelectClip"
-msgstr ""
-
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%d of %d clip %s"
@@ -12623,6 +12629,13 @@ msgstr "Chia và xoá"
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
 msgstr "Đã tạo khoảng lặng dài %.2f giây tại %.2f vào dải hiện hành"
+
+#. i18n-hint: verb
+#: src/menus/EditMenus.cpp
+#, fuzzy
+msgctxt "command"
+msgid "Silence"
+msgstr "Im lặng"
 
 #: src/menus/EditMenus.cpp
 #, fuzzy, c-format
@@ -13138,7 +13151,8 @@ msgstr ""
 msgid "&Check for Updates..."
 msgstr "&Kiểm tra phụ thuộc..."
 
-#: src/menus/LabelMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
+#: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "Added label"
 msgstr "Đã thêm nhãn"
 
@@ -13480,6 +13494,11 @@ msgstr "Áp dụng %s"
 #, fuzzy
 msgid "Palette..."
 msgstr "&Lưu..."
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Reset &Configuration"
+msgstr "Đang ghi âm"
 
 #: src/menus/PluginMenus.cpp
 #, fuzzy
@@ -14505,7 +14524,7 @@ msgstr "Tạo dải âm mới"
 
 #: src/menus/TransportMenus.cpp
 #, fuzzy
-msgid "Please select in a stereo track."
+msgid "Please select in a stereo track or two mono tracks."
 msgstr "Tạo dải âm mới"
 
 #: src/menus/TransportMenus.cpp
@@ -14882,8 +14901,10 @@ msgstr ""
 msgid "Preferences for Device"
 msgstr "Tuỳ thích..."
 
-#. i18n-hint: refers to Audacity's user interface settings
-#: src/prefs/DevicePrefs.cpp src/prefs/GUIPrefs.cpp src/prefs/MidiIOPrefs.cpp
+#. i18n-hint Software interface to audio devices
+#: src/prefs/DevicePrefs.cpp
+#, fuzzy
+msgctxt "device"
 msgid "Interface"
 msgstr "Giao diện"
 
@@ -15223,6 +15244,13 @@ msgstr ""
 msgid "Ext Import"
 msgstr "Nhập"
 
+#. i18n-hint: refers to Audacity's user interface settings
+#: src/prefs/GUIPrefs.cpp
+#, fuzzy
+msgctxt "GUI"
+msgid "Interface"
+msgstr "Giao diện"
+
 #: src/prefs/GUIPrefs.cpp
 #, fuzzy
 msgid "Preferences for GUI"
@@ -15269,32 +15297,6 @@ msgstr ""
 #: src/prefs/GUIPrefs.cpp
 msgid "From Internet"
 msgstr "Từ Internet"
-
-#. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
-#: src/prefs/GUIPrefs.cpp
-msgid "Classic"
-msgstr ""
-
-#. i18n-hint: Light meaning opposite of dark
-#: src/prefs/GUIPrefs.cpp
-msgid "Light"
-msgstr "Nhẹ"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Dark"
-msgstr ""
-
-#. i18n-hint: greater difference between foreground and
-#. background colors
-#: src/prefs/GUIPrefs.cpp
-msgid "High Contrast"
-msgstr ""
-
-#. i18n-hint: user defined
-#: src/prefs/GUIPrefs.cpp
-msgid "Custom"
-msgstr ""
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -15508,21 +15510,10 @@ msgid "&Defaults"
 msgstr "Mặc đị&nh"
 
 #: src/prefs/KeyConfigPrefs.cpp
+#, c-format
 msgid ""
 "\n"
-"   *   \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\"  (because the shortcut '"
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "' is used by \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\")\n"
+"   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -15535,19 +15526,12 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Xuất phím tắt ra tập tin:"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "The file with the shortcuts contains illegal shortcut duplicates for \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "\" and \""
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
+#, c-format
 msgid ""
-"\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
+"and \"%s\".\n"
 "Nothing is imported."
-msgstr "Không thể làm lại"
+msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15584,15 +15568,25 @@ msgid "You must select a binding before assigning a shortcut"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
+msgid ""
+"\n"
+"\n"
+"\t and\n"
+"\n"
+"\t"
+msgstr ""
+
+#: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
+"\n"
 "\n"
 "Click OK to assign the shortcut to\n"
 "\n"
-"\t'%s'\n"
+"\t%s\n"
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
@@ -15684,6 +15678,13 @@ msgstr ""
 #, fuzzy
 msgid "Preferences for MidiIO"
 msgstr "Tuỳ thích..."
+
+#. i18n-hint Software interface to MIDI
+#: src/prefs/MidiIOPrefs.cpp
+#, fuzzy
+msgctxt "MIDI"
+msgid "Interface"
+msgstr "Giao diện"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Using: PortMidi"
@@ -15808,6 +15809,9 @@ msgid "Set Selection Range"
 msgstr "Đặt giới hạn vùng chọn"
 
 #: src/prefs/MousePrefs.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Left-Click"
 msgstr "Shift+Click chuột trái"
 
@@ -16999,10 +17003,16 @@ msgid "Sync-Lock Tracks"
 msgstr ""
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom In"
 msgstr "Phóng to"
 
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Out"
 msgstr "Thu nhỏ"
 
@@ -17185,7 +17195,7 @@ msgstr "Tần số của dự án (Hz):"
 msgid "Snap-To"
 msgstr "Dính tới"
 
-#: src/toolbars/SelectionBar.cpp src/toolbars/TimerToolBar.cpp
+#: src/toolbars/SelectionBar.cpp src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Audio Position"
 msgstr "Vị trí âm thanh:"
@@ -17280,14 +17290,14 @@ msgstr ""
 msgid "Spe&ctral Selection Toolbar"
 msgstr "&Vùng chọn"
 
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "Time"
 msgstr "Thời gian kết thúc"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for viewing actual time of the cursor
-#: src/toolbars/TimerToolBar.cpp
+#: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "&Time Toolbar"
 msgstr "&Thiết bị"
@@ -17511,23 +17521,24 @@ msgid "Right-click for menu."
 msgstr "Nhắp chuột phải"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Reset\tShift-Right-Click"
+msgid "Zoom Reset"
+msgstr "Thu nhỏ"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Shift-Right-Click"
 msgstr "Shift+Click chuột trái"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom In\tLeft-Click/Left-Drag"
-msgstr "Shift+Click chuột trái"
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom Out\tShift-Left-Click"
+msgid "Left-Click/Left-Drag"
 msgstr "Shift+Click chuột trái"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
@@ -17604,13 +17615,8 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #, fuzzy
-msgid "Zoom Reset"
-msgstr "Thu nhỏ"
-
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom to Fit\tShift-Right-Click"
-msgstr "Shift+Click chuột trái"
+msgid "Zoom to Fit"
+msgstr "Phóng to trên một điểm"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 #, fuzzy
@@ -18254,6 +18260,21 @@ msgstr "R"
 msgid "%.2fx"
 msgstr ""
 
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#, c-format
+msgid "File '%s' already exists, do you really want to overwrite it?"
+msgstr ""
+
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#, fuzzy
+msgid "Please choose an existing file."
+msgstr "Xin hãy chọn một hành động cần thực thi"
+
+#: src/widgets/FileDialog/mac/FileDialogPrivate.mm
+#, fuzzy
+msgid "File type:"
+msgstr "Loại nhiễu"
+
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
 msgstr "&Xoá"
@@ -18658,6 +18679,11 @@ msgid "0100000.0100 Hz"
 msgstr "0100 h 060 m 060.01000 s"
 
 #: src/widgets/NumericTextCtrl.cpp
+msgid "centihertz"
+msgstr ""
+
+#. i18n-hint: Name of display format that shows frequency in kilohertz
+#: src/widgets/NumericTextCtrl.cpp
 msgid "kHz"
 msgstr "kHz"
 
@@ -18668,6 +18694,10 @@ msgstr "kHz"
 msgid "01000.01000 kHz|0.001"
 msgstr "0100 h 060 m 060.01000 s"
 
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hertz"
+msgstr ""
+
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
 #: src/widgets/NumericTextCtrl.cpp
@@ -18677,11 +18707,15 @@ msgstr "Giảm 1 bát độ"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
 msgid "100.01000 octaves|1.442695041"
 msgstr "01000,01000 frame|24"
+
+#. i18n-hint: an octave is a doubling of frequency
+#: src/widgets/NumericTextCtrl.cpp
+msgid "thousandths of octaves"
+msgstr ""
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18692,9 +18726,13 @@ msgstr ""
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 12 / ln (2)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones .0100 cents|17.312340491"
+msgstr ""
+
+#. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
+#: src/widgets/NumericTextCtrl.cpp
+msgid "hundredths of cents"
 msgstr ""
 
 #. i18n-hint: Name of display format that shows log of frequency
@@ -18705,11 +18743,15 @@ msgstr ""
 
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. Scale factor is 1 / ln (10)
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
 msgid "10.01000 decades|0.434294482"
 msgstr "01000,01000 frame|24"
+
+#. i18n-hint: a decade is a tenfold increase of frequency
+#: src/widgets/NumericTextCtrl.cpp
+msgid "thousandths of decades"
+msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
@@ -18720,12 +18762,9 @@ msgstr "Dùng nút chuột phải hoặc phím Context để thay đổi định
 msgid "centiseconds"
 msgstr ""
 
-#: src/widgets/NumericTextCtrl.cpp
-msgid "hundredths of "
-msgstr ""
-
-#: src/widgets/NumericTextCtrl.cpp
-msgid "thousandths of "
+#: src/widgets/PopupMenuTable.h
+#, c-format
+msgid "%s (%s)"
 msgstr ""
 
 #: src/widgets/ProgressDialog.cpp
@@ -18826,12 +18865,8 @@ msgstr "Không được để trống phần tên"
 
 #: src/widgets/valnum.cpp
 #, fuzzy, c-format
-msgid "Value must not be greather than %s"
+msgid "Value must not be greater than %s"
 msgstr "Ngưỡng bắt đầu và kết thúc phải lớn hơn 0."
-
-#: src/widgets/valnum.cpp
-msgid "e"
-msgstr ""
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
@@ -19420,6 +19455,11 @@ msgid "Equalization XML file"
 msgstr "Cân bằng tần số"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
+#, fuzzy
+msgid "XML file"
+msgstr "Tập tin MP3"
+
+#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
 msgstr ""
 
@@ -19839,6 +19879,32 @@ msgstr "Không thể khởi tạo phần bổ sung Vamp"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy
+msgid "Plug-in"
+msgstr "Đầu ra Nyquist:"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "Lisp file"
+msgstr "Tập tin MP3"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "HTML file"
+msgstr "Tập tin MP3"
+
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "Text file"
+msgstr "Đặt tên các tập tin:"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
+msgid "All supported"
+msgstr "Tốc độ lấy mẫu"
+
+#: plug-ins/nyquist-plug-in-installer.ny
+#, fuzzy
 msgid "Allow overwriting"
 msgstr "Cho phép ghim đỉnh"
 
@@ -20124,6 +20190,16 @@ msgstr "Thay vùng chọn bằng khoảng lặng"
 #, fuzzy
 msgid "Export data to"
 msgstr "Xuất tập tin"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "CSV files"
+msgstr "Tập tin FLAC"
+
+#: plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "HTML files"
+msgstr "Tập tin MP3"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
@@ -20695,6 +20771,74 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "About Audacity"
+#~ msgstr "&Thông tin về Audacity..."
+
+#, fuzzy
+#~ msgid "<h3>Audacity "
+#~ msgstr "Thanh công cụ %s của Audacity"
+
+#, fuzzy
+#~ msgid "Audacity Team Members"
+#~ msgstr "Nhóm phát triển Audacity %s"
+
+#~ msgid "Debug build"
+#~ msgstr "Bản sửa lỗi"
+
+#, fuzzy
+#~ msgid "Unable to open/create test file."
+#~ msgstr "Không mở/tạo được tập tin kiểm tra"
+
+#, fuzzy
+#~ msgid "Unable to remove '%s'."
+#~ msgstr "Không thể xoá bỏ '%s'"
+
+#, fuzzy
+#~ msgid "Unable to rename '%s' to '%s'."
+#~ msgstr "Không thể đổi tên '%s' thành '%s'"
+
+#~ msgid "KB"
+#~ msgstr "KB"
+
+#~ msgid "MB"
+#~ msgstr "MB"
+
+#~ msgid "GB"
+#~ msgstr "GB"
+
+#, fuzzy
+#~ msgid "Presets (*.txt)|*.txt|All files|*"
+#~ msgstr "Tập tin văn bản (*.txt)|*.txt|Tất cả (*.*)|*.*"
+
+#, fuzzy
+#~ msgid "Couldn't create the \"%s\" directory"
+#~ msgstr ""
+#~ "Không tạo được thư muc:\n"
+#~ "  %s"
+
+#, fuzzy
+#~ msgid "%d kpbs"
+#~ msgstr "kbps"
+
+#, fuzzy
+#~ msgid ""
+#~ "\".\n"
+#~ "Nothing is imported."
+#~ msgstr "Không thể làm lại"
+
+#, fuzzy
+#~ msgid "Zoom Reset\tShift-Right-Click"
+#~ msgstr "Shift+Click chuột trái"
+
+#, fuzzy
+#~ msgid "Zoom Out\tShift-Left-Click"
+#~ msgstr "Shift+Click chuột trái"
+
+#, fuzzy
+#~ msgid "Zoom to Fit\tShift-Right-Click"
+#~ msgstr "Shift+Click chuột trái"
+
+#, fuzzy
 #~ msgid "incorporating"
 #~ msgstr "Có lỗi khi nhập"
 
@@ -20805,10 +20949,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Remove Center Classic: Mono"
 #~ msgstr "Xoá đường cắt"
-
-#, fuzzy
-#~ msgid "Decoding failed\n"
-#~ msgstr "Kết thúc thu âm"
 
 #, fuzzy
 #~ msgid "Could not decode file: %s"
@@ -21429,10 +21569,6 @@ msgstr ""
 #~ msgid "Emeritus Developers"
 #~ msgstr "Nhà phát triển danh dự"
 
-#, fuzzy
-#~ msgid " Emeritus Team Members"
-#~ msgstr "Những thành viên khác của nhóm phát triển danh dự"
-
 #~ msgid "Welcome to Audacity "
 #~ msgstr "Chào mừng đến với Audacity"
 
@@ -21496,10 +21632,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Playback Meter Preferences"
 #~ msgstr "Tuỳ chỉnh bộ đo"
-
-#, fuzzy
-#~ msgid "%ld bytes"
-#~ msgstr "bytes"
 
 #, fuzzy
 #~ msgid "Modified"

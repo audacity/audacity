@@ -21,6 +21,8 @@
 
 #include <string.h>
 
+#include "expat.h"
+
 XMLFileReader::XMLFileReader()
 {
    mParser = XML_ParserCreate(NULL);
@@ -128,6 +130,45 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
       mErrorStr = XO("Could not load file: \"%s\"").Format( fname );
       return false;
    }
+}
+
+bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
+                                const wxString &xmldata)
+{
+   const char *buffer = xmldata.mb_str().data();
+   int len = xmldata.mbc_str().length();
+
+   mBaseHandler = baseHandler;
+
+   if (!XML_Parse(mParser, buffer, len, true))
+   {
+
+      // Embedded error string from expat doesn't translate (yet)
+      // We could make a table of XOs if we wanted so that it could
+      // If we do, uncomment the second constructor argument so it's not
+      // a verbatim string
+      mLibraryErrorStr = Verbatim(
+         XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
+      );
+
+      mErrorStr = XO("Error: %s at line %lu").Format(
+         mLibraryErrorStr,
+         (long unsigned int)XML_GetCurrentLineNumber(mParser)
+      );
+
+      return false;
+   }
+
+   // Even though there were no parse errors, we only succeed if
+   // the first-level handler actually got called, and didn't
+   // return false.
+   if (!mBaseHandler)
+   {
+      mErrorStr = XO("Could not parse XML");
+      return false;
+   }
+
+   return true;
 }
 
 const TranslatableString &XMLFileReader::GetErrorStr() const

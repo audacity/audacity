@@ -37,7 +37,6 @@
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
 
-#include "../DirManager.h"
 #include "../FileFormats.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
@@ -256,8 +255,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
 
 
    // Bug 1304: Set the default file path.  It's used if none stored in config.
-   auto filename = FileNames::DefaultToDocumentsFolder(wxT("/Export/Path"));
-   wxString DefaultPath = filename.GetPath();
+   auto DefaultPath = FileNames::FindDefaultPath(FileNames::Operation::Export);
 
    if (mPluginIndex == -1)
    {
@@ -275,9 +273,8 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          S.StartMultiColumn(4, true);
          {
             mDir = S.Id(DirID)
-               .TieTextBox(XXO("Folder:"),
-                           {wxT("/Export/MultiplePath"),
-                            DefaultPath},
+               .AddTextBox(XXO("Folder:"),
+                           DefaultPath,
                            64);
             S.Id(ChooseID).AddButton(XXO("Choose..."));
             S.Id(CreateID).AddButton(XXO("Create"));
@@ -573,6 +570,8 @@ void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))
    PopulateOrExchange(S);
 
    gPrefs->Flush();
+
+   FileNames::UpdateDefaultPath(FileNames::Operation::Export, mDir->GetValue());
 
    // Make sure the output directory is in good shape
    if (!DirOk()) {
@@ -1062,10 +1061,6 @@ ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<ProgressDialog> &p
 
    wxFileName backup;
    if (mOverwrite->GetValue()) {
-      // Make sure we don't overwrite (corrupt) alias files
-      if (!DirManager::Get( *mProject ).EnsureSafeFilename(inName)) {
-         return ProgressResult::Cancelled;
-      }
       name = inName;
       backup.Assign(name);
 

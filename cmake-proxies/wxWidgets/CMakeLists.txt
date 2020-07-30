@@ -18,7 +18,7 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" )
 
    # Specify all of the components we'll need since "html" and "qa" aren't
    # included in the default list
-   find_package(wxWidgets REQUIRED COMPONENTS adv base core html net qa)
+   find_package(wxWidgets REQUIRED COMPONENTS adv base core html net qa xml)
 
    unset( BUILD_SHARED_LIBS )
 endif()
@@ -40,9 +40,12 @@ if( wxWidgets_FOUND )
 
    set( DEFINES
       INTERFACE
-         ${wxWidgets_DEFINITIONS}
+         ${wxWidgets_DEFINITIONS_GENERAL}
          $<$<CONFIG:Debug>:
             ${wxWidgets_DEFINITIONS_DEBUG}
+         >
+         $<$<NOT:$<CONFIG:Debug>>:
+            ${wxWidgets_DEFINITIONS_OPTIMIZED}
          >
    )
 
@@ -60,6 +63,14 @@ if( wxWidgets_FOUND )
             z
          >
    )
+
+#   set( WXWIN $ENV{WXWIN} CACHE INTERNAL "" )
+   if( WXWIN )
+      string( APPEND WXWIN "/lib" )
+   else()
+      set( WXWIN "${wxWidgets_LIBRARY_DIRS}" )
+   endif()
+   set( WXWIN "${WXWIN}" CACHE INTERNAL "" )
 
    set( toolkit "${wxWidgets_LIBRARIES}" )
 else()
@@ -205,6 +216,36 @@ endif()
 if( "${wxTOOLKIT}" MATCHES "GTK." )
    pkg_check_modules( GTK REQUIRED IMPORTED_TARGET GLOBAL ${gtk} )
    pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )
+endif()
+
+find_file( WXVERSION_H
+   NAMES
+      wx/version.h
+   PATHS
+     ${INCLUDES}
+   NO_DEFAULT_PATH
+)
+
+if( NOT WXVERSION_H )
+   message( FATAL_ERROR "wxWidgets version.h header not found" )
+endif()
+
+file(
+   STRINGS
+      "${WXVERSION_H}" output
+   REGEX
+      "^#define +wxVERSION_STRING +"
+)
+
+string( REGEX MATCHALL "\".+(Audacity).+\"" ours "${output}")
+if( NOT ours )
+   message( FATAL_ERROR
+      "\n########################################################################\n"
+      "Audacity version 3.0.0 or higher requires use of a customized version of "
+      "wxWidgets.  For details:\n"
+      "  https://wiki.audacityteam.org/wiki/Building_for_Distros\n"
+      "########################################################################\n"
+   )
 endif()
 
 target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )

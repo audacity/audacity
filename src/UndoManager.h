@@ -51,7 +51,6 @@
 
 #include <vector>
 #include <wx/event.h> // to declare custom event types
-#include "ondemand/ODTaskThread.h"
 #include "ClientData.h"
 #include "SelectedRegion.h"
 
@@ -98,9 +97,9 @@ using SpaceArray = std::vector <unsigned long long> ;
 // Default is AUTOSAVE
 // Frequent/faster actions use CONSOLIDATE
 enum class UndoPush : unsigned char {
-   MINIMAL = 0,
+   NONE = 0,
    CONSOLIDATE = 1 << 0,
-   AUTOSAVE = 1 << 1
+   NOAUTOSAVE = 1 << 1
 };
 
 inline UndoPush operator | (UndoPush a, UndoPush b)
@@ -127,12 +126,11 @@ class AUDACITY_DLL_API UndoManager final
                   const std::shared_ptr<Tags> &tags,
                   const TranslatableString &longDescription,
                   const TranslatableString &shortDescription,
-                  UndoPush flags = UndoPush::AUTOSAVE);
+                  UndoPush flags = UndoPush::NONE);
    void ModifyState(const TrackList * l,
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
    void ClearStates();
    void RemoveStates(int num);  // removes the 'num' oldest states
-   void RemoveStateAt(int n);   // removes the n'th state (1 is oldest)
    unsigned int GetNumStates();
    unsigned int GetCurrentState();
 
@@ -168,12 +166,9 @@ class AUDACITY_DLL_API UndoManager final
 
    // void Debug(); // currently unused
 
-   ///to mark as unsaved changes without changing the state/tracks.
-   void SetODChangesFlag();
-   bool HasODChangesFlag() const;
-   void ResetODChangesFlag();
-
  private:
+   void RemoveStateAt(int n);
+
    AudacityProject &mProject;
  
    int current;
@@ -185,10 +180,6 @@ class AUDACITY_DLL_API UndoManager final
 
    SpaceArray space;
    unsigned long long mClipboardSpaceUsage {};
-
-   bool mODChanges;
-   mutable ODLock mODChangesMutex;//mODChanges is accessed from many threads.
-
 };
 
 #endif

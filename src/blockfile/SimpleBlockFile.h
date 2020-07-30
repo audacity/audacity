@@ -15,15 +15,6 @@
 
 class DirManager;
 
-struct SimpleBlockFileCache {
-   bool active;
-   bool needWrite;
-   sampleFormat format;
-   ArrayOf<char> sampleData, summaryData;
-
-   SimpleBlockFileCache() {}
-};
-
 // The AU formats we care about
 enum {
    AU_SAMPLE_FORMAT_16 = 3,
@@ -48,9 +39,7 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
    /// Create a disk file and write summary and sample data to it
    SimpleBlockFile(wxFileNameWrapper &&baseFileName,
                    samplePtr sampleData, size_t sampleLen,
-                   sampleFormat format,
-                   bool allowDeferredWrite = false,
-                   bool bypassCache = false );
+                   sampleFormat format);
    /// Create the memory structure to refer to the given block file
    SimpleBlockFile(wxFileNameWrapper &&existingFile, size_t len,
                    float min, float max, float rms);
@@ -75,21 +64,10 @@ class PROFILE_DLL_API SimpleBlockFile /* not final */ : public BlockFile {
 
    static BlockFilePtr BuildFromXML(DirManager &dm, const wxChar **attrs);
 
-   bool GetNeedWriteCacheToDisk() override;
-   void WriteCacheToDisk() override;
-
-   bool GetNeedFillCache() override { return !mCache.active; }
-
-   void FillCache() /* noexcept */ override;
-
  protected:
 
    bool WriteSimpleBlockFile(samplePtr sampleData, size_t sampleLen,
                              sampleFormat format, void* summaryData);
-   static bool GetCache();
-   void ReadIntoCache();
-
-   SimpleBlockFileCache mCache;
 
  private:
    mutable sampleFormat mFormat; // may be found lazily

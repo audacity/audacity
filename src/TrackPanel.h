@@ -101,7 +101,6 @@ class AUDACITY_DLL_API TrackPanel final
    void OnSize( wxSizeEvent & );
    void OnIdle(wxIdleEvent & event);
    void OnTimer(wxTimerEvent& event);
-   void OnODTask(wxCommandEvent &event);
    void OnProjectSettingsChange(wxCommandEvent &event);
    void OnTrackFocusChange( wxCommandEvent &event );
 
@@ -146,9 +145,6 @@ public:
    wxRect FindTrackRect( const Track * target );
 
 protected:
-   void MakeParentModifyState(bool bWantsAutoSave);    // if true, writes auto-save file. Should set only if you really want the state change restored after
-                                                               // a crash, as it can take many seconds for large (eg. 10 track-hours) projects
-
    // Get the root object defining a recursive subdivision of the panel's
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
@@ -203,13 +199,6 @@ protected:
 
    bool mRefreshBacking;
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-
-protected:
-
-#endif
-
-   bool mRedrawAfterStop;
 
 protected:
 

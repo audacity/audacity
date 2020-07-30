@@ -1293,6 +1293,11 @@ bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelN
       return false;
    }
 
+   if (!BypassEffect(false))
+   {
+      return false;
+   }
+
    mLatencyDone = false;
 
    mReady = true;

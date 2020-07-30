@@ -26,28 +26,6 @@ supply data and have the constructor write the file.  The other
 is for when the file already exists and we simply want to create
 the data structure to refer to it.
 
-The block file can be cached in two ways. Caching is enabled if the
-preference "/Directories/CacheBlockFiles" is set, otherwise disabled. The
-default is to disable caching.
-
-* Read-caching: If caching is enabled, all block files will always be
-  read-cached. Block files on disk will be read as soon as they are created
-  and held in memory. New block files will be written to disk, but held in
-  memory, so they are never read from disk in the current session.
-
-* Write-caching: If caching is enabled and the parameter allowDeferredWrite
-  is enabled at the block file constructor, NEW block files are held in memory
-  and written to disk only when WriteCacheToDisk() is called. This is used
-  during recording to prevent disk access. After recording, WriteCacheToDisk()
-  will be called on all block files and they will be written to disk. During
-  normal editing, no write cache is active, that is, any block files will be
-  written to disk instantly.
-
-  Even with write cache, auto recovery during normal editing will work as
-  expected. However, auto recovery during recording will not work (not even
-  manual auto recovery, because the files are never written physically to
-  disk).
-
 *//****************************************************************//**
 
 \class auHeader
@@ -98,9 +76,7 @@ static wxUint32 SwapUintEndianess(wxUint32 in)
 /// @param allowDeferredWrite    Allow deferred write-caching
 SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
                                  samplePtr sampleData, size_t sampleLen,
-                                 sampleFormat format,
-                                 bool allowDeferredWrite /* = false */,
-                                 bool bypassCache /* = false */):
+                                 sampleFormat format):
    BlockFile {
       (baseFileName.SetExt(wxT("au")), std::move(baseFileName)),
       sampleLen
@@ -108,33 +84,10 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&baseFileName,
 {
    mFormat = format;
 
-   mCache.active = false;
-
-   bool useCache = GetCache() && (!bypassCache);
-
-   if (!(allowDeferredWrite && useCache) && !bypassCache)
-   {
-      bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
-      if (!bSuccess)
-         throw FileException{
-            FileException::Cause::Write, GetFileName().name };
-   }
-
-   if (useCache) {
-      //wxLogDebug("SimpleBlockFile::SimpleBlockFile(): Caching block file data.");
-      mCache.active = true;
-      mCache.needWrite = true;
-      mCache.format = format;
-      const auto sampleDataSize = sampleLen * SAMPLE_SIZE(format);
-      mCache.sampleData.reinit(sampleDataSize);
-      memcpy(mCache.sampleData.get(), sampleData, sampleDataSize);
-      ArrayOf<char> cleanup;
-      void* summaryData = BlockFile::CalcSummary(sampleData, sampleLen,
-                                                format, cleanup);
-      mCache.summaryData.reinit(mSummaryInfo.totalSummaryBytes);
-      memcpy(mCache.summaryData.get(), summaryData,
-             mSummaryInfo.totalSummaryBytes);
-    }
+   bool bSuccess = WriteSimpleBlockFile(sampleData, sampleLen, format, NULL);
+   if (!bSuccess)
+      throw FileException{
+         FileException::Cause::Write, GetFileName().name };
 }
 
 /// Construct a SimpleBlockFile memory structure that will point to an
@@ -151,8 +104,6 @@ SimpleBlockFile::SimpleBlockFile(wxFileNameWrapper &&existingFile, size_t len,
    mMin = min;
    mMax = max;
    mRMS = rms;
-
-   mCache.active = false;
 }
 
 SimpleBlockFile::~SimpleBlockFile()
@@ -211,7 +162,6 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    ArrayOf<char> cleanup;
    if (!summaryData)
       summaryData = /*BlockFile::*/CalcSummary(sampleData, sampleLen, format, cleanup);
-      //mchinen:allowing virtual override of calc summary for ODDecodeBlockFile.
       // PRL: cleanup fixes a possible memory leak!
 
    size_t nBytesToWrite = sizeof(header);
@@ -269,74 +219,6 @@ bool SimpleBlockFile::WriteSimpleBlockFile(
    return true;
 }
 
-// This function should try to fill the cache, but just return without effect
-// (not throwing) if there is failure.
-void SimpleBlockFile::FillCache()
-{
-   if (mCache.active)
-      return; // cache is already filled
-
-   // Check sample format
-   wxFFile file(mFileName.GetFullPath(), wxT("rb"));
-   if (!file.IsOpened())
-   {
-      // Don't read into cache if file not available
-      return;
-   }
-
-   auHeader header;
-
-   if (file.Read(&header, sizeof(header)) != sizeof(header))
-   {
-      // Corrupt file
-      return;
-   }
-
-   wxUint32 encoding;
-
-   if (header.magic == 0x2e736e64)
-      encoding = header.encoding; // correct endianness
-   else
-      encoding = SwapUintEndianess(header.encoding);
-
-   switch (encoding)
-   {
-   case AU_SAMPLE_FORMAT_16:
-      mCache.format = int16Sample;
-      break;
-   case AU_SAMPLE_FORMAT_24:
-      mCache.format = int24Sample;
-      break;
-   default:
-      // floatSample is a safe default (we will never loose data)
-      mCache.format = floatSample;
-      break;
-   }
-
-   file.Close();
-
-   // Read samples into cache
-   mCache.sampleData.reinit(mLen * SAMPLE_SIZE(mCache.format));
-   if (ReadData(mCache.sampleData.get(), mCache.format, 0, mLen,
-                // no exceptions!
-                false) != mLen)
-   {
-      // Could not read all samples
-      mCache.sampleData.reset();
-      return;
-   }
-
-   // Read summary data into cache
-   // Fills with zeroes in case of failure:
-   ReadSummary(mCache.summaryData);
-
-   // Cache is active but already on disk
-   mCache.active = true;
-   mCache.needWrite = false;
-
-   //wxLogDebug("SimpleBlockFile::FillCache(): Successfully read simple block file into cache.");
-}
-
 /// Read the summary section of the disk file.
 ///
 /// @param *data The buffer to write the data to.  It must be at least
@@ -344,43 +226,35 @@ void SimpleBlockFile::FillCache()
 bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
 {
    data.reinit( mSummaryInfo.totalSummaryBytes );
-   if (mCache.active) {
-      //wxLogDebug("SimpleBlockFile::ReadSummary(): Summary is already in cache.");
-      memcpy(data.get(), mCache.summaryData.get(), mSummaryInfo.totalSummaryBytes);
-      return true;
-   }
-   else
+   //wxLogDebug("SimpleBlockFile::ReadSummary(): Reading summary from disk.");
+
+   wxFFile file(mFileName.GetFullPath(), wxT("rb"));
+
    {
-      //wxLogDebug("SimpleBlockFile::ReadSummary(): Reading summary from disk.");
-
-      wxFFile file(mFileName.GetFullPath(), wxT("rb"));
-
-      {
-         Optional<wxLogNull> silence{};
-         if (mSilentLog)
-            silence.emplace();
-         // FIXME: TRAP_ERR no report to user of absent summary files?
-         // filled with zero instead.
-         if (!file.IsOpened()){
-            memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
-            mSilentLog = TRUE;
-            return false;
-         }
-      }
-      mSilentLog = FALSE;
-
-      // The offset is just past the au header
-      if( !file.Seek(sizeof(auHeader)) ||
-          file.Read(data.get(), mSummaryInfo.totalSummaryBytes) !=
-             mSummaryInfo.totalSummaryBytes ) {
+      Optional<wxLogNull> silence{};
+      if (mSilentLog)
+         silence.emplace();
+      // FIXME: TRAP_ERR no report to user of absent summary files?
+      // filled with zero instead.
+      if (!file.IsOpened()){
          memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+         mSilentLog = TRUE;
          return false;
       }
-
-      FixSummary(data.get());
-
-      return true;
    }
+   mSilentLog = FALSE;
+
+   // The offset is just past the au header
+   if( !file.Seek(sizeof(auHeader)) ||
+       file.Read(data.get(), mSummaryInfo.totalSummaryBytes) !=
+          mSummaryInfo.totalSummaryBytes ) {
+      memset(data.get(), 0, mSummaryInfo.totalSummaryBytes);
+      return false;
+   }
+
+   FixSummary(data.get());
+
+   return true;
 }
 
 /// Read the data portion of the block file using libsndfile.  Convert it
@@ -393,28 +267,8 @@ bool SimpleBlockFile::ReadSummary(ArrayOf<char> &data)
 size_t SimpleBlockFile::ReadData(samplePtr data, sampleFormat format,
                         size_t start, size_t len, bool mayThrow) const
 {
-   if (mCache.active)
-   {
-      //wxLogDebug("SimpleBlockFile::ReadData(): Data are already in cache.");
-
-      auto framesRead = std::min(len, std::max(start, mLen) - start);
-      CopySamples(
-         (samplePtr)(mCache.sampleData.get() +
-            start * SAMPLE_SIZE(mCache.format)),
-         mCache.format, data, format, framesRead);
-
-      if ( framesRead < len ) {
-         if (mayThrow)
-            // Not the best exception class?
-            throw FileException{ FileException::Cause::Read, mFileName };
-         ClearSamples(data, format, framesRead, len - framesRead);
-      }
-
-      return framesRead;
-   }
-   else
-      return CommonReadData( mayThrow,
-         mFileName, mSilentLog, nullptr, 0, 0, data, format, start, len);
+   return CommonReadData( mayThrow,
+      mFileName, mSilentLog, nullptr, 0, 0, data, format, start, len);
 }
 
 void SimpleBlockFile::SaveXML(XMLWriter &xmlFile)
@@ -492,12 +346,6 @@ BlockFilePtr SimpleBlockFile::Copy(wxFileNameWrapper &&newFileName)
 
 auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
 {
-   if (mCache.active && mCache.needWrite)
-   {
-      // We don't know space usage yet
-      return 0;
-   }
-
    // Don't know the format, so it must be read from the file
    if (mFormat == (sampleFormat) 0)
    {
@@ -505,7 +353,6 @@ auto SimpleBlockFile::GetSpaceUsage() const -> DiskByteCount
       wxFFile file(mFileName.GetFullPath(), wxT("rb"));
       if (!file.IsOpened())
       {
-         // Don't read into cache if file not available
          return 0;
       }
    
@@ -574,41 +421,6 @@ void SimpleBlockFile::Recover(){
    for(decltype(mLen) i = 0; i < mLen * 2; i++)
       file.Write(wxT("\0"),1);
 
-}
-
-void SimpleBlockFile::WriteCacheToDisk()
-{
-   if (!GetNeedWriteCacheToDisk())
-      return;
-
-   if (WriteSimpleBlockFile(mCache.sampleData.get(), mLen, mCache.format,
-                            mCache.summaryData.get()))
-      mCache.needWrite = false;
-}
-
-bool SimpleBlockFile::GetNeedWriteCacheToDisk()
-{
-   return mCache.active && mCache.needWrite;
-}
-
-bool SimpleBlockFile::GetCache()
-{
-#ifdef DEPRECATED_AUDIO_CACHE
-   // See http://bugzilla.audacityteam.org/show_bug.cgi?id=545.
-   bool cacheBlockFiles = false;
-   gPrefs->Read(wxT("/Directories/CacheBlockFiles"), &cacheBlockFiles);
-   if (!cacheBlockFiles)
-      return false;
-
-   int lowMem = gPrefs->Read(wxT("/Directories/CacheLowMem"), 16l);
-   if (lowMem < 16) {
-      lowMem = 16;
-   }
-   lowMem <<= 20;
-   return (GetFreeMemory() > lowMem);
-#else
-   return false;
-#endif
 }
 
 static DirManager::RegisteredBlockFileDeserializer sRegistration {

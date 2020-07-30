@@ -25,10 +25,10 @@ UndoManager
 
 #include <wx/hashset.h>
 
-#include "BlockFile.h"
 #include "Clipboard.h"
 #include "Diags.h"
 #include "Project.h"
+#include "SampleBlock.h"
 #include "Sequence.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"          // temp
@@ -44,8 +44,7 @@ wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
 
-using ConstBlockFilePtr = const BlockFile*;
-using Set = std::unordered_set<ConstBlockFilePtr>;
+using SampleBlockID = long long;
 
 struct UndoStackElem {
 
@@ -85,7 +84,6 @@ UndoManager::UndoManager( AudacityProject &project )
 {
    current = -1;
    saved = -1;
-   ResetODChangesFlag();
 }
 
 UndoManager::~UndoManager()
@@ -95,37 +93,15 @@ UndoManager::~UndoManager()
 
 namespace {
    SpaceArray::value_type
-   CalculateUsage(const TrackList &tracks, Set *seen)
+   CalculateUsage(const TrackList &tracks, SampleBlockIDSet &seen)
    {
       SpaceArray::value_type result = 0;
-
       //TIMER_START( "CalculateSpaceUsage", space_calc );
-      for (auto wt : tracks.Any< const WaveTrack >())
-      {
-         // Scan all clips within current track
-         for(const auto &clip : wt->GetAllClips())
-         {
-            // Scan all blockfiles within current clip
-            auto blocks = clip->GetSequenceBlockArray();
-            for (const auto &block : *blocks)
-            {
-               const auto &file = block.f;
-
-               // Accumulate space used by the file if the file was not
-               // yet seen
-               if ( !seen || (seen->count( &*file ) == 0 ) )
-               {
-                  unsigned long long usage{ file->GetSpaceUsage() };
-                  result += usage;
-               }
-
-               // Add file to current set
-               if (seen)
-                  seen->insert( &*file );
-            }
-         }
-      }
-
+      InspectBlocks(
+         tracks,
+         BlockSpaceUsageAccumulator( result ),
+         &seen
+      );
       return result;
    }
 }
@@ -135,7 +111,7 @@ void UndoManager::CalculateSpaceUsage()
    space.clear();
    space.resize(stack.size(), 0);
 
-   Set seen;
+   SampleBlockIDSet seen;
 
    // After copies and pastes, a block file may be used in more than
    // one place in one undo history state, and it may be used in more than
@@ -155,11 +131,14 @@ void UndoManager::CalculateSpaceUsage()
    {
       // Scan all tracks at current level
       auto &tracks = *stack[nn]->state.tracks;
-      space[nn] = CalculateUsage(tracks, &seen);
+      space[nn] = CalculateUsage(tracks, seen);
    }
 
+   // Count the usage of the clipboard separately, using another set.  Do not
+   // multiple-count any block occurring multiple times within the clipboard.
+   seen.clear();
    mClipboardSpaceUsage = CalculateUsage(
-      Clipboard::Get().GetTracks(), nullptr);
+      Clipboard::Get().GetTracks(), seen);
 
    //TIMER_STOP( space_calc );
 }
@@ -167,8 +146,6 @@ void UndoManager::CalculateSpaceUsage()
 wxLongLong_t UndoManager::GetLongDescription(
    unsigned int n, TranslatableString *desc, TranslatableString *size)
 {
-   n -= 1; // 1 based to zero based
-
    wxASSERT(n < stack.size());
    wxASSERT(space.size() == stack.size());
 
@@ -181,8 +158,6 @@ wxLongLong_t UndoManager::GetLongDescription(
 
 void UndoManager::GetShortDescription(unsigned int n, TranslatableString *desc)
 {
-   n -= 1; // 1 based to zero based
-
    wxASSERT(n < stack.size());
 
    *desc = stack[n]->shortDescription;
@@ -228,7 +203,7 @@ unsigned int UndoManager::GetNumStates()
 
 unsigned int UndoManager::GetCurrentState()
 {
-   return current + 1;  // the array is 0 based, the abstraction is 1 based
+   return current;
 }
 
 bool UndoManager::UndoAvailable()
@@ -282,7 +257,7 @@ void UndoManager::PushState(const TrackList * l,
 {
    unsigned int i;
 
-   if ( ((flags & UndoPush::CONSOLIDATE) != UndoPush::MINIMAL) &&
+   if ( (flags & UndoPush::CONSOLIDATE) != UndoPush::NONE &&
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
@@ -332,8 +307,6 @@ void UndoManager::PushState(const TrackList * l,
 
 void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 {
-   n -= 1;
-
    wxASSERT(n < stack.size());
 
    current = n;
@@ -392,13 +365,12 @@ void UndoManager::Redo(const Consumer &consumer)
 
 bool UndoManager::UnsavedChanges() const
 {
-   return (saved != current) || HasODChangesFlag();
+   return (saved != current);
 }
 
 void UndoManager::StateSaved()
 {
    saved = current;
-   ResetODChangesFlag();
 }
 
 // currently unused
@@ -412,26 +384,3 @@ void UndoManager::StateSaved()
 //   }
 //}
 
-///to mark as unsaved changes without changing the state/tracks.
-void UndoManager::SetODChangesFlag()
-{
-   mODChangesMutex.Lock();
-   mODChanges=true;
-   mODChangesMutex.Unlock();
-}
-
-bool UndoManager::HasODChangesFlag() const
-{
-   bool ret;
-   mODChangesMutex.Lock();
-   ret=mODChanges;
-   mODChangesMutex.Unlock();
-   return ret;
-}
-
-void UndoManager::ResetODChangesFlag()
-{
-   mODChangesMutex.Lock();
-   mODChanges=false;
-   mODChangesMutex.Unlock();
-}

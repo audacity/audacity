@@ -115,6 +115,7 @@ for registering for changes.
 #include <wx/bmpbuttn.h>
 #include "../include/audacity/ComponentInterface.h"
 #include "widgets/wxPanelWrapper.h"
+#include "widgets/wxTextCtrlWrapper.h"
 #include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -630,7 +631,7 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(
    long flags = wxTE_LEFT;
 #endif
 
-   mpWind = pTextCtrl = safenew wxTextCtrl(GetParent(), miId, Value,
+   mpWind = pTextCtrl = safenew wxTextCtrlWrapper(GetParent(), miId, Value,
       wxDefaultPosition, Size, GetStyle( flags ));
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control

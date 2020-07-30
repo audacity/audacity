@@ -539,29 +539,39 @@ void Grid::OnKeyDown(wxKeyEvent &event)
       {
          int rows = GetNumberRows();
          int cols = GetNumberCols();
-         int crow = GetGridCursorRow();
-         int ccol = GetGridCursorCol();
 
-         if (event.GetKeyCode() == WXK_LEFT) {
-            if (crow == 0 && ccol == 0) {
-               // do nothing
+         const bool has_cells = rows > 0 && cols > 0;
+
+         if (has_cells) {
+            int crow = GetGridCursorRow();
+            int ccol = GetGridCursorCol();
+
+            const bool has_no_selection = crow == wxGridNoCellCoords.GetRow() || ccol == wxGridNoCellCoords.GetCol();
+
+            if (has_no_selection) {
+               SetGridCursor(0, 0);
             }
-            else if (ccol == 0) {
-               SetGridCursor(crow - 1, cols - 1);
+            else if (event.GetKeyCode() == WXK_LEFT) {
+               if (crow == 0 && ccol == 0) {
+                  // do nothing
+               }
+               else if (ccol == 0) {
+                  SetGridCursor(crow - 1, cols - 1);
+               }
+               else {
+                  SetGridCursor(crow, ccol - 1);
+               }
             }
             else {
-               SetGridCursor(crow, ccol - 1);
-            }
-         }
-         else {
-            if (crow == rows - 1 && ccol == cols - 1) {
-               // do nothing
-            }
-            else if (ccol == cols - 1) {
-               SetGridCursor(crow + 1, 0);
-            }
-            else {
-               SetGridCursor(crow, ccol + 1);
+               if (crow == rows - 1 && ccol == cols - 1) {
+                  // do nothing
+               }
+               else if (ccol == cols - 1) {
+                  SetGridCursor(crow + 1, 0);
+               }
+               else {
+                  SetGridCursor(crow, ccol + 1);
+               }
             }
          }
 
@@ -574,11 +584,6 @@ void Grid::OnKeyDown(wxKeyEvent &event)
 
       case WXK_TAB:
       {
-         int rows = GetNumberRows();
-         int cols = GetNumberCols();
-         int crow = GetGridCursorRow();
-         int ccol = GetGridCursorCol();
-
          if (event.ControlDown()) {
             int flags = wxNavigationKeyEvent::FromTab |
                         ( event.ShiftDown() ?
@@ -587,10 +592,28 @@ void Grid::OnKeyDown(wxKeyEvent &event)
             Navigate(flags);
             return;
          }
-         else if (event.ShiftDown()) {
+
+         int rows = GetNumberRows();
+         int cols = GetNumberCols();
+         int crow = GetGridCursorRow();
+         int ccol = GetGridCursorCol();
+
+         const auto is_empty = rows <= 0 || cols <= 0;
+         const auto has_no_selection = crow == wxGridNoCellCoords.GetRow() || ccol == wxGridNoCellCoords.GetCol();
+
+         if (event.ShiftDown()) {
+            if (is_empty) {
+               Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsBackward);
+               return;
+            }
+
             if (crow == 0 && ccol == 0) {
                Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsBackward);
                return;
+            }
+
+            if (has_no_selection) {
+               SetGridCursor(rows -1, cols - 1);
             }
             else if (ccol == 0) {
                SetGridCursor(crow - 1, cols - 1);
@@ -600,9 +623,18 @@ void Grid::OnKeyDown(wxKeyEvent &event)
             }
          }
          else {
+            if (is_empty) {
+               Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsForward);
+               return;
+            }
+
             if (crow == rows - 1 && ccol == cols - 1) {
                Navigate(wxNavigationKeyEvent::FromTab | wxNavigationKeyEvent::IsForward);
                return;
+            }
+
+            if (has_no_selection) {
+               SetGridCursor(0, 0);
             }
             else if (ccol == cols - 1) {
                SetGridCursor(crow + 1, 0);
@@ -611,6 +643,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
                SetGridCursor(crow, ccol + 1);
             }
          }
+
          MakeCellVisible(GetGridCursorRow(), GetGridCursorCol());
 
 #if wxUSE_ACCESSIBILITY

@@ -16,6 +16,7 @@
 #include <wx/dir.h> // for wxDIR_FILES
 #include <wx/string.h> // function return value
 #include "audacity/Types.h"
+#include "Prefs.h"
 #include "MemoryX.h"
 
 class wxFileName;
@@ -43,7 +44,7 @@ namespace FileNames
    // Frequently used types
    extern const FileType
         AllFiles // *
-      , AudacityProjects // *.aup
+      , AudacityProjects // *.aup3
       , DynamicLibraries // depends on the operating system
       , TextFiles // *.txt
       , XMLFiles; // *.xml, *.XML
@@ -95,7 +96,6 @@ namespace FileNames
     * windows system */
    FilePath DataDir();
    FilePath ResourcesDir();
-   FilePath AutoSaveDir();
    FilePath HtmlHelpDir();
    FilePath HtmlHelpIndexFile(bool quick);
    FilePath LegacyChainDir();
@@ -134,27 +134,44 @@ namespace FileNames
    enum class Operation {
       // _ on None to defeat some macro that is expanding this.
       _None,
+
+      // These do not have a specific pathtype
+      Temp,
+      Presets,
+
+      // These have default/lastused pathtypes
       Open,
+      Save,
+      Import,
       Export
    };
 
-   wxString FindDefaultPath(Operation op);
+   enum class PathType {
+      // _ on None to defeat some macro that is expanding this.
+      _None,
+      User,
+      LastUsed
+   };
+
+   wxString PreferenceKey(FileNames::Operation op, FileNames::PathType type);
+
+   FilePath FindDefaultPath(Operation op);
    void UpdateDefaultPath(Operation op, const FilePath &path);
 
    // F is a function taking a wxString, returning wxString
    template<typename F>
-   wxString WithDefaultPath
+   FilePath WithDefaultPath
    (Operation op, const FilePath &defaultPath, F function)
    {
-      auto path = defaultPath;
+      auto path = gPrefs->Read(PreferenceKey(op, PathType::User), defaultPath);
       if (path.empty())
          path = FileNames::FindDefaultPath(op);
       auto result = function(path);
-      FileNames::UpdateDefaultPath(op, result);
+      FileNames::UpdateDefaultPath(op, ::wxPathOnly(result));
       return result;
    }
 
-   wxString
+   FilePath
    SelectFile(Operation op,   // op matters only when default_path is empty
       const TranslatableString& message,
       const FilePath& default_path,
@@ -179,6 +196,20 @@ namespace FileNames
 #if defined(__WXMSW__)
    char *VerifyFilename(const wxString &s, bool input = true);
 #endif
+
+   // wxString compare function for sorting case, which is needed to load correctly.
+   int CompareNoCase(const wxString& first, const wxString& second);
+
+   // Create a unique filename using the passed prefix and suffix
+   wxString CreateUniqueName(const wxString &prefix,
+                             const wxString &suffix = wxEmptyString);
+
+   // Create a filename for an unsaved/temporary project file
+   wxString UnsavedProjectFileName();
+
+   // File extension used for unsaved/temporary project files
+   wxString UnsavedProjectExtension();
+
 };
 
 // Use this macro to wrap all filenames and pathnames that get

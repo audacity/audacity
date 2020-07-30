@@ -7,6 +7,13 @@ set( CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake_support )
 
 # Define the platform specific interface options
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   if(DEFINED ENV{ASIOSDK_DIR} )
+      cmd_option(
+         ${_OPT}use_pa_asio
+         "Use the portaudio ASIO interface if available"
+         YES
+      )
+   endif()
    cmd_option(
       ${_OPT}use_pa_ds
       "Use the portaudio DirectSound interface if available"
@@ -123,6 +130,11 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/src/os/unix/pa_unix_util.c
       >
 
+      $<$<BOOL:${${_OPT}use_pa_asio}>:
+         ${TARGET_ROOT}/src/hostapi/asio/iasiothiscallresolver.cpp
+         ${TARGET_ROOT}/src/hostapi/asio/pa_asio.cpp
+      >
+
       $<$<BOOL:${${_OPT}use_pa_ds}>:
          ${TARGET_ROOT}/src/hostapi/dsound/pa_win_ds.c
          ${TARGET_ROOT}/src/hostapi/dsound/pa_win_ds_dynlink.c
@@ -150,6 +162,15 @@ list( APPEND SOURCES
       >
 )
 
+list( APPEND EXTRASRC
+   PRIVATE
+      $<$<BOOL:${${_OPT}use_pa_asio}>:
+         $ENV{ASIOSDK_DIR}/common/asio.cpp
+         $ENV{ASIOSDK_DIR}/host/asiodrivers.cpp
+         $ENV{ASIOSDK_DIR}/host/pc/asiolist.cpp
+      >
+)
+
 list( APPEND INCLUDES
    PRIVATE
       ${TARGET_ROOT}/src/common
@@ -160,6 +181,13 @@ list( APPEND INCLUDES
 
       $<$<PLATFORM_ID:Darwin,Linux,FreeBSD,CYGWIN>:
          ${TARGET_ROOT}/src/os/unix
+      >
+
+      $<$<BOOL:${${_OPT}use_pa_asio}>:
+         ${TARGET_ROOT}/src/hostapi/asio
+         $ENV{ASIOSDK_DIR}/common
+         $ENV{ASIOSDK_DIR}/host
+         $ENV{ASIOSDK_DIR}/host/pc
       >
 
       $<$<BOOL:${${_OPT}use_pa_ds}>:
@@ -189,6 +217,10 @@ list( APPEND INCLUDES
 
 list( APPEND DEFINES
    PUBLIC
+      $<$<BOOL:${${_OPT}use_pa_asio}>:
+         PA_USE_ASIO=1
+      >
+
       $<$<BOOL:${${_OPT}use_pa_ds}>:
          PA_USE_DS=1
       >
@@ -239,7 +271,7 @@ list( APPEND LIBRARIES
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
-target_sources( ${TARGET} PRIVATE ${SOURCES} )
+target_sources( ${TARGET} PRIVATE ${SOURCES} ${EXTRASRC} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )

@@ -16,7 +16,6 @@
 
 #ifdef EXPERIMENTAL_OD_FFMPEG
 
-#include "../import/ImportRaw.h" // for TrackHolders
 #include <vector>
 #include "ODDecodeTask.h"
 
@@ -27,6 +26,9 @@ using ScsPtr = std::shared_ptr<Scs>;
 struct FFmpegContext;
 class ODFileDecoder;
 class WaveTrack;
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+using TrackHolders = std::vector< NewChannelGroup >;
+
 /// A class representing a modular task to be used with the On-Demand structures.
 class ODDecodeFFmpegTask final : public ODDecodeTask
 {

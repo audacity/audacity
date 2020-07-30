@@ -11,8 +11,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h" // for USE_* macros
 
 #ifdef USE_MIDI
+#include "../lib-src/header-substitutes/allegro.h"
+
 #include "StretchHandle.h"
 
+#include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ProjectAudioIO.h"
@@ -258,7 +261,7 @@ UIHandle::Result StretchHandle::Release
       or present tense is fine here.  If unsure, go for whichever is
       shorter.*/
       XO("Stretch"),
-      UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
+      UndoPush::CONSOLIDATE);
    return RefreshAll;
 }
 

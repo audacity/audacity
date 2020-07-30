@@ -35,9 +35,9 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
+#include "tracks/ui/CommonTrackPanelCell.h"
 #include "Project.h"
 #include "ProjectSettings.h"
-#include "DirManager.h"
 
 #include "InconsistencyException.h"
 
@@ -46,9 +46,8 @@ and TimeTrack.
 #pragma warning( disable : 4786 )
 #endif
 
-Track::Track(const std::shared_ptr<DirManager> &projDirManager)
-:  vrulerSize(36,0),
-   mDirManager(projDirManager)
+Track::Track()
+:  vrulerSize(36,0)
 {
    mSelected  = false;
    mLinked    = false;
@@ -75,8 +74,6 @@ void Track::Init(const Track &orig)
 
    mDefaultName = orig.mDefaultName;
    mName = orig.mName;
-
-   mDirManager = orig.mDirManager;
 
    mSelected = orig.mSelected;
    mLinked = orig.mLinked;
@@ -390,7 +387,7 @@ bool Track::LinkConsistencyCheck()
 {
    // Sanity checks for linked tracks; unsetting the linked property
    // doesn't fix the problem, but it likely leaves us with orphaned
-   // blockfiles instead of much worse problems.
+   // sample blocks instead of much worse problems.
    bool err = false;
    if (GetLinked())
    {
@@ -1282,13 +1279,13 @@ bool TrackList::HasPendingTracks() const
    return false;
 }
 
+#include "SampleBlock.h"
 #include "ViewInfo.h"
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
-   auto &dirManager = DirManager::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    return std::make_shared< TrackFactory >(
       ProjectSettings::Get( project ),
-      dirManager.shared_from_this(), &viewInfo );
+      SampleBlockFactory::New( project ), &viewInfo );
 };
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key2{

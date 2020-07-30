@@ -21,10 +21,12 @@ Paul Licameli split from AudioIO.h
 #include <vector>
 #include <wx/string.h>
 #include <wx/weakref.h> // member variable
-#include "portaudio.h"
+
+struct PaDeviceInfo;
+typedef void PaStream;
 
 #if USE_PORTMIXER
-#include "../lib-src/portmixer/include/portmixer.h"
+typedef void PxMixer;
 #endif
 
 class AudioIOBase;

@@ -40,11 +40,9 @@
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
 
-#include "DirManager.h"
 #include "ShuttleGui.h"
-#include "MissingAliasFileDialog.h"
-#include "Project.h"
 #include "ProjectAudioManager.h"
+#include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectManager.h"
 #include "Prefs.h"
@@ -54,6 +52,7 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
+#include "widgets/wxTextCtrlWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -186,10 +185,6 @@ TimerRecordDialog::TimerRecordDialog(
 
    m_timer.SetOwner(this, TIMER_ID);
    m_timer.Start(kSlowTimerInterval);
-
-   // Do we need to tidy up when the timer recording has been completed?
-   m_bProjectCleanupRequired = !(this->HaveFilesToRecover());
-
 }
 
 TimerRecordDialog::~TimerRecordDialog()
@@ -305,11 +300,13 @@ void TimerRecordDialog::OnTimeText_Duration(wxCommandEvent& WXUNUSED(event))
 // New events for timer recording automation
 void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(event))
 {
+   auto &projectFileIO = ProjectFileIO::Get(mProject);
+
    wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
       XO("Save Timer Recording As"),
       m_fnAutoSaveFile.GetPath(),
       m_fnAutoSaveFile.GetFullName(),
-      wxT("aup"),
+      wxT("aup3"),
       { FileNames::AudacityProjects },
       wxFD_SAVE | wxRESIZE_BORDER,
       this);
@@ -317,11 +314,9 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    if (fName.empty())
       return;
 
-   AudacityProject* pProject = &mProject;
-
    // If project already exists then abort - we do not allow users to overwrite an existing project
    // unless it is the current project.
-   if (wxFileExists(fName) && (pProject->GetFileName() != fName)) {
+   if (wxFileExists(fName) && (projectFileIO.GetFileName() != fName)) {
       AudacityMessageDialog m(
          nullptr,
          XO("The selected file name could not be used\nfor Timer Recording because it \
@@ -334,10 +329,10 @@ would overwrite another project.\nPlease try again and select an original name."
 
    // Set this boolean to false so we now do a SaveAs at the end of the recording
    // unless we're saving the current project.
-   m_bProjectAlreadySaved = pProject->GetFileName() == fName? true : false;
+   m_bProjectAlreadySaved = projectFileIO.GetFileName() == fName? true : false;
 
    m_fnAutoSaveFile = fName;
-   m_fnAutoSaveFile.SetExt(wxT("aup"));
+   m_fnAutoSaveFile.SetExt(wxT("aup3"));
    this->UpdateTextBoxControls();
 }
 
@@ -411,8 +406,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    // We don't stop the user from starting the recording 
    // as its possible that they plan to free up some
    // space before the recording begins
-   AudacityProject* pProject = &mProject;
-   auto &projectManager = ProjectManager::Get( *pProject );
+   auto &projectManager = ProjectManager::Get( mProject );
 
    // How many minutes do we have left on the disc?
    int iMinsLeft = projectManager.GetEstimatedRecordingMinsLeftOnDisk();
@@ -481,53 +475,10 @@ void TimerRecordDialog::UpdateTextBoxControls() {
    }
 }
 
-// Copied from AutoRecovery.cpp - for use with Timer Recording Improvements
-bool TimerRecordDialog::HaveFilesToRecover()
-{
-   wxDir dir(FileNames::AutoSaveDir());
-   if (!dir.IsOpened()) {
-      AudacityMessageBox(
-         XO("Could not enumerate files in auto save directory."),
-         XO("Error"),
-         wxICON_STOP);
-      return false;
-   }
-
-   wxString filename;
-   bool c = dir.GetFirst(&filename, wxT("*.autosave"), wxDIR_FILES);
-
-   return c;
-}
-
-bool TimerRecordDialog::RemoveAllAutoSaveFiles()
-{
-   FilePaths files;
-   wxDir::GetAllFiles(FileNames::AutoSaveDir(), &files,
-      wxT("*.autosave"), wxDIR_FILES);
-
-   for (unsigned int i = 0; i < files.size(); i++)
-   {
-      if (!wxRemoveFile(files[i]))
-      {
-         // I don't think this error message is actually useful.
-         // -dmazzoni
-         //AudacityMessageBox(
-         //   XO("Could not remove auto save file: %s)".Format( files[i] ),
-         //   XO("Error"),
-         //   wxICON_STOP);
-         return false;
-      }
-   }
-
-   return true;
-}
-
 /// Runs the wait for start dialog.  Returns -1 if the user clicks stop while we are recording
 /// or if the post recording actions fail.
 int TimerRecordDialog::RunWaitDialog()
 {
-   AudacityProject* pProject = &mProject;
-   
    auto updateResult = ProgressResult::Success;
 
    if (m_DateTime_Start > wxDateTime::UNow())
@@ -538,7 +489,7 @@ int TimerRecordDialog::RunWaitDialog()
       return POST_TIMER_RECORD_CANCEL_WAIT;
    } else {
       // Record for specified time.
-      ProjectAudioManager::Get( *pProject ).OnRecord(false);
+      ProjectAudioManager::Get( mProject ).OnRecord(false);
       bool bIsRecording = true;
 
       auto sPostAction = Verbatim(
@@ -587,7 +538,7 @@ int TimerRecordDialog::RunWaitDialog()
 
    // Must do this AFTER the timer project dialog has been deleted to ensure the application
    // responds to the AUDIOIO events...see not about bug #334 in the ProgressDialog constructor.
-   ProjectAudioManager::Get( *pProject ).Stop();
+   ProjectAudioManager::Get( mProject ).Stop();
 
    // Let the caller handle cancellation or failure from recording progress.
    if (updateResult == ProgressResult::Cancelled || updateResult == ProgressResult::Failed)
@@ -607,8 +558,6 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Finally, if there is no post-record action selected then we output
    // a dialog detailing what has been carried out instead.
 
-   AudacityProject* pProject = &mProject;
-
    bool bSaveOK = false;
    bool bExportOK = false;
    int iPostRecordAction = m_pTimerAfterCompleteChoiceCtrl->GetSelection();
@@ -618,7 +567,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Do Automatic Save?
    if (m_bAutoSaveEnabled) {
 
-      auto &projectFileManager = ProjectFileManager::Get( *pProject );
+      auto &projectFileManager = ProjectFileManager::Get( mProject );
       // MY: If this project has already been saved then simply execute a Save here
       if (m_bProjectAlreadySaved) {
          bSaveOK = projectFileManager.Save();
@@ -630,9 +579,8 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // Do Automatic Export?
    if (m_bAutoExportEnabled) {
       Exporter e{ mProject };
-      MissingAliasFilesDialog::SetShouldShow(true);
       bExportOK = e.ProcessFromTimerRecording(
-         false, 0.0, TrackList::Get( *pProject ).GetEndTime(),
+         false, 0.0, TrackList::Get( mProject ).GetEndTime(),
             m_fnAutoExportFile, m_iAutoExportFormat,
             m_iAutoExportSubFormat, m_iAutoExportFilterIndex);
    }
@@ -716,29 +664,9 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          if (iDelayOutcome != ProgressResult::Success) {
             // Cancel the action!
             iPostRecordAction = POST_TIMER_RECORD_NOTHING;
-            // Set this to true to avoid any chance of the temp files being deleted
-            bErrorOverride = true;
             break;
          }
-
-
-         // If we have simply recorded, exported and then plan to Exit/Restart/Shutdown
-         // then we will have a temporary project setup.  Let's get rid of that!
-         if (m_bAutoExportEnabled && !m_bAutoSaveEnabled) {
-            // PRL:  Move the following cleanup into a finally?
-            // No, I think you would want to skip this, in case recording
-            // succeeded but then save or export threw an exception.
-            DirManager::CleanTempDir();
-         }
       } while (false);
-   }
-
-   // Do we need to cleanup the orphaned temporary project?
-   if (m_bProjectCleanupRequired && !bErrorOverride) {
-      // PRL:  Move the following cleanup into a finally?
-      // No, I think you would want to skip this, in case recording
-      // succeeded but then save or export threw an exception.
-      RemoveAllAutoSaveFiles();
    }
 
    // Return the action as required
@@ -794,13 +722,13 @@ wxPrintf(wxT("%s\n"), dt.Format());
    return Verbatim( dt.FormatDate() + wxT(" ") + dt.FormatTime() );
 }
 
-TimerRecordPathCtrl * TimerRecordDialog::NewPathControl(
+wxTextCtrlWrapper * TimerRecordDialog::NewPathControl(
    wxWindow *wParent, const int iID,
    const TranslatableString &sCaption, const TranslatableString &sValue)
 {
-   TimerRecordPathCtrl * pTextCtrl;
+   wxTextCtrlWrapper * pTextCtrl;
    wxASSERT(wParent); // to justify safenew
-   pTextCtrl = safenew TimerRecordPathCtrl(wParent, iID, sValue);
+   pTextCtrl = safenew wxTextCtrlWrapper(wParent, iID, sValue.Translation());
    pTextCtrl->SetName(sCaption.Translation());
    return pTextCtrl;
 }
@@ -917,8 +845,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
             S.StartMultiColumn(3, wxEXPAND);
             {
                TranslatableString sInitialValue;
-               AudacityProject* pProject = &mProject;
-               auto sSaveValue = pProject->GetFileName();
+               auto sSaveValue = ProjectFileIO::Get(mProject).GetFileName();
                if (!sSaveValue.empty()) {
                   m_fnAutoSaveFile.Assign(sSaveValue);
                   sInitialValue = XO("Current Project");

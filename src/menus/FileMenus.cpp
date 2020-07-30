@@ -2,20 +2,22 @@
 #include "../Experimental.h"
 
 #include "../BatchCommands.h"
+#include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
-#include "../MissingAliasFileDialog.h"
 #include "../NoteTrack.h"
 #include "../Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
+#include "../UndoManager.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
@@ -23,14 +25,13 @@
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportMIDI.h"
+#include "../import/ImportRaw.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 
 #ifdef USE_MIDI
 #include "../import/ImportMIDI.h"
 #endif // USE_MIDI
-
-#include "../ondemand/ODManager.h"
 
 #include <wx/menu.h>
 
@@ -39,16 +40,16 @@ namespace {
 void DoExport( AudacityProject &project, const FileExtension & Format )
 {
    auto &tracks = TrackList::Get( project );
-
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   
    Exporter e{ project };
 
-   MissingAliasFilesDialog::SetShouldShow(true);
    double t0 = 0.0;
    double t1 = tracks.GetEndTime();
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired =
-      (project.mBatchMode == 0) || project.GetFileName().empty() ||
+      (project.mBatchMode == 0) || projectFileIO.GetFileName().empty() ||
       Format.empty();
    wxString filename;
 
@@ -59,7 +60,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
       extension.MakeLower();
 
       filename =
-         MacroCommands::BuildCleanFileName(project.GetFileName(), extension);
+         MacroCommands::BuildCleanFileName(projectFileIO.GetFileName(), extension);
 
       // Bug 1854, No warning of file overwrite
       // (when export is called from Macros).
@@ -73,7 +74,7 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
          number.Printf("%03i", counter);
          // So now the name has a number in it too.
          filename = MacroCommands::BuildCleanFileName(
-            project.GetFileName() + number, extension);
+            projectFileIO.GetFileName() + number, extension);
          bPromptingRequired = wxFileExists(filename);
       }
       // If we've run out of alternative names, we will fall back to prompting
@@ -142,6 +143,57 @@ void OnClose(const CommandContext &context )
    window.Close();
 }
 
+void OnCompact(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &undoManager = UndoManager::Get(project);
+   auto &projectFileIO = ProjectFileIO::Get(project);
+
+   auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
+                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
+
+   int id = AudacityMessageBox(
+      XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
+         "There is %s of free disk space and this project is currently using %s.\n\n"
+         "NOTE: If you proceed, the current Undo History and clipboard contents will be discarded.\n\n"
+         "Do you want to continue?")
+      .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
+              Internat::FormatSize(before.GetValue())),
+      XO("Compact Project"),
+      wxYES_NO);
+
+   if (id == wxNO)
+   {
+      return;
+   }
+
+   ProjectHistory::Get(project)
+      .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
+
+   auto numStates = undoManager.GetNumStates();
+   undoManager.RemoveStates(numStates - 1);
+
+   auto &clipboard = Clipboard::Get();
+   clipboard.Clear();
+
+   auto currentTracks = TrackList::Create( nullptr );
+   auto &tracks = TrackList::Get( project );
+   for (auto t : tracks.Any())
+   {
+      currentTracks->Add(t->Duplicate());
+   }
+
+   projectFileIO.Compact(currentTracks, true);
+
+   auto after = wxFileName(projectFileIO.GetFileName()).GetSize() +
+                wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
+
+   AudacityMessageBox(
+      XO("Compacting freed %s of disk space.")
+      .Format(Internat::FormatSize((before - after).GetValue())),
+      XO("Compact Project"));
+}
+
 void OnSave(const CommandContext &context )
 {
    auto &project = context.project;
@@ -160,17 +212,8 @@ void OnSaveCopy(const CommandContext &context )
 {
    auto &project = context.project;
    auto &projectFileManager = ProjectFileManager::Get( project );
-   projectFileManager.SaveAs(true, true);
+   projectFileManager.SaveCopy();
 }
-
-#ifdef USE_LIBVORBIS
-void OnSaveCompressed(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &projectFileManager = ProjectFileManager::Get( project );
-   projectFileManager.SaveAs(true);
-}
-#endif
 
 void OnExportMp3(const CommandContext &context)
 {
@@ -202,7 +245,6 @@ void OnExportSelection(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    Exporter e{ project };
 
-   MissingAliasFilesDialog::SetShouldShow(true);
    e.SetFileDialogTitle( XO("Export Selected Audio") );
    e.Process(true, selectedRegion.t0(),
       selectedRegion.t1());
@@ -275,7 +317,6 @@ void OnExportMultiple(const CommandContext &context)
    auto &project = context.project;
    ExportMultipleDialog em(&project);
 
-   MissingAliasFilesDialog::SetShouldShow(true);
    em.ShowModal();
 }
 
@@ -372,11 +413,7 @@ void OnImport(const CommandContext &context)
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
 
-   // An import trigger for the alias missing dialog might not be intuitive, but
-   // this serves to track the file if the users zooms in and such.
-   MissingAliasFilesDialog::SetShouldShow(true);
-
-   auto selectedFiles = ProjectFileManager::ShowOpenDialog();
+   auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
    if (selectedFiles.size() == 0) {
       Importer::SetLastOpenType({});
       return;
@@ -387,10 +424,7 @@ void OnImport(const CommandContext &context)
    // AudacityProject::Import ?
    gPrefs->Write(wxT("/NewImportingSession"), true);
 
-   //sort selected files by OD status.  Load non OD first so user can edit asap.
-   //first sort selectedFiles.
-   selectedFiles.Sort(CompareNoCaseFileName);
-   ODManager::Pauser pauser;
+   selectedFiles.Sort(FileNames::CompareNoCase);
 
    auto cleanup = finally( [&] {
       Importer::SetLastOpenType({});
@@ -400,7 +434,7 @@ void OnImport(const CommandContext &context)
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       wxString fileName = selectedFiles[ff];
 
-      FileNames::UpdateDefaultPath(FileNames::Operation::Open, fileName);
+      FileNames::UpdateDefaultPath(FileNames::Operation::Import, ::wxPathOnly(fileName));
 
       ProjectFileManager::Get( project ).Import(fileName);
    }
@@ -621,19 +655,15 @@ BaseItemSharedPtr FileMenu()
       Section( "Save",
          Menu( wxT("Save"), XXO("&Save Project"),
             Command( wxT("Save"), XXO("&Save Project"), FN(OnSave),
-               AudioIONotBusyFlag() | UnsavedChangesFlag(), wxT("Ctrl+S") ),
+               AudioIONotBusyFlag(), wxT("Ctrl+S") ),
             Command( wxT("SaveAs"), XXO("Save Project &As..."), FN(OnSaveAs),
                AudioIONotBusyFlag() ),
-            // TODO: The next two items should be disabled if project is empty
-            Command( wxT("SaveCopy"), XXO("Save Lossless Copy of Project..."),
-               FN(OnSaveCopy), AudioIONotBusyFlag() )
-   #ifdef USE_LIBVORBIS
-            ,
-            Command( wxT("SaveCompressed"),
-               XXO("&Save Compressed Copy of Project..."),
-               FN(OnSaveCompressed), AudioIONotBusyFlag() )
-   #endif
-         )
+            Command( wxT("SaveCopy"), XXO("&Backup Project..."), FN(OnSaveCopy),
+               AudioIONotBusyFlag() )
+         ),
+
+         Command( wxT("Compact"), XXO("Co&mpact Project"), FN(OnCompact),
+            AudioIONotBusyFlag() )
       ),
 
       Section( "Import-Export",

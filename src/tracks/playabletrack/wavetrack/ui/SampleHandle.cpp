@@ -422,7 +422,7 @@ UIHandle::Result SampleHandle::Release
    mClickedTrack.reset();       //Set this to NULL so it will catch improper drag events.
    ProjectHistory::Get( *pProject ).PushState(XO("Moved Samples"),
       XO("Sample Edit"),
-      UndoPush::CONSOLIDATE | UndoPush::AUTOSAVE);
+      UndoPush::CONSOLIDATE);
 
    // No change to draw since last drag
    return RefreshCode::RefreshNone;
@@ -430,8 +430,8 @@ UIHandle::Result SampleHandle::Release
 
 UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectHistory::Get( *pProject ).RollbackState();
    mClickedTrack.reset();
+   ProjectHistory::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshCell;
 }
 

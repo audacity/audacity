@@ -10,7 +10,7 @@
 
 \class BenchmarkDialog
 \brief BenchmarkDialog is used for measuring performance and accuracy
-of the BlockFile system.
+of sample block storage.
 
 *//*******************************************************************/
 
@@ -33,7 +33,7 @@ of the BlockFile system.
 #include <wx/valtext.h>
 #include <wx/intl.h>
 
-#include "DirManager.h"
+#include "SampleBlock.h"
 #include "ShuttleGui.h"
 #include "Project.h"
 #include "WaveClip.h"
@@ -47,11 +47,16 @@ of the BlockFile system.
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h"
 
+// Change these to the desired format...should probably make the
+// choice available in the dialog
+#define SampleType short
+#define SampleFormat int16Sample
+
 class BenchmarkDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   BenchmarkDialog( wxWindow *parent, const ProjectSettings &settings );
+   BenchmarkDialog( wxWindow *parent, AudacityProject &project );
 
    void MakeBenchmarkDialog();
 
@@ -66,6 +71,7 @@ private:
    void HoldPrint(bool hold);
    void FlushPrint();
 
+   AudacityProject &mProject;
    const ProjectSettings &mSettings;
 
    bool      mHoldPrint;
@@ -85,7 +91,7 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-void RunBenchmark( wxWindow *parent, const ProjectSettings &settings )
+void RunBenchmark( wxWindow *parent, AudacityProject &project )
 {
    /*
    int action = AudacityMessageBox(
@@ -101,7 +107,7 @@ XO("This will close all project windows (without saving)\nand open the Audacity 
       GetProjectFrame( *pProject ).Close();
    */
 
-   BenchmarkDialog dlog{ parent, settings };
+   BenchmarkDialog dlog{ parent, project };
 
    dlog.CentreOnParent();
 
@@ -131,14 +137,15 @@ BEGIN_EVENT_TABLE(BenchmarkDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 BenchmarkDialog::BenchmarkDialog(
-   wxWindow *parent, const ProjectSettings &settings)
+   wxWindow *parent, AudacityProject &project)
    :
       /* i18n-hint: Benchmark means a software speed test */
       wxDialogWrapper( parent, 0, XO("Benchmark"),
                 wxDefaultPosition, wxDefaultSize,
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
-   , mSettings{ settings }
+   , mProject(project)
+   , mSettings{ ProjectSettings::Get(project) }
 {
    SetName();
 
@@ -366,35 +373,37 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    HoldPrint(true);
 
    ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
-   auto dd = DirManager::Create();
    const auto t =
-      TrackFactory{ mSettings, dd, &zoomInfo }.NewWaveTrack(int16Sample);
+      TrackFactory{ mSettings,
+                    SampleBlockFactory::New( mProject ),
+                    &zoomInfo }.NewWaveTrack(SampleFormat);
 
    t->SetRate(1);
 
    srand(randSeed);
 
-   size_t nChunks, chunkSize;
-   //chunkSize = 7500 + (rand() % 1000);
-   chunkSize = 200 + (rand() % 100);
-   nChunks = (dataSize * 1048576) / (chunkSize*sizeof(short));
-   while(nChunks < 20 || chunkSize > ((unsigned long)(blockSize)*1024)/4) {
-      chunkSize = std::max( size_t(1), (chunkSize / 2) + (rand() % 100) );
-      nChunks = (dataSize * 1048576) / (chunkSize*sizeof(short));
+   uint64_t nChunks, chunkSize;
+   //chunkSize = 7500ull + (rand() % 1000ull);
+   chunkSize = 200ull + (rand() % 100ull);
+   nChunks = (dataSize * 1048576ull) / (chunkSize*sizeof(SampleType));
+   while (nChunks < 20 || chunkSize > (blockSize*1024)/4)
+   {
+      chunkSize = std::max( uint64_t(1), (chunkSize / 2) + (rand() % 100) );
+      nChunks = (dataSize * 1048576ull) / (chunkSize*sizeof(SampleType));
    }
 
    // The chunks are the pieces we move around in the test.
    // They are (and are supposed to be) a different size to
-   // the blocks that make the blockfiles.  That way we get to
-   // do some testing of when edit chunks cross blockfile boundaries.
-   Printf( XO("Using %ld chunks of %ld samples each, for a total of %.1f MB.\n")
-      .Format( nChunks, chunkSize, nChunks*chunkSize*sizeof(short)/1048576.0 ) );
+   // the blocks that make the sample blocks.  That way we get to
+   // do some testing of when edit chunks cross sample block boundaries.
+   Printf( XO("Using %lld chunks of %lld samples each, for a total of %.1f MB.\n")
+      .Format( nChunks, chunkSize, nChunks*chunkSize*sizeof(SampleType)/1048576.0 ) );
 
    int trials = numEdits;
 
-   using Shorts = ArrayOf < short > ;
-   Shorts small1{ nChunks };
-   Shorts block{ chunkSize };
+   using Samples = ArrayOf<SampleType>;
+   Samples small1{nChunks};
+   Samples block{chunkSize};
 
    Printf( XO("Preparing...\n") );
 
@@ -408,13 +417,13 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    wxString tempStr;
    wxStopWatch timer;
 
-   for (size_t i = 0; i < nChunks; i++) {
-      v = short(rand());
+   for (uint64_t i = 0; i < nChunks; i++) {
+      v = SampleType(rand());
       small1[i] = v;
-      for (size_t b = 0; b < chunkSize; b++)
+      for (uint64_t b = 0; b < chunkSize; b++)
          block[b] = v;
 
-      t->Append((samplePtr)block.get(), int16Sample, chunkSize);
+      t->Append((samplePtr)block.get(), SampleFormat, chunkSize);
    }
    t->Flush();
 
@@ -424,7 +433,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    t->GetEndTime();
 
    if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != nChunks * chunkSize) {
-      Printf( XO("Expected len %ld, track len %lld.\n")
+      Printf( XO("Expected len %lld, track len %lld.\n")
          .Format(
             nChunks * chunkSize,
             t->GetClipByIndex(0)->GetSequence()->GetNumSamples()
@@ -440,13 +449,13 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    for (z = 0; z < trials; z++) {
       // First chunk to cut
       // 0 <= x0 < nChunks
-      const size_t x0 = rand() % nChunks;
+      const uint64_t x0 = rand() % nChunks;
 
       // Number of chunks to cut
       // 1 <= xlen <= nChunks - x0
-      const size_t xlen = 1 + (rand() % (nChunks - x0));
+      const uint64_t xlen = 1 + (rand() % (nChunks - x0));
       if (mEditDetail)
-         Printf( XO("Cut: %ld - %ld \n")
+         Printf( XO("Cut: %lld - %lld \n")
             .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
       Track::Holder tmp;
@@ -455,9 +464,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       }
       catch (const AudacityException&) {
          Printf( XO("Trial %d\n").Format( z ) );
-         Printf( XO("Cut (%ld, %ld) failed.\n")
+         Printf( XO("Cut (%lld, %lld) failed.\n")
             .Format( (x0 * chunkSize), (x0 + xlen) * chunkSize) );
-         Printf( XO("Expected len %ld, track len %lld.\n")
+         Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
                t->GetClipByIndex(0)->GetSequence()->GetNumSamples()
@@ -467,10 +476,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
       // Position to paste
       // 0 <= y0 <= nChunks - xlen
-      const size_t y0 = rand() % (nChunks - xlen + 1);
+      const uint64_t y0 = rand() % (nChunks - xlen + 1);
 
       if (mEditDetail)
-         Printf( XO("Paste: %ld\n").Format( y0 * chunkSize ) );
+         Printf( XO("Paste: %lld\n").Format( y0 * chunkSize ) );
 
       try {
          t->Paste((double)(y0 * chunkSize), tmp.get());
@@ -482,7 +491,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
       if (t->GetClipByIndex(0)->GetSequence()->GetNumSamples() != nChunks * chunkSize) {
          Printf( XO("Trial %d\n").Format( z ) );
-         Printf( XO("Expected len %ld, track len %lld.\n")
+         Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
                t->GetClipByIndex(0)->GetSequence()->GetNumSamples()
@@ -522,21 +531,21 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    bad = 0;
    timer.Start();
-   for (size_t i = 0; i < nChunks; i++) {
+   for (uint64_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block.get(), int16Sample, i * chunkSize, chunkSize);
-      for (size_t b = 0; b < chunkSize; b++)
+      t->Get((samplePtr)block.get(), SampleFormat, i * chunkSize, chunkSize);
+      for (uint64_t b = 0; b < chunkSize; b++)
          if (block[b] != v) {
             bad++;
             if (bad < 10)
-               Printf( XO("Bad: chunk %ld sample %ld\n").Format( i, b ) );
+               Printf( XO("Bad: chunk %lld sample %lld\n").Format( i, b ) );
             b = chunkSize;
          }
    }
    if (bad == 0)
       Printf( XO("Passed correctness check!\n") );
    else
-      Printf( XO("Errors in %d/%ld chunks\n").Format( bad, nChunks ) );
+      Printf( XO("Errors in %d/%lld chunks\n").Format( bad, nChunks ) );
 
    elapsed = timer.Time();
 
@@ -548,10 +557,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    timer.Start();
 
-   for (size_t i = 0; i < nChunks; i++) {
+   for (uint64_t i = 0; i < nChunks; i++) {
       v = small1[i];
-      t->Get((samplePtr)block.get(), int16Sample, i * chunkSize, chunkSize);
-      for (size_t b = 0; b < chunkSize; b++)
+      t->Get((samplePtr)block.get(), SampleFormat, i * chunkSize, chunkSize);
+      for (uint64_t b = 0; b < chunkSize; b++)
          if (block[b] != v)
             bad++;
    }
@@ -560,8 +569,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    Printf( XO("Time to check all data (2): %ld ms\n").Format( elapsed ) );
 
-   Printf( XO("At 44100 Hz, 16-bits per sample, the estimated number of\n simultaneous tracks that could be played at once: %.1f\n" )
-      .Format( (nChunks*chunkSize/44100.0)/(elapsed/1000.0) ) );
+   Printf( XO("At 44100 Hz, %d bytes per sample, the estimated number of\n simultaneous tracks that could be played at once: %.1f\n" )
+      .Format( SAMPLE_SIZE(SampleFormat), (nChunks*chunkSize/44100.0)/(elapsed/1000.0) ) );
 
    goto success;
 
@@ -569,8 +578,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    Printf( XO("TEST FAILED!!!\n") );
 
  success:
-
-   dd.reset();
 
    Printf( XO("Benchmark completed successfully.\n") );
    HoldPrint(false);

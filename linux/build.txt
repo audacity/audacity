@@ -1,13 +1,10 @@
 Instructions for Building on Linux
 
-Fuller instructions that cover:
-    * Upgrading to gcc 4.9 on older Ubuntus
-    * Optional libraries
-can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Linux.
+Fuller instructions can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Linux.
 
-In fact for Audacity 2.4.0 you should read those
-instructions rather than these ones, since we switched to 
-CMake for building Audacity itself for 2.4.0
+In fact you should read those instructions rather than these 
+once.  These ones give less detail.
+
 
 Some prerequisites:
 
@@ -66,16 +63,27 @@ wxWidgets:
 
 Audacity:
 
-These are old instructions.  See our wiki and use 
-CMake for 2.4.0 and later, rather than as here automake.
+See our wiki for more detailed build instructions, including how to 
+install CMake.
 
-  1) Create a 'build' subdirectory under Audacity and change to it.
 
-  2) Now to build Audacity itself.  
-    Using a build directory (and .. in the command) keeps source and object files
-    in separate directories.
+1. Make a build directory under the audacity git directory.
 
-    ../configure --with-lib-preference="local system"
+  cd audacity
+  mkdir build-cmake
+  cd build-cmake
 
-    make
-    make install  # as root
+
+2. Generate the makefiles
+
+  cmake -DCMAKE_BUILD_TYPE=Release ..
+
+3. Build Audacity 
+
+  cmake --build . 
+
+4. Run
+
+  cd bin/Release
+  ./audacity
+

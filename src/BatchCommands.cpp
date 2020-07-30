@@ -25,6 +25,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #include "Project.h"
 #include "ProjectAudioManager.h"
+#include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
@@ -631,6 +632,7 @@ bool MacroCommands::ApplySpecialCommand(
       return true;
 
    AudacityProject *project = &mProject;
+   auto &projectFileIO = ProjectFileIO::Get( *project );
 
    unsigned numChannels = 1;    //used to switch between mono and stereo export
    if (IsMono( &mProject )) {
@@ -650,7 +652,7 @@ bool MacroCommands::ApplySpecialCommand(
    else extension = wxT("mp3");
 
    if (mFileName.empty()) {
-      filename = BuildCleanFileName(project->GetFileName(), extension);
+      filename = BuildCleanFileName(projectFileIO.GetFileName(), extension);
    }
    else {
       filename = BuildCleanFileName(mFileName, extension);
@@ -964,18 +966,15 @@ bool MacroCommands::ApplyMacro(
       if (proj) {
          ProjectHistory::Get(*proj).PushState(longDesc, shortDesc);
       }
-
-      // Upon exit of the top level apply, roll back the state if
-      // an error occurs.
-      auto cleanup2 = finally([&] {
-         if (!res) {
-            if (proj) {
-               // Macro failed or was cancelled; revert to the previous state
-               ProjectHistory::Get(*proj).RollbackState();
-            }
-         }
-         });
    }
+
+   // Upon exit of the top level apply, roll back the state if an error occurs.
+   auto cleanup2 = finally([&, macroReentryCount = MacroReentryCount] {
+      if (macroReentryCount == 1 && !res && proj) {
+         // Macro failed or was cancelled; revert to the previous state
+         ProjectHistory::Get(*proj).RollbackState();
+      }
+   });
 
    mAbort = false;
 

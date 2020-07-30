@@ -22,7 +22,6 @@
 
 #include "ClientData.h"
 #include "SampleFormat.h"
-#include "tracks/ui/CommonTrackPanelCell.h"
 #include "xml/XMLTagHandler.h"
 
 #ifdef __WXMSW__
@@ -30,7 +29,7 @@
 #endif
 
 class wxTextFile;
-class DirManager;
+class CommonTrackCell;
 class Track;
 class AudioTrack;
 class PlayableTrack;
@@ -310,11 +309,9 @@ private:
    ChannelType         mChannel;
    double              mOffset;
 
-   mutable std::shared_ptr<DirManager> mDirManager;
-
  public:
 
-   Track(const std::shared_ptr<DirManager> &projDirManager);
+   Track();
    Track(const Track &orig);
 
    virtual ~ Track();
@@ -352,12 +349,6 @@ public:
 
    virtual void SetPan( float ){ ;}
    virtual void SetPanFromChannelType(){ ;};
-
-   // AS: Note that the dirManager is mutable.  This is
-   // mostly to support "Duplicate" of const objects,
-   // but in general, mucking with the dir manager is
-   // separate from the Track.
-   const std::shared_ptr<DirManager> &GetDirManager() const { return mDirManager; }
 
    // Create a NEW track and modify this track
    // Return non-NULL or else throw
@@ -717,8 +708,8 @@ protected:
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track
 {
 public:
-   AudioTrack(const std::shared_ptr<DirManager> &projDirManager)
-      : Track{ projDirManager } {}
+   AudioTrack()
+      : Track{} {}
    AudioTrack(const Track &orig) : Track{ orig } {}
 
    // Serialize, not with tags of its own, but as attributes within a tag.
@@ -732,8 +723,8 @@ public:
 class AUDACITY_DLL_API PlayableTrack /* not final */ : public AudioTrack
 {
 public:
-   PlayableTrack(const std::shared_ptr<DirManager> &projDirManager)
-      : AudioTrack{ projDirManager } {}
+   PlayableTrack()
+      : AudioTrack{} {}
    PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
 
    bool GetMute    () const { return mMute;     }
@@ -1410,12 +1401,6 @@ public:
 
    double GetMinOffset() const;
 
-#if LEGACY_PROJECT_FILE_SUPPORT
-   // File I/O
-   bool Load(wxTextFile * in, DirManager * dirManager) override;
-   bool Save(wxTextFile * out, bool overwrite) override;
-#endif
-
 private:
 
    // Visit all tracks satisfying a predicate, mutative access
@@ -1574,6 +1559,9 @@ private:
    std::vector< Updater > mUpdaters;
 };
 
+class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
+
 class AUDACITY_DLL_API TrackFactory final
    : public ClientData::Base
 {
@@ -1584,18 +1572,21 @@ class AUDACITY_DLL_API TrackFactory final
    static void Destroy( AudacityProject &project );
 
    TrackFactory( const ProjectSettings &settings,
-      const std::shared_ptr<DirManager> &dirManager, const ZoomInfo *zoomInfo)
+      const SampleBlockFactoryPtr &pFactory, const ZoomInfo *zoomInfo)
       : mSettings{ settings }
-      , mDirManager(dirManager)
+      , mpFactory(pFactory)
       , mZoomInfo(zoomInfo)
    {
    }
    TrackFactory( const TrackFactory & ) PROHIBITED;
    TrackFactory &operator=( const TrackFactory & ) PROHIBITED;
 
+   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
+   { return mpFactory; }
+
  private:
    const ProjectSettings &mSettings;
-   const std::shared_ptr<DirManager> mDirManager;
+   SampleBlockFactoryPtr mpFactory;
    const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;
  public:

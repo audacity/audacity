@@ -29,7 +29,9 @@ list( APPEND OPTIONS
    PRIVATE
       $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-enum-compare>
       ${MMX_FLAG}
-      ${SSE_FLAG}
+
+#     Bug 2488 - Do not define this for SBSMS
+#     ${SSE_FLAG}
 )
 
 find_package( Threads )

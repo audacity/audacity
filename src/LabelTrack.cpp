@@ -68,11 +68,11 @@ static ProjectFileIORegistry::Entry registerFactory{
 
 LabelTrack::Holder TrackFactory::NewLabelTrack()
 {
-   return std::make_shared<LabelTrack>(mDirManager);
+   return std::make_shared<LabelTrack>();
 }
 
-LabelTrack::LabelTrack(const std::shared_ptr<DirManager> &projDirManager):
-   Track(projDirManager),
+LabelTrack::LabelTrack():
+   Track(),
    mClipLen(0.0),
    miLastLabel(-1)
 {
@@ -627,53 +627,6 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("labeltrack"));
 }
 
-#if LEGACY_PROJECT_FILE_SUPPORT
-bool LabelTrack::Load(wxTextFile * in, DirManager * dirManager)
-{
-   if (in->GetNextLine() != wxT("NumMLabels"))
-      return false;
-
-   unsigned long len;
-   if (!(in->GetNextLine().ToULong(&len)))
-      return false;
-
-   mLabels.clear();
-   mLabels.reserve(len);
-
-   for (int i = 0; i < len; i++) {
-      double t0;
-      if (!Internat::CompatibleToDouble(in->GetNextLine(), &t0))
-         return false;
-      // Legacy file format does not include label end-times.
-      // PRL: nothing NEW to do, legacy file support
-      mLabels.push_back(LabelStruct {
-         SelectedRegion{ t0, t0 }, in->GetNextLine()
-      });
-   }
-
-   if (in->GetNextLine() != wxT("MLabelsEnd"))
-      return false;
-   SortLabels();
-   return true;
-}
-
-bool LabelTrack::Save(wxTextFile * out, bool overwrite)
-{
-   out->AddLine(wxT("NumMLabels"));
-   int len = mLabels.size();
-   out->AddLine(wxString::Format(wxT("%d"), len));
-
-   for (auto pLabel : mLabels) {
-      const auto &labelStruct = *pLabel;
-      out->AddLine(wxString::Format(wxT("%lf"), labelStruct.selectedRegion.mT0));
-      out->AddLine(labelStruct.title);
-   }
-   out->AddLine(wxT("MLabelsEnd"));
-
-   return true;
-}
-#endif
-
 Track::Holder LabelTrack::Cut(double t0, double t1)
 {
    auto tmp = Copy(t0, t1);
@@ -699,7 +652,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
-   auto tmp = std::make_shared<LabelTrack>(GetDirManager());
+   auto tmp = std::make_shared<LabelTrack>();
    const auto lt = static_cast<LabelTrack*>(tmp.get());
 
    for (auto &labelStruct: mLabels) {

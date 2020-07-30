@@ -15,7 +15,7 @@
   and return the tracks that were imported.  This function just
   figures out which one to call; the actual importers are in
   ImportPCM, ImportMP3, ImportOGG, ImportRawData, ImportLOF,
-  ImportQT and ImportFLAC.
+  ImportQT, ImportFLAC and ImportAUP.
 
 *//***************************************************************//**
 
@@ -29,7 +29,7 @@ It's defined in Import.h
 \class Importer
 \brief Class which actually imports the auido, using functions defined
 in ImportPCM.cpp, ImportMP3.cpp, ImportOGG.cpp, ImportRawData.cpp,
-and ImportLOF.cpp.
+ImportLOF.cpp, and ImportAUP.cpp.
 
 *//******************************************************************/
 
@@ -57,6 +57,8 @@ and ImportLOF.cpp.
 #include "../Prefs.h"
 
 #include "../widgets/ProgressDialog.h"
+
+using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
 // ============================================================================
 //
@@ -135,7 +137,7 @@ bool Importer::Initialize()
    using namespace Registry;
    static OrderingPreferenceInitializer init{
       PathStart,
-      { {wxT(""), wxT("PCM,OGG,FLAC,MP3,LOF,FFmpeg") } }
+      { {wxT(""), wxT("AUP,PCM,OGG,FLAC,MP3,LOF,FFmpeg") } }
       // QT and GStreamer are only conditionally compiled and would get
       // placed at the end if present
    };
@@ -179,21 +181,28 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
    FileNames::FileTypes fileTypes{
       FileNames::AllFiles,
       // Will fill in the list of extensions later:
-      { XO("All supported files"), {} }
+      { XO("All supported files"), {} },
+      FileNames::AudacityProjects
    };
 
    if ( !extraType.extensions.empty() )
       fileTypes.push_back( extraType );
-   
+ 
    FileNames::FileTypes l;
    for(const auto &importPlugin : sImportPluginList())
    {
       l.emplace_back(importPlugin->GetPluginFormatDescription(),
                                importPlugin->GetSupportedExtensions());
    }
-   
+
+   FileExtensions extraExtensions = FileNames::AudacityProjects.extensions;
+   extraExtensions.insert(extraExtensions.end(),
+                          extraType.extensions.begin(),
+                          extraType.extensions.end());
+
    using ExtensionSet = std::unordered_set< FileExtension >;
-   FileExtensions allList = extraType.extensions, newList;
+   FileExtensions allList = FileNames::AudacityProjects.extensions, newList;
+   allList.insert(allList.end(), extraType.extensions.begin(), extraType.extensions.end());
    ExtensionSet allSet{ allList.begin(), allList.end() }, newSet;
    for ( const auto &format : l ) {
       newList.clear();
@@ -632,6 +641,12 @@ bool Importer::Import( AudacityProject &project,
                return true;
             }
 
+            // AUP ("legacy projects") have different semantics
+            if (extension.IsSameAs(wxT("aup"), false))
+            {
+               return true;
+            }
+
             auto end = tracks.end();
             auto iter = std::remove_if( tracks.begin(), end,
                std::mem_fn( &NewChannelGroup::empty ) );
@@ -778,15 +793,6 @@ bool Importer::Import( AudacityProject &project,
          errorMessage = XO(
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a video file. \nAudacity cannot currently open this type of file. \nYou need to extract the audio to a supported format, such as WAV or AIFF.")
-            .Format( fName );
-         return false;
-      }
-
-      // Audacity project
-      if (extension.IsSameAs(wxT("aup"), false)) {
-         errorMessage = XO(
-/* i18n-hint: %s will be the filename */
-"\"%s\" is an Audacity Project file. \nUse the 'File > Open' command to open Audacity Projects.")
             .Format( fName );
          return false;
       }

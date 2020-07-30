@@ -305,7 +305,8 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    auto state = UndoManager::Get( *project ).GetCurrentState();
    auto cleanup = finally( [&] {
       if(!success)
-         ProjectHistory::Get( *project ).SetStateTo( state );
+         // This is like a rollback of state
+         ProjectHistory::Get( *project ).SetStateTo( state, false );
    } );
 
    for (size_t i = 0, cnt = mEffects.size(); i < cnt; i++)
@@ -1842,7 +1843,6 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    return nullptr;
 };
 
-#include "../MissingAliasFileDialog.h"
 #include "../PluginManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -1884,8 +1884,6 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       ProjectAudioManager::Get( project ).Stop();
       SelectUtilities::SelectAllIfNone( project );
    }
-
-   MissingAliasFilesDialog::SetShouldShow(true);
 
    auto nTracksOriginally = tracks.size();
    wxWindow *focus = wxWindow::FindFocus();

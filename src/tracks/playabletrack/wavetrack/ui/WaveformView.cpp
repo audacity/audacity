@@ -325,7 +325,7 @@ void DrawMinMaxRMS(
    float zoomMin, float zoomMax,
    bool dB, float dBRange,
    const float *min, const float *max, const float *rms, const int *bl,
-   bool /* showProgress */, bool muted)
+   bool muted)
 {
    auto &dc = context.dc;
 
@@ -753,7 +753,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
 
    WaveDisplay display(hiddenMid.width);
-   bool isLoadingOD = false;//true if loading on demand block in sequence.
 
    const double pps =
       averagePixelsPerSample * rate;
@@ -788,8 +787,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          // fisheye moves over the background, there is then less to do when
          // redrawing.
 
-         if (!clip->GetWaveDisplay(display,
-            t0, pps, isLoadingOD))
+         if (!clip->GetWaveDisplay(display,t0, pps))
             return;
       }
    }
@@ -840,8 +838,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
                if (!clip->GetWaveDisplay(
-                     fisheyeDisplay, t0, -1.0, // ignored
-                     isLoadingOD))
+                     fisheyeDisplay, t0, -1.0)) // ignored
                   continue; // serious error.  just don't draw??
             useMin = fisheyeDisplay.min;
             useMax = fisheyeDisplay.max;
@@ -874,8 +871,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             DrawMinMaxRMS( context, rectPortion, env2,
                zoomMin, zoomMax,
                dB, dBRange,
-               useMin, useMax, useRms, useBl,
-               isLoadingOD, muted );
+               useMin, useMax, useRms, useBl, muted );
          }
          else {
             bool highlight = false;

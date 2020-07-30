@@ -1,6 +1,6 @@
 #!/bin/sh
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
-for path in ../lib-src/mod-script* ../lib-src/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
+for path in ../modules/mod-script* ../modules/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
 xargs xgettext \
 --default-domain=audacity \
@@ -10,7 +10,7 @@ xargs xgettext \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
 --package-name="audacity" \
---package-version='2.4.0' \
+--package-version='2.4.2' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L C -o audacity.pot 
 echo ";; Adding nyquist files to audacity.pot"
@@ -24,12 +24,12 @@ xargs xgettext \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
 --package-name="audacity" \
---package-version='2.4.0' \
+--package-version='2.4.2' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
 echo ";; Updating the .po files - Updating Project-Id-Version"
 for i in *.po; do
-    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.4.0\\n"' $i
+    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.4.2\\n"' $i
 done
 echo ";; Updating the .po files"
 sed 's/.*/echo "msgmerge --lang=& &.po audacity.pot -o &.po";\

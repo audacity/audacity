@@ -27,7 +27,7 @@ class PlatformCompatibility
 public:
    //
    // On Win32, this function gets the long file name (like
-   // "C:\Program Files\Project.aup") from a short file name like
+   // "C:\Program Files\Project.aup3") from a short file name like
    // "C:\PROGRA~1\PROJEC~1.AUP. On other systems, the function
    // just returns the exact string it is given.
    //

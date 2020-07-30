@@ -15,8 +15,6 @@
 
 #include "Audacity.h"
 
-class AutoSaveFile;
-
 class AUDACITY_DLL_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}
@@ -27,7 +25,7 @@ public:
 
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
-   virtual void OnAudioIONewBlockFiles(const AutoSaveFile & blockFileLog) = 0;
+   virtual void OnAudioIONewBlocks(const WaveTrackArray *tracks) = 0;
 
    // Commit the addition of temporary recording tracks into the project
    virtual void OnCommitRecording() = 0;

@@ -233,7 +233,7 @@ const ReservedCommandFlag&
          return
             undoManager.UnsavedChanges()
          ||
-            !ProjectFileIO::Get( project ).IsProjectSaved()
+            ProjectFileIO::Get( project ).IsModified()
          ;
       }
    }; return flag; }

@@ -11,7 +11,6 @@
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../Project.h"
-#include "../ProjectFileIO.h"
 #include "../commands/CommandContext.h"
 
 #include <wx/frame.h>

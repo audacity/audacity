@@ -28,7 +28,6 @@ class wxMemoryDC;
 class wxSimplebook;
 class wxStaticText;
 class AudacityProject;
-class DirManager;
 class WaveTrack;
 class Tags;
 class TrackList;

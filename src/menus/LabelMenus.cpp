@@ -4,6 +4,7 @@
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../Prefs.h"
+#include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
@@ -266,7 +267,7 @@ void EditClipboardByLabel( AudacityProject &project,
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    clipboard.Assign( std::move( newClipboard ),
-      regions.front().start, regions.back().end, &project );
+      regions.front().start, regions.back().end, project.shared_from_this() );
 }
 
 }

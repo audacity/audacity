@@ -11,7 +11,8 @@
 #include "../Audacity.h"
 
 #include <vector>
-#include "expat.h"
+struct XML_ParserStruct;
+typedef struct XML_ParserStruct *XML_Parser;
 
 #include "XMLTagHandler.h"
 #include "Internat.h" // for TranslatableString
@@ -23,6 +24,8 @@ class AUDACITY_DLL_API XMLFileReader final {
 
    bool Parse(XMLTagHandler *baseHandler,
               const FilePath &fname);
+   bool ParseString(XMLTagHandler *baseHandler,
+                    const wxString &xmldata);
 
    const TranslatableString &GetErrorStr() const;
    const TranslatableString &GetLibraryErrorStr() const;

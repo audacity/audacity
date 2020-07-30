@@ -63,6 +63,8 @@ list( APPEND SOURCES
    PRIVATE
       AColor.cpp
       AColor.h
+      ActiveProjects.cpp
+      ActiveProjects.h
       AboutDialog.cpp
       AboutDialog.h
       AdornedRulerPanel.cpp
@@ -84,8 +86,6 @@ list( APPEND SOURCES
       AudioIOBase.cpp
       AudioIOBase.h
       AudioIOListener.h
-      AutoRecovery.cpp
-      AutoRecovery.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
       BatchCommandDialog.cpp
@@ -96,8 +96,6 @@ list( APPEND SOURCES
       BatchProcessDialog.h
       Benchmark.cpp
       Benchmark.h
-      BlockFile.cpp
-      BlockFile.h
       CellularPanel.cpp
       CellularPanel.h
       ClassicThemeAsCeeCode.h
@@ -110,16 +108,14 @@ list( APPEND SOURCES
       CrashReport.cpp
       CrashReport.h
       DarkThemeAsCeeCode.h
-      Dependencies.cpp
-      Dependencies.h
+      DBConnection.cpp
+      DBConnection.h
       DeviceChange.cpp
       DeviceChange.h
       DeviceManager.cpp
       DeviceManager.h
       Diags.cpp
       Diags.h
-      DirManager.cpp
-      DirManager.h
       Dither.cpp
       Dither.h
       Envelope.cpp
@@ -178,8 +174,6 @@ list( APPEND SOURCES
       MemoryX.h
       Menus.cpp
       Menus.h
-      MissingAliasFileDialog.cpp
-      MissingAliasFileDialog.h
       Mix.cpp
       Mix.h
       MixerBoard.cpp
@@ -207,8 +201,6 @@ list( APPEND SOURCES
       ProjectAudioIO.h
       ProjectAudioManager.cpp
       ProjectAudioManager.h
-      ProjectFSCK.cpp
-      ProjectFSCK.h
       ProjectFileIO.cpp
       ProjectFileIO.h
       ProjectFileIORegistry.cpp
@@ -221,6 +213,8 @@ list( APPEND SOURCES
       ProjectManager.h
       ProjectSelectionManager.cpp
       ProjectSelectionManager.h
+      ProjectSerializer.cpp
+      ProjectSerializer.h
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectStatus.cpp
@@ -241,6 +235,8 @@ list( APPEND SOURCES
       Resample.h
       RingBuffer.cpp
       RingBuffer.h
+      SampleBlock.cpp
+      SampleBlock.h
       SampleFormat.cpp
       SampleFormat.h
       Screenshot.cpp
@@ -271,6 +267,7 @@ list( APPEND SOURCES
       SpectrumAnalyst.h
       SplashDialog.cpp
       SplashDialog.h
+      SqliteSampleBlock.cpp
       SseMathFuncs.cpp
       SseMathFuncs.h
       Tags.cpp
@@ -328,25 +325,6 @@ list( APPEND SOURCES
       ZoomInfo.h
       float_cast.h
       wxFileNameWrapper.h
-
-      # Blockfile
-
-      blockfile/LegacyAliasBlockFile.cpp
-      blockfile/LegacyAliasBlockFile.h
-      blockfile/LegacyBlockFile.cpp
-      blockfile/LegacyBlockFile.h
-      blockfile/NotYetAvailableException.cpp
-      blockfile/NotYetAvailableException.h
-      blockfile/ODDecodeBlockFile.cpp
-      blockfile/ODDecodeBlockFile.h
-      blockfile/ODPCMAliasBlockFile.cpp
-      blockfile/ODPCMAliasBlockFile.h
-      blockfile/PCMAliasBlockFile.cpp
-      blockfile/PCMAliasBlockFile.h
-      blockfile/SilentBlockFile.cpp
-      blockfile/SilentBlockFile.h
-      blockfile/SimpleBlockFile.cpp
-      blockfile/SimpleBlockFile.h
 
       # Commands
 
@@ -645,6 +623,7 @@ list( APPEND SOURCES
 
       # Standard importers
 
+      import/ImportAUP.cpp
       import/ImportLOF.cpp
       import/ImportPCM.cpp
       import/ImportPlugin.h
@@ -695,25 +674,6 @@ list( APPEND SOURCES
       menus/TransportMenus.cpp
       menus/ViewMenus.cpp
       menus/WindowMenus.cpp
-
-      # On demand loading
-
-      ondemand/ODComputeSummaryTask.cpp
-      ondemand/ODComputeSummaryTask.h
-      ondemand/ODDecodeFFmpegTask.cpp
-      ondemand/ODDecodeFFmpegTask.h
-      ondemand/ODDecodeFlacTask.cpp
-      ondemand/ODDecodeFlacTask.h
-      ondemand/ODDecodeTask.cpp
-      ondemand/ODDecodeTask.h
-      ondemand/ODManager.cpp
-      ondemand/ODManager.h
-      ondemand/ODTask.cpp
-      ondemand/ODTask.h
-      ondemand/ODTaskThread.cpp
-      ondemand/ODTaskThread.h
-      ondemand/ODWaveTrackTaskQueue.cpp
-      ondemand/ODWaveTrackTaskQueue.h
 
       # Preferences
 
@@ -931,16 +891,16 @@ list( APPEND SOURCES
       widgets/FileDialog/FileDialog.cpp
       widgets/FileDialog/FileDialog.h
       $<$<BOOL:${wxIS_WIN}>:
-	widgets/FileDialog/win/FileDialogPrivate.cpp
-	widgets/FileDialog/win/FileDialogPrivate.h
+         widgets/FileDialog/win/FileDialogPrivate.cpp
+         widgets/FileDialog/win/FileDialogPrivate.h
       >
       $<$<BOOL:${wxIS_MAC}>:
-	widgets/FileDialog/mac/FileDialogPrivate.mm
-	widgets/FileDialog/mac/FileDialogPrivate.h
+         widgets/FileDialog/mac/FileDialogPrivate.mm
+         widgets/FileDialog/mac/FileDialogPrivate.h
       >
       $<$<BOOL:${wxIS_GTK}>:
-	widgets/FileDialog/gtk/FileDialogPrivate.cpp
-	widgets/FileDialog/gtk/FileDialogPrivate.h
+         widgets/FileDialog/gtk/FileDialogPrivate.cpp
+         widgets/FileDialog/gtk/FileDialogPrivate.h
       >
       widgets/FileHistory.cpp
       widgets/FileHistory.h
@@ -984,6 +944,7 @@ list( APPEND SOURCES
       widgets/valnum.h
       widgets/wxPanelWrapper.cpp
       widgets/wxPanelWrapper.h
+      widgets/wxTextCtrlWrapper.h
 
       # XML handling
       xml/XMLFileReader.cpp
@@ -1055,12 +1016,12 @@ list( APPEND OPTIONS
    PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/permissive->
       $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
-#      $<$<CXX_COMPILER_ID:GNU>:-Wl,-rpath -Wl,${_RPATH}>
 )
 
 list( APPEND LDFLAGS
    PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
+      $<$<CXX_COMPILER_ID:GNU>:-Wl,--disable-new-dtags>
 )
 
 #
@@ -1075,6 +1036,7 @@ list( APPEND LIBRARIES
       libsndfile
       libsoxr
       portaudio-v19
+      sqlite
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
@@ -1098,8 +1060,8 @@ list( APPEND LIBRARIES
 
 set( BUILDING_AUDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
-set( PKGLIBDIR "${_LIBDIR}" )
-set( LIBDIR "${_LIBDIR}" )
+set( PKGLIBDIR "${_PKGLIBDIR}" )
+set( LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}" )
 set( HAVE_GTK ${GTK_FOUND} )
 
 # Do not define these for Windows or Mac until further testing
@@ -1143,33 +1105,15 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    file( TO_NATIVE_PATH "${wxWidgets_LIB_DIR}" libdir )
    file( TO_NATIVE_PATH "${_EXEDIR}" exedir )
 
-   # And create the script to copy the WX libs to the exeutable directory
-   file( WRITE "${_INTDIR}/copy_libs.bat"
-      "@ECHO OFF
-      IF NOT %1 EQU xyzzy (
-         IF EXIST \"${dlls}\" DEL \"${dlls}\"
-         CALL %0 xyzzy \"%1\" %2
-         FOR /F \"delims=\" %%c IN ('SORT \"${dlls}\"') DO (
-            IF NOT EXIST \"%1\"\\%%c (
-               xcopy \"${libdir}\"\\%%c \"%1\"
-            )
-         )
-         DEL ${dlls}
-      )
-      IF %1 EQU xyzzy (
-         FOR /F %%i IN ('DUMPBIN /DEPENDENTS \"%2\"\\%3 ^| findstr /B \"/C:    wx\"') DO (
-            ECHO %%i >>\"${dlls}\"
-            CALL %0 xyzzy \"${libdir}\" %%i
-         )
-      )"
-   )
-
-   # Add it to the build
+   # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
          ${TARGET}
       COMMAND
-         ${_INTDIR}/copy_libs.bat ${exedir} ${AUDACITY_NAME}.exe
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
+                          -D DST="${_EXEDIR}"
+                          -D WXWIN="${libdir}"
+                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1249,16 +1193,16 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( HAVE_VISIBILITY 1 )
    configure_file( audacity_config.h.in private/configmac.h )
 
-   # Copy the wxWidgets libraries into the bundle
-   if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
-      add_custom_command(
-         TARGET
-            ${TARGET}
-         COMMAND
-            sh -c "TARGET_BUILD_DIR=${_DEST} EXECUTABLE_PATH=MacOS/${AUDACITY_NAME} FRAMEWORKS_FOLDER_PATH=Frameworks ${topdir}/mac/scripts/install_wxlibs.sh"
-         POST_BUILD
-      )
-   endif()
+   # Copy the required wxWidgets libs into the bundle
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
+                          -D DST="${_PKGLIB}"
+                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+      POST_BUILD
+   )
 
    # Define the Wrapper target
    set( WRAPPER_ROOT "${TARGET_ROOT}/../mac" )
@@ -1271,7 +1215,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
 else()
-   set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}" )
+   set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DEST}" )
 
    # Create the config file
    set( HAVE_VISIBILITY 1 )
@@ -1318,28 +1262,17 @@ else()
    # Create the desktop file
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
-   # Create the script to copy required wxWidgets libraries
-   if( ${_OPT}use_wxwidgets STREQUAL "local" )
-      file( WRITE "${_INTDIR}/copy_libs.sh"
-         "for lib in \$(ldd ${_EXEDIR}/${AUDACITY_NAME} | awk '/libwx/{print \$1}')
-          do
-             echo \${lib}
-             ldd ${WXWIN}/lib/\${lib} | awk '/libwx/{print \$1}'
-          done | sort -u | xargs cp -n -H -t ${_LIBDIR}
-          rm \${0}"
-      )
-
-      # And run it after the build
-      add_custom_command(
-         TARGET
-            ${TARGET}
-         COMMAND
-            sh "${_INTDIR}/copy_libs.sh"
-         WORKING_DIRECTORY
-            ${WXWIN}/lib
-         POST_BUILD
-      )
-   endif()
+   # Copy the required wxWidgets libs into the bundle
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
+                          -D DST="${_DEST}/${_PKGLIB}"
+                          -D WXWIN="${WXWIN}"
+                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+      POST_BUILD
+   )
 endif()
 
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )
@@ -1390,17 +1323,15 @@ endif()
 
 if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-      install( FILES "${_DEST}/Info.plist"
-               DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents" )
-      install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}" "${_EXEDIR}/Wrapper"
-               DESTINATION "${CMAKE_INSTALL_BINDIR}/Audacity.app/Contents/MacOS" )
+      install( TARGETS ${TARGET}
+               DESTINATION "."
+               RESOURCE DESTINATION "${_APPDIR}/Resources" )
    else()
-      install( PROGRAMS "${_EXEDIR}/${AUDACITY_NAME}"
-               TYPE BIN )
-      install( DIRECTORY "${_DESTDIR}/${_LIBDIR}/"
+      install( TARGETS ${TARGET} RUNTIME )
+      install( DIRECTORY "${_DEST}/${_LIBDIR}/"
                DESTINATION "${_LIBDIR}"
                USE_SOURCE_PERMISSIONS
-               FILES_MATCHING PATTERN "*.so" )
+               FILES_MATCHING PATTERN "*.so*" )
       install( FILES "${_INTDIR}/audacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"

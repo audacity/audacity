@@ -83,7 +83,7 @@ function( set_target_property_all target property value )
    endforeach()
 endfunction()
 
-# Taken from wxWidgets and modified for Audcaity
+# Taken from wxWidgets and modified for Audacity
 #
 # cmd_option(<name> <desc> [default] [STRINGS strings])
 # The default is ON if third parameter isn't specified

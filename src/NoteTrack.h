@@ -17,11 +17,8 @@
 
 #include <utility>
 #include "Track.h"
-#include "effects/TimeWarper.h"
 
 #if defined(USE_MIDI)
-
-#include "../lib-src/header-substitutes/allegro.h"
 
 // define this switch to play MIDI during redisplay to sonify run times
 // Note that if SONIFY is defined, the default MIDI device will be opened
@@ -49,7 +46,6 @@ SONFNS(AutoSave)
 class wxDC;
 class wxRect;
 
-class DirManager;
 class Alg_seq;   // from "allegro.h"
 
 using NoteTrackBase =
@@ -63,12 +59,13 @@ using NoteTrackBase =
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
 class StretchHandle;
+class TimeWarper;
 
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
 public:
-   NoteTrack(const std::shared_ptr<DirManager> &projDirManager);
+   NoteTrack();
    virtual ~NoteTrack();
 
    using Holder = std::shared_ptr<NoteTrack>;

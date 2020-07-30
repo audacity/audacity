@@ -90,11 +90,6 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Missing file &name extension during export"),
                     {wxT("/Warnings/MissingExtension"),
                      true});
-#ifdef EXPERIMENTAL_OD_DATA
-      S.TieCheckBox(XXO("&Importing uncompressed audio files"),
-                    {wxT("/Warnings/CopyOrEditUncompressedDataAsk"),
-                     true});
-#endif
    }
    S.EndStatic();
    S.EndScroller();

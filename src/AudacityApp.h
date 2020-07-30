@@ -38,8 +38,6 @@ class CommandHandler;
 class AppCommandEvent;
 class AudacityProject;
 
-class AliasBlockFile;
-
 class AudacityApp final : public wxApp {
  public:
    AudacityApp();

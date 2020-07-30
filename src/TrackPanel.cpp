@@ -78,9 +78,6 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
 
-#include "ondemand/ODManager.h"
-#include "ondemand/ODTask.h"
-
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackVRulerControls.h"
@@ -283,8 +280,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
          *this, std::move( pAx ) );
    }
 
-   mRedrawAfterStop = false;
-
    mTrackArtist = std::make_unique<TrackArtist>( this );
 
    mTimeCount = 0;
@@ -308,8 +303,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                     this);
 
    auto theProject = GetProject();
-   wxTheApp->Bind(EVT_ODTASK_UPDATE, &TrackPanel::OnODTask, this);
-   theProject->Bind(EVT_ODTASK_COMPLETE, &TrackPanel::OnODTask, this);
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
    theProject->Bind(
@@ -423,8 +416,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    {
       projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
-
-      mRedrawAfterStop = false;
    }
    if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
       UpdateSelectionDisplay();
@@ -443,31 +434,15 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 
       // Periodically update the display while recording
 
-      if (!mRedrawAfterStop) {
-         mRedrawAfterStop = true;
-         MakeParentRedrawScrollbars();
-         mListener->TP_ScrollUpDown( 99999999 );
+      if ((mTimeCount % 5) == 0) {
+         // Must tell OnPaint() to recreate the backing bitmap
+         // since we've not done a full refresh.
+         mRefreshBacking = true;
          Refresh( false );
-      }
-      else {
-         if ((mTimeCount % 5) == 0) {
-            // Must tell OnPaint() to recreate the backing bitmap
-            // since we've not done a full refresh.
-            mRefreshBacking = true;
-            Refresh( false );
-         }
       }
    }
    if(mTimeCount > 1000)
       mTimeCount = 0;
-}
-
-///Handles the redrawing necessary for tasks as they partially update in the
-///background, or finish.
-void TrackPanel::OnODTask(wxCommandEvent & WXUNUSED(event))
-{
-   //todo: add track data to the event - check to see if the project contains it before redrawing.
-   Refresh(false);
 }
 
 void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
@@ -539,11 +514,6 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    wxLogDebug(wxT("Total: %ld milliseconds"), sw.Time());
    wxPrintf(wxT("Total: %ld milliseconds\n"), sw.Time());
 #endif
-}
-
-void TrackPanel::MakeParentModifyState(bool bWantsAutoSave)
-{
-   ProjectHistory::Get( *GetProject() ).ModifyState(bWantsAutoSave);
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
@@ -699,6 +669,9 @@ void TrackPanel::OnTrackListResizing(TrackListEvent & e)
    if( t && t->HasOwner() )
       UpdateVRuler(t.get());
    e.Skip();
+
+   // fix for bug 2477
+   mListener->TP_RedrawScrollbars();
 }
 
 // Tracks have been removed from the list.

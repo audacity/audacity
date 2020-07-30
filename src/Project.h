@@ -16,6 +16,7 @@
 #include "ClientData.h" // to inherit
 
 #include <memory>
+#include <mutex>
 #include <wx/weakref.h> // member variable
 #include <wx/window.h> // MSVC wants this
 
@@ -23,8 +24,6 @@ class wxFrame;
 class wxWindow;
 
 class AudacityProject;
-class ODLock;
-
 
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 // For use by ProjectManager only:
@@ -67,7 +66,7 @@ public:
 
    /// In case you must iterate in a non-main thread, use this to prevent
    /// changes in the set of open projects
-   static ODLock &Mutex();
+   static std::mutex &Mutex();
 
    // Return true if all projects do close (always so if force == true)
    // But if return is false, that means the user cancelled close of at least
@@ -109,6 +108,7 @@ class AUDACITY_DLL_API AudacityProject final
    : public wxEvtHandler
    , public AttachedObjects
    , public AttachedWindows
+   , public std::enable_shared_from_this<AudacityProject>
 {
  public:
    using AttachedObjects = ::AttachedObjects;
@@ -125,17 +125,23 @@ class AUDACITY_DLL_API AudacityProject final
    const wxWindow *GetPanel() const { return mPanel; }
    void SetPanel( wxWindow *pPanel );
  
-   wxString GetProjectName() const;
-
-   const FilePath &GetFileName() { return mFileName; }
-   void SetFileName( const FilePath &fileName ) { mFileName = fileName; }
-
    int GetProjectNumber(){ return mProjectNo;}
-   
+
+   // Project name can be either empty or have the name of the project.
+   //
+   // If empty, it signifies that the project is empty/unmodified or
+   // that the project hasn't yet been saved to a permanent project
+   // file.
+   //
+   // If a name has been assigned, it is merely used to identify
+   // the project and should not be used for any other purposes.
+   const wxString &GetProjectName() const;
+   void SetProjectName(const wxString &name);
+
  private:
 
-   // The project's name and file info
-   FilePath mFileName; // Note: extension-less
+   // The project's name
+   wxString mName;
 
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.

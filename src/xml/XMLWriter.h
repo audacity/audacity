@@ -142,8 +142,6 @@ class XMLStringWriter final : public wxString, public XMLWriter {
 
    void Write(const wxString &data) override;
 
-   wxString Get();
-
  private:
 
 };

@@ -837,7 +837,7 @@ UIHandle::Result TimeShiftHandle::Release
       consolidate = true;
    }
    ProjectHistory::Get( *pProject ).PushState(msg, XO("Time-Shift"),
-      consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::AUTOSAVE));
+      consolidate ? (UndoPush::CONSOLIDATE) : (UndoPush::NONE));
 
    return result | FixScrollbars;
 }

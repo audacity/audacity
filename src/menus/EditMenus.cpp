@@ -2,7 +2,6 @@
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
-#include "../DirManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -76,8 +75,8 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &dirManager = DirManager::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &window = ProjectWindow::Get( project );
 
@@ -93,17 +92,11 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
       Track* pFirstNewTrack = NULL;
       for (auto pClip : clipTrackRange) {
-         Optional<WaveTrack::Locker> locker;
-
          Track::Holder uNewTrack;
          Track *pNewTrack;
          pClip->TypeSwitch(
             [&](const WaveTrack *wc) {
-               if ((clipboard.Project() != &project))
-                  // Cause duplication of block files on disk, when copy is
-                  // between projects
-                  locker.emplace(wc);
-               uNewTrack = wc->EmptyCopy( dirManager.shared_from_this() );
+               uNewTrack = wc->EmptyCopy( pSampleBlockFactory );
                pNewTrack = uNewTrack.get();
             },
 #ifdef USE_MIDI
@@ -279,7 +272,7 @@ void OnCut(const CommandContext &context)
        std::move( newClipboard ),
        selectedRegion.t0(),
        selectedRegion.t1(),
-       &project
+       project.shared_from_this()
    );
 
    // Proceed to change the project.  If this throws, the project will be
@@ -371,7 +364,7 @@ void OnCopy(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    clipboard.Assign( std::move( newClipboard ),
-      selectedRegion.t0(), selectedRegion.t1(), &project );
+      selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this() );
 
    //Make sure the menus/toolbar states get updated
    trackPanel.Refresh(false);
@@ -381,8 +374,8 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &dirManager = DirManager::Get( project );
    auto &trackFactory = TrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -505,15 +498,9 @@ void OnPaste(const CommandContext &context)
             ff = n;
          
          wxASSERT( n && c && n->SameKindAs(*c) );
-         Optional<WaveTrack::Locker> locker;
-
          n->TypeSwitch(
             [&](WaveTrack *wn){
                const auto wc = static_cast<const WaveTrack *>(c);
-               if (clipboard.Project() != &project)
-                  // Cause duplication of block files on disk, when copy is
-                  // between projects
-                  locker.emplace(wc);
                bPastedSomething = true;
                wn->ClearAndPaste(t0, t1, wc, true, true);
             },
@@ -548,7 +535,6 @@ void OnPaste(const CommandContext &context)
             n->TypeSwitch(
                [&](WaveTrack *wn){
                   bPastedSomething = true;
-                  // Note:  rely on locker being still be in scope!
                   wn->ClearAndPaste(t0, t1, c, true, true);
                },
                [&](Track *){
@@ -583,11 +569,6 @@ void OnPaste(const CommandContext &context)
    {
       const auto wc =
          *clipboard.GetTracks().Any< const WaveTrack >().rbegin();
-      Optional<WaveTrack::Locker> locker;
-      if (clipboard.Project() != &project && wc)
-         // Cause duplication of block files on disk, when copy is
-         // between projects
-         locker.emplace(static_cast<const WaveTrack*>(wc));
 
       tracks.Any().StartingWith(*pN).Visit(
          [&](WaveTrack *wt, const Track::Fallthrough &fallthrough) {
@@ -599,7 +580,7 @@ void OnPaste(const CommandContext &context)
                wt->ClearAndPaste(t0, t1, wc, true, true);
             }
             else {
-               auto tmp = wt->EmptyCopy( dirManager.shared_from_this() );
+               auto tmp = wt->EmptyCopy( pSampleBlockFactory );
                tmp->InsertSilence( 0.0,
                   // MJS: Is this correct?
                   clipboard.Duration() );
@@ -705,7 +686,7 @@ void OnSplitCut(const CommandContext &context)
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
    clipboard.Assign( std::move( newClipboard ),
-      selectedRegion.t0(), selectedRegion.t1(), &project );
+      selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this() );
 
    ProjectHistory::Get( project )
       .PushState(XO("Split-cut to the clipboard"), XO("Split Cut"));

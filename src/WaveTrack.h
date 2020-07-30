@@ -20,6 +20,7 @@
 
 class ProgressDialog;
 
+class SampleBlockFactory;
 class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
@@ -68,8 +69,8 @@ public:
    // Constructor / Destructor / Duplicator
    //
 
-   WaveTrack(const std::shared_ptr<DirManager> &projDirManager,
-             sampleFormat format, double rate);
+   WaveTrack(
+      const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
    WaveTrack(const WaveTrack &orig);
 
    // overwrite data excluding the sample sequence but including display
@@ -160,12 +161,11 @@ private:
 
    // Make another track copying format, rate, color, etc. but containing no
    // clips
-   // It is important to pass the correct DirManager (that for the project
+   // It is important to pass the correct factory (that for the project
    // which will own the copy) in the unusual case that a track is copied from
    // another project or the clipboard.  For copies within one project, the
    // default will do.
-   Holder EmptyCopy(
-      const std::shared_ptr<DirManager> &pDirManager = {} ) const;
+   Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {} ) const;
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
@@ -220,18 +220,16 @@ private:
     * If there is an existing WaveClip in the WaveTrack then the data is
     * appended to that clip. If there are no WaveClips in the track, then a NEW
     * one is created.
+    *
+    * @return true if at least one complete block was created
     */
-   void Append(samplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1,
-               XMLWriter* blockFileLog=NULL);
+   bool Append(samplePtr buffer, sampleFormat format,
+               size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();
 
    ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
    void ClearWaveCaches();
-
-   ///Adds an invalid region to the wavecache so it redraws that portion only.
-   void  AddInvalidRegion(sampleCount startSample, sampleCount endSample);
 
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
@@ -308,31 +306,7 @@ private:
    // doing a copy and paste between projects.
    //
 
-   bool Lock() const;
-   bool Unlock() const;
-
-   struct WaveTrackLockDeleter {
-      inline void operator () (const WaveTrack *pTrack) { pTrack->Unlock(); }
-   };
-   using LockerBase = std::unique_ptr<
-      const WaveTrack, WaveTrackLockDeleter
-   >;
-
-   // RAII object for locking.
-   struct Locker : private LockerBase
-   {
-      friend LockerBase;
-      Locker (const WaveTrack *pTrack)
-         : LockerBase{ pTrack }
-      { pTrack->Lock(); }
-      Locker(Locker &&that) : LockerBase{std::move(that)} {}
-      Locker &operator= (Locker &&that) {
-         (LockerBase&)(*this) = std::move(that);
-         return *this;
-      }
-   };
-
-   bool CloseLock(); //similar to Lock but should be called when the project closes.
+   bool CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
    /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.
@@ -527,14 +501,6 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, ProgressDialog *progress = NULL);
 
-   //
-   // AutoSave related
-   //
-   // Retrieve the unique autosave ID
-   int GetAutoSaveIdent() const;
-   // Set the unique autosave ID
-   void SetAutoSaveIdent(int id);
-
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;
 
@@ -591,10 +557,11 @@ private:
    // Private variables
    //
 
+   SampleBlockFactoryPtr mpFactory;
+
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-   int mAutoSaveIdent;
 
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
@@ -658,5 +625,24 @@ private:
    GrowableSampleBuffer mOverlapBuffer;
    int mNValidBuffers;
 };
+
+#include <unordered_set>
+class SampleBlock;
+using SampleBlockID = long long;
+using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
+class TrackList;
+using BlockVisitor = std::function< void(SampleBlock&) >;
+using BlockInspector = std::function< void(const SampleBlock&) >;
+
+// Function to visit all sample blocks from a list of tracks.
+// If a set is supplied, then only visit once each unique block ID not already
+// in that set, and accumulate those into the set as a side-effect.
+// The visitor function may be null.
+void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
+   SampleBlockIDSet *pIDs = nullptr);
+
+// Non-mutating version of the above
+void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
+   SampleBlockIDSet *pIDs = nullptr);
 
 #endif // __AUDACITY_WAVETRACK__

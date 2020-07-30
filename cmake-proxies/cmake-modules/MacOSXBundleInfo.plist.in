@@ -9,6 +9,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>aup3</string>
 				<string>aup</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>

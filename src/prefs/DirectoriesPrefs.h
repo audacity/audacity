@@ -31,15 +31,22 @@ class DirectoriesPrefs final : public PrefsPanel
    bool Commit() override;
    bool Validate() override;
    wxString HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   void PopulateOrExchange(ShuttleGui &S) override;
 
  private:
    void Populate();
-   void UpdateFreeSpace(wxCommandEvent & e);
-   void OnChooseTempDir(wxCommandEvent & e);
 
-   wxStaticText *mFreeSpace;
-   wxTextCtrl *mTempDir;
+   void OnTempText(wxCommandEvent &evt);
+   void OnTempBrowse(wxCommandEvent &evt);
+
+   void OnBrowse(wxCommandEvent &evt);
+
+   wxTextCtrl *mFreeSpace;
+   wxTextCtrl *mTempText;
+   wxTextCtrl *mOpenText;
+   wxTextCtrl *mSaveText;
+   wxTextCtrl *mImportText;
+   wxTextCtrl *mExportText;
 
    DECLARE_EVENT_TABLE()
 };

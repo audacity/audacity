@@ -4,7 +4,6 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../MissingAliasFileDialog.h"
 #include "../Mix.h"
 
 #include "../Prefs.h"
@@ -57,8 +56,6 @@ void DoMixAndRender
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
-
-   MissingAliasFilesDialog::SetShouldShow(true);
 
    WaveTrack::Holder uNewLeft, uNewRight;
    ::MixAndRender(
@@ -171,7 +168,7 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    for (auto left : count == 0 ? range : selectedRange )
       left->SetPan( PanValue );
 
-   auto flags = UndoPush::AUTOSAVE;
+   auto flags = UndoPush::NONE;
    ProjectHistory::Get( project )
       /*i18n-hint: One or more audio tracks have been panned*/
       .PushState(XO("Panned audio track(s)"), XO("Pan Track"), flags);
@@ -802,7 +799,7 @@ void OnResample(const CommandContext &context)
    }
 
    int ndx = 0;
-   auto flags = UndoPush::AUTOSAVE;
+   auto flags = UndoPush::NONE;
    for (auto wt : tracks.Selected< WaveTrack >())
    {
       auto msg = XO("Resampling track %d").Format( ++ndx );

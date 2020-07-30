@@ -28,10 +28,12 @@
 // TODO: Put the relative paths into automake.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-#include "../lib-src/portmidi/pm_common/portmidi.h"
-#include "../lib-src/portmidi/porttime/porttime.h"
-#include <cstring> // Allegro include fails if this header isn't included do to no memcpy
-#include "../lib-src/header-substitutes/allegro.h"
+typedef void PmStream;
+typedef int32_t PmTimestamp;
+
+class Alg_seq;
+class Alg_event;
+class Alg_iterator;
 
 class NoteTrack;
 using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
@@ -59,6 +61,10 @@ class AudacityProject;
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
+
+struct PaStreamCallbackTimeInfo;
+typedef unsigned long PaStreamCallbackFlags;
+typedef int PaError;
 
 bool ValidateDeviceNames();
 
@@ -248,7 +254,7 @@ public:
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
    
    // Part of the callback
-   PaStreamCallbackResult CallbackDoSeek();
+   int CallbackDoSeek();
 
    // Part of the callback
    void CallbackCheckCompletion(
@@ -324,7 +330,7 @@ public:
 #ifdef EXPERIMENTAL_MIDI_OUT
    //   MIDI_PLAYBACK:
    PmStream        *mMidiStream;
-   PmError          mLastPmError;
+   int              mLastPmError;
 
    /// Latency of MIDI synthesizer
    long             mSynthLatency; // ms
@@ -373,10 +379,10 @@ public:
    /// to avoid problems of atomicity of updates
    volatile double mSystemMinusAudioTimePlusLatency;
 
-   Alg_seq_ptr      mSeq;
+   Alg_seq      *mSeq;
    std::unique_ptr<Alg_iterator> mIterator;
    /// The next event to play (or null)
-   Alg_event_ptr    mNextEvent;
+   Alg_event    *mNextEvent;
 
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
    std::vector< std::pair< int, int > > mPendingNotesOff;

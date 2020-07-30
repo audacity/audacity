@@ -15,7 +15,6 @@
 #include "Audacity.h"
 
 #include "SampleFormat.h"
-#include "ondemand/ODTaskThread.h"
 #include "xml/XMLTagHandler.h"
 
 #include "RealFFTf.h"
@@ -25,11 +24,10 @@
 #include <vector>
 
 class BlockArray;
-class BlockFile;
-using BlockFilePtr = std::shared_ptr<BlockFile>;
-class DirManager;
 class Envelope;
 class ProgressDialog;
+class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
 class SpectrogramSettings;
 class WaveCache;
@@ -173,26 +171,27 @@ public:
 class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
-   // It is an error to copy a WaveClip without specifying the DirManager.
+   // It is an error to copy a WaveClip without specifying the
+   // sample block factory.
 
    WaveClip(const WaveClip&) PROHIBITED;
    WaveClip& operator= (const WaveClip&) PROHIBITED;
 
 public:
    // typical constructor
-   WaveClip(const std::shared_ptr<DirManager> &projDirManager, sampleFormat format, 
+   WaveClip(const SampleBlockFactoryPtr &factory, sampleFormat format,
       int rate, int colourIndex);
 
    // essentially a copy constructor - but you must pass in the
-   // current project's DirManager, because we might be copying
+   // current sample block factory, because we might be copying
    // from one project to another
    WaveClip(const WaveClip& orig,
-            const std::shared_ptr<DirManager> &projDirManager,
+            const SampleBlockFactoryPtr &factory,
             bool copyCutlines);
 
    // Copy only a range from the given WaveClip
    WaveClip(const WaveClip& orig,
-            const std::shared_ptr<DirManager> &projDirManager,
+            const SampleBlockFactoryPtr &factory,
             bool copyCutlines,
             double t0, double t1);
 
@@ -258,7 +257,7 @@ public:
    /** Getting high-level data for screen display and clipping
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
-                       double t0, double pixelsPerSecond, bool &isLoadingOD) const;
+                       double t0, double pixelsPerSecond) const;
    bool GetSpectrogram(WaveTrackCache &cache,
                        const float *& spectrogram,
                        const sampleCount *& where,
@@ -280,15 +279,11 @@ public:
    void UpdateEnvelopeTrackLen();
 
    /// You must call Flush after the last Append
-   void Append(samplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1,
-               XMLWriter* blockFileLog = NULL);
+   /// @return true if at least one complete block was created
+   bool Append(samplePtr buffer, sampleFormat format,
+               size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();
-
-   using BlockFileFactory =
-      std::function< BlockFilePtr( wxFileNameWrapper, size_t /* len */ ) >;
-   void AppendBlockFile( const BlockFileFactory &factory, size_t len);
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cutted audio to the clipboard)
@@ -332,19 +327,11 @@ public:
    /// Offset cutlines right to time 't0' by time amount 'len'
    void OffsetCutLines(double t0, double len);
 
-   /// Lock all blockfiles
-   void Lock();
-   /// Unlock all blockfiles
-   void Unlock();
-
-   void CloseLock(); //similar to Lock but should be called when the project closes.
+   void CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
    ///Delete the wave cache - force redraw.  Thread-safe
    void ClearWaveCache();
-
-   ///Adds an invalid region to the wavecache so it redraws that portion only.
-   void AddInvalidRegion(sampleCount startSample, sampleCount endSample);
 
    //
    // XMLTagHandler callback methods for loading and saving
@@ -378,7 +365,6 @@ protected:
    std::unique_ptr<Envelope> mEnvelope;
 
    mutable std::unique_ptr<WaveCache> mWaveCache;
-   mutable ODLock       mWaveCacheMutex {};
    mutable std::unique_ptr<SpecCache> mSpecCache;
    SampleBuffer  mAppendBuffer {};
    size_t        mAppendBufferLen { 0 };

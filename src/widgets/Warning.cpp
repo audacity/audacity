@@ -80,7 +80,8 @@ WarningDialog::WarningDialog(wxWindow *parent, const TranslatableString &message
    S.SetBorder(0);
    S.AddStandardButtons(showCancelButton ? eOkButton | eCancelButton : eOkButton);
 
-   Fit();
+   Layout();
+   GetSizer()->Fit(this);
    CentreOnParent();
 }
 
