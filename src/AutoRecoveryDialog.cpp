@@ -70,7 +70,7 @@ END_EVENT_TABLE()
 AutoRecoveryDialog::AutoRecoveryDialog(AudacityProject *project)
 :  wxDialogWrapper(nullptr, wxID_ANY, XO("Automatic Crash Recovery"),
                    wxDefaultPosition, wxDefaultSize,
-                   wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)), // no close box
+                   (wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) | wxRESIZE_BORDER), // no close box
    mProject(project)
 {
    SetName();
@@ -91,13 +91,13 @@ FilePaths AutoRecoveryDialog::GetRecoverables()
 void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.SetBorder(5);
-   S.StartVerticalLay();
+   S.StartVerticalLay(wxEXPAND, 1);
    {
       S.AddVariableText(
          XO("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"),
          false);
 
-      S.StartStatic(XO("Recoverable projects"));
+      S.StartStatic(XO("Recoverable projects"), 1);
       {
          mFileList = S.Id(ID_FILE_LIST).AddListControlReportMode(
             {
@@ -115,7 +115,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
          XO("After recovery, save the project to save the changes to disk."),
          false);
 
-      S.StartHorizontalLay();
+      S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
          S.Id(ID_QUIT_AUDACITY).AddButton(XXO("Quit Audacity"));
          S.Id(ID_DISCARD_SELECTED).AddButton(XXO("Discard Selected"));
@@ -181,7 +181,7 @@ void AutoRecoveryDialog::PopulateList()
          item++;
       }
    }
-
+   mFileList->SetMinSize(mFileList->GetBestSize());
    mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
    mFileList->SetColumnWidth(1, 500);
 }
