@@ -89,11 +89,20 @@ public:
    bool SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved);
    bool SaveCopy(const FilePath& fileName);
 
-   wxLongLong GetFreeDiskSpace();
+   wxLongLong GetFreeDiskSpace() const;
 
+   // Returns the bytes used for the given sample block
    int64_t GetBlockUsage(SampleBlockID blockid);
+
+   // Returns the bytes used for all blocks owned by the given track list
    int64_t GetCurrentUsage(const std::shared_ptr<TrackList> &tracks);
+
+   // Return the bytes used by all sample blocks in the project file, whether
+   // they are attached to the active tracks or held by the Undo manager.
    int64_t GetTotalUsage();
+
+   // Return the bytes used for the given block using the connection to a
+   // specific database. This is the workhorse for the above 3 methods.
    static int64_t GetDiskUsage(DBConnection *conn, SampleBlockID blockid);
 
    const TranslatableString &GetLastError() const;
