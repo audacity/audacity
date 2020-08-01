@@ -20,9 +20,9 @@ list( APPEND INCLUDES
 list( APPEND DEFINES
    PRIVATE
       #
-      # We need the dbstats table for space calculations.
+      # We need the dbpage table for space calculations.
       #
-      SQLITE_ENABLE_DBSTAT_VTAB=1
+      SQLITE_ENABLE_DBPAGE_VTAB=1
 
       # Can't be set after a WAL mode database is initialized, so change
       # the default here to ensure all project files get the same page 

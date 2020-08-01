@@ -38,6 +38,8 @@ using SampleBlockID = long long;
 
 using Connection = std::unique_ptr<DBConnection>;
 
+using BlockIDs = std::unordered_set<SampleBlockID>;
+
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
 class ProjectFileIO final
@@ -80,6 +82,7 @@ public:
 
    bool OpenProject();
    bool CloseProject();
+   bool ReopenProject();
 
    bool ImportProject(const FilePath &fileName);
    bool LoadProject(const FilePath &fileName);
@@ -87,6 +90,11 @@ public:
    bool SaveCopy(const FilePath& fileName);
 
    wxLongLong GetFreeDiskSpace();
+
+   int64_t GetBlockUsage(SampleBlockID blockid);
+   int64_t GetCurrentUsage(const std::shared_ptr<TrackList> &tracks);
+   int64_t GetTotalUsage();
+   static int64_t GetDiskUsage(DBConnection *conn, SampleBlockID blockid);
 
    const TranslatableString &GetLastError() const;
    const TranslatableString &GetLibraryError() const;
@@ -117,6 +125,10 @@ public:
    bool TransactionStart(const wxString &name);
    bool TransactionCommit(const wxString &name);
    bool TransactionRollback(const wxString &name);
+
+   // In one SQL command, delete sample blocks with ids in the given set, or
+   // (when complement is true), with ids not in the given set.
+   bool DeleteBlocks(const BlockIDs &blockids, bool complement);
 
    // Type of function that is given the fields of one row and returns
    // 0 for success or non-zero to stop the query
@@ -168,15 +180,8 @@ private:
    bool WriteDoc(const char *table, const ProjectSerializer &autosave, const char *schema = "main");
 
    // Application defined function to verify blockid exists is in set of blockids
-   using BlockIDs = std::unordered_set<SampleBlockID>;
    static void InSet(sqlite3_context *context, int argc, sqlite3_value **argv);
 
-public:
-   // In one SQL command, delete sample blocks with ids in the given set, or
-   // (when complement is true), with ids not in the given set.
-   bool DeleteBlocks(const BlockIDs &blockids, bool complement);
-
-private:
    // Return a database connection if successful, which caller must close
    bool CopyTo(const FilePath &destpath,
                const TranslatableString &msg,
@@ -188,6 +193,11 @@ private:
    void SetDBError(const TranslatableString & msg);
 
    bool ShouldCompact(const std::shared_ptr<TrackList> &tracks);
+
+   // Gets values from SQLite B-tree structures
+   static unsigned int get2(const unsigned char *ptr);
+   static unsigned int get4(const unsigned char *ptr);
+   static int get_varint(const unsigned char *ptr, int64_t *out);
 
 private:
    Connection &CurrConn();

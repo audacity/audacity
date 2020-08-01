@@ -256,11 +256,6 @@ ProjectFileIO::~ProjectFileIO()
 {
 }
 
-bool ProjectFileIO::OpenProject()
-{
-   return OpenConnection();
-}
-
 sqlite3 *ProjectFileIO::DB()
 {
    auto &curConn = CurrConn();
@@ -282,7 +277,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 {
    auto &curConn = CurrConn();
    wxASSERT(!curConn);
-   bool temp = false;
+   bool isTemp = false;
 
    if (fileName.empty())
    {
@@ -290,7 +285,19 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       if (fileName.empty())
       {
          fileName = FileNames::UnsavedProjectFileName();
-         temp = true;
+         isTemp = true;
+      }
+   }
+   else
+   {
+      // If this project resides in the temporary directory, then we'll mark it
+      // as temporary.
+      wxFileName temp(FileNames::TempDir(), wxT(""));
+      wxFileName file(fileName);
+      file.SetFullName(wxT(""));
+      if (file == temp)
+      {
+         isTemp = true;
       }
    }
 
@@ -308,7 +315,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       return false;
    }
 
-   mTemporary = temp;
+   mTemporary = isTemp;
 
    SetFileName(fileName);
 
@@ -944,21 +951,17 @@ bool ProjectFileIO::ShouldCompact(const std::shared_ptr<TrackList> &tracks)
    );
 
    // Get the number of blocks and total length from the project file.
+   unsigned long long total = GetTotalUsage();
    unsigned long long blockcount = 0;
-   unsigned long long total = 0;
-
-   auto cb = [&blockcount, &total](int cols, char **vals, char **)
+   
+   auto cb = [&blockcount](int cols, char **vals, char **)
    {
       // Convert
       wxString(vals[0]).ToULongLong(&blockcount);
-      wxString(vals[1]).ToULongLong(&total);
       return 0;
    };
 
-   if (!Query("SELECT Count(*), "
-     "Sum(Length(summary256)) + Sum(Length(summary64k)) + Sum(Length(samples)) "
-     "FROM sampleblocks;", cb)
-       || total == 0)
+   if (!Query("SELECT Count(*) FROM sampleblocks;", cb) || blockcount == 0)
    {
       // Shouldn't compact since we don't have the full picture
       return false;
@@ -1976,6 +1979,11 @@ bool ProjectFileIO::SaveCopy(const FilePath& fileName)
    return CopyTo(fileName, XO("Backing up project"), false, true);
 }
 
+bool ProjectFileIO::OpenProject()
+{
+   return OpenConnection();
+}
+
 bool ProjectFileIO::CloseProject()
 {
    auto &currConn = CurrConn();
@@ -2010,6 +2018,17 @@ bool ProjectFileIO::CloseProject()
    }
 
    return true;
+}
+
+bool ProjectFileIO::ReopenProject()
+{
+   FilePath fileName = mFileName;
+   if (!CloseConnection())
+   {
+      return false;
+   }
+
+   return OpenConnection(fileName);
 }
 
 bool ProjectFileIO::IsModified() const
@@ -2051,12 +2070,12 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace()
    return -1;
 }
 
-const TranslatableString & ProjectFileIO::GetLastError() const
+const TranslatableString &ProjectFileIO::GetLastError() const
 {
    return mLastError;
 }
 
-const TranslatableString & ProjectFileIO::GetLibraryError() const
+const TranslatableString &ProjectFileIO::GetLibraryError() const
 {
    return mLibraryError;
 }
@@ -2116,6 +2135,193 @@ void ProjectFileIO::SetBypass()
    }
 
    return;
+}
+
+int64_t ProjectFileIO::GetBlockUsage(SampleBlockID blockid)
+{
+   return GetDiskUsage(CurrConn().get(), blockid);
+}
+
+int64_t ProjectFileIO::GetCurrentUsage(const std::shared_ptr<TrackList> &tracks)
+{
+   unsigned long long current = 0;
+
+   InspectBlocks(*tracks, BlockSpaceUsageAccumulator(current), nullptr);
+
+   return current;
+}
+
+int64_t ProjectFileIO::GetTotalUsage()
+{
+   return GetDiskUsage(CurrConn().get(), 0);
+}
+
+int64_t ProjectFileIO::GetDiskUsage(DBConnection *conn, SampleBlockID blockid /* = 0 */)
+{
+   typedef struct
+   {
+      SampleBlockID pgno;
+      int currentCell;
+      int numCells;
+      unsigned char data[65536];
+   } page;
+   std::vector<page> stack;
+
+   int64_t total = 0;
+   int64_t found = 0;
+   int64_t next = 0;
+   int rc;
+
+   // Get the rootpage for the sampleblocks table.
+   sqlite3_stmt *stmt = conn->Prepare(DBConnection::GetRootPage,
+      "SELECT rootpage FROM sqlite_master WHERE tbl_name = 'sampleblocks';");
+   sqlite3_step(stmt);
+   int64_t rootpage = sqlite3_column_int64(stmt, 0);
+   sqlite3_clear_bindings(stmt);
+   sqlite3_reset(stmt);
+
+   // Prepare/retrieve statement to read raw database page
+   stmt = conn->Prepare(DBConnection::GetDBPage,
+      "SELECT data FROM sqlite_dbpage WHERE pgno = ?1;");
+
+   stack.push_back({rootpage, 0, 0});
+   do
+   {
+      int nd = (stack.size() - 1) * 2;
+      page &pg = stack.back();
+
+      if (pg.numCells == 0)
+      {
+         sqlite3_bind_int64(stmt, 1, pg.pgno);
+
+         rc = sqlite3_step(stmt);
+         if (rc != SQLITE_ROW)
+         {
+            return found;
+         }
+
+         memcpy(&pg.data,
+                  sqlite3_column_blob(stmt, 0),
+                  sqlite3_column_bytes(stmt, 0));
+
+         pg.currentCell = 0;
+         pg.numCells = get2(&pg.data[3]);
+
+         sqlite3_clear_bindings(stmt);
+         sqlite3_reset(stmt);
+      }
+
+      //wxLogDebug("%*.*spgno %lld currentCell %d numCells %d", nd, nd, "", pg.pgno, pg.currentCell, pg.numCells);
+      if (pg.data[0] == 0x05)
+      {
+         if (pg.currentCell < pg.numCells)
+         {
+            next = get4(&pg.data[8]);
+
+            bool cont = false;
+            while (pg.currentCell < pg.numCells)
+            {
+               int celloff = get2(&pg.data[12 + (pg.currentCell++ * 2)]);
+
+               int pagenum = get4(&pg.data[celloff]);
+
+               int64_t intkey = 0;
+               get_varint(&pg.data[celloff + 4], &intkey);
+
+               //wxLogDebug("%*.*sinternal - next %lld celloff %d pagenum %d intkey %lld", nd, nd, " ", next, celloff, pagenum, intkey);
+               if (!blockid || blockid <= intkey)
+               {
+                  stack.push_back({pagenum, 0, 0});
+                  cont = true;
+                  break;
+               }
+            }
+
+            if (cont)
+            {
+               continue;
+            }
+         }
+
+         if (next)
+         {
+            stack.push_back({next, 0, 0});
+            next = 0;
+            continue;
+         }
+
+      }
+      else if (pg.data[0] == 0x0d)
+      {
+         bool stop = false;
+         for (int i = 0; i < pg.numCells; i++)
+         {
+            int celloff = get2(&pg.data[8 + (i * 2)]);
+
+            int64_t payload = 0;
+            int digits = get_varint(&pg.data[celloff], &payload);
+
+            int64_t intkey = 0;
+            get_varint(&pg.data[celloff + digits], &intkey);
+            //wxLogDebug("%*.*sleaf - celloff %4d intkey %lld payload %lld", nd, nd, " ", celloff, intkey, payload);
+
+            if (blockid)
+            {
+               if (blockid == intkey)
+               {
+                  found = payload;
+                  break;
+               }
+            }
+            else
+            {
+               total += payload;
+            }
+         }
+
+         if (found)
+         {
+            break;
+         }
+      }
+
+      stack.pop_back();
+   } while (!stack.empty());
+
+   return blockid ? found : total;
+}
+
+unsigned int ProjectFileIO::get2(const unsigned char *ptr)
+{
+   return (ptr[0] << 8) | ptr[1];
+}
+
+unsigned int ProjectFileIO::get4(const unsigned char *ptr)
+{
+   return ((unsigned int) ptr[0] << 24) |
+          ((unsigned int) ptr[1] << 16) |
+          ((unsigned int) ptr[2] << 8)  |
+          ((unsigned int) ptr[3]);
+}
+
+int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
+{
+   int64_t val = 0;
+   int i;
+   for (i = 0; i < 8; ++i)
+   {
+      val = (val << 7) + (ptr[i] & 0x7f);
+      if ((ptr[i] & 0x80) == 0)
+      {
+         *out = val;
+         return i + 1;
+      }
+   }
+
+   val = (val << 8) + (ptr[i] & 0xff);
+   *out = val;
+
+   return 9;
 }
 
 AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,

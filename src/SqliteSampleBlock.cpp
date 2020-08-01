@@ -12,6 +12,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include <sqlite3.h>
 
 #include "DBConnection.h"
+#include "ProjectFileIO.h"
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
 
@@ -454,8 +455,7 @@ MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS() const
 
 size_t SqliteSampleBlock::GetSpaceUsage() const
 {
-   // Not an exact number, but close enough
-   return mSummary256Bytes + mSummary64kBytes + mSampleBytes;
+   return ProjectFileIO::GetDiskUsage(Conn(), mBlockID);
 }
 
 size_t SqliteSampleBlock::GetBlob(void *dest,
@@ -868,10 +868,16 @@ void SqliteSampleBlock::CalcSummary()
 }
 
 // Inject our database implementation at startup
-static struct Injector { Injector() {
-   // Do this some time before the first project is created
-   (void) SampleBlockFactory::RegisterFactoryFactory(
-      []( AudacityProject &project ){
-         return std::make_shared<SqliteSampleBlockFactory>( project ); }
-   );
-} } injector;
+static struct Injector
+{
+   Injector()
+   {
+      // Do this some time before the first project is created
+      (void) SampleBlockFactory::RegisterFactoryFactory(
+         []( AudacityProject &project )
+         {
+            return std::make_shared<SqliteSampleBlockFactory>( project );
+         }
+      );
+   }
+} injector;

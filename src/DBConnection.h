@@ -53,7 +53,9 @@ public:
       GetSummary64k,
       LoadSampleBlock,
       InsertSampleBlock,
-      DeleteSampleBlock
+      DeleteSampleBlock,
+      GetRootPage,
+      GetDBPage
    };
    sqlite3_stmt *GetStatement(enum StatementID id);
    sqlite3_stmt *Prepare(enum StatementID id, const char *sql);

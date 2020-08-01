@@ -147,18 +147,35 @@ void OnCompact(const CommandContext &context)
 {
    auto &project = context.project;
    auto &undoManager = UndoManager::Get(project);
+   auto &clipboard = Clipboard::Get();
    auto &projectFileIO = ProjectFileIO::Get(project);
+
+   projectFileIO.ReopenProject();
+
+   auto currentTracks = TrackList::Create( nullptr );
+   auto &tracks = TrackList::Get( project );
+   for (auto t : tracks.Any())
+   {
+      currentTracks->Add(t->Duplicate());
+   }
+
+   int64_t total = projectFileIO.GetTotalUsage();
+   int64_t used = projectFileIO.GetCurrentUsage(currentTracks);
 
    auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
                  wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
 
    int id = AudacityMessageBox(
       XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
-         "There is %s of free disk space and this project is currently using %s.\n\n"
-         "NOTE: If you proceed, the current Undo History and clipboard contents will be discarded.\n\n"
+         "There is %s of free disk space and this project is currently using %s.\n"
+         "\n"
+         "If you proceed, the current Undo History and clipboard contents will be discarded "
+         "and you will recover approximately %s of disk space.\n"
+         "\n"
          "Do you want to continue?")
       .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
-              Internat::FormatSize(before.GetValue())),
+              Internat::FormatSize(before.GetValue()),
+              Internat::FormatSize(total - used)),
       XO("Compact Project"),
       wxYES_NO);
 
@@ -173,15 +190,7 @@ void OnCompact(const CommandContext &context)
    auto numStates = undoManager.GetNumStates();
    undoManager.RemoveStates(numStates - 1);
 
-   auto &clipboard = Clipboard::Get();
    clipboard.Clear();
-
-   auto currentTracks = TrackList::Create( nullptr );
-   auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Any())
-   {
-      currentTracks->Add(t->Duplicate());
-   }
 
    projectFileIO.Compact(currentTracks, true);
 
@@ -189,7 +198,7 @@ void OnCompact(const CommandContext &context)
                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
 
    AudacityMessageBox(
-      XO("Compacting freed %s of disk space.")
+      XO("Compacting actually freed %s of disk space.")
       .Format(Internat::FormatSize((before - after).GetValue())),
       XO("Compact Project"));
 }
