@@ -49,6 +49,7 @@ private:
    void OnDiscardSelected(wxCommandEvent &evt);
    void OnRecoverSelected(wxCommandEvent &evt);
    void OnSkip(wxCommandEvent &evt);
+   void OnColumnClicked(wxListEvent &evt);
    void OnItemActivated(wxListEvent &evt);
 
    FilePaths mFiles;
@@ -64,6 +65,7 @@ BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialogWrapper)
    EVT_BUTTON(ID_DISCARD_SELECTED, AutoRecoveryDialog::OnDiscardSelected)
    EVT_BUTTON(ID_RECOVER_SELECTED, AutoRecoveryDialog::OnRecoverSelected)
    EVT_BUTTON(ID_SKIP, AutoRecoveryDialog::OnSkip)
+   EVT_LIST_COL_CLICK(ID_FILE_LIST, AutoRecoveryDialog::OnColumnClicked)
    EVT_LIST_ITEM_ACTIVATED(ID_FILE_LIST, AutoRecoveryDialog::OnItemActivated)
 END_EVENT_TABLE()
 
@@ -325,6 +327,25 @@ void AutoRecoveryDialog::OnRecoverSelected(wxCommandEvent &WXUNUSED(evt))
 void AutoRecoveryDialog::OnSkip(wxCommandEvent &WXUNUSED(evt))
 {
    EndModal(ID_SKIP);
+}
+
+void AutoRecoveryDialog::OnColumnClicked(wxListEvent &evt)
+{
+   if (evt.GetColumn() != 0)
+   {
+      return;
+   }
+
+   long item = -1;
+   while (true)
+   {
+      item = mFileList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_DONTCARE);
+      if (item == wxNOT_FOUND)
+      {
+         break;
+      }
+      mFileList->CheckItem(item, !mFileList->IsItemChecked(item));
+   }
 }
 
 void AutoRecoveryDialog::OnItemActivated(wxListEvent &evt)
