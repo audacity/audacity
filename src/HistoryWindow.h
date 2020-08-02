@@ -42,6 +42,8 @@ class HistoryDialog final : public wxDialogWrapper {
    void OnItemSelected(wxListEvent & event);
    void OnDiscard(wxCommandEvent & event);
    void OnDiscardClipboard(wxCommandEvent & event);
+   void OnCompact(wxCommandEvent & event);
+   void OnGetURL(wxCommandEvent & event);
 
    AudacityProject   *mProject;
    UndoManager       *mManager;
@@ -51,6 +53,7 @@ class HistoryDialog final : public wxDialogWrapper {
    wxTextCtrl        *mAvail;
    wxSpinCtrl        *mLevels;
    wxButton          *mDiscard;
+   wxButton          *mCompact;
 
    int               mSelected;
    bool              mAudioIOBusy;

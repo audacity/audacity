@@ -1022,8 +1022,9 @@ void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force
    wxString backName = origName + "_compact_back";
    wxString tempName = origName + "_compact_temp";
 
-   // Copy the original database to a new database while pruning unused sample blocks
-   if (CopyTo(tempName, XO("Compacting project"), mTemporary, true, tracks))
+   // Copy the original database to a new database. Only prune sample blocks if
+   // we have a tracklist.
+   if (CopyTo(tempName, XO("Compacting project"), mTemporary, tracks != nullptr, tracks))
    {
       // Must close the database to rename it
       if (CloseConnection())
