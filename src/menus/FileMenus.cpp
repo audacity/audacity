@@ -150,6 +150,7 @@ void OnCompact(const CommandContext &context)
    auto &clipboard = Clipboard::Get();
    auto &projectFileIO = ProjectFileIO::Get(project);
 
+   // Purpose of this is to remove the -wal file.
    projectFileIO.ReopenProject();
 
    auto currentTracks = TrackList::Create( nullptr );
@@ -162,9 +163,7 @@ void OnCompact(const CommandContext &context)
    int64_t total = projectFileIO.GetTotalUsage();
    int64_t used = projectFileIO.GetCurrentUsage(currentTracks);
 
-   auto baseFile = projectFileIO.GetFileName();
-   auto walFile = baseFile + wxT("-wal");
-   auto before = wxFileName::GetSize(baseFile) + wxFileName::GetSize(walFile);
+   auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
    int id = AudacityMessageBox(
       XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
@@ -182,17 +181,25 @@ void OnCompact(const CommandContext &context)
 
    if (id == wxYES)
    {
+      // Want to do this before removing the states so that it becomes the
+      // current state.
       ProjectHistory::Get(project)
          .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
 
+      // Now we can remove all previous states.
       auto numStates = undoManager.GetNumStates();
       undoManager.RemoveStates(numStates - 1);
 
+      // And clear the clipboard
       clipboard.Clear();
+
+      // Refresh the before space usage since it may have changed due to the
+      // above actions.
+      auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
       projectFileIO.Compact(currentTracks, true);
 
-      auto after = wxFileName::GetSize(baseFile) + wxFileName::GetSize(walFile);
+      auto after = wxFileName::GetSize(projectFileIO.GetFileName());
 
       AudacityMessageBox(
          XO("Compacting actually freed %s of disk space.")
