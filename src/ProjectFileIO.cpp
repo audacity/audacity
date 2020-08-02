@@ -1024,7 +1024,7 @@ void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force
 
    // Copy the original database to a new database. Only prune sample blocks if
    // we have a tracklist.
-   if (CopyTo(tempName, XO("Compacting project"), mTemporary, tracks != nullptr, tracks))
+   if (CopyTo(tempName, XO("Compacting project"), IsTemporary(), tracks != nullptr, tracks))
    {
       // Must close the database to rename it
       if (CloseConnection())
@@ -1141,7 +1141,7 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
       ActiveProjects::Add(mFileName);
    }
 
-   if (mTemporary)
+   if (IsTemporary())
    {
       project.SetProjectName({});
    }
@@ -1874,6 +1874,25 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
 
 bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved)
 {
+   // In the case where we're saving a temporary project to a permanent project,
+   // we'll try to simply rename the project to save a bit of time. We then fall
+   // through to the normal Save (not SaveAs) processing.
+   if (IsTemporary() && mFileName != fileName)
+   {
+      FilePath savedName = mFileName;
+      if (CloseConnection())
+      {
+         if (wxRenameFile(savedName, fileName))
+         {
+            if (!OpenConnection(fileName))
+            {
+               wxRenameFile(fileName, savedName);
+               OpenConnection(savedName);
+            }
+         }
+      }
+   }
+
    // If we're saving to a different file than the current one, then copy the
    // current to the new file and make it the active file.
    if (mFileName != fileName)
@@ -2009,7 +2028,7 @@ bool ProjectFileIO::CloseProject()
    {
       // If this is a temporary project, we no longer want to keep the
       // project file.
-      if (mTemporary)
+      if (IsTemporary())
       {
          // This is just a safety check.
          wxFileName temp(FileNames::TempDir(), wxT(""));
