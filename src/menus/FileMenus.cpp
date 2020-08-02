@@ -162,9 +162,9 @@ void OnCompact(const CommandContext &context)
    int64_t total = projectFileIO.GetTotalUsage();
    int64_t used = projectFileIO.GetCurrentUsage(currentTracks);
 
-   auto baseFile = wxFileName(projectFileIO.GetFileName());
-   auto walFile = wxFileName(projectFileIO.GetFileName() + wxT("-wal"));
-   auto before = baseFile.GetSize() + walFile.GetSize();
+   auto baseFile = projectFileIO.GetFileName();
+   auto walFile = baseFile + wxT("-wal");
+   auto before = wxFileName::GetSize(baseFile) + wxFileName::GetSize(walFile);
 
    int id = AudacityMessageBox(
       XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
@@ -192,7 +192,7 @@ void OnCompact(const CommandContext &context)
 
       projectFileIO.Compact(currentTracks, true);
 
-      auto after = baseFile.GetSize() + walFile.GetSize();
+      auto after = wxFileName::GetSize(baseFile) + wxFileName::GetSize(walFile);
 
       AudacityMessageBox(
          XO("Compacting actually freed %s of disk space.")

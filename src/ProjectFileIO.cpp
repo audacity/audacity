@@ -1029,25 +1029,38 @@ void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force
       // Must close the database to rename it
       if (CloseConnection())
       {
-         // Rename the original to backup
-         if (wxRenameFile(origName, backName))
+         // Only use the new file if it is actually smaller than the original.
+         //
+         // If the original file doesn't have anything to compact (original and new
+         // are basically identical), the file could grow by a few pages because of
+         // differences in how SQLite constructs the b-tree.
+         //
+         // In this case, just toss the new file and continue to use the original.
+         //
+         // Also, do this after closing the connection so that the -wal file
+         // gets cleaned up.
+         if (wxFileName::GetSize(tempName) < wxFileName::GetSize(origName))
          {
-            // Rename the temporary to original
-            if (wxRenameFile(tempName, origName))
+            // Rename the original to backup
+            if (wxRenameFile(origName, backName))
             {
-               // Open the newly compacted original file
-               OpenConnection(origName);
+               // Rename the temporary to original
+               if (wxRenameFile(tempName, origName))
+               {
+                  // Open the newly compacted original file
+                  OpenConnection(origName);
 
-               // Remove the old original file
-               wxRemoveFile(backName);
+                  // Remove the old original file
+                  wxRemoveFile(backName);
 
-               // Remember that we compacted
-               mWasCompacted = true;
+                  // Remember that we compacted
+                  mWasCompacted = true;
 
-               return;
+                  return;
+               }
+
+               wxRenameFile(backName, origName);
             }
-
-            wxRenameFile(backName, origName);
          }
 
          OpenConnection(origName);
