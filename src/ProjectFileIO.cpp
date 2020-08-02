@@ -1797,51 +1797,53 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
          // Error already set
          return false;
       }
-
-      // Missing both the autosave and project docs. This can happen if the
-      // system were to crash before the first autosave into a temporary file.
-      if (buffer.GetDataLen() == 0)
-      {
-         SetError(XO("Unable to load project or autosave documents"));
-         return false;
-      }
    }
 
-   // Decode it while capturing the associated sample blockids
-   project = ProjectSerializer::Decode(buffer, blockids);
-   if (project.empty())
-   {
-      SetError(XO("Unable to decode project document"));
-
-      return false;
-   }
-
-   // Check for orphans blocks...sets mRecovered if any were deleted
-   if (blockids.size() > 0)
-   {
-      if (!DeleteBlocks(blockids, true))
-      {
-         return false;
-      }
-   }
-
-   XMLFileReader xmlFile;
-
-   // Load 'er up
-   success = xmlFile.ParseString(this, project);
-   if (!success)
-   {
-      SetError(
-         XO("Unable to parse project information.")
-      );
-      mLibraryError = xmlFile.GetErrorStr();
-      return false;
-   }
-
-   // Remember if we used autosave or not
-   if (usedAutosave)
+   // Missing both the autosave and project docs. This can happen if the
+   // system were to crash before the first autosave into a temporary file.
+   // This should be a recoverable scenario.
+   if (buffer.GetDataLen() == 0)
    {
       mRecovered = true;
+   }
+   else
+   {
+      // Decode it while capturing the associated sample blockids
+      project = ProjectSerializer::Decode(buffer, blockids);
+      if (project.empty())
+      {
+         SetError(XO("Unable to decode project document"));
+
+         return false;
+      }
+
+      // Check for orphans blocks...sets mRecovered if any were deleted
+      if (blockids.size() > 0)
+      {
+         if (!DeleteBlocks(blockids, true))
+         {
+            return false;
+         }
+      }
+
+      XMLFileReader xmlFile;
+
+      // Load 'er up
+      success = xmlFile.ParseString(this, project);
+      if (!success)
+      {
+         SetError(
+            XO("Unable to parse project information.")
+         );
+         mLibraryError = xmlFile.GetErrorStr();
+         return false;
+      }
+
+      // Remember if we used autosave or not
+      if (usedAutosave)
+      {
+         mRecovered = true;
+      }
    }
 
    // Mark the project modified if we recovered it
@@ -1864,6 +1866,8 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    SetFileName(fileName);
 
    DiscardConnection();
+
+   success = true;
 
    return true;
 }
