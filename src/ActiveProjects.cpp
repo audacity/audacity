@@ -13,7 +13,7 @@
 
 #include "Audacity.h"
 #include "ActiveProjects.h"
-#inlcude "FileNames.h"
+#include "FileNames.h"
 #include "Prefs.h"
 
 #include <wx/arrstr.h>
