@@ -162,8 +162,9 @@ void OnCompact(const CommandContext &context)
    int64_t total = projectFileIO.GetTotalUsage();
    int64_t used = projectFileIO.GetCurrentUsage(currentTracks);
 
-   auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
-                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
+   auto baseFile = wxFileName(projectFileIO.GetFileName());
+   auto walFile = wxFileName(projectFileIO.GetFileName() + wxT("-wal"));
+   auto before = baseFile.GetSize() + walFile.GetSize();
 
    int id = AudacityMessageBox(
       XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
@@ -179,28 +180,27 @@ void OnCompact(const CommandContext &context)
       XO("Compact Project"),
       wxYES_NO);
 
-   if (id == wxNO)
+   if (id == wxYES)
    {
-      return;
+      ProjectHistory::Get(project)
+         .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
+
+      auto numStates = undoManager.GetNumStates();
+      undoManager.RemoveStates(numStates - 1);
+
+      clipboard.Clear();
+
+      projectFileIO.Compact(currentTracks, true);
+
+      auto after = baseFile.GetSize() + walFile.GetSize();
+
+      AudacityMessageBox(
+         XO("Compacting actually freed %s of disk space.")
+         .Format(Internat::FormatSize((before - after).GetValue())),
+         XO("Compact Project"));
    }
 
-   ProjectHistory::Get(project)
-      .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
-
-   auto numStates = undoManager.GetNumStates();
-   undoManager.RemoveStates(numStates - 1);
-
-   clipboard.Clear();
-
-   projectFileIO.Compact(currentTracks, true);
-
-   auto after = wxFileName(projectFileIO.GetFileName()).GetSize() +
-                wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
-
-   AudacityMessageBox(
-      XO("Compacting actually freed %s of disk space.")
-      .Format(Internat::FormatSize((before - after).GetValue())),
-      XO("Compact Project"));
+   currentTracks.reset();
 }
 
 void OnSave(const CommandContext &context )
