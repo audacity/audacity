@@ -298,7 +298,7 @@ void HistoryDialog::OnCompact(wxCommandEvent & WXUNUSED(event))
 
 void HistoryDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("View_Menu"));
+   HelpSystem::ShowHelp(this, wxT("Undo,_Redo_and_History"));
 }
 
 void HistoryDialog::OnItemSelected(wxListEvent &event)
