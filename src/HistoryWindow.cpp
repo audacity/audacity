@@ -110,6 +110,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
                .AddTextBox(XXO("&Total space used"), wxT("0"), 10);
             S.AddVariableText( {} )->Hide();
 
+#if defined(ALLOW_DISCARD)
             mAvail = S.Id(ID_AVAIL)
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(XXO("&Undo levels available"), wxT("0"), 10);
@@ -128,18 +129,24 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
             S.AddWindow(mLevels);
             /* i18n-hint: (verb)*/
             mDiscard = S.Id(ID_DISCARD).AddButton(XXO("&Discard"));
-
+#endif
             mClipboard = S
                .ConnectRoot(wxEVT_KEY_DOWN, &HistoryDialog::OnChar)
                .AddTextBox(XXO("Clip&board space used"), wxT("0"), 10);
+
+#if defined(ALLOW_DISCARD)
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(XXO("D&iscard"));
+#endif
          }
          S.EndMultiColumn();
       }
       S.EndStatic();
-
+#if defined(ALLOW_DISCARD)
       mCompact = safenew wxButton(this, ID_COMPACT, _("&Compact"));
       S.AddStandardButtons(eOkButton | eHelpButton, mCompact);
+#else
+      S.AddStandardButtons(eOkButton | eHelpButton);
+#endif
    }
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
@@ -179,8 +186,10 @@ void HistoryDialog::OnAudioIO(wxCommandEvent& evt)
    else
       mAudioIOBusy = false;
 
+#if defined(ALLOW_DISCARD)
    mDiscard->Enable(!mAudioIOBusy);
    mCompact->Enable(!mAudioIOBusy);
+#endif
 }
 
 void HistoryDialog::UpdateDisplay(wxEvent& e)
@@ -219,7 +228,9 @@ void HistoryDialog::DoUpdate()
 
    auto clipboardUsage = mManager->GetClipboardSpaceUsage();
    mClipboard->SetValue(Internat::FormatSize(clipboardUsage).Translation());
+#if defined(ALLOW_DISCARD)
    FindWindowById(ID_DISCARD_CLIPBOARD)->Enable(clipboardUsage > 0);
+#endif
 
    mList->EnsureVisible(mSelected);
 
@@ -232,6 +243,7 @@ void HistoryDialog::DoUpdate()
 
 void HistoryDialog::UpdateLevels()
 {
+#if defined(ALLOW_DISCARD)
    wxWindow *focus;
    int value = mLevels->GetValue();
 
@@ -255,6 +267,7 @@ void HistoryDialog::UpdateLevels()
 
    mLevels->Enable(mSelected > 0);
    mDiscard->Enable(!mAudioIOBusy && mSelected > 0);
+#endif
 }
 
 void HistoryDialog::OnDiscard(wxCommandEvent & WXUNUSED(event))
