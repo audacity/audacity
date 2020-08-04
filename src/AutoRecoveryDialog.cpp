@@ -51,6 +51,8 @@ private:
    void OnSkip(wxCommandEvent &evt);
    void OnColumnClicked(wxListEvent &evt);
    void OnItemActivated(wxListEvent &evt);
+   void OnListKeyDown(wxKeyEvent &evt);
+   void OnKeyDown(wxKeyEvent &evt);
 
    FilePaths mFiles;
    wxListCtrl *mFileList;
@@ -95,13 +97,18 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
    S.SetBorder(5);
    S.StartVerticalLay(wxEXPAND, 1);
    {
-      S.AddVariableText(
-         XO("Some projects were not saved properly the last time Audacity was run.\nFortunately, the following projects can be automatically recovered:"),
-         false);
+      S.AddFixedText(
+         XO("The following projects were not saved properly the last time Audacity was run and "
+            "can be automatically recovered.\n\n"
+            "After recovery, save the projects to ensure changes are written to disk."),
+         false,
+         500);
 
-      S.StartStatic(XO("Recoverable projects"), 1);
+      S.StartStatic(XO("Recoverable &projects"), 1);
       {
-         mFileList = S.Id(ID_FILE_LIST).AddListControlReportMode(
+         mFileList = S.Id(ID_FILE_LIST)
+            .ConnectRoot(wxEVT_KEY_DOWN, &AutoRecoveryDialog::OnListKeyDown)
+            .AddListControlReportMode(
             {
                /*i18n-hint: (verb).  It instruct the user to select items.*/
                XO("Select"),
@@ -113,16 +120,12 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
       }
       S.EndStatic();
 
-      S.AddVariableText(
-         XO("After recovery, save the project to save the changes to disk."),
-         false);
-
       S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
-         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("Quit Audacity"));
-         S.Id(ID_DISCARD_SELECTED).AddButton(XXO("Discard Selected"));
-         S.Id(ID_RECOVER_SELECTED).AddButton(XXO("Recover Selected"));
-         S.Id(ID_SKIP).AddButton(XXO("Skip"));
+         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("&Quit Audacity"));
+         S.Id(ID_DISCARD_SELECTED).AddButton(XXO("&Discard Selected"));
+         S.Id(ID_RECOVER_SELECTED).AddButton(XXO("&Recover Selected"));
+         S.Id(ID_SKIP).AddButton(XXO("&Skip"));
       }
       S.EndHorizontalLay();
    }
@@ -186,6 +189,14 @@ void AutoRecoveryDialog::PopulateList()
    mFileList->SetMinSize(mFileList->GetBestSize());
    mFileList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
    mFileList->SetColumnWidth(1, 500);
+
+   if (item)
+   {
+      mFileList->SetItemState(0,
+                              wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED,
+                              wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+   }
+
 }
 
 bool AutoRecoveryDialog::HaveChecked()
@@ -352,6 +363,43 @@ void AutoRecoveryDialog::OnItemActivated(wxListEvent &evt)
 {
    long item = evt.GetIndex();
    mFileList->CheckItem(item, !mFileList->IsItemChecked(item));
+}
+
+void AutoRecoveryDialog::OnListKeyDown(wxKeyEvent &evt)
+{
+   switch (evt.GetKeyCode())
+   {
+      case WXK_SPACE:
+      {
+         bool selected = false;
+         long item = -1;
+         while (true)
+         {
+            item = mFileList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+            if (item == wxNOT_FOUND)
+            {
+               break;
+            }
+
+            mFileList->CheckItem(item, !mFileList->IsItemChecked(item));
+         }
+      }
+      break;
+
+      case WXK_ESCAPE:
+         EndModal(ID_SKIP);
+      break;
+
+      case WXK_RETURN:
+         // Don't know why wxListCtrls prevent default dialog action,
+         // but they do, so handle it.
+         EmulateButtonClickIfPresent(GetAffirmativeId());
+      break;
+
+      default:
+         evt.Skip();
+      break;
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
