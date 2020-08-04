@@ -195,8 +195,8 @@ void AutoRecoveryDialog::PopulateList()
       mFileList->SetItemState(0,
                               wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED,
                               wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+      mFileList->SetFocus();
    }
-
 }
 
 bool AutoRecoveryDialog::HaveChecked()
