@@ -16,7 +16,7 @@
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../ShuttleGUI.h"
+#include "../ShuttleGui.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../ViewInfo.h"
@@ -118,7 +118,7 @@ public:
    :  wxDialogWrapper(nullptr, wxID_ANY, XO("Compact Project"))
    {
       ShuttleGui S(this, eIsCreating);
-   
+
       S.StartVerticalLay(true);
       {
          S.AddFixedText(text, false, 500);
