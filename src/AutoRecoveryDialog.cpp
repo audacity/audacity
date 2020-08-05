@@ -52,7 +52,6 @@ private:
    void OnColumnClicked(wxListEvent &evt);
    void OnItemActivated(wxListEvent &evt);
    void OnListKeyDown(wxKeyEvent &evt);
-   void OnKeyDown(wxKeyEvent &evt);
 
    FilePaths mFiles;
    wxListCtrl *mFileList;
