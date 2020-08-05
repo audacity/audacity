@@ -388,10 +388,6 @@ void AutoRecoveryDialog::OnListKeyDown(wxKeyEvent &evt)
       }
       break;
 
-      case WXK_ESCAPE:
-         EndModal(ID_SKIP);
-      break;
-
       case WXK_RETURN:
          // Don't know why wxListCtrls prevent default dialog action,
          // but they do, so handle it.
