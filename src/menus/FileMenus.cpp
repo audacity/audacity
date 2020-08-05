@@ -16,6 +16,7 @@
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
+#include "../ShuttleGUI.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
 #include "../ViewInfo.h"
@@ -28,6 +29,8 @@
 #include "../import/ImportRaw.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
+#include "../widgets/HelpSystem.h"
+#include "../widgets/wxPanelWrapper.h"
 
 #ifdef USE_MIDI
 #include "../import/ImportMIDI.h"
@@ -107,6 +110,48 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
 }
 }
 
+// Compact dialog
+class CompactDialog : public wxDialogWrapper
+{
+public:
+   CompactDialog(TranslatableString text)
+   :  wxDialogWrapper(nullptr, wxID_ANY, XO("Compact Project"))
+   {
+      ShuttleGui S(this, eIsCreating);
+   
+      S.StartVerticalLay(true);
+      {
+         S.AddFixedText(text, false, 500);
+
+         S.AddStandardButtons(eYesButton | eNoButton | eHelpButton);
+      }
+      S.EndVerticalLay();
+
+      FindWindowById(wxID_YES, this)->Bind(wxEVT_BUTTON, &CompactDialog::OnYes, this);
+      FindWindowById(wxID_NO, this)->Bind(wxEVT_BUTTON, &CompactDialog::OnNo, this);
+      FindWindowById(wxID_HELP, this)->Bind(wxEVT_BUTTON, &CompactDialog::OnGetURL, this);
+
+      Layout();
+      Fit();
+      Center();
+   }
+
+   void OnYes(wxCommandEvent &WXUNUSED(evt))
+   {
+      EndModal(wxYES);
+   }
+
+   void OnNo(wxCommandEvent &WXUNUSED(evt))
+   {
+      EndModal(wxNO);
+   }
+
+   void OnGetURL(wxCommandEvent &WXUNUSED(evt))
+   {
+      HelpSystem::ShowHelp(this, wxT("File_Menu:_Compact_Project"), true);
+   }
+};
+
 // Menu handler functions
 
 namespace FileActions {
@@ -165,21 +210,19 @@ void OnCompact(const CommandContext &context)
 
    auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
-   int id = AudacityMessageBox(
-      XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
-         "There is %s of free disk space and this project is currently using %s.\n"
-         "\n"
-         "If you proceed, the current Undo History and clipboard contents will be discarded "
-         "and you will recover approximately %s of disk space.\n"
-         "\n"
-         "Do you want to continue?")
-      .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
-              Internat::FormatSize(before.GetValue()),
-              Internat::FormatSize(total - used)),
-      XO("Compact Project"),
-      wxYES_NO);
+   CompactDialog dlg(
+         XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
+            "There is %s of free disk space and this project is currently using %s.\n"
+            "\n"
+            "If you proceed, the current Undo/Redo History and clipboard contents will be discarded "
+            "and you will recover approximately %s of disk space.\n"
+            "\n"
+            "Do you want to continue?")
+         .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
+                  Internat::FormatSize(before.GetValue()),
+                  Internat::FormatSize(total - used)));
 
-   if (id == wxYES)
+   if (dlg.ShowModal() == wxYES)
    {
       // Want to do this before removing the states so that it becomes the
       // current state.
