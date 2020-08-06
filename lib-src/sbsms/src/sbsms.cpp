@@ -390,18 +390,10 @@ ThreadInterface :: ~ThreadInterface()
     pthread_cond_broadcast(&trial2Cond[c]);
     pthread_mutex_unlock(&trial2Mutex[c]);
     pthread_join(trial2Thread[c],NULL);
-    pthread_mutex_lock(&adjust2Mutex);
-    pthread_cond_broadcast(&adjust2Cond);
-    pthread_mutex_unlock(&adjust2Mutex);
-    pthread_join(adjust2Thread,NULL);
     pthread_mutex_lock(&trial1Mutex[c]);
     pthread_cond_broadcast(&trial1Cond[c]);
     pthread_mutex_unlock(&trial1Mutex[c]);
     pthread_join(trial1Thread[c],NULL);
-    pthread_mutex_lock(&adjust1Mutex);
-    pthread_cond_broadcast(&adjust1Cond);
-    pthread_mutex_unlock(&adjust1Mutex);
-    pthread_join(adjust1Thread,NULL);
     if(bRenderThread) {
       pthread_mutex_lock(&renderMutex[c]);
       pthread_cond_broadcast(&renderCond[c]);
@@ -409,6 +401,14 @@ ThreadInterface :: ~ThreadInterface()
       pthread_join(renderThread[c],NULL);
     }
   }
+  pthread_mutex_lock(&adjust2Mutex);
+  pthread_cond_broadcast(&adjust2Cond);
+  pthread_mutex_unlock(&adjust2Mutex);
+  pthread_join(adjust2Thread,NULL);
+  pthread_mutex_lock(&adjust1Mutex);
+  pthread_cond_broadcast(&adjust1Cond);
+  pthread_mutex_unlock(&adjust1Mutex);
+  pthread_join(adjust1Thread,NULL);
 }
 
 void ThreadInterface :: signalReadWrite() 

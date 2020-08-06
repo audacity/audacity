@@ -377,8 +377,8 @@ public:
          ir1 = (dir==1?_ir3:_ir1),
          ir3 = (dir==1?_ir1:_ir3) };
   static inline void execute(t_fft *x, t_fft *y, int step) {
-    simd_vector v1;
-    simd_vector v2;
+    simd_vector v1 = {};
+    simd_vector v2 = {};
     simd_vector v3;
     simd_vector v4;
     simd_vector v5;
@@ -427,9 +427,11 @@ public:
          i6 = i5 + istride, o6 = o5 + ostride,
          i7 = i6 + istride, o7 = o6 + ostride };
   static inline void execute(t_fft *x, t_fft *y, int step) {
-    simd_vector v1,v2,v3,v4,v5,v6,v7,v8;
+    simd_vector v1 = {}, v2 = {};
+    simd_vector v3,v4,v5,v6,v7,v8;
     simd_vector x02,x37,x15,x17,x53,x46;
-    simd_vector w1, w2, w3, w4;
+    simd_vector w1 = {}, w2 = {};
+    simd_vector w3, w4;
     w1 = LOADH(LOADL(w1,x+i0),x+i6);
     w2 = LOADH(LOADL(w2,x+i4),x+i2);	
     w3 = VADD(w1,w2);
@@ -505,9 +507,11 @@ public:
          i6 = i5 + istride, o6 = o5 + ostride,
          i7 = i6 + istride, o7 = o6 + ostride };
   static inline void execute(t_fft *x, t_fft *y, int step) {
-    simd_vector v1,v2,v3,v4,v5,v6,v7,v8;
+    simd_vector v1 = {}, v2 = {};
+    simd_vector v3,v4,v5,v6,v7,v8;
     simd_vector x02,x37,x15,x17,x53,x46;    
-    simd_vector w1, w2, w3, w4;
+    simd_vector w1 = {}, w2 = {};
+    simd_vector w3, w4;
     w1 = LOADH(LOADL(w1,x+i0),x+i2);
     w2 = LOADH(LOADL(w2,x+i4),x+i6);	
     w3 = VADD(w1,w2);
