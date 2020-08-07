@@ -172,7 +172,8 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
                1,
                idealBlockLen,
                false,               // Not interleaved
-               mProjectRate,
+               left->GetRate(),     // Process() checks that left and right
+                                    // rates are the same
                floatSample);
 
    auto outTrack = left->EmptyCopy();
