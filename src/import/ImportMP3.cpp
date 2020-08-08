@@ -117,7 +117,11 @@ public:
 
 private:
    bool Open();
-   bool CheckID3();
+   void CheckTags();
+   void CheckAPETags(bool atEnd);
+   void CheckID3V1Tags();
+   void CheckID3V2Tags(bool atEnd);
+   void CheckLyrics();
    bool CheckMP3();
    bool FillBuffer();
    void LoadID3(Tags *tags);
@@ -321,7 +325,6 @@ bool MP3ImportFileHandle::Open()
 {
    mInputBufferLen = 0;
    mFilePos = 0;
-   mFileLen = 0;
    mHaveID3 = false;
 
    // Open the file
@@ -330,222 +333,301 @@ bool MP3ImportFileHandle::Open()
       return false;
    }
 
-   // Check for ID3 tags
-   if (!CheckID3())
+   // Get the legnth of the file
+   mFileLen = mFile.Seek(0, wxFromEnd);
+   if (mFileLen == wxInvalidOffset || mFile.Error())
    {
+      mFile.Close();
       return false;
    }
+
+   if (mFile.Seek(0, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      mFile.Close();
+      return false;
+   }
+
+   // Check for ID3 tags
+   CheckTags();
 
    // Scan for the first MP3 frame
    if (!CheckMP3())
    {
+      mFile.Close();
       return false;
    }
 
    return true;
 }
 
-bool MP3ImportFileHandle::CheckID3()
+void MP3ImportFileHandle::CheckTags()
 {
-   wxFileOffset mp3Start = 0;
+   // We do this twice to allow them to be in any order
+   for (int i = 0; i < 2; ++i)
+   {
+      CheckAPETags(false);
+      CheckID3V2Tags(false);
+   }
+
+   // We do this twice to allow them to be in any order. Even though ID3v1 is
+   // supposed to at the end, some apps put the v2 tags after the v1 tags.
+   for (int i = 0; i < 2; ++i)
+   {
+      CheckAPETags(true);
+      CheckID3V1Tags();
+      CheckLyrics();
+      CheckID3V2Tags(true);
+   }
+
+   return;
+}
+
+void MP3ImportFileHandle::CheckAPETags(bool atEnd)
+{
+   int offset = atEnd ? mFileLen - 32 : mFilePos;
+
+   // Ensure file is positioned to start of (possible) tags
+   if (mFile.Seek(offset, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      return;
+   }
+
+   // An APE tag header is 32 bytes
+   if (mFile.Read(mInputBuffer, 32) != 32 || mFile.Error())
+   {
+      return;
+   }
+
+   // Do we have an APE preamble?
+   if (memcmp(mInputBuffer, "APETAGEX", 8) != 0)
+   {
+      return;
+   }
+
+   // Get the (little endian) length
+   wxFileOffset len = (mInputBuffer[12] & 0xff) |
+                      ((mInputBuffer[13] & 0xff) << 8) |
+                      ((mInputBuffer[14] & 0xff) << 16) |
+                      ((mInputBuffer[15] & 0xff) << 24);
+
+   // Get needed flags
+   bool hasHeader = mInputBuffer[23] & 0x80;
+
+   // Skip the tags
+   if (!atEnd)
+   {
+      mFilePos += (32 + len);
+   }
+   else
+   {
+      mFileLen -= ((hasHeader ? 32 : 0) + len);
+   }
+}
+
+void MP3ImportFileHandle::CheckID3V1Tags()
+{
+   // Ensure file is positioned to start of (possible) tags
+   if (mFile.Seek(mFileLen - 128, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      return;
+   }
+
+   // An ID3v1 tag header is 3 bytes
+   if (mFile.Read(mInputBuffer, 3) != 3 || mFile.Error())
+   {
+      return;
+   }
+
+   // Do we have ID3v1 tags?
+   if (memcmp(mInputBuffer, "TAG", 3) != 0)
+   {
+      return;
+   }
+
+   // Adjust file length
+   mFileLen -= 128;
+
+   // Remember that we have tags
+   mHaveID3 = true;
+}
+
+void MP3ImportFileHandle::CheckLyrics()
+{
+   int offset = mFileLen - 9;
+
+   // Ensure file is positioned to start of (possible) lyrics
+   if (mFile.Seek(offset, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      return;
+   }
+
+   // An Lyrics3 footeris 9 bytes
+   if (mFile.Read(mInputBuffer, 9) != 9 || mFile.Error())
+   {
+      return;
+   }
+
+   // Found a v1 Lyrics footer?
+   if (memcmp(mInputBuffer, "LYRICSEND", 9) == 0)
+   {
+      wxFileOffset pos = wxMax(offset - 5100, 0);
+      size_t len = offset - pos;
+
+      // Ensure file is positioned to start of (possible) lyrics
+      if (mFile.Seek(pos, wxFromStart) == wxInvalidOffset || mFile.Error())  
+      {
+         return;
+      }
+
+      // Read the lyrics
+      if (mFile.Read(mInputBuffer, len) != len || mFile.Error())
+      {
+         return;
+      }
+
+      // Search forward to find the beginning of the lyrics
+      for (size_t i = 0; i < len; ++i)
+      {
+         if (memcmp(&mInputBuffer[i], "LYRICSBEGIN", 11) == 0)
+         {
+            // Adjust the file length to exclude the lyrics
+            mFileLen = pos + i;
+            break;
+         }
+      }
+   }
+   // Found a v2 Lyrics footer?
+   else if (memcmp(mInputBuffer, "LYRICS200", 9) == 0)
+   {
+      // Ensure file is positioned to start of (possible) lyrics
+      if (mFile.Seek(-15, wxFromCurrent) == wxInvalidOffset || mFile.Error())  
+      {
+         return;
+      }
+
+      // An Lyrics3v2 length is 6 bytes
+      if (mFile.Read(mInputBuffer, 6) != 6 || mFile.Error())
+      {
+         return;
+      }
+
+      // Adjust the file length to exclude the lyrics
+      mInputBuffer[6] = 0;
+      mFileLen -= (wxAtoi((char *) mInputBuffer) + 15);
+   }
+}
+
+void MP3ImportFileHandle::CheckID3V2Tags(bool atEnd)
+{
+   int offset = atEnd ? mFileLen - 10 : mFilePos;
+
+   // Ensure file is positioned to start of (possible) tags
+   if (mFile.Seek(offset, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      return;
+   }
 
    // An ID3v2 tag header is 10 bytes
    if (mFile.Read(mInputBuffer, 10) != 10 || mFile.Error())
    {
-      // An error if we can't read 10 bytes or a true error occurred
-      wxLogMessage(wxT("Couldn't read 10 bytes while searching for ID3v2 header"));
-      return false;
+      return;
    }
 
-   // Does it look like an ID3v2 tag?
-   if (memcmp(mInputBuffer, "ID3", 3) == 0)
+   // Do we have an ID3v2 header or footer?
+   if (memcmp(mInputBuffer, atEnd ? "3DI" : "ID3", 3) != 0)
    {
-      // Get and decode the length
-      wxFileOffset len = (mInputBuffer[6] & 0x7f);
-      len = (len << 7) | (mInputBuffer[7] & 0x7f);
-      len = (len << 7) | (mInputBuffer[8] & 0x7f);
-      len = (len << 7) | (mInputBuffer[9] & 0x7f);
-
-      // Start of MP3 should 10 for the ID3 header + length of tags
-      mp3Start = 10 + len;
-
-      // Remember that we have tags
-      mHaveID3 = true;
+      return;
    }
 
-   // ID3v1 tags always start 128 bytes from the end of a file
-   mFileLen = mFile.Seek(-128, wxFromEnd);
-   if (mFileLen == wxInvalidOffset || mFile.Error())
-   {
-      // An error if we can't seek to 128 before end (MP3 files will always be
-      // longer than this) or a true error occurred
-      wxLogMessage(wxT("Couldn't seek to ID3v1 header"));
-      return false;
-   }
+   // Get and decode the length
+   wxFileOffset len = (mInputBuffer[6] & 0x7f);
+   len = (len << 7) | (mInputBuffer[7] & 0x7f);
+   len = (len << 7) | (mInputBuffer[8] & 0x7f);
+   len = (len << 7) | (mInputBuffer[9] & 0x7f);
 
-   // Read in possible header
-   if (mFile.Read(mInputBuffer, 3) != 3 || mFile.Error())
+   // Skip the tags
+   if (!atEnd)
    {
-      // An error if we can't read the ID3v1 header
-      wxLogMessage(wxT("Couldn't read 3 bytes while searching for the ID3v1 tag"));
-      return false;
-   }
-
-   // Does it look like an ID3v1 tag?
-   if (memcmp(mInputBuffer, "TAG", 3) == 0)
-   {
-      // Remember that we have tags
-      mHaveID3 = true;
+      mFilePos += (10 + len);
    }
    else
    {
-      // No, so adjust file length
-      mFileLen += 128;
-   }
-
-   // Look for an ID3v2 trailer tag (should probably try to load them but I can't find
-   // any sample files or apps to test with)
-   if (mFile.Seek(mFileLen - 10, wxFromStart) == wxInvalidOffset || mFile.Error())
-   {
-      // An error if we can't seek to 10 before end or before the v1 tag (MP3 files will
-      // always be longer than this) or a true error occurred
-      wxLogMessage(wxT("Couldn't seek while searching for ID3v2 footer"));
-      return false;
-   }
-
-   // An ID3v2 tag footer is 10 bytes
-   if (mFile.Read(mInputBuffer, 10) != 10 || mFile.Error())
-   {
-      // An error if we can't read the footer or a true error occurred
-      wxLogMessage(wxT("Couldn't read 10 bytes while searching for ID3v2 footer"));
-      return false;
-   }
-
-   // Does it look like a footer tag?
-   if (memcmp(mInputBuffer, "3DI", 3) == 0)
-   {
-      // Get and decode the length
-      wxFileOffset len = (mInputBuffer[6] & 0x7f);
-      len = (len << 7) | (mInputBuffer[7] & 0x7f);
-      len = (len << 7) | (mInputBuffer[8] & 0x7f);
-      len = (len << 7) | (mInputBuffer[9] & 0x7f);
-
-      // Yes, so "remove" tags from the file's length
-      // (10 for the 3DI header, len for the tag data, and 10 more for the ID3 header)
       mFileLen -= (10 + len + 10);
-
-      // Remember that we have tags
-      mHaveID3 = true;
    }
 
-   // Return to the end of the ID3v2 tags
-   if (mFile.Seek(mp3Start, wxFromStart) == wxInvalidOffset || mFile.Error())
-   {
-      // An error if we can't seek to the start of the file or a true error occurred
-      wxLogMessage(wxT("Couldn't seek to beginning of the MP3 frames"));
-      return false;
-   }
-
-   // Finally, remove the length of any ID3v2 tags from the file's length
-   mFileLen -= mp3Start;
-
-   // Reset input controls
-   mFilePos = 0;
-   mInputBufferLen = 0;
-
-   return true;
+   // Remember that we have tags
+   mHaveID3 = true;
 }
 
 bool MP3ImportFileHandle::CheckMP3()
 {
+   wxFileOffset savedPos = mFilePos;
+   
+   // Ensure file is positioned to start of 1st mp3 frame
+   if (mFile.Seek(mFilePos, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      return false;
+   }
+
    // Load as much as will fit into the buffer
    if (!FillBuffer())
    {
       return false;
    }
 
-   // Scan the input buffer for an MP3 frame.  We limit it to the input buffer len
-   // minus 4 since we need to examine the full header and a header is 4 bytes.
-   auto header = mInputBuffer;
-   for (int i = 0, limit = mInputBufferLen - 4; i < limit; ++i, ++header)
+   // Initialize mad stream
+   mad_stream stream;
+   mad_stream_init(&stream);
+   mad_stream_buffer(&stream, mInputBuffer, mInputBufferLen);
+
+   // And header
+   mad_header header;
+   mad_header_init(&header);
+
+   // Scan the input buffer for 2 consecutive MP3 frames. When the header
+   // decoder finds a frame, it decodes it and ensures it is followed by
+   // another frame or EOF...thus 2 (or 1) consecutive frame(s) are detected.
+   int consecutive = 1;
+   while (consecutive > 0)
    {
-      if ((header[0] & 0xff) != 0xff)
+      // Decode the header at the current stream position.
+      if (mad_header_decode(&header, &stream))
       {
-         continue;            // first 8 bits must be '1'
+         // End of buffer.
+         if (stream.error == MAD_ERROR_BUFLEN)
+         {
+            break;
+         }
       }
 
-      if ((header[1] & 0xe0) != 0xe0)
-      {
-         continue;            // first 3 bits must be '1'
-      }
-
-      if ((header[1] & 0x18) == 0x08)
-      {
-         continue;            // not MPEG-1, -2 or -2.5
-      }
-
-      switch (header[1] & 0x06)
-      {
-      case 0x02:              // Layer 3
-      case 0x04:              // Layer 2
-      case 0x06:              // Layer 1
-         break;
-
-      default:
-         continue;            // no/invalid Layer I, II and III
-      }
-
-      if ((header[2] & 0xf0) == 0xf0)
-      {
-         continue;            // bad bitrate
-      }
-
-      if ((header[2] & 0x0c) == 0x0c)
-      {
-         continue;            // no sample frequency with (32,44.1,48)/(1,2,4)
-      }
-
-      static const char abl2[16] = { 0, 7, 7, 7, 0, 7, 0, 0, 0, 0, 0, 8, 8, 8, 8, 8 };
-      if ((header[1] & 0x18) == 0x18 && (header[1] & 0x06) == 0x04 && abl2[header[2] >> 4] & (1 << (header[3] >> 6)))
-      {
-         continue;            // bad Layer II sample frequency
-      }
-
-      if ((header[3] & 0xc0) != 0x40 && (header[3] & 0x30) != 0)
-      {
-         continue;            // mode extension when not joint stereo
-      }
-
-      if ((header[3] & 0x03) == 0x02)
-      {
-         continue;            // reserved enphasis mode
-      }
-
-      // Resync the real file position to the located frame
-      if (mFile.Seek(i - mFilePos, wxFromCurrent) == wxInvalidOffset || mFile.Error())
-      {
-         // An error if we can't seek to the start of the file or a true error occurred
-         wxLogMessage(wxT("Couldn't resync to the first MP3 frame"));
-         return false;
-      }
-
-      // Reset file controls
-      mFilePos = 0;
-      mFileLen -= i;
-      mInputBufferLen = 0;
-
-      // Log the number of bytes skipped
-      if (i)
-      {
-         wxLogMessage(wxT("Skipped %d bytes while searching for first MP3 frame."), i);
-         return false;
-      }
-
-      return true;
+      consecutive -= 1;
    }
 
-   // Didn't find the first MP3 frame...give up.
-   return false;
+   // Remember how many bytes were processed
+   int used = stream.this_frame - stream.buffer;
+
+   // Cleanup
+   mad_header_finish(&header);
+   mad_stream_finish(&stream);
+
+   // Did we find all that we wanted?
+   if (consecutive)
+   {
+      return false;
+   }
+
+   // Reset file controls
+   mInputBufferLen = 0;
+
+   // Reposition file to start of mp3 frames to prepare for the Import.
+   mFilePos = savedPos + used;
+   if (mFile.Seek(mFilePos, wxFromStart) == wxInvalidOffset || mFile.Error())
+   {
+      return false;
+   }
+
+   // Looks like an MP3...
+   return true;
 }
 
 bool MP3ImportFileHandle::FillBuffer()
@@ -818,7 +900,7 @@ mad_flow MP3ImportFileHandle::InputCB(struct mad_stream *stream)
    return MAD_FLOW_CONTINUE;
 }
 
-// The filter callback let's us examine each frame and decide if it should be
+// The filter callback lets us examine each frame and decide if it should be
 // kept or tossed.  We use this to detect the Xing or LAME tags.
 mad_flow MP3ImportFileHandle::filter_cb(void *that,
                                         struct mad_stream const *stream,
@@ -832,14 +914,26 @@ mad_flow MP3ImportFileHandle::filter_cb(void *that,
    return GuardedCall<mad_flow>(cb, MakeSimpleGuard(MAD_FLOW_BREAK));
 }
 
-enum mad_flow MP3ImportFileHandle::FilterCB(struct mad_stream const *stream,
-                                            struct mad_frame *frame)
+mad_flow MP3ImportFileHandle::FilterCB(struct mad_stream const *stream,
+                                       struct mad_frame *frame)
 {
-   // We only want to inspect the first frame, so disable future calls
+   // We only want to jinspect the first frame, so disable future calls
    mDecoder.filter_func = nullptr;
 
-   // Get the ancillary data ptr and length
-   auto ptr = stream->anc_ptr.byte;
+   // Is it a VBRI info frame?
+   if (memcmp(&stream->this_frame[4 + 32], "VBRI", 4) == 0)
+   {
+      mDelay = (stream->this_frame[4 + 32 + 6] & 0xff) << 8 |
+               (stream->this_frame[4 + 32 + 7] & 0xff);
+
+      return MAD_FLOW_CONTINUE;
+   }
+
+   // Look for Xing/Info information
+
+   // Get the ancillary data ptr and length. If the frame has CRC protection, we make
+   // a small adjustment to get around an apparent bug in libmad.
+   auto ptr = stream->anc_ptr.byte - (frame->header.flags & MAD_FLAG_PROTECTION ? 2 : 0);
    int len = stream->anc_bitlen / 8;
 
    // Ensure it's something we can understand
@@ -996,7 +1090,7 @@ enum mad_flow MP3ImportFileHandle::ErrorCB(struct mad_stream *stream,
    }
 
    // This can happen when parsing the first frame. We can use the number of channels
-   // for it hasn't yet been determined.
+   // to test for this since it hasn't been determined yet.
    if (stream->error == MAD_ERROR_BADDATAPTR && mNumChannels == 0)
    {
       return MAD_FLOW_CONTINUE;

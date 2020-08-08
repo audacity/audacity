@@ -569,16 +569,6 @@ bool Importer::Import( AudacityProject &project,
    }
 
    // Add all plugins that support the extension
-
-   // Here we rely on the fact that the first plugin in sImportPluginList() is libsndfile.
-   // We want to save this for later insertion ahead of libmad, if libmad supports the extension.
-   // The order of plugins in sImportPluginList() is determined by the Importer constructor alone and
-   // is not changed by user selection overrides or any other mechanism, but we include an assert
-   // in case subsequent code revisions to the constructor should break this assumption that
-   // libsndfile is first.
-   ImportPlugin *libsndfilePlugin = *sImportPluginList().begin();
-   wxASSERT(libsndfilePlugin->GetPluginStringID() == wxT("libsndfile"));
-
    for (const auto &plugin : sImportPluginList())
    {
       // Make sure its not already in the list
@@ -593,10 +583,7 @@ bool Importer::Import( AudacityProject &project,
       }
    }
 
-   // Add remaining plugins, except for libmad, which should not be used as a fallback for anything.
-   // Otherwise, if FFmpeg (libav) has not been installed, libmad will still be there near the
-   // end of the preference list importPlugins, where it will claim success importing FFmpeg file
-   // formats unsuitable for it, and produce distorted results.
+   // Add remaining plugins
    for (const auto &plugin : sImportPluginList())
    {
       // Make sure its not already in the list
