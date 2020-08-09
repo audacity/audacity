@@ -92,6 +92,9 @@ wxString ExtImportPrefs::HelpPageName()
 /// Creates the dialog and its contents.
 void ExtImportPrefs::Populate()
 {
+   // Ensure Importer has current items
+   Importer::Get().ReadImportItems();
+
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
    // Use 'eIsCreatingFromPrefs' so that the GUI is
@@ -212,6 +215,8 @@ bool ExtImportPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   Importer::Get().WriteImportItems();
 
    return true;
 }

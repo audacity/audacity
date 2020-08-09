@@ -20,7 +20,6 @@
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "../effects/RealtimeEffectManager.h"
-#include "../import/Import.h"
 #include "../prefs/EffectsPrefs.h"
 #include "../prefs/PrefsDialog.h"
 
@@ -408,9 +407,6 @@ void OnResetConfig(const CommandContext &context)
    gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
 
    gPrefs->Flush();
-
-   // Bug 2491 - Reset Configuration does not reset Extended Import preferences
-   Importer::Get().ReadImportItems();
 }
 
 void OnManageGenerators(const CommandContext &context)
