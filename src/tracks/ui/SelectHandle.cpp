@@ -441,7 +441,7 @@ SelectHandle::SelectHandle
    auto pTrack = pTrackView->FindTrack();
    mSnapStart = mSnapManager->Snap(pTrack.get(), time, false);
    if (mSnapStart.snappedPoint)
-      mSnapStart.outCoord += mRect.x;
+         mSnapStart.outCoord += mRect.x;
    else
       mSnapStart.outCoord = -1;
 
