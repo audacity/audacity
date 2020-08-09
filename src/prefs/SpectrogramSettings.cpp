@@ -327,6 +327,103 @@ void SpectrogramSettings::SavePrefs()
 #endif //EXPERIMENTAL_FIND_NOTES
 }
 
+// This is a temporary hack until SpectrogramSettings gets fully integrated
+void SpectrogramSettings::UpdatePrefs()
+{
+   if (minFreq == defaults().minFreq) {
+      gPrefs->Read(wxT("/Spectrum/MinFreq"), &minFreq);
+   }
+
+   if (maxFreq == defaults().maxFreq) {
+      gPrefs->Read(wxT("/Spectrum/MaxFreq"), &maxFreq);
+   }
+
+   if (range == defaults().range) {
+      gPrefs->Read(wxT("/Spectrum/Range"), &range);
+   }
+
+   if (gain == defaults().gain) {
+      gPrefs->Read(wxT("/Spectrum/Gain"), &gain);
+   }
+
+   if (frequencyGain == defaults().frequencyGain) {
+      gPrefs->Read(wxT("/Spectrum/FrequencyGain"), &frequencyGain);
+   }
+
+   if (windowSize == defaults().windowSize) {
+      gPrefs->Read(wxT("/Spectrum/FFTSize"), &windowSize);
+   }
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   if (zeroPaddingFactor == defaults().zeroPaddingFactor) {
+      gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), &zeroPaddingFactor);
+   }
+#endif
+
+   if (windowType == defaults().windowType) {
+      gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType);
+   }
+
+   if (isGrayscale == defaults().isGrayscale) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/Grayscale"), &temp);
+      isGrayscale = (temp != 0);
+   }
+
+   if (scaleType == defaults().scaleType) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/ScaleType"), &temp);
+      scaleType = ScaleType(temp);
+   }
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   if (spectralSelection == defaults().spectralSelection) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), &temp);
+      spectralSelection = (temp != 0);
+   }
+#endif
+
+   if (algorithm == defaults().algorithm) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/Algorithm"), &temp);
+      algorithm = Algorithm(temp);
+   }
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   if (fftYGrid == defaults().fftYGrid) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/FFTYGrid"), &temp);
+      fftYGrid = (temp != 0);
+   }
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   if (fftFindNotes == defaults().fftFindNotes) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/FFTFindNotes"), &temp);
+      fftFindNotes = (temp != 0);
+   }
+
+   if (findNotesMinA == defaults().findNotesMinA) {
+      gPrefs->Read(wxT("/Spectrum/FindNotesMinA"), &findNotesMinA);
+   }
+
+   if (numberOfMaxima == defaults().numberOfMaxima) {
+      numberOfMaxima = gPrefs->Read(wxT("/Spectrum/FindNotesN"), &numberOfMaxima);
+   }
+
+   if (findNotesQuantize == defaults().findNotesQuantize) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), &temp);
+      findNotesQuantize = (temp != 0);
+   }
+#endif //EXPERIMENTAL_FIND_NOTES
+
+   // Enforce legal values
+   Validate(true);
+}
+
 void SpectrogramSettings::InvalidateCaches()
 {
    DestroyWindows();
