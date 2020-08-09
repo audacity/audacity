@@ -103,6 +103,8 @@ private:
    void OnRemove(wxCommandEvent &event);
    void OnRename(wxCommandEvent &event);
    void OnRestore(wxCommandEvent &event);
+   void OnImport(wxCommandEvent &event);
+   void OnExport(wxCommandEvent &event);
    void OnExpand(wxCommandEvent &event);
    void OnShrink(wxCommandEvent &event);
    void OnSize(wxSizeEvent &event);
@@ -127,6 +129,8 @@ private:
    wxButton *mRemove;
    wxButton *mRename;
    wxButton *mRestore;
+   wxButton *mImport;
+   wxButton *mExport;
 
    int mSelectedCommand;
    bool mChanged;

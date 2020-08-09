@@ -103,8 +103,8 @@ class MacroCommands final {
    void ResetMacro();
 
    void RestoreMacro(const wxString & name);
-   bool ReadMacro(const wxString & macro);
-   bool WriteMacro(const wxString & macro);
+   wxString ReadMacro(const wxString & macro, wxWindow *parent = nullptr);
+   wxString WriteMacro(const wxString & macro, wxWindow *parent = nullptr);
    bool AddMacro(const wxString & macro);
    bool DeleteMacro(const wxString & name);
    bool RenameMacro(const wxString & oldmacro, const wxString & newmacro);

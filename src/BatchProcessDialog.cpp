@@ -500,6 +500,8 @@ BEGIN_EVENT_TABLE(MacrosWindow, ApplyMacroDialog)
    EVT_BUTTON(RemoveButtonID, MacrosWindow::OnRemove)
    EVT_BUTTON(RenameButtonID, MacrosWindow::OnRename)
    EVT_BUTTON(RestoreButtonID, MacrosWindow::OnRestore)
+   EVT_BUTTON(ImportButtonID, MacrosWindow::OnImport)
+   EVT_BUTTON(ExportButtonID, MacrosWindow::OnExport)
    EVT_BUTTON(ExpandID, MacrosWindow::OnExpand)
    EVT_BUTTON(ShrinkID, MacrosWindow::OnShrink)
 
@@ -603,15 +605,8 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                mRemove = S.Id(RemoveButtonID).AddButton(XXO("Remo&ve"));
                mRename = S.Id(RenameButtonID).AddButton(XXO("&Rename..."));
                mRestore = S.Id(RestoreButtonID).AddButton(XXO("Re&store"));
-// Not yet ready for prime time.
-#if 0
-               S.Id(ImportButtonID)
-                  .Disable()
-                  .AddButton(XO("I&mport..."));
-               S.Id(ExportButtonID)
-                  .Disable()
-                  .AddButton(XO("E&xport..."));
-#endif
+               mImport = S.Id(ImportButtonID).AddButton(XO("I&mport..."));
+               mExport = S.Id(ExportButtonID).AddButton(XO("E&xport..."));
             }
             S.EndVerticalLay();
          }
@@ -623,7 +618,6 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       {
          S.StartHorizontalLay(wxEXPAND,1);
          {
-            
             mList = S.Id(CommandsListID)
                .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                    wxLC_SINGLE_SEL)
@@ -1050,6 +1044,46 @@ void MacrosWindow::OnRestore(wxCommandEvent & WXUNUSED(event))
    mChanged = true;
 
    PopulateList();
+}
+
+///
+void MacrosWindow::OnImport(wxCommandEvent & WXUNUSED(event))
+{
+   if (!ChangeOK()) {
+      return;
+   }
+
+   long item = mMacros->GetNextItem(-1,
+                                    wxLIST_NEXT_ALL,
+                                    wxLIST_STATE_SELECTED);
+   if (item == -1) {
+      return;
+   }
+
+   wxString name = mMacros->GetItemText(item);
+
+   name = mMacroCommands.ReadMacro({}, this);
+   if (name == wxEmptyString) {
+      return;
+   }
+
+   mActiveMacro = name;
+
+   PopulateMacros();
+   UpdateMenus();
+}
+
+///
+void MacrosWindow::OnExport(wxCommandEvent & WXUNUSED(event))
+{
+   long item = mMacros->GetNextItem(-1,
+                                    wxLIST_NEXT_ALL,
+                                    wxLIST_STATE_SELECTED);
+   if (item == -1) {
+      return;
+   }
+
+   mMacroCommands.WriteMacro(mMacros->GetItemText(item), this);
 }
 
 /// An item in the list has been selected.

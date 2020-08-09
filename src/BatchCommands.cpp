@@ -164,13 +164,45 @@ int MacroCommands::GetCount()
    return (int)mCommandMacro.size();
 }
 
-bool MacroCommands::ReadMacro(const wxString & macro)
+wxString MacroCommands::ReadMacro(const wxString & macro, wxWindow *parent)
 {
    // Clear any previous macro
    ResetMacro();
 
    // Build the filename
    wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
+
+   // But, ask the user for the real name if we're importing
+   if (parent) {
+      FilePath fn = FileNames::SelectFile(FileNames::Operation::_None,
+         XO("Import Macro"),
+         wxEmptyString,
+         name.GetName(),
+         wxT("txt"),
+         { FileNames::TextFiles },
+         wxFD_OPEN | wxRESIZE_BORDER,
+         parent);
+
+      // User canceled...
+      if (fn.empty()) {
+         return wxEmptyString;
+      }
+
+      wxFileName check(fn);
+      check.SetPath(name.GetPath());
+      if (check.FileExists())
+      {
+         int id = AudacityMessageBox(
+            XO("Macro %s already exists. Would you like to replace it?").Format(check.GetName()),
+            XO("Import Macro"),
+            wxYES_NO);
+         if (id == wxNO) {
+            return wxEmptyString;
+         }
+      }
+
+      name.Assign(fn);
+   }
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -179,7 +211,7 @@ bool MacroCommands::ReadMacro(const wxString & macro)
    tf.Open();
    if (!tf.IsOpened()) {
       // wxTextFile will display any errors
-      return false;
+      return wxEmptyString;
    }
 
    // Load commands from the file
@@ -206,14 +238,37 @@ bool MacroCommands::ReadMacro(const wxString & macro)
    // Done with the file
    tf.Close();
 
-   return true;
+   // Write to macro directory if importing
+   if (parent) {
+      return WriteMacro(name.GetName());
+   }
+
+   return name.GetName();
 }
 
-
-bool MacroCommands::WriteMacro(const wxString & macro)
+wxString MacroCommands::WriteMacro(const wxString & macro, wxWindow *parent)
 {
-   // Build the filename
+   // Build the default filename
    wxFileName name(FileNames::MacroDir(), macro, wxT("txt"));
+
+   // But, ask the user for the real name if we're exporting
+   if (parent) {
+      FilePath fn = FileNames::SelectFile(FileNames::Operation::_None,
+         XO("Export Macro"),
+         wxEmptyString,
+         name.GetName(),
+         wxT("txt"),
+         { FileNames::TextFiles },
+         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+         parent);
+
+      // User canceled...
+      if (fn.empty()) {
+         return wxEmptyString;
+      }
+
+      name.Assign(fn);
+   }
 
    // Set the file name
    wxTextFile tf(name.GetFullPath());
@@ -228,7 +283,7 @@ bool MacroCommands::WriteMacro(const wxString & macro)
 
    if (!tf.IsOpened()) {
       // wxTextFile will display any errors
-      return false;
+      return wxEmptyString;
    }
 
    // Start with a clean slate
@@ -247,7 +302,7 @@ bool MacroCommands::WriteMacro(const wxString & macro)
    // Done with the file
    tf.Close();
 
-   return true;
+   return name.GetName();
 }
 
 bool MacroCommands::AddMacro(const wxString & macro)
