@@ -148,6 +148,19 @@ void AudacityProject::SetProjectName(const wxString &name)
    mName = name;
 }
 
+FilePath AudacityProject::GetInitialImportPath() const
+{
+   return mInitialImportPath;
+}
+
+void AudacityProject::SetInitialImportPath(const FilePath &path)
+{
+   if (mInitialImportPath.empty())
+   {
+      mInitialImportPath = path;
+   }
+}
+
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
 {
    auto ptr = project.GetFrame();

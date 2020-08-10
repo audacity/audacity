@@ -1116,6 +1116,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    // the filename to the just imported path.
    if (initiallyEmpty && projectFileIO.IsTemporary()) {
       project.SetProjectName(fn.GetName());
+      project.SetInitialImportPath(fn.GetPath());
       projectFileIO.SetProjectTitle();
    }
 
@@ -1127,7 +1128,9 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::Import(
-   const FilePath &fileName, WaveTrackArray* pTrackArray /*= NULL*/)
+   const FilePath &fileName,
+   WaveTrackArray *pTrackArray /* = nullptr */,
+   bool addToHistory /* = true */)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get(project);
@@ -1145,13 +1148,17 @@ bool ProjectFileManager::Import(
          // If the project was clean and temporary (not permanently saved), then set
          // the filename to the just imported path.
          if (initiallyEmpty && projectFileIO.IsTemporary()) {
-            project.SetProjectName(wxFileName(fileName).GetName());
+            wxFileName fn(fileName);
+            project.SetProjectName(fn.GetName());
+            project.SetInitialImportPath(fn.GetPath());
             projectFileIO.SetProjectTitle();
          }
 
          history.PushState(XO("Imported '%s'").Format(fileName), XO("Import"));
 
-         FileHistory::Global().Append(fileName);
+         if (addToHistory) {
+            FileHistory::Global().Append(fileName);
+         }
       }
 
       return false;
@@ -1182,7 +1189,9 @@ bool ProjectFileManager::Import(
       if (!success)
          return false;
 
-      FileHistory::Global().Append(fileName);
+      if (addToHistory) {
+         FileHistory::Global().Append(fileName);
+      }
 
       // no more errors, commit
       committed = true;
@@ -1204,7 +1213,9 @@ bool ProjectFileManager::Import(
       // If the project was clean and temporary (not permanently saved), then set
       // the filename to the just imported path.
       if (initiallyEmpty && projectFileIO.IsTemporary()) {
-         project.SetProjectName(wxFileName(fileName).GetName());
+         wxFileName fn(fileName);
+         project.SetProjectName(fn.GetName());
+         project.SetInitialImportPath(fn.GetPath());
          projectFileIO.SetProjectTitle();
       }
 

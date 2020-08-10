@@ -72,22 +72,12 @@ class MacroCommands final {
    bool ApplyCommandInBatchMode( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString &params,
       CommandContext const * pContext = NULL);
-   bool ApplySpecialCommand(
-      int iCommand, const TranslatableString &friendlyCommand,
-      const CommandID & command, const wxString & params);
    bool ApplyEffectCommand(
       const PluginID & ID, const TranslatableString &friendlyCommand,
       const CommandID & command,
       const wxString & params, const CommandContext & Context);
    bool ReportAndSkip( const TranslatableString & friendlyCommand, const wxString & params );
    void AbortBatch();
-
-   // Utility functions for the special commands.
-   static wxString BuildCleanFileName(const FilePath &fileName,
-      const FileExtension &extension);
-   bool WriteMp3File( const wxString & Name, int bitrate );
-   double GetEndTime();
-   static bool IsMono( AudacityProject *project );
 
    // These commands do not depend on the command list.
    static void MigrateLegacyChains();

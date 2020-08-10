@@ -138,13 +138,20 @@ class AUDACITY_DLL_API AudacityProject final
    const wxString &GetProjectName() const;
    void SetProjectName(const wxString &name);
 
- private:
+   // Used exclusively in batch mode, this allows commands to remember
+   // and use the initial import path
+   FilePath GetInitialImportPath() const;
+   void SetInitialImportPath(const FilePath &path);
+
+private:
 
    // The project's name
    wxString mName;
 
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.
+
+   FilePath mInitialImportPath;
 
  public:
    bool mbBusyImporting{ false }; // used to fix bug 584

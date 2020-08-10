@@ -466,6 +466,14 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
    // Get rid of mixerspec
    mMixerSpec.reset();
 
+   if (success) {
+      if (mFormatName.empty()) {
+         gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
+      }
+
+      FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
+   }
+
    return success;
 }
 
@@ -774,11 +782,6 @@ bool Exporter::GetFilename()
 //
 bool Exporter::CheckFilename()
 {
-   if( mFormatName.empty() )
-      gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
-
-   FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
-
    //
    // To be even safer, return a temporary file name based
    // on this one...
@@ -924,6 +927,8 @@ bool Exporter::ExportTracks()
             ::wxRemoveFile(mActualName.GetFullPath());
             ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
          }
+         // Restore filname
+         mFilename = mActualName;
       }
       else {
          if ( ! success )

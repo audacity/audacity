@@ -23,6 +23,7 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../export/ExportMP3.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportMIDI.h"
@@ -40,7 +41,10 @@
 
 // private helper classes and functions
 namespace {
-void DoExport( AudacityProject &project, const FileExtension & Format )
+
+void DoExport(AudacityProject &project,
+              const FileExtension &format,
+              const wxString &prefix = {})
 {
    auto &tracks = TrackList::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -49,65 +53,83 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
 
    double t0 = 0.0;
    double t1 = tracks.GetEndTime();
+   wxString projectName = project.GetProjectName();
 
    // Prompt for file name and/or extension?
-   bool bPromptingRequired =
-      (project.mBatchMode == 0) || projectFileIO.GetFileName().empty() ||
-      Format.empty();
-   wxString filename;
+   bool bPromptingRequired = !project.mBatchMode ||
+                             projectName.empty() ||
+                             format.empty();
 
-   if (!bPromptingRequired) {
-
-      // We're in batch mode, and we have an mFileName and Format.
-      wxString extension = Format;
-      extension.MakeLower();
-
-      filename =
-         MacroCommands::BuildCleanFileName(projectFileIO.GetFileName(), extension);
-
-      // Bug 1854, No warning of file overwrite
-      // (when export is called from Macros).
-      int counter = 0;
-      bPromptingRequired = wxFileExists(filename);
-
-      // We'll try alternative names to avoid overwriting.
-      while ( bPromptingRequired && counter < 100 ) {
-         counter++;
-         wxString number;
-         number.Printf("%03i", counter);
-         // So now the name has a number in it too.
-         filename = MacroCommands::BuildCleanFileName(
-            projectFileIO.GetFileName() + number, extension);
-         bPromptingRequired = wxFileExists(filename);
-      }
-      // If we've run out of alternative names, we will fall back to prompting
-      // - even if in a macro.
-   }
-
-
-   if (bPromptingRequired)
-   {
+   bool success = false;
+   if (bPromptingRequired) {
       // Do export with prompting.
-      e.SetDefaultFormat(Format);
-      e.Process(false, t0, t1);
+      e.SetDefaultFormat(format);
+      success = e.Process(false, t0, t1);
    }
-   else
-   {
-      FileHistory::Global().Append(filename);
+   else {
+      // If we've gotten to this point, we are in batch mode, have a file format,
+      // and the project has either been saved or a file has been imported. So, we
+      // want to use the project's path if it has been saved, otherwise use the
+      // initial import path.
+      FilePath pathName = !projectFileIO.IsTemporary() ?
+                           wxPathOnly(projectFileIO.GetFileName()) :
+                           project.GetInitialImportPath();
+      wxFileName fileName(pathName,
+                          prefix + projectName,
+                          format.Lower());
+
+      // Append the "macro-output" directory to the path
+      const wxString macroDir( "macro-output" );
+      if (fileName.GetDirs().back() != macroDir) {
+         fileName.AppendDir(macroDir);
+      }
+
+      wxString justName = fileName.GetName();
+      wxString extension = fileName.GetExt();
+      FilePath fullPath = fileName.GetFullPath();
+
+      if (wxFileName::FileExists(fileName.GetPath())) {
+         AudacityMessageBox(
+            XO("Cannot create directory '%s'. \n"
+               "File already exists that is not a directory"),
+            Verbatim(fullPath));
+         return;
+      }
+      fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
+
+      int nChannels = (tracks.Any() - &Track::IsLeader ).empty() ? 1 : 2;
+
       // We're in batch mode, the file does not exist already.
       // We really can proceed without prompting.
-      int nChannels = MacroCommands::IsMono( &project ) ? 1 : 2;
-      e.Process(
+      success = e.Process(
          nChannels,  // numChannels,
-         Format,     // type, 
-         filename,   // filename,
+         format,     // type, 
+         fullPath,   // full path,
          false,      // selectedOnly, 
          t0,         // t0
          t1          // t1
       );
    }
 
+   if (success && !project.mBatchMode) {
+      FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
+   }
 }
+
+void WriteMp3File(AudacityProject &project, const wxString &prefix)
+{
+   long prevBitRate = gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), 128);
+   gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), 56);
+   auto prevMode = MP3RateModeSetting.ReadEnum();
+   MP3RateModeSetting.WriteEnum(MODE_CBR);
+
+   DoExport(project, wxT("MP3"), prefix);
+
+   gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
+   MP3RateModeSetting.WriteEnum(prevMode);
+   gPrefs->Flush();
+}
+
 }
 
 // Compact dialog
@@ -629,6 +651,21 @@ void OnExit(const CommandContext &WXUNUSED(context) )
    wxTheApp->AddPendingEvent( evt );
 }
 
+void OnExportMP3_56k_before(const CommandContext &context)
+{
+   WriteMp3File(context.project, wxT("MasterBefore_"));
+}
+
+void OnExportMP3_56k_after(const CommandContext &context)
+{
+   WriteMp3File(context.project, wxT("MasterAfter_"));
+}
+
+void OnExportFLAC(const CommandContext &context)
+{
+   DoExport(context.project, "FLAC");
+}
+
 }; // struct Handler
 
 } // namespace
@@ -798,6 +835,42 @@ AttachedItem sAttachment1{
    wxT(""),
    Shared( FileMenu() )
 };
+
+BaseItemSharedPtr HiddenFileMenu()
+{
+   static BaseItemSharedPtr menu
+   {
+      (
+         FinderScope{ findCommandHandler },
+         ConditionalItems( wxT("HiddenFileItems"),
+            []()
+            {
+               // Ensures that these items never appear in a menu, but
+               // are still available to scripting
+               return false;
+            },
+            Menu( wxT("HiddenFileMenu"), XXO("Hidden File Menu"),
+               Command( wxT("ExportMP3_56k_before"), XXO("Export as MP3 56k before"),
+                  FN(OnExportMP3_56k_before),
+                  AudioIONotBusyFlag() ),
+               Command( wxT("ExportMP3_56k_after"), XXO("Export as MP3 56k after"),
+                  FN(OnExportMP3_56k_after),
+                  AudioIONotBusyFlag() ),
+               Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
+                  FN(OnExportFLAC),
+                  AudioIONotBusyFlag() )
+            )
+         )
+      )
+   };
+   return menu;
+}
+
+AttachedItem sAttachment2{
+   wxT(""),
+   Shared( HiddenFileMenu() )
+};
+
 }
 
 #undef FN
