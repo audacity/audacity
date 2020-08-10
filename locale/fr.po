@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-06-09 22:59+0100\n"
+"PO-Revision-Date: 2020-08-10 15:00+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -5976,7 +5976,7 @@ msgstr "Nom :"
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Set Preference"
-msgstr "Paramètrer les préférences"
+msgstr "Paramétrer les préférences"
 
 #: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
 msgid "Value:"
@@ -6392,7 +6392,7 @@ msgstr "Échelle de gris"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
-msgstr "Paramètrer la piste"
+msgstr "Paramétrer la piste"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
@@ -10642,7 +10642,7 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
-msgstr "FFmpeg : - ERREUR - Ne peut pas paramètrer la trame audio"
+msgstr "FFmpeg : - ERREUR - Ne peut pas paramétrer la trame audio"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
@@ -18018,7 +18018,7 @@ msgstr "Déplacer la piste vers le b&as"
 # trebmuh to check (accélérateur)
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Top"
-msgstr "Déplacer la piste vers le hau&t"
+msgstr "Déplacer la piste tout en hau&t"
 
 # trebmuh to check (accélérateur)
 #: src/tracks/ui/CommonTrackControls.cpp
@@ -18027,7 +18027,7 @@ msgstr "Déplacer la piste tout en &bas"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Set Track Name"
-msgstr "Paramètrer le nom de la piste"
+msgstr "Paramétrer le nom de la piste"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 #, c-format
@@ -18036,7 +18036,7 @@ msgstr " '%s' renommé en '%s'"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Name Change"
-msgstr "changement de nom"
+msgstr "Changement de nom"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Click and drag to warp playback time"
