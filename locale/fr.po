@@ -5976,7 +5976,7 @@ msgstr "Nom :"
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Set Preference"
-msgstr "Paramètrer les préférences"
+msgstr "Paramétrer les préférences"
 
 #: src/commands/PreferenceCommands.cpp src/commands/SetEnvelopeCommand.cpp
 msgid "Value:"
@@ -6392,7 +6392,7 @@ msgstr "Échelle de gris"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
-msgstr "Paramètrer la piste"
+msgstr "Paramétrer la piste"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
@@ -10642,7 +10642,7 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
-msgstr "FFmpeg : - ERREUR - Ne peut pas paramètrer la trame audio"
+msgstr "FFmpeg : - ERREUR - Ne peut pas paramétrer la trame audio"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
