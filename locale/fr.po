@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-06-09 22:59+0100\n"
+"PO-Revision-Date: 2020-08-10 15:00+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -18018,7 +18018,7 @@ msgstr "Déplacer la piste vers le b&as"
 # trebmuh to check (accélérateur)
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Top"
-msgstr "Déplacer la piste vers le hau&t"
+msgstr "Déplacer la piste tout en hau&t"
 
 # trebmuh to check (accélérateur)
 #: src/tracks/ui/CommonTrackControls.cpp
@@ -18027,7 +18027,7 @@ msgstr "Déplacer la piste tout en &bas"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Set Track Name"
-msgstr "Paramètrer le nom de la piste"
+msgstr "Paramétrer le nom de la piste"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 #, c-format
@@ -18036,7 +18036,7 @@ msgstr " '%s' renommé en '%s'"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Name Change"
-msgstr "changement de nom"
+msgstr "Changement de nom"
 
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Click and drag to warp playback time"
