@@ -732,6 +732,9 @@ bool MacroCommands::ApplyMacro(
 
    mAbort = false;
 
+   bool trace;
+   gPrefs->Read(wxT("/EnableMacroTracing"), &trace, false);
+
    size_t i = 0;
    for (; i < mCommandMacro.size(); i++) {
       const auto &command = mCommandMacro[i];
@@ -742,7 +745,23 @@ bool MacroCommands::ApplyMacro(
            // in default of any better friendly name
            Verbatim( command.GET() )
          : iter->name.Msgid().Stripped();
-      if (!ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]) || mAbort)
+
+      wxTimeSpan before;
+      if (trace) {
+         before = wxTimeSpan(0, 0, 0, wxGetUTCTimeMillis());
+      }
+
+      bool success = ApplyCommandInBatchMode(friendly, command, mParamsMacro[i]);
+
+      if (trace) {
+         auto after = wxTimeSpan(0, 0, 0, wxGetUTCTimeMillis());
+         wxLogMessage(wxT("Macro line #%ld \"%s\" took %s"),
+            i + 1,
+            command.GET(),
+            (after - before).Format(wxT("%H:%M:%S.%l")));
+      }
+
+      if (!success || mAbort)
          break;
    }
 

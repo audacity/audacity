@@ -18,6 +18,7 @@
 #include "OpenSaveCommands.h"
 
 #include "LoadCommands.h"
+#include "../AudacityLogger.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
@@ -131,4 +132,31 @@ bool SaveCopyCommand::Apply(const CommandContext &context)
 {
    auto &projectFileManager = ProjectFileManager::Get( context.project );
    return projectFileManager.SaveCopy(mFileName);
+}
+
+const ComponentInterfaceSymbol SaveLogCommand::Symbol
+{ XO("Save Log") };
+
+namespace{ BuiltinCommandsModule::Registration< SaveLogCommand > reg4; }
+
+bool SaveLogCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mFileName, wxT("Filename"),  "log.txt" );
+   return true;
+}
+
+void SaveLogCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(XXO("File Name:"),mFileName);
+   }
+   S.EndMultiColumn();
+}
+
+bool SaveLogCommand::Apply(const CommandContext &context)
+{
+   auto logger = AudacityLogger::Get();
+   return logger->SaveLog(mFileName);
 }

@@ -110,6 +110,19 @@ void AudacityLogger::DoLogText(const wxString & str)
    }
 }
 
+bool AudacityLogger::SaveLog(const FilePath &fileName) const
+{
+   wxFFile file(fileName, wxT("w"));
+
+   if (file.IsOpened()) {
+      file.Write(mBuffer);
+      file.Close();
+      return true;
+   }
+
+   return false;
+}
+
 void AudacityLogger::Show(bool show)
 {
    // Hide the frame if created, otherwise do nothing
