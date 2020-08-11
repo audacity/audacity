@@ -112,6 +112,7 @@ static const auto exts = {
    wxT("nsv"),
    wxT("nuv"),
    wxT("ogg"),
+   wxT("opus"),
    wxT("psxstr"),
    wxT("pva"),
    wxT("redir"),
