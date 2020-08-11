@@ -757,10 +757,11 @@ bool MacroCommands::ApplyMacro(
 
       if (trace) {
          auto after = wxTimeSpan(0, 0, 0, wxGetUTCTimeMillis());
-         wxLogMessage(wxT("Macro line #%ld \"%s\" took %s"),
+         wxLogMessage(wxT("Macro line #%ld took %s : %s:%s"),
             i + 1,
+            (after - before).Format(wxT("%H:%M:%S.%l")),
             command.GET(),
-            (after - before).Format(wxT("%H:%M:%S.%l")));
+            mParamsMacro[i]);
       }
 
       if (!success || mAbort)

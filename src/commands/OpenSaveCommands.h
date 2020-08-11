@@ -102,3 +102,21 @@ public:
 public:
    wxString mFileName;
 };
+
+class ClearLogCommand : public AudacityCommand
+{
+public:
+   static const ComponentInterfaceSymbol Symbol;
+
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   TranslatableString GetDescription() override {return XO("Clears the log contents.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   bool PromptUser(wxWindow *parent) override;
+   bool Apply(const CommandContext & context) override;
+
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#Clear_log");};
+public:
+   wxString mFileName;
+};

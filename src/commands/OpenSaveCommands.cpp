@@ -139,7 +139,8 @@ const ComponentInterfaceSymbol SaveLogCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SaveLogCommand > reg4; }
 
-bool SaveLogCommand::DefineParams( ShuttleParams & S ){
+bool SaveLogCommand::DefineParams(ShuttleParams & S)
+{
    S.Define( mFileName, wxT("Filename"),  "log.txt" );
    return true;
 }
@@ -159,4 +160,25 @@ bool SaveLogCommand::Apply(const CommandContext &context)
 {
    auto logger = AudacityLogger::Get();
    return logger->SaveLog(mFileName);
+}
+
+const ComponentInterfaceSymbol ClearLogCommand::Symbol
+{ XO("Clear Log") };
+
+namespace{ BuiltinCommandsModule::Registration< ClearLogCommand > reg5; }
+
+bool ClearLogCommand::DefineParams(ShuttleParams & S)
+{
+   return true;
+}
+
+bool ClearLogCommand::PromptUser(wxWindow *parent)
+{
+   return true;
+}
+
+bool ClearLogCommand::Apply(const CommandContext &context)
+{
+   auto logger = AudacityLogger::Get();
+   return logger->ClearLog();
 }

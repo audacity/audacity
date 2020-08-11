@@ -34,6 +34,7 @@ class AudacityLogger final : public wxEvtHandler, public wxLog {
    void Show(bool show = true);
 
    bool SaveLog(const wxString &fileName) const;
+   bool ClearLog();
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
    wxString GetLog();

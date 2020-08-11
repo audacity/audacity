@@ -124,6 +124,14 @@ bool AudacityLogger::SaveLog(const wxString &fileName) const
    return false;
 }
 
+bool AudacityLogger::ClearLog()
+{
+   mBuffer = wxEmptyString;
+   DoLogText(wxT("Log Cleared."));
+
+   return true;
+}
+
 void AudacityLogger::Show(bool show)
 {
    // Hide the frame if created, otherwise do nothing
@@ -256,8 +264,7 @@ void AudacityLogger::OnClose(wxCommandEvent & WXUNUSED(e))
 
 void AudacityLogger::OnClear(wxCommandEvent & WXUNUSED(e))
 {
-   mBuffer = wxEmptyString;
-   DoLogText(wxT("Log Cleared."));
+   ClearLog();
 }
 
 void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
