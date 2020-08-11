@@ -20,8 +20,10 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "BatchCommands.h"
 
 #include <wx/defs.h>
+#include <wx/datetime.h>
 #include <wx/dir.h>
 #include <wx/textfile.h>
+#include <wx/time.h>
 
 #include "Project.h"
 #include "ProjectAudioManager.h"
