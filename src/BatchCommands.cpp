@@ -15,6 +15,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 *//*******************************************************************/
 
+#define wxLOG_COMPONENT "MacroCommands"
 
 #include "Audacity.h" // for USE_* macros
 #include "BatchCommands.h"
@@ -734,8 +735,16 @@ bool MacroCommands::ApplyMacro(
 
    mAbort = false;
 
+   // Is tracing enabled?
    bool trace;
    gPrefs->Read(wxT("/EnableMacroTracing"), &trace, false);
+
+   // If so, then block most other messages while running the macro
+   wxLogLevel prevLevel = wxLog::GetComponentLevel("");
+   if (trace) {
+      wxLog::SetComponentLevel("",  wxLOG_FatalError);
+      wxLog::SetComponentLevel(wxLOG_COMPONENT,  wxLOG_Info);
+   }
 
    size_t i = 0;
    for (; i < mCommandMacro.size(); i++) {
@@ -766,6 +775,11 @@ bool MacroCommands::ApplyMacro(
 
       if (!success || mAbort)
          break;
+   }
+
+   // Restore message level
+   if (trace) {
+      wxLog::SetComponentLevel("", prevLevel);
    }
 
    res = (i == mCommandMacro.size());
