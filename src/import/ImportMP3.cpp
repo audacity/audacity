@@ -594,7 +594,7 @@ bool MP3ImportFileHandle::CheckMP3()
       if (mad_header_decode(&header, &stream))
       {
          // End of buffer.
-         if (stream.error == MAD_ERROR_BUFLEN)
+         if (stream.error != MAD_ERROR_NONE)
          {
             break;
          }
