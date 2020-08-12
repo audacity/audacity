@@ -38,6 +38,103 @@
 // private helper classes and functions
 namespace {
 
+void PlayCurrentRegionAndWait(const CommandContext &context,
+                              bool looped = false,
+                              bool cutpreview = false)
+{
+   auto &project = context.project;
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+
+   const auto &playRegion = ViewInfo::Get(project).playRegion;
+   double t0 = playRegion.GetStart();
+   double t1 = playRegion.GetEnd();
+
+   projectAudioManager.PlayCurrentRegion(looped, cutpreview);
+
+   if (project.mBatchMode > 0 && t0 != t1) {
+      /* i18n-hint: This title appears on a dialog that indicates the progress
+         in doing something.*/
+      ProgressDialog progress(XO("Progress"), XO("Playing"), pdlgHideCancelButton);
+      auto gAudioIO = AudioIO::Get();
+
+      while (projectAudioManager.Playing()) {
+         ProgressResult result = progress.Update(gAudioIO->GetStreamTime() - t0, t1 - t0);
+         if (result != ProgressResult::Success) {
+            projectAudioManager.Stop();
+            if (result != ProgressResult::Stopped) {
+               context.Error(wxT("Playing interrupted"));
+            }
+            break;
+         }
+         wxMilliSleep(100);
+      }
+   }
+}
+
+void PlayPlayRegionAndWait(const CommandContext &context,
+                           const SelectedRegion &selectedRegion,
+                           const AudioIOStartStreamOptions &options,
+                           PlayMode mode)
+{
+   auto &project = context.project;
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+
+   double t0 = selectedRegion.t0();
+   double t1 = selectedRegion.t1();
+
+   projectAudioManager.PlayPlayRegion(selectedRegion, options, mode);
+
+   if (project.mBatchMode > 0) {
+      /* i18n-hint: This title appears on a dialog that indicates the progress
+         in doing something.*/
+      ProgressDialog progress(XO("Progress"), XO("Playing"), pdlgHideCancelButton);
+      auto gAudioIO = AudioIO::Get();
+
+      while (projectAudioManager.Playing()) {
+         ProgressResult result = progress.Update(gAudioIO->GetStreamTime() - t0, t1 - t0);
+         if (result != ProgressResult::Success) {
+            projectAudioManager.Stop();
+            if (result != ProgressResult::Stopped) {
+               context.Error(wxT("Playing interrupted"));
+            }
+            break;
+         }
+         wxMilliSleep(100);
+      }
+   }
+}
+
+void RecordAndWait(const CommandContext &context, bool altAppearance)
+{
+   auto &project = context.project;
+   auto &projectAudioManager = ProjectAudioManager::Get(project);
+
+   const auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
+   double t0 = selectedRegion.t0();
+   double t1 = selectedRegion.t1();
+
+   projectAudioManager.OnRecord(altAppearance);
+
+   if (project.mBatchMode > 0 && t1 != t0) {
+      /* i18n-hint: This title appears on a dialog that indicates the progress
+         in doing something.*/
+      ProgressDialog progress(XO("Progress"), XO("Recording"), pdlgHideCancelButton);
+      auto gAudioIO = AudioIO::Get();
+
+      while (projectAudioManager.Recording()) {
+         ProgressResult result = progress.Update(gAudioIO->GetStreamTime() - t0, t1 - t0);
+         if (result != ProgressResult::Success) {
+            projectAudioManager.Stop();
+            if (result != ProgressResult::Stopped) {
+               context.Error(wxT("Recording interrupted"));
+            }
+            break;
+         }
+         wxMilliSleep(100);
+      }
+   }
+}
+
 // TODO: Should all these functions which involve
 // the toolbar actually move into ControlToolBar?
 
@@ -124,7 +221,7 @@ void DoStartPlaying(const CommandContext &context, bool looping = false)
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      projectAudioManager.PlayCurrentRegion(looping);
+      PlayCurrentRegionAndWait(context, looping);
    }
 }
 
@@ -217,7 +314,7 @@ void OnPlayLooped(const CommandContext &context)
 
    // Now play in a loop
    // Will automatically set mLastPlayMode
-   ProjectAudioManager::Get( project ).PlayCurrentRegion(true);
+   PlayCurrentRegionAndWait(context, true);
 }
 
 void OnPause(const CommandContext &context)
@@ -227,15 +324,14 @@ void OnPause(const CommandContext &context)
 
 void OnRecord(const CommandContext &context)
 {
-   ProjectAudioManager::Get( context.project ).OnRecord(false);
+   RecordAndWait(context, false);
 }
 
 // If first choice is record same track 2nd choice is record NEW track
 // and vice versa.
 void OnRecord2ndChoice(const CommandContext &context)
 {
-   auto &project = context.project;
-   ProjectAudioManager::Get( project ).OnRecord(true);
+   RecordAndWait(context, true);
 }
 
 void OnTimerRecord(const CommandContext &context)
@@ -611,9 +707,8 @@ void OnPlayOneSecond(const CommandContext &context)
    auto options = DefaultPlayOptions( project );
 
    double pos = trackPanel.GetMostRecentXPos();
-   ProjectAudioManager::Get( project ).PlayPlayRegion(
-      SelectedRegion(pos - 0.5, pos + 0.5), options,
-      PlayMode::oneSecondPlay);
+   PlayPlayRegionAndWait(context, SelectedRegion(pos - 0.5, pos + 0.5),
+      options, PlayMode::oneSecondPlay);
 }
 
 /// The idea for this function (and first implementation)
@@ -662,8 +757,8 @@ void OnPlayToSelection(const CommandContext &context)
 
    auto playOptions = DefaultPlayOptions( project );
 
-   ProjectAudioManager::Get( project ).PlayPlayRegion(
-      SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
+   PlayPlayRegionAndWait(context, SelectedRegion(t0, t1),
+      playOptions, PlayMode::oneSecondPlay);
 }
 
 // The next 4 functions provide a limited version of the
@@ -685,8 +780,8 @@ void OnPlayBeforeSelectionStart(const CommandContext &context)
 
    auto playOptions = DefaultPlayOptions( project );
 
-   ProjectAudioManager::Get( project ).PlayPlayRegion(
-      SelectedRegion(t0 - beforeLen, t0), playOptions, PlayMode::oneSecondPlay);
+   PlayPlayRegionAndWait(context, SelectedRegion(t0 - beforeLen, t0),
+      playOptions, PlayMode::oneSecondPlay);
 }
 
 void OnPlayAfterSelectionStart(const CommandContext &context)
@@ -704,16 +799,14 @@ void OnPlayAfterSelectionStart(const CommandContext &context)
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
    auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t0, t1),
+         playOptions, PlayMode::oneSecondPlay);
    else
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t0, t0 + afterLen), playOptions,
-         PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t0, t0 + afterLen),
+         playOptions, PlayMode::oneSecondPlay);
 }
 
 void OnPlayBeforeSelectionEnd(const CommandContext &context)
@@ -731,18 +824,15 @@ void OnPlayBeforeSelectionEnd(const CommandContext &context)
    double beforeLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
 
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
    auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t0, t1), playOptions, PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t0, t1),
+         playOptions, PlayMode::oneSecondPlay);
    else
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t1 - beforeLen, t1), playOptions,
-         PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t1 - beforeLen, t1),
+         playOptions, PlayMode::oneSecondPlay);
 }
-
 
 void OnPlayAfterSelectionEnd(const CommandContext &context)
 {
@@ -760,8 +850,8 @@ void OnPlayAfterSelectionEnd(const CommandContext &context)
 
    auto playOptions = DefaultPlayOptions( project );
 
-   ProjectAudioManager::Get( project ).PlayPlayRegion(
-      SelectedRegion(t1, t1 + afterLen), playOptions, PlayMode::oneSecondPlay);
+   PlayPlayRegionAndWait(context, SelectedRegion(t1, t1 + afterLen),
+      playOptions, PlayMode::oneSecondPlay);
 }
 
 void OnPlayBeforeAndAfterSelectionStart
@@ -782,17 +872,14 @@ void OnPlayBeforeAndAfterSelectionStart
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
    auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < afterLen )
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t0 - beforeLen, t1), playOptions,
-         PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t0 - beforeLen, t1),
+         playOptions, PlayMode::oneSecondPlay);
    else
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t0 - beforeLen, t0 + afterLen), playOptions,
-         PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t0 - beforeLen, t0 + afterLen),
+         playOptions, PlayMode::oneSecondPlay);
 }
 
 void OnPlayBeforeAndAfterSelectionEnd
@@ -813,19 +900,15 @@ void OnPlayBeforeAndAfterSelectionEnd
    double afterLen;
    gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
 
-   auto &projectAudioManager = ProjectAudioManager::Get( project );
    auto playOptions = DefaultPlayOptions( project );
 
    if ( t1 - t0 > 0.0 && t1 - t0 < beforeLen )
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t0, t1 + afterLen), playOptions,
-         PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t0, t1 + afterLen),
+         playOptions, PlayMode::oneSecondPlay);
    else
-      projectAudioManager.PlayPlayRegion(
-         SelectedRegion(t1 - beforeLen, t1 + afterLen), playOptions,
-         PlayMode::oneSecondPlay);
+      PlayPlayRegionAndWait(context, SelectedRegion(t1 - beforeLen, t1 + afterLen),
+         playOptions, PlayMode::oneSecondPlay);
 }
-
 
 void OnPlayCutPreview(const CommandContext &context)
 {
@@ -835,9 +918,7 @@ void OnPlayCutPreview(const CommandContext &context)
       return;
 
    // Play with cut preview
-   ProjectAudioManager::Get( project ).PlayCurrentRegion(
-      false, true
-   );
+   PlayCurrentRegionAndWait(context, false, true);
 }
 
 void OnPlayAtSpeed(const CommandContext &context)
