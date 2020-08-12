@@ -42,9 +42,7 @@
 // private helper classes and functions
 namespace {
 
-void DoExport(AudacityProject &project,
-              const FileExtension &format,
-              const wxString &prefix = {})
+void DoExport(AudacityProject &project, const FileExtension &format)
 {
    auto &tracks = TrackList::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -74,9 +72,7 @@ void DoExport(AudacityProject &project,
       FilePath pathName = !projectFileIO.IsTemporary() ?
                            wxPathOnly(projectFileIO.GetFileName()) :
                            project.GetInitialImportPath();
-      wxFileName fileName(pathName,
-                          prefix + projectName,
-                          format.Lower());
+      wxFileName fileName(pathName, projectName, format.Lower());
 
       // Append the "macro-output" directory to the path
       const wxString macroDir( "macro-output" );
@@ -114,20 +110,6 @@ void DoExport(AudacityProject &project,
    if (success && !project.mBatchMode) {
       FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
    }
-}
-
-void WriteMp3File(AudacityProject &project, const wxString &prefix)
-{
-   long prevBitRate = gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), 128);
-   gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), 56);
-   auto prevMode = MP3RateModeSetting.ReadEnum();
-   MP3RateModeSetting.WriteEnum(MODE_CBR);
-
-   DoExport(project, wxT("MP3"), prefix);
-
-   gPrefs->Write(wxT("/FileFormats/MP3Bitrate"), prevBitRate);
-   MP3RateModeSetting.WriteEnum(prevMode);
-   gPrefs->Flush();
 }
 
 }
@@ -651,16 +633,6 @@ void OnExit(const CommandContext &WXUNUSED(context) )
    wxTheApp->AddPendingEvent( evt );
 }
 
-void OnExportMP3_56k_before(const CommandContext &context)
-{
-   WriteMp3File(context.project, wxT("MasterBefore_"));
-}
-
-void OnExportMP3_56k_after(const CommandContext &context)
-{
-   WriteMp3File(context.project, wxT("MasterAfter_"));
-}
-
 void OnExportFLAC(const CommandContext &context)
 {
    DoExport(context.project, "FLAC");
@@ -850,12 +822,6 @@ BaseItemSharedPtr HiddenFileMenu()
                return false;
             },
             Menu( wxT("HiddenFileMenu"), XXO("Hidden File Menu"),
-               Command( wxT("ExportMP3_56k_before"), XXO("Export as MP3 56k before"),
-                  FN(OnExportMP3_56k_before),
-                  AudioIONotBusyFlag() ),
-               Command( wxT("ExportMP3_56k_after"), XXO("Export as MP3 56k after"),
-                  FN(OnExportMP3_56k_after),
-                  AudioIONotBusyFlag() ),
                Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
                   FN(OnExportFLAC),
                   AudioIONotBusyFlag() )
