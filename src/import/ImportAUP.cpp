@@ -1248,7 +1248,7 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 
       if (!wxStrcmp(attr, wxT("len")))
       {
-         if (!XMLValueChecker::IsGoodInt64(value) || !strValue.ToLongLong(&nValue) | !(nValue > 0))
+         if (!XMLValueChecker::IsGoodInt64(value) || !strValue.ToLongLong(&nValue) || !(nValue > 0))
          {
             return SetError(XO("Missing or invalid silentblockfile 'len' attribute."));
          }
