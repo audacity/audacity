@@ -198,6 +198,7 @@ void OnCompact(const CommandContext &context)
    auto &undoManager = UndoManager::Get(project);
    auto &clipboard = Clipboard::Get();
    auto &projectFileIO = ProjectFileIO::Get(project);
+   bool isBatch = project.mBatchMode > 0;
 
    // Purpose of this is to remove the -wal file.
    projectFileIO.ReopenProject();
@@ -225,8 +226,7 @@ void OnCompact(const CommandContext &context)
          .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
                   Internat::FormatSize(before.GetValue()),
                   Internat::FormatSize(total - used)));
-
-   if (dlg.ShowModal() == wxYES)
+   if (isBatch || dlg.ShowModal() == wxYES)
    {
       // Want to do this before removing the states so that it becomes the
       // current state.
@@ -248,10 +248,13 @@ void OnCompact(const CommandContext &context)
 
       auto after = wxFileName::GetSize(projectFileIO.GetFileName());
 
-      AudacityMessageBox(
-         XO("Compacting actually freed %s of disk space.")
-         .Format(Internat::FormatSize((before - after).GetValue())),
-         XO("Compact Project"));
+      if (!isBatch)
+      {
+         AudacityMessageBox(
+            XO("Compacting actually freed %s of disk space.")
+            .Format(Internat::FormatSize((before - after).GetValue())),
+            XO("Compact Project"));
+      }
    }
 
    currentTracks.reset();
