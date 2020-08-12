@@ -52,7 +52,8 @@ void ShowDiagnostics(
          .Style(wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH)
          .AddTextWindow("");
 
-      S.AddStandardButtons(eOkButton | eCancelButton);
+      wxButton *save = safenew wxButton(S.GetParent(), wxID_OK, _("&Save"));
+      S.AddStandardButtons(eCancelButton, save);
    }
    S.EndVerticalLay();
 
@@ -64,7 +65,6 @@ void ShowDiagnostics(
 
    *text << info;
 
-   dlg.FindWindowById(wxID_OK)->SetLabel(_("&Save"));
    dlg.SetSize(350, 450);
 
    if (dlg.ShowModal() == wxID_OK)
