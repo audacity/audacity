@@ -58,9 +58,9 @@
 (defun aud-do-command (id &rest params)
   ;; Translate aud-do-command, to (aud-do "command").
   ;; To avoid unnecessary overhead, only validate when debugging enabled
+  ;; 'aud-import-commands' passes params as a list, so we need to unpack it.
   (when (and (= (length params) 1)
              (listp (first params)))
-    ;Unpack params from "aud-<command>" stubs
     (setf params (first params)))
   (when *tracenable*
     (aud-check-debug-cache)
@@ -69,7 +69,10 @@
           (valid-params (aud-get-command-params id))
           (keystr ""))
       (if (not id-valid)
+          ; The command may still be valid as 
+          ; "GetInfo: Type=Commands" does not return all valid AUD-DO commands.
           (format t "Debug data unavailable: ~s.~%" id)
+          ;; Command ID recognised, so check params.
           (dolist (p params)
             (setf pstr (format nil "~a" p))
             (cond
@@ -88,14 +91,29 @@
                         ((string-equal type "enum")
                           (setf val-allowed enums)) ;a list
                         (t (setf val-allowed type)))) ;"string" "bool" or NIL
-                    (t (format t "Invalid key in ~s :~a~%" id keystr)))))
+                    ;; Invalid keyword, so give some helpful hints:
+                    (t (format t "Invalid key in ~s :~a~%" id keystr)
+                       ;; pretty print valid keywords
+                       (format t "Valid keys for ~a are:~%" id)
+                       (dolist (vp valid-params)
+                         (dolist (item vp)
+                           (let ((itype (first item)))
+                             (case itype
+                              ('KEY (format t "   ~a " (second item)))
+                              ('TYPE (when (string-not-equal (second item) "enum")
+                                       (format t "(~a) " (second item))))
+                              ('ENUM (format t "[~a]"
+                                        (string-trim "()"
+                                            (format nil "~a" (second item))))))))
+                         (format t "~%"))))))
               (t  ;key value
                 (cond
                   ((not val-allowed)
                       (format t "Too many arguments: ~s :~a~%" id keystr))
                   ((listp val-allowed)
                       (unless (member pstr enums :test 'string=) ;case sensitive
-                        (format t "Invalid enum in ~s :~a - ~s~%" id keystr p)))
+                        (format t "Invalid enum in ~s :~a - ~s~%" id keystr p)
+                        (format t "Options are:~%  ~a~%" enums)))
                   ((string= val-allowed "bool")
                       (unless (or (string= pstr "0") (string= pstr "1"))
                         (format t "~s :~a value must be 0 or 1~%" id keystr)))
@@ -124,10 +142,8 @@
 (defun aud-import-commands (&aux cmd)
   ;; Generate function stubs in the form (aud-<command> [&key arg ...])
   ;; Call once to make "aud-<command>"s available.
-  ;; Unfortunatly we can't call this on load, as the cache may
-  ;; not exist yet, and we don't want to delay loading for regular users.
-  (unless (fboundp 'aud-do-version)
-    (aud-check-debug-cache))
+  ;; We don't call this on load, as we don't want to delay loading Nyquist unnecessarily.
+  (aud-check-debug-cache)
   (dolist (cmd (aud-get-command))
     (setf cmd (second (assoc 'id cmd)))
     (let ((symb (intern (string-upcase (format nil "aud-~a" cmd)))))
@@ -143,30 +159,35 @@
                        "aud-do-debug-data-cache.lsp")))
     (cond ;Update if necessary
       ((fboundp 'aud-do-version)  ;cache is loaded
-        ;is cache the current version? Reload aud-do-version if loaded version old.
-        (when (and (string/= (format nil "~a" (aud-do-version))
+        ;; Refresh cache if versions don't match.
+        ;; 'aud-do-version' tests the interned version.
+        ;; 'autoload-helper' tests the disk version and prevents repeating cache refresh in the initial session.
+        (unless (or (string= (format nil "~a" (aud-do-version))
                              (format nil "~a" (get '*audacity* 'version)))
-                   (string/= (format nil "~a" (autoload-helper fqname 'aud-do-version nil))
+                    (string= (format nil "~a" (autoload-helper fqname 'aud-do-version nil))
                              (format nil "~a" (get '*audacity* 'version))))
-          ;wrong version, so refresh cache.
-          (aud-refresh-debug-data-cache)))
-      (t  ;cache not loaded, so try loading and refresh if we can't.
-          (unless (load fqname :verbose t)
-            (aud-refresh-debug-data-cache))))))
+          (aud-refresh-debug-data-cache fqname)))
+      ;cache not loaded, so try loading and refresh if we can't.
+      ((not (load fqname :verbose t))
+        (aud-refresh-debug-data-cache fqname)))))
 
 
-(defun aud-refresh-debug-data-cache ()
+(defun aud-refresh-debug-data-cache (fqname)
   ;; Cache the list of command profiles as function "aud-get-command", and load it.
   (labels ((disable-plugins (typestring &aux oldval)
+            ;; Disable plug-ins of type 'typestring' and return it's previous value.
             (let ((getcmd (format nil "GetPreference: Name=\"~a/Enable\"" typestring)))
               (setf oldval (first (aud-do getcmd)))
               (do-set-val typestring oldval 0) ;Disable all plug-ins
               oldval))  ;may be 0, 1 or ""
           (do-set-val (typestring oldval newval)
+            ;; If plug-in type was previously enabled ('oldval = true, "1" or empty), set it to 'newval'.
             (let ((setcmd (format nil "SetPreference: Name=\"/~a/Enable\" Value=" typestring)))
               (when (and oldval (or (string= oldval "")(string= oldval "1")))
                 (aud-do (format nil "~a~s" setcmd (if (= newval 0) 0 oldval))))))
           (get-usable-commands ()
+            ;; Disable plug-ins, get list of remaining commands, then re-enable plug-ins if previously enabled.
+            ;; Return list of commands.
             (let ((cmds '(("Nyquist" ny)("LADSPA" la)("LV2" lv)("VST" vs)("AudioUnit" au)("Vamp" va)))
                   info)
               (dolist (cmd cmds)
@@ -175,16 +196,8 @@
               (dolist (cmd cmds)
                 (do-set-val (nth 0 cmd) (nth 1 cmd) 1))  ;Re-enable plug-ins
               info)))
-    (let ((path (get-temp-path)) fp)
-      (unless path
-        (return-from aud-refresh-debug-data-cache
-                     (format t "Error: Audacity data directory not found.")))
-      ; file-separator at end of 'get-temp-path' is platform dependent.
-      (let* ((fqname (format nil "~a~a~a"
-                           (string-right-trim (string *file-separator*) (get-temp-path))
-                           *file-separator*
-                           "aud-do-debug-data-cache.lsp"))
-             (fp (open fqname :direction :output)))
+      (let ((fp (open fqname :direction :output)))
+        ;; Write cache file, or return error.
         (cond
           (fp (format fp
 ";; Intended for internal use by aud-do-command.~%
@@ -202,7 +215,7 @@
   ;; Return all commands, or one command or nil.
   (if id
       (dolist (cmd cmds nil)
-        (when (string-equal id (second (assoc 'id cmd)))
+        (when (string-equal (string id) (second (assoc 'id cmd)))
           (return cmd)))
       cmds))"
                       (get '*audacity* 'version)
@@ -211,7 +224,7 @@
               (close fp)
               (unless (load fqname :verbose t) ;load the file
                 (error "Unable to load" fqname))) ;assert
-          (t  (format t "Error: ~a cannot be written." fqname)))))))
+          (t  (format t "Error: ~a cannot be written." fqname))))))
 
 
 ;; Try to load AUD- command cache.
