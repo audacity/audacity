@@ -52,6 +52,8 @@ void PlayCurrentRegionAndWait(const CommandContext &context,
 
    projectAudioManager.PlayCurrentRegion(looped, cutpreview);
 
+   wxYieldIfNeeded();
+
    if (project.mBatchMode > 0 && t0 != t1) {
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
@@ -67,8 +69,13 @@ void PlayCurrentRegionAndWait(const CommandContext &context,
             }
             break;
          }
+
          wxMilliSleep(100);
+         wxYieldIfNeeded();
       }
+
+      projectAudioManager.Stop();
+      wxYieldIfNeeded();
    }
 }
 
@@ -84,6 +91,7 @@ void PlayPlayRegionAndWait(const CommandContext &context,
    double t1 = selectedRegion.t1();
 
    projectAudioManager.PlayPlayRegion(selectedRegion, options, mode);
+   wxYieldIfNeeded();
 
    if (project.mBatchMode > 0) {
       /* i18n-hint: This title appears on a dialog that indicates the progress
@@ -100,8 +108,13 @@ void PlayPlayRegionAndWait(const CommandContext &context,
             }
             break;
          }
+
          wxMilliSleep(100);
+         wxYieldIfNeeded();
       }
+
+      projectAudioManager.Stop();
+      wxYieldIfNeeded();
    }
 }
 
@@ -115,6 +128,7 @@ void RecordAndWait(const CommandContext &context, bool altAppearance)
    double t1 = selectedRegion.t1();
 
    projectAudioManager.OnRecord(altAppearance);
+   wxYieldIfNeeded();
 
    if (project.mBatchMode > 0 && t1 != t0) {
       /* i18n-hint: This title appears on a dialog that indicates the progress
@@ -131,8 +145,13 @@ void RecordAndWait(const CommandContext &context, bool altAppearance)
             }
             break;
          }
+
          wxMilliSleep(100);
+         wxYieldIfNeeded();
       }
+
+      projectAudioManager.Stop();
+      wxYieldIfNeeded();
    }
 }
 
