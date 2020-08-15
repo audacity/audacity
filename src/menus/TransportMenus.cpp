@@ -52,9 +52,9 @@ void PlayCurrentRegionAndWait(const CommandContext &context,
 
    projectAudioManager.PlayCurrentRegion(looped, cutpreview);
 
-   wxYieldIfNeeded();
-
    if (project.mBatchMode > 0 && t0 != t1) {
+      wxYieldIfNeeded();
+
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
       ProgressDialog progress(XO("Progress"), XO("Playing"), pdlgHideCancelButton);
@@ -91,9 +91,10 @@ void PlayPlayRegionAndWait(const CommandContext &context,
    double t1 = selectedRegion.t1();
 
    projectAudioManager.PlayPlayRegion(selectedRegion, options, mode);
-   wxYieldIfNeeded();
 
    if (project.mBatchMode > 0) {
+      wxYieldIfNeeded();
+
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
       ProgressDialog progress(XO("Progress"), XO("Playing"), pdlgHideCancelButton);
@@ -128,9 +129,10 @@ void RecordAndWait(const CommandContext &context, bool altAppearance)
    double t1 = selectedRegion.t1();
 
    projectAudioManager.OnRecord(altAppearance);
-   wxYieldIfNeeded();
 
    if (project.mBatchMode > 0 && t1 != t0) {
+      wxYieldIfNeeded();
+
       /* i18n-hint: This title appears on a dialog that indicates the progress
          in doing something.*/
       ProgressDialog progress(XO("Progress"), XO("Recording"), pdlgHideCancelButton);
