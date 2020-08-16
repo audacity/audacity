@@ -27,7 +27,11 @@
 const ComponentInterfaceSymbol HelpCommand::Symbol
 { XO("Help") };
 
+const ComponentInterfaceSymbol CommentCommand::Symbol
+{ XO("Comment") };
+
 namespace{ BuiltinCommandsModule::Registration< HelpCommand > reg; }
+namespace{ BuiltinCommandsModule::Registration< CommentCommand > reg2; }
 
 enum {
    kJson,
@@ -101,5 +105,21 @@ bool HelpCommand::ApplyInner(const CommandContext & context){
    else
       em.GetCommandDefinition( ID, context, 1);
    return true;
+}
+
+bool CommentCommand::DefineParams( ShuttleParams & S ){
+   S.Define( mComment, wxT("_"),  "" );
+   return true;
+}
+
+void CommentCommand::PopulateOrExchange(ShuttleGui & S)
+{
+   S.AddSpace(0, 5);
+
+   S.StartMultiColumn(2, wxALIGN_CENTER);
+   {
+      S.TieTextBox(XXO("_"),mComment,80);
+   }
+   S.EndMultiColumn();
 }
 
