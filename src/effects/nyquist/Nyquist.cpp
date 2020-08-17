@@ -94,7 +94,6 @@ int NyquistEffect::mReentryCount = 0;
 enum
 {
    ID_Editor = 10000,
-   ID_Version,
    ID_Load,
    ID_Save,
 
@@ -110,7 +109,6 @@ enum
 
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
 
-static const wxChar *KEY_Version = wxT("Version");
 static const wxChar *KEY_Command = wxT("Command");
 static const wxChar *KEY_Parameters = wxT("Parameters");
 
@@ -322,7 +320,6 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
    if (mIsPrompt)
    {
       S.Define( mInputCmd, KEY_Command, "" );
-      S.Define( mVersion, KEY_Version, 3 );
       S.Define( mParameters, KEY_Parameters, "" );
       return true;
    }
@@ -370,7 +367,6 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
    if (mIsPrompt)
    {
       parms.Write(KEY_Command, mInputCmd);
-      parms.Write(KEY_Version, mVersion);
       parms.Write(KEY_Parameters, mParameters);
 
       return true;
@@ -420,7 +416,6 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
    if (mIsPrompt)
    {
       parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
-      parms.Read(KEY_Version, &mVersion, mVersion);
       parms.Read(KEY_Parameters, &mParameters, wxEmptyString);
 
       if (!mInputCmd.empty())
@@ -560,6 +555,7 @@ bool NyquistEffect::Init()
       mIsSpectral = false;
       mDebugButton = true;    // Debug button always enabled for Nyquist Prompt.
       mEnablePreview = true;  // Preview button always enabled for Nyquist Prompt.
+      mVersion = 4;
    }
 
    // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
@@ -2573,7 +2569,6 @@ FilePaths NyquistEffect::GetNyquistSearchPath()
 bool NyquistEffect::TransferDataToPromptWindow()
 {
    mCommandText->ChangeValue(mInputCmd);
-   mVersionCheckBox->SetValue(mVersion <= 3);
 
    return true;
 }
@@ -2624,8 +2619,6 @@ bool NyquistEffect::TransferDataFromPromptWindow()
       dumbSingle = '\'';
    mInputCmd.Replace(leftSingle, dumbSingle, true);
    mInputCmd.Replace(rightSingle, dumbSingle, true);
-
-   mVersion = mVersionCheckBox->GetValue() ? 3 : 4;
 
    return ParseCommand(mInputCmd);
 }
@@ -2781,9 +2774,6 @@ void NyquistEffect::BuildPromptWindow(ShuttleGui & S)
          S.AddVariableText(XO("Enter Nyquist Command: "));
 
          S.AddSpace(1, 1);
-
-         mVersionCheckBox = S.AddCheckBox(XXO("&Use legacy (version 3) syntax."),
-                                          (mVersion == 3));
       }
       S.EndMultiColumn();
 

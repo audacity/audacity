@@ -282,7 +282,6 @@ private:
    int               mMergeClips;
 
    wxTextCtrl *mCommandText;
-   wxCheckBox *mVersionCheckBox;
 
    std::exception_ptr mpException {};
 
