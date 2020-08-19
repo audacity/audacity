@@ -26,10 +26,6 @@ Describes shared object that is used to access FFmpeg libraries.
 
 class wxCheckBox;
 
-// TODO: Determine whether the libav* headers come from the FFmpeg or libav
-// project and set IS_FFMPEG_PROJECT depending on it.
-#define IS_FFMPEG_PROJECT 1
-
 /* FFmpeg is written in C99. It uses many types from stdint.h. Because we are
  * compiling this using a C++ compiler we have to put it in extern "C".
  * __STDC_CONSTANT_MACROS is defined to make <stdint.h> behave like it
@@ -52,88 +48,10 @@ extern "C" {
 
    #include <libavcodec/avcodec.h>
    #include <libavformat/avformat.h>
-   #include <libavutil/error.h>
    #include <libavutil/fifo.h>
-   #include <libavutil/mathematics.h>
 
-   #if defined(DISABLE_DYNAMIC_LOADING_FFMPEG)
-      #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)
-      #define av_frame_alloc avcodec_alloc_frame
-      #define av_frame_free avcodec_free_frame
-      #endif
-
-      #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 59, 100)
-      inline void avcodec_free_frame(AVFrame **frame) {
-         av_free(*frame);
-      }
-      #endif
-
-      #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 51, 100)
-      #define AVCodecID CodecID
-      #define AV_CODEC_ID_AAC CODEC_ID_AAC
-      #define AV_CODEC_ID_AC CODEC_ID_AC
-      #define AV_CODEC_ID_AC3 CODEC_ID_AC3
-      #define AV_CODEC_ID_ADPCM CODEC_ID_ADPCM
-      #define AV_CODEC_ID_ADPCM_CT CODEC_ID_ADPCM_CT
-      #define AV_CODEC_ID_ADPCM_G726 CODEC_ID_ADPCM_G726
-      #define AV_CODEC_ID_ADPCM_IMA_QT CODEC_ID_ADPCM_IMA_QT
-      #define AV_CODEC_ID_ADPCM_IMA_WAV CODEC_ID_ADPCM_IMA_WAV
-      #define AV_CODEC_ID_ADPCM_MS CODEC_ID_ADPCM_MS
-      #define AV_CODEC_ID_ADPCM_SWF CODEC_ID_ADPCM_SWF
-      #define AV_CODEC_ID_ADPCM_YAMAHA CODEC_ID_ADPCM_YAMAHA
-      #define AV_CODEC_ID_ALAC CODEC_ID_ALAC
-      #define AV_CODEC_ID_AMR CODEC_ID_AMR
-      #define AV_CODEC_ID_AMR_NB CODEC_ID_AMR_NB
-      #define AV_CODEC_ID_AMR_WB CODEC_ID_AMR_WB
-      #define AV_CODEC_ID_ATRAC CODEC_ID_ATRAC
-      #define AV_CODEC_ID_ATRAC3 CODEC_ID_ATRAC3
-      #define AV_CODEC_ID_DTS CODEC_ID_DTS
-      #define AV_CODEC_ID_DVAUDIO CODEC_ID_DVAUDIO
-      #define AV_CODEC_ID_FLAC CODEC_ID_FLAC
-      #define AV_CODEC_ID_GSM CODEC_ID_GSM
-      #define AV_CODEC_ID_GSM_MS CODEC_ID_GSM_MS
-      #define AV_CODEC_ID_IMC CODEC_ID_IMC
-      #define AV_CODEC_ID_MACE CODEC_ID_MACE
-      #define AV_CODEC_ID_MACE3 CODEC_ID_MACE3
-      #define AV_CODEC_ID_MACE6 CODEC_ID_MACE6
-      #define AV_CODEC_ID_MP CODEC_ID_MP
-      #define AV_CODEC_ID_MP2 CODEC_ID_MP2
-      #define AV_CODEC_ID_MP3 CODEC_ID_MP3
-      #define AV_CODEC_ID_NELLYMOSER CODEC_ID_NELLYMOSER
-      #define AV_CODEC_ID_NONE CODEC_ID_NONE
-      #define AV_CODEC_ID_PCM CODEC_ID_PCM
-      #define AV_CODEC_ID_PCM_ALAW CODEC_ID_PCM_ALAW
-      #define AV_CODEC_ID_PCM_MULAW CODEC_ID_PCM_MULAW
-      #define AV_CODEC_ID_PCM_S16BE CODEC_ID_PCM_S16BE
-      #define AV_CODEC_ID_PCM_S16LE CODEC_ID_PCM_S16LE
-      #define AV_CODEC_ID_PCM_S24BE CODEC_ID_PCM_S24BE
-      #define AV_CODEC_ID_PCM_S24LE CODEC_ID_PCM_S24LE
-      #define AV_CODEC_ID_PCM_S32BE CODEC_ID_PCM_S32BE
-      #define AV_CODEC_ID_PCM_S32LE CODEC_ID_PCM_S32LE
-      #define AV_CODEC_ID_PCM_S8 CODEC_ID_PCM_S8
-      #define AV_CODEC_ID_PCM_U8 CODEC_ID_PCM_U8
-      #define AV_CODEC_ID_QCELP CODEC_ID_QCELP
-      #define AV_CODEC_ID_QDM CODEC_ID_QDM
-      #define AV_CODEC_ID_QDM2 CODEC_ID_QDM2
-      #define AV_CODEC_ID_ROQ CODEC_ID_ROQ
-      #define AV_CODEC_ID_ROQ_DPCM CODEC_ID_ROQ_DPCM
-      #define AV_CODEC_ID_SONIC CODEC_ID_SONIC
-      #define AV_CODEC_ID_SONIC_LS CODEC_ID_SONIC_LS
-      #define AV_CODEC_ID_TRUESPEECH CODEC_ID_TRUESPEECH
-      #define AV_CODEC_ID_VORBIS CODEC_ID_VORBIS
-      #define AV_CODEC_ID_VOXWARE CODEC_ID_VOXWARE
-      #define AV_CODEC_ID_WMAPRO CODEC_ID_WMAPRO
-      #define AV_CODEC_ID_WMAV CODEC_ID_WMAV
-      #define AV_CODEC_ID_WMAV1 CODEC_ID_WMAV1
-      #define AV_CODEC_ID_WMAV2 CODEC_ID_WMAV2
-      #define AV_CODEC_ID_WMAVOICE CODEC_ID_WMAVOICE
-      #endif
-
-      #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 8, 100)
-      inline bool av_codec_is_encoder(AVCodec *codec) {
-         return codec != NULL && (codec->encode != NULL || codec->encode2 != NULL);
-      }
-      #endif
+   #if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(55, 33, 100)
+   #error Audacity requires at least FFmpeg v2.2.0 (libavformat v55.33.100)
    #endif
 
    #if LIBAVCODEC_VERSION_MAJOR < 58
@@ -147,7 +65,6 @@ extern "C" {
          #define AV_CODEC_CAP_SMALL_LAST_FRAME CODEC_CAP_SMALL_LAST_FRAME
       #endif
    #endif
-
 }
 #endif
 
@@ -247,7 +164,7 @@ public:
    {
       return {
          /* i18n-hint: do not translate avformat.  Preserve the computer gibberish.*/
-         { XO("Only avformat.dll"), { wxT("avformat.dll") } },
+         { XO("Only avformat.dll"), { wxT("avformat-*.dll") } },
          FileNames::DynamicLibraries,
          FileNames::AllFiles
       };
@@ -267,17 +184,7 @@ public:
 
    wxString GetLibAVFormatName()
    {
-      return (wxT("avformat-") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".dll"));
-   }
-
-   wxString GetLibAVCodecName()
-   {
-      return (wxT("avcodec-") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".dll"));
-   }
-
-   wxString GetLibAVUtilName()
-   {
-      return (wxT("avutil-") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".dll"));
+      return wxT("avformat-*.dll");
    }
 #elif defined(__WXMAC__)
    /* Library names and file filters for Mac OS only */
@@ -296,23 +203,7 @@ public:
 
    wxString GetLibAVFormatName()
    {
-      if (sizeof(void*) == 8)
-         return (wxT("ffmpeg.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".64bit.dylib"));
-      return (wxT("libavformat.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)) wxT(".dylib"));
-   }
-
-   wxString GetLibAVCodecName()
-   {
-      if (sizeof(void*) == 8)
-         return (wxT("ffmpeg_codecs.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".64bit.dylib"));
-      return (wxT("libavcodec.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)) wxT(".dylib"));
-   }
-
-   wxString GetLibAVUtilName()
-   {
-      if (sizeof(void*) == 8)
-         return (wxT("ffmpeg_utils.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".64bit.dylib"));
-      return (wxT("libavutil.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)) wxT(".dylib"));
+      return wxT("libavformat.*.dylib");
    }
 #else
    /* Library names and file filters for other platforms, basically Linux and
@@ -320,7 +211,7 @@ public:
    FileNames::FileTypes GetLibraryTypes()
    {
       return {
-         { XO("Only libavformat.so"), { wxT("libavformat*.so*") } },
+         { XO("Only libavformat.so"), { wxT("libavformat.so*") } },
          FileNames::DynamicLibraries,
          FileNames::AllFiles
       };
@@ -333,17 +224,7 @@ public:
 
    wxString GetLibAVFormatName()
    {
-      return (wxT("libavformat.so.") wxT(AV_STRINGIFY(LIBAVFORMAT_VERSION_MAJOR)));
-   }
-
-   wxString GetLibAVCodecName()
-   {
-      return (wxT("libavcodec.so.") wxT(AV_STRINGIFY(LIBAVCODEC_VERSION_MAJOR)));
-   }
-
-   wxString GetLibAVUtilName()
-   {
-      return (wxT("libavutil.so.") wxT(AV_STRINGIFY(LIBAVUTIL_VERSION_MAJOR)));
+      return wxT("libavformat.so");
    }
 #endif // (__WXMAC__) || (__WXMSW__)
 
@@ -580,21 +461,12 @@ extern "C" {
       (AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options),
       (avctx, codec, options);
    );
-#if defined(IS_FFMPEG_PROJECT)
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_decode_audio4,
       (AVCodecContext *avctx, AVFrame *frame, int *got_output, const AVPacket *avpkt),
       (avctx, frame, got_output, avpkt)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      avcodec_decode_audio4,
-      (AVCodecContext *avctx, AVFrame *frame, int *got_output, AVPacket *avpkt),
-      (avctx, frame, got_output, avpkt)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       avcodec_encode_audio2,
@@ -674,42 +546,24 @@ extern "C" {
       (AVFormatContext *s, AVDictionary **options),
       (s, options)
    );
-#if LIBAVFORMAT_VERSION_INT >= AV_VERSION_INT(55, 33, 101)
    FFMPEG_FUNCTION_WITH_RETURN(
       AVOutputFormat*,
       av_oformat_next,
       (const AVOutputFormat *f),
       (f)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      AVOutputFormat*,
-      av_oformat_next,
-      (AVOutputFormat *f),
-      (f)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       AVCodec*,
       av_codec_next,
       (const AVCodec *c),
       (c)
    );
-#if defined(IS_FFMPEG_PROJECT)
    FFMPEG_FUNCTION_WITH_RETURN(
       AVStream*,
       avformat_new_stream,
       (AVFormatContext *s, const AVCodec *c),
       (s, c)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      AVStream*,
-      avformat_new_stream,
-      (AVFormatContext *s, AVCodec *c),
-      (s, c)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       AVFormatContext*,
       avformat_alloc_context,
@@ -755,34 +609,18 @@ extern "C" {
       (AVFifoBuffer *f),
       (f)
    );
-#if LIBAVUTIL_VERSION_MAJOR >= 53
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       av_fifo_size,
       (const AVFifoBuffer *f),
       (f)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      int,
-      av_fifo_size,
-      (AVFifoBuffer *f),
-      (f)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       void*,
       av_malloc,
       (size_t size),
       (size)
    );
-   /*
-   FFMPEG_FUNCTION_NO_RETURN(
-      av_freep,
-      (void *ptr),
-      (ptr)
-   );
-   */
    FFMPEG_FUNCTION_WITH_RETURN(
       int64_t,
       av_rescale_q,
@@ -817,21 +655,12 @@ extern "C" {
       (AVDictionary **m),
       (m)
       );
-#if LIBAVUTIL_VERSION_MAJOR >= 53
    FFMPEG_FUNCTION_WITH_RETURN(
       AVDictionaryEntry *,
       av_dict_get,
       (const AVDictionary *m, const char *key, const AVDictionaryEntry *prev, int flags),
       (m, key, prev, flags)
    );
-#else
-   FFMPEG_FUNCTION_WITH_RETURN(
-      AVDictionaryEntry *,
-      av_dict_get,
-      (AVDictionary *m, const char *key, const AVDictionaryEntry *prev, int flags),
-      (m, key, prev, flags)
-   );
-#endif
    FFMPEG_FUNCTION_WITH_RETURN(
       int,
       av_dict_set,
@@ -880,7 +709,6 @@ extern "C" {
       (linesize, nb_channels, nb_samples, sample_fmt, align)
    );
 };
-
 
 #endif
 
