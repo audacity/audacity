@@ -199,6 +199,11 @@ public:
    virtual ~WaveClip();
 
    void ConvertToSampleFormat(sampleFormat format);
+   void ConvertToSampleFormat(sampleFormat format,
+                              ProgressDialog &progress,
+                              sampleCount &converted,
+                              const sampleCount &total);
+
 
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range

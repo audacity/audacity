@@ -254,8 +254,18 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    AudacityProject *const project = &mpData->project;
 
+   ProgressDialog progress{ XO("Changing sample format"), 
+                            XO("Processing...   0%%"),
+                            pdlgHideStopButton | pdlgHideCancelButton };
+
+   sampleCount totalSamples{ 0 };
+   for (const auto & channel : TrackList::Channels(pTrack))
+      totalSamples += channel->GetNumSamples();
+   sampleCount processedSamples{ 0 };
+
    for (auto channel : TrackList::Channels(pTrack))
-      channel->ConvertToSampleFormat(newFormat);
+      channel->ConvertToSampleFormat(
+         newFormat, progress, processedSamples, totalSamples);
 
    ProjectHistory::Get( *project )
    /* i18n-hint: The strings name a track and a format */

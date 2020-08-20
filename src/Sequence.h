@@ -160,6 +160,10 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // Return true iff there is a change
    bool ConvertToSampleFormat(sampleFormat format);
+   bool ConvertToSampleFormat(sampleFormat format,
+                              ProgressDialog &progress,
+                              sampleCount &converted,
+                              const sampleCount &total);
 
    //
    // Retrieving summary info

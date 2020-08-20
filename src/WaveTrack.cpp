@@ -410,6 +410,15 @@ void WaveTrack::SetWaveColorIndex(int colorIndex)
    mWaveColorIndex = colorIndex;
 }
 
+sampleCount WaveTrack::GetNumSamples() const
+{
+   sampleCount result{ 0 };
+
+   for (const auto &clip : mClips)
+      result += clip->GetNumSamples();
+
+   return result;
+}
 
 void WaveTrack::ConvertToSampleFormat(sampleFormat format)
 // WEAK-GUARANTEE
@@ -417,6 +426,16 @@ void WaveTrack::ConvertToSampleFormat(sampleFormat format)
 {
    for (const auto &clip : mClips)
       clip->ConvertToSampleFormat(format);
+   mFormat = format;
+}
+
+void WaveTrack::ConvertToSampleFormat(sampleFormat format,
+                                      ProgressDialog &progress,
+                                      sampleCount &converted,
+                                      const sampleCount &total)
+{
+   for (const auto &clip : mClips)
+      clip->ConvertToSampleFormat(format, progress, converted, total);
    mFormat = format;
 }
 

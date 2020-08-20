@@ -1373,6 +1373,16 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format)
       MarkChanged();
 }
 
+void WaveClip::ConvertToSampleFormat(sampleFormat format,
+                                     ProgressDialog &progress,
+                                     sampleCount &converted,
+                                     const sampleCount &total)
+{
+   auto bChanged = mSequence->ConvertToSampleFormat(format, progress, converted, total);
+   if (bChanged)
+      MarkChanged();
+}
+
 void WaveClip::UpdateEnvelopeTrackLen()
 // NOFAIL-GUARANTEE
 {

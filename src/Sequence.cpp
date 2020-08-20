@@ -234,6 +234,80 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
    return true;
 }
 
+bool Sequence::ConvertToSampleFormat(sampleFormat format,
+                                     ProgressDialog &progress,
+                                     sampleCount &converted,
+                                     const sampleCount &total)
+{
+   if (format == mSampleFormat)
+      return false;
+
+   if (mBlock.size() == 0)
+   {
+      mSampleFormat = format;
+      return true;
+   }
+
+   const sampleFormat oldFormat = mSampleFormat;
+   mSampleFormat = format;
+
+   const auto oldMinSamples = mMinSamples, oldMaxSamples = mMaxSamples;
+
+   mMinSamples = sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormat) / 2;
+   mMaxSamples = mMinSamples * 2;
+
+   bool bSuccess = false;
+   auto cleanup = finally([&] {
+      if (!bSuccess) {
+         mSampleFormat = oldFormat;
+         mMaxSamples = oldMaxSamples;
+         mMinSamples = oldMinSamples;
+      }
+   });
+
+   BlockArray newBlockArray;
+
+   newBlockArray.reserve
+   (1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
+
+   {
+      size_t oldSize = oldMaxSamples;
+      SampleBuffer bufferOld(oldSize, oldFormat);
+      size_t newSize = oldMaxSamples;
+      SampleBuffer bufferNew(newSize, format);
+
+      for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
+      {
+         SeqBlock &oldSeqBlock = mBlock[i];
+         const auto &oldBlockFile = oldSeqBlock.f;
+         const auto len = oldBlockFile->GetLength();
+         ensureSampleBufferSize(bufferOld, oldFormat, oldSize, len);
+         Read(bufferOld.ptr(), oldFormat, oldSeqBlock, 0, len, true);
+
+         ensureSampleBufferSize(bufferNew, format, newSize, len);
+         CopySamples(bufferOld.ptr(), oldFormat, bufferNew.ptr(), format, len);
+
+         const auto blockstart = oldSeqBlock.start;
+         Blockify(*mDirManager, mMaxSamples, mSampleFormat,
+            newBlockArray, blockstart, bufferNew.ptr(), len);
+
+         converted += len;
+         double d_converted = converted.as_double();
+         double d_total = total.as_double();
+         int percentage{ static_cast<int>((d_converted / d_total) * 100) };
+         progress.Update(d_converted, d_total,
+                         XO("Processing...   %i%%").Format(percentage));
+      }
+   }
+
+   CommitChangesIfConsistent
+   (newBlockArray, mNumSamples, wxT("Sequence::ConvertToSampleFormat()"));
+
+   bSuccess = true;
+
+   return true;
+}
+
 std::pair<float, float> Sequence::GetMinMax(
    sampleCount start, sampleCount len, bool mayThrow) const
 {
