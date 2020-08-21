@@ -839,8 +839,7 @@ bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleNoteTrack(XMLTagHandler *&handler)
 {
 #if defined(USE_MIDI)
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewNoteTrack());
+   mTracks.push_back( std::make_shared<NoteTrack>());
 
    handler = mTracks.back().get();
 

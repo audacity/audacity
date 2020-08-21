@@ -101,7 +101,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
             },
 #ifdef USE_MIDI
             [&](const NoteTrack *) {
-               uNewTrack = trackFactory.NewNoteTrack(),
+               uNewTrack = std::make_shared<NoteTrack>(),
                pNewTrack = uNewTrack.get();
             },
 #endif

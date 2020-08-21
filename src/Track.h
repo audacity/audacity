@@ -1596,9 +1596,6 @@ class AUDACITY_DLL_API TrackFactory final
    std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
    std::shared_ptr<TimeTrack> NewTimeTrack();
-#if defined(USE_MIDI)
-   std::shared_ptr<NoteTrack> NewNoteTrack();
-#endif
 };
 
 #endif
