@@ -892,7 +892,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          auto &intervals = gAudioIO->LostCaptureIntervals();
          if (intervals.size()) {
             // Make a track with labels for recording errors
-            auto uTrack = TrackFactory::Get( project ).NewLabelTrack();
+            auto uTrack = std::make_shared<LabelTrack>();
             auto pTrack = uTrack.get();
             tracks.Add( uTrack );
             /* i18n-hint:  A name given to a track, appearing as its menu button.

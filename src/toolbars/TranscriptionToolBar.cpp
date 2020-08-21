@@ -845,7 +845,6 @@ int DoAddLabel(
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    wxString title;      // of label
@@ -861,7 +860,7 @@ int DoAddLabel(
 
    // If none found, start a NEW label track and use it
    if (!lt)
-      lt = tracks.Add( trackFactory.NewLabelTrack() );
+      lt = tracks.Add( std::make_shared<LabelTrack>() );
 
 // LLL: Commented as it seemed a little forceful to remove users
 //      selection when adding the label.  This does not happen if

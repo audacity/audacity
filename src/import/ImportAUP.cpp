@@ -829,8 +829,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 {
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewLabelTrack());
+   mTracks.push_back(std::make_shared<LabelTrack>());
 
    handler = mTracks.back().get();
 

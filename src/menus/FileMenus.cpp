@@ -535,7 +535,7 @@ void OnImportLabels(const CommandContext &context)
          return;
       }
 
-      auto newTrack = trackFactory.NewLabelTrack();
+      auto newTrack = std::make_shared<LabelTrack>();
       wxString sTrackName;
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);

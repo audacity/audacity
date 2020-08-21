@@ -2106,7 +2106,7 @@ Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
    : mpEffect(pEffect)
 {
-   LabelTrack::Holder pTrack{ pEffect->mFactory->NewLabelTrack() };
+   LabelTrack::Holder pTrack{ std::make_shared<LabelTrack>() };
    mpTrack = pTrack.get();
    if (!name.empty())
       pTrack->SetName(name);

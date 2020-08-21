@@ -661,7 +661,7 @@ void OnNewLabelTrack(const CommandContext &context)
    auto &trackFactory = TrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto t = tracks.Add( trackFactory.NewLabelTrack() );
+   auto t = tracks.Add( std::make_shared<LabelTrack>() );
 
    SelectUtilities::SelectNone( project );
 

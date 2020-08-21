@@ -95,7 +95,6 @@ END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
                          AudacityProject &project,
-                         TrackFactory &factory,
                          TrackList *tracks,
                          LabelTrack *selectedTrack,
                          int index,
@@ -110,7 +109,6 @@ LabelDialog::LabelDialog(wxWindow *parent,
            wxSize(800, 600),
            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
   , mProject{ project }
-  , mFactory(factory)
   , mTracks(tracks)
   , mSelectedTrack(selectedTrack)
   , mIndex(index)
@@ -402,7 +400,7 @@ bool LabelDialog::TransferDataFromWindow()
       wxString name = mTrackNames[tndx + 1].AfterFirst(wxT('-')).Mid(1);
 
       // Create the NEW track and add to track list
-      auto newTrack = mFactory.NewLabelTrack();
+      auto newTrack = std::make_shared<LabelTrack>();
       newTrack->SetName(name);
       mTracks->Add( newTrack );
       tndx++;
@@ -654,7 +652,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       else {
          // Create a temporary label track and load the labels
          // into it
-         auto lt = mFactory.NewLabelTrack();
+         auto lt = std::make_shared<LabelTrack>();
          lt->Import(f);
 
          // Add the labels to our collection
@@ -723,7 +721,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Transfer our collection to a temporary label track
-   auto lt = mFactory.NewLabelTrack();
+   auto lt = std::make_shared<LabelTrack>();
    int i;
 
    for (i = 0; i < cnt; i++) {

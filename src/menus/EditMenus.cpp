@@ -106,7 +106,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
             },
 #endif
             [&](const LabelTrack *) {
-               uNewTrack = trackFactory.NewLabelTrack(),
+               uNewTrack = std::make_shared<LabelTrack>(),
                pNewTrack = uNewTrack.get();
             },
             [&](const TimeTrack *) {
