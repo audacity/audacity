@@ -78,6 +78,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
    auto &trackFactory = TrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // First check whether anything's selected.
@@ -113,7 +114,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
                // Maintain uniqueness of the time track!
                pNewTrack = *tracks.Any<TimeTrack>().begin();
                if (!pNewTrack)
-                  uNewTrack = trackFactory.NewTimeTrack(),
+                  uNewTrack = std::make_shared<TimeTrack>( &viewInfo ),
                   pNewTrack = uNewTrack.get();
             }
          );

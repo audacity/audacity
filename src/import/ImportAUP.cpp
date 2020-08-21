@@ -872,8 +872,8 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
       return true;
    }
 
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewTimeTrack());
+   auto &viewInfo = ViewInfo::Get( mProject );
+   mTracks.push_back( std::make_shared<TimeTrack>(&viewInfo) );
 
    handler = mTracks.back().get();
 

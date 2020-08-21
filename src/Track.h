@@ -41,7 +41,6 @@ class TrackView;
 class WaveTrack;
 class NoteTrack;
 class AudacityProject;
-class ZoomInfo;
 
 using TrackArray = std::vector< Track* >;
 using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
@@ -1572,10 +1571,9 @@ class AUDACITY_DLL_API TrackFactory final
    static void Destroy( AudacityProject &project );
 
    TrackFactory( const ProjectSettings &settings,
-      const SampleBlockFactoryPtr &pFactory, const ZoomInfo *zoomInfo)
+      const SampleBlockFactoryPtr &pFactory)
       : mSettings{ settings }
       , mpFactory(pFactory)
-      , mZoomInfo(zoomInfo)
    {
    }
    TrackFactory( const TrackFactory & ) PROHIBITED;
@@ -1587,7 +1585,6 @@ class AUDACITY_DLL_API TrackFactory final
  private:
    const ProjectSettings &mSettings;
    SampleBlockFactoryPtr mpFactory;
-   const ZoomInfo *const mZoomInfo;
    friend class AudacityProject;
  public:
    // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
@@ -1595,7 +1592,6 @@ class AUDACITY_DLL_API TrackFactory final
    std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
    std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
                            double rate = 0);
-   std::shared_ptr<TimeTrack> NewTimeTrack();
 };
 
 #endif

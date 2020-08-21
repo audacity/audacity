@@ -678,7 +678,7 @@ void OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if ( *tracks.Any<TimeTrack>().begin() ) {
@@ -688,7 +688,7 @@ void OnNewTimeTrack(const CommandContext &context)
       return;
    }
 
-   auto t = tracks.AddToHead( trackFactory.NewTimeTrack() );
+   auto t = tracks.AddToHead( std::make_shared<TimeTrack>(&viewInfo) );
 
    SelectUtilities::SelectNone( project );
 
