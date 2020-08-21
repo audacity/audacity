@@ -36,8 +36,6 @@ class PlayableTrack;
 class ProjectSettings;
 class LabelTrack;
 class TimeTrack;
-class TrackControls;
-class TrackView;
 class WaveTrack;
 class NoteTrack;
 class AudacityProject;
