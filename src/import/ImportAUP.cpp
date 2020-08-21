@@ -91,7 +91,7 @@ public:
 
    ByteCount GetFileUncompressedBytes() override;
 
-   ProgressResult Import(TrackFactory *trackFactory,
+   ProgressResult Import(WaveTrackFactory *trackFactory,
                          TrackHolders &outTracks,
                          Tags *tags) override;
 
@@ -267,7 +267,7 @@ auto AUPImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
+ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFactory),
                                            TrackHolders &WXUNUSED(outTracks),
                                            Tags *tags)
 {
@@ -829,8 +829,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 {
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewLabelTrack());
+   mTracks.push_back(std::make_shared<LabelTrack>());
 
    handler = mTracks.back().get();
 
@@ -840,8 +839,7 @@ bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleNoteTrack(XMLTagHandler *&handler)
 {
 #if defined(USE_MIDI)
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewNoteTrack());
+   mTracks.push_back( std::make_shared<NoteTrack>());
 
    handler = mTracks.back().get();
 
@@ -874,8 +872,8 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
       return true;
    }
 
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewTimeTrack());
+   auto &viewInfo = ViewInfo::Get( mProject );
+   mTracks.push_back( std::make_shared<TimeTrack>(&viewInfo) );
 
    handler = mTracks.back().get();
 
@@ -884,7 +882,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleWaveTrack(XMLTagHandler *&handler)
 {
-   auto &trackFactory = TrackFactory::Get(mProject);
+   auto &trackFactory = WaveTrackFactory::Get(mProject);
    mTracks.push_back(trackFactory.NewWaveTrack());
 
    handler = mTracks.back().get();

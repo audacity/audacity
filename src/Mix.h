@@ -25,7 +25,7 @@
 
 class Resample;
 class BoundedEnvelope;
-class TrackFactory;
+class WaveTrackFactory;
 class TrackList;
 class WaveTrack;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -43,7 +43,7 @@ class WaveTrackCache;
  * no explicit time range to process, and the whole occupied length of the
  * input tracks is processed.
  */
-void MixAndRender(TrackList * tracks, TrackFactory *factory,
+void MixAndRender(TrackList * tracks, WaveTrackFactory *factory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
                   std::shared_ptr<WaveTrack> &uLeft,

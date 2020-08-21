@@ -25,7 +25,7 @@ class wxArrayString;
 class wxListBox;
 class AudacityProject;
 class Tags;
-class TrackFactory;
+class WaveTrackFactory;
 class Track;
 class ImportPlugin;
 class ImportFileHandle;
@@ -167,7 +167,7 @@ public:
    // if false, the import failed and errorMessage will be set.
    bool Import( AudacityProject &project,
               const FilePath &fName,
-              TrackFactory *trackFactory,
+              WaveTrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,
               TranslatableString &errorMessage);

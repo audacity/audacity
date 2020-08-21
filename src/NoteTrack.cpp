@@ -112,19 +112,13 @@ SONFNS(AutoSave)
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add(trackFactory.NewNoteTrack());
+      auto result = tracks.Add( std::make_shared<NoteTrack>());
       TrackView::Get( *result );
       TrackControls::Get( *result );
       return result;
    }
 };
-
-NoteTrack::Holder TrackFactory::NewNoteTrack()
-{
-   return std::make_shared<NoteTrack>();
-}
 
 NoteTrack::NoteTrack()
    : NoteTrackBase()

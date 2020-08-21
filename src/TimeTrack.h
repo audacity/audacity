@@ -25,7 +25,7 @@ class TimeTrack final : public Track {
 
  public:
 
-   TimeTrack(const ZoomInfo *zoomInfo);
+   explicit TimeTrack(const ZoomInfo *zoomInfo);
    /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *
     * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the
@@ -111,8 +111,6 @@ class TimeTrack final : public Track {
 
 private:
    Track::Holder Clone() const override;
-
-   friend class TrackFactory;
 };
 
 

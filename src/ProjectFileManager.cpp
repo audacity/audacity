@@ -1175,7 +1175,7 @@ bool ProjectFileManager::Import(
       Tags::Set( project, newTags );
 
       bool success = Importer::Get().Import(project, fileName,
-                                            &TrackFactory::Get( project ),
+                                            &WaveTrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),
                                             errorMessage);

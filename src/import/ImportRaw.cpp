@@ -93,7 +93,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 // but may also throw FileException to make use of the application's
 // user visible error reporting.
 void ImportRaw(wxWindow *parent, const wxString &fileName,
-              TrackFactory *trackFactory, TrackHolders &outTracks)
+              WaveTrackFactory *trackFactory, TrackHolders &outTracks)
 {
    outTracks.clear();
    int encoding = 0; // Guess Format

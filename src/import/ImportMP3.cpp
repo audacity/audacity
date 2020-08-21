@@ -110,7 +110,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
    wxInt32 GetStreamCount() override;
    const TranslatableStrings &GetStreamInfo() override;
    void SetStreamUsage(wxInt32 StreamID, bool Use) override;
@@ -157,7 +157,7 @@ private:
    unsigned char mInputBuffer[INPUT_BUFFER_SIZE + MAD_BUFFER_GUARD];
    int mInputBufferLen;
 
-   TrackFactory *mTrackFactory;
+   WaveTrackFactory *mTrackFactory;
    NewChannelGroup mChannels;
    unsigned mNumChannels;
 
@@ -252,7 +252,7 @@ void MP3ImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUS
 {
 }
 
-ProgressResult MP3ImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
                                            TrackHolders &outTracks,
                                            Tags *tags)
 {

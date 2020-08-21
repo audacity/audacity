@@ -36,7 +36,7 @@
 bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
 {
    auto &tracks = TrackList::Get( project );
-   auto newTrack = TrackFactory::Get( project ).NewNoteTrack();
+   auto newTrack =  std::make_shared<NoteTrack>();
    
    if (::ImportMIDI(fileName, newTrack.get())) {
       
