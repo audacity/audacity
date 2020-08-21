@@ -1198,7 +1198,7 @@ void Effect::SetBatchProcessing(bool start)
 
 bool Effect::DoEffect(double projectRate,
                       TrackList *list,
-                      TrackFactory *factory,
+                      WaveTrackFactory *factory,
                       NotifyingSelectedRegion &selectedRegion,
                       wxWindow *pParent,
                       const EffectDialogFactory &dialogFactory)

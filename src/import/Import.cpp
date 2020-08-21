@@ -455,7 +455,7 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 // returns number of tracks imported
 bool Importer::Import( AudacityProject &project,
                      const FilePath &fName,
-                     TrackFactory *trackFactory,
+                     WaveTrackFactory *trackFactory,
                      TrackHolders &tracks,
                      Tags *tags,
                      TranslatableString &errorMessage)

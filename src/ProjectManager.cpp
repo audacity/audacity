@@ -770,7 +770,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    window.DestroyChildren();
 
-   TrackFactory::Destroy( project );
+   WaveTrackFactory::Destroy( project );
 
    // Remove self from the global array, but defer destruction of self
    auto pSelf = AllProjects{}.Remove( project );
@@ -918,7 +918,7 @@ void ProjectManager::ResetProjectToEmpty() {
    SelectUtilities::DoSelectAll( project );
    TrackUtilities::DoRemoveTracks( project );
 
-   TrackFactory::Reset( project );
+   WaveTrackFactory::Reset( project );
 
    projectFileManager.Reset();
 

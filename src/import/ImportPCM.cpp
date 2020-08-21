@@ -93,7 +93,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -290,7 +290,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
-ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
                                 TrackHolders &outTracks,
                                 Tags *tags)
 {

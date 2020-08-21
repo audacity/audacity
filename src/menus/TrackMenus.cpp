@@ -51,7 +51,7 @@ void DoMixAndRender
 {
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto rate = settings.GetRate();
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get( project );
@@ -607,7 +607,7 @@ void OnNewWaveTrack(const CommandContext &context)
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
@@ -631,7 +631,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
@@ -658,7 +658,7 @@ void OnNewLabelTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto t = tracks.Add( std::make_shared<LabelTrack>() );

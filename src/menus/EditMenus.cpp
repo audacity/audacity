@@ -75,7 +75,7 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &viewInfo = ViewInfo::Get( project );
@@ -375,7 +375,7 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );

@@ -19,7 +19,7 @@ can accommodate merged regions.
 
 *//****************************************************************//**
 
-\class TrackFactory
+\class WaveTrackFactory
 \brief Used to create a WaveTrack, or a LabelTrack..  Implementation
 of the functions of this class are dispersed through the different
 Track classes.
@@ -69,7 +69,7 @@ using std::max;
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "wavetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = TrackFactory::Get( project );
+      auto &trackFactory = WaveTrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
       auto result = tracks.Add(trackFactory.NewWaveTrack());
       TrackView::Get( *result );
@@ -78,13 +78,13 @@ static ProjectFileIORegistry::Entry registerFactory{
    }
 };
 
-WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
+WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
    return std::static_pointer_cast<WaveTrack>( orig.Duplicate() );
 }
 
 
-WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
+WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
    if (format == (sampleFormat)0)
       format = QualityPrefs::SampleFormatChoice();
@@ -2724,4 +2724,39 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
 {
    VisitBlocks(
       const_cast<TrackList &>(tracks), std::move( inspector ), pIDs );
+}
+
+#include "Project.h"
+#include "SampleBlock.h"
+#include "ViewInfo.h"
+static auto TrackFactoryFactory = []( AudacityProject &project ) {
+   return std::make_shared< WaveTrackFactory >(
+      ProjectSettings::Get( project ),
+      SampleBlockFactory::New( project ) );
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key2{
+   TrackFactoryFactory
+};
+
+WaveTrackFactory &WaveTrackFactory::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< WaveTrackFactory >( key2 );
+}
+
+const WaveTrackFactory &WaveTrackFactory::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+WaveTrackFactory &WaveTrackFactory::Reset( AudacityProject &project )
+{
+   auto result = TrackFactoryFactory( project );
+   project.AttachedObjects::Assign( key2, result );
+   return *result;
+}
+
+void WaveTrackFactory::Destroy( AudacityProject &project )
+{
+   project.AttachedObjects::Assign( key2, nullptr );
 }

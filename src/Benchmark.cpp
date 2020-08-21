@@ -373,7 +373,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    HoldPrint(true);
 
    const auto t =
-      TrackFactory{ mSettings,
+      WaveTrackFactory{ mSettings,
                     SampleBlockFactory::New( mProject )  }
          .NewWaveTrack(SampleFormat);
 

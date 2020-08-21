@@ -1864,7 +1864,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto rate = settings.GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );

@@ -126,7 +126,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override
@@ -231,7 +231,7 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 ProgressResult OggImportFileHandle::Import(
-   TrackFactory *trackFactory, TrackHolders &outTracks,
+   WaveTrackFactory *trackFactory, TrackHolders &outTracks,
    Tags *tags)
 {
    outTracks.clear();

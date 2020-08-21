@@ -91,7 +91,7 @@ public:
 
    ByteCount GetFileUncompressedBytes() override;
 
-   ProgressResult Import(TrackFactory *trackFactory,
+   ProgressResult Import(WaveTrackFactory *trackFactory,
                          TrackHolders &outTracks,
                          Tags *tags) override;
 
@@ -267,7 +267,7 @@ auto AUPImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
+ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFactory),
                                            TrackHolders &WXUNUSED(outTracks),
                                            Tags *tags)
 {
@@ -882,7 +882,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleWaveTrack(XMLTagHandler *&handler)
 {
-   auto &trackFactory = TrackFactory::Get(mProject);
+   auto &trackFactory = WaveTrackFactory::Get(mProject);
    mTracks.push_back(trackFactory.NewWaveTrack());
 
    handler = mTracks.back().get();

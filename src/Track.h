@@ -1556,40 +1556,4 @@ private:
    std::vector< Updater > mUpdaters;
 };
 
-class SampleBlockFactory;
-using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
-
-class AUDACITY_DLL_API TrackFactory final
-   : public ClientData::Base
-{
- public:
-   static TrackFactory &Get( AudacityProject &project );
-   static const TrackFactory &Get( const AudacityProject &project );
-   static TrackFactory &Reset( AudacityProject &project );
-   static void Destroy( AudacityProject &project );
-
-   TrackFactory( const ProjectSettings &settings,
-      const SampleBlockFactoryPtr &pFactory)
-      : mSettings{ settings }
-      , mpFactory(pFactory)
-   {
-   }
-   TrackFactory( const TrackFactory & ) PROHIBITED;
-   TrackFactory &operator=( const TrackFactory & ) PROHIBITED;
-
-   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
-   { return mpFactory; }
-
- private:
-   const ProjectSettings &mSettings;
-   SampleBlockFactoryPtr mpFactory;
-   friend class AudacityProject;
- public:
-   // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
-   // LabelTrack.cpp, and TimeTrack.cpp respectively
-   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
-   std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
-                           double rate = 0);
-};
-
 #endif

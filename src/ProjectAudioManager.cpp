@@ -675,7 +675,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
          Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
-            auto newTrack = TrackFactory::Get( *p ).NewWaveTrack();
+            auto newTrack = WaveTrackFactory::Get( *p ).NewWaveTrack();
             if (!first)
                first = newTrack.get();
 
