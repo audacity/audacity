@@ -1,8 +1,8 @@
-//   ThemeAsCeeCode.h
-//
-//   This file was Auto-Generated.
-//   It is included by Theme.cpp.
-//   Only check this into Git if you've read and understood the guidelines!
+///   @file ThemeAsCeeCode.h
+///   @brief This file was Auto-Generated.
+///
+///   It is included by Theme.cpp.
+///   Only check this into Git if you've read and understood the guidelines!
 
    137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,1,184,
    0,0,3,68,8,6,0,0,0,194,5,58,248,0,0,0,4,115,66,73,
