@@ -169,7 +169,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    {
       /* i18n-hint: The Expand button makes the dialog bigger, with more in it */
       mResize = S.Id(ExpandID).AddButton(XXO("&Expand"));
-      S.Prop(1).AddSpace( 10 );
+      S.AddSpace( 10,10,1 );
       S.AddStandardButtons( eCancelButton | eHelpButton);
    }
    S.EndHorizontalLay();
@@ -666,8 +666,13 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
       // so that name can be set on a standard control
       btn->SetAccessible(safenew WindowAccessible(btn));
 #endif
-      S.Prop(1).AddSpace( 10 );
-      S.AddStandardButtons( eOkButton | eCancelButton | eHelpButton);
+      S.AddSpace( 10,10,1 );
+      // Bug 2524 OK button does much the same as cancel, so remove it.
+      // OnCancel prompts you if there has been a change.
+      // OnOK saves without prompting.
+      // That difference is too slight to merit a button, and with the OK
+      // button, people might expect the dialog to apply the macro too.
+      S.AddStandardButtons( /*eOkButton |*/ eCancelButton | eHelpButton);
    }
    S.EndHorizontalLay();
 
@@ -813,6 +818,11 @@ void MacrosWindow::OnMacroSelected(wxListEvent & event)
    int item = event.GetIndex();
 
    mActiveMacro = mMacros->GetItemText(item);
+   ShowActiveMacro();
+}
+
+void MacrosWindow::ShowActiveMacro()
+{
    mMacroCommands.ReadMacro(mActiveMacro);
    if( !mbExpanded )
       return;
@@ -1265,9 +1275,16 @@ void MacrosWindow::OnOK(wxCommandEvent & WXUNUSED(event))
 ///
 void MacrosWindow::OnCancel(wxCommandEvent &WXUNUSED(event))
 {
+   bool bWasChanged = mChanged;
    if (!ChangeOK()) {
       return;
    }
+   // If we've rejected a change, we need to restore the display
+   // of the active macro.
+   // That's because next time we open this dialog we want to see the 
+   // unedited macro.
+   if( bWasChanged )
+      ShowActiveMacro();
    Hide();
 }
 

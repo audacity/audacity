@@ -94,6 +94,7 @@ private:
    void AddItem(const CommandID &command, wxString const &params);
    bool ChangeOK();
    void UpdateMenus();
+   void ShowActiveMacro();
 
    void OnMacroSelected(wxListEvent &event);
    void OnListSelected(wxListEvent &event);
