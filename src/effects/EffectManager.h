@@ -27,7 +27,6 @@ class CommandContext;
 class CommandMessageTarget;
 class ComponentInterfaceSymbol;
 class Effect;
-class TrackFactory;
 class TrackList;
 class SelectedRegion;
 class wxString;

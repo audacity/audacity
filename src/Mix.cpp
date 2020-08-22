@@ -40,7 +40,7 @@
 #include "widgets/ProgressDialog.h"
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
+void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
                   WaveTrack::Holder &uLeft, WaveTrack::Holder &uRight)

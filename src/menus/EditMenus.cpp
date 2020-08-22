@@ -75,9 +75,10 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    // First check whether anything's selected.
@@ -101,19 +102,19 @@ bool DoPasteNothingSelected(AudacityProject &project)
             },
 #ifdef USE_MIDI
             [&](const NoteTrack *) {
-               uNewTrack = trackFactory.NewNoteTrack(),
+               uNewTrack = std::make_shared<NoteTrack>(),
                pNewTrack = uNewTrack.get();
             },
 #endif
             [&](const LabelTrack *) {
-               uNewTrack = trackFactory.NewLabelTrack(),
+               uNewTrack = std::make_shared<LabelTrack>(),
                pNewTrack = uNewTrack.get();
             },
             [&](const TimeTrack *) {
                // Maintain uniqueness of the time track!
                pNewTrack = *tracks.Any<TimeTrack>().begin();
                if (!pNewTrack)
-                  uNewTrack = trackFactory.NewTimeTrack(),
+                  uNewTrack = std::make_shared<TimeTrack>( &viewInfo ),
                   pNewTrack = uNewTrack.get();
             }
          );
@@ -374,7 +375,7 @@ void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );

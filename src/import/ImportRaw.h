@@ -13,7 +13,7 @@
 
 #include "../MemoryX.h"
 
-class TrackFactory;
+class WaveTrackFactory;
 class WaveTrack;
 class wxString;
 class wxWindow;
@@ -27,6 +27,6 @@ using TrackHolders = std::vector< NewChannelGroup >;
 
 
 void ImportRaw(wxWindow *parent, const wxString &fileName,
-   TrackFactory *trackFactory, TrackHolders &outTracks);
+   WaveTrackFactory *trackFactory, TrackHolders &outTracks);
 
 #endif

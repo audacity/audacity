@@ -2054,12 +2054,11 @@ void LabelTrackView::DoEditLabels
    auto format = settings.GetSelectionFormat(),
       freqFormat = settings.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
    auto rate = ProjectSettings::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   LabelDialog dlg(&window, project, trackFactory, &tracks,
+   LabelDialog dlg(&window, project, &tracks,
                    lt, index,
                    viewInfo, rate,
                    format, freqFormat);

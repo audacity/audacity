@@ -128,7 +128,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -225,7 +225,7 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 ProgressResult LOFImportFileHandle::Import(
-   TrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
+   WaveTrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
    Tags * WXUNUSED(tags))
 {
    // Unlike other ImportFileHandle subclasses, this one never gives any tracks

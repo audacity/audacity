@@ -27,6 +27,7 @@
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "ProjectFileIORegistry.h"
+#include "ViewInfo.h"
 
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackControls.h"
@@ -36,17 +37,12 @@
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
-std::shared_ptr<TimeTrack> TrackFactory::NewTimeTrack()
-{
-   return std::make_shared<TimeTrack>(mZoomInfo);
-}
-
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "timetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add(trackFactory.NewTimeTrack());
+      auto &viewInfo = ViewInfo::Get( project );
+      auto result = tracks.Add(std::make_shared<TimeTrack>(&viewInfo));
       TrackView::Get( *result );
       TrackControls::Get( *result );
       return result;

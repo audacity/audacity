@@ -1504,7 +1504,8 @@ bool NyquistEffect::ProcessOne()
       unsigned int l;
       auto ltrack = * mOutputTracks->Any< LabelTrack >().begin();
       if (!ltrack) {
-         ltrack = static_cast<LabelTrack*>(AddToOutputTracks(mFactory->NewLabelTrack()));
+         ltrack = static_cast<LabelTrack*>(
+            AddToOutputTracks(std::make_shared<LabelTrack>()));
       }
 
       for (l = 0; l < numLabels; l++) {

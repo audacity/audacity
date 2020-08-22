@@ -21,6 +21,8 @@
 class ProgressDialog;
 
 class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
+
 class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
@@ -82,7 +84,7 @@ private:
 
    Track::Holder Clone() const override;
 
-   friend class TrackFactory;
+   friend class WaveTrackFactory;
 
  public:
 
@@ -646,3 +648,36 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
 
 #endif // __AUDACITY_WAVETRACK__
+
+class AUDACITY_DLL_API WaveTrackFactory final
+   : public ClientData::Base
+{
+ public:
+   static WaveTrackFactory &Get( AudacityProject &project );
+   static const WaveTrackFactory &Get( const AudacityProject &project );
+   static WaveTrackFactory &Reset( AudacityProject &project );
+   static void Destroy( AudacityProject &project );
+
+   WaveTrackFactory( const ProjectSettings &settings,
+      const SampleBlockFactoryPtr &pFactory)
+      : mSettings{ settings }
+      , mpFactory(pFactory)
+   {
+   }
+   WaveTrackFactory( const WaveTrackFactory & ) PROHIBITED;
+   WaveTrackFactory &operator=( const WaveTrackFactory & ) PROHIBITED;
+
+   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
+   { return mpFactory; }
+
+ private:
+   const ProjectSettings &mSettings;
+   SampleBlockFactoryPtr mpFactory;
+   friend class AudacityProject;
+ public:
+   // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
+   // LabelTrack.cpp, and TimeTrack.cpp respectively
+   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
+   std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
+                           double rate = 0);
+};
