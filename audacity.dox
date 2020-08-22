@@ -2465,3 +2465,13 @@ GENERATE_LEGEND        = YES
 # This tag requires that the tag HAVE_DOT is set to YES.
 
 DOT_CLEANUP            = YES
+
+# More aliases
+
+# @excsafety
+# Example usage:
+# "@excsafety{Strong} -- Leaves @c *this unchanged in case of exceptions"
+# Argument may be Weak, Partial, Strong, No-fail, Mixed
+# Generates a special paragraph with a link to a page section explaining the
+# exception safety level
+ALIASES += excsafety{1}="@par Exception safety guarantee:^^@ref \1-guarantee \"\1\""

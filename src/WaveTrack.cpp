@@ -209,13 +209,13 @@ double WaveTrack::GetOffset() const
    return GetStartTime();
 }
 
+/*! @excsafety{No-fail} */
 void WaveTrack::SetOffset(double o)
-// NOFAIL-GUARANTEE
 {
    double delta = o - GetOffset();
 
    for (const auto &clip : mClips)
-      // assume NOFAIL-GUARANTEE
+      // assume No-fail-guarantee
       clip->SetOffset(clip->GetOffset() + delta);
 
    mOffset = o;
@@ -404,8 +404,8 @@ void WaveTrack::SetOldChannelGain(int channel, float gain)
 
 
 
+/*! @excsafety{Strong} */
 void WaveTrack::SetWaveColorIndex(int colorIndex)
-// STRONG-GUARANTEE
 {
    for (const auto &clip : mClips)
       clip->SetColourIndex( colorIndex );
@@ -413,9 +413,8 @@ void WaveTrack::SetWaveColorIndex(int colorIndex)
 }
 
 
+/*! @excsafety{Weak} -- Might complete on only some clips */
 void WaveTrack::ConvertToSampleFormat(sampleFormat format)
-// WEAK-GUARANTEE
-// might complete on only some clips
 {
    for (const auto &clip : mClips)
       clip->ConvertToSampleFormat(format);
@@ -456,8 +455,8 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
    return tmp;
 }
 
+/*! @excsafety{Strong} */
 Track::Holder WaveTrack::SplitCut(double t0, double t1)
-// STRONG-GUARANTEE
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -489,8 +488,8 @@ Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 
 //Trim trims within a clip, rather than trimming everything.
 //If a bound is outside a clip, it trims everything.
+/*! @excsafety{Weak} */
 void WaveTrack::Trim (double t0, double t1)
-// WEAK-GUARANTEE
 {
    bool inside0 = false;
    bool inside1 = false;
@@ -611,14 +610,14 @@ Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
    return Copy(t0, t1);
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
-// STRONG-GUARANTEE
 {
    HandleClear(t0, t1, false, false);
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
-// STRONG-GUARANTEE
 {
    HandleClear(t0, t1, true, false);
 }
@@ -715,6 +714,8 @@ void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSetting
 // be pasted with visible split lines.  Normally, effects do not
 // want these extra lines, so they may be merged out.
 //
+/*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException.
+But some of its cutline clips may have been destroyed. */
 void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               double t1, // End of time to clear
                               const Track *src, // What to paste
@@ -722,15 +723,12 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               bool merge, // Whether to remove 'extra' splits
                               const TimeWarper *effectWarper // How does time change
                               )
-// WEAK-GUARANTEE
-// this WaveTrack remains destructible in case of AudacityException.
-// But some of its cutline clips may have been destroyed.
 {
    double dur = std::min(t1 - t0, src->GetEndTime());
 
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
-      // use WEAK-GUARANTEE
+      // use Weak-guarantee
       Paste(t0, src);
       return;
    }
@@ -836,7 +834,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                if (prev) {
                   // It must be that clip is what was pasted and it begins where
                   // prev ends.
-                  // use WEAK-GUARANTEE
+                  // use Weak-guarantee
                   MergeClips(GetClipIndex(prev), GetClipIndex(clip));
                   break;
                }
@@ -893,8 +891,8 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    }
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::SplitDelete(double t0, double t1)
-// STRONG-GUARANTEE
 {
    bool addCutLines = false;
    bool split = true;
@@ -956,9 +954,9 @@ void WaveTrack::AddClip(std::shared_ptr<WaveClip> &&clip)
       mClips.push_back(std::move(clip)); // transfer ownership
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::HandleClear(double t0, double t1,
                             bool addCutLines, bool split)
-// STRONG-GUARANTEE
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -1067,7 +1065,7 @@ void WaveTrack::HandleClear(double t0, double t1,
    }
 
    // Only now, change the contents of this track
-   // use NOFAIL-GUARANTEE for the rest
+   // use No-fail-guarantee for the rest
 
    for (const auto &clip : mClips)
    {
@@ -1133,8 +1131,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
    }
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track *src)
-// WEAK-GUARANTEE
 {
    bool editClipCanMove = GetEditClipsCanMove();
 
@@ -1244,7 +1242,7 @@ void WaveTrack::Paste(double t0, const Track *src)
                   if (clip->GetStartTime() > insideClip->GetStartTime() &&
                       insideClip->GetEndTime() + insertDuration >
                                                          clip->GetStartTime())
-                     // STRONG-GUARANTEE in case of this path
+                     // Strong-guarantee in case of this path
                      // not that it matters.
                      throw SimpleMessageBoxException{
                         XO("There is not enough room available to paste the selection")
@@ -1264,7 +1262,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       //wxPrintf("paste: multi clip mode!\n");
 
       if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
-         // STRONG-GUARANTEE in case of this path
+         // Strong-guarantee in case of this path
          // not that it matters.
          throw SimpleMessageBoxException{
             XO("There is not enough room available to paste the selection")
@@ -1325,8 +1323,8 @@ void WaveTrack::Silence(double t0, double t1)
    }
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::InsertSilence(double t, double len)
-// STRONG-GUARANTEE
 {
    // Nothing to do, if length is zero.
    // Fixes Bug 1626
@@ -1340,7 +1338,7 @@ void WaveTrack::InsertSilence(double t, double len)
       // Special case if there is no clip yet
       auto clip = std::make_unique<WaveClip>(mpFactory, mFormat, mRate, this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
-      // use NOFAIL-GUARANTEE
+      // use No-fail-guarantee
       mClips.push_back( std::move( clip ) );
       return;
    }
@@ -1350,11 +1348,11 @@ void WaveTrack::InsertSilence(double t, double len)
       const auto it = std::find_if( mClips.begin(), end,
          [&](const WaveClipHolder &clip) { return clip->WithinClip(t); } );
 
-      // use STRONG-GUARANTEE
+      // use Strong-guarantee
       if (it != end)
          it->get()->InsertSilence(t, len);
 
-      // use NOFAIL-GUARANTEE
+      // use No-fail-guarantee
       for (const auto &clip : mClips)
       {
          if (clip->BeforeClip(t))
@@ -1365,8 +1363,8 @@ void WaveTrack::InsertSilence(double t, double len)
 
 //Performs the opposite of Join
 //Analyses selected region for possible Joined clips and disjoins them
+/*! @excsafety{Weak} */
 void WaveTrack::Disjoin(double t0, double t1)
-// WEAK-GUARANTEE
 {
    auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
    const size_t maxAtOnce = 1048576;
@@ -1443,8 +1441,8 @@ void WaveTrack::Disjoin(double t0, double t1)
    }
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Join(double t0, double t1)
-// WEAK-GUARANTEE
 {
    // Merge all WaveClips overlapping selection into one
 
@@ -1497,11 +1495,11 @@ void WaveTrack::Join(double t0, double t1)
    }
 }
 
+/*! @excsafety{Partial}
+-- Some prefix (maybe none) of the buffer is appended,
+and no content already flushed to disk is lost. */
 bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
                        size_t len, unsigned int stride /* = 1 */)
-// PARTIAL-GUARANTEE in case of exceptions:
-// Some prefix (maybe none) of the buffer is appended, and no content already
-// flushed to disk is lost.
 {
    return RightmostOrNewClip()->Append(buffer, format, len, stride);
 }
@@ -1562,11 +1560,12 @@ size_t WaveTrack::GetIdealBlockSize()
    return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
 }
 
+/*! @excsafety{Mixed} */
+/*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
+/*! @excsafety{Partial}
+-- Some initial portion (maybe none) of the append buffer of the rightmost
+clip gets appended; no previously saved contents are lost. */
 void WaveTrack::Flush()
-// NOFAIL-GUARANTEE that the rightmost clip will be in a flushed state.
-// PARTIAL-GUARANTEE in case of exceptions:
-// Some initial portion (maybe none) of the append buffer of the rightmost
-// clip gets appended; no previously saved contents are lost.
 {
    // After appending, presumably.  Do this to the clip that gets appended.
    RightmostOrNewClip()->Flush();
@@ -1929,9 +1928,9 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
    return result;
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Set(samplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len)
-// WEAK-GUARANTEE
 {
    for (const auto &clip: mClips)
    {
@@ -2123,8 +2122,8 @@ WaveClip* WaveTrack::NewestOrNewClip()
       return mClips.back().get();
 }
 
+/*! @excsafety{No-fail} */
 WaveClip* WaveTrack::RightmostOrNewClip()
-// NOFAIL-GUARANTEE
 {
    if (mClips.empty()) {
       WaveClip *clip = CreateClip();
@@ -2252,16 +2251,16 @@ bool WaveTrack::CanInsertClip(WaveClip* clip,  double &slideBy, double &toleranc
    return true;
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Split( double t0, double t1 )
-// WEAK-GUARANTEE
 {
    SplitAt( t0 );
    if( t0 != t1 )
       SplitAt( t1 );
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::SplitAt(double t)
-// WEAK-GUARANTEE
 {
    for (const auto &c : mClips)
    {
@@ -2350,9 +2349,9 @@ void WaveTrack::UpdateLocationsCache() const
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
+/*! @excsafety{Strong} */
 void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
-// STRONG-GUARANTEE
 {
    bool editClipCanMove = GetEditClipsCanMove();
 
@@ -2373,7 +2372,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
          {
             if (clip2->GetStartTime() > clip->GetStartTime() &&
                 clip->GetEndTime() + end - start > clip2->GetStartTime())
-               // STRONG-GUARANTEE in case of this path
+               // Strong-guarantee in case of this path
                throw SimpleMessageBoxException{
                   XO("There is not enough room available to expand the cut line")
                };
@@ -2382,7 +2381,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
 
       clip->ExpandCutLine(cutLinePosition);
 
-      // STRONG-GUARANTEE provided that the following gives NOFAIL-GUARANTEE
+      // Strong-guarantee provided that the following gives No-fail-guarantee
 
       if (cutlineStart)
          *cutlineStart = start;
@@ -2410,8 +2409,8 @@ bool WaveTrack::RemoveCutLine(double cutLinePosition)
    return false;
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::MergeClips(int clipidx1, int clipidx2)
-// STRONG-GUARANTEE
 {
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);
@@ -2420,18 +2419,18 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
       return; // Don't throw, just do nothing.
 
    // Append data from second clip to first clip
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    clip1->Paste(clip1->GetEndTime(), clip2);
    
-   // use NOFAIL-GUARANTEE for the rest
+   // use No-fail-guarantee for the rest
    // Delete second clip
    auto it = FindClip(mClips, clip2);
    mClips.erase(it);
 }
 
+/*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
+*/
 void WaveTrack::Resample(int rate, ProgressDialog *progress)
-// WEAK-GUARANTEE
-// Partial completion may leave clips at differing sample rates!
 {
    for (const auto &clip : mClips)
       clip->Resample(rate, progress);

@@ -216,7 +216,8 @@ public:
    int GetColourIndex( ) const { return mColourIndex;};
    void SetOffset(double offset);
    double GetOffset() const { return mOffset; }
-   void Offset(double delta) // NOFAIL-GUARANTEE
+   /*! @excsafety{No-fail} */
+   void Offset(double delta)
       { SetOffset(GetOffset() + delta); }
    double GetStartTime() const;
    double GetEndTime() const;
@@ -251,7 +252,8 @@ public:
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
-   void MarkChanged() // NOFAIL-GUARANTEE
+   /*! @excsafety{No-fail} */
+   void MarkChanged()
       { mDirty++; }
 
    /** Getting high-level data for screen display and clipping

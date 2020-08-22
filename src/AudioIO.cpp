@@ -2365,8 +2365,8 @@ void AudioIO::StopStream()
             GuardedCall( [&] {
                WaveTrack* track = mCaptureTracks[i].get();
 
-               // use NOFAIL-GUARANTEE that track is flushed,
-               // PARTIAL-GUARANTEE that some initial length of the recording
+               // use No-fail-guarantee that track is flushed,
+               // Partial-guarantee that some initial length of the recording
                // is saved.
                // See comments in FillBuffers().
                track->Flush();

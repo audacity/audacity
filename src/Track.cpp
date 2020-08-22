@@ -1073,8 +1073,8 @@ void TrackList::UpdatePendingTracks()
    }
 }
 
+/*! @excsafety{No-fail} */
 void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
-// NOFAIL-GUARANTEE
 {
    for (const auto &pTrack: mPendingUpdates)
       pTrack->SetOwner( {}, {} );
@@ -1115,6 +1115,7 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
    }
 }
 
+/*! @excsafety{Strong} */
 bool TrackList::ApplyPendingTracks()
 {
    bool result = false;
@@ -1128,8 +1129,8 @@ bool TrackList::ApplyPendingTracks()
       updates.swap( mPendingUpdates );
    }
 
-   // Remaining steps must be NOFAIL-GUARANTEE so that this function
-   // gives STRONG-GUARANTEE
+   // Remaining steps must be No-fail-guarantee so that this function
+   // gives Strong-guarantee
 
    std::vector< std::shared_ptr<Track> > reinstated;
 

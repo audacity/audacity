@@ -132,8 +132,8 @@ namespace {
    }
 }
 
+/*! @excsafety{Strong} */
 bool Sequence::ConvertToSampleFormat(sampleFormat format)
-// STRONG-GUARANTEE
 {
    if (format == mSampleFormat)
       // no change
@@ -467,8 +467,8 @@ namespace {
    }
 }
 
+/*! @excsafety{Strong} */
 void Sequence::Paste(sampleCount s, const Sequence *src)
-// STRONG-GUARANTEE
 {
    if ((s < 0) || (s > mNumSamples))
    {
@@ -568,10 +568,10 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
          largerBlockLen.as_size_t(),
          mSampleFormat);
 
-      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // Don't make a duplicate array.  We can still give Strong-guarantee
       // if we modify only one block in place.
 
-      // use NOFAIL-GUARANTEE in remaining steps
+      // use No-fail-guarantee in remaining steps
       for (unsigned int i = b + 1; i < numBlocks; i++)
          mBlock[i].start += addedLen;
 
@@ -668,14 +668,14 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       (newBlock, mNumSamples + addedLen, wxT("Paste branch three"));
 }
 
+/*! @excsafety{Strong} */
 void Sequence::SetSilence(sampleCount s0, sampleCount len)
-// STRONG-GUARANTEE
 {
    SetSamples(NULL, mSampleFormat, s0, len);
 }
 
+/*! @excsafety{Strong} */
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
-// STRONG-GUARANTEE
 {
    auto &factory = *mpFactory;
 
@@ -720,7 +720,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    sTrack.mNumSamples = pos;
 
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    Paste(s0, &sTrack);
 }
 
@@ -1104,9 +1104,9 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
 }
 
 // Pass NULL to set silence
+/*! @excsafety{Strong} */
 void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
-// STRONG-GUARANTEE
 {
    auto &factory = *mpFactory;
 
@@ -1470,8 +1470,8 @@ size_t Sequence::GetIdealAppendLen() const
       return max - lastBlockLen;
 }
 
+/*! @excsafety{Strong} */
 void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
-// STRONG-GUARANTEE
 {
    if (len == 0)
       return;
@@ -1577,8 +1577,8 @@ void Sequence::Blockify(SampleBlockFactory &factory,
    }
 }
 
+/*! @excsafety{Strong} */
 void Sequence::Delete(sampleCount start, sampleCount len)
-// STRONG-GUARANTEE
 {
    if (len == 0)
       return;
@@ -1631,10 +1631,10 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
       b.sb = factory.Create(scratch.ptr(), newLen, mSampleFormat);
 
-      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // Don't make a duplicate array.  We can still give Strong-guarantee
       // if we modify only one block in place.
 
-      // use NOFAIL-GUARANTEE in remaining steps
+      // use No-fail-guarantee in remaining steps
 
       for (unsigned int j = b0 + 1; j < numBlocks; j++)
          mBlock[j].start -= len;
@@ -1814,7 +1814,7 @@ void Sequence::CommitChangesIfConsistent
    ConsistencyCheck( newBlock, mMaxSamples, 0, numSamples, whereStr ); // may throw
 
    // now commit
-   // use NOFAIL-GUARANTEE
+   // use No-fail-guarantee
 
    mBlock.swap(newBlock);
    mNumSamples = numSamples;
@@ -1857,7 +1857,7 @@ void Sequence::AppendBlocksIfConsistent
    ConsistencyCheck( mBlock, mMaxSamples, prevSize, numSamples, whereStr ); // may throw
 
    // now commit
-   // use NOFAIL-GUARANTEE
+   // use No-fail-guarantee
 
    mNumSamples = numSamples;
    consistent = true;
