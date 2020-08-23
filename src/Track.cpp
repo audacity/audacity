@@ -1087,27 +1087,24 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
 
    // To find the first node that remains after the first deleted one
    TrackNodePointer node;
-   bool findingNode = false;
    bool foundNode = false;
 
    for (auto it = ListOfTracks::begin(), stop = ListOfTracks::end();
         it != stop;) {
       if (it->get()->GetId() == TrackId{}) {
-         if (pAdded)
-            pAdded->push_back( *it );
-         (*it)->SetOwner( {}, {} );
-         it = erase( it );
+         do {
+            if (pAdded)
+               pAdded->push_back( *it );
+            (*it)->SetOwner( {}, {} );
+            it = erase( it );
+         }
+         while (it != stop && it->get()->GetId() == TrackId{});
 
-         if (!findingNode)
-            findingNode = true;
          if (!foundNode && it != stop)
-            node = (*it)->GetNode();
+            node = (*it)->GetNode(), foundNode = true;
       }
-      else {
-         if ( findingNode )
-            foundNode = true;
+      else
          ++it;
-      }
    }
 
    if (!empty()) {
