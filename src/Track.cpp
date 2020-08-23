@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class Track
-\brief Fundamental data object of Audacity, placed in the TrackPanel.
+\brief Fundamental data object of Audacity, displayed in the TrackPanel.
 Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 
@@ -800,8 +800,9 @@ TrackNodePointer TrackList::Remove(Track *t)
 
 void TrackList::Clear(bool sendEvent)
 {
-   // Null out the back-pointers in tracks, in case there are outstanding
-   // shared_ptrs to those tracks.
+   // Null out the back-pointers to this in tracks, in case there
+   // are outstanding shared_ptrs to those tracks, making them outlive
+   // the temporary ListOfTracks below.
    for ( auto pTrack: *this )
       pTrack->SetOwner( {}, {} );
    for ( auto pTrack: mPendingUpdates )
