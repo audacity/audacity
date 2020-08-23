@@ -1100,8 +1100,10 @@ void TrackList::ClearPendingTracks( ListOfTracks *pAdded )
          }
          while (it != stop && it->get()->GetId() == TrackId{});
 
-         if (!foundNode && it != stop)
-            node = (*it)->GetNode(), foundNode = true;
+         if (!foundNode && it != stop) {
+            node = (*it)->GetNode();
+            foundNode = true;
+         }
       }
       else
          ++it;
