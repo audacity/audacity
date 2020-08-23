@@ -17,14 +17,13 @@
 \brief Used only by WaveTrack, a special way to hold location that
 can accommodate merged regions.
 
-*//****************************************************************//**
+*//****************************************************************/
 
-\class WaveTrackFactory
-\brief Used to create a WaveTrack, or a LabelTrack..  Implementation
-of the functions of this class are dispersed through the different
-Track classes.
-
-*//*******************************************************************/
+/*!
+@class WaveTrackFactory
+@brief Used to create or clone a WaveTrack, with appropriate context
+from the project that will own the track.
+*/
 
 
 #include "WaveTrack.h"

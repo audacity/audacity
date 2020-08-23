@@ -673,11 +673,9 @@ class AUDACITY_DLL_API WaveTrackFactory final
  private:
    const ProjectSettings &mSettings;
    SampleBlockFactoryPtr mpFactory;
-   friend class AudacityProject;
  public:
-   // These methods are defined in WaveTrack.cpp, NoteTrack.cpp,
-   // LabelTrack.cpp, and TimeTrack.cpp respectively
    std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
-   std::shared_ptr<WaveTrack> NewWaveTrack(sampleFormat format = (sampleFormat)0,
-                           double rate = 0);
+   std::shared_ptr<WaveTrack> NewWaveTrack(
+      sampleFormat format = (sampleFormat)0,
+      double rate = 0);
 };
