@@ -647,8 +647,6 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
 
-#endif // __AUDACITY_WAVETRACK__
-
 class AUDACITY_DLL_API WaveTrackFactory final
    : public ClientData::Base
 {
@@ -679,3 +677,5 @@ class AUDACITY_DLL_API WaveTrackFactory final
       sampleFormat format = (sampleFormat)0,
       double rate = 0);
 };
+
+#endif // __AUDACITY_WAVETRACK__
