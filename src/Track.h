@@ -876,9 +876,10 @@ public:
    //! Return an iterator that replaces the predicate
    /*! Advance to the first position at or after the old position that satisfies the new predicate,
    or to the end */
-   TrackIter Filter( FunctionType pred2 ) const
+   template < typename Predicate2 >
+   TrackIter Filter( const Predicate2 &pred2 ) const
    {
-      return { this->mBegin, this->mIter, this->mEnd, std::move(pred2) };
+      return { this->mBegin, this->mIter, this->mEnd, pred2 };
    }
 
    //! Return an iterator for a subclass of TrackType (and not removing const) with same predicate
