@@ -1,8 +1,9 @@
-/**********************************************************************
+/*!********************************************************************
 
 Audacity: A Digital Audio Editor
 
-ClientData.h
+@file ClientData.h
+@brief Utility ClientData::Site to register hooks into a host class that attach client data
 
 Paul Licameli
 
@@ -19,24 +20,28 @@ Paul Licameli
 #include <vector>
 #include "InconsistencyException.h"
 
+//! @copydoc ClientData.h
 namespace ClientData {
 
-// A convenient default parameter for class template Site below
+//! A convenient default parameter for class template @b Site
 struct AUDACITY_DLL_API Base
 {
    virtual ~Base() {}
 };
 
-// Need a truly one-argument alias template below for the default
-// template-template argument of Site
-// (unique_ptr has two, the second is defaulted)
+//! A one-argument alias template for the default template-template parameter of ClientData::Site
+/*! (std::unique_ptr has two, the second is defaulted) */
 template< typename Object > using UniquePtr = std::unique_ptr< Object >;
 
-// Risk of dangling pointers, so be careful
+//! This template-template parameter for ClientData::Site risks dangling pointers, so be careful
 template< typename Object > using BarePtr = Object*;
 
-// A convenient base class defining abstract virtual Clone() for a given kind
-// of pointer
+//! A convenient base class defining abstract virtual Clone() for a given kind of pointer
+/*!
+ @tparam Owner template-template parameter for the kind of smart pointer, like std::shared_ptr, returned by Clone()
+ 
+ @sa ClientData::DeepCopying
+ */
 template<
    template<typename> class Owner = UniquePtr
 > struct Cloneable
@@ -48,130 +53,156 @@ template<
    virtual PointerType Clone() const = 0;
 };
 
-/*
-   \brief ClientData::Site class template enables decoupling of the
-   implementation of core data structures, inheriting it, from compilation and
-   link dependency on the details of other user interface modules, while also
-   allowing the latter to associate their own extra data caches with each
-   instance of the core class, and the caches can have a coterminous lifetime.
+//! Utility to register hooks into a host class that attach client data
+/*!
+   This allows the host object to be the root of an ownership tree of sub-objects at
+   run-time, but inverting the compile-time dependency among implementation files:
+   The host's implementation is in low-level files, and cyclic file dependencies are avoided.
+   The set of client objects attached to each host object is not fixed in the definition of
+   the host class, but instead a system of registration of factories of client objects lets it
+   be open-ended.
+ 
+   Besides mere storage and retrieval, this can also implement the [observer pattern](https://en.wikipedia.org/wiki/Observer_pattern),
+   in which the host pushes notifications to some virtual function defined in
+   each attached item.
 
-   This can implement an "observer pattern" in which the core object pushes
-   notifications to client-side handlers, or it can just implement storage
-   and retrieval services for the client.
+   @par Host side usage pattern
 
-   typical usage pattern in core code:
+ ```
+class Host;
+class AbstractClientData // Abstract base class for attached data
+{
+   virtual ~AbstractClientData(); // minimum for memory management
 
-   class Host;
-   class AbstractClientData // Abstract base class for attached data
+   // optional extra observer protocols
+   virtual void NotificationMethod(
+      // maybe host passes reference to self, maybe not
+      // Host &host
+   ) = 0;
+};
+
+class Host
+   : public ClientData::Site< Host, AbstractClientData >
+   // That inheritance is a case of CRTP
+   // (the "curiously recurring template pattern")
+   // in which the base class takes the derived class as a template argument
+{
+public:
+   Host()
    {
-      virtual ~AbstractClientData(); // minimum for memory management
-
-      // optional extra observer protocols
-      virtual void NotificationMethod(
-         // maybe host passes reference to self, maybe not
-         // Host &host
-      ) = 0;
-   };
-
-   class Host
-      : public ClientData::Site< Host, AbstractClientData >
-      // That inheritance is a case of CRTP
-      // (the "curiously recurring template pattern")
-      // in which the base class takes the derived class as a template argument
-   {
-   public:
-      Host()
-      {
-         // If using an Observer protocol, force early creation of all client
-         // data:
-         BuildAll();
-      }
-
-      void NotifyAll()
-      {
-         // Visit all non-null objects
-         ForEach( []( AbstractClientData &data ){
-            data.NotificationMethod(
-              // *this
-            );
-         } );
-      }
+      // If using an Observer protocol, force early creation of all client
+      // data:
+      BuildAll();
    }
 
-   typical usage pattern in client module -- observer pattern, and retrieval
+   void NotifyAll()
+   {
+      // Visit all non-null objects
+      ForEach( []( AbstractClientData &data ){
+         data.NotificationMethod(
+           // *this
+         );
+      } );
+   }
+}
+```
+
+  @par Client side usage pattern
  
-   class MyClientData : public AbstractClientData
+ ```
+class MyClientData : public AbstractClientData
+{
+public:
+   MyClientData( Host &host )
    {
-   public:
-      MyClientData( Host &host )
-      {
-         // ... use host, maybe keep a back pointer to it, maybe not,
-         // depending how Host declares NotificationMethod ...
-         // ... Maybe Host too is an abstract class and we invoke some
-         // virtual function of it ...
-      }
-      void NotificationMethod(
-         // Host &host
-      ) override
-      {
-         // ... Observer actions
-         // (If there is more than one separately compiled module using this
-         // protocol, beware that the sequence of notifications is unspecified)
-      }
-
-   private:
-      int mExtraStuff;
-   };
-   
-   // Registration of a factory at static initialization time, to be called
-   // when a Host uses BuildAll, or else lazily when client code uses
-   // Host::Get()
-   static const Host::RegisteredFactory key{
-      []( Host &host ){ return std::make_unique< MyClientData >( host ); }
-   };
-
-   // Use of that key at other times, not dependent on notifications from
-   // the core
-   void DoSomething( Host &host )
+      // ... use host, maybe keep a back pointer to it, maybe not,
+      // depending how Host declares NotificationMethod ...
+      // ... Maybe Host too is an abstract class and we invoke some
+      // virtual function of it ...
+   }
+   void NotificationMethod(
+      // Host &host
+   ) override
    {
-      // This may force lazy construction of ClientData, always returning
-      // an object (or else throwing)
-      auto &data = host.Get< MyClientData >( key );
+      // ... Observer actions
+      // (If there is more than one separately compiled module using this
+      // protocol, beware that the sequence of notifications is unspecified)
+   }
+
+private:
+   int mExtraStuff;
+};
+
+// Registration of a factory at static initialization time, to be called
+// when a Host uses BuildAll, or else lazily when client code uses
+// Host::Get()
+static const Host::RegisteredFactory key{
+   []( Host &host ){ return std::make_unique< MyClientData >( host ); }
+};
+
+// Use of that key at other times, not dependent on notifications from
+// the core
+void DoSomething( Host &host )
+{
+   // This may force lazy construction of MyClientData, always returning
+   // an object (or else throwing)
+   auto &data = host.Get< MyClientData >( key );
+   auto val = pData->mExtraStuff;
+   // ...
+}
+
+void DoAnotherThing( Host &host )
+{
+   // Does not force lazy construction of MyClientData
+   auto *pData = host.Find< MyClientData >( key );
+   if ( pData ) {
       auto val = data.mExtraStuff;
       // ...
    }
+}
 
-   void DoAnotherThing( Host &host )
-   {
-      // Does not force lazy construction of ClientData
-      auto *pData = host.Find< MyClientData >( key );
-      if ( pData ) {
-         auto val = data.mExtraStuff;
-         // ...
-      }
-   }
+void DoYetAnotherThing( Host &host )
+{
+   // Reassign the pointer in this client's slot
+   host.Assign( key, MyReplacementObject( host ) );
+}
+```
 
-   void DoYetAnotherThing( Host &host )
-   {
-      // Reassign the pointer in this client's slot
-      host.Assign( key, MyReplacementObject( host ) );
-   }
+   @par Lazy or eager construction
 
-   About laziness:  If the client only needs retrieval, it might need
+   If the client only needs retrieval, it might need
    construction of data only on demand.  But if the host is meant to push
    notifications to the clients, then the host class is responsible for forcing
    early building of all ClientData when host is constructed, as in the example
    above.
 
-   About unusual registration sequences:  if registration of a factory
+   @par Unusual registration sequences
+
+   If registration of a factory
    happens after some host objects are already in existence, their associated
-   client data fail to be created if you rely only on BuildAll in the Host
+   client data fail to be created if you rely only on BuildAll in the @B Host
    constructor.  Early deregistration of factories is permitted, in which case
    any later constructed host objects will carry null pointers in the associated
    slot, and a small "leak" in the space of per-host slots will persist until
    the program exits.  All such usage is not recommended.
-*/
+ 
+ @tparam Host
+ Type that derives from this base class; it
+ supports hooks to invoke attached object factories.  This is an example of the
+ [curiously recurring template pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern#General_form)
 
+ @tparam ClientData Common base class of attachments; must have a virtual destructor
+ 
+ @tparam CopyingPolicy @ref CopyingPolicy value Chooses deep, shallow, or (default) no-op copying of attachments
+ 
+ @tparam Pointer
+ The kind of pointer @b Host will hold to ClientData; default is std::unique_ptr.
+ You might want to use std::shared_ptr, std::weak_ptr, or wxWeakRef instead
+ 
+ @tparam ObjectLockingPolicy @ref LockingPolicy value chooses thread safety policy for array of attachments in each @b Host, default is unsafe
+ 
+ @tparam RegistryLockingPolicy @ref LockingPolicy value chooses thread safety policy for the static table of attachment factory functions, default is unsafe
+*/
 template<
    typename Host,
    typename ClientData = Base,
@@ -180,12 +211,8 @@ template<
 
    CopyingPolicy ObjectCopyingPolicy = SkipCopying,
 
-   // The kind of pointer Host will hold to ClientData; you might want to
-   // use std::shared_ptr, std::weak_ptr, or wxWeakRef instead
    template<typename> class Pointer = UniquePtr,
 
-   // Thread safety policies for the tables of ClientData objects in each Host
-   // object, and for the static factory function registry
    LockingPolicy ObjectLockingPolicy = NoLocking,
    LockingPolicy RegistryLockingPolicy = NoLocking
 >
@@ -198,9 +225,9 @@ public:
          "ClientData::Site requires a data class with a virtual destructor" );
    }
 
-   // Associated type aliases
    using DataType = ClientData;
    using DataPointer = Pointer< ClientData >;
+   //! Type of function from which RegisteredFactory is constructed; it builds attachments
    using DataFactory = std::function< DataPointer( Host& ) >;
 
    Site()
@@ -220,19 +247,27 @@ public:
    Site& operator =( Site && other )
       { mData = std::move(other.mData); return *this; }
 
+   //! How many attachment pointers are in the Site
    size_t size() const { return mData.size(); }
 
+   //! How many static factories have been registered with this specialization of Site
+   /*!
+    Usually agrees with the size() of each site unless some registrations happened later
+    than some Site's construction.
+    */
    static size_t slots() { return GetFactories().mObject.size(); }
 
-   /// \brief a type meant to be stored by client code in a static variable,
-   /// and used as a retrieval key to get the manufactured client object back
-   /// from the host object.
-   /// It can be destroyed to de-register the factory, but usually not before
-   /// destruction of statics at program exit.
+   //! Client code makes static instance from a factory of attachments; passes it to @ref Get or @ref Find as a retrieval key
+   /*!
+   It can be destroyed to de-register the factory, but usually not before
+   destruction of statics at program exit.
+   */
    class RegisteredFactory
    {
    public:
-      RegisteredFactory( DataFactory factory )
+      RegisteredFactory(
+         DataFactory factory
+      )
       {
          auto factories = GetFactories();
          mIndex = factories.mObject.size();
@@ -259,12 +294,17 @@ public:
       size_t mIndex;
    };
 
-   // member functions for use by clients
+   //! @name Retrieval and reassignment of attachments
+   //! @{
 
-   // \brief Get a reference to an object, creating it on demand if needed, and
-   // down-cast it with static_cast.  Throws on failure to create it.
-   // (Lifetime of the object may depend on the Host's lifetime and also on the
-   // client's use of Assign(). Site is not responsible for guarantees.)
+   //! Get reference to an attachment, creating on demand if not present, down-cast it to @b Subclass
+   /*!
+    Uses static_cast.  Throws on failure to create it.
+    (Lifetime of the object may depend on the host's lifetime and also on the
+    client's use of Assign(). Site is not responsible for guarantees.)
+    @tparam Subclass Expected actual type of attachment, assumed to be correct
+    @param key Reference to static object created in client code
+    */
    template< typename Subclass = ClientData >
    Subclass &Get( const RegisteredFactory &key )
    {
@@ -272,7 +312,8 @@ public:
       return DoGet< Subclass >( data, key );
    }
 
-   // const counterpart of the previous
+   //! @copydoc Get
+   /*! const overload returns const references only. */
    template< typename Subclass = const ClientData >
    auto Get( const RegisteredFactory &key ) const -> typename
       std::enable_if< std::is_const< Subclass >::value, Subclass & >::type
@@ -281,10 +322,13 @@ public:
       return DoGet< Subclass >( data, key );
    }
 
-   // \brief Get a (bare) pointer to an object, or null, and down-cast it with
-   // static_cast.  Do not create any object.
-   // (Lifetime of the object may depend on the Host's lifetime and also on the
-   // client's use of Assign(). Site is not responsible for guarantees.)
+   //!Get a (bare) pointer to an attachment, or null, down-cast it to @b Subclass *; will not create on demand
+   /*!
+    (Lifetime of the object may depend on the host's lifetime and also on the
+    client's use of Assign(). Site is not responsible for guarantees.)
+    @tparam Subclass Expected actual type of attachment, assumed to be correct
+    @param key  Reference to static object created in client code
+    */
    template< typename Subclass = ClientData >
    Subclass *Find( const RegisteredFactory &key )
    {
@@ -292,7 +336,8 @@ public:
       return DoFind< Subclass >( data, key );
    }
 
-   // const counterpart of the previous
+   //! @copydoc Find
+   /*! const overload returns pointers to const only. */
    template< typename Subclass = const ClientData >
    auto Find( const RegisteredFactory &key ) const -> typename
       std::enable_if< std::is_const< Subclass >::value, Subclass * >::type
@@ -301,11 +346,16 @@ public:
       return DoFind< Subclass >( data, key );
    }
 
-  // \brief Reassign Host's pointer to ClientData.
-   // If there is object locking, then reassignments to the same slot in the
-   // same host object are serialized.
+   //! Reassign Site's pointer to ClientData.
+   /*!
+   If @b ObjectLockingPolicy isn't default, then reassignments are serialized.
+   @tparam ReplacementPointer @b Pointer<Subclass> where @b Subclass derives ClientData
+   */
    template< typename ReplacementPointer >
-   void Assign( const RegisteredFactory &key, ReplacementPointer &&replacement )
+   void Assign(
+      const RegisteredFactory &key, //!< Reference to static object created in client code
+      ReplacementPointer &&replacement //!< A temporary or std::move'd pointer
+   )
    {
       auto index = key.mIndex;
       auto data = GetData();
@@ -314,12 +364,18 @@ public:
       // Copy or move as appropriate:
       *iter = std::forward< ReplacementPointer >( replacement );
    }
+   
+   //! @}
 
 protected:
-   // member functions for use by Host
+   //! @name member functions for use by @b Host
+   //! @{
 
-   // \brief Invoke function on each ClientData object that has been created in
-   // this, but do not cause the creation of any.
+   //! Invoke function on each ClientData object that has been created in @c this
+   /*!
+   @tparam Function takes reference to ClientData, return value is ignored
+   @param function of type @b Function
+    */
    template< typename Function >
    void ForEach( const Function &function )
    {
@@ -331,8 +387,8 @@ protected:
       }
    }
 
-   // const counterpart of previous, only compiles with a function that takes
-   // a value or const reference argument
+   //! @copydoc ForEach
+   /*! const overload only compiles with a function that takes reference to const ClientData. */
    template< typename Function >
    void ForEach( const Function &function ) const
    {
@@ -346,11 +402,12 @@ protected:
       }
    }
 
-   // \brief Invoke predicate on the ClientData objects that have been created in
-   // this, but do not cause the creation of any.  Stop at the first for which
-   // the predicate returns true, and return a pointer to the corresponding
-   // object, or return nullptr if no return values were true.
-   // Beware that the sequence of visitation is not specified.
+   //! Return pointer to first attachment in @c this that is not null and satisfies a predicate, or nullptr
+   /*!
+   Beware that the sequence of visitation is not specified.
+   @tparam Function takes reference to ClientData, returns value convertible to bool
+   @param function of type @b Function
+    */
    template< typename Function >
    ClientData *FindIf( const Function &function )
    {
@@ -363,8 +420,8 @@ protected:
       return nullptr;
    }
 
-   // const counterpart of previous, only compiles with a function that takes
-   // a value or const reference argument
+   //! @copydoc FindIf
+   /*! const overload only compiles with a function callable with a const reference to ClientData. */
    template< typename Function >
    const ClientData *FindIf( const Function &function ) const
    {
@@ -380,8 +437,7 @@ protected:
       return nullptr;
    }
 
-   // \brief For each registered factory, if the corresponding object in this
-   // is absent, then invoke the factory and store the result.
+   //! For each RegisteredFactory, if the corresponding attachment is absent in @c this, build and store it
    void BuildAll()
    {
       // Note that we cannot call this function in the Site constructor as we
@@ -401,6 +457,8 @@ protected:
       for ( size_t ii = 0; ii < size; ++ii, ++iter )
          static_cast< void >( Build( data, iter, ii ) );
    }
+
+   //! @}
 
 private:
    using DataFactories =
@@ -500,9 +558,8 @@ private:
       return result;
    }
 
-   // Container of pointers returned by factories, per instance of Host class
-   // This is the only non-static data member that Site injects into the
-   // derived class.
+   //! Container of pointers returned by factories, per instance of @b Host class
+   /*! This is the only non-static data member that Site injects into the derived class. */
    DataContainer mData;
 };
 
