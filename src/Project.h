@@ -81,12 +81,12 @@ private:
 
 // Container of various objects associated with the project, which is
 // responsible for destroying them
-using AttachedObjects = ClientData::Site<
+using AttachedProjectObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
 // Container of pointers to various windows associated with the project, which
 // is not responsible for destroying them -- wxWidgets handles that instead
-using AttachedWindows = ClientData::Site<
+using AttachedProjectWindows = ClientData::Site<
    AudacityProject, wxWindow, ClientData::SkipCopying, ClientData::BarePtr
 >;
 
@@ -106,13 +106,13 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 /// the cooperating attached objects.
 class AUDACITY_DLL_API AudacityProject final
    : public wxEvtHandler
-   , public AttachedObjects
-   , public AttachedWindows
+   , public AttachedProjectObjects
+   , public AttachedProjectWindows
    , public std::enable_shared_from_this<AudacityProject>
 {
  public:
-   using AttachedObjects = ::AttachedObjects;
-   using AttachedWindows = ::AttachedWindows;
+   using AttachedObjects = ::AttachedProjectObjects;
+   using AttachedWindows = ::AttachedProjectWindows;
 
    AudacityProject();
    virtual ~AudacityProject();
