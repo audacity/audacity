@@ -1,10 +1,11 @@
-//
-//  FileException.cpp
-//  
-//
-//  Created by Paul Licameli on 11/22/16.
-//
-//
+/*!
+  @file FileException.cpp
+  @brief implements FileException
+  
+
+  Created by Paul Licameli on 11/22/16.
+
+*/
 
 #include "Audacity.h"
 #include "FileException.h"

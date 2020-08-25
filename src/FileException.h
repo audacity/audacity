@@ -1,10 +1,11 @@
-//
-//  FileException.h
-//  
-//
-//  Created by Paul Licameli on 11/22/16.
-//
-//
+/*!
+  @file FileException.h
+  @brief MessageBoxException for failures of file operations
+  
+
+  Created by Paul Licameli on 11/22/16.
+
+*/
 
 #ifndef __AUDACITY_FILE_EXCEPTION__
 #define __AUDACITY_FILE_EXCEPTION__
@@ -12,15 +13,24 @@
 #include "AudacityException.h"
 #include <wx/filename.h> // wxFileName member variable
 
+//! Thrown for failure of file or database operations in deeply nested places
 class FileException /* not final */ : public MessageBoxException
 {
 public:
-   enum class Cause { Open, Read, Write, Rename };
+   //! Identifies file operation that failed
+   enum class Cause {
+      Open,
+      Read,
+      Write, //!< most important to detect when storage space is exhausted
+      Rename //!< involves two filenames
+   };
 
-   explicit FileException
-      ( Cause cause_, const wxFileName &fileName_,
-        const TranslatableString &caption = XO("File Error"),
-        const wxFileName &renameTarget_ = {})
+   explicit FileException(
+      Cause cause_, //!< What kind of file operation failed
+      const wxFileName &fileName_, //!< Which file suffered a failure
+      const TranslatableString &caption = XO("File Error"), //!< Shown in message box frame, not the main message
+      const wxFileName &renameTarget_ = {} //!< A second file name, only for renaming failure
+   )
    : MessageBoxException{ caption }
    , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }
    {}
@@ -37,7 +47,7 @@ public:
    ~FileException() override;
 
 protected:
-   // Format a default, internationalized error message for this exception.
+   //! %Format an error message appropriate for the @ref Cause.
    TranslatableString ErrorMessage() const override;
 
 public:

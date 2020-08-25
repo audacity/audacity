@@ -1,10 +1,11 @@
-//
-//  InconsistencyException.cpp
-//  
-//
-//  Created by Paul Licameli on 11/27/16.
-//
-//
+/*!
+  @file InconsistencyException.cpp
+  @brief Implements InconsistencyException
+  
+
+  Created by Paul Licameli on 11/27/16.
+
+*/
 
 #include "Audacity.h"
 #include "InconsistencyException.h"
