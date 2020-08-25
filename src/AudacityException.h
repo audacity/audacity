@@ -1,19 +1,14 @@
 #ifndef __AUDACITY_EXCEPTION__
 #define __AUDACITY_EXCEPTION__
 
-/**********************************************************************
+/*!********************************************************************
 
  Audacity: A Digital Audio Editor
 
- AudacityException.h
+ @file AudacityException.h
+ @brief Declare abstract class AudacityException, some often-used subclasses, and @ref GuardedCall
 
  Paul Licameli
- 
- Define the root of a hierarchy of classes that are thrown and caught
- by Audacity.
- 
- Define some subclasses.  Not all subclasses need be defined here.
-
  **********************************************************************/
 
 #include "MemoryX.h"
@@ -22,59 +17,67 @@
 
 #include "Internat.h"
 
+//! Base class for exceptions specially processed by the application
+/*! Objects of this type can be thrown and caught in any thread, stored, and then used by the main
+ thread in later idle time to explain the error condition to the user.
+ */
 class AudacityException /* not final */
 {
 public:
    AudacityException() {}
    virtual ~AudacityException() = 0;
 
-   // Action to do in the main thread at idle time of the event loop.
+   //! Action to do in the main thread at idle time of the event loop.
    virtual void DelayedHandlerAction() = 0;
 
 protected:
-   // Make this protected to prevent slicing copies
+   //! Make this protected to prevent slicing copies
    AudacityException( const AudacityException& ) = default;
 
-   // Don't allow moves of this class or subclasses
+   //! Don't allow moves of this class or subclasses
    // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
    AudacityException( AudacityException&& ) = delete;
 
-   // Disallow assignment
+   //! Disallow assignment
    AudacityException &operator = ( const AudacityException & ) = delete;
 };
 
-/// \brief A subclass of AudacityException whose delayed handler action displays
-/// a message box.  The message is specified by further subclasses.
-/// Not more than one message box will be displayed for each pass through
-/// the main event idle loop.
+//! Abstract AudacityException subclass displays a message, specified by further subclass
+/*! At most one message will be displayed for each pass through the main event idle loop,
+ no matter how many exceptions were caught. */
 class MessageBoxException /* not final */ : public AudacityException
 {
-   // Do not allow subclasses to change this behavior further, except
-   // by overriding ErrorMessage()
+   //! Privatize the inherited function
    using AudacityException::DelayedHandlerAction;
-   void DelayedHandlerAction() override;
+
+   //! Do not allow subclasses to change behavior, except by overriding ErrorMessage().
+   void DelayedHandlerAction() final;
 
 protected:
-   // If default-constructed with empty caption, it makes no message box.
-   explicit MessageBoxException( const TranslatableString &caption = {} );
+   //! If default-constructed with empty caption, it makes no message box.
+   explicit MessageBoxException(
+      const TranslatableString &caption = {} //!< Shown in message box's frame; not the actual message
+   );
    ~MessageBoxException() override;
 
    MessageBoxException( const MessageBoxException& );
 
-   // Format a default error message for this exception.
+   //! %Format the error message for this exception.
    virtual TranslatableString ErrorMessage() const = 0;
 
 private:
-   TranslatableString caption;
-   mutable bool moved { false };
+   TranslatableString caption; //!< Stored caption
+   mutable bool moved { false }; //!< Whether @c *this has been the source of a copy
 };
 
-/// \brief A MessageBoxException that shows a given, unvarying string.
+//! A MessageBoxException that shows a given, unvarying string.
 class SimpleMessageBoxException /* not final */ : public MessageBoxException
 {
 public:
-   explicit SimpleMessageBoxException( const TranslatableString &message_,
-      const TranslatableString &caption = XO("Message") )
+   explicit SimpleMessageBoxException(
+      const TranslatableString &message_, //<! Message to show
+      const TranslatableString &caption = XO("Message") //<! Short caption in frame around message
+   )
       : MessageBoxException{ caption }
       , message{ message_ }
    {}
@@ -88,11 +91,11 @@ public:
    virtual TranslatableString ErrorMessage() const override;
 
 private:
-   TranslatableString message;
+   TranslatableString message; //!< Stored message
 };
 
 
-/// \brief performs the delayed configured action, when invoked.
+//! A default template parameter for @ref GuardedCall
 struct DefaultDelayedHandlerAction
 {
    void operator () (AudacityException *pException) const
@@ -102,26 +105,32 @@ struct DefaultDelayedHandlerAction
    }
 };
 
-/// \brief SimpleGuard classes add the second argument of GuardedCall:
-/// Frequently useful converter of all exceptions to some failure constant
+//! A default template parameter for @ref GuardedCall<R>
+/*! @tparam R return type from GuardedCall (or convertible to it) */
 template <typename R> struct SimpleGuard
 {
-   explicit SimpleGuard( R value ) : m_value{ value } {}
+   explicit SimpleGuard(
+      R value //!< The value to return from GurdedCall when an exception is handled
+   )
+      : m_value{ value } {}
    R operator () ( AudacityException * ) const { return m_value; }
    const R m_value;
 };
 
-/// \brief SimpleGuard specialization that returns bool, and defines Default
+//! Specialization of SimpleGuard, also defining a default value
 template<> struct SimpleGuard<bool>
 {
-   explicit SimpleGuard( bool value ) : m_value{ value } {}
+   explicit SimpleGuard(
+      bool value //!< The value to return from @ref GaurdedCall when an exception is handled
+   )
+      : m_value{ value } {}
    bool operator () ( AudacityException * ) const { return m_value; }
    static SimpleGuard Default()
       { return SimpleGuard{ false }; }
    const bool m_value;
 };
 
-/// \brief SimpleGuard specialization that returns nothing, and defines Default
+//! Specialization of SimpleGuard, also defining a default value
 template<> struct SimpleGuard<void>
 {
    SimpleGuard() {}
@@ -129,33 +138,36 @@ template<> struct SimpleGuard<void>
    static SimpleGuard Default() { return {}; }
 };
 
+//! Convert a value to a handler function returning that value, suitable for @ref GuardedCall<R>
 template < typename R >
 SimpleGuard< R > MakeSimpleGuard( R value )
 { return SimpleGuard< R >{ value }; }
 
+//! Convert a value to a no-op handler function, suitable for @ref GuardedCall<void>
 inline SimpleGuard< void > MakeSimpleGuard() { return {}; }
 
-/***
-  \brief GuardedCall performs a body action, and provided there is no 
-  exception a handler action on completion.  If there is an exception, 
-  it queues up the delayed handler action for execution later in 
-  the idle event loop
-
-  The template is rather configurable, and default behaviours can be 
-  overridden.  GuardedCall makes use of SimpleGuard for the handler action.
-
-  GuardedCall calls the body function (usually a lambda) inside a try block.
+/*!
+  Executes a given function (typically a lamba), in any thread.
  
-  The handler intercepts exceptions, and is passed nullptr if the
-  exception is of a type not defined by Audacity.  It may return a value
-  for the guarded call or throw the same or another exception.
-  The handler executes in the same thread as the body.
+  If there is any exception, can invoke another given function as handler, which may rethrow that or
+  another exception, but usually just returns the value for the GuardedCall.
  
-  If the handler is passed non-null and does not throw, then delayedHandler
-  executes later in the main thread, in idle time of the event loop.
+  If AudacityException is handled, then it queues up a delayed handler action for execution later in
+  the event loop at idle time, on the main thread; typically this informs the user of the error.
+
+  The default delayed handler action is simply to invoke a method of the AudacityException, but this
+  too can be specified otherwise by a third function.
+
+  @tparam R Return type, defaulted to void, or else the only explicit template parameter
+  @tparam F1 deduced type of body function; takes no arguments, returns @b R
+  @tparam F2 deduced type of handler function, or defaulted to @ref SimpleGuard<R>;
+  takes pointer to AudacityException, which is null when some other type of exception is caught;
+  return value is converted to @b R
+  @tparam F3 deduced type of delayed handler function, if a nondefault argument is given;
+  takes pointer to AudacityException, return value is unused
  */
 template <
-   typename R = void, // return type
+   typename R = void,
 
    typename F1, // function object with signature R()
 
@@ -165,10 +177,12 @@ template <
    typename F3 =
       DefaultDelayedHandlerAction // Any( AudacityException * ), ignore return
 >
-R GuardedCall
-   ( const F1 &body,
-     const F2 &handler = F2::Default(),
-     const F3 &delayedHandler = {} )
+//! Execute some code on any thread; catch any AudacityException; enqueue error report on the main thread
+R GuardedCall(
+   const F1 &body, //!< typically a lambda
+   const F2 &handler = F2::Default(), //!< default just returns false or void; see also @ref MakeSimpleGuard
+   const F3 &delayedHandler = {} //!< called later in the main thread, passing it a stored exception; usually defaulted
+)
 {
    try { return body(); }
    catch ( AudacityException &e ) {
