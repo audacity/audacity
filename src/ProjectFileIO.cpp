@@ -2083,16 +2083,6 @@ bool ProjectFileIO::IsRecovered() const
    return mRecovered;
 }
 
-void ProjectFileIO::Reset()
-{
-   wxASSERT_MSG(!CurrConn(), wxT("Resetting project with open project file"));
-
-   mModified = false;
-   mRecovered = false;
-
-   SetFileName({});
-}
-
 wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 {
    wxLongLong freeSpace;

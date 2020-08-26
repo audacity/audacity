@@ -920,11 +920,12 @@ void ProjectManager::ResetProjectToEmpty() {
 
    WaveTrackFactory::Reset( project );
 
-   projectFileManager.Reset();
-
    projectHistory.SetDirty( false );
    auto &undoManager = UndoManager::Get( project );
    undoManager.ClearStates();
+
+   projectFileManager.CloseProject();
+   projectFileManager.OpenProject();
 }
 
 void ProjectManager::RestartTimer()

@@ -62,8 +62,6 @@ public:
    bool SaveFromTimerRecording( wxFileName fnFile );
    bool SaveCopy(const FilePath &fileName = wxT(""));
 
-   void Reset();
-
    /** @brief Show an open dialogue for opening audio files, and possibly other
     * sorts of files.
     *

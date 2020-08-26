@@ -621,28 +621,6 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
    return true;
 }
 
-void ProjectFileManager::Reset()
-{
-   // Lock all blocks in all tracks of the last saved version, so that
-   // the sample blocks aren't deleted from the database when we destroy the
-   // sample block objects in memory.
-   if (mLastSavedTracks)
-   {
-      auto &project = mProject;
-      auto &projectFileIO = ProjectFileIO::Get(project);
-
-      for (auto wt : mLastSavedTracks->Any<WaveTrack>())
-      {
-         wt->CloseLock();
-      }
-
-      mLastSavedTracks->Clear();
-      mLastSavedTracks.reset();
-   }
-   
-   ProjectFileIO::Get( mProject ).Reset();
-}
-
 bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
 {
    auto &project = mProject;

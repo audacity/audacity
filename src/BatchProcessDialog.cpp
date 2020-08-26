@@ -338,6 +338,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
+   // This insures that we start with an empty and temporary project
+   ProjectFileManager::Get(*project).CloseProject();
+   ProjectFileManager::Get(*project).OpenProject();
+
    auto prompt =  XO("Select file(s) for batch processing...");
 
    const auto fileTypes = Importer::Get().GetFileTypes();
@@ -451,10 +455,11 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
             return true;
          });
 
+         // Ensure project is completely reset
+         ProjectManager::Get(*project).ResetProjectToEmpty();
+
          if (!success)
             break;
-
-         ProjectManager::Get(*project).ResetProjectToEmpty();
       }
    }
 
