@@ -17,6 +17,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 
 #include "Internat.h"
 #include "Project.h"
+#include "FileException.h"
 
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
@@ -155,6 +156,20 @@ bool DBConnection::Close()
    mDB = nullptr;
 
    return true;
+}
+
+[[noreturn]] void DBConnection::ThrowException( bool write ) const
+{
+   // Sqlite3 documentation says returned character string
+   // does NOT require freeing by us.
+   wxString dbName{ sqlite3_db_filename(mDB, "main") };
+   // Now we have an absolute path.  Throw a message box exception that
+   // formats a helpful message just as used to be done before sqlite3
+   // was used for projects.
+   throw FileException{
+      write ? FileException::Cause::Write : FileException::Cause::Read,
+      dbName
+   };
 }
 
 bool DBConnection::SafeMode(const char *schema /* = "main" */)

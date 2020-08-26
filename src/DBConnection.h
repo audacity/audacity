@@ -35,6 +35,11 @@ public:
    bool Open(const char *fileName);
    bool Close();
 
+   //! throw and show appropriate message box
+   [[noreturn]] void ThrowException(
+      bool write //!< If true, a database update failed; if false, only a SELECT failed
+   ) const;
+
    bool SafeMode(const char *schema = "main");
    bool FastMode(const char *schema = "main");
 

@@ -506,7 +506,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to retrieve project data") };
+      Conn()->ThrowException( false );
    }
 
    // Retrieve returned data
@@ -583,7 +583,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to retrieve sample block") };
+      Conn()->ThrowException( false );
    }
 
    // Retrieve returned data
@@ -641,7 +641,7 @@ void SqliteSampleBlock::Commit()
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to add sample block") };
+      Conn()->ThrowException( true );
    }
 
    // Retrieve returned data
@@ -690,7 +690,7 @@ void SqliteSampleBlock::Delete()
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to delete sample block") };
+      Conn()->ThrowException( true );
    }
 
    // Clear statement bindings and rewind statement
