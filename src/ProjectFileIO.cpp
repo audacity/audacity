@@ -2123,7 +2123,7 @@ void ProjectFileIO::SetDBError(const TranslatableString &msg)
       wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
       printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
    }
-   abort();
+
    wxASSERT(false);
 }
 
