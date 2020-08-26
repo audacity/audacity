@@ -268,6 +268,15 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
+   if (mBlockID == 0) {
+      // The block object was constructed but failed to Load() or Commit().
+      // Just let the stack unwind.  Don't violate the assertion in
+      // Delete(), which may do odd recursive things in debug builds when it
+      // yields to the UI to put up a dialog, but then dispatches timer
+      // events that try again to finish recording.
+      return;
+   }
+
    // See ProjectFileIO::Bypass() for a description of mIO.mBypass
    if (!mLocked && !Conn()->ShouldBypass())
    {
