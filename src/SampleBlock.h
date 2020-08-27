@@ -58,8 +58,10 @@ public:
 
    virtual size_t GetSampleCount() const = 0;
 
+   //! Non-throwing, should fill with zeroes on failure
    virtual bool
       GetSummary256(float *dest, size_t frameoffset, size_t numframes) = 0;
+   //! Non-throwing, should fill with zeroes on failure
    virtual bool
       GetSummary64k(float *dest, size_t frameoffset, size_t numframes) = 0;
 

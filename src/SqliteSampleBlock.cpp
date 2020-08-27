@@ -385,12 +385,21 @@ bool SqliteSampleBlock::GetSummary(float *dest,
                                    sqlite3_stmt *stmt,
                                    size_t srcbytes)
 {
-   return GetBlob(dest,
+   // Non-throwing, it returns true for success
+   try {
+      // Note GetBlob returns a size_t, not a bool
+      GetBlob(dest,
                   floatSample,
                   stmt,
                   floatSample,
                   frameoffset * 3 * SAMPLE_SIZE(floatSample),
-                  numframes * 3 * SAMPLE_SIZE(floatSample)) / 3 / SAMPLE_SIZE(floatSample);
+                  numframes * 3 * SAMPLE_SIZE(floatSample));
+      return true;
+   }
+   catch ( const AudacityException & ) {
+      memset(dest, 0, 3 * numframes * sizeof( float ));
+      return false;
+   }
 }
 
 double SqliteSampleBlock::GetSumMin() const
