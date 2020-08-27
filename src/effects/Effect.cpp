@@ -1240,6 +1240,9 @@ bool Effect::DoEffect(double projectRate,
          // LastUsedDuration may have been modified by Preview.
          SetDuration(oldDuration);
       }
+      else
+         trans.Commit();
+
       End();
       ReplaceProcessedTracks( false );
    } );
