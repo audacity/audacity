@@ -2450,7 +2450,11 @@ AutoCommitTransaction::~AutoCommitTransaction()
 {
    if (mInTrans)
    {
-      if (!mIO.TransactionRollback(mName))
+      // Rollback AND REMOVE the transaction
+      // -- must do both; rolling back a savepoint only rewinds it
+      // without removing it, unlike the ROLLBACK command
+      if (!(mIO.TransactionRollback(mName) &&
+            mIO.TransactionCommit(mName) ) )
       {
          // Do not throw from a destructor!
          // This has to be a no-fail cleanup that does the best that it can.
