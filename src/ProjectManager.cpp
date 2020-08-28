@@ -733,7 +733,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // SetMenuBar(NULL);
 
    // Compact the project.
-   projectFileManager.CompactProject();
+   projectFileManager.CompactProjectOnClose();
 
    // Set (or not) the bypass flag to indicate that deletes that would happen during
    // the UndoManager::ClearStates() below are not necessary.

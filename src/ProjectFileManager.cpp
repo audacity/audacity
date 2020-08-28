@@ -654,7 +654,7 @@ bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
    return success;
 }
 
-void ProjectFileManager::CompactProject()
+void ProjectFileManager::CompactProjectOnClose()
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get(project);
@@ -671,6 +671,15 @@ void ProjectFileManager::CompactProject()
 
       // Attempt to compact the project
       projectFileIO.Compact(mLastSavedTracks);
+
+      if ( !projectFileIO.WasCompacted() &&
+          UndoManager::Get( project ).UnsavedChanges() ) {
+         // If compaction failed, we must do some work in case of close
+         // without save.  Don't leave the document blob from the last
+         // push of undo history, when that undo state may get purged
+         // with deletion of some new sample blocks.
+         projectFileIO.UpdateSaved( mLastSavedTracks );
+      }
    }
 }
 
@@ -689,7 +698,7 @@ void ProjectFileManager::CloseProject()
 
    projectFileIO.CloseProject();
 
-   // Blocks were locked in CompactProject, so DELETE the data structure so that
+   // Blocks were locked in CompactProjectOnClose, so DELETE the data structure so that
    // there's no memory leak.
    if (mLastSavedTracks)
    {
