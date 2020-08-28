@@ -1215,7 +1215,7 @@ bool Effect::DoEffect(double projectRate,
    // This is for performance purposes only, no additional recovery implied
    auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
    auto &pIO = ProjectFileIO::Get(pProject);
-   AutoCommitTransaction trans(pIO, "Effect");
+   TransactionScope trans(pIO, "Effect");
 
    // Update track/group counts
    CountWaveTracks();
@@ -1240,6 +1240,9 @@ bool Effect::DoEffect(double projectRate,
          // LastUsedDuration may have been modified by Preview.
          SetDuration(oldDuration);
       }
+      else
+         trans.Commit();
+
       End();
       ReplaceProcessedTracks( false );
    } );

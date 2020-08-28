@@ -24,7 +24,7 @@ struct sqlite3_stmt;
 struct sqlite3_value;
 
 class AudacityProject;
-class AutoCommitTransaction;
+class TransactionScope;
 class DBConnection;
 class ProjectSerializer;
 class SqliteSampleBlock;
@@ -240,14 +240,16 @@ private:
 };
 
 // Make a savepoint (a transaction, possibly nested) with the given name;
+// roll it back at destruction time, unless an explicit Commit() happened first.
+// Commit() must not be called again after one successful call.
 // An exception is thrown from the constructor if the transaction cannot open.
-class AutoCommitTransaction
+class TransactionScope
 {
 public:
-   AutoCommitTransaction(ProjectFileIO &projectFileIO, const char *name);
-   ~AutoCommitTransaction();
+   TransactionScope(ProjectFileIO &projectFileIO, const char *name);
+   ~TransactionScope();
 
-   bool Rollback();
+   bool Commit();
 
 private:
    ProjectFileIO &mIO;

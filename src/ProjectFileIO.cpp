@@ -2444,7 +2444,7 @@ int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
    return 9;
 }
 
-AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
+TransactionScope::TransactionScope(ProjectFileIO &projectFileIO,
                                              const char *name)
 :  mIO(projectFileIO),
    mName(name)
@@ -2455,11 +2455,15 @@ AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
       throw SimpleMessageBoxException( XO("Database error") );
 }
 
-AutoCommitTransaction::~AutoCommitTransaction()
+TransactionScope::~TransactionScope()
 {
    if (mInTrans)
    {
-      if (!mIO.TransactionCommit(mName))
+      // Rollback AND REMOVE the transaction
+      // -- must do both; rolling back a savepoint only rewinds it
+      // without removing it, unlike the ROLLBACK command
+      if (!(mIO.TransactionRollback(mName) &&
+            mIO.TransactionCommit(mName) ) )
       {
          // Do not throw from a destructor!
          // This has to be a no-fail cleanup that does the best that it can.
@@ -2467,13 +2471,13 @@ AutoCommitTransaction::~AutoCommitTransaction()
    }
 }
 
-bool AutoCommitTransaction::Rollback()
+bool TransactionScope::Commit()
 {
    if ( !mInTrans )
       // Misuse of this class
       THROW_INCONSISTENCY_EXCEPTION;
 
-   mInTrans = !mIO.TransactionRollback(mName);
+   mInTrans = !mIO.TransactionCommit(mName);
 
    return mInTrans;
 }
