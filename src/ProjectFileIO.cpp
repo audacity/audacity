@@ -1903,6 +1903,12 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
                OpenConnection(savedName);
             }
          }
+         else {
+            // Rename can fail -- if it's to a different device, requiring
+            // real copy of contents, which might exhaust space
+            OpenConnection(savedName);
+            return false;
+         }
       }
    }
 
