@@ -1,8 +1,9 @@
-/**********************************************************************
+/*!********************************************************************
 
 Audacity: A Digital Audio Editor
 
-DBConection.cpp
+@file DBConnection.cpp
+@brief Implements DBConnection
 
 Paul Licameli -- split from ProjectFileIO.cpp
 

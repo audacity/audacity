@@ -1,8 +1,9 @@
-/**********************************************************************
+/*!********************************************************************
 
 Audacity: A Digital Audio Editor
 
-DBConection.h
+@file DBConnection.h
+@brief Declare DBConnection, which maintains database connection and associated status and background thred
 
 Paul Licameli -- split from ProjectFileIO.h
 
