@@ -639,6 +639,8 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
             if (static_cast<size_t>(samplesWritten) != numSamples) {
                char buffer2[1000];
                sf_error_str(sf.get(), buffer2, 1000);
+               //Used to give this error message
+#if 0
                AudacityMessageBox(
                   XO(
                   /* i18n-hint: %s will be the error message from libsndfile, which
@@ -646,6 +648,15 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                    * error" */
 "Error while writing %s file (disk full?).\nLibsndfile says \"%s\"")
                      .Format( formatStr, wxString::FromAscii(buffer2) ));
+#else
+               // But better to give the same error message as for
+               // other cases of disk exhaustion.
+               // The thrown exception doesn't escape but GuardedCall
+               // will enqueue a message.
+               GuardedCall([&fName]{
+                  throw FileException{
+                     FileException::Cause::Write, fName }; });
+#endif
                updateResult = ProgressResult::Cancelled;
                break;
             }
