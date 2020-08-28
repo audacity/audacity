@@ -84,6 +84,7 @@ public:
 
    bool ImportProject(const FilePath &fileName);
    bool LoadProject(const FilePath &fileName);
+   bool UpdateSaved(const std::shared_ptr<TrackList> &tracks = nullptr);
    bool SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved);
    bool SaveCopy(const FilePath& fileName);
 

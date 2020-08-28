@@ -53,7 +53,7 @@ public:
    bool OpenProject();
    void CloseProject();
 
-   void CompactProject();
+   void CompactProjectOnClose();
 
    bool Save();
    bool SaveAs();

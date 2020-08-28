@@ -1885,6 +1885,24 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    return true;
 }
 
+bool ProjectFileIO::UpdateSaved(
+   const std::shared_ptr<TrackList> &tracks)
+{
+   ProjectSerializer doc;
+   WriteXMLHeader(doc);
+   WriteXML(doc, false, tracks);
+
+   if (!WriteDoc("project", doc))
+   {
+      return false;
+   }
+
+   // Autosave no longer needed
+   AutoSaveDelete();
+
+   return true;
+}
+
 bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved)
 {
    // In the case where we're saving a temporary project to a permanent project,
@@ -1986,17 +2004,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
    }
    else
    {
-      ProjectSerializer doc;
-      WriteXMLHeader(doc);
-      WriteXML(doc);
-
-      if (!WriteDoc("project", doc))
-      {
+      if ( !UpdateSaved( nullptr ) )
          return false;
-      }
-
-      // Autosave no longer needed
-      AutoSaveDelete();
    }
 
    // Reaching this point defines success and all the rest are no-fail
