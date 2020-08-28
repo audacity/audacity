@@ -1471,10 +1471,50 @@ size_t Sequence::GetIdealAppendLen() const
 }
 
 /*! @excsafety{Strong} */
+SeqBlock::SampleBlockPtr Sequence::AppendNewBlock(
+   samplePtr buffer, sampleFormat format, size_t len)
+{
+   return DoAppend( buffer, format, len, false );
+}
+
+/*! @excsafety{Strong} */
+void Sequence::AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock)
+{
+   auto len = pBlock->GetSampleCount();
+
+   // Quick check to make sure that it doesn't overflow
+   if (Overflows(mNumSamples.as_double() + ((double)len)))
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   BlockArray newBlock;
+   newBlock.emplace_back( pBlock, mNumSamples );
+   auto newNumSamples = mNumSamples + len;
+
+   AppendBlocksIfConsistent(newBlock, false,
+                            newNumSamples, wxT("Append"));
+
+// JKC: During generate we use Append again and again.
+// If generating a long sequence this test would give O(n^2)
+// performance - not good!
+#ifdef VERY_SLOW_CHECKING
+   ConsistencyCheck(wxT("Append"));
+#endif
+}
+
+/*! @excsafety{Strong} */
 void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
 {
+   DoAppend(buffer, format, len, true);
+}
+
+/*! @excsafety{Strong} */
+SeqBlock::SampleBlockPtr Sequence::DoAppend(
+   samplePtr buffer, sampleFormat format, size_t len, bool coalesce)
+{
+   SeqBlock::SampleBlockPtr result;
+
    if (len == 0)
-      return;
+      return result;
 
    auto &factory = *mpFactory;
 
@@ -1492,7 +1532,8 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
    size_t bufferSize = mMaxSamples;
    SampleBuffer buffer2(bufferSize, mSampleFormat);
    bool replaceLast = false;
-   if (numBlocks > 0 &&
+   if (coalesce &&
+       numBlocks > 0 &&
        (length =
         (pLastBlock = &mBlock.back())->sb->GetSampleCount()) < mMinSamples) {
       // Enlarge a sub-minimum block at the end
@@ -1529,6 +1570,10 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
       SampleBlockPtr pBlock;
       if (format == mSampleFormat) {
          pBlock = factory.Create(buffer, addedLen, mSampleFormat);
+         // It's expected that when not requesting coalescence, the
+         // data should fit in one block
+         wxASSERT( coalesce || !result );
+         result = pBlock;
       }
       else {
          CopySamples(buffer, format, buffer2.ptr(), mSampleFormat, addedLen);
@@ -1551,6 +1596,8 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
 #ifdef VERY_SLOW_CHECKING
    ConsistencyCheck(wxT("Append"));
 #endif
+
+   return result;
 }
 
 void Sequence::Blockify(SampleBlockFactory &factory,

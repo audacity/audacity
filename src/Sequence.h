@@ -103,6 +103,11 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    size_t GetIdealAppendLen() const;
    void Append(samplePtr buffer, sampleFormat format, size_t len);
+
+   //! Append data, not coalescing blocks, returning a pointer to the new block.
+   SeqBlock::SampleBlockPtr AppendNewBlock(samplePtr buffer, sampleFormat format, size_t len);
+   //! Append a complete block, not coalescing
+   void AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock);
    void Delete(sampleCount start, sampleCount len);
 
    void SetSilence(sampleCount s0, sampleCount len);
@@ -195,6 +200,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
 
    int FindBlock(sampleCount pos) const;
+
+   SeqBlock::SampleBlockPtr DoAppend(
+      samplePtr buffer, sampleFormat format, size_t len, bool coalesce);
 
    static void AppendBlock(SampleBlockFactory *pFactory, sampleFormat format,
                            BlockArray &blocks,
