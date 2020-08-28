@@ -14,6 +14,7 @@
 #include "Track.h"
 
 #include <vector>
+#include <functional>
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"
@@ -142,8 +143,11 @@ private:
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 
+   sampleCount GetNumSamples() const;
+
    sampleFormat GetSampleFormat() const { return mFormat; }
-   void ConvertToSampleFormat(sampleFormat format);
+   void ConvertToSampleFormat(sampleFormat format,
+      const std::function<void(size_t)> & progressReport = {});
 
    const SpectrogramSettings &GetSpectrogramSettings() const;
    SpectrogramSettings &GetSpectrogramSettings();

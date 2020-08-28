@@ -24,7 +24,6 @@
 #include "Experimental.h"
 
 #include <math.h>
-#include <functional>
 #include <vector>
 #include <wx/log.h>
 
@@ -1159,12 +1158,13 @@ float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
    return mSequence->GetRMS(s0, s1-s0, mayThrow);
 }
 
-void WaveClip::ConvertToSampleFormat(sampleFormat format)
+void WaveClip::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
 {
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get converted as needed when they are expanded.
 
-   auto bChanged = mSequence->ConvertToSampleFormat(format);
+   auto bChanged = mSequence->ConvertToSampleFormat(format, progressReport);
    if (bChanged)
       MarkChanged();
 }
