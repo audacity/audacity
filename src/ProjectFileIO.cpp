@@ -2435,7 +2435,7 @@ int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
    return 9;
 }
 
-AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
+TransactionScope::TransactionScope(ProjectFileIO &projectFileIO,
                                              const char *name)
 :  mIO(projectFileIO),
    mName(name)
@@ -2446,7 +2446,7 @@ AutoCommitTransaction::AutoCommitTransaction(ProjectFileIO &projectFileIO,
       throw SimpleMessageBoxException( XO("Database error") );
 }
 
-AutoCommitTransaction::~AutoCommitTransaction()
+TransactionScope::~TransactionScope()
 {
    if (mInTrans)
    {
@@ -2462,7 +2462,7 @@ AutoCommitTransaction::~AutoCommitTransaction()
    }
 }
 
-bool AutoCommitTransaction::Commit()
+bool TransactionScope::Commit()
 {
    if ( !mInTrans )
       // Misuse of this class

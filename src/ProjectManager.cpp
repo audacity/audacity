@@ -740,7 +740,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    projectFileIO.SetBypass();
 
    {
-      AutoCommitTransaction trans(projectFileIO, "Shutdown");
+      TransactionScope trans(projectFileIO, "Shutdown");
 
       // This can reduce reference counts of sample blocks in the project's
       // tracks.
