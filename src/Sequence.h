@@ -12,6 +12,7 @@
 #define __AUDACITY_SEQUENCE__
 
 #include <vector>
+#include <functional>
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
@@ -135,7 +136,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    sampleFormat GetSampleFormat() const;
 
    // Return true iff there is a change
-   bool ConvertToSampleFormat(sampleFormat format);
+   bool ConvertToSampleFormat(sampleFormat format, 
+      const std::function<void(size_t)> & progressReport = {});
 
    //
    // Retrieving summary info

@@ -22,6 +22,7 @@
 #include <wx/longlong.h>
 
 #include <vector>
+#include <functional>
 
 class BlockArray;
 class Envelope;
@@ -197,7 +198,8 @@ public:
 
    virtual ~WaveClip();
 
-   void ConvertToSampleFormat(sampleFormat format);
+   void ConvertToSampleFormat(sampleFormat format,
+      const std::function<void(size_t)> & progressReport = {});
 
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range

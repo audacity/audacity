@@ -132,7 +132,8 @@ namespace {
    }
 }
 
-bool Sequence::ConvertToSampleFormat(sampleFormat format)
+bool Sequence::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
 // STRONG-GUARANTEE
 {
    if (format == mSampleFormat)
@@ -199,6 +200,9 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
          const auto blockstart = oldSeqBlock.start;
          Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                   newBlockArray, blockstart, bufferNew.ptr(), len);
+
+         if (progressReport)
+            progressReport(len);
       }
    }
 

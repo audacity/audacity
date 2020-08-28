@@ -413,15 +413,26 @@ void WaveTrack::SetWaveColorIndex(int colorIndex)
    mWaveColorIndex = colorIndex;
 }
 
+sampleCount WaveTrack::GetNumSamples() const
+{
+   sampleCount result{ 0 };
 
-void WaveTrack::ConvertToSampleFormat(sampleFormat format)
+   for (const auto& clip : mClips)
+      result += clip->GetNumSamples();
+
+   return result;
+}
+
+void WaveTrack::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
 // WEAK-GUARANTEE
 // might complete on only some clips
 {
-   for (const auto &clip : mClips)
-      clip->ConvertToSampleFormat(format);
+   for (const auto& clip : mClips)
+      clip->ConvertToSampleFormat(format, progressReport);
    mFormat = format;
 }
+
 
 bool WaveTrack::IsEmpty(double t0, double t1) const
 {
