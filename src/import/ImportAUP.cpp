@@ -1411,7 +1411,11 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       {
          SetWarning(XO("Error while processing %s\n\nInserting silence.").Format(filename));
 
-         AddSilence(len);
+         // If we are unwinding for an exception, don't do another
+         // potentially throwing operation
+         if (!std::uncaught_exception())
+            // If this does throw, let that propagate, don't guard the call
+            AddSilence(len);
       }
 
       if (sf)
