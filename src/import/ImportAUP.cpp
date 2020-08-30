@@ -1406,7 +1406,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
       if (sf)
       {
-         sf_close(sf);
+         SFCall<int>(sf_close, sf);
       }
    });
 
@@ -1420,7 +1420,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    // Even though there is an sf_open() that takes a filename, use the one that
    // takes a file descriptor since wxWidgets can open a file with a Unicode name and
    // libsndfile can't (under Windows).
-   sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+   sf = SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE);
    if (!sf)
    {
       SetWarning(XO("Failed to open %s").Format(filename));
@@ -1430,7 +1430,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
    if (origin > 0)
    {
-      if (sf_seek(sf, origin.as_long_long(), SEEK_SET) < 0)
+      if (SFCall<sf_count_t>(sf_seek, sf, origin.as_long_long(), SEEK_SET) < 0)
       {
          SetWarning(XO("Failed to seek to position %lld in %s")
             .Format(origin.as_long_long(), filename));
@@ -1455,11 +1455,11 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    {
       // If both the src and dest formats are integer formats,
       // read integers directly from the file, conversions not needed
-      framesRead = sf_readf_short(sf, (short *) bufptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf, (short *) bufptr, cnt);
    }
    else if (channels == 1 && format == int24Sample && sf_subtype_is_integer(info.format))
    {
-      framesRead = sf_readf_int(sf, (int *) bufptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_int, sf, (int *) bufptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
@@ -1486,7 +1486,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       SampleBuffer temp(cnt * channels, int16Sample);
       short *tmpptr = (short *) temp.ptr();
 
-      framesRead = sf_readf_short(sf, tmpptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf, tmpptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
@@ -1508,7 +1508,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       SampleBuffer tmpbuf(cnt * channels, floatSample);
       float *tmpptr = (float *) tmpbuf.ptr();
 
-      framesRead = sf_readf_float(sf, tmpptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf, tmpptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
