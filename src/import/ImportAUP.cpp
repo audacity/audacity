@@ -36,6 +36,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
+#include "../Sequence.h"
 #include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../ViewInfo.h"
@@ -1119,6 +1120,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
          }
 
          mFormat = (sampleFormat) fValue;
+         waveclip->GetSequence()->ConvertToSampleFormat( mFormat );
       }
       else if (!wxStrcmp(attr, wxT("numsamples")))
       {
