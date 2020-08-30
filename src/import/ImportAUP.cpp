@@ -505,17 +505,14 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
 
    if (wxStrcmp(tag, wxT("waveclip")) == 0)
    {
-      mClip->HandleXMLEndTag(tag);
       mClip = nullptr;
    }
-   else
-   {
-      if (node.handler)
-      {
-         node.handler->HandleXMLEndTag(tag);
-      }
-   }
 
+   if (node.handler)
+   {
+      node.handler->HandleXMLEndTag(tag);
+   }
+   
    mHandlers.pop_back();
 
    if (mHandlers.size())
