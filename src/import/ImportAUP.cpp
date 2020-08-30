@@ -346,11 +346,6 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       processed += fi.len;
    }
          
-   if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled)
-   {
-      return mUpdateResult;
-   }
-
    // Copy the tracks we just created into the project.
    for (auto &track : mTracks)
    {
