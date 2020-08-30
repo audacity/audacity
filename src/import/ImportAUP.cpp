@@ -187,7 +187,6 @@ private:
    sampleCount mTotalSamples;
 
    sampleFormat mFormat;
-   unsigned long mSampleRate;
    unsigned long mNumChannels;
 
    stack mHandlers;
