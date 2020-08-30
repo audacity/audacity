@@ -26,6 +26,7 @@
 class BlockArray;
 class Envelope;
 class ProgressDialog;
+class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
@@ -279,6 +280,13 @@ public:
     * of samples (that is, the length of the clip), you will want to call this
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
+
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   std::shared_ptr<SampleBlock> AppendNewBlock(
+      samplePtr buffer, sampleFormat format, size_t len);
+
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
    /// You must call Flush after the last Append
    /// @return true if at least one complete block was created

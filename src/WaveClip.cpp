@@ -1202,6 +1202,19 @@ void WaveClip::GetDisplayRect(wxRect* r)
    *r = mDisplayRect;
 }
 
+/*! @excsafety{Strong} */
+std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
+   samplePtr buffer, sampleFormat format, size_t len)
+{
+   return mSequence->AppendNewBlock( buffer, format, len );
+}
+
+/*! @excsafety{Strong} */
+void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
+{
+   mSequence->AppendSharedBlock( pBlock );
+}
+
 /*! @excsafety{Partial}
  -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */

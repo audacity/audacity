@@ -196,7 +196,8 @@ private:
    const wxChar **mAttrs;
 
    wxFileName mProjDir;
-   using BlockFileMap = std::map<wxString, FilePath>;
+   using BlockFileMap =
+      std::map<wxString, std::pair<FilePath, std::shared_ptr<SampleBlock>>>;
    BlockFileMap mFileMap;
 
    ListOfTracks mTracks;
@@ -774,10 +775,9 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
                                          &files,
                                          "*.*");
 
-         for (size_t i = 0; i < cnt; ++i)
+         for (const auto &fn : files)
          {
-            FilePath fn = files[i];
-            mFileMap[wxFileNameFromPath(fn)] = fn;
+            mFileMap[wxFileNameFromPath(fn)] = {fn, {}};
          }
       }
       else if (!wxStrcmp(attr, wxT("rate")))
@@ -1199,7 +1199,7 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
          {
             if (mFileMap.find(strValue) != mFileMap.end())
             {
-               filename = mFileMap[strValue];
+               filename = mFileMap[strValue].first;
             }
             else
             {
@@ -1387,6 +1387,14 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
                                      sampleCount origin /* = 0 */,
                                      int channel /* = 0 */)
 {
+   auto pClip = mClip ? mClip : mWaveTrack->RightmostOrNewClip();
+   auto &pBlock = mFileMap[wxFileNameFromPath(filename)].second;
+   if (pBlock) {
+      // Replicate the sharing of blocks
+      pClip->AppendSharedBlock( pBlock );
+      return true;
+   }
+
    // Third party library has its own type alias, check it before
    // adding origin + size_t
    static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
@@ -1533,15 +1541,9 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    wxASSERT(mClip || mWaveTrack);
 
    // Add the samples to the clip/track
-   if (mClip)
+   if (pClip)
    {
-      mClip->Append(bufptr, format, cnt);
-      mClip->Flush();
-   }
-   else if (mWaveTrack)
-   {
-      mWaveTrack->Append(bufptr, format, cnt);
-      mWaveTrack->Flush();
+      pBlock = pClip->AppendNewBlock(bufptr, format, cnt);
    }
 
    // Let the finally block know everything is good
