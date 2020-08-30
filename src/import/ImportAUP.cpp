@@ -730,6 +730,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
             mProjDir.AppendDir(projName);
             if (!mProjDir.DirExists())
             {
+               mProjDir.RemoveLastDir();
                projName.clear();
             }
          }
