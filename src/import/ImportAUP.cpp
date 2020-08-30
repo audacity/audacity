@@ -277,6 +277,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
+   auto cleanup = finally([this]{ mTracks.clear(); });
+
    bool isDirty = history.GetDirty() || !tracks.empty();
 
    mTotalSamples = 0;
@@ -292,8 +294,6 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    bool success = xmlFile.Parse(this, mFilename);
    if (!success)
    {
-      mTracks.clear();
-
       AudacityMessageBox(
          XO("Couldn't import the project:\n\n%s").Format(xmlFile.GetErrorStr()),
          XO("Import Project"),
@@ -343,8 +343,6 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
          
    if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled)
    {
-      mTracks.clear();
-
       return mUpdateResult;
    }
 
@@ -353,9 +351,6 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    {
       tracks.Add(track);
    }
-
-   // Don't need our local track list anymore
-   mTracks.clear();
 
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
