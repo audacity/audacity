@@ -305,6 +305,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (!mErrorMsg.empty())
    {
+      // Error or warning
       AudacityMessageBox(
          mErrorMsg,
          XO("Import Project"),
@@ -313,9 +314,13 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
       if (mUpdateResult == ProgressResult::Failed)
       {
+         // Error
          return ProgressResult::Failed;
       }
    }
+
+   // If mUpdateResult had been changed, we would have returned already
+   wxASSERT( mUpdateResult == ProgressResult::Success );
 
    sampleCount processed = 0;
    for (auto fi : mFiles)
@@ -1547,11 +1552,12 @@ bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 {
    wxLogError(msg.Debug());
 
-   if (mErrorMsg.empty())
+   if (mErrorMsg.empty() || mUpdateResult == ProgressResult::Success)
    {
       mErrorMsg = msg;
    }
 
+   // The only place where mUpdateResult is set during XML handling callbacks
    mUpdateResult = ProgressResult::Failed;
 
    return false;
