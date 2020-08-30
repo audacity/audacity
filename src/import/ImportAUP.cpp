@@ -1545,7 +1545,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
 bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 {
-   wxLogError(msg.Translation());
+   wxLogError(msg.Debug());
 
    if (mErrorMsg.empty())
    {
@@ -1559,7 +1559,7 @@ bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 
 bool AUPImportFileHandle::SetWarning(const TranslatableString &msg)
 {
-   wxLogWarning(msg.Translation());
+   wxLogWarning(msg.Debug());
 
    if (mErrorMsg.empty())
    {
