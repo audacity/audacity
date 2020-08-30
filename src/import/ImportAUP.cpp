@@ -1325,16 +1325,12 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len, filename.GetFullPath(), start, channel);
+   if (filename.IsOk())
+      AddFile(len, filename.GetFullPath(), start, channel);
+   else
+      AddFile(len); // will add silence instead
 
    return true;
-
-   if (!filename.IsOk())
-   {
-      return AddSilence(len);
-   }
-
-   return AddSamples(filename.GetFullPath(), len, start, channel);
 }
 
 void AUPImportFileHandle::AddFile(sampleCount len,
