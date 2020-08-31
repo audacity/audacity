@@ -495,7 +495,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    int rc;
    size_t minbytes = 0;
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
@@ -572,7 +572,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
       "       length('summary256'), length('summary64k'), length('samples')"
       "  FROM sampleblocks WHERE blockid = ?1;");
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, sbid))
@@ -624,7 +624,7 @@ void SqliteSampleBlock::Commit()
       "                          summary256, summary64k, samples)"
       "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int(stmt, 1, mSampleFormat) ||
@@ -680,7 +680,7 @@ void SqliteSampleBlock::Delete()
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::DeleteSampleBlock,
       "DELETE FROM sampleblocks WHERE blockid = ?1;");
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
