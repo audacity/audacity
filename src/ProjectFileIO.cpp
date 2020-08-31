@@ -1684,6 +1684,10 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          SampleBlockID blockid;
          attr->GetValue().ToLongLong(&blockid);
 
+         if ( blockid <= 0 )
+            // silent block
+            continue;
+
          // Bind statement parameters
          // Might return SQL_MISUSE which means it's our mistake that we violated
          // preconditions; should return SQL_OK which is 0
