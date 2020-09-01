@@ -772,72 +772,6 @@ bool ProjectFileManager::IsAlreadyOpen(const FilePath &projPathName)
    return false;
 }
 
-// XML handler for <import> tag
-class ImportXMLTagHandler final : public XMLTagHandler
-{
- public:
-   ImportXMLTagHandler(AudacityProject* pProject) { mProject = pProject; }
-
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag))  override
-      { return NULL; }
-
-   // Don't want a WriteXML method because ImportXMLTagHandler is not a WaveTrack.
-   // <import> tags are instead written by AudacityProject::WriteXML.
-   //    void WriteXML(XMLWriter &xmlFile) /* not override */ { wxASSERT(false); }
-
- private:
-   AudacityProject* mProject;
-};
-
-bool ImportXMLTagHandler::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
-{
-   if (wxStrcmp(tag, wxT("import")) || attrs==NULL || (*attrs)==NULL || wxStrcmp(*attrs++, wxT("filename")))
-       return false;
-   wxString strAttr = *attrs;
-
-   WaveTrackArray trackArray;
-
-   // Guard this call so that C++ exceptions don't propagate through
-   // the expat library
-   GuardedCall(
-      [&] {
-         ProjectFileManager::Get( *mProject ).Import(strAttr, &trackArray); },
-      [&] (AudacityException*) { trackArray.clear(); }
-   );
-
-   if (trackArray.empty())
-      return false;
-
-   // Handle other attributes, now that we have the tracks.
-   attrs++;
-   const wxChar** pAttr;
-   bool bSuccess = true;
-
-   for (size_t i = 0; i < trackArray.size(); i++)
-   {
-      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
-      // so apply them via WaveTrack::HandleXMLTag().
-      bSuccess = trackArray[i]->HandleXMLTag(wxT("wavetrack"), attrs);
-
-      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
-      // so handle it here.
-      double dblValue;
-      pAttr = attrs;
-      while (*pAttr)
-      {
-         const wxChar *attr = *pAttr++;
-         const wxChar *value = *pAttr++;
-         const wxString strValue = value;
-         if (!wxStrcmp(attr, wxT("offset")) &&
-               XMLValueChecker::IsGoodString(strValue) &&
-               Internat::CompatibleToDouble(strValue, &dblValue))
-            trackArray[i]->SetOffset(dblValue);
-      }
-   }
-   return bSuccess;
-};
-
 // FIXME:? TRAP_ERR This should return a result that is checked.
 //    See comment in AudacityApp::MRUOpen().
 void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
@@ -1016,10 +950,10 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    }
 }
 
-std::vector< std::shared_ptr< Track > >
+void
 ProjectFileManager::AddImportedTracks(const FilePath &fileName,
                                       TrackHolders &&newTracks)
-   {
+{
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -1109,14 +1043,11 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
 
    // Moved this call to higher levels to prevent flicker redrawing everything on each file.
    //   HandleResize();
-
-   return results;
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::Import(
    const FilePath &fileName,
-   WaveTrackArray *pTrackArray /* = nullptr */,
    bool addToHistory /* = true */)
 {
    auto &project = mProject;
@@ -1214,15 +1145,7 @@ bool ProjectFileManager::Import(
    }
 
    // PRL: Undo history is incremented inside this:
-   auto newSharedTracks = AddImportedTracks(fileName, std::move(newTracks));
-
-   if (pTrackArray) {
-      for (const auto &newTrack : newSharedTracks) {
-         newTrack->TypeSwitch( [&](WaveTrack *wt) {
-            pTrackArray->push_back( wt->SharedPointer< WaveTrack >() );
-         });
-      }
-   }
+   AddImportedTracks(fileName, std::move(newTracks));
 
    return true;
 }

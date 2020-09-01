@@ -89,14 +89,10 @@ public:
 
    void OpenFile(const FilePath &fileName, bool addtohistory = true);
 
-   // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
    bool Import(const FilePath &fileName,
-               WaveTrackArray *pTrackArray = nullptr,
                bool addToHistory = true);
 
-   // Takes array of unique pointers; returns array of shared
-   std::vector< std::shared_ptr<Track> >
-   AddImportedTracks(const FilePath &fileName,
+   void AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
    bool GetMenuClose() const { return mMenuClose; }
