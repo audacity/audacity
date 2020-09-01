@@ -187,7 +187,6 @@ private:
    sampleCount mTotalSamples;
 
    sampleFormat mFormat;
-   unsigned long mSampleRate;
    unsigned long mNumChannels;
 
    stack mHandlers;
@@ -278,6 +277,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
+   auto cleanup = finally([this]{ mTracks.clear(); });
+
    bool isDirty = history.GetDirty() || !tracks.empty();
 
    mTotalSamples = 0;
@@ -293,8 +294,6 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    bool success = xmlFile.Parse(this, mFilename);
    if (!success)
    {
-      mTracks.clear();
-
       AudacityMessageBox(
          XO("Couldn't import the project:\n\n%s").Format(xmlFile.GetErrorStr()),
          XO("Import Project"),
@@ -306,6 +305,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (!mErrorMsg.empty())
    {
+      // Error or warning
       AudacityMessageBox(
          mErrorMsg,
          XO("Import Project"),
@@ -314,9 +314,13 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
       if (mUpdateResult == ProgressResult::Failed)
       {
+         // Error
          return ProgressResult::Failed;
       }
    }
+
+   // If mUpdateResult had been changed, we would have returned already
+   wxASSERT( mUpdateResult == ProgressResult::Success );
 
    sampleCount processed = 0;
    for (auto fi : mFiles)
@@ -342,21 +346,11 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       processed += fi.len;
    }
          
-   if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled)
-   {
-      mTracks.clear();
-
-      return mUpdateResult;
-   }
-
    // Copy the tracks we just created into the project.
    for (auto &track : mTracks)
    {
       tracks.Add(track);
    }
-
-   // Don't need our local track list anymore
-   mTracks.clear();
 
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
@@ -506,17 +500,14 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
 
    if (wxStrcmp(tag, wxT("waveclip")) == 0)
    {
-      mClip = static_cast<WaveClip *>(node.handler);
-      mClip->HandleXMLEndTag(tag);
-   }
-   else
-   {
-      if (node.handler)
-      {
-         node.handler->HandleXMLEndTag(tag);
-      }
+      mClip = nullptr;
    }
 
+   if (node.handler)
+   {
+      node.handler->HandleXMLEndTag(tag);
+   }
+   
    mHandlers.pop_back();
 
    if (mHandlers.size())
@@ -739,6 +730,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
             mProjDir.AppendDir(projName);
             if (!mProjDir.DirExists())
             {
+               mProjDir.RemoveLastDir();
                projName.clear();
             }
          }
@@ -1334,16 +1326,12 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len, filename.GetFullPath(), start, channel);
+   if (filename.IsOk())
+      AddFile(len, filename.GetFullPath(), start, channel);
+   else
+      AddFile(len); // will add silence instead
 
    return true;
-
-   if (!filename.IsOk())
-   {
-      return AddSilence(len);
-   }
-
-   return AddSamples(filename.GetFullPath(), len, start, channel);
 }
 
 void AUPImportFileHandle::AddFile(sampleCount len,
@@ -1418,7 +1406,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
       if (sf)
       {
-         sf_close(sf);
+         SFCall<int>(sf_close, sf);
       }
    });
 
@@ -1432,7 +1420,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    // Even though there is an sf_open() that takes a filename, use the one that
    // takes a file descriptor since wxWidgets can open a file with a Unicode name and
    // libsndfile can't (under Windows).
-   sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+   sf = SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE);
    if (!sf)
    {
       SetWarning(XO("Failed to open %s").Format(filename));
@@ -1442,7 +1430,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
    if (origin > 0)
    {
-      if (sf_seek(sf, origin.as_long_long(), SEEK_SET) < 0)
+      if (SFCall<sf_count_t>(sf_seek, sf, origin.as_long_long(), SEEK_SET) < 0)
       {
          SetWarning(XO("Failed to seek to position %lld in %s")
             .Format(origin.as_long_long(), filename));
@@ -1467,11 +1455,11 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    {
       // If both the src and dest formats are integer formats,
       // read integers directly from the file, conversions not needed
-      framesRead = sf_readf_short(sf, (short *) bufptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf, (short *) bufptr, cnt);
    }
    else if (channels == 1 && format == int24Sample && sf_subtype_is_integer(info.format))
    {
-      framesRead = sf_readf_int(sf, (int *) bufptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_int, sf, (int *) bufptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
@@ -1498,7 +1486,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       SampleBuffer temp(cnt * channels, int16Sample);
       short *tmpptr = (short *) temp.ptr();
 
-      framesRead = sf_readf_short(sf, tmpptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf, tmpptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
@@ -1520,7 +1508,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       SampleBuffer tmpbuf(cnt * channels, floatSample);
       float *tmpptr = (float *) tmpbuf.ptr();
 
-      framesRead = sf_readf_float(sf, tmpptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf, tmpptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
@@ -1554,13 +1542,14 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
 bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 {
-   wxLogError(msg.Translation());
+   wxLogError(msg.Debug());
 
-   if (mErrorMsg.empty())
+   if (mErrorMsg.empty() || mUpdateResult == ProgressResult::Success)
    {
       mErrorMsg = msg;
    }
 
+   // The only place where mUpdateResult is set during XML handling callbacks
    mUpdateResult = ProgressResult::Failed;
 
    return false;
@@ -1568,7 +1557,7 @@ bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 
 bool AUPImportFileHandle::SetWarning(const TranslatableString &msg)
 {
-   wxLogWarning(msg.Translation());
+   wxLogWarning(msg.Debug());
 
    if (mErrorMsg.empty())
    {
