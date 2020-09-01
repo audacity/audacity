@@ -145,6 +145,12 @@ public:
 
 private:
    const std::shared_ptr<ConnectionPtr> mppConnection;
+
+   // Track all blocks that this factory has created, but don't control
+   // their lifetimes (so use weak_ptr)
+   using AllBlocksMap =
+      std::map< SampleBlockID, std::weak_ptr< SqliteSampleBlock > >;
+   AllBlocksMap mAllBlocks;
 };
 
 SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
@@ -160,6 +166,8 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
 {
    auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
    sb->SetSamples(src, numsamples, srcformat);
+   // block id has now been assigned
+   mAllBlocks[ sb->GetBlockID() ] = sb;
    return sb;
 }
 
@@ -168,6 +176,8 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 {
    auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
    sb->SetSilent(numsamples, srcformat);
+   // block id has now been assigned
+   mAllBlocks[ sb->GetBlockID() ] = sb;
    return sb;
 }
 
@@ -175,8 +185,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const wxChar **attrs )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
-   sb->mSampleFormat = srcformat;
+   std::shared_ptr<SqliteSampleBlock> sb;
 
    int found = 0;
 
@@ -199,8 +208,21 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
       {
          if (wxStrcmp(attr, wxT("blockid")) == 0)
          {
-            // This may throw
-            sb->Load((SampleBlockID) nValue);
+            // Note that we depend on finding "blockid" before
+            // the other attributes, to assign sb first
+            // But first see if this block id was previously loaded
+            auto &wb = mAllBlocks[ nValue ];
+            auto pb = wb.lock();
+            if (pb)
+               // Reuse the block
+               sb = pb;
+            else {
+               // First sight of this id
+               wb = sb = std::make_shared<SqliteSampleBlock>(mppConnection);
+               sb->mSampleFormat = srcformat;
+               // This may throw
+               sb->Load((SampleBlockID) nValue);
+            }
             found++;
          }
          else if (wxStrcmp(attr, wxT("samplecount")) == 0)
