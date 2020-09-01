@@ -97,7 +97,6 @@ private:
 
    const std::shared_ptr<ConnectionPtr> mppConnection;
    bool mValid;
-   bool mDirty;
    bool mSilent;
    bool mLocked = false;
 
