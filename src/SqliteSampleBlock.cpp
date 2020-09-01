@@ -204,60 +204,33 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
       double dblValue;
       long long nValue;
 
-      if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLongLong(&nValue) && (nValue >= 0))
+      if (wxStrcmp(attr, wxT("blockid")) == 0 &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLongLong(&nValue) && (nValue >= 0))
       {
-         if (wxStrcmp(attr, wxT("blockid")) == 0)
-         {
-            // Note that we depend on finding "blockid" before
-            // the other attributes, to assign sb first
-            // But first see if this block id was previously loaded
-            auto &wb = mAllBlocks[ nValue ];
-            auto pb = wb.lock();
-            if (pb)
-               // Reuse the block
-               sb = pb;
-            else {
-               // First sight of this id
-               wb = sb = std::make_shared<SqliteSampleBlock>(mppConnection);
-               sb->mSampleFormat = srcformat;
-               // This may throw
-               sb->Load((SampleBlockID) nValue);
-            }
-            found++;
+         // First see if this block id was previously loaded
+         auto &wb = mAllBlocks[ nValue ];
+         auto pb = wb.lock();
+         if (pb)
+            // Reuse the block
+            sb = pb;
+         else {
+            // First sight of this id
+            wb = sb = std::make_shared<SqliteSampleBlock>(mppConnection);
+            sb->mSampleFormat = srcformat;
+            // This may throw database errors
+            // It initializes the rest of the fields
+            sb->Load((SampleBlockID) nValue);
          }
-         else if (wxStrcmp(attr, wxT("samplecount")) == 0)
-         {
-            sb->mSampleCount = nValue;
-            sb->mSampleBytes = sb->mSampleCount * SAMPLE_SIZE(sb->mSampleFormat);
-            found++;
-         }
-      }
-      else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-      {
-         if (wxStricmp(attr, wxT("min")) == 0)
-         {
-            sb->mSumMin = dblValue;
-            found++;
-         }
-         else if (wxStricmp(attr, wxT("max")) == 0)
-         {
-            sb->mSumMax = dblValue;
-            found++;
-         }
-         else if ((wxStricmp(attr, wxT("rms")) == 0) && (dblValue >= 0.0))
-         {
-            sb->mSumRms = dblValue;
-            found++;
-         }
+         found++;
       }
    }
 
-   // Were all attributes found?
-   if (found != 5)
+  // Were all attributes found?
+   if (found != 1)
    {
       return nullptr;
    }
-   
+
    return sb;
 }
 
@@ -591,7 +564,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    // Prepare and cache statement...automatically finalized at DB close
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::LoadSampleBlock,
       "SELECT sampleformat, summin, summax, sumrms,"
-      "       length('summary256'), length('summary64k'), length('samples')"
+      "       length(summary256), length(summary64k), length(samples)"
       "  FROM sampleblocks WHERE blockid = ?1;");
 
    // Bind statement parameters
@@ -733,12 +706,6 @@ void SqliteSampleBlock::Delete()
 void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
 {
    xmlFile.WriteAttr(wxT("blockid"), mBlockID);
-   xmlFile.WriteAttr(wxT("samplecount"), mSampleCount);
-   xmlFile.WriteAttr(wxT("len256"), mSummary256Bytes);
-   xmlFile.WriteAttr(wxT("len64k"), mSummary64kBytes);
-   xmlFile.WriteAttr(wxT("min"), mSumMin);
-   xmlFile.WriteAttr(wxT("max"), mSumMax);
-   xmlFile.WriteAttr(wxT("rms"), mSumRms);
 }
 
 /// Calculates summary block data describing this sample data.
