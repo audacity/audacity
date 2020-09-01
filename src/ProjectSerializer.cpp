@@ -383,7 +383,7 @@ bool ProjectSerializer::DictChanged() const
 }
 
 // See ProjectFileIO::LoadProject() for explanation of the blockids arg
-wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
+wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
@@ -549,16 +549,6 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
             {
                id = ReadUShort( in );
                long long val = ReadLongLong( in );
-
-               // Look for and save the "blockid" values to support orphan
-               // block checking. This should be removed once serialization
-               // and related blocks become part of the same transaction.
-               const wxString &name = Lookup(id);
-               if (name.IsSameAs(wxT("blockid")))
-               {
-                  blockids.insert(val);
-               }
-
                out.WriteAttr(Lookup(id), val);
             }
             break;

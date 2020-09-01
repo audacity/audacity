@@ -13,6 +13,7 @@ SampleBlock.h
 
 #include <functional>
 #include <memory>
+#include <unordered_set>
 
 class AudacityProject;
 class ProjectFileIO;
@@ -132,6 +133,10 @@ public:
    SampleBlockPtr CreateFromXML(
       sampleFormat srcformat,
       const wxChar **attrs);
+
+   using SampleBlockIDs = std::unordered_set<SampleBlockID>;
+   /*! @return ids of all sample blocks created by this factory and still extant */
+   virtual SampleBlockIDs GetActiveBlockIDs() = 0;
 
 protected:
    // The override should throw more informative exceptions on error than the

@@ -22,9 +22,6 @@
 // From SampleBlock.h
 using SampleBlockID = long long;
 
-// From ProjectFileiIO.h
-using BlockIDs = std::unordered_set<SampleBlockID>;
-
 ///
 /// ProjectSerializer
 ///
@@ -69,7 +66,7 @@ public:
    bool DictChanged() const;
 
    // Returns empty string if decoding fails
-   static wxString Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids);
+   static wxString Decode(const wxMemoryBuffer &buffer);
 
 private:
    void WriteName(const wxString & name);
