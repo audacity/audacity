@@ -1539,10 +1539,8 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    }
 
    wxString project;
-   BlockIDs blockids;
 
-   // Decode it while capturing the associated sample blockids
-   project = ProjectSerializer::Decode(buffer, blockids);
+   project = ProjectSerializer::Decode(buffer);
    if (project.size() == 0)
    {
       SetError(XO("Unable to decode project document"));
@@ -1788,7 +1786,6 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       return false;
    }
 
-   BlockIDs blockids;
    wxString project;
    wxMemoryBuffer buffer;
    bool usedAutosave = true;
@@ -1821,22 +1818,12 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    }
    else
    {
-      // Decode it while capturing the associated sample blockids
-      project = ProjectSerializer::Decode(buffer, blockids);
+      project = ProjectSerializer::Decode(buffer);
       if (project.empty())
       {
          SetError(XO("Unable to decode project document"));
 
          return false;
-      }
-
-      // Check for orphans blocks...sets mRecovered if any were deleted
-      if (blockids.size() > 0)
-      {
-         if (!DeleteBlocks(blockids, true))
-         {
-            return false;
-         }
       }
 
       XMLFileReader xmlFile;
@@ -1852,6 +1839,19 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
          return false;
       }
 
+      // Check for orphans blocks...sets mRecovered if any were deleted
+      
+      auto blockids = WaveTrackFactory::Get( mProject )
+         .GetSampleBlockFactory()
+            ->GetActiveBlockIDs();
+      if (blockids.size() > 0)
+      {
+         if (!DeleteBlocks(blockids, true))
+         {
+            return false;
+         }
+      }
+   
       // Remember if we used autosave or not
       if (usedAutosave)
       {

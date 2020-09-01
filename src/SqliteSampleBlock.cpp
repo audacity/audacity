@@ -129,6 +129,8 @@ public:
 
    ~SqliteSampleBlockFactory() override;
 
+   SampleBlockIDs GetActiveBlockIDs() override;
+
    SampleBlockPtr DoGet(SampleBlockID sbid) override;
 
    SampleBlockPtr DoCreate(samplePtr src,
@@ -169,6 +171,21 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
    // block id has now been assigned
    mAllBlocks[ sb->GetBlockID() ] = sb;
    return sb;
+}
+
+auto SqliteSampleBlockFactory::GetActiveBlockIDs() -> SampleBlockIDs
+{
+   SampleBlockIDs result;
+   for (auto end = mAllBlocks.end(), it = mAllBlocks.begin(); it != end;) {
+      if (it->second.expired())
+         // Tighten up the map
+         it = mAllBlocks.erase(it);
+      else {
+         result.insert( it->first );
+         ++it;
+      }
+   }
+   return result;
 }
 
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
