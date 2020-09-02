@@ -74,6 +74,12 @@ private:
                   sampleFormat srcformat,
                   size_t srcoffset,
                   size_t srcbytes);
+
+   enum {
+      fields = 3, /* min, max, rms */
+      bytesPerFrame = fields * sizeof(float),
+   };
+   void SetSizes( size_t numsamples, sampleFormat srcformat );
    void CalcSummary();
 
 private:
@@ -332,9 +338,7 @@ void SqliteSampleBlock::SetSamples(samplePtr src,
                                    size_t numsamples,
                                    sampleFormat srcformat)
 {
-   mSampleFormat = srcformat;
-   mSampleCount = numsamples;
-   mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
+   SetSizes(numsamples, srcformat);
    mSamples.reinit(mSampleBytes);
    memcpy(mSamples.get(), src, mSampleBytes);
 
@@ -345,10 +349,7 @@ void SqliteSampleBlock::SetSamples(samplePtr src,
 
 void SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
 {
-   mSampleFormat = srcformat;
-
-   mSampleCount = numsamples;
-   mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
+   SetSizes(numsamples, srcformat);
    mSamples.reinit(mSampleBytes);
    memset(mSamples.get(), 0, mSampleBytes);
 
@@ -394,12 +395,12 @@ bool SqliteSampleBlock::GetSummary(float *dest,
                   floatSample,
                   stmt,
                   floatSample,
-                  frameoffset * 3 * SAMPLE_SIZE(floatSample),
-                  numframes * 3 * SAMPLE_SIZE(floatSample));
+                  frameoffset * fields * SAMPLE_SIZE(floatSample),
+                  numframes * fields * SAMPLE_SIZE(floatSample));
       return true;
    }
    catch ( const AudacityException & ) {
-      memset(dest, 0, 3 * numframes * sizeof( float ));
+      memset(dest, 0, fields * numframes * sizeof( float ));
       return false;
    }
 }
@@ -714,6 +715,18 @@ void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("blockid"), mBlockID);
 }
 
+void SqliteSampleBlock::SetSizes( size_t numsamples, sampleFormat srcformat )
+{
+   mSampleFormat = srcformat;
+   mSampleCount = numsamples;
+   mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
+
+   int frames64k = (mSampleCount + 65535) / 65536;
+   int frames256 = frames64k * 256;
+   mSummary256Bytes = frames256 * bytesPerFrame;
+   mSummary64kBytes = frames64k * bytesPerFrame;
+}
+
 /// Calculates summary block data describing this sample data.
 ///
 /// This method also has the side effect of setting the mSumMin,
@@ -738,15 +751,7 @@ void SqliteSampleBlock::CalcSummary()
                   mSampleCount);
       samples = samplebuffer.get();
    }
-
-   int fields = 3; /* min, max, rms */
-   int bytesPerFrame = fields * sizeof(float);
-   int frames64k = (mSampleCount + 65535) / 65536;
-   int frames256 = frames64k * 256;
    
-   mSummary256Bytes = frames256 * bytesPerFrame;
-   mSummary64kBytes = frames64k * bytesPerFrame;
-
    mSummary256.reinit(mSummary256Bytes);
    mSummary64k.reinit(mSummary64kBytes);
 
@@ -793,20 +798,21 @@ void SqliteSampleBlock::CalcSummary()
 
       totalSquares += sumsq;
 
-      summary256[i * 3] = min;
-      summary256[i * 3 + 1] = max;
+      summary256[i * fields] = min;
+      summary256[i * fields + 1] = max;
       // The rms is correct, but this may be for less than 256 samples in last loop.
-      summary256[i * 3 + 2] = (float) sqrt(sumsq / jcount);
+      summary256[i * fields + 2] = (float) sqrt(sumsq / jcount);
    }
 
-   for (int i = sumLen; i < frames256; ++i)
+   for (int i = sumLen, frames256 = mSummary256Bytes / bytesPerFrame;
+        i < frames256; ++i)
    {
       // filling in the remaining bits with non-harming/contributing values
       // rms values are not "non-harming", so keep count of them:
       summaries--;
-      summary256[i * 3] = FLT_MAX;        // min
-      summary256[i * 3 + 1] = -FLT_MAX;   // max
-      summary256[i * 3 + 2] = 0.0f;       // rms
+      summary256[i * fields] = FLT_MAX;        // min
+      summary256[i * fields + 1] = -FLT_MAX;   // max
+      summary256[i * fields + 2] = 0.0f;       // rms
    }
 
    // Calculate now while we can do it accurately
@@ -843,18 +849,19 @@ void SqliteSampleBlock::CalcSummary()
       double denom = (i < sumLen - 1) ? 256.0 : summaries - fraction;
       float rms = (float) sqrt(sumsq / denom);
 
-      summary64k[i * 3] = min;
-      summary64k[i * 3 + 1] = max;
-      summary64k[i * 3 + 2] = rms;
+      summary64k[i * fields] = min;
+      summary64k[i * fields + 1] = max;
+      summary64k[i * fields + 2] = rms;
    }
 
-   for (int i = sumLen; i < frames64k; ++i)
+   for (int i = sumLen, frames64k = mSummary64kBytes / bytesPerFrame;
+        i < frames64k; ++i)
    {
       wxASSERT_MSG(false, wxT("Out of data for mSummaryInfo"));   // Do we ever get here?
 
-      summary64k[i * 3] = 0.0f;     // probably should be FLT_MAX, need a test case
-      summary64k[i * 3 + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
-      summary64k[i * 3 + 2] = 0.0f; // just padding
+      summary64k[i * fields] = 0.0f;     // probably should be FLT_MAX, need a test case
+      summary64k[i * fields + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
+      summary64k[i * fields + 2] = 0.0f; // just padding
    }
 
    // Recalc block-level summary (mRMS already calculated)
@@ -863,14 +870,14 @@ void SqliteSampleBlock::CalcSummary()
 
    for (int i = 1; i < sumLen; ++i)
    {
-      if (summary64k[i * 3] < min)
+      if (summary64k[i * fields] < min)
       {
-         min = summary64k[i * 3];
+         min = summary64k[i * fields];
       }
 
-      if (summary64k[i * 3 + 1] > max)
+      if (summary64k[i * fields + 1] > max)
       {
-         max = summary64k[i * 3 + 1];
+         max = summary64k[i * fields + 1];
       }
    }
 
