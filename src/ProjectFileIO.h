@@ -142,6 +142,8 @@ public:
    // 0 for success or non-zero to stop the query
    using ExecCB = std::function<int(int cols, char **vals, char **names)>;
 
+   DBConnection &GetConnection();
+
 private:
    void WriteXMLHeader(XMLWriter &xmlFile) const;
    void WriteXML(XMLWriter &xmlFile, bool recording = false, const std::shared_ptr<TrackList> &tracks = nullptr) /* not override */;

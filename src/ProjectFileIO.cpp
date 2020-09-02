@@ -256,7 +256,7 @@ ProjectFileIO::~ProjectFileIO()
 {
 }
 
-sqlite3 *ProjectFileIO::DB()
+DBConnection &ProjectFileIO::GetConnection()
 {
    auto &curConn = CurrConn();
    if (!curConn)
@@ -270,9 +270,18 @@ sqlite3 *ProjectFileIO::DB()
       }
    }
 
-   return curConn->DB();
+   return *curConn;
 }
 
+sqlite3 *ProjectFileIO::DB()
+{
+   return GetConnection().DB();
+}
+
+/*!
+ @pre *CurConn() does not exist
+ @post *CurConn() exists or return value is false
+ */
 bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 {
    auto &curConn = CurrConn();
