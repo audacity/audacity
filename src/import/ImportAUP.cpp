@@ -134,14 +134,18 @@ private:
    bool HandleSilentBlockFile(XMLTagHandler *&handle);
    bool HandlePCMAliasBlockFile(XMLTagHandler *&handle);
 
+   // Called in first pass to collect information about blocks
    void AddFile(sampleCount len,
+                sampleFormat format,
                 const FilePath &filename = wxEmptyString,
                 sampleCount origin = 0,
                 int channel = 0);
 
+   // These two use the collected file information in a second pass
    bool AddSilence(sampleCount len);
    bool AddSamples(const FilePath &filename,
                    sampleCount len,
+                   sampleFormat format,
                    sampleCount origin = 0,
                    int channel = 0);
 
@@ -181,6 +185,7 @@ private:
       WaveClip *clip;
       FilePath path;
       sampleCount len;
+      sampleFormat format;
       sampleCount origin;
       int channel;
    } fileinfo;
@@ -341,7 +346,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       }
       else
       {
-         AddSamples(fi.path, fi.len, fi.origin, fi.channel);
+         AddSamples(fi.path, fi.len, fi.format, fi.origin, fi.channel);
       }
 
       processed += fi.len;
@@ -1215,7 +1220,7 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len, filename);
+   AddFile(len, mFormat, filename);
 
    return true;
 }
@@ -1251,7 +1256,7 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len);
+   AddFile(len, mFormat);
 
    return true;
 }
@@ -1329,14 +1334,15 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
    // Do not set the handler - already handled
 
    if (filename.IsOk())
-      AddFile(len, filename.GetFullPath(), start, channel);
+      AddFile(len, mFormat, filename.GetFullPath(), start, channel);
    else
-      AddFile(len); // will add silence instead
+      AddFile(len, mFormat); // will add silence instead
 
    return true;
 }
 
 void AUPImportFileHandle::AddFile(sampleCount len,
+                                  sampleFormat format,
                                   const FilePath &filename /* = wxEmptyString */,
                                   sampleCount origin /* = 0 */,
                                   int channel /* = 0 */)
@@ -1346,6 +1352,7 @@ void AUPImportFileHandle::AddFile(sampleCount len,
    fi.clip = mClip;
    fi.path = filename;
    fi.len = len;
+   fi.format = format,
    fi.origin = origin,
    fi.channel = channel;
 
@@ -1374,6 +1381,7 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
 // import to continue.
 bool AUPImportFileHandle::AddSamples(const FilePath &filename,
                                      sampleCount len,
+                                     sampleFormat format,
                                      sampleCount origin /* = 0 */,
                                      int channel /* = 0 */)
 {
@@ -1441,7 +1449,6 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       }
    }
 
-   sampleFormat format = mFormat;
    sf_count_t cnt = len.as_size_t();
    int channels = info.channels;
 
