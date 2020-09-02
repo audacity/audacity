@@ -1,12 +1,13 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  ImportAUP.cpp
+  @file ImportAUP.cpp
+  @brief Upgrading project file formats from before version 3
 
 *//****************************************************************//**
 
-\class AUPmportFileHandle
+\class AUPImportFileHandle
 \brief An ImportFileHandle for AUP files (pre-AUP3)
 
 *//****************************************************************//**
