@@ -24,7 +24,6 @@ struct sqlite3_stmt;
 struct sqlite3_value;
 
 class AudacityProject;
-class TransactionScope;
 class DBConnection;
 class ProjectSerializer;
 class SqliteSampleBlock;
@@ -237,28 +236,6 @@ private:
    Connection mPrevConn;
    FilePath mPrevFileName;
    bool mPrevTemporary;
-};
-
-// Make a savepoint (a transaction, possibly nested) with the given name;
-// roll it back at destruction time, unless an explicit Commit() happened first.
-// Commit() must not be called again after one successful call.
-// An exception is thrown from the constructor if the transaction cannot open.
-class TransactionScope
-{
-public:
-   TransactionScope(DBConnection &connection, const char *name);
-   ~TransactionScope();
-
-   bool Commit();
-
-private:
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
-
-   DBConnection &mConnection;
-   bool mInTrans;
-   wxString mName;
 };
 
 class wxTopLevelWindow;

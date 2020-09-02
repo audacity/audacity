@@ -27,6 +27,7 @@
 #include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
+#include "../DBConnection.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../PluginManager.h"
