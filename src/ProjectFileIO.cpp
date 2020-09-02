@@ -507,9 +507,9 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    if (rc != SQLITE_ABORT && errmsg)
    {
       SetDBError(
-         XO("Failed to execute a project file command:\n\n%s").Format(query)
+         XO("Failed to execute a project file command:\n\n%s").Format(query),
+         Verbatim(errmsg)
       );
-      mLibraryError = Verbatim(errmsg);
    }
    if (errmsg)
    {
@@ -1769,9 +1769,8 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    if (!xmlFile.ParseString(this, output.GetString()))
    {
       SetError(
-         XO("Unable to parse project information.")
+         XO("Unable to parse project information."), xmlFile.GetErrorStr()
       );
-      mLibraryError = xmlFile.GetErrorStr();
 
       return false;
    }
@@ -1846,9 +1845,9 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       if (!success)
       {
          SetError(
-            XO("Unable to parse project information.")
+            XO("Unable to parse project information."),
+            xmlFile.GetErrorStr()
          );
-         mLibraryError = xmlFile.GetErrorStr();
          return false;
       }
 
@@ -2122,37 +2121,30 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
    return -1;
 }
 
-const TranslatableString &ProjectFileIO::GetLastError() const
-{
-   return mLastError;
-}
-
-const TranslatableString &ProjectFileIO::GetLibraryError() const
-{
-   return mLibraryError;
-}
-
-void ProjectFileIO::SetError(const TranslatableString &msg)
-{
-   mLastError = msg;
-   mLibraryError = {};
-}
-
-void ProjectFileIO::SetDBError(const TranslatableString &msg)
+const TranslatableString &ProjectFileIO::GetLastError()
 {
    auto &currConn = CurrConn();
-   mLastError = msg;
-   wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
-   printf("   Lib error: %s", mLastError.Debug().mb_str().data());
+   return currConn->GetLastError();
+}
 
-   if (currConn)
-   {
-      mLibraryError = Verbatim(sqlite3_errmsg(currConn->DB()));
-      wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
-      printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
-   }
+const TranslatableString &ProjectFileIO::GetLibraryError()
+{
+   auto &currConn = CurrConn();
+   return currConn->GetLibraryError();
+}
 
-   wxASSERT(false);
+void ProjectFileIO::SetError(
+   const TranslatableString &msg, const TranslatableString &libraryError )
+{
+   auto &currConn = CurrConn();
+   currConn->SetError(msg, libraryError);
+}
+
+void ProjectFileIO::SetDBError(
+   const TranslatableString &msg, const TranslatableString &libraryError)
+{
+   auto &currConn = CurrConn();
+   currConn->SetDBError(msg, libraryError);
 }
 
 void ProjectFileIO::SetBypass()

@@ -104,8 +104,8 @@ public:
    // specific database. This is the workhorse for the above 3 methods.
    static int64_t GetDiskUsage(DBConnection *conn, SampleBlockID blockid);
 
-   const TranslatableString &GetLastError() const;
-   const TranslatableString &GetLibraryError() const;
+   const TranslatableString &GetLastError();
+   const TranslatableString &GetLibraryError();
 
    // Provides a means to bypass "DELETE"s at shutdown if the database
    // is just going to be deleted anyway.  This prevents a noticable
@@ -199,8 +199,13 @@ private:
                bool prune = false,
                const std::shared_ptr<TrackList> &tracks = nullptr);
 
-   void SetError(const TranslatableString & msg);
-   void SetDBError(const TranslatableString & msg);
+   //! Just set stored errors
+   void SetError(const TranslatableString & msg,
+      const TranslatableString &libraryError = {});
+
+   //! Set stored errors and write to log; and default libraryError to what database library reports
+   void SetDBError(const TranslatableString & msg,
+      const TranslatableString &libraryError = {});
 
    bool ShouldCompact(const std::shared_ptr<TrackList> &tracks);
 
@@ -236,9 +241,6 @@ private:
    Connection mPrevConn;
    FilePath mPrevFileName;
    bool mPrevTemporary;
-
-   TranslatableString mLastError;
-   TranslatableString mLibraryError;
 };
 
 // Make a savepoint (a transaction, possibly nested) with the given name;

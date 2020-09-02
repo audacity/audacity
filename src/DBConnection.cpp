@@ -55,6 +55,28 @@ bool DBConnection::ShouldBypass()
    return mBypass;
 }
 
+void DBConnection::SetError(
+   const TranslatableString &msg, const TranslatableString &libraryError)
+{
+   mLastError = msg;
+   mLibraryError = libraryError;
+}
+
+void DBConnection::SetDBError(
+   const TranslatableString &msg, const TranslatableString &libraryError)
+{
+   mLastError = msg;
+   wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
+   printf("   Lib error: %s", mLastError.Debug().mb_str().data());
+
+   mLibraryError = libraryError.empty()
+      ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
+   wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
+   printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
+
+   wxASSERT(false);
+}
+
 bool DBConnection::Open(const char *fileName)
 {
    wxASSERT(mDB == nullptr);
