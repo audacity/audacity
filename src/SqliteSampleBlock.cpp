@@ -130,8 +130,6 @@ public:
 
    SampleBlockIDs GetActiveBlockIDs() override;
 
-   SampleBlockPtr DoGet(SampleBlockID sbid) override;
-
    SampleBlockPtr DoCreate(samplePtr src,
       size_t numsamples,
       sampleFormat srcformat) override;
@@ -247,13 +245,6 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
       return nullptr;
    }
 
-   return sb;
-}
-
-SampleBlockPtr SqliteSampleBlockFactory::DoGet( SampleBlockID sbid )
-{
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
-   sb->Load(sbid);
    return sb;
 }
 

@@ -38,14 +38,6 @@ SampleBlockFactoryPtr SampleBlockFactory::New( AudacityProject &project )
 
 SampleBlockFactory::~SampleBlockFactory() = default;
 
-SampleBlockPtr SampleBlockFactory::Get(SampleBlockID sbid)
-{
-   auto result = DoGet(sbid);
-   if (!result)
-      THROW_INCONSISTENCY_EXCEPTION;
-   return result;
-}
-
 SampleBlockPtr SampleBlockFactory::Create(samplePtr src,
    size_t numsamples,
    sampleFormat srcformat)

@@ -117,9 +117,6 @@ public:
    virtual ~SampleBlockFactory();
 
    // Returns a non-null pointer or else throws an exception
-   SampleBlockPtr Get(SampleBlockID sbid);
-
-   // Returns a non-null pointer or else throws an exception
    SampleBlockPtr Create(samplePtr src,
       size_t numsamples,
       sampleFormat srcformat);
@@ -139,10 +136,6 @@ public:
    virtual SampleBlockIDs GetActiveBlockIDs() = 0;
 
 protected:
-   // The override should throw more informative exceptions on error than the
-   // default InconsistencyException thrown by Create
-   virtual SampleBlockPtr DoGet(SampleBlockID sbid) = 0;
-
    // The override should throw more informative exceptions on error than the
    // default InconsistencyException thrown by Create
    virtual SampleBlockPtr DoCreate(samplePtr src,
