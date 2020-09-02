@@ -64,6 +64,7 @@ public:
    void SaveXML(XMLWriter &xmlFile) override;
 
 private:
+   bool IsSilent() const { return mSilent; }
    void Load(SampleBlockID sbid);
    bool GetSummary(float *dest,
                    size_t frameoffset,
@@ -320,6 +321,11 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                                      size_t sampleoffset,
                                      size_t numsamples)
 {
+   if (IsSilent()) {
+      ClearSamples(dest, destformat, sampleoffset, numsamples);
+      return numsamples;
+   }
+
    // Prepare and cache statement...automatically finalized at DB close
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSamples,
       "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
@@ -381,22 +387,27 @@ bool SqliteSampleBlock::GetSummary(float *dest,
                                    const char *sql)
 {
    // Non-throwing, it returns true for success
-   try {
-      // Prepare and cache statement...automatically finalized at DB close
-      auto stmt = Conn()->Prepare(id, sql);
-      // Note GetBlob returns a size_t, not a bool
-      GetBlob(dest,
-                  floatSample,
-                  stmt,
-                  floatSample,
-                  frameoffset * fields * SAMPLE_SIZE(floatSample),
-                  numframes * fields * SAMPLE_SIZE(floatSample));
-      return true;
+   bool silent = IsSilent();
+   if (!silent) {
+      // Not a silent block
+      try {
+         // Prepare and cache statement...automatically finalized at DB close
+         auto stmt = Conn()->Prepare(id, sql);
+         // Note GetBlob returns a size_t, not a bool
+         GetBlob(dest,
+                     floatSample,
+                     stmt,
+                     floatSample,
+                     frameoffset * fields * SAMPLE_SIZE(floatSample),
+                     numframes * fields * SAMPLE_SIZE(floatSample));
+         return true;
+      }
+      catch ( const AudacityException & ) {
+      }
    }
-   catch ( const AudacityException & ) {
-      memset(dest, 0, fields * numframes * sizeof( float ));
-      return false;
-   }
+   memset(dest, 0, 3 * numframes * sizeof( float ));
+   // Return true for success only if we didn't catch
+   return silent;
 }
 
 double SqliteSampleBlock::GetSumMin() const
@@ -421,6 +432,9 @@ double SqliteSampleBlock::GetSumRms() const
 /// @param len   The number of samples to include in the region
 MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
 {
+   if (IsSilent())
+      return {};
+
    float min = FLT_MAX;
    float max = -FLT_MAX;
    float sumsq = 0;
@@ -482,7 +496,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 {
    auto db = DB();
 
-   wxASSERT(mBlockID > 0);
+   wxASSERT(!IsSilent());
 
    if (!mValid && mBlockID)
    {
