@@ -130,10 +130,6 @@ public:
    // The last compact check found unused blocks in the project file
    bool HadUnused();
 
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
-
    // In one SQL command, delete sample blocks with ids in the given set, or
    // (when complement is true), with ids not in the given set.
    bool DeleteBlocks(const BlockIDs &blockids, bool complement);
@@ -250,13 +246,17 @@ private:
 class TransactionScope
 {
 public:
-   TransactionScope(ProjectFileIO &projectFileIO, const char *name);
+   TransactionScope(DBConnection &connection, const char *name);
    ~TransactionScope();
 
    bool Commit();
 
 private:
-   ProjectFileIO &mIO;
+   bool TransactionStart(const wxString &name);
+   bool TransactionCommit(const wxString &name);
+   bool TransactionRollback(const wxString &name);
+
+   DBConnection &mConnection;
    bool mInTrans;
    wxString mName;
 };

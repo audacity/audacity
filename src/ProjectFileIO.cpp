@@ -423,11 +423,11 @@ void ProjectFileIO::UseConnection(Connection &&conn, const FilePath &filePath)
    SetFileName(filePath);
 }
 
-bool ProjectFileIO::TransactionStart(const wxString &name)
+bool TransactionScope::TransactionStart(const wxString &name)
 {
    char *errmsg = nullptr;
 
-   int rc = sqlite3_exec(DB(),
+   int rc = sqlite3_exec(mConnection.DB(),
                          wxT("SAVEPOINT ") + name + wxT(";"),
                          nullptr,
                          nullptr,
@@ -435,7 +435,7 @@ bool ProjectFileIO::TransactionStart(const wxString &name)
 
    if (errmsg)
    {
-      SetDBError(
+      mConnection.SetDBError(
          XO("Failed to create savepoint:\n\n%s").Format(name)
       );
       sqlite3_free(errmsg);
@@ -444,11 +444,11 @@ bool ProjectFileIO::TransactionStart(const wxString &name)
    return rc == SQLITE_OK;
 }
 
-bool ProjectFileIO::TransactionCommit(const wxString &name)
+bool TransactionScope::TransactionCommit(const wxString &name)
 {
    char *errmsg = nullptr;
 
-   int rc = sqlite3_exec(DB(),
+   int rc = sqlite3_exec(mConnection.DB(),
                          wxT("RELEASE ") + name + wxT(";"),
                          nullptr,
                          nullptr,
@@ -456,7 +456,7 @@ bool ProjectFileIO::TransactionCommit(const wxString &name)
 
    if (errmsg)
    {
-      SetDBError(
+      mConnection.SetDBError(
          XO("Failed to release savepoint:\n\n%s").Format(name)
       );
       sqlite3_free(errmsg);
@@ -465,11 +465,11 @@ bool ProjectFileIO::TransactionCommit(const wxString &name)
    return rc == SQLITE_OK;
 }
 
-bool ProjectFileIO::TransactionRollback(const wxString &name)
+bool TransactionScope::TransactionRollback(const wxString &name)
 {
    char *errmsg = nullptr;
 
-   int rc = sqlite3_exec(DB(),
+   int rc = sqlite3_exec(mConnection.DB(),
                          wxT("ROLLBACK TO ") + name + wxT(";"),
                          nullptr,
                          nullptr,
@@ -477,7 +477,7 @@ bool ProjectFileIO::TransactionRollback(const wxString &name)
 
    if (errmsg)
    {
-      SetDBError(
+      mConnection.SetDBError(
          XO("Failed to release savepoint:\n\n%s").Format(name)
       );
       sqlite3_free(errmsg);
@@ -2449,12 +2449,12 @@ int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
    return 9;
 }
 
-TransactionScope::TransactionScope(ProjectFileIO &projectFileIO,
-                                             const char *name)
-:  mIO(projectFileIO),
+TransactionScope::TransactionScope(
+   DBConnection &connection, const char *name)
+:  mConnection(connection),
    mName(name)
 {
-   mInTrans = mIO.TransactionStart(mName);
+   mInTrans = TransactionStart(mName);
    if ( !mInTrans )
       // To do, improve the message
       throw SimpleMessageBoxException( XO("Database error") );
@@ -2467,8 +2467,8 @@ TransactionScope::~TransactionScope()
       // Rollback AND REMOVE the transaction
       // -- must do both; rolling back a savepoint only rewinds it
       // without removing it, unlike the ROLLBACK command
-      if (!(mIO.TransactionRollback(mName) &&
-            mIO.TransactionCommit(mName) ) )
+      if (!(TransactionRollback(mName) &&
+            TransactionCommit(mName) ) )
       {
          // Do not throw from a destructor!
          // This has to be a no-fail cleanup that does the best that it can.
@@ -2482,7 +2482,7 @@ bool TransactionScope::Commit()
       // Misuse of this class
       THROW_INCONSISTENCY_EXCEPTION;
 
-   mInTrans = !mIO.TransactionCommit(mName);
+   mInTrans = !TransactionCommit(mName);
 
    return mInTrans;
 }

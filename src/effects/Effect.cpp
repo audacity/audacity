@@ -1215,7 +1215,7 @@ bool Effect::DoEffect(double projectRate,
    // This is for performance purposes only, no additional recovery implied
    auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
    auto &pIO = ProjectFileIO::Get(pProject);
-   TransactionScope trans(pIO, "Effect");
+   TransactionScope trans(pIO.GetConnection(), "Effect");
 
    // Update track/group counts
    CountWaveTracks();
