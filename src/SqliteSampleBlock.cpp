@@ -644,8 +644,7 @@ void SqliteSampleBlock::Commit()
        sqlite3_bind_double(stmt, 4, mSumRms) ||
        sqlite3_bind_blob(stmt, 5, mSummary256.get(), mSummary256Bytes, SQLITE_STATIC) ||
        sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC) ||
-       mSilent ? sqlite3_bind_zeroblob(stmt, 7, mSampleBytes)
-               : sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC))
+       sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC))
    {
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
