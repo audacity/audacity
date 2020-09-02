@@ -33,7 +33,9 @@ public:
 
    void SetSilent(size_t numsamples, sampleFormat srcformat);
 
-   void Commit();
+   //! Numbers of bytes needed for 256 and for 64k summaries
+   using Sizes = std::pair< size_t, size_t >;
+   void Commit(Sizes sizes);
 
    void Delete();
 
@@ -79,8 +81,8 @@ private:
       fields = 3, /* min, max, rms */
       bytesPerFrame = fields * sizeof(float),
    };
-   void SetSizes( size_t numsamples, sampleFormat srcformat );
-   void CalcSummary();
+   Sizes SetSizes( size_t numsamples, sampleFormat srcformat );
+   void CalcSummary(Sizes sizes);
 
 private:
    DBConnection *Conn() const
@@ -114,9 +116,7 @@ private:
    sampleFormat mSampleFormat;
 
    ArrayOf<char> mSummary256;
-   size_t mSummary256Bytes;
    ArrayOf<char> mSummary64k;
-   size_t mSummary64kBytes;
    double mSumMin;
    double mSumMax;
    double mSumRms;
@@ -267,8 +267,6 @@ SqliteSampleBlock::SqliteSampleBlock(
    mSampleBytes = 0;
    mSampleCount = 0;
 
-   mSummary256Bytes = 0;
-   mSummary64kBytes = 0;
    mSumMin = 0.0;
    mSumMax = 0.0;
    mSumRms = 0.0;
@@ -338,26 +336,26 @@ void SqliteSampleBlock::SetSamples(samplePtr src,
                                    size_t numsamples,
                                    sampleFormat srcformat)
 {
-   SetSizes(numsamples, srcformat);
+   auto sizes = SetSizes(numsamples, srcformat);
    mSamples.reinit(mSampleBytes);
    memcpy(mSamples.get(), src, mSampleBytes);
 
-   CalcSummary();
+   CalcSummary( sizes );
 
-   Commit();
+   Commit( sizes );
 }
 
 void SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
 {
-   SetSizes(numsamples, srcformat);
+   auto sizes = SetSizes(numsamples, srcformat);
    mSamples.reinit(mSampleBytes);
    memset(mSamples.get(), 0, mSampleBytes);
 
-   CalcSummary();
+   CalcSummary( sizes );
 
    mSilent = true;
 
-   Commit();
+   Commit( sizes );
 }
 
 bool SqliteSampleBlock::GetSummary256(float *dest,
@@ -557,8 +555,6 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    wxASSERT(sbid > 0);
 
    mValid = false;
-   mSummary256Bytes = 0;
-   mSummary64kBytes = 0;
    mSampleCount = 0;
    mSampleBytes = 0;
    mSumMin = FLT_MAX;
@@ -568,7 +564,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    // Prepare and cache statement...automatically finalized at DB close
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::LoadSampleBlock,
       "SELECT sampleformat, summin, summax, sumrms,"
-      "       length(summary256), length(summary64k), length(samples)"
+      "       length(samples)"
       "  FROM sampleblocks WHERE blockid = ?1;");
 
    // Bind statement parameters
@@ -600,9 +596,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSumMin = sqlite3_column_double(stmt, 1);
    mSumMax = sqlite3_column_double(stmt, 2);
    mSumRms = sqlite3_column_double(stmt, 3);
-   mSummary256Bytes = sqlite3_column_int(stmt, 4);
-   mSummary64kBytes = sqlite3_column_int(stmt, 5);
-   mSampleBytes = sqlite3_column_int(stmt, 6);
+   mSampleBytes = sqlite3_column_int(stmt, 4);
    mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
 
    // Clear statement bindings and rewind statement
@@ -612,8 +606,11 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mValid = true;
 }
 
-void SqliteSampleBlock::Commit()
+void SqliteSampleBlock::Commit(Sizes sizes)
 {
+   const auto mSummary256Bytes = sizes.first;
+   const auto mSummary64kBytes = sizes.second;
+
    auto db = DB();
    int rc;
 
@@ -711,7 +708,8 @@ void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(wxT("blockid"), mBlockID);
 }
 
-void SqliteSampleBlock::SetSizes( size_t numsamples, sampleFormat srcformat )
+auto SqliteSampleBlock::SetSizes(
+   size_t numsamples, sampleFormat srcformat ) -> Sizes
 {
    mSampleFormat = srcformat;
    mSampleCount = numsamples;
@@ -719,8 +717,7 @@ void SqliteSampleBlock::SetSizes( size_t numsamples, sampleFormat srcformat )
 
    int frames64k = (mSampleCount + 65535) / 65536;
    int frames256 = frames64k * 256;
-   mSummary256Bytes = frames256 * bytesPerFrame;
-   mSummary64kBytes = frames64k * bytesPerFrame;
+   return { frames256 * bytesPerFrame, frames64k * bytesPerFrame };
 }
 
 /// Calculates summary block data describing this sample data.
@@ -728,8 +725,11 @@ void SqliteSampleBlock::SetSizes( size_t numsamples, sampleFormat srcformat )
 /// This method also has the side effect of setting the mSumMin,
 /// mSumMax, and mSumRms members of this class.
 ///
-void SqliteSampleBlock::CalcSummary()
+void SqliteSampleBlock::CalcSummary(Sizes sizes)
 {
+   const auto mSummary256Bytes = sizes.first;
+   const auto mSummary64kBytes = sizes.second;
+
    Floats samplebuffer;
    float *samples;
 
