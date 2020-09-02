@@ -66,8 +66,8 @@ private:
    bool GetSummary(float *dest,
                    size_t frameoffset,
                    size_t numframes,
-                   sqlite3_stmt *stmt,
-                   size_t srcbytes);
+                   DBConnection::StatementID id,
+                   const char *sql);
    size_t GetBlob(void *dest,
                   sampleFormat destformat,
                   sqlite3_stmt *stmt,
@@ -364,32 +364,28 @@ bool SqliteSampleBlock::GetSummary256(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSummary256,
+   return GetSummary(dest, frameoffset, numframes, DBConnection::GetSummary256,
       "SELECT summary256 FROM sampleblocks WHERE blockid = ?1;");
-
-   return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary64k(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSummary64k,
+   return GetSummary(dest, frameoffset, numframes, DBConnection::GetSummary64k,
       "SELECT summary64k FROM sampleblocks WHERE blockid = ?1;");
-
-   return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary(float *dest,
                                    size_t frameoffset,
                                    size_t numframes,
-                                   sqlite3_stmt *stmt,
-                                   size_t srcbytes)
+                                   DBConnection::StatementID id,
+                                   const char *sql)
 {
    // Non-throwing, it returns true for success
    try {
+      // Prepare and cache statement...automatically finalized at DB close
+      auto stmt = Conn()->Prepare(id, sql);
       // Note GetBlob returns a size_t, not a bool
       GetBlob(dest,
                   floatSample,
