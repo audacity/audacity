@@ -729,9 +729,6 @@ void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
 /// This method also has the side effect of setting the mSumMin,
 /// mSumMax, and mSumRms members of this class.
 ///
-/// @param buffer A buffer containing the sample data to be analyzed
-/// @param len    The length of the sample data
-/// @param format The format of the sample data.
 void SqliteSampleBlock::CalcSummary()
 {
    Floats samplebuffer;
