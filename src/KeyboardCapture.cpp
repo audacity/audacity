@@ -341,8 +341,9 @@ private:
          // as in the combo box case of bug 1252.  We can't compute it!
          // This makes a difference only when there is a capture handler.
          // It's never the case yet that there is one.
-         wxASSERT(false);
-         return chars;
+
+         // Return just a one-character string.
+         return event.GetUnicodeKey();
       }
 
       NSString *c = [mEvent charactersIgnoringModifiers];
