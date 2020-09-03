@@ -628,8 +628,6 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
 
 void SqliteSampleBlock::Commit(Sizes sizes)
 {
-   wxASSERT( !IsSilent() );
-
    const auto mSummary256Bytes = sizes.first;
    const auto mSummary64kBytes = sizes.second;
 
