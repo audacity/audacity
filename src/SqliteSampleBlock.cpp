@@ -567,8 +567,6 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 
 void SqliteSampleBlock::Load(SampleBlockID sbid)
 {
-   wxASSERT(!IsSilent());
-
    auto db = DB();
    int rc;
 
