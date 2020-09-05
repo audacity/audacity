@@ -89,7 +89,7 @@ UndoManager::UndoManager( AudacityProject &project )
 
 UndoManager::~UndoManager()
 {
-   ClearStates();
+   wxASSERT( stack.empty() );
 }
 
 namespace {

@@ -107,6 +107,8 @@ inline UndoPush operator | (UndoPush a, UndoPush b)
 inline UndoPush operator & (UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
+//! Maintain a non-persistent list of states of the project, to support undo and redo commands
+/*! The history should be cleared before destruction */
 class AUDACITY_DLL_API UndoManager final
    : public ClientData::Base
 {
