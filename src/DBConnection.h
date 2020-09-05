@@ -69,6 +69,21 @@ public:
    void SetBypass( bool bypass );
    bool ShouldBypass();
 
+   //! Just set stored errors
+   void SetError(
+      const TranslatableString &msg,
+      const TranslatableString &libraryError = {} );
+
+   //! Set stored errors and write to log; and default libraryError to what database library reports
+   void SetDBError(
+      const TranslatableString &msg,
+      const TranslatableString &libraryError = {} );
+
+   const TranslatableString &GetLastError() const
+   { return mLastError; }
+   const TranslatableString &GetLibraryError() const
+   { return mLibraryError; }
+
 private:
    bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
@@ -88,8 +103,33 @@ private:
 
    std::map<enum StatementID, sqlite3_stmt *> mStatements;
 
+   TranslatableString mLastError;
+   TranslatableString mLibraryError;
+
    // Bypass transactions if database will be deleted after close
    bool mBypass;
+};
+
+// Make a savepoint (a transaction, possibly nested) with the given name;
+// roll it back at destruction time, unless an explicit Commit() happened first.
+// Commit() must not be called again after one successful call.
+// An exception is thrown from the constructor if the transaction cannot open.
+class TransactionScope
+{
+public:
+   TransactionScope(DBConnection &connection, const char *name);
+   ~TransactionScope();
+
+   bool Commit();
+
+private:
+   bool TransactionStart(const wxString &name);
+   bool TransactionCommit(const wxString &name);
+   bool TransactionRollback(const wxString &name);
+
+   DBConnection &mConnection;
+   bool mInTrans;
+   wxString mName;
 };
 
 using Connection = std::unique_ptr<DBConnection>;

@@ -256,7 +256,7 @@ ProjectFileIO::~ProjectFileIO()
 {
 }
 
-sqlite3 *ProjectFileIO::DB()
+DBConnection &ProjectFileIO::GetConnection()
 {
    auto &curConn = CurrConn();
    if (!curConn)
@@ -270,9 +270,18 @@ sqlite3 *ProjectFileIO::DB()
       }
    }
 
-   return curConn->DB();
+   return *curConn;
 }
 
+sqlite3 *ProjectFileIO::DB()
+{
+   return GetConnection().DB();
+}
+
+/*!
+ @pre *CurConn() does not exist
+ @post *CurConn() exists or return value is false
+ */
 bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 {
    auto &curConn = CurrConn();
@@ -414,69 +423,6 @@ void ProjectFileIO::UseConnection(Connection &&conn, const FilePath &filePath)
    SetFileName(filePath);
 }
 
-bool ProjectFileIO::TransactionStart(const wxString &name)
-{
-   char *errmsg = nullptr;
-
-   int rc = sqlite3_exec(DB(),
-                         wxT("SAVEPOINT ") + name + wxT(";"),
-                         nullptr,
-                         nullptr,
-                         &errmsg);
-
-   if (errmsg)
-   {
-      SetDBError(
-         XO("Failed to create savepoint:\n\n%s").Format(name)
-      );
-      sqlite3_free(errmsg);
-   }
-
-   return rc == SQLITE_OK;
-}
-
-bool ProjectFileIO::TransactionCommit(const wxString &name)
-{
-   char *errmsg = nullptr;
-
-   int rc = sqlite3_exec(DB(),
-                         wxT("RELEASE ") + name + wxT(";"),
-                         nullptr,
-                         nullptr,
-                         &errmsg);
-
-   if (errmsg)
-   {
-      SetDBError(
-         XO("Failed to release savepoint:\n\n%s").Format(name)
-      );
-      sqlite3_free(errmsg);
-   }
-
-   return rc == SQLITE_OK;
-}
-
-bool ProjectFileIO::TransactionRollback(const wxString &name)
-{
-   char *errmsg = nullptr;
-
-   int rc = sqlite3_exec(DB(),
-                         wxT("ROLLBACK TO ") + name + wxT(";"),
-                         nullptr,
-                         nullptr,
-                         &errmsg);
-
-   if (errmsg)
-   {
-      SetDBError(
-         XO("Failed to release savepoint:\n\n%s").Format(name)
-      );
-      sqlite3_free(errmsg);
-   }
-
-   return rc == SQLITE_OK;
-}
-
 static int ExecCallback(void *data, int cols, char **vals, char **names)
 {
    auto &cb = *static_cast<const ProjectFileIO::ExecCB *>(data);
@@ -498,9 +444,9 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    if (rc != SQLITE_ABORT && errmsg)
    {
       SetDBError(
-         XO("Failed to execute a project file command:\n\n%s").Format(query)
+         XO("Failed to execute a project file command:\n\n%s").Format(query),
+         Verbatim(errmsg)
       );
-      mLibraryError = Verbatim(errmsg);
    }
    if (errmsg)
    {
@@ -1760,9 +1706,8 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    if (!xmlFile.ParseString(this, output.GetString()))
    {
       SetError(
-         XO("Unable to parse project information.")
+         XO("Unable to parse project information."), xmlFile.GetErrorStr()
       );
-      mLibraryError = xmlFile.GetErrorStr();
 
       return false;
    }
@@ -1837,9 +1782,9 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
       if (!success)
       {
          SetError(
-            XO("Unable to parse project information.")
+            XO("Unable to parse project information."),
+            xmlFile.GetErrorStr()
          );
-         mLibraryError = xmlFile.GetErrorStr();
          return false;
       }
 
@@ -2113,37 +2058,30 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
    return -1;
 }
 
-const TranslatableString &ProjectFileIO::GetLastError() const
-{
-   return mLastError;
-}
-
-const TranslatableString &ProjectFileIO::GetLibraryError() const
-{
-   return mLibraryError;
-}
-
-void ProjectFileIO::SetError(const TranslatableString &msg)
-{
-   mLastError = msg;
-   mLibraryError = {};
-}
-
-void ProjectFileIO::SetDBError(const TranslatableString &msg)
+const TranslatableString &ProjectFileIO::GetLastError()
 {
    auto &currConn = CurrConn();
-   mLastError = msg;
-   wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
-   printf("   Lib error: %s", mLastError.Debug().mb_str().data());
+   return currConn->GetLastError();
+}
 
-   if (currConn)
-   {
-      mLibraryError = Verbatim(sqlite3_errmsg(currConn->DB()));
-      wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
-      printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
-   }
+const TranslatableString &ProjectFileIO::GetLibraryError()
+{
+   auto &currConn = CurrConn();
+   return currConn->GetLibraryError();
+}
 
-   wxASSERT(false);
+void ProjectFileIO::SetError(
+   const TranslatableString &msg, const TranslatableString &libraryError )
+{
+   auto &currConn = CurrConn();
+   currConn->SetError(msg, libraryError);
+}
+
+void ProjectFileIO::SetDBError(
+   const TranslatableString &msg, const TranslatableString &libraryError)
+{
+   auto &currConn = CurrConn();
+   currConn->SetDBError(msg, libraryError);
 }
 
 void ProjectFileIO::SetBypass()
@@ -2446,42 +2384,4 @@ int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
    *out = val;
 
    return 9;
-}
-
-TransactionScope::TransactionScope(ProjectFileIO &projectFileIO,
-                                             const char *name)
-:  mIO(projectFileIO),
-   mName(name)
-{
-   mInTrans = mIO.TransactionStart(mName);
-   if ( !mInTrans )
-      // To do, improve the message
-      throw SimpleMessageBoxException( XO("Database error") );
-}
-
-TransactionScope::~TransactionScope()
-{
-   if (mInTrans)
-   {
-      // Rollback AND REMOVE the transaction
-      // -- must do both; rolling back a savepoint only rewinds it
-      // without removing it, unlike the ROLLBACK command
-      if (!(mIO.TransactionRollback(mName) &&
-            mIO.TransactionCommit(mName) ) )
-      {
-         // Do not throw from a destructor!
-         // This has to be a no-fail cleanup that does the best that it can.
-      }
-   }
-}
-
-bool TransactionScope::Commit()
-{
-   if ( !mInTrans )
-      // Misuse of this class
-      THROW_INCONSISTENCY_EXCEPTION;
-
-   mInTrans = !mIO.TransactionCommit(mName);
-
-   return mInTrans;
 }

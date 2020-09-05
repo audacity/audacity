@@ -15,6 +15,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
+#include "DBConnection.h"
 #include "FileNames.h"
 #include "Menus.h"
 #include "ModuleManager.h"
@@ -740,7 +741,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    projectFileIO.SetBypass();
 
    {
-      TransactionScope trans(projectFileIO, "Shutdown");
+      TransactionScope trans(projectFileIO.GetConnection(), "Shutdown");
 
       // This can reduce reference counts of sample blocks in the project's
       // tracks.

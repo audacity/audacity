@@ -55,6 +55,28 @@ bool DBConnection::ShouldBypass()
    return mBypass;
 }
 
+void DBConnection::SetError(
+   const TranslatableString &msg, const TranslatableString &libraryError)
+{
+   mLastError = msg;
+   mLibraryError = libraryError;
+}
+
+void DBConnection::SetDBError(
+   const TranslatableString &msg, const TranslatableString &libraryError)
+{
+   mLastError = msg;
+   wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
+   printf("   Lib error: %s", mLastError.Debug().mb_str().data());
+
+   mLibraryError = libraryError.empty()
+      ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
+   wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
+   printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
+
+   wxASSERT(false);
+}
+
 bool DBConnection::Open(const char *fileName)
 {
    wxASSERT(mDB == nullptr);
@@ -313,6 +335,107 @@ int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, in
    that->mCheckpointCondition.notify_one();
 
    return SQLITE_OK;
+}
+
+bool TransactionScope::TransactionStart(const wxString &name)
+{
+   char *errmsg = nullptr;
+
+   int rc = sqlite3_exec(mConnection.DB(),
+                         wxT("SAVEPOINT ") + name + wxT(";"),
+                         nullptr,
+                         nullptr,
+                         &errmsg);
+
+   if (errmsg)
+   {
+      mConnection.SetDBError(
+         XO("Failed to create savepoint:\n\n%s").Format(name)
+      );
+      sqlite3_free(errmsg);
+   }
+
+   return rc == SQLITE_OK;
+}
+
+bool TransactionScope::TransactionCommit(const wxString &name)
+{
+   char *errmsg = nullptr;
+
+   int rc = sqlite3_exec(mConnection.DB(),
+                         wxT("RELEASE ") + name + wxT(";"),
+                         nullptr,
+                         nullptr,
+                         &errmsg);
+
+   if (errmsg)
+   {
+      mConnection.SetDBError(
+         XO("Failed to release savepoint:\n\n%s").Format(name)
+      );
+      sqlite3_free(errmsg);
+   }
+
+   return rc == SQLITE_OK;
+}
+
+bool TransactionScope::TransactionRollback(const wxString &name)
+{
+   char *errmsg = nullptr;
+
+   int rc = sqlite3_exec(mConnection.DB(),
+                         wxT("ROLLBACK TO ") + name + wxT(";"),
+                         nullptr,
+                         nullptr,
+                         &errmsg);
+
+   if (errmsg)
+   {
+      mConnection.SetDBError(
+         XO("Failed to release savepoint:\n\n%s").Format(name)
+      );
+      sqlite3_free(errmsg);
+   }
+
+   return rc == SQLITE_OK;
+}
+
+TransactionScope::TransactionScope(
+   DBConnection &connection, const char *name)
+:  mConnection(connection),
+   mName(name)
+{
+   mInTrans = TransactionStart(mName);
+   if ( !mInTrans )
+      // To do, improve the message
+      throw SimpleMessageBoxException( XO("Database error") );
+}
+
+TransactionScope::~TransactionScope()
+{
+   if (mInTrans)
+   {
+      // Rollback AND REMOVE the transaction
+      // -- must do both; rolling back a savepoint only rewinds it
+      // without removing it, unlike the ROLLBACK command
+      if (!(TransactionRollback(mName) &&
+            TransactionCommit(mName) ) )
+      {
+         // Do not throw from a destructor!
+         // This has to be a no-fail cleanup that does the best that it can.
+      }
+   }
+}
+
+bool TransactionScope::Commit()
+{
+   if ( !mInTrans )
+      // Misuse of this class
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   mInTrans = !TransactionCommit(mName);
+
+   return mInTrans;
 }
 
 ConnectionPtr::~ConnectionPtr()

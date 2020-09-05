@@ -24,7 +24,6 @@ struct sqlite3_stmt;
 struct sqlite3_value;
 
 class AudacityProject;
-class TransactionScope;
 class DBConnection;
 class ProjectSerializer;
 class SqliteSampleBlock;
@@ -104,8 +103,8 @@ public:
    // specific database. This is the workhorse for the above 3 methods.
    static int64_t GetDiskUsage(DBConnection *conn, SampleBlockID blockid);
 
-   const TranslatableString &GetLastError() const;
-   const TranslatableString &GetLibraryError() const;
+   const TranslatableString &GetLastError();
+   const TranslatableString &GetLibraryError();
 
    // Provides a means to bypass "DELETE"s at shutdown if the database
    // is just going to be deleted anyway.  This prevents a noticable
@@ -130,10 +129,6 @@ public:
    // The last compact check found unused blocks in the project file
    bool HadUnused();
 
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
-
    // In one SQL command, delete sample blocks with ids in the given set, or
    // (when complement is true), with ids not in the given set.
    bool DeleteBlocks(const BlockIDs &blockids, bool complement);
@@ -141,6 +136,8 @@ public:
    // Type of function that is given the fields of one row and returns
    // 0 for success or non-zero to stop the query
    using ExecCB = std::function<int(int cols, char **vals, char **names)>;
+
+   DBConnection &GetConnection();
 
 private:
    void WriteXMLHeader(XMLWriter &xmlFile) const;
@@ -197,8 +194,13 @@ private:
                bool prune = false,
                const std::shared_ptr<TrackList> &tracks = nullptr);
 
-   void SetError(const TranslatableString & msg);
-   void SetDBError(const TranslatableString & msg);
+   //! Just set stored errors
+   void SetError(const TranslatableString & msg,
+      const TranslatableString &libraryError = {});
+
+   //! Set stored errors and write to log; and default libraryError to what database library reports
+   void SetDBError(const TranslatableString & msg,
+      const TranslatableString &libraryError = {});
 
    bool ShouldCompact(const std::shared_ptr<TrackList> &tracks);
 
@@ -234,27 +236,6 @@ private:
    Connection mPrevConn;
    FilePath mPrevFileName;
    bool mPrevTemporary;
-
-   TranslatableString mLastError;
-   TranslatableString mLibraryError;
-};
-
-// Make a savepoint (a transaction, possibly nested) with the given name;
-// roll it back at destruction time, unless an explicit Commit() happened first.
-// Commit() must not be called again after one successful call.
-// An exception is thrown from the constructor if the transaction cannot open.
-class TransactionScope
-{
-public:
-   TransactionScope(ProjectFileIO &projectFileIO, const char *name);
-   ~TransactionScope();
-
-   bool Commit();
-
-private:
-   ProjectFileIO &mIO;
-   bool mInTrans;
-   wxString mName;
 };
 
 class wxTopLevelWindow;
