@@ -263,7 +263,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    // Whenever activation swaps between projects, the track panel "captures"
    // the keyboard, which means its sub-cells like Label tracks are given
    // the chance to process keystrokes before CommandManager.
-   std::once_flag flag;
+   static std::once_flag flag;
    std::call_once(flag, []{
       wxTheApp->Bind(EVT_PROJECT_ACTIVATION,
       [](wxCommandEvent &){
