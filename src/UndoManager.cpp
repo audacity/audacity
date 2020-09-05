@@ -26,6 +26,7 @@ UndoManager
 #include <wx/hashset.h>
 
 #include "Clipboard.h"
+#include "DBConnection.h"
 #include "Diags.h"
 #include "Project.h"
 #include "SampleBlock.h"
@@ -181,12 +182,20 @@ void UndoManager::RemoveStateAt(int n)
 
 void UndoManager::RemoveStates(int num)
 {
+   Optional<TransactionScope> pTrans;
+   auto pConnection = ConnectionPtr::Get(mProject).mpConnection.get();
+   if (pConnection)
+      pTrans.emplace(*pConnection, "DiscardingUndoStates");
+
    for (int i = 0; i < num; i++) {
       RemoveStateAt(0);
 
       current -= 1;
       saved -= 1;
    }
+
+   if (pTrans)
+      pTrans->Commit();
 }
 
 void UndoManager::ClearStates()

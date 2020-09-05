@@ -15,7 +15,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
-#include "DBConnection.h"
 #include "FileNames.h"
 #include "Menus.h"
 #include "ModuleManager.h"
@@ -741,16 +740,12 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    projectFileIO.SetBypass();
 
    {
-      TransactionScope trans(projectFileIO.GetConnection(), "Shutdown");
-
       // This can reduce reference counts of sample blocks in the project's
       // tracks.
       UndoManager::Get( project ).ClearStates();
 
       // Delete all the tracks to free up memory
       tracks.Clear();
-
-      trans.Commit();
    }
 
    // We're all done with the project file, so close it now
