@@ -18,13 +18,15 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 
 #include "SampleBlock.h" // to inherit
 
+class SqliteSampleBlockFactory;
+
 ///\brief Implementation of @ref SampleBlock using Sqlite database
 class SqliteSampleBlock final : public SampleBlock
 {
 public:
 
    explicit SqliteSampleBlock(
-      const std::shared_ptr<ConnectionPtr> &ppConnection);
+      const std::shared_ptr<SqliteSampleBlockFactory> &pFactory);
    ~SqliteSampleBlock() override;
 
    void CloseLock() override;
@@ -85,17 +87,7 @@ private:
 
 private:
    //! This must never be called for silent blocks
-   DBConnection *Conn() const
-   {
-      auto &pConnection = mppConnection->mpConnection;
-      if (!pConnection) {
-         throw SimpleMessageBoxException
-         {
-            XO("Failed to open the project's database")
-         };
-      }
-      return pConnection.get();
-   }
+   DBConnection *Conn() const;
    sqlite3 *DB() const
    {
       return Conn()->DB();
@@ -103,7 +95,7 @@ private:
 
    friend SqliteSampleBlockFactory;
 
-   const std::shared_ptr<ConnectionPtr> mppConnection;
+   const std::shared_ptr<SqliteSampleBlockFactory> mpFactory;
    bool mValid{ false };
    bool mLocked = false;
 
@@ -132,7 +124,9 @@ static std::map< SampleBlockID, std::shared_ptr<SqliteSampleBlock> >
    sSilentBlocks;
 
 ///\brief Implementation of @ref SampleBlockFactory using Sqlite database
-class SqliteSampleBlockFactory final : public SampleBlockFactory
+class SqliteSampleBlockFactory final
+   : public SampleBlockFactory
+   , public std::enable_shared_from_this<SqliteSampleBlockFactory>
 {
 public:
    explicit SqliteSampleBlockFactory( AudacityProject &project );
@@ -154,10 +148,14 @@ public:
       const wxChar **attrs) override;
 
 private:
+   friend SqliteSampleBlock;
+
    const std::shared_ptr<ConnectionPtr> mppConnection;
 
    // Track all blocks that this factory has created, but don't control
    // their lifetimes (so use weak_ptr)
+   // (Must also use weak pointers because the blocks have shared pointers
+   // to the factory and we can't have a leaky cycle of shared pointers)
    using AllBlocksMap =
       std::map< SampleBlockID, std::weak_ptr< SqliteSampleBlock > >;
    AllBlocksMap mAllBlocks;
@@ -174,7 +172,7 @@ SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
    samplePtr src, size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
+   auto sb = std::make_shared<SqliteSampleBlock>(shared_from_this());
    sb->SetSamples(src, numsamples, srcformat);
    // block id has now been assigned
    mAllBlocks[ sb->GetBlockID() ] = sb;
@@ -251,7 +249,8 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
                sb = pb;
             else {
                // First sight of this id
-               auto ssb = std::make_shared<SqliteSampleBlock>(mppConnection);
+               auto ssb =
+                  std::make_shared<SqliteSampleBlock>(shared_from_this());
                wb = ssb;
                sb = ssb;
                ssb->mSampleFormat = srcformat;
@@ -274,8 +273,8 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
 }
 
 SqliteSampleBlock::SqliteSampleBlock(
-   const std::shared_ptr<ConnectionPtr> &ppConnection)
-:  mppConnection(ppConnection)
+   const std::shared_ptr<SqliteSampleBlockFactory> &pFactory)
+:  mpFactory(pFactory)
 {
    mSampleFormat = floatSample;
    mSampleBytes = 0;
@@ -308,6 +307,18 @@ SqliteSampleBlock::~SqliteSampleBlock()
       // database, which should not cause aborting of the attempted edit.
       GuardedCall( [this]{ Delete(); } );
    }
+}
+
+DBConnection *SqliteSampleBlock::Conn() const
+{
+   auto &pConnection = mpFactory->mppConnection->mpConnection;
+   if (!pConnection) {
+      throw SimpleMessageBoxException
+      {
+         XO("Failed to open the project's database")
+      };
+   }
+   return pConnection.get();
 }
 
 void SqliteSampleBlock::CloseLock()
