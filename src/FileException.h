@@ -46,6 +46,8 @@ public:
 
    ~FileException() override;
 
+   static wxString AbbreviatePath(const wxFileName &fileName);
+
 protected:
    //! %Format an error message appropriate for the @ref Cause.
    TranslatableString ErrorMessage() const override;

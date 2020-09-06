@@ -19,6 +19,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include "Internat.h"
 #include "Project.h"
 #include "FileException.h"
+#include "wxFileNameWrapper.h"
 
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
@@ -282,7 +283,9 @@ void DBConnection::CheckpointThread()
    // If it fails, then we won't checkpoint until the main thread closes
    // the associated DB.
    sqlite3 *db = nullptr;
-   if (sqlite3_open(sqlite3_db_filename(mDB, nullptr), &db) == SQLITE_OK)
+   const auto name = sqlite3_db_filename(mDB, nullptr);
+   bool giveUp = false;
+   if (sqlite3_open(name, &db) == SQLITE_OK)
    {
       // Configure it to be safe
       ModeConfig(db, "main", SafeConfig);
@@ -311,10 +314,38 @@ void DBConnection::CheckpointThread()
 
          // And kick off the checkpoint. This may not checkpoint ALL frames
          // in the WAL.  They'll be gotten the next time around.
-         sqlite3_wal_checkpoint_v2(db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
-
+         auto rc = giveUp ? SQLITE_OK :
+            sqlite3_wal_checkpoint_v2(
+               db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
          // Reset
          mCheckpointActive = false;
+
+         if ( rc != SQLITE_OK ) {
+            // Can't checkpoint -- maybe the device has too little space
+            wxFileNameWrapper fName{ name };
+            auto path = FileException::AbbreviatePath( fName );
+            auto name = fName.GetFullName();
+            auto longname = name + "-wal";
+            auto message1 = rc == SQLITE_FULL
+               ? XO("There is insufficient space in %s.\n" ).Format( path )
+               : TranslatableString{};
+            auto message = XO(
+"The database log file %s could not be cleaned up.\n"
+"%s\n"
+"Nothing has been lost, but you must not remove this file!  "
+"Copy %s with its log file to another device, open it, and close to make "
+"it complete."
+            ).Format( longname, message1, name );
+
+            // Throw and catch and AudacityException, enqueuing the
+            // error message box for the event loop in the main thread
+            GuardedCall( [&message]{
+               throw SimpleMessageBoxException{
+                  message, XO("Warning") }; } );
+            
+            // Stop trying to checkpoint
+            giveUp = true;
+         }
       }
    }
 

@@ -37,8 +37,14 @@ XO("Audacity successfully wrote a file in %s but failed to rename it as %s.");
       default:
          break;
    }
-   wxString target;
 
+   return format.Format(
+      AbbreviatePath(fileName), renameTarget.GetFullName() );
+}
+
+wxString FileException::AbbreviatePath( const wxFileName &fileName )
+{
+   wxString target;
 #ifdef __WXMSW__
 
    // Drive letter plus colon
@@ -54,7 +60,5 @@ XO("Audacity successfully wrote a file in %s but failed to rename it as %s.");
    target = path.GetFullPath();
 
 #endif
-
-   return format.Format( target, renameTarget.GetFullName() );
+   return target;
 }
-
