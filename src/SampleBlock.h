@@ -135,6 +135,13 @@ public:
    /*! @return ids of all sample blocks created by this factory and still extant */
    virtual SampleBlockIDs GetActiveBlockIDs() = 0;
 
+   //! Type of function that is informed when a block is about to be deleted
+   using BlockDeletionCallback = std::function< void(const SampleBlock&) >;
+
+   //! Install a callback, returning the previously installed callback
+   virtual BlockDeletionCallback SetBlockDeletionCallback(
+      BlockDeletionCallback callback ) = 0;
+
 protected:
    // The override should throw more informative exceptions on error than the
    // default InconsistencyException thrown by Create

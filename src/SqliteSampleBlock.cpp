@@ -147,6 +147,9 @@ public:
       sampleFormat srcformat,
       const wxChar **attrs) override;
 
+   BlockDeletionCallback SetBlockDeletionCallback(
+      BlockDeletionCallback callback ) override;
+
 private:
    friend SqliteSampleBlock;
 
@@ -159,6 +162,8 @@ private:
    using AllBlocksMap =
       std::map< SampleBlockID, std::weak_ptr< SqliteSampleBlock > >;
    AllBlocksMap mAllBlocks;
+
+   BlockDeletionCallback mCallback;
 };
 
 SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
@@ -272,6 +277,14 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    return sb;
 }
 
+auto SqliteSampleBlockFactory::SetBlockDeletionCallback(
+   BlockDeletionCallback callback ) -> BlockDeletionCallback
+{
+   auto result = mCallback;
+   mCallback = std::move( callback );
+   return result;
+}
+
 SqliteSampleBlock::SqliteSampleBlock(
    const std::shared_ptr<SqliteSampleBlockFactory> &pFactory)
 :  mpFactory(pFactory)
@@ -287,6 +300,10 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
+   auto &callback = mpFactory->mCallback;
+   if (callback)
+      GuardedCall( [&]{ callback( *this ); } );
+
    if (IsSilent()) {
       // The block object was constructed but failed to Load() or Commit().
       // Or it's a silent block with no row in the database.

@@ -36,6 +36,7 @@ UndoManager
 #include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
 #include "Tags.h"
+#include "widgets/ProgressDialog.h"
 
 
 #include <unordered_set>
@@ -180,8 +181,51 @@ void UndoManager::RemoveStateAt(int n)
 }
 
 
+//! Just to find a denominator for a progress indicator.
+/*! This estimate procedure should in fact be exact */
+size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
+{
+   // Collect ids that survive
+   SampleBlockIDSet wontDelete;
+   auto f = [&](const auto &p){
+      InspectBlocks(*p->state.tracks, {}, &wontDelete);
+   };
+   auto first = stack.begin(), last = stack.end();
+   std::for_each( first, first + begin, f );
+   std::for_each( first + end, last, f );
+
+   // Collect ids that won't survive (and are not negative pseudo ids)
+   SampleBlockIDSet seen, mayDelete;
+   std::for_each( first + begin, first + end, [&](const auto &p){
+      auto &tracks = *p->state.tracks;
+      InspectBlocks(tracks, [&]( const SampleBlock &block ){
+         auto id = block.GetBlockID();
+         if ( id > 0 && !wontDelete.count( id ) )
+            mayDelete.insert( id );
+      },
+      &seen);
+   } );
+   return mayDelete.size();
+}
+
 void UndoManager::RemoveStates(size_t begin, size_t end)
 {
+   // Install a callback function that updates a progress indicator
+   unsigned long long nToDelete = EstimateRemovedBlocks(begin, end),
+      nDeleted = 0;
+   ProgressDialog dialog{ XO("Progress"), XO("Discarding undo/redo history"),
+      pdlgHideStopButton | pdlgHideCancelButton
+   };
+   auto callback = [&](const SampleBlock &){
+      dialog.Update(++nDeleted, nToDelete);
+   };
+   auto &trackFactory = WaveTrackFactory::Get( mProject );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+   auto prevCallback =
+      pSampleBlockFactory->SetBlockDeletionCallback(callback);
+   auto cleanup = finally([&]{ pSampleBlockFactory->SetBlockDeletionCallback( prevCallback ); });
+
+   // Wrap the whole in a savepoint for better performance
    Optional<TransactionScope> pTrans;
    auto pConnection = ConnectionPtr::Get(mProject).mpConnection.get();
    if (pConnection)
@@ -196,8 +240,14 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
         --saved;
    }
 
+   // Success, commit the savepoint
    if (pTrans)
       pTrans->Commit();
+
+   // Check sanity
+   wxASSERT_MSG(
+      nDeleted == 0 || // maybe bypassing all deletions
+      nDeleted == nToDelete, "Block count was misestimated");
 }
 
 void UndoManager::ClearStates()

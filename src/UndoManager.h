@@ -172,6 +172,8 @@ class AUDACITY_DLL_API UndoManager final
    // void Debug(); // currently unused
 
  private:
+   size_t EstimateRemovedBlocks(size_t begin, size_t end);
+
    void RemoveStateAt(int n);
 
    AudacityProject &mProject;
