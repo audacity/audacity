@@ -180,18 +180,20 @@ void UndoManager::RemoveStateAt(int n)
 }
 
 
-void UndoManager::RemoveStates(int num)
+void UndoManager::RemoveStates(size_t begin, size_t end)
 {
    Optional<TransactionScope> pTrans;
    auto pConnection = ConnectionPtr::Get(mProject).mpConnection.get();
    if (pConnection)
       pTrans.emplace(*pConnection, "DiscardingUndoStates");
 
-   for (int i = 0; i < num; i++) {
-      RemoveStateAt(0);
+   for (size_t ii = begin; ii < end; ++ii) {
+      RemoveStateAt(begin);
 
-      current -= 1;
-      saved -= 1;
+      if (current > begin)
+        --current;
+      if (saved > begin)
+        --saved;
    }
 
    if (pTrans)
@@ -200,7 +202,7 @@ void UndoManager::RemoveStates(int num)
 
 void UndoManager::ClearStates()
 {
-   RemoveStates(stack.size());
+   RemoveStates(0, stack.size());
    current = -1;
    saved = -1;
 }
@@ -264,8 +266,6 @@ void UndoManager::PushState(const TrackList * l,
                             const TranslatableString &shortDescription,
                             UndoPush flags)
 {
-   unsigned int i;
-
    if ( (flags & UndoPush::CONSOLIDATE) != UndoPush::NONE &&
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
@@ -289,10 +289,11 @@ void UndoManager::PushState(const TrackList * l,
 
    mayConsolidate = true;
 
-   i = current + 1;
-   while (i < stack.size()) {
-      RemoveStateAt(i);
+   // Abandon redo states
+   if (saved >= current) {
+      saved = -1;
    }
+   RemoveStates( current + 1, stack.size() );
 
    // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.
@@ -303,10 +304,6 @@ void UndoManager::PushState(const TrackList * l,
    );
 
    current++;
-
-   if (saved >= current) {
-      saved = -1;
-   }
 
    lastAction = longDescription;
 

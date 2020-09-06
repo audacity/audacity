@@ -269,7 +269,7 @@ void HistoryDialog::OnDiscard(wxCommandEvent & WXUNUSED(event))
    int i = mLevels->GetValue();
 
    mSelected -= i;
-   mManager->RemoveStates(i);
+   mManager->RemoveStates(0, i);
    ProjectHistory::Get( *mProject ).SetStateTo(mSelected);
 
    while(--i >= 0)

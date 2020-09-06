@@ -132,7 +132,10 @@ class AUDACITY_DLL_API UndoManager final
    void ModifyState(const TrackList * l,
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
    void ClearStates();
-   void RemoveStates(int num);  // removes the 'num' oldest states
+   void RemoveStates(
+      size_t begin, //!< inclusive start of range
+      size_t end    //!< exclusive end of range
+   );
    unsigned int GetNumStates();
    unsigned int GetCurrentState();
 

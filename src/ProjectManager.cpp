@@ -899,7 +899,7 @@ AudacityProject *ProjectManager::OpenProject(
       window.Zoom( window.GetZoomOfToFit() );
       // "Project was recovered" replaces "Create new project" in Undo History.
       auto &undoManager = UndoManager::Get( *pProject );
-      undoManager.RemoveStates(1);
+      undoManager.RemoveStates(0, 1);
    }
 
    return pProject;

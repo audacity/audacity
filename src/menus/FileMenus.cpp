@@ -235,7 +235,7 @@ void OnCompact(const CommandContext &context)
 
       // Now we can remove all previous states.
       auto numStates = undoManager.GetNumStates();
-      undoManager.RemoveStates(numStates - 1);
+      undoManager.RemoveStates(0, numStates - 1);
 
       // And clear the clipboard
       clipboard.Clear();
