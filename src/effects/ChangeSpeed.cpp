@@ -553,7 +553,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    {
       LinearTimeWarper warper { mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
       track->ClearAndPaste(
-         mCurT0, mCurT1, outputTrack.get(), false, true, &warper);
+         mCurT0, mCurT1, outputTrack.get(), true, false, &warper);
    }
 
    if (newLength > mMaxNewLength)

@@ -48,7 +48,8 @@ public:
 protected:
    // Effect implementation
 
-   bool ProcessWithTimeWarper(const TimeWarper &warper);
+   using InitFunction = std::function< void(soundtouch::SoundTouch *soundtouch) >;
+   bool ProcessWithTimeWarper(InitFunction initer, const TimeWarper &warper);
 
    std::unique_ptr<soundtouch::SoundTouch> mSoundTouch;
    double mCurT0;

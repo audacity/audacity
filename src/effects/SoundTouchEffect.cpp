@@ -67,7 +67,7 @@ bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper)
 }
 #endif
 
-bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
+bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer, const TimeWarper &warper)
 {
    // Assumes that mSoundTouch has already been initialized
    // by the subclass for subclass-specific parameters. The
@@ -118,6 +118,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
 
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
+            mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
+            initer(mSoundTouch.get());
 
             // TODO: more-than-two-channels
             auto channels = TrackList::Channels(leftTrack);
@@ -158,6 +160,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(const TimeWarper &warper)
                if (!ProcessOne(leftTrack, start, end, warper))
                   bGoodResult = false;
             }
+
+            mSoundTouch.reset();
          }
          mCurTrackNum++;
       },
