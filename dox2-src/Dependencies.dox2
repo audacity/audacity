@@ -11,9 +11,9 @@
 
 \section DependenciesIntro Introduction
 
-A script that runs nightly maps out he dependencies between source
+A script that runs nightly maps out the dependencies between source
 files in the Audacity code base.  We aim for this graph to be 
-relatively untangled, spearation of concerns, so that classes can 
+relatively untangled, separation of concerns, so that classes can 
 be understood better on their own, without having to read many other
 source files.
 
