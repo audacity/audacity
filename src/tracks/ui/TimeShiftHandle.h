@@ -11,12 +11,41 @@ Paul Licameli
 #ifndef __AUDACITY_TIMESHIFT_HANDLE__
 #define __AUDACITY_TIMESHIFT_HANDLE__
 
+#include <unordered_map>
+
+#include "../../AttachedVirtualFunction.h"
 #include "../../UIHandle.h"
 
 class SnapManager;
 class Track;
 using TrackArray = std::vector<Track*>;
 class TrackList;
+
+class Track;
+
+//! Abstract base class for policies to manipulate a track type with the Time Shift tool
+class TrackShifter {
+public:
+   virtual ~TrackShifter() = 0;
+   //! There is always an associated track
+   virtual Track &GetTrack() const = 0;
+};
+
+//! Used in default of other reimplementations to shift any track as a whole, invoking Track::Offset()
+class CoarseTrackShifter final : public TrackShifter {
+public:
+   CoarseTrackShifter( Track &track );
+   ~CoarseTrackShifter() override;
+   Track &GetTrack() const override { return *mpTrack; }
+
+private:
+   std::shared_ptr<Track> mpTrack;
+};
+
+struct MakeTrackShifterTag;
+using MakeTrackShifter = AttachedVirtualFunction<
+   MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track>;
+
 class ViewInfo;
 class WaveClip;
 class WaveTrack;
@@ -40,12 +69,15 @@ public:
 using TrackClipArray = std::vector <TrackClip>;
 
 struct ClipMoveState {
+   using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
+   
    // non-NULL only if click was in a WaveTrack and without Shift key:
    WaveClip *capturedClip {};
 
    bool capturedClipIsSelection {};
    TrackArray trackExclusions {};
    double hSlideAmount {};
+   ShifterMap shifters;
    TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
@@ -57,6 +89,7 @@ struct ClipMoveState {
       capturedClipIsSelection = false;
       trackExclusions.clear();
       hSlideAmount = 0;
+      shifters.clear();
       capturedClipArray.clear();
       snapLeft = snapRight = -1;
       mMouseClickX = 0;
@@ -73,7 +106,7 @@ public:
    explicit TimeShiftHandle
    ( const std::shared_ptr<Track> &pTrack, bool gripHit );
 
-   TimeShiftHandle &operator=(const TimeShiftHandle&) = default;
+   TimeShiftHandle &operator=(TimeShiftHandle&&) = default;
 
    bool IsGripHit() const { return mGripHit; }
    std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }

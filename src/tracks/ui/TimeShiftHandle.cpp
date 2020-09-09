@@ -244,6 +244,20 @@ namespace
    }
 }
 
+TrackShifter::~TrackShifter() = default;
+
+CoarseTrackShifter::CoarseTrackShifter( Track &track )
+   : mpTrack{ track.SharedPointer() }
+{}
+
+CoarseTrackShifter::~CoarseTrackShifter() = default;
+
+template<> auto MakeTrackShifter::Implementation() -> Function {
+   return [](Track &track) {
+      return std::make_unique<CoarseTrackShifter>(track);
+   };
+}
+
 void TimeShiftHandle::CreateListOfCapturedClips
    ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
      TrackList &trackList, bool syncLocked, double clickTime )
@@ -456,6 +470,8 @@ UIHandle::Result TimeShiftHandle::Click
    bool ok = true;
    bool captureClips = false;
 
+   auto pShifter = MakeTrackShifter::Call( *pTrack );
+
    if (!event.ShiftDown())
       pTrack->TypeSwitch(
          [&](WaveTrack *wt) {
@@ -474,10 +490,21 @@ UIHandle::Result TimeShiftHandle::Click
 
    if ( ! ok )
       return Cancelled;
-   else if ( captureClips )
+
+   if ( captureClips ) {
+      mClipMoveState.shifters[pTrack] = std::move( pShifter );
+
+      // Collect TrackShifters for the rest of the tracks
+      for ( auto track : trackList.Any() ) {
+         auto &pShifter = mClipMoveState.shifters[track];
+         if (!pShifter)
+            pShifter = MakeTrackShifter::Call( *track );
+      }
+
       CreateListOfCapturedClips(
          mClipMoveState, viewInfo, *pTrack, trackList,
          ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime );
+   }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
