@@ -350,6 +350,64 @@ void TimeShiftHandle::DoSlideHorizontal
       DoOffset( state, &capturedTrack, state.hSlideAmount );
 }
 
+#include "LabelTrack.h"
+namespace {
+SnapPointArray FindCandidates(
+   const TrackList &tracks,
+   const TrackClipArray &clipExclusions, const TrackArray &trackExclusions )
+{
+   // Special case restricted candidates for time shift
+   SnapPointArray candidates;
+   auto trackRange =
+      tracks.Any()
+         - [&](const Track *pTrack){
+            return
+               make_iterator_range( trackExclusions ).contains( pTrack );
+         };
+   trackRange.Visit(
+      [&](const LabelTrack *labelTrack) {
+         for (const auto &label : labelTrack->GetLabels())
+         {
+            const double t0 = label.getT0();
+            const double t1 = label.getT1();
+            candidates.emplace_back(t0, labelTrack);
+            if (t1 != t0)
+               candidates.emplace_back(t1, labelTrack);
+         }
+      },
+      [&](const WaveTrack *waveTrack) {
+         for (const auto &clip: waveTrack->GetClips())
+         {
+            bool skip = false;
+            for (const auto &exclusion : clipExclusions)
+            {
+               if (exclusion.track == waveTrack &&
+                   exclusion.clip == clip.get())
+               {
+                  skip = true;
+                  break;
+               }
+            }
+
+            if (skip)
+               continue;
+
+            candidates.emplace_back(clip->GetStartTime(), waveTrack);
+            candidates.emplace_back(clip->GetEndTime(), waveTrack);
+         }
+      }
+#ifdef USE_MIDI
+      ,
+      [&](const NoteTrack *track) {
+         candidates.emplace_back(track->GetStartTime(), track);
+         candidates.emplace_back(track->GetEndTime(), track);
+      }
+#endif
+   );
+   return candidates;
+}
+}
+
 UIHandle::Result TimeShiftHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
@@ -415,12 +473,12 @@ UIHandle::Result TimeShiftHandle::Click
    mRect = rect;
    mClipMoveState.mMouseClickX = event.m_x;
    mSnapManager =
-   std::make_shared<SnapManager>(*trackList.GetOwner(), trackList,
-          viewInfo,
-          true, // don't snap to time
-          kPixelTolerance,
-          &mClipMoveState.capturedClipArray,
-          &mClipMoveState.trackExclusions);
+   std::make_shared<SnapManager>(*trackList.GetOwner(),
+       FindCandidates( trackList,
+         mClipMoveState.capturedClipArray, mClipMoveState.trackExclusions),
+       viewInfo,
+       true, // don't snap to time
+       kPixelTolerance);
    mClipMoveState.snapLeft = -1;
    mClipMoveState.snapRight = -1;
    mSnapPreferRightEdge =
