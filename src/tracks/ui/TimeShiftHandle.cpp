@@ -162,13 +162,10 @@ namespace
    // duplication of this logic)
    void AddClipsToCaptured
       ( ClipMoveState &state, const ViewInfo &viewInfo,
-        Track *t, bool withinSelection )
+        Track *t )
    {
-      if (withinSelection)
-         AddClipsToCaptured( state, t, viewInfo.selectedRegion.t0(),
-                            viewInfo.selectedRegion.t1() );
-      else
-         AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
+      AddClipsToCaptured( state, t, viewInfo.selectedRegion.t0(),
+                         viewInfo.selectedRegion.t1() );
    }
 
    WaveTrack *NthChannel(WaveTrack &leader, int nn)
@@ -260,7 +257,7 @@ void TimeShiftHandle::CreateListOfCapturedClips
    // just the clicked-on clip
    if ( state.capturedClipIsSelection )
       for (auto t : trackList.Selected())
-         AddClipsToCaptured( state, viewInfo, t, true );
+         AddClipsToCaptured( state, viewInfo, t );
    else {
       state.capturedClipArray.push_back
          (TrackClip( &capturedTrack, state.capturedClip ));
