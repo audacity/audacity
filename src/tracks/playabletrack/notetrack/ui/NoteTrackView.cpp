@@ -729,4 +729,27 @@ void NoteTrackView::Draw(
    }
    CommonTrackView::Draw( context, rect, iPass );
 }
+
+#include "../../../ui/TimeShiftHandle.h"
+
+class NoteTrackShifter final : public TrackShifter {
+public:
+   NoteTrackShifter( NoteTrack &track )
+      : mpTrack{ track.SharedPointer<NoteTrack>() }
+   {}
+   ~NoteTrackShifter() override {}
+   Track &GetTrack() const override { return *mpTrack; }
+
+private:
+   std::shared_ptr<NoteTrack> mpTrack;
+};
+
+using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;
+template<> template<> auto MakeNoteTrackShifter::Implementation() -> Function {
+   return [](NoteTrack &track) {
+      return std::make_unique<NoteTrackShifter>(track);
+   };
+}
+static MakeNoteTrackShifter registerMakeNoteTrackShifter;
+
 #endif

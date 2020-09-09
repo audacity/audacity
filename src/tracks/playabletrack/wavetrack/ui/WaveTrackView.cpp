@@ -1301,3 +1301,24 @@ void WaveTrackView::Draw(
 
    CommonTrackView::Draw( context, rect, iPass );
 }
+
+class WaveTrackShifter final : public TrackShifter {
+public:
+   WaveTrackShifter( WaveTrack &track )
+      : mpTrack{ track.SharedPointer<WaveTrack>() }
+   {
+   }
+   ~WaveTrackShifter() override {}
+   Track &GetTrack() const override { return *mpTrack; }
+
+private:
+   std::shared_ptr<WaveTrack> mpTrack;
+};
+
+using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
+template<> template<> auto MakeWaveTrackShifter::Implementation() -> Function {
+   return [](WaveTrack &track) {
+      return std::make_unique<WaveTrackShifter>(track);
+   };
+}
+static MakeWaveTrackShifter registerMakeWaveTrackShifter;
