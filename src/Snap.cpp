@@ -39,22 +39,23 @@ TrackClip::~TrackClip()
 
 }
 
-SnapManager::SnapManager(const TrackList *tracks,
-                         const ZoomInfo *zoomInfo,
-                         const TrackClipArray *clipExclusions,
-                         const TrackArray *trackExclusions,
+SnapManager::SnapManager(const AudacityProject &project,
+                         const TrackList &tracks,
+                         const ZoomInfo &zoomInfo,
                          bool noTimeSnap,
-                         int pixelTolerance)
+                         int pixelTolerance,
+                         const TrackClipArray *clipExclusions,
+                         const TrackArray *trackExclusions)
 :  mConverter(NumericConverter::TIME)
 {
-   mTracks = tracks;
-   mZoomInfo = zoomInfo;
+   mTracks = &tracks;
+   mZoomInfo = &zoomInfo;
    mClipExclusions = clipExclusions;
    mTrackExclusions = trackExclusions;
    mPixelTolerance = pixelTolerance;
    mNoTimeSnap = noTimeSnap;
 
-   mProject = tracks->GetOwner();
+   mProject = &project;
    wxASSERT(mProject);
 
    mSnapTo = 0;

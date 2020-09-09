@@ -432,7 +432,8 @@ SelectHandle::SelectHandle
   const TrackList &trackList,
   const TrackPanelMouseState &st, const ViewInfo &viewInfo )
    : mpView{ pTrackView }
-   , mSnapManager{ std::make_shared<SnapManager>(&trackList, &viewInfo) }
+   , mSnapManager{ std::make_shared<SnapManager>(
+      *trackList.GetOwner(), trackList, viewInfo) }
 {
    const wxMouseState &state = st.state;
    mRect = st.rect;
