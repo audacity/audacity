@@ -181,6 +181,50 @@ private:
    long mValue;
 };
 
+//! Optional extra information about an interval, appropriate to a subtype of Track
+struct TrackIntervalData {
+   virtual ~TrackIntervalData();
+};
+
+//! A start and an end time, and non-mutative access to optional extra information
+/*! @invariant `Start() <= End()` */
+class ConstTrackInterval {
+public:
+
+   /*! @pre `start <= end` */
+   ConstTrackInterval( double start, double end,
+      std::unique_ptr<TrackIntervalData> pExtra = {} )
+   : start{ start }, end{ end }, pExtra{ std::move( pExtra ) }
+   {
+      wxASSERT( start <= end );
+   }
+
+   ConstTrackInterval( ConstTrackInterval&& ) = default;
+   ConstTrackInterval &operator=( ConstTrackInterval&& ) = default;
+
+   double Start() const { return start; }
+   double End() const { return end; }
+   const TrackIntervalData *Extra() const { return pExtra.get(); }
+
+private:
+   double start, end;
+protected:
+   // TODO C++17: use std::any instead
+   std::unique_ptr< TrackIntervalData > pExtra;
+};
+
+//! A start and an end time, and mutative access to optional extra information
+/*! @invariant `Start() <= End()` */
+class TrackInterval : public ConstTrackInterval {
+public:
+   using ConstTrackInterval::ConstTrackInterval;
+
+   TrackInterval(TrackInterval&&) = default;
+   TrackInterval &operator= (TrackInterval&&) = default;
+
+   TrackIntervalData *Extra() const { return pExtra.get(); }
+};
+
 //! Template generated base class for Track lets it host opaque UI related objects
 using AttachedTrackObjects = ClientData::Site<
    Track, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
@@ -267,6 +311,23 @@ class AUDACITY_DLL_API Track /* not final */
    // If this track is a pending changed track, return the corresponding
    // original; else return this track
    std::shared_ptr<const Track> SubstituteOriginalTrack() const;
+
+   using IntervalData = TrackIntervalData;
+   using Interval = TrackInterval;
+   using Intervals = std::vector< Interval >;
+   using ConstInterval = ConstTrackInterval;
+   using ConstIntervals = std::vector< ConstInterval >;
+
+   //! Report times on the track where important intervals begin and end, for UI to snap to
+   /*!
+   Some intervals may be empty, and no ordering of the intervals is assumed.
+   */
+   virtual ConstIntervals GetIntervals() const;
+
+   /*! @copydoc GetIntervals()
+   This overload exposes the extra data of the intervals as non-const
+    */
+   virtual Intervals GetIntervals();
 
  public:
    mutable wxSize vrulerSize;

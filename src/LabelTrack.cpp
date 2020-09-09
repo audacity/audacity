@@ -84,6 +84,28 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    }
 }
 
+template< typename Container >
+static Container MakeIntervals(const LabelArray &labels)
+{
+   Container result;
+   size_t ii = 0;
+   for (const auto &label : labels)
+      result.emplace_back(
+         label.getT0(), label.getT1(),
+         std::make_unique<LabelTrack::IntervalData>( ii++ ) );
+   return result;
+}
+
+auto LabelTrack::GetIntervals() const -> ConstIntervals
+{
+   return MakeIntervals<ConstIntervals>(mLabels);
+}
+
+auto LabelTrack::GetIntervals() -> Intervals
+{
+   return MakeIntervals<Intervals>(mLabels);
+}
+
 void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )
 {
    if( iLabel >= mLabels.size() ) {

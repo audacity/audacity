@@ -185,6 +185,9 @@ public:
          mVisibleChannels = CHANNEL_BIT(c);
    }
 
+   ConstIntervals GetIntervals() const override;
+   Intervals GetIntervals() override;
+
  private:
 
    TrackKind GetKind() const override { return TrackKind::Note; }

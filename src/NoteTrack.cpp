@@ -683,6 +683,20 @@ QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
    return { seq_time + GetOffset(), beat };
 }
 
+auto NoteTrack::GetIntervals() const -> ConstIntervals
+{
+   ConstIntervals results;
+   results.emplace_back( GetStartTime(), GetEndTime() );
+   return results;
+}
+
+auto NoteTrack::GetIntervals() -> Intervals
+{
+   Intervals results;
+   results.emplace_back( GetStartTime(), GetEndTime() );
+   return results;
+}
+
 void NoteTrack::AddToDuration( double delta )
 {
    auto &seq = GetSeq();

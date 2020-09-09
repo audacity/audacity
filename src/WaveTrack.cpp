@@ -323,6 +323,27 @@ int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
       (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }
 
+template< typename Container >
+static Container MakeIntervals(const std::vector<WaveClipHolder> &clips)
+{
+   Container result;
+   for (const auto &clip: clips) {
+      result.emplace_back( clip->GetStartTime(), clip->GetEndTime(),
+         std::make_unique<WaveTrack::IntervalData>( clip ) );
+   }
+   return result;
+}
+
+auto WaveTrack::GetIntervals() const -> ConstIntervals
+{
+   return MakeIntervals<ConstIntervals>( mClips );
+}
+
+auto WaveTrack::GetIntervals() -> Intervals
+{
+   return MakeIntervals<Intervals>( mClips );
+}
+
 Track::Holder WaveTrack::Clone() const
 {
    return std::make_shared<WaveTrack>( *this );
