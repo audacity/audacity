@@ -414,11 +414,13 @@ UIHandle::Result TimeShiftHandle::Click
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
    mClipMoveState.mMouseClickX = event.m_x;
-   mSnapManager = std::make_shared<SnapManager>(&trackList,
-                                  &viewInfo,
-                                  &mClipMoveState.capturedClipArray,
-                                  &mClipMoveState.trackExclusions,
-                                  true); // don't snap to time
+   mSnapManager =
+   std::make_shared<SnapManager>(*trackList.GetOwner(), trackList,
+          viewInfo,
+          true, // don't snap to time
+          kPixelTolerance,
+          &mClipMoveState.capturedClipArray,
+          &mClipMoveState.trackExclusions);
    mClipMoveState.snapLeft = -1;
    mClipMoveState.snapRight = -1;
    mSnapPreferRightEdge =

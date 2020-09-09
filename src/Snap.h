@@ -77,12 +77,13 @@ struct SnapResults {
 class SnapManager
 {
 public:
-   SnapManager(const TrackList *tracks,
-               const ZoomInfo *zoomInfo,
-               const TrackClipArray *clipExclusions = NULL,
-               const TrackArray *trackExclusions = NULL,
+   SnapManager(const AudacityProject &project,
+               const TrackList &tracks,
+               const ZoomInfo &zoomInfo,
                bool noTimeSnap = false,
-               int pixelTolerance = kPixelTolerance);
+               int pixelTolerance = kPixelTolerance,
+               const TrackClipArray *clipExclusions = NULL,
+               const TrackArray *trackExclusions = NULL);
    ~SnapManager();
 
    // The track may be NULL.
