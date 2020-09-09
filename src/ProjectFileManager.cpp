@@ -958,6 +958,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    auto &history = ProjectHistory::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
+   const auto& playableTracks = tracks.Any<PlayableTrack>();
 
    std::vector< std::shared_ptr< Track > > results;
 
@@ -969,6 +970,23 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    double newRate = 0;
    wxString trackNameBase = fn.GetName();
    int i = -1;
+   
+   // Next for- and if-statements fix the bug 2109.
+   // In case the project had soloed tracks before importing,
+   // all newly imported tracks are muted.
+   bool projectHasSolo{ false };
+   for (const auto& track : playableTracks)
+   {
+      if (track->GetSolo())
+         projectHasSolo = true;
+   }
+
+   if (projectHasSolo)
+   {
+      for (auto& track : newTracks)
+         for (auto& channel : track)
+            channel->SetMute(true);
+   }
 
    // Must add all tracks first (before using Track::IsLeader)
    for (auto &group : newTracks) {
