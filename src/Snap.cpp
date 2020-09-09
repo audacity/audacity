@@ -69,65 +69,6 @@ SnapPointArray FindCandidates( const TrackList &tracks )
    }
    return candidates;
 }
-
-SnapPointArray FindCandidates(
-   const TrackList &tracks,
-   const TrackClipArray *clipExclusions, const TrackArray *trackExclusions )
-{
-   // Special case restricted candidates for time shift
-   SnapPointArray candidates;
-   auto trackRange =
-      tracks.Any()
-         - [&](const Track *pTrack){
-            return trackExclusions &&
-               make_iterator_range( *trackExclusions ).contains( pTrack );
-         };
-   trackRange.Visit(
-      [&](const LabelTrack *labelTrack) {
-         for (int i = 0, cnt = labelTrack->GetNumLabels(); i < cnt; ++i)
-         {
-            const LabelStruct *label = labelTrack->GetLabel(i);
-            const double t0 = label->getT0();
-            const double t1 = label->getT1();
-            candidates.emplace_back(t0, labelTrack);
-            if (t1 != t0)
-               candidates.emplace_back(t1, labelTrack);
-         }
-      },
-      [&](const WaveTrack *waveTrack) {
-         for (const auto &clip: waveTrack->GetClips())
-         {
-            if (clipExclusions)
-            {
-               bool skip = false;
-               for (size_t j = 0, cnt = clipExclusions->size(); j < cnt; ++j)
-               {
-                  if ((*clipExclusions)[j].track == waveTrack &&
-                      (*clipExclusions)[j].clip == clip.get())
-                  {
-                     skip = true;
-                     break;
-                  }
-               }
-
-               if (skip)
-                  continue;
-            }
-
-            candidates.emplace_back(clip->GetStartTime(), waveTrack);
-            candidates.emplace_back(clip->GetEndTime(), waveTrack);
-         }
-      }
-#ifdef USE_MIDI
-      ,
-      [&](const NoteTrack *track) {
-         candidates.emplace_back(track->GetStartTime(), track);
-         candidates.emplace_back(track->GetEndTime(), track);
-      }
-#endif
-   );
-   return candidates;
-}
 }
 
 SnapManager::SnapManager(const AudacityProject &project,
@@ -137,19 +78,6 @@ SnapManager::SnapManager(const AudacityProject &project,
             int pixelTolerance)
    : SnapManager{ project,
       FindCandidates( tracks ),
-      zoomInfo, noTimeSnap, pixelTolerance }
-{
-}
-
-SnapManager::SnapManager(const AudacityProject &project,
-                         const TrackList &tracks,
-                         const ZoomInfo &zoomInfo,
-                         bool noTimeSnap,
-                         int pixelTolerance,
-                         const TrackClipArray *clipExclusions,
-                         const TrackArray *trackExclusions)
-   : SnapManager{ project,
-      FindCandidates( tracks, clipExclusions, trackExclusions ),
       zoomInfo, noTimeSnap, pixelTolerance }
 {
 }

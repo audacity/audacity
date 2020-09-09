@@ -89,13 +89,6 @@ public:
                bool noTimeSnap = false,
                int pixelTolerance = kPixelTolerance);
 
-   SnapManager(const AudacityProject &project,
-               const TrackList &tracks,
-               const ZoomInfo &zoomInfo,
-               bool noTimeSnap,
-               int pixelTolerance,
-               const TrackClipArray *clipExclusions = NULL,
-               const TrackArray *trackExclusions = NULL);
    ~SnapManager();
 
    // The track may be NULL.
