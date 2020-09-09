@@ -1224,6 +1224,16 @@ std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
    return SharedPointer();
 }
 
+auto Track::GetIntervals() const -> ConstIntervals
+{
+   return {};
+}
+
+auto Track::GetIntervals() -> Intervals
+{
+   return {};
+}
+
 // Serialize, not with tags of its own, but as attributes within a tag.
 void Track::WriteCommonXMLAttributes(
    XMLWriter &xmlFile, bool includeNameAndSelected) const
@@ -1268,6 +1278,8 @@ void Track::AdjustPositions()
       pList->ResizingEvent(mNode);
    }
 }
+
+TrackIntervalData::~TrackIntervalData() = default;
 
 bool TrackList::HasPendingTracks() const
 {
