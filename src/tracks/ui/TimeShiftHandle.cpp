@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
+#include "../../Snap.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -29,6 +30,18 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
+
+TrackClip::TrackClip(Track *t, WaveClip *c)
+{
+   track = origTrack = t;
+   dstTrack = NULL;
+   clip = c;
+}
+
+TrackClip::~TrackClip()
+{
+
+}
 
 TimeShiftHandle::TimeShiftHandle
 ( const std::shared_ptr<Track> &pTrack, bool gripHit )

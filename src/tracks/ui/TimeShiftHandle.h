@@ -13,10 +13,31 @@ Paul Licameli
 
 #include "../../UIHandle.h"
 
-#include "../../Snap.h"
-
+class SnapManager;
+class Track;
+using TrackArray = std::vector<Track*>;
+class TrackList;
 class ViewInfo;
 class WaveClip;
+class WaveTrack;
+
+class TrackClip
+{
+public:
+   TrackClip(Track *t, WaveClip *c);
+
+   ~TrackClip();
+
+   Track *track;
+   Track *origTrack;
+   WaveClip *clip;
+
+   // These fields are used only during time-shift dragging
+   WaveTrack *dstTrack;
+   std::shared_ptr<WaveClip> holder;
+};
+
+using TrackClipArray = std::vector <TrackClip>;
 
 struct ClipMoveState {
    // non-NULL only if click was in a WaveTrack and without Shift key:

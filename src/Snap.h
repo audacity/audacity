@@ -21,31 +21,9 @@
 
 class AudacityProject;
 class Track;
-using TrackArray = std::vector< Track* >;
-class TrackClipArray;
-class WaveClip;
-class WaveTrack;
 class TrackList;
 class ZoomInfo;
 class wxDC;
-
-class TrackClip
-{
-public:
-   TrackClip(Track *t, WaveClip *c);
-
-   ~TrackClip();
-
-   Track *track;
-   Track *origTrack;
-   WaveClip *clip;
-
-   // These fields are used only during time-shift dragging
-   WaveTrack *dstTrack;
-   std::shared_ptr<WaveClip> holder;
-};
-
-class TrackClipArray : public std::vector < TrackClip > {};
 
 const int kPixelTolerance = 4;
 
