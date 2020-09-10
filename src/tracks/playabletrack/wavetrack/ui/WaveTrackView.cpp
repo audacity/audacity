@@ -1312,6 +1312,23 @@ public:
    ~WaveTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
 
+   HitTestResult HitTest( double time ) override
+   {
+      auto pClip = mpTrack->GetClipAtTime( time );
+
+      if (!pClip)
+         return HitTestResult::Miss;
+
+      // Make a side-effect on our intervals
+      UnfixIntervals( [&](const auto &interval){
+         return
+            static_cast<WaveTrack::IntervalData*>(interval.Extra())
+               ->GetClip().get() == pClip;
+      } );
+      
+      return HitTestResult::Intervals;
+   }
+
 private:
    std::shared_ptr<WaveTrack> mpTrack;
 };

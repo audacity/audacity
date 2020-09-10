@@ -32,6 +32,17 @@ public:
    //! There is always an associated track
    virtual Track &GetTrack() const = 0;
 
+   //! Possibilities for HitTest on the clicked track
+   enum class HitTestResult {
+      Miss,      //!< Don't shift anything
+      Intervals, //<! May shift other tracks' intervals, if clicked in selection
+      Track      //<! Shift selected track only as a whole
+   };
+
+   //! Decide how shift behaves, based on the track that is clicked in
+   /*! If the return value is Intervals, then some intervals may be marked moving as a side effect */
+   virtual HitTestResult HitTest( double time ) = 0;
+
    using Intervals = std::vector<TrackInterval>;
 
    //! Return special intervals of the track that will not move
@@ -62,6 +73,8 @@ public:
    CoarseTrackShifter( Track &track );
    ~CoarseTrackShifter() override;
    Track &GetTrack() const override { return *mpTrack; }
+
+   HitTestResult HitTest( double ) override;
 
 private:
    std::shared_ptr<Track> mpTrack;
