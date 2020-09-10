@@ -126,7 +126,6 @@ struct ClipMoveState {
    WaveClip *capturedClip {};
 
    bool capturedClipIsSelection {};
-   TrackArray trackExclusions {};
    double hSlideAmount {};
    ShifterMap shifters;
    TrackClipArray capturedClipArray {};
@@ -138,7 +137,6 @@ struct ClipMoveState {
    {
       capturedClip = nullptr;
       capturedClipIsSelection = false;
-      trackExclusions.clear();
       hSlideAmount = 0;
       shifters.clear();
       capturedClipArray.clear();

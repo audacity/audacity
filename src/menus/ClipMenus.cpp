@@ -652,7 +652,6 @@ double DoClipMove
 
       state.capturedClipIsSelection =
          track->GetSelected() && !selectedRegion.isPoint();
-      state.trackExclusions.clear();
 
       TimeShiftHandle::Init(
          state, viewInfo, *track, trackList, syncLocked, t0 );
