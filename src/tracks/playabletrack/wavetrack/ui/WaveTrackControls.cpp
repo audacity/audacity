@@ -568,7 +568,6 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    };
 
    BeginSection( "SubViews" );
-
       // Multi-view check mark item, if more than one track sub-view type is
       // known
       Append( []( My &table ) -> Registry::BaseItemPtr {
@@ -623,17 +622,16 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                   menu.Enable( id, false );
             };
          };
-         if( id < OnSetDisplayId + 2  )
-            Append( [type, id]( My &table ) -> Registry::BaseItemPtr {
-               const auto pTrack = &table.FindWaveTrack();
-               const auto &view = WaveTrackView::Get( *pTrack );
-               const auto itemType =
-                  view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
-               return std::make_unique<Entry>( type.name.Internal(), itemType,
-                  id, type.name.Msgid(),
-                  POPUP_MENU_FN( OnSetDisplay ), table,
-                  initFn( !view.GetMultiView() ) );
-            } );
+         Append( [type, id]( My &table ) -> Registry::BaseItemPtr {
+            const auto pTrack = &table.FindWaveTrack();
+            const auto &view = WaveTrackView::Get( *pTrack );
+            const auto itemType =
+               view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
+            return std::make_unique<Entry>( type.name.Internal(), itemType,
+               id, type.name.Msgid(),
+               POPUP_MENU_FN( OnSetDisplay ), table,
+               initFn( !view.GetMultiView() ) );
+         } );
          ++id;
       }
       BeginSection( "Extra" );
@@ -748,16 +746,8 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
+
    auto &view = WaveTrackView::Get( *pTrack );
-
-   if (id == WaveTrackViewConstants::Multiview)
-   {
-      // Only set it to multiview, if not already multi view.
-      if( !view.GetMultiView() )
-         OnMultiView(event);
-      return;
-   }
-
    if ( view.GetMultiView() ) {
       for (auto channel : TrackList::Channels(pTrack)) {
          if ( !WaveTrackView::Get( *channel )

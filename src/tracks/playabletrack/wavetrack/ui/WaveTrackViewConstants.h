@@ -29,11 +29,9 @@ namespace WaveTrackViewConstants
       obsolete3, // was SpectralSelectionLogDisplay
       obsolete4, // was PitchDisplay
 
-      Multiview,
-
       // Add values here, and update MaxDisplay.
 
-      MaxDisplay = Multiview,
+      MaxDisplay = Spectrum,
 
       NoDisplay,            // Preview track has no display
    };

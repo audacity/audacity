@@ -929,12 +929,6 @@ bool WaveTrackView::ToggleSubView(Display display)
 // Be sure the sequence in which the other views appear is determinate.
 void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
 {
-   if (display == WaveTrackViewConstants::Multiview) {
-      SetMultiView(true);
-      display = WaveTrackViewConstants::Waveform;
-      exclusive = false;
-   }
-
    // Some generality here anticipating more than two views.
    // The order of sub-views in the array is not specified, so make it definite
    // by sorting by the view type constants.
