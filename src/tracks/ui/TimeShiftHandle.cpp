@@ -121,11 +121,9 @@ namespace
    void AddClipsToCaptured
       ( ClipMoveState &state, Track *t, double t0, double t1 )
    {
-      bool exclude = true; // to exclude a whole track.
       auto &clips = state.capturedClipArray;
       t->TypeSwitch(
          [&](WaveTrack *wt) {
-            exclude = false;
             for(const auto &clip: wt->GetClips())
                if ( ! clip->IsClipStartAfterClip(t0) && ! clip->BeforeClip(t1) &&
                   // Avoid getting clips that were already captured
@@ -154,8 +152,6 @@ namespace
             }
          }
       );
-      if (exclude)
-         state.trackExclusions.push_back(t);
    }
 
    // Helper for the above, adds a track's clips to capturedClipArray (eliminates
@@ -492,60 +488,23 @@ void TimeShiftHandle::DoSlideHorizontal
       DoOffset( state, &capturedTrack, state.hSlideAmount );
 }
 
-#include "LabelTrack.h"
 namespace {
 SnapPointArray FindCandidates(
-   const TrackList &tracks,
-   const TrackClipArray &clipExclusions, const TrackArray &trackExclusions )
+   const TrackList &tracks, const ClipMoveState::ShifterMap &shifters )
 {
-   // Special case restricted candidates for time shift
+   // Compare with the other function FindCandidates in Snap
+   // Make the snap manager more selective than it would be if just constructed
+   // from the track list
    SnapPointArray candidates;
-   auto trackRange =
-      tracks.Any()
-         - [&](const Track *pTrack){
-            return
-               make_iterator_range( trackExclusions ).contains( pTrack );
-         };
-   trackRange.Visit(
-      [&](const LabelTrack *labelTrack) {
-         for (const auto &label : labelTrack->GetLabels())
-         {
-            const double t0 = label.getT0();
-            const double t1 = label.getT1();
-            candidates.emplace_back(t0, labelTrack);
-            if (t1 != t0)
-               candidates.emplace_back(t1, labelTrack);
-         }
-      },
-      [&](const WaveTrack *waveTrack) {
-         for (const auto &clip: waveTrack->GetClips())
-         {
-            bool skip = false;
-            for (const auto &exclusion : clipExclusions)
-            {
-               if (exclusion.track == waveTrack &&
-                   exclusion.clip == clip.get())
-               {
-                  skip = true;
-                  break;
-               }
-            }
-
-            if (skip)
-               continue;
-
-            candidates.emplace_back(clip->GetStartTime(), waveTrack);
-            candidates.emplace_back(clip->GetEndTime(), waveTrack);
-         }
+   for ( const auto &pair : shifters ) {
+      auto &shifter = pair.second;
+      auto &track = shifter->GetTrack();
+      for (const auto &interval : shifter->FixedIntervals() ) {
+         candidates.emplace_back( interval.Start(), &track );
+         if ( interval.Start() != interval.End() )
+            candidates.emplace_back( interval.End(), &track );
       }
-#ifdef USE_MIDI
-      ,
-      [&](const NoteTrack *track) {
-         candidates.emplace_back(track->GetStartTime(), track);
-         candidates.emplace_back(track->GetEndTime(), track);
-      }
-#endif
-   );
+   }
    return candidates;
 }
 }
@@ -638,8 +597,7 @@ UIHandle::Result TimeShiftHandle::Click
    mClipMoveState.mMouseClickX = event.m_x;
    mSnapManager =
    std::make_shared<SnapManager>(*trackList.GetOwner(),
-       FindCandidates( trackList,
-         mClipMoveState.capturedClipArray, mClipMoveState.trackExclusions),
+       FindCandidates( trackList, mClipMoveState.shifters ),
        viewInfo,
        true, // don't snap to time
        kPixelTolerance);
