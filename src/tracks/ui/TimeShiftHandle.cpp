@@ -279,6 +279,11 @@ CoarseTrackShifter::CoarseTrackShifter( Track &track )
 
 CoarseTrackShifter::~CoarseTrackShifter() = default;
 
+auto CoarseTrackShifter::HitTest( double ) -> HitTestResult
+{
+   return HitTestResult::Track;
+}
+
 template<> auto MakeTrackShifter::Implementation() -> Function {
    return [](Track &track) {
       return std::make_unique<CoarseTrackShifter>(track);
@@ -494,29 +499,38 @@ UIHandle::Result TimeShiftHandle::Click
    mClipMoveState.capturedClip = NULL;
    mClipMoveState.capturedClipArray.clear();
 
-   bool ok = true;
    bool captureClips = false;
+   bool capturedAClip = false;
 
    auto pShifter = MakeTrackShifter::Call( *pTrack );
 
-   if (!event.ShiftDown())
-      pTrack->TypeSwitch(
-         [&](WaveTrack *wt) {
-            if (nullptr ==
-               (mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x)))
-               ok = false;
-            else
-               captureClips = true;
-#ifdef USE_MIDI
-         },
-         [&](NoteTrack *) {
-            captureClips = true;
-#endif
-         }
-      );
+   if (!event.ShiftDown()) {
+      switch( pShifter->HitTest( clickTime ) ) {
+      case TrackShifter::HitTestResult::Miss:
+         return Cancelled;
+      case TrackShifter::HitTestResult::Intervals: {
+         captureClips = true;
+         if ( !pShifter->MovingIntervals().empty() ) {
+            capturedAClip = true;
 
-   if ( ! ok )
-      return Cancelled;
+            // There is still some code special to WaveTracks here that
+            // needs to go elsewhere
+            auto &interval = pShifter->MovingIntervals()[0];
+            auto pInfo =
+               dynamic_cast<WaveTrack::IntervalData*>(interval.Extra());
+            if ( pInfo )
+               mClipMoveState.capturedClip = pInfo->GetClip().get();
+         }
+         break;
+      }
+      case TrackShifter::HitTestResult::Track:
+      default:
+         break;
+      }
+   }
+   else {
+      // As in the default above: just do shifting of one whole track
+   }
 
    if ( captureClips ) {
       mClipMoveState.shifters[pTrack] = std::move( pShifter );
