@@ -1273,6 +1273,11 @@ void WaveTrackView::BuildSubViews() const
          
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
+         bool multi = (display == WaveTrackViewConstants::MultiView);
+         if ( multi ) {
+            pThis->SetMultiView( true );
+            display = WaveTrackSubViewType::Default();
+         }
          
          // Force creation always:
          WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
@@ -1282,7 +1287,7 @@ void WaveTrackView::BuildSubViews() const
          // spectrogram
          settings.scaleType = TracksPrefs::WaveformScaleChoice();
 
-         pThis->DoSetDisplay( display );
+         pThis->DoSetDisplay( display, !multi );
       }
    }
 }

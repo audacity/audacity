@@ -8,6 +8,7 @@ Paul Licameli split from class WaveTrack
 
 **********************************************************************/
 
+#include "../../../../Internat.h"
 #include "WaveTrackViewConstants.h"
 
 // static
@@ -91,3 +92,16 @@ auto WaveTrackSubViewType::All()
 {
    return GetRegistry().Get();
 }
+
+// static
+auto WaveTrackSubViewType::Default() -> Display
+{
+   auto &all = All();
+   if (all.empty())
+      return WaveTrackViewConstants::Waveform;
+   return all[0].id;
+}
+
+const EnumValueSymbol WaveTrackViewConstants::MultiViewSymbol{
+   wxT("Multiview"), XXO("&Multi-view")
+};

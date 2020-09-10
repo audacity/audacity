@@ -11,9 +11,13 @@ Paul Licameli split from class WaveTrack
 #ifndef __AUDACITY_WAVE_TRACK_VIEW_CONSTANTS__
 #define __AUDACITY_WAVE_TRACK_VIEW_CONSTANTS__
 
+#include "audacity/ComponentInterface.h" // for EnumValueSymbol
+
 namespace WaveTrackViewConstants
 {
    enum Display : int {
+
+      MultiView = -1, //!< "Multi" is special, not really a view type on par with the others.
 
       // DO NOT REORDER OLD VALUES!  Replace obsoletes with placeholders.
 
@@ -77,10 +81,12 @@ namespace WaveTrackViewConstants
 
    // Handle remapping of enum values from 2.1.0 and earlier
    Display ConvertLegacyDisplayValue(int oldValue);
+
+   //! String identifier for a preference for one of each type of view
+   extern const EnumValueSymbol MultiViewSymbol;
 }
 
 #include <vector>
-#include "audacity/ComponentInterface.h" // for EnumValueSymbol
 
 struct WaveTrackSubViewType {
    using Display = WaveTrackViewConstants::Display;
@@ -103,8 +109,11 @@ struct WaveTrackSubViewType {
       RegisteredType( WaveTrackSubViewType type );
    };
 
-   // Discover all registered types
+   //! Discover all registered types
    static const std::vector<WaveTrackSubViewType> &All();
+
+   //! Return a preferred type
+   static Display Default();
 };
 
 #endif
