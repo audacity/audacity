@@ -15,6 +15,7 @@
 #include <wx/atomic.h>
 
 #include "widgets/AudacityMessageBox.h"
+#include "widgets/ErrorDialog.h"
 
 AudacityException::~AudacityException()
 {
@@ -40,6 +41,7 @@ MessageBoxException::MessageBoxException( const MessageBoxException& that )
 {
    caption = that.caption;
    moved = that.moved;
+   helpUrl = that.helpUrl;
    that.moved = true;
 }
 
@@ -69,12 +71,25 @@ void MessageBoxException::DelayedHandlerAction()
       // displays its message.  We assume that multiple messages have a
       // common cause such as exhaustion of disk space so that the others
       // give the user no useful added information.
+      
       if ( wxAtomicDec( sOutstandingMessages ) == 0 )
-         ::AudacityMessageBox(
-            ErrorMessage(),
-            (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
-            wxICON_ERROR
-         );
+         if (helpUrl.IsEmpty())
+         {
+            ::AudacityMessageBox(
+               ErrorMessage(),
+               (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
+               wxICON_ERROR 
+            );
+         }
+         else
+         {
+            ShowErrorDialog(
+               nullptr,
+               (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
+               ErrorMessage(),
+               helpUrl);
+         }
+
       moved = true;
    }
 }

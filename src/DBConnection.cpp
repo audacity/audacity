@@ -327,21 +327,18 @@ void DBConnection::CheckpointThread()
             auto name = fName.GetFullName();
             auto longname = name + "-wal";
             auto message1 = rc == SQLITE_FULL
-               ? XO("There is insufficient space in %s.\n" ).Format( path )
+               ? XO("Could not write to %s.\n" ).Format( path )
                : TranslatableString{};
             auto message = XO(
-"The database log file %s could not be cleaned up.\n"
+"Disk is full.  For tips on freeing up space, click the help button.\n"
 "%s\n"
-"Nothing has been lost, but you must not remove this file!  "
-"Copy %s with its log file to another device, open it, and close to make "
-"it complete."
-            ).Format( longname, message1, name );
+            ).Format( message1 );
 
             // Throw and catch and AudacityException, enqueuing the
             // error message box for the event loop in the main thread
             GuardedCall( [&message]{
                throw SimpleMessageBoxException{
-                  message, XO("Warning") }; } );
+                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; } );
             
             // Stop trying to checkpoint
             giveUp = true;
