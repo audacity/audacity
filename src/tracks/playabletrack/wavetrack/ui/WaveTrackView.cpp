@@ -1307,6 +1307,7 @@ public:
    WaveTrackShifter( WaveTrack &track )
       : mpTrack{ track.SharedPointer<WaveTrack>() }
    {
+      InitIntervals();
    }
    ~WaveTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }

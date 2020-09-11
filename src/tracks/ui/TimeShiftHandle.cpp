@@ -246,9 +246,36 @@ namespace
 
 TrackShifter::~TrackShifter() = default;
 
+void TrackShifter::UnfixIntervals(
+   std::function< bool( const TrackInterval& ) > pred )
+{
+   for ( auto iter = mFixed.begin(); iter != mFixed.end(); ) {
+      if ( pred( *iter) ) {
+         mMoving.push_back( std::move( *iter ) );
+         iter = mFixed.erase( iter );
+      }
+      else
+         ++iter;
+   }
+}
+
+void TrackShifter::UnfixAll()
+{
+   std::move( mFixed.begin(), mFixed.end(), std::back_inserter(mMoving) );
+   mFixed = Intervals{};
+}
+
+void TrackShifter::InitIntervals()
+{
+   mMoving.clear();
+   mFixed = GetTrack().GetIntervals();
+}
+
 CoarseTrackShifter::CoarseTrackShifter( Track &track )
    : mpTrack{ track.SharedPointer() }
-{}
+{
+   InitIntervals();
+}
 
 CoarseTrackShifter::~CoarseTrackShifter() = default;
 
