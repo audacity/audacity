@@ -654,7 +654,7 @@ double DoClipMove
          track->GetSelected() && !selectedRegion.isPoint();
       state.trackExclusions.clear();
 
-      TimeShiftHandle::CreateListOfCapturedClips(
+      TimeShiftHandle::Init(
          state, viewInfo, *track, trackList, syncLocked, t0 );
 
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
