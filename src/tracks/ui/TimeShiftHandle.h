@@ -11,6 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_TIMESHIFT_HANDLE__
 #define __AUDACITY_TIMESHIFT_HANDLE__
 
+#include <functional>
 #include <unordered_map>
 
 #include "../../AttachedVirtualFunction.h"
@@ -22,6 +23,7 @@ using TrackArray = std::vector<Track*>;
 class TrackList;
 
 class Track;
+class TrackInterval;
 
 //! Abstract base class for policies to manipulate a track type with the Time Shift tool
 class TrackShifter {
@@ -29,6 +31,29 @@ public:
    virtual ~TrackShifter() = 0;
    //! There is always an associated track
    virtual Track &GetTrack() const = 0;
+
+   using Intervals = std::vector<TrackInterval>;
+
+   //! Return special intervals of the track that will not move
+   const Intervals &FixedIntervals() const { return mFixed; }
+
+   //! Return special intervals of the track that may move
+   const Intervals &MovingIntervals() const { return mMoving; }
+   
+   //! Change intervals satisfying a predicate from fixed to moving
+   void UnfixIntervals(
+      std::function< bool( const TrackInterval& ) > pred );
+
+   //! Change all intervals from fixed to moving
+   void UnfixAll();
+
+protected:
+   //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
+   /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
+   void InitIntervals();
+
+   Intervals mFixed;
+   Intervals mMoving;
 };
 
 //! Used in default of other reimplementations to shift any track as a whole, invoking Track::Offset()

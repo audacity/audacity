@@ -736,7 +736,9 @@ class NoteTrackShifter final : public TrackShifter {
 public:
    NoteTrackShifter( NoteTrack &track )
       : mpTrack{ track.SharedPointer<NoteTrack>() }
-   {}
+   {
+      InitIntervals();
+   }
    ~NoteTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
 
