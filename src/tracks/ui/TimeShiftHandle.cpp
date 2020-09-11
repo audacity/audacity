@@ -265,6 +265,14 @@ void TrackShifter::UnfixAll()
    mFixed = Intervals{};
 }
 
+void TrackShifter::SelectInterval(const TrackInterval &interval)
+{
+   UnfixIntervals( [&](auto &myInterval){
+      return !(interval.End() < myInterval.Start() ||
+               myInterval.End() < interval.Start());
+   });
+}
+
 void TrackShifter::InitIntervals()
 {
    mMoving.clear();
@@ -284,15 +292,26 @@ auto CoarseTrackShifter::HitTest( double ) -> HitTestResult
    return HitTestResult::Track;
 }
 
+void CoarseTrackShifter::SelectInterval( const TrackInterval & )
+{
+   UnfixAll();
+}
+
+bool CoarseTrackShifter::SyncLocks()
+{
+   return false;
+}
+
 template<> auto MakeTrackShifter::Implementation() -> Function {
    return [](Track &track) {
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
 
-void TimeShiftHandle::CreateListOfCapturedClips
+void TimeShiftHandle::Init
    ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-     TrackList &trackList, bool syncLocked, double clickTime )
+     TrackList &trackList, bool syncLocked, double clickTime,
+     bool capturedAClip )
 {
 // The captured clip is the focus, but we need to create a list
    // of all clips that have to move, also...
@@ -302,9 +321,11 @@ void TimeShiftHandle::CreateListOfCapturedClips
    // First, if click was in selection, capture selected clips; otherwise
    // just the clicked-on clip
    if ( state.capturedClipIsSelection )
+      // All selected tracks may move some intervals
       for (auto t : trackList.Selected())
          AddClipsToCaptured( state, viewInfo, t );
    else {
+      // Move intervals only of the chosen channel group
       state.capturedClipArray.push_back
          (TrackClip( &capturedTrack, state.capturedClip ));
 
@@ -320,6 +341,7 @@ void TimeShiftHandle::CreateListOfCapturedClips
    // Now, if sync-lock is enabled, capture any clip that's linked to a
    // captured clip.
    if ( syncLocked ) {
+      // Sync lock propagation of unfixing of intervals
       // AWD: capturedClipArray expands as the loop runs, so newly-added
       // clips are considered (the effect is like recursion and terminates
       // because AddClipsToCaptured doesn't add duplicate clips); to remove
@@ -349,6 +371,70 @@ void TimeShiftHandle::CreateListOfCapturedClips
             });
          }
 #endif
+      }
+   }
+
+   // Analogy of the steps above, but with TrackShifters, follows below
+   
+   if ( state.capturedClipIsSelection ) {
+      // All selected tracks may move some intervals
+      const TrackInterval interval{
+         viewInfo.selectedRegion.t0(),
+         viewInfo.selectedRegion.t1()
+      };
+      for ( const auto &pair : state.shifters ) {
+         auto &shifter = *pair.second;
+         auto &track = shifter.GetTrack();
+         if ( track.IsSelected() )
+            shifter.SelectInterval( interval );
+      }
+   }
+   else {
+      // Move intervals only of the chosen channel group
+      for ( auto channel : TrackList::Channels( &capturedTrack ) ) {
+         auto &shifter = *state.shifters[channel];
+         if ( capturedAClip ) {
+            if ( channel != &capturedTrack )
+               shifter.SelectInterval(TrackInterval{clickTime, clickTime});
+         }
+         else
+            shifter.UnfixAll();
+      }
+   }
+   
+   // Sync lock propagation of unfixing of intervals
+   if ( syncLocked ) {
+      bool change = true;
+      while( change ) {
+         change = false;
+
+         // Iterate over all unfixed intervals in all shifters
+         // that do propagation...
+         for ( auto &pair : state.shifters ) {
+            auto &shifter = *pair.second.get();
+            if (!shifter.SyncLocks())
+               continue;
+            auto &track = shifter.GetTrack();
+            auto &intervals = shifter.MovingIntervals();
+            for (auto &interval : intervals) {
+
+               // ...and tell all other tracks to select that interval...
+               for ( auto &pair2 : state.shifters ) {
+                  auto &shifter2 = *pair2.second.get();
+                  if (&shifter2.GetTrack() == &track)
+                     continue;
+                  auto size = shifter2.MovingIntervals().size();
+                  shifter2.SelectInterval( interval );
+                  change = change ||
+                     (shifter2.SyncLocks() &&
+                      size != shifter2.MovingIntervals().size());
+               }
+
+            }
+         }
+
+         // ... and repeat if any other interval became unfixed in a
+         // shifter that propagates
       }
    }
 }
@@ -542,9 +628,9 @@ UIHandle::Result TimeShiftHandle::Click
             pShifter = MakeTrackShifter::Call( *track );
       }
 
-      CreateListOfCapturedClips(
+      Init(
          mClipMoveState, viewInfo, *pTrack, trackList,
-         ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime );
+         ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime, capturedAClip );
    }
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;

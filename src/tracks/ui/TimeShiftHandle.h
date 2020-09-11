@@ -58,6 +58,13 @@ public:
    //! Change all intervals from fixed to moving
    void UnfixAll();
 
+   //! Notifies the shifter that a region is selected, so it may update its fixed and moving intervals
+   /*! A default implementation unfixes any of the intervals that intersect the given one */
+   virtual void SelectInterval( const TrackInterval &interval );
+
+   //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
+   virtual bool SyncLocks() = 0;
+
 protected:
    //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
@@ -75,6 +82,12 @@ public:
    Track &GetTrack() const override { return *mpTrack; }
 
    HitTestResult HitTest( double ) override;
+
+   //! If any part of the track is selected, unfix all parts of it.
+   void SelectInterval( const TrackInterval & ) override;
+
+   //! Returns false
+   bool SyncLocks() override;
 
 private:
    std::shared_ptr<Track> mpTrack;
@@ -150,9 +163,10 @@ public:
    std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
 
    // A utility function also used by menu commands
-   static void CreateListOfCapturedClips
+   static void Init
       ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-        TrackList &trackList, bool syncLocked, double clickTime );
+        TrackList &trackList, bool syncLocked, double clickTime,
+        bool capturedAClip = true );
 
    // A utility function also used by menu commands
    static void DoSlideHorizontal

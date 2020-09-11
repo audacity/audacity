@@ -1329,6 +1329,21 @@ public:
       return HitTestResult::Intervals;
    }
 
+   void SelectInterval( const TrackInterval &interval ) override
+   {
+      UnfixIntervals( [&](auto &myInterval){
+         // Use a slightly different test from the default, rounding times
+         // to exact samples according to the clip's rate
+         auto data =
+            static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
+         auto clip = data->GetClip().get();
+         return !(clip->IsClipStartAfterClip(interval.Start()) ||
+            clip->BeforeClip(interval.End()));
+      });
+   }
+
+   bool SyncLocks() override { return true; }
+
 private:
    std::shared_ptr<WaveTrack> mpTrack;
 };

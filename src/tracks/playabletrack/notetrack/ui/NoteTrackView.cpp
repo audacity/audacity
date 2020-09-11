@@ -741,11 +741,15 @@ public:
    }
    ~NoteTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
-
+   
    HitTestResult HitTest( double ) override
    {
       return HitTestResult::Intervals;
    }
+
+   // Default implementation of SelectInterval() is correct
+
+   bool SyncLocks() override { return true; }
 
 private:
    std::shared_ptr<NoteTrack> mpTrack;
