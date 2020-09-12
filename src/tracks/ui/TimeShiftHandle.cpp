@@ -304,19 +304,57 @@ template<> auto MakeTrackShifter::Implementation() -> Function {
    };
 }
 
-void TimeShiftHandle::Init
-   ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-     TrackList &trackList, bool syncLocked, double clickTime,
-     bool capturedAClip )
+void ClipMoveState::Init(
+   Track &capturedTrack,
+   std::unique_ptr<TrackShifter> pHit,
+   double clickTime,
+   const ViewInfo &viewInfo,
+   TrackList &trackList, bool syncLocked )
 {
+   capturedClipArray.clear();
+   shifters.clear();
+   auto cleanup = finally([&]{
+      // In transition, this class holds two representations of what to shift.
+      // Be sure each is filled only if the other is.
+      wxASSERT( capturedClipArray.empty() == shifters.empty() );
+   });
+
+   auto &state = *this;
+
+   state.movingSelection = capturedTrack.IsSelected() &&
+      clickTime >= viewInfo.selectedRegion.t0() &&
+      clickTime < viewInfo.selectedRegion.t1();
+
+   if (!pHit)
+      return;
+
+   const bool capturedAClip =
+      pHit && !pHit->MovingIntervals().empty();
+   if ( capturedAClip ) {
+      // There is still some code special to WaveTracks here that
+      // needs to go elsewhere
+      auto &interval = pHit->MovingIntervals()[0];
+      auto pInfo =
+         dynamic_cast<WaveTrack::IntervalData*>(interval.Extra());
+      if ( pInfo )
+         state.capturedClip = pInfo->GetClip().get();
+   }
+
+   state.shifters[&capturedTrack] = std::move( pHit );
+
+   // Collect TrackShifters for the rest of the tracks
+   for ( auto track : trackList.Any() ) {
+      auto &pShifter = state.shifters[track];
+      if (!pShifter)
+         pShifter = MakeTrackShifter::Call( *track );
+   }
+
 // The captured clip is the focus, but we need to create a list
    // of all clips that have to move, also...
 
-   state.capturedClipArray.clear();
-
    // First, if click was in selection, capture selected clips; otherwise
    // just the clicked-on clip
-   if ( state.capturedClipIsSelection )
+   if ( state.movingSelection )
       // All selected tracks may move some intervals
       for (auto t : trackList.Selected())
          AddClipsToCaptured( state, viewInfo, t );
@@ -372,7 +410,7 @@ void TimeShiftHandle::Init
 
    // Analogy of the steps above, but with TrackShifters, follows below
    
-   if ( state.capturedClipIsSelection ) {
+   if ( state.movingSelection ) {
       // All selected tracks may move some intervals
       const TrackInterval interval{
          viewInfo.selectedRegion.t0(),
@@ -435,9 +473,12 @@ void TimeShiftHandle::Init
    }
 }
 
-void TimeShiftHandle::DoSlideHorizontal
-   ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack )
+double ClipMoveState::DoSlideHorizontal(
+   double desiredSlideAmount, TrackList &trackList, Track &capturedTrack )
 {
+   auto &state = *this;
+   state.hSlideAmount = desiredSlideAmount;
+
    // Given a signed slide distance, move clips, but subject to constraint of
    // non-overlapping with other clips, so the distance may be adjusted toward
    // zero.
@@ -486,6 +527,8 @@ void TimeShiftHandle::DoSlideHorizontal
       // For Shift key down, or
       // For non wavetracks, specifically label tracks ...
       DoOffset( state, &capturedTrack, state.hSlideAmount );
+
+   return state.hSlideAmount;
 }
 
 namespace {
@@ -536,16 +579,11 @@ UIHandle::Result TimeShiftHandle::Click
 
    const double clickTime =
       viewInfo.PositionToTime(event.m_x, rect.x);
-   mClipMoveState.capturedClipIsSelection =
-      (pTrack->GetSelected() &&
-       clickTime >= viewInfo.selectedRegion.t0() &&
-       clickTime < viewInfo.selectedRegion.t1());
 
    mClipMoveState.capturedClip = NULL;
    mClipMoveState.capturedClipArray.clear();
 
    bool captureClips = false;
-   bool capturedAClip = false;
 
    auto pShifter = MakeTrackShifter::Call( *pTrack );
 
@@ -555,17 +593,6 @@ UIHandle::Result TimeShiftHandle::Click
          return Cancelled;
       case TrackShifter::HitTestResult::Intervals: {
          captureClips = true;
-         if ( !pShifter->MovingIntervals().empty() ) {
-            capturedAClip = true;
-
-            // There is still some code special to WaveTracks here that
-            // needs to go elsewhere
-            auto &interval = pShifter->MovingIntervals()[0];
-            auto pInfo =
-               dynamic_cast<WaveTrack::IntervalData*>(interval.Extra());
-            if ( pInfo )
-               mClipMoveState.capturedClip = pInfo->GetClip().get();
-         }
          break;
       }
       case TrackShifter::HitTestResult::Track:
@@ -577,20 +604,12 @@ UIHandle::Result TimeShiftHandle::Click
       // As in the default above: just do shifting of one whole track
    }
 
-   if ( captureClips ) {
-      mClipMoveState.shifters[pTrack] = std::move( pShifter );
+   mClipMoveState.Init( *pTrack,
+      captureClips ? std::move( pShifter ) : nullptr,
+      clickTime,
 
-      // Collect TrackShifters for the rest of the tracks
-      for ( auto track : trackList.Any() ) {
-         auto &pShifter = mClipMoveState.shifters[track];
-         if (!pShifter)
-            pShifter = MakeTrackShifter::Call( *track );
-      }
-
-      Init(
-         mClipMoveState, viewInfo, *pTrack, trackList,
-         ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime, capturedAClip );
-   }
+      viewInfo, trackList,
+      ProjectSettings::Get( *pProject ).IsSyncLocked() );
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
@@ -836,7 +855,7 @@ bool TimeShiftHandle::DoSlideVertical
       // Make the offset permanent; start from a "clean slate"
       if( ok ) {
          state.mMouseClickX = xx;
-         if (state.capturedClipIsSelection) {
+         if (state.movingSelection) {
             // Slide the selection, too
             viewInfo.selectedRegion.move( slide );
          }
@@ -897,7 +916,7 @@ UIHandle::Result TimeShiftHandle::Drag
    DoOffset(
       mClipMoveState, mCapturedTrack.get(), -mClipMoveState.hSlideAmount );
 
-   if ( mClipMoveState.capturedClipIsSelection ) {
+   if ( mClipMoveState.movingSelection ) {
       // Slide the selection, too
       viewInfo.selectedRegion.move( -mClipMoveState.hSlideAmount );
    }
@@ -939,11 +958,10 @@ UIHandle::Result TimeShiftHandle::Drag
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
 
-   mClipMoveState.hSlideAmount = desiredSlideAmount;
+   mClipMoveState.DoSlideHorizontal(
+      desiredSlideAmount, trackList, *mCapturedTrack );
 
-   DoSlideHorizontal( mClipMoveState, trackList, *mCapturedTrack );
-
-   if (mClipMoveState.capturedClipIsSelection) {
+   if (mClipMoveState.movingSelection) {
       // Slide the selection, too
       viewInfo.selectedRegion.move( mClipMoveState.hSlideAmount );
    }
