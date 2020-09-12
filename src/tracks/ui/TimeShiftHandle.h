@@ -122,10 +122,23 @@ using TrackClipArray = std::vector <TrackClip>;
 struct ClipMoveState {
    using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
    
+   //! Will associate a TrackShifter with each track in the list
+   void Init(
+      Track &capturedTrack, //<! pHit if not null associates with this track
+      std::unique_ptr<TrackShifter> pHit, /*!<
+         If null, only capturedTrack (with any sister channels) shifts, as a whole */
+      double clickTime,
+      const ViewInfo &viewInfo,
+      TrackList &trackList, bool syncLocked );
+
+   /*! @return actual slide amount, maybe adjusted toward zero from desired */
+   double DoSlideHorizontal(
+      double desiredSlideAmount, TrackList &trackList, Track &capturedTrack );
+
    // non-NULL only if click was in a WaveTrack and without Shift key:
    WaveClip *capturedClip {};
 
-   bool capturedClipIsSelection {};
+   bool movingSelection {};
    double hSlideAmount {};
    ShifterMap shifters;
    TrackClipArray capturedClipArray {};
@@ -136,7 +149,7 @@ struct ClipMoveState {
    void clear()
    {
       capturedClip = nullptr;
-      capturedClipIsSelection = false;
+      movingSelection = false;
       hSlideAmount = 0;
       shifters.clear();
       capturedClipArray.clear();
@@ -159,16 +172,6 @@ public:
 
    bool IsGripHit() const { return mGripHit; }
    std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
-
-   // A utility function also used by menu commands
-   static void Init
-      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-        TrackList &trackList, bool syncLocked, double clickTime,
-        bool capturedAClip = true );
-
-   // A utility function also used by menu commands
-   static void DoSlideHorizontal
-      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
 
    // Try to move clips from one WaveTrack to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the

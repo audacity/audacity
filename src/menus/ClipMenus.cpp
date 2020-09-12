@@ -639,22 +639,25 @@ double DoClipMove
 
       auto t0 = selectedRegion.t0();
 
+      std::unique_ptr<TrackShifter> uShifter;
+
       // Find the first channel that has a clip at time t0
       for (auto channel : TrackList::Channels(wt) ) {
-         if( nullptr != (state.capturedClip = channel->GetClipAtTime( t0 )) ) {
+         uShifter = MakeTrackShifter::Call( *wt );
+         if( uShifter->HitTest( t0 ) == TrackShifter::HitTestResult::Miss )
+            uShifter.reset();
+         else {
             wt = channel;
             break;
          }
       }
 
-      if (state.capturedClip == nullptr)
+      if (!uShifter)
          return 0.0;
+      auto pShifter = uShifter.get();
 
-      state.capturedClipIsSelection =
-         track->GetSelected() && !selectedRegion.isPoint();
-
-      TimeShiftHandle::Init(
-         state, viewInfo, *track, trackList, syncLocked, t0 );
+      state.Init( *track, std::move( uShifter ),
+         t0, viewInfo, trackList, syncLocked );
 
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = desiredT0 - t0;
@@ -668,21 +671,26 @@ double DoClipMove
       if (!right)
          desiredSlideAmount *= -1;
 
-      state.hSlideAmount = desiredSlideAmount;
-      TimeShiftHandle::DoSlideHorizontal( state, trackList, *track );
+      auto hSlideAmount = state.DoSlideHorizontal(
+         desiredSlideAmount, trackList, *track );
 
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
       // so t0 is adjusted so that it is.
-      double newT0 = t0 + state.hSlideAmount;
-      if (newT0 < state.capturedClip->GetStartTime())
-         newT0 = state.capturedClip->GetStartTime();
-      if (newT0 > state.capturedClip->GetEndTime())
-         newT0 = state.capturedClip->GetEndTime();
-      double diff = selectedRegion.duration();
-      selectedRegion.setTimes(newT0, newT0 + diff);
+      double newT0 = t0 + hSlideAmount;
+      // pShifter is still undestroyed in the ClipMoveState
+      auto &intervals = pShifter->MovingIntervals();
+      if ( !intervals.empty() ) {
+         auto &interval = intervals[0];
+         if (newT0 < interval.Start())
+            newT0 = interval.Start();
+         if (newT0 > interval.End())
+            newT0 = interval.End();
+         double diff = selectedRegion.duration();
+         selectedRegion.setTimes(newT0, newT0 + diff);
+      }
 
-      return state.hSlideAmount;
+      return hSlideAmount;
    } );
    return 0.0;
 }
