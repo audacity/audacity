@@ -1440,6 +1440,15 @@ public:
       return true;
    }
 
+   void DoHorizontalOffset( double offset ) override
+   {
+      for ( auto &interval : MovingIntervals() ) {
+         auto data =
+            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         data->GetClip()->Offset( offset );
+      }
+   }
+   
 private:
    std::shared_ptr<WaveTrack> mpTrack;
 

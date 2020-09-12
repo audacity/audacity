@@ -122,6 +122,10 @@ public:
        Default implementation does nothing and returns true */
    virtual bool FinishMigration();
 
+   //! Shift all moving intervals horizontally
+   //! Default moves the whole track, provided `!AllFixed()`; else does nothing
+   virtual void DoHorizontalOffset( double offset );
+
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
    void CommonSelectInterval( const TrackInterval &interval );
@@ -135,8 +139,16 @@ protected:
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
    void InitIntervals();
 
+   bool AllFixed() const {
+      return mAllFixed && mMoving.empty();
+   }
+
    Intervals mFixed;
    Intervals mMoving;
+
+private:
+   bool mAllFixed = true; /*!<
+      Becomes false after `UnfixAll()`, even if there are no intervals, or if any one interval was unfixed */
 };
 
 //! Used in default of other reimplementations to shift any track as a whole, invoking Track::Offset()
@@ -196,8 +208,12 @@ struct ClipMoveState {
    /*! Pointer may be invalidated by operations on the associated TrackShifter */
    const TrackInterval *CapturedInterval() const;
 
+   //! Do sliding of tracks and intervals, maybe adjusting the offset
    /*! @return actual slide amount, maybe adjusted toward zero from desired */
    double DoSlideHorizontal( double desiredSlideAmount );
+
+   //! Offset tracks or intervals horizontally, without adjusting the offset
+   void DoHorizontalOffset( double offset );
 
    std::shared_ptr<Track> mCapturedTrack;
 

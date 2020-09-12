@@ -178,22 +178,17 @@ namespace
 
       return 0;
    }
+}
 
-   void DoOffset( ClipMoveState &state, Track *pTrack, double offset )
-   {
-      auto &clips = state.capturedClipArray;
-      if ( !clips.empty() ) {
-         for (auto &clip : clips) {
-            if (clip.clip)
-               clip.clip->Offset( offset );
-            else
-               clip.track->Offset( offset );
-         }
-      }
-      else if ( pTrack )
-         // Was a shift-click
-         for (auto channel : TrackList::Channels( pTrack ))
-            channel->Offset( offset );
+void ClipMoveState::DoHorizontalOffset( double offset )
+{
+   if ( !shifters.empty() ) {
+      for ( auto &pair : shifters )
+         pair.second->DoHorizontalOffset( offset );
+   }
+   else {
+      for (auto channel : TrackList::Channels( mCapturedTrack.get() ))
+         channel->Offset( offset );
    }
 }
 
@@ -206,6 +201,7 @@ void TrackShifter::UnfixIntervals(
       if ( pred( *iter) ) {
          mMoving.push_back( std::move( *iter ) );
          iter = mFixed.erase( iter );
+         mAllFixed = false;
       }
       else
          ++iter;
@@ -216,6 +212,7 @@ void TrackShifter::UnfixAll()
 {
    std::move( mFixed.begin(), mFixed.end(), std::back_inserter(mMoving) );
    mFixed = Intervals{};
+   mAllFixed = false;
 }
 
 void TrackShifter::SelectInterval( const TrackInterval & )
@@ -301,6 +298,12 @@ bool TrackShifter::Attach( Intervals )
 bool TrackShifter::FinishMigration()
 {
    return true;
+}
+
+void TrackShifter::DoHorizontalOffset( double offset )
+{
+   if (!AllFixed())
+      GetTrack().Offset( offset );
 }
 
 void TrackShifter::InitIntervals()
@@ -548,14 +551,12 @@ double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
                break;
          }
       } while ( desiredSlideAmount != initialAllowed );
-
-      // finally, here is where clips are moved
-      if ( desiredSlideAmount != 0.0 )
-         DoOffset( state, nullptr, desiredSlideAmount );
    }
-   else
-      // Moving whole track
-      DoOffset( state, &capturedTrack, desiredSlideAmount );
+
+   // Whether moving intervals or a whole track,
+   // finally, here is where clips are moved
+   if ( desiredSlideAmount != 0.0 )
+      state.DoHorizontalOffset( desiredSlideAmount );
 
    return (state.hSlideAmount = desiredSlideAmount);
 }
@@ -957,8 +958,7 @@ UIHandle::Result TimeShiftHandle::Drag
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
    // each clip...
-   DoOffset(
-      mClipMoveState, mClipMoveState.mCapturedTrack.get(), -mClipMoveState.hSlideAmount );
+   mClipMoveState.DoHorizontalOffset( -mClipMoveState.hSlideAmount );
 
    if ( mClipMoveState.movingSelection ) {
       // Slide the selection, too
