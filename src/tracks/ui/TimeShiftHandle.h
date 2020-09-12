@@ -132,8 +132,9 @@ struct ClipMoveState {
       TrackList &trackList, bool syncLocked );
 
    /*! @return actual slide amount, maybe adjusted toward zero from desired */
-   double DoSlideHorizontal(
-      double desiredSlideAmount, TrackList &trackList, Track &capturedTrack );
+   double DoSlideHorizontal( double desiredSlideAmount, TrackList &trackList );
+
+   std::shared_ptr<Track> mCapturedTrack;
 
    // non-NULL only if click was in a WaveTrack and without Shift key:
    WaveClip *capturedClip {};
@@ -171,7 +172,7 @@ public:
    TimeShiftHandle &operator=(TimeShiftHandle&&) = default;
 
    bool IsGripHit() const { return mGripHit; }
-   std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
+   std::shared_ptr<Track> GetTrack() const = delete;
 
    // Try to move clips from one WaveTrack to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
@@ -221,7 +222,6 @@ private:
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
-   std::shared_ptr<Track> mCapturedTrack;
    wxRect mRect{};
 
    bool mDidSlideVertically{};

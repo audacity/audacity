@@ -671,8 +671,8 @@ double DoClipMove
       if (!right)
          desiredSlideAmount *= -1;
 
-      auto hSlideAmount = state.DoSlideHorizontal(
-         desiredSlideAmount, trackList, *track );
+      auto hSlideAmount =
+         state.DoSlideHorizontal( desiredSlideAmount, trackList );
 
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
