@@ -45,9 +45,9 @@ TrackClip::~TrackClip()
 
 TimeShiftHandle::TimeShiftHandle
 ( const std::shared_ptr<Track> &pTrack, bool gripHit )
-   : mCapturedTrack{ pTrack }
-   , mGripHit{ gripHit }
+   : mGripHit{ gripHit }
 {
+   mClipMoveState.mCapturedTrack = pTrack;
 }
 
 void TimeShiftHandle::Enter(bool, AudacityProject *)
@@ -320,6 +320,7 @@ void ClipMoveState::Init(
    });
 
    auto &state = *this;
+   state.mCapturedTrack = capturedTrack.SharedPointer();
 
    state.movingSelection = capturedTrack.IsSelected() &&
       clickTime >= viewInfo.selectedRegion.t0() &&
@@ -474,9 +475,10 @@ void ClipMoveState::Init(
 }
 
 double ClipMoveState::DoSlideHorizontal(
-   double desiredSlideAmount, TrackList &trackList, Track &capturedTrack )
+   double desiredSlideAmount, TrackList &trackList )
 {
    auto &state = *this;
+   auto &capturedTrack = *state.mCapturedTrack;
    state.hSlideAmount = desiredSlideAmount;
 
    // Given a signed slide distance, move clips, but subject to constraint of
@@ -896,7 +898,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // within the bounds of the tracks area.
       if (event.m_x >= mRect.GetX() &&
          event.m_x < mRect.GetX() + mRect.GetWidth())
-          track = mCapturedTrack.get();
+          track = mClipMoveState.mCapturedTrack.get();
    }
 
    // May need a shared_ptr to reassign mCapturedTrack below
@@ -907,14 +909,14 @@ UIHandle::Result TimeShiftHandle::Drag
 
    auto &trackList = TrackList::Get( *pProject );
 
-   // GM: DoSlide now implementing snap-to
+   // GM: slide now implementing snap-to
    // samples functionality based on sample rate.
 
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
    // each clip...
    DoOffset(
-      mClipMoveState, mCapturedTrack.get(), -mClipMoveState.hSlideAmount );
+      mClipMoveState, mClipMoveState.mCapturedTrack.get(), -mClipMoveState.hSlideAmount );
 
    if ( mClipMoveState.movingSelection ) {
       // Slide the selection, too
@@ -925,7 +927,7 @@ UIHandle::Result TimeShiftHandle::Drag
    double desiredSlideAmount =
       FindDesiredSlideAmount( viewInfo, mRect.x, event, mSnapManager.get(),
          mSlideUpDownOnly, mSnapPreferRightEdge, mClipMoveState,
-         *mCapturedTrack, *pTrack );
+         *mClipMoveState.mCapturedTrack, *pTrack );
 
    // Scroll during vertical drag.
    // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
@@ -935,12 +937,12 @@ UIHandle::Result TimeShiftHandle::Drag
    // decide which tracks the captured clips should go to.
    bool fail = (
       mClipMoveState.capturedClip &&
-       pTrack != mCapturedTrack
+       pTrack != mClipMoveState.mCapturedTrack
        /* && !mCapturedClipIsSelection*/
       && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
             if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-                     trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
-               mCapturedTrack = pTrack;
+                     trackList, *mClipMoveState.mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
+               mClipMoveState.mCapturedTrack = pTrack;
                mDidSlideVertically = true;
             }
             else
@@ -958,8 +960,7 @@ UIHandle::Result TimeShiftHandle::Drag
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
 
-   mClipMoveState.DoSlideHorizontal(
-      desiredSlideAmount, trackList, *mCapturedTrack );
+   mClipMoveState.DoSlideHorizontal( desiredSlideAmount, trackList );
 
    if (mClipMoveState.movingSelection) {
       // Slide the selection, too
