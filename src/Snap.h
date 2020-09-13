@@ -21,31 +21,9 @@
 
 class AudacityProject;
 class Track;
-using TrackArray = std::vector< Track* >;
-class TrackClipArray;
-class WaveClip;
-class WaveTrack;
 class TrackList;
 class ZoomInfo;
 class wxDC;
-
-class TrackClip
-{
-public:
-   TrackClip(Track *t, WaveClip *c);
-
-   ~TrackClip();
-
-   Track *track;
-   Track *origTrack;
-   WaveClip *clip;
-
-   // These fields are used only during time-shift dragging
-   WaveTrack *dstTrack;
-   std::shared_ptr<WaveClip> holder;
-};
-
-class TrackClipArray : public std::vector < TrackClip > {};
 
 const int kPixelTolerance = 4;
 
@@ -77,12 +55,18 @@ struct SnapResults {
 class SnapManager
 {
 public:
-   SnapManager(const TrackList *tracks,
-               const ZoomInfo *zoomInfo,
-               const TrackClipArray *clipExclusions = NULL,
-               const TrackArray *trackExclusions = NULL,
+   SnapManager(const AudacityProject &project,
+               SnapPointArray candidates,
+               const ZoomInfo &zoomInfo,
                bool noTimeSnap = false,
                int pixelTolerance = kPixelTolerance);
+
+   SnapManager(const AudacityProject &project,
+               const TrackList &tracks,
+               const ZoomInfo &zoomInfo,
+               bool noTimeSnap = false,
+               int pixelTolerance = kPixelTolerance);
+
    ~SnapManager();
 
    // The track may be NULL.
@@ -111,23 +95,22 @@ private:
 private:
 
    const AudacityProject *mProject;
-   const TrackList *mTracks;
-   const TrackClipArray *mClipExclusions;
-   const TrackArray *mTrackExclusions;
    const ZoomInfo *mZoomInfo;
    int mPixelTolerance;
    bool mNoTimeSnap;
    
-   double mEpsilon;
+   //! Two time points closer than this are considered the same
+   double mEpsilon{ 1 / 44100.0 };
+   SnapPointArray mCandidates;
    SnapPointArray mSnapPoints;
 
    // Info for snap-to-time
    NumericConverter mConverter;
-   bool mSnapToTime;
+   bool mSnapToTime{ false };
 
-   int mSnapTo;
-   double mRate;
-   NumericFormatSymbol mFormat;
+   int mSnapTo{ 0 };
+   double mRate{ 0.0 };
+   NumericFormatSymbol mFormat{};
 };
 
 #endif
