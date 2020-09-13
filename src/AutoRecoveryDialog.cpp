@@ -185,6 +185,7 @@ void AutoRecoveryDialog::PopulateList()
          mFiles.push_back(fn.GetFullPath());
          mFileList->InsertItem(item, wxT(""));
          mFileList->SetItem(item, 1, fn.GetName());
+         mFileList->CheckItem(item, true);
          item++;
       }
    }
