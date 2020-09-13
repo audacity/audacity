@@ -1900,7 +1900,8 @@ void AdornedRulerPanel::HandleSnapping()
    if (handle) {
       auto &pSnapManager = handle->mSnapManager;
       if (! pSnapManager)
-         pSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+         pSnapManager =
+            std::make_unique<SnapManager>(*mProject, *mTracks, *mViewInfo);
       
       auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
       mQuickPlayPos = results.outTime;
