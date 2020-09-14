@@ -315,15 +315,17 @@ SqliteSampleBlock::~SqliteSampleBlock()
    }
 
    // See ProjectFileIO::Bypass() for a description of mIO.mBypass
-   if (!mLocked && !Conn()->ShouldBypass())
-   {
-      // In case Delete throws, don't let an exception escape a destructor,
-      // but we can still enqueue the delayed handler so that an error message
-      // is presented to the user.
-      // The failure in this case may be a less harmful waste of space in the
-      // database, which should not cause aborting of the attempted edit.
-      GuardedCall( [this]{ Delete(); } );
-   }
+   GuardedCall( [this]{
+      if (!mLocked && !Conn()->ShouldBypass())
+      {
+         // In case Delete throws, don't let an exception escape a destructor,
+         // but we can still enqueue the delayed handler so that an error message
+         // is presented to the user.
+         // The failure in this case may be a less harmful waste of space in the
+         // database, which should not cause aborting of the attempted edit.
+         Delete();
+      }
+   } );
 }
 
 DBConnection *SqliteSampleBlock::Conn() const
