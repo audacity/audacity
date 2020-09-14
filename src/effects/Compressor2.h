@@ -212,7 +212,10 @@ private:
       double rate, bool preview = false);
    std::unique_ptr<EnvelopeDetector> InitEnvelope(
       double rate, size_t blockSize = 0, bool preview = false);
-   size_t CalcBufferSize(size_t sampleRate);
+   size_t CalcBufferSize(double sampleRate);
+
+   inline size_t CalcLookaheadLength(double rate);
+   inline size_t CalcWindowLength(double rate);
 
    void AllocPipeline();
    void AllocRealtimePipeline();

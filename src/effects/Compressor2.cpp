@@ -1068,9 +1068,7 @@ double EffectCompressor2::CompressorGain(double env)
 std::unique_ptr<SamplePreprocessor> EffectCompressor2::InitPreprocessor(
    double rate, bool preview)
 {
-   size_t window_size =
-      std::max(1, int(round((mLookaheadTime + mLookbehindTime) * rate)));
-
+   size_t window_size = CalcWindowLength(rate);
    if(mCompressBy == kAmplitude)
       return std::unique_ptr<SamplePreprocessor>(safenew
          SlidingMaxPreprocessor(window_size));
@@ -1091,17 +1089,25 @@ std::unique_ptr<EnvelopeDetector> EffectCompressor2::InitEnvelope(
             !preview && mCompressBy != kAmplitude));
 }
 
-size_t EffectCompressor2::CalcBufferSize(size_t sampleRate)
+size_t EffectCompressor2::CalcBufferSize(double sampleRate)
 {
    size_t capacity;
-
-   mLookaheadLength =
-      std::max(0, int(round(mLookaheadTime * sampleRate)));
+   mLookaheadLength = CalcLookaheadLength(sampleRate);
    capacity = mLookaheadLength +
       size_t(float(TAU_FACTOR) * (1.0 + mAttackTime) * sampleRate);
    if(capacity < MIN_BUFFER_CAPACITY)
       capacity = MIN_BUFFER_CAPACITY;
    return capacity;
+}
+
+size_t EffectCompressor2::CalcLookaheadLength(double rate)
+{
+   return std::max(0, int(round(mLookaheadTime * rate)));
+}
+
+size_t EffectCompressor2::CalcWindowLength(double rate)
+{
+   return std::max(1, int(round((mLookaheadTime + mLookbehindTime) * rate)));
 }
 
 /// Get required buffer size for the largest whole track and allocate buffers.
@@ -1133,9 +1139,7 @@ void EffectCompressor2::AllocPipeline()
 
 void EffectCompressor2::AllocRealtimePipeline()
 {
-   mLookaheadLength =
-      std::max(0, int(round(mLookaheadTime * mSampleRate)));
-
+   mLookaheadLength = CalcLookaheadLength(mSampleRate);
    size_t blockSize = std::max(mLookaheadLength, size_t(512));
    if(mAlgorithm == kExpFit)
    {
@@ -1606,8 +1610,7 @@ void EffectCompressor2::UpdateResponsePlot()
    std::unique_ptr<EnvelopeDetector> envelope;
    float plot_rate = RESPONSE_PLOT_SAMPLES / RESPONSE_PLOT_TIME;
 
-   size_t lookahead_size =
-      std::max(0, int(round(mLookaheadTime * plot_rate)));
+   size_t lookahead_size = CalcLookaheadLength(plot_rate);
    ssize_t block_size = float(TAU_FACTOR) * (mAttackTime + 1.0) * plot_rate;
 
    preproc = InitPreprocessor(plot_rate, true);
@@ -1633,11 +1636,8 @@ void EffectCompressor2::UpdateResponsePlot()
 void EffectCompressor2::UpdateRealtimeParams()
 {
    std::lock_guard<std::mutex> guard(mRealtimeMutex);
-   // TODO: extract it
-   size_t window_size =
-      std::max(1, int(round((mLookaheadTime + mLookbehindTime) * mSampleRate)));
-   mLookaheadLength = // TODO: depup this everywhere
-      std::max(0, int(round(mLookaheadTime * mSampleRate)));
+   size_t window_size = CalcWindowLength(mSampleRate);
+   mLookaheadLength = CalcLookaheadLength(mSampleRate);
    mPreproc->SetWindowSize(window_size);
    mEnvelope->SetParams(mSampleRate, mAttackTime, mReleaseTime);
 }
