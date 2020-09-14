@@ -748,9 +748,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       tracks.Clear();
    }
 
-   // We're all done with the project file, so close it now
-   projectFileManager.CloseProject();
-
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
    // crashing when running with Jaws on Windows 10 1703.
@@ -761,6 +758,11 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // Check validity of mTrackPanel per bug 584 Comment 1.
    // Deeper fix is in the Import code, but this failsafes against crash.
    TrackPanel::Destroy( project );
+
+   // Close project only now, because TrackPanel might have been holding
+   // some shared_ptr to WaveTracks keeping SampleBlocks alive.
+   // We're all done with the project file, so close it now
+   projectFileManager.CloseProject();
 
    // Finalize the tool manager before the children since it needs
    // to save the state of the toolbars.
