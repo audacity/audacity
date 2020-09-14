@@ -23,6 +23,7 @@
 #include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
+#include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/utils.h>
 #include <wx/html/htmlwin.h>
