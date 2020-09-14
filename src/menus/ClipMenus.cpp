@@ -646,10 +646,8 @@ double DoClipMove
          uShifter = MakeTrackShifter::Call( *wt );
          if( uShifter->HitTest( t0 ) == TrackShifter::HitTestResult::Miss )
             uShifter.reset();
-         else {
-            wt = channel;
+         else
             break;
-         }
       }
 
       if (!uShifter)
@@ -660,16 +658,7 @@ double DoClipMove
          t0, viewInfo, trackList, syncLocked );
 
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
-      auto desiredSlideAmount = desiredT0 - t0;
-
-      // set it to a sample point, and minimum of 1 sample point
-      if (!right)
-         desiredSlideAmount *= -1;
-      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
-      nSamples = std::max(nSamples, 1.0);
-      desiredSlideAmount = nSamples / wt->GetRate();
-      if (!right)
-         desiredSlideAmount *= -1;
+      auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
       auto hSlideAmount =
          state.DoSlideHorizontal( desiredSlideAmount, trackList );

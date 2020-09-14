@@ -1344,6 +1344,20 @@ public:
 
    bool SyncLocks() override { return true; }
 
+   double HintOffsetLarger(double desiredOffset) override
+   {
+      // set it to a sample point, and minimum of 1 sample point
+      bool positive = (desiredOffset > 0);
+      if (!positive)
+         desiredOffset *= -1;
+      double nSamples = rint(mpTrack->GetRate() * desiredOffset);
+      nSamples = std::max(nSamples, 1.0);
+      desiredOffset = nSamples / mpTrack->GetRate();
+      if (!positive)
+         desiredOffset *= -1;
+      return desiredOffset;
+   }
+
 private:
    std::shared_ptr<WaveTrack> mpTrack;
 };

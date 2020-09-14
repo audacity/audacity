@@ -65,6 +65,16 @@ public:
    //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
    virtual bool SyncLocks() = 0;
 
+   //! Given amount to shift by horizontally, maybe adjust it from zero to suggest minimum distance
+   /*!
+    Any interval placement constraints, not necessarily met at the suggested offset
+    Default implementation returns the argument
+    @post `fabs(r) >= fabs(desiredOffset)`
+    @post `r == 0 || ((r > 0) == (desiredOffset > 0))`
+    @post (where `r` is return value)
+    */
+   virtual double HintOffsetLarger( double desiredOffset );
+
 protected:
    //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
