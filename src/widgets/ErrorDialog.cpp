@@ -64,7 +64,11 @@ ErrorDialog::ErrorDialog(
    S.StartHorizontalLay();
    {
       // wxART_ERROR and wxART_INFORMATION are other possibilities.
-      S.AddIcon( &wxArtProvider::GetBitmap( wxART_WARNING));
+//      S.AddIcon( &wxArtProvider::GetBitmap( wxART_WARNING));
+      S.SetBorder( 20 );
+      wxBitmap bitmap = wxArtProvider::GetBitmap(wxART_WARNING);
+      auto icon = safenew wxStaticBitmap(S.GetParent(), -1, bitmap);
+      S.AddWindow( icon );
       S.StartVerticalLay();
       {
          S.SetBorder(20);
