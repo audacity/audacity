@@ -65,6 +65,16 @@ public:
    //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
    virtual bool SyncLocks() = 0;
 
+   //! Given amount to shift by horizontally, maybe adjust it from zero to suggest minimum distance
+   /*!
+    Any interval placement constraints, not necessarily met at the suggested offset
+    Default implementation returns the argument
+    @post `fabs(r) >= fabs(desiredOffset)`
+    @post `r * desiredOffset >= 0` (i.e. signs are not opposite)
+    @post (where `r` is return value)
+    */
+   virtual double HintOffsetLarger( double desiredOffset );
+
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
    void CommonSelectInterval( const TrackInterval &interval );

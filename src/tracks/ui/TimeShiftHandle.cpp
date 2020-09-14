@@ -274,6 +274,11 @@ void TrackShifter::CommonSelectInterval(const TrackInterval &interval)
    });
 }
 
+double TrackShifter::HintOffsetLarger(double desiredOffset)
+{
+   return desiredOffset;
+}
+
 void TrackShifter::InitIntervals()
 {
    mMoving.clear();
@@ -959,6 +964,8 @@ UIHandle::Result TimeShiftHandle::Drag
 
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
+
+   // Note that mouse dragging doesn't use TrackShifter::HintOffsetLarger()
 
    mClipMoveState.DoSlideHorizontal( desiredSlideAmount, trackList );
 
