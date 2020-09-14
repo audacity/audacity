@@ -320,7 +320,7 @@ void DBConnection::CheckpointThread()
          // Reset
          mCheckpointActive = false;
 
-         if ( rc == SQLITE_OK ) {
+         if ( rc != SQLITE_OK ) {
             // Can't checkpoint -- maybe the device has too little space
             wxFileNameWrapper fName{ name };
             auto path = FileException::AbbreviatePath( fName );
