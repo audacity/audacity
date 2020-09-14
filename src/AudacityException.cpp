@@ -73,7 +73,7 @@ void MessageBoxException::DelayedHandlerAction()
       // give the user no useful added information.
       
       if ( wxAtomicDec( sOutstandingMessages ) == 0 )
-         if (helpUrl.IsEmpty())
+         if (ErrorHelpUrl().IsEmpty())
          {
             ::AudacityMessageBox(
                ErrorMessage(),
@@ -87,7 +87,7 @@ void MessageBoxException::DelayedHandlerAction()
                nullptr,
                (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
                ErrorMessage(),
-               helpUrl);
+               ErrorHelpUrl());
          }
 
       moved = true;

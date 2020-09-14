@@ -320,7 +320,7 @@ void DBConnection::CheckpointThread()
          // Reset
          mCheckpointActive = false;
 
-         if ( rc != SQLITE_OK ) {
+         if ( rc == SQLITE_OK ) {
             // Can't checkpoint -- maybe the device has too little space
             wxFileNameWrapper fName{ name };
             auto path = FileException::AbbreviatePath( fName );
@@ -436,7 +436,11 @@ TransactionScope::TransactionScope(
    mInTrans = TransactionStart(mName);
    if ( !mInTrans )
       // To do, improve the message
-      throw SimpleMessageBoxException( XO("Database error") );
+      throw SimpleMessageBoxException( 
+         XO("Database error.  Sorry, but we don't have more details."), 
+         XO("Warning"), 
+         "Error:_Disk_full_or_not_writable"
+      );
 }
 
 TransactionScope::~TransactionScope()

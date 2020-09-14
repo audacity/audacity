@@ -462,7 +462,10 @@ void OnPaste(const CommandContext &context)
             // Throw, so that any previous changes to the project in this loop
             // are discarded.
             throw SimpleMessageBoxException{
-               XO("Pasting one type of track into another is not allowed.")
+               XO("Pasting one type of track into another is not allowed.",
+               XO("Warning"), 
+               "Error:_Copying_or_Pasting"
+               )
             };
 
          // We should need this check only each time we visit the leading

@@ -28,6 +28,7 @@
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/artprov.h>
 
 #include "../AllThemeResources.h"
 #include "../ShuttleGui.h"
@@ -60,14 +61,20 @@ ErrorDialog::ErrorDialog(
 
    ShuttleGui S(this, eIsCreating);
 
-   S.StartVerticalLay();
+   S.StartHorizontalLay();
    {
-      S.SetBorder( 20 );
-      S.AddFixedText( message );
-      S.SetBorder( 2 );
-      S.AddStandardButtons( buttonMask );
+      // wxART_ERROR and wxART_INFORMATION are other possibilities.
+      S.AddIcon( &wxArtProvider::GetBitmap( wxART_WARNING));
+      S.StartVerticalLay();
+      {
+         S.SetBorder(20);
+         S.AddFixedText(message);
+         S.SetBorder(2);
+         S.AddStandardButtons(buttonMask);
+      }
+      S.EndVerticalLay();
    }
-   S.EndVerticalLay();
+   S.EndHorizontalLay();
 
    Layout();
    GetSizer()->Fit(this);

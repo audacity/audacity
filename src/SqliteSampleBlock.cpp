@@ -332,7 +332,9 @@ DBConnection *SqliteSampleBlock::Conn() const
    if (!pConnection) {
       throw SimpleMessageBoxException
       {
-         XO("Failed to open the project's database")
+         XO("Failed to open the project's database"),
+         XO("Warning"),
+         "Error:_Disk_full_or_not_writable"
       };
    }
    return pConnection.get();

@@ -1256,7 +1256,9 @@ void WaveTrack::Paste(double t0, const Track *src)
                      // Strong-guarantee in case of this path
                      // not that it matters.
                      throw SimpleMessageBoxException{
-                        XO("There is not enough room available to paste the selection")
+                        XO("There is not enough room available to paste the selection"),
+                        XO("Warning"),
+                        "Error:_Insufficient_space_in_track"
                      };
                }
             }
@@ -1276,7 +1278,9 @@ void WaveTrack::Paste(double t0, const Track *src)
          // Strong-guarantee in case of this path
          // not that it matters.
          throw SimpleMessageBoxException{
-            XO("There is not enough room available to paste the selection")
+            XO("There is not enough room available to paste the selection"),
+            XO("Warning"),
+            "Error:_Insufficient_space_in_track"
          };
 
       for (const auto &clip : other->mClips)
@@ -2385,7 +2389,9 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                 clip->GetEndTime() + end - start > clip2->GetStartTime())
                // Strong-guarantee in case of this path
                throw SimpleMessageBoxException{
-                  XO("There is not enough room available to expand the cut line")
+                  XO("There is not enough room available to expand the cut line"),
+                  XO("Warning"),
+                  "Error:_Insufficient_space_in_track"
                };
           }
       }

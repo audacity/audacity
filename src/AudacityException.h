@@ -64,6 +64,7 @@ protected:
 
    //! %Format the error message for this exception.
    virtual TranslatableString ErrorMessage() const = 0;
+   virtual wxString ErrorHelpUrl() const { return helpUrl; };
 
 private:
    TranslatableString caption; //!< Stored caption

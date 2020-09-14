@@ -51,6 +51,7 @@ public:
 protected:
    //! %Format an error message appropriate for the @ref Cause.
    TranslatableString ErrorMessage() const override;
+   wxString ErrorHelpUrl() const override;
 
 public:
    Cause cause;

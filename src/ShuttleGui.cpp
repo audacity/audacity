@@ -845,7 +845,8 @@ void ShuttleGuiBase::AddIcon(wxBitmap *pBmp)
    wxBitmapButton * pBtn;
    mpWind = pBtn = safenew wxBitmapButton(GetParent(), miId, *pBmp,
       wxDefaultPosition, wxDefaultSize, GetStyle( wxBU_AUTODRAW ) );
-   pBtn->SetWindowStyle( 0 );
+   pBtn->SetWindowStyle( wxBORDER_NONE  );
+   pBtn->SetCanFocus(false);
    UpdateSizersC();
 }
 

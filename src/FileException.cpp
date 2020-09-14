@@ -42,6 +42,24 @@ XO("Audacity successfully wrote a file in %s but failed to rename it as %s.");
       AbbreviatePath(fileName), renameTarget.GetFullName() );
 }
 
+wxString FileException::ErrorHelpUrl() const
+{
+   switch (cause) {
+   case Cause::Open:
+   case Cause::Read:
+      return "Error:_Opening_or_reading_file";
+      break;
+   case Cause::Write:
+   case Cause::Rename:
+      return "Error:_Disk_full_or_not_writable";
+   default:
+      break;
+   }
+
+   return "";
+}
+
+
 wxString FileException::AbbreviatePath( const wxFileName &fileName )
 {
    wxString target;
