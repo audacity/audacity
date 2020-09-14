@@ -633,8 +633,7 @@ double DoClipMove
 {
    auto &selectedRegion = viewInfo.selectedRegion;
 
-   // just dealing with clips in wave tracks for the moment. Note tracks??
-   if (track) return track->TypeSwitch<double>( [&]( WaveTrack *wt ) {
+   if (track) {
       ClipMoveState state;
 
       auto t0 = selectedRegion.t0();
@@ -642,8 +641,8 @@ double DoClipMove
       std::unique_ptr<TrackShifter> uShifter;
 
       // Find the first channel that has a clip at time t0
-      for (auto channel : TrackList::Channels(wt) ) {
-         uShifter = MakeTrackShifter::Call( *wt );
+      for (auto channel : TrackList::Channels(track) ) {
+         uShifter = MakeTrackShifter::Call( *track );
          if( uShifter->HitTest( t0 ) == TrackShifter::HitTestResult::Miss )
             uShifter.reset();
          else
@@ -680,7 +679,7 @@ double DoClipMove
       }
 
       return hSlideAmount;
-   } );
+   };
    return 0.0;
 }
 
