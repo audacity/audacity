@@ -479,6 +479,23 @@ void ClipMoveState::Init(
    }
 }
 
+const TrackInterval *ClipMoveState::CapturedInterval() const
+{
+   auto pTrack = mCapturedTrack.get();
+   if ( pTrack ) {
+      auto iter = shifters.find( pTrack );
+      if ( iter != shifters.end() ) {
+         auto &pShifter = iter->second;
+         if ( pShifter ) {
+            auto &intervals = pShifter->MovingIntervals();
+            if ( !intervals.empty() )
+               return &intervals[0];
+         }
+      }
+   }
+   return nullptr;
+}
+
 double ClipMoveState::DoSlideHorizontal(
    double desiredSlideAmount, TrackList &trackList )
 {
@@ -629,10 +646,10 @@ UIHandle::Result TimeShiftHandle::Click
        kPixelTolerance);
    mClipMoveState.snapLeft = -1;
    mClipMoveState.snapRight = -1;
-   mSnapPreferRightEdge =
-      mClipMoveState.capturedClip &&
-      (fabs(clickTime - mClipMoveState.capturedClip->GetEndTime()) <
-       fabs(clickTime - mClipMoveState.capturedClip->GetStartTime()));
+   auto pInterval = mClipMoveState.CapturedInterval();
+   mSnapPreferRightEdge = pInterval &&
+      (fabs(clickTime - pInterval->End()) <
+       fabs(clickTime - pInterval->Start()));
 
    return RefreshNone;
 }
@@ -661,11 +678,10 @@ namespace {
 
          // Adjust desiredSlideAmount using SnapManager
          if (pSnapManager) {
-            if (state.capturedClip) {
-               clipLeft = state.capturedClip->GetStartTime()
-                  + desiredSlideAmount;
-               clipRight = state.capturedClip->GetEndTime()
-                  + desiredSlideAmount;
+            auto pInterval = state.CapturedInterval();
+            if (pInterval) {
+               clipLeft = pInterval->Start() + desiredSlideAmount;
+               clipRight = pInterval->End() + desiredSlideAmount;
             }
             else {
                clipLeft = capturedTrack.GetStartTime() + desiredSlideAmount;

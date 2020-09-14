@@ -141,6 +141,10 @@ struct ClipMoveState {
       const ViewInfo &viewInfo,
       TrackList &trackList, bool syncLocked );
 
+   //! Return pointer to the first fixed interval of the captured track, if there is one
+   /*! Pointer may be invalidated by operations on the associated TrackShifter */
+   const TrackInterval *CapturedInterval() const;
+
    /*! @return actual slide amount, maybe adjusted toward zero from desired */
    double DoSlideHorizontal( double desiredSlideAmount, TrackList &trackList );
 
