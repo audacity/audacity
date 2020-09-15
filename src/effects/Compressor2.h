@@ -22,6 +22,7 @@
 
 class Plot;
 class ShuttleGui;
+class SliderTextCtrl;
 
 class SamplePreprocessor
 {
@@ -29,6 +30,7 @@ class SamplePreprocessor
       virtual float ProcessSample(float value) = 0;
       virtual float ProcessSample(float valueL, float valueR) = 0;
       virtual void Reset() = 0;
+      virtual void SetWindowSize(size_t windowSize) = 0;
 };
 
 class SlidingRmsPreprocessor : public SamplePreprocessor
@@ -39,6 +41,7 @@ class SlidingRmsPreprocessor : public SamplePreprocessor
       virtual float ProcessSample(float value);
       virtual float ProcessSample(float valueL, float valueR);
       virtual void Reset();
+      virtual void SetWindowSize(size_t windowSize);
 
       static const size_t REFRESH_WINDOW_EVERY = 1048576; // 1 MB
 
@@ -61,6 +64,7 @@ class SlidingMaxPreprocessor : public SamplePreprocessor
       virtual float ProcessSample(float value);
       virtual float ProcessSample(float valueL, float valueR);
       virtual void Reset();
+      virtual void SetWindowSize(size_t windowSize);
 
    private:
       std::vector<float> mWindow;
@@ -82,6 +86,10 @@ class EnvelopeDetector
       virtual void CalcInitialCondition(float value);
       inline float InitialCondition() const { return mInitialCondition; }
       inline size_t InitialConditionSize() const { return mInitialBlockSize; }
+
+      virtual void SetParams(float sampleRate, float attackTime,
+         float releaseTime) = 0;
+
    protected:
       size_t mPos;
       float mInitialCondition;
@@ -97,7 +105,10 @@ class ExpFitEnvelopeDetector : public EnvelopeDetector
 {
    public:
       ExpFitEnvelopeDetector(float rate, float attackTime, float releaseTime,
-         size_t buffer_size = 0);
+         size_t buffer_size);
+
+      virtual void SetParams(float sampleRate, float attackTime,
+         float releaseTime);
 
    private:
       double mAttackFactor;
@@ -110,10 +121,14 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
 {
    public:
       Pt1EnvelopeDetector(float rate, float attackTime, float releaseTime,
-         size_t buffer_size = 0, bool correctGain = true);
+         size_t buffer_size, bool correctGain = true);
       virtual void CalcInitialCondition(float value);
 
+      virtual void SetParams(float sampleRate, float attackTime,
+         float releaseTime);
+
    private:
+      bool mCorrectGain;
       double mGainCorrection;
       double mAttackFactor;
       double mReleaseFactor;
@@ -160,9 +175,17 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
+   bool SupportsRealtime() override;
 
    // EffectClientInterface implementation
 
+   unsigned GetAudioInCount() override;
+   unsigned GetAudioOutCount() override;
+   bool RealtimeInitialize() override;
+   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize() override;
+   size_t RealtimeProcess(int group, float **inbuf, float **outbuf,
+      size_t numSamples) override;
    bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -187,6 +210,7 @@ private:
    size_t CalcBufferSize(size_t sampleRate);
 
    void AllocPipeline();
+   void AllocRealtimePipeline();
    void FreePipeline();
    void SwapPipeline();
    bool ProcessOne(TrackIterRange<WaveTrack> range);
@@ -205,6 +229,7 @@ private:
    void UpdateUI();
    void UpdateCompressorPlot();
    void UpdateResponsePlot();
+   void UpdateRealtimeParams();
 
    static const int TAU_FACTOR = 5;
    static const size_t MIN_BUFFER_CAPACITY = 1048576; // 1MB
@@ -218,6 +243,7 @@ private:
    double mTrackLen;
    bool mProcStereo;
 
+   std::mutex mRealtimeMutex;
    std::unique_ptr<SamplePreprocessor> mPreproc;
    std::unique_ptr<EnvelopeDetector> mEnvelope;
 
@@ -246,9 +272,13 @@ private:
    static const size_t RESPONSE_PLOT_STEP_START = 2;
    static const size_t RESPONSE_PLOT_STEP_STOP = 3;
 
+   bool mIgnoreGuiEvents;
    Plot* mGainPlot;
    Plot* mResponsePlot;
-   bool mIgnoreGuiEvents;
+   wxChoice* mAlgorithmCtrl;
+   wxChoice* mPreprocCtrl;
+   SliderTextCtrl* mAttackTimeCtrl;
+   SliderTextCtrl* mLookaheadTimeCtrl;
 
    DECLARE_EVENT_TABLE()
 };

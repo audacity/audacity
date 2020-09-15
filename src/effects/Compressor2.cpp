@@ -133,6 +133,12 @@ void SlidingRmsPreprocessor::Reset()
    std::fill(mWindow.begin(), mWindow.end(), 0);
 }
 
+void SlidingRmsPreprocessor::SetWindowSize(size_t windowSize)
+{
+   mWindow.resize(windowSize);
+   Reset();
+}
+
 float SlidingRmsPreprocessor::DoProcessSample(float value)
 {
    if(mInsertCount > REFRESH_WINDOW_EVERY)
@@ -196,6 +202,13 @@ void SlidingMaxPreprocessor::Reset()
    mPos = 0;
    std::fill(mWindow.begin(), mWindow.end(), 0);
    std::fill(mMaxes.begin(), mMaxes.end(), 0);
+}
+
+void SlidingMaxPreprocessor::SetWindowSize(size_t windowSize)
+{
+   mWindow.resize(windowSize);
+   mMaxes.resize(windowSize);
+   Reset();
 }
 
 float SlidingMaxPreprocessor::DoProcessSample(float value)
@@ -272,8 +285,14 @@ ExpFitEnvelopeDetector::ExpFitEnvelopeDetector(
    float rate, float attackTime, float releaseTime, size_t bufferSize)
    : EnvelopeDetector(bufferSize)
 {
-   mAttackFactor = exp(-1.0 / (rate * attackTime));
-   mReleaseFactor = exp(-1.0 / (rate * releaseTime));
+   SetParams(rate, attackTime, releaseTime);
+}
+
+void ExpFitEnvelopeDetector::SetParams(
+   float sampleRate, float attackTime, float releaseTime)
+{
+   mAttackFactor = exp(-1.0 / (sampleRate * attackTime));
+   mReleaseFactor = exp(-1.0 / (sampleRate * releaseTime));
 }
 
 void ExpFitEnvelopeDetector::Follow()
@@ -361,17 +380,24 @@ void ExpFitEnvelopeDetector::Follow()
 Pt1EnvelopeDetector::Pt1EnvelopeDetector(
    float rate, float attackTime, float releaseTime, size_t bufferSize,
    bool correctGain)
-   : EnvelopeDetector(bufferSize)
+   : EnvelopeDetector(bufferSize),
+   mCorrectGain(correctGain)
+{
+   SetParams(rate, attackTime, releaseTime);
+}
+
+void Pt1EnvelopeDetector::SetParams(
+   float sampleRate, float attackTime, float releaseTime)
 {
    // Approximate peak amplitude correction factor.
-   if(correctGain)
+   if(mCorrectGain)
       mGainCorrection = 1.0 + exp(attackTime / 30.0);
    else
       mGainCorrection = 1.0;
 
-   mAttackFactor = 1.0 / (attackTime * rate);
-   mReleaseFactor  = 1.0 / (releaseTime  * rate);
-   mInitialBlockSize = std::min(size_t(rate * sqrt(attackTime)), bufferSize);
+   mAttackFactor = 1.0 / (attackTime * sampleRate);
+   mReleaseFactor  = 1.0 / (releaseTime  * sampleRate);
+   mInitialBlockSize = std::min(size_t(sampleRate * sqrt(attackTime)), mLookaheadBuffer.size());
 }
 
 void Pt1EnvelopeDetector::CalcInitialCondition(float value)
@@ -461,7 +487,11 @@ void PipelineBuffer::free()
 }
 
 EffectCompressor2::EffectCompressor2()
-   : mIgnoreGuiEvents(false)
+   : mIgnoreGuiEvents(false),
+   mAlgorithmCtrl(0),
+   mPreprocCtrl(0),
+   mAttackTimeCtrl(0),
+   mLookaheadTimeCtrl(0)
 {
    mAlgorithm = DEF_Algorithm;
    mCompressBy = DEF_CompressBy;
@@ -506,6 +536,84 @@ wxString EffectCompressor2::ManualPage()
 EffectType EffectCompressor2::GetType()
 {
    return EffectTypeProcess;
+}
+
+bool EffectCompressor2::SupportsRealtime()
+{
+#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
+   return true;
+#else
+   return false;
+#endif
+}
+
+unsigned EffectCompressor2::GetAudioInCount()
+{
+   return 2;
+}
+
+unsigned EffectCompressor2::GetAudioOutCount()
+{
+   return 2;
+}
+
+bool EffectCompressor2::RealtimeInitialize()
+{
+   SetBlockSize(512);
+   AllocRealtimePipeline();
+   mAlgorithmCtrl->Enable(false);
+   mPreprocCtrl->Enable(false);
+   mLookaheadTimeCtrl->Enable(false);
+   if(mAlgorithm == kExpFit)
+      mAttackTimeCtrl->Enable(false);
+   return true;
+}
+
+bool EffectCompressor2::RealtimeAddProcessor(
+   unsigned WXUNUSED(numChannels), float sampleRate)
+{
+   mSampleRate = sampleRate;
+   mProcStereo = true;
+   mPreproc = InitPreprocessor(mSampleRate);
+   mEnvelope = InitEnvelope(mSampleRate, mPipeline[0].size);
+
+   return true;
+}
+
+bool EffectCompressor2::RealtimeFinalize()
+{
+   mPreproc.reset(nullptr);
+   mEnvelope.reset(nullptr);
+   FreePipeline();
+   mAlgorithmCtrl->Enable(true);
+   mPreprocCtrl->Enable(true);
+   mLookaheadTimeCtrl->Enable(true);
+   if(mAlgorithm == kExpFit)
+      mAttackTimeCtrl->Enable(true);
+   return true;
+}
+
+size_t EffectCompressor2::RealtimeProcess(
+   int group, float **inbuf, float **outbuf, size_t numSamples)
+{
+   std::lock_guard<std::mutex> guard(mRealtimeMutex);
+   const size_t j = PIPELINE_DEPTH-1;
+   for(size_t i = 0; i < numSamples; ++i)
+   {
+      if(mPipeline[j].trackSize == mPipeline[j].size)
+      {
+         ProcessPipeline();
+         mPipeline[j].trackSize = 0;
+         SwapPipeline();
+      }
+
+      outbuf[0][i] = mPipeline[j][0][mPipeline[j].trackSize];
+      outbuf[1][i] = mPipeline[j][1][mPipeline[j].trackSize];
+      mPipeline[j][0][mPipeline[j].trackSize] = inbuf[0][i];
+      mPipeline[j][1][mPipeline[j].trackSize] = inbuf[1][i];
+      ++mPipeline[j].trackSize;
+   }
+   return numSamples;
 }
 
 // EffectClientInterface implementation
@@ -714,24 +822,22 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
 
-         wxChoice* ctrl = nullptr;
-
-         ctrl = S.Validator<wxGenericValidator>(&mAlgorithm)
+         mAlgorithmCtrl = S.Validator<wxGenericValidator>(&mAlgorithm)
             .AddChoice(XO("Envelope Algorithm:"),
                Msgids(kAlgorithmStrings, nAlgos),
                mAlgorithm);
 
-         wxSize box_size = ctrl->GetMinSize();
+         wxSize box_size = mAlgorithmCtrl->GetMinSize();
          int width = S.GetParent()->GetTextExtent(wxString::Format(
             "%sxxxx",  kAlgorithmStrings[nAlgos-1].Translation())).GetWidth();
          box_size.SetWidth(width);
-         ctrl->SetMinSize(box_size);
+         mAlgorithmCtrl->SetMinSize(box_size);
 
-         ctrl = S.Validator<wxGenericValidator>(&mCompressBy)
+         mPreprocCtrl = S.Validator<wxGenericValidator>(&mCompressBy)
             .AddChoice(XO("Compress based on:"),
                Msgids(kCompressByStrings, nBy),
                mCompressBy);
-         ctrl->SetMinSize(box_size);
+         mPreprocCtrl->SetMinSize(box_size);
 
          S.Validator<wxGenericValidator>(&mStereoInd)
             .AddCheckBox(XO("Compress stereo channels independently"),
@@ -784,12 +890,12 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 
          S.AddVariableText(XO("Attack Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Attack Time"))
+         mAttackTimeCtrl = S.Name(XO("Attack Time"))
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_AttackTime, MAX_AttackTime,
                MIN_AttackTime, ScaleToPrecision(SCL_AttackTime),
                &mAttackTime, SCL_AttackTime / 1000);
-         ctrl->SetMinTextboxWidth(textbox_width);
+         mAttackTimeCtrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -806,12 +912,12 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 
          S.AddVariableText(XO("Lookahead Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Lookahead Time"))
+         mLookaheadTimeCtrl = S.Name(XO("Lookahead Time"))
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_LookaheadTime, MAX_LookaheadTime,
                MIN_LookaheadTime, ScaleToPrecision(SCL_LookaheadTime),
                &mLookaheadTime);
-         ctrl->SetMinTextboxWidth(textbox_width);
+         mLookaheadTimeCtrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -986,6 +1092,24 @@ void EffectCompressor2::AllocPipeline()
    capacity = CalcBufferSize(maxSampleRate);
    for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
       mPipeline[i].init(capacity, stereoTrackFound);
+}
+
+void EffectCompressor2::AllocRealtimePipeline()
+{
+   mLookaheadLength =
+      std::max(0, int(round(mLookaheadTime * mSampleRate)));
+
+   size_t blockSize = std::max(mLookaheadLength, size_t(512));
+   if(mAlgorithm == kExpFit)
+   {
+      size_t riseTime = round(5.0 * (0.1 + mAttackTime)) * mSampleRate;
+      blockSize = std::max(blockSize, riseTime);
+   }
+   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+   {
+      mPipeline[i].init(blockSize, true);
+      mPipeline[i].size = blockSize;
+   }
 }
 
 void EffectCompressor2::FreePipeline()
@@ -1379,6 +1503,8 @@ void EffectCompressor2::UpdateUI()
 {
    UpdateCompressorPlot();
    UpdateResponsePlot();
+   if(mEnvelope.get() != nullptr)
+      UpdateRealtimeParams();
 }
 
 void EffectCompressor2::UpdateCompressorPlot()
@@ -1431,4 +1557,16 @@ void EffectCompressor2::UpdateResponsePlot()
       plot->ydata[i] = envelope->ProcessSample(preproc->ProcessSample(0));
 
    mResponsePlot->Refresh(false);
+}
+
+void EffectCompressor2::UpdateRealtimeParams()
+{
+   std::lock_guard<std::mutex> guard(mRealtimeMutex);
+   // TODO: extract it
+   size_t window_size =
+      std::max(1, int(round((mLookaheadTime + mLookbehindTime) * mSampleRate)));
+   mLookaheadLength = // TODO: depup this everywhere
+      std::max(0, int(round(mLookaheadTime * mSampleRate)));
+   mPreproc->SetWindowSize(window_size);
+   mEnvelope->SetParams(mSampleRate, mAttackTime, mReleaseTime);
 }
