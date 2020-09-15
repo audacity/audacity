@@ -11,12 +11,102 @@ Paul Licameli
 #ifndef __AUDACITY_TIMESHIFT_HANDLE__
 #define __AUDACITY_TIMESHIFT_HANDLE__
 
+#include <functional>
+#include <unordered_map>
+
+#include "../../AttachedVirtualFunction.h"
 #include "../../UIHandle.h"
 
 class SnapManager;
 class Track;
 using TrackArray = std::vector<Track*>;
 class TrackList;
+
+class Track;
+class TrackInterval;
+
+//! Abstract base class for policies to manipulate a track type with the Time Shift tool
+class TrackShifter {
+public:
+   virtual ~TrackShifter() = 0;
+   //! There is always an associated track
+   virtual Track &GetTrack() const = 0;
+
+   //! Possibilities for HitTest on the clicked track
+   enum class HitTestResult {
+      Miss,      //!< Don't shift anything
+      Intervals, //<! May shift other tracks' intervals, if clicked in selection
+      Track      //<! Shift selected track only as a whole
+   };
+
+   //! Decide how shift behaves, based on the track that is clicked in
+   /*! If the return value is Intervals, then some intervals may be marked moving as a side effect */
+   virtual HitTestResult HitTest( double time ) = 0;
+
+   using Intervals = std::vector<TrackInterval>;
+
+   //! Return special intervals of the track that will not move
+   const Intervals &FixedIntervals() const { return mFixed; }
+
+   //! Return special intervals of the track that may move
+   const Intervals &MovingIntervals() const { return mMoving; }
+   
+   //! Change intervals satisfying a predicate from fixed to moving
+   void UnfixIntervals(
+      std::function< bool( const TrackInterval& ) > pred );
+
+   //! Change all intervals from fixed to moving
+   void UnfixAll();
+
+   //! Notifies the shifter that a region is selected, so it may update its fixed and moving intervals
+   /*! A default implementation unfixes any of the intervals that intersect the given one */
+   virtual void SelectInterval( const TrackInterval &interval );
+
+   //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
+   virtual bool SyncLocks() = 0;
+
+   //! Given amount to shift by horizontally, maybe adjust it from zero to suggest minimum distance
+   /*!
+    Any interval placement constraints, not necessarily met at the suggested offset
+    Default implementation returns the argument
+    @post `fabs(r) >= fabs(desiredOffset)`
+    @post `r == 0 || ((r > 0) == (desiredOffset > 0))`
+    @post (where `r` is return value)
+    */
+   virtual double HintOffsetLarger( double desiredOffset );
+
+protected:
+   //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
+   /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
+   void InitIntervals();
+
+   Intervals mFixed;
+   Intervals mMoving;
+};
+
+//! Used in default of other reimplementations to shift any track as a whole, invoking Track::Offset()
+class CoarseTrackShifter final : public TrackShifter {
+public:
+   CoarseTrackShifter( Track &track );
+   ~CoarseTrackShifter() override;
+   Track &GetTrack() const override { return *mpTrack; }
+
+   HitTestResult HitTest( double ) override;
+
+   //! If any part of the track is selected, unfix all parts of it.
+   void SelectInterval( const TrackInterval & ) override;
+
+   //! Returns false
+   bool SyncLocks() override;
+
+private:
+   std::shared_ptr<Track> mpTrack;
+};
+
+struct MakeTrackShifterTag;
+using MakeTrackShifter = AttachedVirtualFunction<
+   MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track>;
+
 class ViewInfo;
 class WaveClip;
 class WaveTrack;
@@ -40,12 +130,32 @@ public:
 using TrackClipArray = std::vector <TrackClip>;
 
 struct ClipMoveState {
+   using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
+   
+   //! Will associate a TrackShifter with each track in the list
+   void Init(
+      Track &capturedTrack, //<! pHit if not null associates with this track
+      std::unique_ptr<TrackShifter> pHit, /*!<
+         If null, only capturedTrack (with any sister channels) shifts, as a whole */
+      double clickTime,
+      const ViewInfo &viewInfo,
+      TrackList &trackList, bool syncLocked );
+
+   //! Return pointer to the first fixed interval of the captured track, if there is one
+   /*! Pointer may be invalidated by operations on the associated TrackShifter */
+   const TrackInterval *CapturedInterval() const;
+
+   /*! @return actual slide amount, maybe adjusted toward zero from desired */
+   double DoSlideHorizontal( double desiredSlideAmount, TrackList &trackList );
+
+   std::shared_ptr<Track> mCapturedTrack;
+
    // non-NULL only if click was in a WaveTrack and without Shift key:
    WaveClip *capturedClip {};
 
-   bool capturedClipIsSelection {};
-   TrackArray trackExclusions {};
+   bool movingSelection {};
    double hSlideAmount {};
+   ShifterMap shifters;
    TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
@@ -54,9 +164,9 @@ struct ClipMoveState {
    void clear()
    {
       capturedClip = nullptr;
-      capturedClipIsSelection = false;
-      trackExclusions.clear();
+      movingSelection = false;
       hSlideAmount = 0;
+      shifters.clear();
       capturedClipArray.clear();
       snapLeft = snapRight = -1;
       mMouseClickX = 0;
@@ -73,19 +183,10 @@ public:
    explicit TimeShiftHandle
    ( const std::shared_ptr<Track> &pTrack, bool gripHit );
 
-   TimeShiftHandle &operator=(const TimeShiftHandle&) = default;
+   TimeShiftHandle &operator=(TimeShiftHandle&&) = default;
 
    bool IsGripHit() const { return mGripHit; }
-   std::shared_ptr<Track> GetTrack() const { return mCapturedTrack; }
-
-   // A utility function also used by menu commands
-   static void CreateListOfCapturedClips
-      ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-        TrackList &trackList, bool syncLocked, double clickTime );
-
-   // A utility function also used by menu commands
-   static void DoSlideHorizontal
-      ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack );
+   std::shared_ptr<Track> GetTrack() const = delete;
 
    // Try to move clips from one WaveTrack to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
@@ -135,7 +236,6 @@ private:
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
-   std::shared_ptr<Track> mCapturedTrack;
    wxRect mRect{};
 
    bool mDidSlideVertically{};
