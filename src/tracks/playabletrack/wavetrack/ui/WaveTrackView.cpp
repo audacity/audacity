@@ -1301,3 +1301,71 @@ void WaveTrackView::Draw(
 
    CommonTrackView::Draw( context, rect, iPass );
 }
+
+class WaveTrackShifter final : public TrackShifter {
+public:
+   WaveTrackShifter( WaveTrack &track )
+      : mpTrack{ track.SharedPointer<WaveTrack>() }
+   {
+      InitIntervals();
+   }
+   ~WaveTrackShifter() override {}
+   Track &GetTrack() const override { return *mpTrack; }
+
+   HitTestResult HitTest( double time ) override
+   {
+      auto pClip = mpTrack->GetClipAtTime( time );
+
+      if (!pClip)
+         return HitTestResult::Miss;
+
+      // Make a side-effect on our intervals
+      UnfixIntervals( [&](const auto &interval){
+         return
+            static_cast<WaveTrack::IntervalData*>(interval.Extra())
+               ->GetClip().get() == pClip;
+      } );
+      
+      return HitTestResult::Intervals;
+   }
+
+   void SelectInterval( const TrackInterval &interval ) override
+   {
+      UnfixIntervals( [&](auto &myInterval){
+         // Use a slightly different test from CommonSelectInterval, rounding times
+         // to exact samples according to the clip's rate
+         auto data =
+            static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
+         auto clip = data->GetClip().get();
+         return !(clip->IsClipStartAfterClip(interval.Start()) ||
+            clip->BeforeClip(interval.End()));
+      });
+   }
+
+   bool SyncLocks() override { return true; }
+
+   double HintOffsetLarger(double desiredOffset) override
+   {
+      // set it to a sample point, and minimum of 1 sample point
+      bool positive = (desiredOffset > 0);
+      if (!positive)
+         desiredOffset *= -1;
+      double nSamples = rint(mpTrack->GetRate() * desiredOffset);
+      nSamples = std::max(nSamples, 1.0);
+      desiredOffset = nSamples / mpTrack->GetRate();
+      if (!positive)
+         desiredOffset *= -1;
+      return desiredOffset;
+   }
+
+private:
+   std::shared_ptr<WaveTrack> mpTrack;
+};
+
+using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
+template<> template<> auto MakeWaveTrackShifter::Implementation() -> Function {
+   return [](WaveTrack &track) {
+      return std::make_unique<WaveTrackShifter>(track);
+   };
+}
+static MakeWaveTrackShifter registerMakeWaveTrackShifter;
