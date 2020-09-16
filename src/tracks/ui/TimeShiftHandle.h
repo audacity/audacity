@@ -75,6 +75,31 @@ public:
     */
    virtual double HintOffsetLarger( double desiredOffset );
 
+   //! Whether intervals may migrate to the other track, not yet checking all placement constraints */
+   /*! Default implementation returns true, iff:
+      tracks have same type, and corresponding positions in their channel groups, which have same size */
+   virtual bool MayMigrateTo( Track &otherTrack );
+
+   //! Remove all moving intervals from the track, if possible
+   /*! Default implementation does nothing */
+   virtual Intervals Detach();
+
+   //! Put moving intervals into the track, which may have migrated from another
+   /*! @return success
+   
+       In case of failure, track states are unspecified
+    
+       Default implementation does nothing and returns true */
+   virtual bool Attach( Intervals intervals );
+
+   //! When dragging is done, do (once) the final steps of migration (which may be expensive)
+   /*! @return success
+   
+       In case of failure, track states are unspecified
+    
+       Default implementation does nothing and returns true */
+   virtual bool FinishMigration();
+
 protected:
    //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
@@ -98,6 +123,9 @@ public:
 
    //! Returns false
    bool SyncLocks() override;
+
+   //! Returns false
+   bool MayMigrateTo(Track &otherTrack) override;
 
 private:
    std::shared_ptr<Track> mpTrack;
@@ -124,7 +152,6 @@ public:
 
    // These fields are used only during time-shift dragging
    WaveTrack *dstTrack;
-   std::shared_ptr<WaveClip> holder;
 };
 
 using TrackClipArray = std::vector <TrackClip>;
@@ -191,10 +218,10 @@ public:
    // Try to move clips from one WaveTrack to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
    // destination tracks.
-   static bool DoSlideVertical
-      ( ViewInfo &viewInfo, wxCoord xx,
-        ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
-        Track &dstTrack, double &desiredSlideAmount );
+   static bool DoSlideVertical(
+      ViewInfo &viewInfo, wxCoord xx,
+      ClipMoveState &state, TrackList &trackList,
+      Track &dstTrack, double &desiredSlideAmount );
 
    static UIHandlePtr HitAnywhere
       (std::weak_ptr<TimeShiftHandle> &holder,
