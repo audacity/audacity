@@ -265,6 +265,21 @@ bool TrackShifter::MayMigrateTo(Track &otherTrack)
    return false;
 }
 
+auto TrackShifter::Detach() -> Intervals
+{
+   return {};
+}
+
+bool TrackShifter::Attach( Intervals )
+{
+   return true;
+}
+
+bool TrackShifter::FinishMigration()
+{
+   return true;
+}
+
 void TrackShifter::InitIntervals()
 {
    mMoving.clear();
@@ -808,29 +823,29 @@ namespace {
       return ok;
    }
 
+   [[noreturn]] void MigrationFailure() {
+      // Tracks may be in an inconsistent state; throw to the application
+      // handler which restores consistency from undo history
+      throw SimpleMessageBoxException{
+         XO("Could not shift between tracks")};
+   }
+
    struct TemporaryClipRemover {
       TemporaryClipRemover( ClipMoveState &clipMoveState )
          : state( clipMoveState )
       {
          // Pluck the moving clips out of their tracks
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip)
-               trackClip.holder =
-                  // Assume track is wave because it has a clip
-                  static_cast<WaveTrack*>(trackClip.track)->
-                     RemoveAndReturnClip(pSrcClip);
-         }
+         for (auto &pair : state.shifters)
+            detached[pair.first] = pair.second->Detach();
       }
 
       void Fail()
       {
-         // Cause destructor to put all clips back where they came from
-         for ( auto &trackClip : state.capturedClipArray )
-            trackClip.dstTrack = static_cast<WaveTrack*>(trackClip.track);
+         failed = true;
       }
 
-      ~TemporaryClipRemover()
+      void Reinsert(
+         std::unordered_map< Track*, Track* > &correspondence )
       {
          // Complete (or roll back) the vertical move.
          // Put moving clips into their destination tracks
@@ -839,14 +854,23 @@ namespace {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                const auto dstTrack = trackClip.dstTrack;
-               // To do:  check and propagate the error!  Can't from a dtor
-               (void) dstTrack->AddClip(trackClip.holder);
                trackClip.track = dstTrack;
             }
+         }
+
+         for (auto &pair : detached) {
+            auto pTrack = pair.first;
+            if (!failed && correspondence.count(pTrack))
+               pTrack = correspondence[pTrack];
+            auto &pShifter = state.shifters[pTrack];
+            if (!pShifter->Attach( std::move( pair.second ) ))
+               MigrationFailure();
          }
       }
 
       ClipMoveState &state;
+      std::unordered_map<Track*, TrackShifter::Intervals> detached;
+      bool failed = false;
    };
 }
 
@@ -876,11 +900,13 @@ bool TimeShiftHandle::DoSlideVertical
    if (!ok) {
       // Failure, even with using tolerance.
       remover.Fail();
+      remover.Reinsert( correspondence );
       return false;
    }
 
    // Make the offset permanent; start from a "clean slate"
    state.mMouseClickX = xx;
+   remover.Reinsert( correspondence );
    return true;
 }
 
@@ -1009,26 +1035,11 @@ UIHandle::Result TimeShiftHandle::Release
 
    if ( !mDidSlideVertically && mClipMoveState.hSlideAmount == 0 )
       return result;
-   
-   for ( auto &trackClip : mClipMoveState.capturedClipArray )
-   {
-      WaveClip* pWaveClip = trackClip.clip;
-      // Note that per AddClipsToCaptured(Track *t, double t0, double t1),
-      // in the non-WaveTrack case, the code adds a NULL clip to capturedClipArray,
-      // so we have to check for that any time we're going to deref it.
-      // Previous code did not check it here, and that caused bug 367 crash.
-      if (pWaveClip &&
-         trackClip.track != trackClip.origTrack)
-      {
-         // Now that user has dropped the clip into a different track,
-         // make sure the sample rate matches the destination track.
-         // Assume the clip was dropped in a wave track
-         pWaveClip->Resample
-            (static_cast<WaveTrack*>(trackClip.track)->GetRate());
-         pWaveClip->MarkChanged();
-      }
-   }
 
+   for ( auto &pair : mClipMoveState.shifters )
+      if ( !pair.second->FinishMigration() )
+         MigrationFailure();
+   
    TranslatableString msg;
    bool consolidate;
    if (mDidSlideVertically) {
