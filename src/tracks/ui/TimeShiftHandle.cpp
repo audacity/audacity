@@ -825,7 +825,8 @@ namespace {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                const auto dstTrack = trackClip.dstTrack;
-               dstTrack->AddClip(std::move(trackClip.holder));
+               // To do:  check and propagate the error!  Can't from a dtor
+               (void) dstTrack->AddClip(trackClip.holder);
                trackClip.track = dstTrack;
             }
          }
