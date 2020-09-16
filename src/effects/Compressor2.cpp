@@ -831,6 +831,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       mResponsePlot = S.MinSize( { 200, 200 } )
          .AddPlot({}, 0, 5, -0.2, 1.2, XO("s"), XO(""),
             Ruler::IntFormat, Ruler::RealFormat, 2);
+      mResponsePlot->SetName(XO("Compressor step response plot"));
 
       plot = mResponsePlot->GetPlotData(0);
       plot->pen = std::unique_ptr<wxPen>(
@@ -1594,9 +1595,8 @@ void EffectCompressor2::UpdateCompressorPlot()
       plot->ydata[i] = plot->xdata[i] +
          LINEAR_TO_DB(CompressorGain(DB_TO_LINEAR(plot->xdata[i])));
 
-// XXX: accessibility but fails with TranslatableString required
-//   mGainPlot->SetName(wxString::Format(
-//      "Compressor gain reduction: %.1f dB", plot->ydata[xsize-1]));
+   mGainPlot->SetName(XO("Compressor gain reduction: %.1f dB").
+      Format(plot->ydata[xsize-1]));
    mGainPlot->Refresh(false);
 }
 
