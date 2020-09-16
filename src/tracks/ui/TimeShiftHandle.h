@@ -191,10 +191,10 @@ public:
    // Try to move clips from one WaveTrack to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
    // destination tracks.
-   static bool DoSlideVertical
-      ( ViewInfo &viewInfo, wxCoord xx,
-        ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
-        Track &dstTrack, double &desiredSlideAmount );
+   static bool DoSlideVertical(
+      ViewInfo &viewInfo, wxCoord xx,
+      ClipMoveState &state, TrackList &trackList,
+      Track &dstTrack, double &desiredSlideAmount );
 
    static UIHandlePtr HitAnywhere
       (std::weak_ptr<TimeShiftHandle> &holder,
