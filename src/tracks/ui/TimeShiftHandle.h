@@ -172,25 +172,6 @@ using MakeTrackShifter = AttachedVirtualFunction<
    MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track>;
 
 class ViewInfo;
-class WaveClip;
-class WaveTrack;
-
-class TrackClip
-{
-public:
-   TrackClip(Track *t, WaveClip *c);
-
-   ~TrackClip();
-
-   Track *track;
-   Track *origTrack;
-   WaveClip *clip;
-
-   // These fields are used only during time-shift dragging
-   WaveTrack *dstTrack;
-};
-
-using TrackClipArray = std::vector <TrackClip>;
 
 struct ClipMoveState {
    using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
@@ -217,24 +198,18 @@ struct ClipMoveState {
 
    std::shared_ptr<Track> mCapturedTrack;
 
-   // non-NULL only if click was in a WaveTrack and without Shift key:
-   WaveClip *capturedClip {};
-
    bool movingSelection {};
    double hSlideAmount {};
    ShifterMap shifters;
-   TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
    int mMouseClickX{};
 
    void clear()
    {
-      capturedClip = nullptr;
       movingSelection = false;
       hSlideAmount = 0;
       shifters.clear();
-      capturedClipArray.clear();
       snapLeft = snapRight = -1;
       mMouseClickX = 0;
    }
@@ -255,7 +230,7 @@ public:
    bool IsGripHit() const { return mGripHit; }
    std::shared_ptr<Track> GetTrack() const = delete;
 
-   // Try to move clips from one WaveTrack to another, before also moving
+   // Try to move clips from one track to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
    // destination tracks.
    static bool DoSlideVertical(
