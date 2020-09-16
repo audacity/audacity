@@ -474,14 +474,14 @@ private:
    // Before moving a clip into a track (or inserting a clip), use this
    // function to see if the times are valid (i.e. don't overlap with
    // existing clips).
-   bool CanInsertClip(WaveClip* clip, double &slideBy, double &tolerance);
+   bool CanInsertClip(WaveClip* clip, double &slideBy, double &tolerance) const;
 
    // Remove the clip from the track and return a SMART pointer to it.
    // You assume responsibility for its memory!
    std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
-   // Append a clip to the track
-   void AddClip(std::shared_ptr<WaveClip> &&clip); // Call using std::move
+   //! Append a clip to the track; which must have the same block factory as this track; return success
+   bool AddClip(const std::shared_ptr<WaveClip> &clip);
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.

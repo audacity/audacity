@@ -979,11 +979,16 @@ std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
       return {};
 }
 
-void WaveTrack::AddClip(std::shared_ptr<WaveClip> &&clip)
+bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 {
+   if (clip->GetSequence()->GetFactory() != this->mpFactory)
+      return false;
+
    // Uncomment the following line after we correct the problem of zero-length clips
    //if (CanInsertClip(clip))
-      mClips.push_back(std::move(clip)); // transfer ownership
+      mClips.push_back(clip); // transfer ownership
+
+   return true;
 }
 
 /*! @excsafety{Strong} */
@@ -2254,7 +2259,8 @@ bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
       return true;
 }
 
-bool WaveTrack::CanInsertClip(WaveClip* clip,  double &slideBy, double &tolerance)
+bool WaveTrack::CanInsertClip(
+   WaveClip* clip,  double &slideBy, double &tolerance) const
 {
    for (const auto &c : mClips)
    {

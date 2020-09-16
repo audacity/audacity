@@ -164,46 +164,6 @@ namespace
                          viewInfo.selectedRegion.t1() );
    }
 
-   WaveTrack *NthChannel(WaveTrack &leader, int nn)
-   {
-      if (nn < 0)
-         return nullptr;
-      return *TrackList::Channels( &leader ).begin().advance(nn);
-   }
-
-   int ChannelPosition(const Track *pChannel)
-   {
-      return static_cast<int>(
-         TrackList::Channels( pChannel )
-            .EndingAfter( pChannel ).size()
-      ) - 1;
-   }
-
-   // Don't count right channels.
-   WaveTrack *NthAudioTrack(TrackList &list, int nn)
-   {
-      if (nn >= 0) {
-         for ( auto pTrack : list.Leaders< WaveTrack >() )
-            if (nn -- == 0)
-               return pTrack;
-      }
-
-      return NULL;
-   }
-
-   // Don't count right channels.
-   int TrackPosition(TrackList &list, const Track *pFindTrack)
-   {
-      pFindTrack = *list.FindLeader(pFindTrack);
-      int nn = 0;
-      for ( auto pTrack : list.Leaders< const WaveTrack >() ) {
-         if (pTrack == pFindTrack)
-            return nn;
-         ++nn;
-      }
-      return -1;
-   }
-
    WaveClip *FindClipAtTime(WaveTrack *pTrack, double time)
    {
       if (pTrack) {
@@ -277,6 +237,63 @@ void TrackShifter::CommonSelectInterval(const TrackInterval &interval)
 double TrackShifter::HintOffsetLarger(double desiredOffset)
 {
    return desiredOffset;
+}
+
+bool TrackShifter::MayMigrateTo(Track &)
+{
+   return false;
+}
+
+bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
+{
+   auto &track = GetTrack();
+
+   // Both tracks need to be owned to decide this
+   auto pMyList = track.GetOwner().get();
+   auto pOtherList = otherTrack.GetOwner().get();
+   if (pMyList && pOtherList) {
+
+      // Can migrate to another track of the same kind...
+      if ( otherTrack.SameKindAs( track ) ) {
+
+         // ... with the same number of channels ...
+         auto myChannels = TrackList::Channels( &track );
+         auto otherChannels = TrackList::Channels( &otherTrack );
+         if (myChannels.size() == otherChannels.size()) {
+            
+            // ... and where this track and the other have corresponding
+            // positions
+            return myChannels.size() == 1 ||
+               std::distance(myChannels.first, pMyList->Find(&track)) ==
+               std::distance(otherChannels.first, pOtherList->Find(&otherTrack));
+
+         }
+
+      }
+
+   }
+   return false;
+}
+
+auto TrackShifter::Detach() -> Intervals
+{
+   return {};
+}
+
+bool TrackShifter::AdjustFit(
+   const Track &, const Intervals&, double &, double)
+{
+   return false;
+}
+
+bool TrackShifter::Attach( Intervals )
+{
+   return true;
+}
+
+bool TrackShifter::FinishMigration()
+{
+   return true;
 }
 
 void TrackShifter::InitIntervals()
@@ -724,63 +741,89 @@ namespace {
       }
    }
 
+   using Correspondence = std::unordered_map< Track*, Track* >;
+
    bool FindCorrespondence(
-      TrackList &trackList, Track &track, Track &capturedTrack,
+      Correspondence &correspondence,
+      TrackList &trackList, Track &track,
       ClipMoveState &state)
    {
-      const int diff =
-         TrackPosition(trackList, &track) -
-         TrackPosition(trackList, &capturedTrack);
-      for ( auto &trackClip : state.capturedClipArray ) {
-         if (trackClip.clip) {
-            // Move all clips up or down by an equal count of audio tracks.
-            // Can only move between tracks with equal numbers of channels,
-            // and among corresponding channels.
+      auto &capturedTrack = state.mCapturedTrack;
+      auto sameType = [&]( auto pTrack ){
+         return capturedTrack->SameKindAs( *pTrack );
+      };
+      if (!sameType(&track))
+         return false;
+   
+      // All tracks of the same kind as the captured track
+      auto range = trackList.Any() + sameType;
 
-            Track *const pSrcTrack = trackClip.track;
-            auto pDstTrack = NthAudioTrack(trackList,
-               diff + TrackPosition(trackList, pSrcTrack));
-            if (!pDstTrack)
+      // Find how far this track would shift down among those (signed)
+      const auto myPosition =
+         std::distance( range.first, trackList.Find( capturedTrack.get() ) );
+      const auto otherPosition =
+         std::distance( range.first, trackList.Find( &track ) );
+      auto diff = otherPosition - myPosition;
+
+      // Point to destination track
+      auto iter = range.first.advance( diff > 0 ? diff : 0 );
+
+      for (auto pTrack : range) {
+         auto &pShifter = state.shifters[pTrack];
+         if ( !pShifter->MovingIntervals().empty() ) {
+            // One of the interesting tracks
+
+            auto pOther = *iter;
+            if ( diff < 0 || !pOther )
+               // No corresponding track
                return false;
 
-            if (TrackList::Channels(pSrcTrack).size() !=
-                TrackList::Channels(pDstTrack).size())
+            if ( !pShifter->MayMigrateTo(*pOther) )
+               // Rejected for other reason
                return false;
 
-            auto pDstChannel = NthChannel(
-               *pDstTrack, ChannelPosition(pSrcTrack));
-
-            if (!pDstChannel) {
-               wxASSERT(false);
-               return false;
-            }
-
-           trackClip.dstTrack = pDstChannel;
+            correspondence[ pTrack ] = pOther;
          }
+
+         if ( diff < 0 )
+            ++diff; // Still consuming initial tracks
+         else
+            ++iter; // Safe to increment TrackIter even at end of range
       }
+
+      // Record the correspondence in TrackClip
+      for ( auto &trackClip: state.capturedClipArray )
+         if ( trackClip.clip )
+            trackClip.dstTrack =
+               dynamic_cast<WaveTrack*>(correspondence[ trackClip.track ]);
+
       return true;
    }
 
+   using DetachedIntervals =
+      std::unordered_map<Track*, TrackShifter::Intervals>;
+
    bool CheckFit(
-      const ViewInfo &viewInfo, wxCoord xx, ClipMoveState &state,
+      ClipMoveState &state, const Correspondence &correspondence,
+      const DetachedIntervals &intervals,
       double tolerance, double &desiredSlideAmount )
    {
-      (void)xx;// Compiler food
-      (void)viewInfo;// Compiler food
       bool ok = true;
       double firstTolerance = tolerance;
-
+      
       // The desiredSlideAmount may change and the tolerance may get used up.
       for ( unsigned iPass = 0; iPass < 2 && ok; ++iPass ) {
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip) {
-               ok = trackClip.dstTrack->CanInsertClip(
-                  pSrcClip, desiredSlideAmount, tolerance );
-               if( !ok  )
-                  break;
-            }
+         for ( auto &pair : state.shifters ) {
+            auto *pSrcTrack = pair.first;
+            auto iter = correspondence.find( pSrcTrack );
+            if ( iter != correspondence.end() )
+               if( auto *pOtherTrack = iter->second )
+                  if ( !(ok = pair.second->AdjustFit(
+                     *pOtherTrack, intervals.at(pSrcTrack),
+                     desiredSlideAmount /*in,out*/, tolerance)) )
+                     break;
          }
+
          // If it fits ok, desiredSlideAmount could have been updated to get
          // the clip to fit.
          // Check again, in the new position, this time with zero tolerance.
@@ -793,19 +836,20 @@ namespace {
       return ok;
    }
 
+   [[noreturn]] void MigrationFailure() {
+      // Tracks may be in an inconsistent state; throw to the application
+      // handler which restores consistency from undo history
+      throw SimpleMessageBoxException{
+         XO("Could not shift between tracks")};
+   }
+
    struct TemporaryClipRemover {
       TemporaryClipRemover( ClipMoveState &clipMoveState )
          : state( clipMoveState )
       {
          // Pluck the moving clips out of their tracks
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip)
-               trackClip.holder =
-                  // Assume track is wave because it has a clip
-                  static_cast<WaveTrack*>(trackClip.track)->
-                     RemoveAndReturnClip(pSrcClip);
-         }
+         for (auto &pair : state.shifters)
+            detached[pair.first] = pair.second->Detach();
       }
 
       void Fail()
@@ -813,9 +857,11 @@ namespace {
          // Cause destructor to put all clips back where they came from
          for ( auto &trackClip : state.capturedClipArray )
             trackClip.dstTrack = static_cast<WaveTrack*>(trackClip.track);
+         failed = true;
       }
 
-      ~TemporaryClipRemover()
+      void Reinsert(
+         std::unordered_map< Track*, Track* > &correspondence )
       {
          // Complete (or roll back) the vertical move.
          // Put moving clips into their destination tracks
@@ -824,22 +870,33 @@ namespace {
             WaveClip *const pSrcClip = trackClip.clip;
             if (pSrcClip) {
                const auto dstTrack = trackClip.dstTrack;
-               dstTrack->AddClip(std::move(trackClip.holder));
                trackClip.track = dstTrack;
             }
+         }
+
+         for (auto &pair : detached) {
+            auto pTrack = pair.first;
+            if (!failed && correspondence.count(pTrack))
+               pTrack = correspondence[pTrack];
+            auto &pShifter = state.shifters[pTrack];
+            if (!pShifter->Attach( std::move( pair.second ) ))
+               MigrationFailure();
          }
       }
 
       ClipMoveState &state;
+      DetachedIntervals detached;
+      bool failed = false;
    };
 }
 
 bool TimeShiftHandle::DoSlideVertical
 ( ViewInfo &viewInfo, wxCoord xx,
-  ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
+  ClipMoveState &state, TrackList &trackList,
   Track &dstTrack, double &desiredSlideAmount )
 {
-   if (!FindCorrespondence( trackList, dstTrack, capturedTrack, state))
+   Correspondence correspondence;
+   if (!FindCorrespondence( correspondence, trackList, dstTrack, state ))
       return false;
 
    // Having passed that test, remove clips temporarily from their
@@ -854,42 +911,19 @@ bool TimeShiftHandle::DoSlideVertical
    // i.e. one pixel tolerance at current zoom.
    double tolerance =
       viewInfo.PositionToTime(xx + 1) - viewInfo.PositionToTime(xx);
-   bool ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
+   bool ok = CheckFit( state, correspondence, remover.detached,
+      tolerance, desiredSlideAmount /*in,out*/ );
 
    if (!ok) {
       // Failure, even with using tolerance.
       remover.Fail();
-
-      // Failure -- we'll put clips back where they were
-      // ok will next indicate if a horizontal slide is OK.
-      tolerance = 0.0;
-      desiredSlideAmount = slide;
-      ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
-      for ( auto &trackClip : state.capturedClipArray)  {
-         WaveClip *const pSrcClip = trackClip.clip;
-         if (pSrcClip){
-            
-            // Attempt to move to a new track did not work.
-            // Put the clip back appropriately shifted!
-            if( ok)
-               trackClip.holder->Offset(slide);
-         }
-      }
-      // Make the offset permanent; start from a "clean slate"
-      if( ok ) {
-         state.mMouseClickX = xx;
-         if (state.movingSelection) {
-            // Slide the selection, too
-            viewInfo.selectedRegion.move( slide );
-         }
-         state.hSlideAmount = 0;
-      }
-
+      remover.Reinsert( correspondence );
       return false;
    }
 
    // Make the offset permanent; start from a "clean slate"
    state.mMouseClickX = xx;
+   remover.Reinsert( correspondence );
    return true;
 }
 
@@ -951,33 +985,25 @@ UIHandle::Result TimeShiftHandle::Drag
          *mClipMoveState.mCapturedTrack, *pTrack );
 
    // Scroll during vertical drag.
-   // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
-   bool slidVertically = false;
-
    // If the mouse is over a track that isn't the captured track,
    // decide which tracks the captured clips should go to.
-   bool fail = (
+   // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
+   bool slidVertically = (
       mClipMoveState.capturedClip &&
        pTrack != mClipMoveState.mCapturedTrack
        /* && !mCapturedClipIsSelection*/
       && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
-            if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-                     trackList, *mClipMoveState.mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
-               mClipMoveState.mCapturedTrack = pTrack;
-               mDidSlideVertically = true;
-            }
-            else
-               return true;
-
-            // Not done yet, check for horizontal movement.
-            slidVertically = true;
+         if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
+                  trackList, *pTrack, desiredSlideAmount ) ) {
+            mClipMoveState.mCapturedTrack = pTrack;
+            mDidSlideVertically = true;
+            return true;
+         }
+         else
             return false;
-        })
+     })
    );
    
-   if (fail)
-      return RefreshAll;
-
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
 
@@ -1026,26 +1052,11 @@ UIHandle::Result TimeShiftHandle::Release
 
    if ( !mDidSlideVertically && mClipMoveState.hSlideAmount == 0 )
       return result;
-   
-   for ( auto &trackClip : mClipMoveState.capturedClipArray )
-   {
-      WaveClip* pWaveClip = trackClip.clip;
-      // Note that per AddClipsToCaptured(Track *t, double t0, double t1),
-      // in the non-WaveTrack case, the code adds a NULL clip to capturedClipArray,
-      // so we have to check for that any time we're going to deref it.
-      // Previous code did not check it here, and that caused bug 367 crash.
-      if (pWaveClip &&
-         trackClip.track != trackClip.origTrack)
-      {
-         // Now that user has dropped the clip into a different track,
-         // make sure the sample rate matches the destination track.
-         // Assume the clip was dropped in a wave track
-         pWaveClip->Resample
-            (static_cast<WaveTrack*>(trackClip.track)->GetRate());
-         pWaveClip->MarkChanged();
-      }
-   }
 
+   for ( auto &pair : mClipMoveState.shifters )
+      if ( !pair.second->FinishMigration() )
+         MigrationFailure();
+   
    TranslatableString msg;
    bool consolidate;
    if (mDidSlideVertically) {
