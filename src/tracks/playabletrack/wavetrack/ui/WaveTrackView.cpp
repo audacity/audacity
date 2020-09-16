@@ -1344,6 +1344,11 @@ public:
 
    bool SyncLocks() override { return true; }
 
+   bool MayMigrateTo(Track &other) override
+   {
+      return TrackShifter::CommonMayMigrateTo(other);
+   }
+
    double HintOffsetLarger(double desiredOffset) override
    {
       // set it to a sample point, and minimum of 1 sample point

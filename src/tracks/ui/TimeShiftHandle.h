@@ -75,9 +75,18 @@ public:
     */
    virtual double HintOffsetLarger( double desiredOffset );
 
+   //! Whether intervals may migrate to the other track, not yet checking all placement constraints */
+   /*! Default implementation returns false */
+   virtual bool MayMigrateTo( Track &otherTrack );
+
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
    void CommonSelectInterval( const TrackInterval &interval );
+
+   /*! May be useful to override `MayMigrateTo()`, if certain other needed overrides are given.
+       Returns true, iff: tracks have same type, and corresponding positions in their channel groups,
+       which have same size */
+   bool CommonMayMigrateTo( Track &otherTrack );
 
    //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
