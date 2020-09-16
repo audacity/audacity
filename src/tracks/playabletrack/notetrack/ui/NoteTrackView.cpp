@@ -751,6 +751,8 @@ public:
 
    bool SyncLocks() override { return true; }
 
+   bool MayMigrateTo(Track &otherTrack) override { return false; }
+
 private:
    std::shared_ptr<NoteTrack> mpTrack;
 };

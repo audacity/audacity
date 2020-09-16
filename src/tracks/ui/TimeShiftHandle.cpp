@@ -164,46 +164,6 @@ namespace
                          viewInfo.selectedRegion.t1() );
    }
 
-   WaveTrack *NthChannel(WaveTrack &leader, int nn)
-   {
-      if (nn < 0)
-         return nullptr;
-      return *TrackList::Channels( &leader ).begin().advance(nn);
-   }
-
-   int ChannelPosition(const Track *pChannel)
-   {
-      return static_cast<int>(
-         TrackList::Channels( pChannel )
-            .EndingAfter( pChannel ).size()
-      ) - 1;
-   }
-
-   // Don't count right channels.
-   WaveTrack *NthAudioTrack(TrackList &list, int nn)
-   {
-      if (nn >= 0) {
-         for ( auto pTrack : list.Leaders< WaveTrack >() )
-            if (nn -- == 0)
-               return pTrack;
-      }
-
-      return NULL;
-   }
-
-   // Don't count right channels.
-   int TrackPosition(TrackList &list, const Track *pFindTrack)
-   {
-      pFindTrack = *list.FindLeader(pFindTrack);
-      int nn = 0;
-      for ( auto pTrack : list.Leaders< const WaveTrack >() ) {
-         if (pTrack == pFindTrack)
-            return nn;
-         ++nn;
-      }
-      return -1;
-   }
-
    WaveClip *FindClipAtTime(WaveTrack *pTrack, double time)
    {
       if (pTrack) {
@@ -274,6 +234,37 @@ double TrackShifter::HintOffsetLarger(double desiredOffset)
    return desiredOffset;
 }
 
+bool TrackShifter::MayMigrateTo(Track &otherTrack)
+{
+   auto &track = GetTrack();
+
+   // Both tracks need to be owned to decide this
+   auto pMyList = track.GetOwner().get();
+   auto pOtherList = otherTrack.GetOwner().get();
+   if (pMyList && pOtherList) {
+
+      // Can migrate to another track of the same kind...
+      if ( otherTrack.SameKindAs( track ) ) {
+
+         // ... with the same number of channels ...
+         auto myChannels = TrackList::Channels( &track );
+         auto otherChannels = TrackList::Channels( &otherTrack );
+         if (myChannels.size() == otherChannels.size()) {
+            
+            // ... and where this track and the other have corresponding
+            // positions
+            return myChannels.size() == 1 ||
+               std::distance(myChannels.first, pMyList->Find(&track)) ==
+               std::distance(otherChannels.first, pOtherList->Find(&otherTrack));
+
+         }
+
+      }
+
+   }
+   return false;
+}
+
 void TrackShifter::InitIntervals()
 {
    mMoving.clear();
@@ -299,6 +290,11 @@ void CoarseTrackShifter::SelectInterval( const TrackInterval & )
 }
 
 bool CoarseTrackShifter::SyncLocks()
+{
+   return false;
+}
+
+bool CoarseTrackShifter::MayMigrateTo(Track &)
 {
    return false;
 }
@@ -724,41 +720,59 @@ namespace {
       }
    }
 
+   using Correspondence = std::unordered_map< Track*, Track* >;
+
    bool FindCorrespondence(
+      Correspondence &correspondence,
       TrackList &trackList, Track &track,
       ClipMoveState &state)
    {
-      Track &capturedTrack = *state.mCapturedTrack;
-      const int diff =
-         TrackPosition(trackList, &track) -
-         TrackPosition(trackList, &capturedTrack);
-      for ( auto &trackClip : state.capturedClipArray ) {
-         if (trackClip.clip) {
-            // Move all clips up or down by an equal count of audio tracks.
-            // Can only move between tracks with equal numbers of channels,
-            // and among corresponding channels.
+      auto &capturedTrack = state.mCapturedTrack;
+      auto sameType = [&]( auto pTrack ){
+         return capturedTrack->SameKindAs( *pTrack );
+      };
+   
+      // All tracks of the same kind as the captured track
+      auto range = trackList.Any() + sameType;
 
-            Track *const pSrcTrack = trackClip.track;
-            auto pDstTrack = NthAudioTrack(trackList,
-               diff + TrackPosition(trackList, pSrcTrack));
-            if (!pDstTrack)
+      // Find how far this track would shift down among those (signed)
+      const auto myPosition =
+         std::distance( range.first, trackList.Find( capturedTrack.get() ) );
+      const auto otherPosition =
+         std::distance( range.first, trackList.Find( &track ) );
+      auto diff = otherPosition - myPosition;
+
+      // Point to destination track
+      auto iter = range.first.advance( diff > 0 ? diff : 0 );
+
+      for (auto pTrack : range) {
+         auto &pShifter = state.shifters[pTrack];
+         if ( !pShifter->MovingIntervals().empty() ) {
+            // One of the interesting tracks
+
+            auto pOther = *iter;
+            if ( diff < 0 || !pOther )
+               // No corresponding track
                return false;
 
-            if (TrackList::Channels(pSrcTrack).size() !=
-                TrackList::Channels(pDstTrack).size())
+            if ( !pShifter->MayMigrateTo(*pOther) )
+               // Rejected for other reason
                return false;
 
-            auto pDstChannel = NthChannel(
-               *pDstTrack, ChannelPosition(pSrcTrack));
-
-            if (!pDstChannel) {
-               wxASSERT(false);
-               return false;
-            }
-
-           trackClip.dstTrack = pDstChannel;
+            correspondence[ pTrack ] = pOther;
          }
+
+         if ( diff < 0 )
+            ++diff; // Still consuming initial tracks
+         else
+            ++iter; // Safe to increment TrackIter even at end of range
       }
+
+      // Record the correspondence in TrackClip
+      for ( auto &trackClip: state.capturedClipArray )
+         trackClip.dstTrack =
+            dynamic_cast<WaveTrack*>(correspondence[ trackClip.track ]);
+
       return true;
    }
 
@@ -841,7 +855,8 @@ bool TimeShiftHandle::DoSlideVertical
   ClipMoveState &state, TrackList &trackList,
   Track &dstTrack, double &desiredSlideAmount )
 {
-   if (!FindCorrespondence( trackList, dstTrack, state ))
+   Correspondence correspondence;
+   if (!FindCorrespondence( correspondence, trackList, dstTrack, state ))
       return false;
 
    // Having passed that test, remove clips temporarily from their

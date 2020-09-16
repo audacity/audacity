@@ -75,6 +75,11 @@ public:
     */
    virtual double HintOffsetLarger( double desiredOffset );
 
+   //! Whether intervals may migrate to the other track, not yet checking all placement constraints */
+   /*! Default implementation returns true, iff:
+      tracks have same type, and corresponding positions in their channel groups, which have same size */
+   virtual bool MayMigrateTo( Track &otherTrack );
+
 protected:
    //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
@@ -98,6 +103,9 @@ public:
 
    //! Returns false
    bool SyncLocks() override;
+
+   //! Returns false
+   bool MayMigrateTo(Track &otherTrack) override;
 
 private:
    std::shared_ptr<Track> mpTrack;

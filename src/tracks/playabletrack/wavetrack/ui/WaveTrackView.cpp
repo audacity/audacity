@@ -1344,6 +1344,8 @@ public:
 
    bool SyncLocks() override { return true; }
 
+   // Default behavior is right for MayMigrateTo()
+
    double HintOffsetLarger(double desiredOffset) override
    {
       // set it to a sample point, and minimum of 1 sample point
