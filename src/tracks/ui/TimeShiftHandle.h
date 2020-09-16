@@ -79,6 +79,26 @@ public:
    /*! Default implementation returns false */
    virtual bool MayMigrateTo( Track &otherTrack );
 
+   //! Remove all moving intervals from the track, if possible
+   /*! Default implementation does nothing */
+   virtual Intervals Detach();
+
+   //! Put moving intervals into the track, which may have migrated from another
+   /*! @return success
+   
+       In case of failure, track states are unspecified
+    
+       Default implementation does nothing and returns true */
+   virtual bool Attach( Intervals intervals );
+
+   //! When dragging is done, do (once) the final steps of migration (which may be expensive)
+   /*! @return success
+   
+       In case of failure, track states are unspecified
+    
+       Default implementation does nothing and returns true */
+   virtual bool FinishMigration();
+
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
    void CommonSelectInterval( const TrackInterval &interval );
@@ -133,7 +153,6 @@ public:
 
    // These fields are used only during time-shift dragging
    WaveTrack *dstTrack;
-   std::shared_ptr<WaveClip> holder;
 };
 
 using TrackClipArray = std::vector <TrackClip>;

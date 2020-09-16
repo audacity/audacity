@@ -10,6 +10,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackView.h"
 
+#include <unordered_set>
+
 #include "CutlineHandle.h"
 
 #include "../../../../Experimental.h"
@@ -1363,8 +1365,48 @@ public:
       return desiredOffset;
    }
 
+   Intervals Detach() override
+   {
+      for ( auto &interval: mMoving ) {
+         auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         auto pClip = pData->GetClip().get();
+         // interval will still hold the clip, so ignore the return:
+         (void) mpTrack->RemoveAndReturnClip(pClip);
+         mMigrated.erase(pClip);
+      }
+      return std::move( mMoving );
+   }
+
+   bool Attach( Intervals intervals ) override
+   {
+      for (auto &interval : intervals) {
+         auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         auto pClip = pData->GetClip();
+         if ( !mpTrack->AddClip( pClip ) )
+            return false;
+         mMigrated.insert( pClip.get() );
+         mMoving.emplace_back( std::move( interval ) );
+      }
+      return true;
+   }
+
+   bool FinishMigration() override
+   {
+      auto rate = mpTrack->GetRate();
+      for (auto pClip : mMigrated) {
+         // Now that user has dropped the clip into a different track,
+         // make sure the sample rate matches the destination track.
+         pClip->Resample(rate);
+         pClip->MarkChanged();
+      }
+      return true;
+   }
+
 private:
    std::shared_ptr<WaveTrack> mpTrack;
+
+   // Clips that may require resampling
+   std::unordered_set<WaveClip *> mMigrated;
 };
 
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
