@@ -16,19 +16,17 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
-#include "../../NoteTrack.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../Snap.h"
+#include "../../Track.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UndoManager.h"
-#include "../../WaveClip.h"
 #include "../../ViewInfo.h"
-#include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
 TimeShiftHandle::TimeShiftHandle
@@ -804,17 +802,13 @@ UIHandle::Result TimeShiftHandle::Drag
    bool slidVertically = (
        pTrack != mClipMoveState.mCapturedTrack
        /* && !mCapturedClipIsSelection*/
-      && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
-         if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-                  trackList, *pTrack, desiredSlideAmount ) ) {
-            mClipMoveState.mCapturedTrack = pTrack;
-            mDidSlideVertically = true;
-            return true;
-         }
-         else
-            return false;
-     })
-   );
+      && DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
+                  trackList, *pTrack, desiredSlideAmount ) );
+   if (slidVertically)
+   {
+      mClipMoveState.mCapturedTrack = pTrack;
+      mDidSlideVertically = true;
+   }
    
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
