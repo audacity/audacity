@@ -725,9 +725,10 @@ namespace {
    }
 
    bool FindCorrespondence(
-      TrackList &trackList, Track &track, Track &capturedTrack,
+      TrackList &trackList, Track &track,
       ClipMoveState &state)
    {
+      Track &capturedTrack = *state.mCapturedTrack;
       const int diff =
          TrackPosition(trackList, &track) -
          TrackPosition(trackList, &capturedTrack);
@@ -836,10 +837,10 @@ namespace {
 
 bool TimeShiftHandle::DoSlideVertical
 ( ViewInfo &viewInfo, wxCoord xx,
-  ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
+  ClipMoveState &state, TrackList &trackList,
   Track &dstTrack, double &desiredSlideAmount )
 {
-   if (!FindCorrespondence( trackList, dstTrack, capturedTrack, state))
+   if (!FindCorrespondence( trackList, dstTrack, state ))
       return false;
 
    // Having passed that test, remove clips temporarily from their
@@ -859,32 +860,6 @@ bool TimeShiftHandle::DoSlideVertical
    if (!ok) {
       // Failure, even with using tolerance.
       remover.Fail();
-
-      // Failure -- we'll put clips back where they were
-      // ok will next indicate if a horizontal slide is OK.
-      tolerance = 0.0;
-      desiredSlideAmount = slide;
-      ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
-      for ( auto &trackClip : state.capturedClipArray)  {
-         WaveClip *const pSrcClip = trackClip.clip;
-         if (pSrcClip){
-            
-            // Attempt to move to a new track did not work.
-            // Put the clip back appropriately shifted!
-            if( ok)
-               trackClip.holder->Offset(slide);
-         }
-      }
-      // Make the offset permanent; start from a "clean slate"
-      if( ok ) {
-         state.mMouseClickX = xx;
-         if (state.movingSelection) {
-            // Slide the selection, too
-            viewInfo.selectedRegion.move( slide );
-         }
-         state.hSlideAmount = 0;
-      }
-
       return false;
    }
 
@@ -951,33 +926,25 @@ UIHandle::Result TimeShiftHandle::Drag
          *mClipMoveState.mCapturedTrack, *pTrack );
 
    // Scroll during vertical drag.
-   // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
-   bool slidVertically = false;
-
    // If the mouse is over a track that isn't the captured track,
    // decide which tracks the captured clips should go to.
-   bool fail = (
+   // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
+   bool slidVertically = (
       mClipMoveState.capturedClip &&
        pTrack != mClipMoveState.mCapturedTrack
        /* && !mCapturedClipIsSelection*/
       && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
-            if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-                     trackList, *mClipMoveState.mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
-               mClipMoveState.mCapturedTrack = pTrack;
-               mDidSlideVertically = true;
-            }
-            else
-               return true;
-
-            // Not done yet, check for horizontal movement.
-            slidVertically = true;
+         if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
+                  trackList, *pTrack, desiredSlideAmount ) ) {
+            mClipMoveState.mCapturedTrack = pTrack;
+            mDidSlideVertically = true;
+            return true;
+         }
+         else
             return false;
-        })
+     })
    );
    
-   if (fail)
-      return RefreshAll;
-
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
 
