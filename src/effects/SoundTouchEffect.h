@@ -49,7 +49,9 @@ protected:
    // Effect implementation
 
    using InitFunction = std::function< void(soundtouch::SoundTouch *soundtouch) >;
-   bool ProcessWithTimeWarper(InitFunction initer, const TimeWarper &warper);
+   bool ProcessWithTimeWarper(InitFunction initer,
+                              const TimeWarper &warper,
+                              bool preserveLength);
 
    std::unique_ptr<soundtouch::SoundTouch> mSoundTouch;
    double mCurT0;
@@ -69,6 +71,9 @@ private:
    bool ProcessStereoResults(const size_t outputCount,
                               WaveTrack* outputLeftTrack,
                               WaveTrack* outputRightTrack);
+   void Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper &warper);
+
+   bool   mPreserveLength;
 
    int    mCurTrackNum;
 
