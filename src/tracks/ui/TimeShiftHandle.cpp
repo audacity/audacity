@@ -280,6 +280,12 @@ auto TrackShifter::Detach() -> Intervals
    return {};
 }
 
+bool TrackShifter::AdjustFit(
+   const Track &, const Intervals&, double &, double)
+{
+   return false;
+}
+
 bool TrackShifter::Attach( Intervals )
 {
    return true;
@@ -794,26 +800,30 @@ namespace {
       return true;
    }
 
+   using DetachedIntervals =
+      std::unordered_map<Track*, TrackShifter::Intervals>;
+
    bool CheckFit(
-      const ViewInfo &viewInfo, wxCoord xx, ClipMoveState &state,
+      ClipMoveState &state, const Correspondence &correspondence,
+      const DetachedIntervals &intervals,
       double tolerance, double &desiredSlideAmount )
    {
-      (void)xx;// Compiler food
-      (void)viewInfo;// Compiler food
       bool ok = true;
       double firstTolerance = tolerance;
-
+      
       // The desiredSlideAmount may change and the tolerance may get used up.
       for ( unsigned iPass = 0; iPass < 2 && ok; ++iPass ) {
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip) {
-               ok = trackClip.dstTrack->CanInsertClip(
-                  pSrcClip, desiredSlideAmount, tolerance );
-               if( !ok  )
-                  break;
-            }
+         for ( auto &pair : state.shifters ) {
+            auto *pSrcTrack = pair.first;
+            auto iter = correspondence.find( pSrcTrack );
+            if ( iter != correspondence.end() )
+               if( auto *pOtherTrack = iter->second )
+                  if ( !(ok = pair.second->AdjustFit(
+                     *pOtherTrack, intervals.at(pSrcTrack),
+                     desiredSlideAmount /*in,out*/, tolerance)) )
+                     break;
          }
+
          // If it fits ok, desiredSlideAmount could have been updated to get
          // the clip to fit.
          // Check again, in the new position, this time with zero tolerance.
@@ -875,7 +885,7 @@ namespace {
       }
 
       ClipMoveState &state;
-      std::unordered_map<Track*, TrackShifter::Intervals> detached;
+      DetachedIntervals detached;
       bool failed = false;
    };
 }
@@ -901,7 +911,8 @@ bool TimeShiftHandle::DoSlideVertical
    // i.e. one pixel tolerance at current zoom.
    double tolerance =
       viewInfo.PositionToTime(xx + 1) - viewInfo.PositionToTime(xx);
-   bool ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
+   bool ok = CheckFit( state, correspondence, remover.detached,
+      tolerance, desiredSlideAmount /*in,out*/ );
 
    if (!ok) {
       // Failure, even with using tolerance.

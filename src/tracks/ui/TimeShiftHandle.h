@@ -83,6 +83,16 @@ public:
    /*! Default implementation does nothing */
    virtual Intervals Detach();
 
+   //! Test whether intervals can fit into another track, maybe adjusting the offset slightly
+   /*! Default implementation does nothing and returns false */
+   virtual bool AdjustFit(
+      const Track &otherTrack,
+      const Intervals &intervals, /*!<
+         Assume these came from Detach() and only after MayMigrateTo returned true for otherTrack */
+      double &desiredOffset, //!< [in,out]
+      double tolerance //! Nonnegative ceiling for allowed changes in fabs(desiredOffset)
+   );
+
    //! Put moving intervals into the track, which may have migrated from another
    /*! @return success
    

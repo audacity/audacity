@@ -1377,6 +1377,24 @@ public:
       return std::move( mMoving );
    }
 
+   bool AdjustFit(
+      const Track &otherTrack, const Intervals &intervals,
+      double &desiredOffset, double tolerance) override
+   {
+      bool ok = true;
+      auto pOtherWaveTrack = static_cast<const WaveTrack*>(&otherTrack);
+      for ( auto &interval: intervals ) {
+         auto pData =
+            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         auto pClip = pData->GetClip().get();
+         ok = pOtherWaveTrack->CanInsertClip(
+            pClip, desiredOffset, tolerance );
+         if( !ok  )
+            break;
+      }
+      return ok;
+   }
+
    bool Attach( Intervals intervals ) override
    {
       for (auto &interval : intervals) {
