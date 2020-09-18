@@ -465,11 +465,16 @@ private:
    WaveClipPointers SortedClipArray();
    WaveClipConstPointers SortedClipArray() const;
 
-   // Before calling 'Offset' on a clip, use this function to see if the
-   // offsetting is allowed with respect to the other clips in this track.
-   // This function can optionally return the amount that is allowed for offsetting
-   // in this direction maximally.
-   bool CanOffsetClip(WaveClip* clip, double amount, double *allowedAmount=NULL);
+   //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
+   /*!
+   @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
+    */
+   bool CanOffsetClips(
+      const std::vector<WaveClip*> &clips, //!< not necessarily in this track
+      double amount, //!< signed
+      double *allowedAmount = nullptr /*!<
+         [out] if null, test exact amount only; else, largest (in magnitude) possible offset with same sign */
+   );
 
    // Before moving a clip into a track (or inserting a clip), use this
    // function to see if the times are valid (i.e. don't overlap with

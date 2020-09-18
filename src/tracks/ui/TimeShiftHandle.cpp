@@ -179,16 +179,13 @@ namespace
       return 0;
    }
 
-   void DoOffset( ClipMoveState &state, Track *pTrack, double offset,
-                  WaveClip *pExcludedClip = nullptr )
+   void DoOffset( ClipMoveState &state, Track *pTrack, double offset )
    {
       auto &clips = state.capturedClipArray;
       if ( !clips.empty() ) {
          for (auto &clip : clips) {
-            if (clip.clip) {
-               if (clip.clip != pExcludedClip)
-                  clip.clip->Offset( offset );
-            }
+            if (clip.clip)
+               clip.clip->Offset( offset );
             else
                clip.track->Offset( offset );
          }
@@ -240,6 +237,11 @@ double TrackShifter::HintOffsetLarger(double desiredOffset)
 }
 
 double TrackShifter::QuantizeOffset(double desiredOffset)
+{
+   return desiredOffset;
+}
+
+double TrackShifter::AdjustOffsetSmaller(double desiredOffset)
 {
    return desiredOffset;
 }
@@ -518,63 +520,44 @@ const TrackInterval *ClipMoveState::CapturedInterval() const
    return nullptr;
 }
 
-double ClipMoveState::DoSlideHorizontal(
-   double desiredSlideAmount, TrackList &trackList )
+double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
 {
    auto &state = *this;
    auto &capturedTrack = *state.mCapturedTrack;
-   state.hSlideAmount = desiredSlideAmount;
 
    // Given a signed slide distance, move clips, but subject to constraint of
    // non-overlapping with other clips, so the distance may be adjusted toward
    // zero.
-   if ( state.capturedClipArray.size() )
-   {
-      double allowed;
-      double initialAllowed;
-      double safeBigDistance = 1000 + 2.0 * ( trackList.GetEndTime() -
-                                              trackList.GetStartTime() );
-
+   if ( !state.shifters.empty() ) {
+      double initialAllowed = 0;
       do { // loop to compute allowed, does not actually move anything yet
-         initialAllowed = state.hSlideAmount;
+         initialAllowed = desiredSlideAmount;
 
-         for ( auto &trackClip : state.capturedClipArray ) {
-            if (const auto clip = trackClip.clip) {
-               // only audio clips are used to compute allowed
-               const auto track = static_cast<WaveTrack *>( trackClip.track );
-
-               // Move all other selected clips totally out of the way
-               // temporarily because they're all moving together and
-               // we want to find out if OTHER clips are in the way,
-               // not one of the moving ones
-               DoOffset( state, nullptr, -safeBigDistance, clip );
-               auto cleanup = finally( [&]
-                  { DoOffset( state, nullptr, safeBigDistance, clip ); } );
-
-               if ( track->CanOffsetClip(clip, state.hSlideAmount, &allowed) ) {
-                  if ( state.hSlideAmount != allowed ) {
-                     state.hSlideAmount = allowed;
-                     state.snapLeft = state.snapRight = -1; // see bug 1067
-                  }
+         for (auto &pair : shifters) {
+            auto newAmount = pair.second->AdjustOffsetSmaller( desiredSlideAmount );
+            if ( desiredSlideAmount != newAmount ) {
+               if ( newAmount * desiredSlideAmount < 0 ||
+                    fabs(newAmount) > fabs(desiredSlideAmount) ) {
+                  wxASSERT( false ); // AdjustOffsetSmaller didn't honor postcondition!
+                  newAmount = 0; // Be sure the loop progresses to termination!
                }
-               else {
-                  state.hSlideAmount = 0.0;
-                  state.snapLeft = state.snapRight = -1; // see bug 1067
-               }
+               desiredSlideAmount = newAmount;
+               state.snapLeft = state.snapRight = -1; // see bug 1067
             }
+            if (newAmount == 0)
+               break;
          }
-      } while ( state.hSlideAmount != initialAllowed );
+      } while ( desiredSlideAmount != initialAllowed );
 
       // finally, here is where clips are moved
-      if ( state.hSlideAmount != 0.0 )
-         DoOffset( state, nullptr, state.hSlideAmount );
+      if ( desiredSlideAmount != 0.0 )
+         DoOffset( state, nullptr, desiredSlideAmount );
    }
    else
-      // For Shift key down, or
-      // For non wavetracks, specifically label tracks ...
-      DoOffset( state, &capturedTrack, state.hSlideAmount );
+      // Moving whole track
+      DoOffset( state, &capturedTrack, desiredSlideAmount );
 
-   return state.hSlideAmount;
+   return (state.hSlideAmount = desiredSlideAmount);
 }
 
 namespace {
@@ -1013,7 +996,7 @@ UIHandle::Result TimeShiftHandle::Drag
 
    // Note that mouse dragging doesn't use TrackShifter::HintOffsetLarger()
 
-   mClipMoveState.DoSlideHorizontal( desiredSlideAmount, trackList );
+   mClipMoveState.DoSlideHorizontal( desiredSlideAmount );
 
    if (mClipMoveState.movingSelection) {
       // Slide the selection, too

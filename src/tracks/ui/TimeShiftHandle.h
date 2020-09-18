@@ -79,6 +79,15 @@ public:
    /*! Default implementation returns argument */
    virtual double QuantizeOffset( double desiredOffset );
 
+   //! Given amount to shift by horizontally, maybe adjust it toward zero to meet placement constraints
+   /*!
+    Default implementation returns the argument
+    @post `fabs(r) <= fabs(desiredOffset)`
+    @post `r * desiredOffset >= 0` (i.e. signs are not opposite)
+    @post (where `r` is return value)
+    */
+   virtual double AdjustOffsetSmaller( double desiredOffset );
+
    //! Whether intervals may migrate to the other track, not yet checking all placement constraints */
    /*! Default implementation returns false */
    virtual bool MayMigrateTo( Track &otherTrack );
@@ -188,7 +197,7 @@ struct ClipMoveState {
    const TrackInterval *CapturedInterval() const;
 
    /*! @return actual slide amount, maybe adjusted toward zero from desired */
-   double DoSlideHorizontal( double desiredSlideAmount, TrackList &trackList );
+   double DoSlideHorizontal( double desiredSlideAmount );
 
    std::shared_ptr<Track> mCapturedTrack;
 

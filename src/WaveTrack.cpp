@@ -2212,32 +2212,43 @@ int WaveTrack::GetNumClips() const
    return mClips.size();
 }
 
-bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
-                              double *allowedAmount /* = NULL */)
+bool WaveTrack::CanOffsetClips(
+   const std::vector<WaveClip*> &clips,
+   double amount,
+   double *allowedAmount /* = NULL */)
 {
    if (allowedAmount)
       *allowedAmount = amount;
 
-   for (const auto &c: mClips)
-   {
-      if (c.get() != clip && c->GetStartTime() < clip->GetEndTime()+amount &&
-                       c->GetEndTime() > clip->GetStartTime()+amount)
-      {
-         if (!allowedAmount)
-            return false; // clips overlap
+   const auto &moving = [&](WaveClip *clip){
+      // linear search might be improved, but expecting few moving clips
+      // compared with the fixed clips
+      return clips.end() != std::find( clips.begin(), clips.end(), clip );
+   };
 
-         if (amount > 0)
+   for (const auto &c: mClips) {
+      if ( moving( c.get() ) )
+         continue;
+      for (const auto clip : clips) {
+         if (c->GetStartTime() < clip->GetEndTime() + amount &&
+            c->GetEndTime() > clip->GetStartTime() + amount)
          {
-            if (c->GetStartTime()-clip->GetEndTime() < *allowedAmount)
-               *allowedAmount = c->GetStartTime()-clip->GetEndTime();
-            if (*allowedAmount < 0)
-               *allowedAmount = 0;
-         } else
-         {
-            if (c->GetEndTime()-clip->GetStartTime() > *allowedAmount)
-               *allowedAmount = c->GetEndTime()-clip->GetStartTime();
-            if (*allowedAmount > 0)
-               *allowedAmount = 0;
+            if (!allowedAmount)
+               return false; // clips overlap
+
+            if (amount > 0)
+            {
+               if (c->GetStartTime()-clip->GetEndTime() < *allowedAmount)
+                  *allowedAmount = c->GetStartTime()-clip->GetEndTime();
+               if (*allowedAmount < 0)
+                  *allowedAmount = 0;
+            } else
+            {
+               if (c->GetEndTime()-clip->GetStartTime() > *allowedAmount)
+                  *allowedAmount = c->GetEndTime()-clip->GetStartTime();
+               if (*allowedAmount > 0)
+                  *allowedAmount = 0;
+            }
          }
       }
    }
@@ -2249,7 +2260,7 @@ bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
 
       // Check if the NEW calculated amount would not violate
       // any other constraint
-      if (!CanOffsetClip(clip, *allowedAmount, NULL)) {
+      if (!CanOffsetClips(clips, *allowedAmount, nullptr)) {
          *allowedAmount = 0; // play safe and don't allow anything
          return false;
       }
