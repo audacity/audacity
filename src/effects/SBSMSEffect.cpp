@@ -19,6 +19,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include <math.h>
 
 #include "../LabelTrack.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "TimeWarper.h"
 
@@ -426,12 +427,9 @@ bool EffectSBSMS::Process()
             if(rightTrack)
                rb.outputRightTrack->Flush();
 
-            leftTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputLeftTrack.get(),
-                                     true, false, warper.get());
-
+            Finalize(leftTrack, rb.outputLeftTrack.get(), warper.get());
             if(rightTrack)
-               rightTrack->ClearAndPaste(mCurT0, mCurT1, rb.outputRightTrack.get(),
-                                         true, false, warper.get());
+               Finalize(rightTrack, rb.outputRightTrack.get(), warper.get());
          }
          mCurTrackNum++;
       },
@@ -452,6 +450,44 @@ bool EffectSBSMS::Process()
    }
 
    return bGoodResult;
+}
+
+void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *warper)
+{
+   // Silenced samples will be inserted in gaps between clips, so capture where these
+   // gaps are for later deletion
+   std::vector<std::pair<double, double>> gaps;
+   double last = 0.0;
+   auto clips = orig->SortedClipArray();
+   auto front = clips.front();
+   auto back = clips.back();
+   for (auto &clip : clips) {
+      auto st = clip->GetStartTime();
+      auto et = clip->GetEndTime();
+
+      if (st >= mCurT0 || et < mCurT1) {
+         if (mCurT0 < st && clip == front) {
+            gaps.push_back(std::make_pair(mCurT0, st));
+         }
+         if (mCurT1 > et && clip == back) {
+            gaps.push_back(std::make_pair(et, mCurT1));
+         }
+         if (last >= mCurT0) {
+            gaps.push_back(std::make_pair(last, st));
+         }
+      }
+      last = et;
+   }
+
+   // Take the output track and insert it in place of the original sample data
+   orig->ClearAndPaste(mCurT0, mCurT1, out, true, true, warper);
+
+   // Finally, recreate the gaps
+   for (auto gap : gaps) {
+      auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
+      auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
+      orig->SplitDelete(warper->Warp(st), warper->Warp(et));
+   }
 }
 
 #endif

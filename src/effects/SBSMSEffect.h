@@ -45,6 +45,8 @@ protected:
 
 private:
    bool ProcessLabelTrack(LabelTrack *track);
+   void Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *warper);
+
    double rateStart, rateEnd, pitchStart, pitchEnd;
    bool bLinkRatePitch, bRateReferenceInput, bPitchReferenceInput;
    SlideType rateSlideType;
