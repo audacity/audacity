@@ -184,8 +184,6 @@ list( APPEND SOURCES
       MIDIPlay.h
       MixAndRender.cpp
       MixAndRender.h
-      MixerBoard.cpp
-      MixerBoard.h
       NoteTrack.cpp
       NoteTrack.h
       PasteOverPreservingClips.cpp
