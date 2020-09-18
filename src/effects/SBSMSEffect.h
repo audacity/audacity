@@ -24,6 +24,7 @@
 using namespace _sbsms_;
 
 class LabelTrack;
+class TimeWarper;
 
 class EffectSBSMS /* not final */ : public Effect
 {
