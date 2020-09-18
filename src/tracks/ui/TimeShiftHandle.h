@@ -75,6 +75,10 @@ public:
     */
    virtual double HintOffsetLarger( double desiredOffset );
 
+   //! Given amount to shift by horizontally, do any preferred rounding, before placement constraint checks
+   /*! Default implementation returns argument */
+   virtual double QuantizeOffset( double desiredOffset );
+
    //! Whether intervals may migrate to the other track, not yet checking all placement constraints */
    /*! Default implementation returns false */
    virtual bool MayMigrateTo( Track &otherTrack );

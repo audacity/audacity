@@ -1364,6 +1364,13 @@ public:
          desiredOffset *= -1;
       return desiredOffset;
    }
+   
+   double QuantizeOffset( double desiredOffset ) override
+   {
+      const auto rate = mpTrack->GetRate();
+      // set it to a sample point
+      return rint(desiredOffset * rate) / rate;
+   }
 
    Intervals Detach() override
    {

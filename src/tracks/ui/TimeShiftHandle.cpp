@@ -239,6 +239,11 @@ double TrackShifter::HintOffsetLarger(double desiredOffset)
    return desiredOffset;
 }
 
+double TrackShifter::QuantizeOffset(double desiredOffset)
+{
+   return desiredOffset;
+}
+
 bool TrackShifter::MayMigrateTo(Track &)
 {
    return false;
@@ -677,8 +682,9 @@ namespace {
       SnapManager *pSnapManager,
       bool slideUpDownOnly, bool snapPreferRightEdge,
       ClipMoveState &state,
-      Track &capturedTrack, Track &track )
+      Track &track )
    {
+      auto &capturedTrack = *state.mCapturedTrack;
       if (slideUpDownOnly)
          return 0.0;
       else {
@@ -687,11 +693,9 @@ namespace {
             viewInfo.PositionToTime(state.mMouseClickX);
          double clipLeft = 0, clipRight = 0;
 
-         track.TypeSwitch( [&](WaveTrack *mtw){
-            const double rate = mtw->GetRate();
-            // set it to a sample point
-            desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
-         });
+         if (!state.shifters.empty())
+            desiredSlideAmount =
+               state.shifters[ &track ]->QuantizeOffset( desiredSlideAmount );
 
          // Adjust desiredSlideAmount using SnapManager
          if (pSnapManager) {
@@ -982,7 +986,7 @@ UIHandle::Result TimeShiftHandle::Drag
    double desiredSlideAmount =
       FindDesiredSlideAmount( viewInfo, mRect.x, event, mSnapManager.get(),
          mSlideUpDownOnly, mSnapPreferRightEdge, mClipMoveState,
-         *mClipMoveState.mCapturedTrack, *pTrack );
+         *pTrack );
 
    // Scroll during vertical drag.
    // If the mouse is over a track that isn't the captured track,
