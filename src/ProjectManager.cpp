@@ -758,17 +758,16 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // Check validity of mTrackPanel per bug 584 Comment 1.
    // Deeper fix is in the Import code, but this failsafes against crash.
    TrackPanel::Destroy( project );
-
-   // Close project only now, because TrackPanel might have been holding
-   // some shared_ptr to WaveTracks keeping SampleBlocks alive.
-   // We're all done with the project file, so close it now
-   projectFileManager.CloseProject();
-
    // Finalize the tool manager before the children since it needs
    // to save the state of the toolbars.
    ToolManager::Get( project ).Destroy();
 
    window.DestroyChildren();
+
+   // Close project only now, because TrackPanel might have been holding
+   // some shared_ptr to WaveTracks keeping SampleBlocks alive.
+   // We're all done with the project file, so close it now
+   projectFileManager.CloseProject();
 
    WaveTrackFactory::Destroy( project );
 
