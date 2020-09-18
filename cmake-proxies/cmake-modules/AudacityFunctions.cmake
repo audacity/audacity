@@ -204,3 +204,74 @@ macro( check_for_platform_version )
    endif()
 endmacro()
 
+
+# Set up for defining a module target.
+# All modules depend on the application.
+# Pass a name and sources, and a list of other targets.
+# Use the interface compile definitions and include directories of the
+# other targets, and link to them.
+# More defines, and more target libraries (maybe generator expressions)
+# may be given too.
+function( audacity_module NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
+
+   set( TARGET ${NAME} )
+   set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
+
+   message( STATUS "========== Configuring ${TARGET} ==========" )
+
+   def_vars()
+
+   add_library( ${TARGET} MODULE )
+
+   # compute INCLUDES
+   unset( INCLUDES )
+   foreach( IMPORT ${IMPORT_TARGETS} )
+      unset( PROPS )
+      get_target_property( PROPS ${IMPORT} INTERFACE_INCLUDE_DIRECTORIES )
+      if (PROPS)
+         list( APPEND INCLUDES PUBLIC ${PROPS} )
+      endif()
+   endforeach()
+   list( APPEND INCLUDES PUBLIC ${TARGET_ROOT} )
+
+   # compute DEFINES
+   unset( DEFINES )
+   foreach( IMPORT ${IMPORT_TARGETS} )
+      unset( PROPS )
+      get_target_property( PROPS ${IMPORT} INTERFACE_COMPILE_DEFINITIONS )
+      if (PROPS)
+         list( APPEND DEFINES ${PROPS} )
+      endif()
+   endforeach()
+   list( APPEND DEFINES ${ADDITIONAL_DEFINES} )
+
+   set( LOPTS
+      PRIVATE
+         $<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>
+   )
+
+   # compute LIBRARIES
+   set( LIBRARIES PRIVATE Audacity )
+   foreach( IMPORT ${IMPORT_TARGETS} )
+      list( APPEND LIBRARIES "${IMPORT}" )
+   endforeach()
+   list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
+
+   set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_MODDIR}" )
+   set_target_properties( ${TARGET}
+      PROPERTIES
+         PREFIX ""
+         FOLDER "modules"
+   )
+
+#   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
+   list( PREPEND SOURCES "PRIVATE" )
+
+   organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
+   target_sources( ${TARGET} PRIVATE ${SOURCES} )
+   target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
+   target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+   target_link_options( ${TARGET} PRIVATE ${LOPTS} )
+   target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+endfunction()
