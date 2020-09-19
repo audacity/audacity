@@ -1364,6 +1364,26 @@ public:
          desiredOffset *= -1;
       return desiredOffset;
    }
+   
+   double QuantizeOffset( double desiredOffset ) override
+   {
+      const auto rate = mpTrack->GetRate();
+      // set it to a sample point
+      return rint(desiredOffset * rate) / rate;
+   }
+
+   double AdjustOffsetSmaller(double desiredOffset) override
+   {
+      std::vector< WaveClip * > movingClips;
+      for ( auto &interval : MovingIntervals() ) {
+         auto data =
+            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         movingClips.push_back(data->GetClip().get());
+      }
+      double newAmount = 0;
+      (void) mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
+      return newAmount;
+   }
 
    Intervals Detach() override
    {
@@ -1420,6 +1440,15 @@ public:
       return true;
    }
 
+   void DoHorizontalOffset( double offset ) override
+   {
+      for ( auto &interval : MovingIntervals() ) {
+         auto data =
+            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         data->GetClip()->Offset( offset );
+      }
+   }
+   
 private:
    std::shared_ptr<WaveTrack> mpTrack;
 

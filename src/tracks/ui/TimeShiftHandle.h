@@ -75,6 +75,19 @@ public:
     */
    virtual double HintOffsetLarger( double desiredOffset );
 
+   //! Given amount to shift by horizontally, do any preferred rounding, before placement constraint checks
+   /*! Default implementation returns argument */
+   virtual double QuantizeOffset( double desiredOffset );
+
+   //! Given amount to shift by horizontally, maybe adjust it toward zero to meet placement constraints
+   /*!
+    Default implementation returns the argument
+    @post `fabs(r) <= fabs(desiredOffset)`
+    @post `r * desiredOffset >= 0` (i.e. signs are not opposite)
+    @post (where `r` is return value)
+    */
+   virtual double AdjustOffsetSmaller( double desiredOffset );
+
    //! Whether intervals may migrate to the other track, not yet checking all placement constraints */
    /*! Default implementation returns false */
    virtual bool MayMigrateTo( Track &otherTrack );
@@ -109,6 +122,10 @@ public:
        Default implementation does nothing and returns true */
    virtual bool FinishMigration();
 
+   //! Shift all moving intervals horizontally
+   //! Default moves the whole track, provided `!AllFixed()`; else does nothing
+   virtual void DoHorizontalOffset( double offset );
+
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
    void CommonSelectInterval( const TrackInterval &interval );
@@ -122,8 +139,16 @@ protected:
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
    void InitIntervals();
 
+   bool AllFixed() const {
+      return mAllFixed && mMoving.empty();
+   }
+
    Intervals mFixed;
    Intervals mMoving;
+
+private:
+   bool mAllFixed = true; /*!<
+      Becomes false after `UnfixAll()`, even if there are no intervals, or if any one interval was unfixed */
 };
 
 //! Used in default of other reimplementations to shift any track as a whole, invoking Track::Offset()
@@ -147,25 +172,6 @@ using MakeTrackShifter = AttachedVirtualFunction<
    MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track>;
 
 class ViewInfo;
-class WaveClip;
-class WaveTrack;
-
-class TrackClip
-{
-public:
-   TrackClip(Track *t, WaveClip *c);
-
-   ~TrackClip();
-
-   Track *track;
-   Track *origTrack;
-   WaveClip *clip;
-
-   // These fields are used only during time-shift dragging
-   WaveTrack *dstTrack;
-};
-
-using TrackClipArray = std::vector <TrackClip>;
 
 struct ClipMoveState {
    using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
@@ -183,29 +189,27 @@ struct ClipMoveState {
    /*! Pointer may be invalidated by operations on the associated TrackShifter */
    const TrackInterval *CapturedInterval() const;
 
+   //! Do sliding of tracks and intervals, maybe adjusting the offset
    /*! @return actual slide amount, maybe adjusted toward zero from desired */
-   double DoSlideHorizontal( double desiredSlideAmount, TrackList &trackList );
+   double DoSlideHorizontal( double desiredSlideAmount );
+
+   //! Offset tracks or intervals horizontally, without adjusting the offset
+   void DoHorizontalOffset( double offset );
 
    std::shared_ptr<Track> mCapturedTrack;
-
-   // non-NULL only if click was in a WaveTrack and without Shift key:
-   WaveClip *capturedClip {};
 
    bool movingSelection {};
    double hSlideAmount {};
    ShifterMap shifters;
-   TrackClipArray capturedClipArray {};
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
    int mMouseClickX{};
 
    void clear()
    {
-      capturedClip = nullptr;
       movingSelection = false;
       hSlideAmount = 0;
       shifters.clear();
-      capturedClipArray.clear();
       snapLeft = snapRight = -1;
       mMouseClickX = 0;
    }
@@ -226,7 +230,7 @@ public:
    bool IsGripHit() const { return mGripHit; }
    std::shared_ptr<Track> GetTrack() const = delete;
 
-   // Try to move clips from one WaveTrack to another, before also moving
+   // Try to move clips from one track to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
    // destination tracks.
    static bool DoSlideVertical(

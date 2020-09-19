@@ -659,8 +659,7 @@ double DoClipMove
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
-      auto hSlideAmount =
-         state.DoSlideHorizontal( desiredSlideAmount, trackList );
+      auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );
 
       // update t0 and t1. There is the possibility that the updated
       // t0 may no longer be within the clip due to rounding errors,
