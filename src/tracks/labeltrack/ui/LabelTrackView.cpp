@@ -2134,3 +2134,117 @@ std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
       std::make_shared<LabelTrackVRulerControls>( shared_from_this() );
 }
 
+#include "../../ui/TimeShiftHandle.h"
+
+class LabelTrackShifter final : public TrackShifter {
+public:
+   LabelTrackShifter( LabelTrack &track, AudacityProject &project )
+      : mpTrack{ track.SharedPointer<LabelTrack>() }
+      , mProject{ project }
+   {
+      InitIntervals();
+      mpTrack->Bind(
+         EVT_LABELTRACK_PERMUTED, &LabelTrackShifter::OnLabelPermuted, this );
+   }
+   ~LabelTrackShifter() override
+   {
+      mpTrack->Unbind(
+         EVT_LABELTRACK_PERMUTED, &LabelTrackShifter::OnLabelPermuted, this );
+   }
+   Track &GetTrack() const override { return *mpTrack; }
+   
+   HitTestResult HitTest(
+      double time, const ViewInfo &viewInfo, HitTestParams *pParams ) override
+   {
+      HitTestResult result = HitTestResult::Intervals;
+      auto t0 = viewInfo.selectedRegion.t0();
+      auto t1 = viewInfo.selectedRegion.t1();
+      if ( mpTrack->IsSelected() && time >= t0 && time < t1 )
+         result = HitTestResult::Selection;
+
+      // Prefer the box that the mouse hovers over, else the selected one
+      int iLabel = -1;
+      if ( pParams )
+         iLabel =
+            LabelTrackView::OverATextBox(*mpTrack, pParams->xx, pParams->yy);
+      if (iLabel == -1)
+         iLabel = LabelTrackView::Get(*mpTrack).GetSelectedIndex(mProject);
+      if (iLabel != -1) {
+         UnfixIntervals([&](const auto &myInterval){
+            auto pData =
+               static_cast<LabelTrack::IntervalData*>(myInterval.Extra());
+            return pData->index == iLabel;
+         });
+         return result;
+      }
+      else {
+         // If the pick is within the selection, which overlaps some intervals,
+         // then move those intervals only
+         // Else move all labels (preserving the older beahvior of time shift)
+         if ( result == HitTestResult::Selection )
+            SelectInterval({ t0, t1 });
+         if (mMoving.empty())
+            return HitTestResult::Track;
+         else
+            return result;
+      }
+   }
+
+   void SelectInterval( const TrackInterval &interval ) override
+   {
+      CommonSelectInterval(interval);
+   }
+
+   bool SyncLocks() override { return false; }
+
+   void DoHorizontalOffset( double offset ) override
+   {
+      auto &labels = mpTrack->GetLabels();
+      for ( auto &interval : MovingIntervals() ) {
+         auto pExtra =
+            static_cast<LabelTrack::IntervalData*>( interval.Extra() );
+         auto index = pExtra->index;
+         auto labelStruct = labels[index];
+         labelStruct.selectedRegion.move(offset);
+         mpTrack->SetLabel( index, labelStruct );
+      }
+
+      mpTrack->SortLabels();
+   }
+
+private:
+   void OnLabelPermuted( LabelTrackEvent &e )
+   {
+      e.Skip();
+      if ( e.mpTrack.lock() != mpTrack )
+         return;
+
+      auto former = e.mFormerPosition;
+      auto present = e.mPresentPosition;
+
+      auto update = [=]( TrackInterval &interval ){
+         auto pExtra = static_cast<LabelTrack::IntervalData*>(interval.Extra());
+         auto &index = pExtra->index;
+         if ( index == former )
+            index = present;
+         else if ( former < index && index <= present )
+            -- index;
+         else if ( former > index && index >= present )
+            ++ index;
+      };
+
+      std::for_each(mFixed.begin(), mFixed.end(), update);
+      std::for_each(mMoving.begin(), mMoving.end(), update);
+   }
+
+   std::shared_ptr<LabelTrack> mpTrack;
+   AudacityProject &mProject;
+};
+
+using MakeLabelTrackShifter = MakeTrackShifter::Override<LabelTrack>;
+template<> template<> auto MakeLabelTrackShifter::Implementation() -> Function {
+   return [](LabelTrack &track, AudacityProject &project) {
+      return std::make_unique<LabelTrackShifter>(track, project);
+   };
+}
+static MakeLabelTrackShifter registerMakeLabelTrackShifter;
