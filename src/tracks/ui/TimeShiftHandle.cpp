@@ -241,7 +241,7 @@ CoarseTrackShifter::CoarseTrackShifter( Track &track )
 
 CoarseTrackShifter::~CoarseTrackShifter() = default;
 
-auto CoarseTrackShifter::HitTest( double ) -> HitTestResult
+auto CoarseTrackShifter::HitTest( double, HitTestParams* ) -> HitTestResult
 {
    return HitTestResult::Track;
 }
@@ -462,7 +462,10 @@ UIHandle::Result TimeShiftHandle::Click
    auto pShifter = MakeTrackShifter::Call( *pTrack );
 
    if (!event.ShiftDown()) {
-      switch( pShifter->HitTest( clickTime ) ) {
+      TrackShifter::HitTestParams params{
+         rect, event.m_x, event.m_y
+      };
+      switch( pShifter->HitTest( clickTime, &params ) ) {
       case TrackShifter::HitTestResult::Miss:
          return Cancelled;
       case TrackShifter::HitTestResult::Intervals: {

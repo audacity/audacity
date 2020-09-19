@@ -25,6 +25,8 @@ class TrackList;
 class Track;
 class TrackInterval;
 
+class ViewInfo;
+
 //! Abstract base class for policies to manipulate a track type with the Time Shift tool
 class TrackShifter {
 public:
@@ -39,9 +41,21 @@ public:
       Track      //<! Shift selected track only as a whole
    };
 
+   //! Optional, more complete information for hit testing
+   struct HitTestParams {
+      wxRect rect;
+      wxCoord xx, yy;
+   };
+
    //! Decide how shift behaves, based on the track that is clicked in
    /*! If the return value is Intervals, then some intervals may be marked moving as a side effect */
-   virtual HitTestResult HitTest( double time ) = 0;
+   /*!
+    @pre `!pParams || (time == pParams->viewInfo.PositionToTime(pParams->xx, pParams->rect.x))`
+    */
+   virtual HitTestResult HitTest(
+      double time, //!< A time value to test
+      HitTestParams *pParams = nullptr //!< Optional extra information
+   ) = 0;
 
    using Intervals = std::vector<TrackInterval>;
 
@@ -158,7 +172,7 @@ public:
    ~CoarseTrackShifter() override;
    Track &GetTrack() const override { return *mpTrack; }
 
-   HitTestResult HitTest( double ) override;
+   HitTestResult HitTest( double, HitTestParams* ) override;
 
    //! Returns false
    bool SyncLocks() override;
