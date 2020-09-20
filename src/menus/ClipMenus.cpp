@@ -641,9 +641,10 @@ double DoClipMove( AudacityProject &project, Track *track,
       std::unique_ptr<TrackShifter> uShifter;
 
       // Find the first channel that has a clip at time t0
+      auto hitTestResult = TrackShifter::HitTestResult::Track;
       for (auto channel : TrackList::Channels(track) ) {
          uShifter = MakeTrackShifter::Call( *track, project );
-         if ( uShifter->HitTest( t0, viewInfo ) ==
+         if ( (hitTestResult = uShifter->HitTest( t0, viewInfo )) ==
              TrackShifter::HitTestResult::Miss )
             uShifter.reset();
          else
@@ -654,7 +655,7 @@ double DoClipMove( AudacityProject &project, Track *track,
          return 0.0;
       auto pShifter = uShifter.get();
 
-      state.Init( project, *track, std::move( uShifter ),
+      state.Init( project, *track, hitTestResult, std::move( uShifter ),
          t0, viewInfo, trackList, syncLocked );
 
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );

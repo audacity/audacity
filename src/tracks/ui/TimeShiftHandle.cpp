@@ -261,6 +261,7 @@ template<> auto MakeTrackShifter::Implementation() -> Function {
 void ClipMoveState::Init(
    AudacityProject &project,
    Track &capturedTrack,
+   TrackShifter::HitTestResult hitTestResult,
    std::unique_ptr<TrackShifter> pHit,
    double clickTime,
    const ViewInfo &viewInfo,
@@ -271,15 +272,25 @@ void ClipMoveState::Init(
    auto &state = *this;
    state.mCapturedTrack = capturedTrack.SharedPointer();
 
-   state.movingSelection = capturedTrack.IsSelected() &&
-      clickTime >= viewInfo.selectedRegion.t0() &&
-      clickTime < viewInfo.selectedRegion.t1();
+   switch (hitTestResult) {
+      case TrackShifter::HitTestResult::Miss:
+         wxASSERT(false);
+         pHit.reset();
+         break;
+      case TrackShifter::HitTestResult::Track:
+         pHit.reset();
+         break;
+      case TrackShifter::HitTestResult::Intervals:
+         break;
+      case TrackShifter::HitTestResult::Selection:
+         state.movingSelection = true;
+         break;
+      default:
+         break;
+   }
 
    if (!pHit)
       return;
-
-   const bool capturedAClip =
-      pHit && !pHit->MovingIntervals().empty();
 
    state.shifters[&capturedTrack] = std::move( pHit );
 
@@ -290,8 +301,6 @@ void ClipMoveState::Init(
          pShifter = MakeTrackShifter::Call( *track, project );
    }
 
-   // Analogy of the steps above, but with TrackShifters, follows below
-   
    if ( state.movingSelection ) {
       // All selected tracks may move some intervals
       const TrackInterval interval{
@@ -301,6 +310,9 @@ void ClipMoveState::Init(
       for ( const auto &pair : state.shifters ) {
          auto &shifter = *pair.second;
          auto &track = shifter.GetTrack();
+         if (&track == &capturedTrack)
+            // Don't change the choice of intervals made by HitTest
+            continue;
          if ( track.IsSelected() )
             shifter.SelectInterval( interval );
       }
@@ -309,12 +321,8 @@ void ClipMoveState::Init(
       // Move intervals only of the chosen channel group
       for ( auto channel : TrackList::Channels( &capturedTrack ) ) {
          auto &shifter = *state.shifters[channel];
-         if ( capturedAClip ) {
-            if ( channel != &capturedTrack )
-               shifter.SelectInterval(TrackInterval{clickTime, clickTime});
-         }
-         else
-            shifter.UnfixAll();
+         if ( channel != &capturedTrack )
+            shifter.SelectInterval(TrackInterval{clickTime, clickTime});
       }
    }
    
@@ -459,32 +467,28 @@ UIHandle::Result TimeShiftHandle::Click
    const double clickTime =
       viewInfo.PositionToTime(event.m_x, rect.x);
 
-   bool captureClips = false;
-
    auto pShifter = MakeTrackShifter::Call( *pTrack, *pProject );
 
+   auto hitTestResult = TrackShifter::HitTestResult::Track;
    if (!event.ShiftDown()) {
       TrackShifter::HitTestParams params{
          rect, event.m_x, event.m_y
       };
-      switch( pShifter->HitTest( clickTime, viewInfo, &params ) ) {
+      hitTestResult = pShifter->HitTest( clickTime, viewInfo, &params );
+      switch( hitTestResult ) {
       case TrackShifter::HitTestResult::Miss:
          return Cancelled;
-      case TrackShifter::HitTestResult::Intervals: {
-         captureClips = true;
-         break;
-      }
-      case TrackShifter::HitTestResult::Track:
       default:
          break;
       }
    }
    else {
-      // As in the default above: just do shifting of one whole track
+      // just do shifting of one whole track
    }
 
    mClipMoveState.Init( *pProject, *pTrack,
-      captureClips ? std::move( pShifter ) : nullptr,
+      hitTestResult,
+      std::move( pShifter ),
       clickTime,
 
       viewInfo, trackList,

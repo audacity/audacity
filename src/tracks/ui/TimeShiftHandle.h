@@ -37,8 +37,9 @@ public:
    //! Possibilities for HitTest on the clicked track
    enum class HitTestResult {
       Miss,      //!< Don't shift anything
-      Intervals, //<! May shift other tracks' intervals, if clicked in selection
-      Track      //<! Shift selected track only as a whole
+      Selection, //!< Shfit chosen intervals of this track; may shift other tracks' intervals
+      Intervals, //!< Shift intervals only of selected track and sister channels
+      Track      //!< Shift selected track and sister channels only, as a whole
    };
 
    //! Optional, more complete information for hit testing
@@ -48,7 +49,8 @@ public:
    };
 
    //! Decide how shift behaves, based on the track that is clicked in
-   /*! If the return value is Intervals, then some intervals may be marked moving as a side effect */
+   /*! If the return value is Intervals or Selection,
+       then some intervals may be marked moving as a side effect */
    /*!
     @pre `!pParams || (time == pParams->viewInfo.PositionToTime(pParams->xx, pParams->rect.x))`
     */
@@ -195,8 +197,9 @@ struct ClipMoveState {
    void Init(
       AudacityProject &project,
       Track &capturedTrack, //<! pHit if not null associates with this track
+      TrackShifter::HitTestResult hitTestResult, //!< must not be `Miss`
       std::unique_ptr<TrackShifter> pHit, /*!<
-         If null, only capturedTrack (with any sister channels) shifts, as a whole */
+         If null, implies `Track`, overriding previous argument */
       double clickTime,
       const ViewInfo &viewInfo,
       TrackList &trackList, bool syncLocked );
