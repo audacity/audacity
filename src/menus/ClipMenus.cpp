@@ -643,7 +643,8 @@ double DoClipMove( AudacityProject &project, Track *track,
       // Find the first channel that has a clip at time t0
       for (auto channel : TrackList::Channels(track) ) {
          uShifter = MakeTrackShifter::Call( *track, project );
-         if( uShifter->HitTest( t0 ) == TrackShifter::HitTestResult::Miss )
+         if ( uShifter->HitTest( t0, viewInfo ) ==
+             TrackShifter::HitTestResult::Miss )
             uShifter.reset();
          else
             break;

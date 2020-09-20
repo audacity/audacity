@@ -742,7 +742,7 @@ public:
    ~NoteTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
    
-   HitTestResult HitTest( double, HitTestParams* ) override
+   HitTestResult HitTest( double, const ViewInfo&, HitTestParams* ) override
    {
       return HitTestResult::Intervals;
    }

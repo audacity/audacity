@@ -54,6 +54,7 @@ public:
     */
    virtual HitTestResult HitTest(
       double time, //!< A time value to test
+      const ViewInfo &viewInfo,
       HitTestParams *pParams = nullptr //!< Optional extra information
    ) = 0;
 
@@ -172,7 +173,7 @@ public:
    ~CoarseTrackShifter() override;
    Track &GetTrack() const override { return *mpTrack; }
 
-   HitTestResult HitTest( double, HitTestParams* ) override;
+   HitTestResult HitTest( double, const ViewInfo&, HitTestParams* ) override;
 
    //! Returns false
    bool SyncLocks() override;

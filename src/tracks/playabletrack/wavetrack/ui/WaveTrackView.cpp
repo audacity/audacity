@@ -1314,7 +1314,8 @@ public:
    ~WaveTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
 
-   HitTestResult HitTest( double time, HitTestParams* ) override
+   HitTestResult HitTest(
+      double time, const ViewInfo&, HitTestParams* ) override
    {
       auto pClip = mpTrack->GetClipAtTime( time );
 
