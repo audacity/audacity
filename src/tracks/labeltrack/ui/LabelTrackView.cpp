@@ -2153,6 +2153,18 @@ public:
    }
    Track &GetTrack() const override { return *mpTrack; }
    
+   static inline size_t& GetIndex(TrackInterval &interval)
+   {
+      auto pExtra =
+         static_cast<LabelTrack::IntervalData*>( interval.Extra() );
+      return pExtra->index;
+   }
+
+   static inline size_t GetIndex(const TrackInterval &interval)
+   {
+      return GetIndex( const_cast<TrackInterval&>(interval) );
+   }
+
    HitTestResult HitTest(
       double time, const ViewInfo &viewInfo, HitTestParams *pParams ) override
    {
@@ -2171,9 +2183,7 @@ public:
          iLabel = LabelTrackView::Get(*mpTrack).GetSelectedIndex(mProject);
       if (iLabel != -1) {
          UnfixIntervals([&](const auto &myInterval){
-            auto pData =
-               static_cast<LabelTrack::IntervalData*>(myInterval.Extra());
-            return pData->index == iLabel;
+            return GetIndex( myInterval ) == iLabel;
          });
          return result;
       }
@@ -2201,9 +2211,7 @@ public:
    {
       auto &labels = mpTrack->GetLabels();
       for ( auto &interval : MovingIntervals() ) {
-         auto pExtra =
-            static_cast<LabelTrack::IntervalData*>( interval.Extra() );
-         auto index = pExtra->index;
+         auto index = GetIndex( interval );
          auto labelStruct = labels[index];
          labelStruct.selectedRegion.move(offset);
          mpTrack->SetLabel( index, labelStruct );
@@ -2222,9 +2230,14 @@ private:
       auto former = e.mFormerPosition;
       auto present = e.mPresentPosition;
 
+      // Avoid signed-unsigned comparison below!
+      if (former < 0 || present < 0) {
+         wxASSERT(false);
+         return;
+      }
+
       auto update = [=]( TrackInterval &interval ){
-         auto pExtra = static_cast<LabelTrack::IntervalData*>(interval.Extra());
-         auto &index = pExtra->index;
+         auto &index = GetIndex( interval );
          if ( index == former )
             index = present;
          else if ( former < index && index <= present )
