@@ -2145,11 +2145,19 @@ public:
       InitIntervals();
       mpTrack->Bind(
          EVT_LABELTRACK_PERMUTED, &LabelTrackShifter::OnLabelPermuted, this );
+      mpTrack->Bind(
+         EVT_LABELTRACK_ADDITION, &LabelTrackShifter::OnLabelAdded, this );
+      mpTrack->Bind(
+         EVT_LABELTRACK_DELETION, &LabelTrackShifter::OnLabelDeleted, this );
    }
    ~LabelTrackShifter() override
    {
       mpTrack->Unbind(
          EVT_LABELTRACK_PERMUTED, &LabelTrackShifter::OnLabelPermuted, this );
+      mpTrack->Unbind(
+         EVT_LABELTRACK_ADDITION, &LabelTrackShifter::OnLabelAdded, this );
+      mpTrack->Unbind(
+         EVT_LABELTRACK_DELETION, &LabelTrackShifter::OnLabelDeleted, this );
    }
    Track &GetTrack() const override { return *mpTrack; }
    
@@ -2207,6 +2215,66 @@ public:
 
    bool SyncLocks() override { return false; }
 
+   bool MayMigrateTo( Track &otherTrack ) override
+   {
+      return CommonMayMigrateTo(otherTrack);
+   }
+
+   /* We need to copy a complete label when detaching it because LabelStruct
+      is stored in a vector in LabelTrack without an extra indirection.
+      So the detached intervals handed back to the caller are unlike those
+      reported by LabelTrack, but carry the extra information. */
+   struct IntervalData final: Track::IntervalData {
+      SelectedRegion region;
+      wxString title;
+      IntervalData(const LabelStruct &label)
+         : region{label.selectedRegion}
+         , title{label.title}
+      {}
+   };
+
+   Intervals Detach() override
+   {
+      auto pTrack = mpTrack.get();
+      auto moveLabel = [pTrack](TrackInterval &interval) -> TrackInterval {
+         auto &rindex = GetIndex(interval);
+         auto index = rindex;
+         rindex = -1;
+         auto result = TrackInterval{
+            interval.Start(), interval.End(),
+            std::make_unique<IntervalData>( *pTrack->GetLabel(index) ) };
+         pTrack->DeleteLabel(index);
+         return result;
+      };
+      Intervals result;
+      std::transform(
+         // Reverse traversal may lessen the shifting-left in the label array
+         mMoving.rbegin(), mMoving.rend(), std::back_inserter(result),
+         moveLabel );
+      mMoving = Intervals{};
+      return result;
+   }
+
+   bool AdjustFit(
+      const Track &, const Intervals &, double &, double ) override
+   {
+      // Labels have no overlapping constraints, so just...
+      return true;
+   }
+
+   bool Attach( Intervals intervals ) override
+   {
+      auto pTrack = mpTrack.get();
+      std::for_each( intervals.rbegin(), intervals.rend(),
+         [this, pTrack](auto &interval){
+            auto pData = static_cast<IntervalData*>( interval.Extra() );
+            auto index = pTrack->AddLabel(pData->region, pData->title);
+            // Recreate the simpler TrackInterval as would be reported by LabelTrack
+            mMoving.emplace_back( pTrack->MakeInterval(index) );
+         } );
+      return true;
+   }
+
    void DoHorizontalOffset( double offset ) override
    {
       auto &labels = mpTrack->GetLabels();
@@ -2217,7 +2285,7 @@ public:
          mpTrack->SetLabel( index, labelStruct );
       }
 
-      mpTrack->SortLabels();
+      mpTrack->SortLabels(); // causes callback to OnLabelPermuted
    }
 
 private:
@@ -2244,6 +2312,59 @@ private:
             -- index;
          else if ( former > index && index >= present )
             ++ index;
+      };
+
+      std::for_each(mFixed.begin(), mFixed.end(), update);
+      std::for_each(mMoving.begin(), mMoving.end(), update);
+   }
+
+   void OnLabelAdded( LabelTrackEvent &e )
+   {
+      e.Skip();
+      if ( e.mpTrack.lock() != mpTrack )
+         return;
+
+      auto present = e.mPresentPosition;
+
+      // Avoid signed-unsigned comparison below!
+      if (present < 0) {
+         wxASSERT(false);
+         return;
+      }
+
+      auto update = [=]( TrackInterval &interval ){
+         auto pExtra = static_cast<LabelTrack::IntervalData*>(interval.Extra());
+         auto &index = pExtra->index;
+         if ( index >= present )
+            ++ index;
+      };
+
+      std::for_each(mFixed.begin(), mFixed.end(), update);
+      std::for_each(mMoving.begin(), mMoving.end(), update);
+   }
+
+   void OnLabelDeleted( LabelTrackEvent &e )
+   {
+      e.Skip();
+      if ( e.mpTrack.lock() != mpTrack )
+         return;
+
+      auto former = e.mFormerPosition;
+
+      // Avoid signed-unsigned comparison below!
+      if (former < 0) {
+         wxASSERT(false);
+         return;
+      }
+
+      auto update = [=]( TrackInterval &interval ){
+         auto pExtra = static_cast<LabelTrack::IntervalData*>(interval.Extra());
+         auto &index = pExtra->index;
+         if ( index > former )
+            -- index;
+         else if ( index == former )
+            // It should have been deleted first!
+            wxASSERT( false );
       };
 
       std::for_each(mFixed.begin(), mFixed.end(), update);
