@@ -693,18 +693,13 @@ namespace {
             detached[pair.first] = pair.second->Detach();
       }
 
-      void Fail()
-      {
-         failed = true;
-      }
-
       void Reinsert(
-         std::unordered_map< Track*, Track* > &correspondence )
+         std::unordered_map< Track*, Track* > *pCorrespondence )
       {
          for (auto &pair : detached) {
             auto pTrack = pair.first;
-            if (!failed && correspondence.count(pTrack))
-               pTrack = correspondence[pTrack];
+            if (pCorrespondence && pCorrespondence->count(pTrack))
+               pTrack = (*pCorrespondence)[pTrack];
             auto &pShifter = state.shifters[pTrack];
             if (!pShifter->Attach( std::move( pair.second ) ))
                MigrationFailure();
@@ -713,7 +708,6 @@ namespace {
 
       ClipMoveState &state;
       DetachedIntervals detached;
-      bool failed = false;
    };
 }
 
@@ -743,14 +737,13 @@ bool TimeShiftHandle::DoSlideVertical
 
    if (!ok) {
       // Failure, even with using tolerance.
-      remover.Fail();
-      remover.Reinsert( correspondence );
+      remover.Reinsert( nullptr );
       return false;
    }
 
    // Make the offset permanent; start from a "clean slate"
    state.mMouseClickX = xx;
-   remover.Reinsert( correspondence );
+   remover.Reinsert( &correspondence );
    return true;
 }
 
