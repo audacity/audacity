@@ -627,10 +627,10 @@ void DoCursorClipBoundary
 }
 
 // This function returns the amount moved.  Possibly 0.0.
-double DoClipMove
-   ( ViewInfo &viewInfo, Track *track,
+double DoClipMove( AudacityProject &project, Track *track,
      TrackList &trackList, bool syncLocked, bool right )
 {
+   auto &viewInfo = ViewInfo::Get(project);
    auto &selectedRegion = viewInfo.selectedRegion;
 
    if (track) {
@@ -642,7 +642,7 @@ double DoClipMove
 
       // Find the first channel that has a clip at time t0
       for (auto channel : TrackList::Channels(track) ) {
-         uShifter = MakeTrackShifter::Call( *track );
+         uShifter = MakeTrackShifter::Call( *track, project );
          if( uShifter->HitTest( t0 ) == TrackShifter::HitTestResult::Miss )
             uShifter.reset();
          else
@@ -653,7 +653,7 @@ double DoClipMove
          return 0.0;
       auto pShifter = uShifter.get();
 
-      state.Init( *track, std::move( uShifter ),
+      state.Init( project, *track, std::move( uShifter ),
          t0, viewInfo, trackList, syncLocked );
 
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
@@ -700,7 +700,7 @@ void DoClipLeftOrRight
    auto &tracks = TrackList::Get( project );
    auto isSyncLocked = settings.IsSyncLocked();
 
-   auto amount = DoClipMove( viewInfo, trackFocus.Get(),
+   auto amount = DoClipMove( project, trackFocus.Get(),
         tracks, isSyncLocked, right );
 
    window.ScrollIntoView(selectedRegion.t0());

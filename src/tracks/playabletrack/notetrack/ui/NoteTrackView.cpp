@@ -760,7 +760,7 @@ private:
 
 using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;
 template<> template<> auto MakeNoteTrackShifter::Implementation() -> Function {
-   return [](NoteTrack &track) {
+   return [](NoteTrack &track, AudacityProject&) {
       return std::make_unique<NoteTrackShifter>(track);
    };
 }

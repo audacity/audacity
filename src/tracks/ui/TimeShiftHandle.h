@@ -183,7 +183,7 @@ private:
 
 struct MakeTrackShifterTag;
 using MakeTrackShifter = AttachedVirtualFunction<
-   MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track>;
+   MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track, AudacityProject&>;
 
 class ViewInfo;
 
@@ -192,6 +192,7 @@ struct ClipMoveState {
    
    //! Will associate a TrackShifter with each track in the list
    void Init(
+      AudacityProject &project,
       Track &capturedTrack, //<! pHit if not null associates with this track
       std::unique_ptr<TrackShifter> pHit, /*!<
          If null, only capturedTrack (with any sister channels) shifts, as a whole */

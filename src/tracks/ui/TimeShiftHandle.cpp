@@ -252,12 +252,13 @@ bool CoarseTrackShifter::SyncLocks()
 }
 
 template<> auto MakeTrackShifter::Implementation() -> Function {
-   return [](Track &track) {
+   return [](Track &track, AudacityProject&) {
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
 
 void ClipMoveState::Init(
+   AudacityProject &project,
    Track &capturedTrack,
    std::unique_ptr<TrackShifter> pHit,
    double clickTime,
@@ -285,7 +286,7 @@ void ClipMoveState::Init(
    for ( auto track : trackList.Any() ) {
       auto &pShifter = state.shifters[track];
       if (!pShifter)
-         pShifter = MakeTrackShifter::Call( *track );
+         pShifter = MakeTrackShifter::Call( *track, project );
    }
 
    // Analogy of the steps above, but with TrackShifters, follows below
@@ -459,7 +460,7 @@ UIHandle::Result TimeShiftHandle::Click
 
    bool captureClips = false;
 
-   auto pShifter = MakeTrackShifter::Call( *pTrack );
+   auto pShifter = MakeTrackShifter::Call( *pTrack, *pProject );
 
    if (!event.ShiftDown()) {
       TrackShifter::HitTestParams params{
@@ -481,7 +482,7 @@ UIHandle::Result TimeShiftHandle::Click
       // As in the default above: just do shifting of one whole track
    }
 
-   mClipMoveState.Init( *pTrack,
+   mClipMoveState.Init( *pProject, *pTrack,
       captureClips ? std::move( pShifter ) : nullptr,
       clickTime,
 
