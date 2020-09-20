@@ -159,6 +159,8 @@ public:
       size_t index;
       explicit IntervalData(size_t index) : index{index} {};
    };
+   ConstInterval MakeInterval ( size_t index ) const;
+   Interval MakeInterval ( size_t index );
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;
 
