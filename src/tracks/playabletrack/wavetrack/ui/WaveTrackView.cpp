@@ -1314,14 +1314,23 @@ public:
    ~WaveTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
 
-   HitTestResult HitTest( double time ) override
+   HitTestResult HitTest(
+      double time, const ViewInfo &viewInfo, HitTestParams* ) override
    {
       auto pClip = mpTrack->GetClipAtTime( time );
 
       if (!pClip)
          return HitTestResult::Miss;
 
-      // Make a side-effect on our intervals
+      auto t0 = viewInfo.selectedRegion.t0();
+      auto t1 = viewInfo.selectedRegion.t1();
+      if ( mpTrack->IsSelected() && time >= t0 && time < t1 ) {
+         // Unfix maybe many intervals (at least one because of test above)
+         SelectInterval({t0, t1});
+         return HitTestResult::Selection;
+      }
+
+      // Select just one interval
       UnfixIntervals( [&](const auto &interval){
          return
             static_cast<WaveTrack::IntervalData*>(interval.Extra())
@@ -1458,7 +1467,7 @@ private:
 
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
 template<> template<> auto MakeWaveTrackShifter::Implementation() -> Function {
-   return [](WaveTrack &track) {
+   return [](WaveTrack &track, AudacityProject&) {
       return std::make_unique<WaveTrackShifter>(track);
    };
 }

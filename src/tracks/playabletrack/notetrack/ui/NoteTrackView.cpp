@@ -742,9 +742,16 @@ public:
    ~NoteTrackShifter() override {}
    Track &GetTrack() const override { return *mpTrack; }
    
-   HitTestResult HitTest( double ) override
+   HitTestResult HitTest(
+      double time, const ViewInfo &viewInfo, HitTestParams* ) override
    {
-      return HitTestResult::Intervals;
+      UnfixAll();
+      auto t0 = viewInfo.selectedRegion.t0();
+      auto t1 = viewInfo.selectedRegion.t1();
+      if ( mpTrack->IsSelected() && time >= t0 && time < t1 )
+         return HitTestResult::Selection;
+      else
+         return HitTestResult::Intervals;
    }
 
    void SelectInterval( const TrackInterval &interval ) override
@@ -760,7 +767,7 @@ private:
 
 using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;
 template<> template<> auto MakeNoteTrackShifter::Implementation() -> Function {
-   return [](NoteTrack &track) {
+   return [](NoteTrack &track, AudacityProject&) {
       return std::make_unique<NoteTrackShifter>(track);
    };
 }
