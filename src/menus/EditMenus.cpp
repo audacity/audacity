@@ -492,7 +492,9 @@ void OnPaste(const CommandContext &context)
                // Throw, so that any previous changes to the project in this
                // loop are discarded.
                throw SimpleMessageBoxException{
-                  XO("Copying stereo audio into a mono track is not allowed.")
+                  XO("Copying stereo audio into a mono track is not allowed."),
+                  XO("Warning"), 
+                  "Error:_Copying_or_Pasting"
                };
             }
          }
