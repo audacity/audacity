@@ -342,7 +342,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
          if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
             // TODO: more precise message
-            ShowExportErrorDialog("MP2:346");
+            ShowDiskFullExportErrorDialog();
             return ProgressResult::Cancelled;
          }
 

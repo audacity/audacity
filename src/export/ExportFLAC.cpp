@@ -407,7 +407,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
             // TODO: more precise message
-            ShowExportErrorDialog("FLAC:410");
+            ShowDiskFullExportErrorDialog();
             updateResult = ProgressResult::Cancelled;
             break;
          }

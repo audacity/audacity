@@ -1963,7 +1963,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
-            ShowExportErrorDialog("MP3:1966");
+            ShowDiskFullExportErrorDialog();
             updateResult = ProgressResult::Cancelled;
             break;
          }
