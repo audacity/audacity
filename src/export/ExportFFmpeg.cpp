@@ -39,6 +39,7 @@ function.
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
 
@@ -953,10 +954,13 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       // Write the encoded audio frame to the output file.
       if ((ret = av_interleaved_write_frame(mEncFormatCtx.get(), &pkt)) < 0)
       {
-         AudacityMessageBox(
-            XO("FFmpeg : ERROR - Failed to write audio frame to file."),
-            XO("FFmpeg Error"),
-            wxOK|wxCENTER|wxICON_EXCLAMATION
+         ShowErrorDialog(nullptr,
+            XO("Warning"),
+            XO("Audacity failed to write to a file.\n"
+               "Perhaps the file is not writable or the disk is full.\n"
+               "For tips on freeing up space, click the help button."
+            ),
+            "Error:_Disk_full_or_not_writable"
          );
          return false;
       }
