@@ -28,8 +28,10 @@ TranslatableString FileException::ErrorMessage() const
          break;
       case Cause::Write:
          format =
-XO("Audacity failed to write to a file.\n"
-  "Perhaps %s is not writable or the disk is full.");
+         XO("Audacity failed to write to a file.\n"
+           "Perhaps %s is not writable or the disk is full.\n"
+           "For tips on freeing up space, click the help button."
+         );
          break;
       case Cause::Rename:
          format =

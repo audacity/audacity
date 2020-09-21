@@ -330,8 +330,9 @@ void DBConnection::CheckpointThread()
                ? XO("Could not write to %s.\n" ).Format( path )
                : TranslatableString{};
             auto message = XO(
-"Disk is full.  For tips on freeing up space, click the help button.\n"
-"%s\n"
+               "Disk is full.\n"
+               "%s\n"
+               "For tips on freeing up space, click the help button."
             ).Format( message1 );
 
             // Throw and catch and AudacityException, enqueuing the
