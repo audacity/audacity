@@ -592,12 +592,15 @@ namespace {
 
    bool FindCorrespondence(
       Correspondence &correspondence,
-      TrackList &trackList, Track &track,
+      TrackList &trackList, Track &capturedTrack, Track &track,
       ClipMoveState &state)
    {
-      auto &capturedTrack = state.mCapturedTrack;
+      // Accumulate new pairs for the correspondence, and merge them
+      // into the given correspondence only on success
+      Correspondence newPairs;
+
       auto sameType = [&]( auto pTrack ){
-         return capturedTrack->SameKindAs( *pTrack );
+         return capturedTrack.SameKindAs( *pTrack );
       };
       if (!sameType(&track))
          return false;
@@ -607,7 +610,7 @@ namespace {
 
       // Find how far this track would shift down among those (signed)
       const auto myPosition =
-         std::distance( range.first, trackList.Find( capturedTrack.get() ) );
+         std::distance( range.first, trackList.Find( &capturedTrack ) );
       const auto otherPosition =
          std::distance( range.first, trackList.Find( &track ) );
       auto diff = otherPosition - myPosition;
@@ -629,7 +632,11 @@ namespace {
                // Rejected for other reason
                return false;
 
-            correspondence[ pTrack ] = pOther;
+            if ( correspondence.count(pTrack) )
+               // Don't overwrite the given correspondence
+               return false;
+
+            newPairs[ pTrack ] = pOther;
          }
 
          if ( diff < 0 )
@@ -638,6 +645,12 @@ namespace {
             ++iter; // Safe to increment TrackIter even at end of range
       }
 
+      // Success
+      if (correspondence.empty())
+         correspondence.swap(newPairs);
+      else
+         std::copy( newPairs.begin(), newPairs.end(),
+            std::inserter( correspondence, correspondence.end() ) );
       return true;
    }
 
@@ -693,18 +706,13 @@ namespace {
             detached[pair.first] = pair.second->Detach();
       }
 
-      void Fail()
-      {
-         failed = true;
-      }
-
       void Reinsert(
-         std::unordered_map< Track*, Track* > &correspondence )
+         std::unordered_map< Track*, Track* > *pCorrespondence )
       {
          for (auto &pair : detached) {
             auto pTrack = pair.first;
-            if (!failed && correspondence.count(pTrack))
-               pTrack = correspondence[pTrack];
+            if (pCorrespondence && pCorrespondence->count(pTrack))
+               pTrack = (*pCorrespondence)[pTrack];
             auto &pShifter = state.shifters[pTrack];
             if (!pShifter->Attach( std::move( pair.second ) ))
                MigrationFailure();
@@ -713,7 +721,6 @@ namespace {
 
       ClipMoveState &state;
       DetachedIntervals detached;
-      bool failed = false;
    };
 }
 
@@ -723,8 +730,49 @@ bool TimeShiftHandle::DoSlideVertical
   Track &dstTrack, double &desiredSlideAmount )
 {
    Correspondence correspondence;
-   if (!FindCorrespondence( correspondence, trackList, dstTrack, state ))
+
+   // See if captured track corresponds to another
+   auto &capturedTrack = *state.mCapturedTrack;
+   if (!FindCorrespondence(
+      correspondence, trackList, capturedTrack, dstTrack, state ))
       return false;
+
+   // Try to extend the correpondence
+   auto tryExtend = [&](bool forward){
+      auto begin = trackList.begin(), end = trackList.end();
+      auto pCaptured = trackList.Find( &capturedTrack );
+      auto pDst = trackList.Find( &dstTrack );
+      // Scan for more correspondences
+      while ( true ) {
+         // Remember that TrackIter wraps circularly to the end iterator when
+         // decrementing it
+
+         // First move to a track with moving intervals and
+         // without a correspondent
+         do
+            forward ? ++pCaptured : --pCaptured;
+         while ( pCaptured != end &&
+            ( correspondence.count(*pCaptured) || state.shifters[*pCaptured]->MovingIntervals().empty() ) );
+         if ( pCaptured == end )
+            break;
+
+         // Change the choice of possible correspondent track too
+         do
+            forward ? ++pDst : --pDst;
+         while ( pDst != end && correspondence.count(*pDst) );
+         if ( pDst == end )
+            break;
+
+         // Make correspondence if we can
+         if (!FindCorrespondence(
+            correspondence, trackList, **pCaptured, **pDst, state ))
+            break;
+      }
+   };
+   // Try extension, backward first, then forward
+   // (anticipating the case of dragging a label that is under a clip)
+   tryExtend(false);
+   tryExtend(true);
 
    // Having passed that test, remove clips temporarily from their
    // tracks, so moving clips don't interfere with each other
@@ -743,14 +791,13 @@ bool TimeShiftHandle::DoSlideVertical
 
    if (!ok) {
       // Failure, even with using tolerance.
-      remover.Fail();
-      remover.Reinsert( correspondence );
+      remover.Reinsert( nullptr );
       return false;
    }
 
    // Make the offset permanent; start from a "clean slate"
    state.mMouseClickX = xx;
-   remover.Reinsert( correspondence );
+   remover.Reinsert( &correspondence );
    return true;
 }
 
