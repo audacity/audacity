@@ -592,12 +592,15 @@ namespace {
 
    bool FindCorrespondence(
       Correspondence &correspondence,
-      TrackList &trackList, Track &track,
+      TrackList &trackList, Track &capturedTrack, Track &track,
       ClipMoveState &state)
    {
-      auto &capturedTrack = state.mCapturedTrack;
+      // Accumulate new pairs for the correspondence, and merge them
+      // into the given correspondence only on success
+      Correspondence newPairs;
+
       auto sameType = [&]( auto pTrack ){
-         return capturedTrack->SameKindAs( *pTrack );
+         return capturedTrack.SameKindAs( *pTrack );
       };
       if (!sameType(&track))
          return false;
@@ -607,7 +610,7 @@ namespace {
 
       // Find how far this track would shift down among those (signed)
       const auto myPosition =
-         std::distance( range.first, trackList.Find( capturedTrack.get() ) );
+         std::distance( range.first, trackList.Find( &capturedTrack ) );
       const auto otherPosition =
          std::distance( range.first, trackList.Find( &track ) );
       auto diff = otherPosition - myPosition;
@@ -629,7 +632,11 @@ namespace {
                // Rejected for other reason
                return false;
 
-            correspondence[ pTrack ] = pOther;
+            if ( correspondence.count(pTrack) )
+               // Don't overwrite the given correspondence
+               return false;
+
+            newPairs[ pTrack ] = pOther;
          }
 
          if ( diff < 0 )
@@ -638,6 +645,12 @@ namespace {
             ++iter; // Safe to increment TrackIter even at end of range
       }
 
+      // Success
+      if (correspondence.empty())
+         correspondence.swap(newPairs);
+      else
+         std::copy( newPairs.begin(), newPairs.end(),
+            std::inserter( correspondence, correspondence.end() ) );
       return true;
    }
 
@@ -717,7 +730,11 @@ bool TimeShiftHandle::DoSlideVertical
   Track &dstTrack, double &desiredSlideAmount )
 {
    Correspondence correspondence;
-   if (!FindCorrespondence( correspondence, trackList, dstTrack, state ))
+
+   // See if captured track corresponds to another
+   auto &capturedTrack = *state.mCapturedTrack;
+   if (!FindCorrespondence(
+      correspondence, trackList, capturedTrack, dstTrack, state ))
       return false;
 
    // Having passed that test, remove clips temporarily from their
