@@ -1526,7 +1526,7 @@ void ShowExportErrorDialog(wxString ErrorCode,
    ShowErrorDialog(nullptr,
                   caption,
                   message.Format( ErrorCode ),
-                  "Error:_Unable to export" // URL.
+                  "Error:_Unable_to_export" // URL.
                   );
 }
 
