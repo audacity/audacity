@@ -332,21 +332,27 @@ void ClipMoveState::Init(
       while( change ) {
          change = false;
 
-         // Iterate over all unfixed intervals in all shifters
-         // that do propagation...
+         // Iterate over all unfixed intervals in all tracks
+         // that do propagation and are in sync lock groups ...
          for ( auto &pair : state.shifters ) {
             auto &shifter = *pair.second.get();
             if (!shifter.SyncLocks())
                continue;
             auto &track = shifter.GetTrack();
+            auto group = TrackList::SyncLockGroup(&track);
+            if ( group.size() <= 1 )
+               continue;
+
             auto &intervals = shifter.MovingIntervals();
             for (auto &interval : intervals) {
 
-               // ...and tell all other tracks to select that interval...
-               for ( auto &pair2 : state.shifters ) {
-                  auto &shifter2 = *pair2.second.get();
-                  if (&shifter2.GetTrack() == &track)
+               // ...and tell all other tracks in the sync lock group
+               // to select that interval...
+               for ( auto pTrack2 : group ) {
+                  if (pTrack2 == &track)
                      continue;
+                  
+                  auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
                   shifter2.SelectInterval( interval );
                   change = change ||
