@@ -84,26 +84,41 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    }
 }
 
-template< typename Container >
-static Container MakeIntervals(const LabelArray &labels)
+template<typename IntervalType>
+static IntervalType DoMakeInterval(const LabelStruct &label, size_t index)
+{
+   return {
+      label.getT0(), label.getT1(),
+      std::make_unique<LabelTrack::IntervalData>( index ) };
+}
+
+auto LabelTrack::MakeInterval( size_t index ) const -> ConstInterval
+{
+   return DoMakeInterval<ConstInterval>(mLabels[index], index);
+}
+
+auto LabelTrack::MakeInterval( size_t index ) -> Interval
+{
+   return DoMakeInterval<Interval>(mLabels[index], index);
+}
+
+template< typename Container, typename LabelTrack >
+static Container DoMakeIntervals(LabelTrack &track)
 {
    Container result;
-   size_t ii = 0;
-   for (const auto &label : labels)
-      result.emplace_back(
-         label.getT0(), label.getT1(),
-         std::make_unique<LabelTrack::IntervalData>( ii++ ) );
+   for (size_t ii = 0, nn = track.GetNumLabels(); ii < nn; ++ii)
+      result.emplace_back( track.MakeInterval( ii ) );
    return result;
 }
 
 auto LabelTrack::GetIntervals() const -> ConstIntervals
 {
-   return MakeIntervals<ConstIntervals>(mLabels);
+   return DoMakeIntervals<ConstIntervals>(*this);
 }
 
 auto LabelTrack::GetIntervals() -> Intervals
 {
-   return MakeIntervals<Intervals>(mLabels);
+   return DoMakeIntervals<Intervals>(*this);
 }
 
 void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )
