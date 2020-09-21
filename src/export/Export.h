@@ -321,4 +321,16 @@ private:
 private:
    DECLARE_EVENT_TABLE()
 };
+
+TranslatableString AudacityExportCaptionStr();
+TranslatableString AudacityExportMessageStr();
+
+/// We have many Export errors that are essentially anonymous
+/// and are distinguished only by an error code number.
+/// Rather than repeat the code, we have it just once.
+void ShowExportErrorDialog(wxString ErrorCode,
+   TranslatableString message = AudacityExportMessageStr(),
+   const TranslatableString& caption = AudacityExportCaptionStr());
+
+
 #endif

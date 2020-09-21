@@ -338,7 +338,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                   if ( outFile.Write(page.header, page.header_len).GetLastError() ||
                        outFile.Write(page.body, page.body_len).GetLastError()) {
                      // TODO: more precise message
-                     AudacityMessageBox( XO("Unable to export") );
+                     ShowExportErrorDialog("OGG:341");
                      return ProgressResult::Cancelled;
                   }
 
@@ -352,7 +352,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          if (err) {
             updateResult = ProgressResult::Cancelled;
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("OGG:355");
             break;
          }
 
@@ -363,7 +363,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    if ( !outFile.Close() ) {
       updateResult = ProgressResult::Cancelled;
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("OGG:366");
    }
 
    return updateResult;

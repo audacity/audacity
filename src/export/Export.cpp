@@ -70,6 +70,7 @@
 #include "../FileNames.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/ErrorDialog.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -572,10 +573,9 @@ bool Exporter::ExamineTracks()
          message = XO("All selected audio is muted.");
       else
          message = XO("All audio is muted.");
-      AudacityMessageBox(
-         message,
-         XO("Unable to export"),
-         wxOK | wxICON_INFORMATION);
+      ShowExportErrorDialog(
+         ":576",
+         message);
       return false;
    }
 
@@ -1500,4 +1500,34 @@ void ExportMixerDialog::OnMixerPanelHelp(wxCommandEvent & WXUNUSED(event))
 {
    HelpSystem::ShowHelp(this, wxT("Advanced_Mixing_Options"), true);
 }
+
+
+TranslatableString AudacityExportCaptionStr()
+{
+   return XO("Warning");
+}
+TranslatableString AudacityExportMessageStr()
+{
+   return XO("Unable to export.\nError %s");
+}
+
+
+// This creates a generic export error dialog
+// Untranslated ErrorCodes like "MP3:1882" are used since we don't yet have
+// a good user facing error message.  They allow us to 
+// distinguish where the error occurred, and we can update the landing
+// page as we learn more about when (if ever) these errors actually happen.
+// The number happens to at one time have been a line number, but all
+// we need from them is that they be distinct.
+void ShowExportErrorDialog(wxString ErrorCode,
+   TranslatableString message,
+   const TranslatableString& caption)
+{
+   ShowErrorDialog(nullptr,
+                  caption,
+                  message.Format( ErrorCode ),
+                  "Error:_Unable to export" // URL.
+                  );
+}
+
 

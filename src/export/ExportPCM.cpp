@@ -672,13 +672,13 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
              fileFormat == SF_FORMAT_WAVEX) {
             if (!AddStrings(project, sf.get(), metadata, sf_format)) {
                // TODO: more precise message
-               AudacityMessageBox( XO("Unable to export") );
+               ShowExportErrorDialog("PCM:675");
                return ProgressResult::Cancelled;
             }
          }
          if (0 != sf.close()) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("PCM:681");
             return ProgressResult::Cancelled;
          }
       }
@@ -691,7 +691,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          // Note: file has closed, and gets reopened and closed again here:
          if (!AddID3Chunk(fName, metadata, sf_format) ) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("PCM:694");
             return ProgressResult::Cancelled;
          }
 

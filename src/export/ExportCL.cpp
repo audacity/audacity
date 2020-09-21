@@ -741,10 +741,9 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    );
 
    if (argv.size() == 0) {
-      AudacityMessageBox(
-         XO("Program name appears to be missing."),
-         XO("Unable to export"),
-         wxOK | wxICON_INFORMATION);
+      ShowExportErrorDialog(
+         ":745",
+         XO("Program name appears to be missing."));
       return false;
    }
       

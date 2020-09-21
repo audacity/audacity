@@ -822,7 +822,7 @@ bool ExportFFmpeg::Finalize()
          {
             wxLogDebug(wxT("FFmpeg : Reading from Audio FIFO failed, aborting"));
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("FFmpeg:825");
             return false;
          }
       }
@@ -834,7 +834,7 @@ bool ExportFFmpeg::Finalize()
 
       if (encodeResult < 0) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("FFmpeg:837");
          return false;
       }
       else if (encodeResult == 0)
@@ -865,7 +865,7 @@ bool ExportFFmpeg::Finalize()
    // Write any file trailers.
    if (av_write_trailer(mEncFormatCtx.get()) != 0) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:868");
       return false;
    }
 
@@ -993,7 +993,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    if (mSubFormat >= FMT_LAST) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:996");
       return ProgressResult::Cancelled;
    }
 
@@ -1005,7 +1005,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    if (!ret) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:1008");
       return ProgressResult::Cancelled;
    }
 
@@ -1038,7 +1038,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
             pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
             // TODO: more precise message, and fix redundancy with messages
             // already given on some of the failure paths of the above call
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("FFmpeg:1041");
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -1053,7 +1053,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    if ( mUfileCloser.close() != 0 ) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:1056");
       return ProgressResult::Cancelled;
    }
 

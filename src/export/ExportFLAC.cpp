@@ -280,7 +280,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // See note in GetMetadata() about a bug in libflac++ 1.1.2
    if (success && !GetMetadata(project, metadata)) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FLAC:283");
       return ProgressResult::Cancelled;
    }
 
@@ -333,7 +333,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    if (!success) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FLAC:336");
       return ProgressResult::Cancelled;
    }
 
@@ -407,7 +407,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("FLAC:410");
             updateResult = ProgressResult::Cancelled;
             break;
          }

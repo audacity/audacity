@@ -1879,7 +1879,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    if (id3len && !endOfFile) {
       if (id3len > outFile.Write(id3buffer.get(), id3len)) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+         ShowExportErrorDialog("MP3:1882");
          return ProgressResult::Cancelled;
       }
    }
@@ -1891,7 +1891,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    size_t bufferSize = std::max(0, exporter.GetOutBufferSize());
    if (bufferSize <= 0) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("MP3:1849");
       return ProgressResult::Cancelled;
    }
 
@@ -1963,7 +1963,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("MP3:1966");
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -1978,14 +1978,14 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
 
       if (bytes < 0) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+         ShowExportErrorDialog("MP3:1981");
          return ProgressResult::Cancelled;
       }
 
       if (bytes > 0) {
          if (bytes > (int)outFile.Write(buffer.get(), bytes)) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("MP3:1988");
             return ProgressResult::Cancelled;
          }
       }
@@ -1994,7 +1994,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       if (id3len > 0 && endOfFile) {
          if (bytes > (int)outFile.Write(id3buffer.get(), id3len)) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("MP3:1997");
             return ProgressResult::Cancelled;
          }
       }
@@ -2009,7 +2009,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
           !outFile.Flush() ||
           !outFile.Close()) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+         ShowExportErrorDialog("MP3:2012");
          return ProgressResult::Cancelled;
       }
    }
