@@ -737,6 +737,43 @@ bool TimeShiftHandle::DoSlideVertical
       correspondence, trackList, capturedTrack, dstTrack, state ))
       return false;
 
+   // Try to extend the correpondence
+   auto tryExtend = [&](bool forward){
+      auto begin = trackList.begin(), end = trackList.end();
+      auto pCaptured = trackList.Find( &capturedTrack );
+      auto pDst = trackList.Find( &dstTrack );
+      // Scan for more correspondences
+      while ( true ) {
+         // Remember that TrackIter wraps circularly to the end iterator when
+         // decrementing it
+
+         // First move to a track with moving intervals and
+         // without a correspondent
+         do
+            forward ? ++pCaptured : --pCaptured;
+         while ( pCaptured != end &&
+            ( correspondence.count(*pCaptured) || state.shifters[*pCaptured]->MovingIntervals().empty() ) );
+         if ( pCaptured == end )
+            break;
+
+         // Change the choice of possible correspondent track too
+         do
+            forward ? ++pDst : --pDst;
+         while ( pDst != end && correspondence.count(*pDst) );
+         if ( pDst == end )
+            break;
+
+         // Make correspondence if we can
+         if (!FindCorrespondence(
+            correspondence, trackList, **pCaptured, **pDst, state ))
+            break;
+      }
+   };
+   // Try extension, backward first, then forward
+   // (anticipating the case of dragging a label that is under a clip)
+   tryExtend(false);
+   tryExtend(true);
+
    // Having passed that test, remove clips temporarily from their
    // tracks, so moving clips don't interfere with each other
    // when we call CanInsertClip()
