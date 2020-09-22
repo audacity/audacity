@@ -44,7 +44,7 @@
 #include "wxFileNameWrapper.h"
 
 #ifdef USE_LIBID3TAG
-   #include <id3tag.h>
+   #include "id3tag.h"
    extern "C" {
       struct id3_frame *id3_frame_new(char const *);
    }

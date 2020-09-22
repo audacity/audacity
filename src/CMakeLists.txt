@@ -697,9 +697,6 @@ list( APPEND SOURCES
          export/ExportFFmpegDialogs.h
       >
 
-      $<$<BOOL:${USE_LIBFLAC}>:
-         export/ExportFLAC.cpp
-      >
 
       $<$<BOOL:${USE_LIBTWOLAME}>:
          export/ExportMP2.cpp
@@ -741,10 +738,6 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_FFMPEG}>:
          import/ImportFFmpeg.cpp
-      >
-
-      $<$<BOOL:${USE_LIBFLAC}>:
-         import/ImportFLAC.cpp
       >
 
       $<$<BOOL:${USE_GSTREAMER}>:
@@ -1252,8 +1245,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_common>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
-      $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
-      $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
@@ -1467,12 +1458,6 @@ else()
          audio/mp4
          audio/x-ms-wma
          video/mpeg
-      )
-   endif()
-   if( USE_LIBFLAC )
-      list( APPEND MIMETYPES
-         audio/flac
-         audio/x-flac
       )
    endif()
    if( USE_LIBMAD OR USE_LIBMPG123)
