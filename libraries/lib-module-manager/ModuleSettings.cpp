@@ -22,6 +22,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
    static std::unordered_set<wxString> modules{
       "mod-mixer-board",
       "mod-lyrics",
+      "mod-undo-history",
    };
    return modules;
 }

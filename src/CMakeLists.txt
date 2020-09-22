@@ -147,8 +147,6 @@ list( APPEND SOURCES
       HelpText.h
       HelpUtilities.cpp
       HelpUtilities.h
-      HistoryWindow.cpp
-      HistoryWindow.h
       HitTestResult.h
       IncompatiblePluginsDialog.cpp
       IncompatiblePluginsDialog.h
