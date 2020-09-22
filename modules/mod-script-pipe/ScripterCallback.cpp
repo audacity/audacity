@@ -37,25 +37,7 @@ and replace the main project window with our own wxFrame.
 
 */
 
-#ifdef _MSC_VER
-   #define DLL_API _declspec(dllexport)
-   #define DLL_IMPORT _declspec(dllimport)
-#else
-   #define DLL_API __attribute__ ((visibility("default")))
-   #define DLL_IMPORT
-#endif
-
-
-typedef enum
-{
-   ModuleInitialize,
-   ModuleTerminate,
-   AppInitialized,
-   AppQuiting,
-   ProjectInitialized,
-   ProjectClosing
-} ModuleDispatchTypes;
-
+#include "ModuleConstants.h"
 
 extern void PipeServer();
 typedef DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);

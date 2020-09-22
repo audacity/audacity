@@ -27,8 +27,7 @@ click from the menu into the actual function to be called.
 
 #include <wx/wx.h>
 #include "ModNullCallback.h"
-
-#include "ModuleManager.h"
+#include "ModuleConstants.h"
 #include "ShuttleGui.h"
 #include "Project.h"
 #include "commands/CommandManager.h"
@@ -54,14 +53,6 @@ This function is the hijacking function, to take over Audacity
 and replace the main project window with our own wxFrame.
 
 */
-
-#ifdef _MSC_VER
-   #define DLL_API _declspec(dllexport)
-   #define DLL_IMPORT _declspec(dllimport)
-#else
-   #define DLL_API __attribute__ ((visibility("default")))
-   #define DLL_IMPORT
-#endif
 
 // derived from wxFrame as it needs to be some kind of event handler.
 class ModNullCallback : public wxFrame

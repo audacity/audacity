@@ -25,7 +25,7 @@
 
 #include "AudioIOBase.h"
 #include "CommonCommandFlags.h"
-#include "ModuleManager.h"
+#include "ModuleConstants.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
@@ -133,12 +133,6 @@ void RegisterMenuItems()
 extern "C"
 {
    static NyqBench *gBench = NULL;
-
-   #ifdef _MSC_VER
-      #define DLL_API _declspec(dllexport)
-   #else
-      #define DLL_API __attribute__ ((visibility("default")))
-   #endif
 
    extern DLL_API const wxChar * GetVersionString();
    // GetVersionString
