@@ -366,3 +366,123 @@ macro( audacity_module NAME SOURCES IMPORT_TARGETS
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 endmacro()
+
+#
+# Add individual library targets
+#
+# Parms:
+#     dir      directory name within the cmake-proxies directory.
+#              (Doesn't HAVE to match the same directory in lib-src,
+#              but it usually does.)
+#
+#     name     suffix for the cmake user options
+#
+#     symbol   suffix for the "USE_<symbol>" variable that the Audacity
+#              target uses to include/exclude functionality.
+#
+#     required Determines if the library is required or not.  If it is,
+#              the user is not given the option of enabling/disabling it.
+#
+#     check    Determines if local/system checks should be performed here
+#              or in the subdirectory config.
+#
+#     packages A list of packages required for this target in pkg-config
+#              format.
+function( addlib dir name symbol required check )
+   # Extract the list of packages from the function args
+   list( SUBLIST ARGV 5 -1 packages )
+
+   # Define target's name and it's source directory
+   set( TARGET ${dir} )
+   set( TARGET_ROOT ${libsrc}/${dir} )
+
+   # Define the option name
+   set( use ${_OPT}use_${name} ) 
+
+   # If we're not checking for system or local here, then let the
+   # target config handle the rest.
+   if( NOT check )
+      add_subdirectory( ${dir} EXCLUDE_FROM_ALL )
+      return()
+   endif()
+
+   # If the target isn't required, allow the user to select which one
+   # to use or disable it entirely
+   set( desc "local" )
+   if( packages )
+      set( sysopt "system" )
+      string( PREPEND desc "system (if available), " )
+      set( default "${${_OPT}lib_preference}" )
+   else()
+      set( default "local" )
+   endif()
+
+   if( NOT required )
+      set( reqopt "off" )
+      string( APPEND desc ", off" )
+   endif()
+
+   cmd_option( ${use}
+               "Use ${name} library [${desc}]"
+               "${default}"
+               STRINGS ${sysopt} "local" ${reqopt}
+   )
+
+   # Bail if the target will not be used
+   if( ${use} STREQUAL "off" )
+      message( STATUS "========== ${name} disabled ==========" )
+
+      set( USE_${symbol} OFF CACHE INTERNAL "" FORCE )
+
+      return()
+   endif()
+
+   # Let the Audacity target know that this library will be used
+   set( USE_${symbol} ON CACHE INTERNAL "" FORCE )
+
+   message( STATUS "========== Configuring ${name} ==========" )
+
+   # Check for the system package(s) if the user prefers it
+   if( ${use} STREQUAL "system" )
+      # Look them up
+      pkg_check_modules( PKG_${TARGET} ${packages} )
+      if( PKG_${TARGET}_FOUND )
+         message( STATUS "Using '${name}' system library" )
+
+         # Create the target interface library
+         add_library( ${TARGET} INTERFACE IMPORTED GLOBAL )
+
+         # Retrieve the package information
+         get_package_interface( PKG_${TARGET} )
+
+         # And add it to our target
+         target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
+         target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
+      else()
+         set( ${use} "local" )
+         set_property( CACHE ${use} PROPERTY VALUE "local" )
+      endif()
+   endif()
+
+   # User wants the local package or the system one wasn't found
+   if( ${use} STREQUAL "local" )
+      message( STATUS "Using '${name}' local library" )
+
+      # Pull in the target config
+      add_subdirectory( ${dir} EXCLUDE_FROM_ALL )
+
+      # Get the list of targets defined by that config
+      get_property( targets DIRECTORY "${dir}" PROPERTY BUILDSYSTEM_TARGETS )
+
+      # Set the folder (for the IDEs) for each one
+      foreach( target ${targets} )
+         # Skip interface libraries since they don't have any source to
+         # present in the IDEs   
+         get_target_property( type "${target}" TYPE )
+         if( NOT "${type}" STREQUAL "INTERFACE_LIBRARY" )
+            set_target_properties( ${target} PROPERTIES FOLDER "lib-src" )
+         endif()
+      endforeach()
+   endif()
+endfunction()
+
