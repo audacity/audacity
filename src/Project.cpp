@@ -13,6 +13,8 @@
 #include "Project.h"
 
 #include "KeyboardCapture.h"
+#include "FileNames.h"
+#include "widgets\ErrorDialog.h"
 
 #include <wx/display.h>
 #include <wx/frame.h>
@@ -122,6 +124,22 @@ AudacityProject::AudacityProject()
    AttachedObjects::BuildAll();
    // But not for the attached windows.  They get built only on demand, such as
    // from menu items.
+
+   // Make sure there is plenty of space for Sqlite files
+   wxLongLong freeSpace = 0;
+
+   auto path = FileNames::FindDefaultPath(FileNames::Operation::Temp);
+   if (wxGetDiskSpace(path, NULL, &freeSpace)) {
+      if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
+         ShowErrorDialog(nullptr, 
+            XO("Warning"),
+            XO("There is very little free disk space left.\n"
+               "Please select a bigger temporary directory in Preferences."),
+            "Error:_Disk_full_or_not_writable"
+            );
+      }
+   }
+
 }
 
 AudacityProject::~AudacityProject()
