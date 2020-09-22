@@ -1,15 +1,15 @@
-#include "../CommonCommandFlags.h"
+#include "CommonCommandFlags.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../TrackPanelAx.h"
-#include "../ProjectWindow.h"
+#include "ProjectSettings.h"
+#include "TrackPanelAx.h"
+#include "ProjectWindow.h"
 #include "UndoManager.h"
-#include "../WaveClip.h"
+#include "WaveClip.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../tracks/ui/TimeShiftHandle.h"
+#include "WaveTrack.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "tracks/ui/TimeShiftHandle.h"
 
 // private helper classes and functions
 namespace {
@@ -828,6 +828,8 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
    return instance;
 };
 
+// Remaining code hooks this add-on into the application
+
 // Menu definitions
 
 #define FN(X) (& ClipActions::Handler :: X)
@@ -914,3 +916,6 @@ AttachedItem sAttachment3{
 }
 
 #undef FN
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
