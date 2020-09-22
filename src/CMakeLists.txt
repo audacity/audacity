@@ -1020,6 +1020,7 @@ list( APPEND OPTIONS
       $<$<CXX_COMPILER_ID:MSVC>:/permissive->
       $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
       $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
+      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
 )
 
 list( APPEND LDFLAGS

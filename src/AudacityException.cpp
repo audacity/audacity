@@ -72,7 +72,7 @@ void MessageBoxException::DelayedHandlerAction()
       // common cause such as exhaustion of disk space so that the others
       // give the user no useful added information.
       
-      if ( wxAtomicDec( sOutstandingMessages ) == 0 )
+      if ( wxAtomicDec( sOutstandingMessages ) == 0 ) {
          if (ErrorHelpUrl().IsEmpty())
          {
             ::AudacityMessageBox(
@@ -89,6 +89,7 @@ void MessageBoxException::DelayedHandlerAction()
                ErrorMessage(),
                ErrorHelpUrl());
          }
+      }
 
       moved = true;
    }
