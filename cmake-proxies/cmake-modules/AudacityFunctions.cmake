@@ -204,6 +204,20 @@ macro( check_for_platform_version )
    endif()
 endmacro()
 
+# To be used to compile all C++ in the application and modules
+function( audacity_append_common_compiler_options var )
+   list( APPEND ${var}
+      PRIVATE
+         $<$<CXX_COMPILER_ID:MSVC>:/permissive->
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
+	 # Yes, CMake will change -D to /D as needed for Windows:
+	 -DWXINTL_NO_GETTEXT_MACRO
+   )
+   set( ${var} "${${var}}" PARENT_SCOPE )
+endfunction()
 
 # Set up for defining a module target.
 # Pass a name and sources, and a list of other targets.
@@ -249,10 +263,17 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
 
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
 
+   # Compute compilation options.
+   # Perhaps a another function argument in future to customize this too.
+   set( OPTIONS )
+   audacity_append_common_compiler_options( OPTIONS )
+
    organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
    target_sources( ${TARGET} PRIVATE ${SOURCES} )
    target_compile_definitions( ${TARGET} PRIVATE ${ADDITIONAL_DEFINES} )
+   target_compile_options( ${TARGET} ${OPTIONS} )
    target_include_directories( ${TARGET} PUBLIC ${TARGET_ROOT} )
+
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
    target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
 
@@ -272,3 +293,4 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
       endforeach()
    endif()
 endfunction()
+

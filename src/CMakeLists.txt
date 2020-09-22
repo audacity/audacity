@@ -1005,7 +1005,6 @@ list( APPEND RESOURCES
 list( APPEND DEFINES
    PRIVATE
       BUILDING_AUDACITY
-      WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
       CMAKE
       $<$<BOOL:${HAVE_LRINT}>:
@@ -1024,14 +1023,7 @@ list( APPEND DEFINES
       >
 )
 
-list( APPEND OPTIONS
-   PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
-)
+audacity_append_common_compiler_options( OPTIONS )
 
 list( APPEND LDFLAGS
    PRIVATE
