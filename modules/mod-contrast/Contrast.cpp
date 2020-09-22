@@ -9,24 +9,23 @@
 
 *//*******************************************************************/
 
-
 #include "Contrast.h"
 
-#include "../CommonCommandFlags.h"
-#include "../WaveTrack.h"
+#include "CommonCommandFlags.h"
+#include "WaveTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectFileIO.h"
+#include "ProjectFileIO.h"
 #include "ProjectRate.h"
-#include "../ProjectWindow.h"
-#include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "ProjectWindow.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
 #include "FileNames.h"
 #include "ViewInfo.h"
-#include "../widgets/HelpSystem.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
+#include "widgets/HelpSystem.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/VetoDialogHook.h"
 
 #include <cmath>
 #include <limits>
@@ -695,3 +694,6 @@ AttachedItem sAttachment{ wxT("Analyze/Analyzers/Windows"),
 };
 
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
