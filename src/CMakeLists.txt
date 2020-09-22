@@ -141,8 +141,6 @@ list( APPEND SOURCES
       FileFormats.h
       FrameStatisticsDialog.cpp
       FrameStatisticsDialog.h
-      FreqWindow.cpp
-      FreqWindow.h
       HelpText.cpp
       HelpText.h
       HelpUtilities.cpp
