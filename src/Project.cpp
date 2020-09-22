@@ -128,7 +128,7 @@ AudacityProject::AudacityProject()
    // Make sure there is plenty of space for Sqlite files
    wxLongLong freeSpace = 0;
 
-   auto path = FileNames::FindDefaultPath(FileNames::Operation::Temp);
+   auto path = FileNames::TempDir();
    if (wxGetDiskSpace(path, NULL, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
          ShowErrorDialog(nullptr, 
