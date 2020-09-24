@@ -389,6 +389,9 @@ endmacro()
 #     packages A list of packages required for this target in pkg-config
 #              format.
 function( addlib dir name symbol required check )
+   set( subdir "${CMAKE_SOURCE_DIR}/cmake-proxies/${dir}" )
+   set( bindir "${CMAKE_BINARY_DIR}/cmake-proxies/${dir}" )
+
    # Extract the list of packages from the function args
    list( SUBLIST ARGV 5 -1 packages )
 
@@ -402,7 +405,7 @@ function( addlib dir name symbol required check )
    # If we're not checking for system or local here, then let the
    # target config handle the rest.
    if( NOT check )
-      add_subdirectory( ${dir} EXCLUDE_FROM_ALL )
+      add_subdirectory( ${subdir} ${bindir} EXCLUDE_FROM_ALL )
       return()
    endif()
 
@@ -469,10 +472,10 @@ function( addlib dir name symbol required check )
       message( STATUS "Using '${name}' local library" )
 
       # Pull in the target config
-      add_subdirectory( ${dir} EXCLUDE_FROM_ALL )
+      add_subdirectory( ${subdir} ${bindir} EXCLUDE_FROM_ALL )
 
       # Get the list of targets defined by that config
-      get_property( targets DIRECTORY "${dir}" PROPERTY BUILDSYSTEM_TARGETS )
+      get_property( targets DIRECTORY "${subdir}" PROPERTY BUILDSYSTEM_TARGETS )
 
       # Set the folder (for the IDEs) for each one
       foreach( target ${targets} )
