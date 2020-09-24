@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-06-18 13:36+0000\n"
+"PO-Revision-Date: 2020-09-24 04:44+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -4509,7 +4509,7 @@ msgstr "Nie można otworzyć pliku z gatunkami."
 
 #: src/Tags.cpp
 msgid "Load Metadata As:"
-msgstr "Załaduj metadane jako:"
+msgstr "Wczytaj metadane jako:"
 
 #: src/Tags.cpp
 msgid "Error Loading Metadata"
@@ -4571,7 +4571,7 @@ msgid ""
 "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr "Audacity nie mógł znaleźć pliku:\n%s.\nMotyw nie został załadowany."
+msgstr "Audacity nie mógł znaleźć pliku:\n%s.\nMotyw nie został wczytany."
 
 #. i18n-hint: Do not translate png.  It is the name of a file format.
 #: src/Theme.cpp
@@ -8374,7 +8374,7 @@ msgid ""
 "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr "Efekt naprawy jest przeznaczony do użytku na bardzo krótkich odcinkach uszkodzonego dźwięku (do 128 sampli).\n\nPrzybliż i zaznacz ułamek sekundy do naprawy."
+msgstr "Efekt naprawy jest przeznaczony do użytku na bardzo krótkich odcinkach uszkodzonego dźwięku (do 128 sampli).\n\nPowiększ i zaznacz ułamek sekundy do naprawy."
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -14483,7 +14483,7 @@ msgstr "Plik ze skrótami zawiera niedozwolone duplikaty skrótów dla \"%s\" i 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid "Loaded %d keyboard shortcuts\n"
-msgstr "Załadowano %d skróty klawiaturowe\n"
+msgstr "Wczytano %d skróty klawiaturowe\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
@@ -14493,7 +14493,7 @@ msgstr "\nNastępujące polecenia nie są wymienione w importowanym pliku, ale i
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
-msgstr "Ładowanie skrótów klawiaturowych"
+msgstr "Wczytywanie skrótów klawiaturowych"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Export Keyboard Shortcuts As:"
@@ -14589,7 +14589,7 @@ msgstr "Us&tal..."
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
-msgstr "Pobie&rz"
+msgstr "Po&bierz"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "Allow &background on-demand loading"
@@ -14787,7 +14787,7 @@ msgstr "Kliknięcie prawym przyciskiem myszki"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom out one step"
-msgstr "Pomniejsz"
+msgstr "Pomniejsz o jeden krok"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Right-Drag"
@@ -15402,7 +15402,7 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr "Ubieranie w motywy jest funkcją eksperymentalną.\n\nWypróbuj ją przez kliknięcie na \"Zapisz pamięć podręczną motywu\", a następnie znajdź i zmodyfikuj obrazy i kolory w\nImageCacheVxx.png, wykorzystując edytor obrazów, np. Gimp.\n\nKliknij \"Wczytaj pamięć podręczną motywu\", aby wczytać zmienione obrazy i kolory z powrotem do Audacity.\n\n(Na razie tylko pasek narzędzi transportu i kolory na ścieżce fali są zmieniane, nawet\nw przypadku gdy plik obrazu pokazuje także inne ikony.)"
+msgstr "Ubieranie w motywy jest funkcją eksperymentalną.\n\nWypróbuj ją przez kliknięcie na \"Zapisz pamięć podręczną motywu\", a następnie znajdź i zmodyfikuj obrazy i kolory w\nImageCacheVxx.png, wykorzystując edytor obrazów, np. Gimp.\n\nKliknij \"Wczytaj pamięć podręczną motywu\", aby wczytać zmienione obrazy i kolory z powrotem do Audacity.\n\n(Na razie tylko pasek narzędzi transportu i kolory na ścieżce fali są zmieniane, nawet\nw przypadku, gdy plik obrazu pokazuje także inne ikony.)"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
@@ -15414,15 +15414,15 @@ msgstr "Zapisywanie i wczytywanie indywidualnych plików motywów używa oddziel
 #. * so keep it as is
 #: src/prefs/ThemePrefs.cpp
 msgid "Theme Cache - Images && Color"
-msgstr "Pamięć motywu - Obrazy i &kolor"
+msgstr "Pamięć podręczna motywu - Obrazy i &kolor"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Save Theme Cache"
-msgstr "Zapisz pamięć motywu"
+msgstr "Zapisz pamięć podręczną motywu"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Load Theme Cache"
-msgstr "Wczytaj pamięć motywu"
+msgstr "Wczytaj pamięć podręczną motywu"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Individual Theme Files"
@@ -15468,7 +15468,7 @@ msgstr "Włącz &przeciąganie krawędzi zaznaczenia"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
-msgstr "Edytowanie klipu &może przesunąć inne klipy"
+msgstr "Edytowanie klipu może &przesunąć inne klipy"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -15589,7 +15589,7 @@ msgstr "Po&każ nazwę ścieżki jako nakładki"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
-msgstr "Użyj wyświetlacza półfalowego, gdy zwinięty"
+msgstr "Użyj wyświetlacza &półfalowego, gdy zwinięty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -16065,7 +16065,7 @@ msgstr "Zaznaczenie %s. %s nie zmieniło się."
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
-msgstr "Pasek narzędziowy &zaznaczania"
+msgstr "Pasek narzędziowy &zaznaczenia"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
@@ -16087,7 +16087,7 @@ msgstr "Przepustowość"
 #. for selecting a frequency range of audio
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Pasek narzędziowy &widmowego zaznaczania"
+msgstr "Pasek narzędziowy &widmowego zaznaczenia"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -16127,7 +16127,7 @@ msgstr "Narzędzie do przesuwania w czasie"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Zoom Tool"
-msgstr "Narzędzie zbliżania"
+msgstr "Narzędzie powiększania"
 
 #: src/toolbars/ToolsToolBar.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
@@ -16360,7 +16360,7 @@ msgstr "Kliknij i przeciągnij, aby edytować sampel"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr "Aby użyć rysowania, przybliżaj do momentu zobaczenia pojedynczych sampli."
+msgstr "Aby użyć rysowania, powiększaj do momentu zobaczenia pojedynczych sampli."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -16930,11 +16930,11 @@ msgstr "Przesuń ścieżkę"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
-msgstr "Kliknij, aby zwiększyć podgląd; kliknij z Shift, aby zmniejszyć"
+msgstr "Kliknij, aby powiększyć podgląd; kliknij z Shift, aby pomniejszyć"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Przeciągnij lewym przyciskiem myszki, aby zwiększyć; kliknij z prawym przyciskiem myszki, aby zmniejszyć"
+msgstr "Przeciągnij lewym przyciskiem myszki, aby powiększyć; kliknij z prawym przyciskiem myszki, aby pomniejszyć"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -18121,7 +18121,7 @@ msgstr "Utwórz nową etykietę na podstawie"
 
 #: plug-ins/equalabel.ny
 msgid "Number & Interval"
-msgstr "Numer & interwał"
+msgstr "Numer i interwał"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -19061,7 +19061,7 @@ msgstr "Tremolo"
 
 #: plug-ins/tremolo.ny
 msgid "Applying Tremolo..."
-msgstr "Stosowanie tremolo..."
+msgstr "Stosowanie tremola..."
 
 #: plug-ins/tremolo.ny
 msgid "Waveform type"
@@ -19195,7 +19195,7 @@ msgid ""
 " - Although the Track is stereo, the field is obviously extra wide.\n"
 "                This can cause strange effects.\n"
 "                Especially when played by only one speaker."
-msgstr " - Mimo że ścieżka jest stereo, pole jest oczywiście bardzo szerokie.\n                Może to spowodować dziwne efekty.\n                Zwłaszcza gdy gra tylko jeden głośnik."
+msgstr " - Mimo że ścieżka jest stereo, pole jest oczywiście bardzo szerokie.\n                Może to spowodować dziwne efekty.\n                Zwłaszcza, gdy gra tylko jeden głośnik."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
