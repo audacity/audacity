@@ -49,6 +49,8 @@ class ShuttleGui;
 class AUDACITY_DLL_API PrefsPanel /* not final */
    : public wxPanelWrapper, ComponentInterface
 {
+   struct PrefsItem;
+
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.
     struct PrefsNode {
@@ -81,6 +83,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    // Typically you make a static object of this type in the .cpp file that
    // also implements the PrefsPanel subclass.
    struct AUDACITY_DLL_API Registration final
+      : public Registry::RegisteredItem<PrefsItem>
    {
       Registration( const wxString &name, const Factory &factory,
          bool expanded = true,
@@ -120,6 +123,20 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    virtual ManualPageID HelpPageName();
 
    virtual void Cancel();
+
+ private:
+   struct AUDACITY_DLL_API PrefsItem final
+      : Registry::ConcreteGroupItem<false> {
+      PrefsPanel::Factory factory;
+      bool expanded{ false };
+
+      static Registry::GroupItem &Registry();
+
+      PrefsItem( const wxString &name,
+         const PrefsPanel::Factory &factory_, bool expanded_ );
+
+      struct Visitor;
+   };
 };
 
 #endif

@@ -233,7 +233,24 @@ namespace Registry {
    // a GroupItem.
    REGISTRIES_API
    void RegisterItem( GroupItem &registry, const Placement &placement,
-      BaseItemPtr pItem );
+      BaseItemPtr pItem //!< Registry takes ownership
+   );
+   
+   //! Generates classes whose instances register items at construction
+   /*!
+       Usually constructed statically
+       @tparam Item inherits `BaseItem`
+       @tparam RegistryClass defines static member `Registry()` returning `GroupItem&`
+    */
+   template<typename Item, typename RegistryClass = Item> class RegisteredItem {
+   public:
+      RegisteredItem(std::unique_ptr<Item> pItem, const Placement &placement)
+      {
+         if (pItem)
+            RegisterItem(
+               RegistryClass::Registry(), placement, std::move( pItem ) );
+      }
+   };
    
    // Define actions to be done in Visit.
    // Default implementations do nothing

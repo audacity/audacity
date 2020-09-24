@@ -766,10 +766,15 @@ namespace MenuTable {
       const Identifier &name, const SpecialItem::Appender &fn )
          { return std::make_unique<SpecialItem>( name, fn ); }
 
+   struct ItemRegistry {
+      static GroupItem &Registry();
+   };
+
    // Typically you make a static object of this type in the .cpp file that
    // also defines the added menu actions.
    // pItem can be specified by an expression using the inline functions above.
    struct AUDACITY_DLL_API AttachedItem final
+      : public RegisteredItem<BaseItem, ItemRegistry>
    {
       AttachedItem( const Placement &placement, BaseItemPtr pItem );
 
