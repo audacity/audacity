@@ -90,30 +90,33 @@ ImportPluginList &Importer::sImportPluginList()
 namespace {
 static const auto PathStart = wxT("Importers");
 
-static Registry::GroupItem &sRegistry()
+
+}
+
+Registry::GroupItem &Importer::ImporterItem::Registry()
 {
    static Registry::TransparentGroupItem<> registry{ PathStart };
    return registry;
 }
 
-struct ImporterItem final : Registry::SingleItem {
-   ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin )
-      : SingleItem{ id }
-      , mpPlugin{ std::move( pPlugin ) }
-   {}
+Importer::ImporterItem::ImporterItem( const Identifier &id, std::unique_ptr<ImportPlugin> pPlugin )
+   : SingleItem{ id }
+   , mpPlugin{ std::move( pPlugin ) }
+{}
 
-   std::unique_ptr<ImportPlugin> mpPlugin;
-};
-}
+Importer::ImporterItem::~ImporterItem() = default;
 
 Importer::RegisteredImportPlugin::RegisteredImportPlugin(
    const Identifier &id,
    std::unique_ptr<ImportPlugin> pPlugin,
    const Registry::Placement &placement )
+   : RegisteredItem{
+      pPlugin
+         ? std::make_unique< ImporterItem >( id, std::move( pPlugin ) )
+         : nullptr,
+      placement
+   }
 {
-   if ( pPlugin )
-      Registry::RegisterItem( sRegistry(), placement,
-         std::make_unique< ImporterItem >( id, std::move( pPlugin ) ) );
 }
 
 UnusableImportPluginList &Importer::sUnusableImportPluginList()
@@ -149,7 +152,7 @@ bool Importer::Initialize()
          // Once only, visit the registry to collect the plug-ins properly
          // sorted
          TransparentGroupItem<> top{ PathStart };
-         Registry::Visit( *this, &top, &sRegistry() );
+         Registry::Visit( *this, &top, &ImporterItem::Registry() );
       }
 
       void Visit( SingleItem &item, const Path &path ) override

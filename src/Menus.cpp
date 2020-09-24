@@ -251,22 +251,23 @@ using namespace Registry;
 
 const auto MenuPathStart = wxT("MenuBar");
 
-static Registry::GroupItem &sRegistry()
-{
-   static Registry::TransparentGroupItem<> registry{ MenuPathStart };
-   return registry;
 }
+
+Registry::GroupItem &MenuTable::ItemRegistry::Registry()
+{
+   static TransparentGroupItem<> registry{ MenuPathStart };
+   return registry;
 }
 
 MenuTable::AttachedItem::AttachedItem(
    const Placement &placement, BaseItemPtr pItem )
+   : RegisteredItem{ std::move(pItem), placement }
 {
-   Registry::RegisterItem( sRegistry(), placement, std::move( pItem ) );
 }
 
 void MenuTable::DestroyRegistry()
 {
-   sRegistry().items.clear();
+   MenuTable::ItemRegistry::Registry().items.clear();
 }
 
 namespace {
@@ -437,7 +438,8 @@ void MenuManager::Visit( ToolbarMenuVisitor &visitor )
    static const auto menuTree = MenuTable::Items( MenuPathStart );
 
    wxLogNull nolog;
-   Registry::Visit( visitor, menuTree.get(), &sRegistry() );
+   Registry::Visit( visitor, menuTree.get(),
+      &MenuTable::ItemRegistry::Registry() );
 }
 
 // TODO: This surely belongs in CommandManager?
