@@ -17,6 +17,7 @@
 #include "./widgets/ErrorDialog.h"
 
 #include <wx/display.h>
+#include <wx/filename.h>
 #include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
@@ -131,10 +132,12 @@ AudacityProject::AudacityProject()
    auto path = FileNames::TempDir();
    if (wxGetDiskSpace(path, NULL, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
+         auto volume = wxFileName(path).GetVolume();
+         /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
          ShowErrorDialog(nullptr, 
             XO("Warning"),
-            XO("There is very little free disk space left.\n"
-               "Please select a bigger temporary directory in Preferences."),
+            XO("There is very little free disk space left on %s:\n"
+               "Please select a bigger temporary directory in Preferences.").Format( volume ),
             "Error:_Disk_full_or_not_writable"
             );
       }
