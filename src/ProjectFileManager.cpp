@@ -291,13 +291,13 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
       if ( !wxRenameFile(fileName, safetyFileName) )
       {
-         AudacityMessageBox(
-            XO(
-"Audacity failed to write file %s.\nPerhaps disk is full or not writable.")
-               .Format(safetyFileName),
+         ShowErrorDialog(
+            &window,
             XO("Error Writing to File"),
-            wxICON_STOP,
-            &window);
+            XO("Audacity failed to write file %s.\nPerhaps disk is full or not writable.")
+               .Format(safetyFileName),
+            "Error:_Disk_full_or_not_writable"
+            );
          return false;
       }
    }
@@ -305,13 +305,13 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks);
    if (!success)
    {
-      AudacityMessageBox(
-         XO(
-"Could not save project. Perhaps %s \nis not writable or the disk is full.")
-            .Format(fileName),
+      ShowErrorDialog(
+         &window,
          XO("Error Saving Project"),
-         wxICON_ERROR,
-         &window);
+         XO("Could not save project. Perhaps %s \nis not writable or the disk is full.")
+            .Format(fileName),
+         "Error:_Disk_full_or_not_writable"
+         );
 
       if (fromSaveAs)
       {
