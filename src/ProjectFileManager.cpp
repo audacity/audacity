@@ -294,7 +294,9 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
          ShowErrorDialog(
             &window,
             XO("Error Writing to File"),
-            XO("Audacity failed to write file %s.\nPerhaps disk is full or not writable.")
+            XO("Audacity failed to write file %s.\n"
+               "Perhaps disk is full or not writable.\n"
+               "For tips on freeing up space, click the help button.")
                .Format(safetyFileName),
             "Error:_Disk_full_or_not_writable"
             );
@@ -308,7 +310,9 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       ShowErrorDialog(
          &window,
          XO("Error Saving Project"),
-         XO("Could not save project. Perhaps %s \nis not writable or the disk is full.")
+         XO("Could not save project. Perhaps %s \n"
+            "is not writable or the disk is full.\n"
+            "For tips on freeing up space, click the help button.")
             .Format(fileName),
          "Error:_Disk_full_or_not_writable"
          );

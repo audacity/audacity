@@ -15,6 +15,7 @@
 #include "KeyboardCapture.h"
 #include "FileNames.h"
 #include "./widgets/ErrorDialog.h"
+#include "./FileException.h"
 
 #include <wx/display.h>
 #include <wx/filename.h>
@@ -132,12 +133,13 @@ AudacityProject::AudacityProject()
    auto path = FileNames::TempDir();
    if (wxGetDiskSpace(path, NULL, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
-         auto volume = wxFileName(path).GetVolume();
+         auto volume = FileException::AbbreviatePath( path );
          /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
          ShowErrorDialog(nullptr, 
             XO("Warning"),
-            XO("There is very little free disk space left on %s:\n"
-               "Please select a bigger temporary directory in Preferences.").Format( volume ),
+            XO("There is very little free disk space left on %s\n"
+               "Please select a bigger temporary directory location in\n"
+               "Directories Preferences.").Format( volume ),
             "Error:_Disk_full_or_not_writable"
             );
       }
