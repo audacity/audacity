@@ -813,7 +813,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(10);
 
-   S.StartHorizontalLay(wxEXPAND, true);
+   S.StartHorizontalLay(wxEXPAND, 1);
    {
       PlotData* plot;
 
@@ -856,6 +856,11 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Algorithm"));
    {
+      wxSize box_size;
+      int width;
+
+      S.StartHorizontalLay(wxEXPAND, 1);
+      S.StartVerticalLay(1);
       S.StartMultiColumn(2, wxALIGN_LEFT);
       {
          S.SetStretchyCol(1);
@@ -865,33 +870,48 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
                Msgids(kAlgorithmStrings, nAlgos),
                mAlgorithm);
 
-         wxSize box_size = mAlgorithmCtrl->GetMinSize();
-         int width = S.GetParent()->GetTextExtent(wxString::Format(
+         box_size = mAlgorithmCtrl->GetMinSize();
+         width = S.GetParent()->GetTextExtent(wxString::Format(
             "%sxxxx",  kAlgorithmStrings[nAlgos-1].Translation())).GetWidth();
          box_size.SetWidth(width);
          mAlgorithmCtrl->SetMinSize(box_size);
+      }
+      S.EndMultiColumn();
+      S.EndVerticalLay();
+
+      S.AddSpace(15, 0);
+
+      S.StartVerticalLay(1);
+      S.StartMultiColumn(2, wxALIGN_LEFT);
+      {
+         S.SetStretchyCol(1);
 
          mPreprocCtrl = S.Validator<wxGenericValidator>(&mCompressBy)
             .AddChoice(XO("Compress based on:"),
                Msgids(kCompressByStrings, nBy),
                mCompressBy);
          mPreprocCtrl->SetMinSize(box_size);
-
-         S.Validator<wxGenericValidator>(&mStereoInd)
-            .AddCheckBox(XO("Compress stereo channels independently"),
-               DEF_StereoInd);
       }
       S.EndMultiColumn();
+      S.EndVerticalLay();
+      S.EndHorizontalLay();
+
+      S.Validator<wxGenericValidator>(&mStereoInd)
+         .AddCheckBox(XO("Compress stereo channels independently"),
+            DEF_StereoInd);
    }
    S.EndStatic();
 
    S.StartStatic(XO("Compressor"));
    {
+      int textbox_width = S.GetParent()->GetTextExtent("10.000001XX").GetWidth();
+      SliderTextCtrl* ctrl = nullptr;
+
+      S.StartHorizontalLay(wxEXPAND, true);
+      S.StartVerticalLay(1);
       S.StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(1);
-         int textbox_width = S.GetParent()->GetTextExtent("0.000001").GetWidth();
-         SliderTextCtrl* ctrl = nullptr;
 
          S.AddVariableText(XO("Threshold:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -925,6 +945,40 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
          ctrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("dB"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
+         S.AddVariableText(XO("Make-up Gain:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Make-up Gain"))
+            .Style(SliderTextCtrl::HORIZONTAL)
+            .AddSliderTextCtrl({}, DEF_MakeupGain, MAX_MakeupGain,
+               MIN_MakeupGain, ScaleToPrecision(SCL_MakeupGain),
+               &mMakeupGainPct);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("%"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+
+         S.AddVariableText(XO("Dry/Wet:"), true,
+            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+         ctrl = S.Name(XO("Dry/Wet"))
+            .Style(SliderTextCtrl::HORIZONTAL)
+            .AddSliderTextCtrl({}, DEF_DryWet, MAX_DryWet,
+               MIN_DryWet, ScaleToPrecision(SCL_DryWet),
+               &mDryWetPct);
+         ctrl->SetMinTextboxWidth(textbox_width);
+         S.AddVariableText(XO("%"), true,
+            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+      }
+      S.EndMultiColumn();
+      S.EndVerticalLay();
+
+      S.AddSpace(15, 0, 0);
+
+      S.StartHorizontalLay(wxEXPAND, true);
+      S.StartVerticalLay(1);
+      S.StartMultiColumn(3, wxEXPAND);
+      {
+         S.SetStretchyCol(1);
 
          S.AddVariableText(XO("Attack Time:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
@@ -969,31 +1023,10 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
          ctrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
-         S.AddVariableText(XO("Make-up Gain:"), true,
-            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Make-up Gain"))
-            .Style(SliderTextCtrl::HORIZONTAL)
-            .AddSliderTextCtrl({}, DEF_MakeupGain, MAX_MakeupGain,
-               MIN_MakeupGain, ScaleToPrecision(SCL_MakeupGain),
-               &mMakeupGainPct);
-         ctrl->SetMinTextboxWidth(textbox_width);
-         S.AddVariableText(XO("%"), true,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         S.AddVariableText(XO("Dry/Wet:"), true,
-            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Dry/Wet"))
-            .Style(SliderTextCtrl::HORIZONTAL)
-            .AddSliderTextCtrl({}, DEF_DryWet, MAX_DryWet,
-               MIN_DryWet, ScaleToPrecision(SCL_DryWet),
-               &mDryWetPct);
-         ctrl->SetMinTextboxWidth(textbox_width);
-         S.AddVariableText(XO("%"), true,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
       S.EndMultiColumn();
+      S.EndVerticalLay();
+      S.EndHorizontalLay();
    }
    S.EndVerticalLay();
 }
