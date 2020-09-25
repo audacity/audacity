@@ -104,7 +104,7 @@ BEGIN_EVENT_TABLE(EffectCompressor2, wxEvtHandler)
 END_EVENT_TABLE()
 
 const ComponentInterfaceSymbol EffectCompressor2::Symbol
-{ XO("Compressor v2") };
+{ XO("Dynamic Compressor") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectCompressor2 > reg; }
 
@@ -548,7 +548,7 @@ TranslatableString EffectCompressor2::GetDescription()
 
 wxString EffectCompressor2::ManualPage()
 {
-   return wxT("Compressor2");
+   return wxT("Dynamic_Compressor");
 }
 
 // EffectDefinitionInterface implementation
