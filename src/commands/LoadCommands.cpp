@@ -44,6 +44,20 @@ void BuiltinCommandsModule::DoRegistration(
    Entry::Registry().emplace_back( Entry{ name, factory } );
 }
 
+void BuiltinCommandsModule::UndoRegistration(
+   const ComponentInterfaceSymbol &name )
+{
+   auto &items = Entry::Registry();
+   auto end = items.end();
+   auto iter = std::find_if( items.begin(), end, [&](auto &entry){
+      return name == entry.name;
+   } );
+   if ( iter != end )
+      items.erase( iter);
+   else
+      wxASSERT( false );
+}
+
 // ============================================================================
 // Module registration entry point
 //

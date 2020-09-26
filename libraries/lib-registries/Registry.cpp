@@ -747,12 +747,14 @@ void OrderingPreferenceInitializer::operator () ()
       gPrefs->Flush();
 }
 
-void RegisterItem( GroupItem &registry, const Placement &placement,
-   BaseItemPtr pItem )
+}
+
+namespace {
+
+auto Finder( BaseItemPtrs **ppItems )
 {
    // Since registration determines only an unordered tree of menu items,
    // we can sort children of each node lexicographically for our convenience.
-   BaseItemPtrs *pItems;
    struct Comparator {
       bool operator()
          ( const Identifier &component, const BaseItemPtr& pItem ) const {
@@ -761,8 +763,19 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
          ( const BaseItemPtr& pItem, const Identifier &component ) const {
             return pItem->name < component; }
    };
-   auto find = [&pItems]( const Identifier &component ){ return std::equal_range(
-      pItems->begin(), pItems->end(), component, Comparator() ); };
+   return [ppItems]( const Identifier &component ){
+      return std::equal_range(
+         ppItems[0]->begin(), ppItems[0]->end(), component, Comparator() ); };
+};
+
+/*!
+ @post if `createGroups` then return value is not null
+ */
+BaseItemPtrs *LocateItem(
+   GroupItem &registry, const Placement &placement, bool createGroups )
+{
+   BaseItemPtrs *pItems;
+   const auto find = Finder(&pItems);
 
    auto pNode = &registry;
    pItems = &pNode->items;
@@ -798,6 +811,9 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
          break;
    }
 
+   if (!createGroups && pComponent != end)
+      return nullptr;
+
    // Create path group items for remaining components
    while ( pComponent != end ) {
       auto newNode = std::make_unique<TransparentGroupItem<>>( *pComponent );
@@ -807,11 +823,46 @@ void RegisterItem( GroupItem &registry, const Placement &placement,
       ++pComponent;
    }
 
+   return pItems;
+}
+
+}
+
+namespace Registry {
+
+void RegisterItem( GroupItem &registry, const Placement &placement,
+   BaseItemPtr pItem )
+{
+   auto pItems = LocateItem(registry, placement, true);
+   wxASSERT( pItems );
+
+   const auto find = Finder(&pItems);
+
    // Remember the hint, to be used later in merging.
    pItem->orderingHint = placement.hint;
 
    // Now insert the item.
    pItems->insert( find( pItem->name ).second, std::move( pItem ) );
+}
+
+
+bool UnregisterItem( GroupItem &registry, const Placement &placement,
+   const BaseItem *pItem )
+{
+   auto pItems = LocateItem(registry, placement, false);
+   if (!pItems)
+      return false;
+
+   const auto find = Finder(&pItems);
+   const auto range = find( pItem->name );
+   if (range.first == range.second)
+      return false;
+
+   // Assuming unregistration is complementary to the sequence of registrations,
+   // this is the correct way to unregister in case of name collisions,
+   // rather than erasing at range.first.
+   pItems->erase( range.second - 1 );
+   return true;
 }
 
 }

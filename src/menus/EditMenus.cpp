@@ -1213,22 +1213,22 @@ auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
 };
 
 RegisteredMenuItemEnabler selectTracks{{
-   []{ return TracksExistFlag(); },
-   []{ return EditableTracksSelectedFlag(); },
+   TracksExistFlag,
+   EditableTracksSelectedFlag,
    canSelectAll,
    selectAll
 }};
 
 // Including time tracks.
 RegisteredMenuItemEnabler selectAnyTracks{{
-   []{ return TracksExistFlag(); },
-   []{ return AnyTracksSelectedFlag(); },
+   TracksExistFlag,
+   AnyTracksSelectedFlag,
    canSelectAll,
    selectAll
 }};
 
 RegisteredMenuItemEnabler selectWaveTracks{{
-   []{ return WaveTracksExistFlag(); },
+   WaveTracksExistFlag,
    []{ return TimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll
@@ -1236,7 +1236,7 @@ RegisteredMenuItemEnabler selectWaveTracks{{
 
 // Also enable select for the noise reduction case.
 RegisteredMenuItemEnabler selectWaveTracks2{{
-   []{ return WaveTracksExistFlag(); },
+   WaveTracksExistFlag,
    []{ return NoiseReductionTimeSelectedFlag() | WaveTracksSelectedFlag() | CutCopyAvailableFlag(); },
    canSelectAll,
    selectAll

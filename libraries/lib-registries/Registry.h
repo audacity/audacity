@@ -236,7 +236,13 @@ namespace Registry {
       BaseItemPtr pItem //!< Registry takes ownership
    );
    
-   //! Generates classes whose instances register items at construction
+   // Undo registration of an item, returning success
+   REGISTRIES_API
+   bool UnregisterItem( GroupItem &registry, const Placement &placement,
+      const BaseItem *pItem //!< Registry already has ownership, and will delete it if found
+   );
+
+   //! Generates classes whose instances register and unregister items at construction and destruction
    /*!
        Usually constructed statically
        @tparam Item inherits `BaseItem`
@@ -245,11 +251,22 @@ namespace Registry {
    template<typename Item, typename RegistryClass = Item> class RegisteredItem {
    public:
       RegisteredItem(std::unique_ptr<Item> pItem, const Placement &placement)
+         : mpItem{ pItem.get() }, mPlacement{ placement }
       {
-         if (pItem)
+         if (mpItem)
             RegisterItem(
-               RegistryClass::Registry(), placement, std::move( pItem ) );
+               RegistryClass::Registry(), mPlacement, std::move( pItem ) );
       }
+
+      ~RegisteredItem()
+      {
+         if (mpItem) {
+            UnregisterItem( RegistryClass::Registry(), mPlacement, mpItem );
+         }
+      }
+   private:
+      Item *mpItem = nullptr;
+      Placement mPlacement;
    };
    
    // Define actions to be done in Visit.
