@@ -97,6 +97,11 @@ inline int ScaleToPrecision(double scale)
    return ceil(log10(scale));
 }
 
+inline bool IsInRange(double val, double min, double max)
+{
+   return val >= min && val <= max;
+}
+
 BEGIN_EVENT_TABLE(EffectCompressor2, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectCompressor2::OnUpdateUI)
    EVT_CHOICE(wxID_ANY, EffectCompressor2::OnUpdateUI)
@@ -1622,6 +1627,15 @@ void EffectCompressor2::UpdateCompressorPlot()
    plot = mGainPlot->GetPlotData(0);
    wxASSERT(plot->xdata.size() == plot->ydata.size());
 
+   if(!IsInRange(mThresholdDB, MIN_Threshold, MAX_Threshold))
+       return;
+   if(!IsInRange(mRatio, MIN_Ratio, MAX_Ratio))
+       return;
+   if(!IsInRange(mKneeWidthDB, MIN_KneeWidth, MAX_KneeWidth))
+       return;
+   if(!IsInRange(mMakeupGainPct, MIN_MakeupGain, MAX_MakeupGain))
+       return;
+
    InitGainCalculation();
    size_t xsize = plot->xdata.size();
    for(size_t i = 0; i < xsize; ++i)
@@ -1638,6 +1652,15 @@ void EffectCompressor2::UpdateResponsePlot()
    PlotData* plot;
    plot = mResponsePlot->GetPlotData(1);
    wxASSERT(plot->xdata.size() == plot->ydata.size());
+
+   if(!IsInRange(mAttackTime, MIN_AttackTime, MAX_AttackTime))
+       return;
+   if(!IsInRange(mReleaseTime, MIN_ReleaseTime, MAX_ReleaseTime))
+       return;
+   if(!IsInRange(mLookaheadTime, MIN_LookaheadTime, MAX_LookaheadTime))
+       return;
+   if(!IsInRange(mLookbehindTime, MIN_LookbehindTime, MAX_LookbehindTime))
+       return;
 
    std::unique_ptr<SamplePreprocessor> preproc;
    std::unique_ptr<EnvelopeDetector> envelope;
