@@ -8,6 +8,9 @@
 
 **********************************************************************/
 
+#ifndef __AUDACITY_LOAD_EFFECTS__
+#define __AUDACITY_LOAD_EFFECTS__
+
 #include "audacity/ModuleInterface.h"
 
 #include <functional>
@@ -85,3 +88,5 @@ private:
    using EffectHash = std::unordered_map< wxString, const Entry* > ;
    EffectHash mEffects;
 };
+
+#endif
