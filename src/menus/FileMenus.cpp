@@ -734,7 +734,7 @@ BaseItemSharedPtr FileMenu()
          ),
 
          Command( wxT("Compact"), XXO("Co&mpact Project"), FN(OnCompact),
-            AudioIONotBusyFlag() )
+            AudioIONotBusyFlag(), wxT("Shift+A") )
       ),
 
       Section( "Import-Export",
