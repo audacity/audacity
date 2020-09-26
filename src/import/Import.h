@@ -96,6 +96,12 @@ public:
    // unsupported import formats; typically in a conditional compilation
    struct RegisteredUnusableImportPlugin{
       RegisteredUnusableImportPlugin( std::unique_ptr<UnusableImportPlugin> );
+      ~RegisteredUnusableImportPlugin();
+
+      struct AUDACITY_DLL_API Init{ Init(); };
+
+   private:
+      UnusableImportPlugin *mpPlugin = nullptr;
    };
 
    Importer();

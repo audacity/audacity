@@ -38,10 +38,15 @@ public:
    // Typically you make a static object of this type in the .cpp file that
    // also implements the Command subclass.
    template< typename Subclass >
-   struct Registration final { Registration() {
-      DoRegistration(
-         Subclass::Symbol, []{ return std::make_unique< Subclass >(); } );
-   } };
+   struct Registration final {
+      Registration() {
+         DoRegistration(
+            Subclass::Symbol, []{ return std::make_unique< Subclass >(); } );
+      }
+      ~Registration() {
+         UndoRegistration( Subclass::Symbol );
+      }
+   };
 
    // ComponentInterface implementation
 
@@ -82,6 +87,8 @@ private:
 
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory );
+
+   static void UndoRegistration( const ComponentInterfaceSymbol &name );
 
    using CommandHash = std::unordered_map< wxString, const Entry* > ;
    CommandHash mCommands;

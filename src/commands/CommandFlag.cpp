@@ -45,6 +45,18 @@ ReservedCommandFlag::ReservedCommandFlag(
    sOptions().emplace_back( options );
 }
 
+ReservedCommandFlag::~ReservedCommandFlag()
+{
+   sPredicates().pop_back();
+   sOptions().pop_back();
+}
+
+ReservedCommandFlag::Init::Init()
+{
+   RegisteredPredicates();
+   Options();
+}
+
 namespace {
 MenuItemEnablers &sEnablers()
 {

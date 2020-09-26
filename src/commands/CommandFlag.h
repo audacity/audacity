@@ -95,6 +95,9 @@ public:
 
    ReservedCommandFlag( const Predicate &predicate,
       const CommandFlagOptions &options = {} );
+   ~ReservedCommandFlag();
+
+   struct AUDACITY_DLL_API Init{ Init(); };
 };
 
 // To describe auto-selection, stop-if-paused, etc.:
@@ -127,5 +130,7 @@ struct AUDACITY_DLL_API RegisteredMenuItemEnabler{
    RegisteredMenuItemEnabler( const MenuItemEnabler &enabler );
 };
 
+
+static ReservedCommandFlag::Init sInitReservedCommandFlags;
 
 #endif

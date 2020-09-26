@@ -37,11 +37,16 @@ public:
    // Typically you make a static object of this type in the .cpp file that
    // also implements the Effect subclass.
    template< typename Subclass >
-   struct Registration final { Registration( bool excluded = false ) {
-      DoRegistration(
-         Subclass::Symbol, []{ return std::make_unique< Subclass >(); },
-         excluded );
-   } };
+   struct Registration final {
+      Registration( bool excluded = false ) {
+         DoRegistration(
+            Subclass::Symbol, []{ return std::make_unique< Subclass >(); },
+            excluded );
+      }
+      ~Registration() {
+         UndoRegistration( Subclass::Symbol );
+      }
+   };
 
    // ComponentInterface implementation
 
@@ -81,6 +86,8 @@ private:
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory,
       bool excluded );
+
+   static void UndoRegistration( const ComponentInterfaceSymbol &name );
 
    struct Entry;
    using EffectHash = std::unordered_map< wxString, const Entry* > ;

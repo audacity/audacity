@@ -265,7 +265,7 @@ MenuTable::AttachedItem::AttachedItem(
 
 void MenuTable::DestroyRegistry()
 {
-   MenuTable::ItemRegistry::Registry().items.clear();
+
 }
 
 namespace {

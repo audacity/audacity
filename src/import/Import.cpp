@@ -125,9 +125,25 @@ UnusableImportPluginList &Importer::sUnusableImportPluginList()
 
 Importer::RegisteredUnusableImportPlugin::RegisteredUnusableImportPlugin(
    std::unique_ptr<UnusableImportPlugin> pPlugin )
+   : mpPlugin( pPlugin.get() )
 {
-   if ( pPlugin )
+   if ( mpPlugin ) {
       sUnusableImportPluginList().emplace_back( std::move( pPlugin ) );
+   }
+}
+
+Importer::RegisteredUnusableImportPlugin::~RegisteredUnusableImportPlugin()
+{
+   if ( mpPlugin ) {
+      auto &list = sUnusableImportPluginList();
+      auto end = list.end();
+      auto iter = std::find_if( list.begin(), end,
+         [&](auto &entry){ return entry.get() == mpPlugin; } );
+      if ( iter != end )
+         list.erase( iter );
+      else
+         wxASSERT( false );
+   }
 }
 
 bool Importer::Initialize()
