@@ -24,6 +24,7 @@ and sample size to help you importing data of an unknown format.
 #include "../Audacity.h"
 #include "ImportRaw.h"
 
+#include "../AudioIOBase.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
 #include "../ProjectSettings.h"
@@ -42,6 +43,7 @@ and sample size to help you importing data of an unknown format.
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
