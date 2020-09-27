@@ -3,7 +3,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/vamp-hostsdk/PluginBufferingAdapter.cpp
       ${TARGET_ROOT}/src/vamp-hostsdk/PluginChannelAdapter.cpp
@@ -15,12 +15,12 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/src/vamp-hostsdk/RealTime.cpp
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PUBLIC
       ${TARGET_ROOT}
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PRIVATE
       _USE_MATH_DEFINES
 )
@@ -30,3 +30,4 @@ target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 
+set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
