@@ -81,7 +81,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxChoice   *mChannelChoice;
    wxTextCtrl *mOffsetText;
    wxTextCtrl *mPercentText;
-   wxTextCtrl *mRateText;
+   wxComboBox *mRateText;
 
    int         mNumEncodings;
    ArrayOf<int> mEncodingSubtype;
@@ -418,10 +418,16 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          S.AddUnits(XO("%"));
 
          // Rate text
+         wxArrayStringEx rates;
+         for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
+            rates.Add(
+               wxString::Format(wxT("%d"), AudioIOBase::StandardRates[i]));
+         }
+
          /* i18n-hint: (noun)*/
-         mRateText = S.AddTextBox(XXO("Sample rate:"),
-                                  wxString::Format(wxT("%d"), (int)mRate),
-                                  12);
+         mRateText = S.AddCombo(XXO("Sample rate:"),
+                                wxString::Format(wxT("%d"), (int)mRate),
+                                rates);
          /* i18n-hint: This is the abbreviation for "Hertz", or
             cycles per second. */
          S.AddUnits(XO("Hz"));
