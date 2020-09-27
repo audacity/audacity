@@ -13,8 +13,8 @@
 #ifndef __AUDACITY_EFFECT_CHANGESPEED__
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
-#include "Effect.h"
-#include "../ShuttleAutomation.h"
+#include "effects/Effect.h"
+#include "ShuttleAutomation.h"
 
 class wxSlider;
 class wxChoice;
