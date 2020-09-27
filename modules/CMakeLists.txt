@@ -16,5 +16,10 @@ foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()
 
+# Propagate some collected values
+foreach(var MIMETYPES MAC_RESOURCES)
+   set( ${var} "${${var}}" PARENT_SCOPE )
+endforeach()
+
 #propagate collected edges up to root CMakeLists.txt
 set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
