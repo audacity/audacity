@@ -603,7 +603,7 @@ void OnImportRaw(const CommandContext &context)
 
    TrackHolders newTracks;
 
-   ::ImportRaw(&window, fileName, &trackFactory, newTracks);
+   ::ImportRaw(project, &window, fileName, &trackFactory, newTracks);
 
    if (newTracks.size() <= 0)
       return;

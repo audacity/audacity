@@ -26,6 +26,7 @@ and sample size to help you importing data of an unknown format.
 
 #include "../FileFormats.h"
 #include "../Prefs.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../UserException.h"
 #include "../WaveTrack.h"
@@ -92,7 +93,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 // This function leaves outTracks empty as an indication of error,
 // but may also throw FileException to make use of the application's
 // user visible error reporting.
-void ImportRaw(wxWindow *parent, const wxString &fileName,
+void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
               WaveTrackFactory *trackFactory, TrackHolders &outTracks)
 {
    outTracks.clear();
@@ -127,6 +128,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          numChannels = 1;
          offset = 0;
       }
+
+      rate = ProjectSettings::Get( project ).GetRate();
 
       numChannels = std::max(1u, numChannels);
       ImportRawDialog dlog(parent, encoding, numChannels, (int)offset, rate);
