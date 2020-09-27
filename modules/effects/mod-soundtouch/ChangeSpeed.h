@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_CHANGESPEED__
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
-#include "StatefulEffect.h"
+#include "effects/StatefulEffect.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
 

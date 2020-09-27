@@ -14,7 +14,7 @@
 *//*******************************************************************/
 #if USE_SBSMS
 #include "TimeScale.h"
-#include "EffectEditor.h"
+#include "effects/EffectEditor.h"
 #include "LoadEffects.h"
 
 #include <math.h>
@@ -23,7 +23,7 @@
 
 #include "MemoryX.h"
 #include "ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "widgets/valnum.h"
 
 enum
 {

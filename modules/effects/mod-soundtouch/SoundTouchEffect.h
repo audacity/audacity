@@ -12,14 +12,12 @@
 
 **********************************************************************/
 
-
-
 #if USE_SOUNDTOUCH
 
 #ifndef __AUDACITY_EFFECT_SOUNDTOUCH__
 #define __AUDACITY_EFFECT_SOUNDTOUCH__
 
-#include "StatefulEffect.h"
+#include "effects/StatefulEffect.h"
 
 // forward declaration of a class defined in SoundTouch.h
 // which is not included here

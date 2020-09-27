@@ -12,6 +12,7 @@ set( FOLDERS
    etc
    import-export
    track-ui
+   effects
    scripting
    nyquist
    sharing

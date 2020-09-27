@@ -322,12 +322,6 @@ set( SOURCES
       effects/BassTreble.h
       effects/Biquad.cpp
       effects/Biquad.h
-      effects/ChangePitch.cpp
-      effects/ChangePitch.h
-      effects/ChangeSpeed.cpp
-      effects/ChangeSpeed.h
-      effects/ChangeTempo.cpp
-      effects/ChangeTempo.h
       effects/ClickRemoval.cpp
       effects/ClickRemoval.h
       effects/Compressor.cpp
@@ -404,16 +398,12 @@ set( SOURCES
       effects/Reverb_libSoX.h
       effects/Reverse.cpp
       effects/Reverse.h
-      effects/SBSMSEffect.cpp
-      effects/SBSMSEffect.h
       effects/ScienFilter.cpp
       effects/ScienFilter.h
       effects/ScoreAlignDialog.cpp
       effects/ScoreAlignDialog.h
       effects/Silence.cpp
       effects/Silence.h
-      effects/SoundTouchEffect.cpp
-      effects/SoundTouchEffect.h
       effects/StatefulEffect.cpp
       effects/StatefulEffect.h
       effects/StatefulEffectUIServices.cpp
@@ -424,8 +414,6 @@ set( SOURCES
       effects/StatelessPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
-      effects/TimeScale.cpp
-      effects/TimeScale.h
       effects/ToneGen.cpp
       effects/ToneGen.h
       effects/TruncSilence.cpp
@@ -1012,8 +1000,6 @@ set( LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
-      $<$<BOOL:${USE_SBSMS}>:libsbsms>
-      $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>

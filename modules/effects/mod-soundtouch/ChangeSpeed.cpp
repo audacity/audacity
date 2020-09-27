@@ -13,9 +13,8 @@
 
 *//*******************************************************************/
 
-
 #include "ChangeSpeed.h"
-#include "EffectEditor.h"
+#include "effects/EffectEditor.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
 
@@ -25,13 +24,13 @@
 #include <wx/slider.h>
 
 #include "ConfigInterface.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "Prefs.h"
 #include "Resample.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/valnum.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
 
 #include "TimeWarper.h"
 #include "WaveClip.h"

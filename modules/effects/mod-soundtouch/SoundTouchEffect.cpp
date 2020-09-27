@@ -12,15 +12,13 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 **********************************************************************/
 
-
-
 #if USE_SOUNDTOUCH
 #include "SoundTouchEffect.h"
 #include "EffectOutputTracks.h"
 
 #include <math.h>
 
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "SyncLock.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"

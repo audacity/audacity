@@ -16,7 +16,7 @@
 *//*******************************************************************/
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"
-#include "EffectEditor.h"
+#include "effects/EffectEditor.h"
 
 #if USE_SBSMS
 #include <wx/valgen.h>
@@ -28,7 +28,7 @@
 #include <wx/slider.h>
 
 #include "ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "widgets/valnum.h"
 #include "TimeWarper.h"
 
 #include "LoadEffects.h"
