@@ -698,10 +698,6 @@ list( APPEND SOURCES
       >
 
 
-      $<$<BOOL:${USE_LIBTWOLAME}>:
-         export/ExportMP2.cpp
-      >
-
       $<$<BOOL:${USE_WAVPACK}>:
          export/ExportWavPack.cpp
       >
@@ -1241,7 +1237,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
-      $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>

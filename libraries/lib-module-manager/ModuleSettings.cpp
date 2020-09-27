@@ -22,6 +22,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
    static std::unordered_set<wxString> modules{
       "mod-flac",
       "mod-ogg",
+      "mod-mp2",
   };
    return modules;
 }

@@ -32,8 +32,6 @@
 
 */
 
-
-
 #ifdef USE_LIBTWOLAME
 
 #include <wx/defs.h>
@@ -46,16 +44,16 @@
 #include <wx/intl.h>
 #include <wx/stream.h>
 
-#include "Export.h"
+#include "export/Export.h"
 #include "FileIO.h"
 #include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
-#include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "ShuttleGui.h"
+#include "Tags.h"
 #include "Track.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ProgressDialog.h"
 
 #define LIBTWOLAME_STATIC
 #include "twolame.h"
@@ -497,5 +495,7 @@ static Exporter::RegisteredExportPlugin sRegisteredPlugin{ "MP2",
    []{ return std::make_unique< ExportMP2 >(); }
 };
 
-#endif // #ifdef USE_LIBTWOLAME
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
 
+#endif // #ifdef USE_LIBTWOLAME
