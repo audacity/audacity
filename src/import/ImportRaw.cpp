@@ -24,8 +24,10 @@ and sample size to help you importing data of an unknown format.
 #include "../Audacity.h"
 #include "ImportRaw.h"
 
+#include "../AudioIOBase.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../UserException.h"
 #include "../WaveTrack.h"
@@ -41,6 +43,7 @@ and sample size to help you importing data of an unknown format.
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -81,7 +84,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxChoice   *mChannelChoice;
    wxTextCtrl *mOffsetText;
    wxTextCtrl *mPercentText;
-   wxTextCtrl *mRateText;
+   wxComboBox *mRateText;
 
    int         mNumEncodings;
    ArrayOf<int> mEncodingSubtype;
@@ -92,7 +95,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 // This function leaves outTracks empty as an indication of error,
 // but may also throw FileException to make use of the application's
 // user visible error reporting.
-void ImportRaw(wxWindow *parent, const wxString &fileName,
+void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
               WaveTrackFactory *trackFactory, TrackHolders &outTracks)
 {
    outTracks.clear();
@@ -127,6 +130,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          numChannels = 1;
          offset = 0;
       }
+
+      rate = ProjectSettings::Get( project ).GetRate();
 
       numChannels = std::max(1u, numChannels);
       ImportRawDialog dlog(parent, encoding, numChannels, (int)offset, rate);
@@ -418,10 +423,16 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          S.AddUnits(XO("%"));
 
          // Rate text
+         wxArrayStringEx rates;
+         for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
+            rates.Add(
+               wxString::Format(wxT("%d"), AudioIOBase::StandardRates[i]));
+         }
+
          /* i18n-hint: (noun)*/
-         mRateText = S.AddTextBox(XXO("Sample rate:"),
-                                  wxString::Format(wxT("%d"), (int)mRate),
-                                  12);
+         mRateText = S.AddCombo(XXO("Sample rate:"),
+                                wxString::Format(wxT("%d"), (int)mRate),
+                                rates);
          /* i18n-hint: This is the abbreviation for "Hertz", or
             cycles per second. */
          S.AddUnits(XO("Hz"));
