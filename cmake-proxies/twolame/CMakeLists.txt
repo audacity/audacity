@@ -3,7 +3,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       ${TARGET_ROOT}/libtwolame/ath.c
       ${TARGET_ROOT}/libtwolame/availbits.c
@@ -26,19 +26,19 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/libtwolame/util.c
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PRIVATE
       ${_PRVDIR}
    PUBLIC
       ${TARGET_ROOT}/libtwolame
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PRIVATE
       LIBTWOLAME_STATIC
 )
 
-list( APPEND OPTIONS
+set( OPTIONS
    PRIVATE
       $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-implicit-function-declaration>
 )
@@ -54,3 +54,4 @@ target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 
+set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)

@@ -3,7 +3,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
 
       # sqlite
@@ -12,12 +12,12 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/sqlite3.h
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PUBLIC
       ${TARGET_ROOT}
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PRIVATE
       #
       # Recommended in SQLite docs
@@ -43,4 +43,6 @@ organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
+
+set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
 
