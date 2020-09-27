@@ -706,10 +706,6 @@ list( APPEND SOURCES
          export/ExportWavPack.cpp
       >
 
-      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
-         export/ExportOGG.cpp
-      >
-
       # Import
 
       import/FormatClassifier.cpp
@@ -759,10 +755,6 @@ list( APPEND SOURCES
 
       $<$<BOOL:${USE_WAVPACK}>:
          import/ImportWavPack.cpp
-      >
-
-      $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
-         import/ImportOGG.cpp
       >
 
       # Menus
@@ -1248,10 +1240,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
-      $<$<BOOL:${USE_LIBOGG}>:Ogg::ogg>
-      $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbis>
-      $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisfile>
-      $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisenc>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
@@ -1342,7 +1330,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       ../mac/Resources/AudacityAIFF.icns
       ../mac/Resources/AudacityAU.icns
       ../mac/Resources/AudacityMP3.icns
-      ../mac/Resources/AudacityOGG.icns
       ../mac/Resources/AudacityProject.icns
       ../mac/Resources/AudacityWAV.icns
    )
@@ -1470,12 +1457,6 @@ else()
          audio/basic
          audio/x-aiff
          audio/x-wav
-      )
-   endif()
-   if( USE_LIBOGG AND USE_LIBVORBIS )
-      list( APPEND MIMETYPES
-         application/ogg
-         audio/x-vorbis+ogg
       )
    endif()
 

@@ -28,8 +28,6 @@
 
 *//*******************************************************************/
 
-
-
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -38,10 +36,10 @@
 #endif
 
 #include <wx/intl.h>
-#include "Import.h"
+#include "import/Import.h"
 #include "Prefs.h"
-#include "../Tags.h"
-#include "../widgets/ProgressDialog.h"
+#include "Tags.h"
+#include "widgets/ProgressDialog.h"
 
 
 #define DESC XO("Ogg Vorbis files")
@@ -73,8 +71,8 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include <vorbis/vorbisfile.h>
 
-#include "../WaveTrack.h"
-#include "ImportPlugin.h"
+#include "WaveTrack.h"
+#include "import/ImportPlugin.h"
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
@@ -385,5 +383,8 @@ OggImportFileHandle::~OggImportFileHandle()
    mFile->Detach();    // so that it doesn't try to close the file (ov_clear()
                        // did that already)
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
 
 #endif                          /* USE_LIBVORBIS */
