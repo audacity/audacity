@@ -390,28 +390,8 @@ list( APPEND SOURCES
 
       # Built-in Effects
 
-      effects/Amplify.cpp
-      effects/Amplify.h
-      effects/AutoDuck.cpp
-      effects/AutoDuck.h
-      effects/BassTreble.cpp
-      effects/BassTreble.h
-      effects/Biquad.cpp
-      effects/Biquad.h
-      effects/ClickRemoval.cpp
-      effects/ClickRemoval.h
-      effects/Compressor.cpp
-      effects/Compressor.h
       effects/Contrast.cpp
       effects/Contrast.h
-      effects/Distortion.cpp
-      effects/Distortion.h
-      effects/DtmfGen.cpp
-      effects/DtmfGen.h
-      effects/EBUR128.cpp
-      effects/EBUR128.h
-      effects/Echo.cpp
-      effects/Echo.h
       effects/Effect.cpp
       effects/Effect.h
       effects/EffectBase.cpp
@@ -420,36 +400,12 @@ list( APPEND SOURCES
       effects/EffectManager.h
       effects/EffectUI.cpp
       effects/EffectUI.h
-      effects/Equalization.cpp
-      effects/Equalization.h
-      effects/Equalization48x.cpp
-      effects/Equalization48x.h
-      effects/Fade.cpp
-      effects/Fade.h
-      effects/FindClipping.cpp
-      effects/FindClipping.h
       effects/Generator.cpp
       effects/Generator.h
-      effects/Invert.cpp
-      effects/Invert.h
       effects/LoadEffects.cpp
       effects/LoadEffects.h
-      effects/Loudness.cpp
-      effects/Loudness.h
-      effects/Noise.cpp
-      effects/Noise.h
-      effects/NoiseReduction.cpp
-      effects/NoiseReduction.h
-      effects/NoiseRemoval.cpp
-      effects/NoiseRemoval.h
-      effects/Normalize.cpp
-      effects/Normalize.h
-      effects/Paulstretch.cpp
-      effects/Paulstretch.h
       effects/PerTrackEffect.cpp
       effects/PerTrackEffect.h
-      effects/Phaser.cpp
-      effects/Phaser.h
       effects/RealtimeEffectList.cpp
       effects/RealtimeEffectList.h
       effects/RealtimeEffectManager.cpp
@@ -458,21 +414,8 @@ list( APPEND SOURCES
       effects/RealtimeEffectState.h
       effects/RealtimeEffectStateUI.h
       effects/RealtimeEffectStateUI.cpp
-      effects/Repair.cpp
-      effects/Repair.h
-      effects/Repeat.cpp
-      effects/Repeat.h
-      effects/Reverb.cpp
-      effects/Reverb.h
-      effects/Reverb_libSoX.h
-      effects/Reverse.cpp
-      effects/Reverse.h
-      effects/ScienFilter.cpp
-      effects/ScienFilter.h
       effects/ScoreAlignDialog.cpp
       effects/ScoreAlignDialog.h
-      effects/Silence.cpp
-      effects/Silence.h
       effects/SimpleMono.cpp
       effects/SimpleMono.h
       effects/StatefulEffectBase.cpp
@@ -481,14 +424,8 @@ list( APPEND SOURCES
       effects/StatefulPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
-      effects/ToneGen.cpp
-      effects/ToneGen.h
-      effects/TruncSilence.cpp
-      effects/TruncSilence.h
       effects/TwoPassSimpleMono.cpp
       effects/TwoPassSimpleMono.h
-      effects/Wahwah.cpp
-      effects/Wahwah.h
 
       # VST Effects
 

@@ -24,19 +24,19 @@
 #include <wx/sizer.h>
 
 #include "ConfigInterface.h"
-#include "../LabelTrack.h"
-#include "../ProjectSettings.h"
-#include "../SelectFile.h"
-#include "../ShuttleAutomation.h"
-#include "../ShuttleGui.h"
-#include "../SyncLock.h"
+#include "LabelTrack.h"
+#include "ProjectSettings.h"
+#include "SelectFile.h"
+#include "ShuttleAutomation.h"
+#include "ShuttleGui.h"
+#include "SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
-#include "../widgets/ProgressDialog.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/VetoDialogHook.h"
+#include "widgets/ProgressDialog.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/VetoDialogHook.h"
 
 #include <unordered_map>
 

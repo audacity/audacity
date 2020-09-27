@@ -1,0 +1,74 @@
+#[[
+Adds most of Audacity's built-in effect and generator classes
+]]
+
+set( SOURCES
+   Amplify.cpp
+   Amplify.h
+   AutoDuck.cpp
+   AutoDuck.h
+   BassTreble.cpp
+   BassTreble.h
+   Biquad.cpp
+   Biquad.h
+   ClickRemoval.cpp
+   ClickRemoval.h
+   Compressor.cpp
+   Compressor.h
+   Distortion.cpp
+   Distortion.h
+   DtmfGen.cpp
+   DtmfGen.h
+   EBUR128.cpp
+   EBUR128.h
+   Echo.cpp
+   Echo.h
+   Equalization.cpp
+   Equalization.h
+   Equalization48x.cpp
+   Equalization48x.h
+   Fade.cpp
+   Fade.h
+   FindClipping.cpp
+   FindClipping.h
+   Invert.cpp
+   Invert.h
+   Loudness.cpp
+   Loudness.h
+   ModEffectsClassesMain.cpp
+   Noise.cpp
+   Noise.h
+   NoiseReduction.cpp
+   NoiseReduction.h
+   NoiseRemoval.cpp
+   NoiseRemoval.h
+   Normalize.cpp
+   Normalize.h
+   Paulstretch.cpp
+   Paulstretch.h
+   Phaser.cpp
+   Phaser.h
+   RealFFTf48x.cpp
+   RealFFTf48x.h
+   Repair.cpp
+   Repair.h
+   Repeat.cpp
+   Repeat.h
+   Reverb.cpp
+   Reverb.h
+   Reverb_libSoX.h
+   Reverse.cpp
+   Reverse.h
+   ScienFilter.cpp
+   ScienFilter.h
+   Silence.cpp
+   Silence.h
+   ToneGen.cpp
+   ToneGen.h
+   TruncSilence.cpp
+   TruncSilence.h
+   Wahwah.cpp
+   Wahwah.h
+)
+audacity_module( mod-effect-classes "${SOURCES}" "Audacity"
+   "" "" )
