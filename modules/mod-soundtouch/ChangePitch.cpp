@@ -15,11 +15,9 @@ the pitch without changing the tempo.
 
 *//*******************************************************************/
 
-
-
 #if USE_SOUNDTOUCH
 #include "ChangePitch.h"
-#include "LoadEffects.h"
+#include "effects/LoadEffects.h"
 
 #if USE_SBSMS
 #include <wx/valgen.h>
@@ -35,13 +33,13 @@ the pitch without changing the tempo.
 #include <wx/spinctrl.h>
 #include <wx/valtext.h>
 
-#include "../PitchName.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../Spectrum.h"
-#include "../WaveTrack.h"
-#include "../widgets/valnum.h"
-#include "TimeWarper.h"
+#include "PitchName.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "Spectrum.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
+#include "effects/TimeWarper.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h
 // and configunix.h, so get rid of them before including,
