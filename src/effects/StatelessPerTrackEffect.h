@@ -32,7 +32,7 @@ public:
 };
 
 //! Simply the union of PerTrackEffect and StatelessEffectUIServices
-class StatelessPerTrackEffect
+class AUDACITY_DLL_API StatelessPerTrackEffect
    : public PerTrackEffect
    , public StatelessEffectUIServices
 {

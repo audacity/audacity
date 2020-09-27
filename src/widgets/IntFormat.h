@@ -14,7 +14,7 @@
 
 #include "RulerFormat.h"
 
-class IntFormat final : public RulerFormat {
+class AUDACITY_DLL_API IntFormat final : public RulerFormat {
 public:
    static const IntFormat &Instance();
 

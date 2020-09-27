@@ -22,7 +22,7 @@ class EffectSettingsAccess;
 /*!
  @param updateUI called after adjusting temporary settings and before play
  */
-void EffectPreview(EffectBase &effect,
+AUDACITY_DLL_API void EffectPreview(EffectBase &effect,
    EffectSettingsAccess &access, std::function<void()> updateUI,
    bool dryOnly);
 

@@ -11,7 +11,7 @@
   Paul Licameli split from Effect.cpp
 
 **********************************************************************/
-#include "StatefulEffect.h"
+#include "effects/StatefulEffect.h"
 #include "SampleCount.h"
 #include "ShuttleGui.h"
 #include <wx/sizer.h>

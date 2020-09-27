@@ -14,7 +14,7 @@
 
 #include "RulerFormat.h"
 
-class LinearDBFormat final : public RulerFormat {
+class AUDACITY_DLL_API LinearDBFormat final : public RulerFormat {
 public:
    static const LinearDBFormat &Instance();
    ~LinearDBFormat() override;

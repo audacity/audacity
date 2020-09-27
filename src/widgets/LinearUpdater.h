@@ -16,7 +16,7 @@
 
 class ZoomInfo;
 
-class LinearUpdater final : public GeneratedUpdater {
+class AUDACITY_DLL_API LinearUpdater final : public GeneratedUpdater {
 public:
    LinearUpdater() = default;
 

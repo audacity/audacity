@@ -7,7 +7,7 @@
  Paul Licameli
  
  **********************************************************************/
-#include "StatelessPerTrackEffect.h"
+#include "effects/StatelessPerTrackEffect.h"
 #include "EffectEditor.h"
 #include "ShuttleGui.h"
 #include <wx/sizer.h>

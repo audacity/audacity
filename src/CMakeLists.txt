@@ -303,32 +303,12 @@ set( SOURCES
 
       # Built-in Effects
 
-      effects/Amplify.cpp
-      effects/Amplify.h
       effects/AnalysisTracks.cpp
       effects/AnalysisTracks.h
-      effects/AutoDuck.cpp
-      effects/AutoDuck.h
       effects/BasicEffectUIServices.cpp
       effects/BasicEffectUIServices.h
-      effects/BassTreble.cpp
-      effects/BassTreble.h
-      effects/Biquad.cpp
-      effects/Biquad.h
-      effects/ClickRemoval.cpp
-      effects/ClickRemoval.h
-      effects/Compressor.cpp
-      effects/Compressor.h
       effects/Contrast.cpp
       effects/Contrast.h
-      effects/Distortion.cpp
-      effects/Distortion.h
-      effects/DtmfGen.cpp
-      effects/DtmfGen.h
-      effects/EBUR128.cpp
-      effects/EBUR128.h
-      effects/Echo.cpp
-      effects/Echo.h
       effects/EffectEditor.cpp
       effects/EffectEditor.h
       effects/EffectManager.cpp
@@ -340,61 +320,12 @@ set( SOURCES
       effects/EffectUI.h
       effects/EffectUIServices.cpp
       effects/EffectUIServices.h
-      effects/Equalization.cpp
-      effects/Equalization.h
-      effects/EqualizationBandSliders.cpp
-      effects/EqualizationBandSliders.h
-      effects/EqualizationCurves.cpp
-      effects/EqualizationCurves.h
-      effects/EqualizationCurvesDialog.cpp
-      effects/EqualizationCurvesDialog.h
-      effects/EqualizationCurvesList.cpp
-      effects/EqualizationCurvesList.h
-      effects/EqualizationFilter.cpp
-      effects/EqualizationFilter.h
-      effects/EqualizationPanel.cpp
-      effects/EqualizationPanel.h
-      effects/EqualizationParameters.cpp
-      effects/EqualizationParameters.h
-      effects/EqualizationUI.cpp
-      effects/EqualizationUI.h
-      effects/Fade.cpp
-      effects/Fade.h
-      effects/FindClipping.cpp
-      effects/FindClipping.h
       effects/Generator.cpp
       effects/Generator.h
-      effects/Invert.cpp
-      effects/Invert.h
-      effects/Loudness.cpp
-      effects/Loudness.h
-      effects/Noise.cpp
-      effects/Noise.h
-      effects/NoiseReduction.cpp
-      effects/NoiseReduction.h
-      effects/Normalize.cpp
-      effects/Normalize.h
-      effects/Paulstretch.cpp
-      effects/Paulstretch.h
-      effects/Phaser.cpp
-      effects/Phaser.h
       effects/RealtimeEffectStateUI.h
       effects/RealtimeEffectStateUI.cpp
-      effects/Repair.cpp
-      effects/Repair.h
-      effects/Repeat.cpp
-      effects/Repeat.h
-      effects/Reverb.cpp
-      effects/Reverb.h
-      effects/Reverb_libSoX.h
-      effects/Reverse.cpp
-      effects/Reverse.h
-      effects/ScienFilter.cpp
-      effects/ScienFilter.h
       effects/ScoreAlignDialog.cpp
       effects/ScoreAlignDialog.h
-      effects/Silence.cpp
-      effects/Silence.h
       effects/StatefulEffect.cpp
       effects/StatefulEffect.h
       effects/StatefulEffectUIServices.cpp
@@ -405,14 +336,8 @@ set( SOURCES
       effects/StatelessPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
-      effects/ToneGen.cpp
-      effects/ToneGen.h
-      effects/TruncSilence.cpp
-      effects/TruncSilence.h
       effects/TwoPassSimpleMono.cpp
       effects/TwoPassSimpleMono.h
-      effects/Wahwah.cpp
-      effects/Wahwah.h
 
       # Nyquist Effects
 

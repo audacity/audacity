@@ -14,7 +14,7 @@
 
 #include "GeneratedUpdater.h"
 
-class LogarithmicUpdater final : public GeneratedUpdater {
+class AUDACITY_DLL_API LogarithmicUpdater final : public GeneratedUpdater {
 public:
    static const LogarithmicUpdater &Instance();
 

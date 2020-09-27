@@ -20,7 +20,7 @@
 
 //! Subclass of PerTrackEffect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
-class StatefulPerTrackEffect
+class AUDACITY_DLL_API StatefulPerTrackEffect
    : public StatefulEffectBase
    , public PerTrackEffect
    , public StatefulEffectUIServices

@@ -1,0 +1,84 @@
+#[[
+Various effects, generators, and analyzers using Audacity's own internal APIs
+]]
+
+list( APPEND SOURCES
+   Amplify.cpp
+   Amplify.h
+   AutoDuck.cpp
+   AutoDuck.h
+   BassTreble.cpp
+   BassTreble.h
+   Biquad.cpp
+   Biquad.h
+   ClickRemoval.cpp
+   ClickRemoval.h
+   Compressor.cpp
+   Compressor.h
+   Distortion.cpp
+   Distortion.h
+   DtmfGen.cpp
+   DtmfGen.h
+   EBUR128.cpp
+   EBUR128.h
+   Echo.cpp
+   Echo.h
+   Equalization.cpp
+   Equalization.h
+   EqualizationBandSliders.cpp
+   EqualizationBandSliders.h
+   EqualizationCurves.cpp
+   EqualizationCurves.h
+   EqualizationCurvesDialog.cpp
+   EqualizationCurvesDialog.h
+   EqualizationCurvesList.cpp
+   EqualizationCurvesList.h
+   EqualizationFilter.cpp
+   EqualizationFilter.h
+   EqualizationPanel.cpp
+   EqualizationPanel.h
+   EqualizationParameters.cpp
+   EqualizationParameters.h
+   EqualizationUI.cpp
+   EqualizationUI.h
+   Fade.cpp
+   Fade.h
+   FindClipping.cpp
+   FindClipping.h
+   Invert.cpp
+   Invert.h
+   Loudness.cpp
+   Loudness.h
+   ModEffectsMain.cpp
+   Noise.cpp
+   Noise.h
+   NoiseReduction.cpp
+   NoiseReduction.h
+   Normalize.cpp
+   Normalize.h
+   Paulstretch.cpp
+   Paulstretch.h
+   Phaser.cpp
+   Phaser.h
+   Repair.cpp
+   Repair.h
+   Repeat.cpp
+   Repeat.h
+   Reverb.cpp
+   Reverb.h
+   Reverb_libSoX.h
+   Reverse.cpp
+   Reverse.h
+   ScienFilter.cpp
+   ScienFilter.h
+   Silence.cpp
+   Silence.h
+   ToneGen.cpp
+   ToneGen.h
+   TruncSilence.cpp
+   TruncSilence.h
+   Wahwah.cpp
+   Wahwah.h
+)
+audacity_module( mod-effect-classes "${SOURCES}" "Audacity"
+   "" "" )
