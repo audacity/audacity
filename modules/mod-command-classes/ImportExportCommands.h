@@ -1,71 +1,65 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
-   License: wxwidgets
+   Audacity: A Digital Audio Editor
+   Audacity(R) is copyright (c) 1999-2018 Audacity Team.
+   File License: wxwidgets
 
+   ImportExportCommands.h
    Dan Horgan
    James Crook
 
 ******************************************************************//**
 
-\file HelpCommand
-\brief Declarations of HelpCommand and HelpCommandType classes
+\class ImportCommand
+\brief Command for importing audio
 
-\class HelpCommand
-\brief Command which returns information about the given command
+\class ExportCommand
+\brief Command for exporting audio
 
 *//*******************************************************************/
 
-#ifndef __HELPCOMMAND__
-#define __HELPCOMMAND__
+#include "commands/Command.h"
+#include "commands/CommandType.h"
 
-#include "CommandType.h"
-#include "Command.h"
+// Import
 
-class HelpCommand : public AudacityCommand
+class ImportCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
-   int mFormat;
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Gives help on a command.");};
+   TranslatableString GetDescription() const override {return XO("Imports from a file.");};
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
-   bool ApplyInner(const CommandContext & context);
 
    // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#help";}
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#import";}
 public:
-   wxString mCommandName;
+   wxString mFileName;
 };
 
-class CommentCommand : public AudacityCommand
+class ExportCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
-   int mFormat;
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("For comments in a macro.");};
+   TranslatableString GetDescription() const override {return XO("Exports to a file.");};
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override {
-      return true;
-   };
+   bool Apply(const CommandContext & context) override;
+
    // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#comment";}
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#export";}
 public:
-   wxString mComment;
+   wxString mFileName;
+   int mnChannels;
 };
-
-
-#endif /* End of include guard: __HELPCOMMAND__ */

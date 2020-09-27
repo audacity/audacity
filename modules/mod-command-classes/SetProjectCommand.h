@@ -1,61 +1,58 @@
 /**********************************************************************
 
    Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Copyright 1999-2018 Audacity Team
    License: wxwidgets
 
+   Dan Horgan
    James Crook
 
 ******************************************************************//**
 
-\file DragCommand.h
-\brief Declarations of DragCommand and DragCommandType classes
+\file SetProjectCommand.h
+\brief Declarations of SetProjectCommand and SetProjectCommandType classes
 
 *//*******************************************************************/
 
-#ifndef __DRAG_COMMAND__
-#define __DRAG_COMMAND__
+#ifndef __SET_PROJECT_COMMAND__
+#define __SET_PROJECT_COMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
+#include "commands/Command.h"
+#include "commands/CommandType.h"
 
-class DragCommand : public AudacityCommand
+class SetProjectCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   DragCommand();
+   SetProjectCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Drags mouse from one place to another.");};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a project.");};
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#move_mouse";}
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_project";}
 
    bool Apply(const CommandContext & context) override;
 
 public:
-   double mFromX;
-   double mFromY;
-   double mToX;
-   double mToY;
-   int mRelativeTo;
-   int mId;
-   wxString mWinName;
 
-   bool bHasFromX;
-   bool bHasFromY;
-   bool bHasToX;
-   bool bHasToY;
-   bool bHasRelativeTo;
-   bool bHasId;
-   bool bHasWinName;
+   wxString mName;
+   int mPosX;
+   int mPosY;
+   int mWidth;
+   int mHeight;
+   double mRate;
 
+// For tracking optional parameters.
+   bool bHasName;
+   bool bHasSizing;
+   bool bHasRate;
 };
 
 
-#endif /* End of include guard: __DRAG_COMMAND__ */
+#endif /* End of include guard: __SETTRACKINFOCOMMAND__ */

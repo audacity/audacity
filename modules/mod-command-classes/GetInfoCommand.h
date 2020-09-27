@@ -20,8 +20,8 @@ channel.
 #ifndef __GET_INFO_COMMAND__
 #define __GET_INFO_COMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
+#include "commands/Command.h"
+#include "commands/CommandType.h"
 
 class wxMenuBar;
 class wxPoint;

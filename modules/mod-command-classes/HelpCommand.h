@@ -1,74 +1,71 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2018 Audacity Team.
-   File License: wxwidgets
+   Audacity - A Digital Audio Editor
+   Copyright 1999-2018 Audacity Team
+   License: wxwidgets
 
-   PreferenceCommands.h
    Dan Horgan
    James Crook
 
 ******************************************************************//**
 
-\class GetPreferenceCommand
-\brief Command for getting the value of a preference
+\file HelpCommand
+\brief Declarations of HelpCommand and HelpCommandType classes
 
-\class SetPreferenceCommand
-\brief Command for setting a preference to a given value
+\class HelpCommand
+\brief Command which returns information about the given command
 
 *//*******************************************************************/
 
-#ifndef __PREFERENCE_COMMANDS__
-#define __PREFERENCE_COMMANDS__
+#ifndef __HELPCOMMAND__
+#define __HELPCOMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
+#include "commands/CommandType.h"
+#include "commands/Command.h"
 
-// GetPreference
-
-class GetPreferenceCommand final : public AudacityCommand
+class HelpCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
+   int mFormat;
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Gets the value of a single preference.");};
+   TranslatableString GetDescription() const override {return XO("Gives help on a command.");};
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
+   bool ApplyInner(const CommandContext & context);
 
    // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#get_preference";}
-
-   wxString mName;
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#help";}
+public:
+   wxString mCommandName;
 };
 
-// SetPreference
-
-class SetPreferenceCommand final : public AudacityCommand
+class CommentCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
+   int mFormat;
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Sets the value of a single preference.");};
+   TranslatableString GetDescription() const override {return XO("For comments in a macro.");};
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
-
+   bool Apply(const CommandContext & context) override {
+      return true;
+   };
    // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_preference";}
-
-   wxString mName;
-   wxString mValue;
-   bool mbReload;
-   bool bHasReload;
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#comment";}
+public:
+   wxString mComment;
 };
 
-#endif /* End of include guard: __PREFERENCE_COMMANDS__ */
+
+#endif /* End of include guard: __HELPCOMMAND__ */

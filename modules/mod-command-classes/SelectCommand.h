@@ -19,8 +19,8 @@
 
 
 
-#include "CommandType.h"
-#include "Command.h"
+#include "commands/CommandType.h"
+#include "commands/Command.h"
 
 //#include "../commands/AudacityCommand.h"
 

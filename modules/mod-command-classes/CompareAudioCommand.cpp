@@ -18,25 +18,24 @@ threshold of difference in two selected tracks
 
 *//*******************************************************************/
 
-
 #include "CompareAudioCommand.h"
 
-#include "CommandDispatch.h"
-#include "CommandManager.h"
-#include "../CommonCommandFlags.h"
-#include "LoadCommands.h"
+#include "commands/CommandDispatch.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+#include "commands/LoadCommands.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 
 #include <float.h>
 #include <wx/intl.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
-#include "CommandContext.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/valnum.h"
+#include "commands/CommandContext.h"
 
 const ComponentInterfaceSymbol CompareAudioCommand::Symbol
 { XO("Compare Audio") };

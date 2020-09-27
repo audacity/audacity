@@ -13,16 +13,15 @@
 
 *//*******************************************************************/
 
-
 #include "MessageCommand.h"
 
-#include "CommandDispatch.h"
-#include "CommandManager.h"
-#include "../CommonCommandFlags.h"
-#include "LoadCommands.h"
-#include "CommandContext.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "commands/CommandDispatch.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+#include "commands/LoadCommands.h"
+#include "commands/CommandContext.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol MessageCommand::Symbol
 { XO("Message") };

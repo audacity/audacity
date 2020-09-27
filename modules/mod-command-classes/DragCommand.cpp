@@ -16,19 +16,18 @@
 
 *//*******************************************************************/
 
-
 #include "DragCommand.h"
 
-#include "CommandDispatch.h"
-#include "CommandManager.h"
-#include "../CommonCommandFlags.h"
-#include "LoadCommands.h"
+#include "commands/CommandDispatch.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+#include "commands/LoadCommands.h"
 #include "Project.h"
-#include "../ProjectWindows.h"
-#include "../WaveTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "CommandContext.h"
+#include "ProjectWindows.h"
+#include "WaveTrack.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "commands/CommandContext.h"
 
 #include <wx/frame.h>
 

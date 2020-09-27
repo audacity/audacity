@@ -2,43 +2,47 @@
 
    Audacity - A Digital Audio Editor
    Copyright 1999-2009 Audacity Team
-   License: wxwidgets
+   File License: wxWidgets
 
    Dan Horgan
-   Marty Goddard
+
 ******************************************************************//**
 
-\file GetTrackInfoCommand.h
-\brief Declarations of GetTrackInfoCommand and GetTrackInfoCommandType classes
+\file MessageCommand.h
+\brief Contains definition of MessageCommand class.
+
+*//***************************************************************//**
+
+\class MessageCommand
+\brief Command to send a message (currently on the status channel)
 
 *//*******************************************************************/
 
-#ifndef __GETTRACKINFOCOMMAND__
-#define __GETTRACKINFOCOMMAND__
+#ifndef __MESSAGE_COMMAND__
+#define __MESSAGE_COMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
+#include "commands/CommandType.h"
+#include "commands/Command.h"
 
-class GetTrackInfoCommand final : public AudacityCommand
+class MessageCommand : public AudacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   GetTrackInfoCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Gets track values as JSON.");};
+   TranslatableString GetDescription() const override {return XO("Echos a message.");};
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Tools#get_track_info";}
-
-   bool Apply(const CommandContext &context ) override;
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#message";}
 public:
-   int mInfoType;
+   wxString mMessage;
 };
 
-#endif /* End of include guard: __GETTRACKINFOCOMMAND__ */
+
+#endif /* End of include guard: __MESSAGECOMMAND__ */

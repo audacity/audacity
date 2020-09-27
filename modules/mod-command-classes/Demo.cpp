@@ -19,19 +19,18 @@ parameters.  It is for development purposes.
 
 *//*******************************************************************/
 
-
 #include "Demo.h"
-#include "LoadCommands.h"
+#include "commands/LoadCommands.h"
 
 #include <float.h>
 
 #include <wx/intl.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/valnum.h"
-#include "../commands/CommandContext.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/valnum.h"
+#include "commands/CommandContext.h"
 
 const ComponentInterfaceSymbol DemoCommand::Symbol
 { XO("Demo") };

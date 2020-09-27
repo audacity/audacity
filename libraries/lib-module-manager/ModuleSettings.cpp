@@ -28,6 +28,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-timer-record",
       "mod-screenshot",
       "mod-printing",
+      "mod-command-classes",
    };
    return modules;
 }

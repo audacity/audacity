@@ -24,8 +24,8 @@
 
 *//*******************************************************************/
 
-#include "Command.h"
-#include "CommandType.h"
+#include "commands/Command.h"
+#include "commands/CommandType.h"
 
 class OpenProjectCommand : public AudacityCommand
 {

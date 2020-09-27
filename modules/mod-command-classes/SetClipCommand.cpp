@@ -16,17 +16,16 @@
 
 *//*******************************************************************/
 
-
 #include "SetClipCommand.h"
 
-#include "CommandDispatch.h"
-#include "CommandManager.h"
-#include "../CommonCommandFlags.h"
-#include "LoadCommands.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "commands/CommandDispatch.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+#include "commands/LoadCommands.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol SetClipCommand::Symbol
 { XO("Set Clip") };

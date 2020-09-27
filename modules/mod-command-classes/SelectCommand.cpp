@@ -29,24 +29,23 @@ explicitly code all three.
 
 *//*******************************************************************/
 
-
 #include "SelectCommand.h"
 
 #include <wx/string.h>
 #include <float.h>
 
-#include "CommandDispatch.h"
-#include "CommandManager.h"
-#include "../CommonCommandFlags.h"
-#include "LoadCommands.h"
-#include "../ProjectSelectionManager.h"
-#include "../TrackPanel.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "commands/CommandDispatch.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+#include "commands/LoadCommands.h"
+#include "ProjectSelectionManager.h"
+#include "TrackPanel.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 #include "Track.h"
-#include "../effects/Effect.h"
+#include "effects/Effect.h"
 #include "ViewInfo.h"
-#include "CommandContext.h"
+#include "commands/CommandContext.h"
 
 
 const ComponentInterfaceSymbol SelectTimeCommand::Symbol
