@@ -158,6 +158,9 @@ public:
    int FindNextLabel(const SelectedRegion& currentSelection);
    int FindPrevLabel(const SelectedRegion& currentSelection);
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    Track::Holder PasteInto( AudacityProject & ) const override;
 
    struct IntervalData final : Track::IntervalData {

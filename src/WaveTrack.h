@@ -546,6 +546,9 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, ProgressDialog *progress = NULL);
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;
 

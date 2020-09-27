@@ -1104,6 +1104,13 @@ std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
    return SharedPointer();
 }
 
+auto Track::ClassTypeInfo() -> const TypeInfo &
+{
+   static Track::TypeInfo info{ TrackKind::All,
+      { "generic", "generic", XO("Generic Track") }, false };
+   return info;
+}
+
 bool Track::SupportsBasicEditing() const
 {
    return true;
@@ -1162,6 +1169,22 @@ void Track::AdjustPositions()
       pList->RecalcPositions(mNode);
       pList->ResizingEvent(mNode);
    }
+}
+
+auto AudioTrack::ClassTypeInfo() -> const TypeInfo &
+{
+   static Track::TypeInfo info{ TrackKind::Audio,
+      { "audio", "audio", XO("Audio Track") },
+      false, &Track::ClassTypeInfo() };
+   return info;
+}
+
+auto PlayableTrack::ClassTypeInfo() -> const TypeInfo &
+{
+   static Track::TypeInfo info{ TrackKind::Playable,
+      { "playable", "playable", XO("Playable Track") },
+      false, &AudioTrack::ClassTypeInfo() };
+   return info;
 }
 
 TrackIntervalData::~TrackIntervalData() = default;

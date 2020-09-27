@@ -133,6 +133,23 @@ void TimeTrack::SetRangeUpper(double upper)
    mEnvelope->SetRangeUpper( upper );
 }
 
+static const Track::TypeInfo &typeInfo()
+{
+   static const Track::TypeInfo info{ TrackKind::Time,
+      { "time", "time", XO("Time Track") }, true, &Track::ClassTypeInfo() };
+   return info;
+}
+
+auto TimeTrack::GetTypeInfo() const -> const TypeInfo &
+{
+   return typeInfo();
+}
+
+auto TimeTrack::ClassTypeInfo() -> const TypeInfo &
+{
+   return typeInfo();
+}
+
 bool TimeTrack::SupportsBasicEditing() const
 {
    return false;

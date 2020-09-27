@@ -331,6 +331,24 @@ private:
    using ConstInterval = ConstTrackInterval;
    using ConstIntervals = std::vector< ConstInterval >;
 
+   //! Names of a track type for various purposes.
+   /*! Some of the distinctions exist only for historical reasons. */
+   struct TypeNames {
+      wxString info; //!< short, like "wave", in macro output, not internationalized
+      wxString property; //!< short, like "wave", as a Lisp symbol property, not internationalized
+      TranslatableString name; //!< long, like "Wave Track"
+   };
+   struct TypeInfo {
+      TrackKind kind = TrackKind::None;
+      TypeNames names;
+      bool concrete = false;
+      const TypeInfo *pBaseInfo = nullptr;
+   };
+   virtual const TypeInfo &GetTypeInfo() const = 0;
+   static const TypeInfo &ClassTypeInfo();
+   virtual const TypeNames &GetTypeNames() const
+   { return GetTypeInfo().names; }
+
    //! Whether this track type implements cut-copy-paste; by default, true
    virtual bool SupportsBasicEditing() const;
 
@@ -822,6 +840,8 @@ public:
       : Track{} {}
    AudioTrack(const Track &orig) : Track{ orig } {}
 
+   static const TypeInfo &ClassTypeInfo();
+
    // Serialize, not with tags of its own, but as attributes within a tag.
    void WriteXMLAttributes(XMLWriter &WXUNUSED(xmlFile)) const {}
 
@@ -837,6 +857,8 @@ public:
    PlayableTrack()
       : AudioTrack{} {}
    PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
+
+   static const TypeInfo &ClassTypeInfo();
 
    bool GetMute    () const { return mMute;     }
    bool GetSolo    () const { return mSolo;     }

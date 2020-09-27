@@ -685,6 +685,24 @@ QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
    return { seq_time + GetOffset(), beat };
 }
 
+static const Track::TypeInfo &typeInfo()
+{
+   static const Track::TypeInfo info{ TrackKind::Note,
+      { "note", "midi", XO("Note Track") }, true,
+      &PlayableTrack::ClassTypeInfo() };
+   return info;
+}
+
+auto NoteTrack::GetTypeInfo() const -> const TypeInfo &
+{
+   return typeInfo();
+}
+
+auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
+{
+   return typeInfo();
+}
+
 Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
 {
    auto pNewTrack = std::make_shared<NoteTrack>();
