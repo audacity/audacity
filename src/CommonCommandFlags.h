@@ -15,10 +15,17 @@ Paul Licameli split from Menus.cpp
 
 #include "commands/CommandFlag.h"
 
+AUDACITY_DLL_API
 bool EditableTracksSelectedPred( const AudacityProject &project );
+
+AUDACITY_DLL_API
 bool AudioIOBusyPred( const AudacityProject &project );
+
+AUDACITY_DLL_API
 bool TimeSelectedPred( const AudacityProject &project );
-extern const CommandFlagOptions &cutCopyOptions();
+
+AUDACITY_DLL_API
+const CommandFlagOptions &cutCopyOptions();
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    &AudioIONotBusyFlag(),

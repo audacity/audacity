@@ -25,7 +25,7 @@
 #include "audacity/Types.h"
 
 #include "XMLWriter.h"
-class XMLValueChecker
+class AUDACITY_DLL_API XMLValueChecker
 {
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.

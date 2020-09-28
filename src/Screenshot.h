@@ -25,7 +25,7 @@
 
 class AudacityProject;
 
-void OpenScreenshotTools( AudacityProject &project );
+AUDACITY_DLL_API void OpenScreenshotTools( AudacityProject &project );
 void CloseScreenshotTools();
 
 #endif // __AUDACITY_SCREENSHOT__

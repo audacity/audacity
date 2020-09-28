@@ -21,6 +21,7 @@
   calculates windowSize/2 frequency samples
 */
 
+AUDACITY_DLL_API
 bool ComputeSpectrum(const float * data, size_t width, size_t windowSize,
                      double rate, float *out, bool autocorrelation,
                      int windowFunc = eWinFuncHann);

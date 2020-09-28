@@ -45,7 +45,8 @@ protected:
 //! Abstract AudacityException subclass displays a message, specified by further subclass
 /*! At most one message will be displayed for each pass through the main event idle loop,
  no matter how many exceptions were caught. */
-class MessageBoxException /* not final */ : public AudacityException
+class AUDACITY_DLL_API MessageBoxException /* not final */
+   : public AudacityException
 {
    //! Privatize the inherited function
    using AudacityException::DelayedHandlerAction;
@@ -74,7 +75,8 @@ protected:
 };
 
 //! A MessageBoxException that shows a given, unvarying string.
-class SimpleMessageBoxException /* not final */ : public MessageBoxException
+class AUDACITY_DLL_API SimpleMessageBoxException /* not final */
+   : public MessageBoxException
 {
 public:
    explicit SimpleMessageBoxException(

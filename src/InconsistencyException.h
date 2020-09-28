@@ -20,7 +20,7 @@
   The error message identifies source file and line number, possibly the function too (depending on
   the compiler), and suggests that the user inform the development team.
  */
-class InconsistencyException final : public MessageBoxException
+class AUDACITY_DLL_API InconsistencyException final : public MessageBoxException
 {
 public:
    InconsistencyException() {}

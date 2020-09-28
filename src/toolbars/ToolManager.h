@@ -47,7 +47,7 @@ class ToolFrame;
 /// class ToolManager
 ////////////////////////////////////////////////////////////
 
-class ToolManager final
+class AUDACITY_DLL_API ToolManager final
    : public wxEvtHandler
    , public wxEventFilter
    , public ClientData::Base
@@ -221,7 +221,7 @@ public:
 
 // Construct a static instance of this class to add a menu item that shows and
 // hides a toolbar
-struct AttachedToolBarMenuItem : CommandHandlerObject {
+struct AUDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
    AttachedToolBarMenuItem(
       ToolBarID id, const CommandID &name, const TranslatableString &label_in,
       const Registry::OrderingHint &hint = {},

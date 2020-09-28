@@ -18,7 +18,7 @@ class wxOutputStream;
 class wxFFileOutputStream;
 class wxFileNameWrapper;
 
-class FileIO
+class AUDACITY_DLL_API FileIO
 {
  public:
    typedef enum FileIOMode

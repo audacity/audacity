@@ -14,12 +14,12 @@
 class TranslatableString;
 class wxString;
 
-wxString HelpText( const wxString & Key );
-TranslatableString TitleText( const wxString & Key );
+AUDACITY_DLL_API  wxString HelpText( const wxString & Key );
+AUDACITY_DLL_API TranslatableString TitleText( const wxString & Key );
 
-extern const wxString VerCheckArgs();
-extern const wxString VerCheckUrl();
-extern const wxString VerCheckHtml();
-extern wxString FormatHtmlText( const wxString & Text );
+extern AUDACITY_DLL_API const wxString VerCheckArgs();
+extern AUDACITY_DLL_API const wxString VerCheckUrl();
+extern AUDACITY_DLL_API const wxString VerCheckHtml();
+extern AUDACITY_DLL_API wxString FormatHtmlText( const wxString & Text );
 
 #endif

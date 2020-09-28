@@ -25,7 +25,7 @@ struct AUDACITY_DLL_API NonKeystrokeInterceptingWindow
  \brief Top-level windows that do redirect keystrokes to the associated
  project's CommandManager inherit this class.
 */
-struct TopLevelKeystrokeHandlingWindow
+struct AUDACITY_DLL_API TopLevelKeystrokeHandlingWindow
 {
    virtual ~TopLevelKeystrokeHandlingWindow();
 };

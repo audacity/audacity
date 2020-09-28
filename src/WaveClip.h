@@ -34,7 +34,7 @@ class WaveCache;
 class WaveTrackCache;
 class wxFileNameWrapper;
 
-class SpecCache {
+class AUDACITY_DLL_API SpecCache {
 public:
 
    // Make invalid cache
