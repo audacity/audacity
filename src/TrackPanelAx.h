@@ -156,7 +156,7 @@ private:
    int mMessageCount;
 };
 
-class TrackFocus final
+class AUDACITY_DLL_API TrackFocus final
    : public ClientData::Base
 {
 public:

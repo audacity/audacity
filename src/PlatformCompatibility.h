@@ -22,7 +22,7 @@
 
 #include "audacity/Types.h"
 
-class PlatformCompatibility
+class AUDACITY_DLL_API PlatformCompatibility
 {
 public:
    //

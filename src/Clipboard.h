@@ -23,7 +23,7 @@ class TrackList;
 wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
                           EVT_CLIPBOARD_CHANGE, wxCommandEvent );
 
-class Clipboard final
+class AUDACITY_DLL_API Clipboard final
    : public wxEvtHandler
 {
 public:

@@ -27,7 +27,7 @@ class ViewInfo;
 class WaveTrack;
 class wxMouseState;
 
-class SelectHandle : public UIHandle
+class AUDACITY_DLL_API SelectHandle : public UIHandle
 {
    SelectHandle(const SelectHandle&);
 

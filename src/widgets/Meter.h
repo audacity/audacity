@@ -92,7 +92,8 @@ class MeterAx;
 \brief MeterPanel is a panel that paints the meter used for monitoring
 or playback.
 ************************************************************************/
-class MeterPanel final : public MeterPanelBase, private PrefsListener
+class AUDACITY_DLL_API MeterPanel final
+   : public MeterPanelBase, private PrefsListener
 {
    DECLARE_DYNAMIC_CLASS(MeterPanel)
 

@@ -17,7 +17,7 @@ class AudacityProject;
 struct UndoState;
 enum class UndoPush : unsigned char;
 
-class ProjectHistory final
+class AUDACITY_DLL_API ProjectHistory final
    : public ClientData::Base
 {
 public:

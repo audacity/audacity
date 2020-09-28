@@ -60,7 +60,7 @@ class Tags;
 
 class ImportFileHandle;
 
-class ImportPlugin /* not final */
+class AUDACITY_DLL_API ImportPlugin /* not final */
 {
 public:
 
@@ -100,7 +100,7 @@ protected:
 class WaveTrack;
 using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
 
-class ImportFileHandle /* not final */
+class AUDACITY_DLL_API ImportFileHandle /* not final */
 {
 public:
    ImportFileHandle(const FilePath & filename);

@@ -26,6 +26,7 @@
 
    namespace CrashReport
    {
+      AUDACITY_DLL_API
       void Generate(wxDebugReport::Context ctx);
    }
 #endif

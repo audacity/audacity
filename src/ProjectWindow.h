@@ -26,7 +26,7 @@ void InitProjectWindow( ProjectWindow &window );
 
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
-class ProjectWindow final : public ProjectWindowBase
+class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
    , public TrackPanelListener
    , public PrefsListener
 {

@@ -27,7 +27,7 @@ class AudacityCommand;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class BuiltinCommandsModule final : public ModuleInterface
+class AUDACITY_DLL_API BuiltinCommandsModule final : public ModuleInterface
 {
 public:
    BuiltinCommandsModule(const wxString *path);

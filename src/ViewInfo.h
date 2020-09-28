@@ -38,7 +38,7 @@ wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
 
 // This heavyweight wrapper of the SelectedRegion structure emits events
 // on mutating operations, that other classes can listen for.
-class NotifyingSelectedRegion : public wxEvtHandler
+class AUDACITY_DLL_API NotifyingSelectedRegion : public wxEvtHandler
 {
 public:
    // Expose SelectedRegion's const accessors

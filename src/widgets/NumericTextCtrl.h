@@ -43,7 +43,7 @@ class NumericField;
 
 class DigitInfo;
 
-class NumericConverter /* not final */
+class AUDACITY_DLL_API NumericConverter /* not final */
 {
 public:
 
@@ -166,7 +166,8 @@ protected:
    int mDefaultNdx;
 };
 
-class NumericTextCtrl final : public wxControl, public NumericConverter
+class AUDACITY_DLL_API NumericTextCtrl final
+   : public wxControl, public NumericConverter
 {
    friend class NumericTextCtrlAx;
 

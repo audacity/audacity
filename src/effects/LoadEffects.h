@@ -26,7 +26,7 @@ class Effect;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class BuiltinEffectsModule final : public ModuleInterface
+class AUDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
 {
 public:
    BuiltinEffectsModule(const wxString *path);

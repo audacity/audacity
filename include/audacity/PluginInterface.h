@@ -51,7 +51,7 @@
 class ModuleInterface;
 
 
-class PluginManagerInterface /* not final */
+class AUDACITY_DLL_API PluginManagerInterface /* not final */
 {
 public:
 

@@ -220,6 +220,7 @@ class CommandContext;
 
 namespace  EffectUI {
 
+   AUDACITY_DLL_API
    wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       EffectUIClientInterface *client);
 
@@ -227,7 +228,7 @@ namespace  EffectUI {
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
    // Audacity's standard UI.
-   bool DoEffect(
+   AUDACITY_DLL_API bool DoEffect(
       const PluginID & ID, const CommandContext &context, unsigned flags );
 
 }

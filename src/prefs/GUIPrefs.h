@@ -22,7 +22,7 @@ class ShuttleGui;
 
 #define GUI_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("GUI") }
 
-class GUIPrefs final : public PrefsPanel
+class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
 {
  public:
    GUIPrefs(wxWindow * parent, wxWindowID winid);
@@ -68,10 +68,11 @@ class GUIPrefs final : public PrefsPanel
    int mDefaultRangeIndex;
 };
 
+AUDACITY_DLL_API
 int ShowClippingPrefsID();
 int ShowTrackNameInWaveformPrefsID();
 
-extern ChoiceSetting
+extern AUDACITY_DLL_API ChoiceSetting
      GUIManualLocation
 ;
 
