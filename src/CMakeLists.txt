@@ -765,7 +765,6 @@ list( APPEND SOURCES
       menus/PluginMenus.cpp
       menus/SelectMenus.cpp
       menus/ToolbarMenus.cpp
-      menus/TrackMenus.cpp
       menus/TransportMenus.cpp
       menus/ViewMenus.cpp
       menus/WindowMenus.cpp
