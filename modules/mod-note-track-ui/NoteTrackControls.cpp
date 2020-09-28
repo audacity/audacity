@@ -8,7 +8,6 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #ifdef USE_MIDI
 #include "NoteTrackControls.h"
 
@@ -16,23 +15,23 @@ Paul Licameli split from TrackPanel.cpp
 #include "Observer.h"
 #include "Theme.h"
 
-#include "../../ui/PlayableTrackButtonHandles.h"
+#include "tracks/playabletrack/ui/PlayableTrackButtonHandles.h"
 #include "NoteTrackSliderHandles.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../../../../HitTestResult.h"
-#include "../../../../TrackArtist.h"
-#include "../../../../TrackPanel.h"
-#include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../NoteTrack.h"
-#include "../../../../widgets/PopupMenuTable.h"
+#include "HitTestResult.h"
+#include "TrackArtist.h"
+#include "TrackPanel.h"
+#include "TrackPanelMouseEvent.h"
+#include "NoteTrack.h"
+#include "widgets/PopupMenuTable.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "../../../../ProjectWindows.h"
-#include "../../../../RefreshCode.h"
+#include "ProjectWindows.h"
+#include "RefreshCode.h"
 #include "Theme.h"
-#include "../../../../prefs/ThemePrefs.h"
+#include "prefs/ThemePrefs.h"
 
 #include <mutex>
 #include <wx/app.h>
@@ -147,9 +146,9 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 }
 
 // drawing related
-#include "../../../../widgets/ASlider.h"
-#include "../../../../TrackInfo.h"
-#include "../../../../TrackPanelDrawingContext.h"
+#include "widgets/ASlider.h"
+#include "TrackInfo.h"
+#include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
 using TCPLine = TrackInfo::TCPLine;
@@ -423,7 +422,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackControls) {
    };
 }
 
-#include "../../../ui/TrackView.h"
+#include "tracks/ui/TrackView.h"
 
 using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultNoteTrackHeight) {

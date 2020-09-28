@@ -12,25 +12,25 @@
 
 #include <wx/dc.h>
 
-#include "../../../ui/AffordanceHandle.h"
-#include "../../../ui/SelectHandle.h"
-#include "../../../ui/TrackView.h"
+#include "tracks/ui/AffordanceHandle.h"
+#include "tracks/ui/SelectHandle.h"
+#include "tracks/ui/TrackView.h"
 #include "AllThemeResources.h"
 #include "AColor.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 #include "ViewInfo.h"
-#include "../../../../TrackArt.h"
-#include "../../../../TrackArtist.h"
-#include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../TrackPanelDrawingContext.h"
+#include "TrackArt.h"
+#include "TrackArtist.h"
+#include "TrackPanelMouseEvent.h"
+#include "TrackPanelDrawingContext.h"
 
-#include "../lib-src/header-substitutes/allegro.h"
+#include "../../lib-src/header-substitutes/allegro.h"
 
 
 #include "ProjectHistory.h"
-#include "../../../../SelectionState.h"
-#include "../../../../ProjectSettings.h"
-#include "../../../../RefreshCode.h"
+#include "SelectionState.h"
+#include "ProjectSettings.h"
+#include "RefreshCode.h"
 #include "Theme.h"
 
 class NoteTrackAffordanceHandle final : public AffordanceHandle

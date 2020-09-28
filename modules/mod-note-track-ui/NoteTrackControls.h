@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_CONTROLS__
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
-#include "../../ui/PlayableTrackControls.h" // to inherit
+#include "tracks/playabletrack/ui/PlayableTrackControls.h" // to inherit
 #include "Observer.h"
 
 class wxEvent;
@@ -21,8 +21,6 @@ class MuteButtonHandle;
 class SoloButtonHandle;
 class NoteTrackButtonHandle;
 class VelocitySliderHandle;
-
-
 
 using NoteTrackControlsBase =
 #ifdef EXPERIMENTAL_MIDI_OUT

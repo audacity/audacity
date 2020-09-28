@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseState;
 class NoteTrack;
 
-#include "../../../../UIHandle.h"
+#include "UIHandle.h"
 
 class NoteTrackVZoomHandle : public UIHandle
 {

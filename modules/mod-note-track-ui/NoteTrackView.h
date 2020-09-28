@@ -11,7 +11,7 @@ Paul Licameli split from class NoteTrack
 #ifndef __AUDACITY_NOTE_TRACK_VIEW__
 #define __AUDACITY_NOTE_TRACK_VIEW__
 
-#include "../../../ui/CommonTrackView.h"
+#include "tracks/ui/CommonTrackView.h"
 
 class NoteTrackView final : public CommonTrackView
 {

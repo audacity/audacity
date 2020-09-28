@@ -20,7 +20,7 @@ class ShuttleGui;
 
 #include <wx/defs.h>
 
-#include "PrefsPanel.h"
+#include "prefs/PrefsPanel.h"
 
 #define MIDI_IO_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Midi IO") }
 

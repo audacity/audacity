@@ -8,26 +8,25 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "NoteTrackView.h"
 #include "NoteTrackDisplayData.h"
 
 #ifdef USE_MIDI
-#include "../lib-src/header-substitutes/allegro.h"
+#include "../../lib-src/header-substitutes/allegro.h"
 
 #include "NoteTrackVRulerControls.h"
-#include "../../../../NoteTrack.h"
+#include "NoteTrack.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../../../../HitTestResult.h"
+#include "HitTestResult.h"
 #include "Theme.h"
-#include "../../../../TrackArt.h"
-#include "../../../../TrackArtist.h"
-#include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../TrackPanelMouseEvent.h"
+#include "TrackArt.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../../ui/SelectHandle.h"
+#include "tracks/ui/SelectHandle.h"
 #include "StretchHandle.h"
 #include "NoteTrackAffordanceControls.h"
 
@@ -760,4 +759,8 @@ using GetNoteTrackSyncLockPolicy =
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetNoteTrackSyncLockPolicy) {
    return [](auto &) { return SyncLockPolicy::Grouped; };
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
+
 #endif

@@ -8,24 +8,22 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
-
 #ifdef USE_MIDI
 #include "NoteTrackVRulerControls.h"
 
 #include "NoteTrackDisplayData.h"
 #include "NoteTrackVZoomHandle.h"
 
-#include "../../../../HitTestResult.h"
-#include "../../../../NoteTrack.h"
+#include "HitTestResult.h"
+#include "NoteTrack.h"
 #include "ProjectHistory.h"
-#include "../../../../RefreshCode.h"
-#include "../../../../TrackArtist.h"
-#include "../../../../TrackPanelMouseEvent.h"
+#include "RefreshCode.h"
+#include "TrackArtist.h"
+#include "TrackPanelMouseEvent.h"
 
 #include "AColor.h"
-#include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../widgets/Ruler.h"
+#include "TrackPanelDrawingContext.h"
+#include "widgets/Ruler.h"
 
 #include <wx/dc.h>
 
