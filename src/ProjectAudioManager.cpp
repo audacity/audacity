@@ -22,6 +22,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "Meter.h"
+#include "Mix.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -31,7 +32,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
 #include "ScrubState.h"
-#include "TimeTrack.h"
 #include "TrackPanelAx.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -1182,8 +1182,7 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
       ProjectRate::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
-   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
+   options.envelope = Mixer::WarpOptions::DefaultWarp(TrackList::Get(project));
    options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();

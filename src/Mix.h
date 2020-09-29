@@ -22,6 +22,7 @@
 
 #include "audacity/Types.h"
 #include "SampleFormat.h"
+#include <functional>
 #include <vector>
 
 class sampleCount;
@@ -61,7 +62,17 @@ class AUDACITY_DLL_API Mixer {
     class AUDACITY_DLL_API WarpOptions
     {
     public:
-       //! Construct with warp from the TimeTrack if there is one
+       //! Type of hook function for default time warp
+       using DefaultWarpFunction =
+          std::function< const BoundedEnvelope*(const TrackList&) >;
+
+       //! Install a default warp function, returning the previously installed
+       static DefaultWarpFunction SetDefaultWarpFunction(DefaultWarpFunction);
+
+       //! Apply the default warp function
+       static const BoundedEnvelope *DefaultWarp(const TrackList &list);
+
+       //! Construct using the default warp function
        explicit WarpOptions(const TrackList &list);
 
        //! Construct with an explicit warp
