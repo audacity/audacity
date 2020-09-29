@@ -107,6 +107,8 @@ private:
    // I'm a singleton class
    ModuleManager();
    ~ModuleManager();
+   ModuleManager(const ModuleManager&) PROHIBITED;
+   ModuleManager &operator=(const ModuleManager&) PROHIBITED;
 
    void InitializeBuiltins();
    ModuleInterface *LoadModule(const PluginPath & path);

@@ -30,9 +30,10 @@ class CommandSignature
 private:
    ParamValueMap mDefaults;
    ValidatorMap mValidators;
-   explicit CommandSignature(const CommandSignature & WXUNUSED(other)) { }
+   CommandSignature(const CommandSignature &) PROHIBITED;
+   CommandSignature& operator=(const CommandSignature &) PROHIBITED;
 public:
-   explicit CommandSignature() { }
+   explicit CommandSignature();
    ~CommandSignature();
 
    // Add a parameter to the signature.

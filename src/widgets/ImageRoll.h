@@ -38,6 +38,9 @@ class ImageRoll
    ImageRoll();
    ImageRoll(const wxImage &src);
    ImageRoll(RollType type, const wxImage &src, wxColour magicColor);
+   ImageRoll(const ImageRoll&);
+   ImageRoll &operator =(const ImageRoll&);
+   ~ImageRoll();
 
    bool Ok() const;
 

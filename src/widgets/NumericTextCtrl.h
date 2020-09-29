@@ -85,6 +85,7 @@ public:
                     const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
+   NumericConverter(const NumericConverter&);
 
    virtual ~NumericConverter();
 

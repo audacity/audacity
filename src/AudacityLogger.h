@@ -31,6 +31,8 @@ class AudacityLogger final : public wxEvtHandler,
                              public PrefsListener
 {
  public:
+
+   ~AudacityLogger() override;
  
    // Get the singleton instance or null
    static AudacityLogger *Get();
