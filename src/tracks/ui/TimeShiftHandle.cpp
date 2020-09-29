@@ -111,6 +111,8 @@ void ClipMoveState::DoHorizontalOffset( double offset )
    }
 }
 
+TrackShifter::TrackShifter() = default;
+
 TrackShifter::~TrackShifter() = default;
 
 void TrackShifter::UnfixIntervals(

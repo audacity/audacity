@@ -102,6 +102,10 @@
 #include <wx/dcclient.h>
 #include <wx/image.h>
 
+ImageRoll::ImageRoll(const ImageRoll&) = default;
+ImageRoll &ImageRoll::operator =(const ImageRoll&) = default;
+ImageRoll::~ImageRoll() = default;
+
 // static
 ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
 {

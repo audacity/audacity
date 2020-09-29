@@ -77,16 +77,9 @@ public:
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
-   virtual FileExtensions GetSupportedExtensions()
-   {
-      return mExtensions;
-   }
+   virtual FileExtensions GetSupportedExtensions();
 
-   bool SupportsExtension(const FileExtension &extension)
-   {
-      // Case-insensitive check if extension is supported
-      return mExtensions.Index(extension, false) != wxNOT_FOUND;
-   }
+   bool SupportsExtension(const FileExtension &extension);
 
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
@@ -94,14 +87,11 @@ public:
    virtual std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) = 0;
 
-   virtual ~ImportPlugin() { }
+   virtual ~ImportPlugin();
 
 protected:
 
-   ImportPlugin(FileExtensions supportedExtensions):
-      mExtensions( std::move( supportedExtensions ) )
-   {
-   }
+   ImportPlugin(FileExtensions supportedExtensions);
 
    const FileExtensions mExtensions;
 };

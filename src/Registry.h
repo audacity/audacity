@@ -131,6 +131,7 @@ namespace Registry {
       GroupItem( const Identifier &internalName, BaseItemPtrs &&items_ )
          : BaseItem{ internalName }, items{ std::move( items_ ) }
       {}
+      GroupItem( const GroupItem& ) PROHIBITED;
       ~GroupItem() override = 0;
 
       // Whether the item is non-significant for path naming
