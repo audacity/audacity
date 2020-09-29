@@ -318,6 +318,9 @@ class AUDACITY_DLL_API Track /* not final */
    using ConstInterval = ConstTrackInterval;
    using ConstIntervals = std::vector< ConstInterval >;
 
+   //! Whether this track type implements cut-copy-paste; by default, true
+   virtual bool SupportsBasicEditing() const;
+
    //! Report times on the track where important intervals begin and end, for UI to snap to
    /*!
    Some intervals may be empty, and no ordering of the intervals is assumed.

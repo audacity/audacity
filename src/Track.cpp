@@ -1224,6 +1224,11 @@ std::shared_ptr<const Track> Track::SubstituteOriginalTrack() const
    return SharedPointer();
 }
 
+bool Track::SupportsBasicEditing() const
+{
+   return true;
+}
+
 auto Track::GetIntervals() const -> ConstIntervals
 {
    return {};

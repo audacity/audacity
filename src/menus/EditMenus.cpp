@@ -1004,7 +1004,7 @@ static const ReservedCommandFlag
       if (
          TimeSelectedPred( project )
       &&
-         TracksSelectedPred( project )
+         EditableTracksSelectedPred( project )
       )
          return true;
 
@@ -1020,7 +1020,7 @@ BaseItemSharedPtr EditMenu()
    using Options = CommandManager::Options;
 
    static const auto NotBusyTimeAndTracksFlags =
-      AudioIONotBusyFlag() | TimeSelectedFlag() | TracksSelectedFlag();
+      AudioIONotBusyFlag() | TimeSelectedFlag() | EditableTracksSelectedFlag();
 
    // The default shortcut key for Redo is different on different platforms.
    static constexpr auto redoKey =
@@ -1065,7 +1065,7 @@ BaseItemSharedPtr EditMenu()
             AudioIONotBusyFlag() | CutCopyAvailableFlag() | NoAutoSelect(),
             wxT("Ctrl+X") ),
          Command( wxT("Delete"), XXO("&Delete"), FN(OnDelete),
-            AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
+            AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag() | NoAutoSelect(),
             wxT("Ctrl+K") ),
          /* i18n-hint: (verb)*/
          Command( wxT("Copy"), XXO("&Copy"), FN(OnCopy),
@@ -1160,7 +1160,7 @@ BaseItemSharedPtr ExtraEditMenu()
 {
    using Options = CommandManager::Options;
    static const auto flags =
-      AudioIONotBusyFlag() | TracksSelectedFlag() | TimeSelectedFlag();
+      AudioIONotBusyFlag() | EditableTracksSelectedFlag() | TimeSelectedFlag();
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XXO("&Edit"),
@@ -1184,7 +1184,7 @@ auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
 
 RegisteredMenuItemEnabler selectTracks{{
    []{ return TracksExistFlag(); },
-   []{ return TracksSelectedFlag(); },
+   []{ return EditableTracksSelectedFlag(); },
    canSelectAll,
    selectAll
 }};

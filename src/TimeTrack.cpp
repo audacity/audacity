@@ -131,6 +131,11 @@ void TimeTrack::SetRangeUpper(double upper)
    mEnvelope->SetRangeUpper( upper );
 }
 
+bool TimeTrack::SupportsBasicEditing() const
+{
+   return false;
+}
+
 Track::Holder TimeTrack::Cut( double t0, double t1 )
 {
    auto result = Copy( t0, t1, false );

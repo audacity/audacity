@@ -1356,9 +1356,9 @@ BaseItemSharedPtr TracksMenu()
             Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
                FN(OnUnmuteAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+U") ),
             Command( wxT("MuteTracks"), XXO("Mut&e Tracks"),
-               FN(OnMuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+U") ),
+               FN(OnMuteSelectedTracks), EditableTracksSelectedFlag(), wxT("Ctrl+Alt+U") ),
             Command( wxT("UnmuteTracks"), XXO("U&nmute Tracks"),
-               FN(OnUnmuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+Shift+U") )
+               FN(OnUnmuteSelectedTracks), EditableTracksSelectedFlag(), wxT("Ctrl+Alt+Shift+U") )
          ),
 
          Menu( wxT("Pan"), XXO("&Pan"),
@@ -1367,13 +1367,13 @@ BaseItemSharedPtr TracksMenu()
             // in the project could very easily be lost unless we
             // require the tracks to be selected.
             Command( wxT("PanLeft"), XXO("&Left"), FN(OnPanLeft),
-               TracksSelectedFlag(),
+               EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Left") ) ),
             Command( wxT("PanRight"), XXO("&Right"), FN(OnPanRight),
-               TracksSelectedFlag(),
+               EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Right") ) ),
             Command( wxT("PanCenter"), XXO("&Center"), FN(OnPanCenter),
-               TracksSelectedFlag(),
+               EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Center") ) )
          )
       ),
@@ -1387,14 +1387,14 @@ BaseItemSharedPtr TracksMenu()
                      { wxT("EndToEnd"),     XXO("&Align End to End") },
                      { wxT("Together"),     XXO("Align &Together") },
                   },
-                  FN(OnAlignNoSync), AudioIONotBusyFlag() | TracksSelectedFlag())
+                  FN(OnAlignNoSync), AudioIONotBusyFlag() | EditableTracksSelectedFlag())
             ),
 
             Section( "",
                // Alignment commands using selection or zero
                CommandGroup(wxT("Align"),
                   alignLabels(),
-                  FN(OnAlign), AudioIONotBusyFlag() | TracksSelectedFlag())
+                  FN(OnAlign), AudioIONotBusyFlag() | EditableTracksSelectedFlag())
             ),
 
             Section( "",
@@ -1411,7 +1411,7 @@ BaseItemSharedPtr TracksMenu()
          // Do we need this sub-menu at all?
          Menu( wxT("MoveSelectionAndTracks"), XO("Move Sele&ction and Tracks"), {
             CommandGroup(wxT("AlignMove"), alignLabels(),
-               FN(OnAlignMoveSel), AudioIONotBusyFlag() | TracksSelectedFlag()),
+               FN(OnAlignMoveSel), AudioIONotBusyFlag() | EditableTracksSelectedFlag()),
          } ),
    #endif
 
