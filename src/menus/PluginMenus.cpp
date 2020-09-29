@@ -1,7 +1,6 @@
 
 
 #include "../AudioIO.h"
-#include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../CommonCommandFlags.h"
 #include "../Journal.h"
@@ -34,7 +33,6 @@
 
 // private helper classes and functions
 namespace {
-
 
 using EffectsMenuGroups = std::vector<std::pair<TranslatableString, std::vector<TranslatableString>>>;
 
@@ -404,15 +402,6 @@ struct MenuSectionBuilder
    std::function<void(MenuTable::BaseItemPtrs&, std::vector<const PluginDescriptor*>&)> add;
 };
 
-AttachedWindows::RegisteredFactory sMacrosWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-      auto &window = ProjectWindow::Get( parent );
-      return safenew MacrosWindow(
-         &window, parent, true
-      );
-   }
-};
-
 bool ShowManager(
    PluginManager &pm, wxWindow *parent)
 {
@@ -718,10 +707,6 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    return result;
 }
 
-// Forward-declared function has its definition below with OnApplyMacroDirectly
-// in view
-MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  );
-
 }
 
 namespace {
@@ -849,34 +834,6 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
    }
 }
 
-void OnApplyMacroDirectlyByName(const CommandContext& context,
-   const MacroID& Name);
-
-void OnRepeatLastTool(const CommandContext& context)
-{
-   auto& menuManager = MenuManager::Get(context.project);
-   switch (menuManager.mLastToolRegistration) {
-     case MenuCreator::repeattypeplugin:
-     {
-        auto lastEffect = menuManager.mLastTool;
-        if (!lastEffect.empty())
-        {
-           EffectUI::DoEffect(
-              lastEffect, context, menuManager.mRepeatToolFlags);
-        }
-     }
-       break;
-     case MenuCreator::repeattypeunique:
-        CommandManager::Get(context.project).DoRepeatProcess(context,
-           menuManager.mLastToolRegisteredId);
-        break;
-     case MenuCreator::repeattypeapplymacro:
-        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
-        break;
-   }
-}
-
-
 void OnManageAnalyzers(const CommandContext &context)
 {
    auto &project = context.project;
@@ -887,32 +844,6 @@ void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
    DoManagePluginsMenu(project);
-}
-
-void OnManageMacros(const CommandContext &context )
-{
-   auto &project = context.project;
-   CommandManager::Get(project).RegisterLastTool(context);  //Register Macros as Last Tool
-   auto macrosWindow = &GetAttachedWindows(project)
-      .AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
-   if (macrosWindow) {
-      macrosWindow->Show();
-      macrosWindow->Raise();
-      macrosWindow->UpdateDisplay( true );
-   }
-}
-
-void OnApplyMacrosPalette(const CommandContext &context )
-{
-   auto &project = context.project;
-   CommandManager::Get(project).RegisterLastTool(context);  //Register Palette as Last Tool
-   auto macrosWindow = &GetAttachedWindows(project)
-      .AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
-   if (macrosWindow) {
-      macrosWindow->Show();
-      macrosWindow->Raise();
-      macrosWindow->UpdateDisplay( false );
-   }
 }
 
 void OnBenchmark(const CommandContext &context)
@@ -965,51 +896,6 @@ void OnWriteJournal(const CommandContext &)
       AudacityMessageBox( OnMessage );
    else
       AudacityMessageBox( OffMessage );
-}
-
-void OnApplyMacroDirectly(const CommandContext &context )
-{
-   const MacroID& Name = context.parameter.GET();
-   OnApplyMacroDirectlyByName(context, Name);
-}
-
-void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Name)
-{
-   auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-   //wxLogDebug( "Macro was: %s", context.parameter);
-   ApplyMacroDialog dlg( &window, project );
-   //const auto &Name = context.parameter;
-
-// We used numbers previously, but macros could get renumbered, making
-// macros containing macros unpredictable.
-#ifdef MACROS_BY_NUMBERS
-   long item=0;
-   // Take last three letters (of e.g. Macro007) and convert to a number.
-   Name.Mid( Name.length() - 3 ).ToLong( &item, 10 );
-   dlg.ApplyMacroToProject( item, false );
-#else
-   dlg.ApplyMacroToProject( Name, false );
-#endif
-   /* i18n-hint: %s will be the name of the macro which will be
-    * repeated if this menu item is chosen */
-   MenuManager::ModifyUndoMenuItems( project );
-
-   TranslatableString desc;
-   EffectManager& em = EffectManager::Get();
-   auto shortDesc = em.GetCommandName(Name);
-   auto& undoManager = UndoManager::Get(project);
-   auto& commandManager = CommandManager::Get(project);
-   int cur = undoManager.GetCurrentState();
-   if (undoManager.UndoAvailable()) {
-       undoManager.GetShortDescription(cur, &desc);
-       commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
-          .Format(desc));
-       auto& menuManager = MenuManager::Get(project);
-       menuManager.mLastTool = Name;
-       menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
-   }
-
 }
 
 // Menu definitions? ...
@@ -1137,24 +1023,6 @@ void AddEffectMenuItemGroup(
    }
 }
 
-MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
-{
-   MenuTable::BaseItemPtrs result;
-   auto names = MacroCommands::GetNames(); // these names come from filenames
-   int i;
-
-   // This finder scope may be redundant, but harmless
-   for (i = 0; i < (int)names.size(); i++) {
-      auto MacroID = ApplyMacroDialog::MacroIdOfName( names[i] );
-      result.push_back( MenuTable::Command( MacroID,
-         Verbatim( names[i] ), // file name verbatim
-         OnApplyMacroDirectly,
-         flags,
-         CommandManager::Options{}.AllowInMacros()
-      ) );
-   }
-
-   return result;
 }
 
 // Menu definitions
@@ -1162,6 +1030,7 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 // Under /MenuBar
 using namespace MenuTable;
 
+namespace {
 const ReservedCommandFlag&
    HasLastGeneratorFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
@@ -1364,16 +1233,6 @@ AttachedItem sAttachment3{
    Shared( AnalyzeMenu() )
 };
 
-const ReservedCommandFlag&
-   HasLastToolFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
-      auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
-         return !menuManager.mLastTool.empty();
-      }
-   }; return flag;
-}
-
 BaseItemSharedPtr ToolsMenu()
 {
    using Options = CommandManager::Options;
@@ -1382,47 +1241,9 @@ BaseItemSharedPtr ToolsMenu()
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
          Command( wxT("ManageTools"), XXO("Plugin Manager"),
-            OnManageTools, AudioIONotBusyFlag() ),
+            OnManageTools, AudioIONotBusyFlag() )
 
          //Separator(),
-
-         Section( "RepeatLast",
-         // Delayed evaluation:
-         [](AudacityProject &project)
-         {
-            const auto &lastTool = MenuManager::Get(project).mLastTool;
-            TranslatableString buildMenuLabel;
-            if (!lastTool.empty())
-               buildMenuLabel = XO("Repeat %s")
-                  .Format( EffectManager::Get().GetCommandName(lastTool) );
-            else
-               buildMenuLabel = XO("Repeat Last Tool");
-
-            return Command( wxT("RepeatLastTool"), buildMenuLabel,
-               OnRepeatLastTool,
-               AudioIONotBusyFlag() |
-                  HasLastToolFlag(),
-               Options{}.IsGlobal() );
-         }
-      ),
-
-      Command( wxT("ManageMacros"), XXO("&Macro Manager"),
-            OnManageMacros, AudioIONotBusyFlag() ),
-
-         Menu( wxT("Macros"), XXO("&Apply Macro"),
-            // Palette has no access key to ensure first letter navigation of
-            // sub menu
-            Section( "",
-               Command( wxT("ApplyMacrosPalette"), XXO("Palette..."),
-                  OnApplyMacrosPalette, AudioIONotBusyFlag() )
-            ),
-
-            Section( "",
-               // Delayed evaluation:
-               [](AudacityProject&)
-               { return Items( wxEmptyString, PopulateMacrosMenu( AudioIONotBusyFlag() ) ); }
-            )
-         )
       ),
 
       Section( "Other",
@@ -1492,36 +1313,6 @@ BaseItemSharedPtr ToolsMenu()
 AttachedItem sAttachment4{
    wxT(""),
    Shared( ToolsMenu() )
-};
-
-BaseItemSharedPtr ExtraScriptablesIMenu()
-{
-   // These are the more useful to VI user Scriptables.
-   static BaseItemSharedPtr menu{
-   // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables1"), XXO("Script&ables I") )
-   };
-   return menu;
-}
-
-AttachedItem sAttachment5{
-   wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIMenu() )
-};
-
-BaseItemSharedPtr ExtraScriptablesIIMenu()
-{
-   // Less useful to VI users.
-   static BaseItemSharedPtr menu{
-   // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
-   Menu( wxT("Scriptables2"), XXO("Scripta&bles II") )
-   };
-   return menu;
-}
-
-AttachedItem sAttachment6{
-   wxT("Optional/Extra/Part2"),
-   Shared( ExtraScriptablesIIMenu() )
 };
 
 }
