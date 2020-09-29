@@ -654,12 +654,11 @@ double DoClipMove( AudacityProject &project, Track *track,
       if (!uShifter)
          return 0.0;
       auto pShifter = uShifter.get();
+      auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
+      auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
       state.Init( project, *track, hitTestResult, std::move( uShifter ),
          t0, viewInfo, trackList, syncLocked );
-
-      auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
-      auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
       auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );
 
@@ -667,16 +666,18 @@ double DoClipMove( AudacityProject &project, Track *track,
       // t0 may no longer be within the clip due to rounding errors,
       // so t0 is adjusted so that it is.
       double newT0 = t0 + hSlideAmount;
-      // pShifter is still undestroyed in the ClipMoveState
-      auto &intervals = pShifter->MovingIntervals();
-      if ( !intervals.empty() ) {
-         auto &interval = intervals[0];
-         if (newT0 < interval.Start())
-            newT0 = interval.Start();
-         if (newT0 > interval.End())
-            newT0 = interval.End();
-         double diff = selectedRegion.duration();
-         selectedRegion.setTimes(newT0, newT0 + diff);
+      if (hitTestResult != TrackShifter::HitTestResult::Track) {
+         // pShifter is still undestroyed in the ClipMoveState
+         auto &intervals = pShifter->MovingIntervals();
+         if ( !intervals.empty() ) {
+            auto &interval = intervals[0];
+            if (newT0 < interval.Start())
+               newT0 = interval.Start();
+            if (newT0 > interval.End())
+               newT0 = interval.End();
+            double diff = selectedRegion.duration();
+            selectedRegion.setTimes(newT0, newT0 + diff);
+         }
       }
 
       return hSlideAmount;
