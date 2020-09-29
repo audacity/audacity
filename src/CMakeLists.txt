@@ -329,6 +329,8 @@ list( APPEND SOURCES
       commands/CommandDirectory.h
       commands/CommandFlag.h
       commands/CommandFunctors.h
+      commands/CommandDispatch.cpp
+      commands/CommandDispatch.h
       commands/CommandHandler.cpp
       commands/CommandHandler.h
       commands/CommandManager.cpp
