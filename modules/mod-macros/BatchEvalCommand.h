@@ -22,9 +22,9 @@ to that system.
 #ifndef __BATCHEVALCOMMAND__
 #define __BATCHEVALCOMMAND__
 
-#include "Command.h"
-#include "CommandType.h"
-#include "../BatchCommands.h"
+#include "commands/Command.h"
+#include "commands/CommandType.h"
+#include "BatchCommands.h"
 
 class AudacityProject;
 

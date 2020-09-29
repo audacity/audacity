@@ -109,12 +109,6 @@ list( APPEND SOURCES
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
-      BatchCommandDialog.cpp
-      BatchCommandDialog.h
-      BatchCommands.cpp
-      BatchCommands.h
-      BatchProcessDialog.cpp
-      BatchProcessDialog.h
       Benchmark.cpp
       Benchmark.h
       CellularPanel.cpp
@@ -312,8 +306,6 @@ list( APPEND SOURCES
       commands/AppCommandEvent.h
       commands/AudacityCommand.cpp
       commands/AudacityCommand.h
-      commands/BatchEvalCommand.cpp
-      commands/BatchEvalCommand.h
       commands/Command.cpp
       commands/Command.h
       commands/CommandBuilder.cpp
@@ -739,8 +731,6 @@ list( APPEND SOURCES
 
       # Preferences
 
-      prefs/BatchPrefs.cpp
-      prefs/BatchPrefs.h
       prefs/DevicePrefs.cpp
       prefs/DevicePrefs.h
       prefs/DirectoriesPrefs.cpp
