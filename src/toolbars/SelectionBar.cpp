@@ -824,7 +824,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a time range of audio */
-   SelectionBarID, wxT("ShowSelectionTB"), XXO("&Selection Toolbar")
+   SelectionBar::ID(), wxT("ShowSelectionTB"), XXO("&Selection Toolbar")
 };
 }
 

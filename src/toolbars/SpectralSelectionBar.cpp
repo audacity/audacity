@@ -495,7 +495,7 @@ static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
 
 namespace {
 AttachedToolBarMenuItem sAttachment{
-   SpectralSelectionBarID,
+   SpectralSelectionBar::ID(),
       /* i18n-hint: Clicking this menu item shows the toolbar
       for selecting a frequency range of audio */
    wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar")

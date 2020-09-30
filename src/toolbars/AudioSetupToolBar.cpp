@@ -774,7 +774,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar
       that manages the audio devices */
-   AudioSetupBarID, wxT("ShowAudioSetupTB"), XXO("&Audio Setup Toolbar")
+   AudioSetupToolBar::ID(), wxT("ShowAudioSetupTB"), XXO("&Audio Setup Toolbar")
 };
 }
 

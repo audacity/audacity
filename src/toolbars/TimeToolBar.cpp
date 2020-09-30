@@ -387,7 +387,7 @@ static RegisteredToolbarFactory factory
 namespace {
 AttachedToolBarMenuItem sAttachment
 {
-   TimeBarID,
+   TimeToolBar::ID(),
    wxT("ShowTimeTB"),
    /* i18n-hint: Clicking this menu item shows the toolbar
       for viewing actual time of the cursor */

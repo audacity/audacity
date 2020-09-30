@@ -262,7 +262,7 @@ static RegisteredToolbarFactory factory{ EditBarID,
 namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar for editing */
-   EditBarID, wxT("ShowEditTB"), XXO("&Edit Toolbar")
+   EditToolBar::ID(), wxT("ShowEditTB"), XXO("&Edit Toolbar")
 };
 }
 

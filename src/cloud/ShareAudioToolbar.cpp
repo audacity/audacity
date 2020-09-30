@@ -222,7 +222,7 @@ namespace
 AttachedToolBarMenuItem sAttachment {
    /* i18n-hint: Clicking this menu item shows the toolbar
       that opens Share Audio dialog */
-   ShareAudioBarID, wxT("ShareAudioTB"), XXO("&Share Audio Toolbar")
+   ShareAudioToolbar::ID(), wxT("ShareAudioTB"), XXO("&Share Audio Toolbar")
 };
 }
 

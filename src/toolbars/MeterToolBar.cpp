@@ -529,19 +529,21 @@ namespace {
 AttachedToolBarMenuItem sAttachment1{
    /* i18n-hint: Clicking this menu item shows the toolbar
       with the recording level meters */
-   RecordMeterBarID, wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
-   {}, { MeterBarID }
+   MeterToolBar::RecordID(),
+   wxT("ShowRecordMeterTB"), XXO("&Recording Meter Toolbar"),
+   {}, { MeterToolBar::ID() }
 };
 AttachedToolBarMenuItem sAttachment2{
    /* i18n-hint: Clicking this menu item shows the toolbar
       with the playback level meter */
-   PlayMeterBarID, wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
-   {}, { MeterBarID }
+   MeterToolBar::PlayID(),
+   wxT("ShowPlayMeterTB"), XXO("&Playback Meter Toolbar"),
+   {}, { MeterToolBar::ID() }
 };
 //AttachedToolBarMenuItem sAttachment3{
 //   /* --i18nhint: Clicking this menu item shows the toolbar
 //      which has sound level meters */
-//   MeterBarID, wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
+//   MeterToolBar::ID(), wxT("ShowMeterTB"), XXO("Co&mbined Meter Toolbar"),
 //   { Registry::OrderingHint::After, "ShowPlayMeterTB" },
 //   { PlayMeterBarID, RecordMeterBarID }
 //};

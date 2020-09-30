@@ -177,7 +177,7 @@ static RegisteredToolbarFactory factory{ CutCopyPasteBarID,
 namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows the toolbar for editing */
-   CutCopyPasteBarID,
+   CutCopyPasteToolBar::ID(),
    wxT("ShowCutCopyPasteTB"),
    XXO("&Cut/Copy/Paste Toolbar"),
    { Registry::OrderingHint::After, "ShowEditTB" }

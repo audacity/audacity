@@ -264,7 +264,7 @@ namespace {
 AttachedToolBarMenuItem sAttachment{
    /* i18n-hint: Clicking this menu item shows a toolbar
       that has some tools in it */
-   ToolsBarID, wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
+   ToolsToolBar::ID(), wxT("ShowToolsTB"), XXO("T&ools Toolbar"),
 };
 }
 
