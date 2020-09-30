@@ -97,6 +97,19 @@ class AUDACITY_DLL_API ToolManager final
 
    bool RestoreFocus();
 
+   template< typename F >
+   void ForEach( const F &fun )
+   {
+      std::for_each(std::begin(mBars), std::end(mBars), [&fun](auto pBar){
+         fun(pBar.get());
+      });
+   }
+
+   size_t CountBars() const
+   {
+      return ToolBarCount;
+   }
+
  private:
 
    ToolBar *Float( ToolBar *t, wxPoint & pos );
