@@ -53,7 +53,7 @@ ShareAudioToolbar& ShareAudioToolbar::Get(AudacityProject& project)
 {
    auto& toolManager = ToolManager::Get(project);
    return *static_cast<ShareAudioToolbar*>(
-      toolManager.GetToolBar(ShareAudioBarID));
+      toolManager.GetToolBar(ID()));
 }
 
 const ShareAudioToolbar& ShareAudioToolbar::Get(const AudacityProject& project)

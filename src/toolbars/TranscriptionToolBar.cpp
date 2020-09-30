@@ -116,7 +116,7 @@ TranscriptionToolBar::~TranscriptionToolBar()
 TranscriptionToolBar &TranscriptionToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<TranscriptionToolBar*>( toolManager.GetToolBar(TranscriptionBarID) );
+   return *static_cast<TranscriptionToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const TranscriptionToolBar &TranscriptionToolBar::Get( const AudacityProject &project )

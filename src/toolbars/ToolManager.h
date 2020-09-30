@@ -81,6 +81,7 @@ class AUDACITY_DLL_API ToolManager final
    void Expose( int type, bool show );
 
    ToolBar *GetToolBar( int type ) const;
+   ToolBar *GetToolBar(const Identifier &type) const;
 
    ToolDock *GetTopDock();
    const ToolDock *GetTopDock() const;

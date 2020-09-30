@@ -1046,6 +1046,16 @@ ToolBar *ToolManager::GetToolBar( int type ) const
 }
 
 //
+// Return a pointer to the specified toolbar
+//
+ToolBar *ToolManager::GetToolBar(const Identifier &type) const
+{
+   auto end = std::end(mBars), iter = std::find_if(std::begin(mBars), end,
+      [&](auto &pBar){ return pBar && pBar->GetSection() == type; } );
+   return (iter == end) ? nullptr : iter->get();
+}
+
+//
 // Return a pointer to the top dock
 //
 ToolDock *ToolManager::GetTopDock()

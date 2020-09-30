@@ -70,7 +70,7 @@ ScrubbingToolBar::~ScrubbingToolBar()
 ScrubbingToolBar &ScrubbingToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ScrubbingToolBar*>( toolManager.GetToolBar(ScrubbingBarID) );
+   return *static_cast<ScrubbingToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const ScrubbingToolBar &ScrubbingToolBar::Get( const AudacityProject &project )

@@ -143,7 +143,7 @@ SelectionBar::~SelectionBar()
 SelectionBar &SelectionBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<SelectionBar*>( toolManager.GetToolBar(SelectionBarID) );
+   return *static_cast<SelectionBar*>(toolManager.GetToolBar(ID()));
 }
 
 const SelectionBar &SelectionBar::Get( const AudacityProject &project )

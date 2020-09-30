@@ -70,7 +70,7 @@ TimeToolBar::~TimeToolBar()
 TimeToolBar &TimeToolBar::Get(AudacityProject &project)
 {
    auto &toolManager = ToolManager::Get(project);
-   return *static_cast<TimeToolBar*>(toolManager.GetToolBar(TimeBarID));
+   return *static_cast<TimeToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const TimeToolBar &TimeToolBar::Get(const AudacityProject &project)

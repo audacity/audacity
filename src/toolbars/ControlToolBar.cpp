@@ -134,14 +134,14 @@ ControlToolBar *ControlToolBar::Find( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return static_cast<ControlToolBar*>(
-      toolManager.GetToolBar(TransportBarID) );
+      toolManager.GetToolBar(ID()));
 }
 
 ControlToolBar &ControlToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return *static_cast<ControlToolBar*>(
-      toolManager.GetToolBar(TransportBarID) );
+      toolManager.GetToolBar(ID()));
 }
 
 const ControlToolBar &ControlToolBar::Get( const AudacityProject &project )

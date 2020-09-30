@@ -109,7 +109,7 @@ ToolsToolBar::~ToolsToolBar()
 ToolsToolBar &ToolsToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ToolsToolBar*>( toolManager.GetToolBar(ToolsBarID) );
+   return *static_cast<ToolsToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const ToolsToolBar &ToolsToolBar::Get( const AudacityProject &project )

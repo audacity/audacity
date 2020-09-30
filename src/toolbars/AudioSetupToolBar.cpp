@@ -92,7 +92,7 @@ AudioSetupToolBar::~AudioSetupToolBar()
 AudioSetupToolBar &AudioSetupToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<AudioSetupToolBar*>( toolManager.GetToolBar(AudioSetupBarID) );
+   return *static_cast<AudioSetupToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const AudioSetupToolBar &AudioSetupToolBar::Get( const AudacityProject &project )

@@ -178,14 +178,13 @@ ConstMeterToolBars MeterToolBar::GetToolBars(const AudacityProject &project)
 MeterToolBar & MeterToolBar::Get(AudacityProject &project, bool forPlayMeterToolBar)
 {
    auto& toolManager = ToolManager::Get(project);
-   auto  toolBarID = forPlayMeterToolBar ? PlayMeterBarID : RecordMeterBarID;
-
+   const auto &toolBarID = forPlayMeterToolBar ? PlayID() : RecordID();
    return *static_cast<MeterToolBar*>(toolManager.GetToolBar(toolBarID));
 }
 
 const MeterToolBar & MeterToolBar::Get(const AudacityProject &project, bool forPlayMeterToolBar)
 {
-   return Get( const_cast<AudacityProject&>( project ), forPlayMeterToolBar );
+   return Get(const_cast<AudacityProject&>(project), forPlayMeterToolBar);
 }
 
 void MeterToolBar::Create(wxWindow * parent)

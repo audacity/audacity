@@ -93,7 +93,7 @@ DeviceToolBar::~DeviceToolBar()
 DeviceToolBar &DeviceToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<DeviceToolBar*>( toolManager.GetToolBar(DeviceBarID) );
+   return *static_cast<DeviceToolBar*>(toolManager.GetToolBar(ID()));
 }
 
 const DeviceToolBar &DeviceToolBar::Get( const AudacityProject &project )
