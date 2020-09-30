@@ -12,7 +12,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2 
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
 
 $control mode (_ "Select Function") choice (("Gate" (_ "Gate"))
-                                            ("Analyze" (_ "Analyse Noise Level")))
+                                            ("Analyze" (_ "Analyze Noise Level")))
                                            0
 $control stereo-link (_ "Stereo Linking") choice (("LinkStereo" (_ "Link Stereo Tracks"))
                                                   ("DoNotLink" (_ "Don't Link Stereo")))
@@ -78,7 +78,8 @@ Set the control below ~a kHz.")
     (when (> (* *sound-srate* (- end start)) (1- (power 2 31)))
       ;; Work around bug 2012 and 439.
       (throw 'err (format nil (_ "Error.
-Selection too long.")))))
+Selection too long.
+Maximum length is ~a.") (format-time (/ (1- (power 2 31)) *sound-srate*))))))
   (when (< len 100) ;100 samples required 
     ;; Work around bug 2012.
     (throw 'err (format nil (_ "Error.
@@ -126,6 +127,13 @@ Suggested Threshold Setting ~a dB.")
              (ff (strcat "%#1." x "f")))
         (setq *float-format* ff)
         (format NIL "~a" num))))
+
+(defun format-time (s)
+  ;;; format time in seconds as h m.
+  (let* ((hh (truncate (/ s 3600)))
+         (mm (truncate (/ s 60))))
+  ;i18n-hint: hours and minutes. Do not translate "~a".
+  (format nil (_ "~ah ~am") hh (- mm (* hh 60)))))
 
 
 ;;; Gate Functions
