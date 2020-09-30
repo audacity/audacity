@@ -49,8 +49,13 @@ BEGIN_EVENT_TABLE(TimeToolBar, ToolBar)
    EVT_IDLE(TimeToolBar::OnIdle)
 END_EVENT_TABLE()
 
+Identifier TimeToolBar::ID()
+{
+   return wxT("Time");
+}
+
 TimeToolBar::TimeToolBar(AudacityProject &project)
-:  ToolBar(project, TimeBarID, XO("Time"), wxT("Time"), true),
+:  ToolBar(project, TimeBarID, XO("Time"), ID(), true),
    mListener(NULL),
    mAudioTime(NULL)
 {

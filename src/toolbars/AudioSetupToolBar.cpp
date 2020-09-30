@@ -72,9 +72,14 @@ BEGIN_EVENT_TABLE(AudioSetupToolBar, ToolBar)
    EVT_BUTTON(ID_AUDIO_SETUP_BUTTON, AudioSetupToolBar::OnAudioSetup)
 END_EVENT_TABLE()
 
+Identifier AudioSetupToolBar::ID()
+{
+   return wxT("Audio Setup");
+}
+
 //Standard constructor
 AudioSetupToolBar::AudioSetupToolBar( AudacityProject &project )
-: ToolBar( project, AudioSetupBarID, XO("Audio Setup"), wxT("Audio Setup") )
+: ToolBar( project, AudioSetupBarID, XO("Audio Setup"), ID() )
 {
    mSubscription = DeviceManager::Instance()->Subscribe(
       *this, &AudioSetupToolBar::OnRescannedDevices );

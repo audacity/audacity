@@ -120,9 +120,14 @@ BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
                       EditToolBar::OnButton )
 END_EVENT_TABLE()
 
+Identifier EditToolBar::ID()
+{
+   return wxT("Edit");
+}
+
 //Standard constructor
 EditToolBar::EditToolBar( AudacityProject &project )
-: ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
+: ToolBar(project, EditBarID, XO("Edit"), ID())
 , mButtons{ this, project, EditToolbarButtonList, ETBNumButtons, first_ETB_ID }
 {
 #ifdef OPTION_SYNC_LOCK_BUTTON

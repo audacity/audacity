@@ -46,6 +46,8 @@ class NumericTextCtrl;
 class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
  public:
+   static Identifier ID();
+
    SelectionBar( AudacityProject &project );
    virtual ~SelectionBar();
 

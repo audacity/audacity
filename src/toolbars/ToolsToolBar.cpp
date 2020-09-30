@@ -71,9 +71,14 @@ BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
 
+Identifier ToolsToolBar::ID()
+{
+   return wxT("Tools");
+}
+
 //Standard constructor
 ToolsToolBar::ToolsToolBar( AudacityProject &project )
-: ToolBar(project, ToolsBarID, XO("Tools"), wxT("Tools"))
+: ToolBar(project, ToolsBarID, XO("Tools"), ID())
 {
    using namespace ToolCodes;
 

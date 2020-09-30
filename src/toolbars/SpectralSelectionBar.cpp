@@ -93,9 +93,14 @@ END_EVENT_TABLE()
 static const wxString preferencePath
 (wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
+Identifier SpectralSelectionBar::ID()
+{
+   return wxT("SpectralSelection");
+}
+
 SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
 : ToolBar( project,
-   SpectralSelectionBarID, XO("Spectral Selection"), wxT("SpectralSelection") )
+   SpectralSelectionBarID, XO("Spectral Selection"), ID() )
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)

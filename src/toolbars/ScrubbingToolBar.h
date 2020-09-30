@@ -40,6 +40,8 @@ class ScrubbingToolBar final : public ToolBar {
 
 public:
 
+   static Identifier ID();
+
    ScrubbingToolBar( AudacityProject &project );
    virtual ~ScrubbingToolBar();
 

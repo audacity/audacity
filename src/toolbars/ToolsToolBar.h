@@ -35,6 +35,7 @@ const int FirstToolID = 11200;
 class ToolsToolBar final : public ToolBar {
 
  public:
+   static Identifier ID();
 
    ToolsToolBar( AudacityProject &project );
    virtual ~ToolsToolBar();

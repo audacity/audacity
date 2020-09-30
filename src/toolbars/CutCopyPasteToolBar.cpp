@@ -89,9 +89,14 @@ BEGIN_EVENT_TABLE( CutCopyPasteToolBar, ToolBar )
                       CutCopyPasteToolBar::OnButton )
 END_EVENT_TABLE()
 
+Identifier CutCopyPasteToolBar::ID()
+{
+   return wxT("CutCopyPaste");
+}
+
 //Standard constructor
 CutCopyPasteToolBar::CutCopyPasteToolBar( AudacityProject &project )
-: ToolBar(project, CutCopyPasteBarID, XO("Cut/Copy/Paste"), wxT("CutCopyPaste"))
+: ToolBar(project, CutCopyPasteBarID, XO("Cut/Copy/Paste"), ID())
 , mButtons{ this, project, CutCopyPasteToolbarButtonList, TBNumButtons, first_TB_ID }
 {
 }

@@ -93,10 +93,15 @@ BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
 END_EVENT_TABLE()
    ;   //semicolon enforces  proper automatic indenting in emacs.
 
+Identifier TranscriptionToolBar::ID()
+{
+   return wxT("Transcription");
+}
+
 ////Standard Constructor
 TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
 : ToolBar( project,
-   TranscriptionBarID, XO("Play-at-Speed"), wxT("Transcription"), true )
+   TranscriptionBarID, XO("Play-at-Speed"), ID(), true )
 {
    SetPlaySpeed( 1.0 * 100.0 );
 #ifdef EXPERIMENTAL_VOICE_DETECTION

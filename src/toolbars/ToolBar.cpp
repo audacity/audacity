@@ -330,7 +330,7 @@ END_EVENT_TABLE()
 ToolBar::ToolBar( AudacityProject &project,
                   int type,
                   const TranslatableString &label,
-                  const wxString &section,
+                  const Identifier &section,
                   bool resizable )
 : wxPanelWrapper()
 , mProject{ project }
@@ -388,7 +388,7 @@ TranslatableString ToolBar::GetLabel()
 //
 // Returns the toolbar preferences section
 //
-wxString ToolBar::GetSection()
+Identifier ToolBar::GetSection()
 {
    return mSection;
 }

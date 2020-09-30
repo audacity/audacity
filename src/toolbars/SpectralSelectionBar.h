@@ -29,6 +29,8 @@ class SpectralSelectionBar final : public ToolBar {
 
 public:
 
+   static Identifier ID();
+
    SpectralSelectionBar( AudacityProject &project );
    virtual ~SpectralSelectionBar();
 

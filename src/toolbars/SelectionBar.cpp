@@ -108,8 +108,13 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, SelectionBar::OnCaptureKey)
 END_EVENT_TABLE()
 
+Identifier SelectionBar::ID()
+{
+   return wxT("Selection");
+}
+
 SelectionBar::SelectionBar( AudacityProject &project )
-: ToolBar(project, SelectionBarID, XO("Selection"), wxT("Selection")),
+: ToolBar(project, SelectionBarID, XO("Selection"), ID()),
   mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),

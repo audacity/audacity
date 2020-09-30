@@ -30,6 +30,8 @@ class CutCopyPasteToolBar final : public ToolBar {
    CutCopyPasteToolBar( AudacityProject &project );
    virtual ~CutCopyPasteToolBar();
 
+   static Identifier ID();
+
    void Create(wxWindow *parent) override;
 
    void OnButton(wxCommandEvent & event);

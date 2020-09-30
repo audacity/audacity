@@ -35,8 +35,13 @@ IMPLEMENT_CLASS(cloud::ShareAudioToolbar, ToolBar);
 
 namespace cloud
 {
+Identifier ShareAudioToolbar::ID()
+{
+   return wxT("Share Audio");
+}
+
 ShareAudioToolbar::ShareAudioToolbar(AudacityProject& project)
-    : ToolBar(project, ShareAudioBarID, XO("Share Audio"), wxT("Share Audio"))
+    : ToolBar(project, ShareAudioBarID, XO("Share Audio"), ID())
 {
 }
 
@@ -76,7 +81,7 @@ void ShareAudioToolbar::RegenerateTooltips()
       switch (iWinID)
       {
       case ID_SHARE_AUDIO_BUTTON:
-         name = wxT("Share Audio");
+         name = ID();
          break;
       }
 

@@ -23,6 +23,8 @@ class TimeToolBarListener;
 class TimeToolBar final : public ToolBar
 {
 public:
+   static Identifier ID();
+
    TimeToolBar(AudacityProject &project);
    virtual ~TimeToolBar();
    

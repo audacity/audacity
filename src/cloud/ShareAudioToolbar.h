@@ -19,6 +19,8 @@ namespace cloud
 class ShareAudioToolbar final : public ToolBar
 {
 public:
+   static Identifier ID();
+
    explicit ShareAudioToolbar(AudacityProject& project);
    ~ShareAudioToolbar() override;
 
