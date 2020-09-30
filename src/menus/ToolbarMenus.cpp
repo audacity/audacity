@@ -40,14 +40,6 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 namespace{
 using namespace MenuTable;
 
-auto ToolbarCheckFn( int toolbarId ) -> CommandManager::CheckFn
-{
-   return [toolbarId](AudacityProject &project){
-      auto &toolManager = ToolManager::Get( project );
-      return toolManager.IsVisible(toolbarId);
-   };
-}
-
 BaseItemSharedPtr ToolbarsMenu()
 {
    using Options = CommandManager::Options;
