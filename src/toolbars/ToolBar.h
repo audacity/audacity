@@ -63,34 +63,6 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TOOLBAR_UPDATED, -1);
 //
 #define toolbarGap 1
 
-//
-// ToolBar IDs
-//
-enum ToolBarID
-{
-   NoBarID = -1,
-   TransportBarID,
-   ToolsBarID,
-   MeterBarID,
-   RecordMeterBarID,
-   PlayMeterBarID,
-   EditBarID,
-   TranscriptionBarID,
-   ScrubbingBarID,
-   DeviceBarID,
-   SelectionBarID,
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBarID,
-#endif
-   AudioSetupBarID,
-#ifdef HAS_AUDIOCOM_UPLOAD
-   ShareAudioBarID,
-#endif
-   TimeBarID,
-   CutCopyPasteBarID,
-   ToolBarCount
-};
-
 // How may pixels padding each side of a floating toolbar
 enum { ToolBarFloatMargin = 1 };
 

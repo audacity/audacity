@@ -295,9 +295,7 @@ bool ToolBarConfiguration::Read
       gPrefs->Read( wxT("Order"), &ord, -1 );
       // Index was written 1-based
       --ord;
-      if (ord >= ToolBarCount)
-         result = false;
-      else if (ord >= 0)
+      if (ord >= 0)
       {
          // Legacy preferences
          while (pLegacy->bars.size() <= size_t(ord))
@@ -530,7 +528,9 @@ void ToolDock::VisitLayout(LayoutVisitor &visitor,
       ToolBar *lastSib {};
       ToolBar *lastWrappedChild {};
       wxRect rect;
-   } layout[ ToolBarCount ];
+   };
+   std::vector<Item> items(mBars.size());
+   Item *layout = items.data();
    Item *next = layout;
 
    ToolBar *lastRoot {};
