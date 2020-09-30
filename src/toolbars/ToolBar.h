@@ -136,6 +136,11 @@ class AUDACITY_DLL_API ToolBar /* not final */
    void UpdatePrefs() override;
    virtual void RegenerateTooltips() = 0;
 
+   //! Get a value used for computing cascading positions of undocked bars
+   int GetIndex() const { return mIndex; }
+   //! Set a value used for computing cascading positions of undocked bars
+   void SetIndex(int index) { mIndex = index; }
+
    int GetType();
    TranslatableString GetTitle();
    TranslatableString GetLabel();
@@ -273,6 +278,7 @@ public:
    TranslatableString mLabel;
    Identifier mSection;
    int mType;
+   int mIndex{0};
  private:
    void Init(wxWindow *parent, int type, const wxString & title, const wxString & label);
 

@@ -450,7 +450,8 @@ void ToolManager::CreateWindows()
    size_t ii = 0;
    for (const auto &factory : RegisteredToolbarFactory::GetFactories()) {
       if (factory) {
-         mBars[ii] = factory( *parent );
+         // TODO: assignment of indices independently of registration order
+         (mBars[ii] = factory( *parent )) -> SetIndex(ii);
       }
       else
          wxASSERT( false );
@@ -645,7 +646,7 @@ void ToolManager::Reset()
          // If there were multiple hidden toobars the * 10 adjustment means
          // they won't overlap too much.
          floater->CentreOnParent( );
-         const auto index = bar->GetType();
+         const auto index = bar->GetIndex();
          floater->Move(
             floater->GetPosition() + wxSize{ index * 10 - 200, index * 10 });
          bar->SetDocked( NULL, false );

@@ -489,7 +489,9 @@ bool ToolBar::Expose( bool show )
       if( !IsPositioned() && show ){
          SetPositioned();
          pParent->CentreOnParent();
-         pParent->Move( pParent->GetPosition() + wxSize( mType*10, mType*10 ));
+         // Cascade the undocked bars
+         pParent->Move( pParent->GetPosition() +
+            wxSize{ mIndex * 10, mIndex * 10 });
       }
       pParent->Show( show );
    }
