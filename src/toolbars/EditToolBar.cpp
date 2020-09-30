@@ -127,7 +127,7 @@ Identifier EditToolBar::ID()
 
 //Standard constructor
 EditToolBar::EditToolBar( AudacityProject &project )
-: ToolBar(project, EditBarID, XO("Edit"), ID())
+: ToolBar(project, XO("Edit"), ID())
 , mButtons{ this, project, EditToolbarButtonList, ETBNumButtons, first_ETB_ID }
 {
 #ifdef OPTION_SYNC_LOCK_BUTTON
@@ -252,7 +252,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    mButtons.OnButton(event);
 }
 
-static RegisteredToolbarFactory factory{ EditBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew EditToolBar{ project } }; }
 };

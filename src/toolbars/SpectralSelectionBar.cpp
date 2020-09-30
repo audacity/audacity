@@ -99,8 +99,7 @@ Identifier SpectralSelectionBar::ID()
 }
 
 SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
-: ToolBar( project,
-   SpectralSelectionBarID, XO("Spectral Selection"), ID() )
+: ToolBar( project, XO("Spectral Selection"), ID() )
 , mListener(NULL), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
@@ -498,7 +497,7 @@ void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSy
    }
 }
 
-static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew SpectralSelectionBar{ project } }; }
 };

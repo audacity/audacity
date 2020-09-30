@@ -41,7 +41,7 @@ Identifier ShareAudioToolbar::ID()
 }
 
 ShareAudioToolbar::ShareAudioToolbar(AudacityProject& project)
-    : ToolBar(project, ShareAudioBarID, XO("Share Audio"), ID())
+    : ToolBar(project, XO("Share Audio"), ID())
 {
 }
 
@@ -213,7 +213,7 @@ void ShareAudioToolbar::DestroySizer()
 }
 
 static RegisteredToolbarFactory factory {
-   ShareAudioBarID, [](AudacityProject& project)
+   [](AudacityProject& project)
    { return ToolBar::Holder { safenew ShareAudioToolbar { project } }; }
 };
 

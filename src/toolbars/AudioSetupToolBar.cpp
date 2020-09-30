@@ -79,7 +79,7 @@ Identifier AudioSetupToolBar::ID()
 
 //Standard constructor
 AudioSetupToolBar::AudioSetupToolBar( AudacityProject &project )
-: ToolBar( project, AudioSetupBarID, XO("Audio Setup"), ID() )
+: ToolBar( project, XO("Audio Setup"), ID() )
 {
    mSubscription = DeviceManager::Instance()->Subscribe(
       *this, &AudioSetupToolBar::OnRescannedDevices );
@@ -764,7 +764,7 @@ void AudioSetupToolBar::CommonMenuItemSteps(bool audioSettingsChosen)
    }
 }
 
-static RegisteredToolbarFactory factory{ AudioSetupBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew AudioSetupToolBar{ project } };
    }

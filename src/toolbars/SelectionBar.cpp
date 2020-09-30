@@ -114,7 +114,7 @@ Identifier SelectionBar::ID()
 }
 
 SelectionBar::SelectionBar( AudacityProject &project )
-: ToolBar(project, SelectionBarID, XO("Selection"), ID()),
+: ToolBar(project, XO("Selection"), ID()),
   mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
@@ -831,7 +831,7 @@ void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
    mListener->AS_SetSnapTo(mSnapTo->GetSelection());
 }
 
-static RegisteredToolbarFactory factory{ SelectionBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew SelectionBar{ project } }; }
 };

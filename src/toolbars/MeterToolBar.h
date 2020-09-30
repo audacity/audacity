@@ -44,7 +44,7 @@ class MeterToolBar final : public ToolBar {
    static Identifier RecordID();
 
    MeterToolBar(AudacityProject &project,
-      int type, unsigned whichMeters,
+      unsigned whichMeters,
       const TranslatableString &label, Identifier ID);
    virtual ~MeterToolBar();
 

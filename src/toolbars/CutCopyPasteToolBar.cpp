@@ -96,7 +96,7 @@ Identifier CutCopyPasteToolBar::ID()
 
 //Standard constructor
 CutCopyPasteToolBar::CutCopyPasteToolBar( AudacityProject &project )
-: ToolBar(project, CutCopyPasteBarID, XO("Cut/Copy/Paste"), ID())
+: ToolBar(project, XO("Cut/Copy/Paste"), ID())
 , mButtons{ this, project, CutCopyPasteToolbarButtonList, TBNumButtons, first_TB_ID }
 {
 }
@@ -179,7 +179,7 @@ void CutCopyPasteToolBar::OnButton(wxCommandEvent & event)
    mButtons.OnButton(event);
 }
 
-static RegisteredToolbarFactory factory{ CutCopyPasteBarID,
+static RegisteredToolbarFactory factory{
    []( AudacityProject &project ){
       return ToolBar::Holder{ safenew CutCopyPasteToolBar{ project } }; }
 };

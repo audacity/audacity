@@ -328,7 +328,6 @@ END_EVENT_TABLE()
 // Constructor
 //
 ToolBar::ToolBar( AudacityProject &project,
-                  int type,
                   const TranslatableString &label,
                   const Identifier &section,
                   bool resizable )
@@ -336,7 +335,6 @@ ToolBar::ToolBar( AudacityProject &project,
 , mProject{ project }
 {
    // Save parameters
-   mType = type;
    mLabel = label;
    mSection = section;
    mResizable = resizable;
@@ -349,7 +347,6 @@ ToolBar::ToolBar( AudacityProject &project,
 
    mGrabber = NULL;
    mResizer = NULL;
-   SetId(mType);
 }
 
 //
@@ -405,14 +402,6 @@ TranslatableString ToolBar::GetLabel()
 Identifier ToolBar::GetSection()
 {
    return mSection;
-}
-
-//
-// Returns the toolbar type
-//
-int ToolBar::GetType()
-{
-   return mType;
 }
 
 //
@@ -509,7 +498,7 @@ void ToolBar::Create( wxWindow *parent )
 
    // Create the window and label it
    wxPanelWrapper::Create( mParent,
-                    mType,
+                    wxID_ANY,
                     wxDefaultPosition,
                     wxDefaultSize,
                     wxNO_BORDER | wxTAB_TRAVERSAL,
@@ -1046,17 +1035,15 @@ namespace {
 
 RegisteredToolbarFactory::Functions &GetFunctions()
 {
-   static RegisteredToolbarFactory::Functions factories( ToolBarCount );
+   static RegisteredToolbarFactory::Functions factories;
    return factories;
 }
 
 }
 
-RegisteredToolbarFactory::RegisteredToolbarFactory(
-   int id, const Function &function)
+RegisteredToolbarFactory::RegisteredToolbarFactory(const Function &function)
 {
-   wxASSERT( id >= 0 && id < ToolBarCount );
-   GetFunctions()[ id ] = function;
+   GetFunctions().emplace_back(function);
 }
 
 auto RegisteredToolbarFactory::GetFactories() -> const Functions&

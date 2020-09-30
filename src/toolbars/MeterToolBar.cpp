@@ -147,10 +147,10 @@ Identifier MeterToolBar::RecordID()
 }
 
 //Standard constructor
-MeterToolBar::MeterToolBar(AudacityProject &project, int type,
+MeterToolBar::MeterToolBar(AudacityProject &project,
    unsigned whichMeters,
    const TranslatableString &label, Identifier ID)
-: ToolBar(project, type, label, ID, true)
+: ToolBar(project, label, ID, true)
 , mWhichMeters{ whichMeters }
 {
 }
@@ -509,22 +509,22 @@ void MeterToolBar::AdjustInputGain(int adj)
    mRecordMeter->UpdateSliderControl();
 }
 
-static RegisteredToolbarFactory factory1{ RecordMeterBarID,
+static RegisteredToolbarFactory factory1{
    []( AudacityProject &project ){
       return ToolBar::Holder{
-         safenew MeterToolBar{ project, RecordMeterBarID, kWithRecordMeter,
+         safenew MeterToolBar{ project, kWithRecordMeter,
             XO("Recording Meter"), MeterToolBar::RecordID() } }; }
 };
-static RegisteredToolbarFactory factory2{ PlayMeterBarID,
+static RegisteredToolbarFactory factory2{
    []( AudacityProject &project ){
       return ToolBar::Holder{
-         safenew MeterToolBar{ project, PlayMeterBarID, kWithPlayMeter,
+         safenew MeterToolBar{ project, kWithPlayMeter,
             XO("Playback Meter"), MeterToolBar::PlayID() } }; }
 };
-static RegisteredToolbarFactory factory3{ MeterBarID,
+static RegisteredToolbarFactory factory3{
    []( AudacityProject &project ){
       return ToolBar::Holder{
-         safenew MeterToolBar{ project, MeterBarID,
+         safenew MeterToolBar{ project,
             (kWithPlayMeter|kWithRecordMeter),
             XO("Combined Meter"), MeterToolBar::ID() } }; }
 };
