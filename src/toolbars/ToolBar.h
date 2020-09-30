@@ -110,6 +110,21 @@ class AUDACITY_DLL_API ToolBar /* not final */
       bool resizable = false);
    virtual ~ToolBar();
 
+   //! Whether the toolbar should be shown by default.  Default implementation returns true
+   virtual bool ShownByDefault() const;
+
+   //! Default implementation returns false
+   virtual bool HideAfterReset() const;
+
+   //! Identifies one of the docking areas for toolbars
+   enum DockID {
+      TopDockID = 1,
+      BotDockID = 2
+   };
+
+   //! Which dock the toolbar defaults into.  Default implementation chooses the top dock
+   virtual DockID DefaultDockID() const;
+
    bool AcceptsFocus() const override { return false; };
    bool AcceptsFocusFromKeyboard() const override;
 

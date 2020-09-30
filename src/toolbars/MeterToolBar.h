@@ -54,6 +54,8 @@ class MeterToolBar final : public ToolBar {
    static MeterToolBar & Get(AudacityProject &project, bool forPlayMeterToolBar);
    static const MeterToolBar & Get(const AudacityProject &project, bool forPlayMeterToolBar);
 
+   bool ShownByDefault() const override;
+
    void Create(wxWindow *parent) override;
 
    void Populate() override;

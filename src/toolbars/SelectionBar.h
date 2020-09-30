@@ -51,6 +51,9 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    SelectionBar( AudacityProject &project );
    virtual ~SelectionBar();
 
+   bool ShownByDefault() const override;
+   DockID DefaultDockID() const override;
+
    static SelectionBar &Get( AudacityProject &project );
    static const SelectionBar &Get( const AudacityProject &project );
 

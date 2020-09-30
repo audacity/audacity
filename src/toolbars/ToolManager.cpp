@@ -550,8 +550,6 @@ static struct DefaultConfigEntry {
    { SpectralSelectionBarID, NoBarID,                NoBarID                },
 };
 
-constexpr ToolBarID HideAfterReset[] = { CutCopyPasteBarID };
-
 // Static member function.
 void ToolManager::OnResetToolBars(const CommandContext &context)
 {
@@ -594,16 +592,8 @@ void ToolManager::Reset()
       }
 
       // Decide which dock.
-      if (ndx == SelectionBarID
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         || ndx == SpectralSelectionBarID
-#endif
-         || ndx == TimeBarID
-         || ndx == TranscriptionBarID
-         )
-         dock = mBotDock;
-      else
-         dock = mTopDock;
+      dock = (bar->DefaultDockID() == ToolBar::TopDockID)
+         ? mTopDock : mBotDock;
 
       // PRL: Destroy the tool frame before recreating buttons.
       // This fixes some subtle sizing problems on macOs.
@@ -625,19 +615,7 @@ void ToolManager::Reset()
 #endif
 
       // Hide some bars.
-      if( ndx == MeterBarID
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         || ndx == SpectralSelectionBarID
-#endif
-         || ndx == ScrubbingBarID
-         || ndx == DeviceBarID
-// DA: Hides two more toolbars.
-#ifdef EXPERIMENTAL_DA
-         || ndx == TranscriptionBarID
-         || ndx == SelectionBarID
-#endif
-         )
-         expose = false;
+      expose = bar->ShownByDefault() || bar->HideAfterReset();
 
       // Next condition will always (?) be true, as the reset configuration is
       // with no floating toolbars.
@@ -674,8 +652,10 @@ void ToolManager::Reset()
 
    }
 
-   for (auto ndx : HideAfterReset)
-      Expose(ndx, false);
+   ForEach([this](auto bar){
+      if (bar && bar->HideAfterReset())
+         Expose(bar->GetId(), false);
+   });
    // TODO:??
    // If audio was playing, we stopped the VU meters,
    // It would be nice to show them again, but hardly essential as
@@ -763,28 +743,8 @@ void ToolManager::ReadConfig()
       // Change to the bar subkey
       gPrefs->SetPath( bar->GetSection().GET() );
 
-      bool bShownByDefault = true;
-      int defaultDock = TopDockID;
-
-      if( ndx == SelectionBarID )
-         defaultDock = BotDockID;
-      if( ndx == MeterBarID )
-         bShownByDefault = false;
-      if( ndx == ScrubbingBarID )
-         bShownByDefault = false;
-      if( ndx == DeviceBarID )
-         bShownByDefault = false;
-      if( ndx == CutCopyPasteBarID )
-         bShownByDefault = false;
-      if( ndx == TimeBarID )
-         defaultDock = BotDockID;
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      if( ndx == SpectralSelectionBarID ){
-         defaultDock = BotDockID;
-         bShownByDefault = false; // Only show if asked for.
-      }
-#endif
+      const bool bShownByDefault = bar->ShownByDefault();
+      const int defaultDock = bar->DefaultDockID();
 
       // Read in all the settings
 

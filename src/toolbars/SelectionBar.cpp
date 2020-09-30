@@ -140,6 +140,22 @@ SelectionBar::~SelectionBar()
 {
 }
 
+bool SelectionBar::ShownByDefault() const
+{
+   return
+#ifdef EXPERIMENTAL_DA
+      false
+#else
+      true
+#endif
+   ;
+}
+
+ToolBar::DockID SelectionBar::DefaultDockID() const
+{
+   return BotDockID;
+}
+
 SelectionBar &SelectionBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );

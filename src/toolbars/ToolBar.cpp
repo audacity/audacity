@@ -367,6 +367,20 @@ bool ToolBar::AcceptsFocusFromKeyboard() const
    return false;
 }
 
+bool ToolBar::ShownByDefault() const
+{
+   return true;
+}
+
+bool ToolBar::HideAfterReset() const
+{
+   return false;
+}
+
+ToolBar::DockID ToolBar::DefaultDockID() const
+{
+   return TopDockID;
+}
 
 //
 // Returns the toolbar title

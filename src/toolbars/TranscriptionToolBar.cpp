@@ -113,6 +113,22 @@ TranscriptionToolBar::~TranscriptionToolBar()
 {
 }
 
+bool TranscriptionToolBar::ShownByDefault() const
+{
+   return
+#ifdef EXPERIMENTAL_DA
+      false
+#else
+      true
+#endif
+   ;
+}
+
+ToolBar::DockID TranscriptionToolBar::DefaultDockID() const
+{
+   return BotDockID;
+}
+
 TranscriptionToolBar &TranscriptionToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );

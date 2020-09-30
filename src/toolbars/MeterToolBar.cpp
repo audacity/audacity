@@ -187,6 +187,12 @@ const MeterToolBar & MeterToolBar::Get(const AudacityProject &project, bool forP
    return Get(const_cast<AudacityProject&>(project), forPlayMeterToolBar);
 }
 
+bool MeterToolBar::ShownByDefault() const
+{
+   // The combined meter hides by default
+   return mWhichMeters != (kWithPlayMeter|kWithRecordMeter);
+}
+
 void MeterToolBar::Create(wxWindow * parent)
 {
    ToolBar::Create(parent);

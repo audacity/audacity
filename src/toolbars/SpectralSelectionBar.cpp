@@ -113,6 +113,16 @@ SpectralSelectionBar::~SpectralSelectionBar()
    // Do nothing, sizer deletes the controls
 }
 
+bool SpectralSelectionBar::ShownByDefault() const
+{
+   return false;
+}
+
+ToolBar::DockID SpectralSelectionBar::DefaultDockID() const
+{
+   return BotDockID;
+}
+
 SpectralSelectionBar &SpectralSelectionBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );

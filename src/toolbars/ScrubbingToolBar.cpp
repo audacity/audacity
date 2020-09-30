@@ -67,6 +67,11 @@ ScrubbingToolBar::~ScrubbingToolBar()
 {
 }
 
+bool ScrubbingToolBar::ShownByDefault() const
+{
+   return false;
+}
+
 ScrubbingToolBar &ScrubbingToolBar::Get( AudacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );

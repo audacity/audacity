@@ -39,8 +39,8 @@ class GrabberEvent;
 enum
 {
    NoDockID = 0,
-   TopDockID,
-   BotDockID,
+   TopDockID = ToolBar::TopDockID,
+   BotDockID = ToolBar::BotDockID,
    DockCount = 2
 };
 

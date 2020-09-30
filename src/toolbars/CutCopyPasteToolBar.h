@@ -30,6 +30,9 @@ class CutCopyPasteToolBar final : public ToolBar {
    CutCopyPasteToolBar( AudacityProject &project );
    virtual ~CutCopyPasteToolBar();
 
+   bool ShownByDefault() const override;
+   bool HideAfterReset() const override;
+
    static Identifier ID();
 
    void Create(wxWindow *parent) override;

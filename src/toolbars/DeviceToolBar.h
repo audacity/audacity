@@ -33,6 +33,8 @@ class DeviceToolBar final : public ToolBar {
    DeviceToolBar( AudacityProject &project );
    virtual ~DeviceToolBar();
 
+   bool ShownByDefault() const override;
+
    static DeviceToolBar &Get( AudacityProject &project );
    static const DeviceToolBar &Get( const AudacityProject &project );
 
