@@ -50,7 +50,6 @@
 #include "../widgets/Grabber.h"
 #include "DeviceManager.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/Grabber.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

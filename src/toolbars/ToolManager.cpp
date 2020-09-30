@@ -1468,7 +1468,7 @@ void ToolManager::OnGrabber( GrabberEvent & event )
       return HandleEscapeKey();
 
    // Remember which bar we're dragging
-   mDragBar = mBars[ event.GetId() ].get();
+   mDragBar = GetToolBar(event.BarId());
 
    // Remember state, in case of ESCape key later
    if (mDragBar->IsDocked()) {

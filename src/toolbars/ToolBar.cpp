@@ -567,7 +567,7 @@ void ToolBar::ReCreateButtons()
       auto ms = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
       // Create the grabber and add it to the main sizer
-      mGrabber = safenew Grabber(this, mType);
+      mGrabber = safenew Grabber(this, GetSection());
       ms->Add(mGrabber, 0, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP | wxRIGHT, 1);
 
       // Use a box sizer for laying out controls
