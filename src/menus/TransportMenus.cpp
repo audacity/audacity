@@ -29,7 +29,6 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
-#include "../toolbars/TranscriptionToolBar.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 #include "../widgets/ProgressDialog.h"
@@ -692,66 +691,6 @@ void OnPlayCutPreview(const CommandContext &context)
    TransportUtilities::PlayCurrentRegionAndWait(context, false, true);
 }
 
-void OnPlayAtSpeed(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->PlayAtSpeed(false, false);
-   }
-}
-
-void OnPlayAtSpeedLooped(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->PlayAtSpeed(true, false);
-   }
-}
-
-void OnPlayAtSpeedCutPreview(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->PlayAtSpeed(false, true);
-   }
-}
-
-void OnSetPlaySpeed(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->ShowPlaySpeedDialog();
-   }
-}
-
-void OnPlaySpeedInc(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->AdjustPlaySpeed(0.1f);
-   }
-}
-
-void OnPlaySpeedDec(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto tb = &TranscriptionToolBar::Get( project );
-
-   if (tb) {
-      tb->AdjustPlaySpeed(-0.1f);
-   }
-}
-
 void OnMoveToPrevLabel(const CommandContext &context)
 {
    auto &project = context.project;
@@ -976,32 +915,6 @@ BaseItemSharedPtr ExtraTransportMenu()
 AttachedItem sAttachment2{
    wxT("Optional/Extra/Part1"),
    Shared( ExtraTransportMenu() )
-};
-
-BaseItemSharedPtr ExtraPlayAtSpeedMenu()
-{
-   static BaseItemSharedPtr menu{
-   Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed"),
-      /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
-      Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
-         OnPlayAtSpeedLooped, CaptureNotBusyFlag() ),
-      Command( wxT("PlayAtSpeed"), XXO("Play-at-Speed &Once"),
-         OnPlayAtSpeed, CaptureNotBusyFlag() ),
-      Command( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
-         OnPlayAtSpeedCutPreview, CaptureNotBusyFlag() ),
-      Command( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
-         OnSetPlaySpeed, CaptureNotBusyFlag() ),
-      Command( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"),
-         OnPlaySpeedInc, CaptureNotBusyFlag() ),
-      Command( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"),
-         OnPlaySpeedDec, CaptureNotBusyFlag() )
-   ) };
-   return menu;
-}
-
-AttachedItem sAttachment3{
-   wxT("Optional/Extra/Part1"),
-   Shared( ExtraPlayAtSpeedMenu() )
 };
 
 BaseItemSharedPtr ExtraSelectionItems()

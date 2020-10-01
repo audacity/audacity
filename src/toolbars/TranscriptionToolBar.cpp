@@ -1086,3 +1086,110 @@ AttachedToolBarMenuItem sAttachment{
 };
 }
 
+// Menu handler functions
+
+#include "../CommonCommandFlags.h"
+
+namespace {
+void OnPlayAtSpeed(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &TranscriptionToolBar::Get( project );
+
+   if (tb) {
+      tb->PlayAtSpeed(false, false);
+   }
+}
+
+void OnPlayAtSpeedLooped(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &TranscriptionToolBar::Get( project );
+
+   if (tb) {
+      tb->PlayAtSpeed(true, false);
+   }
+}
+
+void OnPlayAtSpeedCutPreview(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &TranscriptionToolBar::Get( project );
+
+   if (tb) {
+      tb->PlayAtSpeed(false, true);
+   }
+}
+
+void OnSetPlaySpeed(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &TranscriptionToolBar::Get( project );
+
+   if (tb) {
+      tb->ShowPlaySpeedDialog();
+   }
+}
+
+void OnPlaySpeedInc(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &TranscriptionToolBar::Get( project );
+
+   if (tb) {
+      tb->AdjustPlaySpeed(0.1f);
+   }
+}
+
+void OnPlaySpeedDec(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto tb = &TranscriptionToolBar::Get( project );
+
+   if (tb) {
+      tb->AdjustPlaySpeed(-0.1f);
+   }
+}
+
+using namespace MenuTable;
+
+BaseItemSharedPtr ExtraPlayAtSpeedMenu()
+{
+   static BaseItemSharedPtr menu{
+      Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed") ) };
+   return menu;
+}
+
+AttachedItem sAttachment2{
+   wxT("Optional/Extra/Part1"),
+   Shared( ExtraPlayAtSpeedMenu() )
+};
+
+BaseItemSharedPtr ExtraPlayAtSpeedItems()
+{
+   static BaseItemSharedPtr items{
+   Items( "",
+      /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
+      Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
+         OnPlayAtSpeedLooped, CaptureNotBusyFlag() ),
+      Command( wxT("PlayAtSpeed"), XXO("Play-at-Speed &Once"),
+         OnPlayAtSpeed, CaptureNotBusyFlag() ),
+      Command( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
+         OnPlayAtSpeedCutPreview, CaptureNotBusyFlag() ),
+      Command( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
+         OnSetPlaySpeed, CaptureNotBusyFlag() ),
+      Command( wxT("PlaySpeedInc"), XXO("&Increase Playback Speed"),
+         OnPlaySpeedInc, CaptureNotBusyFlag() ),
+      Command( wxT("PlaySpeedDec"), XXO("&Decrease Playback Speed"),
+         OnPlaySpeedDec, CaptureNotBusyFlag() )
+   ) };
+   return items;
+}
+
+AttachedItem sAttachment3{
+   Placement{ wxT("Optional/Extra/Part1/PlayAtSpeed"),
+     OrderingHint::Begin },
+   Shared( ExtraPlayAtSpeedItems() )
+};
+
+}
