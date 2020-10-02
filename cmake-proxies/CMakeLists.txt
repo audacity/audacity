@@ -305,8 +305,6 @@ addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.
 
 # Optional libraries
 #
-addlib( libvamp            vamp        VAMP        NO    YES   "vamp >= 2.5" "vamp-hostsdk >= 2.5" )
-
 #addlib( portmidi           midi        MIDI        NO    YES   "PortMidi" )
 
 if (NOT USE_MIDI AND

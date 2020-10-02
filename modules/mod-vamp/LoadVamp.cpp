@@ -8,8 +8,6 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_VAMP)
 #include "LoadVamp.h"
 #include "ModuleManager.h"
