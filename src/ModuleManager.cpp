@@ -461,7 +461,7 @@ void ModuleManager::InitializeBuiltins()
          moduleMain(nullptr), ModuleInterfaceDeleter{}
       };
 
-      if (module->Initialize())
+      if (module && module->Initialize())
       {
          // Register the provider
          ModuleInterface *pInterface = module.get();
@@ -478,40 +478,6 @@ void ModuleManager::InitializeBuiltins()
          // Don't leak!  Destructor of module does that.
       }
    }
-}
-
-ModuleInterface *ModuleManager::LoadModule(const PluginPath & path)
-{
-   auto lib = std::make_unique<wxDynamicLibrary>();
-
-   if (lib->Load(path, wxDL_NOW))
-   {
-      bool success = false;
-      ModuleMain audacityMain = (ModuleMain) lib->GetSymbol(wxSTRINGIZE_T(MODULE_ENTRY),
-                                                            &success);
-      if (success && audacityMain)
-      {
-         ModuleInterfaceHandle handle {
-            audacityMain(&path), ModuleInterfaceDeleter{}
-         };
-         if (handle)
-         {
-            if (handle->Initialize())
-            {
-
-               auto module = handle.get();
-               mDynModules[PluginManager::GetID(module)] = std::move(handle);
-               mLibs[module] = std::move(lib);
-
-               return module;
-            }
-         }
-      }
-
-      lib->Unload();
-   }
-
-   return NULL;
 }
 
 void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
@@ -567,7 +533,7 @@ ModuleInterface *ModuleManager::CreateProviderInstance(const PluginID & provider
       return mDynModules[providerID].get();
    }
 
-   return LoadModule(path);
+   return nullptr;
 }
 
 ComponentInterface *ModuleManager::CreateInstance(const PluginID & providerID,

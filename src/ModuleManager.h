@@ -109,7 +109,6 @@ private:
    ModuleManager &operator=(const ModuleManager&) PROHIBITED;
 
    void InitializeBuiltins();
-   ModuleInterface *LoadModule(const PluginPath & path);
 
 private:
    friend ModuleInterfaceDeleter;
