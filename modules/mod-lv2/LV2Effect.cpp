@@ -35,7 +35,7 @@
 #endif
 
 #include "ConfigInterface.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "widgets/AudacityMessageBox.h"
 
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>
