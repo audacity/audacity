@@ -22,7 +22,6 @@ effects from this one class.
 *//*******************************************************************/
 
 
-
 #include "LadspaEffect.h"       // This class's header file
 #include "SampleCount.h"
 #include "ConfigInterface.h"
@@ -56,14 +55,14 @@ effects from this one class.
 
 #include "AudacityException.h"
 #include "FileNames.h"
-#include "../../ShuttleGui.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/wxPanelWrapper.h"
+#include "ShuttleGui.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
+#include "widgets/wxPanelWrapper.h"
 #include "ModuleManager.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
 // ============================================================================
@@ -1852,3 +1851,6 @@ void LadspaEffect::Validator::UpdateControls(const LadspaEffectSettings& src)
          isIntValue ? 0.5f : ControlValueTolerance);
    }
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
