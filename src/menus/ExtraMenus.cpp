@@ -5,7 +5,6 @@
 #include "ProjectWindows.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../toolbars/MeterToolBar.h"
 
 #include <wx/frame.h>
 
@@ -13,48 +12,6 @@
 namespace {
 
 // Menu handler functions
-
-void OnOutputGain(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = MeterToolBar::Get( project, true );
-   tb.ShowOutputGainDialog();
-}
-
-void OnOutputGainInc(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = MeterToolBar::Get( project, true );
-   tb.AdjustOutputGain(1);
-}
-
-void OnOutputGainDec(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = MeterToolBar::Get( project, true );
-   tb.AdjustOutputGain(-1);
-}
-
-void OnInputGain(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = MeterToolBar::Get( project, false );
-   tb.ShowInputGainDialog();
-}
-
-void OnInputGainInc(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = MeterToolBar::Get( project, false );
-   tb.AdjustInputGain(1);
-}
-
-void OnInputGainDec(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = MeterToolBar::Get( project, false );
-   tb.AdjustInputGain(-1);
-}
 
 void OnFullScreen(const CommandContext &context)
 {
@@ -71,17 +28,11 @@ void OnFullScreen(const CommandContext &context)
 
 using namespace MenuTable;
 
-BaseItemSharedPtr ExtraMixerMenu();
-
 BaseItemSharedPtr ExtraMenu()
 {
    // Table of menu factories.
-   // TODO:  devise a registration system instead.
    static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
-      Section( "Part1",
-           ExtraMixerMenu()
-      ),
-
+      Section( "Part1" ),
       Section( "Part2" )
    ) };
 
@@ -98,27 +49,6 @@ AttachedItem sAttachment1{
    wxT(""),
    Shared( ExtraMenu() )
 };
-
-// Under /MenuBar/Optional/Extra/Part1
-BaseItemSharedPtr ExtraMixerMenu()
-{
-   static BaseItemSharedPtr menu{
-   Menu( wxT("Mixer"), XXO("Mi&xer"),
-      Command( wxT("OutputGain"), XXO("Ad&just Playback Volume..."),
-         OnOutputGain, AlwaysEnabledFlag ),
-      Command( wxT("OutputGainInc"), XXO("&Increase Playback Volume"),
-         OnOutputGainInc, AlwaysEnabledFlag ),
-      Command( wxT("OutputGainDec"), XXO("&Decrease Playback Volume"),
-         OnOutputGainDec, AlwaysEnabledFlag ),
-      Command( wxT("InputGain"), XXO("Adj&ust Recording Volume..."),
-         OnInputGain, AlwaysEnabledFlag ),
-      Command( wxT("InputGainInc"), XXO("I&ncrease Recording Volume"),
-         OnInputGainInc, AlwaysEnabledFlag ),
-      Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
-         OnInputGainDec, AlwaysEnabledFlag )
-   ) };
-   return menu;
-}
 
 // Under /MenuBar/Optional/Extra/Part2
 BaseItemSharedPtr ExtraMiscItems()
