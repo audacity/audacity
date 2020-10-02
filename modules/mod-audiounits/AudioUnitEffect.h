@@ -11,8 +11,6 @@
 #ifndef AUDACITY_AUDIOUNIT_EFFECT_H
 #define AUDACITY_AUDIOUNIT_EFFECT_H
 
-
-
 #if USE_AUDIO_UNITS
 
 #include "AudioUnitWrapper.h"
@@ -25,7 +23,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../PerTrackEffect.h"
+#include "effects/PerTrackEffect.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>
