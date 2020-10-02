@@ -11,16 +11,15 @@
 
 #ifndef __AUDACITY_LV2_EFFECT__
 #define __AUDACITY_LV2_EFFECT__
-
 #if USE_LV2
 
 class wxArrayString;
 
 #include "LV2FeaturesList.h"
 #include "LV2Ports.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "SampleFormat.h"
-#include "../PerTrackEffect.h"
+#include "effects/PerTrackEffect.h"
 
 // We use deprecated LV2 interfaces to remain compatible with older
 // plug-ins, so disable warnings

@@ -557,41 +557,6 @@ list( APPEND SOURCES
          effects/VST3/module_mac.mm
       >
 
-      # LV2 Effects
-
-      $<$<BOOL:${USE_LV2}>:
-         effects/lv2/LV2Effect.cpp
-         effects/lv2/LV2Effect.h
-         effects/lv2/LV2EffectMeter.cpp
-         effects/lv2/LV2EffectMeter.h
-         effects/lv2/LV2FeaturesList.cpp
-         effects/lv2/LV2FeaturesList.h
-         effects/lv2/LV2Instance.cpp
-         effects/lv2/LV2Instance.h
-         effects/lv2/LV2InstanceFeaturesList.cpp
-         effects/lv2/LV2InstanceFeaturesList.h
-         effects/lv2/LV2Ports.cpp
-         effects/lv2/LV2Ports.h
-         effects/lv2/LV2Preferences.cpp
-         effects/lv2/LV2Preferences.h
-         effects/lv2/LV2Symbols.cpp
-         effects/lv2/LV2Symbols.h
-         effects/lv2/LV2UIFeaturesList.cpp
-         effects/lv2/LV2UIFeaturesList.h
-         effects/lv2/LV2Utils.h
-         effects/lv2/LV2Validator.cpp
-         effects/lv2/LV2Validator.h
-         effects/lv2/LV2Wrapper.cpp
-         effects/lv2/LV2Wrapper.h
-         effects/lv2/LoadLV2.cpp
-         effects/lv2/LoadLV2.h
-         effects/lv2/NativeWindow.h
-         effects/lv2/lv2_external_ui.h
-         effects/lv2/zix/common.h
-         effects/lv2/zix/ring.cpp
-         effects/lv2/zix/ring.h
-      >
-
       # Nyquist Effects
 
       $<$<BOOL:${USE_NYQUIST}>:
@@ -1191,7 +1156,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisenc>
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
-      $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:PortMidi::PortMidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
