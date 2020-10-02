@@ -19,8 +19,8 @@
 #include <wx/textctrl.h>
 #include <wx/scrolwin.h>
 #include "ShuttleGui.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/valnum.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_LADSPA_EDITOR__
 #define __AUDACITY_LADSPA_EDITOR__
 
-#include "../EffectEditor.h"
+#include "effects/EffectEditor.h"
 #include "LadspaInstance.h" // for LadspaEffectSettings
 
 #include <wx/weakref.h>

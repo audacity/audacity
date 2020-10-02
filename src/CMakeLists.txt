@@ -472,17 +472,6 @@ set( SOURCES
          effects/VST3/internal/x11/SocketWindow.cpp
       >
 
-      # Ladspa Effects
-
-      $<$<BOOL:${USE_LADSPA}>:
-         effects/ladspa/LadspaEditor.cpp
-         effects/ladspa/LadspaEditor.h
-         effects/ladspa/LadspaEffect.cpp
-         effects/ladspa/LadspaEffect.h
-	 effects/ladspa/LadspaEffectOptionsDialog.cpp
-	 effects/ladspa/LadspaEffectOptionsDialog.h
-      >
-
       # LV2 Effects
 
       $<$<BOOL:${USE_LV2}>:
@@ -1296,12 +1285,6 @@ endif()
 if (USE_LV2)
    list( APPEND AUDACITY_LIBRARIES
       lib-lv2-interface
-   )
-endif()
-
-if (${_OPT}use_ladspa)
-   list( APPEND AUDACITY_LIBRARIES
-      lib-ladspa-interface
    )
 endif()
 

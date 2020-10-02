@@ -87,6 +87,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-cloud-audiocom",
       "mod-soundtouch",
       "mod-audiounit",
+      "mod-ladspa",
    };
    return modules;
 }

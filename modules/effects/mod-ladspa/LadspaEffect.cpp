@@ -70,3 +70,6 @@ void LadspaEffect::ShowOptions(const EffectPlugin &) const
 
 // Inject factory hook to make LadspaEffect capable of UI
 static LadspaEffectsModule::Factory::SubstituteInUnique<LadspaEffect> scope;
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES

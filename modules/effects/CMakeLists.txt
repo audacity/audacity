@@ -4,6 +4,7 @@
 # that it depends on
 set( MODULES
    mod-audiounit
+   mod-ladspa
    mod-soundtouch
 )
 
