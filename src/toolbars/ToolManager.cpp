@@ -510,44 +510,44 @@ ToolManager::~ToolManager()
 // configuration if the window size is narrow.
 
 static struct DefaultConfigEntry {
-   int barID;
-   int rightOf; // parent
-   int below;   // preceding sibling
+   Identifier barID;
+   Identifier rightOf; // parent
+   Identifier below;   // preceding sibling
 } DefaultConfigTable [] = {
    // Top dock row, may wrap
-   { TransportBarID,         NoBarID,                NoBarID                },
-   { ToolsBarID,             TransportBarID,         NoBarID                },
-   { EditBarID,              ToolsBarID,             NoBarID                },
-   { CutCopyPasteBarID,      EditBarID,              NoBarID                },
-   { AudioSetupBarID,        CutCopyPasteBarID,      NoBarID                },
+   { wxT("Control"),           {},                     {}                },
+   { wxT("Tools"),             wxT("Control"),         {}                },
+   { wxT("Edit"),              wxT("Tools"),           {}                },
+   { wxT("CutCopyPaste"),      wxT("Edit"),            {}                },
+   { wxT("Audio Setup"),       wxT("CutCopyPaste"),    {}                },
 #ifdef HAS_AUDIOCOM_UPLOAD
-   { ShareAudioBarID,        AudioSetupBarID,        NoBarID                },
-   { RecordMeterBarID,       ShareAudioBarID,        NoBarID                },
+   { wxT("Share Audio"),       wxT("Audio Setup"),     {}                },
+   { wxT("RecordMeter"),       wxT("Share Audio"),     {}                },
 #else
-   { RecordMeterBarID,       AudioSetupBarID,        NoBarID                },
+   { wxT("RecordMeter"),       wxT("Audio Setup"),     {}                },
 #endif
-   { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
+   { wxT("PlayMeter"),         wxT("RecordMeter"),     {}                },
 
    // start another top dock row
-   { ScrubbingBarID,         NoBarID,                TransportBarID         },
-   { DeviceBarID,            ScrubbingBarID,         TransportBarID         },
+   { wxT("Scrub"),             {},                     wxT("Control")         },
+   { wxT("Device"),            wxT("Scrub"),           wxT("Control")         },
 
    // Hidden by default in top dock
-   { MeterBarID,             NoBarID,                NoBarID                },
+   { wxT("CombinedMeter"),     {},                     {}                },
 
    // Bottom dock
-   { SelectionBarID,         NoBarID,                NoBarID                },
-   { TimeBarID,              SelectionBarID,         NoBarID                },
+   { wxT("Selection"),         {},                     {}                },
+   { wxT("Time"),              wxT("Selection"),       {}                },
 
 // DA: Transcription Toolbar not docked, by default.
 #ifdef EXPERIMENTAL_DA
-   { TranscriptionBarID,     NoBarID,                NoBarID                },
+   { wxT("Transcription"),     {},                     {}                },
 #else
-   { TranscriptionBarID,     TimeBarID,              NoBarID                },
+   { wxT("Transcription"),     wxT("Time"),            {}                },
 #endif
 
    // Hidden by default in bottom dock
-   { SpectralSelectionBarID, NoBarID,                NoBarID                },
+   { wxT("SpectralSelection"), {},                     {}                },
 };
 
 // Static member function.
@@ -566,12 +566,12 @@ void ToolManager::Reset()
    // Disconnect all docked bars
    for ( const auto &entry : DefaultConfigTable )
    {
-      int ndx = entry.barID;
-      ToolBar *bar = mBars[ ndx ].get();
-      
+      auto ndx = entry.barID;
+      ToolBar *bar = GetToolBar(ndx);
+
       ToolBarConfiguration::Position position {
-         (entry.rightOf == NoBarID) ? nullptr : mBars[ entry.rightOf ].get(),
-         (entry.below == NoBarID) ? nullptr : mBars[ entry.below ].get()
+         (entry.rightOf == Identifier{}) ? nullptr : GetToolBar(entry.rightOf),
+         (entry.below == Identifier{}) ? nullptr : GetToolBar(entry.below)
       };
       
       bar->SetSize( 20,20 );
@@ -642,10 +642,12 @@ void ToolManager::Reset()
          // This bar is undocked and invisible.
          // We are doing a reset toolbars, so even the invisible undocked bars should
          // be moved somewhere sensible. Put bar near center of window.
-         // If there were multiple hidden toobars the ndx * 10 adjustment means
+         // If there were multiple hidden toobars the * 10 adjustment means
          // they won't overlap too much.
          floater->CentreOnParent( );
-         floater->Move( floater->GetPosition() + wxSize( ndx * 10 - 200, ndx * 10 ));
+         const auto index = bar->GetType();
+         floater->Move(
+            floater->GetPosition() + wxSize{ index * 10 - 200, index * 10 });
          bar->SetDocked( NULL, false );
          Expose( ndx, false );
       }
@@ -926,16 +928,9 @@ void ToolManager::ReadConfig()
 
    for (const auto& entry : DefaultConfigTable)
    {
-      int ndx = entry.barID;
-      const auto bar = mBars[ndx].get();
-      const auto rightCode = entry.rightOf;
-      const auto rightId =
-         rightCode >= 0 ? mBars[rightCode]->GetSection() : "";
-      const auto belowCode = entry.below;
-      const auto belowId =
-         belowCode >= 0 ? mBars[belowCode]->GetSection() : "";
-
-      bar->SetPreferredNeighbors(rightId, belowId);
+      const auto &ndx = entry.barID;
+      const auto bar = GetToolBar(ndx);
+      bar->SetPreferredNeighbors(entry.rightOf, entry.below);
    }
 
    if (!someFound)
