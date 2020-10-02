@@ -18,8 +18,8 @@
 #include "AUControl.h"
 #include <wx/app.h>
 #include <wx/sizer.h>
-#include "../../ShuttleGui.h"
-#include "../../widgets/wxPanelWrapper.h"
+#include "ShuttleGui.h"
+#include "widgets/wxPanelWrapper.h"
 
 AudioUnitValidator::AudioUnitValidator(CreateToken,
    EffectUIClientInterface &effect,

@@ -21,6 +21,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
    // with Audacity and enable automatically.
    static std::unordered_set<wxString> modules{
       "mod-soundtouch",
+      "mod-audiounits",
    };
    return modules;
 }
