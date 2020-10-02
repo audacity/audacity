@@ -443,6 +443,10 @@ function( addlib dir name symbol required check )
    # Let the Audacity target know that this library will be used
    set( USE_${symbol} ON CACHE INTERNAL "" FORCE )
 
+   if ( TARGET "${TARGET}" )
+      return()
+   endif()
+ 
    message( STATUS "========== Configuring ${name} ==========" )
 
    # Check for the system package(s) if the user prefers it
