@@ -24,7 +24,6 @@ effects from this one class.
 
 *//*******************************************************************/
 
-
 #include "Nyquist.h"
 
 #include <algorithm>
@@ -51,35 +50,35 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "BasicUI.h"
-#include "../EffectManager.h"
+#include "effects/EffectManager.h"
 #include "FileNames.h"
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "Languages.h"
-#include "../../NoteTrack.h"
-#include "../../TimeTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
+#include "NoteTrack.h"
+#include "TimeTrack.h"
+#include "prefs/SpectrogramSettings.h"
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectRate.h"
-#include "../../ShuttleAutomation.h"
-#include "../../ShuttleGetDefinition.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleAutomation.h"
+#include "ShuttleGetDefinition.h"
+#include "ShuttleGui.h"
 #include "TempDirectory.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
 #include "Prefs.h"
 #include "wxFileNameWrapper.h"
-#include "../../prefs/GUIPrefs.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/ProgressDialog.h"
+#include "prefs/GUIPrefs.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/ProgressDialog.h"
 
-#include "../../widgets/FileDialog/FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist
@@ -3459,7 +3458,7 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 }
 
 // Registration of extra functions in XLisp.
-#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
+#include "nyquist/xlisp/xlisp.h"
 
 static LVAL gettext()
 {
@@ -3542,7 +3541,7 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
    return (void *)dst;
 }
 
-#include "../../commands/ScriptCommandRelay.h"
+#include "commands/ScriptCommandRelay.h"
 
 
 static void * ExecForLisp( char * pIn )

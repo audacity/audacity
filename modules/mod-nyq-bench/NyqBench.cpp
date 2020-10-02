@@ -32,7 +32,7 @@
 #include "ShuttleGui.h"
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
-#include "effects/nyquist/Nyquist.h"
+#include "Nyquist.h"
 #include "../images/AudacityLogo.xpm"
 #include "../../src/commands/CommandContext.h"
 #include "../../src/commands/CommandManager.h"
