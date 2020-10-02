@@ -11,13 +11,11 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_VAMP)
 
 #include <vamp-hostsdk/PluginLoader.h>
 
-#include "../Effect.h"
+#include "effects/Effect.h"
 #include "MemoryX.h"
 
 class wxStaticText;
