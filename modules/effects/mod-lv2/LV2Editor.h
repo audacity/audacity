@@ -17,7 +17,7 @@
 
 #if USE_LV2
 
-#include "../EffectEditor.h"
+#include "effects/EffectEditor.h"
 
 #include <optional>
 #include <vector>

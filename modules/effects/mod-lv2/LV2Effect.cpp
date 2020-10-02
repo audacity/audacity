@@ -152,4 +152,7 @@ void LV2Effect::ShowOptions(const EffectPlugin &) const
 // Inject factory hook to make LV2Effect capable of UI
 static LV2EffectsModule::Factory::SubstituteInUnique<LV2Effect> scope;
 
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
+
 #endif

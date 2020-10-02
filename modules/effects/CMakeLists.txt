@@ -5,6 +5,7 @@
 set( MODULES
    mod-audiounit
    mod-ladspa
+   mod-lv2
    mod-soundtouch
 )
 

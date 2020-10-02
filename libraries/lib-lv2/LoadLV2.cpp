@@ -13,8 +13,8 @@
 Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
-#include "LV2Wrapper.h"
 #if defined(USE_LV2)
+#include "LV2Wrapper.h"
 
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wparentheses"

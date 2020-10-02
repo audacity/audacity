@@ -472,22 +472,6 @@ set( SOURCES
          effects/VST3/internal/x11/SocketWindow.cpp
       >
 
-      # LV2 Effects
-
-      $<$<BOOL:${USE_LV2}>:
-         effects/lv2/LV2Editor.cpp
-         effects/lv2/LV2Editor.h
-         effects/lv2/LV2Effect.cpp
-         effects/lv2/LV2Effect.h
-         effects/lv2/LV2EffectMeter.cpp
-         effects/lv2/LV2EffectMeter.h
-         effects/lv2/LV2PreferencesDialog.cpp
-         effects/lv2/LV2PreferencesDialog.h
-         effects/lv2/LV2UIFeaturesList.cpp
-         effects/lv2/LV2UIFeaturesList.h
-         effects/lv2/NativeWindow.h
-      >
-
       # Nyquist Effects
 
       $<$<BOOL:${USE_NYQUIST}>:
@@ -1279,12 +1263,6 @@ set( AUDACITY_LIBRARIES
 if (USE_VST)
    list( APPEND AUDACITY_LIBRARIES
       lib-vst-interface
-   )
-endif()
-
-if (USE_LV2)
-   list( APPEND AUDACITY_LIBRARIES
-      lib-lv2-interface
    )
 endif()
 

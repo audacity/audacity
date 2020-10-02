@@ -41,9 +41,9 @@
 
 #include <wx/scrolwin.h>
 
-#include "../../widgets/valnum.h"
+#include "widgets/valnum.h"
 
-#include "../../widgets/NumericTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>

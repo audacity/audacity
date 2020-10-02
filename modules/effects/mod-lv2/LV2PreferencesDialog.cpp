@@ -25,7 +25,7 @@
 #include "LV2Preferences.h"
 #include "ConfigInterface.h"
 #include "ShuttleGui.h"
-#include "../../widgets/valnum.h"
+#include "widgets/valnum.h"
 
 BEGIN_EVENT_TABLE(LV2PreferencesDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2PreferencesDialog::OnOk)
