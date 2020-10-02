@@ -472,19 +472,6 @@ set( SOURCES
          effects/VST3/internal/x11/SocketWindow.cpp
       >
 
-      # Audio Unit Effects
-
-      $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
-         effects/audiounits/AUControl.h
-         effects/audiounits/AUControl.mm
-         effects/audiounits/AudioUnitEditor.cpp
-         effects/audiounits/AudioUnitEditor.h
-         effects/audiounits/AudioUnitEffect.cpp
-         effects/audiounits/AudioUnitEffect.h
-         effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-         effects/audiounits/AudioUnitEffectOptionsDialog.h
-      >
-
       # Ladspa Effects
 
       $<$<BOOL:${USE_LADSPA}>:
@@ -1120,7 +1107,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       KeyboardCapture.cpp
       effects/EffectUI.mm
       effects/VST/VSTControlOSX.mm
-      effects/audiounits/AUControl.mm
       widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
@@ -1323,10 +1309,6 @@ if (${_OPT}has_vst3)
    list( APPEND AUDACITY_LIBRARIES
       lib-vst3-interface
    )
-endif()
-
-if (USE_AUDIO_UNITS AND wxIS_MAC)
-   list(APPEND AUDACITY_LIBRARIES lib-audio-unit-interface)
 endif()
 
 if ( ${_OPT}has_networking )

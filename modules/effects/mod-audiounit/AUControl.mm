@@ -21,7 +21,6 @@
       
 **********************************************************************/
 
-
 #include "AUControl.h"
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioUnit/AUCocoaUIView.h>

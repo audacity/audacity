@@ -45,7 +45,7 @@
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "AudacityMessageBox.h"
-#include "../../widgets/valnum.h"
+#include "widgets/valnum.h"
 
 //
 // When a plug-in's state is saved to the settings file (as a preset),
@@ -226,3 +226,6 @@ void AudioUnitEffect::ShowOptions(const EffectPlugin &) const
 static AudioUnitEffectsModule::Factory::SubstituteInUnique<AudioUnitEffect> scope;
 
 #endif
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
