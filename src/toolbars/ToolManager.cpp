@@ -1118,7 +1118,7 @@ void ToolManager::Expose( int type, bool show )
    // Handle docked and floaters differently
    if( t->IsDocked() )
    {
-      t->GetDock()->Expose( type, show );
+      t->GetDock()->Expose( t->GetSection(), show );
    }
    else
    {

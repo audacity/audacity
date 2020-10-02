@@ -13,6 +13,7 @@
 #ifndef __AUDACITY_TOOLDOCK__
 #define __AUDACITY_TOOLDOCK__
 
+#include <map>
 #include <vector>
 #include <wx/defs.h>
 
@@ -298,7 +299,7 @@ public:
 
    void LoadConfig();
    void LayoutToolBars();
-   void Expose( int type, bool show );
+   void Expose( Identifier type, bool show );
    int GetOrder( ToolBar *bar );
    void Dock( ToolBar *bar, bool deflate,
               ToolBarConfiguration::Position ndx
@@ -341,7 +342,7 @@ public:
    // Configuration as modified by the constraint of the main window width
    ToolBarConfiguration mWrappedConfiguration;
 
-   ToolBar *mBars[ ToolBarCount ];
+   std::map<Identifier, ToolBar*> mBars;
 
  public:
 
