@@ -7,6 +7,7 @@ set( MODULES
    mod-ladspa
    mod-lv2
    mod-soundtouch
+   mod-vamp
 )
 
 audacity_module_subdirectory("${MODULES}")

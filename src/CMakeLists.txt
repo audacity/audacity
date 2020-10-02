@@ -481,15 +481,6 @@ set( SOURCES
          effects/nyquist/Nyquist.h
       >
 
-      # VAMP Effects
-
-      $<$<BOOL:${USE_VAMP}>:
-         effects/vamp/LoadVamp.cpp
-         effects/vamp/LoadVamp.h
-         effects/vamp/VampEffect.cpp
-         effects/vamp/VampEffect.h
-      >
-
       # Export
 
       export/ExportAudioDialog.cpp
@@ -960,7 +951,6 @@ set( LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
-      $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
       $<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>

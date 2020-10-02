@@ -89,6 +89,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-audiounit",
       "mod-ladspa",
       "mod-lv2",
+      "mod-vamp",
    };
    return modules;
 }
