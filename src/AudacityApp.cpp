@@ -1330,11 +1330,11 @@ bool AudacityApp::InitPart2()
    // Initialize the CommandHandler
    InitCommandHandler();
 
-   // Initialize the PluginManager
-   PluginManager::Get().Initialize();
-
    // Initialize the ModuleManager, including loading found modules
    ModuleManager::Get().Initialize();
+
+   // Initialize the PluginManager
+   PluginManager::Get().Initialize();
 
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
