@@ -337,15 +337,6 @@ set( SOURCES
       effects/TwoPassSimpleMono.cpp
       effects/TwoPassSimpleMono.h
 
-      # Nyquist Effects
-
-      $<$<BOOL:${USE_NYQUIST}>:
-         effects/nyquist/LoadNyquist.cpp
-         effects/nyquist/LoadNyquist.h
-         effects/nyquist/Nyquist.cpp
-         effects/nyquist/Nyquist.h
-      >
-
       # Export
 
       export/ExportAudioDialog.cpp
@@ -815,7 +806,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
       $<$<TARGET_EXISTS:Threads::Threads>:Threads::Threads>

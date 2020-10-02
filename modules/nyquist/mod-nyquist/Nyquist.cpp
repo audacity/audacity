@@ -24,7 +24,6 @@ effects from this one class.
 
 *//*******************************************************************/
 
-
 #include "Nyquist.h"
 #include "EffectOutputTracks.h"
 
@@ -51,17 +50,17 @@ effects from this one class.
 #include <wx/numformatter.h>
 #include <wx/stdpaths.h>
 
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "NoteTrack.h"
-#include "../../ShuttleGetDefinition.h"
-#include "../../prefs/GUIPrefs.h"
-#include "../../prefs/SpectrogramSettings.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
-#include "../../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
-#include "../../widgets/NumericTextCtrl.h"
-#include "../../widgets/valnum.h"
-#include "../EffectEditor.h"
-#include "../EffectManager.h"
+#include "ShuttleGetDefinition.h"
+#include "prefs/GUIPrefs.h"
+#include "prefs/SpectrogramSettings.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
+#include "effects/EffectEditor.h"
+#include "effects/EffectManager.h"
 #include "AudacityMessageBox.h"
 #include "BasicUI.h"
 #include "FileNames.h"
@@ -3503,7 +3502,7 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 }
 
 // Registration of extra functions in XLisp.
-#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
+#include "nyquist/xlisp/xlisp.h"
 
 static LVAL gettext()
 {
@@ -3586,8 +3585,18 @@ void * nyq_reformat_aud_do_response(const wxString & Str) {
    return (void *)dst;
 }
 
-#include "../../commands/ScriptCommandRelay.h"
+#include "commands/ScriptCommandRelay.h"
 
+
+static void * ExecForLisp( char * pIn )
+{
+   wxString Str1(pIn);
+   wxString Str2;
+
+   ExecFromMain(&Str1, &Str2);
+
+   return nyq_reformat_aud_do_response(Str2);
+}
 
 /* xlc_aud_do -- interface to C routine aud_do */
 /**/

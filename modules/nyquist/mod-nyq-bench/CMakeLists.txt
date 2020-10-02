@@ -18,7 +18,7 @@ set( DEFINES
 )
 set( LIBRARIES
    PRIVATE
-      Audacity
+      mod-nyquist-interface
 )
 audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" "" )

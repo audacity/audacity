@@ -93,6 +93,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-vst",
       "mod-vst3",
       "mod-effect-classes",
+      "mod-nyquist",
    };
    return modules;
 }

@@ -8,8 +8,6 @@
 
 **********************************************************************/
 
-
-
 #include "LoadNyquist.h"
 
 #include <wx/log.h>
@@ -271,3 +269,6 @@ bool NyquistEffectsModule::CheckPluginExist(const PluginPath& path) const
 // ============================================================================
 // NyquistEffectsModule implementation
 // ============================================================================
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES

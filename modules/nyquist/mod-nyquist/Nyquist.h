@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include "../StatefulEffect.h"
+#include "effects/StatefulEffect.h"
 #include "FileNames.h"
 #include "SampleCount.h"
 #include "wxPanelWrapper.h"
@@ -73,7 +73,7 @@ struct NyquistSettings {
    // Other fields, to do
 };
 
-class AUDACITY_DLL_API NyquistEffect final
+class NyquistEffect final
    : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
