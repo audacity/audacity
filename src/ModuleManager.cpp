@@ -182,11 +182,21 @@ namespace {
    }
 }
 
-void RegisterBuiltinModule(ModuleMain moduleMain)
+void RegisterProvider(ModuleMain moduleMain)
 {
-   builtinModuleList().push_back(moduleMain);
+   auto &list = builtinModuleList();
+   if ( moduleMain )
+      list.push_back(moduleMain);
 
    return;
+}
+
+void UnregisterProvider(ModuleMain moduleMain)
+{
+   auto &list = builtinModuleList();
+   auto end = list.end(), iter = std::find(list.begin(), end, moduleMain);
+   if (iter != end)
+      list.erase(iter);
 }
 
 // ----------------------------------------------------------------------------

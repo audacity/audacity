@@ -136,6 +136,13 @@ private:
 using ModuleMain = ModuleInterface *(*)(const wxString *path);
 
 AUDACITY_DLL_API
-void RegisterBuiltinModule(ModuleMain rtn);
+void RegisterProvider(ModuleMain rtn);
+AUDACITY_DLL_API
+void UnregisterProvider(ModuleMain rtn);
+
+// Guarantee the registry exists before any registrations, so it will
+// be destroyed only after the un-registrations
+static struct Init{
+   Init() { RegisterProvider(nullptr); } } sInitBuiltinModules;
 
 #endif /* __AUDACITY_MODULEMANAGER_H__ */

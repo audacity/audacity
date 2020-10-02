@@ -164,12 +164,15 @@ static ModuleInterface * name(const wxString *path)
 // Provides the base for embedded module registration.  If used, a Register()
 // method must be supplied explicitly.
 // ----------------------------------------------------------------------------
+
 #define DECLARE_BUILTIN_MODULE_BASE(name)             \
 class name                                            \
 {                                                     \
 public:                                               \
    name() {Register();}                               \
+   ~name() {Unregister();}                            \
    void Register();                                   \
+   void Unregister();                                 \
 };                                                    \
 static name name ## _instance;
 
@@ -181,7 +184,11 @@ static name name ## _instance;
 DECLARE_BUILTIN_MODULE_BASE(name)                     \
 void name::Register()                                 \
 {                                                     \
-   RegisterBuiltinModule(MODULE_ENTRY);               \
+   RegisterProvider(MODULE_ENTRY);                    \
+}                                                     \
+void name::Unregister()                               \
+{                                                     \
+   UnregisterProvider(MODULE_ENTRY);                  \
 }
 
 #else
