@@ -8,6 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 #include "NoteTrackView.h"
+#include "NoteTrackDisplayData.h"
 
 #ifdef USE_MIDI
 #include "../lib-src/header-substitutes/allegro.h"
@@ -282,7 +283,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    // need overlap between MIDI data and the background region
    if (left >= right) return;
 
-   NoteTrackDisplayData data{ track, rect };
+   NoteTrackDisplayData data{ *track, rect };
    dc.SetBrush(bb);
    int octave = 0;
    // obottom is the window coordinate of octave divider line
@@ -380,7 +381,7 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    if (!track->GetSelected())
       sel0 = sel1 = 0.0;
 
-   NoteTrackDisplayData data{ track, rect };
+   NoteTrackDisplayData data{ *track, rect };
 
    // reserve 1/2 note height at top and bottom of track for
    // out-of-bounds notes

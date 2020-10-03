@@ -907,7 +907,7 @@ void NoteTrack::SetTopNote(int note)
    mTopNote = note;
 }
 
-void NoteTrack::SetNoteRange(int note1, int note2)
+void NoteTrack::SetNoteRange(int note1, int note2) const
 {
    // Bounds check
    if (note1 > MaxPitch)
@@ -949,41 +949,6 @@ void NoteTrack::VScroll(int start, int end)
 }
 #endif
 
-void NoteTrack::Zoom(const wxRect &rect, int y, float multiplier, bool center)
-{
-   NoteTrackDisplayData data = NoteTrackDisplayData(this, rect);
-   int clickedPitch = data.YToIPitch(y);
-   int extent = mTopNote - mBottomNote + 1;
-   int newExtent = (int) (extent / multiplier);
-   float position;
-   if (center) {
-      // center the pitch that the user clicked on
-      position = .5;
-   } else {
-      // align to keep the pitch that the user clicked on in the same place
-      position = extent / (clickedPitch - mBottomNote);
-   }
-   int newBottomNote = clickedPitch - (newExtent * position);
-   int newTopNote = clickedPitch + (newExtent * (1 - position));
-   SetNoteRange(newBottomNote, newTopNote);
-}
-
-
-void NoteTrack::ZoomTo(const wxRect &rect, int start, int end)
-{
-   wxRect trackRect(0, rect.GetY(), 1, rect.GetHeight());
-   NoteTrackDisplayData data = NoteTrackDisplayData(this, trackRect);
-   int pitch1 = data.YToIPitch(start);
-   int pitch2 = data.YToIPitch(end);
-   if (pitch1 == pitch2) {
-      // Just zoom in instead of zooming to show only one note
-      Zoom(rect, start, 1, true);
-      return;
-   }
-   // It's fine for this to be in either order
-   SetNoteRange(pitch1, pitch2);
-}
-
 void NoteTrack::ZoomAllNotes()
 {
    Alg_iterator iterator( &GetSeq(), false );
@@ -1014,61 +979,6 @@ void NoteTrack::ZoomAllNotes()
 
    SetNoteRange(minPitch, maxPitch);
 }
-
-NoteTrackDisplayData::NoteTrackDisplayData(const NoteTrack* track, const wxRect &r)
-{
-   auto span = track->GetTopNote() - track->GetBottomNote() + 1; // + 1 to make sure it includes both
-
-   mMargin = std::min((int) (r.height / (float)(span)) / 2, r.height / 4);
-
-   // Count the number of dividers between B/C and E/F
-   int numC = 0, numF = 0;
-   auto botOctave = track->GetBottomNote() / 12, botNote = track->GetBottomNote() % 12;
-   auto topOctave = track->GetTopNote() / 12, topNote = track->GetTopNote() % 12;
-   if (topOctave == botOctave)
-   {
-      if (botNote == 0) numC = 1;
-      if (topNote <= 5) numF = 1;
-   }
-   else
-   {
-      numC = topOctave - botOctave;
-      numF = topOctave - botOctave - 1;
-      if (botNote == 0) numC++;
-      if (botNote <= 5) numF++;
-      if (topOctave <= 5) numF++;
-   }
-   // Effective space, excluding the margins and the lines between some notes
-   auto effectiveHeight = r.height - (2 * (mMargin + 1)) - numC - numF;
-   // Guaranteed that both the bottom and top notes will be visible
-   // (assuming that the clamping below does not happen)
-   mPitchHeight = effectiveHeight / ((float) span);
-
-   if (mPitchHeight < MinPitchHeight)
-      mPitchHeight = MinPitchHeight;
-   if (mPitchHeight > MaxPitchHeight)
-      mPitchHeight = MaxPitchHeight;
-
-   mBottom = r.y + r.height - GetNoteMargin() - 1 - GetPitchHeight(1) +
-            botOctave * GetOctaveHeight() + GetNotePos(botNote);
-}
-
-int NoteTrackDisplayData::IPitchToY(int p) const
-{ return mBottom - (p / 12) * GetOctaveHeight() - GetNotePos(p % 12); }
-
-int NoteTrackDisplayData::YToIPitch(int y) const
-{
-   y = mBottom - y; // pixels above pitch 0
-   int octave = (y / GetOctaveHeight());
-   y -= octave * GetOctaveHeight();
-   // result is approximate because C and G are one pixel taller than
-   // mPitchHeight.
-   // Poke 1-13-18: However in practice this seems not to be an issue,
-   // as long as we use mPitchHeight and not the rounded version
-   return (y / mPitchHeight) + octave * 12;
-}
-
-const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
 
 #include <wx/log.h>
 #include <wx/sstream.h>
