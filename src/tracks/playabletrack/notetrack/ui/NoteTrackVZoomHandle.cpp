@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #ifdef USE_MIDI
 #include "NoteTrackVZoomHandle.h"
+#include "NoteTrackDisplayData.h"
 
 #include "../../../ui/TrackVRulerControls.h"
 
@@ -228,10 +229,10 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       mpData->pTrack->ZoomAllNotes();
       break;
    case kZoomIn:
-      mpData->pTrack->ZoomIn(mpData->rect, mpData->yy);
+      NoteTrackDisplayData{ *mpData->pTrack, mpData->rect }.ZoomIn(mpData->yy);
       break;
    case kZoomOut:
-      mpData->pTrack->ZoomOut(mpData->rect, mpData->yy);
+      NoteTrackDisplayData{ *mpData->pTrack, mpData->rect }.ZoomOut(mpData->yy);
       break;
    case kZoomMax:
       mpData->pTrack->ZoomMaxExtent();
@@ -323,8 +324,9 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    if( !bVZoom )
       return RefreshAll;
 
+   NoteTrackDisplayData data{ *pTrack, evt.rect };
    if (IsDragZooming(mZoomStart, mZoomEnd)) {
-      pTrack->ZoomTo(evt.rect, mZoomStart, mZoomEnd);
+      data.ZoomTo(mZoomStart, mZoomEnd);
    }
    else if (event.ShiftDown() || event.RightUp()) {
       if (event.ShiftDown() && event.RightUp()) {
@@ -339,11 +341,11 @@ UIHandle::Result NoteTrackVZoomHandle::Release
          }
       } else {
          // Zoom out
-         pTrack->ZoomOut(evt.rect, mZoomEnd);
+         data.ZoomOut(mZoomEnd);
       }
    }
    else {
-      pTrack->ZoomIn(evt.rect, mZoomEnd);
+      data.ZoomIn(mZoomEnd);
    }
 
    mZoomEnd = mZoomStart = 0;

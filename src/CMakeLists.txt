@@ -851,6 +851,8 @@ list( APPEND SOURCES
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h
       tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackControls.h
+      tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.cpp
+      tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h
       tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackShifter.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
