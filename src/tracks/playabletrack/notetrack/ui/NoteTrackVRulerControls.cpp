@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackVRulerControls.h"
 
+#include "NoteTrackDisplayData.h"
 #include "NoteTrackVZoomHandle.h"
 
 #include "../../../../HitTestResult.h"
@@ -75,10 +76,11 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
    const auto nt = static_cast<NoteTrack*>(pTrack.get());
 
    if (event.CmdDown() && !event.ShiftDown()) {
+      NoteTrackDisplayData data{ *nt, evt.rect };
       if (steps > 0)
-         nt->ZoomIn(evt.rect, evt.event.m_y);
+         data.ZoomIn(evt.event.m_y);
       else
-         nt->ZoomOut(evt.rect, evt.event.m_y);
+         data.ZoomOut(evt.event.m_y);
    } else if (!event.CmdDown() && event.ShiftDown()) {
       // Scroll some fixed number of notes, independent of zoom level or track height:
       static const int movement = 6; // 6 semitones is half an octave
@@ -131,7 +133,7 @@ void NoteTrackVRulerControls::Draw(
       rect.y += 1;
       rect.height -= 1;
 
-      NoteTrackDisplayData data{ track.get(), rect };
+      NoteTrackDisplayData data{ *track, rect };
 
       wxPen hilitePen;
       hilitePen.SetColour(120, 120, 120);
