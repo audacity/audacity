@@ -18,12 +18,6 @@
 \brief (not quite a Toolbar) at foot of screen for setting and viewing the
 selection range.
 
-*//****************************************************************//**
-
-\class SelectionBarListener
-\brief A parent class of SelectionBar, used to forward events to do
-with changes in the SelectionBar.
-
 *//*******************************************************************/
 
 
@@ -32,7 +26,6 @@ with changes in the SelectionBar.
 
 #include <algorithm>
 
-#include "SelectionBarListener.h"
 #include "ToolManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -57,6 +50,7 @@ with changes in the SelectionBar.
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectRate.h"
+#include "ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
@@ -120,8 +114,7 @@ Identifier SelectionBar::ID()
 
 SelectionBar::SelectionBar( AudacityProject &project )
 : ToolBar(project, XO("Selection"), ID()),
-  mListener(NULL), mRate(0.0),
-  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
+  mRate(0.0), mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
   mRateChangedSubscription(
      ProjectRate::Get(project).Subscribe(
          [this](double rate) { UpdateRate(rate); }))
@@ -210,9 +203,10 @@ void SelectionBar::AddTitle(
 
 
 void SelectionBar::AddTime(
-   int id, wxSizer * pSizer ){
-   auto formatName = mListener ? mListener->AS_GetSelectionFormat()
-      : NumericFormatSymbol{};
+   int id, wxSizer * pSizer )
+{
+   auto formatName =
+      ProjectSelectionManager::Get(mProject).AS_GetSelectionFormat();
    auto pCtrl = safenew NumericTextCtrl(
       this, id, NumericConverter::TIME, formatName, 0.0, mRate);
 
@@ -324,12 +318,6 @@ void SelectionBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
-void SelectionBar::SetListener(SelectionBarListener *l)
-{
-   mListener = l;
-   SetSelectionFormat(mListener->AS_GetSelectionFormat());
-};
-
 void SelectionBar::RegenerateTooltips()
 {
 }
@@ -402,7 +390,8 @@ void SelectionBar::ModifySelection(int driver, bool done)
    }
 
    // Places the start-end markers on the track panel.
-   mListener->AS_ModifySelection(mStart, mEnd, done);
+   auto &manager = ProjectSelectionManager::Get(mProject);
+   manager.AS_ModifySelection(mStart, mEnd, done);
 }
 
 // Called when one of the format drop downs is changed.
@@ -425,8 +414,8 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())
    {
-      if (mListener)
-         mListener->AS_SetSelectionFormat(format);
+      auto &manager = ProjectSelectionManager::Get(mProject);
+      manager.AS_SetSelectionFormat(format);
    }
 
    // ReCreateButtons() will get rid of our sizers and controls

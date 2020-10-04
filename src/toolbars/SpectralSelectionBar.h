@@ -22,7 +22,6 @@ class wxDC;
 class wxSizeEvent;
 
 class AudacityProject;
-class SpectralSelectionBarListener;
 class NumericTextCtrl;
 
 class SpectralSelectionBar final : public ToolBar {
@@ -50,7 +49,6 @@ public:
    void SetFrequencies(double bottom, double top);
    void SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName);
    void SetBandwidthSelectionFormatName(const NumericFormatSymbol & formatName);
-   void SetListener(SpectralSelectionBarListener *l);
 
    void RegenerateTooltips() override {};
 
@@ -66,8 +64,6 @@ private:
    void OnSize(wxSizeEvent &evt);
 
    void ModifySpectralSelection(bool done = false);
-
-   SpectralSelectionBarListener * mListener;
 
    bool mbCenterAndWidth;
 

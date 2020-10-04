@@ -17,18 +17,11 @@ the Free Software Foundation; either version 2 of the License, or
 \brief (not quite a Toolbar) at foot of screen for setting and viewing the
 frequency selection range.
 
-*//****************************************************************//**
-
-\class SpectralSelectionBarListener
-\brief A class used to forward events to do
-with changes in the SpectralSelectionBar.
-
 *//*******************************************************************/
 
 
 
 #include "SpectralSelectionBar.h"
-#include "SpectralSelectionBarListener.h"
 
 #include "ToolManager.h"
 
@@ -52,6 +45,7 @@ with changes in the SpectralSelectionBar.
 
 #include "Prefs.h"
 #include "Project.h"
+#include "../ProjectSelectionManager.h"
 #include "AllThemeResources.h"
 #include "SelectedRegion.h"
 #include "ViewInfo.h"
@@ -97,7 +91,7 @@ Identifier SpectralSelectionBar::ID()
 
 SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
 : ToolBar( project, XO("Spectral Selection"), ID() )
-, mListener(NULL), mbCenterAndWidth(true)
+, mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
 , mChoice(NULL)
@@ -142,13 +136,9 @@ void SpectralSelectionBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
 
-   auto frequencyFormatName = mListener
-      ? mListener->SSBL_GetFrequencySelectionFormatName()
-      : NumericFormatSymbol{};
-   auto bandwidthFormatName = mListener
-      ? mListener->SSBL_GetBandwidthSelectionFormatName()
-      : NumericFormatSymbol{};
-
+   auto &manager = ProjectSelectionManager::Get(mProject);
+   auto frequencyFormatName = manager.SSBL_GetFrequencySelectionFormatName();
+   auto bandwidthFormatName = manager.SSBL_GetBandwidthSelectionFormatName();
    wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
@@ -226,6 +216,14 @@ void SpectralSelectionBar::Populate()
    mainSizer->Layout();
 
    Layout();
+
+   CallAfter([this]{
+      auto &manager = ProjectSelectionManager::Get(mProject);
+      SetFrequencySelectionFormatName(
+         manager.SSBL_GetFrequencySelectionFormatName());
+      SetBandwidthSelectionFormatName(
+         manager.SSBL_GetBandwidthSelectionFormatName());
+   });
 }
 
 void SpectralSelectionBar::UpdatePrefs()
@@ -252,13 +250,6 @@ void SpectralSelectionBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
-void SpectralSelectionBar::SetListener(SpectralSelectionBarListener *l)
-{
-   mListener = l;
-   SetFrequencySelectionFormatName(mListener->SSBL_GetFrequencySelectionFormatName());
-   SetBandwidthSelectionFormatName(mListener->SSBL_GetBandwidthSelectionFormatName());
-};
-
 void SpectralSelectionBar::OnSize(wxSizeEvent &evt)
 {
    Refresh(true);
@@ -268,7 +259,8 @@ void SpectralSelectionBar::OnSize(wxSizeEvent &evt)
 
 void SpectralSelectionBar::ModifySpectralSelection(bool done)
 {
-   const double nyq = mListener->SSBL_GetRate() / 2.0;
+   auto &manager = ProjectSelectionManager::Get(mProject);
+   const double nyq = manager.SSBL_GetRate() / 2.0;
 
    double bottom, top;
    if (mbCenterAndWidth) {
@@ -332,7 +324,7 @@ void SpectralSelectionBar::ModifySpectralSelection(bool done)
 
    // Notify project and track panel, which may change
    // the values again, and call back to us in SetFrequencies()
-   mListener->SSBL_ModifySpectralSelection(bottom, top, done);
+   manager.SSBL_ModifySpectralSelection(bottom, top, done);
 }
 
 void SpectralSelectionBar::OnCtrl(wxCommandEvent & event)
@@ -371,6 +363,7 @@ void SpectralSelectionBar::OnIdle( wxIdleEvent &evt )
 
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 {
+   auto &manager = ProjectSelectionManager::Get(mProject);
    int index = evt.GetInt();
    wxWindow *w = FindFocus();
    bool centerFocus = (w && w == mCenterCtrl);
@@ -385,14 +378,12 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    if (type == EVT_FREQUENCYTEXTCTRL_UPDATED) {
       NumericTextCtrl *frequencyCtrl = (mbCenterAndWidth ? mCenterCtrl : mLowCtrl);
       auto frequencyFormatName = frequencyCtrl->GetBuiltinName(index);
-      if (mListener)
-         mListener->SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
+      manager.SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
    }
    else if (mbCenterAndWidth &&
             type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
       auto bandwidthFormatName = mWidthCtrl->GetBuiltinName(index);
-      if (mListener)
-         mListener->SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
+      manager.SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
    }
 
    // ReCreateButtons() will get rid of our sizers and controls

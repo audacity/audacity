@@ -23,7 +23,6 @@
 #endif
 
 #include "TimeToolBar.h"
-#include "SelectionBarListener.h"
 #include "ToolManager.h"
 
 #include "AudioIO.h"
@@ -31,6 +30,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
+#include "../ProjectSelectionManager.h"
 #include "ViewInfo.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
@@ -55,7 +55,6 @@ Identifier TimeToolBar::ID()
 
 TimeToolBar::TimeToolBar(AudacityProject &project)
 :  ToolBar(project, XO("Time"), ID(), true),
-   mListener(NULL),
    mAudioTime(NULL)
 {
    mSubscription =
@@ -108,6 +107,19 @@ void TimeToolBar::Populate()
    // from being used as we want to ensure the saved size is used instead. See SetDocked()
    // and OnUpdate() for more info.
    mSettingInitialSize = true;
+   CallAfter([this]{
+      // Get (and set) the saved time format
+      SetAudioTimeFormat(
+         ProjectSelectionManager::Get(mProject).TT_GetAudioTimeFormat());
+
+      // During initialization, if the saved format is the same as the default,
+      // OnUpdate() will not otherwise be called but we need it to set the
+      // initial size.
+      assert(mSettingInitialSize);
+      wxCommandEvent e;
+      e.SetInt(mAudioTime->GetFormatIndex());
+      OnUpdate(e);
+   });
 
    // Establish initial resizing limits
 //   SetResizingLimits();
@@ -182,23 +194,6 @@ void TimeToolBar::SetDocked(ToolDock *dock, bool pushed)
          // Inform others the toolbar has changed
          Updated();
       }
-   }
-}
-
-void TimeToolBar::SetListener(TimeToolBarListener *l)
-{
-   // Remember the listener
-   mListener = l;
-
-   // Get (and set) the saved time format
-   SetAudioTimeFormat(mListener->TT_GetAudioTimeFormat());
-
-   // During initialization, if the saved format is the same as the default,
-   // OnUpdate() will not be called and need it to set the initial size.
-   if (mSettingInitialSize) {
-      wxCommandEvent e;
-      e.SetInt(mAudioTime->GetFormatIndex());
-      OnUpdate(e);
    }
 }
 
@@ -292,9 +287,7 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    SetMaxSize(wxDefaultSize);
 
    // Save format name before recreating the controls so they resize properly
-   if (mListener) {
-      mListener->TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
-   }
+   ProjectSelectionManager::Get(mProject).TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
 
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force
