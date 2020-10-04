@@ -138,9 +138,10 @@ public:
    explicit SpectralDataDialogWorker( AudacityProject &project );
    ~SpectralDataDialogWorker();
 
-   void OnToolChanged(wxCommandEvent &evt);
+   void OnToolChanged(ProjectSettingsEvent);
    void OnIdle(wxIdleEvent &evt);
 private:
+   Observer::Subscription mSettingsSubscription;
    AudacityProject &mProject;
    unsigned mPrevNViews = 0;
 };
@@ -365,7 +366,8 @@ SpectralDataDialog *SpectralDataDialog::Find( AudacityProject *pProject )
 SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject &project)
    : mProject{ project }
 {
-   project.Bind(EVT_PROJECT_SETTINGS_CHANGE, &SpectralDataDialogWorker::OnToolChanged, this);
+   mSettingsSubscription = ProjectSettings::Get(project)
+      .Subscribe(*this, &SpectralDataDialogWorker::OnToolChanged);
    wxTheApp->Bind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
 }
 
@@ -374,10 +376,9 @@ SpectralDataDialogWorker::~SpectralDataDialogWorker()
    wxTheApp->Unbind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
 }
 
-void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
+void SpectralDataDialogWorker::OnToolChanged(ProjectSettingsEvent evt)
 {
-   evt.Skip();
-   if (evt.GetInt() == ProjectSettings::ChangedTool) {
+   if (evt.type == ProjectSettingsEvent::ChangedTool) {
       // Find not Get to avoid creating the dialog if not yet done
       if (auto pDialog = SpectralDataDialog::Find(&mProject);
           pDialog && pDialog->IsShown())
@@ -389,7 +390,7 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
 
          auto &projectSettings = ProjectSettings::Get( mProject );
          if (projectSettings.GetTool() == value) {
-            auto oldValue = static_cast<Type>( evt.GetExtraLong() );
+            auto oldValue = evt.oldValue;
             if (oldValue + 1 == value)
                // continue tool rotation
                wxTheApp->CallAfter([&]{ projectSettings.SetTool(

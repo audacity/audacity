@@ -63,7 +63,14 @@ ProjectNumericFormats::GetFrequencySelectionFormatName() const
 void ProjectNumericFormats::SetFrequencySelectionFormatName(
    const NumericFormatID & formatName)
 {
-   mFrequencySelectionFormatName = formatName;
+   if (mFrequencySelectionFormatName != formatName) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedFrequencyFormat,
+         mFrequencySelectionFormatName, formatName
+      };
+      mFrequencySelectionFormatName = formatName;
+      Publish(e);
+   }
 }
 
 NumericFormatID
@@ -82,12 +89,26 @@ NumericFormatSymbol ProjectNumericFormats::LookupFormat(
 void ProjectNumericFormats::SetBandwidthSelectionFormatName(
    const NumericFormatID &formatName)
 {
-   mBandwidthSelectionFormatName = formatName;
+   if (mBandwidthSelectionFormatName != formatName) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedBandwidthFormat,
+         mBandwidthSelectionFormatName, formatName
+      };
+      mBandwidthSelectionFormatName = formatName;
+      Publish(e);
+   }
 }
 
 void ProjectNumericFormats::SetSelectionFormat(const NumericFormatID &format)
 {
-   mSelectionFormat = format;
+   if (mSelectionFormat != format) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedSelectionFormat,
+         mSelectionFormat, format
+      };
+      mSelectionFormat = format;
+      Publish(e);
+   }
 }
 
 NumericFormatID ProjectNumericFormats::GetSelectionFormat() const
@@ -97,7 +118,14 @@ NumericFormatID ProjectNumericFormats::GetSelectionFormat() const
 
 void ProjectNumericFormats::SetAudioTimeFormat(const NumericFormatID &format)
 {
-   mAudioTimeFormat = format;
+   if (mAudioTimeFormat != format) {
+      ProjectNumericFormatsEvent e{
+         ProjectNumericFormatsEvent::ChangedAudioTimeFormat,
+         mAudioTimeFormat, format
+      };
+      mAudioTimeFormat = format;
+      Publish(e);
+   }
 }
 
 NumericFormatID ProjectNumericFormats::GetAudioTimeFormat() const
