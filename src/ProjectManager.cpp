@@ -22,7 +22,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
-#include "ProjectSelectionManager.h"
 #include "ProjectWindows.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
@@ -38,9 +37,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/ImportMIDI.h"
 #include "QualitySettings.h"
 #include "toolbars/MeterToolBar.h"
-#include "toolbars/SelectionBar.h"
-#include "toolbars/SpectralSelectionBar.h"
-#include "toolbars/TimeToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -370,13 +366,7 @@ AudacityProject *ProjectManager::New()
    auto gAudioIO = AudioIO::Get();
    gAudioIO->SetListener(
       ProjectAudioManager::Get( project ).shared_from_this() );
-   auto &projectSelectionManager = ProjectSelectionManager::Get( project );
-   SelectionBar::Get( project ).SetListener( &projectSelectionManager );
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetListener( &projectSelectionManager );
-#endif
-   TimeToolBar::Get( project ).SetListener( &projectSelectionManager );
-      
+
    //Set the NEW project as active:
    SetActiveProject(p);
    
