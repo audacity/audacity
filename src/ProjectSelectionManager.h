@@ -12,8 +12,6 @@ Paul Licameli split from ProjectManager.cpp
 #define __AUDACITY_PROJECT_SELECTION_MANAGER__
 
 #include "ClientData.h" // to inherit
-#include "toolbars/SelectionBarListener.h" // to inherit
-#include "toolbars/SpectralSelectionBarListener.h" // to inherit
 #include "ComponentInterfaceSymbol.h"
 #include "Observer.h"
 
@@ -21,9 +19,6 @@ class AudacityProject;
 
 class AUDACITY_DLL_API ProjectSelectionManager final
    : public ClientData::Base
-   , public SelectionBarListener
-   , public SpectralSelectionBarListener
-   , public TimeToolBarListener
 {
 public:
    static ProjectSelectionManager &Get( AudacityProject &project );
@@ -35,23 +30,23 @@ public:
       const ProjectSelectionManager & ) = delete;
    ~ProjectSelectionManager() override;
 
-   // SelectionBarListener callback methods
-   NumericFormatID AS_GetSelectionFormat() override;
-   void AS_SetSelectionFormat(const NumericFormatID & format) override;
-   NumericFormatID TT_GetAudioTimeFormat() override;
-   void TT_SetAudioTimeFormat(const NumericFormatID & format) override;
-   void AS_ModifySelection(double &start, double &end, bool done) override;
+   NumericFormatID AS_GetSelectionFormat();
+   void AS_SetSelectionFormat(const NumericFormatID & format);
 
-   // SpectralSelectionBarListener callback methods
-   double SSBL_GetRate() const override;
-   NumericFormatID SSBL_GetFrequencySelectionFormatName() override;
+   NumericFormatID TT_GetAudioTimeFormat();
+   void TT_SetAudioTimeFormat(const NumericFormatID & format);
+   void AS_ModifySelection(double &start, double &end, bool done);
+
+
+   double SSBL_GetRate() const;
+   NumericFormatID SSBL_GetFrequencySelectionFormatName();
    void SSBL_SetFrequencySelectionFormatName(
-      const NumericFormatID & formatName) override;
-   NumericFormatID SSBL_GetBandwidthSelectionFormatName() override;
+      const NumericFormatID & formatName);
+   NumericFormatID SSBL_GetBandwidthSelectionFormatName();
    void SSBL_SetBandwidthSelectionFormatName(
-      const NumericFormatID & formatName) override;
+      const NumericFormatID & formatName);
    void SSBL_ModifySpectralSelection(
-      double &bottom, double &top, bool done) override;
+      double &bottom, double &top, bool done);
 
 private:
    void SnapSelection();
