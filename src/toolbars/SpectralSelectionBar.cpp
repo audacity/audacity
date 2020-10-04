@@ -99,6 +99,8 @@ SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
 , mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
 , mChoice(NULL)
 {
+   mFormatsSubscription = ProjectNumericFormats::Get(project)
+      .Subscribe(*this, &SpectralSelectionBar::OnFormatsChanged);
 }
 
 SpectralSelectionBar::~SpectralSelectionBar()
@@ -370,6 +372,15 @@ void SpectralSelectionBar::OnIdle( wxIdleEvent &evt )
    auto &project = mProject;
    const auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    SetFrequencies( selectedRegion.f0(), selectedRegion.f1() );
+}
+
+void SpectralSelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   default:
+      break;
+   }
 }
 
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)

@@ -92,6 +92,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
    void FitToTimeControls();
 
+   void OnFormatsChanged(struct ProjectNumericFormatsEvent);
+
    double mRate;
    double mStart, mEnd, mLength, mCenter;
 
@@ -104,7 +106,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    Observer::Subscription mFormatChangedToFitValueSubscription[2];
 
    wxString mLastValidText;
-   
+   const Observer::Subscription mFormatsSubscription;
+
  public:
 
    DECLARE_CLASS(SelectionBar)

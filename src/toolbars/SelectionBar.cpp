@@ -130,7 +130,9 @@ Identifier SelectionBar::ID()
 SelectionBar::SelectionBar( AudacityProject &project )
 : ToolBar(project, XO("Selection"), ID()),
   mRate(0.0),
-  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0)
+  mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
+  mFormatsSubscription{ ProjectNumericFormats::Get(project).Subscribe(
+     *this, &SelectionBar::OnFormatsChanged) }
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
@@ -586,6 +588,15 @@ void SelectionBar::SetSelectionFormat(const NumericFormatID & format)
       wxCommandEvent e;
       e.SetString(format.GET());
       OnUpdate(e);
+   }
+}
+
+void SelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   default:
+      break;
    }
 }
 

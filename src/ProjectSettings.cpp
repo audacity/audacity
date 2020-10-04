@@ -17,20 +17,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "QualitySettings.h"
 #include "widgets/NumericTextCtrl.h"
 
-wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
-
-namespace {
-   void Notify(
-      AudacityProject &project, ProjectSettings::EventCode code,
-      long previousValue )
-   {
-      wxCommandEvent e{ EVT_PROJECT_SETTINGS_CHANGE };
-      e.SetInt( static_cast<int>( code ) );
-      e.SetExtraLong( previousValue );
-      project.ProcessEvent( e );
-   }
-}
-
 static const AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSettingsKey{
   []( AudacityProject &project ){
@@ -90,9 +76,9 @@ void ProjectSettings::UpdatePrefs()
 }
 
 void ProjectSettings::SetTool(int tool) {
-   if (auto oldValue = mCurrentTool; oldValue != tool) {
+   if (auto oldValue = mCurrentTool; tool != oldValue) {
       mCurrentTool = tool;
-      Notify( mProject, ChangedTool, oldValue );
+      Publish({ ProjectSettingsEvent::ChangedTool, oldValue, tool });
    }
 }
 
