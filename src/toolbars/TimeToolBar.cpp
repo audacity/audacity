@@ -57,8 +57,10 @@ TimeToolBar::TimeToolBar(AudacityProject &project)
 :  ToolBar(project, XO("Time"), ID(), true),
    mAudioTime(NULL)
 {
-   mSubscription =
+   mRateSubscription =
       ProjectRate::Get(project).Subscribe(*this, &TimeToolBar::OnRateChanged);
+   mFormatsSubscription = ProjectNumericFormats::Get(project)
+      .Subscribe(*this, &TimeToolBar::OnFormatsChanged);
 }
 
 TimeToolBar::~TimeToolBar()
@@ -272,6 +274,15 @@ void TimeToolBar::OnRateChanged(double rate)
 {
    if (mAudioTime)
       mAudioTime->SetSampleRate(rate);
+}
+
+void TimeToolBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &settings = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   default:
+      break;
+   }
 }
 
 // Called when the format drop downs is changed.

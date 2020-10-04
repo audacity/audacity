@@ -17,8 +17,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
 #include "ProjectTimeSignature.h"
-#include "ProjectSettings.h"
-#include "ProjectWindow.h"
 #include "Snap.h"
 #include "TrackPanel.h"
 #include "ViewInfo.h"
@@ -60,6 +58,8 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
     }
 
 {
+   mFormatsSubscription = ProjectNumericFormats::Get(project)
+      .Subscribe(*this, &ProjectSelectionManager::OnFormatsChanged);
 }
 
 ProjectSelectionManager::~ProjectSelectionManager() = default;
@@ -85,6 +85,15 @@ void ProjectSelectionManager::SnapSelection()
    {
       selectedRegion.setTimes(t0, t1);
       TrackPanel::Get(mProject).Refresh(false);
+   }
+}
+
+void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   default:
+      break;
    }
 }
 

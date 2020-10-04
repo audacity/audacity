@@ -18,6 +18,7 @@
 #include "Observer.h"
 
 class NumericTextCtrl;
+struct ProjectNumericFormatsEvent;
 
 class TimeToolBar final : public ToolBar
 {
@@ -50,6 +51,7 @@ private:
    wxSize ComputeSizing(int digitH);
 
    void OnRateChanged(double);
+   void OnFormatsChanged(ProjectNumericFormatsEvent);
    void OnUpdate(wxCommandEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnIdle(wxIdleEvent &evt);
@@ -61,7 +63,8 @@ private:
    static const int minDigitH = 17;
    static const int maxDigitH = 100;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mRateSubscription;
+   Observer::Subscription mFormatsSubscription;
 
 public:
    

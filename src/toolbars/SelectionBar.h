@@ -87,6 +87,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void SelectionModeUpdated();
 
    void UpdateRate(double rate);
+   void OnFormatsChanged(struct ProjectNumericFormatsEvent);
 
    double mRate;
    double mStart, mEnd, mLength, mCenter;
@@ -98,7 +99,8 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
    wxString mLastValidText;
 
-   Observer::Subscription mRateChangedSubscription;
+   const Observer::Subscription mRateChangedSubscription;
+   const Observer::Subscription mFormatsSubscription;
 
  public:
 

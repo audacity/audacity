@@ -118,7 +118,9 @@ SelectionBar::SelectionBar( AudacityProject &project )
   mRate(0.0), mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0),
   mRateChangedSubscription(
      ProjectRate::Get(project).Subscribe(
-         [this](double rate) { UpdateRate(rate); }))
+         [this](double rate) { UpdateRate(rate); })),
+  mFormatsSubscription{ ProjectNumericFormats::Get(project).Subscribe(
+         *this, &SelectionBar::OnFormatsChanged) }
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
@@ -546,6 +548,15 @@ void SelectionBar::UpdateRate(double rate)
          if (ctrl != nullptr)
             ctrl->SetSampleRate(rate);
       }
+   }
+}
+
+void SelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
+{
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   switch (evt.type) {
+   default:
+      break;
    }
 }
 

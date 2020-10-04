@@ -12,10 +12,12 @@ Paul Licameli split from ProjectManager.cpp
 #define __AUDACITY_PROJECT_SELECTION_MANAGER__
 
 #include "ClientData.h" // to inherit
+#include "Observer.h"
 #include "ComponentInterfaceSymbol.h"
 #include "Observer.h"
 
 class AudacityProject;
+struct ProjectNumericFormatsEvent;
 
 class AUDACITY_DLL_API ProjectSelectionManager final
    : public ClientData::Base
@@ -30,6 +32,10 @@ public:
       const ProjectSelectionManager & ) PROHIBITED;
    ~ProjectSelectionManager() override;
 
+private:
+   void OnFormatsChanged(ProjectNumericFormatsEvent);
+
+public:
    void AS_SetSelectionFormat(const NumericFormatSymbol & format);
 
    void TT_SetAudioTimeFormat(const NumericFormatSymbol & format);
@@ -45,6 +51,7 @@ public:
 private:
    void SnapSelection();
 
+   Observer::Subscription mFormatsSubscription;
    AudacityProject &mProject;
 
    Observer::Subscription mSnapModeChangedSubscription;
