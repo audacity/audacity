@@ -1,31 +1,29 @@
-
-
-#include "../AdornedRulerPanel.h"
-#include "../AudioIO.h"
-#include "../CommonCommandFlags.h"
-#include "../SpectrumAnalyst.h"
+#include "AdornedRulerPanel.h"
+#include "AudioIO.h"
+#include "CommonCommandFlags.h"
+#include "SpectrumAnalyst.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectAudioManager.h"
+#include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
-#include "../ProjectSelectionManager.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../ProjectWindows.h"
-#include "../SelectUtilities.h"
-#include "../SyncLock.h"
-#include "../TrackPanel.h"
-#include "../WaveTrack.h"
-#include "../LabelTrack.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../toolbars/ControlToolBar.h"
-#include "../tracks/ui/SelectHandle.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "ProjectSelectionManager.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "ProjectWindows.h"
+#include "SelectUtilities.h"
+#include "SyncLock.h"
+#include "TrackPanel.h"
+#include "WaveTrack.h"
+#include "LabelTrack.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "toolbars/ControlToolBar.h"
+#include "tracks/ui/SelectHandle.h"
+#include "tracks/labeltrack/ui/LabelTrackView.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 // private helper classes and functions
 namespace {
@@ -1256,3 +1254,6 @@ AttachedItem sAttachment5{
 }
 
 #undef FN
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
