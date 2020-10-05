@@ -504,8 +504,9 @@ void SpectrogramSettings::CacheWindows() const
    if (hFFT == NULL || window == NULL) {
 
       double scale;
-      const auto fftLen = WindowSize() * ZeroPaddingFactor();
-      const auto padding = (WindowSize() * (zeroPaddingFactor - 1)) / 2;
+      auto factor = ZeroPaddingFactor();
+      const auto fftLen = WindowSize() * factor;
+      const auto padding = (WindowSize() * (factor - 1)) / 2;
 
       hFFT = GetFFT(fftLen);
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
