@@ -30,19 +30,13 @@ public:
       const ProjectSelectionManager & ) PROHIBITED;
    ~ProjectSelectionManager() override;
 
-   const NumericFormatSymbol & AS_GetSelectionFormat();
    void AS_SetSelectionFormat(const NumericFormatSymbol & format);
 
-   const NumericFormatSymbol & TT_GetAudioTimeFormat();
    void TT_SetAudioTimeFormat(const NumericFormatSymbol & format);
    void AS_ModifySelection(double &start, double &end, bool done);
 
-
-   double SSBL_GetRate() const;
-   const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName();
    void SSBL_SetFrequencySelectionFormatName(
       const NumericFormatSymbol & formatName);
-   const NumericFormatSymbol & SSBL_GetBandwidthSelectionFormatName();
    void SSBL_SetBandwidthSelectionFormatName(
       const NumericFormatSymbol & formatName);
    void SSBL_ModifySpectralSelection(
