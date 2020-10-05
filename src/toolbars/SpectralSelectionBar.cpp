@@ -45,10 +45,13 @@ frequency selection range.
 
 #include "Prefs.h"
 #include "Project.h"
+#include "ProjectNumericFormats.h"
+#include "ProjectRate.h"
 #include "../ProjectSelectionManager.h"
 #include "AllThemeResources.h"
 #include "SelectedRegion.h"
 #include "ViewInfo.h"
+#include "WaveTrack.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -136,9 +139,9 @@ void SpectralSelectionBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    gPrefs->Read(preferencePath, &mbCenterAndWidth, true);
 
-   auto &manager = ProjectSelectionManager::Get(mProject);
-   auto frequencyFormatName = manager.SSBL_GetFrequencySelectionFormatName();
-   auto bandwidthFormatName = manager.SSBL_GetBandwidthSelectionFormatName();
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   auto frequencyFormatName = formats.GetFrequencySelectionFormatName();
+   auto bandwidthFormatName = formats.GetBandwidthSelectionFormatName();
    wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
@@ -221,11 +224,11 @@ void SpectralSelectionBar::Populate()
    Layout();
 
    CallAfter([this]{
-      auto &manager = ProjectSelectionManager::Get(mProject);
+      auto &formats = ProjectNumericFormats::Get(mProject);
       SetFrequencySelectionFormatName(
-         manager.SSBL_GetFrequencySelectionFormatName());
+         formats.GetFrequencySelectionFormatName());
       SetBandwidthSelectionFormatName(
-         manager.SSBL_GetBandwidthSelectionFormatName());
+         formats.GetBandwidthSelectionFormatName());
    });
 }
 
@@ -265,7 +268,10 @@ void SpectralSelectionBar::OnSize(wxSizeEvent &evt)
 void SpectralSelectionBar::ModifySpectralSelection(bool done)
 {
    auto &manager = ProjectSelectionManager::Get(mProject);
-   const double nyq = manager.SSBL_GetRate() / 2.0;
+   auto &tracks = TrackList::Get(mProject);
+   const auto rate = std::max(ProjectRate::Get(mProject).GetRate(),
+      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate));
+   const double nyq = rate / 2.0;
 
    double bottom, top;
    if (mbCenterAndWidth) {

@@ -89,12 +89,6 @@ void ProjectSelectionManager::SnapSelection()
    }
 }
 
-NumericFormatID ProjectSelectionManager::AS_GetSelectionFormat()
-{
-   auto &project = mProject;
-   return ProjectNumericFormats::Get(project).GetSelectionFormat();
-}
-
 void ProjectSelectionManager::AS_SetSelectionFormat(
    const NumericFormatID & format)
 {
@@ -106,13 +100,6 @@ void ProjectSelectionManager::AS_SetSelectionFormat(
    gPrefs->Flush();
 
    SelectionBar::Get( project ).SetSelectionFormat(format);
-}
-
-NumericFormatID ProjectSelectionManager::TT_GetAudioTimeFormat()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetAudioTimeFormat();
 }
 
 void
@@ -142,23 +129,6 @@ void ProjectSelectionManager::AS_ModifySelection(
    }
 }
 
-double ProjectSelectionManager::SSBL_GetRate() const
-{
-   auto &project = mProject;
-   auto &tracks = TrackList::Get( project );
-   // Return maximum of project rate and all track rates.
-   return std::max( ProjectRate::Get( project ).GetRate(),
-      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate));
-}
-
-NumericFormatID
-ProjectSelectionManager::SSBL_GetFrequencySelectionFormatName()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetFrequencySelectionFormatName();
-}
-
 void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
    const NumericFormatID &formatName)
 {
@@ -174,14 +144,6 @@ void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
 #endif
-}
-
-NumericFormatID
-ProjectSelectionManager::SSBL_GetBandwidthSelectionFormatName()
-{
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   return formats.GetBandwidthSelectionFormatName();
 }
 
 void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
@@ -210,7 +172,10 @@ void ProjectSelectionManager::SSBL_ModifySpectralSelection(
    auto &trackPanel = TrackPanel::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
-   double nyq = SSBL_GetRate() / 2.0;
+   auto &tracks = TrackList::Get(mProject);
+   auto nyq = std::max(ProjectRate::Get(project).GetRate(),
+      tracks.Any<const WaveTrack>().max(&WaveTrack::GetRate))
+      / 2.0;
    if (bottom >= 0.0)
       bottom = std::min(nyq, bottom);
    if (top >= 0.0)

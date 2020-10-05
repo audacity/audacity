@@ -49,6 +49,7 @@ selection range.
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectTimeSignature.h"
@@ -216,8 +217,8 @@ void SelectionBar::AddTitle(
 
 void SelectionBar::AddTime(int id, wxSizer * pSizer)
 {
-   auto formatName =
-      ProjectSelectionManager::Get(mProject).AS_GetSelectionFormat();
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   auto formatName = formats.GetSelectionFormat();
    auto pCtrl = safenew NumericTextCtrl(FormatterContext::ProjectContext(mProject),
       this, id, NumericConverterType_TIME(), formatName, 0.0);
 
@@ -312,8 +313,8 @@ void SelectionBar::Populate()
    Layout();
 
    CallAfter([this]{
-      auto &manager = ProjectSelectionManager::Get(mProject);
-      SetSelectionFormat(manager.AS_GetSelectionFormat());
+      auto &formats = ProjectNumericFormats::Get(mProject);
+      SetSelectionFormat(formats.GetSelectionFormat());
    });
 
 }

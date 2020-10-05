@@ -30,19 +30,14 @@ public:
       const ProjectSelectionManager & ) = delete;
    ~ProjectSelectionManager() override;
 
-   NumericFormatID AS_GetSelectionFormat();
    void AS_SetSelectionFormat(const NumericFormatID & format);
 
-   NumericFormatID TT_GetAudioTimeFormat();
    void TT_SetAudioTimeFormat(const NumericFormatID & format);
    void AS_ModifySelection(double &start, double &end, bool done);
 
 
-   double SSBL_GetRate() const;
-   NumericFormatID SSBL_GetFrequencySelectionFormatName();
    void SSBL_SetFrequencySelectionFormatName(
       const NumericFormatID & formatName);
-   NumericFormatID SSBL_GetBandwidthSelectionFormatName();
    void SSBL_SetBandwidthSelectionFormatName(
       const NumericFormatID & formatName);
    void SSBL_ModifySpectralSelection(
