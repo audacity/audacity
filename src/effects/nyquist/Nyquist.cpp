@@ -2192,7 +2192,7 @@ bool NyquistEffect::Parse(
             ctrl.fileTypes = ParseFileTypes(tokens[6]);
             // will determine file dialog styles:
             ctrl.highStr = UnQuote( tokens[7] );
-            ctrl.label = wxT("");
+            ctrl.label = UnQuote(ctrl.label);
          }
          else {
             ctrl.label = UnQuote( ctrl.label );
