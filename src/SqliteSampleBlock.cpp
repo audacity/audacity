@@ -373,7 +373,8 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                                      size_t numsamples)
 {
    if (IsSilent()) {
-      ClearSamples(dest, destformat, sampleoffset, numsamples);
+      auto size = SAMPLE_SIZE(destformat);
+      memset(dest, 0, numsamples * size);
       return numsamples;
    }
 
