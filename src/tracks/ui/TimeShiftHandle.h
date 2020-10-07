@@ -143,6 +143,11 @@ public:
    //! Default moves the whole track, provided `!AllFixed()`; else does nothing
    virtual void DoHorizontalOffset( double offset );
 
+   // This function is used by the keyboard interface for time shifting.
+   // It adjusts t0 after the move to take into account
+   // any rounding errors if this is necessary.
+   virtual double AdjustT0(double t0) const;
+
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
    void CommonSelectInterval( const TrackInterval &interval );

@@ -662,23 +662,17 @@ double DoClipMove( AudacityProject &project, Track *track,
 
       auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );
 
-      // update t0 and t1. There is the possibility that the updated
-      // t0 may no longer be within the clip due to rounding errors,
-      // so t0 is adjusted so that it is.
       double newT0 = t0 + hSlideAmount;
       if (hitTestResult != TrackShifter::HitTestResult::Track) {
-         // pShifter is still undestroyed in the ClipMoveState
-         auto &intervals = pShifter->MovingIntervals();
-         if ( !intervals.empty() ) {
-            auto &interval = intervals[0];
-            if (newT0 < interval.Start())
-               newT0 = interval.Start();
-            if (newT0 > interval.End())
-               newT0 = interval.End();
-            double diff = selectedRegion.duration();
-            selectedRegion.setTimes(newT0, newT0 + diff);
-         }
+         // If necessary, correct for rounding errors. For example,
+         // for a wavetrack, ensure that t0 is still in the clip
+         // which it was within before the move.
+         // (pShifter is still undestroyed in the ClipMoveState.)
+         newT0 = pShifter->AdjustT0(newT0);
       }
+
+      double diff = selectedRegion.duration();
+      selectedRegion.setTimes(newT0, newT0 + diff);
 
       return hSlideAmount;
    };

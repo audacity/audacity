@@ -36,6 +36,19 @@ public:
 
    bool SyncLocks() override { return true; }
 
+   // Ensure that t0 is still within the data.
+   // This corrects for any rounding errors.
+   double AdjustT0(double t0) const override
+   {
+      auto& track = GetTrack();
+      if (t0 < track.GetStartTime())
+         t0 = track.GetStartTime();
+      if (t0 > track.GetEndTime())
+         t0 = track.GetEndTime();
+
+      return t0;
+   }
+
 private:
    std::shared_ptr<NoteTrack> mpTrack;
 };

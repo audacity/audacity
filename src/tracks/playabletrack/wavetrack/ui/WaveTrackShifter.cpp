@@ -161,6 +161,24 @@ public:
          data->GetClip()->Offset( offset );
       }
    }
+
+
+   // Ensure that t0 is still within the clip which it was in before the move.
+   // This corrects for any rounding errors.
+   double AdjustT0( double t0 ) const override
+   {
+      if (MovingIntervals().empty())
+         return t0;
+      else {
+         auto data = static_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
+         auto& clip = data->GetClip();
+         if (t0 < clip->GetStartTime())
+            t0 = clip->GetStartTime();
+         if (t0 > clip->GetEndTime())
+            t0 = clip->GetEndTime();
+      }
+      return t0;
+   }
    
 private:
    std::shared_ptr<WaveTrack> mpTrack;

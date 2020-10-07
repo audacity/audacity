@@ -227,6 +227,11 @@ void TrackShifter::DoHorizontalOffset( double offset )
       GetTrack().Offset( offset );
 }
 
+double TrackShifter::AdjustT0(double t0) const
+{
+   return t0;
+}
+
 void TrackShifter::InitIntervals()
 {
    mMoving.clear();
