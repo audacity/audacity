@@ -1085,9 +1085,6 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       window.mbInitializingScrollbar = true;
 
       auto &selectionManager = ProjectSelectionManager::Get( project );
-
-      selectionManager.AS_SetSelectionFormat(
-         formats.GetSelectionFormat());
       selectionManager.TT_SetAudioTimeFormat(
          formats.GetAudioTimeFormat());
       selectionManager.SSBL_SetFrequencySelectionFormatName(
