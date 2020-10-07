@@ -24,16 +24,15 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
-
 #include "VSTEffect.h"
 #include "ModuleManager.h"
 #include "SampleCount.h"
 
-#include "../../widgets/ProgressDialog.h"
+#include "widgets/ProgressDialog.h"
 
 #if 0
 #if defined(BUILDING_AUDACITY)
-#include "../../PlatformCompatibility.h"
+#include "PlatformCompatibility.h"
 
 // Make the main function private
 #else
@@ -79,18 +78,19 @@
 // TODO:  Unfortunately we have some dependencies on Audacity provided 
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
 
+#include "EffectPlugin.h"
 #include "FileNames.h"
 #include "PlatformCompatibility.h"
-#include "../../SelectFile.h"
-#include "../../ShuttleGui.h"
-#include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
-#include "../../widgets/NumericTextCtrl.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/NumericTextCtrl.h"
 #include "XMLFileReader.h"
 #include "Base64.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
 #include "ConfigInterface.h"
@@ -4039,6 +4039,8 @@ VSTEffectInstance::~VSTEffectInstance()
    PowerOff();
 }
 
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
 
 void VSTEffectInstance::SetOwningValidator(VSTEffectUIWrapper* vi)
 {

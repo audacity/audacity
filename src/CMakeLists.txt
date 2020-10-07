@@ -64,14 +64,6 @@ else()
    set ( wxIS_GTK on)
 endif()
 
-# Handle VST option
-cmd_option(
-   ${_OPT}use_vst
-   "Use VST2 plug-in support [on, off]"
-   ON
-)
-set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
-
 #
 #
 #
@@ -411,28 +403,6 @@ list( APPEND SOURCES
       effects/TwoPassSimpleMono.h
 
       # VST Effects
-
-      $<$<BOOL:${USE_VST}>:
-         effects/VST/VSTControl.h
-         effects/VST/VSTEffect.cpp
-         effects/VST/VSTEffect.h
-         effects/VST/aeffectx.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
-         effects/VST/VSTControlGTK.cpp
-         effects/VST/VSTControlGTK.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_WIN}>>:
-         effects/VST/VSTControlMSW.cpp
-         effects/VST/VSTControlMSW.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_MAC}>>:
-         effects/VST/VSTControlOSX.h
-         effects/VST/VSTControlOSX.mm
-      >
 
       $<$<BOOL:${${_OPT}has_vst3}>:
          effects/VST3/AudacityVst3HostApplication.h
@@ -1167,7 +1137,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       AudacityApp.mm
       KeyboardCapture.cpp
       effects/EffectUI.cpp
-      effects/VST/VSTControlOSX.mm
       widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
@@ -1178,12 +1147,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          effects/VST3/module_mac.mm
          PROPERTIES
             COMPILE_FLAGS "-fobjc-arc"
-            SKIP_PRECOMPILE_HEADERS YES
-      )
-
-      set_source_files_properties(
-         effects/VST/VSTControlOSX.mm
-         PROPERTIES
             SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
