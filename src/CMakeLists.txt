@@ -46,13 +46,6 @@ else()
    file( WRITE "${_PRVDIR}/RevisionIdent.h" "" )
 endif()
 
-# Handle VST option
-cmd_option(
-   ${_OPT}use_vst
-   "Use VST2 plug-in support [on, off]"
-   ON
-)
-set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 
 #
 #
@@ -424,31 +417,6 @@ set( SOURCES
       effects/Wahwah.h
 
       # VST Effects
-
-      $<$<BOOL:${USE_VST}>:
-         effects/VST/VSTControl.h
-         effects/VST/VSTEditor.cpp
-         effects/VST/VSTEditor.h
-         effects/VST/VSTEffect.cpp
-         effects/VST/VSTEffect.h
-         effects/VST/VSTEffectOptionsDialog.cpp
-         effects/VST/VSTEffectOptionsDialog.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_GTK}>>:
-         effects/VST/VSTControlGTK.cpp
-         effects/VST/VSTControlGTK.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_WIN}>>:
-         effects/VST/VSTControlMSW.cpp
-         effects/VST/VSTControlMSW.h
-      >
-
-      $<$<AND:$<BOOL:${USE_VST}>,$<BOOL:${wxIS_MAC}>>:
-         effects/VST/VSTControlOSX.h
-         effects/VST/VSTControlOSX.mm
-      >
 
       $<$<BOOL:${${_OPT}has_vst3}>:
          effects/VST3/VST3Editor.cpp
@@ -1069,19 +1037,11 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       AudacityApp.mm
       KeyboardCapture.cpp
       effects/EffectUI.mm
-      effects/VST/VSTControlOSX.mm
       widgets/FileDialog/mac/FileDialogPrivate.mm
       PROPERTIES
          COMPILE_FLAGS "-x objective-c++"
          SKIP_PRECOMPILE_HEADERS YES
    )
-   if(${_OPT}has_vst3 AND ${wxIS_MAC})
-      set_source_files_properties(
-         effects/VST/VSTControlOSX.mm
-         PROPERTIES
-            SKIP_PRECOMPILE_HEADERS YES
-      )
-   endif()
 
    # Add our required frameworks
    list( APPEND LIBRARIES
@@ -1249,12 +1209,6 @@ set( AUDACITY_LIBRARIES
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
 )
-
-if (USE_VST)
-   list( APPEND AUDACITY_LIBRARIES
-      lib-vst-interface
-   )
-endif()
 
 if (${_OPT}has_vst3)
    list( APPEND AUDACITY_LIBRARIES

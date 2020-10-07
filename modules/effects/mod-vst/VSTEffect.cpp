@@ -295,3 +295,6 @@ void VSTEffect::ShowOptions(const EffectPlugin &) const
 
 // Inject factory hook to make VSTEffect capable of UI
 static VSTEffectsModule::Factory::SubstituteInUnique<VSTEffect> scope;
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES

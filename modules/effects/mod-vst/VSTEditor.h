@@ -14,7 +14,7 @@
 #define __AUDACITY_VST_EDITOR__
 
 #include "VSTWrapper.h"
-#include "../EffectEditor.h"
+#include "effects/EffectEditor.h"
 
 #include <wx/weakref.h>
 #include <wx/event.h>

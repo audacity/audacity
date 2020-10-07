@@ -26,7 +26,7 @@
 #include <wx/stattext.h>
 #include <wx/timer.h>
 #include "ShuttleGui.h"
-#include "../../widgets/NumericTextCtrl.h"
+#include "widgets/NumericTextCtrl.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

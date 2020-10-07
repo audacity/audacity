@@ -12,7 +12,7 @@
 #define __AUDACITY_VST_EFFECT__
 
 #include "VSTEffectBase.h"
-#include "../StatelessPerTrackEffect.h"
+#include "effects/StatelessPerTrackEffect.h"
 
 #include "SampleFormat.h"
 

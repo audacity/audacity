@@ -14,7 +14,7 @@
 #include "VSTEffectOptionsDialog.h"
 
 #include "ShuttleGui.h"
-#include "../../widgets/valnum.h"
+#include "widgets/valnum.h"
 
 #include "ConfigInterface.h"
 
