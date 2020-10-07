@@ -417,8 +417,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    // Save format name before recreating the controls so they resize properly
    if (mTimeControls.front())
    {
-      auto &manager = ProjectSelectionManager::Get(mProject);
-      manager.AS_SetSelectionFormat(format);
+      auto &formats = ProjectNumericFormats::Get(mProject);
+      formats.SetSelectionFormat(format);
+      // Then my Subscription is called
    }
 
    // ReCreateButtons() will get rid of our sizers and controls
@@ -555,6 +556,8 @@ void SelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
 {
    auto &formats = ProjectNumericFormats::Get(mProject);
    switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedSelectionFormat:
+      return SetSelectionFormat(formats.GetSelectionFormat());
    default:
       break;
    }

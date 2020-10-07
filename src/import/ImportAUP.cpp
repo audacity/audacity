@@ -33,6 +33,7 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
@@ -308,6 +309,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
    auto &viewInfo = ViewInfo::Get(mProject);
+   auto &formats = ProjectNumericFormats::Get(mProject);
    auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
@@ -413,7 +415,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.selectionformat));
+      formats.SetSelectionFormat(
+         NumericConverter::LookupFormat(
+            NumericConverter::TIME, mProjectAttrs.selectionformat));
    }
 
    if (mProjectAttrs.haveaudiotimeformat)
