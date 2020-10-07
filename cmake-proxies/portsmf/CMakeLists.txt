@@ -1,5 +1,5 @@
 
-add_library( ${TARGET} STATIC )
+add_library( ${TARGET} OBJECT )
 
 def_vars()
 
