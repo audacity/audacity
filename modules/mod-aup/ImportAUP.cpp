@@ -32,9 +32,9 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
+#include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSelectionManager.h"
-#include "ProjectSettings.h"
 #include "ProjectSnap.h"
 #include "ProjectWindows.h"
 #include "Sequence.h"
@@ -318,6 +318,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
    auto &viewInfo = ViewInfo::Get(mProject);
+   auto &formats = ProjectNumericFormats::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
    auto oldNumTracks = tracks.Size();
@@ -442,7 +443,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.haveselectionformat)
    {
-      selman.AS_SetSelectionFormat(mProjectAttrs.selectionformat);
+      formats.SetSelectionFormat(mProjectAttrs.selectionformat);
    }
 
    if (mProjectAttrs.haveaudiotimeformat)

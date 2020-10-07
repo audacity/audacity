@@ -36,7 +36,7 @@ private:
    void OnFormatsChanged(ProjectNumericFormatsEvent);
 
 public:
-   void AS_SetSelectionFormat(const NumericFormatID & format);
+   void SetSelectionFormat(const NumericFormatID & format);
 
    void TT_SetAudioTimeFormat(const NumericFormatID & format);
    void ModifySelection(double &start, double &end, bool done);

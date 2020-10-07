@@ -7,7 +7,6 @@ ProjectSelectionManager.cpp
 Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
-
 #include "ProjectSelectionManager.h"
 
 #include "Project.h"
@@ -20,7 +19,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Snap.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
 #include "toolbars/TimeToolBar.h"
 
@@ -58,6 +56,11 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
          [this](auto&) { SnapSelection(); }) } 
 
 {
+   // Be consistent with ProjectNumericFormats
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   SetSelectionFormat(formats.GetSelectionFormat());
+
+   // And stay consistent
    mFormatsSubscription = ProjectNumericFormats::Get(project)
       .Subscribe(*this, &ProjectSelectionManager::OnFormatsChanged);
 }
@@ -89,22 +92,17 @@ void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
 {
    auto &formats = ProjectNumericFormats::Get(mProject);
    switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedSelectionFormat:
+      return SetSelectionFormat(formats.GetSelectionFormat());
    default:
       break;
    }
 }
 
-void ProjectSelectionManager::AS_SetSelectionFormat(
-   const NumericFormatID & format)
+void ProjectSelectionManager::SetSelectionFormat(const NumericFormatID & format)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   formats.SetSelectionFormat( format );
-
    gPrefs->Write(wxT("/SelectionFormat"), format);
    gPrefs->Flush();
-
-   SelectionBar::Get( project ).SetSelectionFormat(format);
 }
 
 void
