@@ -325,7 +325,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
 #endif
 
       auto umodule = std::make_unique<Module>(files[i]);
-      if (umodule->Load())   // it will get rejected if there  are version problems
+         if (umodule->Load())   // it will get rejected if there  are version problems
       {
          auto module = umodule.get();
 
