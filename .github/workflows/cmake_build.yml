@@ -82,16 +82,16 @@ jobs:
         wxhash="wx_${wxhash}_${RUNNER_OS}_${{matrix.config.platform}}"
 
         # Export the commit hash to further steps
-        echo "::set-env name=WXHASH::${wxhash}"
+        echo "WXHASH=${wxhash}" >> ${GITHUB_ENV}
 
         # Get the short hash
         shorthash=$(git show -s --format='%h')
 
         # Export the short hash for the upload step
-        echo "::set-env name=SHORTHASH::${shorthash}"
+        echo "SHORTHASH=${shorthash}" >> ${GITHUB_ENV}
 
         # Export the destination directory name
-        echo "::set-env name=DEST::${{matrix.config.name}}_${shorthash}"
+        echo "DEST=${{matrix.config.name}}_${shorthash}" >> ${GITHUB_ENV}
 
     # =========================================================================
     # SHARED: Create and/or retrieve wxWidgets cached build
