@@ -11,7 +11,6 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "ProjectWindows.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
@@ -19,7 +18,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Snap.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "toolbars/SpectralSelectionBar.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSelectionManagerKey {
@@ -60,6 +58,7 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
    SetSelectionFormat(formats.GetSelectionFormat());
    SetAudioTimeFormat(formats.GetAudioTimeFormat());
    SetFrequencySelectionFormatName(formats.GetFrequencySelectionFormatName());
+   SetBandwidthSelectionFormatName(formats.GetBandwidthSelectionFormatName());
 
    // And stay consistent
    mFormatsSubscription = ProjectNumericFormats::Get(project)
@@ -100,6 +99,9 @@ void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
    case ProjectNumericFormatsEvent::ChangedFrequencyFormat:
       return SetFrequencySelectionFormatName(
          formats.GetFrequencySelectionFormatName());
+   case ProjectNumericFormatsEvent::ChangedBandwidthFormat:
+      return SetBandwidthSelectionFormatName(
+         formats.GetBandwidthSelectionFormatName());
    default:
       break;
    }
@@ -136,21 +138,11 @@ void ProjectSelectionManager::SetFrequencySelectionFormatName(
    gPrefs->Flush();
 }
 
-void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
+void ProjectSelectionManager::SetBandwidthSelectionFormatName(
    const NumericFormatID & formatName)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-
-   formats.SetBandwidthSelectionFormatName( formatName );
-
    gPrefs->Write(wxT("/BandwidthSelectionFormatName"), formatName.GET());
    gPrefs->Flush();
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get(project)
-      .SetBandwidthSelectionFormatName(formatName.GET());
-#endif
 }
 
 void ProjectSelectionManager::ModifySpectralSelection(
