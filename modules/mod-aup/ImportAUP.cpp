@@ -448,7 +448,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.haveaudiotimeformat)
    {
-      selman.TT_SetAudioTimeFormat(mProjectAttrs.audiotimeformat);
+      formats.SetAudioTimeFormat(mProjectAttrs.audiotimeformat);
    }
 
    if (mProjectAttrs.havefrequencyformat)

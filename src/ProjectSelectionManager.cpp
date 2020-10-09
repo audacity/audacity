@@ -20,7 +20,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "toolbars/SpectralSelectionBar.h"
-#include "toolbars/TimeToolBar.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectSelectionManagerKey {
@@ -59,6 +58,7 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
    // Be consistent with ProjectNumericFormats
    auto &formats = ProjectNumericFormats::Get(mProject);
    SetSelectionFormat(formats.GetSelectionFormat());
+   SetAudioTimeFormat(formats.GetAudioTimeFormat());
 
    // And stay consistent
    mFormatsSubscription = ProjectNumericFormats::Get(project)
@@ -94,6 +94,8 @@ void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
    switch (evt.type) {
    case ProjectNumericFormatsEvent::ChangedSelectionFormat:
       return SetSelectionFormat(formats.GetSelectionFormat());
+   case ProjectNumericFormatsEvent::ChangedAudioTimeFormat:
+      return SetAudioTimeFormat(formats.GetAudioTimeFormat());
    default:
       break;
    }
@@ -105,17 +107,10 @@ void ProjectSelectionManager::SetSelectionFormat(const NumericFormatID & format)
    gPrefs->Flush();
 }
 
-void
-ProjectSelectionManager::TT_SetAudioTimeFormat(const NumericFormatID & format)
+void ProjectSelectionManager::SetAudioTimeFormat(const NumericFormatID & format)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-   formats.SetAudioTimeFormat( format );
-
    gPrefs->Write(wxT("/AudioTimeFormat"), format.GET());
    gPrefs->Flush();
-
-   TimeToolBar::Get( project ).SetAudioTimeFormat(format);
 }
 
 void ProjectSelectionManager::ModifySelection(
