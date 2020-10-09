@@ -871,23 +871,23 @@ AttachedItem sAttachment2{
    Shared( ClipCursorItems() )
 };
 
-BaseItemSharedPtr ExtraClipCursorItems()
+BaseItemSharedPtr ExtraTimeShiftItems()
 {
    using Options = CommandManager::Options;
    static BaseItemSharedPtr items{
    ( FinderScope{ findCommandHandler },
-   Items( wxT("Clip"),
-      Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
+   Items( wxT("TimeShift"),
+      Command( wxT("ClipLeft"), XXO("Time Shift &Left"), FN(OnClipLeft),
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
-      Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
+      Command( wxT("ClipRight"), XXO("Time Shift &Right"), FN(OnClipRight),
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() )
    ) ) };
    return items;
 }
 
 AttachedItem sAttachment3{
-  { wxT("Optional/Extra/Part2/Cursor"), { OrderingHint::End, {} } },
-  Shared( ExtraClipCursorItems() )
+  { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } },
+  Shared( ExtraTimeShiftItems() )
 };
 
 }
