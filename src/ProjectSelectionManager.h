@@ -44,7 +44,7 @@ public:
 
    void SetFrequencySelectionFormatName(
       const NumericFormatSymbol & formatName);
-   void SSBL_SetBandwidthSelectionFormatName(
+   void SetBandwidthSelectionFormatName(
       const NumericFormatSymbol & formatName);
    void ModifySpectralSelection(
       double &bottom, double &top, bool done);

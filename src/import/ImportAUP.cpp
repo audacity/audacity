@@ -35,7 +35,6 @@
 #include "ProjectHistory.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "ProjectSelectionManager.h"
 #include "ProjectSettings.h"
 #include "ProjectSnap.h"
 #include "ProjectWindows.h"
@@ -311,7 +310,6 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &viewInfo = ViewInfo::Get(mProject);
    auto &formats = ProjectNumericFormats::Get(mProject);
    auto &settings = ProjectSettings::Get(mProject);
-   auto &selman = ProjectSelectionManager::Get(mProject);
 
    auto oldNumTracks = tracks.size();
    auto cleanup = finally([this, &tracks, oldNumTracks]{
@@ -436,7 +434,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (mProjectAttrs.havebandwidthformat)
    {
-      selman.SSBL_SetBandwidthSelectionFormatName(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.bandwidthformat));
+      formats.SetBandwidthSelectionFormatName(
+         NumericConverter::LookupFormat(
+            NumericConverter::BANDWIDTH, mProjectAttrs.bandwidthformat));
    }
 
    // PRL: It seems this must happen after SetSnapTo

@@ -25,8 +25,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
-#include "ProjectNumericFormats.h"
-#include "ProjectSelectionManager.h"
 #include "ProjectWindows.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
@@ -1005,14 +1003,8 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const bool err = results.trackError;
 
    if (bParseSuccess) {
-      auto &formats = ProjectNumericFormats::Get( project );
-      auto &settings = ProjectSettings::Get( project );
       window.mbInitializingScrollbar = true;
 
-      auto &selectionManager = ProjectSelectionManager::Get( project );
-      selectionManager.SSBL_SetBandwidthSelectionFormatName(
-         formats.GetBandwidthSelectionFormatName());
-      
       ProjectHistory::Get( project ).InitialState();
       TrackFocus::Get( project ).Set( *tracks.Any().begin() );
       window.HandleResize();
