@@ -429,7 +429,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(NumericConverter::LookupFormat(NumericConverter::TIME, mProjectAttrs.frequencyformat));
+      formats.SetFrequencySelectionFormatName(
+         NumericConverter::LookupFormat(
+            NumericConverter::FREQUENCY, mProjectAttrs.frequencyformat));
    }
 
    if (mProjectAttrs.havebandwidthformat)

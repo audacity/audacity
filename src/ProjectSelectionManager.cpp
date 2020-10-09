@@ -58,6 +58,7 @@ ProjectSelectionManager::ProjectSelectionManager(AudacityProject& project)
    auto &formats = ProjectNumericFormats::Get(mProject);
    SetSelectionFormat(formats.GetSelectionFormat());
    SetAudioTimeFormat(formats.GetAudioTimeFormat());
+   SetFrequencySelectionFormatName(formats.GetFrequencySelectionFormatName());
 
    // And stay consistent
    mFormatsSubscription = ProjectNumericFormats::Get(project)
@@ -95,6 +96,9 @@ void ProjectSelectionManager::OnFormatsChanged(ProjectNumericFormatsEvent evt)
       return SetSelectionFormat(formats.GetSelectionFormat());
    case ProjectNumericFormatsEvent::ChangedAudioTimeFormat:
       return SetAudioTimeFormat(formats.GetAudioTimeFormat());
+   case ProjectNumericFormatsEvent::ChangedFrequencyFormat:
+      return SetFrequencySelectionFormatName(
+         formats.GetFrequencySelectionFormatName());
    default:
       break;
    }
@@ -125,21 +129,12 @@ void ProjectSelectionManager::ModifySelection(
       history.ModifyState(false);
 }
 
-void ProjectSelectionManager::SSBL_SetFrequencySelectionFormatName(
+void ProjectSelectionManager::SetFrequencySelectionFormatName(
    const NumericFormatSymbol & formatName)
 {
-   auto &project = mProject;
-   auto &formats = ProjectNumericFormats::Get( project );
-
-   formats.SetFrequencySelectionFormatName( formatName );
-
    gPrefs->Write(wxT("/FrequencySelectionFormatName"),
                  formatName.Internal());
    gPrefs->Flush();
-
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   SpectralSelectionBar::Get( project ).SetFrequencySelectionFormatName(formatName);
-#endif
 }
 
 void ProjectSelectionManager::SSBL_SetBandwidthSelectionFormatName(
