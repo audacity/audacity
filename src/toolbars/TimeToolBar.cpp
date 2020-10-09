@@ -30,7 +30,6 @@
 #include "ProjectAudioIO.h"
 #include "ProjectNumericFormats.h"
 #include "ProjectRate.h"
-#include "../ProjectSelectionManager.h"
 #include "ViewInfo.h"
 
 IMPLEMENT_CLASS(TimeToolBar, ToolBar);
@@ -280,6 +279,9 @@ void TimeToolBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
 {
    auto &settings = ProjectNumericFormats::Get(mProject);
    switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedAudioTimeFormat:
+      SetAudioTimeFormat(settings.GetAudioTimeFormat());
+      break;
    default:
       break;
    }
@@ -298,7 +300,9 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    SetMaxSize(wxDefaultSize);
 
    // Save format name before recreating the controls so they resize properly
-   ProjectSelectionManager::Get(mProject).TT_SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
+   auto &formats = ProjectNumericFormats::Get(mProject);
+   formats.SetAudioTimeFormat(mAudioTime->GetBuiltinName(evt.GetInt()));
+   // Then my subscription is called
 
    // During initialization, the desired size will have already been set at this point
    // and the "best" size" would override it, so we simply send a size event to force

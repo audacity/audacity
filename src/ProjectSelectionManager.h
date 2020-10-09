@@ -39,7 +39,7 @@ public:
 
    void SetSelectionFormat(const NumericFormatSymbol & format);
 
-   void TT_SetAudioTimeFormat(const NumericFormatSymbol & format);
+   void SetAudioTimeFormat(const NumericFormatSymbol & format);
    void ModifySelection(double &start, double &end, bool done);
 
    void SSBL_SetFrequencySelectionFormatName(
