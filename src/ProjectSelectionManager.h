@@ -39,8 +39,7 @@ public:
    void SetSelectionFormat(const NumericFormatID & format);
    void SetAudioTimeFormat(const NumericFormatID & format);
    void ModifySelection(double &start, double &end, bool done);
-
-   void SSBL_SetFrequencySelectionFormatName(
+   void SetFrequencySelectionFormatName(
       const NumericFormatID & formatName);
    void SSBL_SetBandwidthSelectionFormatName(
       const NumericFormatID & formatName);

@@ -453,7 +453,7 @@ void AUPImportFileHandle::Import(ImportProgressListener& progressListener,
 
    if (mProjectAttrs.havefrequencyformat)
    {
-      selman.SSBL_SetFrequencySelectionFormatName(mProjectAttrs.frequencyformat);
+      formats.SetFrequencySelectionFormatName(mProjectAttrs.frequencyformat);
    }
 
    if (mProjectAttrs.havebandwidthformat)

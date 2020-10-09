@@ -1085,8 +1085,6 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
       window.mbInitializingScrollbar = true;
 
       auto &selectionManager = ProjectSelectionManager::Get( project );
-      selectionManager.SSBL_SetFrequencySelectionFormatName(
-         formats.GetFrequencySelectionFormatName());
       selectionManager.SSBL_SetBandwidthSelectionFormatName(
          formats.GetBandwidthSelectionFormatName());
       
