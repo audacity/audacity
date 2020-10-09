@@ -381,6 +381,9 @@ void SpectralSelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
    case ProjectNumericFormatsEvent::ChangedFrequencyFormat:
       return SetFrequencySelectionFormatName(
          formats.GetFrequencySelectionFormatName());
+   case ProjectNumericFormatsEvent::ChangedBandwidthFormat:
+      return SetBandwidthSelectionFormatName(
+         formats.GetBandwidthSelectionFormatName());
    default:
       break;
    }
@@ -388,7 +391,6 @@ void SpectralSelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
 
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 {
-   auto &manager = ProjectSelectionManager::Get(mProject);
    auto &formats = ProjectNumericFormats::Get(mProject);
    wxWindow *w = FindFocus();
    bool centerFocus = (w && w == mCenterCtrl);
@@ -406,8 +408,8 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    }
    else if (mbCenterAndWidth &&
             type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
-      auto bandwidthFormatName = evt.GetString();
-      manager.SSBL_SetBandwidthSelectionFormatName(bandwidthFormatName);
+      formats.SetBandwidthSelectionFormatName(evt.GetString());
+      // Then my subscription is called
    }
 
    // ReCreateButtons() will get rid of our sizers and controls
