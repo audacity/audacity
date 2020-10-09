@@ -1,22 +1,20 @@
-
-
-#include "../CommonCommandFlags.h"
+#include "CommonCommandFlags.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "../ProjectWindow.h"
-#include "../ProjectWindows.h"
-#include "../RealtimeEffectPanel.h"
+#include "ProjectWindow.h"
+#include "ProjectWindows.h"
+#include "RealtimeEffectPanel.h"
 #include "Track.h"
-#include "../SelectionState.h"
-#include "../TrackPanel.h"
-#include "../TrackPanelAx.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../toolbars/ToolManager.h"
-#include "../widgets/AButton.h"
-#include "../widgets/ASlider.h"
-#include "../widgets/MeterPanel.h"
+#include "SelectionState.h"
+#include "TrackPanel.h"
+#include "TrackPanelAx.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "toolbars/ToolManager.h"
+#include "widgets/AButton.h"
+#include "widgets/ASlider.h"
+#include "widgets/MeterPanel.h"
 
 // private helper classes and functions
 namespace {
@@ -610,3 +608,6 @@ AttachedItem sAttachment3{
 }
 
 #undef FN
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
