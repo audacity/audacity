@@ -6,7 +6,6 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/MeterToolBar.h"
-#include "../toolbars/DeviceToolBar.h"
 
 #include <wx/frame.h>
 
@@ -57,34 +56,6 @@ void OnInputGainDec(const CommandContext &context)
    tb.AdjustInputGain(-1);
 }
 
-void OnInputDevice(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = DeviceToolBar::Get( project );
-   tb.ShowInputDialog();
-}
-
-void OnOutputDevice(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = DeviceToolBar::Get( project );
-   tb.ShowOutputDialog();
-}
-
-void OnInputChannels(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = DeviceToolBar::Get( project );
-   tb.ShowChannelsDialog();
-}
-
-void OnAudioHost(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tb = DeviceToolBar::Get( project );
-   tb.ShowHostDialog();
-}
-
 void OnFullScreen(const CommandContext &context)
 {
    auto &project = context.project;
@@ -101,7 +72,6 @@ void OnFullScreen(const CommandContext &context)
 using namespace MenuTable;
 
 BaseItemSharedPtr ExtraMixerMenu();
-BaseItemSharedPtr ExtraDeviceMenu();
 
 BaseItemSharedPtr ExtraMenu()
 {
@@ -110,7 +80,6 @@ BaseItemSharedPtr ExtraMenu()
    static BaseItemSharedPtr extraItems{ Items( wxEmptyString,
       Section( "Part1",
            ExtraMixerMenu()
-         , ExtraDeviceMenu()
       ),
 
       Section( "Part2" )
@@ -147,26 +116,6 @@ BaseItemSharedPtr ExtraMixerMenu()
          OnInputGainInc, AlwaysEnabledFlag ),
       Command( wxT("InputGainDec"), XXO("D&ecrease Recording Volume"),
          OnInputGainDec, AlwaysEnabledFlag )
-   ) };
-   return menu;
-}
-
-// Under /MenuBar/Optional/Extra/Part1
-BaseItemSharedPtr ExtraDeviceMenu()
-{
-   static BaseItemSharedPtr menu{
-   Menu( wxT("Device"), XXO("De&vice"),
-      Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
-         OnInputDevice,
-         AudioIONotBusyFlag(), wxT("Shift+I") ),
-      Command( wxT("OutputDevice"), XXO("Change &Playback Device..."),
-         OnOutputDevice,
-         AudioIONotBusyFlag(), wxT("Shift+O") ),
-      Command( wxT("AudioHost"), XXO("Change Audio &Host..."), OnAudioHost,
-         AudioIONotBusyFlag(), wxT("Shift+H") ),
-      Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
-         OnInputChannels,
-         AudioIONotBusyFlag(), wxT("Shift+N") )
    ) };
    return menu;
 }

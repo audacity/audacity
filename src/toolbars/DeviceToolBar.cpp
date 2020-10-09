@@ -770,3 +770,66 @@ AttachedToolBarMenuItem sAttachment{
 };
 }
 
+
+// Define some related menu items
+#include "../commands/CommandContext.h"
+#include "../CommonCommandFlags.h"
+
+namespace {
+void OnInputDevice(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowInputDialog();
+}
+
+void OnOutputDevice(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowOutputDialog();
+}
+
+void OnInputChannels(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowChannelsDialog();
+}
+
+void OnAudioHost(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tb = DeviceToolBar::Get( project );
+   tb.ShowHostDialog();
+}
+
+// Menu definitions
+
+using namespace MenuTable;
+// Under /MenuBar/Optional/Extra/Part1
+BaseItemSharedPtr ExtraDeviceMenu()
+{
+   static BaseItemSharedPtr menu{
+   Menu( wxT("Device"), XXO("De&vice"),
+      Command( wxT("InputDevice"), XXO("Change &Recording Device..."),
+         OnInputDevice,
+         AudioIONotBusyFlag(), wxT("Shift+I") ),
+      Command( wxT("OutputDevice"), XXO("Change &Playback Device..."),
+         OnOutputDevice,
+         AudioIONotBusyFlag(), wxT("Shift+O") ),
+      Command( wxT("AudioHost"), XXO("Change Audio &Host..."), OnAudioHost,
+         AudioIONotBusyFlag(), wxT("Shift+H") ),
+      Command( wxT("InputChannels"), XXO("Change Recording Cha&nnels..."),
+         OnInputChannels,
+         AudioIONotBusyFlag(), wxT("Shift+N") )
+   ) };
+   return menu;
+}
+
+AttachedItem sAttachment2{
+   Placement{ wxT("Optional/Extra/Part1"), { OrderingHint::End } },
+   Shared( ExtraDeviceMenu() )
+};
+
+}
