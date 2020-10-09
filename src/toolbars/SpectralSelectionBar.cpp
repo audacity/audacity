@@ -378,6 +378,9 @@ void SpectralSelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
 {
    auto &formats = ProjectNumericFormats::Get(mProject);
    switch (evt.type) {
+   case ProjectNumericFormatsEvent::ChangedFrequencyFormat:
+      return SetFrequencySelectionFormatName(
+         formats.GetFrequencySelectionFormatName());
    default:
       break;
    }
@@ -386,6 +389,7 @@ void SpectralSelectionBar::OnFormatsChanged(ProjectNumericFormatsEvent evt)
 void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 {
    auto &manager = ProjectSelectionManager::Get(mProject);
+   auto &formats = ProjectNumericFormats::Get(mProject);
    wxWindow *w = FindFocus();
    bool centerFocus = (w && w == mCenterCtrl);
    bool widthFocus = (w && w == mWidthCtrl);
@@ -397,8 +401,8 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
    // Save formats before recreating the controls so they resize properly
    wxEventType type = evt.GetEventType();
    if (type == EVT_FREQUENCYTEXTCTRL_UPDATED) {
-      auto frequencyFormatName = evt.GetString();
-      manager.SSBL_SetFrequencySelectionFormatName(frequencyFormatName);
+      formats.SetFrequencySelectionFormatName(evt.GetString());
+      // Then my subscription is called
    }
    else if (mbCenterAndWidth &&
             type == EVT_BANDWIDTHTEXTCTRL_UPDATED) {
