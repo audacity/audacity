@@ -57,6 +57,20 @@ unsigned WaveformVRulerControls::HandleWheelRotation(
    return DoHandleWheelRotation( evt, pProject, wt );
 }
 
+namespace {
+void SetLastdBRange(
+   const WaveformScale &cache, const WaveTrack &track)
+{
+   cache.mLastdBRange = WaveformSettings::Get(track).dBRange;
+}
+
+void SetLastScaleType(
+   const WaveformScale &cache, const WaveTrack &track)
+{
+   cache.mLastScaleType = WaveformSettings::Get(track).scaleType;
+}
+}
+
 unsigned WaveformVRulerControls::DoHandleWheelRotation(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack *wt)
 {
@@ -74,13 +88,14 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
 
    using namespace WaveTrackViewConstants;
    auto &settings = WaveformSettings::Get(*wt);
+   auto &cache = WaveformScale::Get(*wt);
    const bool isDB =
       settings.scaleType == WaveformSettings::stLogarithmic;
    // Special cases for Waveform dB only.
    // Set the bottom of the dB scale but only if it's visible
    if (isDB && event.ShiftDown() && event.CmdDown()) {
       float min, max;
-      wt->GetDisplayBounds(&min, &max);
+      cache.GetDisplayBounds(min, max);
       if (!(min < 0.0 && max > 0.0))
          return RefreshNone;
 
@@ -99,7 +114,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
       // Is y coordinate within the rectangle half-height centered about
       // the zero level?
       const auto &rect = evt.rect;
-      const auto zeroLevel = wt->ZeroLevelYCoordinate(rect);
+      const auto zeroLevel = cache.ZeroLevelYCoordinate(rect);
       const bool fixedMagnification =
       (4 * std::abs(event.GetY() - zeroLevel) < rect.GetHeight());
 
@@ -111,8 +126,9 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          max = std::min(extreme, max * olddBRange / newdBRange);
          min = std::max(-extreme, min * olddBRange / newdBRange);
          for (auto channel : TrackList::Channels(wt)) {
-            channel->SetLastdBRange();
-            channel->SetDisplayBounds(min, max);
+            auto &cache = WaveformScale::Get(*channel);
+            SetLastdBRange(cache, *channel);
+            cache.SetDisplayBounds(min, max);
          }
       }
    }
@@ -137,14 +153,16 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          }
          const float bottomLimit = -topLimit;
          float top, bottom;
-         wt->GetDisplayBounds(&bottom, &top);
+         auto &cache = WaveformScale::Get(*wt);
+         cache.GetDisplayBounds(bottom, top);
          const float range = top - bottom;
          const float delta = range * steps * movement / height;
          float newTop = std::min(topLimit, top + delta);
          const float newBottom = std::max(bottomLimit, newTop - range);
          newTop = std::min(topLimit, newBottom + range);
          for (auto channel : TrackList::Channels(wt))
-            channel->SetDisplayBounds(newBottom, newTop);
+            WaveformScale::Get(*channel)
+               .SetDisplayBounds(newBottom, newTop);
       }
    }
    else
@@ -183,17 +201,18 @@ void WaveformVRulerControls::DoUpdateVRuler(
 
    auto scaleType = settings.scaleType;
    
+   auto &cache = WaveformScale::Get(*wt);
    if (scaleType == WaveformSettings::stLinear) {
       // Waveform
       
       float min, max;
-      wt->GetDisplayBounds(&min, &max);
-      if (wt->GetLastScaleType() != scaleType &&
-          wt->GetLastScaleType() != -1)
+      cache.GetDisplayBounds(min, max);
+      if (cache.GetLastScaleType() != scaleType &&
+          cache.GetLastScaleType() != -1)
       {
          // do a translation into the linear space
-         wt->SetLastScaleType();
-         wt->SetLastdBRange();
+         SetLastScaleType(cache, *wt);
+         SetLastdBRange(cache, *wt);
          float sign = (min >= 0 ? 1 : -1);
          if (min != 0.) {
             min = DB_TO_LINEAR(fabs(min) * dBRange - dBRange);
@@ -209,7 +228,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
                max = 0.0;
             max *= sign;
          }
-         wt->SetDisplayBounds(min, max);
+         cache.SetDisplayBounds(min, max);
       }
       
       vruler->SetDbMirrorValue( 0.0 );
@@ -228,15 +247,16 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetUnits({});
       
       float min, max;
-      wt->GetDisplayBounds(&min, &max);
+      auto &cache = WaveformScale::Get(*wt);
+      cache.GetDisplayBounds(min, max);
       float lastdBRange;
       
-      if (wt->GetLastScaleType() != scaleType &&
-          wt->GetLastScaleType() != -1)
+      if (cache.GetLastScaleType() != scaleType &&
+          cache.GetLastScaleType() != -1)
       {
          // do a translation into the dB space
-         wt->SetLastScaleType();
-         wt->SetLastdBRange();
+         SetLastScaleType(cache, *wt);
+         SetLastdBRange(cache, *wt);
          float sign = (min >= 0 ? 1 : -1);
          if (min != 0.) {
             min = (LINEAR_TO_DB(fabs(min)) + dBRange) / dBRange;
@@ -252,10 +272,10 @@ void WaveformVRulerControls::DoUpdateVRuler(
                max = 0.0;
             max *= sign;
          }
-         wt->SetDisplayBounds(min, max);
+         cache.SetDisplayBounds(min, max);
       }
-      else if (dBRange != (lastdBRange = wt->GetLastdBRange())) {
-         wt->SetLastdBRange();
+      else if (dBRange != (lastdBRange = cache.mLastdBRange)) {
+         SetLastdBRange(cache, *wt);
          // Remap the max of the scale
          float newMax = max;
          
@@ -280,7 +300,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
                min = std::max(-extreme, newMax * min / max);
          }
 #endif
-         wt->SetDisplayBounds(min, newMax);
+         cache.SetDisplayBounds(min, newMax);
       }
       
       // Old code was if ONLY_LABEL_POSITIVE were defined.

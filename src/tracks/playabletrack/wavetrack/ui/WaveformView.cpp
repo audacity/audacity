@@ -120,12 +120,13 @@ void WaveformView::DoSetMinimized( bool minimized )
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
    if( bHalfWave )
    {
+      auto &cache = WaveformScale::Get(*wt);
       if (minimized)
          // Zoom to show fractionally more than the top half of the wave.
-         wt->SetDisplayBounds( -0.01f, 1.0f );
+         cache.SetDisplayBounds( -0.01f, 1.0f );
       else
          // Zoom out full
-         wt->SetDisplayBounds( -1.0f, 1.0f );
+         cache.SetDisplayBounds( -1.0f, 1.0f );
    }
 #endif
 
@@ -733,7 +734,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    // The bounds (controlled by vertical zooming; -1.0...1.0
    // by default)
    float zoomMin, zoomMax;
-   track->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*track);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
@@ -760,7 +762,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       DrawWaveformBackground(context, leftOffset, mid,
          env,
          zoomMin, zoomMax,
-         track->ZeroLevelYCoordinate(mid),
+         cache.ZeroLevelYCoordinate(mid),
          dB, dBRange,
          tt0, tt1,
          !track->GetSelected(), highlightEnvelope);

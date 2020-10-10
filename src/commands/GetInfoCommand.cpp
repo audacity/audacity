@@ -38,6 +38,7 @@ This class now lists
 #include "../WaveClip.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
+#include "prefs/WaveformSettings.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
 #include "../TimeTrack.h"
@@ -484,7 +485,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
       //context.AddItem( TrackView::Get( *trk ).GetHeight(), "height" );
       trk->TypeSwitch( [&] (const WaveTrack* t ) {
          float vzmin, vzmax;
-         t->GetDisplayBounds(&vzmin, &vzmax);
+         WaveformScale::Get(*t).GetDisplayBounds(vzmin, vzmax);
          context.AddItem( "wave", "kind" );
          context.AddItem( t->GetStartTime(), "start" );
          context.AddItem( t->GetEndTime(), "end" );

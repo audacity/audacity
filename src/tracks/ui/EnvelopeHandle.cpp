@@ -105,7 +105,8 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
    const bool dB = !WaveformSettings::Get(*wt).isLinear();
 
    float zoomMin, zoomMax;
-   wt->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*wt);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    const float dBRange = WaveformSettings::Get(*wt).dBRange;
 
@@ -191,7 +192,8 @@ UIHandle::Result EnvelopeHandle::Click
             return Cancelled;
 
          mLog = !WaveformSettings::Get(*wt).isLinear();
-         wt->GetDisplayBounds(&mLower, &mUpper);
+         auto &cache = WaveformScale::Get(*wt);
+         cache.GetDisplayBounds(mLower, mUpper);
          mdBRange = WaveformSettings::Get(*wt).dBRange;
          auto channels = TrackList::Channels( wt );
          for ( auto channel : channels ) {

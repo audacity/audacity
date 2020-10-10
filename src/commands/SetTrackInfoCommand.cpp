@@ -432,17 +432,19 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
             : WaveformSettings::stLogarithmic;
 
    if( wt && bHasVZoom ){
+      auto &cache = WaveformScale::Get(*wt);
       switch( mVZoom ){
          default:
-         case kReset: wt->SetDisplayBounds(-1,1); break;
-         case kTimes2: wt->SetDisplayBounds(-2,2); break;
-         case kHalfWave: wt->SetDisplayBounds(0,1); break;
+         case kReset: cache.SetDisplayBounds(-1,1); break;
+         case kTimes2: cache.SetDisplayBounds(-2,2); break;
+         case kHalfWave: cache.SetDisplayBounds(0,1); break;
       }
    }
 
    if ( wt && (bHasVZoomTop || bHasVZoomBottom) && !bHasVZoom){
       float vzmin, vzmax;
-      wt->GetDisplayBounds(&vzmin, &vzmax);
+      auto &cache = WaveformScale::Get(*wt);
+      cache.GetDisplayBounds(vzmin, vzmax);
 
       if ( !bHasVZoomTop ){
          mVZoomTop = vzmax;
@@ -463,7 +465,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          mVZoomBottom = c - ZOOMLIMIT / 2.0;
          mVZoomTop = c + ZOOMLIMIT / 2.0;
       }
-      wt->SetDisplayBounds(mVZoomBottom, mVZoomTop);
+      cache.SetDisplayBounds(mVZoomBottom, mVZoomTop);
       auto &tp = TrackPanel::Get( context.project );
       tp.UpdateVRulers();
    }

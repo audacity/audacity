@@ -46,20 +46,26 @@ WaveformSettings::Globals
    return instance;
 }
 
+static WaveTrack::Attachments::RegisteredFactory key1{
+   [](SampleTrack&){
+      return std::make_unique<WaveformSettings>(WaveformSettings::defaults());
+   }
+};
+
 WaveformSettings &WaveformSettings::Get( WaveTrack &track )
 {
-   return track.GetWaveformSettings();
+   return static_cast<WaveformSettings&>(track.WaveTrack::Attachments::Get(key1));
 }
 
 const WaveformSettings &WaveformSettings::Get( const WaveTrack &track )
 {
-   return track.GetWaveformSettings();
+   return Get(const_cast<WaveTrack&>(track));
 }
 
 void WaveformSettings::Set(
    WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings)
 {
-   track.SetWaveformSettings(move(pSettings));
+   track.WaveTrack::Attachments::Assign(key1, move(pSettings));
 }
 
 WaveformSettings::WaveformSettings()
@@ -187,4 +193,39 @@ const EnumValueSymbols &WaveformSettings::GetScaleNames()
 
 WaveformSettings::~WaveformSettings()
 {
+}
+
+auto WaveformSettings::Clone() const -> PointerType
+{
+   return std::make_unique<WaveformSettings>(*this);
+}
+
+static WaveTrack::Attachments::RegisteredFactory key2{
+   [](SampleTrack&){
+      return std::make_unique<WaveformScale>();
+   }
+};
+
+WaveformScale &WaveformScale::Get( WaveTrack &track )
+{
+   return static_cast<WaveformScale&>(
+      track.WaveTrack::Attachments::Get(key2));
+}
+
+const WaveformScale &WaveformScale::Get( const WaveTrack &track )
+{
+   return Get(const_cast<WaveTrack&>(track));
+}
+
+WaveformScale::~WaveformScale() = default;
+
+auto WaveformScale::Clone() const -> PointerType
+{
+   return std::make_unique<WaveformScale>(*this);
+}
+
+int WaveformScale::ZeroLevelYCoordinate(wxRect rect) const
+{
+   return rect.GetTop() +
+      (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }

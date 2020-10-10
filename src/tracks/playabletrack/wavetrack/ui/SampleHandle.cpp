@@ -134,9 +134,9 @@ UIHandlePtr SampleHandle::HitTest
       return {};
 
    // Get y distance of envelope point from center line (in pixels).
+   auto &cache = WaveformScale::Get(*wavetrack);
    float zoomMin, zoomMax;
-
-   wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    double envValue = 1.0;
    Envelope* env = wavetrack->GetEnvelopeAtTime(time);
@@ -450,7 +450,8 @@ float SampleHandle::FindSampleEditingLevel
 {
    // Calculate where the mouse is located vertically (between +/- 1)
    float zoomMin, zoomMax;
-   mClickedTrack->GetDisplayBounds(&zoomMin, &zoomMax);
+   auto &cache = WaveformScale::Get(*mClickedTrack);
+   cache.GetDisplayBounds(zoomMin, zoomMax);
 
    const int yy = event.m_y - mRect.y;
    const int height = mRect.GetHeight();
