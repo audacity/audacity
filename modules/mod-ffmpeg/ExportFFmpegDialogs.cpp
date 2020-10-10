@@ -41,10 +41,9 @@
 
 *//*******************************************************************/
 
-
 #include "ExportFFmpegDialogs.h"
 
-#include "../FFmpeg.h"
+#include "FFmpeg.h"
 #include "FFmpegFunctions.h"
 
 #include <wx/app.h>
@@ -60,14 +59,14 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 
-#include "../widgets/FileDialog/FileDialog.h"
+#include "widgets/FileDialog/FileDialog.h"
 
 #include "Mix.h"
-#include "../Tags.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/HelpSystem.h"
+#include "Tags.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/HelpSystem.h"
 
-#include "Export.h"
+#include "export/Export.h"
 #include "FFmpeg.h"
 
 #if defined(USE_FFMPEG)

@@ -361,4 +361,20 @@ bool FindFFmpegLibs(wxWindow* parent)
 
 BoolSetting FFmpegNotFoundDontShow{ L"/FFmpeg/NotFoundDontShow", false };
 
+#include "ModuleConstants.h"
+
+// Not sufficient, need a startup action, so expand the macro and modify it
+//DEFINE_MODULE_ENTRIES
+DEFINE_VERSION_CHECK
+extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
+{
+   switch(type) {
+      case ModuleInitialize:
+         FFmpegStartup();
+         return 1;
+      default:
+         return 1;
+   }
+}
+
 #endif //USE_FFMPEG

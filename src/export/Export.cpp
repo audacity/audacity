@@ -328,6 +328,8 @@ Exporter::Exporter( AudacityProject &project )
    using namespace Registry;
    static OrderingPreferenceInitializer init{
       PathStart,
+      // FFmpeg comes last so that other modules, if present, take precedence
+      // for those file types
       { {wxT(""), wxT("PCM,MP3,OGG,FLAC,MP2,CommandLine,FFmpeg") } },
    };
 

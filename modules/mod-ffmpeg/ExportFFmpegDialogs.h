@@ -13,7 +13,7 @@ LRN
 
 #if defined(USE_FFMPEG)
 
-#include "../FFmpeg.h"
+#include "FFmpeg.h"
 #include "FFmpegFunctions.h"
 
 #include "XMLFileReader.h"
