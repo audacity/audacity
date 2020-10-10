@@ -156,7 +156,6 @@ private:
 
    const WaveformSettings &GetWaveformSettings() const;
    WaveformSettings &GetWaveformSettings();
-   WaveformSettings &GetIndependentWaveformSettings();
    void SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings);
    void UseSpectralPrefs( bool bUse=true );
    //

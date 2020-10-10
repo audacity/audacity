@@ -171,7 +171,7 @@ bool WaveformPrefs::Commit()
             channel->SetWaveformSettings({});
          else {
             WaveformSettings &settings =
-               channel->GetIndependentWaveformSettings();
+               channel->GetWaveformSettings();
             settings = mTempSettings;
          }
       }
