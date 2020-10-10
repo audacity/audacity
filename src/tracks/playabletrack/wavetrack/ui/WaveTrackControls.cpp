@@ -766,7 +766,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
          for (auto channel : TrackList::Channels(pTrack)) {
-            channel->SetLastScaleType();
             WaveTrackView::Get( *channel )
                .SetDisplay( WaveTrackView::Display{ id } );
          }
