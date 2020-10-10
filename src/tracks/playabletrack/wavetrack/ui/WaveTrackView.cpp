@@ -1462,14 +1462,6 @@ bool WaveTrackView::SelectAll(AudacityProject &project)
    return SelectAllText(project);
 }
 
-std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
-{
-   // This should never be called because of delegation to the spectrum or
-   // waveform sub-view
-   wxASSERT( false );
-   return {};
-}
-
 namespace
 {
    // Returns an offset in seconds to be applied to the right clip 
@@ -1709,16 +1701,6 @@ void WaveTrackView::BuildSubViews() const
          pThis->DoSetDisplay( display, !multi );
       }
    }
-}
-
-void WaveTrackView::Draw(
-   TrackPanelDrawingContext &context,
-   const wxRect &rect, unsigned iPass )
-{
-   CommonTrackView::Draw( context, rect, iPass );
-
-   // Should not come here, drawing is now delegated to sub-views
-   wxASSERT( false );
 }
 
 using GetWaveTrackSyncLockPolicy =
