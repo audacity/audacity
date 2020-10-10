@@ -1280,14 +1280,6 @@ void WaveTrackView::BuildSubViews() const
             pThis->SetMultiView( true );
             display = WaveTrackSubViewType::Default();
          }
-         
-         // Force creation always:
-         WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
-            ->GetIndependentWaveformSettings();
-
-         // Set the default scale type to linear or log, even if we are showing
-         // spectrogram
-         settings.scaleType = TracksPrefs::WaveformScaleChoice();
 
          pThis->DoSetDisplay( display, !multi );
       }

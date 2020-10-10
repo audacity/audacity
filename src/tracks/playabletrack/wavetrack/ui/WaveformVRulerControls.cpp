@@ -84,11 +84,11 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
          return RefreshNone;
 
       WaveformSettings &settings =
-         wt->GetIndependentWaveformSettings();
+         wt->GetWaveformSettings();
       float olddBRange = settings.dBRange;
       for (auto channel : TrackList::Channels(wt)) {
          WaveformSettings &channelSettings =
-            channel->GetIndependentWaveformSettings();
+            channel->GetWaveformSettings();
          if (steps < 0)
             // Zoom out
             channelSettings.NextLowerDBRange();

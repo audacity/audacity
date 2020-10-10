@@ -704,22 +704,13 @@ void WaveTrack::UseSpectralPrefs( bool bUse )
 
 const WaveformSettings &WaveTrack::GetWaveformSettings() const
 {
-   if (mpWaveformSettings)
-      return *mpWaveformSettings;
-   else
-      return WaveformSettings::defaults();
+   // Create on demand
+   return const_cast<WaveTrack*>(this)->GetWaveformSettings();
 }
 
 WaveformSettings &WaveTrack::GetWaveformSettings()
 {
-   if (mpWaveformSettings)
-      return *mpWaveformSettings;
-   else
-      return WaveformSettings::defaults();
-}
-
-WaveformSettings &WaveTrack::GetIndependentWaveformSettings()
-{
+   // Create on demand
    if (!mpWaveformSettings)
       mpWaveformSettings = std::make_unique<WaveformSettings>(WaveformSettings::defaults());
    return *mpWaveformSettings;

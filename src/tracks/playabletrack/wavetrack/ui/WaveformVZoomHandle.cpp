@@ -329,7 +329,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
 
    if (wt->GetWaveformSettings().scaleType != newScaleType) {
       for (auto channel : TrackList::Channels(wt)) {
-         channel->GetIndependentWaveformSettings().scaleType = newScaleType;
+         channel->GetWaveformSettings().scaleType = newScaleType;
       }
 
       AudacityProject *const project = &mpData->project;

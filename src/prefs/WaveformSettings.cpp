@@ -86,15 +86,9 @@ bool WaveformSettings::Validate(bool /* quiet */)
 
 void WaveformSettings::LoadPrefs()
 {
-   bool newPrefFound;
+   scaleType = TracksPrefs::WaveformScaleChoice();
 
-   newPrefFound = gPrefs->Read(wxT("/Waveform/ScaleType"), &scaleType);
-   if (!newPrefFound)
-      scaleType = TracksPrefs::WaveformScaleChoice();
-
-   newPrefFound = gPrefs->Read(wxT("/Waveform/dBRange"), &dBRange);
-   if (!newPrefFound)
-      dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
+   dBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
 
    // Enforce legal values
    Validate(true);
@@ -104,8 +98,6 @@ void WaveformSettings::LoadPrefs()
 
 void WaveformSettings::SavePrefs()
 {
-   gPrefs->Write(wxT("/Waveform/ScaleType"), long(scaleType));
-   gPrefs->Write(wxT("/Waveform/dBRange"), long(dBRange));
 }
 
 void WaveformSettings::Update()
