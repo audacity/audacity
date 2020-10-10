@@ -717,7 +717,8 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
    const auto display = displays.empty()
-      ? WaveTrackViewConstants::Waveform : displays.begin()->id;
+      ? WaveTrackSubViewType::Default()
+      : displays.begin()->id;
    for (const auto channel : TrackList::Channels(pTrack)) {
       auto &channelView = WaveTrackView::Get( *channel );
       channelView.SetMultiView( multi );

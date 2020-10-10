@@ -916,8 +916,6 @@ std::vector<UIHandlePtr> WaveTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
  const AudacityProject *pProject, int currentTool, bool bMultiTool)
 {
-   // should not come here any more, delegation to sub-view instead
-   wxASSERT( false );
    return {};
 }
 
@@ -1197,6 +1195,11 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
       const auto height = rect->GetHeight();
       float partial = 0;
       wxCoord lastCoord = 0;
+      if (items.empty()) {
+         return {
+            { top + (partial / total) * height, shared_from_this() }
+         };
+      }
       for (const auto& item : items) {
          wxCoord newCoord = top + (partial / total) * height;
          results.emplace_back(newCoord, item.pView);
@@ -1678,7 +1681,7 @@ std::weak_ptr<WaveClip> WaveTrackView::GetSelectedClip()
 
 void WaveTrackView::BuildSubViews() const
 {
-   if ( WaveTrackSubViews::size() == 0) {
+   if ( WaveTrackSubViews::size() == 0 && WaveTrackSubViews::slots() > 0) {
       // On-demand steps that can't happen in the constructor
       auto pThis = const_cast<WaveTrackView*>( this );
       pThis->BuildAll();

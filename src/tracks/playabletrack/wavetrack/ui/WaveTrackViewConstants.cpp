@@ -99,6 +99,7 @@ auto WaveTrackSubViewType::Default() -> Display
    auto &all = All();
    if (all.empty())
       return WaveTrackViewConstants::Waveform;
+      //return 0;
    return all[0].id;
 }
 
