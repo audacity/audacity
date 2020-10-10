@@ -144,11 +144,12 @@ UIHandlePtr SampleHandle::HitTest
       // Calculate sample as it would be rendered, so quantize time
       envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
 
-   const bool dB = !wavetrack->GetWaveformSettings().isLinear();
+   auto &settings = WaveformSettings::Get(*wavetrack);
+   const bool dB = !settings.isLinear();
    int yValue = GetWaveYPos(oneSample * envValue,
       zoomMin, zoomMax,
       rect.height, dB, true, 
-      wavetrack->GetWaveformSettings().dBRange, false) + rect.y;
+      settings.dBRange, false) + rect.y;
 
    // Get y position of mouse (in pixels)
    int yMouse = state.m_y;
@@ -453,10 +454,11 @@ float SampleHandle::FindSampleEditingLevel
 
    const int yy = event.m_y - mRect.y;
    const int height = mRect.GetHeight();
-   const bool dB = !mClickedTrack->GetWaveformSettings().isLinear();
+   auto &settings = WaveformSettings::Get(*mClickedTrack);
+   const bool dB = !settings.isLinear();
    float newLevel =
       ::ValueOfPixel(yy, height, false, dB, 
-         mClickedTrack->GetWaveformSettings().dBRange, zoomMin, zoomMax);
+         settings.dBRange, zoomMin, zoomMax);
 
    //Take the envelope into account
    const auto time = viewInfo.PositionToTime(event.m_x, mRect.x);

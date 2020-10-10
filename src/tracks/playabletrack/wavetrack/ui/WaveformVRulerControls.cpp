@@ -73,8 +73,9 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
    auto steps = evt.steps;
 
    using namespace WaveTrackViewConstants;
+   auto &settings = WaveformSettings::Get(*wt);
    const bool isDB =
-      wt->GetWaveformSettings().scaleType == WaveformSettings::stLogarithmic;
+      settings.scaleType == WaveformSettings::stLogarithmic;
    // Special cases for Waveform dB only.
    // Set the bottom of the dB scale but only if it's visible
    if (isDB && event.ShiftDown() && event.CmdDown()) {
@@ -83,12 +84,9 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
       if (!(min < 0.0 && max > 0.0))
          return RefreshNone;
 
-      WaveformSettings &settings =
-         wt->GetWaveformSettings();
       float olddBRange = settings.dBRange;
       for (auto channel : TrackList::Channels(wt)) {
-         WaveformSettings &channelSettings =
-            channel->GetWaveformSettings();
+         auto &channelSettings = WaveformSettings::Get(*channel);
          if (steps < 0)
             // Zoom out
             channelSettings.NextLowerDBRange();
@@ -134,7 +132,7 @@ unsigned WaveformVRulerControls::DoHandleWheelRotation(
       {
          float topLimit = 2.0;
          if (isDB) {
-            const float dBRange = wt->GetWaveformSettings().dBRange;
+            const float dBRange = WaveformSettings::Get(*wt).dBRange;
             topLimit = (LINEAR_TO_DB(topLimit) + dBRange) / dBRange;
          }
          const float bottomLimit = -topLimit;
@@ -180,11 +178,10 @@ void WaveformVRulerControls::DoUpdateVRuler(
 
    // All waves have a ruler in the info panel
    // The ruler needs a bevelled surround.
-   const float dBRange =
-      wt->GetWaveformSettings().dBRange;
+   auto &settings = WaveformSettings::Get(*wt);
+   const float dBRange = settings.dBRange;
 
-   WaveformSettings::ScaleType scaleType =
-   wt->GetWaveformSettings().scaleType;
+   auto scaleType = settings.scaleType;
    
    if (scaleType == WaveformSettings::stLinear) {
       // Waveform

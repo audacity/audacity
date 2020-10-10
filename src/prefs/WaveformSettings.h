@@ -14,10 +14,21 @@ Paul Licameli
 #include "Prefs.h"
 
 class EnumValueSymbols;
+class WaveTrack;
 
 class AUDACITY_DLL_API WaveformSettings : public PrefsListener
 {
 public:
+
+   //! Create waveform settings for the track on demand
+   static WaveformSettings &Get( WaveTrack &track );
+
+   //! @copydoc Get
+   static const WaveformSettings &Get( const WaveTrack &track );
+
+   //! Guarantee independence of settings, then assign
+   static void Set(
+      WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings );
 
    // Singleton for settings that are not per-track
    class AUDACITY_DLL_API Globals

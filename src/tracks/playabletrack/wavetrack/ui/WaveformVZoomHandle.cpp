@@ -135,7 +135,7 @@ void WaveformVZoomHandle::DoZoom(
 
    {
       pTrack->GetDisplayBounds(&min, &max);
-      const WaveformSettings &waveSettings = pTrack->GetWaveformSettings();
+      auto &waveSettings = WaveformSettings::Get(*pTrack);
       const bool linear = waveSettings.isLinear();
       if( !linear ){
          top = (LINEAR_TO_DB(2.0) + waveSettings.dBRange) / waveSettings.dBRange;
@@ -285,7 +285,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
                WaveTrack *const wt = pData->pTrack;
                if ( id ==
                   OnFirstWaveformScaleID +
-                  (int)(wt->GetWaveformSettings().scaleType) )
+                  static_cast<int>(WaveformSettings::Get(*wt).scaleType) )
                   menu.Check(id, true);
             }
           );
@@ -330,9 +330,9 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
                evt.GetId() - OnFirstWaveformScaleID
       )));
 
-   if (wt->GetWaveformSettings().scaleType != newScaleType) {
+   if (WaveformSettings::Get(*wt).scaleType != newScaleType) {
       for (auto channel : TrackList::Channels(wt)) {
-         channel->GetWaveformSettings().scaleType = newScaleType;
+         WaveformSettings::Get(*channel).scaleType = newScaleType;
       }
 
       AudacityProject *const project = &mpData->project;
