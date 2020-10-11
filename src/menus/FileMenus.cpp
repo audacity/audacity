@@ -18,7 +18,6 @@
 #include "../commands/CommandManager.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
-#include "../export/ExportMP3.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportRaw.h"

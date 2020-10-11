@@ -20,7 +20,6 @@
 
 class wxStaticText;
 class wxTextCtrl;
-class ReadOnlyText;
 class ShuttleGui;
 
 #define LIBRARY_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Library") }
@@ -55,19 +54,6 @@ class LibraryPrefs final : public PrefsPanel
    ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-
- private:
-   void SetMP3VersionText(bool prompt = false);
-   void SetFFmpegVersionText();
- 
-   void OnFFmpegFindButton(wxCommandEvent & e);
-   void OnFFmpegDownButton(wxCommandEvent & e);
-
-
-   ReadOnlyText *mMP3Version;
-   ReadOnlyText *mFFmpegVersion;
-
-   DECLARE_EVENT_TABLE()
 
  private:
    struct AUDACITY_DLL_API PopulatorItem final : Registry::SingleItem {
