@@ -22,7 +22,6 @@
 #include "../commands/CommandManager.h"
 #include "../effects/RealtimeEffectList.h"
 #include "../effects/RealtimeEffectState.h"
-#include "../export/ExportMP3.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportMIDI.h"

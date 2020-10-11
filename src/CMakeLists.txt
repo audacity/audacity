@@ -689,12 +689,14 @@ list( APPEND SOURCES
       export/ExportMultiple.cpp
       export/ExportMultiple.h
       export/ExportPCM.cpp
+      export/MP3Prefs.cpp
 
       # Optional exporters
       $<$<BOOL:${USE_FFMPEG}>:
          export/ExportFFmpeg.cpp
          export/ExportFFmpegDialogs.cpp
          export/ExportFFmpegDialogs.h
+         export/FFmpegPrefs.cpp
       >
 
 
