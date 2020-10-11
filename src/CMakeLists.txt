@@ -682,12 +682,9 @@ list( APPEND SOURCES
 
       # Standard exporters
       export/ExportCL.cpp
-      export/ExportMP3.cpp
-      export/ExportMP3.h
       export/ExportMultiple.cpp
       export/ExportMultiple.h
       export/ExportPCM.cpp
-      export/MP3Prefs.cpp
 
       $<$<BOOL:${USE_WAVPACK}>:
          export/ExportWavPack.cpp
@@ -726,14 +723,6 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_MIDI}>:
          import/ImportMIDI.cpp
          import/ImportMIDI.h
-      >
-
-      $<$<BOOL:${USE_LIBMAD}>:
-         import/ImportMP3_MAD.cpp
-      >
-
-      $<$<BOOL:${USE_LIBMPG123}>:
-         import/ImportMP3_MPG123.cpp
       >
 
       $<$<BOOL:${USE_WAVPACK}>:
@@ -1210,7 +1199,6 @@ list( APPEND LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
       wxwidgets::wxwidgets
-      libmp3lame::libmp3lame
       SndFile::sndfile
       portaudio::portaudio
       sqlite
@@ -1221,7 +1209,6 @@ list( APPEND LIBRARIES
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_common>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
-      $<$<BOOL:${USE_LIBMPG123}>:mpg123::libmpg123>
       $<$<BOOL:${USE_WAVPACK}>:wavpack::wavpack>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi::portmidi>
@@ -1241,15 +1228,6 @@ set( BUILDING_AUDACITY YES )
 set( PKGLIBDIR "${_PKGLIBDIR}" )
 set( LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}" )
 set( HAVE_GTK ${GTK_FOUND} )
-
-# Do not define these for Windows or Mac until further testing
-# can be done against ExportMP3.cpp.  If either are defined, the
-# build will fail.
-if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
-   if( "${${_OPT}use_lame}" STREQUAL "local" )
-      set( DISABLE_DYNAMIC_LOADING_LAME YES )
-   endif()
-endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    # Define the Windows specific resources
@@ -1415,11 +1393,6 @@ else()
       application/x-audacity-project
       application/x-audacity-project+sqlite3
    )
-   if( USE_LIBMAD OR USE_LIBMPG123)
-      list( APPEND MIMETYPES
-         audio/mpeg
-      )
-   endif()
    if( USE_SNDFILE )
       list( APPEND MIMETYPES
          audio/basic

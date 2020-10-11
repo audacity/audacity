@@ -13,9 +13,9 @@
 #include <cstddef>
 #include <cstring>
 
-#include "Import.h"
+#include "import/Import.h"
 #include "BasicUI.h"
-#include "ImportPlugin.h"
+#include "import/ImportPlugin.h"
 #include "Project.h"
 
 #define DESC XO("MP3 files")
@@ -27,10 +27,10 @@
 #include <mpg123.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "Tags.h"
+#include "WaveTrack.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ProgressDialog.h"
 
 #include "CodeConversions.h"
 #include "FromChars.h"

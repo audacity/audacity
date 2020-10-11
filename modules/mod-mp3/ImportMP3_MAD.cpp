@@ -26,13 +26,11 @@
 
 *//*******************************************************************/
 
-
-
 #include <wx/defs.h>
 
-#include "Import.h"
+#include "import/Import.h"
 #include "BasicUI.h"
-#include "ImportPlugin.h"
+#include "import/ImportPlugin.h"
 #include "Project.h"
 
 #define DESC XO("MP3 files")
@@ -60,13 +58,12 @@ static Importer::RegisteredUnusableImportPlugin registered
 #endif
 
 #include <wx/file.h>
-#include <wx/string.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
-#include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ProgressDialog.h"
+#include "Tags.h"
+#include "WaveTrack.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/ProgressDialog.h"
 
 // PRL:  include these last,
 // and correct some preprocessor namespace pollution from wxWidgets that
@@ -1107,3 +1104,6 @@ enum mad_flow MP3ImportFileHandle::ErrorCB(struct mad_stream *stream,
 }
 
 #endif
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
