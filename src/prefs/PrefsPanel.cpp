@@ -35,7 +35,7 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
    void BeginGroup( Registry::GroupItem &item, const Path & ) override
    {
       auto pItem = dynamic_cast<PrefsItem*>( &item );
-      if (!pItem)
+      if (!pItem || !pItem->factory)
          return;
       indices.push_back( factories.size() );
       factories.emplace_back( pItem->factory, 0, pItem->expanded );
@@ -45,7 +45,7 @@ struct PrefsPanel::PrefsItem::Visitor final : Registry::Visitor {
    void EndGroup( Registry::GroupItem &item, const Path & ) override
    {
       auto pItem = dynamic_cast<PrefsItem*>( &item );
-      if (!pItem)
+      if (!pItem || !pItem->factory)
          return;
       auto &factory = factories[ indices.back() ];
       factory.nChildren = childCounts.back();
