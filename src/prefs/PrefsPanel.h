@@ -60,6 +60,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
        Factory factory;
        size_t nChildren{ 0 };
        bool expanded{ false };
+       mutable bool enabled{ true };
 
        PrefsNode(const Factory &factory_,
           unsigned nChildren_ = 0,
