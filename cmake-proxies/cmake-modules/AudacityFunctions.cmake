@@ -372,6 +372,14 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
    target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
 
+   if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      add_custom_command(
+         TARGET "${TARGET}"
+         POST_BUILD
+	 COMMAND $<IF:$<CONFIG:Debug>,echo,strip> -x $<TARGET_FILE:${TARGET}>
+      )
+   endif()
+
    # define an additional interface library target
    set(INTERFACE_TARGET "${TARGET}-interface")
    if (NOT REAL_LIBTYPE STREQUAL "MODULE")
