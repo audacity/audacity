@@ -221,8 +221,13 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
 
    def_vars()
 
-   add_library( ${TARGET} MODULE )
-  
+   if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+      set( LIBTYPE SHARED )
+   else()
+      set( LIBTYPE MODULE )
+   endif()
+   add_library( ${TARGET} ${LIBTYPE} )
+
    set( LOPTS
       PRIVATE
          $<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>
@@ -250,4 +255,20 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
    target_include_directories( ${TARGET} PUBLIC ${TARGET_ROOT} )
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
    target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
+
+   # define an additional interface library target
+   set(INTERFACE_TARGET "${TARGET}-interface")
+   if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+      add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
+   else()
+      add_library("${INTERFACE_TARGET}" INTERFACE)
+      foreach(PROP INTERFACE_INCLUDE_DIRECTORIES INTERFACE_COMPILE_DEFINITIONS)
+         get_target_property( PROPS "${TARGET}" "${PROP}" )
+	 if (PROPS)
+            set_target_properties(
+               "${INTERFACE_TARGET}"
+	       PROPERTIES "${PROP}" "${PROPS}" )
+	 endif()
+      endforeach()
+   endif()
 endfunction()
