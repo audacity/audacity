@@ -41,7 +41,8 @@ public:
    Module(const FilePath & name);
    virtual ~Module();
 
-   bool Load();
+   void ShowLoadFailureError(const wxString &Error);
+   bool Load(wxString &deferredErrorMessage);
    void Unload();
    bool HasDispatch() { return mDispatch != NULL; };
    int Dispatch(ModuleDispatchTypes type);

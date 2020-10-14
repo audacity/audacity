@@ -95,8 +95,17 @@ Module::~Module()
 {
 }
 
-bool Module::Load()
+void Module::ShowLoadFailureError(const wxString &Error)
 {
+   auto ShortName = wxFileName(mName).GetName();
+   AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
+                      XO("Module Unsuitable"));
+   wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
+}
+
+bool Module::Load(wxString &deferredErrorMessage)
+{
+   deferredErrorMessage.clear();
    // Will this ever happen???
    if (mLib->IsLoaded()) {
       if (mDispatch) {
@@ -110,10 +119,7 @@ bool Module::Load()
    auto ShortName = wxFileName(mName).GetName();
 
    if (!mLib->Load(mName, wxDL_NOW | wxDL_QUIET | wxDL_GLOBAL)) {
-      auto Error = wxString(wxSysErrorMsg());
-      AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
-                         XO("Module Unsuitable"));
-      wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
+      deferredErrorMessage = wxString(wxSysErrorMsg());
       return false;
    }
 
@@ -324,8 +330,9 @@ void ModuleManager::Initialize()
       ModulePrefs::SetModuleStatus( files[i], kModuleFailed );
 #endif
 
+      wxString Error;
       auto umodule = std::make_unique<Module>(files[i]);
-         if (umodule->Load())   // it will get rejected if there  are version problems
+         if (umodule->Load(Error))   // it will get rejected if there are version problems
       {
          auto module = umodule.get();
 
@@ -365,6 +372,9 @@ void ModuleManager::Initialize()
             ModulePrefs::SetModuleStatus(files[i], iModuleStatus);
 #endif
          }
+      }
+      else if (!Error.empty()) {
+         umodule->ShowLoadFailureError(Error);
       }
    }
    ::wxSetWorkingDirectory(saveOldCWD);
