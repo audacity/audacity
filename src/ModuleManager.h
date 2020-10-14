@@ -75,7 +75,12 @@ public:
    // -------------------------------------------------------------------------
 
    static ModuleManager & Get();
+   
+private:
+   static void FindModules(FilePaths &files);
+   static void TryLoadModules(const FilePaths &files);
 
+public:
    void Initialize();
    int Dispatch(ModuleDispatchTypes type);
 

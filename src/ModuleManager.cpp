@@ -237,22 +237,20 @@ ModuleManager::~ModuleManager()
    builtinModuleList().clear();
 }
 
-// static 
-void ModuleManager::Initialize()
+// static
+void ModuleManager::FindModules(FilePaths &files)
 {
    const auto &audacityPathList = FileNames::AudacityPathList();
    FilePaths pathList;
-   FilePaths files;
    wxString pathVar;
-   size_t i;
 
    // Code from LoadLadspa that might be useful in load modules.
    pathVar = wxGetenv(wxT("AUDACITY_MODULES_PATH"));
    if (!pathVar.empty())
       FileNames::AddMultiPathsToPathList(pathVar, pathList);
 
-   for (i = 0; i < audacityPathList.size(); i++) {
-      wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
+   for (const auto &path : audacityPathList) {
+      wxString prefix = path + wxFILE_SEP_PATH;
       FileNames::AddUniquePathToPathList(prefix + wxT("modules"),
                                          pathList);
       if (files.size()) {
@@ -265,25 +263,29 @@ void ModuleManager::Initialize()
    #else
    FileNames::FindFilesInPathList(wxT("*.so"), pathList, files);
    #endif
+}
 
+void ModuleManager::TryLoadModules(const FilePaths &files)
+{
    FilePaths checked;
    wxString saveOldCWD = ::wxGetCwd();
-   for (i = 0; i < files.size(); i++) {
+   auto cleanup = finally([&]{ ::wxSetWorkingDirectory(saveOldCWD); });
+   for (const auto &file : files) {
       // As a courtesy to some modules that might be bridges to
       // open other modules, we set the current working
       // directory to be the module's directory.
-      auto prefix = ::wxPathOnly(files[i]);
+      auto prefix = ::wxPathOnly(file);
       ::wxSetWorkingDirectory(prefix);
 
       // Only process the first module encountered in the
       // defined search sequence.
-      wxString ShortName = wxFileName( files[i] ).GetName();
+      wxString ShortName = wxFileName( file ).GetName();
       if( checked.Index( ShortName, false ) != wxNOT_FOUND )
          continue;
       checked.Add( ShortName );
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
-      int iModuleStatus = ModulePrefs::GetModuleStatus( files[i] );
+      int iModuleStatus = ModulePrefs::GetModuleStatus( file );
       if( iModuleStatus == kModuleDisabled )
          continue;
       if( iModuleStatus == kModuleFailed )
@@ -292,7 +294,7 @@ void ModuleManager::Initialize()
       if( iModuleStatus == kModuleNew ){
          // To ensure it is noted in config file and so
          // appears on modules page.
-         ModulePrefs::SetModuleStatus( files[i], kModuleNew);
+         ModulePrefs::SetModuleStatus( file, kModuleNew);
          continue;
       }
 
@@ -311,13 +313,13 @@ void ModuleManager::Initialize()
          action = ShowMultiDialog(msg, XO("Audacity Module Loader"),
             buttons,
             "",
-            XO("Try and load this module?"), 
+            XO("Try and load this module?"),
             false);
 #ifdef EXPERIMENTAL_MODULE_PREFS
          // If we're not prompting always, accept the answer permanently
          if( iModuleStatus == kModuleNew ){
             iModuleStatus = (action==1)?kModuleDisabled : kModuleEnabled;
-            ModulePrefs::SetModuleStatus( files[i], iModuleStatus );
+            ModulePrefs::SetModuleStatus( file, iModuleStatus );
          }
 #endif
          if(action == 1){   // "No"
@@ -327,11 +329,11 @@ void ModuleManager::Initialize()
 #ifdef EXPERIMENTAL_MODULE_PREFS
       // Before attempting to load, we set the state to bad.
       // That way, if we crash, we won't try again.
-      ModulePrefs::SetModuleStatus( files[i], kModuleFailed );
+      ModulePrefs::SetModuleStatus( file, kModuleFailed );
 #endif
 
       wxString Error;
-      auto umodule = std::make_unique<Module>(files[i]);
+      auto umodule = std::make_unique<Module>(file);
          if (umodule->Load(Error))   // it will get rejected if there are version problems
       {
          auto module = umodule.get();
@@ -356,11 +358,11 @@ void ModuleManager::Initialize()
 
          if (!module->HasDispatch() && !scriptFn && !pPanelHijack)
          {
-            auto ShortName = wxFileName(files[i]).GetName();
+            auto ShortName = wxFileName(file).GetName();
             AudacityMessageBox(
                XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.").Format(ShortName),
                XO("Module Unsuitable"));
-            wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), files[i]);
+            wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), file);
             module->Unload();
          }
          else
@@ -369,7 +371,7 @@ void ModuleManager::Initialize()
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
             // Loaded successfully, restore the status.
-            ModulePrefs::SetModuleStatus(files[i], iModuleStatus);
+            ModulePrefs::SetModuleStatus(file, iModuleStatus);
 #endif
          }
       }
@@ -377,7 +379,15 @@ void ModuleManager::Initialize()
          umodule->ShowLoadFailureError(Error);
       }
    }
-   ::wxSetWorkingDirectory(saveOldCWD);
+}
+
+// static
+void ModuleManager::Initialize()
+{
+   FilePaths files;
+   FindModules(files);
+
+   TryLoadModules(files);
 
    // After loading all the modules, we may have a registered scripting function.
    if(scriptFn)
