@@ -3,6 +3,7 @@
 # The list of modules is ordered so that each module occurs after any others
 # that it depends on
 set( MODULES
+   mod-view-menus
    mod-select-menus
    mod-track-menus
    mod-clip-menu-items

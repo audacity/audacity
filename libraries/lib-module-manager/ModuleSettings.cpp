@@ -23,6 +23,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-clip-menu-items",
       "mod-track-menus",
       "mod-select-menus",
+      "mod-view-menus",
    };
    return modules;
 }

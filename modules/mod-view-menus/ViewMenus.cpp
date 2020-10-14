@@ -1,21 +1,20 @@
-#include "../CommonCommandFlags.h"
-#include "../Menus.h"
+#include "CommonCommandFlags.h"
+#include "Menus.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
 #include "Track.h"
-#include "../TrackInfo.h"
-#include "../TrackPanel.h"
+#include "TrackInfo.h"
+#include "TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../prefs/GUIPrefs.h"
-#include "../prefs/TracksPrefs.h"
-#include "../tracks/ui/TrackView.h"
-
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "prefs/GUIPrefs.h"
+#include "prefs/TracksPrefs.h"
+#include "tracks/ui/TrackView.h"
 
 #include <wx/app.h>
 #include <wx/scrolbar.h>
@@ -467,3 +466,6 @@ AttachedItem sAttachment1{
 }
 
 #undef FN
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
