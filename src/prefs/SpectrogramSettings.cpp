@@ -23,6 +23,7 @@ Paul Licameli
 
 #include "FFT.h"
 #include "Prefs.h"
+#include "../WaveTrack.h"
 
 #include <cmath>
 
@@ -101,6 +102,26 @@ SpectrogramSettings::Globals
 {
    static Globals instance;
    return instance;
+}
+
+SpectrogramSettings &SpectrogramSettings::Get(WaveTrack &track)
+{
+   return track.GetSpectrogramSettings();
+}
+
+const SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
+{
+   return Get(const_cast<WaveTrack&>(track));
+}
+
+SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
+{
+   return track.GetIndependentSpectrogramSettings();
+}
+
+void SpectrogramSettings::Reset(WaveTrack &track)
+{
+   track.mpSpectrumSettings.reset();
 }
 
 SpectrogramSettings::SpectrogramSettings()

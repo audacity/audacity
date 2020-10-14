@@ -201,7 +201,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
       // Nyquist frequency.
       constexpr auto max = std::numeric_limits<float>::max();
       const bool spectrumLinear =
-         (wt->GetSpectrogramSettings().scaleType ==
+         (SpectrogramSettings::Get(*wt).scaleType ==
             SpectrogramSettings::stLinear);
       // Zoom out full
       wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
@@ -343,12 +343,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       dynamic_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    if (!track)
       // Leave a blank rectangle.
-      // TODO: rewrite GetSpectrogramSettings and GetSpectrumBounds so they
-      // are not members of WaveTrack, but fetch UI related ClientData
+      // TODO: rewrite GetSpectrumBounds so it is
+      // not a member of WaveTrack, but fetch UI related ClientData
       // attachments; then this downcast from SampleTrack will not be needed.
       return;
 
-   const SpectrogramSettings &settings = track->GetSpectrogramSettings();
+   const auto &settings = SpectrogramSettings::Get(*track);
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };

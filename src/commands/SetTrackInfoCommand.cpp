@@ -471,14 +471,20 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
    }
 
    if( wt && bHasUseSpecPrefs   ){
-      wt->UseSpectralPrefs( bUseSpecPrefs );
+      if( bUseSpecPrefs ){
+         // reset it, and next we will be getting the defaults.
+         SpectrogramSettings::Reset(*wt);
+      }
+      else {
+         SpectrogramSettings::Own(*wt);
+      }
    }
-   if( wt && bHasSpectralSelect ){
-      wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
-   }
-   if (wt && bHasSpecColorScheme) {
-      wt->GetSpectrogramSettings().colorScheme = (SpectrogramSettings::ColorScheme)mSpecColorScheme;
-   }
+   auto &settings = SpectrogramSettings::Get(*wt);
+   if (wt && bHasSpectralSelect)
+      settings.spectralSelection = bSpectralSelect;
+   if (wt && bHasSpecColorScheme)
+      settings.colorScheme =
+         static_cast<SpectrogramSettings::ColorScheme>(mSpecColorScheme);
 
    return true;
 }

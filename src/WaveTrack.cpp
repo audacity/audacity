@@ -309,7 +309,7 @@ void WaveTrack::GetSpectrumBounds(float *min, float *max) const
 {
    const double rate = GetRate();
 
-   const SpectrogramSettings &settings = GetSpectrogramSettings();
+   const auto &settings = SpectrogramSettings::Get(*this);
    const SpectrogramSettings::ScaleType type = settings.scaleType;
 
    const float top = (rate / 2.);
@@ -759,22 +759,6 @@ void WaveTrack::SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pS
       mpSpectrumSettings = std::move(pSettings);
    }
 }
-
-void WaveTrack::UseSpectralPrefs( bool bUse )
-{  
-   if( bUse ){
-      if( !mpSpectrumSettings )
-         return;
-      // reset it, and next we will be getting the defaults.
-      mpSpectrumSettings.reset();
-   }
-   else {
-      if( mpSpectrumSettings )
-         return;
-      GetIndependentSpectrogramSettings();
-   }
-}
-
 
 
 namespace {

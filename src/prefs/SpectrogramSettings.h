@@ -22,6 +22,7 @@ struct FFTParam;
 class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
+class WaveTrack;
 
 class AUDACITY_DLL_API SpectrogramSettings : public PrefsListener
 {
@@ -69,6 +70,16 @@ public:
    static const EnumValueSymbols &GetScaleNames();
    static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
+
+   // Return either the track's independent settings or global defaults
+   static SpectrogramSettings &Get(WaveTrack &track);
+   static const SpectrogramSettings &Get(const WaveTrack &track);
+
+   // Force creation of track's independent settings
+   static SpectrogramSettings &Own(WaveTrack &track);
+
+   //! Make track lose indpendent settings and use defaults
+   static void Reset(WaveTrack &track);
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();

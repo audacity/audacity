@@ -42,7 +42,7 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
 , mPopulating(false)
 {
    if (mWt) {
-      SpectrogramSettings &settings = wt->GetSpectrogramSettings();
+      auto &settings = SpectrogramSettings::Get(*wt);
       mOrigDefaulted = mDefaulted = (&SpectrogramSettings::defaults() == &settings);
       mTempSettings = mOrigSettings = settings;
       wt->GetSpectrumBounds(&mOrigMin, &mOrigMax);
@@ -399,12 +399,11 @@ void SpectrumPrefs::Rollback()
 
       for (auto channel : channels) {
          if (mOrigDefaulted) {
-            channel->SetSpectrogramSettings({});
+            SpectrogramSettings::Reset(*channel);
             channel->SetSpectrumBounds(-1, -1);
          }
          else {
-            auto &settings =
-               channel->GetIndependentSpectrogramSettings();
+            auto &settings = SpectrogramSettings::Own(*channel);
             channel->SetSpectrumBounds(mOrigMin, mOrigMax);
             settings = mOrigSettings;
          }
@@ -448,13 +447,12 @@ void SpectrumPrefs::Preview()
    if (mWt) {
       for (auto channel : TrackList::Channels(mWt)) {
          if (mDefaulted) {
-            channel->SetSpectrogramSettings({});
+            SpectrogramSettings::Reset(*channel);
             // ... and so that the vertical scale also defaults:
             channel->SetSpectrumBounds(-1, -1);
          }
          else {
-            SpectrogramSettings &settings =
-               channel->GetIndependentSpectrogramSettings();
+            SpectrogramSettings &settings = SpectrogramSettings::Own(*channel);
             channel->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
             settings = mTempSettings;
          }

@@ -123,10 +123,10 @@ void SpectrumVZoomHandle::DoZoom(
    const double rate = pTrack->GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
-   const SpectrogramSettings &specSettings = pTrack->GetSpectrogramSettings();
+   const auto &specSettings = SpectrogramSettings::Get(*pTrack);
    NumberScale scale;
    const bool spectrumLinear =
-      (pTrack->GetSpectrogramSettings().scaleType == SpectrogramSettings::stLinear);
+      (SpectrogramSettings::Get(*pTrack).scaleType == SpectrogramSettings::stLinear);
 
 
    bool bDragZoom = WaveTrackVZoomHandle::IsDragZooming(zoomStart, zoomEnd);
@@ -283,7 +283,7 @@ BeginSection( "Scales" );
                      .mpData->pTrack;
                if ( id ==
                   OnFirstSpectrumScaleID +
-                      (int)(wt->GetSpectrogramSettings().scaleType ) )
+                      static_cast<int>(SpectrogramSettings::Get(*wt).scaleType))
                   menu.Check(id, true);
             }
          );
@@ -322,9 +322,9 @@ void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
             std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstSpectrumScaleID
       )));
-   if (wt->GetSpectrogramSettings().scaleType != newScaleType) {
+   if (SpectrogramSettings::Get(*wt).scaleType != newScaleType) {
       for (auto channel : TrackList::Channels(wt))
-         channel->GetIndependentSpectrogramSettings().scaleType = newScaleType;
+         SpectrogramSettings::Own(*channel).scaleType = newScaleType;
 
       ProjectHistory::Get( mpData->project ).ModifyState(true);
 
