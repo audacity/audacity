@@ -107,10 +107,7 @@ ScreenshotCommand::ScreenshotCommand()
    mbBringToTop=true;
    mIgnore=NULL;
    
-   static std::once_flag flag;
-   std::call_once( flag, []{
-      ::SetVetoDialogHook( MayCapture );
-   });
+   static VetoDialogHook::Scope scope{ MayCapture };
 }
 
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){

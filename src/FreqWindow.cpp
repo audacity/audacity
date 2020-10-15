@@ -1220,7 +1220,7 @@ struct Handler : CommandHandlerObject {
       auto freqWindow = &GetAttachedWindows(project)
          .Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 
-      if( ::CallVetoDialogHook( freqWindow ) )
+      if( VetoDialogHook::Call( freqWindow ) )
          return;
       freqWindow->Show(true);
       freqWindow->Raise();

@@ -97,7 +97,7 @@ bool AudacityCommand::ShowInterface(wxWindow *parent, bool WXUNUSED(forceModal))
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
    // The Screenshot command might be popping this dialog up, just to capture it.
-   if( ::CallVetoDialogHook( mUIDialog ) )
+   if ( VetoDialogHook::Call( mUIDialog ) )
       return false;
 
    bool res = mUIDialog->ShowModal() != 0;
