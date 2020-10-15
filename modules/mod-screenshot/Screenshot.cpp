@@ -16,8 +16,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 
 ***********************************************************************/
 
-#include "Screenshot.h"
-#include "commands/ScreenshotCommand.h"
+#include "ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
 #include "commands/CommandContext.h"
 #include <wx/app.h>
@@ -836,3 +835,7 @@ AttachedItem sAttachment{
 };
 
 }
+
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES

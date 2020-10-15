@@ -17,13 +17,12 @@ small calculations of rectangles.
 
 *//*******************************************************************/
 
-
 #include "ScreenshotCommand.h"
 
 #include <mutex>
 #include <thread>
 
-#include "LoadCommands.h"
+#include "commands/LoadCommands.h"
 #include "Project.h"
 #include <wx/app.h>
 #include <wx/toplevel.h>
@@ -34,19 +33,19 @@ small calculations of rectangles.
 #include <wx/valgen.h>
 
 #include "ActiveProject.h"
-#include "../AdornedRulerPanel.h"
-#include "../TrackPanel.h"
-#include "../toolbars/ToolManager.h"
+#include "AdornedRulerPanel.h"
+#include "TrackPanel.h"
+#include "toolbars/ToolManager.h"
 #include "Prefs.h"
-#include "../ProjectWindow.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
+#include "ProjectWindow.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
 #include "Track.h"
-#include "../widgets/VetoDialogHook.h"
-#include "CommandContext.h"
-#include "CommandManager.h"
-#include "CommandDispatch.h"
-#include "../CommonCommandFlags.h"
+#include "widgets/VetoDialogHook.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "commands/CommandDispatch.h"
+#include "CommonCommandFlags.h"
 
 const ComponentInterfaceSymbol ScreenshotCommand::Symbol
 { XO("Screenshot") };

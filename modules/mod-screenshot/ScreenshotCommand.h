@@ -13,7 +13,7 @@
 #ifndef __SCREENSHOT_COMMAND__
 #define __SCREENSHOT_COMMAND__
 
-#include "Command.h"
+#include "commands/Command.h"
 
 #include <wx/colour.h> // member variable
 
@@ -28,7 +28,7 @@ class AdornedRulerPanel;
 class AudacityProject;
 class CommandContext;
 
-class AUDACITY_DLL_API ScreenshotCommand : public AudacityCommand
+class ScreenshotCommand : public AudacityCommand
 {
 public:
    enum kBackgrounds
