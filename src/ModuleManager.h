@@ -47,9 +47,10 @@ public:
    bool HasDispatch() { return mDispatch != NULL; };
    int Dispatch(ModuleDispatchTypes type);
    void * GetSymbol(const wxString &name);
+   const FilePath &GetName() const { return mName; }
 
 private:
-   FilePath mName;
+   const FilePath mName;
    std::unique_ptr<wxDynamicLibrary> mLib;
    fnModuleDispatch mDispatch;
 };
@@ -78,7 +79,10 @@ public:
    
 private:
    static void FindModules(FilePaths &files);
-   static void TryLoadModules(const FilePaths &files);
+   using DelayedErrors =
+      std::vector< std::pair< std::unique_ptr<Module>, wxString > >;
+   static void TryLoadModules(
+      const FilePaths &files, FilePaths &decided, DelayedErrors &errors);
 
 public:
    void Initialize();
