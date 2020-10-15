@@ -42,6 +42,7 @@ small calculations of rectangles.
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Track.h"
+#include "../widgets/VetoDialogHook.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 
@@ -108,8 +109,7 @@ ScreenshotCommand::ScreenshotCommand()
    
    static std::once_flag flag;
    std::call_once( flag, []{
-      AudacityCommand::SetVetoDialogHook( MayCapture );
-      Effect::SetVetoDialogHook( MayCapture );
+      ::SetVetoDialogHook( MayCapture );
    });
 }
 
