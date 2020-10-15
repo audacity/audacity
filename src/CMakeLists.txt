@@ -422,8 +422,6 @@ list( APPEND SOURCES
       effects/StatefulEffectBase.h
       effects/StatefulPerTrackEffect.cpp
       effects/StatefulPerTrackEffect.h
-      effects/StereoToMono.cpp
-      effects/StereoToMono.h
       effects/TwoPassSimpleMono.cpp
       effects/TwoPassSimpleMono.h
 

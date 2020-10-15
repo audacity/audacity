@@ -63,6 +63,8 @@ set( SOURCES
    ScienFilter.h
    Silence.cpp
    Silence.h
+   StereoToMono.cpp
+   StereoToMono.h
    ToneGen.cpp
    ToneGen.h
    TruncSilence.cpp
