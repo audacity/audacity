@@ -100,7 +100,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
-#include "Screenshot.h"
 #include "Sequence.h"
 #include "SelectFile.h"
 #include "TempDirectory.h"
@@ -531,7 +530,6 @@ static void QuitAudacity(bool bForce)
 #ifdef EXPERIMENTAL_SCOREALIGN
    CloseScoreAlignDialog();
 #endif
-   CloseScreenshotTools();
 
    // Logger window is always destroyed on macOS,
    // on other platforms - it prevents the runloop
