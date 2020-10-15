@@ -13,7 +13,6 @@
 
 *//*******************************************************************/
 
-
 #include "StereoToMono.h"
 #include "EffectOutputTracks.h"
 #include "LoadEffects.h"
@@ -178,4 +177,51 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
 bool EffectStereoToMono::IsHiddenFromMenus() const
 {
    return true;
+}
+
+// Attach a menu item
+#include "CommonCommandFlags.h"
+#include "PluginManager.h"
+#include "CommandManager.h"
+#include "effects/EffectManager.h"
+#include "effects/EffectUI.h"
+
+namespace {
+void OnStereoToMono(const CommandContext &context)
+{
+   EffectUI::DoEffect(
+      EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
+      context,
+      EffectManager::kConfigured);
+}
+
+using namespace MenuRegistry;
+auto MenuItem()
+{
+   static auto item = std::shared_ptr{
+   // Delayed evaluation
+   // Stereo to Mono is an oddball command that is also subject to control
+   // by the plug-in manager, as if an effect.  Decide whether to show or
+   // hide it.
+   Items( "",
+      [](AudacityProject&) -> std::unique_ptr<CommandItem> {
+         const PluginID ID =
+            EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
+         const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
+         if (plug && plug->IsEnabled())
+            return Command( wxT("Stereo to Mono"),
+               XXO("Mix Stereo Down to &Mono"), OnStereoToMono,
+               AudioIONotBusyFlag() | StereoRequiredFlag() |
+                  WaveTracksSelectedFlag(), Options{} );
+         else
+            return {};
+      }
+   ) };
+   return item;
+}
+
+AttachedItem sAttachment{
+   Indirect(MenuItem()),
+   { wxT("Tracks/Mix/Mix"), { OrderingHint::Begin, {} } }
+};
 }

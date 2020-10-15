@@ -548,14 +548,6 @@ namespace {
 
 // Menu handler functions
 
-void OnStereoToMono(const CommandContext &context)
-{
-   EffectUI::DoEffect(
-      EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-      context,
-      EffectManager::kConfigured);
-}
-
 void OnMixAndRender(const CommandContext &context)
 {
    auto &project = context.project;
@@ -1130,24 +1122,8 @@ auto TracksMenu()
 
       //////////////////////////////////////////////////////////////////////////
 
-      Section( "",
+      Section( "Mix",
          Menu( wxT("Mix"), XXO("Mi&x"),
-            // Delayed evaluation
-            // Stereo to Mono is an oddball command that is also subject to control
-            // by the plug-in manager, as if an effect.  Decide whether to show or
-            // hide it.
-            [](AudacityProject&) -> std::unique_ptr<CommandItem> {
-               const PluginID ID =
-                  EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
-               const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
-               if (plug && plug->IsEnabled())
-                  return Command( wxT("Stereo to Mono"),
-                     XXO("Mix Stereo Down to &Mono"), OnStereoToMono,
-                     AudioIONotBusyFlag() | StereoRequiredFlag() |
-                        WaveTracksSelectedFlag(), Options{} );
-               else
-                  return {};
-            },
             Command( wxT("MixAndRender"), XXO("Mi&x and Render"),
                OnMixAndRender,
                AudioIONotBusyFlag() | WaveTracksSelectedFlag() ),

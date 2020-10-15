@@ -334,8 +334,6 @@ set( SOURCES
       effects/StatefulPerTrackEffect.h
       effects/StatelessPerTrackEffect.cpp
       effects/StatelessPerTrackEffect.h
-      effects/StereoToMono.cpp
-      effects/StereoToMono.h
       effects/TwoPassSimpleMono.cpp
       effects/TwoPassSimpleMono.h
 
