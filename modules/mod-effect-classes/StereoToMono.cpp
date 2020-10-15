@@ -13,16 +13,15 @@
 
 *//*******************************************************************/
 
-
 #include "StereoToMono.h"
-#include "LoadEffects.h"
+#include "effects/LoadEffects.h"
 
 #include "Mix.h"
 #include "MixAndRender.h"
 #include "Project.h"
-#include "RealtimeEffectList.h"
-#include "../WaveTrack.h"
-#include "../widgets/ProgressDialog.h"
+#include "effects/RealtimeEffectList.h"
+#include "WaveTrack.h"
+#include "widgets/ProgressDialog.h"
 
 const ComponentInterfaceSymbol EffectStereoToMono::Symbol
 { XO("Stereo To Mono") };
