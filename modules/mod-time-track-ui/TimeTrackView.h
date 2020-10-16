@@ -11,7 +11,7 @@ Paul Licameli split from class TimeTrack
 #ifndef __AUDACITY_TIME_TRACK_VIEW__
 #define __AUDACITY_TIME_TRACK_VIEW__
 
-#include "../../ui/CommonTrackView.h"
+#include "tracks/ui/CommonTrackView.h"
 
 class EnvelopeHandle;
 class Ruler;

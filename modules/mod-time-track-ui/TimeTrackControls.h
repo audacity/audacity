@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TIME_TRACK_CONTROLS__
 #define __AUDACITY_TIME_TRACK_CONTROLS__
 
-#include "../../ui/CommonTrackControls.h" // to inherit
+#include "tracks/ui/CommonTrackControls.h" // to inherit
 
 class TimeTrackControls final : public CommonTrackControls
 {
@@ -34,7 +34,7 @@ public:
    static const int kRangeMax {1000};
 };
 
-#include "../../../widgets/PopupMenuTable.h"
+#include "widgets/PopupMenuTable.h"
 
 class TimeTrackMenuTable : public PopupMenuTable
 {

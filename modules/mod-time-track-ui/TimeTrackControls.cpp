@@ -8,15 +8,14 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "TimeTrackControls.h"
 
-#include "../../../HitTestResult.h"
+#include "HitTestResult.h"
 #include "Project.h"
 #include "ProjectHistory.h"
-#include "../../../RefreshCode.h"
-#include "../../../TimeTrack.h"
-#include "../../../widgets/PopupMenuTable.h"
+#include "RefreshCode.h"
+#include "TimeTrack.h"
+#include "widgets/PopupMenuTable.h"
 #include <wx/numdlg.h>
 
 TimeTrackControls::~TimeTrackControls()
@@ -171,7 +170,7 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackControls) {
    };
 }
 
-#include "../../ui/TrackView.h"
+#include "tracks/ui/TrackView.h"
 
 using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultTimeTrackHeight) {

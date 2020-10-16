@@ -8,23 +8,22 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "TimeTrackVRulerControls.h"
 #include "TimeTrackVZoomHandle.h"
 
-#include "../../../HitTestResult.h"
+#include "HitTestResult.h"
 
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "ProjectHistory.h"
-#include "../../../RefreshCode.h"
+#include "RefreshCode.h"
 #include "Theme.h"
-#include "../../../TimeTrack.h"
-#include "../../../TrackArtist.h"
-#include "../../../TrackPanelDrawingContext.h"
-#include "../../../TrackPanelMouseEvent.h"
-#include "../../../UIHandle.h"
-#include "../../../widgets/Ruler.h"
+#include "TimeTrack.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
+#include "TrackPanelMouseEvent.h"
+#include "UIHandle.h"
+#include "widgets/Ruler.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {

@@ -11,7 +11,7 @@ Paul Licameli split from TimeTrackVZoomHandle.h
 #ifndef __AUDACITY_TIMETRACK_VZOOM_HANDLE__
 #define __AUDACITY_TIMETRACK_VZOOM_HANDLE__
 
-#include "../../../UIHandle.h" // to inherit
+#include "UIHandle.h" // to inherit
 
 class TimeTrack;
 
