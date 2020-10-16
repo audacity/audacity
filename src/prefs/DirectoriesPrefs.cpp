@@ -116,8 +116,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
    S.StartStatic(XO("Default directories"));
    {
       S.AddSpace(1);
-      S.AddFixedText(XO("Leave a field empty to go to the last directory used for that operation. Fill in a field to "
-                        "always go to that directory for that operation."), false, 450);
+      S.AddFixedText(XO("Leave a field empty to go to the last directory used for that operation.\n"
+         "Fill in a field to always go to that directory for that operation."), false, 450);
       S.AddSpace(5);
 
       S.StartMultiColumn(3, wxEXPAND);
