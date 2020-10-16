@@ -1,9 +1,9 @@
 // Install cut-copy-paste hooks
-#include "../../../EditUtilities.h"
-#include "../../../LabelTrack.h"
+#include "EditUtilities.h"
+#include "LabelTrack.h"
 #include "ProjectHistory.h"
-#include "../../../ProjectWindow.h"
-#include "../../../ProjectWindows.h"
+#include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "ViewInfo.h"
 #include "LabelTrackView.h"
 

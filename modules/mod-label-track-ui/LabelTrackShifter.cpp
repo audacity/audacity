@@ -4,8 +4,8 @@
  */
 
 #include "LabelTrackView.h"
-#include "../../ui/TimeShiftHandle.h"
-#include "../../../LabelTrack.h"
+#include "tracks/ui/TimeShiftHandle.h"
+#include "LabelTrack.h"
 #include "ViewInfo.h"
 
 class LabelTrackShifter final : public TrackShifter {

@@ -19,15 +19,15 @@
 
 #include "SetLabelCommand.h"
 
-#include "LoadCommands.h"
+#include "commands/LoadCommands.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
-#include "../LabelTrack.h"
+#include "WaveTrack.h"
+#include "LabelTrack.h"
 #include "ProjectHistory.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "CommandContext.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "commands/CommandContext.h"
+#include "LabelTrackView.h"
 
 const ComponentInterfaceSymbol SetLabelCommand::Symbol
 { XO("Set Label") };

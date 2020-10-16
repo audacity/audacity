@@ -8,14 +8,13 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "LabelTrackVRulerControls.h"
 
-#include "../../../HitTestResult.h"
+#include "HitTestResult.h"
 
 #include "AColor.h"
-#include "../../../TrackArtist.h"
-#include "../../../TrackPanelDrawingContext.h"
+#include "TrackArtist.h"
+#include "TrackPanelDrawingContext.h"
 
 LabelTrackVRulerControls::~LabelTrackVRulerControls()
 {

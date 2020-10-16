@@ -3,6 +3,7 @@
 # The list of modules is ordered so that each module occurs after any others
 # that it depends on
 set( MODULES
+   mod-label-track-ui
    mod-time-track-ui
    mod-note-track-ui
    mod-script-pipe

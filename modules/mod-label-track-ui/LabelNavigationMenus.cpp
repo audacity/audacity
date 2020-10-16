@@ -1,13 +1,13 @@
-#include "../CommonCommandFlags.h"
-#include "../LabelTrack.h"
-#include "../ProjectAudioIO.h"
-#include "../ProjectAudioManager.h"
-#include "../ProjectWindow.h"
-#include "../TrackPanelAx.h"
-#include "../TransportUtilities.h"
+#include "CommonCommandFlags.h"
+#include "LabelTrack.h"
+#include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
+#include "ProjectWindow.h"
+#include "TrackPanelAx.h"
+#include "TransportUtilities.h"
 #include "ViewInfo.h"
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
 
 // Menu handler functions
 namespace{

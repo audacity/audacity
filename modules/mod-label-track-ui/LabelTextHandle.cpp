@@ -8,20 +8,19 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "LabelTextHandle.h"
 
 #include "LabelTrackView.h"
 
-#include "../../../HitTestResult.h"
-#include "../../../LabelTrack.h"
-#include "../../../ProjectAudioIO.h"
+#include "HitTestResult.h"
+#include "LabelTrack.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
-#include "../../../RefreshCode.h"
-#include "../../../SelectionState.h"
-#include "../../../TrackPanelMouseEvent.h"
+#include "RefreshCode.h"
+#include "SelectionState.h"
+#include "TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../../../images/Cursors.h"
+#include "../../images/Cursors.h"
 
 #include <wx/clipbrd.h>
 

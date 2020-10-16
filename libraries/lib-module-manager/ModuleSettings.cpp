@@ -22,6 +22,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
    static std::unordered_set<wxString> modules{
       "mod-note-track-ui",
       "mod-time-track-ui",
+      "mod-label-track-ui",
    };
    return modules;
 }

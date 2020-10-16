@@ -130,7 +130,6 @@ list( APPEND SOURCES
       Diags.cpp
       Diags.h
       DropTarget.cpp
-      DropoutDetector.cpp
       EditUtilities.cpp
       EditUtilities.h
       EffectPlugin.cpp
@@ -166,10 +165,6 @@ list( APPEND SOURCES
       JournalWindowPaths.h
       KeyboardCapture.cpp
       KeyboardCapture.h
-      LabelDialog.cpp
-      LabelDialog.h
-      LabelImportExport.cpp
-      LabelImportExport.h
       LabelTrack.cpp
       LabelTrack.h
       LangChoice.cpp
@@ -392,8 +387,6 @@ list( APPEND SOURCES
       commands/SetClipCommand.h
       commands/SetEnvelopeCommand.cpp
       commands/SetEnvelopeCommand.h
-      commands/SetLabelCommand.cpp
-      commands/SetLabelCommand.h
       commands/SetProjectCommand.cpp
       commands/SetProjectCommand.h
       commands/SetTrackInfoCommand.cpp
@@ -765,9 +758,6 @@ list( APPEND SOURCES
       menus/ExtraMenus.cpp
       menus/FileMenus.cpp
       menus/HelpMenus.cpp
-      menus/LabelMenus.cpp
-      menus/LabelImportExportMenus.cpp
-      menus/LabelNavigationMenus.cpp
       menus/NavigationMenus.cpp
       menus/PluginMenus.cpp
       menus/SelectMenus.cpp
@@ -865,20 +855,6 @@ list( APPEND SOURCES
 
       # Tracks
 
-      tracks/labeltrack/ui/LabelDefaultClickHandle.cpp
-      tracks/labeltrack/ui/LabelDefaultClickHandle.h
-      tracks/labeltrack/ui/LabelGlyphHandle.cpp
-      tracks/labeltrack/ui/LabelGlyphHandle.h
-      tracks/labeltrack/ui/LabelTextHandle.cpp
-      tracks/labeltrack/ui/LabelTextHandle.h
-      tracks/labeltrack/ui/LabelTrackCopyPaste.cpp
-      tracks/labeltrack/ui/LabelTrackControls.cpp
-      tracks/labeltrack/ui/LabelTrackControls.h
-      tracks/labeltrack/ui/LabelTrackShifter.cpp
-      tracks/labeltrack/ui/LabelTrackVRulerControls.cpp
-      tracks/labeltrack/ui/LabelTrackVRulerControls.h
-      tracks/labeltrack/ui/LabelTrackView.cpp
-      tracks/labeltrack/ui/LabelTrackView.h
       tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
       tracks/playabletrack/ui/PlayableTrackButtonHandles.h
       tracks/playabletrack/ui/PlayableTrackControls.cpp

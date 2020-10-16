@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_LABEL_TRACK_VRULER_CONTROLS__
 #define __AUDACITY_LABEL_TRACK_VRULER_CONTROLS__
 
-#include "../../ui/TrackVRulerControls.h"
+#include "tracks/ui/TrackVRulerControls.h"
 
 // This class is here for completeness, by analogy with other track
 // types, but it does nothing.
