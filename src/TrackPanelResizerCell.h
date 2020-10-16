@@ -18,7 +18,7 @@ class Track;
 class TrackPanelResizeHandle;
 
 class TrackPanelResizerCell
-   : public CommonTrackPanelCell
+   : public CommonTrackCell
    , public std::enable_shared_from_this< TrackPanelResizerCell >
    , public ClientData::Base
 {
@@ -35,12 +35,7 @@ public:
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *) override;
 
-protected:
-   std::shared_ptr<Track> DoFindTrack() override;
-
 private:
-   // back-pointer is weak to break a cycle
-   std::weak_ptr<Track> mwTrack;
 
    // TrackPanelDrawable implementation
    void Draw(

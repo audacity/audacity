@@ -113,9 +113,10 @@ Track::Holder Track::Duplicate() const
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone();
 
-   if (mpView)
+   AttachedTrackObjects::ForEach([&](auto &attachment){
       // Copy view state that might be important to undo/redo
-      mpView->CopyTo( *result );
+      attachment.CopyTo( *result );
+   });
 
    return result;
 }
@@ -138,26 +139,6 @@ void Track::SetOwner
    // focused track too.  Otherwise focus could remain on an invisible (or deleted) track.
    mList = list;
    mNode = node;
-}
-
-const std::shared_ptr<TrackAttachment> &Track::GetTrackView()
-{
-   return mpView;
-}
-
-void Track::SetTrackView( const std::shared_ptr<TrackAttachment> &pView )
-{
-   mpView = pView;
-}
-
-const std::shared_ptr<TrackAttachment> &Track::GetTrackControls()
-{
-   return mpControls;
-}
-
-void Track::SetTrackControls( const std::shared_ptr<TrackAttachment> &pControls )
-{
-   mpControls = pControls;
 }
 
 int Track::GetIndex() const
@@ -1045,8 +1026,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
       pTrack = src->Clone(); // not duplicate
       // Share the satellites with the original, though they do not point back
       // to the pending track
-      pTrack->mpView = src->mpView;
-      pTrack->mpControls = src->mpControls;
+      ((AttachedTrackObjects&)*pTrack) = *src; // shallow copy
    }
 
    if (pTrack) {
@@ -1145,10 +1125,9 @@ bool TrackList::ApplyPendingTracks()
 
    for (auto &pendingTrack : updates) {
       if (pendingTrack) {
-         if (pendingTrack->mpView)
-            pendingTrack->mpView->Reparent( pendingTrack );
-         if (pendingTrack->mpControls)
-            pendingTrack->mpControls->Reparent( pendingTrack );
+         pendingTrack->AttachedTrackObjects::ForEach([&](auto &attachment){
+            attachment.Reparent( pendingTrack );
+         });
          auto src = FindById( pendingTrack->GetId() );
          if (src)
             this->Replace(src, pendingTrack), result = true;
@@ -1256,10 +1235,9 @@ void Track::WriteCommonXMLAttributes(
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
-   if ( mpView )
-      mpView->WriteXMLAttributes( xmlFile );
-   if ( mpControls )
-      mpControls->WriteXMLAttributes( xmlFile );
+   AttachedTrackObjects::ForEach([&](auto &attachment){
+      attachment.WriteXMLAttributes( xmlFile );
+   });
 }
 
 // Return true iff the attribute is recognized.
@@ -1268,10 +1246,12 @@ bool Track::HandleCommonXMLAttribute(
 {
    long nValue = -1;
 
-   if (mpView && mpView->HandleXMLAttribute(attr, valueView))
-      return true;
-   else if (mpControls && mpControls->HandleXMLAttribute(attr, valueView))
-      return true;
+   bool handled = false;
+   AttachedTrackObjects::ForEach([&](auto &attachment){
+      handled = handled || attachment.HandleXMLAttribute( attr, valueView );
+   });
+   if (handled)
+      ;
    else if (attr == "name") {
       SetName(valueView.ToWString());
       return true;

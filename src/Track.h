@@ -230,7 +230,7 @@ public:
 
 //! Template generated base class for Track lets it host opaque UI related objects
 using AttachedTrackObjects = ClientData::Site<
-   Track, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
+   Track, TrackAttachment, ClientData::ShallowCopying, std::shared_ptr
 >;
 
 //! Abstract base class for an object holding data associated with points on a time axis
@@ -354,18 +354,6 @@ private:
 
  public:
    mutable wxSize vrulerSize;
-
-   // These are exposed only for the purposes of the TrackView class, to
-   // initialize the pointer on demand
-   const std::shared_ptr<TrackAttachment> &GetTrackView();
-   void SetTrackView( const std::shared_ptr<TrackAttachment> &pView );
-
-   // These are exposed only for the purposes of the TrackControls class, to
-   // initialize the pointer on demand
-   const std::shared_ptr<TrackAttachment> &GetTrackControls();
-   void SetTrackControls( const std::shared_ptr<TrackAttachment> &pControls );
-
-   // Return another, associated TrackPanelCell object that implements the
 
    int GetIndex() const;
    void SetIndex(int index);
@@ -829,10 +817,6 @@ public:
 
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
-
-protected:
-   std::shared_ptr<TrackAttachment> mpView;
-   std::shared_ptr<TrackAttachment> mpControls;
 };
 
 //! Track subclass holding data representing sound (as notes, or samples, or ...)

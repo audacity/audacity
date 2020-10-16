@@ -66,6 +66,9 @@ class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
 public:
+   // Construct and also build all attachments
+   static NoteTrack *New(AudacityProject &project);
+
    NoteTrack();
    virtual ~NoteTrack();
 

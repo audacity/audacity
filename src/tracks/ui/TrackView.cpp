@@ -60,18 +60,20 @@ void TrackView::CopyTo( Track &track ) const
    other.mHeight = mHeight;
 }
 
+static const AttachedTrackObjects::RegisteredFactory key{
+   []( Track &track ){
+      return DoGetView::Call( track );
+   }
+};
+
 TrackView &TrackView::Get( Track &track )
 {
-   auto pView = std::static_pointer_cast<TrackView>( track.GetTrackView() );
-   if (!pView)
-      // create on demand
-      track.SetTrackView( pView = DoGetView::Call( track ) );
-   return *pView;
+   return track.AttachedObjects::Get< TrackView >( key );
 }
 
 const TrackView &TrackView::Get( const Track &track )
 {
-   return Get( const_cast< Track& >( track ) );
+   return Get( const_cast< Track & >( track ) );
 }
 
 void TrackView::SetMinimized(bool isMinimized)

@@ -22,19 +22,20 @@ TrackControls::~TrackControls()
 {
 }
 
+static const AttachedTrackObjects::RegisteredFactory key{
+   []( Track &track ){
+      return DoGetControls::Call( track );
+   }
+};
+
 TrackControls &TrackControls::Get( Track &track )
 {
-   auto pControls =
-      std::static_pointer_cast<TrackControls>( track.GetTrackControls() );
-   if (!pControls)
-      // create on demand
-      track.SetTrackControls( pControls = DoGetControls::Call( track ) );
-   return *pControls;
+   return track.AttachedObjects::Get< TrackControls >( key );
 }
 
 const TrackControls &TrackControls::Get( const Track &track )
 {
-   return Get( const_cast< Track& >( track ) );
+   return Get( const_cast< Track & >( track ) );
 }
 
 DEFINE_ATTACHED_VIRTUAL(DoGetControls) {

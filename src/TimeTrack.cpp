@@ -27,9 +27,6 @@
 #include "ProjectRate.h"
 #include "ViewInfo.h"
 
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackControls.h"
-
 
 //TODO-MB: are these sensible values?
 #define TIMETRACK_MIN 0.01
@@ -37,15 +34,17 @@
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "timetrack",
-   []( AudacityProject &project ){
-      auto &tracks = TrackList::Get( project );
-      auto &viewInfo = ViewInfo::Get( project );
-      auto result = tracks.Add(std::make_shared<TimeTrack>(&viewInfo));
-      TrackView::Get( *result );
-      TrackControls::Get( *result );
-      return result;
-   }
+   TimeTrack::New
 };
+
+TimeTrack *TimeTrack::New( AudacityProject &project )
+{
+   auto &tracks = TrackList::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
+   auto result = tracks.Add(std::make_shared<TimeTrack>(&viewInfo));
+   result->AttachedTrackObjects::BuildAll();
+   return result;
+}
 
 TimeTrack::TimeTrack(const ZoomInfo *zoomInfo):
    Track()

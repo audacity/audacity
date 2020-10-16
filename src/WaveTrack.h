@@ -73,6 +73,9 @@ public:
    // Constructor / Destructor / Duplicator
    //
 
+   // Construct and also build all attachments
+   static WaveTrack *New( AudacityProject &project );
+
    WaveTrack(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
    WaveTrack(const WaveTrack &orig);

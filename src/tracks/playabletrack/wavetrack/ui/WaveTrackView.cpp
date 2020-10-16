@@ -937,10 +937,10 @@ WaveTrackView::DoDetailedHitTest
       if (!WaveTrackView::ClipDetailsVisible(*clip, viewInfo, st.rect)
          && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
       {
-         auto waveTrackView = std::static_pointer_cast<WaveTrackView>(pTrack->GetTrackView());
+         auto &waveTrackView = WaveTrackView::Get(*pTrack);
          results.push_back(
             AssignUIHandlePtr(
-               waveTrackView->mAffordanceHandle,
+               waveTrackView.mAffordanceHandle,
                std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
             )
          );
