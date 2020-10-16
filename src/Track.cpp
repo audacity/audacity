@@ -35,7 +35,6 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "tracks/ui/CommonTrackPanelCell.h"
 #include "Project.h"
 #include "ProjectSettings.h"
 
@@ -141,22 +140,22 @@ void Track::SetOwner
    mNode = node;
 }
 
-const std::shared_ptr<CommonTrackCell> &Track::GetTrackView()
+const std::shared_ptr<TrackAttachment> &Track::GetTrackView()
 {
    return mpView;
 }
 
-void Track::SetTrackView( const std::shared_ptr<CommonTrackCell> &pView )
+void Track::SetTrackView( const std::shared_ptr<TrackAttachment> &pView )
 {
    mpView = pView;
 }
 
-const std::shared_ptr<CommonTrackCell> &Track::GetTrackControls()
+const std::shared_ptr<TrackAttachment> &Track::GetTrackControls()
 {
    return mpControls;
 }
 
-void Track::SetTrackControls( const std::shared_ptr<CommonTrackCell> &pControls )
+void Track::SetTrackControls( const std::shared_ptr<TrackAttachment> &pControls )
 {
    mpControls = pControls;
 }
