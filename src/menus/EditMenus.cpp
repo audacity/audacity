@@ -1,7 +1,7 @@
-
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"
+#include "../EditUtilities.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -17,14 +17,12 @@
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "UndoManager.h"
-#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "TimeWarper.h"
 #include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
-#include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/VetoDialogHook.h"
@@ -37,40 +35,6 @@ void FinishCopy
    Track::FinishCopy( n, dest.get() );
    if (dest)
       list.Add( dest );
-}
-
-// Handle text paste (into active label), if any. Return true if did paste.
-// (This was formerly the first part of overly-long OnPaste.)
-bool DoPasteText(AudacityProject &project)
-{
-   auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   auto &window = ProjectWindow::Get( project );
-
-   for (auto pLabelTrack : tracks.Any<LabelTrack>())
-   {
-      // Does this track have an active label?
-      if (LabelTrackView::Get( *pLabelTrack ).GetTextEditIndex(project) != -1) {
-
-         // Yes, so try pasting into it
-         auto &view = LabelTrackView::Get( *pLabelTrack );
-         if (view.PasteSelectedText( project, selectedRegion.t0(),
-                                            selectedRegion.t1() ))
-         {
-            ProjectHistory::Get( project )
-               .PushState(XO("Pasted text from the clipboard"), XO("Paste"));
-
-            // Make sure caret is in view
-            int x;
-            if (view.CalcCursorX( project, &x )) {
-               window.ScrollIntoView(x);
-            }
-
-            return true;
-         }
-      }
-   }
-   return false;
 }
 
 // Return true if nothing selected, regardless of paste result.
@@ -208,17 +172,10 @@ void OnCut(const CommandContext &context)
    auto &ruler = AdornedRulerPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   // This doesn't handle cutting labels, it handles
-   // cutting the _text_ inside of labels, i.e. if you're
-   // in the middle of editing the label text and select "Cut".
-
-   for (auto lt : tracks.Selected< LabelTrack >()) {
-      auto &view = LabelTrackView::Get( *lt );
-      if (view.CutSelectedText( context.project )) {
-         trackPanel.Refresh(false);
+   // Handle special cut (such as from label tracks) first.
+   for (const auto &pMethods: GetCopyPasteMethods())
+      if (pMethods && pMethods->DoCut(project))
          return;
-      }
-   }
 
    //Presumably, there might be not more than one track
    //that expects text input
@@ -331,13 +288,11 @@ void OnCopy(const CommandContext &context)
    auto &trackPanel = TrackPanel::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
-      auto &view = LabelTrackView::Get( *lt );
-      if (view.CopySelectedText( context.project )) {
-         //trackPanel.Refresh(false);
+   // Handle special copy (such as from label tracks) first.
+   for (const auto &pMethods: GetCopyPasteMethods())
+      if (pMethods && pMethods->DoCopy(project))
          return;
-      }
-   }
+
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
@@ -403,9 +358,10 @@ void OnPaste(const CommandContext &context)
 
    auto isSyncLocked = settings.IsSyncLocked();
 
-   // Handle text paste (into active label) first.
-   if (DoPasteText(project))
-      return;
+   // Handle special paste (such as into active label) first.
+   for (const auto &pMethods: GetCopyPasteMethods())
+      if (pMethods && pMethods->DoPaste(project))
+         return;
 
    //Presumably, there might be not more than one track
    //that expects text input
@@ -1025,15 +981,11 @@ void OnPasteOver(const CommandContext &context)
 const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
    [](const AudacityProject &project){
-      auto range = TrackList::Get( project ).Any<const LabelTrack>()
-         + [&](const LabelTrack *pTrack){
-            return LabelTrackView::Get( *pTrack ).IsTextSelected(
-               // unhappy const_cast because track focus might be set
-               const_cast<AudacityProject&>(project)
-            );
-         };
-      if ( !range.empty() )
-         return true;
+      // Detect condition for enabling special cut or copy
+      //(such as from label tracks).
+      for (const auto &pMethods: GetCopyPasteMethods())
+         if (pMethods && pMethods->Enable(project))
+            return true;
 
       if (
          TimeSelectedPred( project )

@@ -131,6 +131,8 @@ list( APPEND SOURCES
       Diags.h
       DropTarget.cpp
       DropoutDetector.cpp
+      EditUtilities.cpp
+      EditUtilities.h
       EffectPlugin.cpp
       EffectPlugin.h
       EnvelopeEditor.cpp
@@ -865,6 +867,7 @@ list( APPEND SOURCES
       tracks/labeltrack/ui/LabelGlyphHandle.h
       tracks/labeltrack/ui/LabelTextHandle.cpp
       tracks/labeltrack/ui/LabelTextHandle.h
+      tracks/labeltrack/ui/LabelTrackCopyPaste.cpp
       tracks/labeltrack/ui/LabelTrackControls.cpp
       tracks/labeltrack/ui/LabelTrackControls.h
       tracks/labeltrack/ui/LabelTrackShifter.cpp
