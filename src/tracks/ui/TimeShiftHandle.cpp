@@ -262,6 +262,7 @@ template<> auto MakeTrackShifter::Implementation() -> Function {
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
+static MakeTrackShifter registerMakeTrackShifter;
 
 void ClipMoveState::Init(
    AudacityProject &project,
