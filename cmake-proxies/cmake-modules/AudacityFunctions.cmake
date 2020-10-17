@@ -221,6 +221,39 @@ function( audacity_append_common_compiler_options var )
    set( ${var} "${${var}}" PARENT_SCOPE )
 endfunction()
 
+function( import_export_symbol var module_name )
+   # compute, e.g. "TRACK_UI_API" from module name "mod-track-ui"
+   string( REGEX REPLACE "^mod-" "" symbol "${module_name}" )
+   string( TOUPPER "${symbol}" symbol )
+   string( REPLACE "-" "_" symbol "${symbol}" )
+   string( APPEND symbol "_API" )
+   set( "${var}" "${symbol}" PARENT_SCOPE )
+endfunction()
+
+function( import_symbol_define var module_name )
+   import_export_symbol( symbol "${module_name}" )
+   if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      set( value "_declspec(dllimport)" )
+   elseif( HAVE_VISIBILITY )
+      set( value "__attribute__((visibility(\"default\")))" )
+   else()
+      set( value "" )
+   endif()
+   set( "${var}" "${symbol}=${value}" PARENT_SCOPE )
+endfunction()
+
+function( export_symbol_define var module_name )
+   import_export_symbol( symbol "${module_name}" )
+   if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      set( value "_declspec(dllexport)" )
+   elseif( HAVE_VISIBILITY )
+      set( value "__attribute__((visibility(\"default\")))" )
+   else()
+      set( value "" )
+   endif()
+   set( "${var}" "${symbol}=${value}" PARENT_SCOPE )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
 
@@ -237,6 +270,14 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       set( LIBTYPE MODULE )
    endif()
    add_library( ${TARGET} ${LIBTYPE} )
+
+   export_symbol_define( export_symbol "${TARGET}" )
+   import_symbol_define( import_symbol "${TARGET}" )
+   set( DEFINES
+      ${ADDITIONAL_DEFINES}
+      PRIVATE "${export_symbol}"
+      INTERFACE "${import_symbol}"
+   )
 
    set( LOPTS
       PRIVATE
@@ -266,7 +307,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
    target_sources( ${TARGET} PRIVATE ${SOURCES} )
-   target_compile_definitions( ${TARGET} PRIVATE ${ADDITIONAL_DEFINES} )
+   target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
    target_compile_options( ${TARGET} ${OPTIONS} )
    target_include_directories( ${TARGET} PUBLIC ${TARGET_ROOT} )
 
