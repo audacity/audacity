@@ -221,13 +221,7 @@ function( audacity_append_common_compiler_options var )
    set( ${var} "${${var}}" PARENT_SCOPE )
 endfunction()
 
-# Set up for defining a module target.
-# Pass a name and sources, and a list of other targets.
-# Use the interface compile definitions and include directories of the
-# other targets, and link to them.
-# More defines, and more target libraries (maybe generator expressions)
-# may be given too.
-function( audacity_module NAME SOURCES IMPORT_TARGETS
+function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
 
    set( TARGET ${NAME} )
@@ -294,5 +288,40 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
 	 endif()
       endforeach()
    endif()
+
+   # collect dependency information
+   list( APPEND GRAPH_EDGES "\"${TARGET}\" [shape=box]" )
+   set(ACCESS PUBLIC PRIVATE INTERFACE)
+   foreach( IMPORT ${IMPORT_TARGETS} )
+      if(IMPORT IN_LIST ACCESS)
+         continue()
+      endif()
+      string( REGEX REPLACE "-interface\$" "" IMPORT "${IMPORT}"  )
+      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
+   endforeach()
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
 endfunction()
 
+# Set up for defining a module target.
+# All modules depend on the application.
+# Pass a name and sources, and a list of other targets.
+# Use the interface compile definitions and include directories of the
+# other targets, and link to them.
+# More defines, and more target libraries (maybe generator expressions)
+# may be given too.
+macro( audacity_module NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
+   # The extra indirection of a function call from this macro, and
+   # re-assignment of GRAPH_EDGES, is so that a module definition may
+   # call this macro, and it will (correctly) collect edges for the
+   # CMakeLists.txt in the directory above it; but otherwise we take
+   # advantage of function scoping of variables.
+   audacity_module_fn(
+      "${NAME}"
+      "${SOURCES}"
+      "${IMPORT_TARGETS}"
+      "${ADDITIONAL_DEFINES}"
+      "${ADDITIONAL_LIBRARIES}"
+   )
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+endmacro()

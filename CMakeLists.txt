@@ -444,6 +444,18 @@ else()
    configure_file( src/audacity_config.h.in src/private/configunix.h )
 endif()
 
+# Generate a picture of module dependencies
+string( JOIN "\n" GRAPH_EDGES ${GRAPH_EDGES} )
+# Choose edge attributes making it easy to hover at either end of edge
+# and see a tooltip describing the edge, in svg image
+file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
+   graph [rankdir=LR] edge [dir=both,arrowtail=inv] \n"
+   "${GRAPH_EDGES}"
+   "\n}\n"
+)
+execute_process( COMMAND
+   dot -O -Tsvg "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" )
+
 # Uncomment what follows for symbol values.
 #[[
    get_cmake_property( _variableNames VARIABLES )
