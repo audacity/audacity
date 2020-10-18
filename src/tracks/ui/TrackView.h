@@ -31,7 +31,7 @@ public:
 
    explicit
    TrackView( const std::shared_ptr<Track> &pTrack );
-   virtual ~TrackView() = 0;
+   virtual ~TrackView();
 
    // some static conveniences, useful for summation over track iterator
    // ranges
@@ -61,7 +61,7 @@ public:
 
    //! @return height of the track when collapsed
    /*! See other comments for GetHeight */
-   virtual int GetMinimizedHeight() const = 0;
+   virtual int GetMinimizedHeight() const;
 
    //! @return height of the track as it now appears, expanded or collapsed
    /*!
@@ -109,6 +109,16 @@ public:
 
    virtual void DoSetMinimized( bool isMinimized );
 
+   //! Returns no hits
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *) override;
+
+   //! Paints a blank rectangle
+   void Draw(
+      TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
+      override;
+
 private:
 
    // No need yet to make this virtual
@@ -117,10 +127,9 @@ private:
    void DoSetHeight(int h);
 
 protected:
-
    // Private factory to make appropriate object; class TrackView handles
    // memory management thereafter
-   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() = 0;
+   virtual std::shared_ptr<TrackVRulerControls> DoGetVRulerControls();
 
    std::shared_ptr<TrackVRulerControls> mpVRulerControls;
 

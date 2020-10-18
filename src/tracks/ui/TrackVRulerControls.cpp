@@ -43,6 +43,10 @@ const TrackVRulerControls &TrackVRulerControls::Get( const TrackView &trackView 
    return *trackView.GetVRulerControls();
 }
 
+void TrackVRulerControls::UpdateRuler( const wxRect & )
+{
+}
+
 std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 {
    const auto pView = mwTrackView.lock();

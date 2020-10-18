@@ -25,7 +25,17 @@ public:
    explicit
    TrackControls( std::shared_ptr<Track> pTrack );
 
-   virtual ~TrackControls() = 0;
+   virtual ~TrackControls();
+
+   //! Returns no hits
+   std::vector<UIHandlePtr> HitTest
+      (const TrackPanelMouseState &state,
+       const AudacityProject *) override;
+
+   //! Paints a blank rectangle
+   void Draw(
+      TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
+      override;
 };
 
 #include "AttachedVirtualFunction.h"
