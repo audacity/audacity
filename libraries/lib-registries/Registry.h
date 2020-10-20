@@ -39,13 +39,13 @@ namespace Registry {
    struct OrderingHint
    {
       /*!
-       The default Unspecified hint is just like End, except that in case the
+       The default Unspecified hint is just like End, but is overridden if the
        item is delegated to (by an IndirectItem, ComputedItem, or anonymous
-       group), the delegating item's hint will be used instead
+       group).  The delegating item's hint will be used instead
        */
       enum Type : int {
-         Before, After,
          Begin, End,
+         Before, After,
          Unspecified // keep this last
       } type;
 
@@ -59,9 +59,9 @@ namespace Registry {
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
 
+      /*! This sorts unspecified placements later */
       bool operator < ( const OrderingHint &other ) const
       {
-         // This sorts unspecified placements later
          return std::make_pair( type, name ) <
             std::make_pair( other.type, other.name );
       }
