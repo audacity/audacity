@@ -92,10 +92,6 @@
 /*
 There are several functions that can be used in a GUI module.
 
-//#define versionFnName   "GetVersionString"
-If the version is wrong, the module will be rejected.
-That is it will be loaded and then unloaded.
-
 //#define ModuleDispatchName "ModuleDispatch"
 The most useful function.  See the example in this 
 file.  It has several cases/options in it.
@@ -130,20 +126,11 @@ void RegisterMenuItems()
 }
 }
 
+DEFINE_VERSION_CHECK
+
 extern "C"
 {
    static NyqBench *gBench = NULL;
-
-   extern DLL_API const wxChar * GetVersionString();
-   // GetVersionString
-   // REQUIRED for the module to be accepted by Audacity.
-   // Without it Audacity will see a version number mismatch.
-   const wxChar * GetVersionString()
-   {
-      // For now, the versions must match exactly for Audacity to 
-      // agree to load the module.
-      return AUDACITY_VERSION_STRING;
-   }
 
    extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
    // ModuleDispatch
