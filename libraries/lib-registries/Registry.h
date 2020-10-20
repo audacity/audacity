@@ -26,8 +26,8 @@ namespace Registry {
       // item is delegated to (by a SharedItem, ComputedItem, or nameless
       // transparent group), the delegating item's hint will be used instead
       enum Type : int {
-         Before, After,
          Begin, End,
+         Before, After,
          Unspecified // keep this last
       } type{ Unspecified };
 
