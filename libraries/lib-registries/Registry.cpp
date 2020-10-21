@@ -712,9 +712,9 @@ void Visitor::Visit(SingleItem &, const Path &) {}
 
 void Visit( Visitor &visitor, BaseItem *pTopItem, const GroupItem *pRegistry )
 {
-   std::vector< BaseItemSharedPtr > computedItems;
+   visitor.computedItems.clear();
    bool doFlush = false;
-   CollectedItems collection{ {}, computedItems };
+   CollectedItems collection{ {}, visitor.computedItems };
    Path emptyPath;
    VisitItem(
       visitor, collection, emptyPath, pTopItem,
