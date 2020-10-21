@@ -237,6 +237,6 @@ void MenuRegistry::Visit(Visitor<Traits> &visitor, AudacityProject &project)
    static const auto menuTree = MenuRegistry::Items( MenuPathStart );
 
    wxLogNull nolog;
-   Registry::VisitWithFunctions(visitor, menuTree.get(),
-      &MenuRegistry::ItemRegistry::Registry(), project);
+   Registry::VisitWithFunctions{ visitor, menuTree.get(),
+      &MenuRegistry::ItemRegistry::Registry(), project };
 }

@@ -16,11 +16,11 @@ Paul Licameli split from Menus.cpp
 
 #include "BasicUI.h"
 
+using namespace Registry;
+using namespace Registry::detail;
+
 namespace {
 struct ItemOrdering;
-
-using namespace Registry;
-using namespace detail;
 
 //! Used only internally
 struct PlaceHolder : GroupItemBase {
@@ -169,8 +169,6 @@ void CollectItem(CollectedItems &collection,
    }
 }
 
-using Path = std::vector< Identifier >;
-
    std::unordered_set< wxString > sBadPaths;
    void BadPath(
      const TranslatableString &format, const wxString &key, const Identifier &name )
@@ -209,10 +207,12 @@ XO("Plug-in items at %s specify conflicting placements"),
          key, name);
    }
 
+using Path = VisitBase::Path;
+
 struct ItemOrdering {
    wxString key;
 
-   ItemOrdering( const Path &path )
+   ItemOrdering(const Path &path)
    {
       // The set of path names determines only an unordered tree.
       // We want an ordering of the tree that is stable across runs.
@@ -621,35 +621,33 @@ void CollectedItems::MergeItems(ItemOrdering &itemOrdering,
 }
 
 // forward declaration for mutually recursive functions
-void VisitItem(
-   VisitorBase &visitor, CollectedItems &collection,
-   Path &path, const BaseItem *pItem,
+void VisitItem(VisitBase &state,
+   const VisitorBase &visitor, const BaseItem *pItem,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush, void *pComputedItemContext);
-void VisitItems(
-   VisitorBase &visitor, CollectedItems &collection,
-   Path &path, const GroupItemBase &group,
+void VisitItems(VisitBase &state,
+   const VisitorBase &visitor, const GroupItemBase &group,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush, void *pComputedItemContext)
 {
    // Make a NEW collection for this subtree, sharing the memo cache
-   CollectedItems newCollection{ {}, collection.computedItems };
+   CollectedItems newCollection{ {}, state.computedItems };
 
    // Gather items at this level
    // (The ordering hint is irrelevant when not merging items in)
    CollectItems(newCollection, group, {},
       pComputedItemContext);
 
-   path.push_back(group.name.GET());
+   state.path.push_back(group.name.GET());
 
    // Merge with the registry
    if ( pToMerge )
    {
-      ItemOrdering itemOrdering{ path };
+      ItemOrdering itemOrdering{ state.path };
       newCollection.MergeItems(itemOrdering, *pToMerge, hint,
          pComputedItemContext);
 
-      // Remember the NEW ordering, if there was any need to use the old.
+      // Remember the new ordering, if there was any need to use the old.
       // This makes a side effect in preferences.
       if ( itemOrdering.gotOrdering ) {
          wxString newValue;
@@ -669,15 +667,14 @@ void VisitItems(
 
    // Now visit them
    for ( const auto &item : newCollection.items )
-      VisitItem(visitor, collection, path,
+      VisitItem(state, visitor,
          item.visitNow, item.mergeLater, item.hint,
          doFlush, pComputedItemContext);
 
-   path.pop_back();
+   state.path.pop_back();
 }
-void VisitItem(
-   VisitorBase &visitor, CollectedItems &collection,
-   Path &path, const BaseItem *pItem,
+void VisitItem(VisitBase &state,
+   const VisitorBase &visitor, const BaseItem *pItem,
    const GroupItemBase *pToMerge, const OrderingHint &hint,
    bool &doFlush, void *pComputedItemContext)
 {
@@ -687,17 +684,16 @@ void VisitItem(
    if (const auto pSingle =
        dynamic_cast<const SingleItem*>(pItem)) {
       wxASSERT( !pToMerge );
-      visitor.Visit( *pSingle, path );
+      visitor.Visit(*pSingle, state.path);
    }
    else
    if (const auto pGroup =
        dynamic_cast<const GroupItemBase*>(pItem)) {
-      visitor.BeginGroup(*pGroup, path);
+      visitor.BeginGroup(*pGroup, state.path);
       // recursion
-      VisitItems(
-         visitor, collection, path, *pGroup, pToMerge, hint, doFlush,
+      VisitItems(state, visitor, *pGroup, pToMerge, hint, doFlush,
          pComputedItemContext);
-      visitor.EndGroup(*pGroup, path);
+      visitor.EndGroup(*pGroup, state.path);
    }
    else
       wxASSERT( false );
@@ -722,17 +718,15 @@ auto GroupItemBase::GetOrdering() const -> Ordering { return Strong; }
 
 VisitorBase::~VisitorBase() = default;
 
-void detail::Visit(VisitorBase &visitor,
+void detail::VisitBase::DoVisit(const VisitorBase &visitor,
    const GroupItemBase *pTopItem,
    const GroupItemBase *pRegistry, void *pComputedItemContext)
 {
    assert(pComputedItemContext);
-   std::vector< BaseItemSharedPtr > computedItems;
+   computedItems.clear();
+   path.clear();
    bool doFlush = false;
-   CollectedItems collection{ {}, computedItems };
-   Path emptyPath;
-   VisitItem(
-      visitor, collection, emptyPath, pTopItem,
+   VisitItem(*this, visitor, pTopItem,
       pRegistry, pRegistry->orderingHint, doFlush, pComputedItemContext);
    // Flush any writes done by MergeItems()
    if (doFlush)

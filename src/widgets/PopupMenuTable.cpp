@@ -139,8 +139,8 @@ void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
    auto &theMenu = dynamic_cast<PopupMenuImpl&>(menu);
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
-   Registry::VisitWithFunctions(visitor, table.Get(theMenu.pUserData).get(),
-      table.GetRegistry(), table);
+   Registry::VisitWithFunctions{ visitor,
+      table.Get(theMenu.pUserData).get(), table.GetRegistry(), table };
 }
 
 void PopupMenuTable::Append(

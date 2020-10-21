@@ -182,10 +182,11 @@ bool Importer::Initialize()
    static std::once_flag flag;
    std::call_once(flag, []{
       GroupItem<Traits> top{ PathStart };
-      Registry::Visit(
+      Registry::Visit{
          [](const ImporterItem &item, auto&) {
             sImportPluginList().push_back(item.mpPlugin.get()); },
-         &top, &ImporterItem::Registry());
+         &top, &ImporterItem::Registry()
+      };
    });
 
    // Ordering of the unusable plugin list is not important.

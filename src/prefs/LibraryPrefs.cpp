@@ -110,9 +110,10 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    // visit the registry to collect the plug-ins properly
    // sorted
    GroupItem<Traits> top{ PathStart };
-   Registry::Visit(
+   Registry::Visit {
       [&](const PopulatorItem &item, auto &) { item.mPopulator(S); },
-      &top, &PopulatorItem::Registry());
+      &top, &PopulatorItem::Registry()
+   };
 
    S.EndScroller();
 }

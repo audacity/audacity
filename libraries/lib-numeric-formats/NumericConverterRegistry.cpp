@@ -58,7 +58,7 @@ void NumericConverterRegistry::Visit(
 
    Registry::GroupItem<NumericConverterRegistryTraits> top { PathStart };
    bool inMatchingGroup = false;
-   Registry::Visit(std::tuple{
+   Registry::Visit{ std::tuple{
       [&](const NumericConverterRegistryGroup &group, auto&) {
          inMatchingGroup = group.GetType() == type; },
       [&](const NumericConverterRegistryItem &item, auto&) {
@@ -71,7 +71,7 @@ void NumericConverterRegistry::Visit(
       },
       [&](const NumericConverterRegistryGroup &, auto&) {
          inMatchingGroup = false; }
-   }, &top, &Registry());
+   }, &top, &Registry() };
 }
 
 const NumericConverterRegistryItem* NumericConverterRegistry::Find(

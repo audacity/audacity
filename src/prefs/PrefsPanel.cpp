@@ -94,7 +94,7 @@ PrefsPanel::Factories
       Factories factories;
 
       Registry::GroupItem<Traits> top{ PathStart };
-      Registry::Visit(std::tuple{
+      Registry::Visit{ std::tuple{
          [&](const PrefsItem &item, auto&) {
             if (!item.factory)
                return;
@@ -112,7 +112,7 @@ PrefsPanel::Factories
             childCounts.pop_back();
             indices.pop_back();
          }
-      }, &top, &PrefsItem::Registry());
+      }, &top, &PrefsItem::Registry() };
       sFactories.swap(factories);
    });
    return sFactories;

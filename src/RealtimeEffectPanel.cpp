@@ -749,7 +749,8 @@ public:
       
       RealtimeEffectsMenuVisitor visitor { menu };
       
-      Registry::VisitWithFunctions(visitor, mEffectMenuRoot.get(), {}, *mProject);
+      Registry::VisitWithFunctions{ visitor,
+         mEffectMenuRoot.get(), {}, *mProject };
       
       int commandId = wxID_NONE;
       

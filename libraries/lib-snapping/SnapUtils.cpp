@@ -115,7 +115,7 @@ void SnapFunctionsRegistry::Visit(const SnapRegistryVisitor& visitor)
    };
 
    Registry::GroupItem<SnapRegistryTraits> top { PathStart };
-   Registry::VisitWithFunctions(visitor, &top, &Registry());
+   Registry::VisitWithFunctions{ visitor, &top, &Registry() };
 }
 
 const SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
@@ -136,7 +136,7 @@ const SnapRegistryItem* SnapFunctionsRegistry::Find(const Identifier& id)
       }
    };
 
-   Registry::Visit(visitor, &Registry());
+   Registry::Visit{ visitor, &Registry() };
 
    it = cache.find(id);
 

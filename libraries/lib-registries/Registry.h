@@ -542,11 +542,20 @@ namespace detail {
          const = 0;
    };
 
-   REGISTRIES_API void Visit(
-      VisitorBase &visitor,
-      const GroupItemBase *pTopItem,
-      const GroupItemBase *pRegistry,
-      void *pComputedItemContext);
+   struct REGISTRIES_API VisitBase {
+      using Path = std::vector<Identifier>;
+
+      //! Extends the lifetimes of computed items created by Visit() until
+      //! this is destroyed
+      std::vector<detail::BaseItemSharedPtr> computedItems;
+      Path path;
+
+      void DoVisit(const VisitorBase &visitor,
+        const GroupItemBase *pTopItem,
+        const GroupItemBase *pRegistry,
+        void *pComputedItemContext);
+   };
+
 
    //! Type-erasing adapter class (with no std::function overhead)
    /*!
@@ -592,7 +601,15 @@ namespace detail {
     seen in the registry for the first time is placed somewhere, and that
     ordering should be kept the same thereafter in later runs (which may add
     yet other previously unknown items).
+    Computed registry items' lifetimes last until state is destroyed or
+    passed again to Visit().
 
+    This object does the work in its constructor, and extends the lifetimes of
+    computed items until it is destroyed
+    */
+   template<typename RegistryTraits, typename Visitors>
+   struct Visit : detail::VisitBase {
+      /*
     @param visitors A tuple of size 1 or 3, or a callable.
       - If a triple, the first member is for pre-visit of group nodes, the last
          is for post-visit, and the middle for leaf visits.
@@ -604,33 +621,39 @@ namespace detail {
     GroupItem<RegistryTraits> or a const SingleItem subtype, and the path up to
     its parent node.
     @param computedItemContext is passed to factory functions of computed items
-    */
-   template<typename RegistryTraits, typename Visitors>
-   void Visit(const Visitors &visitors,
-      const GroupItem<RegistryTraits> *pTopItem,
-      const GroupItem<RegistryTraits> *pRegistry = {},
-      typename RegistryTraits::ComputedItemContextType &computedItemContext =
-         RegistryTraits::ComputedItemContextType::Instance)
-   {
-      static_assert(AcceptableTraits_v<RegistryTraits>);
-      detail::Visitor<RegistryTraits, Visitors> visitor{ visitors };
-      detail::Visit(visitor, pTopItem, pRegistry, &computedItemContext);
-   }
+       */
+      Visit(const Visitors &visitors,
+         const GroupItem<RegistryTraits> *pTopItem,
+         const GroupItem<RegistryTraits> *pRegistry = {},
+         typename RegistryTraits::ComputedItemContextType &computedItemContext =
+            RegistryTraits::ComputedItemContextType::Instance)
+      {
+         static_assert(AcceptableTraits_v<RegistryTraits>);
+         auto visitor = detail::Visitor<RegistryTraits, Visitors>{ visitors };
+         DoVisit(visitor, pTopItem, pRegistry, &computedItemContext);
+      }
+   };
 
    //! @copydoc Visit
    //! Like Visit but passing function(s) wrapped in std::function
    template<typename RegistryTraits>
-   void VisitWithFunctions(const VisitorFunctions<RegistryTraits> &visitors,
-      const GroupItem<RegistryTraits> *pTopItem,
-      const GroupItem<RegistryTraits> *pRegistry = {},
-      typename RegistryTraits::ComputedItemContextType &computedItemContext =
-         RegistryTraits::ComputedItemContextType::Instance)
-   {
-      static_assert(AcceptableTraits_v<RegistryTraits>);
-      Variant::Visit([&](auto &&visitor){
-         Visit(visitor, pTopItem, pRegistry, computedItemContext);
-      }, visitors);
-   }
+   struct VisitWithFunctions : detail::VisitBase {
+      VisitWithFunctions(const VisitorFunctions<RegistryTraits> &visitors,
+         const GroupItem<RegistryTraits> *pTopItem,
+         const GroupItem<RegistryTraits> *pRegistry = {},
+         typename RegistryTraits::ComputedItemContextType &computedItemContext =
+            RegistryTraits::ComputedItemContextType::Instance)
+      {
+         static_assert(AcceptableTraits_v<RegistryTraits>);
+         Variant::Visit([&](auto &&visitor){
+            using V = std::remove_const_t<
+               std::remove_reference_t<decltype(visitor)>>;
+            auto vis =
+               detail::Visitor<RegistryTraits, V>{ visitor };
+            DoVisit(vis, pTopItem, pRegistry, &computedItemContext);
+         }, visitors);
+      }
+   };
 
    // Typically a static object.  Constructor initializes certain preferences
    // if they are not present.  These preferences determine an extrinsic

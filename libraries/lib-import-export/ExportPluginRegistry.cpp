@@ -62,10 +62,11 @@ void ExportPluginRegistry::Initialize()
    // visit the registry to collect the plug-ins properly
    // sorted
    GroupItem<Traits> top{ PathStart };
-   Registry::Visit(
+   Registry::Visit{
       [&](const ExportPluginRegistryItem &item, auto&){
          mPlugins.emplace_back(item.mFactory()); },
-      &top, &ExportPluginRegistryItem::Registry());
+      &top, &ExportPluginRegistryItem::Registry()
+   };
 }
 
 std::tuple<ExportPlugin*, int>
