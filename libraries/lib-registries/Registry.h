@@ -280,6 +280,13 @@ namespace Registry {
       virtual void BeginGroup( GroupItem &item, const Path &path );
       virtual void EndGroup( GroupItem &item, const Path &path );
       virtual void Visit( SingleItem &item, const Path &path );
+
+   private:
+      std::vector< BaseItemSharedPtr > computedItems;
+      friend REGISTRIES_API void Visit(
+         Visitor &visitor,
+         BaseItem *pTopItem,
+         const GroupItem *pRegistry );
    };
 
    // Top-down visitation of all items and groups in a tree rooted in
@@ -291,6 +298,8 @@ namespace Registry {
    // seen in the registry for the first time is placed somehere, and that
    // ordering should be kept the same thereafter in later runs (which may add
    // yet other previously unknown items).
+   // Computed registry items' lifetimes last until visitor is destroyed or
+   // passed again to Visit().
    REGISTRIES_API void Visit(
       Visitor &visitor,
       BaseItem *pTopItem,
