@@ -45,6 +45,7 @@ for drawing different aspects of the label and its text box.
 
 #include "Prefs.h"
 #include "ProjectFileIORegistry.h"
+#include "prefs/ImportExportPrefs.h"
 
 #include "effects/TimeWarper.h"
 #include "widgets/AudacityMessageBox.h"
@@ -443,8 +444,9 @@ void LabelStruct::Export(wxTextFile &file) const
    // Do we need more lines?
    auto f0 = selectedRegion.f0();
    auto f1 = selectedRegion.f1();
-   if (f0 == SelectedRegion::UndefinedFrequency &&
-       f1 == SelectedRegion::UndefinedFrequency)
+   if ((f0 == SelectedRegion::UndefinedFrequency &&
+      f1 == SelectedRegion::UndefinedFrequency) ||
+      ImportExportPrefs::LabelStyleSetting.ReadEnum())
       return;
 
    // Write a \ character at the start of a second line,

@@ -76,6 +76,19 @@ EnumSetting< bool > ImportExportPrefs::ExportDownMixSetting{
    wxT("/FileFormats/ExportDownMix"),
 };
 
+EnumSetting< bool > ImportExportPrefs::LabelStyleSetting{
+   wxT("/FileFormats/LabelStyleChoice"),
+   {
+      EnumValueSymbol{ wxT("Standard"), XXO("S&tandard") },
+      EnumValueSymbol{ wxT("Extended"), XXO("E&xtended (with frequency ranges)") },
+   },
+   0, // true
+
+   {
+      true, false,
+   },
+};
+
 EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
    wxT("/FileFormats/AllegroStyleChoice"),
    {
@@ -114,6 +127,18 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
                      false});
    }
    S.EndStatic();
+
+   S.StartStatic(XO("Exported Label Style:"));
+   {
+      S.StartRadioButtonGroup(ImportExportPrefs::LabelStyleSetting);
+      {
+         S.TieRadioButton();
+         S.TieRadioButton();
+      }
+      S.EndRadioButtonGroup();
+   }
+   S.EndStatic();
+
 #ifdef USE_MIDI
    S.StartStatic(XO("Exported Allegro (.gro) files save time as:"));
    {
