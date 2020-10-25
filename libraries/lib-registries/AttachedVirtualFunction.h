@@ -72,13 +72,15 @@ AttachedVirtualFunction<
    AbstractHost, // class to be switched on by runtime type
    int, double // other arguments
 >;
+// Allow correct linkage for overrides defined in dynamically loaded modules:
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, DoSomething);
 ```
 
 Definitions needed:
 ```
 //file Client.cpp
-// Define the default function body here (as a function returning a function!)
-template<> auto DoSomething::Implementation() -> Function {
+// Define the default function body here
+DEFINE_ATTACHED_VIRTUAL(DoSomething) {
    return [](AbstractHost &host, int arg1, double arg2) {
       return ErrorCode::Ok;
    };
@@ -86,9 +88,6 @@ template<> auto DoSomething::Implementation() -> Function {
    // at runtime if the virtual function is invoked for a host subclass for which no override
    // was defined.
 }
-// Must also guarantee construction of an instance of class DoSomething at least
-// once before any use of DoSomething::Call()
-static DoSomething registerMe;
 ```
 
 Usage of the method somewhere else:
@@ -124,7 +123,7 @@ Overrides of the method, defined in any other .cpp file:
 // An override of the function, building up a hierarchy of function bodies parallel
 // to the host class hierarchy
 using DoSomethingSpecial = DoSomething::Override< SpecialHost >;
-template<> template<> auto DoSomethingSpecial::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoSomethingSpecial) {
    // The function can be defined without casting the first argument
    return [](SpecialHost &host, int arg1, double arg2) {
       return arg1 == 0 ? ErrorCode::Ok : ErrorCode::Bad;
@@ -135,8 +134,7 @@ static DoSomethingSpecial registerMe;
 // A further override, demonstrating call-through too
 using DoSomethingExtraSpecial =
    DoSomething::Override< ExtraSpecialHost, DoSomethingSpecial >;
-template<> template<>
-auto DoSomethingExtraSpecial::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoSomethingExtraSpecial) {
    return [](ExtraSpecialHost &host, int arg1, double arg2){
       // Call the immediately overridden version of the function
       auto result = Callthrough( host, arg1, arg2 );
@@ -173,11 +171,7 @@ public:
 
     //! At least one static instance must be created; more instances are harmless
     /*! (There will be others if there are any overrides.) */
-   AttachedVirtualFunction()
-   {
-      static std::once_flag flag;
-      std::call_once( flag, []{ Register<This>( Implementation() ); } );
-   }
+   AttachedVirtualFunction();
 
    //! For defining overrides of the method
    /*!
@@ -280,11 +274,33 @@ private:
    };
 
    using Registry = std::vector< Entry >;
-   static Registry &GetRegistry()
-   {
-      static Registry registry;
-      return registry;
-   }
+   static Registry &GetRegistry();
 };
+
+//! Typically follow the `using` declaration of a new AttachedVirtualFunction with this macro
+#define DECLARE_EXPORTED_ATTACHED_VIRTUAL(DECLSPEC, Name)      \
+   template<> DECLSPEC Name::AttachedVirtualFunction();        \
+   template<> auto DECLSPEC Name::GetRegistry() -> Registry &; \
+   template<> auto DECLSPEC Name::Implementation() -> Function
+
+//! Used in the companion .cpp file to the .h using the above macro; followed by a function body
+#define DEFINE_ATTACHED_VIRTUAL(Name)                          \
+   template<> Name::AttachedVirtualFunction()                  \
+   {                                                           \
+      static std::once_flag flag;                              \
+      std::call_once( flag, []{ Register<Object>( Implementation() ); } ); \
+   }                                                           \
+   template<> auto Name::GetRegistry() -> Registry &           \
+   {                                                           \
+      static Registry registry;                                \
+      return registry;                                         \
+   }                                                           \
+   static Name register ## Name ;                              \
+   template<> auto Name::Implementation() -> Function
+
+//! Used to define overriding function; followed by a function body
+#define DEFINE_ATTACHED_VIRTUAL_OVERRIDE(Name)                 \
+   static Name register ## Name ;                              \
+   template<> template<> auto Name::Implementation() -> Function \
 
 #endif

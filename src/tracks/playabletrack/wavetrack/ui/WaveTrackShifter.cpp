@@ -188,9 +188,8 @@ private:
 };
 
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
-template<> template<> auto MakeWaveTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeWaveTrackShifter) {
    return [](WaveTrack &track, AudacityProject&) {
       return std::make_unique<WaveTrackShifter>(track);
    };
 }
-static MakeWaveTrackShifter registerMakeWaveTrackShifter;

@@ -1043,12 +1043,11 @@ void WaveTrackView::DoSetMinimized( bool minimized )
 }
 
 using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
-template<> template<> auto DoGetWaveTrackView::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackView) {
    return [](WaveTrack &track) {
       return std::make_shared<WaveTrackView>( track.SharedPointer() );
    };
 }
-static DoGetWaveTrackView registerDoGetWaveTrackView;
 
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 {

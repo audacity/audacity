@@ -248,9 +248,8 @@ private:
 };
 
 using MakeLabelTrackShifter = MakeTrackShifter::Override<LabelTrack>;
-template<> template<> auto MakeLabelTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeLabelTrackShifter) {
    return [](LabelTrack &track, AudacityProject &project) {
       return std::make_unique<LabelTrackShifter>(track, project);
    };
 }
-static MakeLabelTrackShifter registerMakeLabelTrackShifter;

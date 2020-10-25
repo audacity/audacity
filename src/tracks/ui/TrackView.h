@@ -113,6 +113,7 @@ AttachedVirtualFunction<
    std::shared_ptr< TrackView >,
    Track
 >;
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, DoGetView);
 
 struct GetDefaultTrackHeightTag;
 
@@ -122,5 +123,6 @@ AttachedVirtualFunction<
    int,
    Track
 >;
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, GetDefaultTrackHeight);
 
 #endif
