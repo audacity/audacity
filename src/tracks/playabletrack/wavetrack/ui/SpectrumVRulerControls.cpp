@@ -90,7 +90,7 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
          SpectrogramSettings &settings = SpectrogramSettings::Own(*wt);
          const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
          float bottom, top;
-         wt->GetSpectrumBounds(&bottom, &top);
+         SpectrogramBounds::Get(*wt).GetBounds(*wt, bottom, top);
          const double rate = wt->GetRate();
          const float bound = rate / 2;
          const NumberScale numberScale(settings.GetScale(bottom, top));
@@ -104,7 +104,8 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
                   numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
          
          for (auto channel : TrackList::Channels(wt))
-            channel->SetSpectrumBounds(newBottom, newTop);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(newBottom, newTop);
       }
    }
    else
@@ -137,7 +138,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
    auto vruler = &WaveTrackVRulerControls::ScratchRuler();
    const auto &settings = SpectrogramSettings::Get(*wt);
    float minFreq, maxFreq;
-   wt->GetSpectrumBounds(&minFreq, &maxFreq);
+   SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
    vruler->SetDbMirrorValue( 0.0 );
    
    switch (settings.scaleType) {

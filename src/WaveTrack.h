@@ -30,7 +30,6 @@ namespace BasicUI{ class ProgressDialog; }
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
-class SpectrogramSettings;
 class TimeWarper;
 
 class Sequence;
@@ -158,11 +157,6 @@ private:
 
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
-
-   const SpectrogramSettings &GetSpectrogramSettings() const;
-   SpectrogramSettings &GetSpectrogramSettings();
-   SpectrogramSettings &GetIndependentSpectrogramSettings();
-   void SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pSettings);
 
    //
    // High-level editing
@@ -508,9 +502,6 @@ private:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   void GetSpectrumBounds(float *min, float *max) const;
-   void SetSpectrumBounds(float min, float max) const;
-
    class IntervalData final : public Track::IntervalData {
    public:
       explicit IntervalData( const std::shared_ptr<WaveClip> &pClip )
@@ -545,13 +536,6 @@ private:
    int           mWaveColorIndex;
 
 
-   //
-   // Data that should be part of GUIWaveTrack
-   // and will be taken out of the WaveTrack class:
-   //
-   mutable float         mSpectrumMin;
-   mutable float         mSpectrumMax;
-
    mutable std::vector <Location> mDisplayLocationsCache;
 
 private:
@@ -565,9 +549,6 @@ private:
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset;
-
-   friend SpectrogramSettings;
-   std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);

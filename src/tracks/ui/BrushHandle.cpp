@@ -69,7 +69,7 @@ namespace
    {
       const auto &settings = SpectrogramSettings::Get(*wt);
       float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(frequency);
       return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
@@ -94,8 +94,9 @@ namespace
          return -1;
 
       const auto &settings = SpectrogramSettings::Get(*wt);
+      const auto &cache = SpectrogramBounds::Get(*wt);
       float minFreq, maxFreq;
-      wt->GetSpectrumBounds(&minFreq, &maxFreq);
+      cache.GetBounds(*wt, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const double p = double(mouseYCoordinate - trackTopEdge) / trackHeight;
       return numberScale.PositionToValue(1.0 - p);

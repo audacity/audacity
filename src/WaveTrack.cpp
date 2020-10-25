@@ -54,7 +54,6 @@ from the project that will own the track.
 
 #include "TimeWarper.h"
 #include "QualitySettings.h"
-#include "prefs/SpectrogramSettings.h"
 
 #include "InconsistencyException.h"
 
@@ -143,16 +142,11 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mFormat = format;
    mRate = (int) rate;
    mWaveColorIndex = 0;
-   mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
    : WritableSampleTrack(orig, std::move(a))
    , mpFactory( orig.mpFactory )
-   , mpSpectrumSettings(orig.mpSpectrumSettings
-      ? std::make_unique<SpectrogramSettings>(*orig.mpSpectrumSettings)
-      : nullptr
-   )
 {
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
@@ -171,22 +165,12 @@ void WaveTrack::Init(const WaveTrack &orig)
    mRate = orig.mRate;
    DoSetGain(orig.GetGain());
    DoSetPan(orig.GetPan());
-   mSpectrumMin = orig.mSpectrumMin;
-   mSpectrumMax = orig.mSpectrumMax;
    mDisplayLocationsCache.clear();
 }
 
 void WaveTrack::Reinit(const WaveTrack &orig)
 {
    Init(orig);
-
-   {
-      auto &settings = orig.mpSpectrumSettings;
-      if (settings)
-         mpSpectrumSettings = std::make_unique<SpectrogramSettings>(*settings);
-      else
-         mpSpectrumSettings.reset();
-   }
 
    // Copy attached data from orig.  Nullify data in this where orig had null.
    Attachments &attachments = *this;
@@ -199,8 +183,6 @@ void WaveTrack::Merge(const Track &orig)
       const WaveTrack &wt = *pwt;
       DoSetGain(wt.GetGain());
       DoSetPan(wt.GetPan());
-      SetSpectrogramSettings(wt.mpSpectrumSettings
-         ? std::make_unique<SpectrogramSettings>(*wt.mpSpectrumSettings) : nullptr);
       // Copy attached data from orig.  Nullify data in this where orig had null.
       Attachments &attachments = *this;
       attachments = *pwt;
@@ -303,56 +285,6 @@ auto WaveTrack::GetTypeInfo() const -> const TypeInfo &
 auto WaveTrack::ClassTypeInfo() -> const TypeInfo &
 {
    return typeInfo();
-}
-
-void WaveTrack::GetSpectrumBounds(float *min, float *max) const
-{
-   const double rate = GetRate();
-
-   const auto &settings = SpectrogramSettings::Get(*this);
-   const SpectrogramSettings::ScaleType type = settings.scaleType;
-
-   const float top = (rate / 2.);
-
-   float bottom;
-   if (type == SpectrogramSettings::stLinear)
-      bottom = 0.0f;
-   else if (type == SpectrogramSettings::stPeriod) {
-      // special case
-      const auto half = settings.GetFFTLength() / 2;
-      // EAC returns no data for below this frequency:
-      const float bin2 = rate / half;
-      bottom = bin2;
-   }
-   else
-      // logarithmic, etc.
-      bottom = 1.0f;
-
-   {
-      float spectrumMax = mSpectrumMax;
-      if (spectrumMax < 0)
-         spectrumMax = settings.maxFreq;
-      if (spectrumMax < 0)
-         *max = top;
-      else
-         *max = std::max(bottom, std::min(top, spectrumMax));
-   }
-
-   {
-      float spectrumMin = mSpectrumMin;
-      if (spectrumMin < 0)
-         spectrumMin = settings.minFreq;
-      if (spectrumMin < 0)
-         *min = std::max(bottom, top / 1000.0f);
-      else
-         *min = std::max(bottom, std::min(top, spectrumMin));
-   }
-}
-
-void WaveTrack::SetSpectrumBounds(float min, float max) const
-{
-   mSpectrumMin = min;
-   mSpectrumMax = max;
 }
 
 template< typename Container >
@@ -728,38 +660,6 @@ void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
    HandleClear(t0, t1, true, false);
 }
-
-const SpectrogramSettings &WaveTrack::GetSpectrogramSettings() const
-{
-   if (mpSpectrumSettings)
-      return *mpSpectrumSettings;
-   else
-      return SpectrogramSettings::defaults();
-}
-
-SpectrogramSettings &WaveTrack::GetSpectrogramSettings()
-{
-   if (mpSpectrumSettings)
-      return *mpSpectrumSettings;
-   else
-      return SpectrogramSettings::defaults();
-}
-
-SpectrogramSettings &WaveTrack::GetIndependentSpectrogramSettings()
-{
-   if (!mpSpectrumSettings)
-      mpSpectrumSettings =
-      std::make_unique<SpectrogramSettings>(SpectrogramSettings::defaults());
-   return *mpSpectrumSettings;
-}
-
-void WaveTrack::SetSpectrogramSettings(std::unique_ptr<SpectrogramSettings> &&pSettings)
-{
-   if (mpSpectrumSettings != pSettings) {
-      mpSpectrumSettings = std::move(pSettings);
-   }
-}
-
 
 namespace {
    

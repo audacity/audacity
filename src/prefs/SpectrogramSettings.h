@@ -11,6 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
+#include "ClientData.h" // to inherit
 #include "Prefs.h"
 #include "SampleFormat.h"
 #include "RealFFTf.h"
@@ -24,7 +25,9 @@ class SpectrumPrefs;
 class wxArrayStringEx;
 class WaveTrack;
 
-class AUDACITY_DLL_API SpectrogramSettings : public PrefsListener
+class AUDACITY_DLL_API SpectrogramSettings
+   : public PrefsListener
+   , public ClientData::Cloneable< ClientData::UniquePtr >
 {
    friend class SpectrumPrefs;
 public:
@@ -86,6 +89,8 @@ public:
    SpectrogramSettings(const SpectrogramSettings &other);
    SpectrogramSettings& operator= (const SpectrogramSettings &other);
    ~SpectrogramSettings();
+
+   PointerType Clone() const override;
 
    bool IsDefault() const
    {
@@ -194,5 +199,27 @@ public:
 };
 
 extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
+
+class AUDACITY_DLL_API SpectrogramBounds
+   : public ClientData::Cloneable< ClientData::UniquePtr >
+{
+public:
+
+   //! Get either the global default settings, or the track's own if previously created
+   static SpectrogramBounds &Get( WaveTrack &track );
+
+   //! @copydoc Get
+   static const SpectrogramBounds &Get( const WaveTrack &track );
+
+   ~SpectrogramBounds() override;
+   PointerType Clone() const override;
+
+   void GetBounds(const WaveTrack &wt, float &min, float &max) const;
+
+   void SetBounds(float min, float max)
+   { mSpectrumMin = min, mSpectrumMax = max; }
+
+   float mSpectrumMin = -1, mSpectrumMax = -1;
+};
 
 #endif

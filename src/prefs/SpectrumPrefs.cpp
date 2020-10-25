@@ -45,7 +45,7 @@ SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
       auto &settings = SpectrogramSettings::Get(*wt);
       mOrigDefaulted = mDefaulted = (&SpectrogramSettings::defaults() == &settings);
       mTempSettings = mOrigSettings = settings;
-      wt->GetSpectrumBounds(&mOrigMin, &mOrigMax);
+      SpectrogramBounds::Get(*wt).GetBounds(*wt, mOrigMin, mOrigMax);
       mTempSettings.maxFreq = mOrigMax;
       mTempSettings.minFreq = mOrigMin;
       mOrigPlacements = WaveTrackView::Get( *mWt ).SavePlacements();
@@ -400,11 +400,12 @@ void SpectrumPrefs::Rollback()
       for (auto channel : channels) {
          if (mOrigDefaulted) {
             SpectrogramSettings::Reset(*channel);
-            channel->SetSpectrumBounds(-1, -1);
+            SpectrogramBounds::Get(*channel).SetBounds(-1, -1);
          }
          else {
             auto &settings = SpectrogramSettings::Own(*channel);
-            channel->SetSpectrumBounds(mOrigMin, mOrigMax);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(mOrigMin, mOrigMax);
             settings = mOrigSettings;
          }
       }
@@ -449,11 +450,13 @@ void SpectrumPrefs::Preview()
          if (mDefaulted) {
             SpectrogramSettings::Reset(*channel);
             // ... and so that the vertical scale also defaults:
-            channel->SetSpectrumBounds(-1, -1);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(-1, -1);
          }
          else {
             SpectrogramSettings &settings = SpectrogramSettings::Own(*channel);
-            channel->SetSpectrumBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
+            SpectrogramBounds::Get(*channel)
+               .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
             settings = mTempSettings;
          }
       }

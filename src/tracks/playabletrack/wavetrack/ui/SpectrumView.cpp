@@ -204,7 +204,8 @@ void SpectrumView::DoSetMinimized( bool minimized )
          (SpectrogramSettings::Get(*wt).scaleType ==
             SpectrogramSettings::stLinear);
       // Zoom out full
-      wt->SetSpectrumBounds( spectrumLinear ? 0.0f : 1.0f, max );
+      SpectrogramBounds::Get(*wt)
+         .SetBounds( spectrumLinear ? 0.0f : 1.0f, max );
    }
 #endif
 
@@ -423,7 +424,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
-   track->GetSpectrumBounds(&minFreq, &maxFreq);
+   SpectrogramBounds::Get(*track)
+      .GetBounds(*track, minFreq, maxFreq);
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
