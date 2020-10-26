@@ -2213,7 +2213,8 @@ loop
 
 ;; The new (Nyquist 3.15) version:
 (defun multichan-expand-new (src fn types &rest args)
-  (let (len newlen result prev typ (index 0) nonsnd) ; len is a flag as well as a count
+  (let (chan len newlen result prev typ (index 0) nonsnd)
+    ; len is a flag as well as a count
     (dolist (a args)
       (setf typ (car types) types (cdr types))
       ;; we only report argument position when there is more than one.
@@ -2241,8 +2242,7 @@ loop
                      ((and (eq nonsnd 'NULL) (null chan)))
                      ((and (eq nonsnd 'INT-OR-NULL)
                            (or (integerp chan) (null chan))))
-                     (t (ny:error src index typ a t)))
-               (setf chan nil))
+                     (t (ny:error src index typ a t))))
              (setf prev a)
              (setf len newlen))
             ((and (eq nonsnd 'NUMBER) (numberp a)))
