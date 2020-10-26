@@ -163,7 +163,7 @@ int DoSrvMore(char *pOut, size_t nMax)
    while (currentLine < totalLines)
    {
       wxString lineString    = aStr[currentLine];
-      size_t lineLength      = lineString.Length();
+      size_t lineLength      = lineString.mb_str().length();
       size_t charsLeftInLine = lineLength - currentPosition;
 
       wxASSERT(charsLeftInLine >= 0);
