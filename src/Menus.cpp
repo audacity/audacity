@@ -409,7 +409,9 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 //"ShowMeterTB,"
 "ShowMixerTB,"
 "ShowEditTB,ShowTranscriptionTB,ShowScrubbingTB,ShowDeviceTB,ShowSelectionTB,"
-"ShowSpectralSelectionTB") }
+"ShowSpectralSelectionTB") },
+         {wxT("/Tracks/Add/Add"), wxT(
+   "NewMonoTrack,NewStereoTrack,NewLabelTrack,NewTimeTrack")},
       }
    };
 
