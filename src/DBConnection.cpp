@@ -21,6 +21,10 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include "FileException.h"
 #include "wxFileNameWrapper.h"
 
+#include "./commands/CommandContext.h"
+#include "./ProjectAudioManager.h"
+
+
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
    "PRAGMA <schema>.locking_mode = SHARED;"
@@ -276,6 +280,13 @@ sqlite3_stmt *DBConnection::GetStatement(enum StatementID id)
    return iter->second;
 }
 
+
+void OnStopAudio()
+{
+   ProjectAudioManager::Get( *GetActiveProject() ).Stop();
+}
+
+
 void DBConnection::CheckpointThread()
 {
    // Open another connection to the DB to prevent blocking the main thread.
@@ -320,29 +331,43 @@ void DBConnection::CheckpointThread()
          // Reset
          mCheckpointActive = false;
 
-         if ( rc != SQLITE_OK ) {
+         if (rc != SQLITE_OK) {
             // Can't checkpoint -- maybe the device has too little space
             wxFileNameWrapper fName{ name };
-            auto path = FileException::AbbreviatePath( fName );
+            auto path = FileException::AbbreviatePath(fName);
             auto name = fName.GetFullName();
             auto longname = name + "-wal";
             auto message1 = rc == SQLITE_FULL
-               ? XO("Could not write to %s.\n" ).Format( path )
+               ? XO("Could not write to %s.\n").Format(path)
                : TranslatableString{};
             auto message = XO(
                "Disk is full.\n"
                "%s\n"
                "For tips on freeing up space, click the help button."
-            ).Format( message1 );
+            ).Format(message1);
 
-            // Throw and catch and AudacityException, enqueuing the
-            // error message box for the event loop in the main thread
-            GuardedCall( [&message]{
-               throw SimpleMessageBoxException{
-                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; } );
-            
             // Stop trying to checkpoint
             giveUp = true;
+
+
+            // Stop the audio.
+            // OnStopAudio happens in the main thread.
+            GuardedCall(
+               [&message] {
+               throw SimpleMessageBoxException{
+                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
+               [&](AudacityException * e) {; },
+               [&](AudacityException * e) { OnStopAudio(); }
+            );
+
+            // The message box in the previous GuardedCall is swallowed,
+            // so send it again....
+            // Throw and catch and AudacityException, enqueuing the
+            // error message box for the event loop in the main thread
+            GuardedCall([&message] {
+               throw SimpleMessageBoxException{
+                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; }
+                  );
          }
       }
    }
