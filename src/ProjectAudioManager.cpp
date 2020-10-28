@@ -45,6 +45,8 @@ Paul Licameli split from ProjectManager.cpp
 #include "widgets/AudacityMessageBox.h"
 
 
+wxDEFINE_EVENT(EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
+
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectAudioManagerKey {
    []( AudacityProject &project ) {
@@ -1106,6 +1108,8 @@ You are saving directly to a slow external storage device\n\
             });
          };
          if (intervals.size()) {
+            RecordingDropoutEvent evt{ intervals };
+            mProject.ProcessEvent(evt);
             callback(intervals);
          }
       }
