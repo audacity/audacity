@@ -48,6 +48,7 @@ struct CollectedItems
    };
    std::vector< BaseItemSharedPtr > &computedItems;
    std::vector< Item > items;
+   std::unordered_set<Identifier> mResolvedConflicts;
 
    // A linear search.  Smarter search may not be worth the effort.
    using Iterator = decltype( items )::iterator;
@@ -76,8 +77,8 @@ struct CollectedItems
 
    void SubordinateMultipleItems(Item &found, GroupItemBase &items);
 
-   bool MergeWithExistingItem(
-      const ItemOrdering &itemOrdering, BaseItem *pItem);
+   auto MergeWithExistingItem(const ItemOrdering &itemOrdering,
+      BaseItem *pItem, OrderingHint::ConflictResolutionPolicy policy) -> bool;
 
    using NewItem = std::pair< BaseItem*, OrderingHint >;
    using NewItems = std::vector< NewItem >;
@@ -102,11 +103,19 @@ struct CollectedItems
 
 // When a computed or indirect item, or nameless grouping, specifies a hint and
 // the subordinate does not, propagate the hint.
-const OrderingHint &ChooseHint(BaseItem *delegate, const OrderingHint &hint)
+// Likewise for conflict resolution.
+OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 {
-   return !delegate || delegate->orderingHint.type == OrderingHint::Unspecified
+   auto result =
+      !delegate || delegate->orderingHint.type == OrderingHint::Unspecified
       ? hint
       : delegate->orderingHint;
+   auto policy =
+      !delegate || delegate->orderingHint.policy == OrderingHint::None
+      ? hint.policy
+      : delegate->orderingHint.policy;
+   result.policy = policy;
+   return result;
 }
 
 // "Collection" of items is the first pass of visitation, and resolves
@@ -470,8 +479,8 @@ void CollectedItems::SubordinateMultipleItems(Item &found, GroupItemBase &items)
          std::shared_ptr<BaseItem>(pItem.get(), [](void*){})));
 }
 
-bool CollectedItems::MergeWithExistingItem(
-   const ItemOrdering &itemOrdering, BaseItem *pItem)
+auto CollectedItems::MergeWithExistingItem(const ItemOrdering &itemOrdering,
+   BaseItem *pItem, OrderingHint::ConflictResolutionPolicy policy) -> bool
 {
    // Assume no null pointers remain after CollectItems:
    const auto &name = pItem->name;
@@ -523,12 +532,29 @@ bool CollectedItems::MergeWithExistingItem(
             found->visitNow = pRegistryGroup;
             SubordinateSingleItem(*found, demoted);
          }
-         else
-            // Collision of non-group items is the worst case!
-            // The later-registered item is lost.
-            // Which one you lose might be unpredictable when both originate
-            // from static registries.
-            ReportItemItemCollision( itemOrdering.key, name );
+         else {
+            // Collision of non-group items.
+            // Try conflict resolution.
+            switch( policy ) {
+            case OrderingHint::Ignore:
+               break;
+            case OrderingHint::Replace:
+               // At most one item with this policy may be substituted
+               if (mResolvedConflicts.insert(name).second) {
+                  found->visitNow = pItem;
+                  break;
+               }
+               [[fallthrough]] ;
+            case OrderingHint::Error:
+            default:
+               // Unresolved collision of non-group items is the worst case!
+               // The later-registered item is lost.
+               // Which one you lose might be unpredictable when both originate
+               // from static registries.
+               ReportItemItemCollision( itemOrdering.key, name );
+               break;
+            }
+         }
       }
       return true;
    }
@@ -573,7 +599,8 @@ void CollectedItems::MergeLikeNamedItems(const ItemOrdering &itemOrdering,
       }
       // Re-invoke MergeWithExistingItem for this item, which is known
       // to have a name collision, so ignore the return value.
-      MergeWithExistingItem(itemOrdering, iter++ -> first);
+      MergeWithExistingItem(itemOrdering, iter->first, iter->second.policy );
+      ++iter;
    }
 }
 
@@ -666,7 +693,8 @@ void CollectedItems::MergeItems(ItemOrdering &itemOrdering,
       // Try to merge each, resolving name collisions with items already in the
       // tree, and collecting those with names that don't collide.
       for (const auto &item : newCollection.items)
-         if (!MergeWithExistingItem(itemOrdering, item.visitNow))
+         if (!MergeWithExistingItem(itemOrdering,
+            item.visitNow, item.hint.policy))
              newItems.push_back({ item.visitNow, item.hint });
    }
 

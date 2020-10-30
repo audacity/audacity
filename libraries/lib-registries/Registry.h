@@ -49,13 +49,33 @@ namespace Registry {
          Unspecified // keep this last
       } type;
 
+      //! What to do in case a registered SingleItem is at the same path as a
+      //! predefined SingleItem
+      /*
+       The default None policy is like Error, but is overridden if the
+       item is delegated to (by a SharedItem, ComputedItem, or nameless
+       transparent group).  The delegating item's hint will be used instead
+       */
+      enum ConflictResolutionPolicy : int {
+         Error,   /*!<
+            By default, ignore the registered item and display an error */
+         Ignore,  //!< Yield to any other item
+         Replace, /*!<
+            At most one registered SingleItem may replace the predefined
+            without error */
+         None
+      } policy{ None };
+
       // name of some other BaseItem; significant only when type is Before or
       // After:
       Identifier name;
 
-      OrderingHint(Type type = Unspecified, const wxString &name = {})
-         : type{ type }, name{ name } {}
+      OrderingHint(Type type = Unspecified,
+         const wxString &name = {}, ConflictResolutionPolicy policy = Error)
+         : type{ type }, name{ name }, policy{ policy } {}
 
+      //! The conflict resolution policy is not significant in equality
+      //! comparison
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
 
