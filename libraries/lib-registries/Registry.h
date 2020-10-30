@@ -31,20 +31,30 @@ namespace Registry {
          Unspecified // keep this last
       } type{ Unspecified };
 
+      //! What to do in case a registered SingleItem is at the same path as a predefined SingleItem
+      enum ConflictResolutionPolicy : int {
+         Error,   //!< By default, ignore the registered item and display an error
+         Ignore,  //!< Yield to any other item
+         Replace, //!< At most one registered SingleItem may replace the predefined without error
+      } policy{ Error };
+
       // name of some other BaseItem; significant only when type is Before or
       // After:
       Identifier name;
 
       OrderingHint() {}
-      OrderingHint( Type type_, const wxString &name_ = {} )
-         : type(type_), name(name_) {}
+      OrderingHint( Type type,
+         const wxString &name = {}, ConflictResolutionPolicy policy = Error )
+         : type{ type }, name{ name }, policy{ policy } {}
 
+      //! The conflict resoution policy is not significant in equality comparison
       bool operator == ( const OrderingHint &other ) const
       { return name == other.name && type == other.type; }
 
+      //! The conflict resoution policy is not significant in ordering comparison
+      /*! This sorts unspecified placements later */
       bool operator < ( const OrderingHint &other ) const
       {
-         // This sorts unspecified placements later
          return std::make_pair( type, name ) <
             std::make_pair( other.type, other.name );
       }
