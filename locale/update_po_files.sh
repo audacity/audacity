@@ -1,4 +1,5 @@
 #!/bin/sh
+set -o errexit
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
 for path in ../modules/mod-script* ../modules/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
