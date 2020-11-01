@@ -1,4 +1,5 @@
 #!/bin/sh
+set -o errexit
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
 for path in ../modules/mod-script* ../modules/mod-nyq* ../include ../src ; do find $path -name \*.h -o -name \*.cpp -o -name \*.mm ; done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
@@ -27,6 +28,9 @@ xargs xgettext \
 --package-version='2.4.2' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
+if test "${AUDACITY_ONLY_POT:-}" = 'y'; then
+    return 0
+fi
 echo ";; Updating the .po files - Updating Project-Id-Version"
 for i in *.po; do
     sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.4.2\\n"' $i
