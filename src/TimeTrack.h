@@ -125,6 +125,8 @@ private:
    Track::Holder Clone() const override;
 };
 
+ENUMERATE_TRACK_TYPE(TimeTrack);
+
 
 #endif // __AUDACITY_TIMETRACK__
 

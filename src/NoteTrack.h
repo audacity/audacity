@@ -281,6 +281,8 @@ extern AUDACITY_DLL_API StringSetting MIDIPlaybackDevice;
 extern AUDACITY_DLL_API StringSetting MIDIRecordingDevice;
 extern AUDACITY_DLL_API IntSetting MIDISynthLatency_ms;
 
+ENUMERATE_TRACK_TYPE(NoteTrack);
+
 #endif // USE_MIDI
 
 #ifndef SONIFY

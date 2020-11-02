@@ -65,6 +65,79 @@ inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
 inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
 { return !(a == b); }
 
+namespace {
+
+//! Empty class which will have subclasses
+struct TrackTypeCountTag{};
+
+/*! Declared but undefined function, whose overloads will define a compile-time
+  function from integers to known sub-types of Track
+ */
+auto enumerateTrackTypes(TrackTypeCountTag, ...) -> void;
+
+//! What type is associated with `U` (at the point of instantiation for Tag)?
+template<unsigned U, typename Tag> using EnumeratedTrackType =
+   std::remove_reference_t< decltype( enumerateTrackTypes( Tag{},
+      std::integral_constant<unsigned, U>{} ) ) >;
+
+//! Embedded `value` member counts track types so far declared in the compilation unit
+/*!
+ @tparam Tag a distinct subclass of TrackTypeCountTag for one point of instantiation of the template
+ */
+template<typename Tag>
+class CountTrackTypes {
+   template<unsigned U> struct Stop{
+      static constexpr unsigned value = U; };
+   template<unsigned U> struct Count
+      : std::conditional_t<
+         std::is_void_v<EnumeratedTrackType<U, Tag>>,
+         Stop<U>,
+         Count<U + 1>
+      >
+   {};
+public:
+   static constexpr unsigned value = Count<0>::value;
+};
+
+//! Embedded `type` member is the tuple of track types so far declared in the compilation unit
+/*!
+ Each track subtype occurs earlier than its base classes in the tuple of types
+
+ @tparam Tag a distinct subclass of TrackTypeCountTag for one point of instantiation of the template
+ */
+template<typename Tag>
+class CollectTrackTypes {
+   template<typename... Types> struct Stop{
+      using type = std::tuple<Types...>; };
+   template<unsigned U, typename... Types> struct Accumulate;
+   template<unsigned U, typename Type, typename... Types> struct AccumulateType
+      : std::conditional_t< std::is_void_v<Type>,
+         Stop<Types...>,
+         Accumulate<U + 1, Type, Types...>
+      >
+   {};
+   template<unsigned U, typename... Types> struct Accumulate
+      : AccumulateType<U, EnumeratedTrackType<U, Tag>, Types...>
+   {};
+public:
+   using type = typename Accumulate<0>::type;
+};
+
+//! Implements the ENUMERATE_TRACK_TYPE macro
+template<typename T>
+struct TrackTypeCounter {
+   struct Tag : TrackTypeCountTag {};
+   static constexpr unsigned value = CountTrackTypes<Tag>::value;
+};
+
+}
+
+//! This macro should be called immediately after each definition of a track subtype
+/*! It must occur at file scope, not within any other namespace */
+#define ENUMERATE_TRACK_TYPE(T) namespace { auto enumerateTrackTypes(\
+   TrackTypeCountTag, \
+   std::integral_constant<unsigned, TrackTypeCounter<T>::value>) -> T&; }
+
 //! Enumerates all subclasses of Track (not just the leaf classes) and the None value
 enum class TrackKind
 {
@@ -832,6 +905,8 @@ public:
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
 };
 
+ENUMERATE_TRACK_TYPE(Track);
+
 //! Track subclass holding data representing sound (as notes, or samples, or ...)
 class AUDACITY_DLL_API AudioTrack /* not final */ : public Track
 {
@@ -849,6 +924,8 @@ public:
    bool HandleXMLAttribute(const std::string_view & /*attr*/, const XMLAttributeValueView &/*value*/)
    { return false; }
 };
+
+ENUMERATE_TRACK_TYPE(AudioTrack);
 
 //! AudioTrack subclass that can also be audibly replayed by the program
 class AUDACITY_DLL_API PlayableTrack /* not final */ : public AudioTrack
@@ -880,6 +957,9 @@ protected:
    bool                mMute { false };
    bool                mSolo { false };
 };
+
+ENUMERATE_TRACK_TYPE(PlayableTrack);
+
 
 //! Encapsulate the checked down-casting of track pointers
 /*! Eliminates possibility of error -- and not quietly casting away const
