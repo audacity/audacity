@@ -81,7 +81,7 @@ namespace {
       if ( !projectFileIO.AutoSave() )
          throw SimpleMessageBoxException{
             XO("Automatic database backup failed."),
-            XO("Warining"),
+            XO("Warning"),
             "Error:_Disk_full_or_not_writable"
          };
    }
