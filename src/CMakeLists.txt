@@ -1021,6 +1021,7 @@ list( APPEND OPTIONS
       $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
       $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
       $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
+      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
 )
 
 list( APPEND LDFLAGS
