@@ -265,6 +265,8 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
+      SyncLock.cpp
+      SyncLock.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp

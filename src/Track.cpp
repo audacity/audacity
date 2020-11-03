@@ -25,8 +25,6 @@ and TimeTrack.
 
 #include "Track.h"
 
-
-
 #include <algorithm>
 #include <numeric>
 
@@ -36,7 +34,6 @@ and TimeTrack.
 #include <wx/log.h>
 
 #include "Project.h"
-#include "ProjectSettings.h"
 
 #include "InconsistencyException.h"
 
@@ -211,58 +208,6 @@ bool Track::HasLinkedTrack() const noexcept
     return mLinkType != LinkType::None;
 }
 
-namespace {
-   inline bool IsSyncLockableNonLabelTrack( const Track *pTrack )
-   {
-      return nullptr != track_cast< const AudioTrack * >( pTrack );
-   }
-
-   bool IsGoodNextSyncLockTrack(const Track *t, bool inLabelSection)
-   {
-      if (!t)
-         return false;
-      const bool isLabel = ( nullptr != track_cast<const LabelTrack*>(t) );
-      if (inLabelSection)
-         return isLabel;
-      else if (isLabel)
-         return true;
-      else
-         return IsSyncLockableNonLabelTrack( t );
-   }
-}
-
-bool Track::IsSyncLockSelected() const
-{
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   auto pList = mList.lock();
-   if (!pList)
-      return false;
-
-   auto p = pList->GetOwner();
-   if (!p || !ProjectSettings::Get( *p ).IsSyncLocked())
-      return false;
-
-   auto shTrack = this->SubstituteOriginalTrack();
-   if (!shTrack)
-      return false;
-
-   const auto pTrack = shTrack.get();
-   auto trackRange = TrackList::SyncLockGroup( pTrack );
-
-   if (trackRange.size() <= 1) {
-      // Not in a sync-locked group.
-      // Return true iff selected and of a sync-lockable type.
-      return (IsSyncLockableNonLabelTrack( pTrack ) ||
-              track_cast<const LabelTrack*>( pTrack )) && GetSelected();
-   }
-
-   // Return true iff any track in the group is selected.
-   return *(trackRange + &Track::IsSelected).begin();
-#endif
-
-   return false;
-}
-
 void Track::Notify( int code )
 {
    auto pList = mList.lock();
@@ -351,9 +296,6 @@ bool Track::Any() const
 bool Track::IsSelected() const
    { return GetSelected(); }
 
-bool Track::IsSelectedOrSyncLockSelected() const
-   { return GetSelected() || IsSyncLockSelected(); }
-
 bool Track::IsLeader() const
 {
     return !GetLinkedTrack() || HasLinkedTrack();
@@ -418,47 +360,6 @@ bool Track::LinkConsistencyCheck()
 
    return ! err;
 }
-
-std::pair<Track *, Track *> TrackList::FindSyncLockGroup(Track *pMember) const
-{
-   if (!pMember)
-      return { nullptr, nullptr };
-
-   // A non-trivial sync-locked group is a maximal sub-sequence of the tracks
-   // consisting of any positive number of audio tracks followed by zero or
-   // more label tracks.
-
-   // Step back through any label tracks.
-   auto member = pMember;
-   while (member && ( nullptr != track_cast<const LabelTrack*>(member) )) {
-      member = GetPrev(member);
-   }
-
-   // Step back through the wave and note tracks before the label tracks.
-   Track *first = nullptr;
-   while (member && IsSyncLockableNonLabelTrack(member)) {
-      first = member;
-      member = GetPrev(member);
-   }
-
-   if (!first)
-      // Can't meet the criteria described above.  In that case,
-      // consider the track to be the sole member of a group.
-      return { pMember, pMember };
-
-   Track *last = first;
-   bool inLabels = false;
-
-   while (const auto next = GetNext(last)) {
-      if ( ! IsGoodNextSyncLockTrack(next, inLabels) )
-         break;
-      last = next;
-      inLabels = (nullptr != track_cast<const LabelTrack*>(last) );
-   }
-
-   return { first, last };
-}
-
 
 // TrackList
 //
@@ -623,15 +524,6 @@ auto TrackList::EmptyRange() const
       { it, it, it, &Track::Any },
       { it, it, it, &Track::Any }
    };
-}
-
-auto TrackList::SyncLockGroup( Track *pTrack )
-   -> TrackIterRange< Track >
-{
-   auto pList = pTrack->GetOwner();
-   auto tracks =
-      pList->FindSyncLockGroup( const_cast<Track*>( pTrack ) );
-   return pList->Any().StartingWith(tracks.first).EndingAfter(tracks.second);
 }
 
 auto TrackList::FindLeader( Track *pTrack )

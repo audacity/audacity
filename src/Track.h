@@ -790,9 +790,6 @@ public:
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
 
-   // Checks if sync-lock is on and any track in its sync-lock group is selected.
-   bool IsSyncLockSelected() const;
-
    // Send an event to listeners when state of the track changes
    // To do: define values for the argument to distinguish different parts
    // of the state, perhaps with wxNewId
@@ -803,7 +800,6 @@ public:
 
    // Frequently useful operands for + and -
    bool IsSelected() const;
-   bool IsSelectedOrSyncLockSelected() const;
    bool IsLeader() const;
    bool IsSelectedLeader() const;
 
@@ -1429,15 +1425,6 @@ class AUDACITY_DLL_API TrackList final
    }
 
 
-   static TrackIterRange< Track >
-      SyncLockGroup( Track *pTrack );
-
-   static TrackIterRange< const Track >
-      SyncLockGroup( const Track *pTrack )
-   {
-      return SyncLockGroup(const_cast<Track*>(pTrack)).Filter<const Track>();
-   }
-
 private:
    Track *DoAddToHead(const std::shared_ptr<Track> &t);
    Track *DoAdd(const std::shared_ptr<Track> &t);
@@ -1577,8 +1564,6 @@ private:
    Track *GetPrev(Track * t, bool linked = false) const;
    Track *GetNext(Track * t, bool linked = false) const;
    
-   std::pair<Track *, Track *> FindSyncLockGroup(Track *pMember) const;
-
    template < typename TrackType >
       TrackIter< TrackType >
          MakeTrackIterator( TrackNodePointer iter ) const

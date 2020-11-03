@@ -372,7 +372,7 @@ void CommonTrackControls::Draw(
    
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
-      //if (t->IsSyncLockSelected()) {
+      //if (SyncLock::IsSyncLockSelected(t)) {
       //   wxRect tileFill = rect;
       //   tileFill.x = mViewInfo->GetVRulerOffset();
       //   tileFill.width = mViewInfo->GetVRulerWidth();

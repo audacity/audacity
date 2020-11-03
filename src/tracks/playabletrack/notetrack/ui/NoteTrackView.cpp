@@ -750,4 +750,12 @@ void NoteTrackView::Draw(
    }
    CommonTrackView::Draw( context, rect, iPass );
 }
+
+#include "SyncLock.h"
+
+using GetNoteTrackSyncLockPolicy =
+   GetSyncLockPolicy::Override< const NoteTrack >;
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetNoteTrackSyncLockPolicy) {
+   return [](auto &) { return SyncLockPolicy::Grouped; };
+}
 #endif
