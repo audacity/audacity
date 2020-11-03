@@ -143,15 +143,15 @@ template<typename TrackType> constexpr TrackKind track_kind ()
 
 // forward declarations, so we can make them friends
 template<typename T>
-   typename std::enable_if< std::is_pointer<T>::value, T >::type
+   std::enable_if_t< std::is_pointer_v<T>, T >
       track_cast(Track *track);
 
 template<typename T>
-   typename std::enable_if<
-      std::is_pointer<T>::value &&
-         std::is_const< typename std::remove_pointer< T >::type >::value,
+   std::enable_if_t<
+      std::is_pointer_v<T> &&
+         std::is_const_v< std::remove_pointer_t< T > >,
       T
-   >::type
+   >
       track_cast(const Track *track);
 
 //! An in-session identifier of track objects across undo states.  It does not persist between sessions
@@ -490,14 +490,14 @@ private:
    virtual TrackKind GetKind() const { return TrackKind::None; }
 
    template<typename T>
-      friend typename std::enable_if< std::is_pointer<T>::value, T >::type
+      friend std::enable_if_t< std::is_pointer_v<T>, T >
          track_cast(Track *track);
    template<typename T>
-      friend typename std::enable_if<
-         std::is_pointer<T>::value &&
-            std::is_const< typename std::remove_pointer< T >::type >::value,
+      friend std::enable_if_t<
+         std::is_pointer_v<T> &&
+            std::is_const_v< std::remove_pointer_t< T > >,
          T
-      >::type
+      >
          track_cast(const Track *track);
 
 public:
@@ -890,12 +890,12 @@ if (auto wt = track_cast<const WaveTrack*>(track)) { ... }
 ```
  */
 template<typename T>
-   inline typename std::enable_if< std::is_pointer<T>::value, T >::type
+   inline std::enable_if_t< std::is_pointer_v<T>, T >
       track_cast(Track *track)
 {
-   using BareType = typename std::remove_pointer< T >::type;
+   using BareType = std::remove_pointer_t< T >;
    if (track &&
-       CompatibleTrackKinds( track_kind<BareType>(), track->GetKind() ))
+       CompatibleTrackKinds( BareType::ClassTypeInfo().kind, track->GetKind() ))
       return reinterpret_cast<T>(track);
    else
       return nullptr;
@@ -904,16 +904,16 @@ template<typename T>
 /*! @copydoc track_cast(Track*)
 This overload for const pointers can cast only to other const pointer types. */
 template<typename T>
-   inline typename std::enable_if<
-      std::is_pointer<T>::value &&
-         std::is_const< typename std::remove_pointer< T >::type >::value,
+   inline std::enable_if_t<
+      std::is_pointer_v<T> &&
+         std::is_const_v< std::remove_pointer_t< T > >,
       T
-   >::type
+   >
       track_cast(const Track *track)
 {
-   using BareType = typename std::remove_pointer< T >::type;
+   using BareType = std::remove_pointer_t< T >;
    if (track &&
-       CompatibleTrackKinds( track_kind<BareType>(), track->GetKind() ))
+       CompatibleTrackKinds( BareType::ClassTypeInfo().kind, track->GetKind() ))
       return reinterpret_cast<T>(track);
    else
       return nullptr;
