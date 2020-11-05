@@ -34,20 +34,10 @@
 
 class wxTextFile;
 class Track;
-class AudioTrack;
-class PlayableTrack;
 class ProjectSettings;
-class LabelTrack;
-class TimeTrack;
-class WaveTrack;
-class NoteTrack;
 class AudacityProject;
 
 using TrackArray = std::vector< Track* >;
-using WaveTrackArray = std::vector < std::shared_ptr< WaveTrack > > ;
-using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-
-using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 class TrackList;
 
@@ -404,9 +394,7 @@ private:
    Track* GetLinkedTrack() const;
    //! Returns true for leaders of multichannel groups
    bool HasLinkedTrack() const noexcept;
-
    
-
    //! Retrieve mNode with debug checks
    TrackNodePointer GetNode() const;
    //! Update mNode when Track is added to TrackList, or removed from it
