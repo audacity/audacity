@@ -416,6 +416,15 @@ private:
       TypeNames names;
       bool concrete = false;
       const TypeInfo *pBaseInfo = nullptr;
+
+      bool IsBaseOf(const TypeInfo &other) const
+      {
+         for (auto pInfo = &other;
+              pInfo; pInfo = pInfo->pBaseInfo)
+            if (this == pInfo)
+               return true;
+         return false;
+      }
    };
    virtual const TypeInfo &GetTypeInfo() const = 0;
    static const TypeInfo &ClassTypeInfo();
@@ -604,7 +613,7 @@ private:
          //! Ignore the first, inapplicable function and try others.
          R operator ()
             (const Track *pTrack,
-             const Function &, const Functions &...functions)
+             const Function &, const Functions &...functions) const
          { return Tail{}( pTrack, functions... ); }
       };
 
@@ -619,7 +628,7 @@ private:
          //! Ignore the remaining functions and call the first only.
          R operator ()
             (const Track *pTrack,
-             const Function &function, const Functions &...)
+             const Function &function, const Functions &...) const
          { return function( (BaseClass *)pTrack ); }
       };
 
@@ -636,7 +645,7 @@ private:
          //! Call the first function, which may request dispatch to the further functions by invoking a continuation.
          R operator ()
             (const Track *pTrack, const Function &function,
-             const Functions &...functions)
+             const Functions &...functions) const
          {
             auto continuation = Continuation<R>{ [&] {
                return Tail{}( pTrack, functions... );
@@ -719,20 +728,22 @@ private:
    template< typename R, typename ConcreteType >
    struct Executor< R, ConcreteType >
    {
+      using NominalType = ConcreteType;
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
-      R operator () (const void *) { return R{}; }
+      R operator () (const void *, ...) { return R{}; }
    };
 
    //! Base case of metafunction implementing Track::TypeSwitch generates operator () with void return
    template< typename ConcreteType >
    struct Executor< void, ConcreteType >
    {
+      using NominalType = ConcreteType;
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
-      void operator () (const void *) { }
+      void operator () (const void *, ...) { }
    };
 
    //! Implements Track::TypeSwitch, its operator() invokes the first function that can accept ConcreteType*
@@ -746,7 +757,9 @@ private:
             WaveTrack, LabelTrack, TimeTrack,
             NoteTrack >
                ::template test<Function, Functions... >())
-   {};
+   {
+      using NominalType = ConcreteType;
+   };
 
    //! Implements const overload of Track::TypeSwitch, its operator() invokes the first function that can accept ConcreteType*
    /*! Mutually recursive (in compile time) with template Track::Dispatcher. */
@@ -759,9 +772,89 @@ private:
             const WaveTrack, const LabelTrack, const TimeTrack,
             const NoteTrack >
                ::template test<Function, Functions... >())
-   {};
+   {
+      using NominalType = ConcreteType;
+   };
 
 public:
+
+   template<typename TrackType>
+   static void checkTrackType()
+   {
+      static_assert(
+         std::is_same_v<Track, TrackType> ||
+         std::is_same_v<const Track, TrackType>, "Error" );
+   }
+   template<typename R, typename TrackType, typename... Functions>
+   static R CallExecutor(R*, std::tuple<>*, TrackType&, const Functions&...)
+   {
+      // This overload is needed so that the other overload of CallExecutor
+      // compiles, but it should never be reached at run-time, because an
+      // Executor generated for (const) Track should have been the catch-all.
+      wxASSERT(false);
+      checkTrackType<TrackType>();
+      if constexpr (std::is_void_v<R>)
+         return;
+      else
+         return R{};
+   }
+   template<
+      typename R, typename TrackType, typename... Functions,
+      typename Executor, typename... Executors>
+   static R CallExecutor(
+      R*, std::tuple<Executor, Executors...>*, TrackType &track,
+      const Functions &...functions)
+   {
+      checkTrackType<TrackType>();
+      const auto &info = Executor::NominalType::ClassTypeInfo();
+      // Dynamic type test of track
+      // Assumes Executor classes are sequenced with more specific accepted
+      // types earlier
+      if ( info.IsBaseOf(track.GetTypeInfo()) )
+         // Dispatch to an Executor that knows which of functions applies
+         return Executor{}(&track, functions...);
+      else
+         // Recur, with fewer candidate Executors and all of functions
+         return CallExecutor( (R*)nullptr,
+            (std::tuple<Executors...>*)nullptr, track, functions...);
+   }
+
+   template<typename ...Executors>
+   static constexpr unsigned UsedCases(std::tuple<Executors...>*)
+   {
+      return (Executors::SetUsed | ...); // My very first fold expression :-)
+   }
+
+   template<
+      bool IsConst,
+      typename R,
+      typename ...TrackTypes,
+      typename ...Functions
+   >
+   static R DoTypeSwitch(
+      std::conditional_t<IsConst, const Track, Track> &track,
+      std::tuple<TrackTypes...>*,
+      const Functions &...functions )
+   {
+      // Generate Executor classes, for each of TrackTypes,
+      // each zero-sized and with an operator () that calls the correct
+      // one of functions, assuming the track is of the corresponding type
+      using Executors = std::tuple< Executor<
+         R,
+         std::conditional_t<IsConst, const TrackTypes, TrackTypes>,
+         Functions...
+      >... >;
+      // Don't even construct the tuple of zero-sized types, just point
+      constexpr Executors *executors = nullptr;
+
+      // Compile time reachability check of the given functions
+      enum { All = sizeof...( functions ) };
+      static_assert( (1u << All) - 1u == UsedCases(executors),
+         "Uncallable case in Track::TypeSwitch");
+
+      // Do dynamic dispatch to one of the Executors
+      return CallExecutor((R *)nullptr, executors, track, functions...);
+   }
 
    //! Use this function rather than testing track type explicitly and making down-casts.
    /*!
@@ -775,7 +868,7 @@ public:
    If no function accepts the track, do nothing and return R{}
    if R is not void.
    
-   If one of the functions invokes the call-through, then the next following
+   If one of the functions invokes the fall-through, then the next following
    applicable function is called.
 
    @tparam R Return type of this function and each function argument
@@ -788,41 +881,12 @@ public:
    >
    R TypeSwitch( const Functions &...functions )
    {
-      using WaveExecutor =
-         Executor< R, WaveTrack,  Functions... >;
-      using NoteExecutor =
-         Executor< R, NoteTrack,  Functions... >;
-      using LabelExecutor =
-         Executor< R, LabelTrack, Functions... >;
-      using TimeExecutor =
-         Executor< R, TimeTrack,  Functions... >;
-      using DefaultExecutor =
-         Executor< R, Track >;
-      enum { All = sizeof...( functions ) };
-
-      static_assert(
-         (1u << All) - 1u ==
-            (WaveExecutor::SetUsed |
-             NoteExecutor::SetUsed |
-             LabelExecutor::SetUsed |
-             TimeExecutor::SetUsed),
-         "Uncallable case in Track::TypeSwitch"
-      );
-
-      switch (GetKind()) {
-         case TrackKind::Wave:
-            return WaveExecutor{} (this,  functions...);
-#if defined(USE_MIDI)
-         case TrackKind::Note:
-            return NoteExecutor{} (this,  functions...);
-#endif
-         case TrackKind::Label:
-            return LabelExecutor{}(this, functions...);
-         case TrackKind::Time:
-            return TimeExecutor{} (this,  functions...);
-         default:
-            return DefaultExecutor{} (this);
-      }
+      struct Tag : TrackTypeCountTag {};
+      // Collect all concrete and abstract track types known at compile time
+      using TrackTypes = typename CollectTrackTypes<Tag>::type;
+      TrackTypes *const trackTypes = nullptr;
+      // Generate a function that dispatches dynamically on track type
+      return DoTypeSwitch<false, R>(*this, trackTypes, functions...);
    }
 
    /*! @copydoc Track::TypeSwitch */
@@ -834,41 +898,12 @@ public:
    >
    R TypeSwitch(const Functions &...functions) const
    {
-      using WaveExecutor =
-         Executor< R, const WaveTrack,  Functions... >;
-      using NoteExecutor =
-         Executor< R, const NoteTrack,  Functions... >;
-      using LabelExecutor =
-         Executor< R, const LabelTrack, Functions... >;
-      using TimeExecutor =
-         Executor< R, const TimeTrack,  Functions... >;
-      using DefaultExecutor =
-         Executor< R, const Track >;
-      enum { All = sizeof...( functions ) };
-
-      static_assert(
-         (1u << All) - 1u ==
-            (WaveExecutor::SetUsed |
-             NoteExecutor::SetUsed |
-             LabelExecutor::SetUsed |
-             TimeExecutor::SetUsed),
-         "Uncallable case in Track::TypeSwitch"
-      );
-
-      switch (GetKind()) {
-         case TrackKind::Wave:
-            return WaveExecutor{} (this,  functions...);
-#if defined(USE_MIDI)
-         case TrackKind::Note:
-            return NoteExecutor{} (this,  functions...);
-#endif
-         case TrackKind::Label:
-            return LabelExecutor{}(this, functions...);
-         case TrackKind::Time:
-            return TimeExecutor{} (this,  functions...);
-         default:
-            return DefaultExecutor{} (this);
-      }
+      struct Tag : TrackTypeCountTag {};
+      // Collect all concrete and abstract track types known at compile time
+      using TrackTypes = typename CollectTrackTypes<Tag>::type;
+      TrackTypes *const trackTypes = nullptr;
+      // Generate a function that dispatches dynamically on track type
+      return DoTypeSwitch<true, R>(*this, trackTypes, functions...);
    }
 
    // XMLTagHandler callback methods -- NEW virtual for writing

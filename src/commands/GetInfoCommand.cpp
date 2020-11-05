@@ -36,6 +36,8 @@ This class now lists
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
+#include "../NoteTrack.h"
+#include "../TimeTrack.h"
 #include "../Envelope.h"
 
 #include "SelectCommand.h"
