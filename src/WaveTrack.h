@@ -619,8 +619,6 @@ private:
 
    void PasteWaveTrack(double t0, const WaveTrack* other);
 
-   TrackKind GetKind() const override { return TrackKind::Wave; }
-
    //
    // Private variables
    //

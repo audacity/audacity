@@ -687,7 +687,7 @@ QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
 
 static const Track::TypeInfo &typeInfo()
 {
-   static const Track::TypeInfo info{ TrackKind::Note,
+   static const Track::TypeInfo info{
       { "note", "midi", XO("Note Track") }, true,
       &PlayableTrack::ClassTypeInfo() };
    return info;

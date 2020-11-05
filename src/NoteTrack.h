@@ -199,8 +199,6 @@ public:
 
  private:
 
-   TrackKind GetKind() const override { return TrackKind::Note; }
-
    void AddToDuration( double delta );
 
    // These are mutable to allow NoteTrack to switch details of representation

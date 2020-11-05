@@ -135,7 +135,7 @@ void TimeTrack::SetRangeUpper(double upper)
 
 static const Track::TypeInfo &typeInfo()
 {
-   static const Track::TypeInfo info{ TrackKind::Time,
+   static const Track::TypeInfo info{
       { "time", "time", XO("Time Track") }, true, &Track::ClassTypeInfo() };
    return info;
 }

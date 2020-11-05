@@ -103,9 +103,6 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
  private:
    void CleanState();
 
-   // Identifying the type of track
-   TrackKind GetKind() const override { return TrackKind::Time; }
-
    const ZoomInfo  *const mZoomInfo;
    std::unique_ptr<BoundedEnvelope> mEnvelope;
    std::unique_ptr<Ruler> mRuler;

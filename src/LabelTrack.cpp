@@ -84,7 +84,7 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
 
 static const Track::TypeInfo &typeInfo()
 {
-   static Track::TypeInfo info{ TrackKind::Label,
+   static Track::TypeInfo info{
       { "label", "label", XO("Label Track") }, true, &Track::ClassTypeInfo() };
    return info;
 }
