@@ -206,7 +206,6 @@ private:
       std::map<wxString, std::pair<FilePath, std::shared_ptr<SampleBlock>>>;
    BlockFileMap mFileMap;
 
-   ListOfTracks mTracks;
    WaveTrack *mWaveTrack;
    WaveClip *mClip;
 
@@ -284,7 +283,16 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
 
-   auto cleanup = finally([this]{ mTracks.clear(); });
+   auto oldNumTracks = tracks.size();
+   auto cleanup = finally([this, &tracks, oldNumTracks]{
+      if (mUpdateResult != ProgressResult::Success) {
+         // Revoke additions of tracks
+         while (oldNumTracks < tracks.size()) {
+            Track *lastTrack = *tracks.Any().rbegin();
+            tracks.Remove(lastTrack);
+         }
+      }
+   });
 
    bool isDirty = history.GetDirty() || !tracks.empty();
 
@@ -352,12 +360,8 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
       processed += fi.len;
    }
-         
-   // Copy the tracks we just created into the project.
-   for (auto &track : mTracks)
-   {
-      tracks.Add(track);
-   }
+
+   wxASSERT( mUpdateResult == ProgressResult::Success );
 
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
@@ -828,9 +832,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 {
-   mTracks.push_back(std::make_shared<LabelTrack>());
-
-   handler = mTracks.back().get();
+   handler = TrackList::Get(mProject).Add(std::make_shared<LabelTrack>());
 
    return true;
 }
@@ -838,9 +840,7 @@ bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleNoteTrack(XMLTagHandler *&handler)
 {
 #if defined(USE_MIDI)
-   mTracks.push_back( std::make_shared<NoteTrack>());
-
-   handler = mTracks.back().get();
+   handler = TrackList::Get(mProject).Add(std::make_shared<NoteTrack>());
 
    return true;
 #else
@@ -872,9 +872,8 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
    }
 
    auto &viewInfo = ViewInfo::Get( mProject );
-   mTracks.push_back( std::make_shared<TimeTrack>(&viewInfo) );
-
-   handler = mTracks.back().get();
+   handler =
+      TrackList::Get(mProject).Add(std::make_shared<TimeTrack>(&viewInfo));
 
    return true;
 }
@@ -882,11 +881,8 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleWaveTrack(XMLTagHandler *&handler)
 {
    auto &trackFactory = WaveTrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewWaveTrack());
-
-   handler = mTracks.back().get();
-
-   mWaveTrack = static_cast<WaveTrack *>(handler);
+   handler = mWaveTrack =
+      TrackList::Get(mProject).Add(trackFactory.NewWaveTrack());
 
    // No active clip.  In early versions of Audacity, there was a single
    // implied clip so we'll create a clip when the first "sequence" is
