@@ -297,6 +297,8 @@ list( APPEND SOURCES
       TrackUtilities.h
       UIHandle.cpp
       UIHandle.h
+      TransportUtilities.cpp
+      TransportUtilities.h
       UndoManager.cpp
       UndoManager.h
       VoiceKey.cpp
