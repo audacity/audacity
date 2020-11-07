@@ -1,20 +1,16 @@
 
 
 #include "../CommonCommandFlags.h"
-#include "FileNames.h"
-#include "../LabelTrack.h"
 #include "../NoteTrack.h"
 #include "Prefs.h"
 #include "../Printing.h"
 #include "Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
-#include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"
-#include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -260,68 +256,6 @@ void OnExportSelection(const CommandContext &context)
       selectedRegion.t1());
 }
 
-void OnExportLabels(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &window = GetProjectFrame( project );
-
-   /* i18n-hint: filename containing exported text from label tracks */
-   wxString fName = _("labels.txt");
-   auto trackRange = tracks.Any<const LabelTrack>();
-   auto numLabelTracks = trackRange.size();
-
-   if (numLabelTracks == 0) {
-      AudacityMessageBox( XO("There are no label tracks to export.") );
-      return;
-   }
-   else
-      fName = (*trackRange.rbegin())->GetName();
-
-   fName = SelectFile(FileNames::Operation::Export,
-      XO("Export Labels As:"),
-      wxEmptyString,
-      fName,
-      wxT("txt"),
-      { FileNames::TextFiles },
-      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-      &window);
-
-   if (fName.empty())
-      return;
-
-   // Move existing files out of the way.  Otherwise wxTextFile will
-   // append to (rather than replace) the current file.
-
-   if (wxFileExists(fName)) {
-#ifdef __WXGTK__
-      wxString safetyFileName = fName + wxT("~");
-#else
-      wxString safetyFileName = fName + wxT(".bak");
-#endif
-
-      if (wxFileExists(safetyFileName))
-         wxRemoveFile(safetyFileName);
-
-      wxRename(fName, safetyFileName);
-   }
-
-   wxTextFile f(fName);
-   f.Create();
-   f.Open();
-   if (!f.IsOpened()) {
-      AudacityMessageBox(
-         XO( "Couldn't write to file: %s" ).Format( fName ) );
-      return;
-   }
-
-   for (auto lt : trackRange)
-      lt->Export(f);
-
-   f.Write();
-   f.Close();
-}
-
 void OnExportMultiple(const CommandContext &context)
 {
    auto &project = context.project;
@@ -421,52 +355,6 @@ void OnExportMIDI(const CommandContext &context)
 void OnImport(const CommandContext &context)
 {
    DoImport(context, false);
-}
-
-void OnImportLabels(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   wxString fileName =
-       SelectFile(FileNames::Operation::Open,
-         XO("Select a text file containing labels"),
-         wxEmptyString,     // Path
-         wxT(""),       // Name
-         wxT("txt"),   // Extension
-         { FileNames::TextFiles, FileNames::AllFiles },
-         wxRESIZE_BORDER,        // Flags
-         &window);    // Parent
-
-   if (!fileName.empty()) {
-      wxTextFile f;
-
-      f.Open(fileName);
-      if (!f.IsOpened()) {
-         AudacityMessageBox(
-            XO("Could not open file: %s").Format( fileName ) );
-         return;
-      }
-
-      auto newTrack = std::make_shared<LabelTrack>();
-      wxString sTrackName;
-      wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
-      newTrack->SetName(sTrackName);
-
-      newTrack->Import(f);
-
-      SelectUtilities::SelectNone( project );
-      newTrack->SetSelected(true);
-      tracks.Add( newTrack );
-
-      ProjectHistory::Get( project ).PushState(
-         XO("Imported labels from '%s'").Format( fileName ),
-            XO("Import Labels"));
-
-      window.ZoomAfterImport(nullptr);
-   }
 }
 
 #ifdef USE_MIDI
@@ -645,9 +533,6 @@ BaseItemSharedPtr FileMenu()
                OnExportSelection,
                AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag() ),
 
-            Command( wxT("ExportLabels"), XXO("Export &Labels..."),
-               OnExportLabels,
-               AudioIONotBusyFlag() | LabelTracksExistFlag() ),
             // Enable Export audio commands only when there are audio tracks.
             Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
                OnExportMultiple,
@@ -662,8 +547,6 @@ BaseItemSharedPtr FileMenu()
          Menu( wxT("Import"), XXO("&Import"),
             Command( wxT("ImportAudio"), XXO("&Audio..."), OnImport,
                AudioIONotBusyFlag(), wxT("Ctrl+Shift+I") ),
-            Command( wxT("ImportLabels"), XXO("&Labels..."), OnImportLabels,
-               AudioIONotBusyFlag() ),
       #ifdef USE_MIDI
             Command( wxT("ImportMIDI"), XXO("&MIDI..."), OnImportMIDI,
                AudioIONotBusyFlag() ),

@@ -764,6 +764,7 @@ list( APPEND SOURCES
       menus/FileMenus.cpp
       menus/HelpMenus.cpp
       menus/LabelMenus.cpp
+      menus/LabelImportExportMenus.cpp
       menus/LabelNavigationMenus.cpp
       menus/NavigationMenus.cpp
       menus/PluginMenus.cpp
