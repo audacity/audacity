@@ -319,6 +319,9 @@ ENUMERATE_TRACK_TYPE(NoteTrack);
 #endif
 
 
+#include "Prefs.h"
+extern AUDACITY_DLL_API EnumSetting< bool > AllegroStyleSetting;
+
 AUDACITY_DLL_API wxString GetMIDIDeviceInfo();
 
 #endif

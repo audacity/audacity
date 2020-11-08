@@ -23,6 +23,29 @@
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
+static const auto PathStart = wxT("ImportExportPreferences");
+
+Registry::GroupItem &ImportExportPrefs::PopulatorItem::Registry()
+{
+   static Registry::TransparentGroupItem<> registry{ PathStart };
+   return registry;
+}
+
+ImportExportPrefs::PopulatorItem::PopulatorItem(
+   const Identifier &id, Populator populator)
+   : SingleItem{ id }
+   , mPopulator{ move(populator) }
+{}
+
+ImportExportPrefs::RegisteredControls::RegisteredControls(
+   const Identifier &id, Populator populator,
+   const Registry::Placement &placement )
+   : RegisteredItem{
+      std::make_unique< PopulatorItem >( id, move(populator) ),
+      placement
+   }
+{}
+
 ImportExportPrefs::ImportExportPrefs(wxWindow * parent, wxWindowID winid)
 :   PrefsPanel(parent, winid, XO("Import / Export"))
 {
@@ -75,34 +98,6 @@ EnumSetting< bool > ImportExportPrefs::ExportDownMixSetting{
    wxT("/FileFormats/ExportDownMix"),
 };
 
-EnumSetting< bool > ImportExportPrefs::LabelStyleSetting{
-   wxT("/FileFormats/LabelStyleChoice"),
-   {
-      EnumValueSymbol{ wxT("Standard"), XXO("S&tandard") },
-      EnumValueSymbol{ wxT("Extended"), XXO("E&xtended (with frequency ranges)") },
-   },
-   0, // true
-
-   {
-      true, false,
-   },
-};
-
-EnumSetting< bool > ImportExportPrefs::AllegroStyleSetting{
-   wxT("/FileFormats/AllegroStyleChoice"),
-   {
-      EnumValueSymbol{ wxT("Seconds"), XXO("&Seconds") },
-      EnumValueSymbol{ wxT("Beats"), XXO("&Beats") },
-   },
-   0, // true
-
-   // for migrating old preferences:
-   {
-      true, false,
-   },
-   wxT("/FileFormats/AllegroStyle"),
-};
-
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -133,41 +128,29 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(XO("Exported Label Style:"));
-   {
-      // Bug 2692: Place button group in panel so tabbing will work and,
-      // on the Mac, VoiceOver will announce as radio buttons.
-      S.StartPanel();
+   // Add registered controls
+   using namespace Registry;
+   static OrderingPreferenceInitializer init{
+      PathStart,
+      { {wxT(""), wxT("LabelStyle,AllegroTimeOption") } },
+   };
+   struct MyVisitor final : Visitor {
+      MyVisitor( ShuttleGui &S ) : S{ S }
       {
-         S.StartRadioButtonGroup(ImportExportPrefs::LabelStyleSetting);
-         {
-            S.TieRadioButton();
-            S.TieRadioButton();
-         }
-         S.EndRadioButtonGroup();
+         // visit the registry to collect the plug-ins properly
+         // sorted
+         TransparentGroupItem<> top{ PathStart };
+         Registry::Visit( *this, &top, &PopulatorItem::Registry() );
       }
-      S.EndPanel();
-   }
-   S.EndStatic();
 
-#ifdef USE_MIDI
-   S.StartStatic(XO("Exported Allegro (.gro) files save time as:"));
-   {
-      // Bug 2692: Place button group in panel so tabbing will work and,
-      // on the Mac, VoiceOver will announce as radio buttons.
-      S.StartPanel();
+      void Visit( Registry::SingleItem &item, const Path &path ) override
       {
-         S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
-         {
-            S.TieRadioButton();
-            S.TieRadioButton();
-         }
-         S.EndRadioButtonGroup();
+         static_cast<PopulatorItem&>(item).mPopulator(S);
       }
-      S.EndPanel();
-   }
-   S.EndStatic();
-#endif
+
+      ShuttleGui &S;
+   } visitor{ S };
+
    S.EndScroller();
 }
 
@@ -187,4 +170,9 @@ PrefsPanel::Registration sAttachment{ "ImportExport",
       return safenew ImportExportPrefs(parent, winid);
    }
 };
+}
+
+ImportExportPrefs::RegisteredControls::Init::Init()
+{
+   (void) PopulatorItem::Registry();
 }
