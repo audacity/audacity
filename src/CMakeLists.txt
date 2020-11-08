@@ -938,8 +938,6 @@ list( APPEND SOURCES
       tracks/ui/CommonTrackPanelCell.h
       tracks/ui/CommonTrackView.cpp
       tracks/ui/CommonTrackView.h
-      tracks/ui/EditCursorOverlay.cpp
-      tracks/ui/EditCursorOverlay.h
       tracks/ui/EnvelopeHandle.cpp
       tracks/ui/EnvelopeHandle.h
       tracks/ui/PlayIndicatorOverlay.cpp

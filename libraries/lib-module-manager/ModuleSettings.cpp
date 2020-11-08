@@ -29,6 +29,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-screenshot",
       "mod-printing",
       "mod-command-classes",
+      "mod-edit-cursor-overlay",
    };
    return modules;
 }
