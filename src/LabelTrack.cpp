@@ -401,7 +401,9 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
-LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
+struct BadFormatException {};
+
+LabelStruct ImportLabelStruct(wxTextFile &file, int &index)
 {
    SelectedRegion sr;
    wxString title;
@@ -473,17 +475,17 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
    return LabelStruct{ sr, title };
 }
 
-void LabelStruct::Export(wxTextFile &file) const
+void ExportLabelStruct(const LabelStruct &label, wxTextFile &file)
 {
    file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
-      Internat::ToString(getT0(), FLT_DIG),
-      Internat::ToString(getT1(), FLT_DIG),
-      title
+      Internat::ToString(label.getT0(), FLT_DIG),
+      Internat::ToString(label.getT1(), FLT_DIG),
+      label.title
    ));
 
    // Do we need more lines?
-   auto f0 = selectedRegion.f0();
-   auto f1 = selectedRegion.f1();
+   auto f0 = label.selectedRegion.f0();
+   auto f1 = label.selectedRegion.f1();
    if ((f0 == SelectedRegion::UndefinedFrequency &&
       f1 == SelectedRegion::UndefinedFrequency) ||
       ImportExportPrefs::LabelStyleSetting.ReadEnum())
@@ -566,20 +568,19 @@ auto LabelStruct::RegionRelation(
 }
 
 /// Export labels including label start and end-times.
-void LabelTrack::Export(wxTextFile & f) const
+void ExportLabelTrack(const LabelTrack &track, wxTextFile & f)
 {
    // PRL: to do: export other selection fields
-   for (auto &labelStruct: mLabels)
-      labelStruct.Export(f);
+   for (auto &labelStruct: track.GetLabels())
+      ExportLabelStruct(labelStruct, f);
 }
 
 /// Import labels, handling files with or without end-times.
-void LabelTrack::Import(wxTextFile & in)
+void ImportLabelTrack(LabelTrack &track, wxTextFile & in)
 {
    int lines = in.GetLineCount();
 
-   mLabels.clear();
-   mLabels.reserve(lines);
+   track.Clear(track.GetStartTime() - 1, track.GetEndTime() + 1);
 
    //Currently, we expect a tag file to have two values and a label
    //on each line. If the second token is not a number, we treat
@@ -588,14 +589,14 @@ void LabelTrack::Import(wxTextFile & in)
    for (int index = 0; index < lines;) {
       try {
          // Let LabelStruct::Import advance index
-         LabelStruct l { LabelStruct::Import(in, index) };
-         mLabels.push_back(l);
+         LabelStruct l { ImportLabelStruct(in, index) };
+         track.AddLabel(l.selectedRegion, l.title);
       }
-      catch(const LabelStruct::BadFormatException&) { error = true; }
+      catch(const BadFormatException&) { error = true; }
    }
    if (error)
       ::AudacityMessageBox( XO("One or more saved labels could not be read.") );
-   SortLabels();
+   track.SortLabels();
 }
 
 bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)

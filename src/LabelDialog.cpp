@@ -30,6 +30,7 @@
 #include <wx/textdlg.h>
 
 #include "ShuttleGui.h"
+#include "LabelImportExport.h"
 #include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -655,7 +656,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          // Create a temporary label track and load the labels
          // into it
          auto lt = std::make_shared<LabelTrack>();
-         lt->Import(f);
+         ImportLabelTrack(*lt, f);
 
          // Add the labels to our collection
          AddLabels(lt.get());
@@ -733,7 +734,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    }
 
    // Export them and clean
-   lt->Export(f);
+   ExportLabelTrack(*lt, f);
 
 #ifdef __WXMAC__
    f.Write(wxTextFileType_Mac);
