@@ -168,6 +168,7 @@ list( APPEND SOURCES
       KeyboardCapture.h
       LabelDialog.cpp
       LabelDialog.h
+      LabelImportExport.cpp
       LabelImportExport.h
       LabelTrack.cpp
       LabelTrack.h
