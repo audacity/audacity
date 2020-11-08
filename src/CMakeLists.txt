@@ -940,8 +940,6 @@ list( APPEND SOURCES
       tracks/ui/CommonTrackView.h
       tracks/ui/EnvelopeHandle.cpp
       tracks/ui/EnvelopeHandle.h
-      tracks/ui/PlayIndicatorOverlay.cpp
-      tracks/ui/PlayIndicatorOverlay.h
       tracks/ui/ScrubUI.cpp
       tracks/ui/ScrubUI.h
       tracks/ui/Scrubbing.cpp

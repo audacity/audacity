@@ -8,24 +8,23 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "PlayIndicatorOverlay.h"
 
 #include "AColor.h"
-#include "../../AdornedRulerPanel.h"
+#include "AdornedRulerPanel.h"
 #include "AllThemeResources.h"
-#include "../../AudioIO.h"
-#include "../../LabelTrack.h"
+#include "AudioIO.h"
+#include "LabelTrack.h"
 #include "Project.h"
-#include "../../ProjectAudioIO.h"
-#include "../../ProjectAudioManager.h"
-#include "../../ProjectWindow.h"
+#include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
+#include "ProjectWindow.h"
 #include "Theme.h"
 #include "Track.h"
-#include "../../TrackPanel.h"
+#include "TrackPanel.h"
 #include "ViewInfo.h"
-#include "Scrubbing.h"
-#include "TrackView.h"
+#include "tracks/ui/Scrubbing.h"
+#include "tracks/ui/TrackView.h"
 
 #include <wx/dc.h>
 
@@ -247,3 +246,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
    if(mPartner)
       mPartner->Update(mNewIndicatorX);
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
+
