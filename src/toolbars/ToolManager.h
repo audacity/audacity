@@ -138,8 +138,8 @@ class ToolManager final
    bool mTransition;
 #endif
 
-   ToolDock *mTopDock;
-   ToolDock *mBotDock;
+   ToolDock *mTopDock{};
+   ToolDock *mBotDock{};
 
    ToolBar::Holder mBars[ ToolBarCount ];
 
