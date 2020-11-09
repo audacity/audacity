@@ -95,6 +95,8 @@ class TimeTrack final : public Track {
    Ruler &GetRuler() const { return *mRuler; }
 
  private:
+   void CleanState();
+
    // Identifying the type of track
    TrackKind GetKind() const override { return TrackKind::Time; }
 
