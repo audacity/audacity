@@ -23,16 +23,11 @@
 #include "../effects/RealtimeEffectState.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
-#include "../import/ImportMIDI.h"
 #include "../import/ImportRaw.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "../widgets/wxPanelWrapper.h"
-
-#ifdef USE_MIDI
-#include "../import/ImportMIDI.h"
-#endif // USE_MIDI
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -330,34 +325,6 @@ void OnImportLabels(const CommandContext &context)
    }
 }
 
-#ifdef USE_MIDI
-void OnImportMIDI(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &window = GetProjectFrame( project );
-
-   wxString fileName = SelectFile(FileNames::Operation::Open,
-      XO("Select a MIDI file"),
-      wxEmptyString,     // Path
-      wxT(""),       // Name
-      wxT(""),       // Extension
-      {
-         { XO("MIDI and Allegro files"),
-           { wxT("mid"), wxT("midi"), wxT("gro"), }, true },
-         { XO("MIDI files"),
-           { wxT("mid"), wxT("midi"), }, true },
-         { XO("Allegro files"),
-           { wxT("gro"), }, true },
-         FileNames::AllFiles
-      },
-      wxRESIZE_BORDER,        // Flags
-      &window);    // Parent
-
-   if (!fileName.empty())
-      DoImportMIDI(project, fileName);
-}
-#endif
-
 void OnImportRaw(const CommandContext &context)
 {
    DoImport(context, true);
@@ -511,10 +478,6 @@ BaseItemSharedPtr FileMenu()
                AudioIONotBusyFlag(), wxT("Ctrl+Shift+I") ),
             Command( wxT("ImportLabels"), XXO("&Labels..."), OnImportLabels,
                AudioIONotBusyFlag() ),
-      #ifdef USE_MIDI
-            Command( wxT("ImportMIDI"), XXO("&MIDI..."), OnImportMIDI,
-               AudioIONotBusyFlag() ),
-      #endif // USE_MIDI
             Command( wxT("ImportRaw"), XXO("&Raw Data..."), OnImportRaw,
                AudioIONotBusyFlag() )
          )

@@ -24,11 +24,14 @@
 //#include "strparse.h"
 //#include "mfmidi.h"
 
+#include "FileNames.h"
 #include "../NoteTrack.h"
 #include "Project.h"
 #include "../ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectWindow.h"
+#include "ProjectWindows.h"
+#include "SelectFile.h"
 #include "../SelectUtilities.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
@@ -125,4 +128,46 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
    return true;
 }
 
+// Insert a menu item
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
+
+namespace {
+using namespace MenuTable;
+
+void OnImportMIDI(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &window = GetProjectFrame( project );
+
+   wxString fileName = SelectFile(FileNames::Operation::Open,
+      XO("Select a MIDI file"),
+      wxEmptyString,     // Path
+      wxT(""),       // Name
+      wxT(""),       // Extension
+      {
+         { XO("MIDI and Allegro files"),
+           { wxT("mid"), wxT("midi"), wxT("gro"), }, true },
+         { XO("MIDI files"),
+           { wxT("mid"), wxT("midi"), }, true },
+         { XO("Allegro files"),
+           { wxT("gro"), }, true },
+         FileNames::AllFiles
+      },
+      wxRESIZE_BORDER,        // Flags
+      &window);    // Parent
+
+   if (!fileName.empty())
+      DoImportMIDI(project, fileName);
+}
+
+AttachedItem sAttachment{
+   { wxT("File/Import-Export/Import"),
+      { OrderingHint::Before, {"ImportRaw"} } },
+   Command( wxT("ImportMIDI"), XXO("&MIDI..."), OnImportMIDI,
+      AudioIONotBusyFlag() )
+};
+
+}
 #endif
