@@ -18,7 +18,6 @@
 #include "ProjectFileManager.h"
 #include "Viewport.h"
 #include "TrackPanel.h"
-#include "import/ImportMIDI.h"
 
 #if wxUSE_DRAG_AND_DROP
 class FileObject final : public wxFileDataObject
@@ -166,14 +165,8 @@ public:
             Viewport::Get(*mProject).HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
-         for (const auto &name : sortednames) {
-#ifdef USE_MIDI
-            if (FileNames::IsMidi(name))
-               DoImportMIDI( *mProject, name );
-            else
-#endif
-               ProjectFileManager::Get( *mProject ).Import(name);
-         }
+         for (const auto &name : sortednames)
+            ProjectFileManager::Get( *mProject ).Import(name);
 
          auto &viewport = Viewport::Get(*mProject);
          viewport.ZoomFitHorizontallyAndShowTrack(nullptr);

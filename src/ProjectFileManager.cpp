@@ -969,16 +969,6 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
             return nullptr;
          }
 #endif
-#ifdef USE_MIDI
-         if (FileNames::IsMidi(fileName)) {
-            auto &project = chooser(false);
-            // If this succeeds, indo history is incremented, and it also does
-            // ZoomFitHorizontallyAndShowTrack:
-            if(DoImportMIDI(project, fileName))
-               return &project;
-            return nullptr;
-         }
-#endif
          auto &project = chooser(false);
          // Undo history is incremented inside this:
          if (Get(project).Import(fileName)) {
@@ -1312,6 +1302,13 @@ bool ProjectFileManager::Import(
    const FilePath &fileName,
    bool addToHistory /* = true */)
 {
+#ifdef USE_MIDI
+   if (FileNames::IsMidi(fileName))
+   {
+      return DoImportMIDI(mProject, fileName);
+   }
+#endif
+
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get(project);
    auto oldTags = Tags::Get( project ).shared_from_this();
