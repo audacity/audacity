@@ -1666,7 +1666,15 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mCaptureTracks = tracks.captureTracks;
    mPlaybackTracks = tracks.playbackTracks;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   mMidiPlaybackTracks = tracks.midiTracks;
+   {
+      mMidiPlaybackTracks.clear();
+      for (const auto &pTrack : tracks.otherPlayableTracks) {
+         pTrack->TypeSwitch( [&](const NoteTrack *pNoteTrack){
+            mMidiPlaybackTracks.push_back(
+               pNoteTrack->SharedPointer<const NoteTrack>());
+         } );
+      }
+   }
 #endif
 
    bool commit = false;
@@ -1706,10 +1714,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    auto pListener = GetListener();
 
    if (tracks.playbackTracks.size() > 0
-#ifdef EXPERIMENTAL_MIDI_OUT
-      || tracks.midiTracks.size() > 0
-#endif
-      )
+      || tracks.otherPlayableTracks.size() > 0)
       playbackChannels = 2;
 
    if (mSoftwarePlaythrough)

@@ -33,7 +33,6 @@ class Alg_event;
 class Alg_iterator;
 
 class NoteTrack;
-using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #endif // EXPERIMENTAL_MIDI_OUT
@@ -53,6 +52,10 @@ class AudioThread;
 class SelectedRegion;
 
 class AudacityProject;
+
+class PlayableTrack;
+using PlayableTrackConstArray =
+   std::vector < std::shared_ptr < const PlayableTrack > >;
 
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
@@ -87,9 +90,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 struct TransportTracks {
    WaveTrackArray playbackTracks;
    WaveTrackArray captureTracks;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   NoteTrackConstArray midiTracks;
-#endif
+   PlayableTrackConstArray otherPlayableTracks;
 
    // This is a subset of playbackTracks
    WaveTrackConstArray prerollTracks;

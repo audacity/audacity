@@ -95,6 +95,8 @@ struct AudioIOStartStreamOptions
    double * pStartTime;
    double preRoll;
 
+   bool playNonWaveTracks{ true };
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    // Non-null value indicates that scrubbing will happen
    // (do not specify a time track, looping, or recording, which
