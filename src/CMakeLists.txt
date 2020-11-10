@@ -571,7 +571,6 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_MIDI}>:
          export/ExportMIDI.cpp
          import/ImportMIDI.cpp
-         import/ImportMIDI.h
       >
 
       # Menus

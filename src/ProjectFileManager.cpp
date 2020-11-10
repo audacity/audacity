@@ -45,7 +45,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Import.h"
 #include "ImportProgressListener.h"
 #include "ImportPlugin.h"
-#include "import/ImportMIDI.h"
 #include "import/ImportStreamDialog.h"
 #include "AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -1302,13 +1301,6 @@ bool ProjectFileManager::Import(
    const FilePath &fileName,
    bool addToHistory /* = true */)
 {
-#ifdef USE_MIDI
-   if (FileNames::IsMidi(fileName))
-   {
-      return DoImportMIDI(mProject, fileName);
-   }
-#endif
-
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get(project);
    auto oldTags = Tags::Get( project ).shared_from_this();

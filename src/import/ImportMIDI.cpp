@@ -8,9 +8,6 @@
 
 **********************************************************************/
 
-
-#include "ImportMIDI.h"
-
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/frame.h>
@@ -20,10 +17,9 @@
 
 #include "WrapAllegro.h"
 
-//#include "strparse.h"
-//#include "mfmidi.h"
-
-#include "FileNames.h"
+#include "Import.h"
+#include "ImportPlugin.h"
+#include "ImportProgressListener.h"
 #include "NoteTrack.h"
 #include "../tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h"
 #include "Project.h"
@@ -35,6 +31,11 @@
 #include "../SelectUtilities.h"
 #include "AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
+#include "ProgressDialog.h"
+
+namespace {
+
+bool ImportMIDI(const FilePath &fName, NoteTrack * dest);
 
 // Given an existing project, try to import into it, return true on success
 bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
@@ -128,6 +129,8 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
    return true;
 }
 
+}
+
 // Insert a menu item
 #include "CommandContext.h"
 #include "MenuRegistry.h"
@@ -167,6 +170,91 @@ AttachedItem sAttachment{
       AudioIONotBusyFlag() ),
    { wxT("File/Import-Export/Import"),
       { OrderingHint::After, {"ImportAudio"} } }
+};
+
+constexpr auto exts = {
+   wxT("gro"),
+   wxT("midi"),
+   wxT("mid"),
+};
+
+const auto DESC = XO("MIDI files");
+
+struct MIDIImportFileHandle final : ImportFileHandle
+{
+public:
+   explicit MIDIImportFileHandle(const FilePath &fileName)
+      : mFileName{ fileName }
+   {}
+
+   ~MIDIImportFileHandle() override {}
+
+   FilePath GetFilename() const override { return mFileName; }
+
+   TranslatableString GetFileDescription() override { return DESC; }
+
+   ByteCount GetFileUncompressedBytes() override
+   {
+      // TODO: Get Uncompressed byte count.
+      return 0;
+   }
+
+   wxInt32 GetStreamCount() override { return 1; }
+
+   const TranslatableStrings &GetStreamInfo() override
+   {
+      static TranslatableStrings empty;
+      return empty;
+   }
+
+   void Import(ImportProgressListener &progressListener,
+      WaveTrackFactory *trackFactory,
+      TrackHolders &outTracks,
+      Tags *tags) override;
+   
+   void Cancel() override {}
+   void Stop() override {}
+
+   void SetStreamUsage(wxInt32, bool) override {}
+
+   FilePath mFileName;
+};
+
+void MIDIImportFileHandle::Import(ImportProgressListener &progressListener,
+   WaveTrackFactory *, TrackHolders &outTracks, Tags *)
+{
+   auto newTrack = std::make_shared<NoteTrack>();
+   if (::ImportMIDI(mFileName, newTrack.get())) {
+      outTracks.push_back(TrackList::Temporary(nullptr, newTrack));
+      progressListener.OnImportResult(
+         ImportProgressListener::ImportResult::Success);
+   }
+   else
+      progressListener.OnImportResult(
+         ImportProgressListener::ImportResult::Error);
+}
+
+class MIDIImportPlugin final : public ImportPlugin
+{
+public:
+   MIDIImportPlugin()
+      : ImportPlugin(FileExtensions(exts.begin(), exts.end()))
+   {}
+   ~MIDIImportPlugin() override {}
+
+   wxString GetPluginStringID() override { return wxT("portsmf"); }
+   
+   TranslatableString GetPluginFormatDescription() override { return DESC; }
+
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &fileName,
+                     AudacityProject *project) override
+   {
+      return std::make_unique<MIDIImportFileHandle>(fileName);
+   }
+};
+
+Importer::RegisteredImportPlugin registered{ "portsmf",
+   std::make_unique<MIDIImportPlugin>()
 };
 
 }
