@@ -1146,7 +1146,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo) {
       for (auto &group : newTracks)
-         for (const auto pTrack : group->Any<WaveTrack>())
+         for (const auto pTrack : group->Any<PlayableTrack>())
             pTrack->SetMute(true);
    }
 
