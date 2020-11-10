@@ -56,7 +56,6 @@ but little else.
 
 class AudacityProject;
 class ProgressDialog;
-namespace BasicUI{ enum class ProgressResult : unsigned; }
 class WaveTrackFactory;
 class Track;
 class TranslatableString;
@@ -111,8 +110,6 @@ using TrackHolders = std::vector< std::vector< std::shared_ptr<Track> > >;
 class AUDACITY_DLL_API ImportFileHandle /* not final */
 {
 public:
-   using ProgressResult = BasicUI::ProgressResult;
-
    ImportFileHandle(const FilePath & filename);
 
    virtual ~ImportFileHandle();
@@ -141,6 +138,12 @@ public:
    // Set stream "import/don't import" flag, before Import() is called
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;
 
+   enum class ImportResult{
+      Success, //!< Import succeeded, even if resulting track list is empty; don't retry
+      Failed,  //!< Import failed or user cancelled, don't retry
+      Retry,   //!< Import procedure should try with another ImportFileHandle
+   };
+
    // do the actual import, creating whatever tracks are necessary with
    // the WaveTrackFactory and calling the progress callback every iteration
    // through the importing loop
@@ -149,8 +152,9 @@ public:
    // or tags unmodified.
    // If resulting outTracks is not empty,
    // then each member of it must be a nonempty vector.
-   virtual ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-                      Tags *tags) = 0;
+   virtual ImportResult Import(
+      WaveTrackFactory *trackFactory, TrackHolders &outTracks,
+      Tags *tags) = 0;
 
    //! Choose appropriate format, which will not be narrower than the specified one
    static sampleFormat ChooseFormat(sampleFormat effectiveFormat);

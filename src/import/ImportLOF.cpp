@@ -124,8 +124,9 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-              Tags *tags) override;
+   ImportResult Import(
+      WaveTrackFactory *trackFactory, TrackHolders &outTracks,
+      Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -266,9 +267,9 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult LOFImportFileHandle::Import(
+auto LOFImportFileHandle::Import(
    WaveTrackFactory * WXUNUSED(trackFactory), TrackHolders &outTracks,
-   Tags * WXUNUSED(tags))
+   Tags * WXUNUSED(tags)) -> ImportResult
 {
    // Unlike other ImportFileHandle subclasses, this one never gives any tracks
    // back to the caller.
@@ -289,7 +290,7 @@ ProgressResult LOFImportFileHandle::Import(
    if(mTextFile->Eof())
    {
       mTextFile->Close();
-      return ProgressResult::Failed;
+      return ImportResult::Failed;
    }
 
    wxString line = mTextFile->GetFirstLine();
@@ -304,12 +305,12 @@ ProgressResult LOFImportFileHandle::Import(
    lofOpenFiles(&line);
 
    if(!mTextFile->Close())
-      return ProgressResult::Failed;
+      return ImportResult::Failed;
 
    // set any duration/offset factors for last window, as all files were called
    doDurationAndScrollOffset();
 
-   return ProgressResult::Success;
+   return ImportResult::Success;
 }
 
 static Importer::RegisteredImportPlugin registered{ "LOF",

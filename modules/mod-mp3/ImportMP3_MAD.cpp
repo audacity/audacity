@@ -107,7 +107,9 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
+   ImportResult Import(
+      WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags)
+      override;
    wxInt32 GetStreamCount() override;
    const TranslatableStrings &GetStreamInfo() override;
    void SetStreamUsage(wxInt32 StreamID, bool Use) override;
@@ -249,9 +251,9 @@ void MP3ImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUS
 {
 }
 
-ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
-                                           TrackHolders &outTracks,
-                                           Tags *tags)
+auto MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
+   TrackHolders &outTracks,
+   Tags *tags) -> ImportResult
 {
    outTracks.clear();
 
@@ -277,13 +279,13 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    // Decoding failed, so pass it on
    if (res != 0)
    {
-      return ProgressResult::Failed;
+      return ImportResult::Failed;
    }
 
    // The user canceled the decoding, so bail without saving tracks or tags
    if (mUpdateResult == ProgressResult::Cancelled)
    {
-      return mUpdateResult;
+      return ImportResult::Failed;
    }
 
    // Flush and trim the channels
@@ -316,7 +318,9 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    // Load ID3 tags from the file
    LoadID3(tags);
 
-   return mUpdateResult;
+   return (mUpdateResult == ProgressResult::Success)
+      ? (outTracks.empty() ? ImportResult::Retry : ImportResult::Success)
+      : ImportResult::Failed;
 }
 
 bool MP3ImportFileHandle::Open()

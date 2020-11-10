@@ -95,9 +95,10 @@ public:
 
    ByteCount GetFileUncompressedBytes() override;
 
-   ProgressResult Import(WaveTrackFactory *trackFactory,
-                         TrackHolders &outTracks,
-                         Tags *tags) override;
+   ImportResult Import(
+      WaveTrackFactory *trackFactory,
+      TrackHolders &outTracks,
+      Tags *tags) override;
 
    wxInt32 GetStreamCount() override;
 
@@ -216,7 +217,7 @@ private:
    WaveClip *mClip;
    std::vector<WaveClip *> mClips;
 
-   ProgressResult mUpdateResult;
+   ImportFileHandle::ImportResult mUpdateResult;
    TranslatableString mErrorMsg;
 };
 
@@ -301,9 +302,10 @@ auto AUPImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFactory),
-                                           TrackHolders &WXUNUSED(outTracks),
-                                           Tags *tags)
+auto AUPImportFileHandle::Import(
+   WaveTrackFactory *WXUNUSED(trackFactory),
+   TrackHolders &WXUNUSED(outTracks),
+   Tags *tags) -> ImportResult
 {
    auto &history = ProjectHistory::Get(mProject);
    auto &tracks = TrackList::Get(mProject);
@@ -313,7 +315,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    auto oldNumTracks = tracks.size();
    auto cleanup = finally([this, &tracks, oldNumTracks]{
-      if (mUpdateResult != ProgressResult::Success) {
+      if (mUpdateResult != ImportResult::Success) {
          // Revoke additions of tracks
          while (oldNumTracks < tracks.size()) {
             Track *lastTrack = *tracks.Any().rbegin();
@@ -330,7 +332,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
    CreateProgress();
 
-   mUpdateResult = ProgressResult::Success;
+   mUpdateResult = ImportResult::Success;
 
    XMLFileReader xmlFile;
 
@@ -343,7 +345,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
          wxOK | wxCENTRE,
          &GetProjectFrame(mProject));
 
-      return ProgressResult::Failed;
+      return ImportResult::Failed;
    }
 
    if (!mErrorMsg.empty())
@@ -355,23 +357,23 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
          wxOK | wxCENTRE,
          &GetProjectFrame(mProject));
 
-      if (mUpdateResult == ProgressResult::Failed)
+      if (mUpdateResult == ImportResult::Failed)
       {
          // Error
-         return ProgressResult::Failed;
+         return ImportResult::Failed;
       }
    }
 
    // If mUpdateResult had been changed, we would have returned already
-   wxASSERT( mUpdateResult == ProgressResult::Success );
+   wxASSERT( mUpdateResult == ImportResult::Success );
 
    sampleCount processed = 0;
    for (auto fi : mFiles)
    {
-      mUpdateResult = mProgress->Update(processed.as_long_long(), mTotalSamples.as_long_long());
-      if (mUpdateResult != ProgressResult::Success)
+      auto result = mProgress->Update(processed.as_long_long(), mTotalSamples.as_long_long());
+      if (result != ProgressResult::Success)
       {
-         return mUpdateResult;
+         return ImportResult::Failed;
       }
 
       mClip = fi.clip;
@@ -393,7 +395,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    for (auto pClip : mClips)
       pClip->UpdateEnvelopeTrackLen();
 
-   wxASSERT( mUpdateResult == ProgressResult::Success );
+   wxASSERT( mUpdateResult == ImportResult::Success );
 
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
@@ -534,7 +536,7 @@ XMLTagHandler *AUPImportFileHandle::HandleXMLChild(const std::string_view& tag)
 
 void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (mUpdateResult != ProgressResult::Success)
+   if (mUpdateResult != ImportResult::Success)
    {
       return;
    }
@@ -563,7 +565,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
 
 bool AUPImportFileHandle::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   if (mUpdateResult != ProgressResult::Success)
+   if (mUpdateResult != ImportResult::Success)
    {
       return false;
    }
@@ -1650,13 +1652,13 @@ bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 {
    wxLogError(msg.Debug());
 
-   if (mErrorMsg.empty() || mUpdateResult == ProgressResult::Success)
+   if (mErrorMsg.empty() || mUpdateResult == ImportResult::Success)
    {
       mErrorMsg = msg;
    }
 
    // The only place where mUpdateResult is set during XML handling callbacks
-   mUpdateResult = ProgressResult::Failed;
+   mUpdateResult = ImportResult::Failed;
 
    return false;
 }

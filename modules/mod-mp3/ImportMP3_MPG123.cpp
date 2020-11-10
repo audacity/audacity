@@ -131,7 +131,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
+   ImportResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
 
    bool SetupOutputFormat();
 
@@ -262,9 +262,8 @@ void MP3ImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUS
 {
 }
 
-ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
-                                           TrackHolders &outTracks,
-                                           Tags *tags)
+auto MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
+   TrackHolders &outTracks, Tags *tags) -> ImportResult
 {
    auto finalAction = finally([handle = mHandle]() { mpg123_close(handle); });
 
@@ -278,10 +277,10 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    mUpdateResult = mProgress->Update(0ll, framesCount);
 
    if (mUpdateResult == ProgressResult::Cancelled)
-      return ProgressResult::Cancelled;
+      return ImportResult::Failed;
 
    if (!SetupOutputFormat())
-      return ProgressResult::Failed;
+      return ImportResult::Failed;
 
    off_t frameIndex { 0 };
    unsigned char* data { nullptr };
@@ -298,7 +297,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
          static_cast<long long>(frameIndex), framesCount);
 
       if (mUpdateResult == ProgressResult::Cancelled)
-         return ProgressResult::Cancelled;
+         return ImportResult::Failed;
 
       constSamplePtr samples = reinterpret_cast<constSamplePtr>(data);
       const size_t samplesCount = dataSize / sizeof(float) / mNumChannels;
@@ -332,7 +331,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
       wxLogError(
          "Failed to decode MP3 file: %s", mpg123_plain_strerror(ret));
 
-      return ProgressResult::Failed;
+      return ImportResult::Failed;
    }
 
    // Flush and trim the channels
@@ -345,7 +344,9 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
 
    ReadTags(tags);
 
-   return mUpdateResult;
+   return (mUpdateResult == ProgressResult::Success)
+      ? (outTracks.empty() ? ImportResult::Retry : ImportResult::Success)
+      : ImportResult::Failed;
 }
 
 bool MP3ImportFileHandle::SetupOutputFormat()

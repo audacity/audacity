@@ -89,8 +89,9 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
-              Tags *tags) override;
+   ImportResult Import(
+      WaveTrackFactory *trackFactory, TrackHolders &outTracks,
+      Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -283,9 +284,9 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
 using NewChannelGroup = std::vector< std::shared_ptr<Track> >;
 
-ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
-                                TrackHolders &outTracks,
-                                Tags *tags)
+auto PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
+   TrackHolders &outTracks,
+   Tags *tags) -> ImportResult
 {
    outTracks.clear();
 
@@ -316,13 +317,13 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
       // PRL:  guard against excessive memory buffer allocation in case of many channels
       using type = decltype(maxBlockSize);
       if (mInfo.channels < 1)
-         return ProgressResult::Failed;
+         return ImportResult::Failed;
       auto maxBlock = std::min(maxBlockSize,
          std::numeric_limits<type>::max() /
             (mInfo.channels * SAMPLE_SIZE(mFormat))
       );
       if (maxBlock < 1)
-         return ProgressResult::Failed;
+         return ImportResult::Failed;
 
       SampleBuffer srcbuffer, buffer;
       wxASSERT(mInfo.channels >= 0);
@@ -331,7 +332,7 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
       {
          maxBlock /= 2;
          if (maxBlock < 1)
-            return ProgressResult::Failed;
+            return ImportResult::Failed;
       }
 
       decltype(fileTotalFrames) framescompleted = 0;
@@ -381,7 +382,7 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
    }
 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled) {
-      return updateResult;
+      return ImportResult::Failed;
    }
 
    for(const auto &channel : channels)
@@ -580,7 +581,9 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
    }
 #endif
 
-   return updateResult;
+   return (updateResult == ProgressResult::Success)
+      ? (outTracks.empty() ? ImportResult::Retry : ImportResult::Success)
+      : ImportResult::Failed;
 }
 
 PCMImportFileHandle::~PCMImportFileHandle()

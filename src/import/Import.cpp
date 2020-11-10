@@ -644,21 +644,9 @@ bool Importer::Import( AudacityProject &project,
             inFile->SetStreamUsage(0,TRUE);
 
          auto res = inFile->Import(trackFactory, tracks, tags);
-
-         if (res == ProgressResult::Success || res == ProgressResult::Stopped)
+         switch (res) {
+         case ImportFileHandle::ImportResult::Success:
          {
-            // LOF ("list-of-files") has different semantics
-            if (extension.IsSameAs(wxT("lof"), false))
-            {
-               return true;
-            }
-
-            // AUP ("legacy projects") have different semantics
-            if (extension.IsSameAs(wxT("aup"), false))
-            {
-               return true;
-            }
-
             auto end = tracks.end();
             auto iter = std::remove_if( tracks.begin(), end,
                std::mem_fn( &std::vector< std::shared_ptr<Track> >::empty ) );
@@ -668,15 +656,15 @@ bool Importer::Import( AudacityProject &project,
                // But correct that and proceed anyway
                tracks.erase( iter, end );
             }
-            if (tracks.size() > 0)
-            {
-               // success!
-               return true;
-            }
+            // success!
+            return true;
          }
-
-         if (res == ProgressResult::Cancelled)
+         case ImportFileHandle::ImportResult::Failed:
             return false;
+         case ImportFileHandle::ImportResult::Retry:
+         default:
+            break;
+         }
 
          // We could exit here since we had a match on the file extension,
          // but there may be another plug-in that can import the file and

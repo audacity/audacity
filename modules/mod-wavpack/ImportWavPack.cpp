@@ -63,7 +63,8 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags) override;
+   ImportResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
+      Tags *tags) override;
    wxInt32 GetStreamCount() override;
    const TranslatableStrings &GetStreamInfo() override;
    void SetStreamUsage(wxInt32 StreamID, bool Use) override;
@@ -157,7 +158,8 @@ auto WavPackImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks, Tags *tags)
+auto WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory,
+   TrackHolders &outTracks, Tags *tags) -> ImportResult
 {
    const int wavpackMode = WavpackGetMode(mWavPackContext);
 
@@ -241,7 +243,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
       updateResult = ProgressResult::Failed;
 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
-      return updateResult;
+      return ImportResult::Failed;
 
    for (const auto &channel : mChannels)
       static_cast<WaveTrack*>(channel.get())->Flush();
@@ -294,7 +296,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
       }
    }
 
-   return updateResult;
+   return (outTracks.empty() ? ImportResult::Retry : ImportResult::Success);
 }
 
 wxInt32 WavPackImportFileHandle::GetStreamCount()
