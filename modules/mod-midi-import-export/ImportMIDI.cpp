@@ -21,16 +21,16 @@
 #include "ImportPlugin.h"
 #include "ImportProgressListener.h"
 #include "NoteTrack.h"
-#include "../tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h"
+#include "tracks/playabletrack/notetrack/ui/NoteTrackDisplayData.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "Viewport.h"
 #include "ProjectWindows.h"
 #include "SelectFile.h"
-#include "../SelectUtilities.h"
+#include "SelectUtilities.h"
 #include "AudacityMessageBox.h"
-#include "../widgets/FileHistory.h"
+#include "widgets/FileHistory.h"
 #include "ProgressDialog.h"
 
 namespace {
@@ -134,7 +134,7 @@ bool ImportMIDI(const FilePath &fName, NoteTrack * dest)
 // Insert a menu item
 #include "CommandContext.h"
 #include "MenuRegistry.h"
-#include "../CommonCommandFlags.h"
+#include "CommonCommandFlags.h"
 
 namespace {
 using namespace MenuRegistry;
@@ -258,4 +258,8 @@ Importer::RegisteredImportPlugin registered{ "portsmf",
 };
 
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
+
 #endif

@@ -19,7 +19,7 @@
 #include "FileNames.h"
 #include "NoteTrack.h"
 #include "Project.h"
-#include "../ProjectWindows.h"
+#include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "AudacityMessageBox.h"
 #include "FileDialog/FileDialog.h"
@@ -55,7 +55,7 @@ ImportExportPrefs::RegisteredControls reg{
 // Insert a menu item
 #include "CommandContext.h"
 #include "MenuRegistry.h"
-#include "../CommonCommandFlags.h"
+#include "CommonCommandFlags.h"
 
 namespace {
 const ReservedCommandFlag&
@@ -161,4 +161,5 @@ AttachedItem sAttachment{
 };
 
 }
+
 #endif

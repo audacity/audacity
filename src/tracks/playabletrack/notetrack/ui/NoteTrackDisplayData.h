@@ -19,7 +19,7 @@ class Alg_seq;
 class NoteTrack;
 
 /// Persistent data for display of a note track
-class NoteTrackRange final : public NoteTrackAttachment
+class AUDACITY_DLL_API NoteTrackRange final : public NoteTrackAttachment
 {
 public:
    //! Allow mutative access to attached data of a const track
