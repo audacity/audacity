@@ -44,6 +44,14 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
       auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
       
+      // Fix the bug 2109.
+      // In case the project had soloed tracks before importing,
+      // the newly imported track is muted.
+      const bool projectHasSolo =
+         !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+      if (projectHasSolo)
+         pTrack->SetMute(true);
+
       ProjectHistory::Get( project )
          .PushState(
             XO("Imported MIDI from '%s'").Format( fileName ),
