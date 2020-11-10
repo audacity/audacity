@@ -17,12 +17,12 @@
 //#include "mfmidi.h"
 
 #include "FileNames.h"
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #include "Project.h"
-#include "../ProjectWindows.h"
+#include "ProjectWindows.h"
 #include "SelectFile.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/FileDialog/FileDialog.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/FileDialog/FileDialog.h"
 
 #include "ShuttleGui.h"
 #include "prefs/ImportExportPrefs.h"
@@ -53,9 +53,9 @@ ImportExportPrefs::RegisteredControls reg{
 }
 
 // Insert a menu item
-#include "../commands/CommandContext.h"
-#include "../commands/CommandManager.h"
-#include "../CommonCommandFlags.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "CommonCommandFlags.h"
 
 using namespace MenuTable;
 
@@ -161,4 +161,5 @@ AttachedItem sAttachment{
 };
 
 }
+
 #endif

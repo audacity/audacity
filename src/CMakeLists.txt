@@ -714,11 +714,6 @@ list( APPEND SOURCES
          import/ImportGStreamer.cpp
       >
 
-      $<$<BOOL:${USE_MIDI}>:
-         export/ExportMIDI.cpp
-         import/ImportMIDI.cpp
-      >
-
       # Menus
 
       menus/ClipMenus.cpp
