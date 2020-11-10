@@ -511,7 +511,7 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
          {
             ++c;
 
-            WaveTrack *t = channel.get();
+            auto t = static_cast<WaveTrack*>(channel.get());
             t->InsertSilence(0,double(stream_delay)/AUDACITY_AV_TIME_BASE);
          }
       }
@@ -555,7 +555,7 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
    // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
    for (auto &stream : mChannels)
       for(auto &channel : stream)
-         channel->Flush();
+         static_cast<WaveTrack*>(channel.get())->Flush();
 
    outTracks.swap(mChannels);
 
@@ -598,7 +598,7 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
       auto iter2 = iter->begin();
       for (size_t chn = 0; chn < nChannels; ++iter2, ++chn)
       {
-         iter2->get()->Append(
+         static_cast<WaveTrack*>(iter2->get())->Append(
             reinterpret_cast<samplePtr>(data.data() + chn), sc->SampleFormat,
             samplesPerChannel,
             sc->CodecContext->GetChannels());
@@ -615,7 +615,7 @@ ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPack
       auto iter2 = iter->begin();
       for (size_t chn = 0; chn < nChannels; ++iter2, ++chn)
       {
-         iter2->get()->Append(
+         static_cast<WaveTrack*>(iter2->get())->Append(
             reinterpret_cast<samplePtr>(data.data() + chn), sc->SampleFormat,
             samplesPerChannel, sc->CodecContext->GetChannels());
       }

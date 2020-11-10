@@ -53,7 +53,7 @@ public:
      const FilePath &Filename, AudacityProject*) override;
 };
 
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+using NewChannelGroup = std::vector< std::shared_ptr<Track> >;
 
 class WavPackImportFileHandle final : public ImportFileHandle
 {
@@ -174,7 +174,8 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
    }
 
    /* The number of samples to read in each loop */
-   const size_t SAMPLES_TO_READ = mChannels.begin()->get()->GetMaxBlockSize();
+   const size_t SAMPLES_TO_READ =
+      static_cast<WaveTrack*>(mChannels.begin()->get())->GetMaxBlockSize();
    auto updateResult = ProgressResult::Success;
    uint32_t totalSamplesRead = 0;
 
@@ -203,14 +204,14 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
                   int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
-               mChannels[channel]->Append(
+               static_cast<WaveTrack*>(mChannels[channel].get())->Append(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + channel),
                   mFormat, samplesRead, mNumChannels);
             }
 
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
-               mChannels[channel]->Append(
+               static_cast<WaveTrack*>(mChannels[channel].get())->Append(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + channel),
                   mFormat, samplesRead, mNumChannels);
             }
@@ -220,7 +221,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
                floatBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
 
             for (unsigned channel = 0; channel < mNumChannels; channel++) {
-               mChannels[channel]->Append(
+               static_cast<WaveTrack*>(mChannels[channel].get())->Append(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + channel),
                   mFormat, samplesRead, mNumChannels);
             }
@@ -243,7 +244,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
       return updateResult;
 
    for (const auto &channel : mChannels)
-      channel->Flush();
+      static_cast<WaveTrack*>(channel.get())->Flush();
 
    if (!mChannels.empty())
       outTracks.push_back(std::move(mChannels));

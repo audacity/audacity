@@ -1090,7 +1090,8 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    {
       for (auto& track : newTracks)
          for (auto& channel : track)
-            channel->SetMute(true);
+            if (auto pChannel = track_cast<PlayableTrack*>(channel.get()))
+               pChannel->SetMute(true);
    }
 
    // Must add all tracks first (before using Track::IsLeader)

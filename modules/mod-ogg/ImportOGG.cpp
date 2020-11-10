@@ -74,7 +74,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include "WaveTrack.h"
 #include "import/ImportPlugin.h"
 
-using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
+using NewChannelGroup = std::vector< std::shared_ptr<Track> >;
 
 class OggImportPlugin final : public ImportPlugin
 {
@@ -327,10 +327,11 @@ ProgressResult OggImportFileHandle::Import(
          {
             auto iter2 = iter->begin();
             for (int c = 0; c < mVorbisFile->vi[bitstream].channels; ++iter2, ++c)
-               iter2->get()->Append((char *)(mainBuffer.get() + c),
-               int16Sample,
-               samplesRead,
-               mVorbisFile->vi[bitstream].channels);
+               static_cast<WaveTrack*>(iter2->get())
+                  ->Append((char *)(mainBuffer.get() + c),
+                     int16Sample,
+                     samplesRead,
+                     mVorbisFile->vi[bitstream].channels);
          }
 
          samplesSinceLastCallback += samplesRead;
@@ -353,7 +354,7 @@ ProgressResult OggImportFileHandle::Import(
    for (auto &link : mChannels)
    {
       for (auto &channel : link)
-         channel->Flush();
+         static_cast<WaveTrack*>(channel.get())->Flush();
       outTracks.push_back(std::move(link));
    }
 
