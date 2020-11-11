@@ -113,6 +113,16 @@ struct AudioIOStartStreamOptions
    std::function< unsigned long() > playbackStreamPrimer;
 };
 
+//! Abstract interface to alternative, concurrent playback with the main audio (such as MIDI events)
+class AUDIO_DEVICES_API AudioIOExtBase
+{
+public:
+   virtual ~AudioIOExtBase();
+
+   // Formerly in AudioIOBase
+   virtual bool IsOtherStreamActive() const = 0;
+};
+
 ///\brief A singleton object supporting queries of the state of any active
 /// audio streams, and audio device capabilities
 class AUDIO_DEVICES_API AudioIOBase /* not final */
@@ -121,7 +131,11 @@ class AUDIO_DEVICES_API AudioIOBase /* not final */
 public:
    static AudioIOBase *Get();
 
+   AudioIOBase();
    virtual ~AudioIOBase();
+
+   AudioIOBase(const AudioIOBase &) = delete;
+   AudioIOBase &operator=(const AudioIOBase &) = delete;
 
    void SetCaptureMeter(
       AudacityProject *project, const std::weak_ptr<Meter> &meter);
@@ -263,12 +277,6 @@ protected:
    /// True if audio playback is paused
    bool                mPaused;
 
-   /// True when output reaches mT1
-   bool             mMidiOutputComplete{ true };
-
-   /// mMidiStreamActive tells when mMidiStream is open for output
-   bool             mMidiStreamActive;
-
    volatile int        mStreamToken;
 
    /// Audio playback rate in samples per second
@@ -338,12 +346,11 @@ protected:
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   bool IsOtherStreamActive() const;
-#endif
+   /*! This class needs to iterate this array for one limited purpose but does
+    not populate it and does not give access to it except to subclasses
+    */
+   std::vector<std::unique_ptr<AudioIOExtBase>> mAudioIOExt;
 };
-
-#endif
 
 #include "Prefs.h"
 
@@ -355,3 +362,5 @@ extern AUDIO_DEVICES_API IntSetting    AudioIORecordChannels;
 extern AUDIO_DEVICES_API StringSetting AudioIORecordingDevice;
 extern AUDIO_DEVICES_API StringSetting AudioIORecordingSource;
 extern AUDIO_DEVICES_API IntSetting    AudioIORecordingSourceIndex;
+
+#endif

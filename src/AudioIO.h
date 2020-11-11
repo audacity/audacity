@@ -25,20 +25,6 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-#include "../lib-src/header-substitutes/allegro.h" // to be removed
-typedef void PmStream;
-typedef int32_t PmTimestamp;
-
-class Alg_seq;
-class Alg_event;
-class Alg_iterator;
-
-class NoteTrack;
-using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
-
-#endif // EXPERIMENTAL_MIDI_OUT
-
 #include <wx/event.h> // to declare custom event types
 
 #include "SampleCount.h"
@@ -69,9 +55,6 @@ typedef int PaError;
 
 bool ValidateDeviceNames();
 
-#define MAX_MIDI_BUFFER_SIZE 5000
-#define DEFAULT_SYNTH_LATENCY 5
-
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
@@ -87,10 +70,6 @@ struct TransportTracks {
    // This is a subset of playbackTracks
    WaveTrackConstArray prerollTracks;
 };
-
-// This workaround makes pause and stop work when output is to GarageBand,
-// which seems not to implement the notes-off message correctly.
-#define AUDIO_IO_GB_MIDI_WORKAROUND
 
 /** brief The function which is called from PortAudio's callback thread
  * context to collect and deliver audio for / from the sound device.
@@ -222,6 +201,32 @@ void MessageBuffer<Data>::Write( Data &&data )
    mSlots[idx].mBusy.store( false, std::memory_order_release );
 }
 
+struct PaStreamInfo;
+struct PaStreamCallbackTimeInfo;
+struct TransportTracks;
+
+class AUDACITY_DLL_API AudioIOExt : public AudioIOExtBase
+{
+public:
+   virtual ~AudioIOExt();
+
+   // Formerly in AudioIoCallback
+   virtual void ComputeOtherTimings(double rate,
+      const PaStreamCallbackTimeInfo *timeInfo,
+      unsigned long framesPerBuffer) = 0;
+   virtual void SignalOtherCompletion() = 0;
+   virtual unsigned CountOtherSoloTracks() const = 0;
+
+   // Formerly in AudioIO
+   virtual bool StartOtherStream(const TransportTracks &tracks,
+      const PaStreamInfo* info, double startTime, double rate) = 0;
+   virtual void AbortOtherStream() = 0;
+   virtual void FillOtherBuffers(
+      double rate, unsigned long pauseFrames, bool paused, bool hasSolo) = 0;
+   virtual void StopOtherStream() = 0;
+};
+
+#include "../lib-src/header-substitutes/allegro.h" // to be removed
 class AUDACITY_DLL_API AudioIoCallback /* not final */
    : public AudioIOBase
 {
@@ -237,33 +242,55 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void PrepareMidiIterator(bool send, double offset);
-   bool StartPortMidiStream(double rate);
+   //! @name iteration over extensions, supporting range-for syntax
+   //! @{
+   class AUDACITY_DLL_API AudioIOExtIterator {
+   public:
+      using difference_type = ptrdiff_t;
+      using value_type = AudioIOExt &;
+      using pointer = AudioIOExt *;
+      using reference = AudioIOExt &;
+      using iterator_category = std::forward_iterator_tag;
 
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime(double pauseTime);
+      explicit AudioIOExtIterator( AudioIoCallback &audioIO, bool end )
+         : mIterator{ end
+            ? audioIO.mAudioIOExt.end()
+            : audioIO.mAudioIOExt.begin() }
+      {}
+      AudioIOExtIterator &operator ++ () { ++mIterator; return *this; }
+      auto operator *() const -> AudioIOExt &
+      {
+         // Down-cast and dereference are safe because only AudioIOCallback
+         // populates the array
+         return *static_cast<AudioIOExt*>(mIterator->get());
+      }
+      friend inline bool operator == (
+         const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
+      {
+         return xx.mIterator == yy.mIterator;
+      }
+      friend inline bool operator != (
+         const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
+      {
+         return !(xx == yy);
+      }
+   private:
+      std::vector<std::unique_ptr<AudioIOExtBase>>::const_iterator mIterator;
+   };
+   struct AudioIOExtRange {
+      AudioIOExtIterator first;
+      AudioIOExtIterator second;
+      AudioIOExtIterator begin() const { return first; }
+      AudioIOExtIterator end() const { return second; }
+   };
 
-   void OutputEvent(double pauseTime);
-   void FillMidiBuffers(
-         double rate, unsigned long pauseFrames, bool paused, bool hasSolo);
-   void GetNextEvent();
-   double PauseTime(double rate, unsigned long pauseFrames);
-   void AllNotesOff(bool looping = false);
-
-   /** \brief Compute the current PortMidi timestamp time.
-    *
-    * This is used by PortMidi to synchronize midi time to audio samples
-    */
-   PmTimestamp MidiTime();
-
- private:
-   bool  mHasSolo; // is any playback solo button pressed?
- public:
-   bool SetHasSolo(bool hasSolo);
-   bool GetHasSolo() { return mHasSolo; }
-#endif
+   AudioIOExtRange Extensions() {
+      return {
+         AudioIOExtIterator{ *this, false },
+         AudioIOExtIterator{ *this, true }
+      };
+   }
+   //! @}
 
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
@@ -284,10 +311,6 @@ public:
    bool TrackHasBeenFadedOut( const WaveTrack &wt );
    bool AllTracksAlreadySilent();
 
-   // These eight functions do different parts of AudioCallback().
-   void ComputeMidiTimings(double rate,
-      const PaStreamCallbackTimeInfo *timeInfo,
-      unsigned long framesPerBuffer);
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
       unsigned long framesPerBuffer
@@ -329,14 +352,6 @@ public:
       unsigned long framesPerBuffer
    );
 
-
-// Required by these functions...
-#ifdef EXPERIMENTAL_MIDI_OUT
-   double AudioTime(double rate) const
-   { return mPlaybackSchedule.mT0 + mNumFrames / rate; }
-#endif
-
-
    /** \brief Get the number of audio samples ready in all of the playback
    * buffers.
    *
@@ -346,72 +361,6 @@ public:
 
    /// How many frames of zeros were output due to pauses?
    long    mNumPauseFrames;
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   //   MIDI_PLAYBACK:
-   PmStream        *mMidiStream;
-   int              mLastPmError;
-
-   /// Latency of MIDI synthesizer
-   long             mSynthLatency; // ms
-
-   // These fields are used to synchronize MIDI with audio:
-
-   /// Number of frames output, including pauses
-   long    mNumFrames;
-   int     mMidiLoopPasses;
-   inline double MidiLoopOffset() {
-      return mMidiLoopPasses * (mPlaybackSchedule.mT1 - mPlaybackSchedule.mT0);
-   }
-
-   long    mAudioFramesPerBuffer;
-   /// Used by Midi process to record that pause has begun,
-   /// so that AllNotesOff() is only delivered once
-   bool    mMidiPaused;
-   /// The largest timestamp written so far, used to delay
-   /// stream closing until last message has been delivered
-   PmTimestamp mMaxMidiTimestamp;
-
-   /// Offset from ideal sample computation time to system time,
-   /// where "ideal" means when we would get the callback if there
-   /// were no scheduling delays or computation time
-   double mSystemMinusAudioTime;
-   /// audio output latency reported by PortAudio
-   /// (initially; for Alsa, we adjust it to the largest "observed" value)
-   double mAudioOutLatency;
-
-   // Next two are used to adjust the previous two, if
-   // PortAudio does not provide the info (using ALSA):
-
-   /// time of first callback
-   /// used to find "observed" latency
-   double mStartTime;
-   /// number of callbacks since stream start
-   long mCallbackCount;
-
-   double mSystemMinusAudioTimePlusLatency;
-
-   Alg_seq      *mSeq;
-   std::optional<Alg_iterator> mIterator;
-   /// The next event to play (or null)
-   Alg_event    *mNextEvent;
-
-#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
-   std::vector< std::pair< int, int > > mPendingNotesOff;
-#endif
-
-   /// Real time at which the next event should be output, measured in seconds.
-   /// Note that this could be a note's time+duration for note offs.
-   double           mNextEventTime;
-   /// Track of next event
-   NoteTrack        *mNextEventTrack;
-   /// Is the next event a note-on?
-   bool             mNextIsNoteOn;
-   /// when true, mSendMidiState means send only updates, not note-on's,
-   /// used to send state changes that precede the selected notes
-   bool             mSendMidiState;
-   NoteTrackConstArray mMidiPlaybackTracks;
-#endif
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    bool           mAILAActive;
@@ -431,6 +380,7 @@ public:
 #endif
 
    std::unique_ptr<AudioThread> mThread;
+
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
@@ -553,10 +503,13 @@ protected:
 
    PlaybackSchedule mPlaybackSchedule;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void SignalOtherCompletion();
-   unsigned CountOtherSoloTracks() const;
-#endif
+private:
+   /*!
+    Privatize the inherited array but give access by Extensions().
+    This class guarantees that this array is populated only with non-null
+    pointers to the subtype AudioIOExt
+    */
+   using AudioIOBase::mAudioIOExt;
 };
 
 struct PaStreamInfo;
@@ -818,15 +771,157 @@ private:
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
    bool mDelayingActions{ false };
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   bool StartOtherStream(const TransportTracks &tracks,
-      const PaStreamInfo* info, double startTime, double rate);
-   void AbortOtherStream();
-   void StopOtherStream();
-#endif
 };
 
 static constexpr unsigned ScrubPollInterval_ms = 50;
+
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+typedef void PmStream;
+typedef int32_t PmTimestamp;
+class Alg_event;
+class Alg_iterator;
+class NoteTrack;
+using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
+
+class AudioThread;
+
+// This workaround makes pause and stop work when output is to GarageBand,
+// which seems not implement the notes-off message correctly.
+#define AUDIO_IO_GB_MIDI_WORKAROUND
+
+#define DEFAULT_SYNTH_LATENCY 5
+
+struct MIDIPlay : AudioIOExt
+{
+   explicit MIDIPlay(const PlaybackSchedule &schedule);
+   ~MIDIPlay() override;
+
+   double AudioTime(double rate) const
+   { return mPlaybackSchedule.mT0 + mNumFrames / rate; }
+
+   const PlaybackSchedule &mPlaybackSchedule;
+   NoteTrackConstArray mMidiPlaybackTracks;
+
+   /// True when output reaches mT1
+   bool             mMidiOutputComplete{ true };
+
+   /// mMidiStreamActive tells when mMidiStream is open for output
+   bool             mMidiStreamActive = false;
+
+   PmStream        *mMidiStream = nullptr;
+   int              mLastPmError = 0;
+
+   /// Latency of MIDI synthesizer
+   long             mSynthLatency = DEFAULT_SYNTH_LATENCY; // ms
+
+   // These fields are used to synchronize MIDI with audio:
+
+   /// Number of frames output, including pauses
+   long    mNumFrames = 0;
+   /// total of backward jumps
+   int     mMidiLoopPasses = 0;
+   //
+   inline double MidiLoopOffset() {
+      return mMidiLoopPasses * (mPlaybackSchedule.mT1 - mPlaybackSchedule.mT0);
+   }
+
+   long    mAudioFramesPerBuffer = 0;
+   /// Used by Midi process to record that pause has begun,
+   /// so that AllNotesOff() is only delivered once
+   bool    mMidiPaused = false;
+   /// The largest timestamp written so far, used to delay
+   /// stream closing until last message has been delivered
+   PmTimestamp mMaxMidiTimestamp = 0;
+
+   /// Offset from ideal sample computation time to system time,
+   /// where "ideal" means when we would get the callback if there
+   /// were no scheduling delays or computation time
+   double mSystemMinusAudioTime = 0.0;
+   /// audio output latency reported by PortAudio
+   /// (initially; for Alsa, we adjust it to the largest "observed" value)
+   double mAudioOutLatency = 0.0;
+
+   // Next two are used to adjust the previous two, if
+   // PortAudio does not provide the info (using ALSA):
+
+   /// time of first callback
+   /// used to find "observed" latency
+   double mStartTime = 0.0;
+   /// number of callbacks since stream start
+   long mCallbackCount = 0;
+
+   double mSystemMinusAudioTimePlusLatency = 0.0;
+
+   std::optional<Alg_iterator> mIterator;
+   /// The next event to play (or null)
+   Alg_event    *mNextEvent = nullptr;
+
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+   std::vector< std::pair< int, int > > mPendingNotesOff;
+#endif
+
+   /// Real time at which the next event should be output, measured in seconds.
+   /// Note that this could be a note's time+duration for note offs.
+   double           mNextEventTime = 0.0;
+   /// Track of next event
+   NoteTrack        *mNextEventTrack = nullptr;
+   /// Is the next event a note-on?
+   bool             mNextIsNoteOn = false;
+   /// when true, mSendMidiState means send only updates, not note-on's,
+   /// used to send state changes that precede the selected notes
+   bool             mSendMidiState = false;
+
+   void PrepareMidiIterator(bool send, double offset);
+   bool StartPortMidiStream(double rate);
+
+   // Compute nondecreasing real time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime(double pauseTime);
+
+   void OutputEvent(double pauseTime);
+   void GetNextEvent();
+   double PauseTime(double rate, unsigned long pauseFrames);
+   void AllNotesOff(bool looping = false);
+
+   /** \brief Compute the current PortMidi timestamp time.
+    *
+    * This is used by PortMidi to synchronize midi time to audio samples
+    */
+   PmTimestamp MidiTime();
+
+   // Note: audio code solves the problem of soloing/muting tracks by scanning
+   // all playback tracks on every call to the audio buffer fill routine.
+   // We do the same for Midi, but it seems wasteful for at least two
+   // threads to be frequently polling to update status. This could be
+   // eliminated (also with a reduction in code I think) by updating mHasSolo
+   // each time a solo button is activated or deactivated. For now, I'm
+   // going to do this polling in the FillMidiBuffer routine to localize
+   // changes for midi to the midi code, but I'm declaring the variable
+   // here so possibly in the future, Audio code can use it too. -RBD
+ private:
+   bool  mHasSolo = false; // is any playback solo button pressed?
+ public:
+   bool SetHasSolo(bool hasSolo);
+   bool GetHasSolo() { return mHasSolo; }
+
+   bool mUsingAlsa = false;
+
+   bool IsOtherStreamActive() const override;
+
+   void ComputeOtherTimings(double rate,
+      const PaStreamCallbackTimeInfo *timeInfo,
+      unsigned long framesPerBuffer) override;
+   void SignalOtherCompletion() override;
+   unsigned CountOtherSoloTracks() const override;
+
+   bool StartOtherStream(const TransportTracks &tracks,
+      const PaStreamInfo* info, double startTime, double rate) override;
+   void AbortOtherStream() override;
+   void FillOtherBuffers(double rate, unsigned long pauseFrames,
+      bool paused, bool hasSolo) override;
+   void StopOtherStream() override;
+};
+#endif
 
 #endif
