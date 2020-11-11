@@ -178,7 +178,7 @@ Time (in seconds, = total_sample_count / sample_rate)
   \par AudioTime() and PauseTime() computation
   AudioTime() is simply mT0 + mNumFrames / mRate.
   mNumFrames is incremented in each audio callback. Similarly, PauseTime()
-  is mNumPauseFrames / mRate. mNumPauseFrames is also incremented in
+  is pauseFrames / rate. pauseFrames is also incremented in
   each audio callback when a pause is in effect or audio output is ready to start.
 
   \par MidiTime() computation
@@ -3407,10 +3407,11 @@ bool AudioIoCallback::SetHasSolo(bool hasSolo)
 }
 
 
-void AudioIoCallback::FillMidiBuffers(double rate)
+void AudioIoCallback::FillMidiBuffers(
+   double rate, unsigned long pauseFrames, bool paused, bool hasSolo)
 {
    // Keep track of time paused. If not paused, fill buffers.
-   if (IsPaused()) {
+   if (paused) {
       if (!mMidiPaused) {
          mMidiPaused = true;
          AllNotesOff(); // to avoid hanging notes during pause
@@ -3422,24 +3423,7 @@ void AudioIoCallback::FillMidiBuffers(double rate)
       mMidiPaused = false;
    }
 
-   //---- Duplicated code -----
-   // TODO this code is duplicated.  Look for mbHasSoloTracks.
-   bool hasSolo = false;
-   auto numPlaybackTracks = mPlaybackTracks.size();
-   for(unsigned t = 0; t < numPlaybackTracks; t++ )
-      if( mPlaybackTracks[t]->GetSolo() ) {
-         hasSolo = true;
-         break;
-      }
-   auto numMidiPlaybackTracks = mMidiPlaybackTracks.size();
-   for(unsigned t = 0; t < numMidiPlaybackTracks; t++ )
-      if( mMidiPlaybackTracks[t]->GetSolo() ) {
-         hasSolo = true;
-         break;
-      }
    SetHasSolo(hasSolo);
-   //---- End duplicated code -----
-
 
    // If we compute until mNextEventTime > current audio time,
    // we would have a built-in compute-ahead of mAudioOutLatency, and
@@ -3453,15 +3437,15 @@ void AudioIoCallback::FillMidiBuffers(double rate)
        time += actual_latency - mAudioOutLatency;
    }
    while (mNextEvent &&
-          UncorrectedMidiEventTime(PauseTime(rate)) < time) {
-      OutputEvent(PauseTime(rate));
+          UncorrectedMidiEventTime(PauseTime(rate, pauseFrames)) < time) {
+      OutputEvent(PauseTime(rate, pauseFrames));
       GetNextEvent();
    }
 }
 
-double AudioIoCallback::PauseTime(double rate)
+double AudioIoCallback::PauseTime(double rate, unsigned long pauseFrames)
 {
-   return mNumPauseFrames / rate;
+   return pauseFrames / rate;
 }
 
 
@@ -4471,6 +4455,7 @@ int AudioIoCallback::AudioCallback(
    const PaStreamCallbackTimeInfo *timeInfo,
    const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
 {
+   // Poll tracks for change of state.  User might click mute and solo buttons.
    mbHasSoloTracks = CountSoloingTracks() > 0 ;
    mCallbackReturn = paContinue;
 
@@ -4497,7 +4482,7 @@ int AudioIoCallback::AudioCallback(
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    if (mMidiStream)
-      FillMidiBuffers(mRate);
+      FillMidiBuffers(mRate, mNumPauseFrames, IsPaused(), mbHasSoloTracks);
 #endif
 
    // ------ MEMORY ALLOCATIONS -----------------------------------------------

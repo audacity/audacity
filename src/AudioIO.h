@@ -246,9 +246,10 @@ public:
    double UncorrectedMidiEventTime(double pauseTime);
 
    void OutputEvent(double pauseTime);
-   void FillMidiBuffers(double rate);
+   void FillMidiBuffers(
+         double rate, unsigned long pauseFrames, bool paused, bool hasSolo);
    void GetNextEvent();
-   double PauseTime(double rate);
+   double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
 
    /** \brief Compute the current PortMidi timestamp time.
@@ -257,15 +258,6 @@ public:
     */
    PmTimestamp MidiTime();
 
-   // Note: audio code solves the problem of soloing/muting tracks by scanning
-   // all playback tracks on every call to the audio buffer fill routine.
-   // We do the same for Midi, but it seems wasteful for at least two
-   // threads to be frequently polling to update status. This could be
-   // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm
-   // going to do this polling in the FillMidiBuffer routine to localize
-   // changes for midi to the midi code, but I'm declaring the variable
-   // here so possibly in the future, Audio code can use it too. -RBD
  private:
    bool  mHasSolo; // is any playback solo button pressed?
  public:
