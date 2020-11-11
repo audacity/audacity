@@ -139,6 +139,8 @@ list( APPEND SOURCES
       FreqWindow.h
       HelpText.cpp
       HelpText.h
+      HelpUtilities.cpp
+      HelpUtilities.h
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h

@@ -11,6 +11,7 @@
 #include "../CrashReport.h" // for HAS_CRASH_REPORT
 #include "FileNames.h"
 #include "../HelpText.h"
+#include "../HelpUtilities.h"
 #include "../LogWindow.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
@@ -34,61 +35,6 @@
 
 // private helper classes and functions
 namespace {
-
-void ShowDiagnostics(
-   AudacityProject &project, const wxString &info,
-   const TranslatableString &description, const wxString &defaultPath,
-   bool fixedWidth = false)
-{
-   auto &window = GetProjectFrame( project );
-   wxDialogWrapper dlg( &window, wxID_ANY, description);
-   dlg.SetName();
-   ShuttleGui S(&dlg, eIsCreating);
-
-   wxTextCtrl *text;
-   S.StartVerticalLay();
-   {
-      text = S.Id(wxID_STATIC)
-         .Style(wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH)
-         .AddTextWindow("");
-
-      wxButton *save = safenew wxButton(S.GetParent(), wxID_OK, _("&Save"));
-      S.AddStandardButtons(eCancelButton, save);
-   }
-   S.EndVerticalLay();
-
-   if (fixedWidth) {
-      auto style = text->GetDefaultStyle();
-      style.SetFontFamily( wxFONTFAMILY_TELETYPE );
-      text->SetDefaultStyle(style);
-   }
-
-   *text << info;
-
-   dlg.SetSize(350, 450);
-
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      const auto fileDialogTitle = XO("Save %s").Format( description );
-      wxString fName = SelectFile(FileNames::Operation::Export,
-         fileDialogTitle,
-         wxEmptyString,
-         defaultPath,
-         wxT("txt"),
-         { FileNames::TextFiles },
-         wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-         &window);
-      if (!fName.empty())
-      {
-         if (!text->SaveFile(fName))
-         {
-            AudacityMessageBox(
-               XO("Unable to save %s").Format( description ),
-               fileDialogTitle);
-         }
-      }
-   }
-}
 
 /** @brief Class which makes a dialog for displaying quick fixes to common issues.
  *
@@ -336,17 +282,6 @@ void OnAudioDeviceInfo(const CommandContext &context)
       XO("Audio Device Info"), wxT("deviceinfo.txt") );
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-void OnMidiDeviceInfo(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto gAudioIO = AudioIOBase::Get();
-   auto info = GetMIDIDeviceInfo();
-   ShowDiagnostics( project, info,
-      XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
-}
-#endif
-
 void OnShowLog( const CommandContext &context )
 {
    LogWindow::Show();
@@ -542,11 +477,6 @@ BaseItemSharedPtr HelpMenu()
             Command( wxT("DeviceInfo"), XXO("Au&dio Device Info..."),
                FN(OnAudioDeviceInfo),
                AudioIONotBusyFlag() ),
-      #ifdef EXPERIMENTAL_MIDI_OUT
-            Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
-               FN(OnMidiDeviceInfo),
-               AudioIONotBusyFlag() ),
-      #endif
             Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
                AlwaysEnabledFlag ),
       #if defined(HAS_CRASH_REPORT)
