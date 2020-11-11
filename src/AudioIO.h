@@ -552,7 +552,14 @@ protected:
    } mTimeQueue;
 
    PlaybackSchedule mPlaybackSchedule;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   void SignalOtherCompletion();
+   unsigned CountOtherSoloTracks() const;
+#endif
 };
+
+struct PaStreamInfo;
 
 //! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
 struct PlaybackSlice {
@@ -811,6 +818,13 @@ private:
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
    bool mDelayingActions{ false };
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   bool StartOtherStream(const TransportTracks &tracks,
+      const PaStreamInfo* info, double startTime, double rate);
+   void AbortOtherStream();
+   void StopOtherStream();
+#endif
 };
 
 static constexpr unsigned ScrubPollInterval_ms = 50;

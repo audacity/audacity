@@ -337,6 +337,10 @@ protected:
    static const int RatesToTry[];
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+   bool IsOtherStreamActive() const;
+#endif
 };
 
 #endif

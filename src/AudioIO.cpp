@@ -1282,20 +1282,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 {
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   mNumFrames = 0;
-   // we want this initial value to be way high. It should be
-   // sufficient to assume AudioTime is zero and therefore
-   // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
-   // for good measure. On the first callback, this should be
-   // reduced to SystemTime() - mT0, and note that mT0 is always
-   // positive.
-   mSystemMinusAudioTimePlusLatency =
-      mSystemMinusAudioTime = SystemTime(mUsingAlsa) + 1000;
-   mAudioOutLatency = 0.0; // set when stream is opened
-   mCallbackCount = 0;
-   mAudioFramesPerBuffer = 0;
-#endif
    mOwningProject = options.pProject;
 
    // PRL:  Protection from crash reported by David Bailes, involving starting
@@ -1467,17 +1453,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    }
 #endif
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   // We use audio latency to estimate how far ahead of DACS we are writing
-   if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-      const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
-      // this is an initial guess, but for PA/Linux/ALSA it's wrong and will be
-      // updated with a better value:
-      mAudioOutLatency = info->outputLatency;
-      mSystemMinusAudioTimePlusLatency += mAudioOutLatency;
-   }
-#endif
-
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3,1,0)
    // Don't want the system to sleep while audio I/O is active
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
@@ -1542,6 +1517,63 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
       pListener->OnAudioIORate((int)mRate);
    }
 }
+
+#ifdef EXPERIMENTAL_MIDI_OUT
+bool AudioIO::StartOtherStream(const TransportTracks &tracks,
+   const PaStreamInfo* info, double, double rate)
+{
+   mMidiPlaybackTracks.clear();
+   for (const auto &pTrack : tracks.otherPlayableTracks) {
+      pTrack->TypeSwitch( [&](const NoteTrack *pNoteTrack){
+         mMidiPlaybackTracks.push_back(
+            pNoteTrack->SharedPointer<const NoteTrack>());
+      } );
+   }
+
+   streamStartTime = 0;
+   streamStartTime = SystemTime(mUsingAlsa);
+
+   mNumFrames = 0;
+   // we want this initial value to be way high. It should be
+   // sufficient to assume AudioTime is zero and therefore
+   // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
+   // for good measure. On the first callback, this should be
+   // reduced to SystemTime() - mT0, and note that mT0 is always
+   // positive.
+   mSystemMinusAudioTimePlusLatency =
+      mSystemMinusAudioTime = SystemTime(mUsingAlsa) + 1000;
+   mAudioOutLatency = 0.0; // set when stream is opened
+   mCallbackCount = 0;
+   mAudioFramesPerBuffer = 0;
+
+   // We use audio latency to estimate how far ahead of DACS we are writing
+   if (info) {
+      // this is an initial guess, but for PA/Linux/ALSA it's wrong and will be
+      // updated with a better value:
+      mAudioOutLatency = info->outputLatency;
+      mSystemMinusAudioTimePlusLatency += mAudioOutLatency;
+   }
+
+   // TODO: it may be that midi out will not work unless audio in or out is
+   // active -- this would be a bug and may require a change in the
+   // logic here.
+
+   bool successMidi = true;
+
+   if(!mMidiPlaybackTracks.empty()){
+      successMidi = StartPortMidiStream(rate);
+   }
+
+   // On the other hand, if MIDI cannot be opened, we will not complain
+   // return successMidi;
+   return true;
+}
+
+void AudioIO::AbortOtherStream()
+{
+   mMidiPlaybackTracks.clear();
+}
+#endif
 
 int AudioIO::StartStream(const TransportTracks &tracks,
                          double t0, double t1,
@@ -1621,17 +1653,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mLastRecordingOffset = 0;
    mCaptureTracks = tracks.captureTracks;
    mPlaybackTracks = tracks.playbackTracks;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   {
-      mMidiPlaybackTracks.clear();
-      for (const auto &pTrack : tracks.otherPlayableTracks) {
-         pTrack->TypeSwitch( [&](const NoteTrack *pNoteTrack){
-            mMidiPlaybackTracks.push_back(
-               pNoteTrack->SharedPointer<const NoteTrack>());
-         } );
-      }
-   }
-#endif
 
    bool commit = false;
    auto cleanupTracks = finally([&]{
@@ -1640,7 +1661,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          mPlaybackTracks.clear();
          mCaptureTracks.clear();
 #ifdef EXPERIMENTAL_MIDI_OUT
-         mMidiPlaybackTracks.clear();
+         AbortOtherStream();
 #endif
 
          // Don't cause a busy wait in the audio thread after stopping scrubbing
@@ -1653,11 +1674,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mCaptureBuffers.reset();
    mResample.reset();
    mTimeQueue.mData.reset();
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   streamStartTime = 0;
-   streamStartTime = SystemTime(mUsingAlsa);
-#endif
 
    mPlaybackSchedule.Init(
       t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
@@ -1700,18 +1716,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    successAudio = StartPortAudioStream(options, playbackChannels,
                                        captureChannels, captureFormat);
 #ifdef EXPERIMENTAL_MIDI_OUT
-
-   // TODO: it may be that midi out will not work unless audio in or out is
-   // active -- this would be a bug and may require a change in the
-   // logic here.
-
-   bool successMidi = true;
-
-   if(!mMidiPlaybackTracks.empty()){
-      successMidi = StartPortMidiStream(mRate);
-   }
-
-   // On the other hand, if MIDI cannot be opened, we will not complain
+   successAudio = successAudio &&
+      StartOtherStream( tracks,
+         (mPortStreamV19 != NULL && mLastPaError == paNoError)
+            ? Pa_GetStreamInfo(mPortStreamV19) : nullptr,
+         t0, mRate );
 #endif
 
    if (!successAudio) {
@@ -2253,6 +2262,48 @@ void AudioIO::SetMeters()
    mUpdateMeters = true;
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+void AudioIO::StopOtherStream()
+{
+   if (mMidiStream && mMidiStreamActive) {
+      /* Stop Midi playback */
+      mMidiStreamActive = false;
+
+      mMidiOutputComplete = true;
+
+      // now we can assume "ownership" of the mMidiStream
+      // if output in progress, send all off, etc.
+      AllNotesOff();
+      // AllNotesOff() should be sufficient to stop everything, but
+      // in Linux, if you Pm_Close() immediately, it looks like
+      // messages are dropped. ALSA then seems to send All Sound Off
+      // and Reset All Controllers messages, but not all synthesizers
+      // respond to these messages. This is probably a bug in PortMidi
+      // if the All Off messages do not get out, but for security,
+      // delay a bit so that messages can be delivered before closing
+      // the stream. Add 2ms of "padding" to avoid any rounding errors.
+      while (mMaxMidiTimestamp + 2 > MidiTime()) {
+          wxMilliSleep(1); // deliver the all-off messages
+      }
+      Pm_Close(mMidiStream);
+      mMidiStream = NULL;
+      mIterator->end();
+
+      // set in_use flags to false
+      int nTracks = mMidiPlaybackTracks.size();
+      for (int i = 0; i < nTracks; i++) {
+         const auto t = mMidiPlaybackTracks[i].get();
+         Alg_seq_ptr seq = &t->GetSeq();
+         seq->set_in_use(false);
+      }
+
+      mIterator.reset(); // just in case someone tries to reference it
+   }
+
+   mMidiPlaybackTracks.clear();
+}
+#endif
+
 void AudioIO::StopStream()
 {
    auto cleanup = finally ( [this] {
@@ -2260,11 +2311,7 @@ void AudioIO::StopStream()
       mRecordingSchedule.mCrossfadeData.clear(); // free arrays
    } );
 
-   if( mPortStreamV19 == NULL
-#ifdef EXPERIMENTAL_MIDI_OUT
-       && mMidiStream == NULL
-#endif
-     )
+   if( mPortStreamV19 == NULL )
       return;
 
    // DV: This code seems to be unnecessary.
@@ -2276,12 +2323,7 @@ void AudioIO::StopStream()
    // was breaking IsStreamStopped() == !IsStreamActive()
    // invariant.
    /*
-   if (
-      Pa_IsStreamStopped(mPortStreamV19)
-#ifdef EXPERIMENTAL_MIDI_OUT
-       && !mMidiStreamActive
-#endif
-     )
+   if ( Pa_IsStreamStopped(mPortStreamV19) )
       return;
    */
 
@@ -2377,41 +2419,7 @@ void AudioIO::StopStream()
    }
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   /* Stop Midi playback */
-   if ( mMidiStream ) {
-
-      mMidiStreamActive = false;
-
-      mMidiOutputComplete = true;
-
-      // now we can assume "ownership" of the mMidiStream
-      // if output in progress, send all off, etc.
-      AllNotesOff();
-      // AllNotesOff() should be sufficient to stop everything, but
-      // in Linux, if you Pm_Close() immediately, it looks like
-      // messages are dropped. ALSA then seems to send All Sound Off
-      // and Reset All Controllers messages, but not all synthesizers
-      // respond to these messages. This is probably a bug in PortMidi
-      // if the All Off messages do not get out, but for security,
-      // delay a bit so that messages can be delivered before closing
-      // the stream. Add 2ms of "padding" to avoid any rounding errors.
-      while (mMaxMidiTimestamp + 2 > MidiTime()) {
-          wxMilliSleep(1); // deliver the all-off messages
-      }
-      Pm_Close(mMidiStream);
-      mMidiStream = NULL;
-      mIterator->end();
-
-      // set in_use flags to false
-      int nTracks = mMidiPlaybackTracks.size();
-      for (int i = 0; i < nTracks; i++) {
-         const auto t = mMidiPlaybackTracks[i].get();
-         Alg_seq_ptr seq = &t->GetSeq();
-         seq->set_in_use(false);
-      }
-
-      mIterator.reset(); // just in case someone tries to reference it
-   }
+   StopOtherStream();
 #endif
 
    auto pListener = GetListener();
@@ -2566,9 +2574,6 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
-#if defined(EXPERIMENTAL_MIDI_OUT) && defined(USE_MIDI)
-   mMidiPlaybackTracks.clear();
-#endif
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    mScrubState.reset();
@@ -4376,6 +4381,15 @@ void AudioIoCallback::SendVuOutputMeterData(
    mUpdatingMeters = false;
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+unsigned AudioIoCallback::CountOtherSoloTracks() const
+{
+   return std::count_if(
+      mMidiPlaybackTracks.begin(), mMidiPlaybackTracks.end(),
+      [](const auto &pTrack){ return pTrack->GetSolo(); } );
+}
+#endif
+
 unsigned AudioIoCallback::CountSoloingTracks(){
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
@@ -4385,10 +4399,7 @@ unsigned AudioIoCallback::CountSoloingTracks(){
       if( mPlaybackTracks[t]->GetSolo() )
          numSolo++;
 #ifdef EXPERIMENTAL_MIDI_OUT
-   auto numMidiPlaybackTracks = mMidiPlaybackTracks.size();
-   for( unsigned t = 0; t < numMidiPlaybackTracks; t++ )
-      if( mMidiPlaybackTracks[t]->GetSolo() )
-         numSolo++;
+   numSolo += CountOtherSoloTracks();
 #endif
    return numSolo;
 }
@@ -4619,6 +4630,13 @@ int AudioIoCallback::CallbackDoSeek()
    return paContinue;
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+void AudioIoCallback::SignalOtherCompletion()
+{
+   mMidiOutputComplete = true;
+}
+#endif
+
 void AudioIoCallback::CallbackCheckCompletion(
    int &callbackReturn, unsigned long len)
 {
@@ -4636,7 +4654,7 @@ void AudioIoCallback::CallbackCheckCompletion(
       return;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   mMidiOutputComplete = true,
+   SignalOtherCompletion();
 #endif
    callbackReturn = paComplete;
 }
