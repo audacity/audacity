@@ -239,16 +239,16 @@ public:
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    void PrepareMidiIterator(bool send, double offset);
-   bool StartPortMidiStream();
+   bool StartPortMidiStream(double rate);
 
    // Compute nondecreasing real time stamps, accounting for pauses, but not the
    // synth latency.
    double UncorrectedMidiEventTime(double pauseTime);
 
    void OutputEvent(double pauseTime);
-   void FillMidiBuffers();
+   void FillMidiBuffers(double rate);
    void GetNextEvent();
-   double PauseTime();
+   double PauseTime(double rate);
    void AllNotesOff(bool looping = false);
 
    /** \brief Compute the current PortMidi timestamp time.
@@ -293,7 +293,7 @@ public:
    bool AllTracksAlreadySilent();
 
    // These eight functions do different parts of AudioCallback().
-   void ComputeMidiTimings(
+   void ComputeMidiTimings(double rate,
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer);
    void CheckSoundActivatedRecordingLevel(
@@ -340,7 +340,8 @@ public:
 
 // Required by these functions...
 #ifdef EXPERIMENTAL_MIDI_OUT
-   double AudioTime() { return mPlaybackSchedule.mT0 + mNumFrames / mRate; }
+   double AudioTime(double rate) const
+   { return mPlaybackSchedule.mT0 + mNumFrames / rate; }
 #endif
 
 
