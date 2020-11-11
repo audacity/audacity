@@ -292,4 +292,6 @@ public:
 #endif
 
 
+AUDACITY_DLL_API wxString GetMIDIDeviceInfo();
+
 #endif

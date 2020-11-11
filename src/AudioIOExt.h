@@ -16,6 +16,8 @@
 #include <memory>
 #include <vector>
 
+#include <wx/string.h>
+
 #include "AudioIOBase.h"
 
 struct PaStreamCallbackTimeInfo;
@@ -32,7 +34,7 @@ public:
    static Factories &GetFactories();
 
    //! Typically statically constructed
-   struct AUDACITY_DLL_API RegisteredFactory{
+   struct AUDIO_DEVICES_API RegisteredFactory{
       explicit RegisteredFactory(Factory factory);
       ~RegisteredFactory();
    };

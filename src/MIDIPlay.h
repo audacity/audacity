@@ -47,10 +47,10 @@ struct MIDIPlay : AudioIOExt
    NoteTrackConstArray mMidiPlaybackTracks;
 
    /// True when output reaches mT1
-   bool             mMidiOutputComplete{ true };
+   static bool      mMidiOutputComplete;
 
    /// mMidiStreamActive tells when mMidiStream is open for output
-   bool             mMidiStreamActive = false;
+   static bool      mMidiStreamActive;
 
    PmStream        *mMidiStream = nullptr;
    int              mLastPmError = 0;
@@ -150,6 +150,7 @@ struct MIDIPlay : AudioIOExt
 
    bool mUsingAlsa = false;
 
+   static bool IsActive();
    bool IsOtherStreamActive() const override;
 
    void ComputeOtherTimings(double rate,
@@ -164,6 +165,8 @@ struct MIDIPlay : AudioIOExt
    void FillOtherBuffers(double rate, unsigned long pauseFrames,
       bool paused, bool hasSolo) override;
    void StopOtherStream() override;
+
+   AudioIODiagnostics Dump() const override;
 };
 
 }

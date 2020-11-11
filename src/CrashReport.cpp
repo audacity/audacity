@@ -21,6 +21,7 @@
 #include "ActiveProject.h"
 #include "AudacityLogger.h"
 #include "AudioIOBase.h"
+#include "AudioIOExt.h"
 #include "BasicUI.h"
 #include "FileNames.h"
 #include "Internat.h"
@@ -64,10 +65,9 @@ void Generate(wxDebugReport::Context ctx)
             auto cleanup = finally( [&]{ GUIPrefs::SetLang( saveLang ); } );
       
             auto gAudioIO = AudioIOBase::Get();
-            rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
-#ifdef EXPERIMENTAL_MIDI_OUT
-            rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));
-#endif
+            for (const auto &diagnostics : gAudioIO->GetAllDeviceInfo())
+               rpt.AddText(
+                  diagnostics.filename, diagnostics.text, diagnostics.description);
             auto project = GetActiveProject().lock();
             if (project) {
                auto &projectFileIO = ProjectFileIO::Get( *project );

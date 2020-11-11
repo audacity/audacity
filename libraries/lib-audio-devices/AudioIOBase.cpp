@@ -22,10 +22,6 @@ Paul Licameli split from AudioIO.cpp
 #include "portmixer.h"
 #endif
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-#include <portmidi.h>
-#endif
-
 int AudioIOBase::mCachedPlaybackIndex = -1;
 std::vector<long> AudioIOBase::mCachedPlaybackRates;
 int AudioIOBase::mCachedCaptureIndex = -1;
@@ -708,7 +704,7 @@ int AudioIOBase::getRecordDevIndex(const wxString &devNameArg)
    return deviceNum;
 }
 
-wxString AudioIOBase::GetDeviceInfo()
+wxString AudioIOBase::GetDeviceInfo() const
 {
    wxStringOutputStream o;
    wxTextOutputStream s(o, wxEOL_UNIX);
@@ -954,113 +950,16 @@ wxString AudioIOBase::GetDeviceInfo()
    return o.GetString();
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-// FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke
-wxString AudioIOBase::GetMidiDeviceInfo()
+auto AudioIOBase::GetAllDeviceInfo() -> std::vector<AudioIODiagnostics>
 {
-   wxStringOutputStream o;
-   wxTextOutputStream s(o, wxEOL_UNIX);
-
-   if (IsStreamActive()) {
-      return XO("Stream is active ... unable to gather information.\n")
-         .Translation();
-   }
-
-
-   // XXX: May need to trap errors as with the normal device info
-   int recDeviceNum = Pm_GetDefaultInputDeviceID();
-   int playDeviceNum = Pm_GetDefaultOutputDeviceID();
-   int cnt = Pm_CountDevices();
-
-   // PRL:  why only into the log?
-   wxLogDebug(wxT("PortMidi reports %d MIDI devices"), cnt);
-
-   s << wxT("==============================\n");
-   s << XO("Default recording device number: %d\n").Format( recDeviceNum );
-   s << XO("Default playback device number: %d\n").Format( playDeviceNum );
-
-   wxString recDevice = gPrefs->Read(wxT("/MidiIO/RecordingDevice"), wxT(""));
-   wxString playDevice = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"), wxT(""));
-
-   // This gets info on all available audio devices (input and output)
-   if (cnt <= 0) {
-      s << XO("No devices found\n");
-      return o.GetString();
-   }
-
-   for (int i = 0; i < cnt; i++) {
-      s << wxT("==============================\n");
-
-      const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
-      if (!info) {
-         s << XO("Device info unavailable for: %d\n").Format( i );
-         continue;
-      }
-
-      wxString name = wxSafeConvertMB2WX(info->name);
-      wxString hostName = wxSafeConvertMB2WX(info->interf);
-
-      s << XO("Device ID: %d\n").Format( i );
-      s << XO("Device name: %s\n").Format( name );
-      s << XO("Host name: %s\n").Format( hostName );
-      /* i18n-hint: Supported, meaning made available by the system */
-      s << XO("Supports output: %d\n").Format( info->output );
-      /* i18n-hint: Supported, meaning made available by the system */
-      s << XO("Supports input: %d\n").Format( info->input );
-      s << XO("Opened: %d\n").Format( info->opened );
-
-      if (name == playDevice && info->output)
-         playDeviceNum = i;
-
-      if (name == recDevice && info->input)
-         recDeviceNum = i;
-
-      // XXX: This is only done because the same was applied with PortAudio
-      // If PortMidi returns -1 for the default device, use the first one
-      if (recDeviceNum < 0 && info->input){
-         recDeviceNum = i;
-      }
-      if (playDeviceNum < 0 && info->output){
-         playDeviceNum = i;
-      }
-   }
-
-   bool haveRecDevice = (recDeviceNum >= 0);
-   bool havePlayDevice = (playDeviceNum >= 0);
-
-   s << wxT("==============================\n");
-   if (haveRecDevice)
-      s << XO("Selected MIDI recording device: %d - %s\n").Format( recDeviceNum, recDevice );
-   else
-      s << XO("No MIDI recording device found for '%s'.\n").Format( recDevice );
-
-   if (havePlayDevice)
-      s << XO("Selected MIDI playback device: %d - %s\n").Format( playDeviceNum, playDevice );
-   else
-      s << XO("No MIDI playback device found for '%s'.\n").Format( playDevice );
-
-   // Mention our conditional compilation flags for Alpha only
-#ifdef IS_ALPHA
-
-   // Not internationalizing these alpha-only messages
-   s << wxT("==============================\n");
-#ifdef EXPERIMENTAL_MIDI_OUT
-   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled\n");
-#else
-   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled\n");
-#endif
-#ifdef EXPERIMENTAL_MIDI_IN
-   s << wxT("EXPERIMENTAL_MIDI_IN is enabled\n");
-#else
-   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled\n");
-#endif
-
-#endif
-
-   return o.GetString();
+   std::vector<AudioIODiagnostics> result;
+   result.push_back({
+      wxT("audiodev.txt"), GetDeviceInfo(), wxT("Audio Device Info") });
+   for( auto &pExt : mAudioIOExt )
+      if ( pExt )
+         result.emplace_back(pExt->Dump());
+   return result;
 }
-
-#endif
 
 StringSetting AudioIOHost{
    L"/AudioIO/Host", L"" };

@@ -502,6 +502,9 @@ static double SystemTime(bool usingAlsa)
    return util_GetTime() - streamStartTime;
 }
 
+bool MIDIPlay::mMidiStreamActive = false;
+bool MIDIPlay::mMidiOutputComplete = true;
+
 AudioIOExt::RegisteredFactory sMIDIPlayFactory{
    [](const auto &playbackSchedule){
       return std::make_unique<MIDIPlay>(playbackSchedule);
@@ -1147,10 +1150,24 @@ void MIDIPlay::SignalOtherCompletion()
 {
    mMidiOutputComplete = true;
 }
+}
 
-bool MIDIPlay::IsOtherStreamActive() const
+bool MIDIPlay::IsActive()
 {
    return ( mMidiStreamActive && !mMidiOutputComplete );
 }
 
+bool MIDIPlay::IsOtherStreamActive() const
+{
+   return IsActive();
 }
+
+AudioIODiagnostics MIDIPlay::Dump() const
+{
+   return {
+      wxT("mididev.txt"),
+      GetMIDIDeviceInfo(),
+      wxT("MIDI Device Info")
+   };
+}
+
