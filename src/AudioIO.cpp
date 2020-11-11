@@ -1028,6 +1028,12 @@ bool AudioIO::ValidateDeviceNames(const wxString &play, const wxString &rec)
    return pInfo != nullptr && rInfo != nullptr && pInfo->hostApi == rInfo->hostApi;
 }
 
+static AudioIOExt::RegisteredFactory sMIDIPlayFactory{
+   [](const auto &playbackSchedule){
+      return std::make_unique<MIDIPlay>(playbackSchedule);
+   }
+};
+
 MIDIPlay::MIDIPlay(const PlaybackSchedule &schedule)
    : mPlaybackSchedule{ schedule }
 {
@@ -4462,7 +4468,10 @@ bool AudioIoCallback::AllTracksAlreadySilent()
 
 AudioIoCallback::AudioIoCallback()
 {
-   mAudioIOExt.push_back(std::make_unique<MIDIPlay>(mPlaybackSchedule));
+   auto &factories = AudioIOExt::GetFactories();
+   for (auto &factory: factories)
+      if (auto pExt = factory(mPlaybackSchedule))
+         mAudioIOExt.push_back( move(pExt) );
 }
 
 
@@ -4727,6 +4736,22 @@ bool AudioIO::IsCapturing() const
 }
 
 AudioIOExt::~AudioIOExt() = default;
+
+auto AudioIOExt::GetFactories() -> Factories &
+{
+   static Factories factories;
+   return factories;
+}
+
+AudioIOExt::RegisteredFactory::RegisteredFactory(Factory factory)
+{
+   GetFactories().push_back( move(factory) );
+}
+
+AudioIOExt::RegisteredFactory::~RegisteredFactory()
+{
+   GetFactories().pop_back();
+}
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 bool MIDIPlay::IsOtherStreamActive() const
