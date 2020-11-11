@@ -178,6 +178,8 @@ list( APPEND SOURCES
       MacroMagic.h
       Menus.cpp
       Menus.h
+      MIDIPlay.cpp
+      MIDIPlay.h
       Mix.cpp
       Mix.h
       MixerBoard.cpp
