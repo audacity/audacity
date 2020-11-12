@@ -577,15 +577,6 @@ AudacityProject *ProjectManager::New()
 #endif
    TimeToolBar::Get( project ).SetListener( &projectSelectionManager );
    
-#if wxUSE_DRAG_AND_DROP
-   // We can import now, so become a drag target
-   //   SetDropTarget(safenew AudacityDropTarget(this));
-   //   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
-   
-   // SetDropTarget takes ownership
-   TrackPanel::Get( project ).SetDropTarget( safenew DropTarget( &project ) );
-#endif
-   
    //Set the NEW project as active:
    SetActiveProject(p);
    
@@ -599,6 +590,21 @@ AudacityProject *ProjectManager::New()
    
    return p;
 }
+
+// Hook the construction of projects
+static const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject &project) {
+      // We can import now, so become a drag target
+      //   SetDropTarget(safenew AudacityDropTarget(this));
+      //   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
+      
+      TrackPanel::Get( project )
+         .SetDropTarget(
+            // SetDropTarget takes ownership
+            safenew DropTarget( &project ) );
+      return nullptr;
+   }
+};
 
 void ProjectManager::OnReconnectionFailure(wxCommandEvent & event)
 {
