@@ -127,6 +127,7 @@ list( APPEND SOURCES
       DBConnection.h
       Diags.cpp
       Diags.h
+      DropTarget.cpp
       EffectHostInterface.cpp
       EffectHostInterface.h
       EnvelopeEditor.cpp
