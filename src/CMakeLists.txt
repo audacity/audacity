@@ -269,8 +269,6 @@ list( APPEND SOURCES
       TimeDialog.h
       TimeTrack.cpp
       TimeTrack.h
-      TimerRecordDialog.cpp
-      TimerRecordDialog.h
       TrackArt.cpp
       TrackArt.h
       TrackArtist.cpp
