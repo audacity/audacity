@@ -407,6 +407,10 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 "ShowSpectralSelectionTB") },
          {wxT("/Tracks/Add/Add"), wxT(
 "NewMonoTrack,NewStereoTrack,NewLabelTrack,NewTimeTrack")},
+         {wxT("/File/Import-Export/Export"), wxT(
+"ExportMp3,ExportWav,ExportOgg,Export,ExportSel,ExportLabels,"
+"ExportMultiple,ExportMIDI"
+          )},
          {wxT("/Optional/Extra/Part2/Scriptables1"), wxT(
 "SelectTime,SelectFrequencies,SelectTracks,SetTrackStatus,SetTrackAudio,"
 "SetTrackVisuals,GetPreference,SetPreference,SetClip,SetEnvelope,SetLabel"
