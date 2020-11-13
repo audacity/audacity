@@ -58,6 +58,7 @@
 #include "Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
 #include "Project.h"
+#include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -71,6 +72,7 @@
 #include "../widgets/HelpSystem.h"
 #include "AColor.h"
 #include "FileNames.h"
+#include "widgets/FileHistory.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
@@ -1554,4 +1556,82 @@ void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)
    );
 }
 
+void Exporter::DoExport(AudacityProject &project, const FileExtension &format)
+{
+   auto &tracks = TrackList::Get( project );
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   
+   Exporter e{ project };
 
+   double t0 = 0.0;
+   double t1 = tracks.GetEndTime();
+   wxString projectName = project.GetProjectName();
+
+   // Prompt for file name and/or extension?
+   bool bPromptingRequired = !project.mBatchMode ||
+                             projectName.empty() ||
+                             format.empty();
+
+   bool success = false;
+   if (bPromptingRequired) {
+      // Do export with prompting.
+      e.SetDefaultFormat(format);
+      success = e.Process(false, t0, t1);
+   }
+   else {
+      // We either use a configured output path,
+      // or we use the default documents folder - just as for exports.
+      FilePath pathName = FileNames::FindDefaultPath(FileNames::Operation::MacrosOut);
+
+      if (!FileNames::WritableLocationCheck(pathName, XO("Cannot proceed to export.")))
+      {
+          return;
+      }
+/*
+      // If we've gotten to this point, we are in batch mode, have a file format,
+      // and the project has either been saved or a file has been imported. So, we
+      // want to use the project's path if it has been saved, otherwise use the
+      // initial import path.
+      FilePath pathName = !projectFileIO.IsTemporary() ?
+                           wxPathOnly(projectFileIO.GetFileName()) :
+                           project.GetInitialImportPath();
+*/
+      wxFileName fileName(pathName, projectName, format.Lower());
+
+      // Append the "macro-output" directory to the path
+      const wxString macroDir( "macro-output" );
+      if (fileName.GetDirs().back() != macroDir) {
+         fileName.AppendDir(macroDir);
+      }
+
+      wxString justName = fileName.GetName();
+      wxString extension = fileName.GetExt();
+      FilePath fullPath = fileName.GetFullPath();
+
+      if (wxFileName::FileExists(fileName.GetPath())) {
+         AudacityMessageBox(
+            XO("Cannot create directory '%s'. \n"
+               "File already exists that is not a directory"),
+            Verbatim(fullPath));
+         return;
+      }
+      fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
+
+      int nChannels = (tracks.Any() - &Track::IsLeader ).empty() ? 1 : 2;
+
+      // We're in batch mode, the file does not exist already.
+      // We really can proceed without prompting.
+      success = e.Process(
+         nChannels,  // numChannels,
+         format,     // type,
+         fullPath,   // full path,
+         false,      // selectedOnly,
+         t0,         // t0
+         t1          // t1
+      );
+   }
+
+   if (success && !project.mBatchMode) {
+      FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
+   }
+}

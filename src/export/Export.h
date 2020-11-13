@@ -168,10 +168,11 @@ using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
-class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
+class AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
    struct ExporterItem;
 public:
+   static void DoExport(AudacityProject &project, const FileExtension &format);
 
    using ExportPluginFactory =
       std::function< std::unique_ptr< ExportPlugin >() >;
