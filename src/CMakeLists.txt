@@ -708,8 +708,6 @@ list( APPEND SOURCES
       prefs/PrefsDialog.h
       prefs/PrefsPanel.cpp
       prefs/PrefsPanel.h
-      prefs/ProjectsPrefs.cpp
-      prefs/ProjectsPrefs.h
       prefs/QualityPrefs.cpp
       prefs/QualityPrefs.h
       prefs/RecordingPrefs.cpp
