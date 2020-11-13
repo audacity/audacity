@@ -660,11 +660,7 @@ BaseItemSharedPtr HiddenFileMenu()
             // are still available to scripting
             return false;
          },
-         Menu( wxT("HiddenFileMenu"), XXO("Hidden File Menu"),
-            Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
-               OnExportFLAC,
-               AudioIONotBusyFlag() )
-         )
+         Menu( wxT("HiddenFileMenu"), XXO("Hidden File Menu") )
       )
    };
    return menu;
@@ -673,6 +669,13 @@ BaseItemSharedPtr HiddenFileMenu()
 AttachedItem sAttachment2{
    wxT(""),
    Shared( HiddenFileMenu() )
+};
+
+AttachedItem sAttachment3{
+   wxT("HiddenFileItems/HiddenFileMenu"),
+   Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
+      OnExportFLAC,
+      AudioIONotBusyFlag() )
 };
 
 }
