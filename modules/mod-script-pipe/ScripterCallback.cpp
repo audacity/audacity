@@ -15,6 +15,7 @@
 
 #include <wx/wx.h>
 #include "ScripterCallback.h"
+#include "commands/ScriptCommandRelay.h"
 
 /*
 There are several functions that can be used in a GUI module.
@@ -22,10 +23,6 @@ There are several functions that can be used in a GUI module.
 //#define ModuleDispatchName "ModuleDispatch"
 The most useful function.  See the example in this 
 file.  It has several cases/options in it.
-
-//#define scriptFnName    "RegScriptServerFunc"
-This function is run from a non gui thread.  It was originally 
-created for the benefit of mod-script-pipe.
 
 //#define mainPanelFnName "MainPanelFunc"
 This function is the hijacking function, to take over Audacity
@@ -39,8 +36,6 @@ extern void PipeServer();
 typedef DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
 static tpExecScriptServerFunc pScriptServerFn=NULL;
 
-
-DEFINE_MODULE_ENTRIES
 
 extern "C" {
 
@@ -56,6 +51,18 @@ int DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
    return 4;
 }
 
+DEFINE_VERSION_CHECK
+extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
+{
+   switch (type) {
+   case ModuleInitialize:
+      ScriptCommandRelay::StartScriptServer(RegScriptServerFunc);
+      break;
+   default:
+      break;
+   }
+   return 1;
+}
 
 wxString Str2;
 wxArrayString aStr;

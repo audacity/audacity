@@ -96,10 +96,6 @@ There are several functions that can be used in a GUI module.
 The most useful function.  See the example in this 
 file.  It has several cases/options in it.
 
-//#define scriptFnName    "RegScriptServerFunc"
-This function is run from a non gui thread.  It was originally 
-created for the benefit of mod-script-pipe.
-
 //#define mainPanelFnName "MainPanelFunc"
 This function is the hijacking function, to take over Audacity
 and replace the main project window with our own wxFrame.
