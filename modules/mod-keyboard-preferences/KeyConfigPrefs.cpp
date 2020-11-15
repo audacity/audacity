@@ -19,13 +19,12 @@ KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
 
-
-
 #include "KeyConfigPrefs.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/ffile.h>
+#include <wx/frame.h>
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/button.h>
@@ -37,22 +36,22 @@ KeyConfigPrefs and MousePrefs use.
 #include "ActiveProject.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectWindows.h"
-#include "../commands/CommandManager.h"
+#include "ProjectWindows.h"
+#include "commands/CommandManager.h"
 #include "XMLFileReader.h"
 
-#include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "SelectFile.h"
+#include "ShuttleGui.h"
 
 #include "FileNames.h"
 
-#include "../widgets/BasicMenu.h"
-#include "../widgets/KeyView.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/wxWidgetsWindowPlacement.h"
+#include "widgets/BasicMenu.h"
+#include "KeyView.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "widgets/WindowAccessible.h"
 #endif
 
 //
@@ -952,4 +951,42 @@ namespace{
 PrefsPanel::Registration sAttachment{ "KeyConfig",
    KeyConfigPrefsFactory()
 };
+}
+
+#include "ModuleConstants.h"
+#include "prefs/PrefsDialog.h"
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+#include "ProjectWindows.h"
+#include "ProjectCommandManager.h"
+#endif
+
+DEFINE_VERSION_CHECK
+extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
+{
+   switch (type) {
+      case ModuleInitialize: {
+#ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
+         static CommandManager::GlobalMenuHook::Scope scope{
+         [](const CommandID &id){
+            if (::wxGetMouseState().ShiftDown()) {
+               // Only want one page of the preferences
+               PrefsPanel::Factories factories;
+               factories.push_back(KeyConfigPrefsFactory( id ));
+               if (const auto pProject = GetActiveProject().lock()) {
+                  auto pWindow = FindProjectFrame( pProject.get() );
+                  GlobalPrefsDialog dialog( pWindow, pProject.get(), factories );
+                  dialog.ShowModal();
+                  MenuCreator::RebuildAllMenuBars();
+                  return true;
+               }
+            }
+            return false;
+         } };
+#endif
+         break;
+      }
+      default:
+         break;
+   }
+   return 1;
 }
