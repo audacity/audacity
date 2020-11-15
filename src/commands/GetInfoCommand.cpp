@@ -510,16 +510,19 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
    auto &tracks = TrackList::Get( context.project );
    int i=0;
    context.StartArray();
-   for (auto waveTrack : tracks.Leaders<WaveTrack>()) {
-      WaveClipPointers ptrs( waveTrack->SortedClipArray());
-      for(WaveClip * pClip : ptrs ) {
-         context.StartStruct();
-         context.AddItem( (double)i, "track" );
-         context.AddItem( pClip->GetStartTime(), "start" );
-         context.AddItem( pClip->GetEndTime(), "end" );
-         context.AddItem( pClip->GetColourIndex(), "color" );
-         context.EndStruct();
-      }
+   for (auto t : tracks.Leaders()) {
+      t->TypeSwitch([&](WaveTrack *waveTrack) {
+         WaveClipPointers ptrs(waveTrack->SortedClipArray());
+         for (WaveClip * pClip : ptrs) {
+            context.StartStruct();
+            context.AddItem((double)i, "track");
+            context.AddItem(pClip->GetStartTime(), "start");
+            context.AddItem(pClip->GetEndTime(), "end");
+            context.AddItem(pClip->GetColourIndex(), "color");
+            context.EndStruct();
+         }
+      });
+      // Per track numbering counts all tracks
       i++;
    }
    context.EndArray();
@@ -533,30 +536,35 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
    int i=0;
    int j=0;
    context.StartArray();
-   for (auto waveTrack : tracks.Leaders<WaveTrack>()) {
-      WaveClipPointers ptrs( waveTrack->SortedClipArray());
-      for(WaveClip * pClip : ptrs ) {
-         context.StartStruct();
-         context.AddItem( (double)i, "track" );
-         context.AddItem( (double)j, "clip" );
-         context.AddItem( pClip->GetStartTime(), "start" );
-         Envelope * pEnv = pClip->GetEnvelope();
-         context.StartField( "points" );
-         context.StartArray();
-         double offset = pEnv->GetOffset();
-         for( size_t k = 0; k < pEnv->GetNumberOfPoints(); k++)
-         {
-            context.StartStruct( );
-            context.AddItem( (*pEnv)[k].GetT()+offset, "t" );
-            context.AddItem( (*pEnv)[k].GetVal(), "y" );
+   for (auto t : tracks.Leaders()) {
+      t->TypeSwitch([&](WaveTrack *waveTrack) {
+         WaveClipPointers ptrs(waveTrack->SortedClipArray());
+         j = 0;
+         for (WaveClip * pClip : ptrs) {
+            context.StartStruct();
+            context.AddItem((double)i, "track");
+            context.AddItem((double)j, "clip");
+            context.AddItem(pClip->GetStartTime(), "start");
+            Envelope * pEnv = pClip->GetEnvelope();
+            context.StartField("points");
+            context.StartArray();
+            double offset = pEnv->GetOffset();
+            for (size_t k = 0; k < pEnv->GetNumberOfPoints(); k++)
+            {
+               context.StartStruct();
+               context.AddItem((*pEnv)[k].GetT() + offset, "t");
+               context.AddItem((*pEnv)[k].GetVal(), "y");
+               context.EndStruct();
+            }
+            context.EndArray();
+            context.EndField();
+            context.AddItem(pClip->GetEndTime(), "end");
             context.EndStruct();
+            j++;
          }
-         context.EndArray();
-         context.EndField();
-         context.AddItem( pClip->GetEndTime(), "end" );
-         context.EndStruct();
-         j++;
-      }
+      });
+      // Per track numbering counts all tracks
+      i++;
    }
    context.EndArray();
 
@@ -600,8 +608,6 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
       i++;
    }
    context.EndArray();
-
-
 
    return true;
 }
