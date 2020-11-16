@@ -119,11 +119,11 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
-#include "WaveTrack.h"
 #include "TransactionScope.h"
 
 #include "effects/RealtimeEffectManager.h"
 #include "QualitySettings.h"
+#include "SampleTrack.h"
 #include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 
@@ -144,7 +144,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const WaveTrackArray &playbackTracks,
+      const WritableSampleTrackArray &playbackTracks,
       unsigned numPlaybackChannels, double rate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -1520,7 +1520,7 @@ void AudioIO::StopStream()
             // state, though the append buffer may be lost.
 
             GuardedCall( [&] {
-               WaveTrack* track = mCaptureTracks[i].get();
+               auto track = mCaptureTracks[i].get();
 
                // use No-fail-guarantee that track is flushed,
                // Partial-guarantee that some initial length of the recording
@@ -2444,7 +2444,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    const float * tempBuf,
    bool drop,
    unsigned long len,
-   WaveTrack *vt
+   WritableSampleTrack *vt
    )
 {
    const auto numPlaybackChannels = mNumPlaybackChannels;
@@ -2524,7 +2524,8 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // ------ MEMORY ALLOCATION ----------------------
    // These are small structures.
-   WaveTrack **chans = (WaveTrack **) alloca(numPlaybackChannels * sizeof(WaveTrack *));
+   WritableSampleTrack **chans = (WritableSampleTrack **) alloca(
+      numPlaybackChannels * sizeof(WritableSampleTrack *));
    float **tempBufs = (float **) alloca(numPlaybackChannels * sizeof(float *));
 
    // And these are larger structures....
@@ -2555,7 +2556,7 @@ bool AudioIoCallback::FillOutputBuffers(
    bool dropQuickly = false; // Track has already been faded to silence.
    for (unsigned t = 0; t < numPlaybackTracks; t++)
    {
-      WaveTrack *vt = mPlaybackTracks[t].get();
+      auto vt = mPlaybackTracks[t].get();
       chans[chanCnt] = vt;
 
       // TODO: more-than-two-channels
@@ -2960,7 +2961,7 @@ unsigned AudioIoCallback::CountSoloingTracks(){
 // true IFF the track should be silent. 
 // The track may not yet be silent, since it may still be
 // fading out.
-bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
+bool AudioIoCallback::TrackShouldBeSilent( const SampleTrack &wt )
 {
    return IsPaused() || (!wt.GetSolo() && (
       // Cut if somebody else is soloing
@@ -2971,7 +2972,7 @@ bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
 }
 
 // This is about micro-fades.
-bool AudioIoCallback::TrackHasBeenFadedOut( const WaveTrack &wt )
+bool AudioIoCallback::TrackHasBeenFadedOut( const SampleTrack &wt )
 {
    const auto channel = wt.GetChannelIgnoringPan();
    if ((channel == Track::LeftChannel  || channel == Track::MonoChannel) &&
@@ -2987,10 +2988,9 @@ bool AudioIoCallback::AllTracksAlreadySilent()
 {
    const bool dropAllQuickly = std::all_of(
       mPlaybackTracks.begin(), mPlaybackTracks.end(),
-      [&]( const std::shared_ptr< WaveTrack > &vt )
-         { return 
-      TrackShouldBeSilent( *vt ) && 
-      TrackHasBeenFadedOut( *vt ); }
+      [&]( const auto &vt ) { return
+         TrackShouldBeSilent( *vt ) && 
+         TrackHasBeenFadedOut( *vt ); }
    );
    return dropAllQuickly;
 }

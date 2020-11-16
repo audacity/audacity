@@ -15,9 +15,9 @@
 
 
 
-class WaveTrack;
-using WaveTrackArray =
-   std::vector < std::shared_ptr < WaveTrack > >;
+class WritableSampleTrack;
+using WritableSampleTrackArray =
+   std::vector < std::shared_ptr < WritableSampleTrack > >;
 
 class AUDACITY_DLL_API AudioIOListener /* not final */ {
 public:
@@ -29,7 +29,7 @@ public:
 
    virtual void OnAudioIOStartRecording() = 0;
    virtual void OnAudioIOStopRecording() = 0;
-   virtual void OnAudioIONewBlocks(const WaveTrackArray *tracks) = 0;
+   virtual void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) = 0;
 
    // Commit the addition of temporary recording tracks into the project
    virtual void OnCommitRecording() = 0;
