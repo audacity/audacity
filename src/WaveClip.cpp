@@ -942,7 +942,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 {
    t0 += GetTrimLeft();
 
-   const WaveTrack *const track = waveTrackCache.GetTrack().get();
+   const auto track =
+      static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
 
    //Trim offset comparison failure forces spectrogram cache rebuild 

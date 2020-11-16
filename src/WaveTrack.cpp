@@ -2729,7 +2729,7 @@ WaveTrackCache::~WaveTrackCache()
 {
 }
 
-void WaveTrackCache::SetTrack(const std::shared_ptr<const WaveTrack> &pTrack)
+void WaveTrackCache::SetTrack(const std::shared_ptr<const SampleTrack> &pTrack)
 {
    if (mPTrack != pTrack) {
       if (pTrack) {

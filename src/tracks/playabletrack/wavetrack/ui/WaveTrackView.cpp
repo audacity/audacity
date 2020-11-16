@@ -1546,7 +1546,7 @@ namespace
 }
 
 ClipParameters::ClipParameters
-   (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
+   (bool spectrum, const SampleTrack *track, const WaveClip *clip, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    tOffset = clip->GetPlayStartTime();

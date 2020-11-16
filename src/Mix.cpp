@@ -412,7 +412,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                                     int *queueStart, int *queueLen,
                                     Resample * pResample)
 {
-   const WaveTrack *const track = cache.GetTrack().get();
+   const auto track = cache.GetTrack().get();
    const double trackRate = track->GetRate();
    const double initialWarp = mRate / mSpeed / trackRate;
    const double tstep = 1.0 / trackRate;
@@ -565,7 +565,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
 size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
                                sampleCount *pos)
 {
-   const WaveTrack *const track = cache.GetTrack().get();
+   const auto track = cache.GetTrack().get();
    const double t = ( *pos ).as_double() / track->GetRate();
    const double trackEndTime = track->GetEndTime();
    const double trackStartTime = track->GetStartTime();
@@ -638,7 +638,7 @@ size_t Mixer::Process(size_t maxToProcess)
 
    Clear();
    for(size_t i=0; i<mNumInputTracks; i++) {
-      const WaveTrack *const track = mInputTrack[i].GetTrack().get();
+      const auto track = mInputTrack[i].GetTrack().get();
       for(size_t j=0; j<mNumChannels; j++)
          channelFlags[j] = 0;
 

@@ -306,7 +306,6 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
-
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
@@ -333,7 +332,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       return;
    }
 
-   const WaveTrack *const track = waveTrackCache.GetTrack().get();
+   const auto track =
+      static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
