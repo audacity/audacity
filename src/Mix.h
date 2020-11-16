@@ -31,7 +31,7 @@ class WaveTrackFactory;
 class TrackList;
 class WaveTrack;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-class WaveTrackCache;
+class SampleTrackCache;
 
 /** @brief Mixes together all input tracks, applying any envelopes, amplitude
  * gain, panning, and real-time effects in the process.
@@ -146,10 +146,10 @@ class AUDACITY_DLL_API Mixer {
  private:
 
    void Clear();
-   size_t MixSameRate(int *channelFlags, WaveTrackCache &cache,
+   size_t MixSameRate(int *channelFlags, SampleTrackCache &cache,
                            sampleCount *pos);
 
-   size_t MixVariableRates(int *channelFlags, WaveTrackCache &cache,
+   size_t MixVariableRates(int *channelFlags, SampleTrackCache &cache,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
                                 Resample * pResample);
@@ -160,7 +160,7 @@ class AUDACITY_DLL_API Mixer {
 
     // Input
    const size_t     mNumInputTracks;
-   ArrayOf<WaveTrackCache> mInputTrack;
+   ArrayOf<SampleTrackCache> mInputTrack;
    bool             mbVariableRates;
    const BoundedEnvelope *mEnvelope;
    ArrayOf<sampleCount> mSamplePos;

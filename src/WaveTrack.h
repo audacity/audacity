@@ -585,63 +585,6 @@ private:
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
 
-//! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
-/*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).
- */
-class AUDACITY_DLL_API WaveTrackCache {
-public:
-   WaveTrackCache()
-      : mBufferSize(0)
-      , mOverlapBuffer()
-      , mNValidBuffers(0)
-   {
-   }
-
-   explicit WaveTrackCache(const std::shared_ptr<const SampleTrack> &pTrack)
-      : mBufferSize(0)
-      , mOverlapBuffer()
-      , mNValidBuffers(0)
-   {
-      SetTrack(pTrack);
-   }
-   ~WaveTrackCache();
-
-   const std::shared_ptr<const SampleTrack>& GetTrack() const { return mPTrack; }
-   void SetTrack(const std::shared_ptr<const SampleTrack> &pTrack);
-
-   //! Retrieve samples as floats from the track or from the memory cache
-   /*! Uses fillZero always
-    @return null on failure; this object owns the memory; may be invalidated if GetFloats() is called again
-   */
-   const float *GetFloats(sampleCount start, size_t len, bool mayThrow);
-
-private:
-   void Free();
-
-   struct Buffer {
-      Floats data;
-      sampleCount start;
-      sampleCount len;
-
-      Buffer() : start(0), len(0) {}
-      void Free() { data.reset(); start = 0; len = 0; }
-      sampleCount end() const { return start + len; }
-
-      void swap ( Buffer &other )
-      {
-         data .swap ( other.data );
-         std::swap( start, other.start );
-         std::swap( len, other.len );
-      }
-   };
-
-   std::shared_ptr<const SampleTrack> mPTrack;
-   size_t mBufferSize;
-   Buffer mBuffers[2];
-   GrowableSampleBuffer mOverlapBuffer;
-   int mNValidBuffers;
-};
-
 #include <unordered_set>
 class SampleBlock;
 using SampleBlockID = long long;

@@ -27,6 +27,7 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "SampleTrackCache.h"
 #include "Sequence.h"
 #include "Spectrum.h"
 #include "Prefs.h"
@@ -564,7 +565,7 @@ bool SpecCache::Matches
 
 bool SpecCache::CalculateOneSpectrum
    (const SpectrogramSettings &settings,
-    WaveTrackCache &waveTrackCache,
+    SampleTrackCache &waveTrackCache,
     const int xx, const sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond,
     int lowerBoundX, int upperBoundX,
@@ -810,7 +811,7 @@ void SpecCache::Grow(size_t len_, const SpectrogramSettings& settings,
 }
 
 void SpecCache::Populate
-   (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
+   (const SpectrogramSettings &settings, SampleTrackCache &waveTrackCache,
     int copyBegin, int copyEnd, size_t numPixels,
     sampleCount numSamples,
     double offset, double rate, double pixelsPerSecond)
@@ -849,13 +850,13 @@ void SpecCache::Populate
          ThreadLocalStorage()  { }
          ~ThreadLocalStorage() { }
 
-         void init(WaveTrackCache &waveTrackCache, size_t scratchSize) {
+         void init(SampleTrackCache &waveTrackCache, size_t scratchSize) {
             if (!cache) {
-               cache = std::make_unique<WaveTrackCache>(waveTrackCache.GetTrack());
+               cache = std::make_unique<SampleTrackCache>(waveTrackCache.GetTrack());
                scratch.resize(scratchSize);
             }
          }
-         std::unique_ptr<WaveTrackCache> cache;
+         std::unique_ptr<SampleTrackCache> cache;
          std::vector<float> scratch;
       } tls;
 
@@ -865,10 +866,10 @@ void SpecCache::Populate
       {
 #ifdef _OPENMP
          tls.init(waveTrackCache, scratchSize);
-         WaveTrackCache& cache = *tls.cache;
+         SampleTrackCache& cache = *tls.cache;
          float* buffer = &tls.scratch[0];
 #else
-         WaveTrackCache& cache = waveTrackCache;
+         SampleTrackCache& cache = waveTrackCache;
          float* buffer = &scratch[0];
 #endif
          CalculateOneSpectrum(
@@ -934,7 +935,7 @@ void SpecCache::Populate
    }
 }
 
-bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
+bool WaveClip::GetSpectrogram(SampleTrackCache &waveTrackCache,
                               const float *& spectrogram,
                               const sampleCount *& where,
                               size_t numPixels,
