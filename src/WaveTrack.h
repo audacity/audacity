@@ -282,7 +282,6 @@ private:
    Sequence* GetSequenceAtTime(double time);
    Envelope* GetEnvelopeAtTime(double time);
 
-   WaveClip* GetClipAtSample(sampleCount sample);
    WaveClip* GetClipAtTime(double time);
 
    //

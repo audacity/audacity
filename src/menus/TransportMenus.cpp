@@ -414,21 +414,32 @@ void OnPunchAndRoll(const CommandContext &context)
 
    double newt1 = t1;
    for (const auto &wt : tracks) {
-      sampleCount testSample(floor(t1 * wt->GetRate()));
-      auto clip = wt->GetClipAtSample(testSample);
-      if (!clip)
+      auto rate = wt->GetRate();
+      sampleCount testSample(floor(t1 * rate));
+      auto intervals = wt->GetIntervals();
+      auto pred = [rate](sampleCount testSample){ return
+         [rate, testSample](const Track::Interval &interval){
+            auto start = floor(interval.Start() * rate + 0.5);
+            auto end = floor(interval.End() * rate + 0.5);
+            auto ts = testSample.as_double();
+            return ts >= start && ts < end;
+         };
+      };
+      auto begin = intervals.begin(), end = intervals.end(),
+         iter = std::find_if(begin, end, pred(testSample));
+      if (iter == end)
          // Bug 1890 (an enhancement request)
          // Try again, a little to the left.
          // Subtract 10 to allow a selection exactly at or slightly after the
          // end time
-         clip = wt->GetClipAtSample(testSample - 10);
-      if (!clip)
+         iter = std::find_if(begin, end, pred(testSample - 10));
+      if (iter == end)
          error = true;
       else {
          // May adjust t1 left
          // Let's ignore the possibility of a clip even shorter than the
          // crossfade duration!
-         newt1 = std::min(newt1, clip->GetPlayEndTime() - crossFadeDuration);
+         newt1 = std::min(newt1, iter->End() - crossFadeDuration);
       }
    }
 
