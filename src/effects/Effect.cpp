@@ -27,7 +27,7 @@
 #include "../AudioIO.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 #include "../LabelTrack.h"
-#include "../Mix.h"
+#include "../MixAndRender.h"
 #include "../PluginManager.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"

@@ -1,9 +1,7 @@
-
-
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../Mix.h"
+#include "../MixAndRender.h"
 
 #include "Prefs.h"
 #include "Project.h"
