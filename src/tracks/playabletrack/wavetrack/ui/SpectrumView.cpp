@@ -334,7 +334,14 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    }
 
    const auto track =
-      static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
+      dynamic_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
+   if (!track)
+      // Leave a blank rectangle.
+      // TODO: rewrite GetSpectrogramSettings and GetSpectrumBounds so they
+      // are not members of WaveTrack, but fetch UI related ClientData
+      // attachments; then this downcast from SampleTrack will not be needed.
+      return;
+
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
