@@ -67,7 +67,7 @@ using Regions = std::vector < Region >;
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack final : public SampleTrack
+class AUDACITY_DLL_API WaveTrack final : public WritableSampleTrack
 {
 public:
 
