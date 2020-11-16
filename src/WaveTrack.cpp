@@ -2328,20 +2328,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    }
 }
 
-WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
-{
-   for (const auto &clip: mClips)
-   {
-      auto start = clip->GetPlayStartSample();
-      auto len   = clip->GetPlaySamplesCount();
-
-      if (sample >= start && sample < start + len)
-         return clip.get();
-   }
-
-   return NULL;
-}
-
 // When the time is both the end of a clip and the start of the next clip, the
 // latter clip is returned.
 WaveClip* WaveTrack::GetClipAtTime(double time)
