@@ -27,9 +27,9 @@ class AudacityProject;
 struct AudioIOStartStreamOptions;
 class TrackList;
 class SelectedRegion;
-
-class WaveTrack;
-using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
+class WritableSampleTrack;
+using WritableSampleTrackArray =
+   std::vector< std::shared_ptr< WritableSampleTrack > >;
 
 enum class PlayMode : int {
    normalPlay,
@@ -68,7 +68,7 @@ public:
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
    // Find suitable tracks to record into, or return an empty array.
-   static WaveTrackArray ChooseExistingRecordingTracks(
+   static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
 
@@ -156,7 +156,7 @@ private:
    void OnAudioIORate(int rate) override;
    void OnAudioIOStartRecording() override;
    void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks(const WaveTrackArray *tracks) override;
+   void OnAudioIONewBlocks(const WritableSampleTrackArray *tracks) override;
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
