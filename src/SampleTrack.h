@@ -115,6 +115,19 @@ public:
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
+
+   virtual void SetOldChannelGain(int channel, float gain) = 0;
+
+   /** @brief Append the sample data to the track. You must call Flush()
+    * after the last Append.
+    *
+    * @return true in case a block was flushed from memory to underlying DB
+    */
+   virtual bool Append(constSamplePtr buffer, sampleFormat format,
+               size_t len, unsigned int stride=1) = 0;
+
+   //! Flush must be called after last Append
+   virtual void Flush() = 0;
 };
 
 ENUMERATE_TRACK_TYPE(WritableSampleTrack)
