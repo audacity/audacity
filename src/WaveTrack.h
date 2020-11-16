@@ -103,7 +103,7 @@ private:
 
    double GetOffset() const override;
    void SetOffset(double o) override;
-   virtual ChannelType GetChannelIgnoringPan() const;
+   ChannelType GetChannelIgnoringPan() const override;
    ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
@@ -130,7 +130,7 @@ private:
    // WaveTrack parameters
    //
 
-   double GetRate() const;
+   double GetRate() const override;
    void SetRate(double newRate);
 
    // Multiplicative factor.  Only converted to dB for display.
@@ -141,12 +141,9 @@ private:
    float GetPan() const;
    void SetPan(float newPan) override;
 
-   // Takes gain and pan into account
-   float GetChannelGain(int channel) const;
+   float GetChannelGain(int channel) const override;
 
-   // Old gain is used in playback in linearly interpolating 
-   // the gain.
-   float GetOldChannelGain(int channel) const;
+   float GetOldChannelGain(int channel) const override;
    void SetOldChannelGain(int channel, float gain);
 
    int GetWaveColorIndex() const { return mWaveColorIndex; };
@@ -155,7 +152,8 @@ private:
    sampleCount GetPlaySamplesCount() const;
    sampleCount GetSequenceSamplesCount() const;
 
-   sampleFormat GetSampleFormat() const { return mFormat; }
+   sampleFormat GetSampleFormat() const override { return mFormat; }
+
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
@@ -257,30 +255,6 @@ private:
    /// guaranteed that the same samples are affected.
    ///
 
-   //! Retrieve samples from a track in floating-point format, regardless of the storage format
-   /*!
-    @param buffer receives the samples
-    @param start starting sample, relative to absolute time zero (not to the track's offset value)
-    @param len how many samples to get.  buffer is assumed sufficiently large
-    @param fill how to assign values for sample positions between clips
-    @param mayThrow if false, fill buffer with zeros when there is failure to retrieve samples; else throw
-    @param[out] pNumWithinClips Report how many samples were copied from within clips, rather
-       than filled according to fillFormat; but these were not necessarily one contiguous range.
-    */
-   bool GetFloats(float *buffer, sampleCount start, size_t len,
-      fillFormat fill = fillZero, bool mayThrow = true,
-      sampleCount * pNumWithinClips = nullptr) const
-   {
-      //! Cast the pointer to pass it to Get() which handles multiple destination formats
-      return Get(reinterpret_cast<samplePtr>(buffer),
-         floatSample, start, len, fill, mayThrow, pNumWithinClips);
-   }
-
-   //! Retrieve samples from a track in a specified format
-   /*!
-    @copydetails WaveTrack::GetFloats()
-    @param format sample format of the destination buffer
-    */
    bool Get(samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       fillFormat fill = fillZero,
@@ -288,15 +262,12 @@ private:
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
-      sampleCount * pNumWithinClips = nullptr) const;
-
+      sampleCount * pNumWithinClips = nullptr) const override;
    void Set(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
-   // Fetch envelope values corresponding to uniformly separated sample times
-   // starting at the given time.
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
-                         double t0) const;
+                         double t0) const override;
 
    // May assume precondition: t0 <= t1
    std::pair<float, float> GetMinMax(
@@ -321,12 +292,11 @@ private:
    // and alignment for efficiency
    //
 
-   // This returns a possibly large or negative value
-   sampleCount GetBlockStart(sampleCount t) const;
+   sampleCount GetBlockStart(sampleCount t) const override;
 
    // These return a nonnegative number of samples meant to size a memory buffer
-   size_t GetBestBlockSize(sampleCount t) const;
-   size_t GetMaxBlockSize() const;
+   size_t GetBestBlockSize(sampleCount t) const override;
+   size_t GetMaxBlockSize() const override;
    size_t GetIdealBlockSize();
 
    //
@@ -348,27 +318,6 @@ private:
 
    bool CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
-
-   /** @brief Convert correctly between an (absolute) time in seconds and a number of samples.
-    *
-    * This method will not give the correct results if used on a relative time (difference of two
-    * times). Each absolute time must be converted and the numbers of samples differenced:
-    *    sampleCount start = track->TimeToLongSamples(t0);
-    *    sampleCount end = track->TimeToLongSamples(t1);
-    *    sampleCount len = (sampleCount)(end - start);
-    * NOT the likes of:
-    *    sampleCount len = track->TimeToLongSamples(t1 - t0);
-    * See also WaveTrack::TimeToLongSamples().
-    * @param t0 The time (floating point seconds) to convert
-    * @return The number of samples from the start of the track which lie before the given time.
-    */
-   sampleCount TimeToLongSamples(double t0) const;
-   /** @brief Convert correctly between a number of samples and an (absolute) time in seconds.
-    *
-    * @param pos The time number of samples from the start of the track to convert.
-    * @return The time in seconds.
-    */
-   double LongSamplesToTime(sampleCount pos) const;
 
    // Get access to the (visible) clips in the tracks, in unspecified order
    // (not necessarily sequenced in time).
