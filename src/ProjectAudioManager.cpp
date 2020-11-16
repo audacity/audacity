@@ -1304,8 +1304,6 @@ void ProjectAudioManager::DoPlayStopSelect()
    }
 }
 
-#include "CommonCommandFlags.h"
-
 static RegisteredMenuItemEnabler stopIfPaused{{
    []{ return PausedFlag(); },
    []{ return AudioIONotBusyFlag(); },
