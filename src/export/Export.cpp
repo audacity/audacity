@@ -227,7 +227,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
          double outRate, sampleFormat outFormat,
          MixerSpec *mixerSpec)
 {
-   WaveTrackConstArray inputTracks;
+   SampleTrackConstArray inputTracks;
 
    bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
 
@@ -236,7 +236,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
       - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputTracks.push_back(
-         pTrack->SharedPointer< const WaveTrack >() );
+         pTrack->SharedPointer< const SampleTrack >() );
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
                   // Throw, to stop exporting, if read fails:
