@@ -95,7 +95,7 @@ TranslatableString EffectLoudness::GetDescription()
 
 wxString EffectLoudness::ManualPage()
 {
-   return wxT("Loudness");
+   return wxT("Loudness_Normalization");
 }
 
 // EffectDefinitionInterface implementation
