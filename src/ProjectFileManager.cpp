@@ -1265,8 +1265,9 @@ void ProjectFileManager::Compact()
       auto numStates = undoManager.GetNumStates();
       undoManager.RemoveStates(0, numStates - 1);
 
-      // And clear the clipboard
-      clipboard.Clear();
+      // And clear the clipboard, if needed
+      if (&mProject == clipboard.Project().lock().get())
+         clipboard.Clear();
 
       // Refresh the before space usage since it may have changed due to the
       // above actions.
