@@ -92,6 +92,8 @@ public:
    bool Import(const FilePath &fileName,
                bool addToHistory = true);
 
+   void Compact();
+
    void AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 

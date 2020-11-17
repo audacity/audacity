@@ -1171,3 +1171,119 @@ bool ProjectFileManager::Import(
 
    return true;
 }
+
+#include "Clipboard.h"
+#include "ShuttleGui.h"
+#include "widgets/HelpSystem.h"
+
+// Compact dialog
+namespace {
+class CompactDialog : public wxDialogWrapper
+{
+public:
+   CompactDialog(TranslatableString text)
+   :  wxDialogWrapper(nullptr, wxID_ANY, XO("Compact Project"))
+   {
+      ShuttleGui S(this, eIsCreating);
+
+      S.StartVerticalLay(true);
+      {
+         S.AddFixedText(text, false, 500);
+
+         S.AddStandardButtons(eYesButton | eNoButton | eHelpButton);
+      }
+      S.EndVerticalLay();
+
+      FindWindowById(wxID_YES, this)->Bind(wxEVT_BUTTON, &CompactDialog::OnYes, this);
+      FindWindowById(wxID_NO, this)->Bind(wxEVT_BUTTON, &CompactDialog::OnNo, this);
+      FindWindowById(wxID_HELP, this)->Bind(wxEVT_BUTTON, &CompactDialog::OnGetURL, this);
+
+      Layout();
+      Fit();
+      Center();
+   }
+
+   void OnYes(wxCommandEvent &WXUNUSED(evt))
+   {
+      EndModal(wxYES);
+   }
+
+   void OnNo(wxCommandEvent &WXUNUSED(evt))
+   {
+      EndModal(wxNO);
+   }
+
+   void OnGetURL(wxCommandEvent &WXUNUSED(evt))
+   {
+      HelpSystem::ShowHelp(this, wxT("File_Menu:_Compact_Project"), true);
+   }
+};
+}
+
+void ProjectFileManager::Compact()
+{
+   auto &project = mProject;
+   auto &undoManager = UndoManager::Get(project);
+   auto &clipboard = Clipboard::Get();
+   auto &projectFileIO = ProjectFileIO::Get(project);
+   bool isBatch = project.mBatchMode > 0;
+
+   // Purpose of this is to remove the -wal file.
+   projectFileIO.ReopenProject();
+
+   auto currentTracks = TrackList::Create( nullptr );
+   auto &tracks = TrackList::Get( project );
+   for (auto t : tracks.Any())
+   {
+      currentTracks->Add(t->Duplicate());
+   }
+
+   int64_t total = projectFileIO.GetTotalUsage();
+   int64_t used = projectFileIO.GetCurrentUsage(currentTracks);
+
+   auto before = wxFileName::GetSize(projectFileIO.GetFileName());
+
+   CompactDialog dlg(
+         XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
+            "There is %s of free disk space and this project is currently using %s.\n"
+            "\n"
+            "If you proceed, the current Undo/Redo History and clipboard contents will be discarded "
+            "and you will recover approximately %s of disk space.\n"
+            "\n"
+            "Do you want to continue?")
+         .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
+                  Internat::FormatSize(before.GetValue()),
+                  Internat::FormatSize(total - used)));
+   if (isBatch || dlg.ShowModal() == wxYES)
+   {
+      // Want to do this before removing the states so that it becomes the
+      // current state.
+      ProjectHistory::Get(project)
+         .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
+
+      // Now we can remove all previous states.
+      auto numStates = undoManager.GetNumStates();
+      undoManager.RemoveStates(0, numStates - 1);
+
+      // And clear the clipboard
+      clipboard.Clear();
+
+      // Refresh the before space usage since it may have changed due to the
+      // above actions.
+      auto before = wxFileName::GetSize(projectFileIO.GetFileName());
+
+      projectFileIO.Compact(currentTracks, true);
+
+      auto after = wxFileName::GetSize(projectFileIO.GetFileName());
+
+      if (!isBatch)
+      {
+         AudacityMessageBox(
+            XO("Compacting actually freed %s of disk space.")
+            .Format(Internat::FormatSize((before - after).GetValue())),
+            XO("Compact Project"));
+      }
+   }
+
+   currentTracks.reset();
+}
