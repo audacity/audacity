@@ -27,9 +27,8 @@ UndoManager
 
 #include "BasicUI.h"
 #include "Project.h"
-#include "SampleBlock.h"
+#include "Track.h"
 #include "TransactionScope.h"
-#include "WaveTrack.h"          // temp
 //#include "NoteTrack.h"  // for Sonify* function declarations
 
 
@@ -124,55 +123,11 @@ void UndoManager::EnqueueMessage(UndoRedoMessage message)
    });
 }
 
-//! Just to find a denominator for a progress indicator.
-/*! This estimate procedure should in fact be exact */
-size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
-{
-   if (begin == end)
-      return 0;
-
-   // Collect ids that survive
-   SampleBlockIDSet wontDelete;
-   auto f = [&](const auto &p){
-      InspectBlocks(*p->state.tracks, {}, &wontDelete);
-   };
-   auto first = stack.begin(), last = stack.end();
-   std::for_each( first, first + begin, f );
-   std::for_each( first + end, last, f );
-   if (saved >= 0)
-      std::for_each( first + saved, first + saved + 1, f );
-   InspectBlocks(TrackList::Get(mProject), {}, &wontDelete);
-
-   // Collect ids that won't survive (and are not negative pseudo ids)
-   SampleBlockIDSet seen, mayDelete;
-   std::for_each( first + begin, first + end, [&](const auto &p){
-      auto &tracks = *p->state.tracks;
-      InspectBlocks(tracks, [&]( const SampleBlock &block ){
-         auto id = block.GetBlockID();
-         if ( id > 0 && !wontDelete.count( id ) )
-            mayDelete.insert( id );
-      },
-      &seen);
-   } );
-   return mayDelete.size();
-}
-
 void UndoManager::RemoveStates(size_t begin, size_t end)
 {
    Publish({ UndoRedoMessage::BeginPurge, begin, end });
    auto cleanup =
       finally([&]{ Publish({ UndoRedoMessage::EndPurge }); });
-
-   using namespace BasicUI;
-   unsigned long long nToDelete = EstimateRemovedBlocks(begin, end),
-      nDeleted = 0;
-   auto dialog =
-      MakeProgress(XO("Progress"), XO("Discarding undo/redo history"), 0);
-
-   // Install a callback function that updates a progress indicator
-   SampleBlock::DeletionCallback::Scope callbackScope{
-      [&](const SampleBlock &){ dialog->Poll(++nDeleted, nToDelete); }
-   };
 
    // Wrap the whole in a savepoint for better performance
    TransactionScope trans{mProject, "DiscardingUndoStates"};
@@ -191,11 +146,6 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
    
    if (begin != end)
       EnqueueMessage({ UndoRedoMessage::Purge });
-
-   // Check sanity
-   wxASSERT_MSG(
-      nDeleted == 0 || // maybe bypassing all deletions
-      nDeleted == nToDelete, "Block count was misestimated");
 }
 
 void UndoManager::ClearStates()
