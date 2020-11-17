@@ -1269,6 +1269,9 @@ void ProjectFileManager::Compact()
       if (&mProject == clipboard.Project().lock().get())
          clipboard.Clear();
 
+      // This may also decrease some reference counts on blocks
+      mLastSavedTracks.reset();
+
       // Refresh the before space usage since it may have changed due to the
       // above actions.
       auto before = wxFileName::GetSize(projectFileIO.GetFileName());
@@ -1286,5 +1289,5 @@ void ProjectFileManager::Compact()
       }
    }
 
-   currentTracks.reset();
+   mLastSavedTracks = currentTracks;
 }
