@@ -36,7 +36,7 @@ class Odict(dict):
 				raise Exception("expected a dict or a tuple list")
 
 	def append_from_dict(self, dict):
-		map(self.__setitem__, dict.keys(), dict.values())
+		list(map(self.__setitem__, list(dict.keys()), list(dict.values())))
 
 	def append_from_plist(self, plist):
 		for pair in plist:
@@ -64,24 +64,24 @@ class Odict(dict):
 		return Odict(self.plist())
 
 	def items(self):
-		return zip(self._keys, self.values())
+		return list(zip(self._keys, list(self.values())))
 
 	def keys(self):
 		return list(self._keys) # return a copy of the list
 
 	def values(self):
-		return map(self.get, self._keys)
+		return list(map(self.get, self._keys))
 
 	def plist(self):
 		p = []
-		for k, v in self.items():
+		for k, v in list(self.items()):
 			p.append( (k, v) )
 		return p
 
 	def __str__(self):
 		buf = []
 		buf.append("{ ")
-		for k, v in self.items():
+		for k, v in list(self.items()):
 			buf.append('%r : %r, ' % (k, v))
 		buf.append("}")
 		return ''.join(buf)
@@ -122,7 +122,7 @@ class OptionsReview(Options.OptionsContext):
 				continue
 			review_options[opt.dest] = opt
 			review_defaults[opt.dest] = opt.default
-			if gr.defaults.has_key(opt.dest):
+			if opt.dest in gr.defaults:
 				del gr.defaults[opt.dest]
 			opt.default = None
 
@@ -161,7 +161,7 @@ class ReviewContext(Context.Context):
 		if not self.compare_review_set(old_review_set, new_review_set):
 			self.invalidate_cache()
 		self.store_review_set(new_review_set)
-		print(self.display_review_set(new_review_set))
+		print((self.display_review_set(new_review_set)))
 
 	def invalidate_cache(self):
 		"""Invalidate the cache to prevent bad builds."""
@@ -214,7 +214,7 @@ class ReviewContext(Context.Context):
 		new_set = ConfigSet.ConfigSet()
 		opt_dict = Options.options.__dict__
 
-		for name in review_options.keys():
+		for name in list(review_options.keys()):
 			# the option is specified explicitly on the command line
 			if name in opt_dict:
 				# if the option is the default, pretend it was never specified
@@ -231,7 +231,7 @@ class ReviewContext(Context.Context):
 		Import the actual value of the reviewable options in the option
 		dictionary, given the current review set.
 		"""
-		for name in review_options.keys():
+		for name in list(review_options.keys()):
 			if name in review_set:
 				value = review_set[name]
 			else:
@@ -242,9 +242,9 @@ class ReviewContext(Context.Context):
 		"""
 		Return true if the review sets specified are equal.
 		"""
-		if len(set1.keys()) != len(set2.keys()):
+		if len(list(set1.keys())) != len(list(set2.keys())):
 			return False
-		for key in set1.keys():
+		for key in list(set1.keys()):
 			if not key in set2 or set1[key] != set2[key]:
 				return False
 		return True
@@ -255,7 +255,7 @@ class ReviewContext(Context.Context):
 		"""
 		term_width = Logs.get_term_cols()
 		lines = []
-		for dest in review_options.keys():
+		for dest in list(review_options.keys()):
 			opt = review_options[dest]
 			name = ", ".join(opt._short_opts + opt._long_opts)
 			help = opt.help

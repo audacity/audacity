@@ -395,7 +395,7 @@ def check_boost(self, *k, **kw):
 		'lib': k and k[0] or kw.get('lib'),
 		'stlib': kw.get('stlib')
 	}
-	for key, value in self.options.__dict__.items():
+	for key, value in list(self.options.__dict__.items()):
 		if not key.startswith('boost_'):
 			continue
 		key = key[len('boost_'):]

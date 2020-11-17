@@ -27,7 +27,7 @@ Usage::
 Usage of the :py:mod:`waflib.Tools.gnu_dirs` is recommended, but not obligatory.
 """
 
-from __future__ import with_statement
+
 
 import os, re
 from waflib import Context, Task, Utils, Logs

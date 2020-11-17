@@ -291,7 +291,7 @@ class Plugin(Structure):
     def get_num_ports_of_class(self, *args):
         """Get the number of ports of some class(es) on this plugin."""
         return c.plugin_get_num_ports_of_class(
-            self.plugin, *(list(map(lambda n: n.node, args)) + [None])
+            self.plugin, *(list([n.node for n in args]) + [None])
         )
 
     def has_latency(self):
@@ -854,7 +854,7 @@ class Iter(Structure):
             self.iter_get(self.collection.collection, self.iterator),
         )
 
-    def next(self):
+    def __next__(self):
         """Move to and return the next item."""
         if self.is_end():
             raise StopIteration

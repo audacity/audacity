@@ -161,7 +161,7 @@ def niceName(uri):
     if pref in ns_list:
         return ns_list.get(pref, pref) + ":" + rez.group(2)
     else:
-        print("warning: prefix %s not in ns list:" % pref)
+        print(("warning: prefix %s not in ns list:" % pref))
         print(ns_list)
         return uri
 
@@ -238,7 +238,7 @@ def linkify(string):
         return string
 
     "Add links to code documentation for identifiers"
-    if string in linkmap.keys():
+    if string in list(linkmap.keys()):
         # Exact match for complete string
         return linkmap[string]
 
@@ -300,7 +300,7 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 if not ((classlist and uri in classlist) or
                         (instalist and uri in instalist) or
                         (proplist and uri in proplist)):
-                    print("warning: Link to undefined resource <%s>\n" % text)
+                    print(("warning: Link to undefined resource <%s>\n" % text))
                 return '<a href="#%s">%s</a>' % (name, curie)
             elif prefix in namespaces:
                 return '<a href="%s">%s</a>' % (
@@ -322,7 +322,7 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 (proplist and uri in proplist)):
                 return '%s<a href="#%s">%s</a>' % (space, name, name)
             else:
-                print("warning: Link to undefined resource <%s>\n" % name)
+                print(("warning: Link to undefined resource <%s>\n" % name))
                 return text
         markup = rgx.sub(translateLocalLink, markup)
 
@@ -348,10 +348,10 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 root = etree.fromstring(doc, parser)
                 os.chdir(oldcwd)
             except Exception as e:
-                print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
+                print(("Invalid lv2:documentation for %s\n%s" % (urinode, e)))
                 line_num = 1
                 for line in doc.split('\n'):
-                    print('%3d: %s' % (line_num, line))
+                    print(('%3d: %s' % (line_num, line)))
                     line_num += 1
 
         return markup
@@ -1003,7 +1003,7 @@ def specHistoryEntries(m, subject, entries):
 def specHistoryMarkup(entries):
     if len(entries) > 0:
         history = '<dl>\n'
-        for e in sorted(entries.keys(), reverse=True):
+        for e in sorted(list(entries.keys()), reverse=True):
             history += entries[e] + '</ul></dd>'
         history += '</dl>\n'
         return history
@@ -1123,7 +1123,7 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     if not ext_node:
         ext_node = model.value(None, rdf.type, owl.Ontology)
     if not ext_node:
-        print('no extension found in %s' % bundle)
+        print(('no extension found in %s' % bundle))
         sys.exit(1)
 
     ext = str(ext_node)
@@ -1136,7 +1136,7 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
         micro = int(model.value(ext_node, lv2.microVersion, None))
     except:
         e = sys.exc_info()[1]
-        print('warning: %s: failed to find version for %s' % (bundle, ext))
+        print(('warning: %s: failed to find version for %s' % (bundle, ext)))
 
     # Get date
     date = None
@@ -1150,8 +1150,8 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     for r in model.triples([ext_node, doap.release, None]):
         this_date = model.value(r[2], doap.created, None)
         if this_date > date:
-            print('warning: %s revision %d.%d (%s) is not the latest release' % (
-                ext_node, minor, micro, date))
+            print(('warning: %s revision %d.%d (%s) is not the latest release' % (
+                ext_node, minor, micro, date)))
             break
 
     # Get name and short description
@@ -1281,7 +1281,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     prefixes_html += "</span>"
 
     if spec_pre is None:
-        print('No namespace prefix for %s defined' % specloc)
+        print(('No namespace prefix for %s defined' % specloc))
         sys.exit(1)
 
     ns_list[spec_ns_str] = spec_pre
@@ -1401,7 +1401,7 @@ def save(path, text):
         f.close()
     except Exception:
         e = sys.exc_info()[1]
-        print('Error writing to file "' + path + '": ' + str(e))
+        print(('Error writing to file "' + path + '": ' + str(e)))
 
 
 def getNamespaces(m):
@@ -1492,7 +1492,7 @@ if __name__ == "__main__":
     b = os.path.basename(outdir)
 
     if not os.access(os.path.abspath(spec), os.R_OK):
-        print('warning: extension %s has no %s.ttl file' % (b, b))
+        print(('warning: extension %s has no %s.ttl file' % (b, b)))
         sys.exit(1)
 
     # Root link

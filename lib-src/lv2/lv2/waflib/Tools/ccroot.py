@@ -356,7 +356,7 @@ def process_use(self):
 	out = self.tmp_use_sorted = []
 	tmp = []
 	for x in self.tmp_use_seen:
-		for k in use_prec.values():
+		for k in list(use_prec.values()):
 			if x in k:
 				break
 		else:

@@ -92,7 +92,7 @@ def make_interpreted_test(self):
 		self.ut_env = dict(os.environ)
 
 	paths = getattr(self, 'test_scripts_paths', {})
-	for (k,v) in paths.items():
+	for (k,v) in list(paths.items()):
 		p = self.ut_env.get(k, '').split(os.pathsep)
 		if isinstance(v, str):
 			v = v.split(os.pathsep)

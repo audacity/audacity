@@ -230,9 +230,9 @@ class CStyleChecker:
 		"""
 		Print an error message and increment the error count.
 		"""
-		print ("%s (%d) : %s" % (self.filename, self.line_num, msg))
+		print(("%s (%d) : %s" % (self.filename, self.line_num, msg)))
 		if self.debug:
-			print ("'" + self.orig_line + "'")
+			print(("'" + self.orig_line + "'"))
 		self.error_count += 1
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

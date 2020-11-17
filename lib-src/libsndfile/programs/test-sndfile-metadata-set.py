@@ -32,11 +32,11 @@
 
 # Simple test script for the sndfile-metadata-set program.
 
-from __future__ import print_function
+
 
 try:
     # py2
-    import commands
+    import subprocess
 except ImportError:
     # py3
     import subprocess as commands
@@ -55,7 +55,7 @@ class Programs:
         self.make_sine_prog = "../examples/make_sine" + extension
 
     def _run_command (self, should_fail, cmd):
-        status, output = commands.getstatusoutput (cmd)
+        status, output = subprocess.getstatusoutput (cmd)
         if should_fail and not status:
             print("\n\nError : command '%s' should have failed." % cmd)
             print(output)

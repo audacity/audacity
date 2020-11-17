@@ -272,12 +272,12 @@ class remote(BuildContext):
 
 		self.extract_groups_of_builds()
 		self.setup_private_ssh_key()
-		for k, v in self.vgroups.items():
+		for k, v in list(self.vgroups.items()):
 			task = self(rule=rsync_and_ssh, always=True)
 			task.env.login = self.variant_to_login(k)
 
 			task.env.commands = []
-			for opt, value in v.items():
+			for opt, value in list(v.items()):
 				task.env.commands += value
 			task.env.variant = task.env.commands[0].partition('_')[2]
 			for opt, value in self.custom_options(k):

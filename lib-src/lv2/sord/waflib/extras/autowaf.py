@@ -35,7 +35,7 @@ class OptionsContext(Options.OptionsContext):
 
     def add_flags(self, group, flags):
         """Tersely add flags (a dictionary of longname:desc) to a group"""
-        for name, desc in flags.items():
+        for name, desc in list(flags.items()):
             group.add_option('--' + name, action='store_true',
                              dest=name.replace('-', '_'), help=desc)
 
@@ -508,16 +508,14 @@ def display_msg(conf, msg, status=None, color=None):
     Logs.pprint(color, status)
 
 def display_msgs(conf, msgs):
-    for k, v in msgs.items():
+    for k, v in list(msgs.items()):
         display_msg(conf, k, v)
 
 def link_flags(env, lib):
-    return ' '.join(map(lambda x: env['LIB_ST'] % x,
-                        env['LIB_' + lib]))
+    return ' '.join([env['LIB_ST'] % x for x in env['LIB_' + lib]])
 
 def compile_flags(env, lib):
-    return ' '.join(map(lambda x: env['CPPPATH_ST'] % x,
-                        env['INCLUDES_' + lib]))
+    return ' '.join([env['CPPPATH_ST'] % x for x in env['INCLUDES_' + lib]])
 
 def build_pc(bld, name, version, version_suffix, libs, subst_dict={}):
     """Build a pkg-config file for a library.
@@ -744,7 +742,7 @@ class ExecutionEnvironment:
         self.original_environ = os.environ.copy()
 
         self.diff = {}
-        for path_name, paths in changes.items():
+        for path_name, paths in list(changes.items()):
             value = os.pathsep.join(paths)
             if path_name in os.environ:
                 value += os.pathsep + os.environ[path_name]
@@ -754,7 +752,7 @@ class ExecutionEnvironment:
         os.environ.update(self.diff)
 
     def __str__(self):
-        return '\n'.join({'%s="%s"' % (k, v) for k, v in self.diff.items()})
+        return '\n'.join({'%s="%s"' % (k, v) for k, v in list(self.diff.items())})
 
     def __enter__(self):
         return self
@@ -831,7 +829,7 @@ class TestOutput:
 
 def is_string(s):
     if sys.version_info[0] < 3:
-        return isinstance(s, basestring)
+        return isinstance(s, str)
     return isinstance(s, str)
 
 class TestScope:

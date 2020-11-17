@@ -66,7 +66,7 @@ def options(opt):
 	opt.add_option('--without-pch', action='store_false', default=True, dest='with_pch', help='''Try to use precompiled header to speed up compilation (only g++ and clang++)''')
 
 def configure(conf):
-	if (conf.options.with_pch and conf.env['COMPILER_CXX'] in PCH_COMPILER_OPTIONS.keys()):
+	if (conf.options.with_pch and conf.env['COMPILER_CXX'] in list(PCH_COMPILER_OPTIONS.keys())):
 		conf.env.WITH_PCH = True
 		flags = PCH_COMPILER_OPTIONS[conf.env['COMPILER_CXX']]
 		conf.env.CXXPCH_F = flags[0]

@@ -54,7 +54,7 @@ def check_same_targets(self):
 				check_task(tg)
 
 	dupe = False
-	for (k, v) in mp.items():
+	for (k, v) in list(mp.items()):
 		if len(v) > 1:
 			dupe = True
 			msg = '* Node %r is created more than once%s. The task generators are:' % (k, Logs.verbose == 1 and " (full message on 'waf -v -v')" or "")
@@ -67,7 +67,7 @@ def check_same_targets(self):
 			Logs.error('If you think that this is an error, set no_errcheck_out on the task instance')
 
 	if not dupe:
-		for (k, v) in uids.items():
+		for (k, v) in list(uids.items()):
 			if len(v) > 1:
 				Logs.error('* Several tasks use the same identifier. Please check the information on\n   https://waf.io/apidocs/Task.html?highlight=uid#waflib.Task.Task.uid')
 				tg_details = tsk.generator.name
@@ -80,11 +80,11 @@ def check_invalid_constraints(self):
 	feat = set()
 	for x in list(TaskGen.feats.values()):
 		feat.union(set(x))
-	for (x, y) in TaskGen.task_gen.prec.items():
+	for (x, y) in list(TaskGen.task_gen.prec.items()):
 		feat.add(x)
 		feat.union(set(y))
 	ext = set()
-	for x in TaskGen.task_gen.mappings.values():
+	for x in list(TaskGen.task_gen.mappings.values()):
 		ext.add(x.__name__)
 	invalid = ext & feat
 	if invalid:

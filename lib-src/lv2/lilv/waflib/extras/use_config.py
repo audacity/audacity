@@ -68,7 +68,7 @@ Remote directories for use with :py:const:`waflib.extras.use_config.remote_repo`
 try:
 	from urllib import request
 except ImportError:
-	from urllib import urlopen
+	from urllib.request import urlopen
 else:
 	urlopen = request.urlopen
 
@@ -78,7 +78,7 @@ from waflib import Errors, Context, Logs, Utils, Options, Configure
 try:
 	from urllib.parse import urlparse
 except ImportError:
-	from urlparse import urlparse
+	from urllib.parse import urlparse
 
 
 

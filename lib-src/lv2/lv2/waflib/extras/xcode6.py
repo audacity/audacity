@@ -125,7 +125,7 @@ def configure(self):
 	# Some build settings are required to be present by XCode. We will supply default values
 	# if user hasn't defined any.
 	defaults_required = [('PRODUCT_NAME', '$(TARGET_NAME)')]
-	for cfgname,settings in self.env.PROJ_CONFIGURATION.items():
+	for cfgname,settings in list(self.env.PROJ_CONFIGURATION.items()):
 		for default_var, default_val in defaults_required:
 			if default_var not in settings:
 				settings[default_var] = default_val
@@ -158,7 +158,7 @@ class XCodeNode(object):
 	def tostring(self, value):
 		if isinstance(value, dict):
 			result = "{\n"
-			for k,v in value.items():
+			for k,v in list(value.items()):
 				result = result + "\t\t\t%s = %s;\n" % (k, self.tostring(v))
 			result = result + "\t\t}"
 			return result
@@ -177,7 +177,7 @@ class XCodeNode(object):
 
 	def write_recursive(self, value, file):
 		if isinstance(value, dict):
-			for k,v in value.items():
+			for k,v in list(value.items()):
 				self.write_recursive(v, file)
 		elif isinstance(value, list):
 			for i in value:
@@ -188,13 +188,13 @@ class XCodeNode(object):
 	def write(self, file):
 		if not self._been_written:
 			self._been_written = True
-			for attribute,value in self.__dict__.items():
+			for attribute,value in list(self.__dict__.items()):
 				if attribute[0] != '_':
 					self.write_recursive(value, file)
 			w = file.write
 			w("\t%s = {\n" % self._id)
 			w("\t\tisa = %s;\n" % self.__class__.__name__)
-			for attribute,value in self.__dict__.items():
+			for attribute,value in list(self.__dict__.items()):
 				if attribute[0] != '_':
 					w("\t\t%s = %s;\n" % (attribute, self.tostring(value)))
 			w("\t};\n\n")
@@ -273,14 +273,14 @@ class PBXGroup(XCodeNode):
 
 		:param sources: list of PBXFileReferences objects
 		"""
-		self._filerefs.update(dict(zip(sources, sources)))
+		self._filerefs.update(dict(list(zip(sources, sources))))
 		self.children.extend(sources)
 
 	def get_sub_groups(self):
 		"""
 		Returns all child PBXGroup objects contained in this group
 		"""
-		return list(filter(lambda x: isinstance(x, PBXGroup), self.children))
+		return list([x for x in self.children if isinstance(x, PBXGroup)])
 
 	def find_fileref(self, fileref):
 		"""
@@ -419,7 +419,7 @@ class PBXProject(XCodeNode):
 
 		# Retrieve project configuration
 		configurations = []
-		for config_name, settings in env.PROJ_CONFIGURATION.items():
+		for config_name, settings in list(env.PROJ_CONFIGURATION.items()):
 			cf = XCBuildConfiguration(config_name, settings)
 			configurations.append(cf)
 
@@ -489,7 +489,7 @@ def process_xcode(self):
 	# Determine what type to build - framework, app bundle etc.
 	target_type = getattr(self, 'target_type', 'app')
 	if target_type not in TARGET_TYPES:
-		raise Errors.WafError("Target type '%s' does not exists. Available options are '%s'. In target '%s'" % (target_type, "', '".join(TARGET_TYPES.keys()), self.name))
+		raise Errors.WafError("Target type '%s' does not exists. Available options are '%s'. In target '%s'" % (target_type, "', '".join(list(TARGET_TYPES.keys())), self.name))
 	else:
 		target_type = TARGET_TYPES[target_type]
 	file_ext = target_type[2]
@@ -506,7 +506,7 @@ def process_xcode(self):
 	sources = getattr(self, 'source', [])
 	if hasattr(self, 'group_files'):
 		group_files = getattr(self, 'group_files', [])
-		for grpname,files in group_files.items():
+		for grpname,files in list(group_files.items()):
 			group = bld.create_group(grpname, files)
 			target_group.children.append(group)
 	else:
@@ -544,7 +544,7 @@ def process_xcode(self):
 			buildphase = PBXFrameworksBuildPhase([PBXBuildFile(use_target.productReference)])
 			target.add_build_phase(buildphase)
 			if lib in self.env.LIB:
-				self.env.LIB = list(filter(lambda x: x != lib, self.env.LIB))
+				self.env.LIB = list([x for x in self.env.LIB if x != lib])
 
 	# If 'export_headers' is present, add files to the Headers build phase in xcode.
 	# These are files that'll get packed into the Framework for instance.
@@ -591,14 +591,14 @@ def process_xcode(self):
 
 	# The keys represents different build configuration, e.g. Debug, Release and so on..
 	# Insert our generated build settings to all configuration names
-	keys = set(settings.keys() + bld.env.PROJ_CONFIGURATION.keys())
+	keys = set(list(settings.keys()) + list(bld.env.PROJ_CONFIGURATION.keys()))
 	for k in keys:
 		if k in settings:
 			settings[k].update(bldsettings)
 		else:
 			settings[k] = bldsettings
 
-	for k,v in settings.items():
+	for k,v in list(settings.items()):
 		target.add_configuration(XCBuildConfiguration(k, v))
 
 	p.add_target(target)

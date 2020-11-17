@@ -30,7 +30,7 @@ def print_presets(uri):
         preset_list.append((str(preset), str(label)))
 
     for preset in sorted(preset_list):
-        print('<%s> "%s"' % preset)
+        print(('<%s> "%s"' % preset))
 
 
 if __name__ == "__main__":

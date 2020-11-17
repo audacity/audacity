@@ -88,7 +88,7 @@ class doxygen(Task.Task):
 
 			# Override with any parameters passed to the task generator
 			if getattr(self.generator, 'pars', None):
-				for k, v in self.generator.pars.items():
+				for k, v in list(self.generator.pars.items()):
 					self.pars[k] = v
 
 			if self.pars.get('OUTPUT_DIRECTORY'):

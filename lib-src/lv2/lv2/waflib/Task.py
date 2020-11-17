@@ -957,7 +957,7 @@ def set_file_constraints(tasks):
 		for a in x.outputs:
 			outs[a].add(x)
 
-	links = set(ins.keys()).intersection(outs.keys())
+	links = set(ins.keys()).intersection(list(outs.keys()))
 	for k in links:
 		for a in ins[k]:
 			a.run_after.update(outs[k])

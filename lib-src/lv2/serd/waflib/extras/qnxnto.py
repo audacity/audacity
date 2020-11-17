@@ -36,7 +36,7 @@ class Popen(object):
 					print("Emulating")
 		except Exception as e:
 			if Popen.verbose:
-				print("Exception: %s" % e)
+				print(("Exception: %s" % e))
 			raise
 
 	def __getattr__(self, name):
@@ -57,7 +57,7 @@ class Popen(object):
 
 	def emu_wait(self):
 		if Popen.verbose:
-			print("emulated wait (%r kw=%r)" % (self.prog, self.kw))
+			print(("emulated wait (%r kw=%r)" % (self.prog, self.kw)))
 		if isinstance(self.prog, str):
 			cmd = self.prog
 		else:

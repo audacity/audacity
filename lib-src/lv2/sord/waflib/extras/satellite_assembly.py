@@ -49,7 +49,7 @@ def satellite_assembly(self):
 			tsk.env.append_value('ALFLAGS','/out:'+satellite.relpath())
 			self.source[i] = None
 	# remove the None elements that we just substituted
-	self.source = list(filter(lambda x:x, self.source))
+	self.source = list([x for x in self.source if x])
 
 def configure(ctx):
 	ctx.find_program('al', var='AL', mandatory=True)

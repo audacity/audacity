@@ -61,7 +61,7 @@ The detection uses pkg-config on Linux by default. To force static library detec
 QT5_XCOMPILE=1 QT5_FORCE_STATIC=1 waf configure
 """
 
-from __future__ import with_statement
+
 
 try:
 	from xml.sax import make_parser

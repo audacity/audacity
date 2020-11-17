@@ -138,7 +138,7 @@ class bld_proxy(object):
 				x = Build.cPickle.dumps(data, Build.PROTOCOL)
 			except Build.cPickle.PicklingError:
 				root = data['root']
-				for node_deps in data['node_deps'].values():
+				for node_deps in list(data['node_deps'].values()):
 					for idx, node in enumerate(node_deps):
 						# there may be more cross-context Node objects to fix,
 						# but this should be the main source

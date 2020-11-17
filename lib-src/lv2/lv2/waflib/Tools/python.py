@@ -317,7 +317,7 @@ def check_python_headers(conf, features='pyembed pyext'):
 	vals = ['%s = %r' % (x, y) for (x, y) in zip(v, lst)]
 	conf.to_log("Configuration returned from %r:\n%s\n" % (pybin, '\n'.join(vals)))
 
-	dct = dict(zip(v, lst))
+	dct = dict(list(zip(v, lst)))
 	x = 'MACOSX_DEPLOYMENT_TARGET'
 	if dct[x]:
 		env[x] = conf.environ[x] = dct[x]

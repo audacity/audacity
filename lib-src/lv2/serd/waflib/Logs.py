@@ -51,9 +51,9 @@ colors_lst = {
 indicator = '\r\x1b[K%s%s%s'
 
 try:
-	unicode
+	str
 except NameError:
-	unicode = None
+	str = None
 
 def enable_colors(use):
 	"""
@@ -182,12 +182,12 @@ class log_handler(logging.StreamHandler):
 		"""
 		self.terminator = getattr(record, 'terminator', '\n')
 		stream = self.stream
-		if unicode:
+		if str:
 			# python2
 			msg = self.formatter.format(record)
 			fs = '%s' + self.terminator
 			try:
-				if (isinstance(msg, unicode) and getattr(stream, 'encoding', None)):
+				if (isinstance(msg, str) and getattr(stream, 'encoding', None)):
 					fs = fs.decode(stream.encoding)
 					try:
 						stream.write(fs % msg)

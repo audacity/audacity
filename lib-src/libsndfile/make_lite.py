@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import commands, os, re, string, sys, time
+import subprocess, os, re, string, sys, time
 
 def count_enclosed_functions (source):
 	func_count = 0
@@ -14,7 +14,7 @@ def count_enclosed_functions (source):
 			if open_brace == close_brace:
 				func_count += 1
 		if open_brace < close_brace:
-			print "count_enclosed_functions : open_brace < close_brace"
+			print("count_enclosed_functions : open_brace < close_brace")
 			return -1
 	return func_count
 
@@ -61,7 +61,7 @@ def find_assign_statement (source, var_name):
 def remove_include (source, inc_name):
 	inc_text = find_include (source, inc_name)
 	if not inc_text:
-		print "remove_include : include '%s' not found. Exiting." % inc_name
+		print("remove_include : include '%s' not found. Exiting." % inc_name)
 		sys.exit (1)
 
 	source = string.replace (source, inc_text, "")
@@ -70,7 +70,7 @@ def remove_include (source, inc_name):
 def remove_assign (source, assign_name):
 	assign_text = find_assign (source, inc_name)
 	if not inc_text:
-		print "remove_include : include '%s' not found. Exiting." % inc_name
+		print("remove_include : include '%s' not found. Exiting." % inc_name)
 		sys.exit (1)
 
 	source = string.replace (source, inc_text, "")
@@ -79,7 +79,7 @@ def remove_assign (source, assign_name):
 def remove_prototype (source, proto_name):
 	proto_text = find_function_prototype (source, proto_name)
 	if not proto_text:
-		print "remove_prototype : prototype '%s' not found. Exiting." % proto_name
+		print("remove_prototype : prototype '%s' not found. Exiting." % proto_name)
 		sys.exit (1)
 
 	source = string.replace (source, proto_text, "")
@@ -88,7 +88,7 @@ def remove_prototype (source, proto_name):
 def remove_function (source, func_name):
 	func_text = find_function_definition (source, func_name)
 	if not func_text:
-		print "remove_function : function '%s' not found. Exiting." % func_name
+		print("remove_function : function '%s' not found. Exiting." % func_name)
 		sys.exit (1)
 
 	source = string.replace (source, func_text, "/* Function %s() removed here. */\n" % func_name)
@@ -101,7 +101,7 @@ def remove_all_assignments (source, var):
 		if not assign_text:
 			if count != 0:
 				break
-			print "remove_all_assignments : variable '%s' not found. Exiting." % var
+			print("remove_all_assignments : variable '%s' not found. Exiting." % var)
 			sys.exit (1)
 
 		source = string.replace (source, assign_text, "")
@@ -206,7 +206,7 @@ def fix_configure_ac_file (filename):
 
 
 def make_dist_file (package, version):
-	print "Making dist file."
+	print("Making dist file.")
 	tar_gz_file = "%s-%s.tar.gz" % (package, version)
 	if os.path.exists (tar_gz_file):
 		return
@@ -235,26 +235,26 @@ make_dist_file (conf_package, conf_version)
 
 os.chdir ("/tmp")
 
-print "Uncompressing .tar.gz file."
+print("Uncompressing .tar.gz file.")
 os.system ("rm -rf %s" % package_version)
 if os.system ("tar zxf %s/%s.tar.gz" % (source_dir, package_version)):
 	sys.exit (1)
 
 
-print "Renaming to libsndfile_lite."
+print("Renaming to libsndfile_lite.")
 os.system ("rm -rf %s" % lite_version)
 os.rename (package_version, lite_version)
 
-print "Changing into libsndfile_lite directory."
+print("Changing into libsndfile_lite directory.")
 os.chdir (lite_version)
 
-print "Removing un-neeed directories."
+print("Removing un-neeed directories.")
 delete_dirs = [ 'src/G72x' ]
 
 for dir_name in delete_dirs:
 	os.system ("rm -rf %s" % dir_name)
 
-print "Removing un-needed files."
+print("Removing un-needed files.")
 delete_files ([ 'src/ircam.c', 'src/nist.c',
 	'src/ima_adpcm.c', 'src/ms_adpcm.c', 'src/au_g72x.c',
 	'src/mat4.c', 'src/mat5.c', 'src/dwvw.c', 'src/paf.c',
@@ -265,7 +265,7 @@ delete_files ([ 'src/ircam.c', 'src/nist.c',
 	])
 
 
-print "Hacking 'configure.ac' and 'src/Makefile.am'."
+print("Hacking 'configure.ac' and 'src/Makefile.am'.")
 remove_strings_from_file ('configure.ac', [ 'src/G72x/Makefile' ])
 remove_strings_from_file ('src/Makefile.am', [ 'G72x/libg72x.la', 'G72x',
 		'ircam.c', 'nist.c', 'ima_adpcm.c', 'ms_adpcm.c', 'au_g72x.c', 'mat4.c', 
@@ -276,7 +276,7 @@ remove_strings_from_file ('src/Makefile.am', [ 'G72x/libg72x.la', 'G72x',
 
 #----------------------------------------------------------------------------
 
-print "Hacking header files."
+print("Hacking header files.")
 
 remove_protos_from_file ('src/common.h', [	'xi_open', 'sd2_open', 'ogg_open',
 	'dwvw_init', 'paf_open', 'svx_open', 'nist_open', 'rx2_open', 'mat4_open',
@@ -293,7 +293,7 @@ remove_protos_from_file ('src/wav_w64.h', [ 'msadpcm_write_adapt_coeffs' ])
 
 #----------------------------------------------------------------------------
 
-print "Hacking case statements."
+print("Hacking case statements.")
 
 remove_comment_start_end ('src/sndfile.c', '/* Lite remove start */' , '/* Lite remove end */')
 remove_comment_start_end ('src/aiff.c', '/* Lite remove start */' , '/* Lite remove end */')
@@ -307,7 +307,7 @@ remove_comment_start_end ('src/float32.c', '/* Lite remove start */' , '/* Lite 
 
 #----------------------------------------------------------------------------
 
-print "Hacking src/pcm.c."
+print("Hacking src/pcm.c.")
 remove_funcs_from_file ('src/pcm.c', [
 	'f2sc_array', 'f2sc_clip_array', 'f2uc_array', 'f2uc_clip_array',
 	'f2bes_array', 'f2bes_clip_array', 'f2les_array', 'f2les_clip_array',
@@ -341,7 +341,7 @@ remove_all_assignments_from_file ('src/pcm.c', [
 	'psf-\>read_float', 'psf\-\>read_double' ])
 
 #----------------------------------------------------------------------------
-print "Hacking src/ulaw.c."
+print("Hacking src/ulaw.c.")
 remove_funcs_and_protos_from_file ('src/ulaw.c', [
 	'ulaw_read_ulaw2f', 'ulaw_read_ulaw2d',
 	'ulaw_write_f2ulaw', 'ulaw_write_d2ulaw',
@@ -355,7 +355,7 @@ remove_all_assignments_from_file ('src/ulaw.c', [
 
 #----------------------------------------------------------------------------
 
-print "Hacking src/alaw.c."
+print("Hacking src/alaw.c.")
 remove_funcs_and_protos_from_file ('src/alaw.c', [
 	'alaw_read_alaw2f', 'alaw_read_alaw2d',
 	'alaw_write_f2alaw', 'alaw_write_d2alaw',
@@ -369,7 +369,7 @@ remove_all_assignments_from_file ('src/alaw.c', [
 
 #----------------------------------------------------------------------------
 
-print "Hacking src/gsm610.c."
+print("Hacking src/gsm610.c.")
 remove_funcs_and_protos_from_file ('src/gsm610.c', [
 	'gsm610_read_f', 'gsm610_read_d', 'gsm610_write_f', 'gsm610_write_d'
 	])
@@ -381,7 +381,7 @@ remove_all_assignments_from_file ('src/gsm610.c', [
 
 #----------------------------------------------------------------------------
 
-print "Hacking src/float32.c."
+print("Hacking src/float32.c.")
 
 # string_replace_in_file ('src/float32.c', '"float_cast.h"', '<math.h>')
 remove_funcs_from_file ('src/float32.c', [ 'float32_init'	])
@@ -399,7 +399,7 @@ remove_funcs_and_protos_from_file ('src/float32.c', [
 
 #----------------------------------------------------------------------------
 
-print "Hacking src/double64.c."
+print("Hacking src/double64.c.")
 remove_funcs_from_file ('src/double64.c', [ 'double64_init'	])
 
 remove_funcs_and_protos_from_file ('src/double64.c', [
@@ -415,7 +415,7 @@ remove_funcs_and_protos_from_file ('src/double64.c', [
 
 #----------------------------------------------------------------------------
 
-print "Hacking test programs."
+print("Hacking test programs.")
 delete_files ([ 'tests/dwvw_test.c', 'tests/floating_point_test.c', 
 	'tests/dft_cmp.c', 'tests/peak_chunk_test.c',
 	'tests/scale_clip_test.tpl', 'tests/scale_clip_test.def'
@@ -464,23 +464,23 @@ remove_comment_start_end ('tests/pipe_test.c', '/* Lite remove start */', '/* Li
 
 #----------------------------------------------------------------------------
 
-print "Fixing configure.ac file."
+print("Fixing configure.ac file.")
 fix_configure_ac_file ('configure.ac')
 
-print "Building and testing source."
+print("Building and testing source.")
 	# Try --disable-shared --disable-gcc-opt
 if os.system ("./reconfigure.mk && ./configure --disable-shared --disable-gcc-opt && make check"):
 	os.system ('PS1="FIX > " bash --norc')
 	sys.exit (1)
 
-print "Making distcheck"
+print("Making distcheck")
 if os.system ("make distcheck"):
 	os.system ('PS1="FIX > " bash --norc')
 	sys.exit (1)
 
-print "Copying tarball"
+print("Copying tarball")
 if os.system ("cp %s.tar.gz %s" % (lite_version, source_dir)):
-	print "??? %s.tar.gz ???" % lite_version
+	print("??? %s.tar.gz ???" % lite_version)
 	os.system ('PS1="FIX > " bash --norc')
 	sys.exit (1)
 
@@ -488,4 +488,4 @@ os.chdir (source_dir)
 
 os.system ("rm -rf /tmp/%s" % lite_version)
 
-print "Done."
+print("Done.")

@@ -51,7 +51,7 @@ def stale_rec(node, nodes):
 		return
 
 	if getattr(node, 'children', []):
-		for x in node.children.values():
+		for x in list(node.children.values()):
 			if x.name != "c4che":
 				stale_rec(x, nodes)
 	else:

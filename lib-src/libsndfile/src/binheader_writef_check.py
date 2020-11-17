@@ -48,11 +48,11 @@ def find_binheader_writefs (data):
 def find_format_string (s):
     fmt = re.search ('"([^"]+)"', s)
     if not fmt:
-        print ("Bad format in :\n\n\t%s\n\n" % s)
+        print(("Bad format in :\n\n\t%s\n\n" % s))
         sys.exit (1)
     fmt = fmt.groups ()
     if len (fmt) != 1:
-        print ("Bad format in :\n\n\t%s\n\n" % s)
+        print(("Bad format in :\n\n\t%s\n\n" % s))
         sys.exit (1)
     return _whitespace_re.sub ("", fmt [0])
 
@@ -91,7 +91,7 @@ def handle_file (fname):
                 continue
 
             if errors == 0: sys.stdout.write ("\n")
-            print ("\n%s: error for format specifier '%c' (index %d) in:\n    %s\n" % (fname, ch, param_index, item))
+            print(("\n%s: error for format specifier '%c' (index %d) in:\n    %s\n" % (fname, ch, param_index, item)))
             errors += 1
             # Break out of 'for ch in fmt' loop
             break
@@ -107,7 +107,7 @@ if len (sys.argv) > 1:
     for fname in sys.argv [1:]:
         errors += handle_file (fname)
     if errors > 0:
-        print ("\nErrors : %d\n" % errors)
+        print(("\nErrors : %d\n" % errors))
         sys.exit (1)
 
 print ("ok\n")

@@ -28,7 +28,7 @@ if Utils.is_win32:
 	INVALID_HANDLE_VALUE = -1
 	UPPER_FOLDERS = ('.', '..')
 	try:
-		UPPER_FOLDERS = [unicode(x) for x in UPPER_FOLDERS]
+		UPPER_FOLDERS = [str(x) for x in UPPER_FOLDERS]
 	except NameError:
 		pass
 

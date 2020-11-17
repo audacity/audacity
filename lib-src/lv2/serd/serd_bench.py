@@ -126,13 +126,13 @@ def run(progs, n_min, n_max, step):
                    'memory':     open('serdi-memory.txt', 'w')}
 
         # Write TSV header for all output files
-        for name, f in results.items():
+        for name, f in list(results.items()):
             write_header(f, progs)
 
         for n in range(n_min, n_max + step, step):
             # Add first column (n) to rows
             rows = {}
-            for name, _ in results.items():
+            for name, _ in list(results.items()):
                 rows[name] = [str(n)]
 
             # Run each program and fill rows with measurements
@@ -149,10 +149,10 @@ def run(progs, n_min, n_max, step):
                     rows['memory'] += [str(memory)]
 
             # Write rows to output files
-            for name, f in results.items():
+            for name, f in list(results.items()):
                 f.write('\t'.join(rows[name]) + '\n')
 
-        for name, f in results.items():
+        for name, f in list(results.items()):
             tsv_filename = 'serdi-%s.txt' % name
             sys.stderr.write('wrote %s\n' % tsv_filename)
 

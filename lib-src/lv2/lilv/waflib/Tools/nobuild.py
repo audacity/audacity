@@ -19,6 +19,6 @@ def build(bld):
 	def run(self):
 		for x in self.outputs:
 			x.write('')
-	for (name, cls) in Task.classes.items():
+	for (name, cls) in list(Task.classes.items()):
 		cls.run = run
 

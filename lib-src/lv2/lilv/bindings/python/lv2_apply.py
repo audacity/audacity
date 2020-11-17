@@ -68,7 +68,7 @@ def main():
     plugin_uri_node = world.new_uri(plugin_uri)
     plugins         = world.get_all_plugins()
     if plugin_uri_node not in plugins:
-        print("Unknown plugin `%s'" % plugin_uri)
+        print(("Unknown plugin `%s'" % plugin_uri))
         sys.exit(1)
 
     plugin      = plugins[plugin_uri_node]
@@ -82,26 +82,26 @@ def main():
     try:
         wav_in = WavFile(wav_in_path)
     except:
-        print("Failed to open input `%s'\n" % wav_in_path)
+        print(("Failed to open input `%s'\n" % wav_in_path))
         sys.exit(1)
 
     if wav_in.nchannels != n_audio_in:
-        print("Input has %d channels, but plugin has %d audio inputs\n" % (
-            wav_in.nchannels, n_audio_in))
+        print(("Input has %d channels, but plugin has %d audio inputs\n" % (
+            wav_in.nchannels, n_audio_in)))
         sys.exit(1)
 
     # Open output file
     wav_out = wave.open(wav_out_path, 'w')
     if not wav_out:
-        print("Failed to open output `%s'\n" % wav_out_path)
+        print(("Failed to open output `%s'\n" % wav_out_path))
         sys.exit(1)
 
     # Set output file to same format as input (except possibly nchannels)
     wav_out.setparams(wav_in.wav_in.getparams())
     wav_out.setnchannels(n_audio_out)
 
-    print('%s => %s => %s @ %d Hz'
-          % (wav_in_path, plugin.get_name(), wav_out_path, wav_in.framerate))
+    print(('%s => %s => %s @ %d Hz'
+          % (wav_in_path, plugin.get_name(), wav_out_path, wav_in.framerate)))
 
     instance = lilv.Instance(plugin, wav_in.framerate)
 

@@ -91,7 +91,7 @@ class task_gen(object):
 			except AttributeError:
 				self.tg_idx_count = self.bld.tg_idx_count = 1
 
-		for key, val in kw.items():
+		for key, val in list(kw.items()):
 			setattr(self, key, val)
 
 	def __str__(self):
@@ -193,7 +193,7 @@ class task_gen(object):
 		# elements disconnected
 		tmp = []
 		for a in keys:
-			for x in prec.values():
+			for x in list(prec.values()):
 				if a in x:
 					break
 			else:
@@ -223,7 +223,7 @@ class task_gen(object):
 
 		if prec:
 			buf = ['Cycle detected in the method execution:']
-			for k, v in prec.items():
+			for k, v in list(prec.items()):
 				buf.append('- %s after %s' % (k, [x for x in v if x in prec]))
 			raise Errors.WafError('\n'.join(buf))
 		self.meths = out

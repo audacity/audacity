@@ -80,7 +80,7 @@ class opt_parser(optparse.OptionParser):
 			cmds_str[cls.cmd] = s
 
 		if Context.g_module:
-			for (k, v) in Context.g_module.__dict__.items():
+			for (k, v) in list(Context.g_module.__dict__.items()):
 				if k in ('options', 'init', 'shutdown'):
 					continue
 
@@ -92,7 +92,7 @@ class opt_parser(optparse.OptionParser):
 		for k in cmds_str:
 			just = max(just, len(k))
 
-		lst = ['  %s: %s' % (k.ljust(just), v) for (k, v) in cmds_str.items()]
+		lst = ['  %s: %s' % (k.ljust(just), v) for (k, v) in list(cmds_str.items())]
 		lst.sort()
 		ret = '\n'.join(lst)
 

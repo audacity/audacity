@@ -21,10 +21,10 @@ import unittest
 path = os.path.abspath("bindings/bindings_test_plugin.lv2/")
 
 if sys.version_info[0] == 2:
-    import urllib
-    import urlparse
+    import urllib.request, urllib.parse, urllib.error
+    import urllib.parse
 
-    location = urlparse.urljoin("file:", urllib.pathname2url(path) + "/")
+    location = urllib.parse.urljoin("file:", urllib.request.pathname2url(path) + "/")
 else:
     from urllib.parse import urljoin
     from urllib.request import pathname2url

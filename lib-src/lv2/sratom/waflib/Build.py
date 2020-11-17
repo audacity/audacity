@@ -11,7 +11,7 @@ The inheritance tree is the following:
 
 import os, sys, errno, re, shutil, stat
 try:
-	import cPickle
+	import pickle
 except ImportError:
 	import pickle as cPickle
 from waflib import Node, Runner, TaskGen, Utils, ConfigSet, Task, Logs, Options, Context, Errors
@@ -288,7 +288,7 @@ class BuildContext(Context.Context):
 				Node.pickle_lock.acquire()
 				Node.Nod3 = self.node_class
 				try:
-					data = cPickle.loads(data)
+					data = pickle.loads(data)
 				except Exception as e:
 					Logs.debug('build: Could not pickle the build cache %s: %r', dbfn, e)
 				else:
@@ -312,7 +312,7 @@ class BuildContext(Context.Context):
 		try:
 			Node.pickle_lock.acquire()
 			Node.Nod3 = self.node_class
-			x = cPickle.dumps(data, PROTOCOL)
+			x = pickle.dumps(data, PROTOCOL)
 		finally:
 			Node.pickle_lock.release()
 
@@ -1332,7 +1332,7 @@ class CleanContext(BuildContext):
 		elif self.bldnode != self.srcnode:
 			# would lead to a disaster if top == out
 			lst = []
-			for env in self.all_envs.values():
+			for env in list(self.all_envs.values()):
 				lst.extend(self.root.find_or_declare(f) for f in env[CFG_FILES])
 			excluded_dirs = '.lock* *conf_check_*/** config.log %s/*' % CACHE_DIR
 			for n in self.bldnode.ant_glob('**/*', excl=excluded_dirs, quiet=True):

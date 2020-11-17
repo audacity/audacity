@@ -28,7 +28,7 @@ class log_to_file(object):
 		self.filename = filename
 		self.is_valid = True
 	def replace_colors(self, data):
-		for x in Logs.colors_lst.values():
+		for x in list(Logs.colors_lst.values()):
 			if isinstance(x, str):
 				data = data.replace(x, '')
 		return data

@@ -9,12 +9,12 @@ The portability fixes try to provide a consistent behavior of the Waf API
 through Python versions 2.5 to 3.X and across different platforms (win32, linux, etc)
 """
 
-from __future__ import with_statement
+
 
 import atexit, os, sys, errno, inspect, re, datetime, platform, base64, signal, functools, time
 
 try:
-	import cPickle
+	import pickle
 except ImportError:
 	import pickle as cPickle
 
@@ -36,7 +36,7 @@ except AttributeError:
 from collections import deque, defaultdict
 
 try:
-	import _winreg as winreg
+	import winreg as winreg
 except ImportError:
 	try:
 		import winreg
@@ -150,13 +150,13 @@ class lru_cache(object):
 			return node.val
 
 		# detach the node found
-		node.prev.next = node.next
+		node.prev.next = node.__next__
 		node.next.prev = node.prev
 
 		# replace the head
-		node.next = self.head.next
+		node.next = self.head.__next__
 		node.prev = self.head
-		self.head = node.next.prev = node.prev.next = node
+		self.head = node.next.prev = node.prev.__next__ = node
 
 		return node.val
 
@@ -171,10 +171,10 @@ class lru_cache(object):
 				# the very first item is unused until the maximum is reached
 				node = lru_node()
 				node.prev = self.head
-				node.next = self.head.next
+				node.next = self.head.__next__
 				node.prev.next = node.next.prev = node
 			else:
-				node = self.head = self.head.next
+				node = self.head = self.head.__next__
 				try:
 					# that's another key
 					del self.table[node.key]
@@ -551,7 +551,7 @@ def def_attrs(cls, **kw):
 	:type kw: dict
 	:param kw: dictionary of attributes names and values.
 	"""
-	for k, v in kw.items():
+	for k, v in list(kw.items()):
 		if not hasattr(cls, k):
 			setattr(cls, k, v)
 
@@ -880,7 +880,7 @@ def run_prefork_process(cmd, kwargs, cargs):
 	if not 'env' in kwargs:
 		kwargs['env'] = dict(os.environ)
 	try:
-		obj = base64.b64encode(cPickle.dumps([cmd, kwargs, cargs]))
+		obj = base64.b64encode(pickle.dumps([cmd, kwargs, cargs]))
 	except (TypeError, AttributeError):
 		return run_regular_process(cmd, kwargs, cargs)
 
@@ -896,7 +896,7 @@ def run_prefork_process(cmd, kwargs, cargs):
 		raise OSError('Preforked sub-process %r died' % proc.pid)
 
 	process_pool.append(proc)
-	lst = cPickle.loads(base64.b64decode(obj))
+	lst = pickle.loads(base64.b64decode(obj))
 	# Jython wrapper failures (bash/execvp)
 	assert len(lst) == 5
 	ret, out, err, ex, trace = lst

@@ -127,7 +127,7 @@ def setup_msvc(conf, versiondict):
 		lazy_detect = False
 
 	if not lazy_detect:
-		for val in versiondict.values():
+		for val in list(versiondict.values()):
 			for arch in list(val.keys()):
 				cfg = val[arch]
 				cfg.evaluate()

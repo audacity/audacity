@@ -366,7 +366,7 @@ except TypeError:
 
 def stealth_write(self, data, flags='wb'):
 	try:
-		unicode
+		str
 	except NameError:
 		data = data.encode('utf-8') # python 3
 	else:

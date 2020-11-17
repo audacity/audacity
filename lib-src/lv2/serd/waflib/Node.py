@@ -220,7 +220,7 @@ class Node(object):
 		object_pairs_hook = None
 		if convert and sys.hexversion < 0x3000000:
 			try:
-				_type = unicode
+				_type = str
 			except NameError:
 				_type = str
 

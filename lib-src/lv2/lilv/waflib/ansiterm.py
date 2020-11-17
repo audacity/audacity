@@ -60,7 +60,7 @@ else:
 		_fields_ = [('dwSize', c_ulong), ('bVisible', c_int)]
 
 	try:
-		_type = unicode
+		_type = str
 	except NameError:
 		_type = str
 

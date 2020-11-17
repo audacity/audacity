@@ -6,7 +6,7 @@
 C/C++/D configuration helpers
 """
 
-from __future__ import with_statement
+
 
 import os, re, shlex
 from waflib import Build, Utils, Task, Options, Logs, Errors, Runner
@@ -299,7 +299,7 @@ def exec_cfg(self, kw):
 	defi = kw.get('define_variable')
 	if not defi:
 		defi = self.env.PKG_CONFIG_DEFINES or {}
-	for key, val in defi.items():
+	for key, val in list(defi.items()):
 		lst.append('--define-variable=%s=%s' % (key, val))
 
 	static = kw.get('force_static', False)
@@ -383,7 +383,7 @@ def build_fun(bld):
 
 	o = bld(features=bld.kw['features'], source=bld.kw['compile_filename'], target='testprog')
 
-	for k, v in bld.kw.items():
+	for k, v in list(bld.kw.items()):
 		setattr(o, k, v)
 
 	if not bld.kw.get('quiet'):

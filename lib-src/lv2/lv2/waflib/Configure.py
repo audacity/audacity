@@ -534,7 +534,7 @@ def run_build(self, *k, **kw):
 		$ waf configure --confcache
 
 	"""
-	lst = [str(v) for (p, v) in kw.items() if p != 'env']
+	lst = [str(v) for (p, v) in list(kw.items()) if p != 'env']
 	h = Utils.h_list(lst)
 	dir = self.bldnode.abspath() + os.sep + (not Utils.is_win32 and '.' or '') + 'conf_check_' + Utils.to_hex(h)
 

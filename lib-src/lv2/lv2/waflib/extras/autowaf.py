@@ -93,7 +93,7 @@ def set_options(opt, debug_by_default=False, test=False):
     g_step = 1
 
 def add_flags(opt, flags):
-    for name, desc in flags.items():
+    for name, desc in list(flags.items()):
         opt.add_option('--' + name, action='store_true',
                        dest=name.replace('-', '_'), help=desc)
 
@@ -476,16 +476,14 @@ def display_msg(conf, msg, status=None, color=None):
     Logs.pprint(color, status)
 
 def display_msgs(conf, msgs):
-    for k, v in msgs.items():
+    for k, v in list(msgs.items()):
         display_msg(conf, k, v)
 
 def link_flags(env, lib):
-    return ' '.join(map(lambda x: env['LIB_ST'] % x,
-                        env['LIB_' + lib]))
+    return ' '.join([env['LIB_ST'] % x for x in env['LIB_' + lib]])
 
 def compile_flags(env, lib):
-    return ' '.join(map(lambda x: env['CPPPATH_ST'] % x,
-                        env['INCLUDES_' + lib]))
+    return ' '.join([env['CPPPATH_ST'] % x for x in env['INCLUDES_' + lib]])
 
 def set_recursive():
     global g_is_child
@@ -1025,7 +1023,7 @@ def write_news(entries, out_file):
         return
 
     news = open(out_file, 'w')
-    for e in sorted(entries.keys(), reverse=True):
+    for e in sorted(list(entries.keys()), reverse=True):
         entry = entries[e]
         news.write('%s (%s) %s;\n' % (entry['name'], entry['revision'], entry['status']))
         for item in entry['items']:

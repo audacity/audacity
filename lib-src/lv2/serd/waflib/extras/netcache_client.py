@@ -357,7 +357,7 @@ def setup_netcache(ctx, push_addr, pull_addr):
 	Build.BuildContext.hash_env_vars = hash_env_vars
 	ctx.cache_global = True
 
-	for x in Task.classes.values():
+	for x in list(Task.classes.values()):
 		make_cached(x)
 
 def build(bld):

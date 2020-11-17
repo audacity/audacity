@@ -194,7 +194,7 @@ def process_enums(self):
 		           'value-prod' : '--vprod',
 		           'value-tail' : '--vtail',
 		           'comments': '--comments'}
-		for param, option in params.items():
+		for param, option in list(params.items()):
 			if enum[param]:
 				options.append('%s %r' % (option, enum[param]))
 

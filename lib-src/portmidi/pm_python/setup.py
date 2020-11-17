@@ -142,7 +142,7 @@ PACKAGEDATA.update(EXTRAS)
 
 
 if sys.platform == 'win32':
-    print "Found Win32 platform"
+    print("Found Win32 platform")
     EXTENSION = dict(
         ext_modules=[ 
             Extension("pyportmidi._pyportmidi", [os.path.join("pyportmidi", "_pyportmidi.pyx")],
@@ -154,7 +154,7 @@ if sys.platform == 'win32':
         ]
     )
 elif sys.platform == 'darwin':
-    print "Found darwin (OS X) platform"
+    print("Found darwin (OS X) platform")
     library_dirs = ["/usr/local/lib"]
     include_dirs = ["/usr/local/include"]
     EXTENSION = dict(
@@ -169,7 +169,7 @@ elif sys.platform == 'darwin':
         ]
     )
 else:
-    print "Assuming Linux platform"
+    print("Assuming Linux platform")
     EXTENSION = dict(
         ext_modules=[ 
             Extension("pyportmidi._pyportmidi", [os.path.join("pyportmidi", "_pyportmidi.pyx")],

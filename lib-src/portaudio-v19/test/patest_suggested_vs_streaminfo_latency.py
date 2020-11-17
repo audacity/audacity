@@ -92,7 +92,7 @@ isFirst = True
 
 for framesPerBuffer in compositeTestFramesPerBufferValues:
     commandString = testExeName + " " + str(inputDeviceIndex) + " " + str(outputDeviceIndex) + " " + str(sampleRate) + " " + str(framesPerBuffer) + ' > ' + dataFileName
-    print commandString
+    print(commandString)
     os.system(commandString)
 
     d = loadCsvData(dataFileName)

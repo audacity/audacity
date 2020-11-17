@@ -172,7 +172,7 @@ def write_text_news(entries, news):
     """Write NEWS in standard Debian changelog format"""
     import textwrap
 
-    revisions = sorted(entries.keys(), reverse=True)
+    revisions = sorted(list(entries.keys()), reverse=True)
     for r in revisions:
         e = entries[r]
         summary = "%s (%s) %s" % (e["name"], e["revision"], e["status"])
@@ -292,7 +292,7 @@ def write_ttl_news(entries, out_file, template=None, subject_uri=None):
 
     maintainer = g.value(subject, doap.maintainer, None)
 
-    for r, e in entries.items():
+    for r, e in list(entries.items()):
         semver = parse_version(e["revision"])
         ver_string = "%03d%03d%03d" % semver
 
@@ -338,7 +338,7 @@ def read_news(path=None, format="NEWS", unsorted=False, utc=True, top=None):
         entries = read_ttl_news(info["name"], [path])
 
     if not unsorted:
-        for r, e in entries.items():
+        for r, e in list(entries.items()):
             e["items"] = list(sorted(e["items"]))
 
     return entries
@@ -412,7 +412,7 @@ def write_posts(entries, out_dir, meta={}):
     except Exception:
         pass
 
-    for r, e in entries.items():
+    for r, e in list(entries.items()):
         name = e["name"]
         revision = e["revision"]
         if "dist" not in e:
@@ -467,7 +467,7 @@ def release(args, posts_dir=None, remote_dist_dir=None, dist_name=None):
 
     def run_cmd(cmd):
         if args.dry_run:
-            print(" ".join([shlex.quote(i) for i in cmd]))
+            print((" ".join([shlex.quote(i) for i in cmd])))
 
     info = get_project_info()
     name = info["name"]

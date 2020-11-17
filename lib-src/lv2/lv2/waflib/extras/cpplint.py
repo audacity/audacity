@@ -35,7 +35,7 @@ When using this tool, the wscript will look like:
         bld(features='cpplint', source=bld.path.ant_glob('**/*.hpp'))
 '''
 
-from __future__ import absolute_import
+
 import sys, re
 import logging
 from waflib import Errors, Task, TaskGen, Logs, Options, Node, Utils
@@ -187,7 +187,7 @@ def cpplint_includes(self, node):
 @TaskGen.before_method('process_source')
 def post_cpplint(self):
     if not self.env.CPPLINT_INITIALIZED:
-        for key, value in Options.options.__dict__.items():
+        for key, value in list(Options.options.__dict__.items()):
             if not key.startswith('CPPLINT_') or self.env[key]:
                 continue
             self.env[key] = value

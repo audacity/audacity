@@ -10,9 +10,9 @@ import heapq, traceback
 try:
 	from queue import Queue, PriorityQueue
 except ImportError:
-	from Queue import Queue
+	from queue import Queue
 	try:
-		from Queue import PriorityQueue
+		from queue import PriorityQueue
 	except ImportError:
 		class PriorityQueue(Queue):
 			def _init(self, maxsize):
@@ -325,7 +325,7 @@ class Parallel(object):
 				if isinstance(x, Task.TaskGroup):
 					x.prev.remove(tsk)
 					if not x.prev:
-						for k in x.next:
+						for k in x.__next__:
 							# TODO necessary optimization?
 							k.run_after.remove(x)
 							try_unfreeze(k)
@@ -558,7 +558,7 @@ class Parallel(object):
 		# the priority number is not the tree depth
 		def visit(n):
 			if isinstance(n, Task.TaskGroup):
-				return sum(visit(k) for k in n.next)
+				return sum(visit(k) for k in n.__next__)
 
 			if n.visited == 0:
 				n.visited = 1
@@ -601,7 +601,7 @@ class Parallel(object):
 
 		def visit(n, acc):
 			if isinstance(n, Task.TaskGroup):
-				for k in n.next:
+				for k in n.__next__:
 					visit(k, acc)
 				return
 			if tmp[n] == 0:

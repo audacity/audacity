@@ -205,7 +205,7 @@ class eclipse(Build.BuildContext):
 			self.write_conf_to_xml('%s%s%s'%(extbuilder_dir, os.path.sep, extbuilder_name), builder)
 
 
-		for k, v in dictionaries.items():
+		for k, v in list(dictionaries.items()):
 			self.addDictionary(doc, arguments, k, v)
 
 		natures = self.add(doc, projectDescription, 'natures')
@@ -426,6 +426,6 @@ class eclipse(Build.BuildContext):
 		return el
 
 	def setAttributes(self, node, attrs):
-		for k, v in attrs.items():
+		for k, v in list(attrs.items()):
 			node.setAttribute(k, v)
 

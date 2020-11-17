@@ -17,7 +17,7 @@ The build will then output a file named pdebug.svg in the source directory.
 
 import re, sys, threading, time, traceback
 try:
-	from Queue import Queue
+	from queue import Queue
 except:
 	from queue import Queue
 from waflib import Runner, Options, Task, Logs, Errors
@@ -276,7 +276,7 @@ def set_running(self, by, tsk):
 
 		i = 0
 		if by > 0:
-			vals = cache.values()
+			vals = list(cache.values())
 			for i in range(self.numjobs):
 				if i not in vals:
 					cache[tsk] = i
@@ -335,14 +335,14 @@ def make_picture(producer):
 	st = {}
 	for l in tmp:
 		if not l[0] in st:
-			st[l[0]] = len(st.keys())
+			st[l[0]] = len(list(st.keys()))
 	tmp = [  [st[lst[0]]] + lst[1:] for lst in tmp ]
-	THREAD_AMOUNT = len(st.keys())
+	THREAD_AMOUNT = len(list(st.keys()))
 
 	st = {}
 	for l in tmp:
 		if not l[1] in st:
-			st[l[1]] = len(st.keys())
+			st[l[1]] = len(list(st.keys()))
 	tmp = [  [lst[0]] + [st[lst[1]]] + lst[2:] for lst in tmp ]
 
 

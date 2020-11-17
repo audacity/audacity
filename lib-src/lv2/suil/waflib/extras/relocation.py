@@ -47,10 +47,10 @@ def init_dirs(self):
 		d = self.root.find_node(srcdir)
 		if d and srcdir != self.top_dir and getattr(d, 'children', ''):
 			srcnode = self.root.make_node(self.top_dir)
-			print("relocating the source directory %r -> %r" % (srcdir, self.top_dir))
+			print(("relocating the source directory %r -> %r" % (srcdir, self.top_dir)))
 			srcnode.children = {}
 
-			for (k, v) in d.children.items():
+			for (k, v) in list(d.children.items()):
 				srcnode.children[k] = v
 				v.parent = srcnode
 			d.children = {}

@@ -368,13 +368,13 @@ class cppcheck(Task.Task):
 
 	def _create_html_table(self, content, files):
 		table = ElementTree.fromstring(CPPCHECK_HTML_TABLE)
-		for name, val in files.items():
+		for name, val in list(files.items()):
 			f = val['htmlfile']
 			s = '<tr><td colspan="4"><a href="%s">%s</a></td></tr>\n' % (f,name)
 			row = ElementTree.fromstring(s)
 			table.append(row)
 
-			errors = sorted(val['errors'], key=lambda e: int(e['line']) if 'line' in e else sys.maxint)
+			errors = sorted(val['errors'], key=lambda e: int(e['line']) if 'line' in e else sys.maxsize)
 			for e in errors:
 				if not 'line' in e:
 					s = '<tr><td></td><td>%s</td><td>%s</td><td>%s</td></tr>\n' % (e['id'], e['severity'], e['msg'])

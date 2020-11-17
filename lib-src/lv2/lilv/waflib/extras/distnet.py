@@ -11,14 +11,14 @@ Caching files from a server has advantages over a NFS/Samba shared folder:
 - permissions are much simpler to manage
 """
 
-import os, urllib, tarfile, re, shutil, tempfile, sys
+import os, urllib.request, urllib.parse, urllib.error, tarfile, re, shutil, tempfile, sys
 from collections import OrderedDict
 from waflib import Context, Utils, Logs
 
 try:
 	from urllib.parse import urlencode
 except ImportError:
-	urlencode = urllib.urlencode
+	urlencode = urllib.parse.urlencode
 
 def safe_urlencode(data):
 	x = urlencode(data)
@@ -31,12 +31,12 @@ def safe_urlencode(data):
 try:
 	from urllib.error import URLError
 except ImportError:
-	from urllib2 import URLError
+	from urllib.error import URLError
 
 try:
 	from urllib.request import Request, urlopen
 except ImportError:
-	from urllib2 import Request, urlopen
+	from urllib.request import Request, urlopen
 
 DISTNETCACHE = os.environ.get('DISTNETCACHE', '/tmp/distnetcache')
 DISTNETSERVER = os.environ.get('DISTNETSERVER', 'http://localhost:8000/cgi-bin/')

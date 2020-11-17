@@ -107,7 +107,7 @@ if __name__ == '__main__':
     'LV2 plugin documentation generator'
 
     if len(sys.argv) < 2:
-        print('Usage: %s OUTDIR FILE...' % sys.argv[0])
+        print(('Usage: %s OUTDIR FILE...' % sys.argv[0]))
         sys.exit(1)
 
     outdir = sys.argv[1]
@@ -132,7 +132,7 @@ if __name__ == '__main__':
             else:
                 raise
 
-            print('Writing <%s> documentation to %s' % (plugin, outpath))
+            print(('Writing <%s> documentation to %s' % (plugin, outpath)))
             out = open(outpath, 'w')
             out.write(html)
             out.close()

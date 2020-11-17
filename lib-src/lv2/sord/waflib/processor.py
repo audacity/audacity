@@ -4,7 +4,7 @@
 
 import os, sys, traceback, base64, signal
 try:
-	import cPickle
+	import pickle
 except ImportError:
 	import pickle as cPickle
 
@@ -24,7 +24,7 @@ def run():
 	if not txt:
 		# parent process probably ended
 		sys.exit(1)
-	[cmd, kwargs, cargs] = cPickle.loads(base64.b64decode(txt))
+	[cmd, kwargs, cargs] = pickle.loads(base64.b64decode(txt))
 	cargs = cargs or {}
 
 	if not 'close_fds' in kwargs:
@@ -55,7 +55,7 @@ def run():
 
 	# it is just text so maybe we do not need to pickle()
 	tmp = [ret, out, err, ex, trace]
-	obj = base64.b64encode(cPickle.dumps(tmp))
+	obj = base64.b64encode(pickle.dumps(tmp))
 	sys.stdout.write(obj.decode())
 	sys.stdout.write('\n')
 	sys.stdout.flush()
