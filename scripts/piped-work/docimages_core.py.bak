@@ -23,12 +23,12 @@ def startPipes() :
         fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
         EOL = '\n'
 
-    print(( "Write to  \"" + toname +"\"" ))
+    print( "Write to  \"" + toname +"\"" )
     if not os.path.exists( toname ) :
        print( " ..does not exist.  Ensure Audacity is running with mod-script-pipe." )
        sys.exit();
         
-    print(( "Read from \"" + fromname +"\""))
+    print( "Read from \"" + fromname +"\"")
     if not os.path.exists( fromname ) :
        print( " ..does not exist.  Ensure Audacity is running with mod-script-pipe." )
        sys.exit();
@@ -44,7 +44,7 @@ def startPipes() :
 def sendCommand( command ) :
     global tofile
     global EOL
-    print(( "Send: >>> \n"+command ))
+    print( "Send: >>> \n"+command )
     tofile.write( command + EOL )	
     tofile.flush()
 
@@ -61,7 +61,7 @@ def getResponse() :
 def doCommand( command ) :
     sendCommand( command )
     response = getResponse()
-    print(( "Rcvd: <<< \n" + response ))
+    print( "Rcvd: <<< \n" + response )
     return response
 
 def do( command ) :
@@ -93,7 +93,7 @@ def setup() :
     do( 'SetProject: X=10 Y=10 Width=910 Height=800' )
 
 def imageSet(name):
-    print(("****************** " + name + " ***************************"))
+    print("****************** " + name + " ***************************")
 
 def makeWayForTracks(  ) :
     do( 'Select: TrackCount=20' )

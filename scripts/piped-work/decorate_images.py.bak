@@ -70,7 +70,7 @@ def process_one( name ):
     #---- End of image processing steps
     
     path, fname = os.path.split( name )
-    print(( "Name:", fname, " Size:", image.size ))
+    print( "Name:", fname, " Size:", image.size )
     image.save( "/".join( (dest, fname )) )
 
 

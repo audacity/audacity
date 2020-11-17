@@ -34,16 +34,16 @@ import json
 #PATH = './'
 PATH = ""
 while not os.path.isdir(PATH):
-    PATH = os.path.realpath(eval(input('Path to test folder: ')))
+    PATH = os.path.realpath(input('Path to test folder: '))
     if not os.path.isdir(PATH):
         print('Invalid path. Try again.')
-print(('Test folder: ' + PATH))
+print('Test folder: ' + PATH)
 
 
 #INFILE = "testfile.wav"
 INFILE = ""
 while not os.path.isfile(os.path.join(PATH, INFILE)):
-    INFILE = eval(input('Name of input WAV file: '))
+    INFILE = input('Name of input WAV file: ')
     # Ensure we have the .wav extension.
     INFILE = os.path.splitext(INFILE)[0] + '.wav'
     if not os.path.isfile(os.path.join(PATH, INFILE)):
@@ -67,13 +67,13 @@ else:
     EOL = '\n'
 
 
-print(("Write to  \"" + PIPE_TO_AUDACITY +"\""))
+print("Write to  \"" + PIPE_TO_AUDACITY +"\"")
 if not os.path.exists(PIPE_TO_AUDACITY):
     print(""" ..does not exist.
     Ensure Audacity is running with mod-script-pipe.""")
     sys.exit()
 
-print(("Read from \"" + PIPE_FROM_AUDACITY +"\""))
+print("Read from \"" + PIPE_FROM_AUDACITY +"\"")
 if not os.path.exists(PIPE_FROM_AUDACITY):
     print(""" ..does not exist.
     Ensure Audacity is running with mod-script-pipe.""")
@@ -89,7 +89,7 @@ print("-- File to read from has now been opened too\r\n")
 
 def send_command(command):
     """Send a command to Audacity."""
-    print(("Send: >>> "+command))
+    print("Send: >>> "+command)
     TOPIPE.write(command + EOL)
     TOPIPE.flush()
 
@@ -111,7 +111,7 @@ def do_command(command):
     send_command(command)
     # time.sleep(0.1) # may be required on slow machines
     response = get_response()
-    print(("Rcvd: <<< " + response))
+    print("Rcvd: <<< " + response)
     return response
 
 

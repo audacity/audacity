@@ -568,10 +568,10 @@ def url_open(url):
         if L[1] != domain:
             conn.close()
             if L[1] == '': return(['',''])
-            print(("connection to", domain, "closed."))
+            print("connection to", domain, "closed.")
             conn = http.client.HTTPSConnection(L[1])
             domain = L[1]
-            print(("connection to", domain, "opened."))
+            print("connection to", domain, "opened.")
 
         rel_url = url
         pos = url.find(domain)
@@ -590,7 +590,7 @@ def url_open(url):
             try:
                 conn.request("GET", rel_url,headers=headers)
                 r = conn.getresponse()
-                print(('Status', r.status, r.reason, 'accessing', rel_url))
+                print('Status', r.status, r.reason, 'accessing', rel_url)
                 if r.status == 404:
                     print("   it's not possible to recover this error.")
                     errors += 1
@@ -610,11 +610,11 @@ def url_open(url):
                 if attempts != 0:
                     recovered = True
                 if r.status != 200:
-                    print(("      Status other than 200, 404, 500, 403. It is: ", r.status))
+                    print("      Status other than 200, 404, 500, 403. It is: ", r.status)
                 success = True
 
             except http.client.HTTPException as e:
-                print(('ERROR', e.__class__.__name__, 'while retrieving', url))
+                print('ERROR', e.__class__.__name__, 'while retrieving', url)
                 conn.close
                 if e.__class__.__name__ in ['BadStatusLine', 'ImproperConnectionState', 'NotConnected', 'IncompleteRead', 'ResponseNotReady']:
                     print("eventually this error might be recovered. let's try again.")
@@ -843,28 +843,28 @@ def should_follow(url):
     #if droot != dn and not (dn.endswith(droot) or droot.endswith(dn)):
     if droot != dn:
         if config.debug:
-            print((url, 'not in the same domain'))
+            print(url, 'not in the same domain')
         return False
 
     # False if multiple query fields or parameters found
     if (url.count('&') >= 1 or url.count(';') > 0) and not any(x in url for x in ('.css', 'gen=css')):
         if config.debug:
-            print((url, 'with multiple query fields'))
+            print(url, 'with multiple query fields')
         return False
 
     if any(x in url for x in ('Special:', 'Image:', 'Talk:', 'User:', 'Help:', 'User_talk:', 'MediaWiki_talk:', 'File:', 'action=edit', 'title=-')):
         if config.debug:
-            print((url, 'is a forbidden wiki page'))
+            print(url, 'is a forbidden wiki page')
         return False
 
     if config.no_images and any(url.strip().lower().endswith(suffix) for suffix in ('.jpg', '.gif', '.png', '.ico')):
         if config.debug:
-            print((url, 'is a image and you are in no-images mode'))
+            print(url, 'is a image and you are in no-images mode')
         return False
 
     if any(url.strip().lower().endswith(suffix) for suffix in ('.zip', '.7z')):
         if config.debug:
-            print((url, 'is a compressed file'))
+            print(url, 'is a compressed file')
         return False
 
 
@@ -875,7 +875,7 @@ def should_follow(url):
         L = nurl.split('/')
         if ('.' not in L[-1]):
             if config.debug:
-                print((url, 'is a file outside of scope with unknown extension'))
+                print(url, 'is a file outside of scope with unknown extension')
             return False
 
         # JKC: we do allow css from 'strange' places.
@@ -886,7 +886,7 @@ def should_follow(url):
         for fp in forbidden_parents:
             if fp in L[-1]:
                 if config.debug:
-                    print((url, 'is a page outside of scope'))
+                    print(url, 'is a page outside of scope')
                 return False
 
     return True
@@ -922,7 +922,7 @@ def parse_html(doc, url, filename):
         follow = should_follow(u) #and (counter < 10)
         if follow:
             if config.debug:
-                print(('ACCEPTED   - ', u))
+                print('ACCEPTED   - ', u)
             # Store url locally.
             new_urls += [u]
             item.url = url_to_relative(u, url)
@@ -931,7 +931,7 @@ def parse_html(doc, url, filename):
             # if not any( license in u for license in ('creativecommons.org', 'wxwidgets.org', 'gnu.org', 'mediawiki.org') ):
             #  item.url = ''
             if config.debug:
-                print(('NOT INCLUDED     - ', u))
+                print('NOT INCLUDED     - ', u)
 
     newdoc = htmldata.urljoin(doc, L)
     newdoc = newdoc.replace(BEGIN_COMMENT_REPLACE, '<!--')
@@ -958,7 +958,7 @@ def deploy_file( src, dest ):
     src_dir = os.path.dirname(os.path.realpath(__file__))
     src = os.path.join(src_dir, src)
     dest = os.path.join(config.outdir, dest)
-    print(("copying from", src, "to", dest))
+    print("copying from", src, "to", dest)
     directory = os.path.dirname(dest)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -986,7 +986,7 @@ def run(out=sys.stdout):
 
     domain = get_domain(config.rooturl)
     conn = http.client.HTTPSConnection(domain)
-    print(('connection established to:', domain))
+    print('connection established to:', domain)
     complete = set()
     pending = set([config.rooturl])
 
@@ -1000,7 +1000,7 @@ def run(out=sys.stdout):
 
         if nurl in complete:
             if config.debug:
-                print((url, 'already processed'))
+                print(url, 'already processed')
             continue
 
         complete.add(nurl)
@@ -1011,7 +1011,7 @@ def run(out=sys.stdout):
         if start:
             start = False
             aux_url = ''
-            for redir in list(redir_cache.keys()):
+            for redir in redir_cache.keys():
                 aux_url = normalize_url(redir)
                 url_filename_cache[aux_url] = filename
                 if aux_url not in complete:
@@ -1023,7 +1023,7 @@ def run(out=sys.stdout):
             continue
 
         if not os.path.exists(filename):
-            print(("ERROR: ", url, '\n'))
+            print("ERROR: ", url, '\n')
             continue
 
         # These formats are encoded as text. Everything else is read as bytes
@@ -1068,10 +1068,10 @@ def run(out=sys.stdout):
                 pending.add(u)        
 
     conn.close()
-    print(("connection to", domain, "closed."))
+    print("connection to", domain, "closed.")
     out.write(str(n) + ' files saved\n')
-    print((counter, "httplib requests done"))
-    print((errors, "errors not recovered"))
+    print(counter, "httplib requests done")
+    print(errors, "errors not recovered")
 
     # use / not \ so as to work on both windows and mac.
     deploy_file( "AudacityLogo.png", r"alphamanual.audacityteam.org/m/resources/assets/AudacityLogo.png")
@@ -1137,7 +1137,7 @@ def usage():
 
     """
 
-    print((textwrap.dedent(usage_str.strip('\n'))))
+    print(textwrap.dedent(usage_str.strip('\n')))
     sys.exit(1)
 
 

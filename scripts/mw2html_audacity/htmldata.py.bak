@@ -1087,7 +1087,7 @@ def examples():
     the offending IP address.
 
     """
-    print((examples.__doc__))
+    print(examples.__doc__)
 
 class URLMatch:
     """

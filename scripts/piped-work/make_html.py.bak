@@ -14,4 +14,4 @@ def oneItem( name ) :
     return "<img src='./auto_images/"+name+"'><br><em>"+name+"</em><br>"
 
 files = getFiles()
-print(( "\n".join( [ oneItem(name) for name in files ] ) ))
+print( "\n".join( [ oneItem(name) for name in files ] ) )

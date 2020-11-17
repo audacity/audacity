@@ -29,12 +29,12 @@ else:
     FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'
 
-print(("Write to  \"" + TONAME +"\""))
+print("Write to  \"" + TONAME +"\"")
 if not os.path.exists(TONAME):
     print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
     sys.exit()
 
-print(("Read from \"" + FROMNAME +"\""))
+print("Read from \"" + FROMNAME +"\"")
 if not os.path.exists(FROMNAME):
     print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
     sys.exit()
@@ -49,7 +49,7 @@ print("-- File to read from has now been opened too\r\n")
 
 def send_command(command):
     """Send a single command."""
-    print(("Send: >>> \n"+command))
+    print("Send: >>> \n"+command)
     TOFILE.write(command + EOL)
     TOFILE.flush()
 
@@ -68,7 +68,7 @@ def do_command(command):
     """Send one command, and return the response."""
     send_command(command)
     response = get_response()
-    print(("Rcvd: <<< \n" + response))
+    print("Rcvd: <<< \n" + response)
     return response
 
 def quick_test():

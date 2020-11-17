@@ -43,6 +43,6 @@ exec( inner( 'arrange' ) )
 inner( "" )
 
 print( "\n\nSummary:" )
-print(( "\n".join( results ) ))
+print( "\n".join( results ) )
 
 
