@@ -56,9 +56,10 @@
 #include "Observer.h"
 #include "SelectedRegion.h"
 
-//! Type of message published by UndoManager, always during idle time
+//! Type of message published by UndoManager
+/*! all are published only during idle time, except BeginPurge and EndPurge */
 struct UndoRedoMessage {
-   enum Type {
+   const enum Type {
       Pushed, /*!< Project state did not change, but a new state was copied
                into Undo history and any redo states were lost */
       Modified, /*!< Project state did not change, but current state was
@@ -71,8 +72,15 @@ struct UndoRedoMessage {
       Reset, /*!< Project state changed other than for single-step undo/redo;
               undo manager contents did not change other than the pointer to
               current state */
-      Purge, //!< Undo or redo states discarded
+      Purge, //!< Undo or redo states eliminated
+
+      // Eagerly sent messages (not waiting for idle time)
+      BeginPurge, //!< Begin elimination of old undo states
+      EndPurge, //!< End elimination of old undo states
    } type;
+
+   //! Only significant for BeginPurge messages
+   const size_t begin = 0, end = 0;
 };
 
 class AudacityProject;

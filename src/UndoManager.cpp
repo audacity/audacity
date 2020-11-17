@@ -159,6 +159,10 @@ size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
 
 void UndoManager::RemoveStates(size_t begin, size_t end)
 {
+   Publish({ UndoRedoMessage::BeginPurge, begin, end });
+   auto cleanup =
+      finally([&]{ Publish({ UndoRedoMessage::EndPurge }); });
+
    using namespace BasicUI;
    unsigned long long nToDelete = EstimateRemovedBlocks(begin, end),
       nDeleted = 0;
@@ -423,4 +427,3 @@ int UndoManager::GetSavedState() const
 //                t ? t->GetEndTime()-t->GetStartTime() : 0);
 //   }
 //}
-
