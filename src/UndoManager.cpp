@@ -236,7 +236,7 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
 
       if (current > begin)
         --current;
-      if (saved > begin)
+      if (saved > static_cast<int>(begin))
         --saved;
    }
 
