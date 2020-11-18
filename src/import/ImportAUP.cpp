@@ -140,13 +140,15 @@ private:
    // Called in first pass to collect information about blocks
    void AddFile(sampleCount len,
                 sampleFormat format,
-                const FilePath &filename = wxEmptyString,
+                const FilePath &blockFilename = wxEmptyString,
+                const FilePath &audioFilename = wxEmptyString,
                 sampleCount origin = 0,
                 int channel = 0);
 
    // These two use the collected file information in a second pass
    bool AddSilence(sampleCount len);
-   bool AddSamples(const FilePath &filename,
+   bool AddSamples(const FilePath &blockFilename,
+                   const FilePath &audioFilename,
                    sampleCount len,
                    sampleFormat format,
                    sampleCount origin = 0,
@@ -186,7 +188,8 @@ private:
    {
       WaveTrack *track;
       WaveClip *clip;
-      FilePath path;
+      FilePath blockFile;
+      FilePath audioFile;
       sampleCount len;
       sampleFormat format;
       sampleCount origin;
@@ -351,13 +354,14 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
       mClip = fi.clip;
       mWaveTrack = fi.track;
 
-      if (fi.path.empty())
+      if (fi.blockFile.empty())
       {
          AddSilence(fi.len);
       }
       else
       {
-         AddSamples(fi.path, fi.len, fi.format, fi.origin, fi.channel);
+         AddSamples(fi.blockFile, fi.audioFile,
+                    fi.len, fi.format, fi.origin, fi.channel);
       }
 
       processed += fi.len;
@@ -1223,7 +1227,7 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len, mFormat, filename);
+   AddFile(len, mFormat, filename, filename);
 
    return true;
 }
@@ -1266,6 +1270,7 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
 {
+   wxString summaryFilename;
    wxFileName filename;
    sampleCount start = 0;
    sampleCount len = 0;
@@ -1304,6 +1309,10 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
                .Format(strValue));
          }
       }
+      else if (!wxStricmp(attr, wxT("summaryfile")))
+      {
+         summaryFilename = strValue;
+      }
       else if (!wxStricmp(attr, wxT("aliasstart")))
       {
          if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
@@ -1337,7 +1346,9 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
    // Do not set the handler - already handled
 
    if (filename.IsOk())
-      AddFile(len, mFormat, filename.GetFullPath(), start, channel);
+      AddFile(len, mFormat,
+              summaryFilename, filename.GetFullPath(),
+              start, channel);
    else
       AddFile(len, mFormat); // will add silence instead
 
@@ -1421,14 +1432,16 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
 
 void AUPImportFileHandle::AddFile(sampleCount len,
                                   sampleFormat format,
-                                  const FilePath &filename /* = wxEmptyString */,
+                                  const FilePath &blockFilename /* = wxEmptyString */,
+                                  const FilePath &audioFilename /* = wxEmptyString */,
                                   sampleCount origin /* = 0 */,
                                   int channel /* = 0 */)
 {
    fileinfo fi = {};
    fi.track = mWaveTrack;
    fi.clip = mClip;
-   fi.path = filename;
+   fi.blockFile = blockFilename;
+   fi.audioFile = audioFilename;
    fi.len = len;
    fi.format = format,
    fi.origin = origin,
@@ -1457,14 +1470,15 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
 
 // All errors that occur here will simply insert silence and allow the
 // import to continue.
-bool AUPImportFileHandle::AddSamples(const FilePath &filename,
+bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
+                                     const FilePath &audioFilename,
                                      sampleCount len,
                                      sampleFormat format,
                                      sampleCount origin /* = 0 */,
                                      int channel /* = 0 */)
 {
    auto pClip = mClip ? mClip : mWaveTrack->RightmostOrNewClip();
-   auto &pBlock = mFileMap[wxFileNameFromPath(filename)].second;
+   auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
    if (pBlock) {
       // Replicate the sharing of blocks
       pClip->AppendSharedBlock( pBlock );
@@ -1487,7 +1501,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    {
       if (!success)
       {
-         SetWarning(XO("Error while processing %s\n\nInserting silence.").Format(filename));
+         SetWarning(XO("Error while processing %s\n\nInserting silence.").Format(audioFilename));
 
          // If we are unwinding for an exception, don't do another
          // potentially throwing operation
@@ -1502,9 +1516,9 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       }
    });
 
-   if (!f.Open(filename))
+   if (!f.Open(audioFilename))
    {
-      SetWarning(XO("Failed to open %s").Format(filename));
+      SetWarning(XO("Failed to open %s").Format(audioFilename));
 
       return true;
    }
@@ -1515,7 +1529,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    sf = SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE);
    if (!sf)
    {
-      SetWarning(XO("Failed to open %s").Format(filename));
+      SetWarning(XO("Failed to open %s").Format(audioFilename));
 
       return true;
    }
@@ -1525,7 +1539,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       if (SFCall<sf_count_t>(sf_seek, sf, origin.as_long_long(), SEEK_SET) < 0)
       {
          SetWarning(XO("Failed to seek to position %lld in %s")
-            .Format(origin.as_long_long(), filename));
+            .Format(origin.as_long_long(), audioFilename));
 
          return true;
       }
@@ -1554,7 +1568,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
-            .Format(cnt, filename));
+            .Format(cnt, audioFilename));
 
          return true;
       }
@@ -1581,7 +1595,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
-            .Format(cnt, filename));
+            .Format(cnt, audioFilename));
 
          return true;
       }
@@ -1603,7 +1617,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
-            .Format(cnt, filename));
+            .Format(cnt, audioFilename));
 
          return true;
       }
