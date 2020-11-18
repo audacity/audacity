@@ -678,21 +678,22 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
 }
 
 bool ProjectFileIO::CopyTo(const FilePath &destpath,
-                           const TranslatableString &msg,
-                           bool isTemporary,
-                           bool prune /* = false */,
-                           const std::shared_ptr<TrackList> &tracks /* = nullptr */)
+   const TranslatableString &msg,
+   bool isTemporary,
+   bool prune /* = false */,
+   const std::vector<const TrackList *> &tracks /* = {} */)
 {
    // Get access to the active tracklist
    auto pProject = &mProject;
-   auto &tracklist = tracks ? *tracks : TrackList::Get(*pProject);
 
    SampleBlockIDSet blockids;
 
    // Collect all active blockids
    if (prune)
    {
-      InspectBlocks( tracklist, {}, &blockids );
+      for (auto trackList : tracks)
+         if (trackList)
+            InspectBlocks( *trackList, {}, &blockids );
    }
    // Collect ALL blockids
    else
@@ -713,7 +714,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    // Create the project doc
    ProjectSerializer doc;
    WriteXMLHeader(doc);
-   WriteXML(doc, false, tracks);
+   WriteXML(doc, false, tracks.empty() ? nullptr : tracks[0]);
 
    auto db = DB();
    Connection destConn = nullptr;
@@ -888,15 +889,19 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    return true;
 }
 
-bool ProjectFileIO::ShouldCompact(const std::shared_ptr<TrackList> &tracks)
+bool ProjectFileIO::ShouldCompact(const std::vector<const TrackList *> &tracks)
 {
    SampleBlockIDSet active;
    unsigned long long current = 0;
 
-   InspectBlocks( *tracks,
-      BlockSpaceUsageAccumulator( current ),
-      &active // Visit unique blocks only
-   );
+   {
+      auto fn = BlockSpaceUsageAccumulator( current );
+      for (auto pTracks : tracks)
+         if (pTracks)
+            InspectBlocks( *pTracks, fn,
+               &active // Visit unique blocks only
+            );
+   }
 
    // Get the number of blocks and total length from the project file.
    unsigned long long total = GetTotalUsage();
@@ -938,7 +943,8 @@ Connection &ProjectFileIO::CurrConn()
    return connectionPtr.mpConnection;
 }
 
-void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force /* = false */)
+void ProjectFileIO::Compact(
+   const std::vector<const TrackList *> &tracks, bool force)
 {
    // Haven't compacted yet
    mWasCompacted = false;
@@ -972,7 +978,7 @@ void ProjectFileIO::Compact(const std::shared_ptr<TrackList> &tracks, bool force
 
    // Copy the original database to a new database. Only prune sample blocks if
    // we have a tracklist.
-   if (CopyTo(tempName, XO("Compacting project"), IsTemporary(), tracks != nullptr, tracks))
+   if (CopyTo(tempName, XO("Compacting project"), IsTemporary(), !tracks.empty(), tracks))
    {
       // Must close the database to rename it
       if (CloseConnection())
@@ -1273,7 +1279,7 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
 
 void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
                              bool recording /* = false */,
-                             const std::shared_ptr<TrackList> &tracks /* = nullptr */)
+                             const TrackList *tracks /* = nullptr */)
 // may throw
 {
    auto &proj = mProject;
@@ -1303,7 +1309,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
    tags.WriteXML(xmlFile);
 
    unsigned int ndx = 0;
-   tracklist.Any().Visit([&](Track *t)
+   tracklist.Any().Visit([&](const Track *t)
    {
       auto useTrack = t;
       if ( recording ) {
@@ -1836,8 +1842,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    return true;
 }
 
-bool ProjectFileIO::UpdateSaved(
-   const std::shared_ptr<TrackList> &tracks)
+bool ProjectFileIO::UpdateSaved(const TrackList *tracks)
 {
    ProjectSerializer doc;
    WriteXMLHeader(doc);
@@ -1854,7 +1859,8 @@ bool ProjectFileIO::UpdateSaved(
    return true;
 }
 
-bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved)
+bool ProjectFileIO::SaveProject(
+   const FilePath &fileName, const TrackList *lastSaved)
 {
    // In the case where we're saving a temporary project to a permanent project,
    // we'll try to simply rename the project to save a bit of time. We then fall
@@ -1945,7 +1951,8 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
       AutoSaveDelete();
 
       // Try to compact the original project file
-      Compact(lastSaved ? lastSaved : TrackList::Create(&mProject));
+      auto empty = TrackList::Create(&mProject);
+      Compact( { lastSaved ? lastSaved : empty.get() } );
 
       // Save to close the original project file now
       CloseProject();
@@ -2125,11 +2132,18 @@ int64_t ProjectFileIO::GetBlockUsage(SampleBlockID blockid)
    return GetDiskUsage(CurrConn().get(), blockid);
 }
 
-int64_t ProjectFileIO::GetCurrentUsage(const std::shared_ptr<TrackList> &tracks)
+int64_t ProjectFileIO::GetCurrentUsage(
+   const std::vector<const TrackList*> &trackLists) const
 {
    unsigned long long current = 0;
+   const auto fn = BlockSpaceUsageAccumulator(current);
 
-   InspectBlocks(*tracks, BlockSpaceUsageAccumulator(current), nullptr);
+   // Must pass address of this set, even if not otherwise used, to avoid
+   // possible multiple count of shared blocks
+   SampleBlockIDSet seen;
+   for (auto pTracks: trackLists)
+      if (pTracks)
+         InspectBlocks(*pTracks, fn, &seen);
 
    return current;
 }

@@ -304,7 +304,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       }
    }
 
-   bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks);
+   bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks.get());
    if (!success)
    {
       ShowErrorDialog(
@@ -674,7 +674,7 @@ void ProjectFileManager::CompactProjectOnClose()
       }
 
       // Attempt to compact the project
-      projectFileIO.Compact(mLastSavedTracks);
+      projectFileIO.Compact( { mLastSavedTracks.get() } );
 
       if ( !projectFileIO.WasCompacted() &&
           UndoManager::Get( project ).UnsavedChanges() ) {
@@ -682,7 +682,7 @@ void ProjectFileManager::CompactProjectOnClose()
          // without save.  Don't leave the document blob from the last
          // push of undo history, when that undo state may get purged
          // with deletion of some new sample blocks.
-         projectFileIO.UpdateSaved( mLastSavedTracks );
+         projectFileIO.UpdateSaved( mLastSavedTracks.get() );
       }
    }
 }
@@ -1239,7 +1239,7 @@ void ProjectFileManager::Compact()
    }
 
    int64_t total = projectFileIO.GetTotalUsage();
-   int64_t used = projectFileIO.GetCurrentUsage(currentTracks);
+   int64_t used = projectFileIO.GetCurrentUsage({currentTracks.get()});
 
    auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
@@ -1276,7 +1276,7 @@ void ProjectFileManager::Compact()
       // above actions.
       auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
-      projectFileIO.Compact(currentTracks, true);
+      projectFileIO.Compact( { currentTracks.get() }, true);
 
       auto after = wxFileName::GetSize(projectFileIO.GetFileName());
 

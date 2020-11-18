@@ -83,8 +83,8 @@ public:
 
    bool ImportProject(const FilePath &fileName);
    bool LoadProject(const FilePath &fileName);
-   bool UpdateSaved(const std::shared_ptr<TrackList> &tracks = nullptr);
-   bool SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved);
+   bool UpdateSaved(const TrackList *tracks = nullptr);
+   bool SaveProject(const FilePath &fileName, const TrackList *lastSaved);
    bool SaveCopy(const FilePath& fileName);
 
    wxLongLong GetFreeDiskSpace() const;
@@ -93,7 +93,8 @@ public:
    int64_t GetBlockUsage(SampleBlockID blockid);
 
    // Returns the bytes used for all blocks owned by the given track list
-   int64_t GetCurrentUsage(const std::shared_ptr<TrackList> &tracks);
+   int64_t GetCurrentUsage(
+         const std::vector<const TrackList*> &trackLists) const;
 
    // Return the bytes used by all sample blocks in the project file, whether
    // they are attached to the active tracks or held by the Undo manager.
@@ -121,7 +122,8 @@ public:
    void SetBypass();
 
    // Remove all unused space within a project file
-   void Compact(const std::shared_ptr<TrackList> &tracks, bool force = false);
+   void Compact(
+      const std::vector<const TrackList *> &tracks, bool force = false);
 
    // The last compact check did actually compact the project file if true
    bool WasCompacted();
@@ -141,7 +143,8 @@ public:
 
 private:
    void WriteXMLHeader(XMLWriter &xmlFile) const;
-   void WriteXML(XMLWriter &xmlFile, bool recording = false, const std::shared_ptr<TrackList> &tracks = nullptr) /* not override */;
+   void WriteXML(XMLWriter &xmlFile, bool recording = false,
+      const TrackList *tracks = nullptr) /* not override */;
 
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -189,10 +192,14 @@ private:
 
    // Return a database connection if successful, which caller must close
    bool CopyTo(const FilePath &destpath,
-               const TranslatableString &msg,
-               bool isTemporary,
-               bool prune = false,
-               const std::shared_ptr<TrackList> &tracks = nullptr);
+      const TranslatableString &msg,
+      bool isTemporary,
+      bool prune = false,
+      const std::vector<const TrackList *> &tracks = {} /*!<
+         First track list (or if none, then the project's track list) are tracks to write into document blob;
+         That list, plus any others, contain tracks whose sample blocks must be kept
+      */
+   );
 
    //! Just set stored errors
    void SetError(const TranslatableString & msg,
@@ -202,7 +209,7 @@ private:
    void SetDBError(const TranslatableString & msg,
       const TranslatableString &libraryError = {});
 
-   bool ShouldCompact(const std::shared_ptr<TrackList> &tracks);
+   bool ShouldCompact(const std::vector<const TrackList *> &tracks);
 
    // Gets values from SQLite B-tree structures
    static unsigned int get2(const unsigned char *ptr);

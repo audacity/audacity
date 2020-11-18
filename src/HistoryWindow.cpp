@@ -293,7 +293,7 @@ void HistoryDialog::OnCompact(wxCommandEvent & WXUNUSED(event))
    auto walFile = wxFileName(projectFileIO.GetFileName() + wxT("-wal"));
    auto before = baseFile.GetSize() + walFile.GetSize();
 
-   projectFileIO.Compact(nullptr, true);
+   projectFileIO.Compact({}, true);
 
    auto after = baseFile.GetSize() + walFile.GetSize();
 
