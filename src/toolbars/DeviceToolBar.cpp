@@ -34,7 +34,6 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "ToolDock.h"
 #include "../TrackPanel.h"
 
 #include "../AColor.h"
