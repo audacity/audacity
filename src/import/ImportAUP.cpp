@@ -48,6 +48,7 @@
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ProgressDialog.h"
 #include "../xml/XMLFileReader.h"
+#include "../wxFileNameWrapper.h"
 
 #include <map>
 
@@ -134,6 +135,7 @@ private:
    bool HandleSimpleBlockFile(XMLTagHandler *&handle);
    bool HandleSilentBlockFile(XMLTagHandler *&handle);
    bool HandlePCMAliasBlockFile(XMLTagHandler *&handle);
+   bool HandleImport(XMLTagHandler *&handle);
 
    // Called in first pass to collect information about blocks
    void AddFile(sampleCount len,
@@ -607,6 +609,10 @@ bool AUPImportFileHandle::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    else if (mCurrentTag.IsSameAs(wxT("pcmaliasblockfile")))
    {
       success = HandlePCMAliasBlockFile(handler);
+   }
+   else if (mCurrentTag.IsSameAs(wxT("import")))
+   {
+      success = HandleImport(handler);
    }
 
    if (!success || (handler && !handler->HandleXMLTag(tag, attrs)))
@@ -1336,6 +1342,81 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
       AddFile(len, mFormat); // will add silence instead
 
    return true;
+}
+
+bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
+{
+   // Adapted from ImportXMLTagHandler::HandleXMLTag as in version 2.4.2
+   if (!mAttrs || !(*mAttrs) || wxStrcmp(*mAttrs++, wxT("filename")))
+       return false;
+
+   wxString strAttr = *mAttrs;
+   if (!XMLValueChecker::IsGoodPathName(strAttr))
+   {
+      // Maybe strAttr is just a fileName, not the full path. Try the project data directory.
+      wxFileNameWrapper fileName0{ mFilename };
+      fileName0.SetExt({});
+      wxFileNameWrapper fileName{
+         fileName0.GetFullPath() + wxT("_data"), strAttr };
+      if (XMLValueChecker::IsGoodFileName(strAttr, fileName.GetPath(wxPATH_GET_VOLUME)))
+         strAttr = fileName.GetFullPath();
+      else
+      {
+         wxLogWarning(wxT("Could not import file: %s"), strAttr);
+         return false;
+      }
+   }
+
+   auto &tracks = TrackList::Get(mProject);
+   auto oldNumTracks = tracks.size();
+   Track *pLast = nullptr;
+   if (oldNumTracks > 0)
+      pLast = *tracks.Any().rbegin();
+
+   // Guard this call so that C++ exceptions don't propagate through
+   // the expat library
+   GuardedCall(
+      [&] {
+         ProjectFileManager::Get( mProject ).Import(strAttr, false); },
+      [&] (AudacityException*) {}
+   );
+
+   if (oldNumTracks == tracks.size())
+      return false;
+
+   // Handle other attributes, now that we have the tracks.
+   // Apply them to all new wave tracks.
+   ++mAttrs;
+   const wxChar** pAttr;
+   bool bSuccess = true;
+
+   auto range = tracks.Any();
+   if (pLast) {
+      range = range.StartingWith(pLast);
+      ++range.first;
+   }
+   for (auto pTrack: range.Filter<WaveTrack>())
+   {
+      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
+      // so apply them via WaveTrack::HandleXMLTag().
+      bSuccess = pTrack->HandleXMLTag(wxT("wavetrack"), mAttrs);
+
+      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
+      // so handle it here.
+      double dblValue;
+      pAttr = mAttrs;
+      while (*pAttr)
+      {
+         const wxChar *attr = *pAttr++;
+         const wxChar *value = *pAttr++;
+         const wxString strValue = value;
+         if (!wxStrcmp(attr, wxT("offset")) &&
+               XMLValueChecker::IsGoodString(strValue) &&
+               Internat::CompatibleToDouble(strValue, &dblValue))
+            pTrack->SetOffset(dblValue);
+      }
+   }
+   return bSuccess;
 }
 
 void AUPImportFileHandle::AddFile(sampleCount len,
