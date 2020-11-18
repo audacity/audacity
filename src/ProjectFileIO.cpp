@@ -1944,7 +1944,7 @@ bool ProjectFileIO::SaveProject(const FilePath &fileName, const std::shared_ptr<
       // Autosave no longer needed in original project file
       AutoSaveDelete();
 
-      // Try to compact the orignal project file
+      // Try to compact the original project file
       Compact(lastSaved ? lastSaved : TrackList::Create(&mProject));
 
       // Save to close the original project file now

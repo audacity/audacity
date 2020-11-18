@@ -821,7 +821,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
          XO("Label Track").Translation());
 
       // User canceled so repopulating the grid will set the track
-      // name to the orignal value
+      // name to the original value
       if (d.ShowModal() == wxID_CANCEL) {
          TransferDataToWindow();
          return;
