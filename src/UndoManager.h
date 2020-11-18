@@ -148,6 +148,7 @@ class AUDACITY_DLL_API UndoManager final
                   UndoPush flags = UndoPush::NONE);
    void ModifyState(const TrackList * l,
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
+   void AbandonRedo();
    void ClearStates();
    void RemoveStates(
       size_t begin, //!< inclusive start of range
@@ -183,6 +184,7 @@ class AUDACITY_DLL_API UndoManager final
    bool RedoAvailable();
 
    bool UnsavedChanges() const;
+   int GetSavedState() const;
    void StateSaved();
 
    // Return value must first be calculated by CalculateSpaceUsage():

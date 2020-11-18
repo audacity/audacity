@@ -321,11 +321,7 @@ void UndoManager::PushState(const TrackList * l,
 
    mayConsolidate = true;
 
-   // Abandon redo states
-   if (saved >= current) {
-      saved = -1;
-   }
-   RemoveStates( current + 1, stack.size() );
+   AbandonRedo();
 
    // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.
@@ -341,6 +337,14 @@ void UndoManager::PushState(const TrackList * l,
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PUSHED } );
+}
+
+void UndoManager::AbandonRedo()
+{
+   if (saved > current) {
+      saved = -1;
+   }
+   RemoveStates( current + 1, stack.size() );
 }
 
 void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
@@ -436,6 +440,11 @@ bool UndoManager::UnsavedChanges() const
 void UndoManager::StateSaved()
 {
    saved = current;
+}
+
+int UndoManager::GetSavedState() const
+{
+   return saved;
 }
 
 // currently unused

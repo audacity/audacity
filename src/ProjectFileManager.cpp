@@ -1231,15 +1231,23 @@ void ProjectFileManager::Compact()
    // Purpose of this is to remove the -wal file.
    projectFileIO.ReopenProject();
 
-   auto currentTracks = TrackList::Create( nullptr );
-   auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Any())
-   {
-      currentTracks->Add(t->Duplicate());
+   auto savedState = undoManager.GetSavedState();
+   if (savedState < 0) {
+      undoManager.StateSaved();
+      savedState = undoManager.GetSavedState();
+      if (savedState < 0) {
+         wxASSERT(false);
+         savedState = 0;
+      }
    }
+   std::vector<const TrackList*> trackLists;
+   undoManager.VisitStates(
+      [&](auto& elem){ trackLists.push_back(elem.state.tracks.get()); },
+      savedState,
+      undoManager.GetCurrentState() + 1);
 
    int64_t total = projectFileIO.GetTotalUsage();
-   int64_t used = projectFileIO.GetCurrentUsage({currentTracks.get()});
+   int64_t used = projectFileIO.GetCurrentUsage(trackLists);
 
    auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
@@ -1256,27 +1264,21 @@ void ProjectFileManager::Compact()
                   Internat::FormatSize(total - used)));
    if (isBatch || dlg.ShowModal() == wxYES)
    {
-      // Want to do this before removing the states so that it becomes the
-      // current state.
-      ProjectHistory::Get(project)
-         .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
+      // We can remove redo states.
+      undoManager.AbandonRedo();
 
-      // Now we can remove all previous states.
-      auto numStates = undoManager.GetNumStates();
-      undoManager.RemoveStates(0, numStates - 1);
+      // We can remove all states before the last saved.
+      undoManager.RemoveStates(0, savedState);
 
       // And clear the clipboard, if needed
       if (&mProject == clipboard.Project().lock().get())
          clipboard.Clear();
 
-      // This may also decrease some reference counts on blocks
-      mLastSavedTracks.reset();
-
       // Refresh the before space usage since it may have changed due to the
       // above actions.
       auto before = wxFileName::GetSize(projectFileIO.GetFileName());
 
-      projectFileIO.Compact( { currentTracks.get() }, true);
+      projectFileIO.Compact(trackLists, true);
 
       auto after = wxFileName::GetSize(projectFileIO.GetFileName());
 
@@ -1288,6 +1290,4 @@ void ProjectFileManager::Compact()
             XO("Compact Project"));
       }
    }
-
-   mLastSavedTracks = currentTracks;
 }
