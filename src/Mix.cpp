@@ -285,7 +285,8 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
       mBuffer[c].Allocate(mInterleavedBufferSize, mFormat);
       mTemp[c].Allocate(mInterleavedBufferSize, floatSample);
    }
-   mFloatBuffer = Floats{ mInterleavedBufferSize };
+   // PRL:  Bug2536: see other comments below
+   mFloatBuffer = Floats{ mInterleavedBufferSize + 1 };
 
    // But cut the queue into blocks of this finer size
    // for variable rate resampling.  Each block is resampled at some
@@ -511,11 +512,18 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
       }
 
       auto results = pResample->Process(factor,
-                                      &queue[*queueStart],
-                                      thisProcessLen,
-                                      last,
-                                      &mFloatBuffer[out],
-                                      mMaxOut - out);
+         &queue[*queueStart],
+         thisProcessLen,
+         last,
+         // PRL:  Bug2536: crash in soxr happened on Mac, sometimes, when
+         // mMaxOut - out == 1 and &mFloatBuffer[out + 1] was an unmapped
+         // address, because soxr, strangely, fetched an 8-byte (misaligned!)
+         // value from &mFloatBuffer[out], but did nothing with it anyway,
+         // in soxr_output_no_callback.
+         // Now we make the bug go away by allocating a little more space in
+         // the buffer than we need.
+         &mFloatBuffer[out],
+         mMaxOut - out);
 
       const auto input_used = results.first;
       *queueStart += input_used;
