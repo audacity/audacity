@@ -36,6 +36,9 @@ public:
    static ProjectFileManager &Get( AudacityProject &project );
    static const ProjectFileManager &Get( const AudacityProject &project );
 
+   // Open and close a file, invisibly, removing its Autosave blob
+   static void DiscardAutosave(const FilePath &filename);
+
    explicit ProjectFileManager( AudacityProject &project );
    ProjectFileManager( const ProjectFileManager & ) PROHIBITED;
    ProjectFileManager &operator=( const ProjectFileManager & ) PROHIBITED;
@@ -48,7 +51,8 @@ public:
       const TranslatableString errorString;
       wxString helpUrl;
    };
-   ReadProjectResults ReadProjectFile( const FilePath &fileName );
+   ReadProjectResults ReadProjectFile(
+      const FilePath &fileName, bool discardAutosave = false );
 
    bool OpenProject();
    void CloseProject();

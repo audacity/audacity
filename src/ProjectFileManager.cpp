@@ -71,6 +71,22 @@ const ProjectFileManager &ProjectFileManager::Get( const AudacityProject &projec
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
+void ProjectFileManager::DiscardAutosave(const FilePath &filename)
+{
+   InvisibleTemporaryProject tempProject;
+   auto &project = tempProject.Project();
+   auto &projectFileManager = Get(project);
+   // Read the project, discarding autosave
+   projectFileManager.ReadProjectFile(filename, true);
+
+   for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
+      wt->CloseLock();
+   projectFileManager.mLastSavedTracks.reset();
+
+   // Side-effect on database is done, and destructor of tempProject
+   // closes the temporary project properly
+}
+
 ProjectFileManager::ProjectFileManager( AudacityProject &project )
 : mProject{ project }
 {
@@ -126,7 +142,8 @@ wxString FindHelpUrl( const TranslatableString &libraryError )
 
 }
 
-auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
+auto ProjectFileManager::ReadProjectFile(
+   const FilePath &fileName, bool discardAutosave )
   -> ReadProjectResults
 {
    auto &project = mProject;
@@ -136,14 +153,15 @@ auto ProjectFileManager::ReadProjectFile( const FilePath &fileName )
    ///
    /// Parse project file
    ///
-   bool bParseSuccess = projectFileIO.LoadProject(fileName);
+   bool bParseSuccess = projectFileIO.LoadProject(fileName, discardAutosave);
    
    bool err = false;
 
    if (bParseSuccess)
    {
-      if (projectFileIO.IsRecovered())
-      {
+      if (discardAutosave)
+         projectFileIO.AutoSaveDelete();
+      else if (projectFileIO.IsRecovered()) {
          bool resaved = false;
 
          if (!projectFileIO.IsTemporary())

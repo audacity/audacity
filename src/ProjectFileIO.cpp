@@ -1723,7 +1723,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    return true;
 }
 
-bool ProjectFileIO::LoadProject(const FilePath &fileName)
+bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
 {
    bool success = false;
 
@@ -1748,7 +1748,8 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName)
    bool usedAutosave = true;
 
    // Get the autosave doc, if any
-   if (!GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
+   if (!ignoreAutosave &&
+       !GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
    {
       // Error already set
       return false;
