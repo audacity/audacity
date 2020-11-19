@@ -2401,3 +2401,25 @@ int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
 
    return 9;
 }
+
+InvisibleTemporaryProject::InvisibleTemporaryProject()
+   : mpProject{ std::make_shared< AudacityProject >() }
+{
+}
+
+InvisibleTemporaryProject::~InvisibleTemporaryProject()
+{
+   auto &projectFileIO = ProjectFileIO::Get( Project() );
+   projectFileIO.SetBypass();
+   auto &tracks = TrackList::Get( Project() );
+   tracks.Clear();
+
+   // Consume some delayed track list related events before destroying the
+   // temporary project
+   try { wxTheApp->Yield(); } catch(...) {}
+
+   // Destroy the project and yield again to let delayed window deletions happen
+   projectFileIO.CloseProject();
+   mpProject.reset();
+   try { wxTheApp->Yield(); } catch(...) {}
+}

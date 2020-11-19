@@ -262,4 +262,18 @@ public:
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 
+//! Makes a temporary project that doesn't display on the screen
+class InvisibleTemporaryProject
+{
+public:
+   InvisibleTemporaryProject();
+   ~InvisibleTemporaryProject();
+   AudacityProject &Project()
+   {
+      return *mpProject;
+   }
+private:
+   std::shared_ptr<AudacityProject> mpProject;
+};
+
 #endif
