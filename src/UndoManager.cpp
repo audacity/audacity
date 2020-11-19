@@ -45,6 +45,7 @@ wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_PURGE, wxCommandEvent);
 
 using SampleBlockID = long long;
 
@@ -225,6 +226,10 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
    // Success, commit the savepoint
    if (pTrans)
       pTrans->Commit();
+   
+   if (begin != end)
+      // wxWidgets will own the event object
+      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PURGE } );
 
    // Check sanity
    wxASSERT_MSG(

@@ -169,6 +169,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    parent->Bind(EVT_UNDO_MODIFIED, &HistoryDialog::UpdateDisplay, this);
    parent->Bind(EVT_UNDO_OR_REDO, &HistoryDialog::UpdateDisplay, this);
    parent->Bind(EVT_UNDO_RESET, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_PURGE, &HistoryDialog::UpdateDisplay, this);
 }
 
 void HistoryDialog::OnAudioIO(wxCommandEvent& evt)

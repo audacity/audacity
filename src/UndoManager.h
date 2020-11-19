@@ -67,9 +67,12 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_MODIFIED, wxCommandEvent);
 // contents did not change other than the pointer to current state
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_OR_REDO, wxCommandEvent);
 
-// Project state for changed other than single-step undo/redo; undo manager
+// Project state changed other than for single-step undo/redo; undo manager
 // contents did not change other than the pointer to current state
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_RESET, wxCommandEvent);
+
+// Undo or redo states discarded
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_PURGE, wxCommandEvent);
 
 class AudacityProject;
 class Tags;
