@@ -1172,8 +1172,9 @@ void WaveClip::ConvertToSampleFormat(sampleFormat format,
 /*! @excsafety{No-fail} */
 void WaveClip::UpdateEnvelopeTrackLen()
 {
-   mEnvelope->SetTrackLen
-      ((mSequence->GetNumSamples().as_double()) / mRate, 1.0 / GetRate());
+   auto len = (mSequence->GetNumSamples().as_double()) / mRate;
+   if (len != mEnvelope->GetTrackLen())
+      mEnvelope->SetTrackLen(len, 1.0 / GetRate());
 }
 
 void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const

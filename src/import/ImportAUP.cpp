@@ -213,6 +213,7 @@ private:
 
    WaveTrack *mWaveTrack;
    WaveClip *mClip;
+   std::vector<WaveClip *> mClips;
 
    ProgressResult mUpdateResult;
    TranslatableString mErrorMsg;
@@ -366,6 +367,9 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
 
       processed += fi.len;
    }
+
+   for (auto pClip : mClips)
+      pClip->UpdateEnvelopeTrackLen();
 
    wxASSERT( mUpdateResult == ProgressResult::Success );
 
@@ -1031,6 +1035,7 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
    }
 
    mClip = static_cast<WaveClip *>(handler);
+   mClips.push_back(mClip);
 
    return true;
 }
