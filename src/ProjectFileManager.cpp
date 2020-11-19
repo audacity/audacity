@@ -1232,6 +1232,7 @@ void ProjectFileManager::Compact()
    projectFileIO.ReopenProject();
 
    auto savedState = undoManager.GetSavedState();
+   const auto currentState = undoManager.GetCurrentState();
    if (savedState < 0) {
       undoManager.StateSaved();
       savedState = undoManager.GetSavedState();
@@ -1240,11 +1241,13 @@ void ProjectFileManager::Compact()
          savedState = 0;
       }
    }
+   const auto least = std::min<size_t>(savedState, currentState);
+   const auto greatest = std::max<size_t>(savedState, currentState);
    std::vector<const TrackList*> trackLists;
    undoManager.VisitStates(
-      [&](auto& elem){ trackLists.push_back(elem.state.tracks.get()); },
-      savedState,
-      undoManager.GetCurrentState() + 1);
+      [&](auto& elem){
+         trackLists.push_back(elem.state.tracks.get()); },
+      least, 1 + greatest);
 
    int64_t total = projectFileIO.GetTotalUsage();
    int64_t used = projectFileIO.GetCurrentUsage(trackLists);
@@ -1264,11 +1267,11 @@ void ProjectFileManager::Compact()
                   Internat::FormatSize(total - used)));
    if (isBatch || dlg.ShowModal() == wxYES)
    {
-      // We can remove redo states.
-      undoManager.AbandonRedo();
+      // We can remove redo states, if they are after the saved state.
+      undoManager.RemoveStates(1 + greatest, undoManager.GetNumStates());
 
-      // We can remove all states before the last saved.
-      undoManager.RemoveStates(0, savedState);
+      // We can remove all states before the current and the last saved.
+      undoManager.RemoveStates(0, least);
 
       // And clear the clipboard, if needed
       if (&mProject == clipboard.Project().lock().get())
