@@ -570,7 +570,8 @@ UIHandle::Result SelectHandle::Click
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
       pTrack->TypeSwitch( [&] ( WaveTrack *wt ) {
-         WaveClip *const selectedClip = wt->GetClipAtX(event.m_x);
+         auto time = viewInfo.PositionToTime(event.m_x, mRect.x);
+         WaveClip *const selectedClip = wt->GetClipAtTime(time);
          if (selectedClip) {
             viewInfo.selectedRegion.setTimes(
                selectedClip->GetOffset(), selectedClip->GetEndTime());

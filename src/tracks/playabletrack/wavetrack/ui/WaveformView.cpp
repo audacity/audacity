@@ -84,7 +84,10 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                // Unconditional hits appropriate to the tool
                // If tools toolbar were eliminated, we would eliminate these
             case ToolCodes::envelopeTool: {
-               auto envelope = pTrack->GetEnvelopeAtX( st.state.m_x );
+               auto &viewInfo = ViewInfo::Get(*pProject);
+               auto time =
+                  viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
+               auto envelope = pTrack->GetEnvelopeAtTime(time);
                result = EnvelopeHandle::HitAnywhere(
                   view.mEnvelopeHandle, envelope, false);
                break;
@@ -712,10 +715,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    int iColorIndex = clip->GetColourIndex();
    artist->SetColours( iColorIndex );
 
-   // If we get to this point, the clip is actually visible on the
-   // screen, so remember the display rectangle.
-   clip->SetDisplayRect(hiddenMid);
-
    // The bounds (controlled by vertical zooming; -1.0...1.0
    // by default)
    float zoomMin, zoomMax;
@@ -1011,10 +1010,6 @@ void WaveformView::Draw(
       auto &dc = context.dc;
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());
-
-      for (const auto &clip : wt->GetClips()) {
-         clip->ClearDisplayRect();
-      }
 
       const auto artist = TrackArtist::Get( context );
       const auto hasSolo = artist->hasSolo;

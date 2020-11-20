@@ -2069,19 +2069,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    }
 }
 
-WaveClip* WaveTrack::GetClipAtX(int xcoord)
-{
-   for (const auto &clip: mClips)
-   {
-      wxRect r;
-      clip->GetDisplayRect(&r);
-      if (xcoord >= r.x && xcoord < r.x+r.width)
-         return clip.get();
-   }
-
-   return NULL;
-}
-
 WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
 {
    for (const auto &clip: mClips)
@@ -2119,18 +2106,18 @@ WaveClip* WaveTrack::GetClipAtTime(double time)
    return p != clips.rend() ? *p : nullptr;
 }
 
-Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)
+Envelope* WaveTrack::GetEnvelopeAtTime(double time)
 {
-   WaveClip* clip = GetClipAtX(xcoord);
+   WaveClip* clip = GetClipAtTime(time);
    if (clip)
       return clip->GetEnvelope();
    else
       return NULL;
 }
 
-Sequence* WaveTrack::GetSequenceAtX(int xcoord)
+Sequence* WaveTrack::GetSequenceAtTime(double time)
 {
-   WaveClip* clip = GetClipAtX(xcoord);
+   WaveClip* clip = GetClipAtTime(time);
    if (clip)
       return clip->GetSequence();
    else

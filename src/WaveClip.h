@@ -272,12 +272,6 @@ public:
       double t0, double t1, bool mayThrow = true) const;
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
-   // Set/clear/get rectangle that this WaveClip fills on screen. This is
-   // called by TrackArtist while actually drawing the tracks and clips.
-   void ClearDisplayRect() const;
-   void SetDisplayRect(const wxRect& r) const;
-   void GetDisplayRect(wxRect* r);
-
    /** Whenever you do an operation to the sequence that will change the number
     * of samples (that is, the length of the clip), you will want to call this
     * function to tell the envelope about it. */
@@ -366,8 +360,6 @@ public:
    mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
 
 protected:
-   mutable wxRect mDisplayRect {};
-
    double mOffset { 0 };
    int mRate;
    int mDirty { 0 };

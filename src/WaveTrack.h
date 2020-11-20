@@ -271,12 +271,11 @@ private:
    //
    // MM: We now have more than one sequence and envelope per track, so
    // instead of GetSequence() and GetEnvelope() we have the following
-   // function which give the sequence and envelope which is under the
-   // given X coordinate of the mouse pointer.
+   // function which give the sequence and envelope which contains the given
+   // time.
    //
-   WaveClip* GetClipAtX(int xcoord);
-   Sequence* GetSequenceAtX(int xcoord);
-   Envelope* GetEnvelopeAtX(int xcoord);
+   Sequence* GetSequenceAtTime(double time);
+   Envelope* GetEnvelopeAtTime(double time);
 
    WaveClip* GetClipAtSample(sampleCount sample);
    WaveClip* GetClipAtTime(double time);

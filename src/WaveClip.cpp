@@ -1187,22 +1187,6 @@ void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
       *s0 = sampleCount( floor(((t0 - mOffset) * mRate) + 0.5) );
 }
 
-void WaveClip::ClearDisplayRect() const
-{
-   mDisplayRect.x = mDisplayRect.y = -1;
-   mDisplayRect.width = mDisplayRect.height = -1;
-}
-
-void WaveClip::SetDisplayRect(const wxRect& r) const
-{
-   mDisplayRect = r;
-}
-
-void WaveClip::GetDisplayRect(wxRect* r)
-{
-   *r = mDisplayRect;
-}
-
 /*! @excsafety{Strong} */
 std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
    samplePtr buffer, sampleFormat format, size_t len)

@@ -93,7 +93,9 @@ UIHandlePtr EnvelopeHandle::WaveTrackHitTest
 {
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
-   Envelope *const envelope = wt->GetEnvelopeAtX(state.GetX());
+   auto &viewInfo = ViewInfo::Get(*pProject);
+   auto time = viewInfo.PositionToTime(state.m_x, rect.GetX());
+   Envelope *const envelope = wt->GetEnvelopeAtTime(time);
 
    if (!envelope)
       return {};
@@ -194,7 +196,9 @@ UIHandle::Result EnvelopeHandle::Click
                mEnvelopeEditors.push_back(
                   std::make_unique< EnvelopeEditor >( *mEnvelope, true ) );
             else {
-               auto e2 = channel->GetEnvelopeAtX(event.GetX());
+               auto time =
+                  viewInfo.PositionToTime(event.GetX(), evt.rect.GetX());
+               auto e2 = channel->GetEnvelopeAtTime(time);
                if (e2)
                   mEnvelopeEditors.push_back(
                      std::make_unique< EnvelopeEditor >( *e2, true ) );

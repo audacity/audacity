@@ -119,9 +119,9 @@ UIHandlePtr SampleHandle::HitTest
    /// method that tells us if the mouse event landed on an
    /// editable sample
    const auto wavetrack = pTrack.get();
+   const auto time = viewInfo.PositionToTime(state.m_x, rect.x);
 
-   const double tt =
-      adjustTime(wavetrack, viewInfo.PositionToTime(state.m_x, rect.x));
+   const double tt = adjustTime(wavetrack, time);
    if (!SampleResolutionTest(viewInfo, wavetrack, tt, rect.width))
       return {};
 
@@ -140,7 +140,7 @@ UIHandlePtr SampleHandle::HitTest
    wavetrack->GetDisplayBounds(&zoomMin, &zoomMax);
 
    double envValue = 1.0;
-   Envelope* env = wavetrack->GetEnvelopeAtX(state.GetX());
+   Envelope* env = wavetrack->GetEnvelopeAtTime(time);
    if (env)
       // Calculate sample as it would be rendered, so quantize time
       envValue = env->GetValue( tt, 1.0 / wavetrack->GetRate() );
@@ -436,7 +436,7 @@ UIHandle::Result SampleHandle::Cancel(AudacityProject *pProject)
 }
 
 float SampleHandle::FindSampleEditingLevel
-   (const wxMouseEvent &event, const ViewInfo &, double t0)
+   (const wxMouseEvent &event, const ViewInfo &viewInfo, double t0)
 {
    // Calculate where the mouse is located vertically (between +/- 1)
    float zoomMin, zoomMax;
@@ -450,7 +450,8 @@ float SampleHandle::FindSampleEditingLevel
          mClickedTrack->GetWaveformSettings().dBRange, zoomMin, zoomMax);
 
    //Take the envelope into account
-   Envelope *const env = mClickedTrack->GetEnvelopeAtX(event.m_x);
+   const auto time = viewInfo.PositionToTime(event.m_x, mRect.x);
+   Envelope *const env = mClickedTrack->GetEnvelopeAtTime(time);
    if (env)
    {
       // Calculate sample as it would be rendered, so quantize time
