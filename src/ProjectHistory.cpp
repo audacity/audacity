@@ -16,7 +16,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Track.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {
    []( AudacityProject &project ) {

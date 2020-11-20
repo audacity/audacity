@@ -19,8 +19,6 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 #include <wx/frame.h>
-#include "Dependencies.h"
-#include "FileFormats.h"
 #include "FileNames.h"
 #include "Legacy.h"
 #include "PlatformCompatibility.h"
@@ -35,18 +33,15 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
 #include "SelectionState.h"
-#include "Sequence.h"
 #include "Tags.h"
 #include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "export/Export.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "commands/CommandContext.h"
 #include "toolbars/SelectionBar.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"

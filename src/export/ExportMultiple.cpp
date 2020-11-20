@@ -37,7 +37,6 @@
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
 
-#include "../FileFormats.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../Project.h"

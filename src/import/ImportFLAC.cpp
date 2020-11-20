@@ -42,7 +42,6 @@
 #include "ImportPlugin.h"
 
 #include "../Tags.h"
-#include "../WaveClip.h"
 #include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 

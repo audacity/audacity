@@ -9,10 +9,9 @@
 #ifndef __AUDACITY_COMMAND_FUNCTORS__
 #define __AUDACITY_COMMAND_FUNCTORS__
 
-#include "Command.h"
-
 class AudacityProject;
 class AudacityApp;
+class CommandContext;
 class wxEvtHandler;
 
 // Base class for objects, to whose member functions, the CommandManager will

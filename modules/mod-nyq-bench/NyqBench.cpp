@@ -25,7 +25,6 @@
 
 #include "AudioIOBase.h"
 #include "CommonCommandFlags.h"
-#include "LabelTrack.h"
 #include "ModuleManager.h"
 #include "Prefs.h"
 #include "Project.h"

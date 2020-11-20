@@ -71,7 +71,6 @@ effects from this one class.
 #include "../../Prefs.h"
 #include "../../wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
-#include "../../prefs/WaveformSettings.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../../widgets/NumericTextCtrl.h"

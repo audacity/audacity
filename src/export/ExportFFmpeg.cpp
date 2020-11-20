@@ -33,7 +33,6 @@ function.
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
 
-#include "../FileFormats.h"
 #include "../Mix.h"
 #include "../ProjectSettings.h"
 #include "../Tags.h"

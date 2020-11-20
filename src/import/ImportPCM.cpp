@@ -36,7 +36,6 @@
 
 #include "sndfile.h"
 
-#include "../WaveClip.h"
 #include "../ShuttleGui.h"
 
 #include "../prefs/QualityPrefs.h"

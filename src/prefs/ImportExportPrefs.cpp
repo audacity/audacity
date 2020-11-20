@@ -20,7 +20,6 @@
 
 #include <wx/defs.h>
 
-#include "../FileFormats.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 

@@ -50,7 +50,6 @@
 
 #include "../widgets/FileDialog/FileDialog.h"
 
-#include "../FileFormats.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
@@ -66,11 +65,11 @@
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"
 #include "../AColor.h"
-#include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/ErrorDialog.h"
+#include "../wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin

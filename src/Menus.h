@@ -22,13 +22,10 @@ class wxCommandEvent;
 class AudacityProject;
 class CommandContext;
 class CommandManager;
-class LabelTrack;
 class PluginDescriptor;
 class Track;
 class TrackList;
 class ViewInfo;
-class WaveClip;
-class WaveTrack;
 
 enum EffectType : int;
 

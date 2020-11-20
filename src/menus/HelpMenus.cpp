@@ -11,7 +11,6 @@
 #include "../AudioIOBase.h"
 #include "../CommonCommandFlags.h"
 #include "../CrashReport.h"
-#include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../HelpText.h"
 #include "../Menus.h"

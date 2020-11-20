@@ -31,9 +31,8 @@ UndoManager
 #include "Project.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"          // temp
-#include "NoteTrack.h"  // for Sonify* function declarations
+//#include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
 #include "Tags.h"
 #include "widgets/ProgressDialog.h"
@@ -272,7 +271,7 @@ void UndoManager::ModifyState(const TrackList * l,
       return;
    }
 
-   SonifyBeginModifyState();
+//   SonifyBeginModifyState();
    // Delete current -- not necessary, but let's reclaim space early
    stack[current]->state.tracks.reset();
 
@@ -290,7 +289,7 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.tags = tags;
 
    stack[current]->state.selectedRegion = selectedRegion;
-   SonifyEndModifyState();
+//   SonifyEndModifyState();
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );

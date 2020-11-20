@@ -31,7 +31,6 @@
 
 class wxRect;
 
-class LabelTrack;
 class SpectrumAnalyst;
 class Track;
 class TrackList;
@@ -44,10 +43,6 @@ class AdornedRulerPanel;
 class LWSlider;
 
 class TrackPanelAx;
-
-class NoteTrack;
-class WaveTrack;
-class WaveClip;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;

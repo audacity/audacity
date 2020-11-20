@@ -30,7 +30,7 @@ effects.
 
 #include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
-#include "../commands/Command.h"
+#include "../commands/AudacityCommand.h"
 #include "../PluginManager.h"
 
 

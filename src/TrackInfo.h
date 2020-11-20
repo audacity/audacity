@@ -23,10 +23,8 @@ class wxWindow;
 
 class ButtonHandle;
 class LWSlider;
-class NoteTrack;
 class Track;
 struct TrackPanelDrawingContext;
-class WaveTrack;
 
 static const int TitleSoloBorderOverlap = 1;
 
