@@ -159,7 +159,14 @@ void UndoManager::SetLongDescription(
 
 void UndoManager::RemoveStateAt(int n)
 {
-   stack.erase(stack.begin() + n);
+   // Remove the state from the array first, and destroy it at function exit.
+   // Because in case of callbacks from destruction of Sample blocks, there
+   // might be a yield to GUI and other events might inspect the undo stack
+   // (such as history window update).  Don't expose an inconsistent stack
+   // state.
+   auto iter = stack.begin() + n;
+   auto state = std::move(*iter);
+   stack.erase(iter);
 }
 
 
