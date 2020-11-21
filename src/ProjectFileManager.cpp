@@ -1257,10 +1257,11 @@ void ProjectFileManager::Compact()
    const auto least = std::min<size_t>(savedState, currentState);
    const auto greatest = std::max<size_t>(savedState, currentState);
    std::vector<const TrackList*> trackLists;
-   undoManager.VisitStates(
-      [&](auto& elem){
-         trackLists.push_back(elem.state.tracks.get()); },
-      least, 1 + greatest);
+   auto fn = [&](auto& elem){
+      trackLists.push_back(elem.state.tracks.get()); };
+   undoManager.VisitStates(fn, least, 1 + least);
+   if (least != greatest)
+      undoManager.VisitStates(fn, greatest, 1 + greatest);
 
    int64_t total = projectFileIO.GetTotalUsage();
    int64_t used = projectFileIO.GetCurrentUsage(trackLists);
@@ -1282,6 +1283,10 @@ void ProjectFileManager::Compact()
    {
       // We can remove redo states, if they are after the saved state.
       undoManager.RemoveStates(1 + greatest, undoManager.GetNumStates());
+
+      // We can remove all states between the current and the last saved.
+      if (least < greatest)
+         undoManager.RemoveStates(least + 1, greatest);
 
       // We can remove all states before the current and the last saved.
       undoManager.RemoveStates(0, least);
