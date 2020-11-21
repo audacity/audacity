@@ -941,6 +941,31 @@ Connection &ProjectFileIO::CurrConn()
    return connectionPtr.mpConnection;
 }
 
+namespace {
+bool MoveProject(const FilePath &src, const FilePath &dst)
+{
+   // Assume the src database file is not busy.
+   if (!wxRenameFile(src, dst))
+      return false;
+   // So far so good, but the separate -wal file might yet exist, as when
+   // checkpointing failed for limited space on the drive.  If so move it too
+   // or else lose data.
+   auto srcWalFilename = src + wxT("-wal");
+   if (wxFileExists(srcWalFilename)) {
+      auto dstWalFilename = dst + wxT("-wal");
+      if (!wxRenameFile(srcWalFilename, dstWalFilename)) {
+         // undo the first move
+         if (!wxRenameFile(dst, src)) {
+            // ... ???
+            wxASSERT(false);
+         }
+         return false;
+      }
+   }
+   return true;
+}
+}
+
 void ProjectFileIO::Compact(
    const std::vector<const TrackList *> &tracks, bool force)
 {
@@ -1869,11 +1894,11 @@ bool ProjectFileIO::SaveProject(
       FilePath savedName = mFileName;
       if (CloseConnection())
       {
-         if (wxRenameFile(savedName, fileName))
+         if (MoveProject(savedName, fileName))
          {
             if (!OpenConnection(fileName))
             {
-               wxRenameFile(fileName, savedName);
+               MoveProject(fileName, savedName);
                OpenConnection(savedName);
             }
          }
