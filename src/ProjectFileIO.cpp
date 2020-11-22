@@ -31,9 +31,16 @@ Paul Licameli split from AudacityProject.cpp
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
+#include "widgets/ErrorDialog.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/ProgressDialog.h"
+#include "wxFileNameWrapper.h"
 #include "xml/XMLFileReader.h"
+
+#undef NO_SHM
+#if !defined(__WXMSW__)
+   #define NO_SHM
+#endif
 
 wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 
@@ -148,7 +155,7 @@ public:
          mRc = sqlite3_initialize();
       }
 
-#if !defined(__WXMSW__)
+#ifdef NO_SHM
       if (mRc == SQLITE_OK)
       {
          // Use the "unix-excl" VFS to make access to the DB exclusive.  This gets
@@ -941,29 +948,148 @@ Connection &ProjectFileIO::CurrConn()
    return connectionPtr.mpConnection;
 }
 
-namespace {
-bool MoveProject(const FilePath &src, const FilePath &dst)
+const std::vector<wxString> &ProjectFileIO::AuxiliaryFileSuffixes()
 {
-   // Assume the src database file is not busy.
-   if (!wxRenameFile(src, dst))
+   static const std::vector<wxString> strings {
+      "-wal",
+#ifndef NO_SHM
+      "-shm",
+#endif
+   };
+   return strings;
+}
+
+FilePath ProjectFileIO::SafetyFileName(const FilePath &src)
+{
+   wxFileNameWrapper fn{ src };
+
+   // Extra characters inserted into filename before extension
+   wxString extra =
+#ifdef __WXGTK__
+      wxT("~")
+#else
+      wxT(".bak")
+#endif
+   ;
+
+   int nn = 1;
+   auto numberString = [](int num) -> wxString {
+      return num == 1 ? "" : wxString::Format(".%d", num);
+   };
+
+   auto suffixes = AuxiliaryFileSuffixes();
+   suffixes.push_back({});
+
+   // Find backup paths not already occupied; check all auxiliary suffixes
+   const auto name = fn.GetName();
+   FilePath result;
+   do {
+      fn.SetName( name + numberString(nn++) + extra );
+      result = fn.GetFullPath();
+   }
+   while( std::any_of(suffixes.begin(), suffixes.end(), [&](auto &suffix){
+      return wxFileExists(result + suffix);
+   }) );
+
+   return result;
+}
+
+bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
+{
+   if ( !wxRenameFile(src, dst) ) {
+      auto &window = GetProjectFrame( mProject );
+      ShowErrorDialog(
+         &window,
+         XO("Error Writing to File"),
+         XO("Audacity failed to write file %s.\n"
+            "Perhaps disk is full or not writable.\n"
+            "For tips on freeing up space, click the help button.")
+            .Format(dst),
+         "Error:_Disk_full_or_not_writable"
+         );
       return false;
-   // So far so good, but the separate -wal file might yet exist, as when
-   // checkpointing failed for limited space on the drive.  If so move it too
-   // or else lose data.
-   auto srcWalFilename = src + wxT("-wal");
-   if (wxFileExists(srcWalFilename)) {
-      auto dstWalFilename = dst + wxT("-wal");
-      if (!wxRenameFile(srcWalFilename, dstWalFilename)) {
-         // undo the first move
-         if (!wxRenameFile(dst, src)) {
-            // ... ???
-            wxASSERT(false);
-         }
-         return false;
-      }
    }
    return true;
 }
+
+bool ProjectFileIO::MoveProject(const FilePath &src, const FilePath &dst)
+{
+   // Assume the src database file is not busy.
+   if (!RenameOrWarn(src, dst))
+      return false;
+
+   // So far so good, but the separate -wal and -shm files might yet exist,
+   // as when checkpointing failed for limited space on the drive.
+   // If so move them too or else lose data.
+
+   std::vector< std::pair<FilePath, FilePath> > pairs{ { src, dst } };
+   bool success = false;
+   auto cleanup = finally([&]{
+      if (!success) {
+         // If any one of the renames failed, back out the previous ones.
+         // This should be a no-fail recovery!  Not clear what to do if any
+         // of these renames fails.
+         for (auto &pair : pairs) {
+            if (!(pair.first.empty() && pair.second.empty()))
+               wxRenameFile(pair.second, pair.first);
+         }
+      }
+   });
+
+   for (const auto &suffix : AuxiliaryFileSuffixes()) {
+      auto srcName = src + suffix;
+      if (wxFileExists(srcName)) {
+         auto dstName = dst + suffix;
+         if (!RenameOrWarn(srcName, dstName))
+            return false;
+         pairs.push_back({ srcName, dstName });
+      }
+   }
+
+   return (success = true);
+}
+
+ProjectFileIO::BackupProject::BackupProject(
+   ProjectFileIO &projectFileIO, const FilePath &path )
+{
+   auto safety = SafetyFileName(path);
+   if (!projectFileIO.MoveProject(path, safety))
+      return;
+
+   mPath = path;
+   mSafety = safety;
+}
+
+void ProjectFileIO::BackupProject::Discard()
+{
+   if (!mPath.empty()) {
+      // Succeeded; don't need the safety files
+      auto suffixes = AuxiliaryFileSuffixes();
+      suffixes.push_back({});
+      for (const auto &suffix : suffixes) {
+         auto path = mSafety + suffix;
+         if (wxFileExists(path))
+            wxRemoveFile(path);
+      }
+      mSafety.clear();
+   }
+}
+
+ProjectFileIO::BackupProject::~BackupProject()
+{
+   if (!mPath.empty()) {
+      if (!mSafety.empty()) {
+         // Failed; restore from safety files
+         auto suffixes = AuxiliaryFileSuffixes();
+         suffixes.push_back({});
+         for (const auto &suffix : suffixes) {
+            auto path = mPath + suffix;
+            if (wxFileExists(path))
+               wxRemoveFile(path);
+            wxRenameFile(mSafety + suffix, mPath + suffix);
+         }
+      }
+   }
 }
 
 void ProjectFileIO::Compact(

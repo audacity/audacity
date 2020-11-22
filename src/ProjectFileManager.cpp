@@ -288,33 +288,12 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    // End of confirmations
 
    // Always save a backup of the original project file
-   wxString safetyFileName;
+   Optional<ProjectFileIO::BackupProject> pBackupProject;
    if (fromSaveAs && wxFileExists(fileName))
    {
-#ifdef __WXGTK__
-      safetyFileName = fileName + wxT("~");
-#else
-      safetyFileName = fileName + wxT(".bak");
-#endif
-
-      if (wxFileExists(safetyFileName))
-      {
-         wxRemoveFile(safetyFileName);
-      }
-
-      if ( !wxRenameFile(fileName, safetyFileName) )
-      {
-         ShowErrorDialog(
-            &window,
-            XO("Error Writing to File"),
-            XO("Audacity failed to write file %s.\n"
-               "Perhaps disk is full or not writable.\n"
-               "For tips on freeing up space, click the help button.")
-               .Format(safetyFileName),
-            "Error:_Disk_full_or_not_writable"
-            );
+      pBackupProject.emplace(projectFileIO, fileName);
+      if (!pBackupProject->IsOk())
          return false;
-      }
    }
 
    bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks.get());
@@ -329,16 +308,6 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
             .Format(fileName),
          "Error:_Disk_full_or_not_writable"
          );
-
-      if (fromSaveAs)
-      {
-         if (wxFileExists(fileName))
-         {
-            wxRemoveFile(fileName);
-         }
-         wxRename(safetyFileName, fileName);
-      }
-
       return false;
    }
 
@@ -361,12 +330,9 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    }
 
    // If we get here, saving the project was successful, so we can DELETE
-   // the .bak file (because it now does not fit our block files anymore
-   // anyway).
-   if (!safetyFileName.empty())
-   {
-      wxRemoveFile(safetyFileName);
-   }
+   // any backup project.
+   if (pBackupProject)
+      pBackupProject->Discard();
 
    return true;
 }

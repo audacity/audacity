@@ -121,6 +121,37 @@ public:
    //    ProjectManager::OnCloseWindow()
    void SetBypass();
 
+private:
+   //! Strings like -wal that may be appended to main project name to get other files created by
+   //! the database system
+   static const std::vector<wxString> &AuxiliaryFileSuffixes();
+
+   //! Generate a name for short-lived backup project files from an existing project
+   static FilePath SafetyFileName(const FilePath &src);
+
+   //! Rename a file or put up appropriate warning message.
+   /*! Failure might happen when renaming onto another device, doing copy of contents */
+   bool RenameOrWarn(const FilePath &src, const FilePath &dst);
+
+   bool MoveProject(const FilePath &src, const FilePath &dst);
+
+public:
+   // Object manages the temporary backing-up of project paths while
+   // trying to overwrite with new contents, and restoration in case of failure
+   class BackupProject {
+   public:
+      //! Rename project file at path, and any auxiliary files, to backup path names
+      BackupProject( ProjectFileIO &projectFileIO, const FilePath &path );
+      //! Returns false if the renaming in the constructor failed
+      bool IsOk() { return !mPath.empty(); }
+      //! if `!IsOk()` do nothing; else remove backup files
+      void Discard();
+      //! if `!IsOk()` do nothing; else if `Discard()` was not called, undo the renaming
+      ~BackupProject();
+   private:
+      FilePath mPath, mSafety;
+   };
+
    // Remove all unused space within a project file
    void Compact(
       const std::vector<const TrackList *> &tracks, bool force = false);
