@@ -196,13 +196,28 @@ wxString FileNames::MkDir(const wxString &Str)
    return Str;
 }
 
+static wxString &TempDirPath()
+{
+   static wxString path;
+   return path;
+}
+
 /// Returns the directory used for temp files.
 /// \todo put a counter in here to see if it gets used a lot.
 /// if it does, then maybe we should cache the path name
 /// each time.
 wxString FileNames::TempDir()
 {
-   return FileNames::MkDir(gPrefs->Read(PreferenceKey(Operation::Temp, PathType::_None), wxT("")));
+   auto &path = TempDirPath();
+   if (gPrefs && path.empty())
+      path =
+         gPrefs->Read(PreferenceKey(Operation::Temp, PathType::_None), wxT(""));
+   return FileNames::MkDir(path);
+}
+
+void FileNames::ResetTempDir()
+{
+   TempDirPath().clear();
 }
 
 // originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.

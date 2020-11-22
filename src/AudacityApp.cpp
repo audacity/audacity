@@ -1637,6 +1637,7 @@ bool AudacityApp::InitTempDir()
    chmod(OSFILENAME(temp), 0755);
    #endif
 
+   FileNames::ResetTempDir();
    FileNames::UpdateDefaultPath(FileNames::Operation::Temp, temp);
 
    // Make sure the temp dir isn't locked by another process.

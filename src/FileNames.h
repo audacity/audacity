@@ -66,6 +66,7 @@ namespace FileNames
 
    wxString MkDir(const wxString &Str);
    wxString TempDir();
+   void ResetTempDir();
 
    const FilePath &DefaultTempDir();
    void SetDefaultTempDir( const FilePath &tempDir );

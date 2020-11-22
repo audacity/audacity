@@ -1014,8 +1014,7 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
 
 bool ProjectFileIO::MoveProject(const FilePath &src, const FilePath &dst)
 {
-   // Assume the src database file is not busy.
-   if (!RenameOrWarn(src, dst))
+   // Assume the src database file is not busy.   if (!RenameOrWarn(src, dst))
       return false;
 
    // So far so good, but the separate -wal and -shm files might yet exist,
