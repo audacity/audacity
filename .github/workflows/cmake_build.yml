@@ -1,24 +1,9 @@
-#
 # CMake based build for Audacity
-#
 name: CMake Build
 
-#
-# Only execute on "git push" actions
-#
-on:
-  push:
-    # Remove the "#" from the next 2 lines if you need to disable this action
-    #branches:
-    #  - disable
-  pull_request:
-    # Remove the "#" from the next 2 lines if you need to disable this action
-    #branches:
-    #  - disable
+on: [push, pull_request]
 
-#
 # Global environment variables
-#
 env:
   WXURL: https://github.com/audacity/wxWidgets
   WXREF: audacity-fixes-3.1.3
@@ -28,9 +13,8 @@ env:
   # instead.
   DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
 
-#
+
 # Define our job(s)
-#
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -63,17 +47,11 @@ jobs:
           }
 
     steps:
-    # =========================================================================
     # SHARED: Checkout source
-    # =========================================================================
     - name: Checkout
       uses: actions/checkout@v2
-    #  with:
-    #    ref: master
 
-    # =========================================================================
     # SHARED: Retrieve git hashes and set up for cache
-    # =========================================================================
     - name: Setup cache
       shell: bash
       run: |
@@ -97,9 +75,7 @@ jobs:
         # Export the destination directory name
         echo "DEST=${{matrix.config.name}}_${shorthash}" >> ${GITHUB_ENV}
 
-    # =========================================================================
     # SHARED: Create and/or retrieve wxWidgets cached build
-    # =========================================================================
     - name: Populate cache
       id: cache
       uses: actions/cache@v1
@@ -108,9 +84,7 @@ jobs:
         key: ${{ env.WXHASH }}.2
         path: ${{ env.WXWIN }}
 
-    # =========================================================================
     # WINDOWS: Build (for all versions of Windows)
-    # =========================================================================
     - name: Build for Windows
       if: startswith( matrix.config.os, 'windows' )
       shell: bash
@@ -171,9 +145,7 @@ jobs:
         # Create artifact (zipped as Github actions don't preserve permissions)
         cmake -E tar c "${GITHUB_SHA}.zip" --format=zip "${DEST}"
 
-    # =========================================================================
     # MACOS: Build (for all versions of MacOS)
-    # =========================================================================
     - name: Build for macOS
       if: startswith( matrix.config.os, 'macos' )
       shell: bash
@@ -246,9 +218,7 @@ jobs:
         # Create artifact (zipped as Github actions don't preserve permissions)
         cmake -E tar c "${GITHUB_SHA}.zip" --format=zip "${DEST}"
 
-    # =========================================================================
     # UBUNTU: Build (for all versions of Ubuntu)
-    # =========================================================================
     - name: Build for Ubuntu
       if: startswith( matrix.config.os, 'ubuntu' )
       shell: bash
@@ -320,12 +290,9 @@ jobs:
         # Create artifact (zipped as Github actions don't preserve permissions)
         cmake -E tar c "${GITHUB_SHA}.zip" --format=zip "${DEST}"
 
-    # =========================================================================
     # SHARED: Attach the artifact to the workflow results
-    # =========================================================================
     - name: Upload artifact
       uses: actions/upload-artifact@v1
       with:
         name: ${{ matrix.config.name }}_${{ env.SHORTHASH }}
         path: ${{ github.sha }}.zip
-
