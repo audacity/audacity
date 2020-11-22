@@ -78,7 +78,7 @@ jobs:
     # SHARED: Create and/or retrieve wxWidgets cached build
     - name: Populate cache
       id: cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         # Increment the number at the end to force recreation of the cache
         key: ${{ env.WXHASH }}.2
@@ -292,7 +292,7 @@ jobs:
 
     # SHARED: Attach the artifact to the workflow results
     - name: Upload artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.config.name }}_${{ env.SHORTHASH }}
         path: ${{ github.sha }}.zip
