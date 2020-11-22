@@ -185,7 +185,10 @@ size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
 
    // Collect ids that won't survive (and are not negative pseudo ids)
    SampleBlockIDSet seen, mayDelete;
-   std::for_each( first + begin, first + end, [&](const auto &p){
+   for( auto ii = begin; ii < end; ++ii) {
+      if (ii == saved)
+         continue;
+      auto &p = *(first + ii);
       auto &tracks = *p->state.tracks;
       InspectBlocks(tracks, [&]( const SampleBlock &block ){
          auto id = block.GetBlockID();
@@ -193,7 +196,7 @@ size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
             mayDelete.insert( id );
       },
       &seen);
-   } );
+   }
    return mayDelete.size();
 }
 
