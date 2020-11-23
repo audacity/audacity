@@ -2255,6 +2255,13 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
    wxLongLong freeSpace;
    if (wxGetDiskSpace(wxPathOnly(mFileName), NULL, &freeSpace))
    {
+      if (IsOnFATFileSystem(mFileName)) {
+         // 4 GiB per-file maximum
+         constexpr auto limit = 1ll << 32;
+         auto length = wxFile{mFileName}.Length();
+         auto free = std::max<wxLongLong>(0, limit - length);
+         freeSpace = std::min(freeSpace, free);
+      }
       return freeSpace;
    }
 
