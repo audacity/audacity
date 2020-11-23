@@ -349,25 +349,19 @@ void DBConnection::CheckpointThread()
             // Stop trying to checkpoint
             giveUp = true;
 
-
             // Stop the audio.
-            // OnStopAudio happens in the main thread.
             GuardedCall(
                [&message] {
                throw SimpleMessageBoxException{
                   message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
-               [&](AudacityException * e) {; },
-               [&](AudacityException * e) { OnStopAudio(); }
+               SimpleGuard<void>{},
+               [&](AudacityException * e) {
+                  // This executes in the main thread.
+                  OnStopAudio();
+                  if (e)
+                     e->DelayedHandlerAction();
+               }
             );
-
-            // The message box in the previous GuardedCall is swallowed,
-            // so send it again....
-            // Throw and catch and AudacityException, enqueuing the
-            // error message box for the event loop in the main thread
-            GuardedCall([&message] {
-               throw SimpleMessageBoxException{
-                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; }
-                  );
          }
       }
    }
