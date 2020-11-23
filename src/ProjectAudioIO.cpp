@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AudioIOBase.h"
 #include "Project.h"
+#include "widgets/MeterPanelBase.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sAudioIOKey{
   []( AudacityProject &parent ){

@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.h
 #define __PROJECT_AUDIO_IO__
 
 #include "ClientData.h" // to inherit
+#include <wx/weakref.h>
 
 class AudacityProject;
 class MeterPanelBase;
@@ -43,8 +44,8 @@ private:
    AudacityProject &mProject;
 
    // Project owned meters
-   MeterPanelBase *mPlaybackMeter{};
-   MeterPanelBase *mCaptureMeter{};
+   wxWeakRef<MeterPanelBase> mPlaybackMeter{};
+   wxWeakRef<MeterPanelBase> mCaptureMeter{};
 
    int  mAudioIOToken{ -1 };
 };
