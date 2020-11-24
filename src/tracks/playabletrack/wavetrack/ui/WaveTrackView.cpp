@@ -728,14 +728,6 @@ void WaveTrackSubView::DrawBoldBoundaries(
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
 
-   // Update cache for locations, e.g. cutlines and merge points
-   // Bug2588: do this for both channels, even if one is not drawn, so that
-   // cut-line editing (which depends on the locations cache) works properly.
-   // If both channels are visible, we will duplicate this effort, but that
-   // matters little.
-   for( auto channel: TrackList::Channels(track))
-      channel->UpdateLocationsCache();
-
    const auto &zoomInfo = *artist->pZoomInfo;
 
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
