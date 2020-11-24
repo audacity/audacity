@@ -325,9 +325,18 @@ void DBConnection::CheckpointThread()
 
          // And kick off the checkpoint. This may not checkpoint ALL frames
          // in the WAL.  They'll be gotten the next time around.
-         auto rc = giveUp ? SQLITE_OK :
-            sqlite3_wal_checkpoint_v2(
-               db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
+         int rc;
+         using namespace std::chrono;
+         do {
+            rc = giveUp ? SQLITE_OK :
+               sqlite3_wal_checkpoint_v2(
+                  db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
+         }
+         // Contentions for an exclusive lock on the databse are possible,
+         // even while the main thread is merely drawing the tracks, which
+         // may perform reads
+         while (rc == SQLITE_BUSY && (std::this_thread::sleep_for(1ms), true));
+
          // Reset
          mCheckpointActive = false;
 
