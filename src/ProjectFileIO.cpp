@@ -2149,7 +2149,8 @@ bool ProjectFileIO::SaveProject(
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-   return CopyTo(fileName, XO("Backing up project"), false, true);
+   return CopyTo(fileName, XO("Backing up project"), false, true,
+      {&TrackList::Get(mProject)});
 }
 
 bool ProjectFileIO::OpenProject()
