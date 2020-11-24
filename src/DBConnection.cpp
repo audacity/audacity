@@ -332,7 +332,7 @@ void DBConnection::CheckpointThread()
                sqlite3_wal_checkpoint_v2(
                   db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
          }
-         // Contentions for an exclusive lock on the databse are possible,
+         // Contentions for an exclusive lock on the database are possible,
          // even while the main thread is merely drawing the tracks, which
          // may perform reads
          while (rc == SQLITE_BUSY && (std::this_thread::sleep_for(1ms), true));
