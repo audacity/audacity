@@ -137,6 +137,9 @@ private:
    bool MoveProject(const FilePath &src, const FilePath &dst);
 
 public:
+   //! Remove any files associated with a project at given path; return true if successful
+   static bool RemoveProject(const FilePath &filename);
+
    // Object manages the temporary backing-up of project paths while
    // trying to overwrite with new contents, and restoration in case of failure
    class BackupProject {

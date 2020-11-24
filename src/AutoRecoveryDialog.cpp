@@ -287,25 +287,7 @@ void AutoRecoveryDialog::OnDiscardSelected(wxCommandEvent &WXUNUSED(evt))
 
          wxFileName temp(FileNames::TempDir(), wxT(""));
          if (file == temp)
-         {
-            if (wxRemoveFile(fileName))
-            {
-               if (wxFileExists(fileName + wxT("-shm")))
-               {
-                  wxRemoveFile(fileName + wxT("-shm"));
-               }
-
-               if (wxFileExists(fileName + wxT("-wal")))
-               {
-                  wxRemoveFile(fileName + wxT("-wal"));
-               }
-
-               if (wxFileExists(fileName + wxT("-journal")))
-               {
-                  wxRemoveFile(fileName + wxT("-journal"));
-               }
-            }
-         }
+            ProjectFileIO::RemoveProject(fileName);
       }
       else
          // Don't remove from disk, but do (later) open the database

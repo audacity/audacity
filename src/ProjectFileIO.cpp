@@ -392,9 +392,7 @@ void ProjectFileIO::DiscardConnection()
          wxFileName file(mPrevFileName);
          file.SetFullName(wxT(""));
          if (file == temp)
-         {
-            wxRemoveFile(mPrevFileName);
-         }
+            RemoveProject(mPrevFileName);
       }
       mPrevConn = nullptr;
       mPrevFileName.clear();
@@ -742,6 +740,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
          sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
+         // RemoveProject not necessary to clean up attached database
          wxRemoveFile(destpath);
       }
    });
@@ -1051,6 +1050,21 @@ bool ProjectFileIO::MoveProject(const FilePath &src, const FilePath &dst)
    return (success = true);
 }
 
+bool ProjectFileIO::RemoveProject(const FilePath &filename)
+{
+   if (!wxFileExists(filename))
+      return false;
+
+   bool success = wxRemoveFile(filename);
+   auto &suffixes = AuxiliaryFileSuffixes();
+   for (const auto &suffix : suffixes) {
+      auto file = filename + suffix;
+      if (wxFileExists(file))
+         success = wxRemoveFile(file) && success;
+   }
+   return success;
+}
+
 ProjectFileIO::BackupProject::BackupProject(
    ProjectFileIO &projectFileIO, const FilePath &path )
 {
@@ -1066,13 +1080,7 @@ void ProjectFileIO::BackupProject::Discard()
 {
    if (!mPath.empty()) {
       // Succeeded; don't need the safety files
-      auto suffixes = AuxiliaryFileSuffixes();
-      suffixes.push_back({});
-      for (const auto &suffix : suffixes) {
-         auto path = mSafety + suffix;
-         if (wxFileExists(path))
-            wxRemoveFile(path);
-      }
+      RemoveProject(mSafety);
       mSafety.clear();
    }
 }
@@ -1171,6 +1179,8 @@ void ProjectFileIO::Compact(
          OpenConnection(origName);
       }
 
+      // Did not achieve any real compaction
+      // RemoveProject not needed for what was an attached database
       wxRemoveFile(tempName);
    }
 
@@ -2174,9 +2184,7 @@ bool ProjectFileIO::CloseProject()
          wxFileName file(filename);
          file.SetFullName(wxT(""));
          if (file == temp)
-         {
-            wxRemoveFile(filename);
-         }
+            RemoveProject(filename);
       }
    }
 
