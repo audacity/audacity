@@ -38,8 +38,11 @@ static const char *FastConfig =
    "PRAGMA <schema>.synchronous = OFF;"
    "PRAGMA <schema>.journal_mode = OFF;";
 
-DBConnection::DBConnection(const std::weak_ptr<AudacityProject> &pProject)
-:  mpProject{ pProject }
+DBConnection::DBConnection(
+   const std::weak_ptr<AudacityProject> &pProject,
+   const std::shared_ptr<DBConnectionErrors> &pErrors)
+: mpProject{ pProject }
+, mpErrors{ pErrors }
 {
    mDB = nullptr;
    mBypass = false;
@@ -63,21 +66,21 @@ bool DBConnection::ShouldBypass()
 void DBConnection::SetError(
    const TranslatableString &msg, const TranslatableString &libraryError)
 {
-   mLastError = msg;
-   mLibraryError = libraryError;
+   mpErrors->mLastError = msg;
+   mpErrors->mLibraryError = libraryError;
 }
 
 void DBConnection::SetDBError(
    const TranslatableString &msg, const TranslatableString &libraryError)
 {
-   mLastError = msg;
-   wxLogDebug(wxT("SQLite error: %s"), mLastError.Debug());
-   printf("   Lib error: %s", mLastError.Debug().mb_str().data());
+   mpErrors->mLastError = msg;
+   wxLogDebug(wxT("SQLite error: %s"), mpErrors->mLastError.Debug());
+   printf("   Lib error: %s", mpErrors->mLastError.Debug().mb_str().data());
 
-   mLibraryError = libraryError.empty()
+   mpErrors->mLibraryError = libraryError.empty()
       ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
-   wxLogDebug(wxT("   Lib error: %s"), mLibraryError.Debug());
-   printf("   Lib error: %s", mLibraryError.Debug().mb_str().data());
+   wxLogDebug(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
+   printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
 
    wxASSERT(false);
 }

@@ -26,11 +26,19 @@ struct sqlite3_stmt;
 class wxString;
 class AudacityProject;
 
+struct DBConnectionErrors
+{
+   TranslatableString mLastError;
+   TranslatableString mLibraryError;
+};
+
 class DBConnection
 {
 public:
-   explicit
-   DBConnection(const std::weak_ptr<AudacityProject> &pProject);
+
+   DBConnection(
+      const std::weak_ptr<AudacityProject> &pProject,
+      const std::shared_ptr<DBConnectionErrors> &pErrors);
    ~DBConnection();
 
    bool Open(const char *fileName);
@@ -79,11 +87,6 @@ public:
       const TranslatableString &msg,
       const TranslatableString &libraryError = {} );
 
-   const TranslatableString &GetLastError() const
-   { return mLastError; }
-   const TranslatableString &GetLibraryError() const
-   { return mLibraryError; }
-
 private:
    bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
@@ -103,8 +106,7 @@ private:
 
    std::map<enum StatementID, sqlite3_stmt *> mStatements;
 
-   TranslatableString mLastError;
-   TranslatableString mLibraryError;
+   std::shared_ptr<DBConnectionErrors> mpErrors;
 
    // Bypass transactions if database will be deleted after close
    bool mBypass;

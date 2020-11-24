@@ -247,6 +247,7 @@ const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
 
 ProjectFileIO::ProjectFileIO(AudacityProject &project)
    : mProject{ project }
+   , mpErrors{ std::make_shared<DBConnectionErrors>() }
 {
    mPrevConn = nullptr;
 
@@ -318,7 +319,8 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
    }
 
    // Pass weak_ptr to project into DBConnection constructor
-   curConn = std::make_unique<DBConnection>(mProject.shared_from_this());
+   curConn = std::make_unique<DBConnection>(
+      mProject.shared_from_this(), mpErrors);
    if (!curConn->Open(fileName))
    {
       curConn.reset();
@@ -2049,7 +2051,8 @@ bool ProjectFileIO::SaveProject(
       }
 
       // Open the newly created database
-      Connection newConn = std::make_unique<DBConnection>(mProject.shared_from_this());
+      Connection newConn = std::make_unique<DBConnection>(
+         mProject.shared_from_this(), mpErrors);
 
       // NOTE: There is a noticeable delay here when dealing with large multi-hour
       //       projects that we just created. The delay occurs in Open() when it
@@ -2270,14 +2273,12 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 
 const TranslatableString &ProjectFileIO::GetLastError()
 {
-   auto &currConn = CurrConn();
-   return currConn->GetLastError();
+   return mpErrors->mLastError;
 }
 
 const TranslatableString &ProjectFileIO::GetLibraryError()
 {
-   auto &currConn = CurrConn();
-   return currConn->GetLibraryError();
+   return mpErrors->mLibraryError;
 }
 
 void ProjectFileIO::SetError(

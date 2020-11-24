@@ -25,6 +25,7 @@ struct sqlite3_value;
 
 class AudacityProject;
 class DBConnection;
+struct DBConnectionErrors;
 class ProjectSerializer;
 class SqliteSampleBlock;
 class TrackList;
@@ -252,6 +253,8 @@ private:
 
    // non-static data members
    AudacityProject &mProject;
+
+   std::shared_ptr<DBConnectionErrors> mpErrors;
 
    // The project's file path
    FilePath mFileName;
