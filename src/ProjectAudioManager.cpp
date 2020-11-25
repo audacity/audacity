@@ -65,6 +65,8 @@ ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
 {
    static ProjectStatus::RegisteredStatusWidthFunction
       registerStatusWidthFunction{ StatusWidthFunction };
+   project.Bind( EVT_CHECKPOINT_FAILURE,
+      &ProjectAudioManager::OnCheckpointFailure, this );
 }
 
 ProjectAudioManager::~ProjectAudioManager() = default;
@@ -951,6 +953,12 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    if ( gAudioIO && &project == gAudioIO->GetOwningProject() ) {
       wxTheApp->CallAfter( [this]{ Pause(); } );
    }
+}
+
+void ProjectAudioManager::OnCheckpointFailure(wxCommandEvent &evt)
+{
+   evt.Skip();
+   Stop();
 }
 
 bool ProjectAudioManager::Playing() const

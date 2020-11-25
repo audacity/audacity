@@ -140,6 +140,8 @@ private:
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
+   void OnCheckpointFailure(wxCommandEvent &evt);
+
    AudacityProject &mProject;
 
    std::shared_ptr<TrackList> mCutPreviewTracks;

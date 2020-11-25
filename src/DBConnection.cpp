@@ -21,10 +21,6 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include "FileException.h"
 #include "wxFileNameWrapper.h"
 
-#include "./commands/CommandContext.h"
-#include "./ProjectAudioManager.h"
-
-
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
    "PRAGMA <schema>.locking_mode = SHARED;"
@@ -40,9 +36,11 @@ static const char *FastConfig =
 
 DBConnection::DBConnection(
    const std::weak_ptr<AudacityProject> &pProject,
-   const std::shared_ptr<DBConnectionErrors> &pErrors)
+   const std::shared_ptr<DBConnectionErrors> &pErrors,
+   CheckpointFailureCallback callback)
 : mpProject{ pProject }
 , mpErrors{ pErrors }
+, mCallback{ std::move(callback) }
 {
    mDB = nullptr;
    mBypass = false;
@@ -284,12 +282,6 @@ sqlite3_stmt *DBConnection::GetStatement(enum StatementID id)
 }
 
 
-void OnStopAudio()
-{
-   ProjectAudioManager::Get( *GetActiveProject() ).Stop();
-}
-
-
 void DBConnection::CheckpointThread()
 {
    // Open another connection to the DB to prevent blocking the main thread.
@@ -367,9 +359,10 @@ void DBConnection::CheckpointThread()
                throw SimpleMessageBoxException{
                   message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
                SimpleGuard<void>{},
-               [&](AudacityException * e) {
+               [this](AudacityException * e) {
                   // This executes in the main thread.
-                  OnStopAudio();
+                  if (mCallback)
+                     mCallback();
                   if (e)
                      e->DelayedHandlerAction();
                }

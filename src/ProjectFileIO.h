@@ -40,6 +40,11 @@ using Connection = std::unique_ptr<DBConnection>;
 
 using BlockIDs = std::unordered_set<SampleBlockID>;
 
+// An event processed by the project in the main thread after a checkpoint
+// failure was detected in a worker thread
+wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+                          EVT_CHECKPOINT_FAILURE, wxCommandEvent );
+
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
 class ProjectFileIO final
@@ -177,6 +182,8 @@ public:
    DBConnection &GetConnection();
 
 private:
+   void OnCheckpointFailure();
+
    void WriteXMLHeader(XMLWriter &xmlFile) const;
    void WriteXML(XMLWriter &xmlFile, bool recording = false,
       const TrackList *tracks = nullptr) /* not override */;

@@ -43,6 +43,7 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
+wxDEFINE_EVENT( EVT_CHECKPOINT_FAILURE, wxCommandEvent);
 
 static const int ProjectFileID = ('A' << 24 | 'U' << 16 | 'D' << 8 | 'Y');
 static const int ProjectFileVersion = 1;
@@ -320,7 +321,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 
    // Pass weak_ptr to project into DBConnection constructor
    curConn = std::make_unique<DBConnection>(
-      mProject.shared_from_this(), mpErrors);
+      mProject.shared_from_this(), mpErrors, [this]{ OnCheckpointFailure(); } );
    if (!curConn->Open(fileName))
    {
       curConn.reset();
@@ -1423,6 +1424,12 @@ XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
    return nullptr;
 }
 
+void ProjectFileIO::OnCheckpointFailure()
+{
+   wxCommandEvent evt{ EVT_CHECKPOINT_FAILURE };
+   mProject.ProcessEvent(evt);
+}
+
 void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
 {
    xmlFile.Write(wxT("<?xml "));
@@ -2062,7 +2069,8 @@ bool ProjectFileIO::SaveProject(
 
       // Open the newly created database
       Connection newConn = std::make_unique<DBConnection>(
-         mProject.shared_from_this(), mpErrors);
+         mProject.shared_from_this(), mpErrors,
+         [this]{ OnCheckpointFailure(); });
 
       // NOTE: There is a noticeable delay here when dealing with large multi-hour
       //       projects that we just created. The delay occurs in Open() when it

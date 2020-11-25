@@ -14,6 +14,7 @@ Paul Licameli -- split from ProjectFileIO.h
 
 #include <atomic>
 #include <condition_variable>
+#include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -35,10 +36,14 @@ struct DBConnectionErrors
 class DBConnection
 {
 public:
+   // Type of function invoked in the main thread after detection of
+   // checkpoint failure, which might have been in a worker thread
+   using CheckpointFailureCallback = std::function<void()>;
 
    DBConnection(
       const std::weak_ptr<AudacityProject> &pProject,
-      const std::shared_ptr<DBConnectionErrors> &pErrors);
+      const std::shared_ptr<DBConnectionErrors> &pErrors,
+      CheckpointFailureCallback callback);
    ~DBConnection();
 
    bool Open(const char *fileName);
@@ -107,6 +112,7 @@ private:
    std::map<enum StatementID, sqlite3_stmt *> mStatements;
 
    std::shared_ptr<DBConnectionErrors> mpErrors;
+   CheckpointFailureCallback mCallback;
 
    // Bypass transactions if database will be deleted after close
    bool mBypass;
