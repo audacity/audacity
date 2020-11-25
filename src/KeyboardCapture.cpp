@@ -239,7 +239,19 @@ public:
 
          // Give it back to WX for normal processing.
          return Event_Skip;
-      }, MakeSimpleGuard( Event_Skip ) );
+      },
+      // Immediate handler invokes the same high level catch-all as for
+      // unhandled exceptions, which will also do its own delayed handling
+      [](AudacityException *pEx){
+         if (pEx)
+            wxTheApp->OnExceptionInMainLoop();
+         else
+            throw;
+         return Event_Processed;
+      },
+      // So don't duplicate delayed handling:
+      [](auto){}
+      );
    }
 
 private:
