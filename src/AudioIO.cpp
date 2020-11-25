@@ -461,6 +461,8 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "prefs/GUISettings.h"
 #include "Prefs.h"
 #include "Project.h"
+#include "DBConnection.h"
+#include "ProjectFileIO.h"
 #include "WaveTrack.h"
 
 #include "effects/RealtimeEffectManager.h"
@@ -2373,14 +2375,27 @@ void AudioIO::StopStream()
             } );
          }
 
-         for (auto &interval : mLostCaptureIntervals) {
-            auto &start = interval.first;
-            auto duration = interval.second;
-            for (auto &track : mCaptureTracks) {
-               GuardedCall([&] {
-                  track->SyncLockAdjust(start, start + duration);
-               });
+         
+         if (!mLostCaptureIntervals.empty())
+         {
+            // This scope may combine many splittings of wave tracks
+            // into one transaction, lessening the number of checkpoints
+            Optional<TransactionScope> pScope;
+            if (mOwningProject) {
+               auto &pIO = ProjectFileIO::Get(*mOwningProject);
+               pScope.emplace(pIO.GetConnection(), "Dropouts");
             }
+            for (auto &interval : mLostCaptureIntervals) {
+               auto &start = interval.first;
+               auto duration = interval.second;
+               for (auto &track : mCaptureTracks) {
+                  GuardedCall([&] {
+                     track->SyncLockAdjust(start, start + duration);
+                  });
+               }
+            }
+            if (pScope)
+               pScope->Commit();
          }
 
          if (pListener)
@@ -2893,6 +2908,15 @@ void AudioIO::FillBuffers()
          if (mAudioThreadShouldCallFillBuffersOnce ||
              deltat >= mMinCaptureSecsToCopy)
          {
+            // This scope may combine many appendings of wave tracks,
+            // and also an autosave, into one transaction,
+            // lessening the number of checkpoints
+            Optional<TransactionScope> pScope;
+            if (mOwningProject) {
+               auto &pIO = ProjectFileIO::Get(*mOwningProject);
+               pScope.emplace(pIO.GetConnection(), "Recording");
+            }
+
             bool newBlocks = false;
 
             // Append captured samples to the end of the WaveTracks.
@@ -3027,6 +3051,9 @@ void AudioIO::FillBuffers()
             auto pListener = GetListener();
             if (pListener && newBlocks)
                pListener->OnAudioIONewBlocks(&mCaptureTracks);
+
+            if (pScope)
+               pScope->Commit();
          }
          // end of record buffering
       },
