@@ -74,9 +74,11 @@ void ProjectFileManager::DiscardAutosave(const FilePath &filename)
    // Read the project, discarding autosave
    projectFileManager.ReadProjectFile(filename, true);
 
-   for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
-      wt->CloseLock();
-   projectFileManager.mLastSavedTracks.reset();
+   if (projectFileManager.mLastSavedTracks) {
+      for (auto wt : projectFileManager.mLastSavedTracks->Any<WaveTrack>())
+         wt->CloseLock();
+      projectFileManager.mLastSavedTracks.reset();
+   }
 
    // Side-effect on database is done, and destructor of tempProject
    // closes the temporary project properly

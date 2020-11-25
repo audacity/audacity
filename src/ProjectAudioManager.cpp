@@ -365,7 +365,8 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    }
 
    const auto toolbar = ToolManager::Get( *project ).GetToolBar(ScrubbingBarID);
-   toolbar->EnableDisableButtons();
+   if (toolbar)
+      toolbar->EnableDisableButtons();
 }
 
 void ProjectAudioManager::Pause()
