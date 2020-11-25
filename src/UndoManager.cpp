@@ -308,6 +308,17 @@ void UndoManager::ModifyState(const TrackList * l,
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );
 }
 
+void UndoManager::RenameState( int state,
+   const TranslatableString &longDescription,
+   const TranslatableString &shortDescription)
+{
+   if (state >= 0 && state < stack.size() ) {
+      auto &theState = *stack[state];
+      theState.description = longDescription;
+      theState.shortDescription = shortDescription;
+   }
+}
+
 void UndoManager::PushState(const TrackList * l,
                             const SelectedRegion &selectedRegion,
                             const std::shared_ptr<Tags> &tags,

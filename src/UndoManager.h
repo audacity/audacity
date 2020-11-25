@@ -151,6 +151,9 @@ class AUDACITY_DLL_API UndoManager final
                   UndoPush flags = UndoPush::NONE);
    void ModifyState(const TrackList * l,
                     const SelectedRegion &selectedRegion, const std::shared_ptr<Tags> &tags);
+   void RenameState( int state,
+      const TranslatableString &longDescription,
+      const TranslatableString &shortDescription);
    void AbandonRedo();
    void ClearStates();
    void RemoveStates(

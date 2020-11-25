@@ -1272,5 +1272,9 @@ void ProjectFileManager::Compact()
             .Format(Internat::FormatSize((before - after).GetValue())),
             XO("Compact Project"));
       }
+
+      undoManager.RenameState( undoManager.GetCurrentState(),
+         XO("Compacted project file"),
+         XO("Compact") );
    }
 }
