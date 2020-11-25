@@ -4066,8 +4066,14 @@ void AudioIoCallback::FillInputBuffers(
       auto start = mPlaybackSchedule.GetTrackTime() +
             len / mRate + mRecordingSchedule.mLatencyCorrection;
       auto duration = (framesPerBuffer - len) / mRate;
-      auto interval = std::make_pair( start, duration );
-      mLostCaptureIntervals.push_back( interval );
+      auto pLast = mLostCaptureIntervals.empty()
+         ? nullptr : &mLostCaptureIntervals.back();
+      if (pLast &&
+          fabs(pLast->first + pLast->second - start) < 0.5/mRate)
+         // Make one bigger interval, not two butting intervals
+         pLast->second = start + duration - pLast->first;
+      else
+         mLostCaptureIntervals.emplace_back( start, duration );
    }
 
    if (len < framesPerBuffer)
