@@ -947,8 +947,12 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &AdornedRulerPanel::OnThemeChange, this);
 
+   // Bind event that updates the play region
    mViewInfo->selectedRegion.Bind(EVT_SELECTED_REGION_CHANGE,
       &AdornedRulerPanel::OnSelectionChange, this);
+
+   // And call it once to inititalize it
+   DoSelectionChange( mViewInfo->selectedRegion );
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
