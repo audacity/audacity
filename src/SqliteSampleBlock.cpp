@@ -806,11 +806,8 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
    else
    {
       samplebuffer.reinit((unsigned) mSampleCount);
-      CopySamples(mSamples.get(),
-                  mSampleFormat,
-                  (samplePtr) samplebuffer.get(),
-                  floatSample,
-                  mSampleCount);
+      SamplesToFloats(mSamples.get(), mSampleFormat,
+         samplebuffer.get(), mSampleCount);
       samples = samplebuffer.get();
    }
    

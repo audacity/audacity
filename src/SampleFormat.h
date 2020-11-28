@@ -125,6 +125,19 @@ private:
 //
 
 AUDACITY_DLL_API
+//! Copy samples from any format into the widest format, which is 32 bit float, with no dithering
+/*!
+ @param src address of source samples
+ @param srcFormat format of source samples, determines sizeof each one
+ @param dst address of floating-point numbers
+ @param len count of samples to copy
+ @param srcStride how many samples to advance src after copying each one
+ @param dstString how many samples to advance dst after copying each one
+ */
+void SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
+    float *dst, size_t len, size_t srcStride = 1, size_t dstStride = 1);
+
+AUDACITY_DLL_API
 void      CopySamples(constSamplePtr src, sampleFormat srcFormat,
                       samplePtr dst, sampleFormat dstFormat,
                       unsigned int len, bool highQuality=true,

@@ -99,6 +99,15 @@ void ReverseSamples(samplePtr dst, sampleFormat format,
    }
 }
 
+void  SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
+   float *dst, size_t len, size_t srcStride, size_t dstStride)
+{
+   CopySamples( src, srcFormat,
+      reinterpret_cast<samplePtr>(dst), floatSample, len,
+      true, // doesn't matter, no dither happens when destination is float
+      srcStride, dstStride);
+}
+
 void CopySamples(constSamplePtr src, sampleFormat srcFormat,
                  samplePtr dst, sampleFormat dstFormat,
                  unsigned int len,

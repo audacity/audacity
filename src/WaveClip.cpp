@@ -525,9 +525,9 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                else {
                   b.reinit(len);
                   pb = b.get();
-                  CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
-                              seqFormat,
-                              (samplePtr)pb, floatSample, len);
+                  SamplesToFloats(
+                     mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
+                     seqFormat, pb, len);
                }
 
                float theMax, theMin, sumsq;

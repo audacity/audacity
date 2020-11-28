@@ -29,6 +29,7 @@ effects from this one class.
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 #include <locale.h>
 
@@ -2462,9 +2463,8 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
    // We have guaranteed above that this is nonnegative and bounded by
    // mCurBufferLen[ch]:
    auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
-   CopySamples(mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample), floatSample,
-               (samplePtr)buffer, floatSample,
-               len);
+   const void *src = mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample);
+   std::memcpy(buffer, src, len * sizeof(float));
 
    if (ch == 0) {
       double progress = mScale *
