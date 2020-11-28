@@ -1640,7 +1640,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
                   bufptr,
                   format,
                   framesRead,
-                  true /* high quality by default */,
+                  gHighQualityDither /* high quality by default */,
                   channels /* source stride */);
    }
 

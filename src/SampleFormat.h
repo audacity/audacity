@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  SampleFormat.h
+  @file SampleFormat.h
 
   Dominic Mazzoni
 
@@ -17,10 +17,14 @@
 #include <wx/defs.h>
 
 #include "audacity/Types.h"
+#include "Dither.h"
 
 //
 // Definitions / Meta-Information
 //
+
+//! These global variables are assigned at application startup or after change of preferences.
+extern AUDACITY_DLL_API DitherType gLowQualityDither, gHighQualityDither;
 
 #if 0
 // Moved to audacity/types.h
@@ -138,18 +142,16 @@ void SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
     float *dst, size_t len, size_t srcStride = 1, size_t dstStride = 1);
 
 AUDACITY_DLL_API
-void      CopySamples(constSamplePtr src, sampleFormat srcFormat,
-                      samplePtr dst, sampleFormat dstFormat,
-                      unsigned int len, bool highQuality=true,
-                      unsigned int srcStride=1,
-                      unsigned int dstStride=1);
-
-AUDACITY_DLL_API
-void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
-                      samplePtr dst, sampleFormat dstFormat,
-                      unsigned int len,
-                      unsigned int srcStride=1,
-                      unsigned int dstStride=1);
+//! Copy samples from any format to any other format; apply dithering only if narrowing the format
+/*!
+ @copydetails SamplesToFloats()
+ @param dstFormat format of destination samples, determines sizeof each one
+ @param ditherType choice of dithering algorithm to use if narrowing the format
+ */
+void CopySamples(constSamplePtr src, sampleFormat srcFormat,
+   samplePtr dst, sampleFormat dstFormat, size_t len,
+   DitherType ditherType = gHighQualityDither, //!< default is loaded from a global variable
+   unsigned int srcStride=1, unsigned int dstStride=1);
 
 AUDACITY_DLL_API
 void      ClearSamples(samplePtr buffer, sampleFormat format,

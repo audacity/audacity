@@ -691,7 +691,7 @@ size_t Mixer::Process(size_t maxToProcess)
             mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat)),
             mFormat,
             maxOut,
-            mHighQuality,
+            mHighQuality ? gHighQualityDither : gLowQualityDither,
             mNumChannels,
             mNumChannels);
       }
@@ -703,7 +703,7 @@ size_t Mixer::Process(size_t maxToProcess)
             mBuffer[c].ptr(),
             mFormat,
             maxOut,
-            mHighQuality);
+            mHighQuality ? gHighQualityDither : gLowQualityDither);
       }
    }
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos

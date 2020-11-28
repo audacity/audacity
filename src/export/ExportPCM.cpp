@@ -643,12 +643,13 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                   CopySamples(
                      mixed + (c * SAMPLE_SIZE(format)), format,
                      dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
-                     numSamples, true, info.channels, info.channels
+                     numSamples, gHighQualityDither, info.channels, info.channels
                   );
-                  CopySamplesNoDither(
+                  // Copy back without dither
+                  CopySamples(
                      dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
                      mixed + (c * SAMPLE_SIZE(format)), format,
-                     numSamples, info.channels, info.channels);
+                     numSamples, DitherType::none, info.channels, info.channels);
                }
             }
 

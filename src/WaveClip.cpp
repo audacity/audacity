@@ -1248,7 +1248,7 @@ bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
                   mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
                   seqFormat,
                   toCopy,
-                  true, // high quality
+                  gHighQualityDither,
                   stride);
 
       mAppendBufferLen += toCopy;

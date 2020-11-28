@@ -43,11 +43,10 @@
 #include <string.h>
 
 #include "Prefs.h"
-#include "Dither.h"
 #include "Internat.h"
 
-static DitherType gLowQualityDither = DitherType::none;
-static DitherType gHighQualityDither = DitherType::none;
+DitherType gLowQualityDither = DitherType::none;
+DitherType gHighQualityDither = DitherType::shaped;
 static Dither gDitherAlgorithm;
 
 void InitDitherers()
@@ -104,29 +103,17 @@ void  SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
 {
    CopySamples( src, srcFormat,
       reinterpret_cast<samplePtr>(dst), floatSample, len,
-      true, // doesn't matter, no dither happens when destination is float
+      DitherType::none,
       srcStride, dstStride);
 }
 
 void CopySamples(constSamplePtr src, sampleFormat srcFormat,
-                 samplePtr dst, sampleFormat dstFormat,
-                 unsigned int len,
-                 bool highQuality, /* = true */
-                 unsigned int srcStride /* = 1 */,
-                 unsigned int dstStride /* = 1 */)
+   samplePtr dst, sampleFormat dstFormat, size_t len,
+   DitherType ditherType, /* = gHighQualityDither */
+   unsigned int srcStride /* = 1 */,
+   unsigned int dstStride /* = 1 */)
 {
    gDitherAlgorithm.Apply(
-      highQuality ? gHighQualityDither : gLowQualityDither,
-      src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
-}
-
-void CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
-                 samplePtr dst, sampleFormat dstFormat,
-                 unsigned int len,
-                 unsigned int srcStride /* = 1 */,
-                 unsigned int dstStride /* = 1 */)
-{
-   gDitherAlgorithm.Apply(
-      DitherType::none,
+      ditherType,
       src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
 }
