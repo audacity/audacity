@@ -200,7 +200,14 @@ public:
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
    void SetSamples(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len);
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
@@ -230,7 +237,7 @@ public:
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
    std::shared_ptr<SampleBlock> AppendNewBlock(
       samplePtr buffer, sampleFormat format, size_t len);
 
@@ -240,7 +247,14 @@ public:
    /// You must call Flush after the last Append
    /// @return true if at least one complete block was created
    bool Append(constSamplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride);
+      size_t len, unsigned int stride,
+      sampleFormat effectiveFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
    /// Flush must be called after last Append
    void Flush();
 
