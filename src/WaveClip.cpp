@@ -1204,7 +1204,7 @@ void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
  -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
 bool WaveClip::Append(samplePtr buffer, sampleFormat format,
-                      size_t len, unsigned int stride /* = 1 */)
+                      size_t len, unsigned int stride)
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
    bool result = false;

@@ -287,7 +287,7 @@ public:
    /// You must call Flush after the last Append
    /// @return true if at least one complete block was created
    bool Append(samplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1);
+               size_t len, unsigned int stride);
    /// Flush must be called after last Append
    void Flush();
 
