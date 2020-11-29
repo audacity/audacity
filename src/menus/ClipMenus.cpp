@@ -12,7 +12,7 @@
 #include "../tracks/ui/TimeShiftHandle.h"
 
 
-//This is a test comment/change by Ammar (test 7)
+//This is a test comment/change by Ammar (test 8)
 
 
 // private helper classes and functions
