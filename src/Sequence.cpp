@@ -1257,10 +1257,51 @@ void Sequence::AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock)
 #endif
 }
 
-/*! @excsafety{Strong} */
-void Sequence::Append(constSamplePtr buffer, sampleFormat format, size_t len)
+/*! @excsafety{Weak} */
+bool Sequence::Append(
+   constSamplePtr buffer, sampleFormat format, size_t len, size_t stride)
 {
-   DoAppend(buffer, format, len, true);
+   if (!mAppendBuffer.ptr())
+      mAppendBuffer.Allocate(mMaxSamples, mSampleFormat);
+
+   bool result = false;
+   auto blockSize = GetIdealAppendLen();
+   const auto seqFormat = GetSampleFormat();
+   for(;;) {
+      if (mAppendBufferLen >= blockSize) {
+         // flush some previously appended contents
+         // use Strong-guarantee
+         DoAppend(mAppendBuffer.ptr(), seqFormat, blockSize, true);
+         result = true;
+
+         // use No-fail-guarantee for rest of this "if"
+         memmove(mAppendBuffer.ptr(),
+                 mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
+                 (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
+         mAppendBufferLen -= blockSize;
+         blockSize = GetIdealAppendLen();
+      }
+
+      if (len == 0)
+         break;
+
+      // use No-fail-guarantee for rest of this "for"
+      wxASSERT(mAppendBufferLen <= mMaxSamples);
+      auto toCopy = std::min(len, mMaxSamples - mAppendBufferLen);
+
+      CopySamples(buffer, format,
+         mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
+         seqFormat,
+         toCopy,
+         gHighQualityDither,
+         stride);
+
+      mAppendBufferLen += toCopy;
+      buffer += toCopy * SAMPLE_SIZE(format) * stride;
+      len -= toCopy;
+   }
+
+   return result;
 }
 
 /*! @excsafety{Strong} */
@@ -1354,6 +1395,28 @@ SeqBlock::SampleBlockPtr Sequence::DoAppend(
 #endif
 
    return result;
+}
+
+/*! @excsafety{Mixed} */
+/*! @excsafety{No-fail} -- The Sequence will be in a flushed state. */
+/*! @excsafety{Partial}
+-- Some initial portion (maybe none) of the append buffer of the
+ Sequence gets appended; no previously flushed contents are lost. */
+void Sequence::Flush()
+{
+   if (mAppendBufferLen > 0) {
+
+      auto cleanup = finally( [&] {
+         // Blow away the append buffer even in case of failure.  May lose some
+         // data but don't leave the sequence in an un-flushed state.
+
+         // Use No-fail-guarantee of these steps.
+         mAppendBufferLen = 0;
+         mAppendBuffer.Free();
+      } );
+
+      DoAppend(mAppendBuffer.ptr(), GetSampleFormat(), mAppendBufferLen, true);
+   }
 }
 
 void Sequence::Blockify(SampleBlockFactory &factory,

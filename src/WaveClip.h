@@ -324,8 +324,8 @@ public:
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
 
-   const SampleBuffer &GetAppendBuffer() const { return mAppendBuffer; }
-   size_t GetAppendBufferLen() const { return mAppendBufferLen; }
+   constSamplePtr GetAppendBuffer() const;
+   size_t GetAppendBufferLen() const;
 
 protected:
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
@@ -343,9 +343,6 @@ protected:
 
    std::unique_ptr<Sequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
-
-   SampleBuffer  mAppendBuffer {};
-   size_t        mAppendBufferLen { 0 };
 
    // Cut Lines are nothing more than ordinary wave clips, with the
    // offset relative to the start of the clip.

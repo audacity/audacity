@@ -109,8 +109,24 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   /*! @excsafety{Strong} */
-   void Append(constSamplePtr buffer, sampleFormat format, size_t len);
+
+   /*!
+       Samples may be retained in a memory buffer, pending Flush()
+       If there are exceptions, an unspecified prefix of buffer may be
+       appended
+   
+       @return true if at least one sample block was added
+       @excsafety{Weak}
+    */
+   bool Append( constSamplePtr buffer, sampleFormat format, size_t len,
+      size_t stride = 1);
+
+   /*! @excsafety{Mixed} */
+   /*! @excsafety{No-fail} -- The Sequence will be in a flushed state. */
+   /*! @excsafety{Partial}
+   -- Some initial portion (maybe none) of the append buffer of the
+    Sequence gets appended; no previously flushed contents are lost. */
+   void Flush();
 
    //! Append data, not coalescing blocks, returning a pointer to the new block.
    /*! @excsafety{Strong} */
@@ -186,6 +202,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    BlockArray &GetBlockArray() { return mBlock; }
    const BlockArray &GetBlockArray() const { return mBlock; }
 
+   size_t GetAppendBufferLen() const { return mAppendBufferLen; }
+   constSamplePtr GetAppendBuffer() const { return mAppendBuffer.ptr(); }
+
  private:
 
    //
@@ -208,6 +227,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    size_t   mMinSamples; // min samples per block
    size_t   mMaxSamples; // max samples per block
+
+   SampleBuffer  mAppendBuffer {};
+   size_t        mAppendBufferLen { 0 };
 
    bool          mErrorOpening{ false };
 

@@ -214,12 +214,12 @@ bool WaveClipWaveformCache::GetWaveDisplay(
                size_t len = ( right - left ).as_size_t();
 
                if (seqFormat == floatSample)
-                  pb = &((const float *)appendBuffer.ptr())[sLeft];
+                  pb = &((const float *)appendBuffer)[sLeft];
                else {
                   b.reinit(len);
                   pb = b.get();
                   SamplesToFloats(
-                     appendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
+                     appendBuffer + sLeft * SAMPLE_SIZE(seqFormat),
                      seqFormat, b.get(), len);
                }
 
