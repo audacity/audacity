@@ -1530,7 +1530,7 @@ void WaveTrack::Join(double t0, double t1)
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
-bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
+bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
                        size_t len, unsigned int stride /* = 1 */)
 {
    return RightmostOrNewClip()->Append(buffer, format, len, stride);
@@ -1961,7 +1961,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Set(samplePtr buffer, sampleFormat format,
+void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len)
 {
    for (const auto &clip: mClips)
@@ -1994,7 +1994,7 @@ void WaveTrack::Set(samplePtr buffer, sampleFormat format,
          }
 
          clip->SetSamples(
-               (samplePtr)(((char*)buffer) +
+               (constSamplePtr)(((const char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
                           format, inclipDelta, samplesToCopy.as_size_t() );

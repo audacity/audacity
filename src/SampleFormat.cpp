@@ -99,7 +99,7 @@ void ReverseSamples(samplePtr dst, sampleFormat format,
    }
 }
 
-void CopySamples(samplePtr src, sampleFormat srcFormat,
+void CopySamples(constSamplePtr src, sampleFormat srcFormat,
                  samplePtr dst, sampleFormat dstFormat,
                  unsigned int len,
                  bool highQuality, /* = true */

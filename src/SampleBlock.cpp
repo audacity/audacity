@@ -38,7 +38,7 @@ SampleBlockFactoryPtr SampleBlockFactory::New( AudacityProject &project )
 
 SampleBlockFactory::~SampleBlockFactory() = default;
 
-SampleBlockPtr SampleBlockFactory::Create(samplePtr src,
+SampleBlockPtr SampleBlockFactory::Create(constSamplePtr src,
    size_t numsamples,
    sampleFormat srcformat)
 {

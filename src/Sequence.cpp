@@ -1109,7 +1109,7 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
 
 // Pass NULL to set silence
 /*! @excsafety{Strong} */
-void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
+void Sequence::SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
 {
    auto &factory = *mpFactory;
@@ -1165,7 +1165,7 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       ensureSampleBufferSize(scratch, mSampleFormat, tempSize, fileLength,
                              &temp);
 
-      samplePtr useBuffer = buffer;
+      auto useBuffer = buffer;
       if (buffer && format != mSampleFormat)
       {
          // To do: remove the extra movement.
@@ -1476,7 +1476,7 @@ size_t Sequence::GetIdealAppendLen() const
 
 /*! @excsafety{Strong} */
 SeqBlock::SampleBlockPtr Sequence::AppendNewBlock(
-   samplePtr buffer, sampleFormat format, size_t len)
+   constSamplePtr buffer, sampleFormat format, size_t len)
 {
    return DoAppend( buffer, format, len, false );
 }
@@ -1506,14 +1506,14 @@ void Sequence::AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock)
 }
 
 /*! @excsafety{Strong} */
-void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
+void Sequence::Append(constSamplePtr buffer, sampleFormat format, size_t len)
 {
    DoAppend(buffer, format, len, true);
 }
 
 /*! @excsafety{Strong} */
 SeqBlock::SampleBlockPtr Sequence::DoAppend(
-   samplePtr buffer, sampleFormat format, size_t len, bool coalesce)
+   constSamplePtr buffer, sampleFormat format, size_t len, bool coalesce)
 {
    SeqBlock::SampleBlockPtr result;
 
@@ -1606,7 +1606,8 @@ SeqBlock::SampleBlockPtr Sequence::DoAppend(
 
 void Sequence::Blockify(SampleBlockFactory &factory,
                         size_t mMaxSamples, sampleFormat mSampleFormat,
-                        BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
+                        BlockArray &list, sampleCount start,
+                        constSamplePtr buffer, size_t len)
 {
    if (len <= 0)
       return;
@@ -1620,7 +1621,7 @@ void Sequence::Blockify(SampleBlockFactory &factory,
       const auto offset = i * len / num;
       b.start = start + offset;
       int newLen = ((i + 1) * len / num) - offset;
-      samplePtr bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
+      auto bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
 
       b.sb = factory.Create(bufStart, newLen, mSampleFormat);
 

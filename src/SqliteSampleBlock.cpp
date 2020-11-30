@@ -31,7 +31,8 @@ public:
 
    void CloseLock() override;
 
-   void SetSamples(samplePtr src, size_t numsamples, sampleFormat srcformat);
+   void SetSamples(
+      constSamplePtr src, size_t numsamples, sampleFormat srcformat);
 
    //! Numbers of bytes needed for 256 and for 64k summaries
    using Sizes = std::pair< size_t, size_t >;
@@ -135,7 +136,7 @@ public:
 
    SampleBlockIDs GetActiveBlockIDs() override;
 
-   SampleBlockPtr DoCreate(samplePtr src,
+   SampleBlockPtr DoCreate(constSamplePtr src,
       size_t numsamples,
       sampleFormat srcformat) override;
 
@@ -175,7 +176,7 @@ SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
 SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 
 SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
-   samplePtr src, size_t numsamples, sampleFormat srcformat )
+   constSamplePtr src, size_t numsamples, sampleFormat srcformat )
 {
    auto sb = std::make_shared<SqliteSampleBlock>(shared_from_this());
    sb->SetSamples(src, numsamples, srcformat);
@@ -390,7 +391,7 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                   numsamples * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
 }
 
-void SqliteSampleBlock::SetSamples(samplePtr src,
+void SqliteSampleBlock::SetSamples(constSamplePtr src,
                                    size_t numsamples,
                                    sampleFormat srcformat)
 {

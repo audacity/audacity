@@ -117,7 +117,7 @@ public:
    virtual ~SampleBlockFactory();
 
    // Returns a non-null pointer or else throws an exception
-   SampleBlockPtr Create(samplePtr src,
+   SampleBlockPtr Create(constSamplePtr src,
       size_t numsamples,
       sampleFormat srcformat);
 
@@ -145,7 +145,7 @@ public:
 protected:
    // The override should throw more informative exceptions on error than the
    // default InconsistencyException thrown by Create
-   virtual SampleBlockPtr DoCreate(samplePtr src,
+   virtual SampleBlockPtr DoCreate(constSamplePtr src,
       size_t numsamples,
       sampleFormat srcformat) = 0;
 

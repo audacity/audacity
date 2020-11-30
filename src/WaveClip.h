@@ -238,7 +238,7 @@ public:
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
-   void SetSamples(samplePtr buffer, sampleFormat format,
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
@@ -286,7 +286,7 @@ public:
 
    /// You must call Flush after the last Append
    /// @return true if at least one complete block was created
-   bool Append(samplePtr buffer, sampleFormat format,
+   bool Append(constSamplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride);
    /// Flush must be called after last Append
    void Flush();

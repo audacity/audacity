@@ -224,7 +224,7 @@ bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
+void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len)
 {
    // use Strong-guarantee
@@ -1203,7 +1203,7 @@ void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
 /*! @excsafety{Partial}
  -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
-bool WaveClip::Append(samplePtr buffer, sampleFormat format,
+bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
                       size_t len, unsigned int stride)
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);

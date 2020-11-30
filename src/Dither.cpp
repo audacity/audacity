@@ -237,7 +237,7 @@ void Dither::Reset()
 // stride number of samples.
 
 void Dither::Apply(enum DitherType ditherType,
-                   const samplePtr source, sampleFormat sourceFormat,
+                   constSamplePtr source, sampleFormat sourceFormat,
                    samplePtr dest, sampleFormat destFormat,
                    unsigned int len,
                    unsigned int sourceStride /* = 1 */,
@@ -269,24 +269,24 @@ void Dither::Apply(enum DitherType ditherType,
         {
             if (sourceFormat == floatSample)
             {
-                float* d = (float*)dest;
-                float* s = (float*)source;
+                auto d = (float*)dest;
+                auto s = (const float*)source;
 
                 for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                     *d = *s;
             } else
             if (sourceFormat == int24Sample)
             {
-                int* d = (int*)dest;
-                int* s = (int*)source;
+                auto d = (int*)dest;
+                auto s = (const int*)source;
 
                 for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                     *d = *s;
             } else
             if (sourceFormat == int16Sample)
             {
-                short* d = (short*)dest;
-                short* s = (short*)source;
+                auto d = (short*)dest;
+                auto s = (const short*)source;
 
                 for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                     *d = *s;
@@ -299,17 +299,17 @@ void Dither::Apply(enum DitherType ditherType,
     {
         // No need to dither, just convert samples to float.
         // No clipping should be necessary.
-        float* d = (float*)dest;
+        auto d = (float*)dest;
 
         if (sourceFormat == int16Sample)
         {
-            short* s = (short*)source;
+            auto s = (const short*)source;
             for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                 *d = FROM_INT16(s);
         } else
         if (sourceFormat == int24Sample)
         {
-            int* s = (int*)source;
+            auto s = (const int*)source;
             for (i = 0; i < len; i++, d += destStride, s += sourceStride)
                 *d = FROM_INT24(s);
         } else {
@@ -319,8 +319,8 @@ void Dither::Apply(enum DitherType ditherType,
     if (destFormat == int24Sample && sourceFormat == int16Sample)
     {
         // Special case when promoting 16 bit to 24 bit
-        int* d = (int*)dest;
-        short* s = (short*)source;
+        auto d = (int*)dest;
+        auto s = (const short*)source;
         for (i = 0; i < len; i++, d += destStride, s += sourceStride)
             *d = ((int)*s) << 8;
     } else

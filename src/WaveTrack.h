@@ -228,7 +228,7 @@ private:
     *
     * @return true if at least one complete block was created
     */
-   bool Append(samplePtr buffer, sampleFormat format,
+   bool Append(constSamplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();
@@ -254,7 +254,7 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const;
-   void Set(samplePtr buffer, sampleFormat format,
+   void Set(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
    // Fetch envelope values corresponding to uniformly separated sample times

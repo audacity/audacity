@@ -124,7 +124,7 @@ private:
 // Copying, Converting and Clearing Samples
 //
 
-void      CopySamples(samplePtr src, sampleFormat srcFormat,
+void      CopySamples(constSamplePtr src, sampleFormat srcFormat,
                       samplePtr dst, sampleFormat dstFormat,
                       unsigned int len, bool highQuality=true,
                       unsigned int srcStride=1,

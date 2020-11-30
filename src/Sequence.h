@@ -82,7 +82,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
-   void SetSamples(samplePtr buffer, sampleFormat format,
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
 
    // where is input, assumed to be nondecreasing, and its size is len + 1.
@@ -103,10 +103,11 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   void Append(samplePtr buffer, sampleFormat format, size_t len);
+   void Append(constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! Append data, not coalescing blocks, returning a pointer to the new block.
-   SeqBlock::SampleBlockPtr AppendNewBlock(samplePtr buffer, sampleFormat format, size_t len);
+   SeqBlock::SampleBlockPtr AppendNewBlock(
+      constSamplePtr buffer, sampleFormat format, size_t len);
    //! Append a complete block, not coalescing
    void AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock);
    void Delete(sampleCount start, sampleCount len);
@@ -204,7 +205,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    int FindBlock(sampleCount pos) const;
 
    SeqBlock::SampleBlockPtr DoAppend(
-      samplePtr buffer, sampleFormat format, size_t len, bool coalesce);
+      constSamplePtr buffer, sampleFormat format, size_t len, bool coalesce);
 
    static void AppendBlock(SampleBlockFactory *pFactory, sampleFormat format,
                            BlockArray &blocks,
@@ -226,7 +227,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
                         sampleFormat format,
                         BlockArray &list,
                         sampleCount start,
-                        samplePtr buffer,
+                        constSamplePtr buffer,
                         size_t len);
 
    bool Get(int b,
