@@ -106,15 +106,10 @@ class AUDACITY_DLL_API Mixer {
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
-         bool highQuality = true, MixerSpec *mixerSpec = NULL);
+         bool highQuality = true, MixerSpec *mixerSpec = nullptr,
+         bool applytTrackGains = true);
 
    virtual ~ Mixer();
-
-   //
-   // Setup
-   //
-
-   void ApplyTrackGains(bool apply = true); // True by default
 
    //
    // Processing
@@ -165,18 +160,18 @@ class AUDACITY_DLL_API Mixer {
  private:
 
     // Input
-   size_t           mNumInputTracks;
+   const size_t     mNumInputTracks;
    ArrayOf<WaveTrackCache> mInputTrack;
    bool             mbVariableRates;
    const BoundedEnvelope *mEnvelope;
    ArrayOf<sampleCount> mSamplePos;
-   bool             mApplyTrackGains;
+   const bool       mApplyTrackGains;
    Doubles          mEnvValues;
    double           mT0; // Start time
    double           mT1; // Stop time (none if mT0==mT1)
    double           mTime;  // Current time (renamed from mT to mTime for consistency with AudioIO - mT represented warped time there)
    ArrayOf<std::unique_ptr<Resample>> mResample;
-   size_t           mQueueMaxLen;
+   const size_t     mQueueMaxLen;
    FloatBuffers     mSampleQueue;
    ArrayOf<int>     mQueueStart;
    ArrayOf<int>     mQueueLen;
@@ -185,21 +180,21 @@ class AUDACITY_DLL_API Mixer {
 
    // Output
    size_t              mMaxOut;
-   unsigned         mNumChannels;
+   const unsigned   mNumChannels;
    Floats           mGains;
    unsigned         mNumBuffers;
    size_t              mBufferSize;
    size_t              mInterleavedBufferSize;
-   sampleFormat     mFormat;
+   const sampleFormat mFormat;
    bool             mInterleaved;
    ArrayOf<SampleBuffer> mBuffer, mTemp;
    Floats           mFloatBuffer;
-   double           mRate;
+   const double     mRate;
    double           mSpeed;
    bool             mHighQuality;
    std::vector<double> mMinFactor, mMaxFactor;
 
-   bool             mMayThrow;
+   const bool       mMayThrow;
 };
 
 #endif

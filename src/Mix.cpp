@@ -240,8 +240,10 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
              double startTime, double stopTime,
              unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
              double outRate, sampleFormat outFormat,
-             bool highQuality, MixerSpec *mixerSpec)
+             bool highQuality, MixerSpec *mixerSpec, bool applyTrackGains)
    : mNumInputTracks { inputTracks.size() }
+
+   , mApplyTrackGains{ applyTrackGains }
 
    // This is the number of samples grabbed in one go from a track
    // and placed in a queue, when mixing with resampling.
@@ -251,6 +253,9 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
 
    , mNumChannels{ numOutChannels }
    , mGains{ mNumChannels }
+
+   , mFormat{ outFormat }
+   , mRate{ outRate }
 
    , mMayThrow{ mayThrow }
 {
@@ -270,10 +275,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    mTime = startTime;
    mBufferSize = outBufferSize;
    mInterleaved = outInterleaved;
-   mRate = outRate;
    mSpeed = 1.0;
-   mFormat = outFormat;
-   mApplyTrackGains = true;
    if( mixerSpec && mixerSpec->GetNumChannels() == mNumChannels &&
          mixerSpec->GetNumTracks() == mNumInputTracks )
       mMixerSpec = mixerSpec;
@@ -349,11 +351,6 @@ void Mixer::MakeResamplers()
 {
    for (size_t i = 0; i < mNumInputTracks; i++)
       mResample[i] = std::make_unique<Resample>(mHighQuality, mMinFactor[i], mMaxFactor[i]);
-}
-
-void Mixer::ApplyTrackGains(bool apply)
-{
-   mApplyTrackGains = apply;
 }
 
 void Mixer::Clear()

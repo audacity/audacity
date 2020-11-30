@@ -1953,8 +1953,11 @@ bool AudioIO::AllocateBuffers(
                   1,
                   std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
                   false,
-                  mRate, floatSample, false);
-               mPlaybackMixers[i]->ApplyTrackGains(false);
+                  mRate, floatSample,
+                  false, // low quality dithering and resampling
+                  nullptr,
+                  false // don't apply track gains
+               );
             }
          }
 
