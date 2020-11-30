@@ -143,11 +143,10 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   auto timeTrack = *tracks->Any<TimeTrack>().begin();
    Mixer mixer(waveArray,
       // Throw to abort mix-and-render if read fails:
       true,
-      Mixer::WarpOptions(timeTrack ? timeTrack->GetEnvelope() : nullptr),
+      Mixer::WarpOptions{*tracks},
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
 
@@ -203,6 +202,17 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
 #endif
    }
 }
+
+Mixer::WarpOptions::WarpOptions(const TrackList &list)
+: minSpeed(0.0), maxSpeed(0.0)
+{
+   auto timeTrack = *(list.Any<const TimeTrack>().begin());
+   envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
+}
+
+Mixer::WarpOptions::WarpOptions(const BoundedEnvelope *e)
+    : envelope(e), minSpeed(0.0), maxSpeed(0.0)
+ {}
 
 Mixer::WarpOptions::WarpOptions(double min, double max)
    : minSpeed(min), maxSpeed(max)

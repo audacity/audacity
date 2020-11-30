@@ -88,7 +88,7 @@ struct AudioIOStartStreamOptions
 
    AudacityProject *pProject{};
    MeterPanelBase *captureMeter{}, *playbackMeter{};
-   BoundedEnvelope *envelope; // for time warping
+   const BoundedEnvelope *envelope; // for time warping
    std::shared_ptr< AudioIOListener > listener;
    double rate;
    bool playLooped;

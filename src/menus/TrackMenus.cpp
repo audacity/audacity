@@ -997,9 +997,7 @@ void OnScoreAlign(const CommandContext &context)
       Mixer mix(
          waveTracks,              // const WaveTrackConstArray &inputTracks
          false, // mayThrow -- is this right?
-         Mixer::WarpOptions{
-            *tracks->Any<const TimeTrack >().begin()
-         }, // const WarpOptions &warpOptions
+         Mixer::WarpOptions{ *tracks },
          0.0,                     // double startTime
          endTime,                 // double stopTime
          2,                       // int numOutChannels

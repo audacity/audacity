@@ -21,7 +21,6 @@
 
 #include "../Mix.h"
 #include "../Project.h"
-#include "../TimeTrack.h"
 #include "../WaveTrack.h"
 
 const ComponentInterfaceSymbol EffectStereoToMono::Symbol
@@ -162,11 +161,9 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    tracks.push_back(left->SharedPointer< const WaveTrack >());
    tracks.push_back(right->SharedPointer< const WaveTrack >());
 
-   auto timeTrack = *(inputTracks()->Any<const TimeTrack>().begin());
-
    Mixer mixer(tracks,
                true,                // Throw to abort mix-and-render if read fails:
-               Mixer::WarpOptions(timeTrack ? timeTrack->GetEnvelope() : nullptr),
+               Mixer::WarpOptions{*inputTracks()},
                start,
                end,
                1,

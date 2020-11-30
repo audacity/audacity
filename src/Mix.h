@@ -82,10 +82,13 @@ class AUDACITY_DLL_API Mixer {
     class WarpOptions
     {
     public:
-       explicit WarpOptions(const BoundedEnvelope *e)
-          : envelope(e), minSpeed(0.0), maxSpeed(0.0)
-       {}
+       //! Construct with warp from the TimeTrack if there is one
+       explicit WarpOptions(const TrackList &list);
 
+       //! Construct with an explicit warp
+       explicit WarpOptions(const BoundedEnvelope *e);
+
+       //! Construct with no time warp
        WarpOptions(double min, double max);
 
     private:
