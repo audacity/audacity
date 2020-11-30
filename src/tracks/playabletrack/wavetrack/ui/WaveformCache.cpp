@@ -195,7 +195,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       if (a < p1) {
          const auto appendBufferLen = clip.GetAppendBufferLen();
          const auto &appendBuffer = clip.GetAppendBuffer();
-         sampleFormat seqFormat = sequence->GetSampleFormat();
+         sampleFormat seqFormat = sequence->GetSampleFormats().Stored();
          bool didUpdate = false;
          for(auto i = a; i < p1; i++) {
             auto left = std::max(sampleCount{ 0 },

@@ -167,7 +167,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Manipulating Sample Format
    //
 
-   sampleFormat GetSampleFormat() const;
+   SampleFormats GetSampleFormats() const;
 
    //! @return whether there was a change
    /*! @excsafety{Strong} */
@@ -220,7 +220,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    SampleBlockFactoryPtr mpFactory;
 
    BlockArray    mBlock;
-   sampleFormat  mSampleFormat;
+   SampleFormats  mSampleFormats;
 
    // Not size_t!  May need to be large:
    sampleCount   mNumSamples{ 0 };
