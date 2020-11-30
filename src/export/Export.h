@@ -139,7 +139,7 @@ protected:
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
-         bool highQuality = true, MixerSpec *mixerSpec = NULL);
+         MixerSpec *mixerSpec);
 
    // Create or recycle a dialog.
    static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,

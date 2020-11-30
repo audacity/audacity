@@ -1015,7 +1015,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    auto mixer = CreateMixer(tracks, selectionOnly,
       t0, t1,
       channels, pcmBufferSize, true,
-      mSampleRate, int16Sample, true, mixerSpec);
+      mSampleRate, int16Sample, mixerSpec);
 
    auto updateResult = ProgressResult::Success;
    {

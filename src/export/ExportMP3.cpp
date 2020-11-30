@@ -1902,7 +1902,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          channels, inSamples, true,
-         rate, floatSample, true, mixerSpec);
+         rate, floatSample, mixerSpec);
 
       TranslatableString title;
       if (rmode == MODE_SET) {

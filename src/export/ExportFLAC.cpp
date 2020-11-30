@@ -374,7 +374,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    auto mixer = CreateMixer(tracks, selectionOnly,
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
-                            rate, format, true, mixerSpec);
+                            rate, format, mixerSpec);
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 

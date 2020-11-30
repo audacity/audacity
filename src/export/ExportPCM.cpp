@@ -613,7 +613,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
          auto mixer = CreateMixer(tracks, selectionOnly,
                                   t0, t1,
                                   info.channels, maxBlockLen, true,
-                                  rate, format, true, mixerSpec);
+                                  rate, format, mixerSpec);
 
          InitProgress( pDialog, fName,
             (selectionOnly

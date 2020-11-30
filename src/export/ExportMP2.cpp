@@ -308,7 +308,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          stereo ? 2 : 1, pcmBufferSize, true,
-         rate, int16Sample, true, mixerSpec);
+         rate, int16Sample, mixerSpec);
 
       InitProgress( pDialog, fName,
          selectionOnly

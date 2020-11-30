@@ -279,7 +279,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, false,
-         rate, floatSample, true, mixerSpec);
+         rate, floatSample, mixerSpec);
 
       InitProgress( pDialog, fName,
          selectionOnly

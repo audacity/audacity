@@ -221,7 +221,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
-         bool highQuality, MixerSpec *mixerSpec)
+         MixerSpec *mixerSpec)
 {
    WaveTrackConstArray inputTracks;
 
@@ -241,7 +241,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,
-                  highQuality, mixerSpec);
+                  true, mixerSpec);
 }
 
 void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,

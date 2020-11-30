@@ -503,7 +503,6 @@ ProgressResult ExportCL::Export(AudacityProject *project,
                             true,
                             rate,
                             floatSample,
-                            true,
                             mixerSpec);
 
    size_t numBytes = 0;
