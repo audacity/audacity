@@ -1573,6 +1573,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
 
    size_t framesRead = 0;
    
+   // These cases preserve the logic formerly in BlockFile.cpp,
+   // which was deleted at commit 98d1468.
    if (channels == 1 && format == int16Sample && sf_subtype_is_integer(info.format))
    {
       // If both the src and dest formats are integer formats,
@@ -1624,6 +1626,18 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    }
    else
    {
+      /*
+       Therefore none of the three cases above:
+      !(channels == 1 && format == int16Sample && sf_subtype_is_integer(info.format))
+       &&
+      !(channels == 1 && format == int24Sample && sf_subtype_is_integer(info.format))
+       &&
+      !(format == int16Sample && !sf_subtype_more_than_16_bits(info.format))
+
+       So format is not 16 bits with wider file format (third conjunct),
+       but still maybe it is 24 bits with float file format (second conjunct).
+       */
+
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
@@ -1639,6 +1653,19 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
          return true;
       }
 
+      /*
+       Dithering will happen in CopySamples if format is 24 bits.
+       Should that be done?
+
+       Either the file is an ordinary simple block file -- and presumably the
+       track was saved specifying a matching format, so format is float and
+       there is no dithering.
+
+       Or else this is the very unusual case of an .auf file, importing PCM data
+       on demand.  The destination format is narrower, requiring dither, only
+       if the user also specified a narrow format for the track.  In such a
+       case, dithering is right.
+       */
       CopySamples((samplePtr)(tmpptr + channel),
                   floatSample,
                   bufptr,
