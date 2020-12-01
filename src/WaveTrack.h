@@ -271,6 +271,10 @@ private:
    void Set(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
+   sampleFormat WidestEffectiveFormat() const override;
+
+   bool HasTrivialEnvelope() const override;
+
    void GetEnvelopeValues(double *buffer, size_t bufferLen,
                          double t0) const override;
 

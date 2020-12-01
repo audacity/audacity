@@ -124,6 +124,10 @@ class SAMPLE_TRACK_API Mixer {
    // Transformations
    const size_t     mBufferSize;
 
+   bool NeedsDither(bool needsDither, double rate) const;
+
+ private:
+
    // Output
    const bool       mApplyTrackGains;
    const bool       mHighQuality; // dithering
@@ -131,6 +135,7 @@ class SAMPLE_TRACK_API Mixer {
    const bool       mInterleaved;
 
    // INPUT
+   bool             mNeedsDither;
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 

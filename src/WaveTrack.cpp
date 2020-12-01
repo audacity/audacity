@@ -41,6 +41,7 @@ from the project that will own the track.
 #include <math.h>
 #include <algorithm>
 #include <optional>
+#include <numeric>
 
 #include "float_cast.h"
 
@@ -2242,6 +2243,23 @@ void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
          clip->MarkChanged();
       }
    }
+}
+
+sampleFormat WaveTrack::WidestEffectiveFormat() const
+{
+   auto &clips = GetClips();
+   return std::accumulate(clips.begin(), clips.end(), narrowestSampleFormat,
+      [](sampleFormat format, const auto &pClip){
+         return std::max(format,
+            pClip->GetSequence()->GetSampleFormats().Effective());
+      });
+}
+
+bool WaveTrack::HasTrivialEnvelope() const
+{
+   auto &clips = GetClips();
+   return std::all_of(clips.begin(), clips.end(),
+      [](const auto &pClip){ return pClip->GetEnvelope()->IsTrivial(); });
 }
 
 void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,

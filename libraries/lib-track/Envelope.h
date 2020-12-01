@@ -83,6 +83,8 @@ public:
 
    virtual ~Envelope();
 
+   bool IsTrivial() const;
+
    // Return true if violations of point ordering invariants were detected
    // and repaired
    bool ConsistencyCheck();

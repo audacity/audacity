@@ -19,6 +19,7 @@
 
 #include <cmath>
 #include "EffectStage.h"
+#include "Dither.h"
 #include "SampleTrack.h"
 #include "SampleTrackCache.h"
 #include "Resample.h"
@@ -111,6 +112,15 @@ Mixer::Mixer(Inputs inputs,
    assert(BufferSize() <= outBufferSize);
    const auto nTracks =  mInputs.size();
 
+   // Examine the temporary instances that were made in FindBufferSize
+   // This finds a sufficient, but not necessary, condition to do dithering
+   bool needsDither = std::any_of(mInputs.begin(), mInputs.end(),
+      [](const Input &input){
+         return std::any_of(input.stages.begin(), input.stages.end(),
+            [](const MixerOptions::StageSpecification &spec){
+               return spec.mpFirstInstance &&
+                  spec.mpFirstInstance->NeedsDither(); } ); } );
+
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
       mixerSpec->GetNumTracks() == nTracks
@@ -167,10 +177,61 @@ Mixer::Mixer(Inputs inputs,
       }
       mDecoratedSources.emplace_back(Source{ source, *pDownstream });
    }
+
+   // Decide once at construction time
+   mNeedsDither = NeedsDither(needsDither, outRate);
 }
 
 Mixer::~Mixer()
 {
+}
+
+bool Mixer::NeedsDither(bool needsDither, double rate) const
+{
+   if (needsDither)
+      // Already decided
+      return true;
+
+   // Many possible disqualifiers for the avoidance of dither
+   if (std::any_of(mSources.begin(), mSources.end(),
+      std::mem_fn(&MixerSource::VariableRates))
+   )
+      // We will call MixVariableRates(), so we need nontrivial resampling
+      return true;
+
+   for (const auto &input : mInputs) {
+      auto &pTrack = input.pTrack;
+      if (!pTrack)
+         continue;
+      auto &track = *pTrack;
+      if (track.GetRate() != rate)
+         // Also leads to MixVariableRates(), needs nontrivial resampling
+         return true;
+      if (mApplyTrackGains) {
+         /// TODO: more-than-two-channels
+         for (auto c : {0, 1}) {
+            const auto gain = track.GetChannelGain(c);
+            if (!(gain == 0.0 || gain == 1.0))
+               // Fractional gain may be applied even in MixSameRate
+               return true;
+         }
+      }
+
+      // Examine all tracks.  (This ignores the time bounds for the mixer.
+      // If it did not, we might avoid dither in more cases.  But if we fix
+      // that, remember that some mixers change their time bounds after
+      // construction, as when scrubbing.)
+      if (!track.HasTrivialEnvelope())
+         // Varying or non-unit gain may be applied even in MixSameRate
+         return true;
+      if (track.WidestEffectiveFormat() > mFormat)
+         // Real, not just nominal, precision loss would happen in at
+         // least one clip
+         return true;
+   }
+
+   // We can avoid dither
+   return false;
 }
 
 void Mixer::Clear()
@@ -248,6 +309,9 @@ size_t Mixer::Process(const size_t maxToProcess)
 
    for (auto &[ upstream, downstream ] : mDecoratedSources) {
       auto oResult = downstream.Acquire(mFloatBuffers, maxToProcess);
+      // One of MixVariableRates or MixSameRate assigns into mTemp[*][*] which
+      // are the sources for the CopySamples calls, and they copy into
+      // mBuffer[*][*]
       if (!oResult)
          return 0;
       auto result = *oResult;
@@ -278,14 +342,16 @@ size_t Mixer::Process(const size_t maxToProcess)
       mTime = std::clamp(mTime, oldTime, mT1);
 
    const auto dstStride = (mInterleaved ? mNumChannels : 1);
+   auto ditherType = mNeedsDither
+      ? (mHighQuality ? gHighQualityDither : gLowQualityDither)
+      : DitherType::none;
    for (size_t c = 0; c < mNumChannels; ++c)
       CopySamples((constSamplePtr)mTemp[c].data(), floatSample,
          (mInterleaved
             ? mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat))
             : mBuffer[c].ptr()
          ),
-         mFormat, maxOut,
-         mHighQuality ? gHighQualityDither : gLowQualityDither,
+         mFormat, maxOut, ditherType,
          1, dstStride);
 
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
