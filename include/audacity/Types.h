@@ -723,9 +723,15 @@ inline size_t limitSampleBufferSize( size_t bufferSize, sampleCount limit )
 // ----------------------------------------------------------------------------
 enum sampleFormat : unsigned
 {
+   //! The increasing sequence of these enum values must correspond to the increasing data type width
+   //! These values persist in saved project files, so must not be changed in later program versions
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
-   floatSample = 0x0004000F
+   floatSample = 0x0004000F,
+
+   //! Two synonyms for previous values that might change if more values were added
+   narrowestSampleFormat = int16Sample,
+   widestSampleFormat = floatSample,
 };
 
 // ----------------------------------------------------------------------------
