@@ -85,7 +85,7 @@ size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
 
       CopySamples(src, format,
                   mBuffer.ptr() + pos * SAMPLE_SIZE(mFormat), mFormat,
-                  block);
+                  block, DitherType::none);
 
       src += block * SAMPLE_SIZE(format);
       pos = (pos + block) % mBufferSize;
@@ -167,7 +167,7 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
 
       CopySamples(mBuffer.ptr() + start * SAMPLE_SIZE(mFormat), mFormat,
                   dest, format,
-                  block);
+                  block, DitherType::none);
 
       dest += block * SAMPLE_SIZE(format);
       start = (start + block) % mBufferSize;
