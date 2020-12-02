@@ -1082,7 +1082,7 @@ bool LabelTrackView::PasteSelectedText(
 /// @return true if the text data is available in the clipboard, false otherwise
 bool LabelTrackView::IsTextClipSupported()
 {
-   return wxTheClipboard->IsSupported(wxDF_TEXT);
+   return wxTheClipboard->IsSupported(wxDF_UNICODETEXT);
 }
 
 
