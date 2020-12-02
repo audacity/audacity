@@ -37,6 +37,7 @@
 #include <wx/imaglist.h>
 #include <wx/settings.h>
 
+#include "Clipboard.h"
 #include "ShuttleGui.h"
 #include "Menus.h"
 #include "Prefs.h"
@@ -433,6 +434,14 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
    mMacroCommands.ReadMacro(name); 
    {
+      // Move global clipboard contents aside temporarily
+      Clipboard tempClipboard;
+      auto &globalClipboard = Clipboard::Get();
+      globalClipboard.Swap(tempClipboard);
+      auto cleanup = finally([&]{
+         globalClipboard.Swap(tempClipboard);
+      });
+
       wxWindowDisabler wd(&activityWin);
       for (i = 0; i < (int)files.size(); i++) {
          if (i > 0) {
@@ -457,6 +466,10 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
 
          // Ensure project is completely reset
          ProjectManager::Get(*project).ResetProjectToEmpty();
+         // Bug2567:
+         // Must also destroy the clipboard, to be sure sample blocks are
+         // all freed and their ids can be reused safely in the next pass
+         globalClipboard.Clear();
 
          if (!success)
             break;

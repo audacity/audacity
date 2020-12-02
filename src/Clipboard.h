@@ -43,9 +43,12 @@ public:
      TrackList && newContents, double t0, double t1,
      const std::weak_ptr<AudacityProject> &pProject );
 
-private:
    Clipboard();
    ~Clipboard();
+
+   void Swap( Clipboard &other );
+
+private:
 
    std::shared_ptr<TrackList> mTracks;
    std::weak_ptr<AudacityProject> mProject{};
