@@ -1269,6 +1269,17 @@ bool AudacityApp::OnInit()
       return false;
    }
 
+   // Make sure the temp dir isn't locked by another process.
+   {
+      auto key =
+         PreferenceKey(FileNames::Operation::Temp, FileNames::PathType::_None);
+      auto temp = gPrefs->Read(key);
+      if (temp.empty() || !CreateSingleInstanceChecker(temp)) {
+         FinishPreferences();
+         return false;
+      }
+   }
+
    //<<<< Try to avoid dialogs before this point.
    // The reason is that InitTempDir starts the single instance checker.
    // If we're waiitng in a dialog before then we can very easily
@@ -1639,10 +1650,6 @@ bool AudacityApp::InitTempDir()
 
    FileNames::ResetTempDir();
    FileNames::UpdateDefaultPath(FileNames::Operation::Temp, temp);
-
-   // Make sure the temp dir isn't locked by another process.
-   if (!CreateSingleInstanceChecker(temp))
-      return false;
 
    return true;
 }
