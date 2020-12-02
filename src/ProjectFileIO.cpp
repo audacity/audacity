@@ -2121,6 +2121,16 @@ bool ProjectFileIO::SaveProject(
       // Autosave no longer needed in original project file
       AutoSaveDelete();
 
+      if (lastSaved) {
+         // Bug2605: Be sure not to save orphan blocks
+         bool recovered = mRecovered;
+         SampleBlockIDSet blockids;
+         InspectBlocks( *lastSaved, {}, &blockids );
+         DeleteBlocks(blockids, true);
+         // Don't set mRecovered if any were deleted
+         mRecovered = recovered;
+      }
+
       // Try to compact the original project file
       auto empty = TrackList::Create(&mProject);
       Compact( { lastSaved ? lastSaved : empty.get() } );
