@@ -1269,7 +1269,21 @@ bool AudacityApp::OnInit()
       return false;
    }
 
+#ifdef __WXMAC__
+   // Bug2437:  When files are opened from Finder and another instance of
+   // Audacity is running, we must return from OnInit() to wxWidgets before
+   // MacOpenFile is called, informing us of the paths that need to be
+   // opened.  So use CallAfter() to delay the rest of initialization.
+   // See CreateSingleInstanceChecker() where we send those paths over a
+   // socket to the prior instance.
+   CallAfter([this]{
+      if (!InitPart2())
+         exit(-1);
+   });
+   return true;
+#else
    return InitPart2();
+#endif
 }
 
 bool AudacityApp::InitPart2()
@@ -1849,6 +1863,17 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                return false;
             }
 
+#ifdef __WXMAC__
+            // On Mac the client gets events from the wxWidgets framework that
+            // go to AudacityApp::MacOpenFile.  It is not the command line that
+            // communicates to us the files to be opened.
+            // Forward the file names to the prior instance via the socket.
+            for (const auto &filename: ofqueue) {
+               auto str = filename.c_str().AsWChar();
+               sock->WriteMsg(
+                  str, (filename.length() + 1) * sizeof(*str));
+            }
+#else
             // Windows and Linux require absolute file names as command may
             // not come from current working directory.
             for (size_t j = 0, cnt = parser->GetParamCount(); j < cnt; ++j)
@@ -1860,6 +1885,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                   sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
                }
             }
+#endif
 
             // Send an empty string to force existing Audacity to front
             sock->WriteMsg(wxEmptyString, sizeof(wxChar));
