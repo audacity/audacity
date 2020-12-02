@@ -1269,6 +1269,11 @@ bool AudacityApp::OnInit()
       return false;
    }
 
+   return InitPart2();
+}
+
+bool AudacityApp::InitPart2()
+{
    // Make sure the temp dir isn't locked by another process.
    {
       auto key =
