@@ -2123,7 +2123,11 @@ bool ProjectFileIO::SaveProject(
 
       // Try to compact the original project file
       auto empty = TrackList::Create(&mProject);
-      Compact( { lastSaved ? lastSaved : empty.get() } );
+      Compact( { lastSaved ? lastSaved : empty.get() },
+         // Bug 2605: force compaction of the original when saving-as,
+         // so that the original does not reopen with orphan blocks,
+         // causing warning dialogs about improper save
+         true );
 
       // Save to close the original project file now
       CloseProject();
