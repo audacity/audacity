@@ -64,7 +64,6 @@ static Importer::RegisteredUnusableImportPlugin registered
 #include "../Prefs.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -1034,11 +1033,12 @@ enum mad_flow MP3ImportFileHandle::OutputCB(struct mad_header const * WXUNUSED(h
 
       mChannels.resize(mNumChannels);
 
-      auto format = QualityPrefs::SampleFormatChoice();
-
       for (auto &channel: mChannels)
       {
-         channel = mTrackFactory->NewWaveTrack(format, pcm->samplerate);
+         // Mad library header explains the 32 bit fixed point format with
+         // 28 fractional bits.  Effective sample format must therefore be
+         // more than 24, and this is our only choice now.
+         channel = NewWaveTrack(*mTrackFactory, floatSample, pcm->samplerate);
       }
    }
 

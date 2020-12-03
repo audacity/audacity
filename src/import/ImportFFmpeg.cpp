@@ -516,7 +516,7 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
       sc->m_initialchannels = sc->m_stream->codec->channels;
       stream.resize(sc->m_stream->codec->channels);
       for (auto &channel : stream)
-         channel = trackFactory->NewWaveTrack(sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
+         channel = NewWaveTrack(*trackFactory, sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
    }
 
    // Handles the start_time by creating silence. This may or may not be correct.
