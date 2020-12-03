@@ -42,7 +42,6 @@
 #include "ImportPlugin.h"
 
 #include "../Tags.h"
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
@@ -192,14 +191,11 @@ void MyFLACFile::metadata_callback(const FLAC__StreamMetadata *metadata)
          mFile->mBitsPerSample=metadata->data.stream_info.bits_per_sample;
          mFile->mNumSamples=metadata->data.stream_info.total_samples;
 
+         // Widen mFormat after examining the file header
          if (mFile->mBitsPerSample<=16) {
-            if (mFile->mFormat<int16Sample) {
-               mFile->mFormat=int16Sample;
-            }
+            mFile->mFormat=int16Sample;
          } else if (mFile->mBitsPerSample<=24) {
-            if (mFile->mFormat<int24Sample) {
-               mFile->mFormat=int24Sample;
-            }
+            mFile->mFormat=int24Sample;
          } else {
             mFile->mFormat=floatSample;
          }
@@ -337,7 +333,8 @@ FLACImportFileHandle::FLACImportFileHandle(const FilePath & name)
    mStreamInfoDone(false),
    mUpdateResult(ProgressResult::Success)
 {
-   mFormat = QualityPrefs::SampleFormatChoice();
+   // Initialize mFormat as narrowest
+   mFormat = narrowestSampleFormat;
    mFile = std::make_unique<MyFLACFile>(this);
 }
 
@@ -421,7 +418,7 @@ ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
    {
       auto iter = mChannels.begin();
       for (size_t c = 0; c < mNumChannels; ++iter, ++c)
-         *iter = trackFactory->NewWaveTrack(mFormat, mSampleRate);
+         *iter = NewWaveTrack(*trackFactory, mFormat, mSampleRate);
    }
 
    // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)

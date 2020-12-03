@@ -24,6 +24,8 @@ and sample size to help you importing data of an unknown format.
 #include "../Audacity.h"
 #include "ImportRaw.h"
 
+#include "ImportPlugin.h"
+
 #include "../AudioIOBase.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
@@ -31,7 +33,6 @@ and sample size to help you importing data of an unknown format.
 #include "../ShuttleGui.h"
 #include "../UserException.h"
 #include "../WaveTrack.h"
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
 #include <cmath>
@@ -100,7 +101,6 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 {
    outTracks.clear();
    int encoding = 0; // Guess Format
-   sampleFormat format;
    sf_count_t offset = 0;
    double rate = 44100.0;
    double percent = 100.0;
@@ -193,11 +193,8 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       // the quality of the original file.
       //
 
-      format = QualityPrefs::SampleFormatChoice();
-
-      if (format != floatSample &&
-          sf_subtype_more_than_16_bits(encoding))
-         format = floatSample;
+      auto format = ImportFileHandle::ChooseFormat(
+         sf_subtype_to_effective_format(encoding));
 
       results.resize(1);
       auto &channels = results[0];

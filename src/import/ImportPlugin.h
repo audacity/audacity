@@ -152,6 +152,13 @@ public:
    // Set stream "import/don't import" flag
    virtual void SetStreamUsage(wxInt32 StreamID, bool Use) = 0;
 
+   //! Choose appropriate format, which will not be narrower than the specified one
+   static sampleFormat ChooseFormat(sampleFormat effectiveFormat);
+
+   //! Build a wave track with appropriate format, which will not be narrower than the specified one
+   std::shared_ptr<WaveTrack> NewWaveTrack( WaveTrackFactory &trackFactory,
+      sampleFormat effectiveFormat, double rate);
+
 protected:
    FilePath mFilename;
    std::unique_ptr<ProgressDialog> mProgress;

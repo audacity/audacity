@@ -41,7 +41,6 @@
 #include "Import.h"
 #include "../Prefs.h"
 #include "../Tags.h"
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
 
@@ -107,8 +106,6 @@ public:
       mVorbisFile(std::move(vorbisFile))
       , mStreamUsage{ static_cast<size_t>(mVorbisFile->links) }
    {
-      mFormat = QualityPrefs::SampleFormatChoice();
-
       for (int i = 0; i < mVorbisFile->links; i++)
       {
          auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
@@ -158,8 +155,6 @@ private:
    ArrayOf<int> mStreamUsage;
    TranslatableStrings mStreamInfo;
    std::list<NewChannelGroup> mChannels;
-
-   sampleFormat   mFormat;
 };
 
 
@@ -262,7 +257,8 @@ ProgressResult OggImportFileHandle::Import(
       link.resize(vi->channels);
 
       for (auto &channel : link)
-         channel = trackFactory->NewWaveTrack(mFormat, vi->rate);
+         // The format agrees with what is always passed to Append() below
+         channel = NewWaveTrack(*trackFactory, int16Sample, vi->rate);
    }
 
    /* The number of bytes to get from the codec in each run */
