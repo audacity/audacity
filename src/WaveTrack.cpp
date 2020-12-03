@@ -1662,6 +1662,11 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                   strValue.ToLong(&nValue))
             // Don't use SetWaveColorIndex as it sets the clips too.
             mWaveColorIndex  = nValue;
+         else if (!wxStrcmp(attr, wxT("sampleformat")) &&
+                  XMLValueChecker::IsGoodInt(strValue) &&
+                  strValue.ToLong(&nValue) &&
+                  XMLValueChecker::IsValidSampleFormat(nValue))
+            mFormat = static_cast<sampleFormat>(nValue);
       } // while
       return true;
    }
@@ -1724,6 +1729,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("gain"), (double)mGain);
    xmlFile.WriteAttr(wxT("pan"), (double)mPan);
    xmlFile.WriteAttr(wxT("colorindex"), mWaveColorIndex );
+   xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(mFormat) );
 
    for (const auto &clip : mClips)
    {
