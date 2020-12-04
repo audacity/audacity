@@ -146,6 +146,8 @@ It handles initialization and termination by subclassing wxApp.
 #include "../images/AudacityLogoWithName.xpm"
 #endif
 
+#include <thread>
+
 
 ////////////////////////////////////////////////////////////
 /// Custom events
@@ -1276,6 +1278,8 @@ bool AudacityApp::OnInit()
    // opened.  So use CallAfter() to delay the rest of initialization.
    // See CreateSingleInstanceChecker() where we send those paths over a
    // socket to the prior instance.
+   using namespace std::chrono;
+   std::this_thread::sleep_for(100ms);
    CallAfter([this]{
       if (!InitPart2())
          exit(-1);
