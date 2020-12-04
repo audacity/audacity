@@ -514,7 +514,7 @@ int FileDialog::ShowModal()
         // the entire text field, ignoring the insertion cursor, and ignoring
         // which control really has the focus.
         id handler;
-        if (wxTheClipboard->IsSupported(wxDF_TEXT)) {
+        if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT)) {
            handler = [
               NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask
               handler:^NSEvent *(NSEvent *event)
@@ -581,7 +581,7 @@ int FileDialog::ShowModal()
         [sPanel setNameFieldStringValue:file.AsNSString()];
         returnCode = [sPanel runModal];
         ModalFinishedCallback(sPanel, returnCode);
-        if (wxTheClipboard->IsSupported(wxDF_TEXT))
+        if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT))
            [NSEvent removeMonitor:handler];
     }
     else
