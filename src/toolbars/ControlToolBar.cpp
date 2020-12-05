@@ -604,6 +604,9 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
 {
    event.Skip();
 
+   if (!wxTheApp->IsActive())
+      return;
+
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
    if ( projectAudioManager.Paused() )
       mPause->PushDown();
