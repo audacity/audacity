@@ -133,7 +133,7 @@ AudacityProject::AudacityProject()
    auto path = FileNames::TempDir();
    if (wxGetDiskSpace(path, NULL, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
-         auto volume = FileException::AbbreviatePath( path );
+         auto volume = FileNames::AbbreviatePath( path );
          /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
          ShowErrorDialog(nullptr, 
             XO("Warning"),

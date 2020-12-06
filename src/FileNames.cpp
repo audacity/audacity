@@ -846,7 +846,7 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
    wxFileNameWrapper fileName{path};
    if (!fileName.HasVolume())
       return false;
-   auto volume = fileName.GetVolume() + wxT(":\\");
+   auto volume = AbbreviatePath(fileName) + wxT("\\");
    DWORD volumeFlags;
    wxChar volumeType[64];
    if (!::GetVolumeInformationW(
@@ -864,3 +864,23 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
 }
 #endif
 
+wxString FileNames::AbbreviatePath( const wxFileName &fileName )
+{
+   wxString target;
+#ifdef __WXMSW__
+
+   // Drive letter plus colon
+   target = fileName.GetVolume() + wxT(":");
+
+#else
+
+   // Shorten the path, arbitrarily to 3 components
+   auto path = fileName;
+   path.SetFullName(wxString{});
+   while(path.GetDirCount() > 3)
+      path.RemoveLastDir();
+   target = path.GetFullPath();
+
+#endif
+   return target;
+}

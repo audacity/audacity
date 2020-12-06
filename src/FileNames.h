@@ -213,6 +213,10 @@ namespace FileNames
 
    AUDACITY_DLL_API
    bool IsOnFATFileSystem(const FilePath &path);
+
+   AUDACITY_DLL_API
+   //! Give enough of the path to identify the device.  (On Windows, drive letter plus ':')
+   wxString AbbreviatePath(const wxFileName &fileName);
 };
 
 // Use this macro to wrap all filenames and pathnames that get

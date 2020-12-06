@@ -9,6 +9,7 @@
 
 #include "Audacity.h"
 #include "FileException.h"
+#include "FileNames.h"
 
 #include "Prefs.h"
 
@@ -36,7 +37,7 @@ XO("Audacity successfully wrote a file in %s but failed to rename it as %s.");
    }
 
    return format.Format(
-      AbbreviatePath(fileName), renameTarget.GetFullName() );
+      FileNames::AbbreviatePath(fileName), renameTarget.GetFullName() );
 }
 
 wxString FileException::ErrorHelpUrl() const
@@ -56,33 +57,11 @@ wxString FileException::ErrorHelpUrl() const
    return "";
 }
 
-
-wxString FileException::AbbreviatePath( const wxFileName &fileName )
-{
-   wxString target;
-#ifdef __WXMSW__
-
-   // Drive letter plus colon
-   target = fileName.GetVolume() + wxT(":");
-
-#else
-
-   // Shorten the path, arbitrarily to 3 components
-   auto path = fileName;
-   path.SetFullName(wxString{});
-   while(path.GetDirCount() > 3)
-      path.RemoveLastDir();
-   target = path.GetFullPath();
-
-#endif
-   return target;
-}
-
 TranslatableString
 FileException::WriteFailureMessage(const wxFileName &fileName)
 {
    return XO("Audacity failed to write to a file.\n"
      "Perhaps %s is not writable or the disk is full.\n"
      "For tips on freeing up space, click the help button."
-   ).Format(AbbreviatePath(fileName));
+   ).Format(FileNames::AbbreviatePath(fileName));
 }

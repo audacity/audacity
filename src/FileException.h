@@ -46,7 +46,6 @@ public:
 
    ~FileException() override;
 
-   static wxString AbbreviatePath(const wxFileName &fileName);
    static TranslatableString WriteFailureMessage(const wxFileName &fileName);
 
 protected:

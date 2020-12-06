@@ -16,6 +16,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include <wx/progdlg.h>
 #include <wx/string.h>
 
+#include "FileNames.h"
 #include "Internat.h"
 #include "Project.h"
 #include "FileException.h"
@@ -338,7 +339,7 @@ void DBConnection::CheckpointThread()
          if (rc != SQLITE_OK) {
             // Can't checkpoint -- maybe the device has too little space
             wxFileNameWrapper fName{ name };
-            auto path = FileException::AbbreviatePath(fName);
+            auto path = FileNames::AbbreviatePath(fName);
             auto name = fName.GetFullName();
             auto longname = name + "-wal";
             auto message1 = rc == SQLITE_FULL
