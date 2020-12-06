@@ -211,6 +211,8 @@ namespace FileNames
    // File extension used for unsaved/temporary project files
    wxString UnsavedProjectExtension();
 
+   AUDACITY_DLL_API
+   bool IsOnFATFileSystem(const FilePath &path);
 };
 
 // Use this macro to wrap all filenames and pathnames that get

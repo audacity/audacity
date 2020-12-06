@@ -2236,56 +2236,12 @@ bool ProjectFileIO::IsRecovered() const
    return mRecovered;
 }
 
-// How to detect whether the file system of a path is FAT
-// No apparent way to do it with wxWidgets
-#if defined(__DARWIN__)
-#include <sys/mount.h>
-static bool IsOnFATFileSystem(const FilePath &path)
-{
-   struct statfs fs;
-   if (statfs(path.c_str(), &fs))
-      // Error from statfs
-      return false;
-   return 0 == strcmp(fs.f_fstypename, "msdos");
-}
-#elif defined(__linux__)
-#include <sys/statfs.h>
-#include "/usr/include/linux/magic.h"
-static bool IsOnFATFileSystem(const FilePath &path)
-{
-   struct statfs fs;
-   if (statfs(path.c_str(), &fs))
-      // Error from statfs
-      return false;
-   return fs.f_type == MSDOS_SUPER_MAGIC;
-}
-#elif defined(_WIN32)
-#include <fileapi.h>
-static bool IsOnFATFileSystem(const FilePath &path)
-{
-   DWORD volumeFlags;
-   wxChar volumeType[64];
-   if (!::GetVolumeInformation(
-      path.c_str(), NULL, 0, NULL, NULL,
-      &volumeFlags,
-      volumeType,
-      WXSIZEOF(volumeType)))
-      return false;
-   return wxString(volumeType).Upper().find(wxT("FAT")) != wxString::npos;
-}
-#else
-static bool IsOnFATFileSystem(const FilePath &path)
-{
-   return false;
-}
-#endif
-
 wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 {
    wxLongLong freeSpace;
    if (wxGetDiskSpace(wxPathOnly(mFileName), NULL, &freeSpace))
    {
-      if (IsOnFATFileSystem(mFileName)) {
+      if (FileNames::IsOnFATFileSystem(mFileName)) {
          // 4 GiB per-file maximum
          constexpr auto limit = 1ll << 32;
          auto length = wxFileName::GetSize(mFileName);
