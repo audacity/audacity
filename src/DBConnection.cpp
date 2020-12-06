@@ -80,8 +80,6 @@ void DBConnection::SetDBError(
       ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
    wxLogDebug(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
    printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
-
-   wxASSERT(false);
 }
 
 bool DBConnection::Open(const char *fileName)
