@@ -407,7 +407,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
             // TODO: more precise message
-            ShowDiskFullExportErrorDialog();
+            ShowDiskFullExportErrorDialog(fName);
             updateResult = ProgressResult::Cancelled;
             break;
          }

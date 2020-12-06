@@ -958,7 +958,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       // Write the encoded audio frame to the output file.
       if ((ret = av_interleaved_write_frame(mEncFormatCtx.get(), &pkt)) < 0)
       {
-         ShowDiskFullExportErrorDialog();
+         ShowDiskFullExportErrorDialog(mName);
          return false;
       }
    }
@@ -1038,7 +1038,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
          if (!EncodeAudioFrame(
             pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
             // All errors should already have been reported.
-            //ShowDiskFullExportErrorDialog();
+            //ShowDiskFullExportErrorDialog(mName);
             updateResult = ProgressResult::Cancelled;
             break;
          }

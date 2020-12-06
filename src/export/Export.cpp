@@ -1526,14 +1526,11 @@ void ShowExportErrorDialog(wxString ErrorCode,
                   );
 }
 
-void ShowDiskFullExportErrorDialog()
+void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)
 {
    ShowErrorDialog(nullptr,
       XO("Warning"),
-      XO("Audacity failed to write to a file.\n"
-         "Perhaps the file is not writable or the disk is full.\n"
-         "For tips on freeing up space, click the help button."
-      ),
+      FileException::WriteFailureMessage(fileName),
       "Error:_Disk_full_or_not_writable"
    );
 }

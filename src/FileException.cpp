@@ -27,12 +27,7 @@ TranslatableString FileException::ErrorMessage() const
          format = XO("Audacity failed to read from a file in %s.");
          break;
       case Cause::Write:
-         format =
-         XO("Audacity failed to write to a file.\n"
-           "Perhaps %s is not writable or the disk is full.\n"
-           "For tips on freeing up space, click the help button."
-         );
-         break;
+         return WriteFailureMessage(fileName);
       case Cause::Rename:
          format =
 XO("Audacity successfully wrote a file in %s but failed to rename it as %s.");
@@ -81,4 +76,13 @@ wxString FileException::AbbreviatePath( const wxFileName &fileName )
 
 #endif
    return target;
+}
+
+TranslatableString
+FileException::WriteFailureMessage(const wxFileName &fileName)
+{
+   return XO("Audacity failed to write to a file.\n"
+     "Perhaps %s is not writable or the disk is full.\n"
+     "For tips on freeing up space, click the help button."
+   ).Format(AbbreviatePath(fileName));
 }

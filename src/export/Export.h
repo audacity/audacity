@@ -332,6 +332,6 @@ void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message = AudacityExportMessageStr(),
    const TranslatableString& caption = AudacityExportCaptionStr());
 
-void ShowDiskFullExportErrorDialog();
+void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName);
 
 #endif

@@ -338,7 +338,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                   if ( outFile.Write(page.header, page.header_len).GetLastError() ||
                        outFile.Write(page.body, page.body_len).GetLastError()) {
                      // TODO: more precise message
-                     ShowDiskFullExportErrorDialog();
+                     ShowDiskFullExportErrorDialog(fName);
                      return ProgressResult::Cancelled;
                   }
 
