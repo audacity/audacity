@@ -843,10 +843,14 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
 #include <fileapi.h>
 bool FileNames::IsOnFATFileSystem(const FilePath &path)
 {
+   wxFileNameWrapper fileName{path};
+   if (!fileName.HasVolume())
+      return false;
+   auto volume = fileName.GetVolume() + wxT(":\\");
    DWORD volumeFlags;
    wxChar volumeType[64];
-   if (!::GetVolumeInformation(
-      path.c_str(), NULL, 0, NULL, NULL,
+   if (!::GetVolumeInformationW(
+      volume.wc_str(), NULL, 0, NULL, NULL,
       &volumeFlags,
       volumeType,
       WXSIZEOF(volumeType)))
