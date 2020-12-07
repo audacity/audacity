@@ -331,6 +331,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
    if (!CheckVersion())
    {
       CloseConnection();
+      curConn.reset();
       return false;
    }
 
