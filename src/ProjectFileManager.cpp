@@ -163,8 +163,9 @@ auto ProjectFileManager::ReadProjectFile(
 
          if (!projectFileIO.IsTemporary())
          {
-            projectFileIO.SaveProject(fileName, nullptr);
-            resaved = true;
+            // Re-save non-temporary project to its own path.  This
+            // might fail to update the document blob in the database.
+            resaved = projectFileIO.SaveProject(fileName, nullptr);
          }
 
          AudacityMessageBox(
