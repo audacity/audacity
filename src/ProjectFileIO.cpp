@@ -2180,11 +2180,9 @@ bool ProjectFileIO::OpenProject()
 bool ProjectFileIO::CloseProject()
 {
    auto &currConn = CurrConn();
-   wxASSERT(currConn);
-
-   // Protect...
    if (!currConn)
    {
+      wxLogDebug("Closing project with no database connection");
       return true;
    }
 
