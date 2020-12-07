@@ -99,7 +99,7 @@ std::unique_ptr<wxImage> ChangeImageColour(wxImage * srcImage,
 
 /// Takes a background image, foreground image, and mask
 /// (i.e. the alpha channel for the foreground), and
-/// returns an NEW image where the foreground has been
+/// returns a NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground,
@@ -165,7 +165,7 @@ std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground
 
 /// Takes a background image, foreground image, and mask
 /// (i.e. the alpha channel for the foreground), and
-/// returns an NEW image where the foreground has been
+/// returns a NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,

@@ -327,7 +327,7 @@ private:
     * @return The number of samples from the start of the track which lie before the given time.
     */
    sampleCount TimeToLongSamples(double t0) const;
-   /** @brief Convert correctly between an number of samples and an (absolute) time in seconds.
+   /** @brief Convert correctly between a number of samples and an (absolute) time in seconds.
     *
     * @param pos The time number of samples from the start of the track to convert.
     * @return The time in seconds.
