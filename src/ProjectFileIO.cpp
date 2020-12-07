@@ -2273,7 +2273,13 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
       if (FileNames::IsOnFATFileSystem(mFileName)) {
          // 4 GiB per-file maximum
          constexpr auto limit = 1ll << 32;
-         auto length = wxFileName::GetSize(mFileName);
+
+         // Opening a file only to find its length looks wasteful but
+         // seems to be necessary at least on Windows with FAT filesystems.
+         // I don't know if that is only a wxWidgets bug.
+         auto length = wxFile{mFileName}.Length();
+         // auto length = wxFileName::GetSize(mFileName);
+
          if (length == wxInvalidSize)
             length = 0;
          auto free = std::max<wxLongLong>(0, limit - length);
