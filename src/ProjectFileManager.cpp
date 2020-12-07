@@ -302,15 +302,17 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks.get());
    if (!success)
    {
-      ShowErrorDialog(
-         &window,
-         XO("Error Saving Project"),
-         XO("Could not save project. Perhaps %s \n"
-            "is not writable or the disk is full.\n"
-            "For tips on freeing up space, click the help button.")
-            .Format(fileName),
-         "Error:_Disk_full_or_not_writable"
-         );
+      // Show this error only if we didn't fail reconnection in SaveProject
+      if (projectFileIO.HasConnection())
+         ShowErrorDialog(
+            &window,
+            XO("Error Saving Project"),
+            XO("Could not save project. Perhaps %s \n"
+               "is not writable or the disk is full.\n"
+               "For tips on freeing up space, click the help button.")
+               .Format(fileName),
+            "Error:_Disk_full_or_not_writable"
+            );
       return false;
    }
 
