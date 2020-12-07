@@ -82,6 +82,8 @@ ProjectManager::ProjectManager( AudacityProject &project )
    window.Bind( wxEVT_CLOSE_WINDOW, &ProjectManager::OnCloseWindow, this );
    mProject.Bind(EVT_PROJECT_STATUS_UPDATE,
       &ProjectManager::OnStatusChange, this);
+   project.Bind( EVT_RECONNECTION_FAILURE,
+      &ProjectManager::OnReconnectionFailure, this );
 }
 
 ProjectManager::~ProjectManager() = default;
@@ -587,6 +589,14 @@ AudacityProject *ProjectManager::New()
    window.Show(true);
    
    return p;
+}
+
+void ProjectManager::OnReconnectionFailure(wxCommandEvent & event)
+{
+   event.Skip();
+   wxTheApp->CallAfter([this]{
+      ProjectWindow::Get(mProject).Close(true);
+   });
 }
 
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)

@@ -65,6 +65,7 @@ public:
    void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
 private:
+   void OnReconnectionFailure(wxCommandEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);

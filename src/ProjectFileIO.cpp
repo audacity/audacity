@@ -44,6 +44,7 @@ Paul Licameli split from AudacityProject.cpp
 
 wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 wxDEFINE_EVENT( EVT_CHECKPOINT_FAILURE, wxCommandEvent);
+wxDEFINE_EVENT( EVT_RECONNECTION_FAILURE, wxCommandEvent);
 
 static const int ProjectFileID = ('A' << 24 | 'U' << 16 | 'D' << 8 | 'Y');
 static const int ProjectFileVersion = 1;
@@ -261,6 +262,12 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
 
 ProjectFileIO::~ProjectFileIO()
 {
+}
+
+bool ProjectFileIO::HasConnection() const
+{
+   auto &connectionPtr = ConnectionPtr::Get( mProject );
+   return connectionPtr.mpConnection != nullptr;
 }
 
 DBConnection &ProjectFileIO::GetConnection()
@@ -2045,20 +2052,38 @@ bool ProjectFileIO::SaveProject(
       FilePath savedName = mFileName;
       if (CloseConnection())
       {
-         if (MoveProject(savedName, fileName))
+         bool reopened = false;
+         bool moved = false;
+         if (true == (moved = MoveProject(savedName, fileName)))
          {
-            if (!OpenConnection(fileName))
-            {
+            if (OpenConnection(fileName))
+               reopened = true;
+            else {
                MoveProject(fileName, savedName);
-               OpenConnection(savedName);
+               reopened = OpenConnection(savedName);
             }
          }
          else {
             // Rename can fail -- if it's to a different device, requiring
             // real copy of contents, which might exhaust space
-            OpenConnection(savedName);
-            return false;
+            reopened = OpenConnection(savedName);
          }
+
+         if (!reopened)
+            wxTheApp->CallAfter([this]{
+               ShowErrorDialog(nullptr,
+                  XO("Warning"),
+                  XO(
+"The project's database failed to reopen, "
+"possibly because of limited space on the storage device."),
+                  "Error:_Disk_full_or_not_writable"
+               );
+               wxCommandEvent evt{ EVT_RECONNECTION_FAILURE };
+               mProject.ProcessEvent(evt);
+            });
+
+         if (!moved)
+            return false;
       }
    }
 

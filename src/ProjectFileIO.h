@@ -45,6 +45,11 @@ using BlockIDs = std::unordered_set<SampleBlockID>;
 wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
                           EVT_CHECKPOINT_FAILURE, wxCommandEvent );
 
+// An event processed by the project in the main thread after failure to
+// reconnect to the database, after temporary close and attempted file movement
+wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+                          EVT_RECONNECTION_FAILURE, wxCommandEvent );
+
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
 class ProjectFileIO final
@@ -179,6 +184,10 @@ public:
    // 0 for success or non-zero to stop the query
    using ExecCB = std::function<int(int cols, char **vals, char **names)>;
 
+   //! Return true if a connetion is now open
+   bool HasConnection() const;
+
+   //! Return a reference to a connection, creating it as needed on demand; throw on failure
    DBConnection &GetConnection();
 
 private:
