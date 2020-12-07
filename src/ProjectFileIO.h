@@ -108,7 +108,7 @@ public:
 
    // Return the bytes used for the given block using the connection to a
    // specific database. This is the workhorse for the above 3 methods.
-   static int64_t GetDiskUsage(DBConnection *conn, SampleBlockID blockid);
+   static int64_t GetDiskUsage(DBConnection &conn, SampleBlockID blockid);
 
    const TranslatableString &GetLastError();
    const TranslatableString &GetLibraryError();

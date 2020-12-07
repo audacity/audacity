@@ -88,6 +88,7 @@ private:
 
 private:
    //! This must never be called for silent blocks
+   /*! @post return value is not null */
    DBConnection *Conn() const;
    sqlite3 *DB() const
    {
@@ -527,7 +528,7 @@ size_t SqliteSampleBlock::GetSpaceUsage() const
    if (IsSilent())
       return 0;
    else
-      return ProjectFileIO::GetDiskUsage(Conn(), mBlockID);
+      return ProjectFileIO::GetDiskUsage(*Conn(), mBlockID);
 }
 
 size_t SqliteSampleBlock::GetBlob(void *dest,

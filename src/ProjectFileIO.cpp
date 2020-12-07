@@ -345,7 +345,8 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
 bool ProjectFileIO::CloseConnection()
 {
    auto &curConn = CurrConn();
-   wxASSERT(curConn);
+   if (!curConn)
+      return false;
 
    if (!curConn->Close())
    {
@@ -690,6 +691,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    bool prune /* = false */,
    const std::vector<const TrackList *> &tracks /* = {} */)
 {
+   auto pConn = CurrConn().get();
+   if (!pConn)
+      return false;
+
    // Get access to the active tracklist
    auto pProject = &mProject;
 
@@ -764,7 +769,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    //
    // NOTE:  Between the above attach and setting the mode here, a normal DELETE
    //        mode journal will be used and will briefly appear in the filesystem.
-   CurrConn()->FastMode("outbound");
+   pConn->FastMode("outbound");
 
    // Install our schema into the new database
    if (!InstallSchema(db, "outbound"))
@@ -2269,14 +2274,16 @@ void ProjectFileIO::SetError(
    const TranslatableString &msg, const TranslatableString &libraryError )
 {
    auto &currConn = CurrConn();
-   currConn->SetError(msg, libraryError);
+   if (currConn)
+      currConn->SetError(msg, libraryError);
 }
 
 void ProjectFileIO::SetDBError(
    const TranslatableString &msg, const TranslatableString &libraryError)
 {
    auto &currConn = CurrConn();
-   currConn->SetDBError(msg, libraryError);
+   if (currConn)
+      currConn->SetDBError(msg, libraryError);
 }
 
 void ProjectFileIO::SetBypass()
@@ -2315,7 +2322,10 @@ void ProjectFileIO::SetBypass()
 
 int64_t ProjectFileIO::GetBlockUsage(SampleBlockID blockid)
 {
-   return GetDiskUsage(CurrConn().get(), blockid);
+   auto pConn = CurrConn().get();
+   if (!pConn)
+      return 0;
+   return GetDiskUsage(*pConn, blockid);
 }
 
 int64_t ProjectFileIO::GetCurrentUsage(
@@ -2336,7 +2346,10 @@ int64_t ProjectFileIO::GetCurrentUsage(
 
 int64_t ProjectFileIO::GetTotalUsage()
 {
-   return GetDiskUsage(CurrConn().get(), 0);
+   auto pConn = CurrConn().get();
+   if (!pConn)
+      return 0;
+   return GetDiskUsage(*pConn, 0);
 }
 
 //
@@ -2345,7 +2358,7 @@ int64_t ProjectFileIO::GetTotalUsage()
 // pages available from the "sqlite_dbpage" virtual table to traverse the SQLite
 // table b-tree described here:  https://www.sqlite.org/fileformat.html
 //
-int64_t ProjectFileIO::GetDiskUsage(DBConnection *conn, SampleBlockID blockid /* = 0 */)
+int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /* = 0 */)
 {
    // Information we need to track our travels through the b-tree
    typedef struct
@@ -2364,7 +2377,7 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection *conn, SampleBlockID blockid /*
 
    // Get the rootpage for the sampleblocks table.
    sqlite3_stmt *stmt =
-      conn->Prepare(DBConnection::GetRootPage,
+      conn.Prepare(DBConnection::GetRootPage,
                     "SELECT rootpage FROM sqlite_master WHERE tbl_name = 'sampleblocks';");
    if (stmt == nullptr || sqlite3_step(stmt) != SQLITE_ROW)
    {
@@ -2379,7 +2392,7 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection *conn, SampleBlockID blockid /*
    sqlite3_reset(stmt);
 
    // Prepare/retrieve statement to read raw database page
-   stmt = conn->Prepare(DBConnection::GetDBPage,
+   stmt = conn.Prepare(DBConnection::GetDBPage,
       "SELECT data FROM sqlite_dbpage WHERE pgno = ?1;");
    if (stmt == nullptr)
    {
