@@ -1668,7 +1668,7 @@ bool AudacityApp::InitTempDir()
    // The permissions don't always seem to be set on
    // some platforms.  Hopefully this fixes it...
    #ifdef __UNIX__
-   chmod(OSFILENAME(temp), 0755);
+   chmod(OSFILENAME(temp), 0700);
    #endif
 
    FileNames::ResetTempDir();
