@@ -589,14 +589,11 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       break;
    } while (bPrompt);
 
-   if (!projectFileIO.SaveCopy(filename.GetFullPath()))
+   if (!projectFileIO.SaveCopy(fName))
    {
-      // Overwrite disallowed. The destination project is open in another window.
+      auto msg = FileException::WriteFailureMessage(fName);
       AudacityMessageDialog m(
-         nullptr,
-         XO("The project will not be saved because the selected project is open in another window.\nPlease try again and select an original name."),
-         XO("Error Saving Project"),
-         wxOK | wxICON_ERROR);
+         nullptr, msg, XO("Error Saving Project"), wxOK | wxICON_ERROR);
 
       m.ShowModal();
 
