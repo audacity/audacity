@@ -92,6 +92,7 @@ class AudacityApp final : public wxApp {
 #ifdef __WXMAC__
 
    void MacActivateApp();
+   void MacFinishLaunching();
 
 #endif
 

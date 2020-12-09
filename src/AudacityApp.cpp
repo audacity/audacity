@@ -1279,8 +1279,12 @@ bool AudacityApp::OnInit()
    // See CreateSingleInstanceChecker() where we send those paths over a
    // socket to the prior instance.
    using namespace std::chrono;
+   // This sleep may be unnecessary, but it is harmless.  It less NS framework
+   // events arrive on another thread, but it might not always be long enough.
    std::this_thread::sleep_for(100ms);
    CallAfter([this]{
+      // This call is what probably makes the sleep unnecessary:
+      MacFinishLaunching();
       if (!InitPart2())
          exit(-1);
    });

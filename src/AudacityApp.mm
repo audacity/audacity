@@ -4,7 +4,7 @@
 
 #include <AppKit/NSApplication.h>
 
-// One Mac-only method of class AudacityApp that uses Objective-C is kept
+// Mac-only methods of class AudacityApp that use Objective-C are kept
 // here so that AudacityApp.cpp can be just C++
 
 // The function is not presently used.  See commit
@@ -18,6 +18,11 @@ void AudacityApp::MacActivateApp()
    id app = [NSApplication sharedApplication];
    if ( [app respondsToSelector:@selector(activateIgnoringOtherApps:)] )
       [app activateIgnoringOtherApps:YES];
+}
+
+void AudacityApp::MacFinishLaunching()
+{
+   [NSApp finishLaunching];
 }
 
 #endif
