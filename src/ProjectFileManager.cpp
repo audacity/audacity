@@ -597,7 +597,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       // Overwrite disallowed. The destination project is open in another window.
       AudacityMessageDialog m(
          nullptr,
-         XO("The project will not saved because the selected project is open in another window.\nPlease try again and select an original name."),
+         XO("The project will not be saved because the selected project is open in another window.\nPlease try again and select an original name."),
          XO("Error Saving Project"),
          wxOK | wxICON_ERROR);
 
