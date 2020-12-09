@@ -15,7 +15,6 @@
 #include "KeyboardCapture.h"
 #include "FileNames.h"
 #include "./widgets/ErrorDialog.h"
-#include "./FileException.h"
 
 #include <wx/display.h>
 #include <wx/filename.h>
