@@ -75,6 +75,7 @@ list( APPEND SOURCES
       Audacity.h
       AudacityApp.cpp
       AudacityApp.h
+      $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
       AudacityException.cpp
       AudacityException.h
       AudacityHeaders.cpp
@@ -1171,6 +1172,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # These sources must be compiled as Objective C++ and excluded
    # from precompiled header usage
    set_source_files_properties(
+      AudacityApp.mm
       KeyboardCapture.cpp
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
