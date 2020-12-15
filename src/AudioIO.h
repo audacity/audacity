@@ -483,9 +483,9 @@ public:
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
-   volatile bool       mAudioThreadShouldCallFillBuffersOnce;
-   volatile bool       mAudioThreadFillBuffersLoopRunning;
-   volatile bool       mAudioThreadFillBuffersLoopActive;
+   volatile bool       mAudioThreadShouldCallTrackBufferExchangeOnce;
+   volatile bool       mAudioThreadTrackBufferExchangeLoopRunning;
+   volatile bool       mAudioThreadTrackBufferExchangeLoopActive;
 
    std::atomic<bool>   mForceFadeOut{ false };
 
@@ -769,7 +769,26 @@ private:
                              unsigned int numPlaybackChannels,
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
-   void FillBuffers();
+
+   /*!
+    Called in a loop from another worker thread that does not have the low-latency constraints
+    of the PortAudio callback thread.  Does less frequent and larger batches of work that may
+    include memory allocations and database operations.  RingBuffer objects mediate the transfer
+    between threads, to overcome the mismatch of their batch sizes.
+    */
+   void TrackBufferExchange();
+
+   //! First part of TrackBufferExchange
+   void FillPlayBuffers();
+   //! FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
+   bool RepositionPlayback(
+      size_t frames, //!< how many samples were just now buffered for play
+      size_t available, //!< how many more samples may be buffered
+      bool progress
+   );
+
+   //! Second part of TrackBufferExchange
+   void DrainRecordBuffers();
 
    /** \brief Get the number of audio samples free in all of the playback
    * buffers.

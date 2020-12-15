@@ -663,7 +663,7 @@ struct AudioIoCallback::ScrubState : NonInterferingBase
    void Get(sampleCount &startSample, sampleCount &endSample,
          sampleCount inDuration, sampleCount &duration)
    {
-      // Called by the thread that calls AudioIO::FillBuffers
+      // Called by the thread that calls AudioIO::TrackBufferExchange
       startSample = endSample = duration = -1LL;
       sampleCount s0Init;
 
@@ -1070,9 +1070,9 @@ AudioIO::AudioIO()
    // We have to ASSERT in the GUI thread, if we are to see it properly.
    wxASSERT( sizeof( short ) <= sizeof( float ));
 
-   mAudioThreadShouldCallFillBuffersOnce = false;
-   mAudioThreadFillBuffersLoopRunning = false;
-   mAudioThreadFillBuffersLoopActive = false;
+   mAudioThreadShouldCallTrackBufferExchangeOnce = false;
+   mAudioThreadTrackBufferExchangeLoopRunning = false;
+   mAudioThreadTrackBufferExchangeLoopActive = false;
    mPortStreamV19 = NULL;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -1830,13 +1830,13 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mScrubState.reset();
 #endif
 
-   // We signal the audio thread to call FillBuffers, to prime the RingBuffers
+   // We signal the audio thread to call TrackBufferExchange, to prime the RingBuffers
    // so that they will have data in them when the stream starts.  Having the
-   // audio thread call FillBuffers here makes the code more predictable, since
-   // FillBuffers will ALWAYS get called from the Audio thread.
-   mAudioThreadShouldCallFillBuffersOnce = true;
+   // audio thread call TrackBufferExchange here makes the code more predictable, since
+   // TrackBufferExchange will ALWAYS get called from the Audio thread.
+   mAudioThreadShouldCallTrackBufferExchangeOnce = true;
 
-   while( mAudioThreadShouldCallFillBuffersOnce ) {
+   while( mAudioThreadShouldCallTrackBufferExchangeOnce ) {
       auto interval = 50ull;
       if (options.playbackStreamPrimer) {
          interval = options.playbackStreamPrimer();
@@ -1876,7 +1876,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // Probably not needed so urgently before portaudio thread start for usual
       // playback, since our ring buffers have been primed already with 4 sec
       // of audio, but then we might be scrubbing, so do it.
-      mAudioThreadFillBuffersLoopRunning = true;
+      mAudioThreadTrackBufferExchangeLoopRunning = true;
       mForceFadeOut.store(false, std::memory_order_relaxed);
 
       // Now start the PortAudio stream!
@@ -1886,7 +1886,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       if( err != paNoError )
       {
          mStreamToken = 0;
-         mAudioThreadFillBuffersLoopRunning = false;
+         mAudioThreadTrackBufferExchangeLoopRunning = false;
          if (pListener && mNumCaptureChannels > 0)
             pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
@@ -2331,7 +2331,7 @@ void AudioIO::StopStream()
    wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
 #endif
  
-   if( mAudioThreadFillBuffersLoopRunning)
+   if( mAudioThreadTrackBufferExchangeLoopRunning )
    {
       // PortAudio callback can use the information that we are stopping to fade
       // out the audio.  Give PortAudio callback a chance to do so.
@@ -2379,7 +2379,7 @@ void AudioIO::StopStream()
    // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
    // at least for PortAudio 19.7.0+
 
-   mAudioThreadFillBuffersLoopRunning = false;
+   mAudioThreadTrackBufferExchangeLoopRunning = false;
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -2471,11 +2471,11 @@ void AudioIO::StopStream()
       // In either of the above cases, we want to make sure that any
       // capture data that made it into the PortAudio callback makes it
       // to the target WaveTrack.  To do this, we ask the audio thread to
-      // call FillBuffers one last time (it normally would not do so since
+      // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
-      mAudioThreadShouldCallFillBuffersOnce = true;
+      mAudioThreadShouldCallTrackBufferExchangeOnce = true;
 
-      while( mAudioThreadShouldCallFillBuffersOnce )
+      while( mAudioThreadShouldCallTrackBufferExchangeOnce )
       {
          // LLL:  Experienced recursive yield here...once.
          wxTheApp->Yield(true); // Pass true for onlyIfNeeded to avoid recursive call error.
@@ -2527,7 +2527,7 @@ void AudioIO::StopStream()
                // use No-fail-guarantee that track is flushed,
                // Partial-guarantee that some initial length of the recording
                // is saved.
-               // See comments in FillBuffers().
+               // See comments in TrackBufferExchange().
                track->Flush();
             } );
          }
@@ -2782,17 +2782,17 @@ AudioThread::ExitCode AudioThread::Entry()
       const auto interval = ScrubPollInterval_ms;
 
       // Set LoopActive outside the tests to avoid race condition
-      gAudioIO->mAudioThreadFillBuffersLoopActive = true;
-      if( gAudioIO->mAudioThreadShouldCallFillBuffersOnce )
+      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = true;
+      if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce )
       {
-         gAudioIO->FillBuffers();
-         gAudioIO->mAudioThreadShouldCallFillBuffersOnce = false;
+         gAudioIO->TrackBufferExchange();
+         gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce = false;
       }
-      else if( gAudioIO->mAudioThreadFillBuffersLoopRunning )
+      else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning )
       {
-         gAudioIO->FillBuffers();
+         gAudioIO->TrackBufferExchange();
       }
-      gAudioIO->mAudioThreadFillBuffersLoopActive = false;
+      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = false;
 
       if ( gAudioIO->mPlaybackSchedule.Interactive() )
          std::this_thread::sleep_until(
@@ -2833,7 +2833,7 @@ size_t AudioIO::GetCommonlyFreePlayback()
    for (unsigned i = 1; i < mPlaybackTracks.size(); ++i)
       commonlyAvail = std::min(commonlyAvail,
          mPlaybackBuffers[i]->AvailForPut());
-   // MB: subtract a few samples because the code in FillBuffers has rounding
+   // MB: subtract a few samples because the code in TrackBufferExchange has rounding
    // errors
    return commonlyAvail - std::min(size_t(10), commonlyAvail);
 }
@@ -2862,9 +2862,207 @@ size_t AudioIO::GetCommonlyAvailCapture()
 // This method is the data gateway between the audio thread (which
 // communicates with the disk) and the PortAudio callback thread
 // (which communicates with the audio device).
-void AudioIO::FillBuffers()
+void AudioIO::TrackBufferExchange()
 {
-   unsigned int i;
+   FillPlayBuffers();
+   DrainRecordBuffers();
+}
+
+void AudioIO::FillPlayBuffers()
+{
+   if (mPlaybackTracks.empty())
+      return;
+
+   // Though extremely unlikely, it is possible that some buffers
+   // will have more samples available than others.  This could happen
+   // if we hit this code during the PortAudio callback.  To keep
+   // things simple, we only write as much data as is vacant in
+   // ALL buffers, and advance the global time by that much.
+   auto nAvailable = GetCommonlyFreePlayback();
+
+   // Don't fill the buffers at all unless we can do the
+   // full mMaxPlaybackSecsToCopy.  This improves performance
+   // by not always trying to process tiny chunks, eating the
+   // CPU unnecessarily.
+   if (nAvailable < mPlaybackSamplesToCopy)
+      return;
+
+   // More than mPlaybackSamplesToCopy might be copied:
+   // May produce a larger amount when initially priming the buffer, or
+   // perhaps again later in play to avoid underfilling the queue and falling
+   // behind the real-time demand on the consumer side in the callback.
+   auto nReady = GetCommonlyReadyPlayback();
+   auto nNeeded =
+      mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+
+   // wxASSERT( nNeeded <= nAvailable );
+   auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
+
+   // Limit maximum buffer size (increases performance)
+   auto available = std::min( nAvailable,
+      std::max( nNeeded, mPlaybackSamplesToCopy ) );
+
+   // msmeyer: When playing a very short selection in looped
+   // mode, the selection must be copied to the buffer multiple
+   // times, to ensure, that the buffer has a reasonable size
+   // This is the purpose of this loop.
+   // PRL: or, when scrubbing, we may get work repeatedly from the
+   // user interface.
+   bool done = false;
+   do {
+      // How many samples to produce for each channel.
+      auto frames = available;
+      bool progress = true;
+      auto toProcess = frames;
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+      if (mPlaybackSchedule.Interactive())
+         // scrubbing and play-at-speed are not limited by the real time
+         // and length accumulators
+         toProcess =
+         frames = limitSampleBufferSize(frames, mScrubDuration);
+      else
+#endif
+      {
+         double deltat = frames / mRate;
+         if (deltat > realTimeRemaining)
+         {
+            frames = realTimeRemaining * mRate;
+            toProcess = frames;
+
+            // Don't fall into an infinite loop, if loop-playing a selection
+            // that is so short, it has no samples: detect that case
+            progress =
+               !(mPlaybackSchedule.Looping() &&
+                 mPlaybackSchedule.mWarpedTime == 0.0 && frames == 0);
+            mPlaybackSchedule.RealTimeAdvance( realTimeRemaining );
+         }
+         else
+            mPlaybackSchedule.RealTimeAdvance( deltat );
+         realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
+      }
+
+      if (!progress)
+         frames = available, toProcess = 0;
+#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+      else if ( mPlaybackSchedule.Interactive() && mSilentScrub)
+         toProcess = 0;
+#endif
+
+      // Update the time queue.  This must be done before writing to the
+      // ring buffers of samples, for proper synchronization with the
+      // consumer side in the PortAudio thread, which reads the time
+      // queue after reading the sample queues.  The sample queues use
+      // atomic variables, the time queue doesn't.
+      mTimeQueue.Producer( mPlaybackSchedule, mRate,
+         (mPlaybackSchedule.Interactive() ? mScrubSpeed : 1.0),
+         frames);
+
+      for (size_t i = 0; i < mPlaybackTracks.size(); i++)
+      {
+         // The mixer here isn't actually mixing: it's just doing
+         // resampling, format conversion, and possibly time track
+         // warping
+         if (frames > 0)
+         {
+            size_t processed = 0;
+            if ( toProcess )
+               processed = mPlaybackMixers[i]->Process( toProcess );
+            //wxASSERT(processed <= toProcess);
+            auto warpedSamples = mPlaybackMixers[i]->GetBuffer();
+            const auto put = mPlaybackBuffers[i]->Put(
+               warpedSamples, floatSample, processed, frames - processed);
+            // wxASSERT(put == frames);
+            // but we can't assert in this thread
+            wxUnusedVar(put);
+         }
+      }
+
+      available -= frames;
+      wxASSERT(available >= 0);
+
+      done = RepositionPlayback(frames, available, progress);
+   } while (!done);
+}
+
+bool AudioIO::RepositionPlayback(size_t frames, size_t available, bool progress)
+{
+   bool done = false;
+   switch (mPlaybackSchedule.mPlayMode)
+   {
+   #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
+   case PlaybackSchedule::PLAY_SCRUB:
+   case PlaybackSchedule::PLAY_AT_SPEED:
+   case PlaybackSchedule::PLAY_KEYBOARD_SCRUB:
+   {
+      mScrubDuration -= frames;
+      wxASSERT(mScrubDuration >= 0);
+      done = (available == 0);
+      if (!done && mScrubDuration <= 0)
+      {
+         sampleCount startSample, endSample;
+         mScrubState->Get(
+            startSample, endSample, available, mScrubDuration);
+         if (mScrubDuration < 0)
+         {
+            // Can't play anything
+            // Stop even if we don't fill up available
+            mScrubDuration = 0;
+            done = true;
+         }
+         else
+         {
+            mSilentScrub = (endSample == startSample);
+            double startTime, endTime;
+            startTime = startSample.as_double() / mRate;
+            endTime = endSample.as_double() / mRate;
+            auto diff = (endSample - startSample).as_long_long();
+            if (mScrubDuration == 0)
+               mScrubSpeed = 0;
+            else
+               mScrubSpeed =
+                  double(diff) / mScrubDuration.as_double();
+            if (!mSilentScrub)
+            {
+               for (size_t i = 0; i < mPlaybackTracks.size(); i++) {
+                  if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_AT_SPEED)
+                     mPlaybackMixers[i]->SetSpeedForPlayAtSpeed(mScrubSpeed);
+                  else if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_KEYBOARD_SCRUB)
+                     mPlaybackMixers[i]->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
+                  else
+                     mPlaybackMixers[i]->SetTimesAndSpeed(
+                        startTime, endTime, fabs( mScrubSpeed ));
+               }
+            }
+            mTimeQueue.mLastTime = startTime;
+         }
+      }
+   }
+      break;
+   #endif
+   case PlaybackSchedule::PLAY_LOOPED:
+   {
+      done = !progress || (available == 0);
+      // msmeyer: If playing looped, check if we are at the end of the buffer
+      // and if yes, restart from the beginning.
+      if (mPlaybackSchedule.RealTimeRemaining() <= 0)
+      {
+         for (size_t i = 0; i < mPlaybackTracks.size(); i++)
+            mPlaybackMixers[i]->Restart();
+         mPlaybackSchedule.RealTimeRestart();
+      }
+   }
+      break;
+   default:
+      done = true;
+      break;
+   }
+   return done;
+}
+
+void AudioIO::DrainRecordBuffers()
+{
+   if (mRecordingException || mCaptureTracks.empty())
+      return;
 
    auto delayedHandler = [this] ( AudacityException * pException ) {
       // In the main thread, stop recording
@@ -2885,368 +3083,182 @@ void AudioIO::FillBuffers()
       DefaultDelayedHandlerAction{}( pException );
    };
 
-   if (mPlaybackTracks.size() > 0)
-   {
-      // Though extremely unlikely, it is possible that some buffers
-      // will have more samples available than others.  This could happen
-      // if we hit this code during the PortAudio callback.  To keep
-      // things simple, we only write as much data as is vacant in
-      // ALL buffers, and advance the global time by that much.
-      auto nAvailable = GetCommonlyFreePlayback();
+   GuardedCall( [&] {
+      // start record buffering
+      const auto avail = GetCommonlyAvailCapture(); // samples
+      const auto remainingTime =
+         std::max(0.0, mRecordingSchedule.ToConsume());
+      // This may be a very big double number:
+      const auto remainingSamples = remainingTime * mRate;
+      bool latencyCorrected = true;
 
-      //
-      // Don't fill the buffers at all unless we can do the
-      // full mMaxPlaybackSecsToCopy.  This improves performance
-      // by not always trying to process tiny chunks, eating the
-      // CPU unnecessarily.
-      //
-      // May produce a larger amount when initially priming the buffer, or
-      // perhaps again later in play to avoid underfilling the queue and falling
-      // behind the real-time demand on the consumer side in the callback.
-      auto nReady = GetCommonlyReadyPlayback();
-      auto nNeeded =
-         mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
+      double deltat = avail / mRate;
 
-      // wxASSERT( nNeeded <= nAvailable );
-
-      auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
-      if (nAvailable >= mPlaybackSamplesToCopy)
+      if (mAudioThreadShouldCallTrackBufferExchangeOnce ||
+          deltat >= mMinCaptureSecsToCopy)
       {
-         // Limit maximum buffer size (increases performance)
-         auto available = std::min( nAvailable,
-            std::max( nNeeded, mPlaybackSamplesToCopy ) );
+         // This scope may combine many appendings of wave tracks,
+         // and also an autosave, into one transaction,
+         // lessening the number of checkpoints
+         Optional<TransactionScope> pScope;
+         if (mOwningProject) {
+            auto &pIO = ProjectFileIO::Get(*mOwningProject);
+            pScope.emplace(pIO.GetConnection(), "Recording");
+         }
 
-         // msmeyer: When playing a very short selection in looped
-         // mode, the selection must be copied to the buffer multiple
-         // times, to ensure, that the buffer has a reasonable size
-         // This is the purpose of this loop.
-         // PRL: or, when scrubbing, we may get work repeatedly from the
-         // user interface.
-         bool done = false;
-         do {
-            // How many samples to produce for each channel.
-            auto frames = available;
-            bool progress = true;
-            auto toProcess = frames;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-            if (mPlaybackSchedule.Interactive())
-               // scrubbing and play-at-speed are not limited by the real time
-               // and length accumulators
-               toProcess =
-               frames = limitSampleBufferSize(frames, mScrubDuration);
-            else
-#endif
-            {
-               double deltat = frames / mRate;
-               if (deltat > realTimeRemaining)
-               {
-                  frames = realTimeRemaining * mRate;
-                  toProcess = frames;
-                  // Don't fall into an infinite loop, if loop-playing a selection
-                  // that is so short, it has no samples: detect that case
-                  progress =
-                     !(mPlaybackSchedule.Looping() &&
-                       mPlaybackSchedule.mWarpedTime == 0.0 && frames == 0);
-                  mPlaybackSchedule.RealTimeAdvance( realTimeRemaining );
-               }
-               else
-                  mPlaybackSchedule.RealTimeAdvance( deltat );
-               realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
-            }
+         bool newBlocks = false;
 
-            if (!progress)
-               frames = available, toProcess = 0;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-            else if ( mPlaybackSchedule.Interactive() && mSilentScrub)
-               toProcess = 0;
-#endif
+         // Append captured samples to the end of the WaveTracks.
+         // The WaveTracks have their own buffering for efficiency.
+         auto numChannels = mCaptureTracks.size();
 
-            // Update the time queue.  This must be done before writing to the
-            // ring buffers of samples, for proper synchronization with the
-            // consumer side in the PortAudio thread, which reads the time
-            // queue after reading the sample queues.  The sample queues use
-            // atomic variables, the time queue doesn't.
-            mTimeQueue.Producer( mPlaybackSchedule, mRate,
-               (mPlaybackSchedule.Interactive() ? mScrubSpeed : 1.0),
-               frames);
-
-            for (i = 0; i < mPlaybackTracks.size(); i++)
-            {
-               // The mixer here isn't actually mixing: it's just doing
-               // resampling, format conversion, and possibly time track
-               // warping
-
-               if (frames > 0)
-               {
-                  size_t processed = 0;
-                  if ( toProcess )
-                     processed = mPlaybackMixers[i]->Process( toProcess );
-                  //wxASSERT(processed <= toProcess);
-                  auto warpedSamples = mPlaybackMixers[i]->GetBuffer();
-                  const auto put = mPlaybackBuffers[i]->Put(
-                     warpedSamples, floatSample, processed, frames - processed);
-                  // wxASSERT(put == frames);
-                  // but we can't assert in this thread
-                  wxUnusedVar(put);
-               }               
-            }
-
-            available -= frames;
-            wxASSERT(available >= 0);
-
-            switch (mPlaybackSchedule.mPlayMode)
-            {
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-            case PlaybackSchedule::PLAY_SCRUB:
-            case PlaybackSchedule::PLAY_AT_SPEED:
-            case PlaybackSchedule::PLAY_KEYBOARD_SCRUB:
-            {
-               mScrubDuration -= frames;
-               wxASSERT(mScrubDuration >= 0);
-               done = (available == 0);
-               if (!done && mScrubDuration <= 0)
-               {
-                  sampleCount startSample, endSample;
-                  mScrubState->Get(
-                     startSample, endSample, available, mScrubDuration);
-                  if (mScrubDuration < 0)
-                  {
-                     // Can't play anything
-                     // Stop even if we don't fill up available
-                     mScrubDuration = 0;
-                     done = true;
-                  }
-                  else
-                  {
-                     mSilentScrub = (endSample == startSample);
-                     double startTime, endTime;
-                     startTime = startSample.as_double() / mRate;
-                     endTime = endSample.as_double() / mRate;
-                     auto diff = (endSample - startSample).as_long_long();
-                     if (mScrubDuration == 0)
-                        mScrubSpeed = 0;
-                     else
-                        mScrubSpeed =
-                           double(diff) / mScrubDuration.as_double();
-                     if (!mSilentScrub)
-                     {
-                        for (i = 0; i < mPlaybackTracks.size(); i++) {
-                           if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_AT_SPEED)
-                              mPlaybackMixers[i]->SetSpeedForPlayAtSpeed(mScrubSpeed);
-                           else if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_KEYBOARD_SCRUB)
-                              mPlaybackMixers[i]->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
-                           else
-                              mPlaybackMixers[i]->SetTimesAndSpeed(
-                                 startTime, endTime, fabs( mScrubSpeed ));
-                        }
-                     }
-                     mTimeQueue.mLastTime = startTime;
-                  }
-               }
-            }
-               break;
-#endif
-            case PlaybackSchedule::PLAY_LOOPED:
-            {
-               done = !progress || (available == 0);
-               // msmeyer: If playing looped, check if we are at the end of the buffer
-               // and if yes, restart from the beginning.
-               if (realTimeRemaining <= 0)
-               {
-                  for (i = 0; i < mPlaybackTracks.size(); i++)
-                     mPlaybackMixers[i]->Restart();
-                  mPlaybackSchedule.RealTimeRestart();
-                  realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
-               }
-            }
-               break;
-            default:
-               done = true;
-               break;
-            }
-         } while (!done);
-      }
-   }  // end of playback buffering
-
-   if (!mRecordingException &&
-       mCaptureTracks.size() > 0)
-      GuardedCall( [&] {
-         // start record buffering
-         const auto avail = GetCommonlyAvailCapture(); // samples
-         const auto remainingTime =
-            std::max(0.0, mRecordingSchedule.ToConsume());
-         // This may be a very big double number:
-         const auto remainingSamples = remainingTime * mRate;
-         bool latencyCorrected = true;
-
-         double deltat = avail / mRate;
-
-         if (mAudioThreadShouldCallFillBuffersOnce ||
-             deltat >= mMinCaptureSecsToCopy)
+         for( size_t i = 0; i < numChannels; i++ )
          {
-            // This scope may combine many appendings of wave tracks,
-            // and also an autosave, into one transaction,
-            // lessening the number of checkpoints
-            Optional<TransactionScope> pScope;
-            if (mOwningProject) {
-               auto &pIO = ProjectFileIO::Get(*mOwningProject);
-               pScope.emplace(pIO.GetConnection(), "Recording");
+            sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
+
+            size_t discarded = 0;
+
+            if (!mRecordingSchedule.mLatencyCorrected) {
+               const auto correction = mRecordingSchedule.TotalCorrection();
+               if (correction >= 0) {
+                  // Rightward shift
+                  // Once only (per track per recording), insert some initial
+                  // silence.
+                  size_t size = floor( correction * mRate * mFactor);
+                  SampleBuffer temp(size, trackFormat);
+                  ClearSamples(temp.ptr(), trackFormat, 0, size);
+                  mCaptureTracks[i]->Append(temp.ptr(), trackFormat, size, 1);
+               }
+               else {
+                  // Leftward shift
+                  // discard some samples from the ring buffers.
+                  size_t size = floor(
+                     mRecordingSchedule.ToDiscard() * mRate );
+
+                  // The ring buffer might have grown concurrently -- don't discard more
+                  // than the "avail" value noted above.
+                  discarded = mCaptureBuffers[i]->Discard(std::min(avail, size));
+
+                  if (discarded < size)
+                     // We need to visit this again to complete the
+                     // discarding.
+                     latencyCorrected = false;
+               }
             }
 
-            bool newBlocks = false;
-
-            // Append captured samples to the end of the WaveTracks.
-            // The WaveTracks have their own buffering for efficiency.
-            auto numChannels = mCaptureTracks.size();
-
-            for( i = 0; i < numChannels; i++ )
+            const float *pCrossfadeSrc = nullptr;
+            size_t crossfadeStart = 0, totalCrossfadeLength = 0;
+            if (i < mRecordingSchedule.mCrossfadeData.size())
             {
-               sampleFormat trackFormat = mCaptureTracks[i]->GetSampleFormat();
-
-               size_t discarded = 0;
-
-               if (!mRecordingSchedule.mLatencyCorrected) {
-                  const auto correction = mRecordingSchedule.TotalCorrection();
-                  if (correction >= 0) {
-                     // Rightward shift
-                     // Once only (per track per recording), insert some initial
-                     // silence.
-                     size_t size = floor( correction * mRate * mFactor);
-                     SampleBuffer temp(size, trackFormat);
-                     ClearSamples(temp.ptr(), trackFormat, 0, size);
-                     mCaptureTracks[i]->Append(temp.ptr(), trackFormat, size, 1);
-                  }
-                  else {
-                     // Leftward shift
-                     // discard some samples from the ring buffers.
-                     size_t size = floor(
-                        mRecordingSchedule.ToDiscard() * mRate );
-
-                     // The ring buffer might have grown concurrently -- don't discard more
-                     // than the "avail" value noted above.
-                     discarded = mCaptureBuffers[i]->Discard(std::min(avail, size));
-
-                     if (discarded < size)
-                        // We need to visit this again to complete the
-                        // discarding.
-                        latencyCorrected = false;
-                  }
+               // Do crossfading
+               // The supplied crossfade samples are at the same rate as the track
+               const auto &data = mRecordingSchedule.mCrossfadeData[i];
+               totalCrossfadeLength = data.size();
+               if (totalCrossfadeLength) {
+                  crossfadeStart =
+                     floor(mRecordingSchedule.Consumed() * mCaptureTracks[i]->GetRate());
+                  if (crossfadeStart < totalCrossfadeLength)
+                     pCrossfadeSrc = data.data() + crossfadeStart;
                }
+            }
 
-               const float *pCrossfadeSrc = nullptr;
-               size_t crossfadeStart = 0, totalCrossfadeLength = 0;
-               if (i < mRecordingSchedule.mCrossfadeData.size())
-               {
-                  // Do crossfading
-                  // The supplied crossfade samples are at the same rate as the track
-                  const auto &data = mRecordingSchedule.mCrossfadeData[i];
-                  totalCrossfadeLength = data.size();
-                  if (totalCrossfadeLength) {
-                     crossfadeStart =
-                        floor(mRecordingSchedule.Consumed() * mCaptureTracks[i]->GetRate());
-                     if (crossfadeStart < totalCrossfadeLength)
-                        pCrossfadeSrc = data.data() + crossfadeStart;
-                  }
-               }
-
-               wxASSERT(discarded <= avail);
-               size_t toGet = avail - discarded;
-               SampleBuffer temp;
-               size_t size;
-               sampleFormat format;
-               if( mFactor == 1.0 )
-               {
-                  // Take captured samples directly
-                  size = toGet;
-                  if (pCrossfadeSrc)
-                     // Change to float for crossfade calculation
-                     format = floatSample;
-                  else
-                     format = trackFormat;
-                  temp.Allocate(size, format);
-                  const auto got =
-                     mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
-                  // wxASSERT(got == toGet);
-                  // but we can't assert in this thread
-                  wxUnusedVar(got);
-                  if (double(size) > remainingSamples)
-                     size = floor(remainingSamples);
-               }
-               else
-               {
-                  size = lrint(toGet * mFactor);
+            wxASSERT(discarded <= avail);
+            size_t toGet = avail - discarded;
+            SampleBuffer temp;
+            size_t size;
+            sampleFormat format;
+            if( mFactor == 1.0 )
+            {
+               // Take captured samples directly
+               size = toGet;
+               if (pCrossfadeSrc)
+                  // Change to float for crossfade calculation
                   format = floatSample;
-                  SampleBuffer temp1(toGet, floatSample);
-                  temp.Allocate(size, format);
-                  const auto got =
-                     mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, toGet);
-                  // wxASSERT(got == toGet);
-                  // but we can't assert in this thread
-                  wxUnusedVar(got);
-                  /* we are re-sampling on the fly. The last resampling call
-                   * must flush any samples left in the rate conversion buffer
-                   * so that they get recorded
-                   */
-                  if (toGet > 0 ) {
-                     if (double(toGet) > remainingSamples)
-                        toGet = floor(remainingSamples);
-                     const auto results =
-                     mResample[i]->Process(mFactor, (float *)temp1.ptr(), toGet,
-                                           !IsStreamActive(), (float *)temp.ptr(), size);
-                     size = results.second;
+               else
+                  format = trackFormat;
+               temp.Allocate(size, format);
+               const auto got =
+                  mCaptureBuffers[i]->Get(temp.ptr(), format, toGet);
+               // wxASSERT(got == toGet);
+               // but we can't assert in this thread
+               wxUnusedVar(got);
+               if (double(size) > remainingSamples)
+                  size = floor(remainingSamples);
+            }
+            else
+            {
+               size = lrint(toGet * mFactor);
+               format = floatSample;
+               SampleBuffer temp1(toGet, floatSample);
+               temp.Allocate(size, format);
+               const auto got =
+                  mCaptureBuffers[i]->Get(temp1.ptr(), floatSample, toGet);
+               // wxASSERT(got == toGet);
+               // but we can't assert in this thread
+               wxUnusedVar(got);
+               /* we are re-sampling on the fly. The last resampling call
+                * must flush any samples left in the rate conversion buffer
+                * so that they get recorded
+                */
+               if (toGet > 0 ) {
+                  if (double(toGet) > remainingSamples)
+                     toGet = floor(remainingSamples);
+                  const auto results =
+                  mResample[i]->Process(mFactor, (float *)temp1.ptr(), toGet,
+                                        !IsStreamActive(), (float *)temp.ptr(), size);
+                  size = results.second;
+               }
+            }
+
+            if (pCrossfadeSrc) {
+               wxASSERT(format == floatSample);
+               size_t crossfadeLength = std::min(size, totalCrossfadeLength - crossfadeStart);
+               if (crossfadeLength) {
+                  auto ratio = double(crossfadeStart) / totalCrossfadeLength;
+                  auto ratioStep = 1.0 / totalCrossfadeLength;
+                  auto pCrossfadeDst = (float*)temp.ptr();
+
+                  // Crossfade loop here
+                  for (size_t ii = 0; ii < crossfadeLength; ++ii) {
+                     *pCrossfadeDst = ratio * *pCrossfadeDst + (1.0 - ratio) * *pCrossfadeSrc;
+                     ++pCrossfadeSrc, ++pCrossfadeDst;
+                     ratio += ratioStep;
                   }
                }
+            }
 
-               if (pCrossfadeSrc) {
-                  wxASSERT(format == floatSample);
-                  size_t crossfadeLength = std::min(size, totalCrossfadeLength - crossfadeStart);
-                  if (crossfadeLength) {
-                     auto ratio = double(crossfadeStart) / totalCrossfadeLength;
-                     auto ratioStep = 1.0 / totalCrossfadeLength;
-                     auto pCrossfadeDst = (float*)temp.ptr();
+            // Now append
+            // see comment in second handler about guarantee
+            newBlocks = mCaptureTracks[i]->Append(temp.ptr(), format, size, 1)
+               || newBlocks;
+         } // end loop over capture channels
 
-                     // Crossfade loop here
-                     for (size_t ii = 0; ii < crossfadeLength; ++ii) {
-                        *pCrossfadeDst = ratio * *pCrossfadeDst + (1.0 - ratio) * *pCrossfadeSrc;
-                        ++pCrossfadeSrc, ++pCrossfadeDst;
-                        ratio += ratioStep;
-                     }
-                  }
-               }
+         // Now update the recording schedule position
+         mRecordingSchedule.mPosition += avail / mRate;
+         mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
-               // Now append
-               // see comment in second handler about guarantee
-               newBlocks = mCaptureTracks[i]->Append(temp.ptr(), format, size, 1)
-                  || newBlocks;
-            } // end loop over capture channels
+         auto pListener = GetListener();
+         if (pListener && newBlocks)
+            pListener->OnAudioIONewBlocks(&mCaptureTracks);
 
-            // Now update the recording schedule position
-            mRecordingSchedule.mPosition += avail / mRate;
-            mRecordingSchedule.mLatencyCorrected = latencyCorrected;
-
-            auto pListener = GetListener();
-            if (pListener && newBlocks)
-               pListener->OnAudioIONewBlocks(&mCaptureTracks);
-
-            if (pScope)
-               pScope->Commit();
-         }
-         // end of record buffering
-      },
-      // handler
-      [this] ( AudacityException *pException ) {
-         if ( pException ) {
-            // So that we don't attempt to fill the recording buffer again
-            // before the main thread stops recording
-            SetRecordingException();
-            return ;
-         }
-         else
-            // Don't want to intercept other exceptions (?)
-            throw;
-      },
-      delayedHandler
-   );
+         if (pScope)
+            pScope->Commit();
+      }
+      // end of record buffering
+   },
+   // handler
+   [this] ( AudacityException *pException ) {
+      if ( pException ) {
+         // So that we don't attempt to fill the recording buffer again
+         // before the main thread stops recording
+         SetRecordingException();
+         return ;
+      }
+      else
+         // Don't want to intercept other exceptions (?)
+         throw;
+   },
+   delayedHandler );
 }
 
 void AudioIoCallback::SetListener(
@@ -3994,7 +4006,7 @@ bool AudioIoCallback::FillOutputBuffers(
       return false;
    if( !outputBuffer )
       return false;
-   if(numPlaybackChannels <= 0) 
+   if(numPlaybackChannels <= 0)
       return false;
 
    float *outputFloats = outputBuffer;
@@ -4094,7 +4106,7 @@ bool AudioIoCallback::FillOutputBuffers(
          if (len < framesPerBuffer)
             // This used to happen normally at the end of non-looping
             // plays, but it can also be an anomalous case where the
-            // supply from FillBuffers fails to keep up with the
+            // supply from TrackBufferExchange fails to keep up with the
             // real-time demand in this thread (see bug 1932).  We
             // must supply something to the sound card, so pad it with
             // zeroes and not random garbage.
@@ -4107,7 +4119,7 @@ bool AudioIoCallback::FillOutputBuffers(
       // There can be a difference of len in different loop passes if one channel
       // of a stereo track ends before the other!  Take a max!
 
-      // PRL:  More recent rewrites of FillBuffers should guarantee a
+      // PRL:  More recent rewrites of TrackBufferExchange should guarantee a
       // padding out of the ring buffers so that equal lengths are
       // available, so maxLen ought to increase from 0 only once
       mMaxFramesOutput = std::max(mMaxFramesOutput, len);
@@ -4235,7 +4247,7 @@ void AudioIoCallback::FillInputBuffers(
       len = 0;
 
    // A different symptom is that len < framesPerBuffer because
-   // the other thread, executing FillBuffers, isn't consuming fast
+   // the other thread, executing TrackBufferExchange, isn't consuming fast
    // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
    // storage device it writes is too slow
    if (mDetectDropouts &&
@@ -4648,8 +4660,8 @@ int AudioIoCallback::CallbackDoSeek()
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
    // Pause audio thread and wait for it to finish
-   mAudioThreadFillBuffersLoopRunning = false;
-   while( mAudioThreadFillBuffersLoopActive )
+   mAudioThreadTrackBufferExchangeLoopRunning = false;
+   while( mAudioThreadTrackBufferExchangeLoopActive )
    {
       wxMilliSleep( 50 );
    }
@@ -4677,14 +4689,14 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    // Reload the ring buffers
-   mAudioThreadShouldCallFillBuffersOnce = true;
-   while( mAudioThreadShouldCallFillBuffersOnce )
+   mAudioThreadShouldCallTrackBufferExchangeOnce = true;
+   while( mAudioThreadShouldCallTrackBufferExchangeOnce )
    {
       wxMilliSleep( 50 );
    }
 
    // Reenable the audio thread
-   mAudioThreadFillBuffersLoopRunning = true;
+   mAudioThreadTrackBufferExchangeLoopRunning = true;
 
    return paContinue;
 }
