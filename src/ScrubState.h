@@ -27,6 +27,8 @@ public:
    std::chrono::milliseconds
       SleepInterval( PlaybackSchedule & ) override;
 
+   bool Done( PlaybackSchedule &schedule, unsigned long ) override;
+
 private:
    const ScrubbingOptions mOptions;
 };

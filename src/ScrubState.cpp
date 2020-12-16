@@ -9,6 +9,7 @@
  **********************************************************************/
 
 #include "ScrubState.h"
+#include "AudioIOBase.h"
 
 ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
    const ScrubbingOptions &options)
@@ -26,6 +27,16 @@ bool ScrubbingPlaybackPolicy::AllowSeek( PlaybackSchedule & )
 {
    // While scrubbing, ignore seek requests
    return false;
+}
+
+bool ScrubbingPlaybackPolicy::Done(
+   PlaybackSchedule &schedule, unsigned long )
+{
+   if (mOptions.isPlayingAtSpeed)
+      // some leftover length allowed in this case; ignore outputFrames
+      return PlaybackPolicy::Done(schedule, 0);
+   else
+      return false;
 }
 
 std::chrono::milliseconds
