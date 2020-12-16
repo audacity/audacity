@@ -24,8 +24,13 @@ public:
 
    bool AllowSeek( PlaybackSchedule & ) override;
 
+   std::chrono::milliseconds
+      SleepInterval( PlaybackSchedule & ) override;
+
 private:
    const ScrubbingOptions mOptions;
 };
+
+static constexpr unsigned ScrubPollInterval_ms = 50;
 
 #endif

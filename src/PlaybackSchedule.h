@@ -13,6 +13,7 @@
 
 #include "MemoryX.h"
 #include <atomic>
+#include <chrono>
 #include <vector>
 
 struct AudioIOStartStreamOptions;
@@ -174,6 +175,12 @@ public:
 
    //! Whether repositioning commands are allowed during playback
    virtual bool AllowSeek( PlaybackSchedule &schedule );
+
+   //! @section Called by the AudioIO::TrackBufferExchange thread
+
+   //! How long to wait between calls to AudioIO::TrackBufferExchange
+   virtual std::chrono::milliseconds
+      SleepInterval( PlaybackSchedule &schedule );
 
 protected:
    double mRate = 0;

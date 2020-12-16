@@ -618,6 +618,4 @@ private:
    bool mDelayingActions{ false };
 };
 
-static constexpr unsigned ScrubPollInterval_ms = 50;
-
 #endif

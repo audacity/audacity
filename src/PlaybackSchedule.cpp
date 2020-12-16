@@ -56,6 +56,12 @@ bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
    return true;
 }
 
+std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
+{
+   using namespace std::chrono;
+   return 10ms;
+}
+
 namespace {
 struct DefaultPlaybackPolicy final : PlaybackPolicy {
    ~DefaultPlaybackPolicy() override = default;

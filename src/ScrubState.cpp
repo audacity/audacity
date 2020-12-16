@@ -27,3 +27,9 @@ bool ScrubbingPlaybackPolicy::AllowSeek( PlaybackSchedule & )
    // While scrubbing, ignore seek requests
    return false;
 }
+
+std::chrono::milliseconds
+ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
+{
+   return std::chrono::milliseconds{ ScrubPollInterval_ms };
+}
