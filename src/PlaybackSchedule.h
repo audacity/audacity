@@ -170,6 +170,11 @@ public:
     */
    virtual double NormalizeTrackTime( PlaybackSchedule &schedule );
 
+   //! @section Called by the PortAudio callback thread
+
+   //! Whether repositioning commands are allowed during playback
+   virtual bool AllowSeek( PlaybackSchedule &schedule );
+
 protected:
    double mRate = 0;
 };

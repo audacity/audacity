@@ -22,6 +22,8 @@ public:
 
    double NormalizeTrackTime( PlaybackSchedule &schedule ) override;
 
+   bool AllowSeek( PlaybackSchedule & ) override;
+
 private:
    const ScrubbingOptions mOptions;
 };

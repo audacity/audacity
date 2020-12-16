@@ -2835,11 +2835,8 @@ bool AudioIoCallback::FillOutputBuffers(
 
    float *outputFloats = outputBuffer;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   // While scrubbing, ignore seek requests
-   if (mSeek && mPlaybackSchedule.Interactive())
+   if (mSeek && !mPlaybackSchedule.GetPolicy().AllowSeek(mPlaybackSchedule))
       mSeek = 0.0;
-#endif
 
    if (mSeek){
       mCallbackReturn = CallbackDoSeek();

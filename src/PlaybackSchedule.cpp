@@ -51,6 +51,11 @@ double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
    return absoluteTime;
 }
 
+bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
+{
+   return true;
+}
+
 namespace {
 struct DefaultPlaybackPolicy final : PlaybackPolicy {
    ~DefaultPlaybackPolicy() override = default;
