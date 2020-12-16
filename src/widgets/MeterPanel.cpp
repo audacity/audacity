@@ -986,9 +986,10 @@ static float ToDB(float v, float range)
    return ClipZeroToOne((db + range) / range);
 }
 
-void MeterPanel::UpdateDisplay(unsigned numChannels, int numFrames, float *sampleData)
+void MeterPanel::UpdateDisplay(
+   unsigned numChannels, int numFrames, const float *sampleData)
 {
-   float *sptr = sampleData;
+   auto sptr = sampleData;
    auto num = std::min(numChannels, mNumBars);
    MeterUpdateMsg msg;
 
