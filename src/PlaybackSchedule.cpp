@@ -20,6 +20,37 @@ void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
 }
 void PlaybackPolicy::Finalize( PlaybackSchedule & ){}
 
+double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
+{
+   // Track time readout for the main thread
+
+   // dmazzoni: This function is needed for two reasons:
+   // One is for looped-play mode - this function makes sure that the
+   // position indicator keeps wrapping around.  The other reason is
+   // more subtle - it's because PortAudio can query the hardware for
+   // the current stream time, and this query is not always accurate.
+   // Sometimes it's a little behind or ahead, and so this function
+   // makes sure that at least we clip it to the selection.
+   //
+   // msmeyer: There is also the possibility that we are using "cut preview"
+   //          mode. In this case, we should jump over a defined "gap" in the
+   //          audio.
+
+   // Limit the time between t0 and t1.
+   // Should the limiting be necessary in any play mode if there are no bugs?
+   double absoluteTime = schedule.LimitTrackTime();
+
+   if (schedule.mCutPreviewGapLen > 0)
+   {
+      // msmeyer: We're in cut preview mode, so if we are on the right
+      // side of the gap, we jump over it.
+      if (absoluteTime > schedule.mCutPreviewGapStart)
+         absoluteTime += schedule.mCutPreviewGapLen;
+   }
+
+   return absoluteTime;
+}
+
 namespace {
 struct DefaultPlaybackPolicy final : PlaybackPolicy {
    ~DefaultPlaybackPolicy() override = default;
@@ -132,44 +163,6 @@ double PlaybackSchedule::ClampTrackTime( double trackTime ) const
       return std::max(mT1, std::min(mT0, trackTime));
    else
       return std::max(mT0, std::min(mT1, trackTime));
-}
-
-double PlaybackSchedule::NormalizeTrackTime() const
-{
-   // Track time readout for the main thread
-
-   // dmazzoni: This function is needed for two reasons:
-   // One is for looped-play mode - this function makes sure that the
-   // position indicator keeps wrapping around.  The other reason is
-   // more subtle - it's because PortAudio can query the hardware for
-   // the current stream time, and this query is not always accurate.
-   // Sometimes it's a little behind or ahead, and so this function
-   // makes sure that at least we clip it to the selection.
-   //
-   // msmeyer: There is also the possibility that we are using "cut preview"
-   //          mode. In this case, we should jump over a defined "gap" in the
-   //          audio.
-
-   double absoluteTime;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   // Limit the time between t0 and t1 if not scrubbing.
-   // Should the limiting be necessary in any play mode if there are no bugs?
-   if (Interactive())
-      absoluteTime = GetTrackTime();
-   else
-#endif
-      absoluteTime = LimitTrackTime();
-
-   if (mCutPreviewGapLen > 0)
-   {
-      // msmeyer: We're in cut preview mode, so if we are on the right
-      // side of the gap, we jump over it.
-      if (absoluteTime > mCutPreviewGapStart)
-         absoluteTime += mCutPreviewGapLen;
-   }
-
-   return absoluteTime;
 }
 
 bool PlaybackSchedule::PassIsComplete() const

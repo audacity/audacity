@@ -153,6 +153,8 @@ struct PlaybackSchedule;
  */
 class PlaybackPolicy {
 public:
+   //! @section Called by the main thread
+
    virtual ~PlaybackPolicy() = 0;
 
    //! Called before starting an audio stream
@@ -160,6 +162,13 @@ public:
 
    //! Called after stopping of an audio stream or an unsuccessful start
    virtual void Finalize( PlaybackSchedule &schedule );
+
+   //! Normalizes mTime, clamping it and handling gaps from cut preview.
+   /*!
+    * Clamps the time (unless scrubbing), and skips over the cut section.
+    * Returns a time in seconds.
+    */
+   virtual double NormalizeTrackTime( PlaybackSchedule &schedule );
 
 protected:
    double mRate = 0;
@@ -307,13 +316,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     * Returns a time in seconds.
     */
    double LimitTrackTime() const;
-
-   /** \brief Normalizes mTime, clamping it and handling gaps from cut preview.
-    *
-    * Clamps the time (unless scrubbing), and skips over the cut section.
-    * Returns a time in seconds.
-    */
-   double NormalizeTrackTime() const;
 
    void ResetMode() {
       mPlayMode = PLAY_STRAIGHT;

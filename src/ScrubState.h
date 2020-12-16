@@ -20,6 +20,8 @@ public:
    explicit ScrubbingPlaybackPolicy(const ScrubbingOptions &);
    ~ScrubbingPlaybackPolicy() override;
 
+   double NormalizeTrackTime( PlaybackSchedule &schedule ) override;
+
 private:
    const ScrubbingOptions mOptions;
 };

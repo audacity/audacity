@@ -16,3 +16,8 @@ ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
 {}
 
 ScrubbingPlaybackPolicy::~ScrubbingPlaybackPolicy() = default;
+
+double ScrubbingPlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
+{
+   return schedule.GetTrackTime();
+}
