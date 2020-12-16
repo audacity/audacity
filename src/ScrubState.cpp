@@ -9,3 +9,10 @@
  **********************************************************************/
 
 #include "ScrubState.h"
+
+ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
+   const ScrubbingOptions &options)
+   : mOptions{ options }
+{}
+
+ScrubbingPlaybackPolicy::~ScrubbingPlaybackPolicy() = default;

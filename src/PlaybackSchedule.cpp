@@ -13,11 +13,37 @@
 #include "AudioIOBase.h"
 #include "Envelope.h"
 
+PlaybackPolicy::~PlaybackPolicy() = default;
+
+namespace {
+struct DefaultPlaybackPolicy final : PlaybackPolicy {
+   ~DefaultPlaybackPolicy() override = default;
+};
+}
+
+PlaybackPolicy &PlaybackSchedule::GetPolicy()
+{
+   if (mPolicyValid.load(std::memory_order_acquire) && mpPlaybackPolicy)
+      return *mpPlaybackPolicy;
+
+   static DefaultPlaybackPolicy defaultPolicy;
+   return defaultPolicy;
+}
+
+const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
+{
+   return const_cast<PlaybackSchedule&>(*this).GetPolicy();
+}
+
+LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
+
 void PlaybackSchedule::Init(
    const double t0, const double t1,
    const AudioIOStartStreamOptions &options,
    const RecordingSchedule *pRecordingSchedule )
 {
+   mpPlaybackPolicy.reset();
+
    if ( pRecordingSchedule )
       // It does not make sense to apply the time warp during overdub recording,
       // which defeats the purpose of making the recording synchronized with
@@ -41,9 +67,14 @@ void PlaybackSchedule::Init(
    // Main thread's initialization of mTime
    SetTrackTime( mT0 );
 
-   mPlayMode = options.playLooped
-      ? PlaybackSchedule::PLAY_LOOPED
-      : PlaybackSchedule::PLAY_STRAIGHT;
+   mPlayMode = PlaybackSchedule::PLAY_STRAIGHT;
+   if (options.policyFactory)
+      mpPlaybackPolicy = options.policyFactory(options);
+   else if (options.playLooped) {
+      mPlayMode = PlaybackSchedule::PLAY_LOOPED;
+      mpPlaybackPolicy = std::make_unique<LoopingPlaybackPolicy>();
+   }
+
    mCutPreviewGapStart = options.cutPreviewGapStart;
    mCutPreviewGapLen = options.cutPreviewGapLen;
 
@@ -55,7 +86,7 @@ void PlaybackSchedule::Init(
    {
       const auto &scrubOptions = *options.pScrubbingOptions;
       if (pRecordingSchedule ||
-          Looping() ||
+          options.playLooped ||
           mEnvelope ||
           scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
          wxASSERT(false);
@@ -79,6 +110,8 @@ void PlaybackSchedule::Init(
    else
 #endif
       mWarpedLength = RealDuration(mT1);
+
+   mPolicyValid.store(true, std::memory_order_release);
 }
 
 double PlaybackSchedule::LimitTrackTime() const
