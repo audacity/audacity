@@ -239,6 +239,8 @@ list( APPEND SOURCES
       SampleBlock.h
       Screenshot.cpp
       Screenshot.h
+      ScrubState.cpp
+      ScrubState.h
       SelectUtilities.cpp
       SelectUtilities.h
       SelectFile.cpp
