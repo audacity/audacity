@@ -312,8 +312,7 @@ protected:
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 public:
-   struct ScrubState;
-   std::unique_ptr<ScrubState> mScrubState;
+   struct ScrubQueue;
 
    bool mSilentScrub;
    double mScrubSpeed;
@@ -405,23 +404,6 @@ public:
    //! Enqueue action for main thread idle time, not before the end of any recording in progress
    /*! This may be called from non-main threads */
    void CallAfterRecording(PostRecordingAction action);
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool IsScrubbing() const { return IsBusy() && mScrubState != 0; }
-
-   /** \brief Notify scrubbing engine of desired position or speed.
-   * If options.adjustStart is true, then when mouse movement exceeds maximum
-   * scrub speed, adjust the beginning of the scrub interval rather than the
-   * end, so that the scrub skips or "stutters" to stay near the cursor.
-   */
-   void UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
-
-   void StopScrub();
-
-   /** \brief return the ending time of the last scrub interval.
-   */
-   double GetLastScrubTime() const;
-#endif
 
 public:
    wxString LastPaErrorString();

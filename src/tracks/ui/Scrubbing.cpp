@@ -690,7 +690,7 @@ void Scrubber::ContinueScrubbingPoll()
       mOptions.maxSpeed = mMaxSpeed;
       mOptions.adjustStart = false;
       mOptions.bySpeed = true;
-      gAudioIO->UpdateScrub(0, mOptions);
+      ScrubState::UpdateScrub(0, mOptions);
    }
    else if (mSpeedPlaying) {
       // default speed of 1.3 set, so that we can hear there is a problem
@@ -702,7 +702,7 @@ void Scrubber::ContinueScrubbingPoll()
       mOptions.maxSpeed = speed +0.01;
       mOptions.adjustStart = false;
       mOptions.bySpeed = true;
-      gAudioIO->UpdateScrub(speed, mOptions);
+      ScrubState::UpdateScrub(speed, mOptions);
    }
    else if (mKeyboardScrubbing) {
       mOptions.minSpeed = ScrubbingOptions::MinAllowedScrubSpeed();
@@ -712,7 +712,7 @@ void Scrubber::ContinueScrubbingPoll()
       double speed = GetKeyboardScrubbingSpeed();
       if (mBackwards)
          speed *= -1.0;
-      gAudioIO->UpdateScrub(speed, mOptions);
+      ScrubState::UpdateScrub(speed, mOptions);
    } else {
       const wxMouseState state(::wxGetMouseState());
       auto &trackPanel = GetProjectPanel( *mProject );
@@ -720,7 +720,7 @@ void Scrubber::ContinueScrubbingPoll()
       auto &viewInfo = ViewInfo::Get( *mProject );
 #ifdef DRAG_SCRUB
       if (mDragging && mSmoothScrollingScrub) {
-         const auto lastTime = gAudioIO->GetLastScrubTime();
+         const auto lastTime = ScrubState::GetLastScrubTime();
          const auto delta = mLastScrubPosition - position.x;
          const double time = viewInfo.OffsetTimeByPixels(lastTime, delta);
          mOptions.minSpeed = 0.0;
@@ -756,11 +756,11 @@ void Scrubber::ContinueScrubbingPoll()
          if (mSmoothScrollingScrub) {
             const double speed = FindScrubSpeed(seek, time);
             mOptions.bySpeed = true;
-            gAudioIO->UpdateScrub(speed, mOptions);
+            ScrubState::UpdateScrub(speed, mOptions);
          }
          else {
             mOptions.bySpeed = false;
-            gAudioIO->UpdateScrub(time, mOptions);
+            ScrubState::UpdateScrub(time, mOptions);
          }
       }
    }
@@ -846,7 +846,7 @@ void Scrubber::StopPolling()
 void Scrubber::StopScrubbing()
 {
    auto gAudioIO = AudioIO::Get();
-   gAudioIO->StopScrub();
+   ScrubState::StopScrub();
    StopPolling();
 
    if (HasMark() && !mCancelled) {

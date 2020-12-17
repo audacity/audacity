@@ -36,6 +36,24 @@ private:
    const ScrubbingOptions mOptions;
 };
 
+struct ScrubState
+{
+   static bool IsScrubbing();
+
+   /** \brief Notify scrubbing engine of desired position or speed.
+   * If options.adjustStart is true, then when mouse movement exceeds maximum
+   * scrub speed, adjust the beginning of the scrub interval rather than the
+   * end, so that the scrub skips or "stutters" to stay near the cursor.
+   */
+   static void UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
+
+   static void StopScrub();
+
+   /** \brief return the ending time of the last scrub interval.
+   */
+   static double GetLastScrubTime();
+};
+
 static constexpr unsigned ScrubPollInterval_ms = 50;
 
 #endif
