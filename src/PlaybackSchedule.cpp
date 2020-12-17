@@ -74,6 +74,11 @@ std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
    return 10ms;
 }
 
+bool PlaybackPolicy::Looping(const PlaybackSchedule &) const
+{
+   return false;
+}
+
 namespace {
 struct DefaultPlaybackPolicy final : PlaybackPolicy {
    ~DefaultPlaybackPolicy() override = default;
@@ -99,6 +104,11 @@ LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
 bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
 {
    return false;
+}
+
+bool LoopingPlaybackPolicy::Looping( const PlaybackSchedule & ) const
+{
+   return true;
 }
 
 void PlaybackSchedule::Init(
@@ -217,6 +227,9 @@ double PlaybackSchedule::SolveWarpedLength(double t0, double length) const
 double PlaybackSchedule::AdvancedTrackTime(
    double time, double realElapsed, double speed ) const
 {
+   auto &policy = GetPolicy();
+   const bool looping = policy.Looping(*this);
+
    if (ReversedTime())
       realElapsed *= -1.0;
 
@@ -237,7 +250,7 @@ double PlaybackSchedule::AdvancedTrackTime(
          else
             time = SolveWarpedLength(time, realElapsed);
 
-         if (!Looping() || !Overruns( time ))
+         if (!looping || !Overruns( time ))
             break;
 
          // Bug1922:  The part of the time track outside the loop should not
@@ -259,7 +272,7 @@ double PlaybackSchedule::AdvancedTrackTime(
       time += realElapsed * fabs(speed);
 
       // Wrap to start if looping
-      if (Looping()) {
+      if (looping) {
          while ( Overruns( time ) ) {
             // LL:  This is not exactly right, but I'm at my wits end trying to
             //      figure it out.  Feel free to fix it.  :-)

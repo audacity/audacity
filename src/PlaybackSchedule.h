@@ -187,6 +187,10 @@ public:
    virtual std::chrono::milliseconds
       SleepInterval( PlaybackSchedule &schedule );
 
+   //! @section To be removed
+
+   virtual bool Looping( const PlaybackSchedule &schedule ) const;
+
 protected:
    double mRate = 0;
 };
@@ -378,5 +382,6 @@ struct LoopingPlaybackPolicy final : PlaybackPolicy {
    ~LoopingPlaybackPolicy() override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
+   bool Looping( const PlaybackSchedule & ) const override;
 };
 #endif
