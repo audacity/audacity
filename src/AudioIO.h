@@ -255,7 +255,7 @@ public:
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    WaveTrackArray      mPlaybackTracks;
 
-   ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
+   std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
