@@ -14,6 +14,11 @@
 #include "Envelope.h"
 
 PlaybackPolicy::~PlaybackPolicy() = default;
+void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
+{
+   mRate = rate;
+}
+void PlaybackPolicy::Finalize( PlaybackSchedule & ){}
 
 namespace {
 struct DefaultPlaybackPolicy final : PlaybackPolicy {

@@ -1141,6 +1141,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    successAudio = StartPortAudioStream(options, playbackChannels,
                                        captureChannels, captureFormat);
+
+   // Call this only after reassignment of mRate that might happen in the
+   // previous call.
+   mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    auto range = Extensions();
    successAudio = successAudio &&
@@ -1579,6 +1584,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
       mStreamToken = 0;
    }
 
+   mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    mScrubState.reset();
 #endif
@@ -1868,6 +1875,8 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
+
+   mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    mScrubState.reset();

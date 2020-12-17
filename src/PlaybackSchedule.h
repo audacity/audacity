@@ -142,6 +142,8 @@ struct RecordingSchedule {
    double ToDiscard() const;
 };
 
+struct PlaybackSchedule;
+
 //! Directs which parts of tracks to fetch for playback
 /*!
  A non-default policy object may be created each time playback begins, and if so it is destroyed when
@@ -152,6 +154,15 @@ struct RecordingSchedule {
 class PlaybackPolicy {
 public:
    virtual ~PlaybackPolicy() = 0;
+
+   //! Called before starting an audio stream
+   virtual void Initialize( PlaybackSchedule &schedule, double rate );
+
+   //! Called after stopping of an audio stream or an unsuccessful start
+   virtual void Finalize( PlaybackSchedule &schedule );
+
+protected:
+   double mRate = 0;
 };
 
 struct AUDACITY_DLL_API PlaybackSchedule {
