@@ -9,7 +9,7 @@
  **********************************************************************/
 
 #include "ScrubState.h"
-#include "AudioIOBase.h"
+#include "AudioIO.h"
 
 ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
    const ScrubbingOptions &options)
@@ -43,4 +43,26 @@ std::chrono::milliseconds
 ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 {
    return std::chrono::milliseconds{ ScrubPollInterval_ms };
+}
+
+PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
+   PlaybackSchedule &, size_t available)
+{
+   auto gAudioIO = AudioIO::Get();
+   auto &mScrubDuration = gAudioIO->mScrubDuration;
+   auto &mSilentScrub = gAudioIO->mSilentScrub;
+
+   // How many samples to produce for each channel.
+   auto frames = available;
+   auto toProduce = frames;
+
+   // scrubbing and play-at-speed are not limited by the real time
+   // and length accumulators
+   toProduce =
+      frames = limitSampleBufferSize(frames, mScrubDuration);
+
+   if (mSilentScrub)
+      toProduce = 0;
+
+   return { available, frames, toProduce, true };
 }

@@ -29,6 +29,9 @@ public:
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
 
+   PlaybackSlice GetPlaybackSlice(
+      PlaybackSchedule &schedule, size_t available) override;
+
 private:
    const ScrubbingOptions mOptions;
 };

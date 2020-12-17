@@ -359,23 +359,6 @@ private:
 
 struct PaStreamInfo;
 
-//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
-struct PlaybackSlice {
-   const size_t frames; //!< Total number frames to be buffered
-   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
-   const bool progress; //!< To be removed
-
-   //! Constructor enforces some invariants
-   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
-    */
-   PlaybackSlice(
-      size_t available, size_t frames_, size_t toProduce_, bool progress_)
-      : frames{ std::min(available, frames_) }
-      , toProduce{ std::min(toProduce_, frames) }
-      , progress{ progress_ }
-   {}
-};
-
 class AUDACITY_DLL_API AudioIO final
    : public AudioIoCallback
 {
@@ -569,10 +552,6 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
-   //! Called one or more times by FillPlayBuffers
-   PlaybackSlice GetPlaybackSlice(
-      size_t available //!< how many more samples may be buffered
-   );
    //! FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
    bool RepositionPlayback(
       size_t frames, //!< how many samples were just now buffered for play

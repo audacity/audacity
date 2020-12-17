@@ -145,6 +145,23 @@ struct RecordingSchedule {
 
 struct PlaybackSchedule;
 
+//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
+struct PlaybackSlice {
+   const size_t frames; //!< Total number of frames to be buffered
+   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
+   const bool progress; //!< To be removed
+
+   //! Constructor enforces some invariants
+   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
+    */
+   PlaybackSlice(
+      size_t available, size_t frames_, size_t toProduce_, bool progress_)
+      : frames{ std::min(available, frames_) }
+      , toProduce{ std::min(toProduce_, frames) }
+      , progress{ progress_ }
+   {}
+};
+
 //! Directs which parts of tracks to fetch for playback
 /*!
  A non-default policy object may be created each time playback begins, and if so it is destroyed when
@@ -186,6 +203,11 @@ public:
    //! How long to wait between calls to AudioIO::TrackBufferExchange
    virtual std::chrono::milliseconds
       SleepInterval( PlaybackSchedule &schedule );
+
+   //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
+   virtual PlaybackSlice GetPlaybackSlice( PlaybackSchedule &schedule,
+      size_t available //!< upper bound for the length of the fetch
+   );
 
    //! @section To be removed
 
@@ -343,8 +365,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       mPolicyValid.store(false, std::memory_order_release);
    }
 
-   bool PlayingStraight() const { return mPlayMode == PLAY_STRAIGHT; }
-   bool Looping() const         { return mPlayMode == PLAY_LOOPED; }
    bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
    bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
    bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
@@ -382,6 +402,8 @@ struct LoopingPlaybackPolicy final : PlaybackPolicy {
    ~LoopingPlaybackPolicy() override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
+   PlaybackSlice GetPlaybackSlice(
+      PlaybackSchedule &schedule, size_t available ) override;
    bool Looping( const PlaybackSchedule & ) const override;
 };
 #endif

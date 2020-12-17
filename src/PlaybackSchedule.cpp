@@ -74,6 +74,32 @@ std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
    return 10ms;
 }
 
+PlaybackSlice
+PlaybackPolicy::GetPlaybackSlice(PlaybackSchedule &schedule, size_t available)
+{
+   // How many samples to produce for each channel.
+   const auto realTimeRemaining = schedule.RealTimeRemaining();
+   auto frames = available;
+   auto toProduce = frames;
+   double deltat = frames / mRate;
+
+   if (deltat > realTimeRemaining)
+   {
+      // Produce some extra silence so that the time queue consumer can
+      // satisfy its end condition
+      const double extraRealTime = (TimeQueueGrainSize + 1) / mRate;
+      auto extra = std::min( extraRealTime, deltat - realTimeRemaining );
+      auto realTime = realTimeRemaining + extra;
+      frames = realTime * mRate;
+      toProduce = realTimeRemaining * mRate;
+      schedule.RealTimeAdvance( realTime );
+   }
+   else
+      schedule.RealTimeAdvance( deltat );
+
+   return { available, frames, toProduce, true };
+}
+
 bool PlaybackPolicy::Looping(const PlaybackSchedule &) const
 {
    return false;
@@ -104,6 +130,35 @@ LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
 bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
 {
    return false;
+}
+
+PlaybackSlice
+LoopingPlaybackPolicy::GetPlaybackSlice(
+   PlaybackSchedule &schedule, size_t available)
+{
+   // How many samples to produce for each channel.
+   const auto realTimeRemaining = schedule.RealTimeRemaining();
+   auto frames = available;
+   auto toProduce = frames;
+   double deltat = frames / mRate;
+
+   if (deltat > realTimeRemaining)
+   {
+      toProduce = frames = realTimeRemaining * mRate;
+      schedule.RealTimeAdvance( realTimeRemaining );
+   }
+   else
+      schedule.RealTimeAdvance( deltat );
+
+   // Don't fall into an infinite loop, if loop-playing a selection
+   // that is so short, it has no samples: detect that case
+   bool progress = true;
+   if (frames == 0) {
+      progress = (schedule.mWarpedTime != 0.0);
+      if (!progress)
+         frames = available, toProduce = 0;
+   }
+   return { available, frames, toProduce, progress };
 }
 
 bool LoopingPlaybackPolicy::Looping( const PlaybackSchedule & ) const
