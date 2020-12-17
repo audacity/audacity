@@ -16,6 +16,7 @@
 
 
 #include "AudioIOBase.h" // to inherit
+#include "PlaybackSchedule.h" // member variable
 
 
 

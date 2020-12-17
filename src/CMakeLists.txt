@@ -188,6 +188,8 @@ list( APPEND SOURCES
       PitchName.h
       PlatformCompatibility.cpp
       PlatformCompatibility.h
+      PlaybackSchedule.cpp
+      PlaybackSchedule.h
       PluginManager.cpp
       PluginManager.h
       Prefs.cpp
