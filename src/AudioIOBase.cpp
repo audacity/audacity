@@ -500,16 +500,6 @@ double AudioIOBase::PlaybackSchedule::NormalizeTrackTime() const
    return absoluteTime;
 }
 
-double AudioIOBase::GetStreamTime()
-{
-   // Track time readout for the main thread
-
-   if( !IsStreamActive() )
-      return BAD_STREAM_TIME;
-
-   return mPlaybackSchedule.NormalizeTrackTime();
-}
-
 std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex, double rate)
 {
    if (devIndex == -1)

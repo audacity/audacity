@@ -195,14 +195,6 @@ public:
     */
    static int GetOptimalSupportedSampleRate();
 
-   /** \brief During playback, the track time most recently played
-    *
-    * When playing looped, this will start from t0 again,
-    * too. So the returned time should be always between
-    * t0 and t1
-    */
-   double GetStreamTime();
-
    /** \brief Array of common audio sample rates
     *
     * These are the rates we will always support, regardless of hardware support
@@ -454,7 +446,7 @@ protected:
       
       void RealTimeRestart();
 
-   } mPlaybackSchedule;
+   };
 
    /** \brief get the index of the supplied (named) recording device, or the
     * device selected in the preferences if none given.

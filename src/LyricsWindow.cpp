@@ -11,7 +11,7 @@
 
 #include "LyricsWindow.h"
 #include "Lyrics.h"
-#include "AudioIOBase.h"
+#include "AudioIO.h"
 #include "CommonCommandFlags.h"
 #include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
@@ -160,7 +160,7 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
 {
    if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
    }
    else

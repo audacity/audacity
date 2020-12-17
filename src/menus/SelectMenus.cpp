@@ -504,7 +504,7 @@ void OnSetLeftSelection(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    bool bSelChanged = false;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();
@@ -543,7 +543,7 @@ void OnSetRightSelection(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    bool bSelChanged = false;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();

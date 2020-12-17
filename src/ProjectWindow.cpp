@@ -13,6 +13,7 @@ Paul Licameli split from AudacityProject.cpp
 
 
 #include "AllThemeResources.h"
+#include "AudioIO.h"
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -1670,7 +1671,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
    // Let other listeners get the notification
    event.Skip();
 
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
    mRecentStreamTime = gAudioIO->GetStreamTime();
 
    auto cleanup = finally([&]{
@@ -1724,7 +1725,7 @@ void ProjectWindow::ZoomInByFactor( double ZoomFactor )
    auto &project = mProject;
    auto &viewInfo = ViewInfo::Get( project );
 
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
    // LLL: Handling positioning differently when audio is
    // actively playing.  Don't do this if paused.
    if (gAudioIO->IsStreamActive(
