@@ -12,6 +12,7 @@
 
 #include "AudioIOBase.h"
 #include "Envelope.h"
+#include "Mix.h"
 #include "SampleCount.h"
 
 PlaybackPolicy::~PlaybackPolicy() = default;
@@ -97,7 +98,13 @@ PlaybackPolicy::GetPlaybackSlice(PlaybackSchedule &schedule, size_t available)
    else
       schedule.RealTimeAdvance( deltat );
 
-   return { available, frames, toProduce, true };
+   return { available, frames, toProduce };
+}
+
+bool PlaybackPolicy::RepositionPlayback(
+   PlaybackSchedule &, const Mixers &, size_t, size_t)
+{
+   return true;
 }
 
 bool PlaybackPolicy::Looping(const PlaybackSchedule &) const
@@ -152,13 +159,27 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
 
    // Don't fall into an infinite loop, if loop-playing a selection
    // that is so short, it has no samples: detect that case
-   bool progress = true;
    if (frames == 0) {
-      progress = (schedule.mWarpedTime != 0.0);
+      bool progress = (schedule.mWarpedTime != 0.0);
       if (!progress)
+         // Cause FillPlayBuffers to make progress, filling all available with 0
          frames = available, toProduce = 0;
    }
-   return { available, frames, toProduce, progress };
+   return { available, frames, toProduce };
+}
+
+bool LoopingPlaybackPolicy::RepositionPlayback(
+   PlaybackSchedule &schedule, const Mixers &playbackMixers, size_t, size_t )
+{
+   // msmeyer: If playing looped, check if we are at the end of the buffer
+   // and if yes, restart from the beginning.
+   if (schedule.RealTimeRemaining() <= 0)
+   {
+      for (auto &pMixer : playbackMixers)
+         pMixer->Restart();
+      schedule.RealTimeRestart();
+   }
+   return false;
 }
 
 bool LoopingPlaybackPolicy::Looping( const PlaybackSchedule & ) const

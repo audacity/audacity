@@ -143,22 +143,21 @@ struct RecordingSchedule {
    double ToDiscard() const;
 };
 
+class Mixer;
 struct PlaybackSchedule;
 
 //! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
 struct PlaybackSlice {
    const size_t frames; //!< Total number of frames to be buffered
    const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
-   const bool progress; //!< To be removed
 
    //! Constructor enforces some invariants
    /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
     */
    PlaybackSlice(
-      size_t available, size_t frames_, size_t toProduce_, bool progress_)
+      size_t available, size_t frames_, size_t toProduce_)
       : frames{ std::min(available, frames_) }
       , toProduce{ std::min(toProduce_, frames) }
-      , progress{ progress_ }
    {}
 };
 
@@ -207,6 +206,18 @@ public:
    //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
    virtual PlaybackSlice GetPlaybackSlice( PlaybackSchedule &schedule,
       size_t available //!< upper bound for the length of the fetch
+   );
+
+   using Mixers = std::vector<std::unique_ptr<Mixer>>;
+
+   //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
+   /*!
+    @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
+    */
+   virtual bool RepositionPlayback(
+      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      size_t frames, //!< how many samples were just now buffered for play
+      size_t available //!< how many more samples may be buffered
    );
 
    //! @section To be removed
@@ -398,12 +409,18 @@ private:
    std::atomic<bool> mPolicyValid{ false };
 };
 
-struct LoopingPlaybackPolicy final : PlaybackPolicy {
+class LoopingPlaybackPolicy final : public PlaybackPolicy {
+public:
    ~LoopingPlaybackPolicy() override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available ) override;
+
+   bool RepositionPlayback(
+      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      size_t frames, size_t available ) override;
+
    bool Looping( const PlaybackSchedule & ) const override;
 };
 #endif

@@ -312,11 +312,7 @@ protected:
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 public:
-   struct ScrubQueue;
-
-   bool mSilentScrub;
    double mScrubSpeed;
-   sampleCount mScrubDuration;
 #endif
 
 protected:
@@ -534,12 +530,6 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
-   //! FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
-   bool RepositionPlayback(
-      size_t frames, //!< how many samples were just now buffered for play
-      size_t available, //!< how many more samples may be buffered
-      bool progress
-   );
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();

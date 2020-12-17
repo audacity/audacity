@@ -12,6 +12,7 @@
 #define __AUDACITY_SCRUB_STATE__
 
 #include "PlaybackSchedule.h" // to inherit
+#include "SampleCount.h"
 
 #include "AudioIOBase.h" // for ScrubbingOptions
 
@@ -19,6 +20,9 @@ class ScrubbingPlaybackPolicy final : public PlaybackPolicy {
 public:
    explicit ScrubbingPlaybackPolicy(const ScrubbingOptions &);
    ~ScrubbingPlaybackPolicy() override;
+
+   void Initialize( PlaybackSchedule &schedule, double rate ) override;
+   void Finalize( PlaybackSchedule &schedule ) override;
 
    double NormalizeTrackTime( PlaybackSchedule &schedule ) override;
 
@@ -32,7 +36,16 @@ public:
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available) override;
 
+   bool RepositionPlayback(
+      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      size_t frames,
+      size_t available
+   ) override;
+
 private:
+   sampleCount mScrubDuration{ 0 };
+   bool mSilentScrub{ false };
+
    const ScrubbingOptions mOptions;
 };
 
