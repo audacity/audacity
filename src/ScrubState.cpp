@@ -304,6 +304,7 @@ void ScrubbingPlaybackPolicy::Initialize( PlaybackSchedule &schedule,
 {
    PlaybackPolicy::Initialize(schedule, rate);
    mScrubDuration = 0;
+   mScrubSpeed = 0;
    mSilentScrub = false;
    ScrubQueue::Instance.Init( schedule.mT0, rate, mOptions );
 }
@@ -367,12 +368,18 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
+double ScrubbingPlaybackPolicy::AdvancedTrackTime(
+   PlaybackSchedule &schedule,
+   double trackTime, double realDuration )
+{
+   return trackTime + realDuration * mScrubSpeed;
+}
+
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &schedule, const Mixers &playbackMixers,
    size_t frames, size_t available)
 {
    auto gAudioIO = AudioIO::Get();
-   auto &mScrubSpeed = gAudioIO->mScrubSpeed;
 
    mScrubDuration -= frames;
    wxASSERT(mScrubDuration >= 0);

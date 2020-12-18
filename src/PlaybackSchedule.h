@@ -212,6 +212,16 @@ public:
       size_t available //!< upper bound for the length of the fetch
    );
 
+   //! Compute a new point in a track's timeline from an old point and a real duration
+   /*!
+    Needed because playback might be at non-unit speed.
+
+    Called one or more times between GetPlaybackSlice and RepositionPlayback, until the
+    total real duration of the advances equals the most recent playback slice (including any trailing silence).
+    */
+   virtual double AdvancedTrackTime( PlaybackSchedule &schedule,
+      double trackTime, double realDuration );
+
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
    //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
@@ -293,9 +303,8 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! Aligned to avoid false sharing
       NonInterfering<Cursor> mHead, mTail;
 
-      void Producer(
-         const PlaybackSchedule &schedule, double rate, double scrubSpeed,
-         size_t nSamples );
+      void Producer( PlaybackSchedule &schedule,
+         double rate, size_t nSamples );
       double Consumer( size_t nSamples, double rate );
 
       //! Empty the queue and reassign the last produced time
@@ -387,11 +396,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    // Returns true if time equals t1 or is on opposite side of t1, to t0
    bool Overruns( double trackTime ) const;
 
-   // Compute the NEW track time for the given one and a real duration,
-   // taking into account whether the schedule is for looping
-   double AdvancedTrackTime(
-      double trackTime, double realElapsed, double speed) const;
-
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative
    double RealDuration(double trackTime1) const;
@@ -420,6 +424,9 @@ public:
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available ) override;
+
+   double AdvancedTrackTime( PlaybackSchedule &schedule,
+      double trackTime, double realDuration ) override;
 
    bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,

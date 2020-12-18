@@ -310,11 +310,6 @@ protected:
    // the state used by the third, Audio thread.
    wxMutex mSuspendAudioThread;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-public:
-   double mScrubSpeed;
-#endif
-
 protected:
    // A flag tested and set in one thread, cleared in another.  Perhaps
    // this guarantee of atomicity is more cautious than necessary.

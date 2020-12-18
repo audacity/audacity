@@ -106,6 +106,21 @@ PlaybackPolicy::GetPlaybackSlice(PlaybackSchedule &schedule, size_t available)
    return { available, frames, toProduce };
 }
 
+double PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
+   double trackTime, double realDuration )
+{
+   if (schedule.ReversedTime())
+      realDuration *= -1.0;
+
+   if (schedule.mEnvelope)
+      trackTime =
+         schedule.SolveWarpedLength(trackTime, realDuration);
+   else
+      trackTime += realDuration;
+
+   return trackTime;
+}
+
 bool PlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &, const Mixers &, size_t, size_t)
 {
@@ -171,6 +186,62 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
          frames = available, toProduce = 0;
    }
    return { available, frames, toProduce };
+}
+
+double LoopingPlaybackPolicy::AdvancedTrackTime(
+   PlaybackSchedule &schedule,
+   double trackTime, double realDuration )
+{
+   if (schedule.ReversedTime())
+      realDuration *= -1.0;
+
+   // Defense against cases that might cause loops not to terminate
+   if ( fabs(schedule.mT0 - schedule.mT1) < 1e-9 )
+      return schedule.mT0;
+
+   if (schedule.mEnvelope) {
+      double total=0.0;
+      bool foundTotal = false;
+      do {
+         auto oldTime = trackTime;
+         if (foundTotal && fabs(realDuration) > fabs(total))
+            // Avoid SolveWarpedLength
+            trackTime = schedule.mT1;
+         else
+            trackTime =
+               schedule.SolveWarpedLength(trackTime, realDuration);
+
+         if (!schedule.Overruns( trackTime ))
+            break;
+
+         // Bug1922:  The part of the time track outside the loop should not
+         // influence the result
+         double delta;
+         if (foundTotal && oldTime == schedule.mT0)
+            // Avoid integrating again
+            delta = total;
+         else {
+            delta = schedule.ComputeWarpedLength(oldTime, schedule.mT1);
+            if (oldTime == schedule.mT0)
+               foundTotal = true, total = delta;
+         }
+         realDuration -= delta;
+         trackTime = schedule.mT0;
+      } while ( true );
+   }
+   else {
+      trackTime += realDuration;
+
+      // Wrap to start if looping
+      while ( schedule.Overruns( trackTime ) ) {
+         // LL:  This is not exactly right, but I'm at my wits end trying to
+         //      figure it out.  Feel free to fix it.  :-)
+         // MB: it's much easier than you think, mTime isn't warped at all!
+         trackTime -= schedule.mT1 - schedule.mT0;
+      }
+   }
+
+   return trackTime;
 }
 
 bool LoopingPlaybackPolicy::RepositionPlayback(
@@ -305,67 +376,6 @@ double PlaybackSchedule::SolveWarpedLength(double t0, double length) const
       return t0 + length;
 }
 
-double PlaybackSchedule::AdvancedTrackTime(
-   double time, double realElapsed, double speed ) const
-{
-   auto &policy = GetPolicy();
-   const bool looping = policy.Looping(*this);
-
-   if (ReversedTime())
-      realElapsed *= -1.0;
-
-   // Defense against cases that might cause loops not to terminate
-   if ( fabs(mT0 - mT1) < 1e-9 )
-      return mT0;
-
-   if (mEnvelope) {
-       wxASSERT( speed == 1.0 );
-
-      double total=0.0;
-      bool foundTotal = false;
-      do {
-         auto oldTime = time;
-         if (foundTotal && fabs(realElapsed) > fabs(total))
-            // Avoid SolveWarpedLength
-            time = mT1;
-         else
-            time = SolveWarpedLength(time, realElapsed);
-
-         if (!looping || !Overruns( time ))
-            break;
-
-         // Bug1922:  The part of the time track outside the loop should not
-         // influence the result
-         double delta;
-         if (foundTotal && oldTime == mT0)
-            // Avoid integrating again
-            delta = total;
-         else {
-            delta = ComputeWarpedLength(oldTime, mT1);
-            if (oldTime == mT0)
-               foundTotal = true, total = delta;
-         }
-         realElapsed -= delta;
-         time = mT0;
-      } while ( true );
-   }
-   else {
-      time += realElapsed * fabs(speed);
-
-      // Wrap to start if looping
-      if (looping) {
-         while ( Overruns( time ) ) {
-            // LL:  This is not exactly right, but I'm at my wits end trying to
-            //      figure it out.  Feel free to fix it.  :-)
-            // MB: it's much easier than you think, mTime isn't warped at all!
-            time -= mT1 - mT0;
-         }
-      }
-   }
-
-   return time;
-}
-
 double PlaybackSchedule::RealDuration(double trackTime1) const
 {
    return fabs(ComputeWarpedLength(mT0, trackTime1));
@@ -410,9 +420,11 @@ double RecordingSchedule::ToDiscard() const
 }
 
 void PlaybackSchedule::TimeQueue::Producer(
-   const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+   PlaybackSchedule &schedule, double rate,
    size_t nSamples )
 {
+   auto &policy = schedule.GetPolicy();
+
    if ( ! mData )
       // Recording only.  Don't fill the queue.
       return;
@@ -425,7 +437,7 @@ void PlaybackSchedule::TimeQueue::Producer(
    auto space = TimeQueueGrainSize - remainder;
 
    while ( nSamples >= space ) {
-      time = schedule.AdvancedTrackTime( time, space / rate, scrubSpeed );
+      time = policy.AdvancedTrackTime( schedule, time, space / rate );
       index = (index + 1) % mSize;
       mData[ index ] = time;
       nSamples -= space;
@@ -435,7 +447,7 @@ void PlaybackSchedule::TimeQueue::Producer(
 
    // Last odd lot
    if ( nSamples > 0 )
-      time = schedule.AdvancedTrackTime( time, nSamples / rate, scrubSpeed );
+      time = policy.AdvancedTrackTime( schedule, time, nSamples / rate );
 
    mLastTime = time;
    mTail.mRemainder = remainder + nSamples;
