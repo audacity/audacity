@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <vector>
 #include <wx/longlong.h>
 
-#include "AudioIOBase.h" // for ScrubbingOptions
+#include "../../ScrubState.h" // for ScrubbingOptions
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 #include "../../widgets/Overlay.h" // to inherit

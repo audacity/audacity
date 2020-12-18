@@ -299,41 +299,14 @@ void PlaybackSchedule::Init(
    // Main thread's initialization of mTime
    SetTrackTime( mT0 );
 
-   mPlayMode = PlaybackSchedule::PLAY_STRAIGHT;
    if (options.policyFactory)
-      mpPlaybackPolicy = options.policyFactory(options);
+      mpPlaybackPolicy = options.policyFactory();
    else if (options.playLooped) {
-      mPlayMode = PlaybackSchedule::PLAY_LOOPED;
       mpPlaybackPolicy = std::make_unique<LoopingPlaybackPolicy>();
    }
 
    mCutPreviewGapStart = options.cutPreviewGapStart;
    mCutPreviewGapLen = options.cutPreviewGapLen;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool scrubbing = (options.pScrubbingOptions != nullptr);
-
-   // Scrubbing is not compatible with looping or recording or a time track!
-   if (scrubbing)
-   {
-      const auto &scrubOptions = *options.pScrubbingOptions;
-      if (pRecordingSchedule ||
-          options.playLooped ||
-          mEnvelope ||
-          scrubOptions.maxSpeed < ScrubbingOptions::MinAllowedScrubSpeed()) {
-         wxASSERT(false);
-         scrubbing = false;
-      }
-      else {
-         if (scrubOptions.isPlayingAtSpeed)
-            mPlayMode = PLAY_AT_SPEED;
-         else if (scrubOptions.isKeyboardScrubbing)
-            mPlayMode = PLAY_KEYBOARD_SCRUB;
-         else
-            mPlayMode = PLAY_SCRUB;
-      }
-   }
-#endif
 
    mWarpedTime = 0.0;
    mWarpedLength = RealDuration(mT1);

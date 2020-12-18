@@ -14,7 +14,37 @@
 #include "PlaybackSchedule.h" // to inherit
 #include "SampleCount.h"
 
-#include "AudioIOBase.h" // for ScrubbingOptions
+// For putting an increment of work in the scrubbing queue
+struct ScrubbingOptions {
+   ScrubbingOptions() {}
+
+   bool adjustStart {};
+
+   // usually from TrackList::GetEndTime()
+   double maxTime {};
+   double minTime {};
+
+   bool bySpeed {};
+   bool isPlayingAtSpeed{};
+   bool isKeyboardScrubbing{};
+
+   double delay {};
+
+   // Initial and limiting values for the speed of a scrub interval:
+   double initSpeed { 1.0 };
+   double minSpeed { 0.0 };
+   double maxSpeed { 1.0 };
+
+
+   // When maximum speed scrubbing skips to follow the mouse,
+   // this is the minimum amount of playback allowed at the maximum speed:
+   double minStutterTime {};
+
+   static double MaxAllowedScrubSpeed()
+   { return 32.0; } // Is five octaves enough for your amusement?
+   static double MinAllowedScrubSpeed()
+   { return 0.01; } // Mixer needs a lower bound speed.  Scrub no slower than this.
+};
 
 class ScrubbingPlaybackPolicy final : public PlaybackPolicy {
 public:
