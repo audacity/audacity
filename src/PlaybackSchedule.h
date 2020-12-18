@@ -184,6 +184,15 @@ public:
    //! Options to use when constructing mixers for each playback track
    virtual Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule);
 
+   //! Times are in seconds
+   struct BufferTimes {
+      double batchSize; //!< Try to put at least this much into the ring buffer in each pass
+      double latency; //!< Try not to let ring buffer contents fall below this
+      double ringBufferDelay; //!< Length of ring buffer in seconds
+   };
+   //! Provide hints for construction of playback RingBuffer objects
+   virtual BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule);
+
    //! Normalizes mTime, clamping it and handling gaps from cut preview.
    /*!
     * Clamps the time (unless scrubbing), and skips over the cut section.
@@ -390,8 +399,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    }
 
    bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
-   bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
-   bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
 
    // Returns true if time equals t1 or is on opposite side of t1, to t0
    bool Overruns( double trackTime ) const;

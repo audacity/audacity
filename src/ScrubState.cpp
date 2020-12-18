@@ -321,6 +321,27 @@ Mixer::WarpOptions ScrubbingPlaybackPolicy::MixerWarpOptions(PlaybackSchedule &)
       ScrubbingOptions::MaxAllowedScrubSpeed() };
 }
 
+PlaybackPolicy::BufferTimes
+ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+{
+   return {
+      // For useful scrubbing, we can't run too far ahead without checking
+      // mouse input, so make fillings more and shorter.
+      // Specify a very short minimum batch for non-seek scrubbing, to allow
+      // more frequent polling of the mouse
+      mOptions.delay,
+
+      // Specify enough playback RingBuffer latency so we can refill
+      // once every seek stutter without falling behind the demand.
+      // (Scrub might switch in and out of seeking with left mouse
+      // presses in the ruler)
+      2 * mOptions.minStutterTime,
+
+      // Same as for default policy
+      10.0
+   };
+}
+
 double ScrubbingPlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
 {
    return schedule.GetTrackTime();

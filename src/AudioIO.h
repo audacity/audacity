@@ -551,8 +551,7 @@ private:
      */
    bool AllocateBuffers(
       const AudioIOStartStreamOptions &options,
-      const TransportTracks &tracks, double t0, double t1, double sampleRate,
-      bool scrubbing );
+      const TransportTracks &tracks, double t0, double t1, double sampleRate );
 
    /** \brief Clean up after StartStream if it fails.
      *

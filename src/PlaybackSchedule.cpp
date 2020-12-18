@@ -27,6 +27,12 @@ Mixer::WarpOptions PlaybackPolicy::MixerWarpOptions(PlaybackSchedule &schedule)
    return Mixer::WarpOptions{ schedule.mEnvelope };
 }
 
+PlaybackPolicy::BufferTimes
+PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+{
+   return { 4.0, 4.0, 10.0 };
+}
+
 double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
 {
    // Track time readout for the main thread

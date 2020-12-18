@@ -26,6 +26,8 @@ public:
 
    Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule) override;
 
+   BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
+
    double NormalizeTrackTime( PlaybackSchedule &schedule ) override;
 
    bool AllowSeek( PlaybackSchedule & ) override;
