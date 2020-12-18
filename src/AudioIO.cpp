@@ -1081,6 +1081,8 @@ bool AudioIO::AllocateBuffers(
       if (!success) StartStreamCleanup( false );
    });
 
+   auto &policy = mPlaybackSchedule.GetPolicy();
+
    //
    // The (audio) stream has been opened successfully (assuming we tried
    // to open it). We now proceed to
@@ -1139,15 +1141,8 @@ bool AudioIO::AllocateBuffers(
             mPlaybackMixers.clear();
             mPlaybackMixers.resize(mPlaybackTracks.size());
 
-            const Mixer::WarpOptions &warpOptions =
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               scrubbing
-                  ? Mixer::WarpOptions
-                     (ScrubbingOptions::MinAllowedScrubSpeed(),
-                      ScrubbingOptions::MaxAllowedScrubSpeed())
-                  :
-#endif
-                    Mixer::WarpOptions(mPlaybackSchedule.mEnvelope);
+            const auto &warpOptions =
+               policy.MixerWarpOptions(mPlaybackSchedule);
 
             mPlaybackQueueMinimum = mPlaybackSamplesToCopy;
             if (scrubbing)

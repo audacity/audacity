@@ -22,6 +22,11 @@ void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
 }
 void PlaybackPolicy::Finalize( PlaybackSchedule & ){}
 
+Mixer::WarpOptions PlaybackPolicy::MixerWarpOptions(PlaybackSchedule &schedule)
+{
+   return Mixer::WarpOptions{ schedule.mEnvelope };
+}
+
 double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
 {
    // Track time readout for the main thread

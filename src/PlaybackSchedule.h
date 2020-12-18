@@ -12,6 +12,7 @@
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
 #include "MemoryX.h"
+#include "Mix.h"
 #include <atomic>
 #include <chrono>
 #include <vector>
@@ -179,6 +180,9 @@ public:
 
    //! Called after stopping of an audio stream or an unsuccessful start
    virtual void Finalize( PlaybackSchedule &schedule );
+
+   //! Options to use when constructing mixers for each playback track
+   virtual Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule);
 
    //! Normalizes mTime, clamping it and handling gaps from cut preview.
    /*!

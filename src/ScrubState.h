@@ -24,6 +24,8 @@ public:
    void Initialize( PlaybackSchedule &schedule, double rate ) override;
    void Finalize( PlaybackSchedule &schedule ) override;
 
+   Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule) override;
+
    double NormalizeTrackTime( PlaybackSchedule &schedule ) override;
 
    bool AllowSeek( PlaybackSchedule & ) override;

@@ -313,6 +313,13 @@ void ScrubbingPlaybackPolicy::Finalize(  PlaybackSchedule & )
    ScrubQueue::Instance.Stop();
 }
 
+Mixer::WarpOptions ScrubbingPlaybackPolicy::MixerWarpOptions(PlaybackSchedule &)
+{
+   return Mixer::WarpOptions{
+      ScrubbingOptions::MinAllowedScrubSpeed(),
+      ScrubbingOptions::MaxAllowedScrubSpeed() };
+}
+
 double ScrubbingPlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
 {
    return schedule.GetTrackTime();
