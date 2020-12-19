@@ -398,7 +398,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       mPolicyValid.store(false, std::memory_order_release);
    }
 
-   bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
 
    // Returns true if time equals t1 or is on opposite side of t1, to t0
    bool Overruns( double trackTime ) const;

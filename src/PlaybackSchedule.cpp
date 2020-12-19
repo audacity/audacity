@@ -336,12 +336,7 @@ void PlaybackSchedule::Init(
 #endif
 
    mWarpedTime = 0.0;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (Scrubbing())
-      mWarpedLength = 0.0f;
-   else
-#endif
-      mWarpedLength = RealDuration(mT1);
+   mWarpedLength = RealDuration(mT1);
 
    mPolicyValid.store(true, std::memory_order_release);
 }
@@ -399,10 +394,7 @@ void PlaybackSchedule::RealTimeAdvance( double increment )
 
 void PlaybackSchedule::RealTimeInit( double trackTime )
 {
-   if (Scrubbing())
-      mWarpedTime = 0.0;
-   else
-      mWarpedTime = RealDuration( trackTime );
+   mWarpedTime = RealDuration( trackTime );
 }
 
 void PlaybackSchedule::RealTimeRestart()
