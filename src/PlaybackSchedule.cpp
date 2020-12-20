@@ -301,9 +301,6 @@ void PlaybackSchedule::Init(
 
    if (options.policyFactory)
       mpPlaybackPolicy = options.policyFactory();
-   else if (options.playLooped) {
-      mpPlaybackPolicy = std::make_unique<LoopingPlaybackPolicy>();
-   }
 
    mCutPreviewGapStart = options.cutPreviewGapStart;
    mCutPreviewGapLen = options.cutPreviewGapLen;

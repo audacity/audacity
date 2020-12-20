@@ -525,13 +525,12 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    if (bFixedSpeedPlay)
    {
-      auto options = DefaultPlayOptions( *p );
-      options.playLooped = looped;
+      auto options = DefaultPlayOptions( *p, looped );
       // No need to set cutPreview options.
       options.envelope = mEnvelope.get();
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
-         : options.playLooped ? PlayMode::loopedPlay
+         : looped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       projectAudioManager.PlayPlayRegion(
          SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),

@@ -47,7 +47,6 @@ struct AudioIOStartStreamOptions
       : pProject{ pProject_ }
       , envelope(nullptr)
       , rate(rate_)
-      , playLooped(false)
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
       , pStartTime(NULL)
@@ -59,7 +58,6 @@ struct AudioIOStartStreamOptions
    const BoundedEnvelope *envelope; // for time warping
    std::shared_ptr< AudioIOListener > listener;
    double rate;
-   bool playLooped;
    double cutPreviewGapStart;
    double cutPreviewGapLen;
    double * pStartTime;

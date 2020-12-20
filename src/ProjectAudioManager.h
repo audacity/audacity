@@ -167,8 +167,8 @@ private:
 };
 
 AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
-AUDACITY_DLL_API
+AudioIOStartStreamOptions DefaultPlayOptions(
+   AudacityProject &project, bool looped = false );
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected
