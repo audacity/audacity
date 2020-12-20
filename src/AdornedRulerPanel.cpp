@@ -951,7 +951,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mViewInfo->selectedRegion.Bind(EVT_SELECTED_REGION_CHANGE,
       &AdornedRulerPanel::OnSelectionChange, this);
 
-   // And call it once to inititalize it
+   // And call it once to initialize it
    DoSelectionChange( mViewInfo->selectedRegion );
 }
 
