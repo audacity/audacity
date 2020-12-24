@@ -334,9 +334,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    PlaybackPolicy &GetPolicy();
    const PlaybackPolicy &GetPolicy() const;
 
-   double              mCutPreviewGapStart;
-   double              mCutPreviewGapLen;
-
    void Init(
       double t0, double t1,
       const AudioIOStartStreamOptions &options,

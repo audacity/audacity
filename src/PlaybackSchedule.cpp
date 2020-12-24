@@ -46,22 +46,10 @@ double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
    // the current stream time, and this query is not always accurate.
    // Sometimes it's a little behind or ahead, and so this function
    // makes sure that at least we clip it to the selection.
-   //
-   // msmeyer: There is also the possibility that we are using "cut preview"
-   //          mode. In this case, we should jump over a defined "gap" in the
-   //          audio.
 
    // Limit the time between t0 and t1.
    // Should the limiting be necessary in any play mode if there are no bugs?
    double absoluteTime = schedule.LimitTrackTime();
-
-   if (schedule.mCutPreviewGapLen > 0)
-   {
-      // msmeyer: We're in cut preview mode, so if we are on the right
-      // side of the gap, we jump over it.
-      if (absoluteTime > schedule.mCutPreviewGapStart)
-         absoluteTime += schedule.mCutPreviewGapLen;
-   }
 
    return absoluteTime;
 }
@@ -287,9 +275,6 @@ void PlaybackSchedule::Init(
 
    if (options.policyFactory)
       mpPlaybackPolicy = options.policyFactory();
-
-   mCutPreviewGapStart = options.cutPreviewGapStart;
-   mCutPreviewGapLen = options.cutPreviewGapLen;
 
    mWarpedTime = 0.0;
    mWarpedLength = RealDuration(mT1);
