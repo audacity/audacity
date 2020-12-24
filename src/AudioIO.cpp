@@ -2116,6 +2116,9 @@ bool AudioIO::StartPortMidiStream()
       }
    } // (else playback device has Pm_GetDefaultOuputDeviceID())
 
+   if (playbackDevice < 0)
+      return false;
+
    /* open output device */
    mLastPmError = Pm_OpenOutput(&mMidiStream,
                                 playbackDevice,
