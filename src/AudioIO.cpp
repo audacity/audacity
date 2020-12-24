@@ -3933,7 +3933,7 @@ bool AudioIoCallback::FillOutputBuffers(
 
       if (dropQuickly)
       {
-         len = mPlaybackBuffers[t]->Discard(framesPerBuffer);
+         len = mPlaybackBuffers[t]->Discard(toGet);
          // keep going here.  
          // we may still need to issue a paComplete.
       }
