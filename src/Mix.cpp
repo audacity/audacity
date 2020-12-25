@@ -48,7 +48,7 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
    uLeft.reset(), uRight.reset();
 
    // This function was formerly known as "Quick Mix".
-   bool mono = false;   /* flag if output can be mono without loosing anything*/
+   bool mono = false;   /* flag if output can be mono without losing anything*/
    bool oneinput = false;  /* flag set to true if there is only one input track
                               (mono or stereo) */
 
@@ -114,6 +114,7 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
    if (oneinput)
       mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
    else
+      /* i18n-hint: noun, means a track, made by mixing other tracks */
       mixLeft->SetName(_("Mix"));
    mixLeft->SetOffset(mixStartTime);
 
