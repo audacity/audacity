@@ -304,8 +304,9 @@ void ScrubbingPlaybackPolicy::Initialize( PlaybackSchedule &schedule,
 {
    PlaybackPolicy::Initialize(schedule, rate);
    mScrubDuration = mStartSample = mEndSample = 0;
+   mOldEndTime = mNewStartTime = 0;
    mScrubSpeed = 0;
-   mSilentScrub = mReplenish = false;
+   mSilentScrub = mReplenish = mDiscontinuity = false;
    ScrubQueue::Instance.Init( schedule.mT0, rate, mOptions );
 }
 
@@ -392,20 +393,31 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
    mScrubDuration -= frames;
    wxASSERT(mScrubDuration >= 0);
 
+   mDiscontinuity = false;
    if (mScrubDuration <= 0) {
       mReplenish = true;
+      auto oldEndSample = mEndSample;
+      mOldEndTime = oldEndSample.as_long_long() / mRate;
       ScrubQueue::Instance.Get(
          mStartSample, mEndSample, available, mScrubDuration);
+      mNewStartTime = mStartSample.as_long_long() / mRate;
+      mDiscontinuity = (mScrubDuration >= 0 && oldEndSample != mStartSample);
    }
 
    return { available, frames, toProduce };
 }
 
-double ScrubbingPlaybackPolicy::AdvancedTrackTime(
+std::pair<double, double> ScrubbingPlaybackPolicy::AdvancedTrackTime(
    PlaybackSchedule &schedule,
    double trackTime, double realDuration )
 {
-   return trackTime + realDuration * mScrubSpeed;
+   auto result = trackTime + realDuration * mScrubSpeed;
+   bool discontinuity = mDiscontinuity &&
+      ((mScrubSpeed < 0) ? result <= mOldEndTime : result >= mOldEndTime);
+   if (discontinuity)
+      return { mOldEndTime, mNewStartTime };
+   else
+      return { result, result };
 }
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
@@ -450,7 +462,6 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
                      startTime, endTime, fabs( mScrubSpeed ));
             }
          }
-         schedule.mTimeQueue.mLastTime = startTime;
       }
    }
 
