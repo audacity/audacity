@@ -2054,7 +2054,7 @@ PmTimestamp MidiTime(void *WXUNUSED(info))
 // Sends MIDI control changes up to the starting point mT0
 // if send is true. Output is delayed by offset to facilitate
 // looping (each iteration is delayed more).
-void AudioIO::PrepareMidiIterator(bool send, double offset)
+void AudioIoCallback::PrepareMidiIterator(bool send, double offset)
 {
    int i;
    int nTracks = mMidiPlaybackTracks.size();
@@ -2085,7 +2085,7 @@ void AudioIO::PrepareMidiIterator(bool send, double offset)
    mSendMidiState = false;
 }
 
-bool AudioIO::StartPortMidiStream()
+bool AudioIoCallback::StartPortMidiStream()
 {
    int i;
    int nTracks = mMidiPlaybackTracks.size();
@@ -3093,7 +3093,7 @@ void AudioIoCallback::SetListener(
 static Alg_update gAllNotesOff; // special event for loop ending
 // the fields of this event are never used, only the address is important
 
-double AudioIO::UncorrectedMidiEventTime()
+double AudioIoCallback::UncorrectedMidiEventTime()
 {
    double time;
    if (mPlaybackSchedule.mEnvelope)
@@ -3107,7 +3107,7 @@ double AudioIO::UncorrectedMidiEventTime()
    return time + PauseTime();
 }
 
-void AudioIO::OutputEvent()
+void AudioIoCallback::OutputEvent()
 {
    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
    int command = -1;
@@ -3254,7 +3254,7 @@ void AudioIO::OutputEvent()
    }
 }
 
-void AudioIO::GetNextEvent()
+void AudioIoCallback::GetNextEvent()
 {
    mNextEventTrack = NULL; // clear it just to be safe
    // now get the next event and the track from which it came
@@ -3283,14 +3283,14 @@ void AudioIO::GetNextEvent()
 }
 
 
-bool AudioIO::SetHasSolo(bool hasSolo)
+bool AudioIoCallback::SetHasSolo(bool hasSolo)
 {
    mHasSolo = hasSolo;
    return mHasSolo;
 }
 
 
-void AudioIO::FillMidiBuffers()
+void AudioIoCallback::FillMidiBuffers()
 {
    // Keep track of time paused. If not paused, fill buffers.
    if (IsPaused()) {
@@ -3369,7 +3369,7 @@ void AudioIO::FillMidiBuffers()
    // !mNextEvent);
 }
 
-double AudioIO::PauseTime()
+double AudioIoCallback::PauseTime()
 {
    return mNumPauseFrames / mRate;
 }
@@ -3379,7 +3379,7 @@ double AudioIO::PauseTime()
 // output (DAC) time + 1s. In other words, what audacity track time
 // corresponds to the audio (including pause insertions) at the output?
 //
-PmTimestamp AudioIO::MidiTime()
+PmTimestamp AudioIoCallback::MidiTime()
 {
    // note: the extra 0.0005 is for rounding. Round down by casting to
    // unsigned long, then convert to PmTimeStamp (currently signed)
@@ -3403,7 +3403,7 @@ PmTimestamp AudioIO::MidiTime()
 }
 
 
-void AudioIO::AllNotesOff(bool looping)
+void AudioIoCallback::AllNotesOff(bool looping)
 {
 #ifdef __WXGTK__
    bool doDelay = !looping;

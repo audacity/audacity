@@ -249,6 +249,42 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+   void PrepareMidiIterator(bool send = true, double offset = 0);
+   bool StartPortMidiStream();
+
+   // Compute nondecreasing real time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime();
+
+   void OutputEvent();
+   void FillMidiBuffers();
+   void GetNextEvent();
+   double PauseTime();
+   void AllNotesOff(bool looping = false);
+
+   /** \brief Compute the current PortMidi timestamp time.
+    *
+    * This is used by PortMidi to synchronize midi time to audio samples
+    */
+   PmTimestamp MidiTime();
+
+   // Note: audio code solves the problem of soloing/muting tracks by scanning
+   // all playback tracks on every call to the audio buffer fill routine.
+   // We do the same for Midi, but it seems wasteful for at least two
+   // threads to be frequently polling to update status. This could be
+   // eliminated (also with a reduction in code I think) by updating mHasSolo
+   // each time a solo button is activated or deactivated. For now, I'm
+   // going to do this polling in the FillMidiBuffer routine to localize
+   // changes for midi to the midi code, but I'm declaring the variable
+   // here so possibly in the future, Audio code can use it too. -RBD
+ private:
+   bool  mHasSolo; // is any playback solo button pressed?
+ public:
+   bool SetHasSolo(bool hasSolo);
+   bool GetHasSolo() { return mHasSolo; }
+#endif
+
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
@@ -612,29 +648,6 @@ public:
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
    AudacityProject *GetOwningProject() const { return mOwningProject; }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   /** \brief Compute the current PortMidi timestamp time.
-    *
-    * This is used by PortMidi to synchronize midi time to audio samples
-    */
-   PmTimestamp MidiTime();
-
-   // Note: audio code solves the problem of soloing/muting tracks by scanning
-   // all playback tracks on every call to the audio buffer fill routine.
-   // We do the same for Midi, but it seems wasteful for at least two
-   // threads to be frequently polling to update status. This could be
-   // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm
-   // going to do this polling in the FillMidiBuffer routine to localize
-   // changes for midi to the midi code, but I'm declaring the variable
-   // here so possibly in the future, Audio code can use it too. -RBD
- private:
-   bool  mHasSolo; // is any playback solo button pressed?
- public:
-   bool SetHasSolo(bool hasSolo);
-   bool GetHasSolo() { return mHasSolo; }
-#endif
-
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
 
@@ -740,21 +753,6 @@ private:
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
    void FillBuffers();
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void PrepareMidiIterator(bool send = true, double offset = 0);
-   bool StartPortMidiStream();
-
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime();
-
-   void OutputEvent();
-   void FillMidiBuffers();
-   void GetNextEvent();
-   double PauseTime();
-   void AllNotesOff(bool looping = false);
-#endif
 
    /** \brief Get the number of audio samples free in all of the playback
    * buffers.
