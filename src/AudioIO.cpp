@@ -3340,32 +3340,6 @@ void AudioIoCallback::FillMidiBuffers()
       OutputEvent();
       GetNextEvent();
    }
-
-   // test for end
-   double realTime = MidiTime() * 0.001 -
-                      PauseTime();
-   realTime -= 1; // MidiTime() runs ahead 1s
-
-   // XXX Is this still true now?  It seems to break looping --Poke
-   //
-   // The TrackPanel::OnTimer() method updates the time position
-   // indicator every 200ms, so it tends to not advance the
-   // indicator to the end of the selection (mT1) but instead stop
-   // up to 200ms before the end. At this point, output is shut
-   // down and the indicator is removed, but for a brief time, the
-   // indicator is clearly stopped before reaching mT1. To avoid
-   // this, we do not set mMidiOutputComplete until we are actually
-   // 0.22s beyond mT1 (even though we stop playing at mT1). This
-   // gives OnTimer() time to wake up and draw the final time
-   // position at mT1 before shutting down the stream.
-   const double loopDelay = 0.220;
-
-   auto timeAtSpeed = mPlaybackSchedule.TrackDuration(realTime);
-
-   mMidiOutputComplete =
-      (mPlaybackSchedule.PlayingStraight() && // PRL:  what if scrubbing?
-       timeAtSpeed >= mPlaybackSchedule.mT1 + loopDelay);
-   // !mNextEvent);
 }
 
 double AudioIoCallback::PauseTime()
@@ -4558,8 +4532,6 @@ void AudioIoCallback::CallbackCheckCompletion(
    if(!done) 
       return;
 
-   // PRL: singalling MIDI output complete is necessary if
-   // not USE_MIDI_THREAD, otherwise it's harmlessly redundant
 #ifdef EXPERIMENTAL_MIDI_OUT
    mMidiOutputComplete = true,
 #endif

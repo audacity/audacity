@@ -1304,14 +1304,6 @@ void AudioIOBase::PlaybackSchedule::TrackTimeUpdate(double realElapsed)
    SetTrackTime( newTime );
 }
 
-double AudioIOBase::PlaybackSchedule::TrackDuration(double realElapsed) const
-{
-   if (mEnvelope)
-      return SolveWarpedLength(*mEnvelope, mT0, realElapsed);
-   else
-      return realElapsed;
-}
-
 double AudioIOBase::PlaybackSchedule::RealDuration(double trackTime1) const
 {
    double duration;
