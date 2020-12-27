@@ -126,7 +126,8 @@ struct MIDIPlay : AudioIOExt
    // synth latency.
    double UncorrectedMidiEventTime(double pauseTime);
 
-   void OutputEvent(double pauseTime);
+   // Returns true after outputting all-notes-off
+   bool OutputEvent(double pauseTime);
    void GetNextEvent();
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
