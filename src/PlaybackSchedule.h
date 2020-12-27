@@ -312,9 +312,37 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     thread, what the last consumed track time is.  The main thread can use that
     for other purposes such as refreshing the display of the play head position.
     */
-   struct TimeQueue {
-      ArrayOf<double> mData;
-      size_t mSize{ 0 };
+   class TimeQueue {
+   public:
+
+      //! @section called by main thread
+
+      void Clear();
+      void Resize(size_t size);
+
+      //! @section Called by the AudioIO::TrackBufferExchange thread
+
+      //! Enqueue track time value advanced by `nSamples` according to `schedule`'s PlaybackPolicy
+      void Producer( PlaybackSchedule &schedule, size_t nSamples );
+
+      //! @section called by PortAudio callback thread
+
+      //! Find the track time value `nSamples` after the last consumed sample
+      double Consumer( size_t nSamples, double rate );
+
+      //! @section called by any thread while producer and consumer are suspended
+
+      //! Empty the queue and reassign the last produced time
+      /*! Assumes producer and consumer are suspended */
+      void Prime( double time );
+
+   private:
+      struct Record {
+         double timeValue;
+         // More fields to come
+      };
+      using Records = std::vector<Record>;
+      Records mData;
       double mLastTime {};
       struct Cursor {
          size_t mIndex {};
@@ -322,13 +350,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       };
       //! Aligned to avoid false sharing
       NonInterfering<Cursor> mHead, mTail;
-
-      void Producer( PlaybackSchedule &schedule, size_t nSamples );
-      double Consumer( size_t nSamples, double rate );
-
-      //! Empty the queue and reassign the last produced time
-      /*! Assumes the producer and consumer are suspended */
-      void Prime(double time);
    } mTimeQueue;
 
    PlaybackPolicy &GetPolicy();

@@ -820,7 +820,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
-   mPlaybackSchedule.mTimeQueue.mData.reset();
+   mPlaybackSchedule.mTimeQueue.Clear();
 
    mPlaybackSchedule.Init(
       t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
@@ -932,11 +932,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          mPlaybackMixers[ii]->Reposition( time );
    }
    
-   // Now that we are done with SetTrackTime():
-   mPlaybackSchedule.mTimeQueue.mLastTime = mPlaybackSchedule.GetTrackTime();
-   if (mPlaybackSchedule.mTimeQueue.mData)
-      mPlaybackSchedule.mTimeQueue.mData[0] =
-         mPlaybackSchedule.mTimeQueue.mLastTime;
+   // Now that we are done with AllocateBuffers() and SetTrackTime():
+   mPlaybackSchedule.mTimeQueue.Prime(mPlaybackSchedule.GetTrackTime());
    // else recording only without overdub
 
    // We signal the audio thread to call TrackBufferExchange, to prime the RingBuffers
@@ -1114,8 +1111,6 @@ bool AudioIO::AllocateBuffers(
    mMinCaptureSecsToCopy =
       0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
 
-   mPlaybackSchedule.mTimeQueue.mHead = {};
-   mPlaybackSchedule.mTimeQueue.mTail = {};
    bool bDone;
    do
    {
@@ -1190,8 +1185,7 @@ bool AudioIO::AllocateBuffers(
             const auto timeQueueSize = 1 +
                (playbackBufferSize + TimeQueueGrainSize - 1)
                   / TimeQueueGrainSize;
-            mPlaybackSchedule.mTimeQueue.mData.reinit( timeQueueSize );
-            mPlaybackSchedule.mTimeQueue.mSize = timeQueueSize;
+            mPlaybackSchedule.mTimeQueue.Resize( timeQueueSize );
          }
 
          if( mNumCaptureChannels > 0 )
@@ -1261,7 +1255,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
-   mPlaybackSchedule.mTimeQueue.mData.reset();
+   mPlaybackSchedule.mTimeQueue.Clear();
 
    if(!bOnlyBuffers)
    {
@@ -1435,7 +1429,7 @@ void AudioIO::StopStream()
       {
          mPlaybackBuffers.reset();
          mPlaybackMixers.clear();
-         mPlaybackSchedule.mTimeQueue.mData.reset();
+         mPlaybackSchedule.mTimeQueue.Clear();
       }
 
       //
