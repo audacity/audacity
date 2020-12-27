@@ -33,6 +33,12 @@ class AudioThread;
 
 namespace {
 
+struct Iterator {
+   Alg_iterator it{ nullptr, false };
+
+   ~Iterator() { it.end(); }
+};
+
 struct MIDIPlay : AudioIOExt
 {
    explicit MIDIPlay(const PlaybackSchedule &schedule);
@@ -94,7 +100,7 @@ struct MIDIPlay : AudioIOExt
 
    double mSystemMinusAudioTimePlusLatency = 0.0;
 
-   std::optional<Alg_iterator> mIterator;
+   std::optional<Iterator> mIterator;
    /// The next event to play (or null)
    Alg_event    *mNextEvent = nullptr;
 
