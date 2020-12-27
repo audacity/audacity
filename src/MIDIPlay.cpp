@@ -973,18 +973,9 @@ void MIDIPlay::FillOtherBuffers(
    if (!mMidiStream)
       return;
 
-   // Keep track of time paused. If not paused, fill buffers.
-   if (paused) {
-      if (!mMidiPaused) {
-         mMidiPaused = true;
-         AllNotesOff(); // to avoid hanging notes during pause
-      }
+   // If not paused, fill buffers.
+   if (paused)
       return;
-   }
-
-   if (mMidiPaused) {
-      mMidiPaused = false;
-   }
 
    // If we compute until mNextEventTime > current audio time,
    // we would have a built-in compute-ahead of mAudioOutLatency, and
@@ -1101,7 +1092,7 @@ void MIDIPlay::AllNotesOff(bool looping)
    }
 }
 
-void MIDIPlay::ComputeOtherTimings(double rate,
+void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
    const PaStreamCallbackTimeInfo *timeInfo,
    unsigned long framesPerBuffer
    )
@@ -1165,6 +1156,16 @@ void MIDIPlay::ComputeOtherTimings(double rate,
 
    mAudioFramesPerBuffer = framesPerBuffer;
    mNumFrames += framesPerBuffer;
+
+   // Keep track of time paused.
+   if (paused) {
+      if (!mMidiPaused) {
+         mMidiPaused = true;
+         AllNotesOff(); // to avoid hanging notes during pause
+      }
+   }
+   else if (mMidiPaused)
+      mMidiPaused = false;
 }
 
 unsigned MIDIPlay::CountOtherSoloTracks() const

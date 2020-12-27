@@ -144,7 +144,7 @@ struct MIDIPlay : AudioIOExt
    static bool IsActive();
    bool IsOtherStreamActive() const override;
 
-   void ComputeOtherTimings(double rate,
+   void ComputeOtherTimings(double rate, bool paused,
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer) override;
    void SignalOtherCompletion() override;
