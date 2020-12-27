@@ -147,33 +147,20 @@ bool PlaybackSchedule::Overruns( double trackTime ) const
    return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
 }
 
-namespace
+double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
 {
-/** @brief Compute the duration (in seconds at playback) of the specified region of the track.
- *
- * Takes a region of the time track (specified by the unwarped time points in the project), and
- * calculates how long it will actually take to play this region back, taking the time track's
- * warping effects into account.
- * @param t0 unwarped time to start calculation from
- * @param t1 unwarped time to stop calculation at
- * @return the warped duration in seconds
- */
-double ComputeWarpedLength(const Envelope &env, double t0, double t1)
-{
-   return env.IntegralOfInverse(t0, t1);
+   if (mEnvelope)
+      return mEnvelope->IntegralOfInverse(t0, t1);
+   else
+      return t1 - t0;
 }
 
-/** @brief Compute how much unwarped time must have elapsed if length seconds of warped time has
- * elapsed
- *
- * @param t0 The unwarped time (seconds from project start) at which to start
- * @param length How many seconds of warped time went past.
- * @return The end point (in seconds from project start) as unwarped time
- */
-double SolveWarpedLength(const Envelope &env, double t0, double length)
+double PlaybackSchedule::SolveWarpedLength(double t0, double length) const
 {
-   return env.SolveIntegralOfInverse(t0, length);
-}
+   if (mEnvelope)
+      return mEnvelope->SolveIntegralOfInverse(t0, length);
+   else
+      return t0 + length;
 }
 
 double PlaybackSchedule::AdvancedTrackTime(
@@ -197,7 +184,7 @@ double PlaybackSchedule::AdvancedTrackTime(
             // Avoid SolveWarpedLength
             time = mT1;
          else
-            time = SolveWarpedLength(*mEnvelope, time, realElapsed);
+            time = SolveWarpedLength(time, realElapsed);
 
          if (!Looping() || !Overruns( time ))
             break;
@@ -209,7 +196,7 @@ double PlaybackSchedule::AdvancedTrackTime(
             // Avoid integrating again
             delta = total;
          else {
-            delta = ComputeWarpedLength(*mEnvelope, oldTime, mT1);
+            delta = ComputeWarpedLength(oldTime, mT1);
             if (oldTime == mT0)
                foundTotal = true, total = delta;
          }
@@ -248,12 +235,7 @@ void PlaybackSchedule::TrackTimeUpdate(double realElapsed)
 
 double PlaybackSchedule::RealDuration(double trackTime1) const
 {
-   double duration;
-   if (mEnvelope)
-      duration = ComputeWarpedLength(*mEnvelope, mT0, trackTime1);
-   else
-      duration = trackTime1 - mT0;
-   return fabs(duration);
+   return fabs(ComputeWarpedLength(mT0, trackTime1));
 }
 
 double PlaybackSchedule::RealTimeRemaining() const
