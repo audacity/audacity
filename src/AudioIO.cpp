@@ -2693,7 +2693,8 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
 
    // Update the position seen by drawing code
    mPlaybackSchedule.SetTrackTime(
-      mPlaybackSchedule.mTimeQueue.Consumer( mMaxFramesOutput, mRate ) );
+      mPlaybackSchedule.mTimeQueue.Consumer(
+         mMaxFramesOutput, mRate, mNumPauseFrames, mbHasSoloTracks) );
 }
 
 // return true, IFF we have fully handled the callback.

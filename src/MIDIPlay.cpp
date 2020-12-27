@@ -508,6 +508,19 @@ static double SystemTime(bool usingAlsa)
 bool MIDIPlay::mMidiStreamActive = false;
 bool MIDIPlay::mMidiOutputComplete = true;
 
+void MIDIPlay::Producer(std::pair<double, double>, size_t)
+{
+}
+
+void MIDIPlay::Consumer(
+   size_t, double, unsigned long, bool)
+{
+}
+
+void MIDIPlay::Prime(double newTrackTime)
+{
+}
+
 AudioIOExt::RegisteredFactory sMIDIPlayFactory{
    [](const auto &playbackSchedule){
       return std::make_unique<MIDIPlay>(playbackSchedule);

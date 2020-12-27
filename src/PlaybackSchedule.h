@@ -212,10 +212,12 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     The consumer thread uses that information, and also makes known to the main
     thread, what the last consumed track time is.  The main thread can use that
     for other purposes such as refreshing the display of the play head position.
+
+    Producer and consumer also call back to AudioIOExt objects which might
+    manage additional queues of other information.
     */
    class TimeQueue {
    public:
-
       //! @name Called only by the main thread
       //! @{
       void Clear();
@@ -240,7 +242,8 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! @{
 
       //! Find the track time value `nSamples` after the last consumed sample
-      double Consumer( size_t nSamples, double rate );
+      double Consumer( size_t nSamples, double rate,
+         unsigned long pauseFrames, bool hasSolo );
       //! @}
 
       //! @name Called by any thread while producer and consumer are suspended
@@ -251,6 +254,8 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! @}
 
    private:
+      void ProduceExt(std::pair<double, double> newTrackTimes, size_t nFrames);
+
       struct Record {
          double timeValue;
          // More fields to come
