@@ -115,9 +115,6 @@ struct MIDIPlay : AudioIOExt
    NoteTrack        *mNextEventTrack = nullptr;
    /// Is the next event a note-on?
    bool             mNextIsNoteOn = false;
-   /// when true, mSendMidiState means send only updates, not note-on's,
-   /// used to send state changes that precede the selected notes
-   bool             mSendMidiState = false;
 
    void PrepareMidiIterator(bool send, double offset);
    bool StartPortMidiStream(double rate);
@@ -127,7 +124,9 @@ struct MIDIPlay : AudioIOExt
    double UncorrectedMidiEventTime(double pauseTime);
 
    // Returns true after outputting all-notes-off
-   bool OutputEvent(double pauseTime);
+   /// when true, midiStateOnly means send only updates, not note-ons,
+   /// used to send state changes that precede the selected notes
+   bool OutputEvent(double pauseTime, bool midiStateOnly);
    void GetNextEvent();
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
