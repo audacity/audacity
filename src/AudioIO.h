@@ -238,14 +238,14 @@ public:
       const PaStreamCallbackFlags statusFlags, void *userData);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   void PrepareMidiIterator(bool send = true, double offset = 0);
+   void PrepareMidiIterator(bool send, double offset);
    bool StartPortMidiStream();
 
    // Compute nondecreasing real time stamps, accounting for pauses, but not the
    // synth latency.
-   double UncorrectedMidiEventTime();
+   double UncorrectedMidiEventTime(double pauseTime);
 
-   void OutputEvent();
+   void OutputEvent(double pauseTime);
    void FillMidiBuffers();
    void GetNextEvent();
    double PauseTime();
