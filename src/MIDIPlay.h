@@ -12,7 +12,7 @@ Paul Licameli split from AudIOBase.h
 #ifndef __AUDACITY_MIDI_PLAY__
 #define __AUDACITY_MIDI_PLAY__
 
-#include "AudioIO.h"
+#include "AudioIOExt.h"
 #include <optional>
 #include "../lib-src/header-substitutes/allegro.h"
 

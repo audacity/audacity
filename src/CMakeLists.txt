@@ -105,6 +105,8 @@ list( APPEND SOURCES
       AudacityHeaders.h
       AudioIO.cpp
       AudioIO.h
+      AudioIOExt.cpp
+      AudioIOExt.h
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h

@@ -200,41 +200,7 @@ void MessageBuffer<Data>::Write( Data &&data )
    mSlots[idx].mBusy.store( false, std::memory_order_release );
 }
 
-struct PaStreamInfo;
-struct PaStreamCallbackTimeInfo;
-struct TransportTracks;
-
-class AUDACITY_DLL_API AudioIOExt : public AudioIOExtBase
-{
-public:
-   using Factory = std::function<
-      std::unique_ptr<AudioIOExt>( const PlaybackSchedule& ) >;
-   using Factories = std::vector<AudioIOExt::Factory>;
-   static Factories &GetFactories();
-
-   //! Typically statically constructed
-   struct AUDACITY_DLL_API RegisteredFactory{
-      explicit RegisteredFactory(Factory factory);
-      ~RegisteredFactory();
-   };
-
-   virtual ~AudioIOExt();
-
-   // Formerly in AudioIoCallback
-   virtual void ComputeOtherTimings(double rate,
-      const PaStreamCallbackTimeInfo *timeInfo,
-      unsigned long framesPerBuffer) = 0;
-   virtual void SignalOtherCompletion() = 0;
-   virtual unsigned CountOtherSoloTracks() const = 0;
-
-   // Formerly in AudioIO
-   virtual bool StartOtherStream(const TransportTracks &tracks,
-      const PaStreamInfo* info, double startTime, double rate) = 0;
-   virtual void AbortOtherStream() = 0;
-   virtual void FillOtherBuffers(
-      double rate, unsigned long pauseFrames, bool paused, bool hasSolo) = 0;
-   virtual void StopOtherStream() = 0;
-};
+class AudioIOExt;
 
 class AUDACITY_DLL_API AudioIoCallback /* not final */
    : public AudioIOBase
@@ -267,12 +233,7 @@ public:
             : audioIO.mAudioIOExt.begin() }
       {}
       AudioIOExtIterator &operator ++ () { ++mIterator; return *this; }
-      auto operator *() const -> AudioIOExt &
-      {
-         // Down-cast and dereference are safe because only AudioIOCallback
-         // populates the array
-         return *static_cast<AudioIOExt*>(mIterator->get());
-      }
+      auto operator *() const -> AudioIOExt &;
       friend inline bool operator == (
          const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
       {

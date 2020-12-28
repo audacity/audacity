@@ -71,6 +71,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 
 
+#include "AudioIOExt.h"
 #include "AudioIOListener.h"
 
 #include "float_cast.h"
@@ -3521,6 +3522,13 @@ void AudioIoCallback::CallbackCheckCompletion(
    callbackReturn = paComplete;
 }
 
+auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt &
+{
+   // Down-cast and dereference are safe because only AudioIOCallback
+   // populates the array
+   return *static_cast<AudioIOExt*>(mIterator->get());
+}
+
 void AudioIO::TimeQueue::Producer(
    const PlaybackSchedule &schedule, double rate, double scrubSpeed,
    size_t nSamples )
@@ -3585,22 +3593,4 @@ bool AudioIO::IsCapturing() const
       GetNumCaptureChannels() > 0 &&
       mPlaybackSchedule.GetTrackTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
-}
-
-AudioIOExt::~AudioIOExt() = default;
-
-auto AudioIOExt::GetFactories() -> Factories &
-{
-   static Factories factories;
-   return factories;
-}
-
-AudioIOExt::RegisteredFactory::RegisteredFactory(Factory factory)
-{
-   GetFactories().push_back( move(factory) );
-}
-
-AudioIOExt::RegisteredFactory::~RegisteredFactory()
-{
-   GetFactories().pop_back();
 }
