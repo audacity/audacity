@@ -629,6 +629,8 @@ protected:
       return {
          XO( "Click and drag to adjust, double-click to reset" ),
          &cursor,
+         /* i18n-hint: This text is a tooltip on the icon (of a pin) representing 
+         the temporal position in the audio.  */
          XO( "Record/Play head" )
       };
    }
