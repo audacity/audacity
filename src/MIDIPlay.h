@@ -33,10 +33,50 @@ class AudioThread;
 
 namespace {
 
-struct Iterator {
-   Alg_iterator it{ nullptr, false };
+struct MIDIPlay;
 
-   ~Iterator() { it.end(); }
+Alg_update gAllNotesOff; // special event for loop ending
+// the fields of this event are never used, only the address is important
+
+struct Iterator {
+   Iterator(
+      const PlaybackSchedule &schedule, MIDIPlay &midiPlay );
+   ~Iterator();
+
+   void Prime(bool send, double startTime);
+
+   double GetNextEventTime() const;
+
+   // Compute nondecreasing real time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime(double pauseTime);
+
+   bool Unmuted(bool hasSolo) const;
+
+   // Returns true after outputting all-notes-off
+   bool OutputEvent(double pauseTime,
+      /// when true, sendMidiState means send only updates, not note-ons,
+      /// used to send state changes that precede the selected notes
+      bool sendMidiState,
+      bool hasSolo);
+   void GetNextEvent();
+
+   const PlaybackSchedule &mPlaybackSchedule;
+   MIDIPlay &mMIDIPlay;
+   Alg_iterator it{ nullptr, false };
+   /// The next event to play (or null)
+   Alg_event    *mNextEvent = nullptr;
+
+   /// Track of next event
+   NoteTrack        *mNextEventTrack = nullptr;
+
+   /// Is the next event a note-on?
+   bool             mNextIsNoteOn = false;
+
+private:
+   /// Real time at which the next event should be output, measured in seconds.
+   /// Note that this could be a note's time+duration for note offs.
+   double           mNextEventTime = 0;
 };
 
 struct MIDIPlay : AudioIOExt
@@ -101,35 +141,13 @@ struct MIDIPlay : AudioIOExt
    double mSystemMinusAudioTimePlusLatency = 0.0;
 
    std::optional<Iterator> mIterator;
-   /// The next event to play (or null)
-   Alg_event    *mNextEvent = nullptr;
 
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
    std::vector< std::pair< int, int > > mPendingNotesOff;
 #endif
 
-   /// Real time at which the next event should be output, measured in seconds.
-   /// Note that this could be a note's time+duration for note offs.
-   double           mNextEventTime = 0.0;
-   /// Track of next event
-   NoteTrack        *mNextEventTrack = nullptr;
-   /// Is the next event a note-on?
-   bool             mNextIsNoteOn = false;
-
    void PrepareMidiIterator(bool send, double offset);
    bool StartPortMidiStream(double rate);
-
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime(double pauseTime);
-
-   bool Unmuted(bool hasSolo) const;
-
-   // Returns true after outputting all-notes-off
-   /// when true, midiStateOnly means send only updates, not note-ons,
-   /// used to send state changes that precede the selected notes
-   bool OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo);
-   void GetNextEvent();
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
 
