@@ -22,6 +22,8 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       "Use the portaudio WMME interface if available"
       YES
    )
+   set( ASIOSDK_DIR $ENV{ASIOSDK_DIR} ) # not GUI   
+   string(REPLACE "\\" "/" ASIOSDK_DIR "${ASIOSDK_DIR}")
 else()
    # Look for OSS if the user wants it
    cmd_option(
@@ -87,6 +89,15 @@ if( NOT ${_OPT}use_pa_jack STREQUAL "off" )
    endif()
 endif()
 
+if( ASIOSDK_DIR )
+   list( APPEND ASIOSDK_SOURCES
+      PRIVATE
+         ${ASIOSDK_DIR}/common/asio.cpp
+         ${ASIOSDK_DIR}/host/asiodrivers.cpp
+         ${ASIOSDK_DIR}/host/pc/asiolist.cpp
+   )
+endif()
+
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/common/pa_allocation.c
@@ -132,6 +143,11 @@ list( APPEND SOURCES
          ${TARGET_ROOT}/src/hostapi/wasapi/pa_win_wasapi.c
       >
 
+      $<$<BOOL:${ASIOSDK_DIR}>:
+         ${TARGET_ROOT}/src/hostapi/asio/iasiothiscallresolver.cpp
+         ${TARGET_ROOT}/src/hostapi/asio/pa_asio.cpp
+      >
+
       $<$<BOOL:${${_OPT}use_pa_wmme}>:
          ${TARGET_ROOT}/src/hostapi/wmme/pa_win_wmme.c
       >
@@ -164,6 +180,13 @@ list( APPEND INCLUDES
 
       $<$<BOOL:${${_OPT}use_pa_ds}>:
          ${TARGET_ROOT}/src/hostapi/dsound
+      >
+
+      $<$<BOOL:${ASIOSDK_DIR}>:
+         ${TARGET_ROOT}/src/hostapi/asio
+         ${ASIOSDK_DIR}/common
+         ${ASIOSDK_DIR}/host
+         ${ASIOSDK_DIR}/host/pc
       >
 
       $<$<BOOL:${${_OPT}use_pa_coreaudio}>:
@@ -199,6 +222,10 @@ list( APPEND DEFINES
 
       $<$<BOOL:${${_OPT}use_pa_wmme}>:
          PA_USE_WMME=1
+      >
+
+      $<$<BOOL:${ASIOSDK_DIR}>:
+         PA_USE_ASIO=1
       >
 
       $<$<BOOL:${${_OPT}use_pa_coreaudio}>:
@@ -239,7 +266,10 @@ list( APPEND LIBRARIES
 )
 
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
-target_sources( ${TARGET} PRIVATE ${SOURCES} )
+if( ASIOSDK_DIR )
+ organize_source( "${ASIOSDK_DIR}" "" "${ASIOSDK_SOURCES}" )
+endif()
+target_sources( ${TARGET} PRIVATE ${SOURCES} ${ASIOSDK_SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
