@@ -1054,8 +1054,8 @@ AudioIO::AudioIO()
    mSendMidiState = false;
 
    mNumFrames = 0;
-   mNumPauseFrames = 0;
 #endif
+   mNumPauseFrames = 0;
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
@@ -1281,9 +1281,9 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                                    sampleFormat captureFormat)
 {
    auto sampleRate = options.rate;
+   mNumPauseFrames = 0;
 #ifdef EXPERIMENTAL_MIDI_OUT
    mNumFrames = 0;
-   mNumPauseFrames = 0;
    // we want this initial value to be way high. It should be
    // sufficient to assume AudioTime is zero and therefore
    // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
@@ -3816,14 +3816,6 @@ void AudioIoCallback::ComputeMidiTimings(
    }
 
    mAudioFramesPerBuffer = framesPerBuffer;
-   if (IsPaused()
-       // PRL:  Why was this added?  Was it only because of the mysterious
-       // initial leading zeroes, now solved by setting mStreamToken early?
-       // JKC: I think it's used for the MIDI time cursor.  See comments
-       // at head of file about AudioTime().
-       || mStreamToken <= 0
-       )
-      mNumPauseFrames += framesPerBuffer;
 
    mNumFrames += framesPerBuffer;
 #endif
@@ -4492,6 +4484,18 @@ int AudioIoCallback::AudioCallback(
       timeInfo, 
       framesPerBuffer 
    );
+#endif
+   
+   if (IsPaused()
+       // PRL:  Why was this added?  Was it only because of the mysterious
+       // initial leading zeroes, now solved by setting mStreamToken early?
+       // JKC: I think it's used for the MIDI time cursor.  See comments
+       // at head of file about AudioTime().
+       || mStreamToken <= 0
+       )
+      mNumPauseFrames += framesPerBuffer;
+
+#ifdef EXPERIMENTAL_MIDI_OUT
    if (mMidiStream)
       FillMidiBuffers();
 #endif
