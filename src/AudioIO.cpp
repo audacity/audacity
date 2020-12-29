@@ -2899,9 +2899,6 @@ void AudioIO::FillBuffers()
       // by not always trying to process tiny chunks, eating the
       // CPU unnecessarily.
       //
-      // The exception is if we're at the end of the selected
-      // region - then we should just fill the buffer.
-      //
       // May produce a larger amount when initially priming the buffer, or
       // perhaps again later in play to avoid underfilling the queue and falling
       // behind the real-time demand on the consumer side in the callback.
@@ -2912,9 +2909,7 @@ void AudioIO::FillBuffers()
       // wxASSERT( nNeeded <= nAvailable );
 
       auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
-      if (nAvailable >= mPlaybackSamplesToCopy ||
-          (mPlaybackSchedule.PlayingStraight() &&
-           nAvailable / mRate >= realTimeRemaining))
+      if (nAvailable >= mPlaybackSamplesToCopy)
       {
          // Limit maximum buffer size (increases performance)
          auto available = std::min( nAvailable,
