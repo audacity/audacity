@@ -232,7 +232,7 @@ public:
     */
    virtual std::pair<double, double>
       AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, double realDuration );
+         double trackTime, size_t nSamples );
 
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
@@ -315,8 +315,7 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! Aligned to avoid false sharing
       NonInterfering<Cursor> mHead, mTail;
 
-      void Producer( PlaybackSchedule &schedule,
-         double rate, size_t nSamples );
+      void Producer( PlaybackSchedule &schedule, size_t nSamples );
       double Consumer( size_t nSamples, double rate );
 
       //! Empty the queue and reassign the last produced time
@@ -391,10 +390,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       mPolicyValid.store(false, std::memory_order_release);
    }
 
-
-   // Returns true if time equals t1 or is on opposite side of t1, to t0
-   bool Overruns( double trackTime ) const;
-
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative
    double RealDuration(double trackTime1) const;
@@ -426,12 +421,16 @@ public:
 
    std::pair<double, double>
       AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, double realDuration ) override;
+         double trackTime, size_t nSamples ) override;
 
    bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,
       size_t frames, size_t available ) override;
 
    bool Looping( const PlaybackSchedule & ) const override;
+
+private:
+   size_t mRemaining{ 0 };
+   bool mProgress{ true };
 };
 #endif

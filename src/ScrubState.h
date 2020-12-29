@@ -72,7 +72,7 @@ public:
 
    std::pair<double, double>
       AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, double realDuration ) override;
+         double trackTime, size_t nSamples ) override;
 
    bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,
@@ -86,7 +86,7 @@ private:
    double mScrubSpeed{ 0 };
    bool mSilentScrub{ false };
    bool mReplenish{ false };
-   bool mDiscontinuity{ false };
+   size_t mUntilDiscontinuity{ 0 };
 
    const ScrubbingOptions mOptions;
 };
