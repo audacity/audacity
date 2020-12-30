@@ -535,25 +535,106 @@ bool MIDIPlay::Shutdown(unsigned bit)
       return false;
 }
 
-void MIDIPlay::Producer(std::pair<double, double>, size_t)
+void MIDIPlay::Producer(std::pair<double, double>, size_t frames)
 {
    // If we get the shut-down signal from the main thread, don't produce more,
    // so it it safe for the main thread to destroy the MIDI queue
    if (Shutdown(ProducerBit))
       return;
+
+   // Clean up for the consumer, so it can avoid memory management in the
+   // low-latency thread
+   auto nConsumed = mEntriesConsumed.load(std::memory_order_acquire);
+   // We have acquired the value of nConsumed, so side-effects of
+   // the consumption happened before here, and destruction of entries is safe
+   do {
+      for (; mEntriesDestroyed != nConsumed; ++mEntriesDestroyed)
+         mEntries.pop_front();
+   } // Repeat in case more consumption happened:
+   while ( !mEntriesConsumed.compare_exchange_weak(
+      nConsumed, nConsumed, std::memory_order_acquire ) );
+
+   // Fetch variable that only this producer writes
+   auto nProduced = mEntriesProduced.load(std::memory_order_relaxed);
+
+   // Assume the queue is not empty, which Prime() guarantees
+   auto &entry = *mToProduce;
+
+   // Complete the previous entry
+   ProduceCompleteEntry(entry, frames);
+
+   // Count completed entries
+   ++nProduced;
+
+   // Record new, but incomplete entry.
+   mToProduce = mEntries.emplace_after(mToProduce);
+
+   // Now let the consumer see the entry that was completed.
+   mEntriesProduced.store(nProduced, std::memory_order_release);
+}
+
+void MIDIPlay::ProduceCompleteEntry(Entry &entry, size_t frames)
+{
+   entry.frames = frames;
 }
 
 void MIDIPlay::Consumer(
-   size_t, double, unsigned long, bool)
+   size_t frames, double, unsigned long, bool)
 {
    // If we get the shut-down signal from the main thread, don't send more
    // events to Portmidi
    if (Shutdown(ConsumerBit))
       return;
+
+   // See whether there is new production, after producer's side-effects
+   auto nProduced = mEntriesProduced.load(std::memory_order_acquire);
+   // Fetch variable that only this consumer writes
+   auto nConsumed = mEntriesConsumed.load(std::memory_order_relaxed);
+
+   size_t total = 0;
+
+   do {
+      while (total < frames) {
+         if (nConsumed == nProduced)
+            break;
+         const auto &entry = *mToConsume;
+         if (mNextFrame >= entry.frames) {
+            mNextFrame = 0;
+            ++nConsumed;
+            ++mToConsume;
+            continue;
+         }
+
+         size_t used = ConsumePartOfEntry(entry);
+
+         mNextFrame += used;
+         total += used;
+      }
+   }
+   // Repeat in case room remains and more production happened
+   // (Shouldn't happen if the queue has enough latency for the mismatch
+   // between producer and consumer frequency)
+   while (total < frames &&
+      !mEntriesProduced.compare_exchange_weak(
+      nProduced, nProduced, std::memory_order_acquire ) );
+
+   // Remember how many are consumed, and let producer clean them up
+   mEntriesConsumed.store(nConsumed, std::memory_order_release);
+}
+
+size_t MIDIPlay::ConsumePartOfEntry(const Entry &entry)
+{
+   return entry.frames;
 }
 
 void MIDIPlay::Prime(double newTrackTime)
 {
+   ClearQueue();
+
+   // Make an entry for the consumer's iterator to point at; it is not
+   // yet complete for consumption
+   mEntries.emplace_front();
+   mToConsume = mToProduce = mEntries.begin();
 }
 
 AudioIOExt::RegisteredFactory sMIDIPlayFactory{
@@ -651,6 +732,7 @@ bool MIDIPlay::StartOtherStream(const TransportTracks &tracks,
 
 void MIDIPlay::AbortOtherStream()
 {
+   ClearQueue();
    mMidiPlaybackTracks.clear();
 }
 
@@ -722,6 +804,17 @@ double Iterator::GetNextEventTime() const
    if (mNextEvent == &gAllNotesOff)
       return mNextEventTime - ALG_EPS;
    return mNextEventTime;
+}
+
+void MIDIPlay::ClearQueue()
+{
+   mEntries = Queue{};
+   mToProduce = Queue::iterator{};
+   mToConsume = Queue::const_iterator{};
+   mEntriesProduced.store(0, std::memory_order_relaxed);
+   mEntriesConsumed.store(0, std::memory_order_relaxed);
+   mEntriesDestroyed = 0;
+   mNextFrame = 0;
 }
 
 bool MIDIPlay::StartPortMidiStream(double rate)

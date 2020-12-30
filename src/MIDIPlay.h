@@ -32,6 +32,7 @@ class AudioThread;
 
 #include "NoteTrack.h"
 #include "PlaybackSchedule.h"
+#include <forward_list>
 
 namespace {
 
@@ -83,7 +84,7 @@ private:
    double           mNextEventTime = 0;
 };
 
-struct MIDIPlay : AudioIOExt
+struct MIDIPlay : AudioIOExt, NonInterferingBase
 {
    explicit MIDIPlay(const PlaybackSchedule &schedule);
    ~MIDIPlay() override;
@@ -165,7 +166,49 @@ struct MIDIPlay : AudioIOExt
    std::vector< std::pair< int, int > > mPendingNotesOff;
 #endif
 
+   //! @name Inter-thread queue
+   //! @{
+
+   struct Entry {
+      size_t frames{ 0 };
+   };
+
+   //! Alignment size to avoid false sharing
+   static constexpr size_t alignment = 64;
+      //std::hardware_destructive_interference_size; // C++17
+
+   //! Counter type for entries to-do, done, and cleaned up
+   /*! If the counter type wraps during very long play, it won't matter, so long
+    as the number of entries in transit in the queue never exceeds the
+    largest value of the type. */
+   using CounterType = size_t;
+
+   //! Use a list container for its guarantees of non-invalidation of iterators
+   using Queue = std::forward_list<Entry>;
+   // The Queue object itself is changed only by main or producer thread
+   Queue mEntries;
+
+   //! Shared counter, updated by producer
+   alignas(alignment) std::atomic<CounterType> mEntriesProduced{0};
+   //! Shared counter, updated by consumer
+   std::atomic<CounterType> mEntriesConsumed{0};
+   //! @}
+
+   //! @name For Producer's use only
+   //! @{
+   alignas(alignment) Queue::iterator mToProduce;
+   CounterType mEntriesDestroyed{0};
+   void ProduceCompleteEntry(Entry &entry, size_t frames);
    void PrepareMidiIterator(bool send, double startTime, double offset);
+   //! @}
+
+   //! @name For Consumer's use only
+   //! @{
+   alignas(alignment) Queue::const_iterator mToConsume;
+   size_t mNextFrame = 0;
+   size_t ConsumePartOfEntry(const Entry &entry);
+   //! @}
+
    bool StartPortMidiStream(double rate);
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
@@ -196,6 +239,8 @@ struct MIDIPlay : AudioIOExt
    void DestroyOtherStream() override;
 
    AudioIODiagnostics Dump() const override;
+
+   void ClearQueue();
 };
 
 }
