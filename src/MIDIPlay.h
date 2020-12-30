@@ -45,26 +45,23 @@ struct Iterator {
    Iterator(
       const PlaybackSchedule &schedule, MIDIPlay &midiPlay,
       NoteTrackConstArray &midiPlaybackTracks,
-      double startTime, double offset, bool send );
+      double startTime, bool send );
    ~Iterator();
 
    void Prime(bool send, double startTime);
 
    double GetNextEventTime() const;
 
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime(double pauseTime);
-
    bool Unmuted(bool hasSolo) const;
 
    // Returns true after outputting all-notes-off
-   bool OutputEvent(double pauseTime,
+   bool OutputEvent(double rawTime,
       /// when true, sendMidiState means send only updates, not note-ons,
       /// used to send state changes that precede the selected notes
       bool sendMidiState,
       bool hasSolo);
-   void GetNextEvent();
+   void GetNextEvent(
+      double limitTime = std::numeric_limits<double>::infinity());
 
    // These may update future ending behavior of an iterator that is being used
    // in another thread, so they use atomics to do that properly.
@@ -81,7 +78,7 @@ struct Iterator {
 
    const PlaybackSchedule &mPlaybackSchedule;
    MIDIPlay &mMIDIPlay;
-   Alg_iterator it{ nullptr, false };
+   Alg_iterator it;
    /// The next event to play (or null)
    Alg_event    *mNextEvent = nullptr;
 
@@ -93,6 +90,8 @@ struct Iterator {
 
    std::atomic<double> mNotesOffTime{ std::numeric_limits<double>::infinity() };
    std::atomic<bool> mSkipping{ false };
+
+   bool             mFinished = false;
 
 private:
    /// Real time at which the next event should be output, measured in seconds.
@@ -142,12 +141,6 @@ struct MIDIPlay : AudioIOExt, NonInterferingBase
 
    /// Number of frames output, including pauses
    long    mNumFrames = 0;
-   /// total of backward jumps
-   int     mMidiLoopPasses = 0;
-   //
-   inline double MidiLoopOffset() {
-      return mMidiLoopPasses * (mPlaybackSchedule.mT1 - mPlaybackSchedule.mT0);
-   }
 
    long    mAudioFramesPerBuffer = 0;
    /// Used by Midi process to record that pause has begun,
@@ -224,14 +217,18 @@ struct MIDIPlay : AudioIOExt, NonInterferingBase
    bool mSentControls = false;
    void ProduceCompleteEntry(Entry &entry, size_t frames,
       double leftLimit, bool end, bool continuous);
-   void PrepareMidiIterator(bool send, double startTime, double offset);
+   void PrepareMidiIterator(bool send, double startTime);
    //! @}
 
    //! @name For Consumer's use only
    //! @{
    alignas(alignment) Queue::const_iterator mToConsume;
    size_t mNextFrame = 0;
-   size_t ConsumePartOfEntry(const Entry &entry);
+   // Number of frames that have been consumed in one call of the Portaudio
+   // callback
+   size_t mCallbackFramesConsumed = 0;
+   size_t ConsumePartOfEntry(const Entry &entry,
+      size_t frames, size_t total, double rate, double audioTime, bool hasSolo);
    //! @}
 
    bool StartPortMidiStream(double rate);
@@ -258,8 +255,6 @@ struct MIDIPlay : AudioIOExt, NonInterferingBase
    bool StartOtherStream(const TransportTracks &tracks,
       const PaStreamInfo* info, double startTime, double rate) override;
    void AbortOtherStream() override;
-   void FillOtherBuffers(double rate, unsigned long pauseFrames,
-      bool paused, bool hasSolo) override;
    void StopOtherStream() override;
    void DestroyOtherStream() override;
 

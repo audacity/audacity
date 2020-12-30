@@ -3039,8 +3039,6 @@ int AudioIoCallback::AudioCallback(
       ext.ComputeOtherTimings(mRate, IsPaused(),
          timeInfo,
          framesPerBuffer);
-      ext.FillOtherBuffers(
-         mRate, mNumPauseFrames, IsPaused(), mbHasSoloTracks);
    }
 
    // ------ MEMORY ALLOCATIONS -----------------------------------------------
