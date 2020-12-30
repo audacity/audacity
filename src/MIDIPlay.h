@@ -176,8 +176,6 @@ struct MIDIPlay : AudioIOExt, NonInterferingBase
 
    double mSystemMinusAudioTimePlusLatency = 0.0;
 
-   std::optional<Iterator> mIterator;
-
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
    std::vector< std::pair< int, int > > mPendingNotesOff;
 #endif
@@ -186,6 +184,13 @@ struct MIDIPlay : AudioIOExt, NonInterferingBase
    //! @{
 
    struct Entry {
+      Entry(double trackStartTime, double trackEndTime)
+         : trackStartTime{trackStartTime}, trackEndTime{trackEndTime}
+      {}
+
+      std::shared_ptr<Iterator> iterator;
+      double trackStartTime;
+      double trackEndTime;
       size_t frames{ 0 };
    };
 
@@ -213,8 +218,12 @@ struct MIDIPlay : AudioIOExt, NonInterferingBase
    //! @name For Producer's use only
    //! @{
    alignas(alignment) Queue::iterator mToProduce;
+   //! unshared pointer to object that is shared in Entries:
+   std::shared_ptr<Iterator> mIterator;
    CounterType mEntriesDestroyed{0};
-   void ProduceCompleteEntry(Entry &entry, size_t frames);
+   bool mSentControls = false;
+   void ProduceCompleteEntry(Entry &entry, size_t frames,
+      double leftLimit, bool end, bool continuous);
    void PrepareMidiIterator(bool send, double startTime, double offset);
    //! @}
 

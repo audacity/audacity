@@ -535,7 +535,7 @@ bool MIDIPlay::Shutdown(unsigned bit)
       return false;
 }
 
-void MIDIPlay::Producer(std::pair<double, double>, size_t frames)
+void MIDIPlay::Producer(std::pair<double, double> times, size_t frames)
 {
    // If we get the shut-down signal from the main thread, don't produce more,
    // so it it safe for the main thread to destroy the MIDI queue
@@ -557,25 +557,62 @@ void MIDIPlay::Producer(std::pair<double, double>, size_t frames)
    // Fetch variable that only this producer writes
    auto nProduced = mEntriesProduced.load(std::memory_order_relaxed);
 
+   const auto leftLimit = times.first;
+   const bool continuous = (leftLimit == times.second);
+   const bool end = !std::isfinite(times.second);
+   const auto rightLimit = end ? leftLimit : times.second;
+
    // Assume the queue is not empty, which Prime() guarantees
    auto &entry = *mToProduce;
 
    // Complete the previous entry
-   ProduceCompleteEntry(entry, frames);
+   ProduceCompleteEntry(entry, frames, leftLimit, end, continuous);
 
    // Count completed entries
    ++nProduced;
 
    // Record new, but incomplete entry.
-   mToProduce = mEntries.emplace_after(mToProduce);
+   mToProduce = mEntries.emplace_after(mToProduce, rightLimit, rightLimit);
 
    // Now let the consumer see the entry that was completed.
    mEntriesProduced.store(nProduced, std::memory_order_release);
 }
 
-void MIDIPlay::ProduceCompleteEntry(Entry &entry, size_t frames)
+void MIDIPlay::ProduceCompleteEntry(Entry &entry, size_t frames,
+   double leftLimit, bool end, bool continuous)
 {
    entry.frames = frames;
+
+   auto lastTime = entry.trackStartTime;
+   entry.trackEndTime = leftLimit;
+
+   // Share an iterator if we can with earlier slices.  Only in
+   // the case of forward play without discontinuity.
+   if (!mIterator) {
+      PrepareMidiIterator(
+         // Send initial update events from this thread only the first time the
+         // iterator is constructed:
+         !mSentControls,
+         lastTime, 0);
+      mSentControls = true;
+   }
+   entry.iterator = mIterator;
+
+   // Following steps may update an iterator already used by the consumer.
+   if (end || !continuous) {
+      // Atomically shrink the notes-off time to a finite limit.
+      // A relaxed atomic update, but this is all right because if the consumer
+      // sees the finite limit before it sees the present Entry, then the
+      // earlier Entry has a trackEndTime that causes an earlier stop anyway.
+      mIterator->SetNotesOffTime(leftLimit);
+      if (!continuous) {
+         // We determine that the iterator must skip.
+         // Set that bool, also atomically.
+         mIterator->SetSkipping();
+         // can't share with the next
+         mIterator.reset();
+      }
+   }
 }
 
 void MIDIPlay::Consumer(
@@ -633,7 +670,7 @@ void MIDIPlay::Prime(double newTrackTime)
 
    // Make an entry for the consumer's iterator to point at; it is not
    // yet complete for consumption
-   mEntries.emplace_front();
+   mEntries.emplace_front(newTrackTime, newTrackTime);
    mToConsume = mToProduce = mEntries.begin();
 }
 
@@ -747,7 +784,7 @@ PmTimestamp MidiTime(void *pInfo)
 // looping (each iteration is delayed more).
 void MIDIPlay::PrepareMidiIterator(bool send, double startTime, double offset)
 {
-   mIterator.emplace(mPlaybackSchedule, *this,
+   mIterator = std::make_shared<Iterator>(mPlaybackSchedule, *this,
       mMidiPlaybackTracks, startTime, offset, send);
 }
 
@@ -815,6 +852,8 @@ void MIDIPlay::ClearQueue()
    mEntriesConsumed.store(0, std::memory_order_relaxed);
    mEntriesDestroyed = 0;
    mNextFrame = 0;
+   mIterator.reset();
+   mSentControls = false;
 }
 
 bool MIDIPlay::StartPortMidiStream(double rate)
