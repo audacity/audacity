@@ -228,7 +228,8 @@ public:
     Called one or more times between GetPlaybackSlice and RepositionPlayback, until the
     total real duration of the advances equals the most recent playback slice (including any trailing silence).
     
-    @return a pair, which indicates a discontinuous jump when its members are not equal
+    @return a pair, which indicates a discontinuous jump when its members are not equal, or
+       specially the end of playback when the second member is infinite
     */
    virtual std::pair<double, double>
       AdvancedTrackTime( PlaybackSchedule &schedule,

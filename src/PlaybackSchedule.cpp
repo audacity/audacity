@@ -127,8 +127,11 @@ PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
          schedule.SolveWarpedLength(trackTime, realDuration);
    else
       trackTime += realDuration;
-
-   return { trackTime, trackTime };
+   
+   if ( trackTime >= schedule.mT1 )
+      return { schedule.mT1, std::numeric_limits<double>::infinity() };
+   else
+      return { trackTime, trackTime };
 }
 
 bool PlaybackPolicy::RepositionPlayback(
