@@ -66,6 +66,19 @@ struct Iterator {
       bool hasSolo);
    void GetNextEvent();
 
+   // These may update future ending behavior of an iterator that is being used
+   // in another thread, so they use atomics to do that properly.
+   void SetNotesOffTime(double notesOffTime)
+   { mNotesOffTime.store(notesOffTime, std::memory_order_relaxed); }
+   void SetSkipping()
+   { mSkipping.store(true, std::memory_order_relaxed); }
+
+   // And, the corresponding accessors.
+   double GetNotesOffTime() const
+   { return mNotesOffTime.load(std::memory_order_relaxed); }
+   bool GetSkipping() const
+   { return mSkipping.load(std::memory_order_relaxed); }
+
    const PlaybackSchedule &mPlaybackSchedule;
    MIDIPlay &mMIDIPlay;
    Alg_iterator it{ nullptr, false };
@@ -77,6 +90,9 @@ struct Iterator {
 
    /// Is the next event a note-on?
    bool             mNextIsNoteOn = false;
+
+   std::atomic<double> mNotesOffTime{ std::numeric_limits<double>::infinity() };
+   std::atomic<bool> mSkipping{ false };
 
 private:
    /// Real time at which the next event should be output, measured in seconds.
