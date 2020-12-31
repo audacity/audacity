@@ -123,12 +123,12 @@ struct MIDIPlay : AudioIOExt
    // synth latency.
    double UncorrectedMidiEventTime(double pauseTime);
 
-   bool Unmuted() const;
+   bool Unmuted(bool hasSolo) const;
 
    // Returns true after outputting all-notes-off
    /// when true, midiStateOnly means send only updates, not note-ons,
    /// used to send state changes that precede the selected notes
-   bool OutputEvent(double pauseTime, bool midiStateOnly);
+   bool OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo);
    void GetNextEvent();
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
@@ -138,21 +138,6 @@ struct MIDIPlay : AudioIOExt
     * This is used by PortMidi to synchronize midi time to audio samples
     */
    PmTimestamp MidiTime();
-
-   // Note: audio code solves the problem of soloing/muting tracks by scanning
-   // all playback tracks on every call to the audio buffer fill routine.
-   // We do the same for Midi, but it seems wasteful for at least two
-   // threads to be frequently polling to update status. This could be
-   // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm
-   // going to do this polling in the FillMidiBuffer routine to localize
-   // changes for midi to the midi code, but I'm declaring the variable
-   // here so possibly in the future, Audio code can use it too. -RBD
- private:
-   bool  mHasSolo = false; // is any playback solo button pressed?
- public:
-   bool SetHasSolo(bool hasSolo);
-   bool GetHasSolo() { return mHasSolo; }
 
    bool mUsingAlsa = false;
 

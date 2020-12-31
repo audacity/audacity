@@ -637,7 +637,13 @@ void MIDIPlay::PrepareMidiIterator(bool send, double offset)
    while (mNextEvent &&
           mNextEventTime < mPlaybackSchedule.mT0 + offset) {
       if (send)
-         OutputEvent(0, true);
+         /*
+          hasSolo argument doesn't matter because midiStateOnly is true.
+          "Fast-forward" all update events from the start of track to the given
+          play start time so the notes sound with correct timbre whenever
+          turned on.
+          */
+         OutputEvent(0, true, false);
       GetNextEvent();
    }
 }
@@ -761,18 +767,18 @@ double MIDIPlay::UncorrectedMidiEventTime(double pauseTime)
    return time + pauseTime;
 }
 
-bool MIDIPlay::Unmuted() const
+bool MIDIPlay::Unmuted(bool hasSolo) const
 {
    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
    if (!mNextEventTrack->IsVisibleChan(channel))
       return false;
-   const bool channelIsMute = mHasSolo
+   const bool channelIsMute = hasSolo
       ? !mNextEventTrack->GetSolo()
       : mNextEventTrack->GetMute();
    return !channelIsMute;
 }
 
-bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly)
+bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo)
 {
    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
    int command = -1;
@@ -840,7 +846,7 @@ bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly)
          // and update events (program change, control change, pressure, bend)
          // in case the user changes the muting during play
          return true;
-      return Unmuted();
+      return Unmuted(hasSolo);
    }();
    if (sendIt) {
       // Note event
@@ -961,14 +967,6 @@ void MIDIPlay::GetNextEvent()
    }
 }
 
-
-bool MIDIPlay::SetHasSolo(bool hasSolo)
-{
-   mHasSolo = hasSolo;
-   return mHasSolo;
-}
-
-
 void MIDIPlay::FillOtherBuffers(
    double rate, unsigned long pauseFrames, bool paused, bool hasSolo)
 {
@@ -988,8 +986,6 @@ void MIDIPlay::FillOtherBuffers(
       mMidiPaused = false;
    }
 
-   SetHasSolo(hasSolo);
-
    // If we compute until mNextEventTime > current audio time,
    // we would have a built-in compute-ahead of mAudioOutLatency, and
    // it's probably good to compute MIDI when we compute audio (so when
@@ -1003,7 +999,7 @@ void MIDIPlay::FillOtherBuffers(
    }
    while (mNextEvent &&
           UncorrectedMidiEventTime(PauseTime(rate, pauseFrames)) < time) {
-      if (OutputEvent(PauseTime(rate, pauseFrames), false)) {
+      if (OutputEvent(PauseTime(rate, pauseFrames), false, hasSolo)) {
          if (mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule)) {
             // jump back to beginning of loop
             ++mMidiLoopPasses;
