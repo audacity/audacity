@@ -303,9 +303,9 @@ void ScrubbingPlaybackPolicy::Initialize( PlaybackSchedule &schedule,
    double rate )
 {
    PlaybackPolicy::Initialize(schedule, rate);
-   mScrubDuration = 0;
+   mScrubDuration = mStartSample = mEndSample = 0;
    mScrubSpeed = 0;
-   mSilentScrub = false;
+   mSilentScrub = mReplenish = false;
    ScrubQueue::Instance.Init( schedule.mT0, rate, mOptions );
 }
 
@@ -351,6 +351,9 @@ ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &, size_t available)
 {
+   if (mReplenish)
+      return { available, 0, 0 };
+
    auto gAudioIO = AudioIO::Get();
 
    // How many samples to produce for each channel.
@@ -364,6 +367,15 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
 
    if (mSilentScrub)
       toProduce = 0;
+
+   mScrubDuration -= frames;
+   wxASSERT(mScrubDuration >= 0);
+
+   if (mScrubDuration <= 0) {
+      mReplenish = true;
+      ScrubQueue::Instance.Get(
+         mStartSample, mEndSample, available, mScrubDuration);
+   }
 
    return { available, frames, toProduce };
 }
@@ -381,13 +393,9 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
 {
    auto gAudioIO = AudioIO::Get();
 
-   mScrubDuration -= frames;
-   wxASSERT(mScrubDuration >= 0);
-   if (available > 0 && mScrubDuration <= 0)
+   if (available > 0 && mReplenish)
    {
-      sampleCount startSample, endSample;
-      ScrubQueue::Instance.Get(
-         startSample, endSample, available, mScrubDuration);
+      mReplenish = false;
       if (mScrubDuration < 0)
       {
          // Can't play anything
@@ -399,11 +407,11 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
       }
       else
       {
-         mSilentScrub = (endSample == startSample);
+         mSilentScrub = (mEndSample == mStartSample);
          double startTime, endTime;
-         startTime = startSample.as_double() / mRate;
-         endTime = endSample.as_double() / mRate;
-         auto diff = (endSample - startSample).as_long_long();
+         startTime = mStartSample.as_double() / mRate;
+         endTime = mEndSample.as_double() / mRate;
+         auto diff = (mEndSample - mStartSample).as_long_long();
          if (mScrubDuration == 0)
             mScrubSpeed = 0;
          else

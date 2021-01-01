@@ -48,9 +48,10 @@ public:
    ) override;
 
 private:
-   sampleCount mScrubDuration{ 0 };
+   sampleCount mScrubDuration{ 0 }, mStartSample{ 0 }, mEndSample{ 0 };
    double mScrubSpeed{ 0 };
    bool mSilentScrub{ false };
+   bool mReplenish{ false };
 
    const ScrubbingOptions mOptions;
 };
