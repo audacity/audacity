@@ -3154,7 +3154,7 @@ void AudioIO::OutputEvent()
    // we'll just wait for the note-off events to happen.
    // Also note that note-offs are only sent when we call
    // mIterator->request_note_off(), so notes that are not played
-   // will note generate random note-offs. There is the interesting
+   // will not generate random note-offs. There is the interesting
    // case that if the playback is paused, all-notes-off WILL be sent
    // and if playback resumes, the pending note-off events WILL also
    // be sent (but if that is a problem, there would also be a problem
