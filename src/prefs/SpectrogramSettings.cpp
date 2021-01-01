@@ -46,7 +46,7 @@ void SpectrogramSettings::Globals::LoadPrefs()
 {
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection
-      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
+      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 1L) != 0);
 #endif
 }
 
@@ -379,7 +379,7 @@ void SpectrogramSettings::UpdatePrefs()
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    if (spectralSelection == defaults().spectralSelection) {
       int temp;
-      gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), &temp, 0L);
+      gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), &temp, 1L);
       spectralSelection = (temp != 0);
    }
 #endif
