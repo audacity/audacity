@@ -417,6 +417,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
             mOptions.isPlayingAtSpeed = false;
             mOptions.isKeyboardScrubbing = false;
+            mOptions.initSpeed = 0;
             mOptions.minSpeed = 0.0;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
