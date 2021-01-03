@@ -1922,7 +1922,7 @@ bool AudioIO::AllocateBuffers(
 
                mPlaybackBuffers[i] =
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
-               const auto timeQueueSize =
+               const auto timeQueueSize = 1 +
                   (playbackBufferSize + TimeQueueGrainSize - 1)
                      / TimeQueueGrainSize;
                mTimeQueue.mData.reinit( timeQueueSize );
