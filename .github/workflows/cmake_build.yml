@@ -105,7 +105,7 @@ jobs:
       uses: actions/cache@v1
       with:
         # Increment the number at the end to force recreation of the cache
-        key: ${{ env.WXHASH }}.1
+        key: ${{ env.WXHASH }}.2
         path: ${{ env.WXWIN }}
 
     # =========================================================================
