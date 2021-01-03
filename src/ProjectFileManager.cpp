@@ -299,6 +299,20 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
          return false;
    }
 
+   if (FileNames::IsOnFATFileSystem(fileName))
+   {
+      if (wxFileName::GetSize(projectFileIO.GetFileName()) > UINT32_MAX)
+      {
+         ShowErrorDialog(
+            &window,
+            XO("Error Saving Project"),
+            XO("The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."),
+            "Error:_Unsuitable_drive#fat32"
+            );
+         return false;
+      }
+   }
+
    bool success = projectFileIO.SaveProject(fileName, mLastSavedTracks.get());
    if (!success)
    {
