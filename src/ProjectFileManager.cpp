@@ -599,6 +599,26 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
          continue;
       }
 
+      if (FileNames::IsOnFATFileSystem(filename.GetFullPath()))
+      {
+         if (wxFileName::GetSize(projectFileIO.GetFileName()) > UINT32_MAX)
+         {
+            ShowErrorDialog(
+               &window,
+               XO("Error Saving Project"),
+               XO("The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."),
+               "Error:_Unsuitable_drive#fat32"
+               );
+
+            if (project.mBatchMode)
+            {
+               return false;
+            }
+
+            continue;
+         }
+      }
+
       fName = filename.GetFullPath();
       break;
    } while (bPrompt);
