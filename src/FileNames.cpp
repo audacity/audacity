@@ -823,7 +823,7 @@ wxString FileNames::UnsavedProjectFileName()
 bool FileNames::IsOnFATFileSystem(const FilePath &path)
 {
    struct statfs fs;
-   if (statfs(path.c_str(), &fs))
+   if (statfs(wxPathOnly(path).c_str(), &fs))
       // Error from statfs
       return false;
    return 0 == strcmp(fs.f_fstypename, "msdos");
