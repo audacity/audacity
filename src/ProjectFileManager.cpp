@@ -317,7 +317,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    if (!success)
    {
       // Show this error only if we didn't fail reconnection in SaveProject
-      if (projectFileIO.HasConnection())
+      if (!projectFileIO.HasConnection())
          ShowErrorDialog(
             &window,
             XO("Error Saving Project"),

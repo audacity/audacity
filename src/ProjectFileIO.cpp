@@ -2060,6 +2060,8 @@ bool ProjectFileIO::SaveProject(
                reopened = true;
             else {
                MoveProject(fileName, savedName);
+               moved = false; // No longer moved
+
                reopened = OpenConnection(savedName);
             }
          }
@@ -2069,7 +2071,12 @@ bool ProjectFileIO::SaveProject(
             reopened = OpenConnection(savedName);
          }
 
-         if (!reopened)
+         // Warning issued in MoveProject()
+         if (reopened && !moved) {
+            return false;
+         }
+
+         if (!reopened) {
             wxTheApp->CallAfter([this]{
                ShowErrorDialog(nullptr,
                   XO("Warning"),
@@ -2082,8 +2089,8 @@ bool ProjectFileIO::SaveProject(
                mProject.ProcessEvent(evt);
             });
 
-         if (!moved)
             return false;
+         }
       }
    }
 
