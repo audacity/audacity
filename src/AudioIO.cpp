@@ -710,7 +710,6 @@ void AudioIO::ResetOwningProject()
 void AudioIO::LoopPlayUpdate( PlayRegionEvent &evt )
 {
    evt.Skip();
-
    AudioIO::Get()->mPlaybackSchedule.MessageProducer( evt );
 }
 
@@ -1712,7 +1711,7 @@ double AudioIO::GetStreamTime()
    if( !IsStreamActive() )
       return BAD_STREAM_TIME;
 
-   return mPlaybackSchedule.GetPolicy().NormalizeTrackTime(mPlaybackSchedule);
+   return mPlaybackSchedule.GetTrackTime();
 }
 
 

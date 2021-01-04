@@ -35,25 +35,6 @@ PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
    return { 4.0, 4.0, 10.0 };
 }
 
-double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
-{
-   // Track time readout for the main thread
-
-   // dmazzoni: This function is needed for two reasons:
-   // One is for looped-play mode - this function makes sure that the
-   // position indicator keeps wrapping around.  The other reason is
-   // more subtle - it's because PortAudio can query the hardware for
-   // the current stream time, and this query is not always accurate.
-   // Sometimes it's a little behind or ahead, and so this function
-   // makes sure that at least we clip it to the selection.
-
-   // Limit the time between t0 and t1.
-   // Should the limiting be necessary in any play mode if there are no bugs?
-   double absoluteTime = schedule.LimitTrackTime();
-
-   return absoluteTime;
-}
-
 bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
 {
    return true;
@@ -164,6 +145,14 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
 
 LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
 
+PlaybackPolicy::BufferTimes
+LoopingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+{
+   // Shorter times than in the default policy so that responses to changes of
+   // selection don't lag too much
+   return { 0.5, 0.5, 1.0 };
+}
+
 bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
 {
    return false;
@@ -174,7 +163,7 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &schedule, size_t available)
 {
    // How many samples to produce for each channel.
-   const auto realTimeRemaining = schedule.RealTimeRemaining();
+   const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
    auto frames = available;
    auto toProduce = frames;
    double deltat = frames / mRate;
@@ -229,10 +218,10 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
 {
    // msmeyer: If playing looped, check if we are at the end of the buffer
    // and if yes, restart from the beginning.
-   if (schedule.RealTimeRemaining() <= 0)
+   if (mRemaining <= 0)
    {
       for (auto &pMixer : playbackMixers)
-         pMixer->Restart();
+         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0 );
       schedule.RealTimeRestart();
    }
    return false;
@@ -283,13 +272,6 @@ void PlaybackSchedule::Init(
 
    mMessageChannel.Initialize();
    mMessageChannel.Write( { mT0, mT1 } );
-}
-
-double PlaybackSchedule::LimitTrackTime() const
-{
-   // Track time readout for the main thread
-   // Allows for forward or backward play
-   return ClampTrackTime( GetTrackTime() );
 }
 
 double PlaybackSchedule::ClampTrackTime( double trackTime ) const
@@ -410,6 +392,11 @@ void PlaybackSchedule::TimeQueue::Producer(
    mTail.mIndex = index;
 }
 
+double PlaybackSchedule::TimeQueue::GetLastTime() const
+{
+   return mLastTime;
+}
+
 double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
 {
    if ( mData.empty() ) {
@@ -459,5 +446,11 @@ void PlaybackSchedule::MessageConsumer()
 {
    // This executes in the TrackBufferExchange thread
    auto data = mMessageChannel.Read();
-   // TODO use data
+   auto mine = std::tie(mT0, mT1);
+   auto theirs = std::tie(data.mT0, data.mT1);
+   if (mine != theirs) {
+      mine = theirs;
+      mWarpedLength = RealDuration(mT1);
+      RealTimeInit(mTimeQueue.GetLastTime());
+   }
 }

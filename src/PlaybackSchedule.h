@@ -194,13 +194,6 @@ public:
    //! Provide hints for construction of playback RingBuffer objects
    virtual BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule);
 
-   //! Normalizes mTime, clamping it and handling gaps from cut preview.
-   /*!
-    * Clamps the time (unless scrubbing), and skips over the cut section.
-    * Returns a time in seconds.
-    */
-   virtual double NormalizeTrackTime( PlaybackSchedule &schedule );
-
    //! @section Called by the PortAudio callback thread
 
    //! Whether repositioning commands are allowed during playback
@@ -326,6 +319,9 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! Enqueue track time value advanced by `nSamples` according to `schedule`'s PlaybackPolicy
       void Producer( PlaybackSchedule &schedule, size_t nSamples );
 
+      //! Return the last time saved by Producer
+      double GetLastTime() const;
+
       //! @section called by PortAudio callback thread
 
       //! Find the track time value `nSamples` after the last consumed sample
@@ -417,13 +413,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     */
    double ClampTrackTime( double trackTime ) const;
 
-   /** \brief Clamps mTime to be between mT0 and mT1
-    *
-    * Returns the bound if the value is out of bounds; does not wrap.
-    * Returns a time in seconds.
-    */
-   double LimitTrackTime() const;
-
    void ResetMode() {
       mPolicyValid.store(false, std::memory_order_release);
    }
@@ -452,6 +441,8 @@ private:
 class LoopingPlaybackPolicy final : public PlaybackPolicy {
 public:
    ~LoopingPlaybackPolicy() override;
+
+   BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
    PlaybackSlice GetPlaybackSlice(

@@ -58,8 +58,6 @@ public:
 
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
-   double NormalizeTrackTime( PlaybackSchedule &schedule ) override;
-
    bool AllowSeek( PlaybackSchedule & ) override;
 
    std::chrono::milliseconds

@@ -1263,9 +1263,7 @@ void AdornedRulerPanel::DoSelectionChange( const SelectedRegion &selectedRegion 
 {
 
    auto gAudioIO = AudioIOBase::Get();
-   if ( !gAudioIO->IsBusy() &&
-      !ViewInfo::Get( *mProject ).playRegion.Locked()
-   ) {
+   if ( !ViewInfo::Get( *mProject ).playRegion.Locked() ) {
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    }
 }
