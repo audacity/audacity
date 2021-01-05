@@ -42,14 +42,15 @@ using namespace FileNames;
 class FilesystemValidator : public wxValidator
 {
 public:
-   FilesystemValidator()
+   FilesystemValidator(const TranslatableString &message)
    :  wxValidator()
    {
+      mMessage = message;
    }
 
    virtual wxObject* Clone() const wxOVERRIDE
    {
-      return safenew FilesystemValidator(*this);
+      return safenew FilesystemValidator(mMessage);
    }
 
    virtual bool Validate(wxWindow* WXUNUSED(parent)) wxOVERRIDE
@@ -59,7 +60,7 @@ public:
          return true;
       }
 
-      if (FATFilesystemDenied(tc->GetValue())) {
+      if (FATFilesystemDenied(tc->GetValue(), mMessage)) {
          return false;
       }
 
@@ -83,11 +84,13 @@ public:
       wxString path = tc->GetValue();
       path.insert(tc->GetInsertionPoint(), keycode);
 
-      if (FileNames::FATFilesystemDenied(path)) {
+      if (FileNames::FATFilesystemDenied(path, mMessage)) {
          evt.Skip(false);
          return;
       }
    }
+
+   TranslatableString mMessage;
 
    wxDECLARE_EVENT_TABLE();
 };
@@ -167,8 +170,6 @@ void DirectoriesPrefs::Populate()
 
 void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
 {
-   FilesystemValidator validator;
-
    S.SetBorder(2);
    S.StartScroller();
 
@@ -195,7 +196,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                       {PreferenceKey(Operation::Save, PathType::User),
                                        wxT("")},
                                       30);
-         mSaveText->SetValidator(validator);
+         mSaveText->SetValidator(FilesystemValidator(XO("Projects cannot be saved to FAT drives.")));
          S.Id(SaveButtonID).AddButton(XXO("B&rowse..."));
 
          S.Id(ImportTextID);
@@ -210,7 +211,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                     {PreferenceKey(Operation::Export, PathType::User),
                                      wxT("")},
                                     30);
-         mExportText->SetValidator(validator);
          S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
       }
       S.EndMultiColumn();
@@ -228,7 +228,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                   {PreferenceKey(Operation::Temp, PathType::_None),
                                    wxT("")},
                                   30);
-         mTempText->SetValidator(validator);
+         mTempText->SetValidator(FilesystemValidator(XO("Temporary files directory cannot be on a FAT drive.")));
          S.Id(TempButtonID).AddButton(XXO("Brow&se..."));
 
          S.AddPrompt(XXO("&Free Space:"));
@@ -265,7 +265,8 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
       wxFileName tmpDirPath;
       tmpDirPath.AssignDir(dlog.GetPath());
 
-      if (FATFilesystemDenied(tmpDirPath.GetFullPath())) {
+      if (FATFilesystemDenied(tmpDirPath.GetFullPath(),
+          XO("Temporary files directory cannot be on a FAT drive."))) {
          return;
       }
 
@@ -336,9 +337,10 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       return;
    }
 
-   if (evt.GetId() == SaveButtonID || evt.GetId() == ExportButtonID)
+   if (evt.GetId() == SaveButtonID)
    {
-      if (FATFilesystemDenied(dlog.GetPath()))
+      if (FATFilesystemDenied(dlog.GetPath(),
+                              XO("Projects cannot be saved to FAT drives.")))
       {
          return;
       }

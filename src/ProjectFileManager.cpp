@@ -269,7 +269,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    // Some confirmation dialogs
    {
-      if (FileNames::FATFilesystemDenied(fileName))
+      if (FileNames::FATFilesystemDenied(fileName, XO("Projects cannot be saved to FAT drives.")))
       {
          return false;
       }
@@ -587,7 +587,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
 
       filename.SetExt(wxT("aup3"));
 
-      if (FileNames::FATFilesystemDenied(filename.GetFullPath()))
+      if (FileNames::FATFilesystemDenied(filename.GetFullPath(), XO("Projects cannot be saved to FAT drives.")))
       {
          if (project.mBatchMode)
          {

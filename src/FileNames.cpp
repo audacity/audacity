@@ -868,14 +868,16 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
 }
 #endif
 
-bool FileNames::FATFilesystemDenied( const FilePath &path, wxWindow *window /* = nullptr */ )
+bool FileNames::FATFilesystemDenied( const FilePath &path,
+                                     const TranslatableString &msg,
+                                     wxWindow *window /* = nullptr */ )
 {
    if (FileNames::IsOnFATFileSystem(path))
    {
       ShowErrorDialog(
          window,
          XO("Unsuitable"),
-         XO("FAT formatted filesystems are unsuitable."),
+         XO("%s\n\nFor tips on suitable drives, click the help button.").Format(msg),
          "Error:_Unsuitable_drive"
          );
 
