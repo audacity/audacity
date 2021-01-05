@@ -269,6 +269,11 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    // Some confirmation dialogs
    {
+      if (FileNames::FATFilesystemDenied(fileName))
+      {
+         return false;
+      }
+
       auto &tracks = TrackList::Get( proj );
       if (!tracks.Any())
       {
@@ -581,6 +586,16 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       };
 
       filename.SetExt(wxT("aup3"));
+
+      if (FileNames::FATFilesystemDenied(filename.GetFullPath()))
+      {
+         if (project.mBatchMode)
+         {
+            return false;
+         }
+
+         continue;
+      }
 
       if (filename.FileExists())
       {

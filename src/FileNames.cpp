@@ -37,6 +37,7 @@ used throughout Audacity into this one place.
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
 #include "widgets/AudacityMessageBox.h"
+#include "widgets/ErrorDialog.h"
 #include "widgets/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
@@ -864,6 +865,23 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
 }
 #endif
 
+bool FileNames::FATFilesystemDenied( const FilePath &path, wxFrame *window /* = nullptr */ )
+{
+   if (FileNames::IsOnFATFileSystem(path))
+   {
+      ShowErrorDialog(
+         window,
+         XO("Unsuitable"),
+         XO("FAT formatted filesystems are unsuitable."),
+         "Error:_Unsuitable_drive"
+         );
+
+      return true;
+   }
+
+   return false;
+}
+
 wxString FileNames::AbbreviatePath( const wxFileName &fileName )
 {
    wxString target;
@@ -884,3 +902,4 @@ wxString FileNames::AbbreviatePath( const wxFileName &fileName )
 #endif
    return target;
 }
+

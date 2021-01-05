@@ -39,6 +39,63 @@
 
 using namespace FileNames;
 
+class FilesystemValidator : public wxValidator
+{
+public:
+   FilesystemValidator()
+   :  wxValidator()
+   {
+   }
+
+   virtual wxObject* Clone() const wxOVERRIDE
+   {
+      return safenew FilesystemValidator(*this);
+   }
+
+   virtual bool Validate(wxWindow* WXUNUSED(parent)) wxOVERRIDE
+   {
+      wxTextCtrl* tc = wxDynamicCast(GetWindow(), wxTextCtrl);
+      if (!tc) {
+         return true;
+      }
+
+      if (FATFilesystemDenied(tc->GetValue())) {
+         return false;
+      }
+
+      return true;
+   }
+
+   void OnChar(wxKeyEvent &evt)
+   {
+      evt.Skip();
+
+      wxTextCtrl* tc = wxDynamicCast(GetWindow(), wxTextCtrl);
+      if (!tc) {
+         return;
+      }
+
+      auto keycode = evt.GetUnicodeKey();
+      if (keycode < WXK_SPACE || keycode == WXK_DELETE) {
+         return;
+      }
+
+      wxString path = tc->GetValue();
+      path.insert(tc->GetInsertionPoint(), keycode);
+
+      if (FileNames::FATFilesystemDenied(path)) {
+         evt.Skip(false);
+         return;
+      }
+   }
+
+   wxDECLARE_EVENT_TABLE();
+};
+
+wxBEGIN_EVENT_TABLE(FilesystemValidator, wxValidator)
+    EVT_CHAR(FilesystemValidator::OnChar)
+wxEND_EVENT_TABLE()
+
 enum
 {
    TempTextID = 1000,
@@ -110,6 +167,8 @@ void DirectoriesPrefs::Populate()
 
 void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
 {
+   FilesystemValidator validator;
+
    S.SetBorder(2);
    S.StartScroller();
 
@@ -136,6 +195,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                       {PreferenceKey(Operation::Save, PathType::User),
                                        wxT("")},
                                       30);
+         mSaveText->SetValidator(validator);
          S.Id(SaveButtonID).AddButton(XXO("B&rowse..."));
 
          S.Id(ImportTextID);
@@ -150,6 +210,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                     {PreferenceKey(Operation::Export, PathType::User),
                                      wxT("")},
                                     30);
+         mExportText->SetValidator(validator);
          S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
       }
       S.EndMultiColumn();
@@ -167,6 +228,7 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                   {PreferenceKey(Operation::Temp, PathType::_None),
                                    wxT("")},
                                   30);
+         mTempText->SetValidator(validator);
          S.Id(TempButtonID).AddButton(XXO("Brow&se..."));
 
          S.AddPrompt(XXO("&Free Space:"));
@@ -202,6 +264,10 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
    {
       wxFileName tmpDirPath;
       tmpDirPath.AssignDir(dlog.GetPath());
+
+      if (FATFilesystemDenied(tmpDirPath.GetFullPath())) {
+         return;
+      }
 
       // Append an "audacity_temp" directory to this path if necessary (the
       // default, the existing pref (as stored in the control), and any path
@@ -270,6 +336,14 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       return;
    }
 
+   if (evt.GetId() == SaveButtonID || evt.GetId() == ExportButtonID)
+   {
+      if (FATFilesystemDenied(dlog.GetPath()))
+      {
+         return;
+      }
+   }
+
    tc->SetValue(dlog.GetPath());
 }
 
@@ -287,6 +361,7 @@ bool DirectoriesPrefs::Validate()
          wxOK | wxICON_ERROR);
       return false;
    }
+
    if (!Temp.DirExists()) {
       int ans = AudacityMessageBox(
          XO("Directory %s does not exist. Create it?")
