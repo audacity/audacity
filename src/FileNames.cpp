@@ -856,7 +856,10 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
       volumeType,
       WXSIZEOF(volumeType)))
       return false;
-   return wxString(volumeType).Upper().find(wxT("FAT")) != wxString::npos;
+   wxString type(volumeType);
+   if (type == wxT("FAT") || type == wxT("FAT32"))
+      return true;
+   return false;
 }
 #else
 bool FileNames::IsOnFATFileSystem(const FilePath &path)
