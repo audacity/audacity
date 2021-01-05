@@ -865,7 +865,7 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
 }
 #endif
 
-bool FileNames::FATFilesystemDenied( const FilePath &path, wxFrame *window /* = nullptr */ )
+bool FileNames::FATFilesystemDenied( const FilePath &path, wxWindow *window /* = nullptr */ )
 {
    if (FileNames::IsOnFATFileSystem(path))
    {

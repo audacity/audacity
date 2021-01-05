@@ -21,7 +21,6 @@
 
 class wxFileName;
 class wxFileNameWrapper;
-class wxFrame;
 
 namespace FileNames
 {
@@ -214,7 +213,7 @@ namespace FileNames
 
    AUDACITY_DLL_API
    bool IsOnFATFileSystem(const FilePath &path);
-   bool FATFilesystemDenied(const FilePath &path, wxFrame *window = nullptr);
+   bool FATFilesystemDenied(const FilePath &path, wxWindow *window = nullptr);
 
    AUDACITY_DLL_API
    //! Give enough of the path to identify the device.  (On Windows, drive letter plus ':')
