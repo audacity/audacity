@@ -21,6 +21,7 @@
 
 class wxFileName;
 class wxFileNameWrapper;
+class wxFrame;
 
 namespace FileNames
 {
