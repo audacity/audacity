@@ -13,7 +13,6 @@ Paul Licameli split from AudIOBase.h
 #define __AUDACITY_MIDI_PLAY__
 
 #include "AudioIOExt.h"
-#include "NoteTrack.h"
 #include <optional>
 #include "../lib-src/header-substitutes/allegro.h"
 
@@ -21,6 +20,7 @@ typedef void PmStream;
 typedef int32_t PmTimestamp;
 class Alg_event;
 class Alg_iterator;
+class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 class AudioThread;
@@ -29,6 +29,7 @@ class AudioThread;
 // which seems not to implement the notes-off message correctly.
 #define AUDIO_IO_GB_MIDI_WORKAROUND
 
+#include "NoteTrack.h"
 #include "PlaybackSchedule.h"
 
 namespace {
@@ -40,7 +41,9 @@ Alg_update gAllNotesOff; // special event for loop ending
 
 struct Iterator {
    Iterator(
-      const PlaybackSchedule &schedule, MIDIPlay &midiPlay );
+      const PlaybackSchedule &schedule, MIDIPlay &midiPlay,
+      NoteTrackConstArray &midiPlaybackTracks,
+      double startTime, double offset, bool send );
    ~Iterator();
 
    void Prime(bool send, double startTime);
@@ -146,7 +149,7 @@ struct MIDIPlay : AudioIOExt
    std::vector< std::pair< int, int > > mPendingNotesOff;
 #endif
 
-   void PrepareMidiIterator(bool send, double offset);
+   void PrepareMidiIterator(bool send, double startTime, double offset);
    bool StartPortMidiStream(double rate);
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
