@@ -8,7 +8,6 @@ def_vars()
 
 list( APPEND SOURCES
    SilenceMarker.ny
-   SoundFinder.ny
    SpectralEditMulti.ny
    SpectralEditParametricEQ.ny
    SpectralEditShelves.ny
@@ -22,6 +21,7 @@ list( APPEND SOURCES
    eq-xml-to-txt-converter.ny
    equalabel.ny
    highpass.ny
+   label-sounds.ny
    limiter.ny
    lowpass.ny
    noisegate.ny

@@ -528,10 +528,10 @@ void ScreenshotCommand::CaptureEffects(
       "Find Clipping...",
 #ifdef CAPTURE_NYQUIST_TOO
       "Beat Finder...",
+      "Label Sounds...",
       "Regular Interval Labels...",
       "Sample Data Export...",
       "Silence Finder...",
-      "Sound Finder...",
 #endif
    } );
 }
