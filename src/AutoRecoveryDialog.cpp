@@ -275,6 +275,8 @@ void AutoRecoveryDialog::OnDiscardSelected(wxCommandEvent &WXUNUSED(evt))
       }
       if (!mFileList->IsItemChecked(item))
       {
+         // Keep in list
+         files.push_back(mFiles[item]);
          continue;
       }
       FilePath fileName = mFiles[item];
