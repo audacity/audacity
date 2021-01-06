@@ -28,7 +28,7 @@
 /* The purpose of this util is to build encode hints for lattice
    codebooks so that brute forcing each codebook entry isn't needed.
    Threshhold hints are for books in which each scalar in the vector
-   is independant (eg, residue) and pigeonhole lookups provide a
+   is independent (eg, residue) and pigeonhole lookups provide a
    minimum error fit for words where the scalars are interdependant
    (each affecting the fit of the next in sequence) as in an LSP
    sequential book (or can be used along with a sparse threshhold map,

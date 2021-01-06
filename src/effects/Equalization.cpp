@@ -311,7 +311,7 @@ EffectEqualization::EffectEqualization(int Options)
    mBench=false;
 #endif
 
-   // We expect these Hi and Lo frequences to be overridden by Init().
+   // We expect these Hi and Lo frequencies to be overridden by Init().
    // Don't use inputTracks().  See bug 2321.
 #if 0
    auto trackList = inputTracks();

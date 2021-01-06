@@ -309,7 +309,7 @@ public:
    std::shared_ptr<CommandMessageTarget> mErrorTarget;
 public:
    // && is not a reference to a reference, but rather a way to allow reference to a temporary
-   // that will be gone or transfered after we have taken it.  It's a reference to an xvalue, 
+   // that will be gone or transferred after we have taken it.  It's a reference to an xvalue, 
    // or 'expiring value'.
    CommandOutputTargets(std::unique_ptr<CommandProgressTarget> &&pt = TargetFactory::ProgressDefault(),
                        std::shared_ptr<CommandMessageTarget>  &&st = TargetFactory::MessageDefault(),

@@ -214,7 +214,7 @@ if [ -f "lib-src/Makefile" ] ; then
       reconf=1
    fi
 else
-   # if no Makefile, definitly need to configure
+   # if no Makefile, definitely need to configure
    reconf=1
 fi
 

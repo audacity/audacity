@@ -111,7 +111,7 @@ FLAC__OggDecoderAspectReadStatus FLAC__ogg_decoder_aspect_read_callback_wrapper(
 	 * decoder will eventually call the read callback to supply some data,
 	 * but how much it asks for depends on how much free space it has in
 	 * its internal buffer.  It does not try to grow its internal buffer
-	 * to accomodate a whole frame because then the internal buffer size
+	 * to accommodate a whole frame because then the internal buffer size
 	 * could not be limited, which is necessary in embedded applications.
 	 *
 	 * Ogg however grows its internal buffer until a whole page is present;

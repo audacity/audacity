@@ -274,7 +274,7 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
 
 *track* ;Return original audio if something goes wrong
 
-;;;  we start with some variable assignements
+;;;  we start with some variable assignments
 (setf *sr* *sound-srate*)
 
 ;; hard coded STFT parameters

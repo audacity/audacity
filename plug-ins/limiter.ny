@@ -71,7 +71,7 @@ $control makeup (_ "Apply Make-up Gain") choice (
 (defun get-env (sig step lookahead limit)
   (let* ((sig (mult (/ limit) sig))
          (pad-time (* 3 lookahead))       ; padding required at start (seconds)
-         (pad-s (* 3 step))               ; padding smaples
+         (pad-s (* 3 step))               ; padding samples
          (padding (snd-const (peak sig pad-s) 0 *sound-srate* pad-time))
          (peak-env (snd-avg sig (* 4 step) step OP-PEAK)))
     (extract 0 1

@@ -214,7 +214,7 @@ std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,
    memcpy(dst, bg, bgWidth * bgHeight * 3);
 
    // If background image has tranparency, then we want to blend with the 
-   // current backgorund colour.
+   // current background colour.
    if( imgBack.HasAlpha() ){
       unsigned char *pAlpha = imgBack.GetAlpha();
       wxColour c = theTheme.Colour( clrMedium  );

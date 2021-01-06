@@ -3354,7 +3354,7 @@
 2006-11-03  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 
     * src/common.h
-    Add SF_PLATFORM_S64 macro as a platform independant way of doing signed 64
+    Add SF_PLATFORM_S64 macro as a platform independent way of doing signed 64
     bit integers.
 
     * src/aiff.c src/svx.c src/wav.c
@@ -4166,7 +4166,7 @@
     Add functions psf_init_files() and psf_use_rsrc().
 
     * src/sd2.c
-    Make resource fork handling independant of file desciptor/handles.
+    Make resource fork handling independent of file desciptor/handles.
 
     * src/sndfile.c src/test_file_io.c
     Fix knock on effects.

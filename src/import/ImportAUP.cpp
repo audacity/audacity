@@ -761,7 +761,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          }
 
          // If that fails then try to use the filename of the .aup as the base directory
-         // This is because unzipped projects e.g. those that get transfered between mac-pc
+         // This is because unzipped projects e.g. those that get transferred between mac-pc
          // may have encoding issues and end up expanding the wrong filenames for certain
          // international characters (such as capital 'A' with an umlaut.)
          if (projName.empty())

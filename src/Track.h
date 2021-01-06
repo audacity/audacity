@@ -395,7 +395,7 @@ private:
    virtual Holder Duplicate() const;
 
    // Called when this track is merged to stereo with another, and should
-   // take on some paramaters of its partner.
+   // take on some parameters of its partner.
    virtual void Merge(const Track &orig);
 
    wxString GetName() const { return mName; }

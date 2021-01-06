@@ -93,7 +93,7 @@
  *  Efficient means the whole file is rewritten at most one time, and only
  *  when necessary.  Level 1 is not efficient only in the case that you
  *  cause more than one metadata block to grow or shrink beyond what can
- *  be accomodated by padding.  In this case you should probably use level
+ *  be accommodated by padding.  In this case you should probably use level
  *  2, which allows you to edit all the metadata for a file in memory and
  *  write it out all at once.
  *

@@ -759,7 +759,7 @@ static double defaultSampleRateSearchOrder_[] =
 /************************************************************************************
 ** Extract capabilities from an output device, and add it to the device info list
 ** if successful. This function assumes that there is enough room in the
-** device info list to accomodate all entries.
+** device info list to accommodate all entries.
 **
 ** The device will not be added to the device list if any errors are encountered.
 */
@@ -1016,7 +1016,7 @@ static PaError AddOutputDeviceInfoFromDirectSound(
 /************************************************************************************
 ** Extract capabilities from an input device, and add it to the device info list
 ** if successful. This function assumes that there is enough room in the
-** device info list to accomodate all entries.
+** device info list to accommodate all entries.
 **
 ** The device will not be added to the device list if any errors are encountered.
 */

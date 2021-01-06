@@ -929,7 +929,7 @@ private:
    }
 };
 
-// utilites for RAII:
+// utilities for RAII:
 
 // Deleter adaptor for functions like av_free that take a pointer
 

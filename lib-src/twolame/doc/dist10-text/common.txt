@@ -69,7 +69,7 @@
  * 7/27/92 Mike Li               (re-)Port to MS-DOS                  *
  * 8/19/92 Soren H. Nielsen     Fixed bug in I_CRC_calc and in        *
  *                              II_CRC_calc.  Added function: new_ext *
- *                              for better MS-DOS compatability       *
+ *                              for better MS-DOS compatibility       *
  * 3/10/93 Kevin Peterson       changed aiff_read_headers to handle   *
  *                              chunks in any order.  now returns     *
  *                              position of sound data in file.       *

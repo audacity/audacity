@@ -63,7 +63,7 @@ Please feel free to join. See http://www.portaudio.com for details.
 
 Important Files and Folders:
     include/portaudio.h     = header file for PortAudio API. Specifies API.	
-    src/common/             = platform independant code, host independant 
+    src/common/             = platform independent code, host independent 
                               code for all implementations.
     src/os                  = os specific (but host api neutral) code
     src/hostapi             = implementations for different host apis

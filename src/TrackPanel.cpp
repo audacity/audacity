@@ -333,7 +333,7 @@ TrackPanel::~TrackPanel()
 void TrackPanel::UpdatePrefs()
 {
    // All vertical rulers must be recalculated since the minimum and maximum
-   // frequences may have been changed.
+   // frequencies may have been changed.
    UpdateVRulers();
 
    Refresh();

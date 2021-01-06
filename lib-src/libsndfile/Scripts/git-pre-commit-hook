@@ -55,7 +55,7 @@ if test -n "$cfiles" ; then
 	fi
 
 #-------------------------------------------------------------------------------
-# Check the copyright notice of all files to be commited.
+# Check the copyright notice of all files to be committed.
 
 user=`git config --global user.email`
 year=`date +"%Y"`

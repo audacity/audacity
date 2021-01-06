@@ -292,7 +292,7 @@ public:
    void Flush();
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
-   /// operation (but without putting the cutted audio to the clipboard)
+   /// operation (but without putting the cut audio to the clipboard)
    void Clear(double t0, double t1);
 
    /// Clear, and add cut line that starts at t0 and contains everything until t1.

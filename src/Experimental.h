@@ -103,7 +103,7 @@
 // but then the student didn't contribute after that.  It needs a bit of work to finish it off.
 // As a minimum, if this is turned on for a release,
 // it should have an easy mechanism to disable it at run-time, such as a menu item or a pref,
-// preferrably disabled until other work is done.  Martyn 22/12/2008.
+// preferably disabled until other work is done.  Martyn 22/12/2008.
 // 
 
 // JKC Apr 2015, Menu item to manage effects.
@@ -226,7 +226,7 @@
 
 // PRL 11 Jul 2017
 // Highlight more things in TrackPanel when the mouse moves over them,
-// using delibrately ugly pens and brushes until there is better cooperation
+// using deliberately ugly pens and brushes until there is better cooperation
 // with themes
 //#define EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
 

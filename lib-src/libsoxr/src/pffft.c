@@ -87,7 +87,7 @@
 
 
 /*
-   vector support macros: the rest of the code is independant of
+   vector support macros: the rest of the code is independent of
    SSE/Altivec/NEON -- adding support for other platforms with 4-element
    vectors should be limited to these macros
 */

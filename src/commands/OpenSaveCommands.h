@@ -17,7 +17,7 @@
 \brief Command for saving an Audacity project
 
 \class SaveCopyCommand
-\brief Command for saving a copy of currenty project
+\brief Command for saving a copy of currently project
 
 \class SaveLogCommand
 \brief Command for saving the log contents

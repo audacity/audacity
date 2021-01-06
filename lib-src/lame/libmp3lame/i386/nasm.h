@@ -206,7 +206,7 @@ _%1:
 %define	ge2(n)		(ge3(n) | ((((n) /  2)*0xFFFFFFFF) & 0xFFFFFFFF))
 %define	ge1(n)		(ge2(n) | ((((n) /  1)*0xFFFFFFFF) & 0xFFFFFFFF))
 
-; macro to align for begining of loop
+; macro to align for beginning of loop
 ; %1   does not align if it LE bytes to next alignment 
 ;      4..16 
 ;      default is 12

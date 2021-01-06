@@ -1417,7 +1417,7 @@ sf_seek	(SNDFILE *sndfile, sf_count_t offset, int whence)
 	** used with SEEK_SET.
 	*/
 	switch (whence)
-	{	/* The SEEK_SET behaviour is independant of mode. */
+	{	/* The SEEK_SET behaviour is independent of mode. */
 		case SEEK_SET :
 		case SEEK_SET | SFM_READ :
 		case SEEK_SET | SFM_WRITE :

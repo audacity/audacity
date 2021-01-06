@@ -4,7 +4,7 @@ SUBDIRS = libvorbis vorbisfile vorbisenc
 
 docdir = $(datadir)/doc/$(PACKAGE)-$(VERSION)
 
-### all of the static docs, commited to SVN and included as is
+### all of the static docs, committed to SVN and included as is
 static_docs = \
 	rfc5215.xml \
 	rfc5215.txt \
