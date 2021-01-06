@@ -1069,7 +1069,7 @@ void DrawTrackName(
    // Tracks more than kTranslucentHeight will have maximum translucency for shields.
    const int kOpaqueHeight = 44;
    const int kTranslucentHeight = 124;
-   int h = rect.GetHeight();
+   int h = TrackView::Get( *t ).GetHeight();
    // f codes the opacity as a number between 0.0 and 1.0
    float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
    // kOpaque is the shield's alpha for tracks that are not tall
