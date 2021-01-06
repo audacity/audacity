@@ -2102,6 +2102,12 @@ bool ProjectFileIO::SaveProject(
       // after we switch to the new file.
       if (!CopyTo(fileName, XO("Saving project"), false))
       {
+         ShowErrorDialog(
+            nullptr,
+            XO("Error Saving Project"),
+            FileException::WriteFailureMessage(fileName),
+            "Error:_Disk_full_or_not_writable"
+            );
          return false;
       }
 
@@ -2181,8 +2187,15 @@ bool ProjectFileIO::SaveProject(
    }
    else
    {
-      if ( !UpdateSaved( nullptr ) )
+      if ( !UpdateSaved( nullptr ) ) {
+         ShowErrorDialog(
+            nullptr,
+            XO("Error Saving Project"),
+            FileException::WriteFailureMessage(fileName),
+            "Error:_Disk_full_or_not_writable"
+            );
          return false;
+      }
    }
 
    // Reaching this point defines success and all the rest are no-fail
