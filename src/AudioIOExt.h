@@ -70,6 +70,7 @@ public:
    virtual void FillOtherBuffers(
       double rate, unsigned long pauseFrames, bool paused, bool hasSolo) = 0;
    virtual void StopOtherStream() = 0;
+   virtual void DestroyOtherStream() = 0;
 };
 
 #endif

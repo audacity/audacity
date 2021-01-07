@@ -505,16 +505,51 @@ static double SystemTime(bool usingAlsa)
    return util_GetTime() - streamStartTime;
 }
 
-bool MIDIPlay::mMidiStreamActive = false;
-bool MIDIPlay::mMidiOutputComplete = true;
+std::atomic<bool> MIDIPlay::mMidiStreamActive{ false };
+std::atomic<unsigned> MIDIPlay::mMidiOutputInProgress{ 0 };
+
+enum : unsigned { ConsumerBit = 1u, ProducerBit = 2u };
+
+void MIDIPlay::ForceShutdown(unsigned bit)
+{
+   // Must lock a mutex before notifying the associated condition variable.
+   // This may lock a mutex in the low-latency thread, which normally is
+   // undesirable, but this is shut-down of playback.  This may also be
+   // executed in the producer thread.
+   // May unblock the waiting main thread
+   std::unique_lock<std::mutex> lock{ mMidiOutputCompleteMutex };
+   auto oldValue = mMidiOutputInProgress.fetch_and(
+      ~bit, std::memory_order_relaxed);
+   if ((oldValue & bit))
+      // Kick the main thread on bit transition
+      mMidiOutputCompleteCV.notify_one();
+}
+
+bool MIDIPlay::Shutdown(unsigned bit)
+{
+   if (!mMidiStreamActive.load(std::memory_order_relaxed)) {
+      ForceShutdown(bit);
+      return true;
+   }
+   else
+      return false;
+}
 
 void MIDIPlay::Producer(std::pair<double, double>, size_t)
 {
+   // If we get the shut-down signal from the main thread, don't produce more,
+   // so it it safe for the main thread to destroy the MIDI queue
+   if (Shutdown(ProducerBit))
+      return;
 }
 
 void MIDIPlay::Consumer(
    size_t, double, unsigned long, bool)
 {
+   // If we get the shut-down signal from the main thread, don't send more
+   // events to Portmidi
+   if (Shutdown(ConsumerBit))
+      return;
 }
 
 void MIDIPlay::Prime(double newTrackTime)
@@ -737,10 +772,11 @@ bool MIDIPlay::StartPortMidiStream(double rate)
                                 this, // supplies pInfo argument to MidiTime
                                 MIDI_MINIMAL_LATENCY_MS);
    if (mLastPmError == pmNoError) {
-      mMidiStreamActive = true;
+      mMidiStreamActive.store(true, std::memory_order_relaxed);
       mMidiPaused = false;
       mMidiLoopPasses = 0;
-      mMidiOutputComplete = false;
+      mMidiOutputInProgress.store(
+         ProducerBit | ConsumerBit, std::memory_order_relaxed);
       mMaxMidiTimestamp = 0;
       PrepareMidiIterator(true, mPlaybackSchedule.mT0, 0);
 
@@ -754,15 +790,40 @@ bool MIDIPlay::StartPortMidiStream(double rate)
 
 void MIDIPlay::StopOtherStream()
 {
-   if (mMidiStream && mMidiStreamActive) {
+   // Main thread
+   if (mMidiStream && mMidiStreamActive.load(std::memory_order_relaxed)) {
       /* Stop Midi playback */
-      mMidiStreamActive = false;
+      mMidiStreamActive.store(false, std::memory_order_relaxed);
 
-      mMidiOutputComplete = true;
+      // Detect consumer shut-down
+      {
+         std::unique_lock<std::mutex> lock{ mMidiOutputCompleteMutex };
+         mMidiOutputCompleteCV.wait(lock, []{
+            return !(mMidiOutputInProgress.load(std::memory_order_relaxed)
+                     & ConsumerBit);
+         });
+      }
+
+      // Stop notes promptly now
+      AllNotesOff();
+   }
+}
+
+void MIDIPlay::DestroyOtherStream()
+{
+   if (mMidiStream) {
+      // Wait for producer shut-down
+      {
+         std::unique_lock<std::mutex> lock{ mMidiOutputCompleteMutex };
+         mMidiOutputCompleteCV.wait(lock, []{
+            return !(mMidiOutputInProgress.load(std::memory_order_relaxed)
+                     & ProducerBit);
+         });
+      }
+
+      /* Now it's safe to destroy the queue in AbortOtherStream() */
 
       // now we can assume "ownership" of the mMidiStream
-      // if output in progress, send all off, etc.
-      AllNotesOff();
       // AllNotesOff() should be sufficient to stop everything, but
       // in Linux, if you Pm_Close() immediately, it looks like
       // messages are dropped. ALSA then seems to send All Sound Off
@@ -788,7 +849,7 @@ void MIDIPlay::StopOtherStream()
       }
    }
 
-   mMidiPlaybackTracks.clear();
+   AbortOtherStream();
 }
 
 double Iterator::UncorrectedMidiEventTime(double pauseTime)
@@ -1212,13 +1273,21 @@ unsigned MIDIPlay::CountOtherSoloTracks() const
 
 void MIDIPlay::SignalOtherCompletion()
 {
-   mMidiOutputComplete = true;
+   // We're in the consumer's thread, and must stop because of exhaustion of
+   // the play region, not in response top events on the main thread.
+   ForceShutdown(ConsumerBit);
+   // Cause producer shutdown
+   mMidiStreamActive.store(false, std::memory_order_relaxed);
 }
 }
 
 bool MIDIPlay::IsActive()
 {
-   return ( mMidiStreamActive && !mMidiOutputComplete );
+   // Called by main thread but the answer is affected by other threads.
+   // Main thread timer event detects the transition to false and then finishes
+   // playback or recording.
+   return ( mMidiStreamActive.load(std::memory_order_relaxed) &&
+           mMidiOutputInProgress.load(std::memory_order_relaxed) );
 }
 
 bool MIDIPlay::IsOtherStreamActive() const
