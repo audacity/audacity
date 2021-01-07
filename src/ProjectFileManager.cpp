@@ -312,7 +312,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
             &window,
             XO("Error Saving Project"),
             XO("The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."),
-            "Error:_Unsuitable_drive#fat32"
+            "Error:_Unsuitable_drive"
             );
          return false;
       }
@@ -622,7 +622,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
                &window,
                XO("Error Saving Project"),
                XO("The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."),
-               "Error:_Unsuitable_drive#fat32"
+               "Error:_Unsuitable_drive"
                );
 
             if (project.mBatchMode)
