@@ -531,7 +531,6 @@ void ScreenshotCommand::CaptureEffects(
       "Label Sounds...",
       "Regular Interval Labels...",
       "Sample Data Export...",
-      "Silence Finder...",
 #endif
    } );
 }

@@ -7,7 +7,6 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 def_vars()
 
 list( APPEND SOURCES
-   SilenceMarker.ny
    SpectralEditMulti.ny
    SpectralEditParametricEQ.ny
    SpectralEditShelves.ny
