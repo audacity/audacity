@@ -1882,7 +1882,10 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    if (flags & EffectManager::kConfigured)
    {
       ProjectAudioManager::Get( project ).Stop();
-      SelectUtilities::SelectAllIfNone( project );
+      //Don't Select All if repeating Generator Effect
+      if (!(flags & EffectManager::kConfigured)) {
+         SelectUtilities::SelectAllIfNone(project);
+      }
    }
 
    auto nTracksOriginally = tracks.size();
@@ -1951,15 +1954,29 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
 
    if (!(flags & EffectManager::kDontRepeatLast))
    {
-      // Only remember a successful effect, don't remember insert,
-      // or analyze effects.
-      if (type == EffectTypeProcess) {
+      // Remember a successful generator, effect, analyzer, or tool Process
          auto shortDesc = em.GetCommandName(ID);
-         MenuManager::Get(project).mLastEffect = ID;
          /* i18n-hint: %s will be the name of the effect which will be
           * repeated if this menu item is chosen */
-         auto lastEffectDesc = XO("Repeat %s").Format( shortDesc );
-         commandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
+         auto lastEffectDesc = XO("Repeat %s").Format(shortDesc);
+         switch ( type ) {
+         case EffectTypeGenerate:
+            commandManager.Modify(wxT("RepeatLastGenerator"), lastEffectDesc);
+            MenuManager::Get(project).mLastGenerator = ID;
+            break;
+         case EffectTypeProcess:
+            commandManager.Modify(wxT("RepeatLastEffect"), lastEffectDesc);
+            MenuManager::Get(project).mLastEffect = ID;
+            break;
+         case EffectTypeAnalyze:
+            commandManager.Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
+            MenuManager::Get(project).mLastAnalyzer = ID;
+            break;
+         case EffectTypeTool:
+            commandManager.Modify(wxT("RepeatLastTool"), lastEffectDesc);
+            MenuManager::Get(project).mLastTool = ID;
+            MenuManager::Get(project).mLastToolIsMacro = false;
+            break;
       }
    }
 

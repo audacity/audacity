@@ -57,6 +57,8 @@ public:
       kSkipState  = 0x02,
       // Flag used to disable "Repeat Last Effect"
       kDontRepeatLast = 0x04,
+      // Flag used to disable "Select All during Repeat Generator Effect"
+      kRepeatGen = 0x08,
    };
 
    /** Get the singleton instance of the EffectManager. Probably not safe
