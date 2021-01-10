@@ -14,6 +14,7 @@
 #include "../ProjectSelectionManager.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
+#include "../UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
