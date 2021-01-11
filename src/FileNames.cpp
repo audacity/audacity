@@ -213,6 +213,21 @@ wxString FileNames::TempDir()
    if (gPrefs && path.empty())
       path =
          gPrefs->Read(PreferenceKey(Operation::Temp, PathType::_None), wxT(""));
+
+   if (IsOnFATFileSystem(path))
+   {
+      ShowErrorDialog(
+         nullptr,
+         XO("Unsuitable"),
+         XO("The temporary files direcotory is on a FAT formatted drive\n"
+            "Resetting to default location."),
+         "Error:_Unsuitable_drive"
+         );
+
+      path = DefaultTempDir();
+      UpdateDefaultPath(FileNames::Operation::Temp, path);
+   }
+
    return FileNames::MkDir(path);
 }
 
