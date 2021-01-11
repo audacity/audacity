@@ -1796,32 +1796,140 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
 #if defined(__UNIX__)
 
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/shm.h>
+
 // Return true if there are no other instances of Audacity running,
 // false otherwise.
-//
-// Use "dir" for creating lockfiles (on OS X and Unix).
 
 bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 {
-   wxUNIXaddress addr;
-   addr.Filename(dir + wxT("/.audacity.sock"));
-
    mIPCServ.reset();
 
-   // Try twice to either become the server or make a connection to one.  If
-   // both attempts fail, then there's something wrong that we can't deal with,
-   // like insufficient access to create the socket, no memory, etc.
-   for (int attempts = 0; attempts < 2; ++attempts)
+   bool isServer = false;
+   wxIPV4address addr;
+   addr.LocalHost();
+
+   struct sembuf op = {};
+
+   // Generate the IPC key we'll use for both shared memory and semaphores.
+   wxString datadir = FileNames::DataDir();
+   key_t memkey = ftok(datadir.c_str(), 0);
+   key_t servkey = ftok(datadir.c_str(), 1);
+   key_t lockkey = ftok(datadir.c_str(), 2);
+
+   // Create and map the shared memory segment where the port number
+   // will be stored.
+   int memid = shmget(memkey, sizeof(int), IPC_CREAT | S_IRUSR | S_IWUSR);
+   int *portnum = (int *) shmat(memid, nullptr, 0);
+
+   // Create (or return) the SERVER semaphore ID
+   int servid = semget(servkey, 1, IPC_CREAT | S_IRUSR | S_IWUSR);
+
+   // Create the LOCK semaphore only if it doens't already exist.
+   int lockid = semget(lockkey, 1, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
+
+   // If the LOCK semaphore was successfully created, then this is the first
+   // time Audacity has been run during this boot of the system. In this
+   // case we know we'll become the "server" application, so set up the
+   // semaphores to prepare for it.
+   if (lockid != -1)
    {
-      // Make sure only the current user has access to the socket after
-      // it's created.
-      wxUmaskChanger mask(077);
+      // Initialize value of each semaphore, 1 indicates released and 0
+      // indicates acquired.
+      //
+      // Note that this action is NOT recorded in the semaphore's
+      // UNDO buffer.
+      semctl(servid, 0, SETVAL, 1);
+      semctl(lockid, 0, SETVAL, 1);
+
+      // Now acquire them so the semaphores will be set to the
+      // released state when the process terminates.
+      op.sem_num = 0;
+      op.sem_op = -1;
+      op.sem_flg = SEM_UNDO;
+      if (semop(lockid, &op, 1) == -1 || semop(servid, &op, 1) == -1)
+      {
+         AudacityMessageBox(
+            XO("Unable to acquire semaphores.\n\n"
+               "This is likely due to a resource shortage\n"
+               "and a reboot may be required."),
+            XO("Audacity Startup Failure"),
+            wxOK | wxICON_ERROR);
+
+         return false;
+      }
+
+      // We will be the server...
+      isServer = true;
+   }
+   // Something catastrophic must have happened, so bail.
+   else if (errno != EEXIST)
+   {
+      AudacityMessageBox(
+         XO("Unable to create semaphores.\n\n"
+            "This is likely due to a resource shortage\n"
+            "and a reboot may be required."),
+         XO("Audacity Startup Failure"),
+         wxOK | wxICON_ERROR);
+
+      return false;
+   }
+   // Otherwise it's a normal startup and we need to determine whether
+   // we'll be the server or the client.
+   else
+   {
+      // Retrieve the LOCK semaphore since we wouldn't have gotten it above.
+      lockid = semget(lockkey, 1, 0);
+
+      // Acquire the LOCK semaphore. We may block here if another
+      // process is currently setting up the server.
+      op.sem_num = 0;
+      op.sem_op = -1;
+      op.sem_flg = SEM_UNDO;
+      if (semop(lockid, &op, 1) == -1)
+      {
+         AudacityMessageBox(
+            XO("Unable to acquire lock semaphore.\n\n"
+               "This is likely due to a resource shortage\n"
+               "and a reboot may be required."),
+            XO("Audacity Startup Failure"),
+            wxOK | wxICON_ERROR);
+
+         return false;
+      }
+
+      // Try to acquire the SERVER semaphore. If it's not currently active, then
+      // we will become the server. Otherwise, this will fail and we'll know that
+      // the server is already active and we will become the client.
+      op.sem_num = 0;
+      op.sem_op = -1;
+      op.sem_flg = IPC_NOWAIT | SEM_UNDO;
+      if (semop(servid, &op, 1) == 0)
+      {
+         isServer = true;
+      }
+      else if (errno != EAGAIN)
+      {
+         AudacityMessageBox(
+            XO("Unable to acquire server semaphore.\n\n"
+               "This is likely due to a resource shortage\n"
+               "and a reboot may be required."),
+            XO("Audacity Startup Failure"),
+            wxOK | wxICON_ERROR);
+
+         return false;
+      }
+   }
+
+   // Initialize the socket server if we're to be the server.
+   if (isServer)
+   {
+      // The system will randomly assign a port
+      addr.Service(0);
 
       // Create the socket and bind to it.
-      //
-      // Here is where the actual socket inode is created.  If it
-      // already exists and is currently bound or abandoned, this will
-      // fail. Otherwise, we have become the server.
       auto serv = std::make_unique<wxSocketServer>(addr, wxSOCKET_NOWAIT);
       if (serv && serv->IsOk())
       {
@@ -1829,115 +1937,118 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          serv->SetNotify(wxSOCKET_CONNECTION_FLAG);
          serv->Notify(true);
          mIPCServ = std::move(serv);
-         return true;
+
+         // Save the port number in shared memory so that clients
+         // know where to connect.
+         mIPCServ->GetLocal(addr);
+         *portnum = addr.Service();
       }
 
-      // If we get here, then Audacity is currently active or it has
-      // failed, leaving the socket inode defined in the filesystem.
-      //
-      // So, we try to connect to it and if that is successful, we
-      // forward all filenames listed on the command line to the
-      // active process.
-      //
-      // If we can't connect after several attempts, we assume we've
-      // had a failure, cleanup the socket inode, and loop back up to
-      // retry creating a server.
+      // Now that the server is active, we release the LOCK semaphore
+      // to allow any waiters to continue. The SERVER semaphore will
+      // remain locked for the duration of this processes execution
+      // and will be cleaned up by the system.
+      op.sem_num = 0;
+      op.sem_op = 1;
+      semop(lockid, &op, 1);
 
-      // Setup the socket
-      //
-      // A wxSocketClient must not be deleted by us, but rather, let the
-      // framework do appropriate delayed deletion after Destroy()
-      Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
-      sock->SetFlags(wxSOCKET_WAITALL);
-
-      // We try up to 20 times since there's a small window
-      // where the server may not have been fully initialized.
-      for (int i = 0; i < 20; ++i)
+      // Bail if the server creation failed.
+      if (mIPCServ == nullptr)
       {
-         // Attempt to connect to an active Audacity.
-         sock->Connect(addr, true);
-         if (sock->IsConnected())
-         {
-            // Parse the command line to ensure correct syntax, but ignore
-            // options other than -v, and only use the filenames, if any.
-            auto parser = ParseCommandLine();
-            if (!parser)
-            {
-               // Complaints have already been made
-               return false;
-            }
+         AudacityMessageBox(
+            XO("The Audacity IPC server failed to initialize.\n\n"
+               "This is likely due to a resource shortage\n"
+               "and a reboot may be required."),
+            XO("Audacity Startup Failure"),
+            wxOK | wxICON_ERROR);
 
-            if (parser->Found(wxT("v")))
-            {
-               wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
-               return false;
-            }
+         return false;
+      }
 
-#ifdef __WXMAC__
-            // On Mac the client gets events from the wxWidgets framework that
-            // go to AudacityApp::MacOpenFile.  It is not the command line that
-            // communicates to us the files to be opened.
-            // Forward the file names to the prior instance via the socket.
-            for (const auto &filename: ofqueue) {
-               auto str = filename.c_str().AsWChar();
-               sock->WriteMsg(
-                  str, (filename.length() + 1) * sizeof(*str));
-            }
-#else
-            // Windows and Linux require absolute file names as command may
-            // not come from current working directory.
-            for (size_t j = 0, cnt = parser->GetParamCount(); j < cnt; ++j)
-            {
-               wxFileName filename(parser->GetParam(j));
-               if (filename.MakeAbsolute())
-               {
-                  const wxString param = filename.GetLongPath();
-                  sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
-               }
-            }
+      // We've successfully created the socket server and the app
+      // should continue to initialize.
+      return true;
+   }
+
+   // Retrieve the port number that the server is listening on.
+   addr.Service(*portnum);
+
+   // Now release the LOCK semaphore.
+   op.sem_num = 0;
+   op.sem_op = 1;
+   semop(lockid, &op, 1);
+
+   // If we get here, then Audacity is currently active. So, we connect
+   // to it and we forward all filenames listed on the command line to
+   // the active process.
+
+   // Setup the socket
+   //
+   // A wxSocketClient must not be deleted by us, but rather, let the
+   // framework do appropriate delayed deletion after Destroy()
+   Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
+   sock->SetFlags(wxSOCKET_WAITALL);
+
+   // Attempt to connect to an active Audacity.
+   sock->Connect(addr, true);
+   if (!sock->IsConnected())
+   {
+      // All attempts to become the server or connect to one have failed.  Not
+      // sure what we can say about the error, but it's probably not because
+      // Audacity is already running.
+      AudacityMessageBox(
+         XO("An unrecoverable error has occurred during startup"),
+         XO("Audacity Startup Failure"),
+         wxOK | wxICON_ERROR);
+
+      return false;
+   }
+
+   // Parse the command line to ensure correct syntax, but ignore
+   // options other than -v, and only use the filenames, if any.
+   auto parser = ParseCommandLine();
+   if (!parser)
+   {
+      // Complaints have already been made
+      return false;
+   }
+
+   // Display Audacity's version if requested
+   if (parser->Found(wxT("v")))
+   {
+      wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
+
+      return false;
+   }
+
+#if defined(__WXMAC__)
+   // On macOS the client gets events from the wxWidgets framework that
+   // go to AudacityApp::MacOpenFile. Forward the file names to the prior
+   // instance via the socket.
+   for (const auto &filename: ofqueue)
+   {
+      auto str = filename.c_str().AsWChar();
+      sock->WriteMsg(str, (filename.length() + 1) * sizeof(*str));
+   }
 #endif
 
-            // Send an empty string to force existing Audacity to front
-            sock->WriteMsg(wxEmptyString, sizeof(wxChar));
-
-            return sock->Error();
-         }
-
-         wxMilliSleep(100);
-
-         if (i == 0)
-         {
-            printf("Attempting to connect to Audacity failed...retrying\n");
-         }
-      }
-
-      // At this point, we've exhausted our connections attempts. So, we assume
-      // that we've had a failure and clean up any existing socket inodes.
-      //
-      // We could use POSIX shared memory to store the servers PID and check that
-      // here to see if it's still active using kill(pid, 0), but I "think" it's
-      // a pretty safe bet that it's not.
-
-      // Clean up the socket it if still exists.
-      wxFileName file(addr.Filename());
-      if (file.Exists())
+   // On macOS and Linux, forward any file names found in the command
+   // line arguments.
+   for (size_t j = 0, cnt = parser->GetParamCount(); j < cnt; ++j)
+   {
+      wxFileName filename(parser->GetParam(j));
+      if (filename.MakeAbsolute())
       {
-         // Reset the sockets permissions in case they got munged somehow.
-         file.SetPermissions( wxS_DEFAULT );
-
-         // And remove it
-         wxRemove(file.GetFullPath());
+         const wxString param = filename.GetLongPath();
+         sock->WriteMsg((const wxChar *) param, (param.length() + 1) * sizeof(wxChar));
       }
    }
 
-   // All attempts to become the server or connect to one have failed.  Not
-   // sure what we can say about the error, but it's probably not because
-   // Audacity is already running.
-   AudacityMessageBox(
-      XO("An unrecoverable error has occurred during startup"),
-      XO("Audacity Startup Failure"),
-      wxOK | wxICON_ERROR);
+   // Send an empty string to force existing Audacity to front
+   sock->WriteMsg(wxEmptyString, sizeof(wxChar));
 
+   // We've forwarded all of the filenames, so let the caller know
+   // to terminate.
    return false;
 }
 
@@ -2089,17 +2200,6 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
-
-   if (mIPCServ)
-   {
-#if defined(__UNIX__)
-      wxUNIXaddress addr;
-      if (mIPCServ->GetLocal(addr))
-      {
-         remove(OSFILENAME(addr.Filename()));
-      }
-#endif
-   }
 
    return 0;
 }
