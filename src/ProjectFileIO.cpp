@@ -326,11 +326,6 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       }
    }
 
-   if (FileNames::FATFilesystemDenied(fileName, XO("Project resides on FAT formatted drive.")))
-   {
-      return false;
-   }
-
    // Pass weak_ptr to project into DBConnection constructor
    curConn = std::make_unique<DBConnection>(
       mProject.shared_from_this(), mpErrors, [this]{ OnCheckpointFailure(); } );

@@ -858,6 +858,13 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    auto fileName = PlatformCompatibility::ConvertSlashInFileName(
       PlatformCompatibility::GetLongFileName(fileNameArg));
 
+   if (FileNames::FATFilesystemDenied(fileName,
+                                      XO("Project resides on FAT formatted drive.\n"
+                                         "Copy it to another drive to open it.")))
+   {
+      return;
+   }
+
    // Make sure it isn't already open.
    // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles()
    //    and AudacityApp::MRUOpen(), but if you open an aup file by double-clicking it
