@@ -292,6 +292,25 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
             }
          }
       }
+
+      wxULongLong fileSize = wxFileName::GetSize(projectFileIO.GetFileName());
+
+      wxDiskspaceSize_t freeSpace;
+      if (wxGetDiskSpace(FileNames::AbbreviatePath(fileName), NULL, &freeSpace))
+      {
+         if (freeSpace.GetValue() <= fileSize.GetValue())
+         {
+            ShowErrorDialog(
+               &window,
+               XO("Insufficient Disk Space"),
+               XO("The project size exceeds the available free space on the target disk.\n\n"
+                  "Please select a different disk with more free space."),
+               "Error:_Disk_full_or_not_writable"
+               );
+
+            return false;
+         }
+      }
    }
    // End of confirmations
 
@@ -614,9 +633,28 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
          continue;
       }
 
+      wxULongLong fileSize = wxFileName::GetSize(projectFileIO.GetFileName());
+
+      wxDiskspaceSize_t freeSpace;
+      if (wxGetDiskSpace(FileNames::AbbreviatePath(filename.GetFullPath()), NULL, &freeSpace))
+      {
+         if (freeSpace.GetValue() <= fileSize.GetValue())
+         {
+            ShowErrorDialog(
+               &window,
+               XO("Insufficient Disk Space"),
+               XO("The project size exceeds the available free space on the target disk.\n\n"
+                  "Please select a different disk with more free space."),
+               "Error:_Unsuitable_drive"
+               );
+
+            continue;
+         }
+      }
+
       if (FileNames::IsOnFATFileSystem(filename.GetFullPath()))
       {
-         if (wxFileName::GetSize(projectFileIO.GetFileName()) > UINT32_MAX)
+         if (fileSize > UINT32_MAX)
          {
             ShowErrorDialog(
                &window,
