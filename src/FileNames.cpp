@@ -662,6 +662,14 @@ bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
    wxFileName cmpFile( Name );
    wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
 #endif
+
+   if (FileNames::FATFilesystemDenied(NameCanonical,
+                                      XO("The temporary files direcotory is on a FAT formatted drive.\n"
+                                         "Resetting to default location.")))
+   {
+      return false;
+   }
+
    return !(NameCanonical.StartsWith( BadPath ));
 }
 
