@@ -752,6 +752,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
             destConn = nullptr;
          }
 
+         // Rollback transaction in case one was active.
+         sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+
+         // And detach the outbound DB in case it's attached.
          sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
          // RemoveProject not necessary to clean up attached database
@@ -1011,8 +1015,33 @@ FilePath ProjectFileIO::SafetyFileName(const FilePath &src)
 
 bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
 {
-   if ( !wxRenameFile(src, dst) ) {
-      auto &window = GetProjectFrame( mProject );
+   std::atomic_bool done = {false};
+   bool success = false;
+   auto thread = std::thread([&]
+   {
+      success = wxRenameFile(src, dst);
+      done = true;
+   });
+
+   auto &window = GetProjectFrame( mProject );
+
+   // Provides a progress dialog with indeterminate mode
+   wxGenericProgressDialog pd(XO("Copying Project").Translation(),
+                              XO("This may take several seconds").Translation(),
+                              300000,     // range
+                              &window,     // parent
+                              wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+
+   // Wait for the checkpoints to end
+   while (!done)
+   {
+      wxMilliSleep(50);
+      pd.Pulse();
+   }
+   thread.join();
+
+   if (!success)
+   {
       ShowErrorDialog(
          &window,
          XO("Error Writing to File"),
@@ -1024,6 +1053,7 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
          );
       return false;
    }
+
    return true;
 }
 
