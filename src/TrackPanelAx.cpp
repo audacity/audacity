@@ -156,7 +156,7 @@ bool TrackPanelAx::IsFocused( const Track *track )
    if( !focusedTrack )
       focusedTrack = SetFocus();
 
-   // Remap track pointer if there are oustanding pending updates
+   // Remap track pointer if there are outstanding pending updates
    auto origTrack =
       GetTracks().FindById( track->GetId() );
    if (origTrack)

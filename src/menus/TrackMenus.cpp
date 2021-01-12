@@ -962,7 +962,7 @@ void OnScoreAlign(const CommandContext &context)
    }
 
    // Creating the dialog also stores dialog into gScoreAlignDialog so
-   // that it can be delted by CloseScoreAlignDialog() either here or
+   // that it can be deleted by CloseScoreAlignDialog() either here or
    // if the program is quit by the user while the dialog is up.
    ScoreAlignParams params;
 

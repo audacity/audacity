@@ -66,7 +66,7 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") real "" 30 1 100
 (setf *radar-table* (list *radar-table* (hz-to-step radar-f) T))
 
 ;; increase the volume of the audacity track in the middle of the slider
-;; the sqrt trick is something like an artifical db scaling
+;; the sqrt trick is something like an artificial db scaling
 (setf track-vol (sqrt (/ track-vl 100.0)))
 ;; decrease the volume of the white noise in the middle of the slider
 ;; the expt trick is an inverse db scaling

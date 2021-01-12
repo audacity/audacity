@@ -92,7 +92,7 @@ def tagextract(doc):
      >>> tagextract('<!DOCTYPE html PUBLIC etc...>')
      [('!DOCTYPE html PUBLIC etc...', {})]
 
-    Greater-than and less-than characters occuring inside comments or
+    Greater-than and less-than characters occurring inside comments or
     CDATA blocks are correctly kept as part of the block:
 
      >>> tagextract('<!-- <><><><>>..> -->')

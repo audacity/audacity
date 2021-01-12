@@ -1181,7 +1181,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       //
       // - If multiple clips should be pasted, or a single clip that does not fill
       // the duration of the pasted track, these are always pasted as single
-      // clips, and the current clip is splitted, when necessary. This may seem
+      // clips, and the current clip is split, when necessary. This may seem
       // strange at first, but it probably is better than trying to auto-merge
       // anything. The user can still merge the clips by hand (which should be a
       // simple command reachable by a hotkey or single mouse click).

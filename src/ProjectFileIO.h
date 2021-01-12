@@ -119,7 +119,7 @@ public:
    const TranslatableString &GetLibraryError();
 
    // Provides a means to bypass "DELETE"s at shutdown if the database
-   // is just going to be deleted anyway.  This prevents a noticable
+   // is just going to be deleted anyway.  This prevents a noticeable
    // delay caused by SampleBlocks being deleted when the Sequences that
    // own them are deleted.
    //
@@ -184,7 +184,7 @@ public:
    // 0 for success or non-zero to stop the query
    using ExecCB = std::function<int(int cols, char **vals, char **names)>;
 
-   //! Return true if a connetion is now open
+   //! Return true if a connection is now open
    bool HasConnection() const;
 
    //! Return a reference to a connection, creating it as needed on demand; throw on failure

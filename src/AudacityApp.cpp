@@ -1231,7 +1231,7 @@ bool AudacityApp::OnInit()
 
    FileNames::SetAudacityPathList( std::move( audacityPathList ) );
 
-   // Define languanges for which we have translations, but that are not yet
+   // Define languages for which we have translations, but that are not yet
    // supported by wxWidgets.
    //
    // TODO:  The whole Language initialization really need to be reworked.

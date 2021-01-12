@@ -15,7 +15,7 @@ execute_process(
 )
 
 if( output )
-#   message( FATAL_ERROR "You have uncommited changes\n${output}" )
+#   message( FATAL_ERROR "You have uncommitted changes\n${output}" )
 endif()
 
 # Get the list of files in the repo

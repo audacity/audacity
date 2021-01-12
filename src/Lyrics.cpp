@@ -554,7 +554,7 @@ void LyricsPanel::DoPaint(wxDC &dc)
 
       #ifdef __WXMAC__
          // Mac OS X automatically double-buffers the screen for you,
-         // so our bitmap is unneccessary
+         // so our bitmap is unnecessary
          HandlePaint(dc);
       #else
          wxBitmap bitmap(mWidth, mKaraokeHeight);

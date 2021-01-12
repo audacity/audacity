@@ -308,7 +308,7 @@ void ModuleManager::Initialize(CommandHandler &cmdHandler)
             XO("Try and load this module?"), 
             false);
 #ifdef EXPERIMENTAL_MODULE_PREFS
-         // If we're not prompting always, accept the answer permanantly
+         // If we're not prompting always, accept the answer permanently
          if( iModuleStatus == kModuleNew ){
             iModuleStatus = (action==1)?kModuleDisabled : kModuleEnabled;
             ModulePrefs::SetModuleStatus( files[i], iModuleStatus );

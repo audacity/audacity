@@ -1006,7 +1006,7 @@ def run(out=sys.stdout):
         complete.add(nurl)
         filename = url_to_filename(url)
 
-        #this is needed for the first path as it doesn't know if it is a redirect or not in the begining
+        #this is needed for the first path as it doesn't know if it is a redirect or not in the beginning
         #at this point all the content of redir_cache is relative to the start path
         if start:
             start = False

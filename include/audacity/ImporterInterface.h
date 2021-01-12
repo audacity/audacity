@@ -119,7 +119,7 @@ class ImporterClientInterface
 public:
    virtual ~ImporterClientInterface() {};
 
-   // Provides a pointer to the assocated host for this importer.
+   // Provides a pointer to the associated host for this importer.
    virtual void SetHost(ImporterHostInterface *host) = 0;
 
    // Open the given file, returning true if it is a recognized

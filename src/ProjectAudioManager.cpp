@@ -884,7 +884,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          // Add to history
          // We want this to have No-fail-guarantee if we get here from exception
          // handling of recording, and that means we rely on the last autosave
-         // successully committed to the database, not risking a failure
+         // successfully committed to the database, not risking a failure
          history.PushState(XO("Recorded Audio"), XO("Record"),
             UndoPush::NOAUTOSAVE);
 

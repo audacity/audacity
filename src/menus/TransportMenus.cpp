@@ -389,7 +389,7 @@ void OnTimerRecord(const CommandContext &context)
       return;
    }
 
-   // We check the selected tracks to see if there is enough of them to accomodate
+   // We check the selected tracks to see if there is enough of them to accommodate
    // all input channels and all of them have the same sampling rate.
    // Those checks will be later performed by recording function anyway,
    // but we want to warn the user about potential problems from the very start.
@@ -572,7 +572,7 @@ void OnPunchAndRoll(const CommandContext &context)
          error = true;
       else {
          // May adjust t1 left
-         // Let's ignore the possibilty of a clip even shorter than the
+         // Let's ignore the possibility of a clip even shorter than the
          // crossfade duration!
          newt1 = std::min(newt1, clip->GetEndTime() - crossFadeDuration);
       }
