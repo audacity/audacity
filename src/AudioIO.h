@@ -487,6 +487,8 @@ public:
    volatile bool       mAudioThreadFillBuffersLoopRunning;
    volatile bool       mAudioThreadFillBuffersLoopActive;
 
+   std::atomic<bool>   mForceFadeOut{ false };
+
    wxLongLong          mLastPlaybackTimeMillis;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
