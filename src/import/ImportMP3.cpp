@@ -332,7 +332,7 @@ bool MP3ImportFileHandle::Open()
       return false;
    }
 
-   // Get the legnth of the file
+   // Get the length of the file
    mFileLen = mFile.Seek(0, wxFromEnd);
    if (mFileLen == wxInvalidOffset || mFile.Error())
    {

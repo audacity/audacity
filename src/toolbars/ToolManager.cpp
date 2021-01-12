@@ -214,7 +214,7 @@ void ToolFrame::OnMotion( wxMouseEvent & event )
 
       rect.SetBottomRight( pos );
 
-      // Keep it within max size, if specificed
+      // Keep it within max size, if specified
       wxSize maxsz = mBar->GetMaxSize();
       if (maxsz != wxDefaultSize)
       {

@@ -266,7 +266,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    // Below is the lambda function that is passed along the call chain to
    // the Sequence::ConvertToSampleFormat. This callback function is used
-   // to report the convertion progress and update the progress dialog.
+   // to report the conversion progress and update the progress dialog.
    auto progressUpdate = [&progress, &totalSamples, &processedSamples]
    (size_t newlyProcessedCount)->void
    {

@@ -242,7 +242,7 @@ public:
 /*
 The following macros make it easy to attach a popup menu to a window.
 
-Exmple of usage:
+Example of usage:
 
 In class MyTable (maybe in the private section),
 which inherits from PopupMenuTable,

@@ -3050,7 +3050,7 @@ void AudioIO::FillBuffers()
                   || newBlocks;
             } // end loop over capture channels
 
-            // Now update the recording shedule position
+            // Now update the recording schedule position
             mRecordingSchedule.mPosition += avail / mRate;
             mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 

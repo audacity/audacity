@@ -995,7 +995,7 @@ KeyView::RefreshLines(bool bSort)
             node.line = linecnt++;
             mLines.push_back(&node);
 
-            // If this node is not open, then skip all of its decendants
+            // If this node is not open, then skip all of its descendants
             if (!node.isopen)
             {
                bool iscat = node.iscat;

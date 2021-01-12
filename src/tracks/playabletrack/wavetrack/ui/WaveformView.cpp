@@ -792,7 +792,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
 
    // TODO Add a comment to say what this loop does.
-   // Possily make it into a subroutine.
+   // Possibly make it into a subroutine.
    for (unsigned ii = 0; ii < nPortions; ++ii) {
       WavePortion &portion = portions[ii];
       const bool showIndividualSamples = portion.averageZoom > threshold1;

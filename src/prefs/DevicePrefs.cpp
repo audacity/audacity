@@ -262,7 +262,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
          device   = MakeDeviceSourceString(&inMaps[i]);
          devindex = mRecord->Append(device);
          // We need to const cast here because SetClientData is a wx function
-         // It is okay beause the original variable is non-const.
+         // It is okay because the original variable is non-const.
          mRecord->SetClientData(devindex, const_cast<DeviceSourceMap *>(&inMaps[i]));
          if (device == recDevice) {  /* if this is the default device, select it */
             mRecord->SetSelection(devindex);

@@ -550,7 +550,7 @@ size_t RealtimeEffectState::RealtimeProcess(int group,
          // All input channels have been consumed
          ichans = 0;
       }
-      // Otherwise fullfil the client's needs with as many input channels as possible.
+      // Otherwise fulfill the client's needs with as many input channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
       else if (ichans >= numAudioIn)
@@ -582,7 +582,7 @@ size_t RealtimeEffectState::RealtimeProcess(int group,
          // All output channels have been consumed
          ochans = 0;
       }
-      // Otherwise fullfil the client's needs with as many output channels as possible.
+      // Otherwise fulfill the client's needs with as many output channels as possible.
       // After calling the client with this set, we will loop back up to process more
       // of the input/output channels.
       else if (ochans >= numAudioOut)

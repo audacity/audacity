@@ -1134,7 +1134,7 @@ bool Effect::SetAutomationParameters(const wxString & parms)
       Effect::MessageBox(
          XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
             .Format( GetName(), preset ) );
-      // We are using defualt settings and we still wish to continue.
+      // We are using default settings and we still wish to continue.
       return true;
       //return false;
    }

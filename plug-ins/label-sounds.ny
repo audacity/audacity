@@ -206,7 +206,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
             (setf end-time (first (nth (1- i) snd-list)))
             ;don't overlap next sound
             (setf label-start (min end-time (+ start-time pre-offset)))
-            ;dont't overlap previous sound
+            ;don't overlap previous sound
             (setf label-end (max start-time (- end-time post-offset)))
             ;ensure end is not before start
             (when (< (- label-end label-start) 0)

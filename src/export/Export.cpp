@@ -830,7 +830,7 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    // Clean up ... should never happen
    mMixerSpec.reset();
 
-   // Detemine if exported file will be stereo or mono or multichannel,
+   // Determine if exported file will be stereo or mono or multichannel,
    // and if mixing will occur.
 
    auto downMix = ImportExportPrefs::ExportDownMixSetting.ReadEnum();
@@ -923,7 +923,7 @@ bool Exporter::ExportTracks()
             ::wxRemoveFile(mActualName.GetFullPath());
             ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
          }
-         // Restore filname
+         // Restore filename
          mFilename = mActualName;
       }
       else {
@@ -1290,7 +1290,7 @@ double ExportMixerPanel::Distance( wxPoint &a, wxPoint &b )
    return sqrt( pow( a.x - b.x, 2.0 ) + pow( a.y - b.y, 2.0 ) );
 }
 
-//checks if p is on the line connecting la, lb with tolerence
+//checks if p is on the line connecting la, lb with tolerance
 bool ExportMixerPanel::IsOnLine( wxPoint p, wxPoint la, wxPoint lb )
 {
    return Distance( p, la ) + Distance( p, lb ) - Distance( la, lb ) < 0.1;

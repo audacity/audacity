@@ -93,7 +93,7 @@ void ShowDiagnostics(
  * This class originated with the 'Stuck in a mode' problem, where far too many
  * users get into a mode without realising, and don't know how to get out.
  * It is a band-aid, and we should do more towards a full and proper solution
- * where there are fewer special modes, and they don't persisit.
+ * where there are fewer special modes, and they don't persist.
  */
 class QuickFixDialog : public wxDialogWrapper
 {
