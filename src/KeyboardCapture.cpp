@@ -112,7 +112,7 @@ public:
    :  wxEventFilter()
    {
 #if defined(__WXMAC__)
-      // In wx3, the menu accelerators take precendence over key event processing
+      // In wx3, the menu accelerators take precedence over key event processing
       // so we won't get wxEVT_CHAR_HOOK events for combinations assigned to menus.
       // Since we only support OS X 10.6 or greater, we can use an event monitor
       // to capture the key event before it gets to the normal wx3 processing.

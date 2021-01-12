@@ -1139,7 +1139,7 @@ wxString ExportMultipleDialog::MakeFileName(const wxString &input)
       // build the dialog
       TranslatableString msg;
       wxString excluded = ::wxJoin( Internat::GetExcludedCharacters(), wxChar(' ') );
-      // TODO: For Russian langauge we should have separate cases for 2 and more than 2 letters.
+      // TODO: For Russian language we should have separate cases for 2 and more than 2 letters.
       if( excluded.length() > 1 ){
          msg = XO(
 // i18n-hint: The second %s gives some letters that can't be used.

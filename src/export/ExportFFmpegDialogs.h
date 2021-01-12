@@ -63,7 +63,7 @@ struct ExposedFormat
 /// Describes format-codec compatibility
 struct CompatibilityEntry
 {
-   const wxChar *fmt; //!< format, recognizeable by guess_format()
+   const wxChar *fmt; //!< format, recognizable by guess_format()
    AVCodecID codec;   //!< codec ID
 };
 

@@ -74,7 +74,7 @@ enum FieldTypes
 // Static so that the dict can be reused each time.
 //
 // If entries get added later, like when an envelope node (for example)
-// is writen and then the envelope is later removed, the dict will still
+// is written and then the envelope is later removed, the dict will still
 // contain the envelope name, but that's not a problem.
 
 NameMap ProjectSerializer::mNames;

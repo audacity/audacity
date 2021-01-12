@@ -235,7 +235,7 @@ void ToolBarResizer::OnMotion( wxMouseEvent & event )
       // Adjust the size based on updated mouse position.
       r.width = ( pos.x - mResizeOffset.x ) - r.x;
 
-      // Keep it within max size, if specificed
+      // Keep it within max size, if specified
       if( maxsz != wxDefaultSize )
       {
          if( r.width > maxsz.x )

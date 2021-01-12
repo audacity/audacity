@@ -160,7 +160,7 @@ typedef ModuleInterface *(*ModuleMain)(const wxString *path);
 static ModuleInterface * name(const wxString *path)
 
 // ----------------------------------------------------------------------------
-// This will create a class and instnace that will register the module entry
+// This will create a class and instance that will register the module entry
 // point during Audacity startup.  At the appropriate time, the entry point
 // will be called to create the module instance.
 // ----------------------------------------------------------------------------

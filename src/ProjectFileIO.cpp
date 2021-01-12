@@ -1591,7 +1591,7 @@ bool ProjectFileIO::WriteDoc(const char *table,
    int rc;
 
    // For now, we always use an ID of 1. This will replace the previously
-   // writen row every time.
+   // written row every time.
    char sql[256];
    sqlite3_snprintf(sizeof(sql),
                     sql,

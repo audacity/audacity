@@ -552,7 +552,7 @@ int FileDialog::ShowModal()
         // makes things more convenient:
         [sPanel setCanCreateDirectories:YES];
         [sPanel setMessage:cf.AsNSString()];
-        // if we should be able to descend into pacakges we must somehow
+        // if we should be able to descend into packages we must somehow
         // be able to pass this in
         [sPanel setTreatsFilePackagesAsDirectories:NO];
         [sPanel setCanSelectHiddenExtension:YES];

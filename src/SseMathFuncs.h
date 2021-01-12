@@ -302,7 +302,7 @@ v4sf exp_ps(v4sf x) {
   emm0 = _mm_cvttps_epi32(fx);
   tmp  = _mm_cvtepi32_ps(emm0);
 #endif
-  /* if greater, substract 1 */
+  /* if greater, subtract 1 */
   v4sf mask = _mm_cmpgt_ps(tmp, fx);    
   mask = _mm_and_ps(mask, one);
   fx = _mm_sub_ps(tmp, mask);

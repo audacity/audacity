@@ -1827,7 +1827,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    // Create (or return) the SERVER semaphore ID
    int servid = semget(servkey, 1, IPC_CREAT | S_IRUSR | S_IWUSR);
 
-   // Create the LOCK semaphore only if it doens't already exist.
+   // Create the LOCK semaphore only if it doesn't already exist.
    int lockid = semget(lockkey, 1, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
 
    // If the LOCK semaphore was successfully created, then this is the first

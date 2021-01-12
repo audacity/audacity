@@ -64,7 +64,7 @@ Notice that the zoom guidelines, the focused track highlight,
 and snap guidelines could be drawn directly to the screen rather than to
 the bitmap, generally eliminating redraw work.
 
-One problem is slider udpates. Sliders are in the left area of the track
+One problem is slider updates. Sliders are in the left area of the track
 panel. They are not wxWindows like wxSliders, but instead are just drawn
 on the TrackPanel. When slider state changes, *all* tracks do a full
 refresh, including recomputing the backing store. It would make more sense

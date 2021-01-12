@@ -30,7 +30,7 @@ class XMLValueChecker
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.
    // These are used in HandleXMLTag and BuildFomXML methods to check the input for
-   // security vulnerabilites, per the NGS report for UmixIt.
+   // security vulnerabilities, per the NGS report for UmixIt.
    static bool IsGoodString(const wxString & str);
    // Labels are allowed to be very long.  At some future date we will format long labels nicely.
    static bool IsGoodLongString(const wxString & str);
@@ -48,7 +48,7 @@ public:
 	* duplicate that testing, so use wxString::ToLong after IsGoodInt, not just
 	* atoi.
 	* @param strInt The string to test
-	* @return true if the string is convertable, false if not
+	* @return true if the string is convertible, false if not
 	*/
    static bool IsGoodInt(const wxString & strInt);
    /** @brief Check that the supplied string can be converted to a 64bit
@@ -58,7 +58,7 @@ public:
 	* doesn't duplicate that testing, so use wxString::ToLongLong after IsGoodInt64
 	* not just atoll.
 	* @param strInt The string to test
-	* @return true if the string is convertable, false if not
+	* @return true if the string is convertible, false if not
 	*/
    static bool IsGoodInt64(const wxString & strInt);
    static bool IsGoodIntForRange(const wxString & strInt, const wxString & strMAXABS);
@@ -108,7 +108,7 @@ class AUDACITY_DLL_API XMLTagHandler /* not final */ {
    // handle this child, return NULL and it will be ignored.
    virtual XMLTagHandler *HandleXMLChild(const wxChar *tag) = 0;
 
-   // These functions recieve data from expat.  They do charset
+   // These functions receive data from expat.  They do charset
    // conversion and then pass the data to the handlers above.
    bool ReadXMLTag(const char *tag, const char **attrs);
    void ReadXMLEndTag(const char *tag);

@@ -191,7 +191,7 @@ def monobook_fix_html(doc, page_url):
     if config.made_by:
         doc = doc.replace('<html xmlns=', MADE_BY_COMMENT + '\n<html xmlns=')
 
-    # Obselete substitutions.
+    # Obsolete substitutions.
     # doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
     #James also remove the page/discussion/source/history/ div.
     doc = remove_tag(doc, '<li id="ca-', '</li>', '<li')
@@ -485,7 +485,7 @@ def find_unused_filename(filename, exists=os.path.exists):
     """
     Return 'file' if 'file' doesn't exist, otherwise 'file1', 'file2', etc.
 
-    Existance is determined by the callable exists(), which takes
+    Existence is determined by the callable exists(), which takes
     a filename and returns a boolean.
     """
     if not exists(filename):

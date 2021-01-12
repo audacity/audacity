@@ -302,7 +302,7 @@ void SelectionBar::Populate()
    // It works around a wxWidgets-on-Windows RadioButton bug, where tabbing
    // into the radiobutton group jumps to selecting the first item in the 
    // group even if some other item had been selected.
-   // It is an important bug to work around for sceen reader users, who use TAB 
+   // It is an important bug to work around for screen reader users, who use TAB 
    // a lot in navigation.
    // More about the bug here:
    // https://forums.wxwidgets.org/viewtopic.php?t=41120
@@ -355,7 +355,7 @@ void SelectionBar::UpdatePrefs()
    // If necessary we can drive the SelectionBar mRate via the Project
    // calling our SetRate().
    // As of 13-Sep-2018, changes to the sample rate pref will only affect 
-   // creation of new projects, not the smaple rate in existing ones.
+   // creation of new projects, not the sample rate in existing ones.
 
    wxCommandEvent e;
    e.SetInt(mStartTime->GetFormatIndex());

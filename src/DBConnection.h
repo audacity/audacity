@@ -3,7 +3,7 @@
 Audacity: A Digital Audio Editor
 
 @file DBConnection.h
-@brief Declare DBConnection, which maintains database connection and associated status and background thred
+@brief Declare DBConnection, which maintains database connection and associated status and background thread
 
 Paul Licameli -- split from ProjectFileIO.h
 
