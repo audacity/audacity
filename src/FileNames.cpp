@@ -219,7 +219,7 @@ wxString FileNames::TempDir()
       ShowErrorDialog(
          nullptr,
          XO("Unsuitable"),
-         XO("The temporary files direcotory is on a FAT formatted drive\n"
+         XO("The temporary files directory is on a FAT formatted drive.\n"
             "Resetting to default location."),
          "Error:_Unsuitable_drive"
          );
@@ -679,7 +679,7 @@ bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
 #endif
 
    if (FileNames::FATFilesystemDenied(NameCanonical,
-                                      XO("The temporary files direcotory is on a FAT formatted drive.\n"
+                                      XO("The temporary files directory is on a FAT formatted drive.\n"
                                          "Resetting to default location.")))
    {
       return false;
