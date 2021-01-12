@@ -1429,7 +1429,7 @@ loop
 ;;
 ;; Time transformation: the envelope is not warped; the start time and
 ;; stop times are warped to global time.  Then the value of *SUSTAIN* at
-;; the begining of the envelope is used to determing absolute duration.
+;; the beginning of the envelope is used to determing absolute duration.
 ;; Since PWL is ultimately called to create the envelope, we must use
 ;; ABS-ENV to prevent any further transforms inside PWL.  We use
 ;; (AT global-start ...) inside ABS-ENV so that the final result has 
