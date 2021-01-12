@@ -858,7 +858,7 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
 bool FileNames::IsOnFATFileSystem(const FilePath &path)
 {
    struct statfs fs;
-   if (statfs(path.c_str(), &fs))
+   if (statfs(wxPathOnly(path).c_str(), &fs))
       // Error from statfs
       return false;
    return fs.f_type == MSDOS_SUPER_MAGIC;
