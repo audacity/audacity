@@ -82,6 +82,15 @@ bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
       outputFrames == 0;
 }
 
+double PlaybackPolicy::OffsetTrackTime(
+   PlaybackSchedule &schedule, double offset )
+{
+   const auto time = schedule.ClampTrackTime(
+      schedule.GetTrackTime() + offset );
+   schedule.RealTimeInit( time );
+   return time;
+}
+
 std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
 {
    using namespace std::chrono;

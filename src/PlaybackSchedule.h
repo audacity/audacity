@@ -210,6 +210,12 @@ public:
       unsigned long outputFrames //!< how many playback frames were taken from RingBuffers
    );
 
+   //! Called when the play head needs to jump a certain distance
+   /*! @param offset signed amount requested to be added to schedule::GetTrackTime()
+      @return the new value that will be set as the schedule's track time
+    */
+   virtual double OffsetTrackTime( PlaybackSchedule &schedule, double offset );
+
    //! @section Called by the AudioIO::TrackBufferExchange thread
 
    //! How long to wait between calls to AudioIO::TrackBufferExchange
