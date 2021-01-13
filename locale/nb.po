@@ -18253,8 +18253,8 @@ msgstr "tt.mm.ss + hundredeler"
 #. * (the hundredths are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.0100 s"
-msgstr "0100 t 060 m 060,0100 s"
+msgid "0100 h 060 m 060>0100 s"
+msgstr "0100 t 060 m 060<0100 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and milliseconds (1/1000 second)
@@ -18268,8 +18268,8 @@ msgstr "tt.mm.ss + millisekunder"
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.01000 s"
-msgstr "0100 t 060 m 060.01000 s"
+msgid "0100 h 060 m 060>01000 s"
+msgstr "0100 t 060 m 060>01000 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -18283,8 +18283,8 @@ msgstr "tt:mm:ss + datapunkter"
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.# samples"
-msgstr "0100 t 060 m 060 s+.# datapunkter"
+msgid "0100 h 060 m 060 s+># samples"
+msgstr "0100 t 060 m 060 s+># datapunkter"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -18314,8 +18314,8 @@ msgstr "tt.mm.ss + filmbilderate (24 fps)"
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.24 frames"
-msgstr "0100 t 060 m 060 s+.24 frames"
+msgid "0100 h 060 m 060 s+>24 frames"
+msgstr "0100 t 060 m 060 s+>24 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
@@ -18343,7 +18343,7 @@ msgstr "tt.mm.ss + NTSC-droppbilder"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.30 frames|N"
+msgid "0100 h 060 m 060 s+>30 frames|N"
 msgstr "0100 t 060 m 060 s+0,30 frames|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
@@ -18359,8 +18359,8 @@ msgstr "tt.mm.ss + NTSC uten droppede bilder"
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.030 frames| .999000999"
-msgstr "0100 t 060 m 060 s+.030 frames| .999000999"
+msgid "0100 h 060 m 060 s+>030 frames| .999000999"
+msgstr "0100 t 060 m 060 s+>030 frames| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
@@ -18388,7 +18388,7 @@ msgstr "tt.mm.ss + PAL-bilderate (25 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.25 frames"
+msgid "0100 h 060 m 060 s+>25 frames"
 msgstr "0100 t 060 m 060 s+0,25 bilder"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
@@ -18416,7 +18416,7 @@ msgstr "tt.mm.ss + CDDA-bilderate (75 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.75 frames"
+msgid "0100 h 060 m 060 s+>75 frames"
 msgstr "0100 t 060 m 060 s+0,75 bilder"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
@@ -18437,8 +18437,8 @@ msgstr "01000 01000 bilderate|75"
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100000.0100 Hz"
-msgstr "0100000,0100 Hz"
+msgid "0100000>0100 Hz"
+msgstr "0100000<0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
@@ -18452,8 +18452,8 @@ msgstr "kHz"
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "01000.01000 kHz|0.001"
-msgstr "01000,01000 kHz|0,001"
+msgid "01000>01000 kHz|0.001"
+msgstr "01000<01000 kHz|0,001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
@@ -18468,8 +18468,8 @@ msgstr "oktaver"
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "100.01000 octaves|1.442695041"
-msgstr "100,01000 oktaver|1,442695041"
+msgid "100>01000 octaves|1.442695041"
+msgstr "100<01000 oktaver|1,442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -18487,8 +18487,8 @@ msgstr "semitoner + cent"
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "1000 semitones .0100 cents|17.312340491"
-msgstr "1000 semitoner .0100 cent|17,312340491"
+msgid "1000 semitones >0100 cents|17.312340491"
+msgstr "1000 semitoner >0100 cent|17,312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
@@ -18505,8 +18505,8 @@ msgstr "årtier"
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "10.01000 decades|0.434294482"
-msgstr "10,01000 tiere|0,434294482"
+msgid "10>01000 decades|0.434294482"
+msgstr "10<01000 tiere|0,434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp

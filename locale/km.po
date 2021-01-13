@@ -17575,7 +17575,7 @@ msgstr ""
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy
 msgid "16000 Hz"
-msgstr "0100 ម៉ោង 060 នាទី 060.01000 វិនាទី"
+msgstr "0100 ម៉ោង 060 នាទី 060>01000 វិនាទី"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "22050 Hz"
@@ -18391,7 +18391,7 @@ msgstr ""
 #. * (the hundredths are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.0100 s"
+msgid "0100 h 060 m 060>0100 s"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in hours,
@@ -18406,8 +18406,8 @@ msgstr "hh:mm:ss + មិល្លីវិនាទី"
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.01000 s"
-msgstr "0100 ម៉ោង 060 នាទី 060.01000 វិនាទី"
+msgid "0100 h 060 m 060>01000 s"
+msgstr "0100 ម៉ោង 060 នាទី 060>01000 វិនាទី"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -18421,8 +18421,8 @@ msgstr "hh:mm:ss + គំរូ"
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.# samples"
-msgstr "0100 ម៉ោង 060 នាទី 060 វិនាទី+.# គំរូ"
+msgid "0100 h 060 m 060 s+># samples"
+msgstr "0100 ម៉ោង 060 នាទី 060 វិនាទី+># គំរូ"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -18452,7 +18452,7 @@ msgstr "hh:mm:ss + ស៊ុម​ហ្វីល (២៤ fps)"
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.24 frames"
+msgid "0100 h 060 m 060 s+>24 frames"
 msgstr "០១០០ ម៉ោង ០៦០ នាទី ០៦០ វិនាទី+.២៤ ស៊ុម"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
@@ -18481,8 +18481,8 @@ msgstr "hh:mm:ss + NTSC ទម្លាក់​ស៊ុម"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.30 frames|N"
-msgstr "0100 ម៉ោង 060 នាទី 060 វិនាទី+.30 ស៊ុម|N"
+msgid "0100 h 060 m 060 s+>30 frames|N"
+msgstr "0100 ម៉ោង 060 នាទី 060 វិនាទី+>30 ស៊ុម|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
@@ -18497,7 +18497,7 @@ msgstr "hh:mm:ss + NTSC មិន​ទម្លាក់​ស៊ុម"
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.030 frames| .999000999"
+msgid "0100 h 060 m 060 s+>030 frames| .999000999"
 msgstr "០១០០ ម៉ោង ០៦០ នាទី ០៦០ វិនាទី+.០៣០ ស៊ុម| .៩៩៩០០០៩៩៩"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
@@ -18526,7 +18526,7 @@ msgstr "hh:mm:ss + ស៊ុម PAL​ (២៥ fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.25 frames"
+msgid "0100 h 060 m 060 s+>25 frames"
 msgstr "០១០០ ម៉ោង ០៦០ នាទី ០៦០ វនាទី+.២៥ ស៊ុម"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
@@ -18554,7 +18554,7 @@ msgstr "hh:mm:ss + ស៊ុម​ CDDA (75 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.75 frames"
+msgid "0100 h 060 m 060 s+>75 frames"
 msgstr "០១០០ ម៉ោង ០៦០ នាទី ០៦០ វិនាទី+.75 ស៊ុម"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
@@ -18575,8 +18575,8 @@ msgstr "01000,01000 ស៊ុម|75"
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
-msgid "0100000.0100 Hz"
-msgstr "0100 ម៉ោង 060 នាទី 060.01000 វិនាទី"
+msgid "0100000>0100 Hz"
+msgstr "0100 ម៉ោង 060 នាទី 060>01000 វិនាទី"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
@@ -18591,8 +18591,8 @@ msgstr "kHz"
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
-msgid "01000.01000 kHz|0.001"
-msgstr "0100 ម៉ោង 060 នាទី 060.01000 វិនាទី"
+msgid "01000>01000 kHz|0.001"
+msgstr "0100 ម៉ោង 060 នាទី 060>01000 វិនាទី"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
@@ -18609,7 +18609,7 @@ msgstr "Octave ចុះ"
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
-msgid "100.01000 octaves|1.442695041"
+msgid "100>01000 octaves|1.442695041"
 msgstr "០១០០០,០១០០០ ស៊ុម|២៤"
 
 #. i18n-hint: an octave is a doubling of frequency
@@ -18627,7 +18627,7 @@ msgstr ""
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "1000 semitones .0100 cents|17.312340491"
+msgid "1000 semitones >0100 cents|17.312340491"
 msgstr ""
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
@@ -18645,7 +18645,7 @@ msgstr ""
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 #, fuzzy
-msgid "10.01000 decades|0.434294482"
+msgid "10>01000 decades|0.434294482"
 msgstr "០១០០០,០១០០០ ស៊ុម|២៤"
 
 #. i18n-hint: a decade is a tenfold increase of frequency

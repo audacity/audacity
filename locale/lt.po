@@ -18392,7 +18392,7 @@ msgstr "val:min:sek + šimtosios"
 #. * (the hundredths are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.0100 s"
+msgid "0100 h 060 m 060>0100 s"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in hours,
@@ -18407,7 +18407,7 @@ msgstr "val:min:sek + milisekundės"
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.01000 s"
+msgid "0100 h 060 m 060>01000 s"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in hours,
@@ -18422,7 +18422,7 @@ msgstr "val:min:sek + šablonai"
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.# samples"
+msgid "0100 h 060 m 060 s+># samples"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
@@ -18453,7 +18453,7 @@ msgstr ""
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.24 frames"
+msgid "0100 h 060 m 060 s+>24 frames"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
@@ -18482,7 +18482,7 @@ msgstr ""
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.30 frames|N"
+msgid "0100 h 060 m 060 s+>30 frames|N"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
@@ -18498,7 +18498,7 @@ msgstr ""
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.030 frames| .999000999"
+msgid "0100 h 060 m 060 s+>030 frames| .999000999"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
@@ -18527,7 +18527,7 @@ msgstr ""
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.25 frames"
+msgid "0100 h 060 m 060 s+>25 frames"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
@@ -18555,7 +18555,7 @@ msgstr ""
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.75 frames"
+msgid "0100 h 060 m 060 s+>75 frames"
 msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
@@ -18575,7 +18575,7 @@ msgstr ""
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100000.0100 Hz"
+msgid "0100000>0100 Hz"
 msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp
@@ -18590,7 +18590,7 @@ msgstr "kHz"
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "01000.01000 kHz|0.001"
+msgid "01000>01000 kHz|0.001"
 msgstr ""
 
 #: src/widgets/NumericTextCtrl.cpp
@@ -18606,7 +18606,7 @@ msgstr "oktavos"
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "100.01000 octaves|1.442695041"
+msgid "100>01000 octaves|1.442695041"
 msgstr ""
 
 #. i18n-hint: an octave is a doubling of frequency
@@ -18624,7 +18624,7 @@ msgstr ""
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "1000 semitones .0100 cents|17.312340491"
+msgid "1000 semitones >0100 cents|17.312340491"
 msgstr ""
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
@@ -18641,7 +18641,7 @@ msgstr ""
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "10.01000 decades|0.434294482"
+msgid "10>01000 decades|0.434294482"
 msgstr ""
 
 #. i18n-hint: a decade is a tenfold increase of frequency
