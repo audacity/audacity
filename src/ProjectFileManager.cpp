@@ -19,7 +19,6 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 #include <wx/frame.h>
-#include "FileNames.h"
 #include "Legacy.h"
 #include "PlatformCompatibility.h"
 #include "Project.h"
@@ -34,6 +33,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "SelectUtilities.h"
 #include "SelectionState.h"
 #include "Tags.h"
+#include "TempDirectory.h"
 #include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "UndoManager.h"
@@ -269,7 +269,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    // Some confirmation dialogs
    {
-      if (FileNames::FATFilesystemDenied(fileName, XO("Projects cannot be saved to FAT drives.")))
+      if (TempDirectory::FATFilesystemDenied(fileName, XO("Projects cannot be saved to FAT drives.")))
       {
          return false;
       }
@@ -606,7 +606,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
 
       filename.SetExt(wxT("aup3"));
 
-      if (FileNames::FATFilesystemDenied(filename.GetFullPath(), XO("Projects cannot be saved to FAT drives.")))
+      if (TempDirectory::FATFilesystemDenied(filename.GetFullPath(), XO("Projects cannot be saved to FAT drives.")))
       {
          if (project.mBatchMode)
          {
@@ -858,7 +858,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    auto fileName = PlatformCompatibility::ConvertSlashInFileName(
       PlatformCompatibility::GetLongFileName(fileNameArg));
 
-   if (FileNames::FATFilesystemDenied(fileName,
+   if (TempDirectory::FATFilesystemDenied(fileName,
                                       XO("Project resides on FAT formatted drive.\n"
                                          "Copy it to another drive to open it.")))
    {

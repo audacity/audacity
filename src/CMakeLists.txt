@@ -273,6 +273,8 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
+      TempDirectory.cpp
+      TempDirectory.h
       Theme.cpp
       Theme.h
       ThemeAsCeeCode.h

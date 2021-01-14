@@ -37,7 +37,6 @@ used throughout Audacity into this one place.
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
@@ -195,45 +194,6 @@ wxString FileNames::MkDir(const wxString &Str)
       wxFileName::Mkdir(Str, 511, wxPATH_MKDIR_FULL);
 
    return Str;
-}
-
-static wxString &TempDirPath()
-{
-   static wxString path;
-   return path;
-}
-
-/// Returns the directory used for temp files.
-/// \todo put a counter in here to see if it gets used a lot.
-/// if it does, then maybe we should cache the path name
-/// each time.
-wxString FileNames::TempDir()
-{
-   auto &path = TempDirPath();
-   if (gPrefs && path.empty())
-      path =
-         gPrefs->Read(PreferenceKey(Operation::Temp, PathType::_None), wxT(""));
-
-   if (IsOnFATFileSystem(path))
-   {
-      ShowErrorDialog(
-         nullptr,
-         XO("Unsuitable"),
-         XO("The temporary files directory is on a FAT formatted drive.\n"
-            "Resetting to default location."),
-         "Error:_Unsuitable_drive"
-         );
-
-      path = DefaultTempDir();
-      UpdateDefaultPath(FileNames::Operation::Temp, path);
-   }
-
-   return FileNames::MkDir(path);
-}
-
-void FileNames::ResetTempDir()
-{
-   TempDirPath().clear();
 }
 
 // originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.
@@ -636,58 +596,6 @@ FileNames::SelectFile(Operation op,
    });
 }
 
-/** \brief Default temp directory */
-static FilePath sDefaultTempDir;
-
-const FilePath &FileNames::DefaultTempDir()
-{
-   return sDefaultTempDir;
-}
-
-void FileNames::SetDefaultTempDir( const FilePath &tempDir )
-{
-   sDefaultTempDir = tempDir;
-}
-
-// We now disallow temp directory name that puts it where cleaner apps will
-// try to clean out the files.  
-bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
-{
-   if( Name.empty() )
-      return false;
-
-   wxFileName tmpFile;
-   tmpFile.AssignTempFileName(wxT("nn"));
-   // use Long Path to expand out any abbreviated long substrings.
-   wxString BadPath = tmpFile.GetLongPath();
-   ::wxRemoveFile(tmpFile.GetFullPath());
-
-#ifdef __WXMAC__
-   // This test is to fix bug 1220 on a 1.x to 2.x to 2.1.3 upgrade.
-   // It is less permissive than we could be as it stops a path
-   // with this string ANYWHERE within it rather than excluding just
-   // the paths that the earlier Audacities used to create.
-   if( Name.Contains( "/tmp/") )
-      return false;
-   BadPath = BadPath.BeforeLast( '/' ) + "/";
-   wxFileName cmpFile( Name );
-   wxString NameCanonical = cmpFile.GetLongPath( ) + "/";
-#else
-   BadPath = BadPath.BeforeLast( '\\' ) + "\\";
-   wxFileName cmpFile( Name );
-   wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
-#endif
-
-   if (FileNames::FATFilesystemDenied(NameCanonical,
-                                      XO("The temporary files directory is on a FAT formatted drive.\n"
-                                         "Resetting to default location.")))
-   {
-      return false;
-   }
-
-   return !(NameCanonical.StartsWith( BadPath ));
-}
-
 bool FileNames::IsMidi(const FilePath &fName)
 {
    const auto extension = fName.AfterLast(wxT('.'));
@@ -832,14 +740,6 @@ wxString FileNames::UnsavedProjectExtension()
    return wxT("aup3unsaved");
 }
 
-wxString FileNames::UnsavedProjectFileName()
-{
-   wxFileName fn(TempDir(),
-                 CreateUniqueName(wxT("New Project"), UnsavedProjectExtension()));
-
-   return fn.GetFullPath();
-}
-
 // How to detect whether the file system of a path is FAT
 // No apparent way to do it with wxWidgets
 #if defined(__DARWIN__)
@@ -890,25 +790,6 @@ bool FileNames::IsOnFATFileSystem(const FilePath &path)
    return false;
 }
 #endif
-
-bool FileNames::FATFilesystemDenied( const FilePath &path,
-                                     const TranslatableString &msg,
-                                     wxWindow *window /* = nullptr */ )
-{
-   if (FileNames::IsOnFATFileSystem(path))
-   {
-      ShowErrorDialog(
-         window,
-         XO("Unsuitable"),
-         XO("%s\n\nFor tips on suitable drives, click the help button.").Format(msg),
-         "Error:_Unsuitable_drive"
-         );
-
-      return true;
-   }
-
-   return false;
-}
 
 wxString FileNames::AbbreviatePath( const wxFileName &fileName )
 {

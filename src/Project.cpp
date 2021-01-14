@@ -13,7 +13,7 @@
 #include "Project.h"
 
 #include "KeyboardCapture.h"
-#include "FileNames.h"
+#include "TempDirectory.h"
 #include "./widgets/ErrorDialog.h"
 
 #include <wx/display.h>
@@ -129,7 +129,7 @@ AudacityProject::AudacityProject()
    // Make sure there is plenty of space for Sqlite files
    wxLongLong freeSpace = 0;
 
-   auto path = FileNames::TempDir();
+   auto path = TempDirectory::TempDir();
    if (wxGetDiskSpace(path, NULL, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
          auto volume = FileNames::AbbreviatePath( path );

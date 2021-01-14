@@ -20,13 +20,13 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ActiveProjects.h"
 #include "DBConnection.h"
-#include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileIORegistry.h"
 #include "ProjectSerializer.h"
 #include "ProjectSettings.h"
 #include "SampleBlock.h"
 #include "Tags.h"
+#include "TempDirectory.h"
 #include "TimeTrack.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -309,7 +309,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       fileName = GetFileName();
       if (fileName.empty())
       {
-         fileName = FileNames::UnsavedProjectFileName();
+         fileName = TempDirectory::UnsavedProjectFileName();
          isTemp = true;
       }
    }
@@ -317,7 +317,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
    {
       // If this project resides in the temporary directory, then we'll mark it
       // as temporary.
-      wxFileName temp(FileNames::TempDir(), wxT(""));
+      wxFileName temp(TempDirectory::TempDir(), wxT(""));
       wxFileName file(fileName);
       file.SetFullName(wxT(""));
       if (file == temp)
@@ -398,7 +398,7 @@ void ProjectFileIO::DiscardConnection()
       if (mPrevTemporary)
       {
          // This is just a safety check.
-         wxFileName temp(FileNames::TempDir(), wxT(""));
+         wxFileName temp(TempDirectory::TempDir(), wxT(""));
          wxFileName file(mPrevFileName);
          file.SetFullName(wxT(""));
          if (file == temp)
@@ -2278,7 +2278,7 @@ bool ProjectFileIO::CloseProject()
       if (IsTemporary())
       {
          // This is just a safety check.
-         wxFileName temp(FileNames::TempDir(), wxT(""));
+         wxFileName temp(TempDirectory::TempDir(), wxT(""));
          wxFileName file(filename);
          file.SetFullName(wxT(""));
          if (file == temp)

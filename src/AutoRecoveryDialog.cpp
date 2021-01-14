@@ -11,11 +11,11 @@ Paul Licameli split from AutoRecovery.cpp
 #include "AutoRecoveryDialog.h"
 
 #include "ActiveProjects.h"
-#include "FileNames.h"
 #include "ProjectManager.h"
 #include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ShuttleGui.h"
+#include "TempDirectory.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h"
 
@@ -146,7 +146,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
 
 void AutoRecoveryDialog::PopulateList()
 {
-   wxString tempdir = FileNames::TempDir();
+   wxString tempdir = TempDirectory::TempDir();
    wxString pattern = wxT("*.") + FileNames::UnsavedProjectExtension();
    FilePaths files;
 
@@ -287,7 +287,7 @@ void AutoRecoveryDialog::OnDiscardSelected(wxCommandEvent &WXUNUSED(evt))
       {
          file.SetFullName(wxT(""));
 
-         wxFileName temp(FileNames::TempDir(), wxT(""));
+         wxFileName temp(TempDirectory::TempDir(), wxT(""));
          if (file == temp)
             ProjectFileIO::RemoveProject(fileName);
       }

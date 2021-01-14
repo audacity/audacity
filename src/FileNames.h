@@ -65,12 +65,6 @@ namespace FileNames
    bool HardLinkFile( const FilePath& file1, const FilePath& file2);
 
    wxString MkDir(const wxString &Str);
-   wxString TempDir();
-   void ResetTempDir();
-
-   const FilePath &DefaultTempDir();
-   void SetDefaultTempDir( const FilePath &tempDir );
-   bool IsTempDirectoryNameOK( const FilePath & Name );
 
    bool IsMidi(const FilePath &fName);
 
@@ -205,17 +199,11 @@ namespace FileNames
    wxString CreateUniqueName(const wxString &prefix,
                              const wxString &suffix = wxEmptyString);
 
-   // Create a filename for an unsaved/temporary project file
-   wxString UnsavedProjectFileName();
-
    // File extension used for unsaved/temporary project files
    wxString UnsavedProjectExtension();
 
    AUDACITY_DLL_API
    bool IsOnFATFileSystem(const FilePath &path);
-   bool FATFilesystemDenied(const FilePath &path,
-                            const TranslatableString &msg,
-                            wxWindow *window = nullptr);
 
    AUDACITY_DLL_API
    //! Give enough of the path to identify the device.  (On Windows, drive letter plus ':')

@@ -14,6 +14,7 @@
 #include "../ProjectSelectionManager.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
+#include "../TempDirectory.h"
 #include "../UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -379,7 +380,7 @@ void OnResetConfig(const CommandContext &context)
    gPrefs->DeleteAll();
 
    // Directory will be reset on next restart.
-   FileNames::UpdateDefaultPath(FileNames::Operation::Temp, FileNames::DefaultTempDir());
+   FileNames::UpdateDefaultPath(FileNames::Operation::Temp, TempDirectory::DefaultTempDir());
    gPrefs->Write("/GUI/SyncLockTracks", 0);
    gPrefs->Write("/SnapTo", 0 );
    ProjectSelectionManager::Get( project ).AS_SetSnapTo( 0 );

@@ -94,11 +94,11 @@ It handles initialization and termination by subclassing wxApp.
 #include "ProjectWindow.h"
 #include "Screenshot.h"
 #include "Sequence.h"
+#include "TempDirectory.h"
 #include "Track.h"
 #include "prefs/PrefsDialog.h"
 #include "Theme.h"
 #include "PlatformCompatibility.h"
-#include "FileNames.h"
 #include "AutoRecoveryDialog.h"
 #include "SplashDialog.h"
 #include "FFT.h"
@@ -1122,11 +1122,11 @@ bool AudacityApp::OnInit()
    if (!envTempDir.empty()) {
       /* On Unix systems, the environment variable TMPDIR may point to
          an unusual path when /tmp and /var/tmp are not desirable. */
-      FileNames::SetDefaultTempDir( wxString::Format(
+      TempDirectory::SetDefaultTempDir( wxString::Format(
          wxT("%s/audacity-%s"), envTempDir, wxGetUserId() ) );
    } else {
       /* On Unix systems, the default temp dir is in /var/tmp. */
-      FileNames::SetDefaultTempDir( wxString::Format(
+      TempDirectory::SetDefaultTempDir( wxString::Format(
          wxT("/var/tmp/audacity-%s"), wxGetUserId() ) );
    }
 
@@ -1199,7 +1199,7 @@ bool AudacityApp::OnInit()
 
    // See bug #1271 for explanation of location
    tmpDirLoc = FileNames::MkDir(wxStandardPaths::Get().GetUserLocalDataDir());
-   FileNames::SetDefaultTempDir( wxString::Format(
+   TempDirectory::SetDefaultTempDir( wxString::Format(
       wxT("%s\\SessionData"), tmpDirLoc ) );
 #endif //__WXWSW__
 
@@ -1220,10 +1220,10 @@ bool AudacityApp::OnInit()
 
    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
    // wrong because it would get cleared out on a reboot.
-   FileNames::SetDefaultTempDir( wxString::Format(
+   TempDirectory::SetDefaultTempDir( wxString::Format(
       wxT("%s/Library/Application Support/audacity/SessionData"), tmpDirLoc) );
 
-   //FileNames::SetDefaultTempDir( wxString::Format(
+   //TempDirectory::SetDefaultTempDir( wxString::Format(
    //   wxT("%s/audacity-%s"),
    //   tmpDirLoc,
    //   wxGetUserId() ) );
@@ -1614,8 +1614,8 @@ void SetToExtantDirectory( wxString & result, const wxString & dir ){
 bool AudacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
-   auto tempFromPrefs = FileNames::TempDir();
-   auto tempDefaultLoc = FileNames::DefaultTempDir();
+   auto tempFromPrefs = TempDirectory::TempDir();
+   auto tempDefaultLoc = TempDirectory::DefaultTempDir();
 
    wxString temp;
 
@@ -1629,7 +1629,7 @@ bool AudacityApp::InitTempDir()
    wxLogNull logNo;
 
    // Try temp dir that was stored in prefs first
-   if( FileNames::IsTempDirectoryNameOK( tempFromPrefs ) )
+   if( TempDirectory::IsTempDirectoryNameOK( tempFromPrefs ) )
       SetToExtantDirectory( temp, tempFromPrefs );
 
    // If that didn't work, try the default location
@@ -1652,7 +1652,7 @@ bool AudacityApp::InitTempDir()
 
    if (temp.empty()) {
       // Failed
-      if( !FileNames::IsTempDirectoryNameOK( tempFromPrefs ) ) {
+      if( !TempDirectory::IsTempDirectoryNameOK( tempFromPrefs ) ) {
          AudacityMessageBox(XO(
 "Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       } else {
@@ -1677,7 +1677,7 @@ bool AudacityApp::InitTempDir()
    chmod(OSFILENAME(temp), 0755);
    #endif
 
-   FileNames::ResetTempDir();
+   TempDirectory::ResetTempDir();
    FileNames::UpdateDefaultPath(FileNames::Operation::Temp, temp);
 
    return true;

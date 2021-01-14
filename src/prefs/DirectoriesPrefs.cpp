@@ -32,12 +32,13 @@
 #include <wx/filename.h>
 #include <wx/utils.h>
 
-#include "../FileNames.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+#include "../TempDirectory.h"
 #include "../widgets/AudacityMessageBox.h"
 
 using namespace FileNames;
+using namespace TempDirectory;
 
 class FilesystemValidator : public wxValidator
 {
@@ -84,7 +85,7 @@ public:
       wxString path = tc->GetValue();
       path.insert(tc->GetInsertionPoint(), keycode);
 
-      if (FileNames::FATFilesystemDenied(path, mMessage)) {
+      if (FATFilesystemDenied(path, mMessage)) {
          evt.Skip(false);
          return;
       }
@@ -398,7 +399,7 @@ bool DirectoriesPrefs::Validate()
    }
 
    wxFileName oldDir;
-   oldDir.SetPath(FileNames::TempDir());
+   oldDir.SetPath(TempDir());
    if (Temp != oldDir) {
       AudacityMessageBox(
          XO(
