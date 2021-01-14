@@ -1998,7 +1998,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       XMLFileReader xmlFile;
 
       // Load 'er up
-      success = xmlFile.ParseString(this, project);
+      success = xmlFile.ParseString(this, project.ToUTF8());
       if (!success)
       {
          SetError(
