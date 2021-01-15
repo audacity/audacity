@@ -1123,8 +1123,15 @@ void ToolManager::Expose( int type, bool show )
 void ToolManager::LayoutToolBars()
 {
    // Update the layout
-   mTopDock->LayoutToolBars();
-   mBotDock->LayoutToolBars();
+   if (mTopDock)
+   {
+      mTopDock->LayoutToolBars();
+   }
+
+   if (mBotDock)
+   {
+      mBotDock->LayoutToolBars();
+   }
 }
 
 //
