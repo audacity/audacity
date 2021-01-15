@@ -30,6 +30,7 @@ class ViewInfo;
 enum EffectType : int;
 
 typedef wxString PluginID;
+typedef wxString MacroID;
 typedef wxArrayString PluginIDs;
 
 namespace Registry{ class Visitor; }
@@ -48,7 +49,11 @@ public:
    CommandFlag mLastFlags;
    
    // Last effect applied to this project
+   PluginID mLastGenerator{};
    PluginID mLastEffect{};
+   PluginID mLastAnalyzer{};
+   PluginID mLastTool{};
+   bool mLastToolIsMacro;
 };
 
 struct ToolbarMenuVisitor;

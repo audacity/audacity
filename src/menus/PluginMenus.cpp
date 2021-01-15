@@ -14,6 +14,7 @@
 #include "../ProjectSelectionManager.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
+#include "../UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
@@ -427,15 +428,49 @@ void OnManageEffects(const CommandContext &context)
    DoManagePluginsMenu(project, EffectTypeProcess);
 }
 
+void OnRepeatLastGenerator(const CommandContext &context)
+{
+   auto lastEffect = MenuManager::Get(context.project).mLastGenerator;
+   if (!lastEffect.empty())
+   {
+      EffectUI::DoEffect(
+         lastEffect, context, EffectManager::kConfigured | EffectManager::kRepeatGen);
+   }
+}
+
 void OnRepeatLastEffect(const CommandContext &context)
 {
    auto lastEffect = MenuManager::Get(context.project).mLastEffect;
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, EffectManager::kConfigured );
+         lastEffect, context, EffectManager::kConfigured);
    }
 }
+
+void OnRepeatLastAnalyzer(const CommandContext &context)
+{
+   auto lastEffect = MenuManager::Get(context.project).mLastAnalyzer;
+   if (!lastEffect.empty())
+   {
+      EffectUI::DoEffect(
+         lastEffect, context, EffectManager::kConfigured);
+   }
+}
+
+void OnRepeatLastTool(const CommandContext &context)
+{
+   auto lastEffect = MenuManager::Get(context.project).mLastTool;
+   if (!lastEffect.empty())
+   {
+      if (!MenuManager::Get(context.project).mLastToolIsMacro)
+         EffectUI::DoEffect(
+            lastEffect, context, EffectManager::kConfigured);
+      else
+         OnApplyMacroDirectlyByName(context, lastEffect);
+   }
+}
+
 
 void OnManageAnalyzers(const CommandContext &context)
 {
@@ -509,12 +544,16 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
 
 void OnApplyMacroDirectly(const CommandContext &context )
 {
+   const MacroID& Name = context.parameter.GET();
+   OnApplyMacroDirectlyByName(context, Name);
+}
+void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Name)
+{
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
-
    //wxLogDebug( "Macro was: %s", context.parameter);
    ApplyMacroDialog dlg( &window, project );
-   const auto &Name = context.parameter;
+   //const auto &Name = context.parameter;
 
 // We used numbers previously, but macros could get renumbered, making
 // macros containing macros unpredictable.
@@ -526,7 +565,24 @@ void OnApplyMacroDirectly(const CommandContext &context )
 #else
    dlg.ApplyMacroToProject( Name, false );
 #endif
+   /* i18n-hint: %s will be the name of the macro which will be
+    * repeated if this menu item is chosen */
    MenuManager::ModifyUndoMenuItems( project );
+
+      TranslatableString desc;
+      EffectManager& em = EffectManager::Get();
+      auto shortDesc = em.GetCommandName(Name);
+      auto& undoManager = UndoManager::Get(project);
+      auto& commandManager = CommandManager::Get(project);
+      int cur = undoManager.GetCurrentState();
+      if (undoManager.UndoAvailable()) {
+         undoManager.GetShortDescription(cur, &desc);
+         commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
+            .Format(desc));
+         MenuManager::Get(project).mLastTool = Name;
+         MenuManager::Get(project).mLastToolIsMacro = true;
+      }
+
 }
 
 void OnAudacityCommand(const CommandContext & ctx)
@@ -730,6 +786,26 @@ BaseItemSharedPtr GenerateMenu()
       ),
 #endif
 
+      Section("RepeatLast",
+         // Delayed evaluation:
+         [](AudacityProject &project)
+         {
+            const auto &lastGenerator = MenuManager::Get(project).mLastGenerator;
+            TranslatableString buildMenuLabel;
+            if (!lastGenerator.empty())
+               buildMenuLabel = XO("Repeat %s")
+                  .Format(EffectManager::Get().GetCommandName(lastGenerator));
+            else
+               buildMenuLabel = XO("Repeat Last Generator");
+
+            return Command(wxT("RepeatLastGenerator"), buildMenuLabel,
+               FN(OnRepeatLastGenerator),
+               AudioIONotBusyFlag() |
+                   HasLastGeneratorFlag(),
+               wxT("      "), findCommandHandler);
+         }
+      ),
+
       Section( "Generators",
          // Delayed evaluation:
          [](AudacityProject &)
@@ -823,6 +899,26 @@ BaseItemSharedPtr AnalyzeMenu()
       ),
 #endif
 
+      Section("RepeatLast",
+         // Delayed evaluation:
+         [](AudacityProject &project)
+         {
+            const auto &lastAnalyzer = MenuManager::Get(project).mLastAnalyzer;
+            TranslatableString buildMenuLabel;
+            if (!lastAnalyzer.empty())
+               buildMenuLabel = XO("Repeat %s")
+                  .Format(EffectManager::Get().GetCommandName(lastAnalyzer));
+            else
+               buildMenuLabel = XO("Repeat Last Analyzer");
+
+            return Command(wxT("RepeatLastAnalyzer"), buildMenuLabel,
+               FN(OnRepeatLastAnalyzer),
+               AudioIONotBusyFlag() | TimeSelectedFlag() |
+                  WaveTracksSelectedFlag() | HasLastAnalyzerFlag(),
+               wxT("      "), findCommandHandler);
+         }
+      ),
+
       Section( "Analyzers",
          Items( "Windows" ),
 
@@ -859,7 +955,27 @@ BaseItemSharedPtr ToolsMenu()
 
    #endif
 
-         Command( wxT("ManageMacros"), XXO("&Macros..."),
+         Section( "RepeatLast",
+         // Delayed evaluation:
+         [](AudacityProject &project)
+         {
+            const auto &lastTool = MenuManager::Get(project).mLastTool;
+            TranslatableString buildMenuLabel;
+            if (!lastTool.empty())
+               buildMenuLabel = XO("Repeat %s")
+                  .Format( EffectManager::Get().GetCommandName(lastTool) );
+            else
+               buildMenuLabel = XO("Repeat Last Tool");
+
+            return Command( wxT("RepeatLastTool"), buildMenuLabel,
+               FN(OnRepeatLastTool),
+               AudioIONotBusyFlag() |
+                  HasLastToolFlag(),
+               wxT("      "), findCommandHandler );
+         }
+      ),
+
+      Command( wxT("ManageMacros"), XXO("&Macros..."),
             FN(OnManageMacros), AudioIONotBusyFlag() ),
 
          Menu( wxT("Macros"), XXO("&Apply Macro"),
