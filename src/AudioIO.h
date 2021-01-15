@@ -315,7 +315,6 @@ public:
    void AddToOutputChannel( unsigned int chan,
       float * outputMeterFloats,
       float * outputFloats,
-      float * tempFloats,
       float * tempBuf,
       bool drop,
       unsigned long len,
@@ -323,8 +322,7 @@ public:
       );
    bool FillOutputBuffers(
       void *outputBuffer,
-      unsigned long framesPerBuffer,
-      float * tempFloats, float *outputMeterFloats
+      unsigned long framesPerBuffer, float *outputMeterFloats
    );
    void FillInputBuffers(
       const void *inputBuffer, 

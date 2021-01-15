@@ -3786,7 +3786,6 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
 void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    float * outputMeterFloats,
    float * outputFloats,
-   float * tempFloats,
    float * tempBuf,
    bool drop,
    unsigned long len,
@@ -3804,7 +3803,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    if (outputMeterFloats != outputFloats)
       for ( unsigned i = 0; i < len; ++i)
          outputMeterFloats[numPlaybackChannels*i+chan] +=
-            gain*tempFloats[i];
+            gain*tempBuf[i];
 
    if (mEmulateMixerOutputVol)
       gain *= mMixerOutputVol;
@@ -3836,8 +3835,7 @@ void ClampBuffer(float * pBuffer, unsigned long len){
 //
 bool AudioIoCallback::FillOutputBuffers(
    void *outputBuffer,
-   unsigned long framesPerBuffer,
-   float * tempFloats, float *outputMeterFloats
+   unsigned long framesPerBuffer, float *outputMeterFloats
 )
 {
    const auto numPlaybackTracks = mPlaybackTracks.size();
@@ -3999,11 +3997,13 @@ bool AudioIoCallback::FillOutputBuffers(
 
          if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel )
-            AddToOutputChannel( 0, outputMeterFloats, outputFloats, tempFloats, tempBufs[c], drop, len, vt);
+            AddToOutputChannel( 0, outputMeterFloats, outputFloats,
+               tempBufs[c], drop, len, vt);
 
          if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
                vt->GetChannelIgnoringPan() == Track::MonoChannel  )
-            AddToOutputChannel( 1, outputMeterFloats, outputFloats, tempFloats, tempBufs[c], drop, len, vt);
+            AddToOutputChannel( 1, outputMeterFloats, outputFloats,
+               tempBufs[c], drop, len, vt);
       }
 
       chanCnt = 0;
@@ -4472,7 +4472,6 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
    if( FillOutputBuffers(
          outputBuffer,
          framesPerBuffer,
-         tempFloats,
          outputMeterFloats))
       return mCallbackReturn;
 
