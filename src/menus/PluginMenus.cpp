@@ -803,7 +803,7 @@ BaseItemSharedPtr GenerateMenu()
                FN(OnRepeatLastGenerator),
                AudioIONotBusyFlag() |
                    HasLastGeneratorFlag(),
-               wxT("      "), findCommandHandler);
+               {}, findCommandHandler);
          }
       ),
 
@@ -916,7 +916,7 @@ BaseItemSharedPtr AnalyzeMenu()
                FN(OnRepeatLastAnalyzer),
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastAnalyzerFlag(),
-               wxT("      "), findCommandHandler);
+               {}, findCommandHandler);
          }
       ),
 
@@ -972,7 +972,7 @@ BaseItemSharedPtr ToolsMenu()
                FN(OnRepeatLastTool),
                AudioIONotBusyFlag() |
                   HasLastToolFlag(),
-               wxT("      "), findCommandHandler );
+               {}, findCommandHandler );
          }
       ),
 
