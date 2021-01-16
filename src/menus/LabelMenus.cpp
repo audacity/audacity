@@ -639,11 +639,11 @@ BaseItemSharedPtr LabelEditMenus()
          /* i18n-hint: (verb)*/
          Command( wxT("CutLabels"), XXO("&Cut"), FN(OnCutLabels),
             AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
-               TimeSelectedFlag() | IsNotSyncLockedFlag(),
+               TimeSelectedFlag(),
                Options{ wxT("Alt+X"), XO("Label Cut") } ),
          Command( wxT("DeleteLabels"), XXO("&Delete"), FN(OnDeleteLabels),
             AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
-               TimeSelectedFlag() | IsNotSyncLockedFlag(),
+               TimeSelectedFlag(),
             Options{ wxT("Alt+K"), XO("Label Delete") } )
       ),
 
