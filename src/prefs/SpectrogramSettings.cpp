@@ -255,7 +255,7 @@ void SpectrogramSettings::LoadPrefs()
    zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
 #endif
 
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHanning);
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
 
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
@@ -361,7 +361,7 @@ void SpectrogramSettings::UpdatePrefs()
 #endif
 
    if (windowType == defaults().windowType) {
-      gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHanning);
+      gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
    }
 
    if (isGrayscale == defaults().isGrayscale) {

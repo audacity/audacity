@@ -344,7 +344,7 @@ const TranslatableString WindowFuncName(int whichFunction)
    case eWinFuncHamming:
       /* i18n-hint a proper name */
       return XO("Hamming");
-   case eWinFuncHanning:
+   case eWinFuncHann:
       /* i18n-hint a proper name */
       return XO("Hann");
    case eWinFuncBlackman:
@@ -411,7 +411,7 @@ void NewWindowFunc(int whichFunction, size_t NumSamplesIn, bool extraSample, flo
          in[ii] *= coeff0 + coeff1 * cos(ii * multiplier);
    }
       break;
-   case eWinFuncHanning:
+   case eWinFuncHann:
    {
       // Hann
       const double multiplier = 2 * M_PI / NumSamples;
@@ -519,7 +519,7 @@ void WindowFunc(int whichFunction, size_t NumSamples, float *in)
    switch (whichFunction)
    {
    case eWinFuncHamming:
-   case eWinFuncHanning:
+   case eWinFuncHann:
    case eWinFuncBlackman:
    case eWinFuncBlackmanHarris:
       extraSample = true;
@@ -608,7 +608,7 @@ void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSamp
          in[NumSamples] *= - coeff0 - coeff1 * sin(NumSamples * multiplier);
    }
       break;
-   case eWinFuncHanning:
+   case eWinFuncHann:
    {
       // Hann
       const double multiplier = 2 * M_PI / NumSamples;

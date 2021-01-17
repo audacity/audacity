@@ -107,7 +107,7 @@ enum eWindowFunctions
    eWinFuncRectangular,
    eWinFuncBartlett,
    eWinFuncHamming,
-   eWinFuncHanning,
+   eWinFuncHann,
    eWinFuncBlackman,
    eWinFuncBlackmanHarris,
    eWinFuncWelch,

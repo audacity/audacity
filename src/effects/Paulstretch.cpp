@@ -462,7 +462,7 @@ void PaulStretch::process(float *smps, size_t nsmps)
    //get the samples from the pool
    for (size_t i = 0; i < poolsize; i++)
       fft_smps[i] = in_pool[i];
-   WindowFunc(eWinFuncHanning, poolsize, fft_smps.get());
+   WindowFunc(eWinFuncHann, poolsize, fft_smps.get());
 
    RealFFT(poolsize, fft_smps.get(), fft_c.get(), fft_s.get());
 
