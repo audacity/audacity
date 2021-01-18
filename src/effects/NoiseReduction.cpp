@@ -569,9 +569,14 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
       readPrefs(this, prefix, intTable, intTableSize);
 
       // Ignore preferences for unavailable options.
-#ifndef RESIDUE_CHOICE
+#if !(defined(RESIDUE_CHOICE) || defined (ISOLATE_CHOICE))
+      mNoiseReductionChoice == NRC_REDUCE_NOISE;
+#elif !(defined(RESIDUE_CHOICE))
       if (mNoiseReductionChoice == NRC_LEAVE_RESIDUE)
          mNoiseReductionChoice = NRC_ISOLATE_NOISE;
+#elif !(defined(ISOLATE_CHOICE))
+      if (mNoiseReductionChoice == NRC_ISOLATE_NOISE)
+         mNoiseReductionChoice = NRC_LEAVE_RESIDUE;
 #endif
 
 #ifndef ADVANCED_SETTINGS
