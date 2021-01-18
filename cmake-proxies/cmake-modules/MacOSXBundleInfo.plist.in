@@ -228,7 +228,7 @@
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.music</string>
 	<key>NSHighResolutionCapable</key>
-	<true/>
+	<false/>
    <key>NSRequiresAquaSystemAppearance</key>
    <true/>
 	<key>NSHumanReadableCopyright</key>
