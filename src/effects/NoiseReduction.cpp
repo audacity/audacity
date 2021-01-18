@@ -138,13 +138,20 @@ const struct WindowTypesInfo {
    // plus one half the product of the first cosine coefficients.
 
    // Experimental only, don't need translations
-   { XO("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
-   { XO("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
-   { XO("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
-   { XO("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
-   { XO("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
-   { XO("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
-   { XO("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
+   { Verbatim("none, Hann (2.0.6 behavior)"),
+      2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
+   { Verbatim("Hann, none"),
+      2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
+   { Verbatim("Hann, Hann (default)"),
+      4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
+   { Verbatim("Blackman, Hann"),
+      4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
+   { Verbatim("Hamming, none"),
+      2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
+   { Verbatim("Hamming, Hann"),
+      4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
+   { Verbatim("Hamming, Reciprocal Hamming"),
+      2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
 };
 
 enum {
