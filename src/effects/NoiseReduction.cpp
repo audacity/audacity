@@ -137,13 +137,19 @@ const struct WindowTypesInfo {
    // is the product of the windows' two constant terms,
    // plus one half the product of the first cosine coefficients.
 
-   // Experimental only, don't need translations
+   /* i18n-hint: Hann is a proper name */
    { XO("none, Hann (2.0.6 behavior)"),    2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
+   /* i18n-hint: Hann is a proper name */
    { XO("Hann, none"),                     2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
+   /* i18n-hint: Hann is a proper name */
    { XO("Hann, Hann (default)"),           4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
+   /* i18n-hint: Hann and Blackman are proper names */
    { XO("Blackman, Hann"),                 4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
+   /* i18n-hint: Hamming is a proper name */
    { XO("Hamming, none"),                  2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
+   /* i18n-hint: Hamming and Hann area proper names */
    { XO("Hamming, Hann"),                  4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
+   /* i18n-hint: Hamming is a proper name */
    { XO("Hamming, Reciprocal Hamming"),    2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
 };
 
