@@ -272,13 +272,12 @@ public:
    ~Worker();
 
    bool Process(EffectNoiseReduction &effect,
-                Statistics &statistics, WaveTrackFactory &factory,
+                Statistics &statistics,
                 TrackList &tracks, double mT0, double mT1);
 
 private:
    bool ProcessOne(EffectNoiseReduction &effect,
                    Statistics &statistics,
-                   WaveTrackFactory &factory,
                    int count, WaveTrack *track,
                    sampleCount start, sampleCount len);
 
@@ -657,7 +656,7 @@ bool EffectNoiseReduction::Process()
 #endif
       );
    bool bGoodResult = worker.Process
-      (*this, *mStatistics, *mFactory, *mOutputTracks, mT0, mT1);
+      (*this, *mStatistics, *mOutputTracks, mT0, mT1);
    if (mSettings->mDoProfile) {
       if (bGoodResult)
          mSettings->mDoProfile = false; // So that "repeat last effect" will reduce noise
@@ -673,7 +672,7 @@ EffectNoiseReduction::Worker::~Worker()
 }
 
 bool EffectNoiseReduction::Worker::Process
-(EffectNoiseReduction &effect, Statistics &statistics, WaveTrackFactory &factory,
+(EffectNoiseReduction &effect, Statistics &statistics,
  TrackList &tracks, double inT0, double inT1)
 {
    int count = 0;
@@ -699,7 +698,7 @@ bool EffectNoiseReduction::Worker::Process
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
 
-         if (!ProcessOne(effect, statistics, factory,
+         if (!ProcessOne(effect, statistics,
                          count, track, start, len))
             return false;
       }
@@ -1311,7 +1310,7 @@ void EffectNoiseReduction::Worker::ReduceNoise
 }
 
 bool EffectNoiseReduction::Worker::ProcessOne
-(EffectNoiseReduction &effect,  Statistics &statistics, WaveTrackFactory &factory,
+(EffectNoiseReduction &effect,  Statistics &statistics,
  int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
    if (track == NULL)
