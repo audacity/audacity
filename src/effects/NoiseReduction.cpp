@@ -350,6 +350,8 @@ private:
       FloatVector mImagFFTs;
    };
    std::vector<std::unique_ptr<Record>> mQueue;
+
+   Record &NthWindow(size_t nn) { return *mQueue[nn]; }
 };
 
 /****************************************************************//**
@@ -1066,7 +1068,7 @@ void EffectNoiseReduction::Worker::GatherStatistics()
 
    {
       // NEW statistics
-      auto pPower = mQueue[0]->mSpectrums.data();
+      auto pPower = NthWindow(0).mSpectrums.data();
       auto pSum = mStatistics.mSums.data();
       for (size_t jj = 0; jj < mSpectrumSize; ++jj) {
          *pSum++ += *pPower++;
@@ -1082,12 +1084,12 @@ void EffectNoiseReduction::Worker::GatherStatistics()
 
    {
       // old statistics
-      auto pPower = mQueue[0]->mSpectrums.data();
+      auto pPower = NthWindow(0).mSpectrums.data();
       auto pThreshold = mStatistics.mNoiseThreshold.data();
       for (size_t jj = 0; jj < mSpectrumSize; ++jj) {
          float min = *pPower++;
          for (unsigned ii = 1; ii < finish; ++ii)
-            min = std::min(min, mQueue[ii]->mSpectrums[jj]);
+            min = std::min(min, NthWindow(ii).mSpectrums[jj]);
          *pThreshold = std::max(*pThreshold, min);
          ++pThreshold;
       }
@@ -1104,9 +1106,9 @@ bool EffectNoiseReduction::Worker::Classify(int band)
 #ifdef OLD_METHOD_AVAILABLE
    case DM_OLD_METHOD:
       {
-         float min = mQueue[0]->mSpectrums[band];
+         float min = NthWindow(0).mSpectrums[band];
          for (unsigned ii = 1; ii < mNWindowsToExamine; ++ii)
-            min = std::min(min, mQueue[ii]->mSpectrums[band]);
+            min = std::min(min, NthWindow(ii).mSpectrums[band]);
          return
             min <= mOldSensitivityFactor * mStatistics.mNoiseThreshold[band];
       }
@@ -1131,7 +1133,7 @@ bool EffectNoiseReduction::Worker::Classify(int band)
       {
          float greatest = 0.0, second = 0.0, third = 0.0;
          for (unsigned ii = 0; ii < mNWindowsToExamine; ++ii) {
-            const float power = mQueue[ii]->mSpectrums[band];
+            const float power = NthWindow(ii).mSpectrums[band];
             if (power >= greatest)
                third = second, second = greatest, greatest = power;
             else if (power >= second)
@@ -1153,7 +1155,7 @@ bool EffectNoiseReduction::Worker::Classify(int band)
          // chimes.
          float greatest = 0.0, second = 0.0;
          for (unsigned ii = 0; ii < mNWindowsToExamine; ++ii) {
-            const float power = mQueue[ii]->mSpectrums[band];
+            const float power = NthWindow(ii).mSpectrums[band];
             if (power >= greatest)
                second = greatest, greatest = power;
             else if (power >= second)
@@ -1172,7 +1174,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
    // Raise the gain for elements in the center of the sliding history
    // or, if isolating noise, zero out the non-noise
    {
-      auto pGain = mQueue[mCenter]->mGains.data();
+      auto pGain = NthWindow(mCenter).mGains.data();
       if (mNoiseReductionChoice == NRC_ISOLATE_NOISE) {
          // All above or below the selected frequency range is non-noise
          std::fill(pGain, pGain + mBinLow, 0.0f);
@@ -1209,8 +1211,8 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
          for (unsigned ii = mCenter + 1; ii < mHistoryLen; ++ii) {
             const float minimum =
                std::max(mNoiseAttenFactor,
-                        mQueue[ii - 1]->mGains[jj] * mOneBlockAttack);
-            float &gain = mQueue[ii]->mGains[jj];
+                        NthWindow(ii - 1).mGains[jj] * mOneBlockAttack);
+            float &gain = NthWindow(ii).mGains[jj];
             if (gain < minimum)
                gain = minimum;
             else
@@ -1224,8 +1226,8 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
       // be visited again when we examine the next window, and
       // carry the decay further.
       {
-         auto pNextGain = mQueue[mCenter - 1]->mGains.data();
-         auto pThisGain = mQueue[mCenter]->mGains.data();
+         auto pNextGain = NthWindow(mCenter - 1).mGains.data();
+         auto pThisGain = NthWindow(mCenter).mGains.data();
          for (auto nn = mSpectrumSize; nn--;) {
             *pNextGain =
                std::max(*pNextGain,
@@ -1238,7 +1240,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
 
 
    if (mOutStepCount >= -(int)(mStepsPerWindow - 1)) {
-      Record &record = *mQueue[mHistoryLen - 1];  // end of the queue
+      auto &record = NthWindow(mHistoryLen - 1);  // end of the queue
       const auto last = mSpectrumSize - 1;
 
       if (mNoiseReductionChoice != NRC_ISOLATE_NOISE)
