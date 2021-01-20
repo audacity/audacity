@@ -9,7 +9,7 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
 
 1. MSVC 2019: Download and install Microsoft Visual Studio 2019
 
- https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2017
+ https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
 
 2. Git: Download and install Git, for example by installing:
 
