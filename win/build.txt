@@ -7,7 +7,7 @@ Fuller instructions that include
 can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Windows
 
 
-1. MSVC 2017: Download and install Microsoft Visual Studio 2017
+1. MSVC 2019: Download and install Microsoft Visual Studio 2019
 
  https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2017
 
@@ -56,7 +56,7 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
 
     You will be building a dll version with MSVC2017 IDE, so...
 
-    In MSVC 2017 open wx_vc15.sln, and select dll, release.
+    In MSVC 2019 open wx_vc15.sln, and select dll, release.
     Then build.
 
   3) Having got this far, it is well worth trying out building some wxWidgets
@@ -74,14 +74,35 @@ can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Window
 
     Audacity itself does not use/need git submodules.
 
+  2) Open the CMake GUI
+    -. Open VS 2019 > "continue without code" > File > Open > CMake
+    -. Pick CMakeLists.txt in root of audacity source folder you cloned
+    -. Click "Open the CMake Settings Editor"
+
+  4) Check "Show advanced variables", click "Show advanced settings"
+  5) Set CMake Settings:
+    - configuration type > Release
+    - toolset > msvc_x86_x86 or msvc_x86_x64
+    - CMake generator > VS 16 2019
+
+  6) Set CMake variables:
+    - wxWidgets_LIB_DIR > 'C:/wxWidgets/lib/vc_dll' (your path may be slightly different)
+    - "Install directory" (defaults to `${projectDir}\out\install\${name}`)
+
+  7) Save (should automatically generate CMake file)
+    - if it doesn't, Project > Generate CMake Cache
+
+  8) Build > Build All
+
+    Check the output directory indicated in step 6 to find `Audacity.exe`
+    
+
+ Old VS 2017 instructions: 
 
  2) Open the CMake GUI.
+
      Set the 'Where is the source code' location to where your copy of the git repo is.
      Set the 'Where to build the binaries' to where you want the results.
-
-    Click on configure.
-    (notice where it found / did not find wxWidgets if it did not find wxwidgets check 
-    that you set WXWIN coreectly )
 
  3) Click on Generate.
 
