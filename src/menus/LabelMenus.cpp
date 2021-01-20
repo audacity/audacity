@@ -168,7 +168,8 @@ void EditByLabel(AudacityProject &project,
    if( regions.size() == 0 )
       return;
 
-   const bool notLocked = !ProjectSettings::Get(project).IsSyncLocked();
+   const bool notLocked = (!ProjectSettings::Get(project).IsSyncLocked() &&
+                           (tracks.Selected<PlayableTrack>()).empty());
 
    //Apply action on tracks starting from
    //labeled regions in the end. This is to correctly perform
@@ -177,7 +178,7 @@ void EditByLabel(AudacityProject &project,
    {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
 
-      if (t->IsSelectedOrSyncLockSelected() || (notLocked && playable))
+      if (t->IsSyncLockSelected() || notLocked && playable)
       {
          for (int i = (int)regions.size() - 1; i >= 0; i--)
          {
@@ -206,7 +207,8 @@ void EditClipboardByLabel( AudacityProject &project,
    if( regions.size() == 0 )
       return;
 
-   const bool notLocked = !ProjectSettings::Get(project).IsSyncLocked();
+   const bool notLocked = (!ProjectSettings::Get(project).IsSyncLocked() &&
+                           (tracks.Selected<PlayableTrack>()).empty());
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
@@ -222,7 +224,7 @@ void EditClipboardByLabel( AudacityProject &project,
    {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
 
-      if (t->IsSelectedOrSyncLockSelected() || (notLocked && playable))
+      if (t->IsSyncLockSelected() || notLocked && playable)
       {
          // This track accumulates the needed clips, right to left:
          Track::Holder merged;
