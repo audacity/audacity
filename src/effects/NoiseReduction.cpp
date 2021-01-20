@@ -1114,14 +1114,15 @@ bool EffectNoiseReduction::Worker::Classify(int band)
       }
 #endif
    // New methods suppose an exponential distribution of power values
-   // in the noise; NEW sensitivity is meant to be log of probability
+   // in the noise; NEW sensitivity (which is nonnegative) is meant to be
+   // the negative of a log of probability (so the log is nonpositive)
    // that noise strays above the threshold.  Call that probability
    // 1 - F.  The quantile function of an exponential distribution is
-   // log (1 - F) * mean.  Thus simply multiply mean by sensitivity
+   // - log (1 - F) * mean.  Thus simply multiply mean by sensitivity
    // to get the threshold.
    case DM_MEDIAN:
-      // This method examines the window and all windows
-      // that partly overlap it, and takes a median, to
+      // This method examines the window and all other windows
+      // whose centers lie on or between its boundaries, and takes a median, to
       // avoid being fooled by up and down excursions into
       // either the mistake of classifying noise as not noise
       // (leaving a musical noise chime), or the opposite
@@ -1144,6 +1145,7 @@ bool EffectNoiseReduction::Worker::Classify(int band)
          return third <= mNewSensitivity * mStatistics.mMeans[band];
       }
       else {
+         // not implemented
          wxASSERT(false);
          return true;
       }
@@ -1217,7 +1219,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
                gain = minimum;
             else
                // We can stop now, our attack curve is intersecting
-               // the decay curve of some window previously processed.
+               // the release curve of some window previously processed.
                break;
          }
       }
