@@ -2601,6 +2601,11 @@ bool NyquistEffect::TransferDataToEffectWindow()
          wxSlider *s = (wxSlider *) mUIParent->FindWindow(ID_Slider + i);
          s->SetValue(val);
       }
+      else if (ctrl.type == NYQ_CTRL_TIME)
+      {
+         NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
+         n->SetValue(ctrl.val);
+      }
    }
 
    return true;
