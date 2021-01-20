@@ -7,6 +7,7 @@
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
+#include "../ProjectSettings.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
@@ -157,7 +158,7 @@ using EditFunction = std::function<void(Track *, double, double)>;
 //If the function replaces the selection with audio of a different length,
 // bSyncLockedTracks should be set true to perform the same action on sync-lock
 // selected tracks.
-void EditByLabel(
+void EditByLabel(AudacityProject &project,
    TrackList &tracks, const SelectedRegion &selectedRegion,
    EditFunction action)
 {
@@ -167,12 +168,16 @@ void EditByLabel(
    if( regions.size() == 0 )
       return;
 
+   const bool notLocked = !ProjectSettings::Get(project).IsSyncLocked();
+
    //Apply action on tracks starting from
    //labeled regions in the end. This is to correctly perform
    //actions like 'Delete' which collapse the track area.
    for (auto t : tracks.Any())
    {
-      if (t->GetSelected() || t->IsSyncLockSelected())
+      const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
+
+      if (t->IsSelectedOrSyncLockSelected() || (notLocked && playable))
       {
          for (int i = (int)regions.size() - 1; i >= 0; i--)
          {
@@ -201,6 +206,8 @@ void EditClipboardByLabel( AudacityProject &project,
    if( regions.size() == 0 )
       return;
 
+   const bool notLocked = !ProjectSettings::Get(project).IsSyncLocked();
+
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
 
@@ -213,7 +220,9 @@ void EditClipboardByLabel( AudacityProject &project,
 
    for( auto t : tracks.Any())
    {
-      if (t->GetSelected() || t->IsSyncLockSelected())
+      const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
+
+      if (t->IsSelectedOrSyncLockSelected() || (notLocked && playable))
       {
          // This track accumulates the needed clips, right to left:
          Track::Holder merged;
@@ -417,7 +426,7 @@ void OnCutLabels(const CommandContext &context)
          }
       );
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    selectedRegion.collapseToT0();
 
@@ -442,7 +451,7 @@ void OnDeleteLabels(const CommandContext &context)
    {
       track->Clear(t0, t1);
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    selectedRegion.collapseToT0();
 
@@ -510,7 +519,7 @@ void OnSplitDeleteLabels(const CommandContext &context)
          }
       );
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on
@@ -539,7 +548,7 @@ void OnSilenceLabels(const CommandContext &context)
          }
       );
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb)*/
@@ -592,7 +601,7 @@ void OnSplitLabels(const CommandContext &context)
          }
       );
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) past tense.  Audacity has just split the labeled
@@ -620,7 +629,7 @@ void OnJoinLabels(const CommandContext &context)
          }
       );
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just joined the labeled audio (points or
@@ -648,7 +657,7 @@ void OnDisjoinLabels(const CommandContext &context)
          }
       );
    };
-   EditByLabel(tracks, selectedRegion, editfunc);
+   EditByLabel(project, tracks, selectedRegion, editfunc);
 
    ProjectHistory::Get( project ).PushState(
       /* i18n-hint: (verb) Audacity has just detached the labeled audio regions.
