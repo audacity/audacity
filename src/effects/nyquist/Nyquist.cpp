@@ -527,14 +527,12 @@ int NyquistEffect::SetLispVarsFromParameters(CommandParameters & parms, bool bTe
          if (good && !bTestOnly)
             ctrl.valStr = val;
       }
-/*
       else if (ctrl.type == NYQ_CTRL_TEXT)
       {
          // This "control" is just fixed text (nothing to save or restore),
          // Does not count for good/bad counting.
          good = true;
       }
-*/
       badCount += !good ? 1 : 0;
    }
    return badCount;
@@ -2640,7 +2638,7 @@ bool NyquistEffect::TransferDataFromEffectWindow()
    {
       NyqControl *ctrl = &mControls[i];
 
-      if (ctrl->type == NYQ_CTRL_STRING)
+      if (ctrl->type == NYQ_CTRL_STRING || ctrl->type == NYQ_CTRL_TEXT)
       {
          continue;
       }
