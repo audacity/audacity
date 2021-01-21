@@ -2207,7 +2207,7 @@ bool ProjectFileIO::SaveProject(
 
       // Try to compact the original project file
       auto empty = TrackList::Create(&mProject);
-      Compact( { lastSaved ? lastSaved : empty.get() } );
+      Compact( { lastSaved ? lastSaved : empty.get() }, true );
 
       // Save to close the original project file now
       CloseProject();
