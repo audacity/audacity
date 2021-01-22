@@ -726,9 +726,9 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       // This is a fix for bugs 1300 and 1579. Using the wx provides IDs
       // allows wx to handle them in an macOS way.
       else if (name == wxT("Copy"))
-         entry->id = wxID_CUT;
-      else if (name == wxT("Cut"))
          entry->id = wxID_COPY;
+      else if (name == wxT("Cut"))
+         entry->id = wxID_CUT;
       else if (name == wxT("Delete"))
          entry->id = wxID_CLEAR;
       else if (name == wxT("Paste"))
