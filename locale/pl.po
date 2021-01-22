@@ -15302,7 +15302,7 @@ msgstr "&Typ okna:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Zero padding factor:"
-msgstr "&Zerowe dopełnienie czynnika:"
+msgstr "Współczynnik uzupełnienia &zerami:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
