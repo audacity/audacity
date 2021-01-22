@@ -723,8 +723,10 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       else if (name == wxT("About"))
          entry->id = wxID_ABOUT;
 
-      // This is a fix for bugs 1300 and 1579. Using the wx provides IDs
-      // allows wx to handle them in an macOS way.
+#if defined(BE_CAREFUL)
+      // Don't be tempted to do this unless you're willing to change how
+      // HandleMenuID() decides if a menu action should be performed.
+      // (see comments 6-9 in bug #2642 for symptoms)
       else if (name == wxT("Copy"))
          entry->id = wxID_COPY;
       else if (name == wxT("Cut"))
@@ -735,6 +737,8 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
          entry->id = wxID_PASTE;
       else if (name == wxT("SelectAll"))
          entry->id = wxID_SELECTALL;
+#endif
+
 #endif
 
       entry->name = name;

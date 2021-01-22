@@ -508,6 +508,42 @@ int FileDialog::ShowModal()
 
         SetupExtraControls(sPanel);
 
+        // PRL:
+        // Hack for bugs 1300/1579: Intercept key down events, implementing
+        // copy/cut/paste, by invoking appropriate selectors. This is done
+        // because we do not use the wxWidgets IDs for the menu equivalents.
+        id handler;
+        if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT)) {
+           handler = [
+              NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask
+              handler:^NSEvent *(NSEvent *event)
+              {
+                 auto app = [NSApplication sharedApplication];
+                 if ([event modifierFlags] & NSCommandKeyMask)
+                 {
+                    auto chars = [event charactersIgnoringModifiers];
+                    if ([chars isEqualToString:@"a"])
+                    {
+                          [app sendAction:@selector(selectAll:) to:nil from:nil];
+                    }
+                    else if ([chars isEqualToString:@"c"])
+                    {
+                          [app sendAction:@selector(copy:) to:nil from:nil];
+                    }
+                    else if ([chars isEqualToString:@"x"])
+                    {
+                          [app sendAction:@selector(cut:) to:nil from:nil];
+                    }
+                    else if ([chars isEqualToString:@"v"])
+                    {
+                          [app sendAction:@selector(paste:) to:nil from:nil];
+                    }
+                 }
+                 return event;
+              }
+           ];
+        }
+
         // makes things more convenient:
         [sPanel setCanCreateDirectories:YES];
         [sPanel setMessage:cf.AsNSString()];
@@ -540,6 +576,8 @@ int FileDialog::ShowModal()
         [sPanel setNameFieldStringValue:file.AsNSString()];
         returnCode = [sPanel runModal];
         ModalFinishedCallback(sPanel, returnCode);
+        if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT))
+           [NSEvent removeMonitor:handler];
     }
     else
     {
