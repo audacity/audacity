@@ -855,8 +855,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occasions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
-   auto fileName = PlatformCompatibility::ConvertSlashInFileName(
-      PlatformCompatibility::GetLongFileName(fileNameArg));
+   auto fileName = PlatformCompatibility::GetLongFileName(fileNameArg);
 
    if (TempDirectory::FATFilesystemDenied(fileName,
                                       XO("Project resides on FAT formatted drive.\n"
@@ -889,6 +888,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
       return;
    }
 
+printf("fileexists %d\n", wxFileExists(fileName));
    if (!::wxFileExists(fileName)) {
       AudacityMessageBox(
          XO("Could not open file: %s").Format( fileName ),

@@ -39,19 +39,6 @@ public:
    // This string is unchanging
    //
    static const FilePath &GetExecutablePath();
-
-   //
-   // Audacity treats the / as a file separator always for Mac OS,
-   // however /'s are allowed in the filename. In order for /'s to
-   // work they muse be treated as :'s. To facilitate this, this
-   // function should be called when opening or saving a file on
-   // the Mac. It's important to note that if a / is used in a filename
-   // and folder exists in the same folder with the same name as the part
-   // of the file (before the first /) then the file will be saved inside
-   // of that directory. This function also exists in the FileDialogPrivate
-   // object
-   //
-   static FilePath ConvertSlashInFileName(const FilePath& filePath);
 };
 
 #endif
