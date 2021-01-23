@@ -146,3 +146,15 @@ double StepTimeWarper::Warp(double originalTime) const
 {
    return originalTime + ((originalTime > mTStep) ? mOffset : 0.0);
 }
+
+PasteTimeWarper::PasteTimeWarper(double oldT1, double newT1)
+: mOldT1{ oldT1 }, mNewT1{ newT1 }
+{ }
+
+double PasteTimeWarper::Warp(double originalTime) const
+{
+   if (originalTime < mOldT1)
+      return std::min(originalTime, mNewT1);
+   else
+      return originalTime + mNewT1 - mOldT1;
+}

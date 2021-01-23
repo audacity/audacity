@@ -20,6 +20,7 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../commands/ScreenshotCommand.h"
+#include "../effects/TimeWarper.h"
 #include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
@@ -410,6 +411,13 @@ void OnPaste(const CommandContext &context)
    bool bAdvanceClipboard = true;
    bool bPastedSomething = false;
 
+   auto pasteWaveTrack = [&](WaveTrack *dst, const Track *src){
+      bPastedSomething = true;
+      // For correct remapping of preserved split lines:
+      PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
+      dst->ClearAndPaste(t0, t1, src, true, true, &warper);
+   };
+
    auto pC = clipTrackRange.begin();
    size_t nnChannels=0, ncChannels=0;
    while (*pN && *pC) {
@@ -501,13 +509,11 @@ void OnPaste(const CommandContext &context)
 
          if (!ff)
             ff = n;
-         
+
          wxASSERT( n && c && n->SameKindAs(*c) );
          n->TypeSwitch(
             [&](WaveTrack *wn){
-               const auto wc = static_cast<const WaveTrack *>(c);
-               bPastedSomething = true;
-               wn->ClearAndPaste(t0, t1, wc, true, true);
+               pasteWaveTrack(wn, static_cast<const WaveTrack *>(c));
             },
             [&](LabelTrack *ln){
                // Per Bug 293, users expect labels to move on a paste into
@@ -539,8 +545,7 @@ void OnPaste(const CommandContext &context)
 
             n->TypeSwitch(
                [&](WaveTrack *wn){
-                  bPastedSomething = true;
-                  wn->ClearAndPaste(t0, t1, c, true, true);
+                  pasteWaveTrack(wn, c);
                },
                [&](Track *){
                   n->Clear(t0, t1);
@@ -581,8 +586,7 @@ void OnPaste(const CommandContext &context)
                return fallthrough();
 
             if (wc) {
-               bPastedSomething = true;
-               wt->ClearAndPaste(t0, t1, wc, true, true);
+               pasteWaveTrack(wt, wc);
             }
             else {
                auto tmp = wt->EmptyCopy( pSampleBlockFactory );
@@ -591,8 +595,7 @@ void OnPaste(const CommandContext &context)
                   clipboard.Duration() );
                tmp->Flush();
 
-               bPastedSomething = true;
-               wt->ClearAndPaste(t0, t1, tmp.get(), true, true);
+               pasteWaveTrack(wt, tmp.get());
             }
          },
          [&](LabelTrack *lt, const Track::Fallthrough &fallthrough) {
