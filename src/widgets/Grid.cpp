@@ -20,6 +20,7 @@
 
 #include <wx/defs.h>
 #include <wx/choice.h>
+#include <wx/clipbrd.h>
 #include <wx/dc.h>
 #include <wx/grid.h>
 #include <wx/intl.h>
@@ -532,7 +533,50 @@ void Grid::OnSelectCell(wxGridEvent &event)
 
 void Grid::OnKeyDown(wxKeyEvent &event)
 {
-   switch (event.GetKeyCode())
+   auto keyCode = event.GetKeyCode();
+   int crow = GetGridCursorRow();
+   int ccol = GetGridCursorCol();
+
+   if (event.CmdDown() && crow != wxGridNoCellCoords.GetRow() && ccol != wxGridNoCellCoords.GetCol())
+   {
+      wxClipboardLocker cb;
+
+      switch (keyCode)
+      {
+         case 'C': // Copy
+         {
+            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+            wxClipboard::Get()->SetData(data);
+            return;
+         }
+         break;
+
+         case 'X': // Cut
+         {
+            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+            wxClipboard::Get()->SetData(data);
+            SetCellValue(crow, ccol, {});
+            return;
+         }
+         break;
+
+         case 'V': // Paste
+         {
+            if (wxClipboard::Get()->IsSupported(wxDF_UNICODETEXT))
+            {
+               wxTextDataObject data;
+               if (wxClipboard::Get()->GetData(data))
+               {
+                  SetCellValue(crow, ccol, data.GetText());
+                  return;
+               }
+            }
+         }
+         break;
+      }
+   }
+
+   switch (keyCode)
    {
       case WXK_LEFT:
       case WXK_RIGHT:

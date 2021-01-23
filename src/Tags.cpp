@@ -1412,6 +1412,12 @@ void TagsEditorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
       mGrid->HideCellEditControl();
+#if defined(__WXMAC__)
+      // The cell editors do not capture the ENTER key, so it invokes
+      // the default button ("Ok") when it should just close the
+      // editor. So, cancel the "Ok" action.
+      return;
+#endif
    }
 
    if (!Validate() || !TransferDataFromWindow()) {
