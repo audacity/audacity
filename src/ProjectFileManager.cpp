@@ -157,6 +157,7 @@ auto ProjectFileManager::ReadProjectFile(
    if (bParseSuccess)
    {
       if (discardAutosave)
+         // REVIEW: Failure OK?
          projectFileIO.AutoSaveDelete();
       else if (projectFileIO.IsRecovered()) {
          bool resaved = false;
@@ -341,6 +342,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    if (!success)
    {
       // Show this error only if we didn't fail reconnection in SaveProject
+      // REVIEW: Could HasConnection() be true but SaveProject() still have failed?
       if (!projectFileIO.HasConnection())
          ShowErrorDialog(
             &window,
@@ -747,6 +749,8 @@ void ProjectFileManager::CompactProjectOnClose()
          // without save.  Don't leave the document blob from the last
          // push of undo history, when that undo state may get purged
          // with deletion of some new sample blocks.
+         // REVIEW: UpdateSaved() might fail too.  Do we need to test 
+         // for that and report it?
          projectFileIO.UpdateSaved( mLastSavedTracks.get() );
       }
    }
@@ -1147,7 +1151,7 @@ bool ProjectFileManager::Import(
 
    // Handle AUP3 ("project") files directly
    if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
-
+      // REVIEW: If ImportProject fails, will the failure be reported?
       if (projectFileIO.ImportProject(fileName)) {
          auto &history = ProjectHistory::Get(project);
 

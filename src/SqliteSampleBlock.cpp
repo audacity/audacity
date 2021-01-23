@@ -435,6 +435,7 @@ bool SqliteSampleBlock::GetSummary(float *dest,
          // Prepare and cache statement...automatically finalized at DB close
          auto stmt = Conn()->Prepare(id, sql);
          // Note GetBlob returns a size_t, not a bool
+         // REVIEW: An error in GetBlob() will throw an exception.
          GetBlob(dest,
                      floatSample,
                      stmt,

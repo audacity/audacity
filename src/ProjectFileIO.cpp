@@ -753,6 +753,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          }
 
          // Rollback transaction in case one was active.
+         // REVIEW: Rollback could fail.  Does that matter?
          sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
 
          // And detach the outbound DB in case it's attached.
@@ -1168,6 +1169,8 @@ void ProjectFileIO::Compact(
             // PRL:  not clear what to do if the following fails, but the worst should
             // be, the project may reopen in its present state as a recovery file, not
             // at the last saved state.
+            // REVIEW: Could the autosave file be corrupt though at that point, and so 
+            // prevent recovery?
             (void) AutoSaveDelete();
          }
 
@@ -1181,6 +1184,7 @@ void ProjectFileIO::Compact(
 
    // Copy the original database to a new database. Only prune sample blocks if
    // we have a tracklist.
+   // REVIEW: Compact can fail on the CopyTo with no error messages.  That's OK?
    if (CopyTo(tempName, XO("Compacting project"), IsTemporary(), !tracks.empty(), tracks))
    {
       // Must close the database to rename it
@@ -1658,6 +1662,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    // Ensure the inbound database gets detached
    auto detach = finally([&]
    {
+      // REVIEW: Just a memory leak if this fails?
       sqlite3_exec(db, "DETACH DATABASE inbound;", nullptr, nullptr, nullptr);
    });
 
@@ -1898,6 +1903,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       }
 
       // Go ahead and commit now
+      // REVIEW: Return code not checked.
       sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
 
       // Copy over tags...likely to produce duplicates...needs work once used
@@ -2066,11 +2072,14 @@ bool ProjectFileIO::UpdateSaved(const TrackList *tracks)
    }
 
    // Autosave no longer needed
+   // REVIEW: Failure OK?
    AutoSaveDelete();
 
    return true;
 }
 
+// REVIEW: This function is believed to report an error to the user in all cases 
+// of failure.  Callers are believed not to need to do so if they receive 'false'.
 bool ProjectFileIO::SaveProject(
    const FilePath &fileName, const TrackList *lastSaved)
 {
@@ -2193,6 +2202,7 @@ bool ProjectFileIO::SaveProject(
       }
 
       // Autosave no longer needed in original project file
+      // REVIEW: Failure OK?
       AutoSaveDelete();
 
       if (lastSaved) {
@@ -2498,6 +2508,8 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /*
          // And retrieve the page
          if (sqlite3_step(stmt) != SQLITE_ROW)
          {
+            // REVIEW: Likely harmless failure - says size is zero on
+            // this error.
             return 0;
          }
 
