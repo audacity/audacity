@@ -180,6 +180,7 @@ ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 ExportPCMOptions::~ExportPCMOptions()
 {
    // Save the encoding
+   SaveOtherFormat(mType);
    SaveEncoding(mType, sf_encoding_index_to_subtype(mEncodingIndexes[mEncodingFromChoice]));
 }
 
@@ -223,7 +224,6 @@ void ExportPCMOptions::OnShow(wxShowEvent & evt)
    if (evt.IsShown())
    {
       SendSuffixEvent();
-      SaveEncoding(mType, sf_encoding_index_to_subtype(mEncodingIndexes[mEncodingFromChoice]));
    }
 }
 
