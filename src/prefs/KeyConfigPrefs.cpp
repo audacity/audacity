@@ -286,6 +286,8 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                       &KeyConfigPrefs::OnHotkeyChar)
             .ConnectRoot(wxEVT_KILL_FOCUS,
                       &KeyConfigPrefs::OnHotkeyKillFocus)
+            .ConnectRoot(wxEVT_CONTEXT_MENU,
+                      &KeyConfigPrefs::OnHotkeyContext)
             .AddWindow(mKey);
 
          /* i18n-hint: (verb)*/
@@ -655,6 +657,11 @@ void KeyConfigPrefs::OnHotkeyKillFocus(wxEvent & e)
    }
 
    e.Skip();
+}
+
+void KeyConfigPrefs::OnHotkeyContext(wxEvent & WXUNUSED(e))
+{
+   // event.Skip() not performed, so event will not be processed further.
 }
 
 void KeyConfigPrefs::OnFilterTimer(wxTimerEvent & WXUNUSED(e))
