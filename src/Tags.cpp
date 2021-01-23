@@ -1245,23 +1245,25 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   // Remember title and track in case they're read only
-   wxString title = mLocal.GetTag(TAG_TITLE);
-   wxString track = mLocal.GetTag(TAG_TRACK);
-
-   // Clear current contents
-   mLocal.Clear();
-
    // Load the metadata
+   decltype(mLocal) temp;
    XMLFileReader reader;
-   if (!reader.Parse(&mLocal, fn)) {
+   if (!reader.Parse(&temp, fn)) {
       // Inform user of load failure
       AudacityMessageBox(
          reader.GetErrorStr(),
          XO("Error Loading Metadata"),
          wxOK | wxCENTRE,
          this);
+      return;
    }
+
+   // Remember title and track in case they're read only
+   wxString title = mLocal.GetTag(TAG_TITLE);
+   wxString track = mLocal.GetTag(TAG_TRACK);
+
+   // Replace existing tags with loaded ones
+   mLocal = temp;
 
    // Restore title
    if (!mEditTitle) {
