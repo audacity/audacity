@@ -1550,7 +1550,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // gPrefs->Write(wxT("/AudioIO/SilenceLevel"), silenceLevelDB);
       // gPrefs->Flush();
    }
-   mSilenceLevel = (silenceLevelDB + dBRange)/(double)dBRange;  // meter goes -dBRange dB -> 0dB
+   mSilenceLevel = DB_TO_LINEAR(silenceLevelDB);  // meter goes -dBRange dB -> 0dB
 
    // Clamp pre-roll so we don't play before time 0
    const auto preRoll = std::max(0.0, std::min(t0, options.preRoll));
@@ -3756,25 +3756,31 @@ void AudioIoCallback::ComputeMidiTimings(
 //   to run in the main GUI thread after the next event loop iteration.
 //   That's important, because Pause() updates GUI, such as status bar,
 //   and that should NOT happen in this audio non-gui thread.
-void AudioIoCallback::CheckSoundActivatedRecordingLevel( const void *inputBuffer )
+void AudioIoCallback::CheckSoundActivatedRecordingLevel(
+      float *inputSamples,
+      unsigned long framesPerBuffer
+   )
 {
-   if( !inputBuffer)
-      return;
    // Quick returns if next to nothing to do.
    if( !mPauseRec )
       return;
-   if( !mInputMeter )
-      return;
-   
-   bool bShouldBePaused = mInputMeter->GetMaxPeak() < mSilenceLevel;
-   if( bShouldBePaused != IsPaused())
+
+   float maxPeak = 0.;
+   for( unsigned long i = 0, cnt = framesPerBuffer * mNumCaptureChannels; i < cnt; ++i ) {
+      float sample = fabs(*(inputSamples++));
+      if (sample > maxPeak) {
+         maxPeak = sample;
+      }
+   }
+
+   bool bShouldBePaused = maxPeak < mSilenceLevel;
+   if( bShouldBePaused != IsPaused() )
    {
       auto pListener = GetListener();
       if ( pListener )
          pListener->OnSoundActivationThreshold();
    }
 }
-
 
 // A function to apply the requested gain, fading up or down from the
 // most recently applied gain.
@@ -4234,8 +4240,7 @@ void AudioIoCallback::DoPlaythrough(
 /* Send data to recording VU meter if applicable */
 // Also computes rms
 void AudioIoCallback::SendVuInputMeterData(
-   float *tempFloats,
-   const void *inputBuffer,
+   float *inputSamples,
    unsigned long framesPerBuffer   
    )
 {
@@ -4244,8 +4249,6 @@ void AudioIoCallback::SendVuInputMeterData(
    if (!mInputMeter)
       return;
    if( mInputMeter->IsMeterDisabled())
-      return;
-   if( !inputBuffer) 
       return;
 
    // get here if meters are actually live , and being updated
@@ -4261,18 +4264,9 @@ void AudioIoCallback::SendVuInputMeterData(
    //TODO use atomics instead.
    mUpdatingMeters = true;
    if (mUpdateMeters) {
-      if (mCaptureFormat == floatSample)
          mInputMeter->UpdateDisplay(numCaptureChannels,
-                                                framesPerBuffer,
-                                                (float *)inputBuffer);
-      else {
-         CopySamples((samplePtr)inputBuffer, mCaptureFormat,
-                     (samplePtr)tempFloats, floatSample,
-                     framesPerBuffer * numCaptureChannels);
-         mInputMeter->UpdateDisplay(numCaptureChannels,
-                                                framesPerBuffer,
-                                                tempFloats);
-      }
+                                    framesPerBuffer,
+                                    inputSamples);
    }
    mUpdatingMeters = false;
 }
@@ -4432,22 +4426,35 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
          (float *)outputBuffer;
    // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
+   if (inputBuffer && numCaptureChannels) {
+      float *inputSamples;
 
-   SendVuInputMeterData(
-      tempFloats, 
-      inputBuffer,
-      framesPerBuffer); 
+      if (mCaptureFormat == floatSample) {
+         inputSamples = (float *) inputBuffer;
+      }
+      else {
+         CopySamples((samplePtr)inputBuffer, mCaptureFormat,
+                     (samplePtr)tempFloats, floatSample,
+                     framesPerBuffer * numCaptureChannels);
+         inputSamples = tempFloats;
+      }
 
-   // This function may queue up a pause or resume.
-   // TODO this is a bit dodgy as it toggles the Pause, and
-   // relies on an idle event to have handled that, so could 
-   // queue up multiple toggle requests and so do nothing.
-   // Eventually it will sort itself out by random luck, but
-   // the net effect is a delay in starting/stopping sound activated 
-   // recording.
-   CheckSoundActivatedRecordingLevel(
-      inputBuffer);
-  
+      SendVuInputMeterData(
+         inputSamples,
+         framesPerBuffer);
+
+      // This function may queue up a pause or resume.
+      // TODO this is a bit dodgy as it toggles the Pause, and
+      // relies on an idle event to have handled that, so could 
+      // queue up multiple toggle requests and so do nothing.
+      // Eventually it will sort itself out by random luck, but
+      // the net effect is a delay in starting/stopping sound activated 
+      // recording.
+      CheckSoundActivatedRecordingLevel(
+         inputSamples,
+         framesPerBuffer);
+   }
+
    // Even when paused, we do playthrough.
    // Initialise output buffer to zero or to playthrough data.
    // Initialise output meter values.

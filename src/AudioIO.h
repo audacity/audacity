@@ -308,7 +308,10 @@ public:
    void ComputeMidiTimings(
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer);
-   void CheckSoundActivatedRecordingLevel(const void *inputBuffer);
+   void CheckSoundActivatedRecordingLevel(
+      float *inputSamples,
+      unsigned long framesPerBuffer
+   );
    void AddToOutputChannel( unsigned int chan,
       float * outputMeterFloats,
       float * outputFloats,
@@ -339,8 +342,7 @@ public:
       float *outputMeterFloats
    );
    void SendVuInputMeterData(
-      float *tempFloats,
-      const void *inputBuffer,
+      float *inputSamples,
       unsigned long framesPerBuffer
    );
    void SendVuOutputMeterData(
