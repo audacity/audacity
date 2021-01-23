@@ -93,7 +93,24 @@ bool EffectStereoToMono::Process()
       if (channels.size() > 1)
       {
          auto right = *channels.rbegin();
-         if (left->GetRate() == right->GetRate())
+         auto leftRate = left->GetRate();
+         auto rightRate = right->GetRate();
+
+         if (leftRate != rightRate)
+         {
+            if (leftRate != mProjectRate)
+            {
+               mProgress->SetMessage(XO("Resampling left channel"));
+               left->Resample(mProjectRate, mProgress);
+               leftRate = mProjectRate;
+            }
+            if (rightRate != mProjectRate)
+            {
+               mProgress->SetMessage(XO("Resampling right channel"));
+               right->Resample(mProjectRate, mProgress);
+               rightRate = mProjectRate;
+            }
+         }
          {
             auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
                                right->TimeToLongSamples(right->GetStartTime()));
@@ -111,6 +128,8 @@ bool EffectStereoToMono::Process()
    sampleCount curTime = 0;
    bool refreshIter = false;
 
+   mProgress->SetMessage(XO("Mixing down to mono"));
+
    trackRange = mOutputTracks->SelectedLeaders< WaveTrack >();
    while (trackRange.first != trackRange.second)
    {
@@ -120,17 +139,14 @@ bool EffectStereoToMono::Process()
       {
          auto right = *channels.rbegin();
 
-         if (left->GetRate() == right->GetRate())
+         bGoodResult = ProcessOne(curTime, totalTime, left, right);
+         if (!bGoodResult)
          {
-            bGoodResult = ProcessOne(curTime, totalTime, left, right);
-            if (!bGoodResult)
-            {
-               break;
-            }
-
-            // The right channel has been deleted, so we must restart from the beginning
-            refreshIter = true;
+            break;
          }
+
+         // The right channel has been deleted, so we must restart from the beginning
+         refreshIter = true;
       }
 
       if (refreshIter)
