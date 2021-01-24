@@ -166,7 +166,7 @@ The current algorithm for determining which image to use is:
   - ELSE use the built in ' ThemeAsCeeCode.h ' defaults.
 
 This is handled in function \ref ThemeBase::LoadThemeAtStartUp().  Once the 
-deprecated XPMs have been removed, we wil switch over to using the built 
+deprecated XPMs have been removed, we will switch over to using the built 
 in 'ThemeAsCeeCode.h' defaults where we currently use the XPM defaults.
 
 

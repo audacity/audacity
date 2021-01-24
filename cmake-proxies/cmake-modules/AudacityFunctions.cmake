@@ -145,7 +145,7 @@ endfunction()
 # project in Visual Studio. Sweet right? Well, not quite...
 #
 # We want the Audacity target to be the startup project to provide
-# eaiser debugging. But, if we do that, the ALL_BUILD target is no
+# easier debugging. But, if we do that, the ALL_BUILD target is no
 # longer "in control" and any dependents of the Audacity target would
 # not get built. So, targets like "nyquist" and "plug-ins" would have
 # to be manually built. This is not what we want since Nyquist would

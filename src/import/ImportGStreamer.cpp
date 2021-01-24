@@ -64,7 +64,7 @@ extern "C"
 
 // Capabilities that Audacity can handle
 //
-// This resolves to: (on little endien)
+// This resolves to: (on little endian)
 //
 //    "audio/x-raw, "
 //    "format = (string) {S16LE, S24_32LE, F32LE}, "

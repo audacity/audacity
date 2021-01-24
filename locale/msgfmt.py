@@ -222,7 +222,7 @@ class Msgfmt:
             elif l.startswith('msgid_plural'):
                 if section != ID:
                     raise PoSyntaxError(
-                        'msgid_plural not preceeded by '
+                        'msgid_plural not preceded by '
                         'msgid on line %d of po file %s' %
                         (lno, repr(self.name)))
                 l = l[12:]

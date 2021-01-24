@@ -137,7 +137,7 @@ void Track::SetOwner
 (const std::weak_ptr<TrackList> &list, TrackNodePointer node)
 {
    // BUG: When using this function to clear an owner, we may need to clear
-   // focussed track too.  Otherwise focus could remain on an invisible (or deleted) track.
+   // focused track too.  Otherwise focus could remain on an invisible (or deleted) track.
    mList = list;
    mNode = node;
 }

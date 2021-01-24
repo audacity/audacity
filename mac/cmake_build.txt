@@ -1,7 +1,7 @@
 Instructions for building on macOS using CMake.
 
 Building on macOS has been made much simpler with the Audacity 2.4.0
-release. Still, read this document throughly before starting.
+release. Still, read this document thoroughly before starting.
 
 1) Get and install the latest Xcode version available your macOS version:
 

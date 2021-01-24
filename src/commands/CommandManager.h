@@ -272,7 +272,7 @@ class AUDACITY_DLL_API CommandManager final
        // parenthesized, after the translated name.
        const ComponentInterfaceSymbol commands[], size_t nCommands) const;
 
-   // Sorted list of the shortcut keys to be exluded from the standard defaults
+   // Sorted list of the shortcut keys to be excluded from the standard defaults
    static const std::vector<NormalizedKeyString> &ExcludedList();
 
 private:

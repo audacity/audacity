@@ -210,7 +210,7 @@ public:
 // to one of the operators on Identifiers defined above, but always case
 // sensitive.
 
-// Comparison operators for two TaggedIdentifers, below, require the same tags
+// Comparison operators for two TaggedIdentifiers, below, require the same tags
 // and case sensitivity.
 template< typename Tag1, typename Tag2, bool b1, bool b2 >
 inline bool operator == (

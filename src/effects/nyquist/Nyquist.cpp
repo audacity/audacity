@@ -298,7 +298,7 @@ bool NyquistEffect::IsDefault()
 bool NyquistEffect::DefineParams( ShuttleParams & S )
 {
    // For now we assume Nyquist can do get and set better than DefineParams can,
-   // And so we ONLY use it for geting the signature.
+   // And so we ONLY use it for getting the signature.
    auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
    if( pGa ){
       GetAutomationParameters( *(pGa->mpEap) );

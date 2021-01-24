@@ -484,7 +484,7 @@ private:
    struct Executor{};
 
    //! Helper for recursive case of metafunction implementing Track::TypeSwitch
-   /*! Mutually recursive (in compile time) with tempate Track::Executor. */
+   /*! Mutually recursive (in compile time) with template Track::Executor. */
    struct Dispatcher {
       //! First, recursive case of metafunction, defers generation of operator ()
       template< typename R, typename ConcreteType,

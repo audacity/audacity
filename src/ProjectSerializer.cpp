@@ -39,7 +39,7 @@
 //    name dictionary   dictionary of all names used in the document
 //    data fields       the "encoded" XML document
 //
-// If a subtree is added, it will be preceeded with FT_Push to tell the decoder
+// If a subtree is added, it will be preceded with FT_Push to tell the decoder
 // to preserve the active dictionary.  The decoder will then restore the
 // dictionary when an FT_Pop is encountered.  Nesting is unlimited.
 //

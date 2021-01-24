@@ -108,5 +108,5 @@ IV: PLUGINS: WINDOWS (TM)
 		 Pluggo Synth: quit
 		 Pluggo Sync: quit
 		 Resonation: quit
-		 Genereic Effect: lock-up
+		 Generic Effect: lock-up
 		 LFO: works

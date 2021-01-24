@@ -21,7 +21,7 @@ added into the standard Audacity Project Menus.
 \class ModNullCommandFunctor
 \brief We create one of these functors for each menu item or 
 command which we register with the Command Manager.  These take the 
-click from the menu into the actaul function to be called.
+click from the menu into the actual function to be called.
 
 *//********************************************************************/
 

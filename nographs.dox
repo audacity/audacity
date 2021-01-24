@@ -11,7 +11,7 @@
 ##DOT_IMAGE_FORMAT = svg
 
 ## COMMENT these lines to turn back on certain graphs selectively:
-## (CLASS_GRAPH seems to stil need default YES to draw the basic non-graphViz boxes)
+## (CLASS_GRAPH seems to still need default YES to draw the basic non-graphViz boxes)
 
 ##CLASS_GRAPH = NO
 COLLABORATION_GRAPH = NO

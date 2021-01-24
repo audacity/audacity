@@ -249,7 +249,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    //    3. The bitstream codebook.
    //
    // After we create those our responsibility is complete, libvorbis will
-   // take care of any other ogg bistream constraints (again, according
+   // take care of any other ogg bitstream constraints (again, according
    // to the example encoder source)
    ogg_packet bitstream_header;
    ogg_packet comment_header;

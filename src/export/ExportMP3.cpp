@@ -1592,7 +1592,7 @@ static void dump_config( 	lame_global_flags*	gfp )
       case JOINT_STEREO: wxPrintf(wxT( "Joint-Stereo\n" )); break;
       case DUAL_CHANNEL: wxPrintf(wxT( "Forced Stereo\n" )); break;
       case MONO:         wxPrintf(wxT( "Mono\n" )); break;
-      case NOT_SET:      /* FALLTROUGH */
+      case NOT_SET:      /* FALLTHROUGH */
       default:           wxPrintf(wxT( "Error (unknown)\n" )); break;
    }
 
