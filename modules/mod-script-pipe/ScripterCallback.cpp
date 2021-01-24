@@ -162,8 +162,8 @@ int DoSrvMore(char *pOut, size_t nMax)
    size_t totalLines = aStr.GetCount();
    while (currentLine < totalLines)
    {
-      wxString lineString    = aStr[currentLine];
-      size_t lineLength      = lineString.mb_str().length();
+      wxCharBuffer lineString    = aStr[currentLine].ToUTF8();
+      size_t lineLength      = lineString.length();
       size_t charsLeftInLine = lineLength - currentPosition;
 
       wxASSERT(charsLeftInLine >= 0);
@@ -179,8 +179,7 @@ int DoSrvMore(char *pOut, size_t nMax)
          // Write as much of the rest of the line as will fit in the buffer
          size_t charsToWrite = smin(charsLeftInLine, nMax - 1);
          memcpy(pOut, 
-                lineString.Mid(currentPosition, 
-                               currentPosition + charsToWrite).mb_str(), 
+                &(lineString.data()[currentPosition]),
                 charsToWrite);
          pOut[charsToWrite] = '\0';
          currentPosition    += charsToWrite;
