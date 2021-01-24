@@ -18,7 +18,7 @@ cmd_option( ${_OPT}lib_preference
 #     symbol   suffix for the "USE_<symbol>" variable that the Audacity
 #              target uses to include/exclude functionality.
 #
-#     requried Determines if the library is required or not.  If it is,
+#     required Determines if the library is required or not.  If it is,
 #              the user is not given the option of enabling/disabling it.
 #
 #     check    Determines if local/system checks should be performed here

@@ -1763,7 +1763,7 @@ The repeated choice logic can then be taken out of those
 functions.
 
 JKC: This paves the way for doing data validation too,
-though when we add that we wil need to renumber the
+though when we add that we will need to renumber the
 steps.
 */
 bool ShuttleGuiBase::DoStep( int iStep )

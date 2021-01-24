@@ -35,7 +35,7 @@
 #endif
 
 #include <wx/defs.h>
-#include <wx/intl.h>    // needed for _("translated stings") even if we
+#include <wx/intl.h>    // needed for _("translated strings") even if we
                         // don't have libflac available
 
 #include "Import.h"

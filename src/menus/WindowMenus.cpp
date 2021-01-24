@@ -148,7 +148,7 @@ void OnMacZoom(const CommandContext &context)
 
 void OnMacBringAllToFront(const CommandContext &)
 {
-   // Reall this de-miniaturizes all, which is not exactly the standard
+   // Really this de-miniaturizes all, which is not exactly the standard
    // behavior.
    for (const auto project : AllProjects{})
       GetProjectFrame( *project ).Raise();

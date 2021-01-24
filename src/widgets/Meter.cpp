@@ -1918,7 +1918,7 @@ void MeterPanel::OnAudioIOStatus(wxCommandEvent &evt)
 }
 
 // SaveState() and RestoreState() exist solely for purpose of recreating toolbars
-// They should really be quering the project for current audio I/O state, but there
+// They should really be querying the project for current audio I/O state, but there
 // isn't a clear way of doing that just yet.  (It should NOT query AudioIO.)
 auto MeterPanel::SaveState() -> State
 {

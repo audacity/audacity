@@ -120,7 +120,7 @@ ShuttleGui wraps wxWidget sizers, and the wxWidgets sizer system can sometimes
 itself be confusing.  The most common problem is finding that controls don't
 resize at all for some reason.
 
-Resizing requires that 'stretchiness' propogate all the way down from the 
+Resizing requires that 'stretchiness' propagate all the way down from the 
 ultimate parent window.  Any sizers that is not using \p wxEXPAND will cause
 everything within in it to retain the size it had when the GUI was created,
 i.e. it will not resize when the window does.  A very common idiom is to

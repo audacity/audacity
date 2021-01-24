@@ -24,7 +24,7 @@ cmd_option( ${_OPT}use_ffmpeg
             STRINGS "loaded" ${opt} "off"
 )
 
-# Deteremine if it will be turned off, linked to, or loaded
+# Determine if it will be turned off, linked to, or loaded
 if( ${_OPT}use_ffmpeg STREQUAL "off" )
    message( STATUS "Disabling '${name}' library" )
 else()

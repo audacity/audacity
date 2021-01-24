@@ -321,7 +321,7 @@ void CommandManager::SetMaxList()
    // KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 
    // TODO: At a later date get rid of the maxList entirely and
-   // instead use flags in the menu entrys to indicate whether the default
+   // instead use flags in the menu entries to indicate whether the default
    // shortcut is standard or full.
 
    mMaxListOnly.clear();

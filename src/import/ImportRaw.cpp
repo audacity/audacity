@@ -220,7 +220,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 
       auto msg = XO("Importing %s").Format( wxFileName::FileName(fileName).GetFullName() );
 
-      /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.*/
+      /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.*/
       ProgressDialog progress(XO("Import Raw"), msg);
 
       size_t block;

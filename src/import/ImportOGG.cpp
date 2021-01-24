@@ -66,7 +66,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include <wx/utils.h>
 #include <wx/intl.h>
 /* ffile.h must be included AFTER at least one other wx header that includes
- * wx/setup.h, otherwise #ifdefs erronously collapse it to nothing. This is
+ * wx/setup.h, otherwise #ifdefs erroneously collapse it to nothing. This is
  * a bug in wxWidgets (ffile.h should itself include wx/setup.h), and it
  * was a bitch to track down. */
 #include <wx/ffile.h>
