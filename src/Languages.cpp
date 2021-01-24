@@ -140,6 +140,7 @@ void GetLanguages(
 "bs Bosanski",
 "ca Catal\303\240",
 "ca_ES@valencia Valenci\303\240",
+"co Corsu",
 "cs \304\214e\305\241tina",
 "cy Cymraeg",
 "da Dansk",

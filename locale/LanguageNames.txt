@@ -6,6 +6,7 @@ bn বাংলা
 bs Bosanski
 ca Català
 ca_ES@valencia Valencià
+co Corsu
 cs Čeština
 cy Cymraeg
 da Dansk
