@@ -43,9 +43,6 @@ split points in the input.
 \class GeometricOutputRateTimeWarper
 \brief TimeScale - rate varies geometrically with output
 
-\class StepTimeWarper
-\brief Unit slope but with a jump
-
 \class PasteTimeWarper
 \brief Unit slope but with either a jump (pasting more) or a flat interval (pasting less)
 
@@ -177,16 +174,6 @@ private:
 public:
    GeometricOutputTimeWarper(double tStart, double tEnd,
                              double rStart, double rEnd);
-   double Warp(double originalTime) const override;
-};
-
-class StepTimeWarper final : public TimeWarper
-{
-private:
-   double mTStep;
-   double mOffset;
-public:
-   StepTimeWarper(double tStep, double offset);
    double Warp(double originalTime) const override;
 };
 

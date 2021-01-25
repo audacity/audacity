@@ -138,15 +138,6 @@ GeometricOutputTimeWarper::GeometricOutputTimeWarper(double tStart, double tEnd,
    wxASSERT(tStart < tEnd);
 }
 
-StepTimeWarper::StepTimeWarper(double tStep, double offset)
-: mTStep(tStep), mOffset(offset)
-{ }
-
-double StepTimeWarper::Warp(double originalTime) const
-{
-   return originalTime + ((originalTime > mTStep) ? mOffset : 0.0);
-}
-
 PasteTimeWarper::PasteTimeWarper(double oldT1, double newT1)
 : mOldT1{ oldT1 }, mNewT1{ newT1 }
 { }
