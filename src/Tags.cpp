@@ -895,7 +895,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
             names, std::mem_fn( &TranslatableString::Translation ) );
 
          // Build the initial (empty) grid
-         mGrid->CreateGrid(0, 2);
+         mGrid->CreateGrid(0, 2, wxGrid::wxGridSelectRows);
          mGrid->SetRowLabelSize(0);
          mGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
          mGrid->SetColLabelValue(0, _("Tag"));

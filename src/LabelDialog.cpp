@@ -128,7 +128,7 @@ LabelDialog::~LabelDialog()
 void LabelDialog::PopulateLabels()
 {
    // Build the initial (empty) grid
-   mGrid->CreateGrid(0, Col_Max);
+   mGrid->CreateGrid(0, Col_Max, wxGrid::wxGridSelectRows);
    mGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
 
    size_t ii = 0;

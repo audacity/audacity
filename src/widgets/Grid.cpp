@@ -500,7 +500,6 @@ Grid::Grid(wxWindow *parent,
                     safenew wxGridCellStringRenderer,
                     safenew ChoiceEditor);
 
-
    SetSelectionForeground(GetDefaultCellTextColour());
    SetSelectionBackground(GetDefaultCellBackgroundColour());
 }
