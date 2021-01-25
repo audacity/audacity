@@ -43,6 +43,71 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/frame.h>
 #include <wx/menu.h>
 
+LabelTrackView::Index::Index()
+:  mIndex(-1),
+   mModified(false)
+{
+}
+
+LabelTrackView::Index::Index(int index)
+:  mIndex(index),
+   mModified(false)
+{
+}
+
+LabelTrackView::Index &LabelTrackView::Index::operator =(int index)
+{
+   if (index != mIndex) {
+      mModified = false;
+   }
+   mIndex = index;
+   return *this;
+}
+
+
+LabelTrackView::Index &LabelTrackView::Index::operator +(int index)
+{
+   mModified = false;
+   mIndex += index;
+   return *this;
+}
+
+LabelTrackView::Index &LabelTrackView::Index::operator -(int index)
+{
+   mModified = false;
+   mIndex -= index;
+   return *this;
+}
+
+LabelTrackView::Index &LabelTrackView::Index::operator ++()
+{
+   mModified = false;
+   mIndex += 1;
+   return *this;
+}
+
+LabelTrackView::Index &LabelTrackView::Index::operator --()
+{
+   mModified = false;
+   mIndex -= 1;
+   return *this;
+}
+
+LabelTrackView::Index::operator int() const
+{
+   return mIndex;
+}
+
+bool LabelTrackView::Index::IsModified() const
+{
+   return mModified;
+}
+
+void LabelTrackView::Index::SetModified(bool modified)
+{
+   mModified = modified;
+}
+
 LabelTrackView::LabelTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
@@ -100,8 +165,11 @@ void LabelTrackView::CopyTo( Track &track ) const
    auto &other = TrackView::Get( track );
 
    if ( const auto pOther = dynamic_cast< const LabelTrackView* >( &other ) ) {
-      // only one field is important to preserve in undo/redo history
       pOther->mSelIndex = mSelIndex;
+      pOther->mInitialCursorPos = mInitialCursorPos;
+      pOther->mCurrentCursorPos = mCurrentCursorPos;
+      pOther->mDrawCursor = mDrawCursor;
+      pOther->mUndoLabel = mUndoLabel;
    }
 }
 
@@ -951,6 +1019,22 @@ bool LabelTrackView::IsTextSelected( AudacityProject &project ) const
    return true;
 }
 
+bool LabelTrackView::Undo( AudacityProject &project )
+{
+   if (HasSelection( project )) {
+      const auto pTrack = FindLabelTrack();
+      const auto &mLabels = pTrack->GetLabels();
+      auto labelStruct = mLabels[mSelIndex];
+      auto &title = labelStruct.title;
+      if (title.size() == 0) {
+         return true;
+      }
+      return mSelIndex.IsModified();
+   }
+
+   return true;
+}
+
 /// Cut the selected text in the text box
 ///  @return true if text is selected in text box, false otherwise
 bool LabelTrackView::CutSelectedText( AudacityProject &project )
@@ -964,6 +1048,10 @@ bool LabelTrackView::CutSelectedText( AudacityProject &project )
    wxString left, right;
    auto labelStruct = mLabels[mSelIndex];
    auto &text = labelStruct.title;
+
+   if (!mSelIndex.IsModified()) {
+      mUndoLabel = text;
+   }
 
    int init = mInitialCursorPos;
    int cur = mCurrentCursorPos;
@@ -995,6 +1083,8 @@ bool LabelTrackView::CutSelectedText( AudacityProject &project )
 
    // set cursor positions
    mInitialCursorPos = mCurrentCursorPos = left.length();
+
+   mSelIndex.SetModified(true);
    return true;
 }
 
@@ -1053,6 +1143,10 @@ bool LabelTrackView::PasteSelectedText(
          text = data.GetText();
       }
 
+      if (!mSelIndex.IsModified()) {
+         mUndoLabel = text;
+      }
+
       // Convert control characters to blanks
       for (int i = 0; i < (int)text.length(); i++) {
          if (wxIscntrl(text[i])) {
@@ -1076,6 +1170,8 @@ bool LabelTrackView::PasteSelectedText(
    pTrack->SetLabel( mSelIndex, labelStruct );
 
    mInitialCursorPos =  mCurrentCursorPos = left.length() + text.length();
+
+   mSelIndex.SetModified(true);
    return true;
 }
 
@@ -1296,12 +1392,26 @@ unsigned LabelTrackView::KeyDown(
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
 
+   if (!mSelIndex.IsModified() && HasSelection( *project )) {
+      const auto pTrack = FindLabelTrack();
+      const auto &mLabels = pTrack->GetLabels();
+      auto labelStruct = mLabels[mSelIndex];
+      auto &title = labelStruct.title;
+      mUndoLabel = title;
+   }
+
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
    if (DoKeyDown( *project, viewInfo.selectedRegion, event )) {
       ProjectHistory::Get( *project ).PushState(XO("Modified Label"),
          XO("Label Edit"),
-         UndoPush::CONSOLIDATE);
+         mSelIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
+
+      mSelIndex.SetModified(true);
+   }
+
+   if (!mSelIndex.IsModified()) {
+      mUndoLabel.clear();
    }
 
    // Make sure caret is in view
@@ -1328,10 +1438,25 @@ unsigned LabelTrackView::Char(
    // Pass keystroke to labeltrack's handler and add to history if any
    // updates were done
 
-   if (DoChar( *project, viewInfo.selectedRegion, event ))
+   if (!mSelIndex.IsModified() && HasSelection( *project )) {
+      const auto pTrack = FindLabelTrack();
+      const auto &mLabels = pTrack->GetLabels();
+      auto labelStruct = mLabels[mSelIndex];
+      auto &title = labelStruct.title;
+      mUndoLabel = title;
+   }
+
+   if (DoChar( *project, viewInfo.selectedRegion, event )) {
       ProjectHistory::Get( *project ).PushState(XO("Modified Label"),
          XO("Label Edit"),
-      UndoPush::CONSOLIDATE);
+         mSelIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
+
+      mSelIndex.SetModified(true);
+   }
+
+   if (!mSelIndex.IsModified()) {
+      mUndoLabel.clear();
+   }
 
    // If selection modified, refresh
    // Otherwise, refresh track display if the keystroke was handled
@@ -1475,10 +1600,18 @@ bool LabelTrackView::DoKeyDown(
          }
          break;
 
+      case WXK_ESCAPE:
+         if (mSelIndex.IsModified()) {
+            title = mUndoLabel;
+            pTrack->SetLabel(mSelIndex, labelStruct);
+
+            ProjectHistory::Get( project ).PushState(XO("Modified Label"),
+               XO("Label Edit"),
+               mSelIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
+         }
+
       case WXK_RETURN:
       case WXK_NUMPAD_ENTER:
-
-      case WXK_ESCAPE:
          if (mRestoreFocus >= 0) {
             auto track = *TrackList::Get( project ).Any()
                .begin().advance(mRestoreFocus);
@@ -1492,9 +1625,9 @@ bool LabelTrackView::DoKeyDown(
       case WXK_TAB:
       case WXK_NUMPAD_TAB:
          if (event.ShiftDown()) {
-               mSelIndex--;
+               --mSelIndex;
          } else {
-               mSelIndex++;
+               ++mSelIndex;
          }
 
          mSelIndex = (mSelIndex + (int)mLabels.size()) % (int)mLabels.size();    // wrap round if necessary
@@ -1533,7 +1666,7 @@ bool LabelTrackView::DoKeyDown(
                if (newSel.t0() > mLabels[0].getT0()) {
                   while (mSelIndex >= 0 &&
                          mLabels[mSelIndex].getT0() > newSel.t0()) {
-                     mSelIndex--;
+                     --mSelIndex;
                   }
                }
             } else {
@@ -1541,7 +1674,7 @@ bool LabelTrackView::DoKeyDown(
                if (newSel.t0() < mLabels[len - 1].getT0()) {
                   while (mSelIndex < len &&
                          mLabels[mSelIndex].getT0() < newSel.t0()) {
-                     mSelIndex++;
+                     ++mSelIndex;
                   }
                }
             }
@@ -1745,7 +1878,7 @@ void LabelTrackView::OnContextMenu(
       {
          ProjectHistory::Get( project ).PushState(XO("Modified Label"),
                       XO("Label Edit"),
-                      UndoPush::CONSOLIDATE);
+                      mSelIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
       }
       break;
 
@@ -1761,7 +1894,7 @@ void LabelTrackView::OnContextMenu(
       {
          ProjectHistory::Get( project ).PushState(XO("Modified Label"),
                       XO("Label Edit"),
-                      UndoPush::CONSOLIDATE);
+                      mSelIndex.IsModified() ? UndoPush::CONSOLIDATE : UndoPush::NONE);
       }
       break;
 
@@ -1906,7 +2039,7 @@ void LabelTrackView::OnLabelDeleted( LabelTrackEvent &e )
    // THEN the NEW selected label number is one less.
    else if( index < mSelIndex )
    {
-      mSelIndex--;
+      --mSelIndex;
    }
 }
 
