@@ -64,21 +64,6 @@ LabelTrackView::Index &LabelTrackView::Index::operator =(int index)
    return *this;
 }
 
-
-LabelTrackView::Index &LabelTrackView::Index::operator +(int index)
-{
-   mModified = false;
-   mIndex += index;
-   return *this;
-}
-
-LabelTrackView::Index &LabelTrackView::Index::operator -(int index)
-{
-   mModified = false;
-   mIndex -= index;
-   return *this;
-}
-
 LabelTrackView::Index &LabelTrackView::Index::operator ++()
 {
    mModified = false;
@@ -1016,22 +1001,6 @@ bool LabelTrackView::IsTextSelected( AudacityProject &project ) const
       return false;
    if (mCurrentCursorPos == mInitialCursorPos)
       return false;
-   return true;
-}
-
-bool LabelTrackView::Undo( AudacityProject &project )
-{
-   if (HasSelection( project )) {
-      const auto pTrack = FindLabelTrack();
-      const auto &mLabels = pTrack->GetLabels();
-      auto labelStruct = mLabels[mSelIndex];
-      auto &title = labelStruct.title;
-      if (title.size() == 0) {
-         return true;
-      }
-      return mSelIndex.IsModified();
-   }
-
    return true;
 }
 

@@ -112,8 +112,6 @@ public:
    int GetSelectedIndex( AudacityProject &project ) const;
    void SetSelectedIndex( int index );
 
-   bool Undo( AudacityProject &project );
-
    bool CutSelectedText( AudacityProject &project );
    bool CopySelectedText( AudacityProject &project );
    bool PasteSelectedText(
@@ -131,8 +129,6 @@ private:
       Index(int index);
       operator int() const;
       Index &operator =(int index);
-      Index &operator +(int index);
-      Index &operator -(int index);
       Index &operator ++();
       Index &operator --();
 
@@ -141,7 +137,6 @@ private:
 
    private:
       int mIndex;
-      int mFlag;
       bool mModified;
    };
 

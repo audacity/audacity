@@ -183,13 +183,6 @@ void OnUndo(const CommandContext &context)
       return;
    }
 
-   for (auto lt : tracks.Selected< LabelTrack >()) {
-      auto &view = LabelTrackView::Get( *lt );
-      if (!view.Undo( project )) {
-         return;
-      }
-   }
-
    undoManager.Undo(
       [&]( const UndoStackElem &elem ){
          ProjectHistory::Get( project ).PopState( elem.state ); } );
