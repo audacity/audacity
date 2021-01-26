@@ -647,8 +647,11 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
    if (msgres != wxYES)
       return;
 
-   RuleTable->DeleteRows (last_selected);
+   PluginList->DeleteAllItems();
    items.erase (items.begin() + last_selected);
+   DoOnRuleTableSelect (last_selected);
+   // This will change last_selected
+   RuleTable->DeleteRows (last_selected);
    RuleTable->AutoSizeColumns ();
    if (last_selected >= RuleTable->GetNumberRows ())
       last_selected = RuleTable->GetNumberRows () - 1;
