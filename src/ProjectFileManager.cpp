@@ -1151,7 +1151,6 @@ bool ProjectFileManager::Import(
 
    // Handle AUP3 ("project") files directly
    if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
-      // REVIEW: If ImportProject fails, will the failure be reported?
       if (projectFileIO.ImportProject(fileName)) {
          auto &history = ProjectHistory::Get(project);
 
@@ -1169,6 +1168,16 @@ bool ProjectFileManager::Import(
          if (addToHistory) {
             FileHistory::Global().Append(fileName);
          }
+      }
+      else {
+         errorMessage = projectFileIO.GetLastError();
+         if (errorMessage.empty()) {
+            errorMessage = XO("Failed to import project");
+         }
+
+         // Additional help via a Help button links to the manual.
+         ShowErrorDialog(&GetProjectFrame( project ),XO("Error Importing"),
+                         errorMessage, wxT("Importing_Audio"));
       }
 
       return false;

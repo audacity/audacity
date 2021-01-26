@@ -167,6 +167,7 @@ bool DBConnection::Close()
    // We're done with the prepared statements
    for (auto stmt : mStatements)
    {
+      // No need to check return code.
       sqlite3_finalize(stmt.second);
    }
    mStatements.clear();
@@ -179,6 +180,9 @@ bool DBConnection::Close()
       // the hook, but who knows if that would work either.
       //
       // Should we throw an error???
+      //
+      // LLL: Probably not worthwhile since the DB will just be recovered when
+      // next opened.
    }
 
    mDB = nullptr;
@@ -222,7 +226,7 @@ bool DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *confi
    // Set the configuration
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
 
-   return rc != SQLITE_OK;
+   return rc == SQLITE_OK;
 }
 
 sqlite3 *DBConnection::DB()

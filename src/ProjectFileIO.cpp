@@ -726,6 +726,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
       if (!Query("SELECT blockid FROM sampleblocks;", cb))
       {
+         // Error message already captured.
          return false;
       }
    }
@@ -738,7 +739,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    auto db = DB();
    Connection destConn = nullptr;
    bool success = false;
-   int rc;
+   int rc = SQLITE_OK;
    ProgressResult res = ProgressResult::Success;
 
    // Cleanup in case things go awry
@@ -753,10 +754,22 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          }
 
          // Rollback transaction in case one was active.
-         // REVIEW: Rollback could fail.  Does that matter?
-         sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+         // If this fails (probably due to memory or disk space), the transaction will
+         // (presumably) stil be active, so further updates to the project file will
+         // fail as well. Not really much we can do about it except tell the user.
+         auto result = sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
 
-         // And detach the outbound DB in case it's attached.
+         // Only capture the error if there wasn't a previous error
+         if (result != SQLITE_OK && (rc == SQLITE_DONE || rc == SQLITE_OK))
+         {
+            SetDBError(
+               XO("Failed to rollback transaction during import")
+            );
+         }
+
+         // And detach the outbound DB in case (if it's attached). Don't check for
+         // errors since it may not be attached. But, if it is and the DETACH fails,
+         // subsequent CopyTo() actions will fail until Audacity is relaunched.
          sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
          // RemoveProject not necessary to clean up attached database
@@ -781,7 +794,14 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    //
    // NOTE:  Between the above attach and setting the mode here, a normal DELETE
    //        mode journal will be used and will briefly appear in the filesystem.
-   pConn->FastMode("outbound");
+   if (!pConn->FastMode("outbound"))
+   {
+      SetDBError(
+         XO("Unable to switch to fast journaling mode")
+      );
+
+      return false;
+   }
 
    // Install our schema into the new database
    if (!InstallSchema(db, "outbound"))
@@ -812,6 +832,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
       {
          if (stmt)
          {
+            // No need to check return code
             sqlite3_finalize(stmt);
          }
       });
@@ -853,9 +874,14 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
       for (auto blockid : blockids)
       {
          // Bind statement parameters
-         if (sqlite3_bind_int64(stmt, 1, blockid) != SQLITE_OK)
+         rc = sqlite3_bind_int64(stmt, 1, blockid);
+         if (rc != SQLITE_OK)
          {
-            wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
+            SetDBError(
+               XO("Failed to bind SQL parameter")
+            );
+
+            return false;
          }
 
          // Process it
@@ -1153,14 +1179,15 @@ void ProjectFileIO::Compact(
    // Haven't compacted yet
    mWasCompacted = false;
 
-   // Assume we have unused block until we found out otherwise. That way cleanup
+   // Assume we have unused blocks until we found out otherwise. That way cleanup
    // at project close time will still occur.
    mHadUnused = true;
 
-   // Don't compact if this is a temporary project or if it's determined there are not
-   // enough unused blocks to make it worthwhile
+   // If forcing compaction, bypass inspection.
    if (!force)
    {
+      // Don't compact if this is a temporary project or if it's determined there are not
+      // enough unused blocks to make it worthwhile.
       if (IsTemporary() || !ShouldCompact(tracks))
       {
          // Delete the AutoSave doc it if exists
@@ -1171,6 +1198,8 @@ void ProjectFileIO::Compact(
             // at the last saved state.
             // REVIEW: Could the autosave file be corrupt though at that point, and so 
             // prevent recovery?
+            // LLL: I believe Paul is correct since it's deleted with a single SQLite
+            // transaction. The next time the file opens will just invoke recovery.
             (void) AutoSaveDelete();
          }
 
@@ -1185,6 +1214,8 @@ void ProjectFileIO::Compact(
    // Copy the original database to a new database. Only prune sample blocks if
    // we have a tracklist.
    // REVIEW: Compact can fail on the CopyTo with no error messages.  That's OK?
+   // LLL: We could display an error message or just ignore the failure and allow
+   // the file to be compacted the next time it's saved.
    if (CopyTo(tempName, XO("Compacting project"), IsTemporary(), !tracks.empty(), tracks))
    {
       // Must close the database to rename it
@@ -1657,13 +1688,22 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
 
    bool success = false;
    bool restore = true;
-   int rc;
+   int rc = SQLITE_OK;
 
    // Ensure the inbound database gets detached
    auto detach = finally([&]
    {
-      // REVIEW: Just a memory leak if this fails?
-      sqlite3_exec(db, "DETACH DATABASE inbound;", nullptr, nullptr, nullptr);
+      // If this DETACH fails, subsequent project imports will fail until Audacity
+      // is relaunched.
+      auto result = sqlite3_exec(db, "DETACH DATABASE inbound;", nullptr, nullptr, nullptr);
+
+      // Only capture the error if there wasn't a previous error
+      if (result != SQLITE_OK && (rc == SQLITE_DONE || rc == SQLITE_OK))
+      {
+         SetDBError(
+            XO("Failed to detach project during import")
+         );
+      }
    });
 
    // Attach the inbound project file
@@ -1723,12 +1763,19 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
    wxXmlDocument doc;
    if (!doc.Load(in))
    {
+      SetError(XO("Unable to parse the project document"));
+
       return false;
    }
 
    // Get the root ("project") node
    wxXmlNode *root = doc.GetRoot();
-   wxASSERT(root->GetName().IsSameAs(wxT("project")));
+   if (!root->GetName().IsSameAs(wxT("project")))
+   {
+      SetError(XO("Missing root node in project document"));
+
+      return false;
+   }
 
    // Soft delete all non-essential attributes to prevent updating the active
    // project. This takes advantage of the knowledge that when a project is
@@ -1805,6 +1852,7 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
          // Ensure the prepared statement gets cleaned up
          if (stmt)
          {
+            // Ignore the return code since it will have already been captured below.
             sqlite3_finalize(stmt);
          }
       });
@@ -1836,7 +1884,14 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       wxLongLong_t count = 0;
       wxLongLong_t total = blocknodes.size();
 
-      sqlite3_exec(db, "BEGIN;", nullptr, nullptr, nullptr);
+      rc = sqlite3_exec(db, "BEGIN;", nullptr, nullptr, nullptr);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to start a transaction during import")
+         );
+         return false;
+      }
 
       // Copy all the sample blocks from the inbound project file into
       // the active one, while remembering which were copied.
@@ -1859,11 +1914,14 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
             continue;
 
          // Bind statement parameters
-         // Might return SQL_MISUSE which means it's our mistake that we violated
-         // preconditions; should return SQL_OK which is 0
-         if (sqlite3_bind_int64(stmt, 1, blockid) != SQLITE_OK)
+         rc = sqlite3_bind_int64(stmt, 1, blockid);
+         if (rc != SQLITE_OK)
          {
-            wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
+            SetDBError(
+               XO("Failed to bind SQL parameter")
+            );
+
+            break;
          }
 
          // Process it
@@ -1898,13 +1956,35 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       // import or it completed, then we continue on.
       if (rc != SQLITE_DONE || result == ProgressResult::Cancelled || result == ProgressResult::Failed)
       {
-         sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+         // If this fails (probably due to memory or disk space), the transaction will
+         // (presumably) stil be active, so further updates to the project file will
+         // fail as well. Not really much we can do about it except tell the user.
+         auto result = sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
+
+         // Only capture the error if there wasn't a previous error
+         if (result != SQLITE_OK && rc == SQLITE_DONE)
+         {
+            SetDBError(
+               XO("Failed to rollback transaction during import")
+            );
+         }
+
          return false;
       }
 
-      // Go ahead and commit now
-      // REVIEW: Return code not checked.
-      sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
+      // Go ahead and commit now. If this fails (probably due to memory or disk space),
+      // the transaction will (presumably) stil be active, so further updates to the
+      // project file will fail as well. Not really much we can do about it except tell
+      // the user.
+      rc = sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
+      if (rc != SQLITE_OK)
+      {
+         SetDBError(
+            XO("Unable to commit transaction during import")
+         );
+
+         return false;
+      }
 
       // Copy over tags...likely to produce duplicates...needs work once used
       rc = sqlite3_exec(db,
@@ -1922,9 +2002,17 @@ bool ProjectFileIO::ImportProject(const FilePath &fileName)
       }
    }
 
-   // Recreate the project doc with the revisions we've made above
+   // Recreate the project doc with the revisions we've made above. If this fails
+   // it's probably due to memory.
    wxStringOutputStream output;
-   doc.Save(output);
+   if (!doc.Save(output))
+   {
+      SetError(
+         XO("Unable to recreate project information.")
+      );
+
+      return false;
+   }
 
    // Now load the document as normal
    XMLFileReader xmlFile;
@@ -2072,14 +2160,17 @@ bool ProjectFileIO::UpdateSaved(const TrackList *tracks)
    }
 
    // Autosave no longer needed
-   // REVIEW: Failure OK?
-   AutoSaveDelete();
+   if (!AutoSaveDelete())
+   {
+      return false;
+   }
 
    return true;
 }
 
 // REVIEW: This function is believed to report an error to the user in all cases 
 // of failure.  Callers are believed not to need to do so if they receive 'false'.
+// LLL: All failures checks should now be displaying an error.
 bool ProjectFileIO::SaveProject(
    const FilePath &fileName, const TrackList *lastSaved)
 {
@@ -2191,19 +2282,39 @@ bool ProjectFileIO::SaveProject(
 
          if (!success)
          {
-            SetDBError(
-               XO("Failed to open copy of project file")
-            );
+            // Additional help via a Help button links to the manual.
+            ShowErrorDialog(nullptr,
+                           XO("Error Saving Project"),
+                           XO("The project failed to open, possibly to due limited space\n"
+                              "on the storage device.\n\n%s").Format(GetLastError()),
+                           "Error:_Disk_full_or_not_writable");
 
             newConn = nullptr;
+
+            // Clean up the destination project
+            wxRemoveFile(fileName);
 
             return false;
          }
       }
 
-      // Autosave no longer needed in original project file
-      // REVIEW: Failure OK?
-      AutoSaveDelete();
+      // Autosave no longer needed in original project file.
+      if (!AutoSaveDelete())
+      {
+         // Additional help via a Help button links to the manual.
+         ShowErrorDialog(nullptr,
+                        XO("Error Saving Project"),
+                        XO("Unable to remove autosave information, possibly to due limited space\n"
+                           "on the storage device.\n\n%s").Format(GetLastError()),
+                        "Error:_Disk_full_or_not_writable");
+
+         newConn = nullptr;
+
+         // Clean up the destination project
+         wxRemoveFile(fileName);
+
+         return false;
+      }
 
       if (lastSaved) {
          // Bug2605: Be sure not to save orphan blocks
@@ -2215,11 +2326,13 @@ bool ProjectFileIO::SaveProject(
          mRecovered = recovered;
       }
 
-      // Try to compact the original project file
+      // Try to compact the original project file.
       auto empty = TrackList::Create(&mProject);
       Compact( { lastSaved ? lastSaved : empty.get() }, true );
 
-      // Save to close the original project file now
+      // Safe to close the original project file now. Not much we can do if this fails,
+      // but we should still be in good shape since we'll be switching to the newly
+      // saved database below.
       CloseProject();
 
       // And make it the active project file 
@@ -2510,6 +2623,7 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /*
          {
             // REVIEW: Likely harmless failure - says size is zero on
             // this error.
+            // LLL: Yea, but not much else we can do.
             return 0;
          }
 
