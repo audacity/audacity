@@ -1179,7 +1179,7 @@ void ProjectFileIO::Compact(
    // Haven't compacted yet
    mWasCompacted = false;
 
-   // Assume we have unused blocks until we found out otherwise. That way cleanup
+   // Assume we have unused blocks until we find out otherwise. That way cleanup
    // at project close time will still occur.
    mHadUnused = true;
 
@@ -2285,7 +2285,7 @@ bool ProjectFileIO::SaveProject(
             // Additional help via a Help button links to the manual.
             ShowErrorDialog(nullptr,
                            XO("Error Saving Project"),
-                           XO("The project failed to open, possibly to due limited space\n"
+                           XO("The project failed to open, possibly due to limited space\n"
                               "on the storage device.\n\n%s").Format(GetLastError()),
                            "Error:_Disk_full_or_not_writable");
 
@@ -2304,7 +2304,7 @@ bool ProjectFileIO::SaveProject(
          // Additional help via a Help button links to the manual.
          ShowErrorDialog(nullptr,
                         XO("Error Saving Project"),
-                        XO("Unable to remove autosave information, possibly to due limited space\n"
+                        XO("Unable to remove autosave information, possibly due to limited space\n"
                            "on the storage device.\n\n%s").Format(GetLastError()),
                         "Error:_Disk_full_or_not_writable");
 
