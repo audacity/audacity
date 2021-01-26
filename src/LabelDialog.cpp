@@ -130,6 +130,7 @@ void LabelDialog::PopulateLabels()
    // Build the initial (empty) grid
    mGrid->CreateGrid(0, Col_Max, wxGrid::wxGridSelectRows);
    mGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
+   mGrid->SetRowLabelSize(0);
 
    size_t ii = 0;
    for ( const auto &label : {

@@ -210,6 +210,7 @@ class Grid final : public wxGrid
 
    void OnSetFocus(wxFocusEvent &event);
    void OnSelectCell(wxGridEvent &event);
+   void OnEditorShown(wxGridEvent &event);
    void OnKeyDown(wxKeyEvent &event);
 
  private:

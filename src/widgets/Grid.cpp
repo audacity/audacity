@@ -468,6 +468,7 @@ BEGIN_EVENT_TABLE(Grid, wxGrid)
    EVT_SET_FOCUS(Grid::OnSetFocus)
    EVT_KEY_DOWN(Grid::OnKeyDown)
    EVT_GRID_SELECT_CELL(Grid::OnSelectCell)
+   EVT_GRID_EDITOR_SHOWN(Grid::OnEditorShown)
 END_EVENT_TABLE()
 
 Grid::Grid(wxWindow *parent,
@@ -500,6 +501,8 @@ Grid::Grid(wxWindow *parent,
                     safenew wxGridCellStringRenderer,
                     safenew ChoiceEditor);
 
+   // Bug #2803:
+   // Ensure selection doesn't show up.
    SetSelectionForeground(GetDefaultCellTextColour());
    SetSelectionBackground(GetDefaultCellBackgroundColour());
 }
@@ -532,6 +535,15 @@ void Grid::OnSelectCell(wxGridEvent &event)
 #if wxUSE_ACCESSIBILITY
    mAx->SetCurrentCell(event.GetRow(), event.GetCol());
 #endif
+}
+
+void Grid::OnEditorShown(wxGridEvent &event)
+{
+   event.Skip();
+
+   // Bug #2803 (comment 7):
+   // Select row whenever an editor is displayed
+   SelectRow(GetGridCursorRow());
 }
 
 void Grid::OnKeyDown(wxKeyEvent &event)
