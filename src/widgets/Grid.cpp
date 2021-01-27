@@ -532,6 +532,8 @@ void Grid::OnSelectCell(wxGridEvent &event)
 {
    event.Skip();
 
+   MakeCellVisible(event.GetRow(), event.GetCol());
+
 #if wxUSE_ACCESSIBILITY
    mAx->SetCurrentCell(event.GetRow(), event.GetCol());
 #endif
