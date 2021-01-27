@@ -586,7 +586,10 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       for (auto gap : gaps) {
          auto st = track->LongSamplesToTime(track->TimeToLongSamples(gap.first));
          auto et = track->LongSamplesToTime(track->TimeToLongSamples(gap.second));
-         track->SplitDelete(warper.Warp(st), warper.Warp(et));
+         if (st >= mCurT0 && et <= mCurT1 && st != et)
+         {
+            track->SplitDelete(warper.Warp(st), warper.Warp(et));
+         }
       }
    }
 
