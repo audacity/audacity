@@ -834,7 +834,7 @@ TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
    if (IsWindowRectValid(&r))
       Move(r.GetPosition());
 
-   SetSize(r.GetSize());
+   //SetSize(r.GetSize());
    Layout();
 
    // Resize value column width based on width of columns and the vertical scrollbar
