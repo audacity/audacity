@@ -1001,8 +1001,12 @@ finish:
 bool NyquistEffect::ShowInterface(
    wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
-   // Show the normal (prompt or effect) interface
-   bool res = Effect::ShowInterface(parent, factory, forceModal);
+   bool res = true;
+   if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
+      // Show the normal (prompt or effect) interface
+      res = Effect::ShowInterface(parent, factory, forceModal);
+   }
+
 
    // Remember if the user clicked debug
    mDebug = (mUIResultID == eDebugID);

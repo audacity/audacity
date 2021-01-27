@@ -52,8 +52,21 @@ public:
    PluginID mLastGenerator{};
    PluginID mLastEffect{};
    PluginID mLastAnalyzer{};
+   int mLastAnalyzerRegistration;
+   int mLastAnalyzerRegisteredId;
    PluginID mLastTool{};
-   bool mLastToolIsMacro;
+   int mLastToolRegistration;
+   int mLastToolRegisteredId;
+   enum {
+      repeattypenone = 0,
+      repeattypeplugin = 1,
+      repeattypeunique = 2,
+      repeattypeapplymacro = 3
+   };
+   unsigned mRepeatGeneratorFlags;
+   unsigned mRepeatEffectFlags;
+   unsigned mRepeatAnalyzerFlags;
+   unsigned mRepeatToolFlags;
 };
 
 struct ToolbarMenuVisitor;
