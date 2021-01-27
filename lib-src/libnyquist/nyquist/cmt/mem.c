@@ -24,7 +24,7 @@
 /* how many bytes in the largest node managed in mem_free_list array */
 #define MAX_SIZE_FOR_FREELIST 256
 
-long *mem_free_list[MAX_SIZE_FOR_FREELIST/4];
+intptr_t *mem_free_list[MAX_SIZE_FOR_FREELIST/4];
 
 #define MEM_CHUNK_SIZE 4096
 char *mem_chunk;
@@ -45,10 +45,10 @@ void *memget(register size_t size)
 /*		gprintf(TRANS, "memget calling MALLOC\n"); */
         return MALLOC(size);
     } else {
-        long **p = mem_free_list + ((size - 1) >> 2);
+        intptr_t **p = mem_free_list + ((size - 1) >> 2);
         if (*p) {
-            register long *result = *p;
-            *p = (long *) *result;
+            register intptr_t *result = *p;
+            *p = (intptr_t *) *result;
 /*			gprintf(TRANS, "memget->%lx\n", result); */
             return (char *) result;
         } else if ((size_t) mem_chunk_remaining >= size) {
@@ -76,13 +76,13 @@ void *memget(register size_t size)
 
 void memfree(register void *ptr, register size_t size)
 {
-    register long **p = (long **) ptr;
+    register intptr_t **p = (intptr_t **) ptr;
     if (size > MAX_SIZE_FOR_FREELIST) {
         FREE(ptr);
     } else {
-        register long **head_ptr = mem_free_list + ((size - 1) >> 2);
+        register intptr_t **head_ptr = mem_free_list + ((size - 1) >> 2);
         *p = *head_ptr;
-        *head_ptr = (long *) p;
+        *head_ptr = (intptr_t *) p;
     }
 }
 

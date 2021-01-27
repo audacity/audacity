@@ -2,7 +2,7 @@
 #include "stddef.h" 
 #endif
 
-extern long *mem_free_list[];
+extern intptr_t *mem_free_list[];
 
 void *memget(register size_t size);
 void memfree(register void *ptr, register size_t size);
