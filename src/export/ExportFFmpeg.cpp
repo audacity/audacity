@@ -1079,13 +1079,23 @@ bool ExportFFmpeg::AddTags(const Tags *tags)
       return false;
    }
 
-   SetMetadata(tags, "author", TAG_ARTIST);
    SetMetadata(tags, "album", TAG_ALBUM);
    SetMetadata(tags, "comment", TAG_COMMENTS);
    SetMetadata(tags, "genre", TAG_GENRE);
    SetMetadata(tags, "title", TAG_TITLE);
-   SetMetadata(tags, "year", TAG_YEAR);
    SetMetadata(tags, "track", TAG_TRACK);
+
+   // Bug 2564: Add m4a tags
+   if (mEncFormatDesc->audio_codec == AV_CODEC_ID_AAC)
+   {
+      SetMetadata(tags, "artist", TAG_ARTIST);
+      SetMetadata(tags, "date", TAG_YEAR);
+   }
+   else
+   {
+      SetMetadata(tags, "author", TAG_ARTIST);
+      SetMetadata(tags, "year", TAG_YEAR);
+   }
 
    return true;
 }

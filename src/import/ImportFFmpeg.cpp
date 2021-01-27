@@ -733,13 +733,21 @@ void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
    tags->Clear();
 
    GetMetadata(tags, TAG_TITLE, "title");
-   GetMetadata(tags, TAG_ARTIST, "author");
-//   GetMetadata(tags, TAG_COPYRIGHT, "copyright");
    GetMetadata(tags, TAG_COMMENTS, "comment");
    GetMetadata(tags, TAG_ALBUM, "album");
-   GetMetadata(tags, TAG_YEAR, "year");
    GetMetadata(tags, TAG_TRACK, "track");
    GetMetadata(tags, TAG_GENRE, "genre");
+
+   if (wxString(mFormatContext->iformat->name).Contains("m4a"))
+   {
+      GetMetadata(tags, TAG_ARTIST, "artist");
+      GetMetadata(tags, TAG_YEAR, "date");
+   }
+   else
+   {
+      GetMetadata(tags, TAG_ARTIST, "author");
+      GetMetadata(tags, TAG_YEAR, "year");
+   }
 }
 
 void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const char *name)
