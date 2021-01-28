@@ -174,6 +174,12 @@ public:
    wxString GetPluginStringID() override { return wxT("libav"); }
    TranslatableString GetPluginFormatDescription() override;
 
+   TranslatableString FailureHint() const override
+   {
+      return !FFmpegFunctions::Load()
+         ? XO("Try installing FFmpeg.\n") : TranslatableString{};
+   }
+
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) override;
