@@ -49,7 +49,7 @@ Upstream version: 0.15.1 (beta)
 libnyquist
 ----------
 Digital Audio scripting language, with our own library interface added to it
-Version in Audacity SVN: r288 (r3.15+)
+Version in Audacity SVN: r331 (r3.16+)
 NOTE: Patch files no longer being created. Use git history instead.
 
 libogg
