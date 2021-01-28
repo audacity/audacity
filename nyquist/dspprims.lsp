@@ -142,7 +142,7 @@
         (ny:error "ALPASS" 4 '((POSITIVE) "min-hz") min-hz))
       (setf max-delay (/ (float min-hz)))
       ; make sure delay is between 0 and max-delay
-      ; use clip function, which is symetric, with an offset
+      ; use clip function, which is symmetric, with an offset
       (setf delay (snd-offset (clip (snd-offset delay (* max-delay -0.5))
                                     (* max-delay 0.5))
                               (* max-delay 0.5)))

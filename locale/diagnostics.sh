@@ -18,7 +18,7 @@ done | sort -n -k3
 
 echo
 
-# detect whether this sequence occures in any .po file.  It will break
+# detect whether this sequence occurs in any .po file.  It will break
 # msgfmt on Windows.
 echo "Files with illegal comment sequence:"
 fgrep -l '#~|' *.po
