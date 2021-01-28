@@ -14,18 +14,18 @@ void clarinet_all_free(snd_susp_type a_susp);
 
 typedef struct clarinet_all_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     sound_type breath_env;
-    long breath_env_cnt;
+    int breath_env_cnt;
     sample_block_values_type breath_env_ptr;
     sound_type freq_env;
-    long freq_env_cnt;
+    int freq_env_cnt;
     sample_block_values_type freq_env_ptr;
     sound_type reed_stiffness;
-    long reed_stiffness_cnt;
+    int reed_stiffness_cnt;
     sample_block_values_type reed_stiffness_ptr;
     sound_type noise_env;
-    long noise_env_cnt;
+    int noise_env_cnt;
     sample_block_values_type noise_env_ptr;
 
     struct instr *clar;
@@ -65,117 +65,117 @@ void clarinet_all_nsnn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the breath_env input sample block: */
-	susp_check_term_samples(breath_env, breath_env_ptr, breath_env_cnt);
-	togo = min(togo, susp->breath_env_cnt);
+        /* don't run past the breath_env input sample block: */
+        susp_check_term_samples(breath_env, breath_env_ptr, breath_env_cnt);
+        togo = min(togo, susp->breath_env_cnt);
 
-	/* don't run past the freq_env input sample block: */
-	susp_check_samples(freq_env, freq_env_ptr, freq_env_cnt);
-	togo = min(togo, susp->freq_env_cnt);
+        /* don't run past the freq_env input sample block: */
+        susp_check_samples(freq_env, freq_env_ptr, freq_env_cnt);
+        togo = min(togo, susp->freq_env_cnt);
 
-	/* don't run past the reed_stiffness input sample block: */
-	susp_check_samples(reed_stiffness, reed_stiffness_ptr, reed_stiffness_cnt);
-	togo = min(togo, susp->reed_stiffness_cnt);
+        /* don't run past the reed_stiffness input sample block: */
+        susp_check_samples(reed_stiffness, reed_stiffness_ptr, reed_stiffness_cnt);
+        togo = min(togo, susp->reed_stiffness_cnt);
 
-	/* don't run past the noise_env input sample block: */
-	susp_check_samples(noise_env, noise_env_ptr, noise_env_cnt);
-	togo = min(togo, susp->noise_env_cnt);
+        /* don't run past the noise_env input sample block: */
+        susp_check_samples(noise_env, noise_env_ptr, noise_env_cnt);
+        togo = min(togo, susp->noise_env_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	clar_reg = susp->clar;
-	frequency_reg = susp->frequency;
-	breath_scale_reg = susp->breath_scale;
-	reed_scale_reg = susp->reed_scale;
-	noise_scale_reg = susp->noise_scale;
-	noise_env_ptr_reg = susp->noise_env_ptr;
-	reed_stiffness_ptr_reg = susp->reed_stiffness_ptr;
-	freq_env_ptr_reg = susp->freq_env_ptr;
-	breath_env_ptr_reg = susp->breath_env_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        clar_reg = susp->clar;
+        frequency_reg = susp->frequency;
+        breath_scale_reg = susp->breath_scale;
+        reed_scale_reg = susp->reed_scale;
+        noise_scale_reg = susp->noise_scale;
+        noise_env_ptr_reg = susp->noise_env_ptr;
+        reed_stiffness_ptr_reg = susp->reed_stiffness_ptr;
+        freq_env_ptr_reg = susp->freq_env_ptr;
+        breath_env_ptr_reg = susp->breath_env_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             controlChange(clar_reg, 128, breath_scale_reg * *breath_env_ptr_reg++);
             controlChange(clar_reg, 2, reed_scale_reg * *reed_stiffness_ptr_reg++);
             controlChange(clar_reg, 4, noise_scale_reg * *noise_env_ptr_reg++);
             setFrequency(clar_reg, frequency_reg + (freq_env_scale_reg * *freq_env_ptr_reg++));
             *out_ptr_reg++ = (sample_type) tick(clar_reg);
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->clar = clar_reg;
-	/* using noise_env_ptr_reg is a bad idea on RS/6000: */
-	susp->noise_env_ptr += togo;
-	/* using reed_stiffness_ptr_reg is a bad idea on RS/6000: */
-	susp->reed_stiffness_ptr += togo;
-	/* using freq_env_ptr_reg is a bad idea on RS/6000: */
-	susp->freq_env_ptr += togo;
-	/* using breath_env_ptr_reg is a bad idea on RS/6000: */
-	susp->breath_env_ptr += togo;
-	out_ptr += togo;
-	susp_took(breath_env_cnt, togo);
-	susp_took(freq_env_cnt, togo);
-	susp_took(reed_stiffness_cnt, togo);
-	susp_took(noise_env_cnt, togo);
-	cnt += togo;
+        susp->clar = clar_reg;
+        /* using noise_env_ptr_reg is a bad idea on RS/6000: */
+        susp->noise_env_ptr += togo;
+        /* using reed_stiffness_ptr_reg is a bad idea on RS/6000: */
+        susp->reed_stiffness_ptr += togo;
+        /* using freq_env_ptr_reg is a bad idea on RS/6000: */
+        susp->freq_env_ptr += togo;
+        /* using breath_env_ptr_reg is a bad idea on RS/6000: */
+        susp->breath_env_ptr += togo;
+        out_ptr += togo;
+        susp_took(breath_env_cnt, togo);
+        susp_took(freq_env_cnt, togo);
+        susp_took(reed_stiffness_cnt, togo);
+        susp_took(noise_env_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* clarinet_all_nsnn_fetch */
 
 
 void clarinet_all_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     clarinet_all_susp_type susp = (clarinet_all_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from breath_env up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr)) >=
-	   susp->breath_env->current)
-	susp_get_samples(breath_env, breath_env_ptr, breath_env_cnt);
+           susp->breath_env->current)
+        susp_get_samples(breath_env, breath_env_ptr, breath_env_cnt);
     /* fetch samples from freq_env up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr)) >=
-	   susp->freq_env->current)
-	susp_get_samples(freq_env, freq_env_ptr, freq_env_cnt);
+           susp->freq_env->current)
+        susp_get_samples(freq_env, freq_env_ptr, freq_env_cnt);
     /* fetch samples from reed_stiffness up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr)) >=
-	   susp->reed_stiffness->current)
-	susp_get_samples(reed_stiffness, reed_stiffness_ptr, reed_stiffness_cnt);
+           susp->reed_stiffness->current)
+        susp_get_samples(reed_stiffness, reed_stiffness_ptr, reed_stiffness_cnt);
     /* fetch samples from noise_env up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr)) >=
-	   susp->noise_env->current)
-	susp_get_samples(noise_env, noise_env_ptr, noise_env_cnt);
+           susp->noise_env->current)
+        susp_get_samples(noise_env, noise_env_ptr, noise_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr -
+    n = (int) ROUNDBIG((final_time - susp->breath_env->t0) * susp->breath_env->sr -
          (susp->breath_env->current - susp->breath_env_cnt));
     susp->breath_env_ptr += n;
     susp_took(breath_env_cnt, n);
-    n = ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr -
+    n = (int) ROUNDBIG((final_time - susp->freq_env->t0) * susp->freq_env->sr -
          (susp->freq_env->current - susp->freq_env_cnt));
     susp->freq_env_ptr += n;
     susp_took(freq_env_cnt, n);
-    n = ROUNDBIG((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr -
+    n = (int) ROUNDBIG((final_time - susp->reed_stiffness->t0) * susp->reed_stiffness->sr -
          (susp->reed_stiffness->current - susp->reed_stiffness_cnt));
     susp->reed_stiffness_ptr += n;
     susp_took(reed_stiffness_cnt, n);
-    n = ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr -
+    n = (int) ROUNDBIG((final_time - susp->noise_env->t0) * susp->noise_env->sr -
          (susp->noise_env->current - susp->noise_env_cnt));
     susp->noise_env_ptr += n;
     susp_took(noise_env_cnt, n);

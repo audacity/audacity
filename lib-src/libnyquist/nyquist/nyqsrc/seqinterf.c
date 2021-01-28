@@ -25,8 +25,8 @@ boolean seq_next(seq_type seq)
 
 /* seq_get -- get event data for the current event */
 /**/
-void seq_get(seq_type seq, long *eventtype, long *ntime, long *line, long *chan, 
-    long *value1, long *value2, long *dur)
+void seq_get(seq_type seq, long *eventtype, long *ntime, long *line, long *chan,
+             long *value1, long *value2, long *dur)
 {
     event_type ev = seq->current;
     if (!ev) *eventtype = SEQ_DONE;

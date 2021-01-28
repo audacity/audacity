@@ -14,9 +14,9 @@ void congen_free(snd_susp_type a_susp);
 
 typedef struct congen_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     sound_type sndin;
-    long sndin_cnt;
+    int sndin_cnt;
     sample_block_values_type sndin_ptr;
 
     double value;
@@ -45,29 +45,29 @@ void congen_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the sndin input sample block: */
-	susp_check_term_samples(sndin, sndin_ptr, sndin_cnt);
-	togo = min(togo, susp->sndin_cnt);
+        /* don't run past the sndin input sample block: */
+        susp_check_term_samples(sndin, sndin_ptr, sndin_cnt);
+        togo = min(togo, susp->sndin_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	value_reg = susp->value;
-	rise_factor_reg = susp->rise_factor;
-	fall_factor_reg = susp->fall_factor;
-	sndin_ptr_reg = susp->sndin_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        value_reg = susp->value;
+        rise_factor_reg = susp->rise_factor;
+        fall_factor_reg = susp->fall_factor;
+        sndin_ptr_reg = susp->sndin_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             sample_type current = *sndin_ptr_reg++;
             if (current > value_reg) {
                 value_reg = current - (current - value_reg) * rise_factor_reg;
@@ -75,22 +75,22 @@ void congen_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 value_reg = current - (current - value_reg) * fall_factor_reg;
             }
             *out_ptr_reg++ = (sample_type) value_reg;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->value = value_reg;
-	/* using sndin_ptr_reg is a bad idea on RS/6000: */
-	susp->sndin_ptr += togo;
-	out_ptr += togo;
-	susp_took(sndin_cnt, togo);
-	cnt += togo;
+        susp->value = value_reg;
+        /* using sndin_ptr_reg is a bad idea on RS/6000: */
+        susp->sndin_ptr += togo;
+        out_ptr += togo;
+        susp_took(sndin_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* congen_n_fetch */
 
@@ -116,29 +116,29 @@ void congen_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the sndin input sample block: */
-	susp_check_term_samples(sndin, sndin_ptr, sndin_cnt);
-	togo = min(togo, susp->sndin_cnt);
+        /* don't run past the sndin input sample block: */
+        susp_check_term_samples(sndin, sndin_ptr, sndin_cnt);
+        togo = min(togo, susp->sndin_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	value_reg = susp->value;
-	rise_factor_reg = susp->rise_factor;
-	fall_factor_reg = susp->fall_factor;
-	sndin_ptr_reg = susp->sndin_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        value_reg = susp->value;
+        rise_factor_reg = susp->rise_factor;
+        fall_factor_reg = susp->fall_factor;
+        sndin_ptr_reg = susp->sndin_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             sample_type current = (sndin_scale_reg * *sndin_ptr_reg++);
             if (current > value_reg) {
                 value_reg = current - (current - value_reg) * rise_factor_reg;
@@ -146,39 +146,39 @@ void congen_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 value_reg = current - (current - value_reg) * fall_factor_reg;
             }
             *out_ptr_reg++ = (sample_type) value_reg;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->value = value_reg;
-	/* using sndin_ptr_reg is a bad idea on RS/6000: */
-	susp->sndin_ptr += togo;
-	out_ptr += togo;
-	susp_took(sndin_cnt, togo);
-	cnt += togo;
+        susp->value = value_reg;
+        /* using sndin_ptr_reg is a bad idea on RS/6000: */
+        susp->sndin_ptr += togo;
+        out_ptr += togo;
+        susp_took(sndin_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* congen_s_fetch */
 
 
 void congen_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     congen_susp_type susp = (congen_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from sndin up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->sndin->t0) * susp->sndin->sr)) >=
-	   susp->sndin->current)
-	susp_get_samples(sndin, sndin_ptr, sndin_cnt);
+           susp->sndin->current)
+        susp_get_samples(sndin, sndin_ptr, sndin_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->sndin->t0) * susp->sndin->sr -
+    n = (int) ROUNDBIG((final_time - susp->sndin->t0) * susp->sndin->sr -
          (susp->sndin->current - susp->sndin_cnt));
     susp->sndin_ptr += n;
     susp_took(sndin_cnt, n);

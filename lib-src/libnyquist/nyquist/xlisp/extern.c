@@ -92,8 +92,7 @@ LVAL cvextern(typeptr, instptr)
 
 /* exttype -- get the type of an EXTERN */
 /**/
-LVAL exttype(x)
-  LVAL x;
+LVAL exttype(LVAL x)
 {
     if (!(getdesc(x)->type_symbol)) {
         getdesc(x)->type_symbol = xlenter(getdesc(x)->type_name);

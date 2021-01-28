@@ -41,10 +41,10 @@ extern LVAL a_fixnum,a_flonum,a_string,a_stream,a_object;
 extern LVAL a_vector,a_closure,a_char,a_ustream,a_extern;
 extern LVAL s_gcflag,s_gchook;
 extern LVAL s_search_path;
-extern FUNDEF *funtab;
+extern FUNDEF funtab[];
 
 /* forward declarations */
-FORWARD LOCAL void initwks();
+FORWARD LOCAL void initwks(void);
 
 
 /* xlinit - xlisp initialization routine */

@@ -182,7 +182,7 @@ int xlisave(const char *fname)
 /* xlirestore - restore a saved memory image */
 int xlirestore(const char *fname)
 {
-    extern FUNDEF *funtab;
+    extern FUNDEF funtab[];
     char fullname[STRMAX+1];
     unsigned char *cp;
     int n,i,max,type;

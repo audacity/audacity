@@ -5,6 +5,6 @@
  *  Created by Roger Dannenberg
  */
 
-int nosc_init();
-int nosc_poll();
-void nosc_finish();
+int nosc_init(void);
+int nosc_poll(void);
+void nosc_finish(void);

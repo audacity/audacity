@@ -4,15 +4,15 @@ typedef struct add_susp_struct {
     snd_susp_node               susp;
     boolean                     started;
     int                         terminate_bits;
-    long                        terminate_cnt;
+    int64_t                     terminate_cnt;
     int                         logical_stop_bits;
     boolean                     logically_stopped;
     sound_type                  s1;
-    long                        s1_cnt;
+    int                         s1_cnt;
     sample_block_type           s1_bptr;        /* block pointer */
     sample_block_values_type    s1_ptr;
     sound_type                  s2;
-    long                        s2_cnt;
+    int                         s2_cnt;
     sample_block_type           s2_bptr;        /* block pointer */
     sample_block_values_type    s2_ptr;
 
@@ -27,7 +27,7 @@ typedef struct add_susp_struct {
 #endif
     /* pointer used to synchronize adds in multiseq */
     struct multiseq_struct      *multiseq;
-    long                        s1_prepend; /* offset to susp.current */
+	int64_t                     s1_prepend; /* offset to susp.current */
 } add_susp_node, *add_susp_type;
 
 sound_type snd_make_add(sound_type s1, sound_type s2);

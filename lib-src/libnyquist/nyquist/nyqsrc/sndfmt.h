@@ -56,7 +56,9 @@ error here
 /* LISP-SRC: (setf snd-head-raw 20) */
 #define SND_HEAD_OGG 21
 /* LISP-SRC: (setf snd-head-OGG 21) */
-#define SND_NUM_HEADS 22
+#define SND_HEAD_WAVEX 22
+/* LISP-SRC: (setf snd-head-WAVEX 22) */
+#define SND_NUM_HEADS 23
 
 /* bitfields for soundheaders */
 #define SND_HEAD_CHANNELS (1<<0)

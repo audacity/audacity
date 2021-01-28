@@ -16,7 +16,7 @@ int fftInit(long M);
 /* OUTPUTS */
 /* private cosine and bit reversed tables	*/
 
-void fftFree();
+void fftFree(void);
 // release storage for all private cosine and bit reversed tables
 
 void ffts(float *data, long M, long Rows);

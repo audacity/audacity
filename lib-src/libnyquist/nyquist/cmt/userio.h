@@ -52,7 +52,7 @@ extern int redirect_flag;		/* added by Ning Hu, Apr 2001 */
 boolean get_ascii(char *c);    /* polls for an ascii character */
 #ifdef DOTS_FOR_ARGS
 /* was (defined(ITC_MACH) && defined(__STDC__)) || defined(MACINTOSH) || defined(AZTEC) || (defined(AMIGA) && defined(LATTICE)) || defined(UNIX_ITC) */
-void    gprintf(long where, char *format, ...); /* general printf */
+void    gprintf(long where, const char *format, ...); /* general printf */
 #else
 void gprintf();
 #endif
@@ -70,7 +70,7 @@ FILE    *fileopen(char *deflt, char *extension, char *mode, char *prompt);
 void    readln(FILE *fp);
 void gflush(void);
 int gputchar(int c);
-int ggetchar();
+int ggetchar(void);
 char *ggets(char *str);
 boolean ascii_input(char *c);
 void unget_ascii(char c);

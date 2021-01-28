@@ -83,16 +83,16 @@
 #include "fftext.h"
 #include "convolve.h"
 
-void convolve_free();
+void convolve_free(snd_susp_type a_susp);
 
 
 typedef struct convolve_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean know_end_of_x;
     boolean logically_stopped;
     sound_type x_snd;
-    long x_snd_cnt;
+    int x_snd_cnt;
     sample_block_values_type x_snd_ptr;
 
     sample_type *X; // the FFTs of x_snd
@@ -228,12 +228,12 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* can't use more than what's left in R. R_current is
            the next sample of R, so what's left is N - (R - R_current) */
         R_current = susp->R_current;
-        togo = min(togo, N - (R_current - R));
+        togo = (int) min(togo, N - (R_current - R));
         
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
             if (togo == 0) break;
         }
 
@@ -241,9 +241,9 @@ void convolve_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         if (!susp->logically_stopped &&
             susp->susp.log_stop_cnt !=  UNKNOWN &&
             susp->susp.log_stop_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-            D printf("susp->susp.log_stop_cnt is set to %ld\n",
-                   susp->susp.log_stop_cnt);
+            togo = (int) (susp->susp.log_stop_cnt - (susp->susp.current + cnt));
+            D printf("susp->susp.log_stop_cnt is set to %" PRId64 "\n",
+		     susp->susp.log_stop_cnt);
             if (togo == 0) break;
         }       
 
@@ -287,8 +287,8 @@ void convolve_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 	susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr -
-              (susp->x_snd->current - susp->x_snd_cnt));
+    n = (long) ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr -
+                        (susp->x_snd->current - susp->x_snd_cnt));
     susp->x_snd_ptr += n;
     susp_took(x_snd_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;
@@ -333,12 +333,14 @@ void fill_with_samples(sample_type *x, sound_type s, long n)
     int i;
     for (i = 0; i < n; i++) {
         if (!s->extra) { /* this is the first call, so fix up s */
-            s->extra = (long *) malloc(sizeof(long) * FIELDS);
-            s->extra[0] = sizeof(long) * FIELDS;
+            s->extra = (int64_t *) malloc(sizeof(s->extra[0]) * FIELDS);
+            s->extra[0] = sizeof(s->extra[0]) * FIELDS;
             s->CNT = s->INDEX = 0;
         }
-        if (s->CNT == s->INDEX) {
-            sound_get_next(s, &(s->CNT));
+        int icnt = (int) s->CNT;  /* need this to be int type */
+        if (icnt == s->INDEX) {
+            sound_get_next(s, &icnt);
+            s->CNT = icnt;  /* save the count back into s->extra */
             s->INDEX = 0;
         }
         x[i] = s->SAMPLES[s->INDEX++] * s->scale;
@@ -353,7 +355,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     time_type t0 = x_snd->t0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
-    long h_len;
+    int64_t h_len;
     int i;
     // assume fft_size is maximal. We fix this later if it is wrong
     long fft_size = 1 << MAX_LOG_FFT_SIZE;
@@ -372,8 +374,8 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
      * the FFT size is at least double that */
     if (h_len <= fft_size / 4) {
         /* compute log-base-2(h_len): */;
-        double log_len = log(h_len) / M_LN2;
-        int log_len_int = log_len;
+        double log_len = log((double) h_len) / M_LN2;
+        int log_len_int = (int) log_len;
         if (log_len_int != log_len) log_len_int++; /* round up to power of 2 */
         susp->M = log_len_int + 1;
     } else {
@@ -383,11 +385,11 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     D printf("fft_size %ld\n", fft_size);
     susp->N = fft_size / 2;
     // round h_len up to multiple of susp->N and multiply by 2
-    susp->h_snd_len = h_len;
+    susp->h_snd_len = (int) h_len;
     h_len = ((h_len + susp->N - 1) / susp->N) * susp->N * 2;
-    susp->L = h_len / fft_size;
+    susp->L = (int) (h_len / fft_size);
     // allocate memory
-    susp->H = (sample_type *) calloc(h_len, sizeof(susp->H[0]));
+    susp->H = (sample_type *) calloc((size_t) h_len, sizeof(susp->H[0]));
     if (!susp->H) {
         xlfail("memory allocation failure in convolve");
     }
@@ -413,7 +415,7 @@ sound_type snd_make_convolve(sound_type x_snd, sound_type h_snd)
     for (i = 0; i < susp->L; i++) {
         rffts(susp->H + i * susp->N * 2, susp->M, 1);
     }
-    susp->X = (sample_type *) calloc(h_len, sizeof(susp->X[0]));
+    susp->X = (sample_type *) calloc((size_t) h_len, sizeof(susp->X[0]));
     susp->R = (sample_type *) calloc(fft_size, sizeof(susp->R[0]));
     susp->Y = (sample_type *) calloc(fft_size, sizeof(susp->Y[0]));
     if (!susp->X || !susp->R || !susp->Y) {

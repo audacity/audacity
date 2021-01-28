@@ -14,10 +14,10 @@ void stoponzero_free(snd_susp_type a_susp);
 
 typedef struct stoponzero_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s1;
-    long s1_cnt;
+    int s1_cnt;
     sample_block_values_type s1_ptr;
 } stoponzero_susp_node, *stoponzero_susp_type;
 
@@ -50,7 +50,7 @@ void stoponzero_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
             if (togo < 0) togo = 0;  /* avoids rounding errros */
             if (togo == 0) break;
         }
@@ -58,7 +58,8 @@ void stoponzero_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-            int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            int64_t to_stop = (susp->susp.log_stop_cnt -
+                               (susp->susp.current + cnt));
             /* break if to_stop == 0 (we're at the logical stop)
              * AND cnt > 0 (we're not at the beginning of the
              * output block).
@@ -77,7 +78,7 @@ void stoponzero_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 } else /* limit togo so we can start a new
                         * block at the LST
                         */
-                    togo = to_stop;
+                    togo = (int) to_stop;
             }
         }
 
@@ -132,8 +133,8 @@ void stoponzero_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         susp_get_samples(s1, s1_ptr, s1_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
-         (susp->s1->current - susp->s1_cnt));
+    n = (int) ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
+                       (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
     susp->susp.fetch = susp->susp.keep_fetch;

@@ -3,4 +3,4 @@
  */
 
 sound_type snd_phasevocoder(sound_type f, sound_type g, long fftsize, long hopsize, long mode);
-    /* LISP: (snd-phasevocoder SOUND SOUND FIXNUM FIXNUM FIXNUM) */
+    /* LISP: (snd-phasevocoder SOUND SOUND LONG LONG LONG) */

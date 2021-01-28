@@ -19,6 +19,7 @@
 #include "scale.h"
 #include "extern.h"
 #include "cext.h"
+#include "sndseq.h"
 
 /* #define MULTISEQ_GC_DEBUG */
 #ifdef MULTISEQ_GC_DEBUG
@@ -344,7 +345,7 @@ void multiseq_convert(multiseq_type ms)
     for (i = 0; i < ms->nchans; i++) {
         snd_list_type snd_list = ms->chans[i];
         add_susp_type susp = (add_susp_type) snd_list->u.susp;
-        long sother_start;
+        int64_t sother_start;
 
         /* remove backpointer to ms */
         susp->multiseq = NULL;
@@ -361,8 +362,8 @@ void multiseq_convert(multiseq_type ms)
         }
 
         sother_start = ROUNDBIG((susp->s2->t0 - susp->susp.t0) * susp->s2->sr);
-D	    nyquist_printf("sother_start computed for %p: %d\n",
-                      susp, (int)sother_start);
+D	    nyquist_printf("sother_start computed for %p: %" PRId64 "\n",
+			   susp, sother_start);
         if (sother_start > susp->susp.current) {
 D	    nyquist_printf("susp %p using add_s1_nn_fetch\n", susp);
             susp->susp.fetch = add_s1_nn_fetch;
@@ -605,7 +606,11 @@ D    nyquist_printf("ms->t0 == %g\n", ms->t0);
 }
 
 
-/* note: snd_multiseq is a noop, just call snd_make_multiseq */
+LVAL snd_multiseq(LVAL snd, LVAL closure)
+{
+    return snd_make_multiseq(sound_array_copy(snd), closure);
+}
+
 
 void multiseq_free(snd_susp_type a_susp)
 {

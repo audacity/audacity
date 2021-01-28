@@ -48,6 +48,8 @@
 
  (setf snd-head-OGG 21) 
 
+ (setf snd-head-WAVEX 22) 
+
  (setf snd-head-channels 1) 
 
  (setf snd-head-mode 2) 

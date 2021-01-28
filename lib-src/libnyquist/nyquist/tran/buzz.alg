@@ -7,7 +7,7 @@
 ")
 (STATE ("double" "ph_incr" "0")
        ("float" "n_2_r" "1.0F / (n * 2)")
-       ("float" "n_2_p1" "(n * 2) + 1")
+       ("float" "n_2_p1" "(float) ((n * 2) + 1)")
 	;; note: hz * 0.5 because this formula generates tones an octave up,
 	;; we also have to correct for the modulation s_fm. If hz != 0, then
     	;; ph_incr is the increment per hz, so ph_incr/hz is the right scale

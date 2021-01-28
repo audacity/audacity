@@ -21,7 +21,7 @@
 /* external variables */
 extern LVAL s_printcase,k_downcase,k_const,k_nmacro;
 extern LVAL s_ifmt,s_ffmt;
-extern FUNDEF *funtab;
+extern FUNDEF funtab[];
 extern char buf[];
 
 LOCAL void putsymbol(LVAL fptr, char *str, int escflag);
@@ -209,7 +209,7 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
     for (p = getstring(str); (ch = *p) != '\0'; ++p)
 
         /* check for a control character */
-        if (ch < 040 || ch == '\\' || ch > 0176 /* || ch == '"' */) {
+        if (ch < 040 || ch == '\\' || ch > 0176 || ch == '"') {
             xlputc(fptr,'\\');
             switch (ch) {
             case '\011':
@@ -248,7 +248,7 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
 void putatm(LVAL fptr, const char *tag, LVAL val)
 {
     snprintf(buf, STRMAX, "#<%s: #", tag); xlputstr(fptr,buf);
-    sprintf(buf,AFMT,(long unsigned int)val); xlputstr(fptr,buf);
+    sprintf(buf,AFMT,val); xlputstr(fptr,buf);
     xlputc(fptr,'>');
 }
 
@@ -257,7 +257,7 @@ LOCAL void putsubr(LVAL fptr, const char *tag, LVAL val)
 {
     snprintf(buf, STRMAX, "#<%s-%s: #", tag, funtab[getoffset(val)].fd_name);
     xlputstr(fptr,buf);
-    sprintf(buf,AFMT,(long unsigned int)val); xlputstr(fptr,buf);
+    sprintf(buf,AFMT,val); xlputstr(fptr,buf);
     xlputc(fptr,'>');
 }
 
@@ -270,7 +270,7 @@ LOCAL void putclosure(LVAL fptr, LVAL val)
     else
         strcpy(buf,"#<Closure: #");
     xlputstr(fptr,buf);
-    sprintf(buf,AFMT,(long unsigned int)val); xlputstr(fptr,buf);
+    sprintf(buf,AFMT,val); xlputstr(fptr,buf);
     xlputc(fptr,'>');
 /*
     xlputstr(fptr,"\nName:   "); xlprint(fptr,getname(val),TRUE);

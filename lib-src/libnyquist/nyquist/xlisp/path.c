@@ -201,7 +201,7 @@ const char *find_in_xlisp_path(const char *fname)
     while (paths && *paths) {
         FILE *fp;
         const char *start;
-        int len;
+        intptr_t len;
 
         /* skip over separator */
         while (*paths == os_sepchar || *paths == ';') paths++;

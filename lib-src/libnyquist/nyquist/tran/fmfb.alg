@@ -19,7 +19,7 @@
             while (yy < 0) yy += SINE_TABLE_LEN;
             sin_y = sine_table[(int) yy]; /* truncation gets valid index */
             /* sin_y is now a signal not ready for table lookup */
-            output = sin_y")
+            output = (sample_type) sin_y")
   (CONSTANT "x_incr")
   (SAMPLE-RATE "sr")
   (SUPPORT-HEADER "#include \"sine.h\" /* sine_table and SINE_TABLE_LEN */\n")

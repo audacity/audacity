@@ -14,7 +14,7 @@ void white_free(snd_susp_type a_susp);
 
 typedef struct white_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
 } white_susp_node, *white_susp_type;
 
 
@@ -34,34 +34,34 @@ void white__fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             *out_ptr_reg++ = (sample_type) (rand() * rand_scale - 1.0);
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	out_ptr += togo;
-	cnt += togo;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* white__fetch */
 

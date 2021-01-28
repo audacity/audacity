@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.15
-11 Sep 2018
+README file for Nyquist Version 3.16
+13 Oct 2020
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -27,6 +27,11 @@ and other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.16 provides:
+    Long sounds: sample counts are consistently 64-bit.
+    Details in documentation on avoiding accumulating computed samples in memory
+       some fixes in code to eliminate the same.
+    Win32 32-bit implementation makes Nyquist FIXNUMs 64-bit.
 Version 3.15 provides:
     Fix to retain selected nyquist directory
     Fix for NyquistIDE in paths with spaces

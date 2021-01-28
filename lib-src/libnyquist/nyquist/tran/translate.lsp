@@ -17,13 +17,13 @@
 (setf *debug* t)
 
 ;;**********
-;;	combinations - generate all combinations
+;;      combinations - generate all combinations
 ;; Inputs:
-;;	n - number of combinations to generate
+;;      n - number of combinations to generate
 ;; Result:
-;;	list of the form
-;;	( (a1 b1) (a2 b2) (a3 b3) ... (an bn) )
-;;	
+;;      list of the form
+;;      ( (a1 b1) (a2 b2) (a3 b3) ... (an bn) )
+;;      
 ;;**********
 
 (defun combinations (n)
@@ -194,14 +194,14 @@
 
 
 ;; ****************
-;;	header-list
+;;      header-list
 ;;
 ;; Result:
-;;	'( "s1" "s2" ... "sn" )
-;; 	where s1, s2, etc. are the strings for the header part of the
-;;	resulting .c file
+;;      '( "s1" "s2" ... "sn" )
+;;      where s1, s2, etc. are the strings for the header part of the
+;;      resulting .c file
 ;; Notes:
-;;	Kludgy.  Fix this up for easier maintenance
+;;      Kludgy.  Fix this up for easier maintenance
 ;; ****************
 
 (if *ANSI* 
@@ -231,9 +231,9 @@
 ;; make this work correctly if it is being assigned to a long, float, or
 ;; double, and if a long, float, or double is being compared
 ;      '("\n#ifndef UNKNOWN\n"
-;	"#define UNKNOWN -1\n"
-;	"#define isunknown(x) ( (x) < 0)\n"
-;	"#endif /* UNKNOWN */\n"))
+;       "#define UNKNOWN -1\n"
+;       "#define isunknown(x) ( (x) < 0)\n"
+;       "#endif /* UNKNOWN */\n"))
 ;-------------------------
 
 
@@ -241,9 +241,9 @@
 ;; code-gen -- do the output
 ;;
 ;; Inputs:
-;;	alg -
-;;	stream -
-;;	hstream -
+;;      alg -
+;;      stream -
+;;      hstream -
 ;;**********
 
 (defun code-gen (alg stream hstream)
@@ -304,10 +304,10 @@
 ;; commute-check -- 
 ;;
 ;; Purpose:
-;; 	see if interpolation spec is redundant due to commutativity
+;;      see if interpolation spec is redundant due to commutativity
 ;; Algorithm: 
-;;	for each list of "commutable" sounds, make sure spec asks for
-;;	cannonical ordering:  NONE > SCALE > INTERP > RAMP
+;;      for each list of "commutable" sounds, make sure spec asks for
+;;      cannonical ordering:  NONE > SCALE > INTERP > RAMP
 ;;**********
 (defun commute-check (alg spec)
   (let ((sounds (get-slot alg 'sound-args))
@@ -337,10 +337,10 @@
 ;; concatenate -- string concatenation
 ;;
 ;; Inputs:
-;;	"s1" - string
-;;	"s2" - string
+;;      "s1" - string
+;;      "s2" - string
 ;; Result:
-;;	"s1s2"
+;;      "s1s2"
 ;;**********
 
 (defun concatenate (type s1 s2)
@@ -360,11 +360,11 @@
 ;; index -- find location of list element
 ;;
 ;; Inputs:
-;;	atom - atom to be found in list
-;;	lis  - list searched for
+;;      atom - atom to be found in list
+;;      lis  - list searched for
 ;; Result:
-;;	integer - index of atom in lis
-;;	NIL	- atom not member of lis
+;;      integer - index of atom in lis
+;;      NIL     - atom not member of lis
 ;;**********
 
 (defun index (atom lis)
@@ -379,10 +379,10 @@
 ;; insert -- insert an atom at the front of each element of a list
 ;;
 ;; Inputs:
-;;	atom - 
-;;	list-of-lists - lists of the form ( (L1) (L2) ... (Ln))
+;;      atom - 
+;;      list-of-lists - lists of the form ( (L1) (L2) ... (Ln))
 ;; Result:
-;;	( (atom L1) (atom L2) ... (atom Ln) )
+;;      ( (atom L1) (atom L2) ... (atom Ln) )
 ;;**********
 (defun insert (atom list-of-lists)
   (mapcar '(lambda (lis) (cons atom lis)) list-of-lists))
@@ -407,7 +407,7 @@
 ;; make-interpolation-list -- figure out the possible interpolation forms
 ;;
 ;; Inputs:
-;;	 alg - algorithm description
+;;       alg - algorithm description
 ;; Output:
 ;;  List of interpolation styles, e.g. 
 ;;  ((NONE NONE) (NONE INTERP) (NONE RAMP)), where the styles
@@ -433,7 +433,7 @@
            (setf sound-to-name (cons (cons (car sound-args)
                            (car sound-names))
                      sound-to-name))
-;	       (display "in make-interpolation-list" sound-to-name)
+;              (display "in make-interpolation-list" sound-to-name)
           )))
 ;    (display "make-interpolation-list: " (reverse sound-args))
     (put-slot alg (reverse sound-args) 'sound-args)
@@ -503,18 +503,18 @@
 ;; make-schema-from-slots -- take attr/value pairs and make property list
 ;;
 ;; Inputs:
-;;	slots - a list of the form 
-;;			(name
-;;			   (attribute1 value1) (attribute2 value2)
-;;					... (attributen valuen) )
+;;      slots - a list of the form 
+;;                      (name
+;;                         (attribute1 value1) (attribute2 value2)
+;;                                      ... (attributen valuen) )
 ;; Result:
-;;	The atom 'name' with the attached property list
+;;      The atom 'name' with the attached property list
 ;; Effect:
-;;	Adds properties to the atom 'name' based on the attribute-value
-;;	pairs. 
+;;      Adds properties to the atom 'name' based on the attribute-value
+;;      pairs. 
 ;; Notes:
-;;	The property-list representation is chosen for time efficiency of
-;;	access
+;;      The property-list representation is chosen for time efficiency of
+;;      access
 ;;**********
 
 (defun make-schema-from-slots (slots)
@@ -535,8 +535,8 @@
 ;; position -- find a pattern in a string
 ;;
 ;; Inputs:
-;;	s -
-;;	p -
+;;      s -
+;;      p -
 ;;**********
 
 (defun position (s p)
@@ -552,10 +552,10 @@
 ;; print a list of strings to a stream
 ;;
 ;; Inputs:
-;;	strings - a list of strings
-;;	stream - stream on which to write the strings
+;;      strings - a list of strings
+;;      stream - stream on which to write the strings
 ;; Effect:
-;;	
+;;      
 ;;**********
 
 (defun print-strings (strings stream)
@@ -565,11 +565,11 @@
 
 ;;**********
 ;; put-slot: 
-;;	
+;;      
 ;; Inputs:
-;;	schema - name of the schema
-;;	value - value of the attribute to be added or modified
-;;	property - name of the attribute to be modified
+;;      schema - name of the schema
+;;      value - value of the attribute to be added or modified
+;;      property - name of the attribute to be modified
 ;;
 ;;**********
 
@@ -580,18 +580,18 @@
 
 ;;**********
 ;; scale-check -- make sure scale method is not used on linear input or
-;;	on input where scaling is factored into other computation; 
-;; 	Also, don't use NONE scale method if sound appears on always-scale
-;; 	list (these sounds have low likelihood of ever using 'NONE method -
-;;	see fmosc for an example).  Note that if you say always-scale (removing
+;;      on input where scaling is factored into other computation; 
+;;      Also, don't use NONE scale method if sound appears on always-scale
+;;      list (these sounds have low likelihood of ever using 'NONE method -
+;;      see fmosc for an example).  Note that if you say always-scale (removing
 ;;                NONE) and linear or internal-scaling (removing SCALE),
 ;;                then you'll be in big trouble.
 ;;
 ;; Inputs:
-;;	alg - algorithm description
-;;	spec -
+;;      alg - algorithm description
+;;      spec -
 ;; Notes:
-;;	
+;;      
 ;;**********
 
 (defun scale-check (alg spec)
@@ -610,7 +610,7 @@
             (cond ((member snd always-scale)
                (setf result nil)
                (return))))))))
-    (cond ((member 'SCALE spec)	; quick test
+    (cond ((member 'SCALE spec) ; quick test
        (dotimes (n (length spec))  ; look at each method in spec
          (cond ((eq 'SCALE (nth n spec))
             (setf snd (nth n sounds))
@@ -707,10 +707,10 @@
 ;; translate -- main procedure
 ;;
 ;; Inputs:
-;;	name - string which is name of file to translate
+;;      name - string which is name of file to translate
 ;; Effect:
-;;	Reads the algorithm specification as "name.alg"
-;;	Generates output files "name.c" and "name.h"
+;;      Reads the algorithm specification as "name.alg"
+;;      Generates output files "name.c" and "name.h"
 ;;**********
 (defun translate (name)
   (prog* ((infile (concatenate 'string name ".alg"))
@@ -766,12 +766,12 @@
 ;; type-check-and-transform -- fix up slots in an algorithm schema
 ;;
 ;; Inputs:
-;;	alg - the name of the algorithm; values are its property list
+;;      alg - the name of the algorithm; values are its property list
 ;; Notes:
-;;	Report an error if required slot values are absent
-;;	Any slot which should be a single value and is a list is
-;;	coerced to be the car of the list
-;;	Put argument string names on argument symbols for conversion.
+;;      Report an error if required slot values are absent
+;;      Any slot which should be a single value and is a list is
+;;      coerced to be the car of the list
+;;      Put argument string names on argument symbols for conversion.
 ;;**********
 
 (defun type-check-and-transform (alg)
@@ -786,7 +786,7 @@
 
   ; fix single-value slots to not be stored as lists:
   ;     If the value is a list, the value is coerced to
-  ;	be the car of the list
+  ;     be the car of the list
 
   (dolist 
        (slot 
@@ -842,14 +842,14 @@
 ;; write-header -- write a header file for the suspension create routine
 ;;
 ;; Inputs:
-;;	alg - algorithm name
-;;	stream - output stream for .h file
+;;      alg - algorithm name
+;;      stream - output stream for .h file
 ;; Effect:
-;;	Writes to the stream
-;;		sound_type snd_make_NAME();
+;;      Writes to the stream
+;;              sound_type snd_make_NAME();
 ;; Notes:
-;;	Uses NAME property of algorithm to emit the procedure header to
-;;	the .h file
+;;      Uses NAME property of algorithm to emit the procedure header to
+;;      the .h file
 ;;**********
 
 (setf c-to-xlisp-type '(
@@ -861,8 +861,8 @@
   ("sound_type" . "SOUND")
   ("char *" . "STRING")
   ("LVAL" . "ANY")
-  ("int" . "FIXNUM")
-  ("long" . "FIXNUM")
+  ("int" . "LONG")
+  ("long" . "LONG")
   ("boolean" . "BOOLEAN")
 ))
   
@@ -885,10 +885,10 @@
        ; write the type specification for intgen
        (format stream "    /* LISP: (snd-~A" lisp-name)
        (dolist (arg arguments)
-     (let ((xltype (assoc (car arg) c-to-xlisp-type :test #'equal)))
-       (cond ((null xltype)
-          (error "couldn't translate c-type" (car arg))))
-       (format stream " ~A" (cdr xltype))))
+         (let ((xltype (assoc (car arg) c-to-xlisp-type :test #'equal)))
+           (cond ((null xltype)
+                  (error "couldn't translate c-type" (car arg))))
+           (format stream " ~A" (cdr xltype))))
        (format stream ") */~%")))
 
 
@@ -896,12 +896,12 @@
 ;; write-typedef -- compile the suspension type definition
 ;;
 ;; Inputs:
-;;	alg - the algorithm specification
-;;	stream - stream to which to write it
+;;      alg - the algorithm specification
+;;      stream - stream to which to write it
 ;; Effect:
-;;	typedef struct NAME_susp_struct {
-;;		...
-;;	} NAME_susp_node, *NAME_susp_type;
+;;      typedef struct NAME_susp_struct {
+;;              ...
+;;      } NAME_susp_node, *NAME_susp_type;
 ;;
 ;;  A side-effect of write-typedef is the initialization
 ;;  of slot xlisp-pointers in alg.  This is used later by
@@ -935,7 +935,7 @@
     (cond ((any-ramp-or-interp-in interpolation-list)
            ;---------------------
        ; INTERP/RAMP:
-       ;	boolean started;
+       ;        boolean started;
            ;---------------------
        (format stream "    boolean started;~%")))
 
@@ -943,9 +943,9 @@
          terminate alg (terminate-check-needed terminate alg))
     (cond ((terminate-check-needed terminate alg)
        ;----------------
-       ; long terminate_cnt;
+       ; int64_t terminate_cnt;
        ;----------------
-       (format stream "    long terminate_cnt;~%")))
+       (format stream "    int64_t terminate_cnt;~%")))
 
     (cond ((logical-stop-check-needed logical-stop)
        ;----------------
@@ -961,14 +961,14 @@
      ; each possible interpolation
     (dotimes (n (length (get alg 'sound-args)))
       (let ((interpolation (union-of-nth interpolation-list n)))
-    (setf name (nth n sound-names))	; get name of signal
+    (setf name (nth n sound-names))     ; get name of signal
     ;------------------------
-    ;	sound_type NAMEi;
-    ;	long  NAME_cnt;
-    ;       sample_block_values_type NAME_ptr;
+    ;   sound_type NAMEi;
+    ;   int  NAME_cnt;
+    ;   sample_block_values_type NAME_ptr;
     ;------------------------
     (format stream "    sound_type ~A;~%" name)
-    (format stream "    long ~A_cnt;~%" name)
+    (format stream "    int ~A_cnt;~%" name)
     (format stream "    sample_block_values_type ~A_ptr;~%" name)
     (cond ((or (member 'INTERP interpolation)
            (member 'RAMP interpolation))
@@ -993,23 +993,23 @@
     (cond ((member 'RAMP interpolation)
            ;-----------------
            ; RAMP:
-           ;	/* support for ramp between samples of NAME */
-           ;	double output_per_NAME;
-           ; long NAME_n;
+           ;    /* support for ramp between samples of NAME */
+           ;    double output_per_NAME;
+           ; int64_t NAME_n;
            ;-----------------
            (format stream
         "~%    /* support for ramp between samples of ~A */~%" name)
            (format stream "    double output_per_~A;~%" name)
-           (format stream "    long ~A_n;~%" name) ))))
+           (format stream "    int64_t ~A_n;~%" name) ))))
 
     ;----------------------------
     ; STATE
-    ; 	TYPEi VARNAMEi ;
+    ;   TYPEi VARNAMEi ;
     ;----------------------------
     ;; now write state variables
     ;; (STATE (s1) (s2)... (sn) )
     ;; each (si) is of the form
-    ;;		("type" "varname" "?" [TEMP])
+    ;;          ("type" "varname" "?" [TEMP])
     (cond (state-list (format stream "~%")))
     (dolist (state state-list)
       (cond ((equal "LVAL" (car state))
@@ -1026,7 +1026,7 @@
     (put-slot alg xlisp-pointers 'xlisp-pointers)
 
     ;----------------------------
-    ;	} ALG-NAME_susp_node, *ALG-NAME_susp_type;
+    ;   } ALG-NAME_susp_node, *ALG-NAME_susp_type;
     ;----------------------------
     (format stream "} ~A_susp_node, *~A_susp_type;~%" alg-name alg-name)))
 

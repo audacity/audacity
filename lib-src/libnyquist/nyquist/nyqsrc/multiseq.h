@@ -15,5 +15,5 @@ typedef struct multiseq_struct {
 
 
 
-LVAL snd_make_multiseq(LVAL s1, LVAL closure);
+LVAL snd_multiseq(LVAL s1, LVAL closure);
     /* LISP: (SND-MULTISEQ ANY ANY) */

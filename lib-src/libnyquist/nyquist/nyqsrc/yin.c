@@ -12,17 +12,17 @@
 #include "yin.h"
 
 
-void yin_free();
+void yin_free(snd_susp_type a_susp);
 
 /* for multiple channel results, one susp is shared by all sounds */
 /* the susp in turn must point back to all sound list tails */
 
 typedef struct yin_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s;
-    long s_cnt;
+    int s_cnt;
     sample_block_values_type s_ptr;
     long blocksize;
     long stepsize;
@@ -31,9 +31,9 @@ typedef struct yin_susp_struct {
     sample_type *fillptr;
     sample_type *endptr;
     snd_list_type chan[2];      /* array of back pointers */
-    long cnt;   /* how many sample frames to read */
-    long m;
-    long middle;
+    int cnt;   /* how many sample frames to read */
+    int m;
+    int middle;
 } yin_susp_node, *yin_susp_type;
 
 /* DEBUG CODE: 
@@ -392,18 +392,21 @@ void yin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
         /* don't run past the s input sample block */
         susp_check_term_log_samples(s, s_ptr, s_cnt);
-        togo = min(togo, susp->s_cnt);
+        togo = (int) min(togo, susp->s_cnt);
 
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
-            susp->terminate_cnt <= susp->susp.current + cnt + togo/susp->stepsize) {
-            togo = (susp->terminate_cnt - (susp->susp.current + cnt)) * susp->stepsize;
+            susp->terminate_cnt <=
+            susp->susp.current + cnt + togo/susp->stepsize) {
+            togo = (int) ((susp->terminate_cnt - (susp->susp.current + cnt)) *
+                          susp->stepsize);
             if (togo == 0) break;
         }
 
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-            int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            int64_t to_stop = susp->susp.log_stop_cnt -
+                              (susp->susp.current + cnt);
             /* break if to_stop = 0 (we're at the logical stop)
              * AND cnt > 0 (we're not at the beginning of the output block)
              */
@@ -417,7 +420,7 @@ void yin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                             */
                         susp->logically_stopped = true;
                 } else /* limit togo so we can start a new block a the LST */
-                    togo = to_stop * susp->stepsize;
+                    togo = (int) (to_stop * susp->stepsize);
             }
         }
         n = togo;
@@ -545,10 +548,10 @@ LVAL snd_make_yin(sound_type s, double low_step, double high_step, long stepsize
     susp->susp.current = 0;
     susp->s = s;
     susp->s_cnt = 0;
-    susp->m = (long) (sr / step_to_hz(high_step));
+    susp->m = (int) (sr / step_to_hz(high_step));
     if (susp->m < 2) susp->m = 2;
     /* add 1 to make sure we round up */
-    susp->middle = (long) (sr / step_to_hz(low_step)) + 1;
+    susp->middle = (int) (sr / step_to_hz(low_step)) + 1;
     susp->blocksize = susp->middle * 2;
     susp->stepsize = stepsize;
     /* blocksize must be at least step size to implement stepping */

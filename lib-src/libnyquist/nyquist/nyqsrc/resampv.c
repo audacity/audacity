@@ -60,14 +60,14 @@
 
 typedef struct resamplev_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type f;
-    long f_cnt;
+    int f_cnt;
     sample_block_values_type f_ptr;
 
     sound_type g;
-    long g_cnt;
+    int g_cnt;
     sample_block_values_type g_ptr;
     double prev_g;	/* data for interpolation: */
     double next_g;
@@ -97,7 +97,7 @@ typedef struct resamplev_susp_struct {
     int Xoff; /* number of extra samples at beginning and end of X */
 } resamplev_susp_node, *resamplev_susp_type;
 
-void resamplev_free();
+void resamplev_free(snd_susp_type a_susp);
 void resampv_refill(resamplev_susp_type susp);
 
 /* Sampling rate conversion subroutine

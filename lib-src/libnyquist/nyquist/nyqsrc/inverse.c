@@ -17,15 +17,15 @@
 #include "falloc.h"
 #include "inverse.h"
 
-void inverse_free();
+void inverse_free(snd_susp_type a_susp);
 
 
 typedef struct inverse_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s;
-    long s_cnt;
+    int s_cnt;
     sample_block_values_type s_ptr;
     double s_prev;
     double s_time;
@@ -93,7 +93,7 @@ void inverse_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             susp->terminate_cnt <= susp->susp.current + out_cnt) {
             /* pretend like we computed the correct number of samples */
             togo = 0;
-            out_cnt = susp->terminate_cnt - susp->susp.current;
+            out_cnt = (long) (susp->terminate_cnt - susp->susp.current);
             /* exit the loop to complete the termination */
             break;
         }
@@ -132,8 +132,8 @@ void inverse_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 void inverse_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
     inverse_susp_type susp = (inverse_susp_type) a_susp;
-    long final_count = MIN(susp->susp.current + max_sample_block_len,
-                           susp->susp.toss_cnt);
+    int64_t final_count = MIN(susp->susp.current + max_sample_block_len,
+                              susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
     long n;
 
@@ -144,8 +144,8 @@ void inverse_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-        n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
-                       (susp->s->current - susp->s_cnt));
+        n = (long) ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
+                            (susp->s->current - susp->s_cnt));
         susp->s_ptr += n;
         susp_took(s_cnt, n);
         susp->susp.fetch = susp->susp.keep_fetch;

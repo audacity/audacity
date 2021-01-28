@@ -139,20 +139,20 @@ void multiread_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     while (true) {
 
         /* compute how many frames to read to fill sample blocks */
-        long frame_count = max_sample_block_len - frames_read;
-        long actual;         /* how many frames actually read */
+        int frame_count = max_sample_block_len - frames_read;
+        int actual;         /* how many frames actually read */
 
         /* make sure frames will fit in buffer */
         if (frame_count * file_frame_size > input_buffer_samps) {
             frame_count = input_buffer_samps / file_frame_size;
         }
 
-        actual = sf_readf_float(susp->sndfile, input_buffer, frame_count);
+        actual = (int) sf_readf_float(susp->sndfile, input_buffer, frame_count);
         n = actual;  
 
         /* don't read too many */
         if (n > (susp->cnt - susp->susp.current)) {
-            n = susp->cnt - susp->susp.current;
+            n = (int) (susp->cnt - susp->susp.current);
         }
 
         /* process one channel at a time, multiple passes through input */
@@ -268,7 +268,7 @@ void multiread_free(snd_susp_type a_susp)
     }
     if (!active) {
         /* stdputstr("all channels freed, freeing susp now\n"); */
-        read_free(susp);
+        read_free(a_susp);
     }
 }
 

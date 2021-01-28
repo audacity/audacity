@@ -37,11 +37,13 @@ extern LVAL k_sescape,k_mescape;
 extern char buf[];
 
 /* external routines */
-extern FILE *osaopen();
+extern FILE *osaopen(const char *name, const char *mode);
 /* on the NeXT, atof is a macro in stdlib.h */
-#if !defined(atof) && !defined(_WIN32) 
-   extern double atof();
-#endif
+/* Is this a mistake? atof is declared in stdlib.h, but it is never a macro:
+  #if !defined(atof) && !defined(_WIN32)
+     extern double atof(const char *);
+  #endif
+*/
 #ifndef __MWERKS__
 #if !defined(ITYPE) && !defined(_WIN32) 
    extern ITYPE;
@@ -886,14 +888,17 @@ int xlisnumber(char *str, LVAL *pval)
         p++;
 
     /* check for a string of digits */
-    while (isdigit(*p))
-        p++, dl++;
-
+    while (isdigit(*p)) {
+        p++;
+        dl++;
+    }
     /* check for a decimal point */
     if (*p == '.') {
         p++;
-        while (isdigit(*p))
-            p++, dr++;
+        while (isdigit(*p)) {
+            p++;
+            dr++;
+        }
     }
 
     /* check for an exponent */
@@ -905,8 +910,10 @@ int xlisnumber(char *str, LVAL *pval)
             p++;
 
         /* check for a string of digits */
-        while (isdigit(*p))
-            p++, dr++;
+        while (isdigit(*p)) {
+            p++;
+            dr++;
+        }
     }
 
     /* make sure there was at least one digit and this is the end */
@@ -925,7 +932,7 @@ int xlisnumber(char *str, LVAL *pval)
 /* defmacro - define a read macro */
 void defmacro(int ch, LVAL type, int offset)
 {
-    extern FUNDEF *funtab;
+    extern FUNDEF funtab[];
     LVAL subr;
     subr = cvsubr(funtab[offset].fd_subr,funtab[offset].fd_type,offset);
     setelement(getvalue(s_rtable),ch,cons(type,subr));

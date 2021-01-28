@@ -106,7 +106,8 @@ chunk_type chunk_create(boolean first_flag)
 private void clock_tick(call_args_type args)
 {
     seq_type seq = (seq_type) args->arg[0];
-    time_type fraction = (time_type) args->arg[1];
+	// double cast to avoid pointer-to-long truncation on WIN64
+    time_type fraction = (time_type) ((intptr_t) args->arg[1]);
     int delay;
     fraction += clock_ticksize;
     delay = fraction >> 16;
@@ -171,14 +172,8 @@ private event_type event_create(seq, size, etime, eline)
 
 /* insert_call -- add a call event to the seq */
 /**/
-event_type insert_call(seq, ctime, cline, voice, addr, value, n)
-  seq_type seq;
-  time_type ctime;
-  int cline;
-  int voice;
-  int (*addr)();
-  long value[SEQ_MAX_PARMS];
-  int n;
+event_type insert_call(seq_type seq, time_type ctime, int cline, int voice,
+        int (*addr)(seq_arg_t args), long value[SEQ_MAX_PARMS], int n)
 {
     int i;
     register event_type event = event_create(seq, callsize, ctime, cline);
@@ -227,13 +222,8 @@ event_type insert_clock(seq, ctime, cline, ticksize)
 
 /* insert_ctrl -- add a control to the seq */
 /**/
-event_type insert_ctrl(seq, ctime, cline, ctrl, voice, value)
-  seq_type seq;
-  time_type ctime;
-  int cline;
-  int ctrl;
-  int voice;
-  int value;
+event_type insert_ctrl(seq_type seq, time_type ctime,
+                       int cline, int ctrl, int voice, int value)
 {
     register event_type event = event_create(seq, ctrlsize, ctime, cline);
     if (seq_print) {
@@ -299,7 +289,7 @@ def_type insert_def(seq, symbol, definition, deflen)
 {
     int i;
     def_type defn = (def_type) chunk_alloc(seq, sizeof(def_node));
-    defn->symbol = chunk_alloc(seq, strlen(symbol) + 1);
+    defn->symbol = chunk_alloc(seq, (int) strlen(symbol) + 1);
     defn->definition = (unsigned char *) chunk_alloc(seq, deflen);
     strcpy(defn->symbol, symbol);
     for (i = 0; i < deflen; i++) {
@@ -718,7 +708,8 @@ private void ramp_event(call_args_type args)
     unsigned int to_value = (unsigned int) ((size_t) args->arg[3]);
     /* increment is also a fixed-point fraction, so int is fine */
     int increment = (int) ((size_t) args->arg[4]);
-    time_type step = (time_type) args->arg[5];;
+	/* double cast to avoid pointer to long truncation warning in WIN64: */
+    time_type step = (time_type) ((intptr_t) args->arg[5]);
     /* n is the number of steps remaining. int is big enough. */
     int n = (int) ((size_t) args->arg[6]);
     

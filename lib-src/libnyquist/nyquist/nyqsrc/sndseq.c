@@ -19,6 +19,7 @@
 #include "extern.h"
 #include "cext.h"
 #include "assert.h"
+#include "sndseq.h"
 
 #define SNDSEQDBG 0
 #define D if (SNDSEQDBG) 
@@ -30,20 +31,20 @@
    (sndseq_free) or else we'll leak memory.
  */
 typedef struct sndseq_susp_struct {
-    snd_susp_node		susp;
-    boolean			started;
+    snd_susp_node               susp;
+    boolean                     started;
     int                         terminate_bits;
-    long			terminate_cnt;
+    int64_t                     terminate_cnt;
     int                         logical_stop_bits;
-    boolean			logically_stopped;
-    sound_type			s1;
-    long			s1_cnt;
-    sample_block_type		s1_bptr;	/* block pointer */
-    sample_block_values_type	s1_ptr;
-    sound_type			s2;
-    long			s2_cnt;
-    sample_block_type		s2_bptr;	/* block pointer */
-    sample_block_values_type	s2_ptr;
+    boolean                     logically_stopped;
+    sound_type                  s1;
+    int                         s1_cnt;
+    sample_block_type           s1_bptr;        /* block pointer */
+    sample_block_values_type    s1_ptr;
+    sound_type                  s2;
+    int                         s2_cnt;
+    sample_block_type           s2_bptr;        /* block pointer */
+    sample_block_values_type    s2_ptr;
 
     /* support for interpolation of s2 */
     sample_type s2_x1_sample;
@@ -65,11 +66,106 @@ void sndseq_free(snd_susp_type susp);
 
 extern LVAL s_stdout;
 
+void print_closure(LVAL val);
+
+#ifdef SNDSEQDBG
+
+LVAL print_stack[100];
+int print_stack_index = 0;
+
+#define ps_push(x) print_stack[print_stack_index++] = x
+#define ps_pop(x) print_stack_index--
+
+int in_cycle(LVAL x)
+{
+    for (int i = 0; i < print_stack_index; i++) {
+        if (print_stack[i] == x) {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+/* print_closure -- show everything for debugging */
+void print_lval(LVAL x)
+{
+    LVAL next;
+    if (!x) {
+        printf("NIL");
+        return;
+    }
+    if (in_cycle(x)) {
+        printf("<CYCLE>");
+        return;
+    }
+    ps_push(x);
+    switch (ntype(x)) {
+        case CONS:
+            printf("(");
+            for (LVAL nptr = x; nptr != NIL; nptr = next) {
+                print_lval(car(nptr));
+                if ((next = cdr(nptr))) {
+                    if (consp(next)) printf(" ");
+                    else {
+                        printf(" . ");
+                        print_lval(next);
+                        break;
+                    }
+                }
+            }
+            printf(")");
+            break;
+        case SYMBOL:
+            printf("%s", getstring(getpname(x)));
+            break;
+        case FIXNUM:
+            printf(IFMT, getfixnum(x));
+            break;
+        case FLONUM:
+            printf("%g", getflonum(x));
+            break;
+        case EXTERN:
+            printf("<%s:%p>", getdesc(x)->type_name, getinst(x));
+            break;
+        case CLOSURE:
+            printf("<CLOSURE:%p>\n", x);
+            print_closure(x);
+            break;
+        default:
+            printf("<type %d>", ntype(x));
+            break;
+    }
+    ps_pop(x);
+}
+
+void print_closure(LVAL val)
+{
+    printf("Name:   ");   print_lval(getname(val));
+    printf("\nType:   "); print_lval(gettype(val));
+    printf("\nLambda: "); print_lval(getlambda(val));
+    printf("\nArgs:   "); print_lval(getargs(val));
+    printf("\nOargs:  "); print_lval(getoargs(val));
+    printf("\nRest:   "); print_lval(getrest(val));
+    printf("\nKargs:  "); print_lval(getkargs(val));
+    printf("\nAargs:  "); print_lval(getaargs(val));
+    printf("\nBody:   "); print_lval(getbody(val));
+    printf("\nEnv:    "); print_lval(closure_getenv(val));
+    printf("\nFenv:   "); print_lval(getfenv(val));
+    printf("\n");
+}
+
+#endif
+
 void sndseq_mark(snd_susp_type a_susp)
 {
+D   nyquist_printf("sndseq_mark: marking susp %p\n", a_susp);
     sndseq_susp_type susp = (sndseq_susp_type) a_susp;
     sound_xlmark(susp->s1);
-    if (susp->closure) mark(susp->closure);
+    if (susp->closure) {
+D        nyquist_printf("sndseq_mark: marking closure %p\n", susp->closure);
+D        print_closure(susp->closure);
+        mark(susp->closure);
+    }
 }
 
 
@@ -100,7 +196,7 @@ void sndseq_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         if (susp->s1_ptr == zero_block->samples) {
             susp->terminate_bits = 1;   /* mark s1 as terminated */
         }
-/*	nyquist_printf("sndseq_fetch: s1-lsc %d, current %d cnt %d\n",
+/*        nyquist_printf("sndseq_fetch: s1-lsc %d, current %d cnt %d\n",
                susp->s1->logical_stop_cnt, susp->s1->current, susp->s1_cnt); */
     }
 
@@ -109,14 +205,19 @@ void sndseq_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         time_type now = susp->susp.t0 + susp->susp.current / susp->susp.sr;
         /* note: cons args are protected from GC: */
         LVAL result;
-        long delay;	/* sample delay to s2 */
-/*	stats();gc();stats();*/
+        int64_t delay;        /* sample delay to s2 */
+/*        stats();gc();stats();*/
 
         xlsave1(result);
 
-D      nyquist_printf("sndseq_fetch: about to eval closure at %g, "
-                      "susp->susp.t0 %g, susp.current %d:\n",
-                      now, susp->susp.t0, (int)susp->susp.current);
+D        nyquist_printf("::::sndseq_fetch: about to eval closure at %g, "
+                        "susp->susp.t0 %g, susp.current %d:\n",
+                        now, susp->susp.t0, (int)susp->susp.current);
+D        nyquist_printf("  susp@%p(%s)\n", susp, susp->susp.name);
+D        (*susp->susp.print_tree)((snd_susp_type) susp, 4);
+D        nyquist_printf("  EVALUATE CLOSURE: ");
+D        print_lval(susp->closure);
+D        printf("\n");
         result = xleval(cons(susp->closure, consa(cvflonum(now))));
 
         susp->logical_stop_bits = 1;   /* mark s1 as logically stopped */
@@ -157,9 +258,9 @@ D        nyquist_printf("in sndseq: logically stopped; "
             } else {
                 susp->susp.fetch = add_s2_nn_fetch;
                 susp->susp.name = "sndseq:add_s2_nn_fetch";
-            }		
+            }
         } else if (delay > 0) {    /* fill hole between s1 and s2 */
-D	    stdputstr("using add_s1_nn_fetch\n");
+D           stdputstr("using add_s1_nn_fetch\n");
             susp->susp.fetch = add_s1_nn_fetch;
             susp->susp.name = "sndseq:add_s1_nn_fetch";
         } else {
@@ -173,7 +274,7 @@ D	    stdputstr("using add_s1_nn_fetch\n");
 D        stdputstr("in sndseq: calling add's fetch\n");
         (*(susp->susp.fetch))(a_susp, snd_list);
 D        stdputstr("in sndseq: returned from add's fetch\n");
-/*	gc();*/
+/*       gc();*/
         xlpop();
         return;
     }
@@ -185,13 +286,13 @@ D        stdputstr("in sndseq: returned from add's fetch\n");
     /* don't run past terminate time */
     if (susp->terminate_cnt != UNKNOWN &&
         susp->terminate_cnt <= susp->susp.current + togo) {
-        togo = susp->terminate_cnt - susp->susp.current;
+        togo = (int) (susp->terminate_cnt - susp->susp.current);
     }
     
     /* don't run past logical stop time */
     if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-        int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
-        togo = MIN(togo, to_stop);
+        int64_t to_stop = susp->susp.log_stop_cnt - susp->susp.current;
+        togo = (int) MIN(togo, to_stop);
     }
     assert(togo >= 0);
 
@@ -216,7 +317,7 @@ D        stdputstr("in sndseq: returned from add's fetch\n");
          */
 
         /* just fetch and pass blocks on */
-/*	nyquist_printf("sndseq (s1_nn) %x starting uncopy, togo %d\n", susp, togo); */
+/*      nyquist_printf("sndseq (s1_nn) %x starting uncopy, togo %d\n", susp, togo); */
         snd_list->block = susp->s1_bptr;
         /* the zero_block indicates termination, don't copy it! Use
          * internal_zero_block instead.  It is also filled with zeros,
@@ -227,7 +328,7 @@ D        stdputstr("in sndseq: returned from add's fetch\n");
         if (snd_list->block == zero_block)
             snd_list->block = internal_zero_block;
         (snd_list->block->refcnt)++;
-/*	nyquist_printf("sndseq (s1_nn) %x shared block %x\n", susp, susp->s1_bptr);*/
+/*      nyquist_printf("sndseq (s1_nn) %x shared block %x\n", susp, susp->s1_bptr);*/
 
         susp_took(s1_cnt, togo);
         snd_list->block_len = togo;
@@ -274,11 +375,21 @@ void sndseq_print_tree(snd_susp_type a_susp, int n)
     indent(n);
     stdputstr("s1:");
     sound_print_tree_1(susp->s1, n);
-
+D   {   indent(n); 
+        nyquist_printf("closure %p stored at %p\n", 
+                       susp->closure, &susp->closure); 
+    }
+D   if (susp->closure && closurep(susp->closure)) {
+        LVAL body = getbody(susp->closure);
+        LVAL lambda = getlambda(susp->closure);
+        LVAL args = getargs(susp->closure);
+        nyquist_printf(" closure args@%p: ", args); stdprint(args);
+        nyquist_printf(" closure lambda@%p: ", lambda); stdprint(lambda);
+        nyquist_printf(" closure body@%p: ", body); stdprint(body);
+    }
     indent(n);
     stdputstr("closure:");
     stdprint(susp->closure);
-
     indent(n);
     stdputstr("s2:");
     sound_print_tree_1(susp->s2, n);
@@ -287,11 +398,9 @@ void sndseq_print_tree(snd_susp_type a_susp, int n)
 
 
 
-sound_type snd_make_sndseq(s1, closure)
-  sound_type s1;
-  LVAL closure;
+sound_type snd_make_sndseq(sound_type s1, LVAL closure)
 {
-    register sndseq_susp_type susp;
+    sndseq_susp_type susp;
     /* t0 specified as input parameter */
     sample_type scale_factor = 1.0F;
     sound_type result;
@@ -329,20 +438,45 @@ sound_type snd_make_sndseq(s1, closure)
     susp->s2 = NULL;
     susp->s2_cnt = 0;
     susp->s2_phase = 0.0;
-/*  susp->s2_phase_incr = ??
-    susp->output_per_s2 = ?? */
     susp->closure = closure;
-    result = sound_create((snd_susp_type)susp, susp->susp.t0, susp->susp.sr, scale_factor);
+    result = sound_create((snd_susp_type)susp, susp->susp.t0,
+                          susp->susp.sr, scale_factor);
+D    nyquist_printf("Created sndseq: ");
+D    sound_print_tree_1(result, 2);
     xlpopn(1);
     return result;
 }
 
 
-sound_type snd_sndseq(s1, closure)
-  sound_type s1;
-  LVAL closure;
+/* This was going to support a new construct, SEQV, but it was just a bad idea.
+void change_seqclosure(LVAL snd, LVAL vars, LVAL closure)
 {
-    sound_type s1_copy;
-    s1_copy = sound_copy(s1);
-    return snd_make_sndseq(s1_copy, closure);
+    if (listp(vars)) { // modify the closure
+        LVAL newenv;
+        LVAL binding;
+        LVAL envsublist; // don't save, always points into env
+        xlstkcheck(2);
+        xlsave(newenv); // initially just ((var . val) ...)
+        xlsave(binding);
+        while (vars) { // for each var in environment
+            LVAL var = car(vars);
+            // get value of sym in env:
+            binding = cons(var, xlgetvalue(var));
+            newenv = cons(binding, newenv);
+            vars = cdr(vars);
+        }
+
+        newenv = consa(newenv);
+        if (null(snd)) { // first sound gets to see all local variables
+            cdr(newenv) = closure_getenv(closure);
+        }
+        setenv(closure, newenv);
+        xlpopn(2);
+    }
+}    
+*/
+
+sound_type snd_sndseq(sound_type snd, LVAL closure)
+{
+    return snd_make_sndseq(sound_copy(snd), closure);
 }

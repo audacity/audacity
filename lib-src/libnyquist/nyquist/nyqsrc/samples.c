@@ -18,7 +18,7 @@
 LVAL s_next = NULL;
 LVAL s_send;
 
-void samples_symbols()
+void samples_symbols(void)
 {
     s_next = xlenter(":NEXT");
     s_send = xlenter("SEND");
@@ -64,10 +64,10 @@ sound_type snd_from_array(double t0, double sr, LVAL array)
 
 /* snd_length -- count how many samples are in a sound */
 /**/
-long snd_length(sound_type s, long len)
+int64_t snd_length(sound_type s, int64_t len)
 {
-    long total = 0;
-    long blocklen;
+    int64_t total = 0;
+    int blocklen;
 
     s = sound_copy(s);
     if (len > s->stop) len = s->stop;
@@ -87,7 +87,7 @@ long snd_length(sound_type s, long len)
 double snd_maxsamp(sound_type s)
 {
     sample_type result = 0.0F;
-    long blocklen;
+    int blocklen;
     s = sound_copy(s);
 
     while (true) {
@@ -113,9 +113,9 @@ LVAL snd_samples(sound_type s, long len)
 {
     LVAL v;
     long vx = 0;
-    long blocklen;
+    int blocklen;
     register double scale_factor = s->scale;
-    len = snd_length(s, len);
+    len = (long) snd_length(s, len);
     s = sound_copy(s);
 
     xlsave1(v);
@@ -155,14 +155,16 @@ LVAL snd_samples(sound_type s, long len)
 LVAL snd_fetch(sound_type s)
 {
     if (!s->extra) { /* this is the first call, so fix up s */
-        s->extra = (long *) malloc(sizeof(long) * FIELDS);
-        s->extra[0] = sizeof(long) * FIELDS;
+        s->extra = (int64_t *) malloc(sizeof(s->extra[0]) * FIELDS);
+        s->extra[0] = sizeof(s->extra[0]) * FIELDS;
         s->CNT = s->INDEX = 0;
-    } else if (s->extra[0] != sizeof(long) * FIELDS) {
+    } else if (s->extra[0] != sizeof(s->extra[0]) * FIELDS) {
         xlfail("sound in use by another iterator");
     }
-    if (s->CNT == s->INDEX) {
-        sound_get_next(s, &(s->CNT));
+    int icnt = (int) s->CNT;  /* need this to be type int */
+    if (icnt == s->INDEX) {
+        sound_get_next(s, &icnt);
+        s->CNT = icnt;  /* save the count back to s->extra */
         s->INDEX = 0;
     }
     if (s->SAMPLES == zero_block->samples) {
@@ -205,6 +207,7 @@ LVAL snd_fetch(sound_type s)
 #define TERMCNT extra[4]
 #define OFFSET 5
 
+/* array size is limited by 32-bit len (on Windows) */
 LVAL snd_fetch_array(sound_type s, long len, long step)
 {
     long i, maxlen, skip, fillptr;
@@ -217,23 +220,25 @@ LVAL snd_fetch_array(sound_type s, long len, long step)
     if (len < 1) xlfail("len < 1");
 
     if (!s->extra) { /* this is the first call, so fix up s */
-        s->extra = (long *) malloc(sizeof(long) * (len + OFFSET));
+        s->extra = (int64_t *) malloc(sizeof(int64_t) * (len + OFFSET));
         s->extra[0] = sizeof(long) * (len + OFFSET);
         s->CNT = s->INDEX = s->FILLCNT = 0;
         s->TERMCNT = -1;
         maxlen = len;
     } else {
-        maxlen = (s->extra[0] / sizeof(long)) - OFFSET;
+        maxlen = (long) ((s->extra[0] / sizeof(long)) - OFFSET);
         if (maxlen < 1) xlfail("sound in use by another iterator");
         if (maxlen < len) xlfail("len grew");
     }
     samples = (float *) &(s->extra[OFFSET]);
     
     /* step 1: refill buffer with samples */
-    fillptr = s->FILLCNT;
+    fillptr = (long) s->FILLCNT; /* cast is for Win64 where long is 32-bit */
     while (fillptr < maxlen) {
+        int icnt = (int) s->CNT;  /* need this to be type int */
         if (s->INDEX == s->CNT) {
-            sound_get_next(s, &(s->CNT));
+            sound_get_next(s, &icnt);
+            s->CNT = icnt;        /* save count back to s->extra */
             if (s->SAMPLES == zero_block->samples) {
                 setvalue(rslt_symbol, cvfixnum(fillptr));
                 if (s->TERMCNT < 0) s->TERMCNT = fillptr;
@@ -283,13 +288,15 @@ LVAL snd_fetch_array(sound_type s, long len, long step)
      */
     skip = step - maxlen;
     while (skip > 0) {
-        long remaining = s->CNT - s->INDEX;
+        int remaining = (int) (s->CNT - s->INDEX);
         if (remaining >= skip) {
             s->INDEX += skip;
             skip = 0;
         } else {
             skip -= remaining;
-            sound_get_next(s, &(s->CNT));
+            int icnt = (int) s->CNT;  /* need to have type int */
+            sound_get_next(s, &icnt);
+            s->CNT = icnt;            /* save count back in s->extra */
             s->INDEX = 0;
         }
     }

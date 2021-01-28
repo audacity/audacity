@@ -81,15 +81,15 @@ private boolean fixed_octave;	/* used to avoid many error messages */
 /****************************************************************************
 *    Routines local to this module
 ****************************************************************************/
-private void    bend_filter();
-private void    byteorder();
-private void    ctrl_filter();
-private int    event_bend();
-private void    filter();
-private long    getdur();
-private long    getnext();
-private char    map_ctrl();
-private void    output();
+private void    bend_filter(note_type note, note_type last, long now);
+private void    byteorder(void);
+private void    ctrl_filter(note_type note, note_type last, long now);
+private int     event_bend(note_type note);
+private void    filter(note_type last);
+private long    getdur(int i, note_type last, int ped, long now);
+private long    getnext(int i, note_type last, long now);
+private char    map_ctrl(int control);
+private void    output(FILE *fp, note_type last, boolean absflag);
 
 /****************************************************************************
 *               bend_filter
@@ -105,10 +105,7 @@ private void    output();
 *    the time.
 ****************************************************************************/
 
-private void bend_filter(note, last, now)
-note_type note;    /* current note */
-note_type last;    /* the last recorded event */
-long now;       /* the current time */
+private void bend_filter(note_type note, note_type last, long now)
 {
     /* first see if there is another bend in this time
          * slot.
@@ -132,7 +129,7 @@ long now;       /* the current time */
 *    check out assumptions about byte order and placement
 ****************************************************************************/
 
-private void byteorder()
+private void byteorder(void)
 {
     note_node test_event;
     if ((sizeof(test_event) != 4) ||
@@ -166,10 +163,7 @@ private void byteorder()
 *    the time.
 ****************************************************************************/
 
-private void ctrl_filter(note, last, now)
-note_type note;    /* the current note */
-note_type last;    /* the last recorded event */
-long now;       /* the current time */
+private void ctrl_filter(note_type note, note_type last, long now)
 {
     /* see if there is another control change in this time
          * slot.
@@ -196,8 +190,7 @@ long now;       /* the current time */
 *    returns int: an 8 bit pitch bend number
 ****************************************************************************/
 
-private int event_bend(note)
-note_type note;
+private int event_bend(note_type note)
 {
     return((int) (((note->n[1]) >> 6) + ((note->n[2]) << 1)));
 }
@@ -212,8 +205,7 @@ note_type note;
 *    noop data (the current time is used as a noop)
 ****************************************************************************/
 
-private void filter(last)
-note_type last;
+private void filter(note_type last)
 {
     note_type note;    /* loop control variable */
     long now=0;   /* last time seen */
@@ -263,11 +255,7 @@ note_type last;
 *    pressed (this event will also start another note).
 ****************************************************************************/
 
-private long getdur(i, last, ped, now)
-int i;
-note_type last;
-int ped;
-long now;
+private long getdur(int i, note_type last, int ped, long now)
 {
     int key = TRUE;    /* flag that says if note is on */
     long start = now;
@@ -316,10 +304,7 @@ long now;
 *       (returns time of last event if nothing else is found)
 ****************************************************************************/
 
-private long getnext(i, last, now)
-int i;    /* the index of the current note */
-note_type last;    /* pointer to last valid data */
-long now;    /* the current time */
+private long getnext(int i, note_type last, long now)
 {
     i++;    /* advance to next item */
     for (; event_buff + i < last; i++) {
@@ -352,8 +337,7 @@ long now;    /* the current time */
 *       MODWHEEL, FOOT
 ****************************************************************************/
 
-private char map_ctrl(control)
-int control;
+private char map_ctrl(int control)
 {
     switch (control) {
 /* 'J' is no longer code for PORTARATE
@@ -389,10 +373,7 @@ int control;
 *    clock tick for each continuous change parameter
 ****************************************************************************/
 
-private void output(fp, last, absflag)
-FILE *fp;
-note_type last;
-boolean absflag;
+private void output(FILE *fp, note_type last, boolean absflag)
 {
     int i;                      /* loop counter */
     int command;                /* the current command */
@@ -400,7 +381,8 @@ boolean absflag;
     int last_velocity = -1;	/* used to filter repeated Lnn attributes */
     int last_voice = 0; 	/* the default adagio channel (1) */
     int ped = FALSE;            /* flag maintains state of pedal */
-    int how_many = last - event_buff;
+    /* size of event_buff is seems to be about 20000 events */
+    int how_many = (int) (last - event_buff);
     long now=0;                 /* the time of the next event */
 
     if (fp == NULL) {
@@ -583,7 +565,7 @@ boolean rec_init(boolean bender)
                 MIN((biggestChunk - SPACE_FOR_PLAY), ENOUGH_ROOM);
             /* leave SPACE_FOR_PLAY contiguous bytes of memory */
         }
-        max_notes = spaceForRecord / sizeof(note_node);
+        max_notes = (long) (spaceForRecord / sizeof(note_node));
         /*    gprintf(GDEBUG,"max_notes = %d\n", max_notes);*/
         event_buff = (note_type) MALLOC(spaceForRecord);
         if (event_buff == NULL) {

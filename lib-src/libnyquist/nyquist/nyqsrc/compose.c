@@ -14,22 +14,22 @@
  * 28Apr03  dm  changes for portability and fix compiler warnings
  */
 
-void compose_free();
+void compose_free(snd_susp_type a_susp);
 
 
 typedef struct compose_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type f;
-    long f_cnt;
+    int f_cnt;
     sample_block_values_type f_ptr;
     sample_type f_prev;
     double f_time;
     double f_time_increment;
     boolean started;
     sound_type g;
-    long g_cnt;
+    int g_cnt;
     sample_block_values_type g_ptr;
 } compose_susp_node, *compose_susp_type;
 
@@ -110,14 +110,15 @@ void compose_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
             if (togo == 0) break;
         }
 
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-            int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-            if (to_stop < togo && ((togo = to_stop) == 0)) break;
+            int64_t to_stop = susp->susp.log_stop_cnt -
+                              (susp->susp.current + cnt);
+            if (to_stop < togo && ((togo = (int) to_stop) == 0)) break;
         }
 
         n = togo;
@@ -177,8 +178,8 @@ f_out_of_samples:
 void compose_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
     compose_susp_type susp = (compose_susp_type) a_susp;
-    long final_count = MIN(susp->susp.current + max_sample_block_len,
-                           susp->susp.toss_cnt);
+    long final_count = (long) MIN(susp->susp.current + max_sample_block_len,
+                                  susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
     long n;
 
@@ -193,12 +194,12 @@ void compose_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-        n = ROUNDBIG((final_time - susp->f->t0) * susp->f->sr -
-                  (susp->f->current - susp->f_cnt));
+        n = ROUND32((final_time - susp->f->t0) * susp->f->sr -
+                    (susp->f->current - susp->f_cnt));
         susp->f_ptr += n;
         susp_took(f_cnt, n);
-        n = ROUNDBIG((final_time - susp->g->t0) * susp->g->sr -
-                  (susp->g->current - susp->g_cnt));
+        n = ROUND32((final_time - susp->g->t0) * susp->g->sr -
+                    (susp->g->current - susp->g_cnt));
         susp->g_ptr += n;
         susp_took(g_cnt, n);
         susp->susp.fetch = susp->susp.keep_fetch;

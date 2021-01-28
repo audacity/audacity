@@ -18,11 +18,11 @@
 #include "sndmax.h"
 #include "extern.h"
 
-double sound_max(LVAL snd_expr, long n)
+double sound_max(LVAL snd_expr, int64_t n)
 {
     LVAL s_as_lval;
     sound_type s = NULL;
-    long blocklen;
+    int blocklen;
     sample_block_values_type sbufp;
     register double maximum = 0;
 
@@ -53,7 +53,7 @@ double sound_max(LVAL snd_expr, long n)
             if (sampblock == zero_block || blocklen == 0) {
                 break;
             }
-            togo = MIN(blocklen, n);
+            togo = (long) MIN(blocklen, n);
             sbufp = sampblock->samples;
             for (j = 0; j < togo; j++) {
                 register double samp = *sbufp++;

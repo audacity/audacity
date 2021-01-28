@@ -23,10 +23,10 @@ void down_free(snd_susp_type a_susp);
 typedef struct down_susp_struct {
     snd_susp_node susp;
     boolean started;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s;
-    long s_cnt;
+    int s_cnt;
     sample_block_values_type s_ptr;
 
     /* support for interpolation of s */
@@ -35,8 +35,9 @@ typedef struct down_susp_struct {
     double s_pHaSe_iNcR;
 
     /* support for ramp between samples of s */
+    /*can we delete these?
     double output_per_s;
-    long s_n;
+    long s_n; */
 } down_susp_node, *down_susp_type;
 
 
@@ -78,7 +79,7 @@ void down_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
             if (togo <= 0) {
                 togo = 0;
                 break;
@@ -87,7 +88,7 @@ void down_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
         /* don't run past logical stop time */
         if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-            int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
             /* break if to_stop == 0 (we're at the logical stop)
              * AND cnt > 0 (we're not at the beginning of the
              * output block).
@@ -105,7 +106,7 @@ void down_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 } else /* limit togo so we can start a new
                         * block at the LST
                         */
-                    togo = to_stop;
+                    togo = (int) to_stop;
             }
         }
 
@@ -197,8 +198,8 @@ void down_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 void down_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
     down_susp_type susp = (down_susp_type) a_susp;
-    long final_count = MIN(susp->susp.current + max_sample_block_len,
-                           susp->susp.toss_cnt);
+    int64_t final_count = MIN(susp->susp.current + max_sample_block_len,
+                              susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
     long n;
 
@@ -209,8 +210,8 @@ void down_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-        n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
-             (susp->s->current - susp->s_cnt));
+        n = (long) ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
+                            (susp->s->current - susp->s_cnt));
         susp->s_ptr += n;
         susp_took(s_cnt, n);
         susp->susp.fetch = susp->susp.keep_fetch;
@@ -289,8 +290,8 @@ sound_type snd_make_down(rate_type sr, sound_type s)
     susp->s_cnt = 0;
     susp->s_pHaSe = 0.0;
     susp->s_pHaSe_iNcR = s->sr / sr;
-    susp->s_n = 0;
-    susp->output_per_s = sr / s->sr;
+    //susp->s_n = 0;
+    //susp->output_per_s = sr / s->sr;
     return sound_create((snd_susp_type)susp, t0, sr, scale_factor);
 }
 

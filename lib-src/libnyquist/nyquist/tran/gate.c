@@ -14,22 +14,22 @@ void gate_free(snd_susp_type a_susp);
 
 typedef struct gate_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     sound_type signal;
-    long signal_cnt;
+    int signal_cnt;
     sample_block_values_type signal_ptr;
 
-    double rise_time;
-    double fall_time;
+    int64_t rise_samps;
+    int64_t fall_samps;
     double floor;
     double threshold;
-    long on_count;
-    long off_count;
+    int64_t on_count;
+    int64_t off_count;
     double rise_factor;
     double fall_factor;
-    long start_fall;
-    long start_rise;
-    long stop_count;
+    int64_t start_fall;
+    int64_t start_rise;
+    int64_t stop_count;
     long delay_len;
     int state;
     double value;
@@ -68,8 +68,8 @@ points, remembered as sample counts are saved in variables:
     off_count -- the time at which the fall should begin
     rise_factor -- multiply by this to get exponential rise
     fall_factor -- multiply by this to get exponential fall
-    rise_time -- number of samples for a full rise
-    fall_time -- number of samples for a full fall
+    rise_samps -- number of samples for a full rise
+    fall_samps -- number of samples for a full fall
     floor -- the lowest value to output
     threshold -- compare the signal s to this value
     start_rise -- the sample count at which a rise begins
@@ -89,20 +89,24 @@ computing fall_factor:
 void compute_start_rise(gate_susp_type susp)
 {
     /* to compute when to start rise to achieve 0dB at on_count:
-    By similar triangles:
-        truncated rise time    truncated fall time
-        ------------------- == -------------------
-            full rise time         full fall time
-    when you enter ST_FALL, set start_fall = now
-    then if (on_count - start_fall) < (rise_time + fall_time)
-    then start rise at
-    on_time - rise_time * (on_count-start_fall)/(rise_time+fall_time)
+    let frt = full rise time = rise_time, art = actual rise time, 
+        fft = full fall time = fall_time, aft = actual fall time
+    If there's no time for a fft + frt, scale both the the fall time
+    and rise times proportionally by available time / (fft + frt).
+
+    When you enter ST_FALL, set start_fall = now.
+    Let avail = available time = (on_count - start_fall).
+    If there is not enough time for a full fall and full rise,
+    i.e. if avail < (fft + frt) then let
+        art = frt * avail / (fft + frt)
+    So start rise at
+        on_time - rise_time * (on_count-start_fall)/(rise_time+fall_time)
     */
-    long total = (long) (susp->rise_time + susp->fall_time);
+    int64_t total = susp->rise_samps + susp->fall_samps;
     if ((susp->on_count - susp->start_fall) < total) {
-        susp->start_rise = (long) (susp->on_count - 
-            (susp->rise_time * susp->on_count - susp->start_fall) / total);
-    } else susp->start_rise = (long) (susp->on_count - susp->rise_time);
+        susp->start_rise = susp->on_count - 
+            (susp->rise_samps * (susp->on_count - susp->start_fall)) / total;
+    } else susp->start_rise = susp->on_count - susp->rise_samps;
 }
 
 
@@ -118,8 +122,8 @@ void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     register sample_block_values_type out_ptr_reg;
 
     register double threshold_reg;
-    register long off_count_reg;
-    register long stop_count_reg;
+    register int64_t off_count_reg;
+    register int64_t stop_count_reg;
     register long delay_len_reg;
     register int state_reg;
     register double value_reg;
@@ -129,35 +133,35 @@ void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the signal input sample block: */
-	susp_check_term_samples(signal, signal_ptr, signal_cnt);
-	togo = min(togo, susp->signal_cnt);
+        /* don't run past the signal input sample block: */
+        susp_check_term_samples(signal, signal_ptr, signal_cnt);
+        togo = min(togo, susp->signal_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	threshold_reg = susp->threshold;
-	off_count_reg = susp->off_count;
-	stop_count_reg = susp->stop_count;
-	delay_len_reg = susp->delay_len;
-	state_reg = susp->state;
-	value_reg = susp->value;
-	signal_ptr_reg = susp->signal_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        threshold_reg = susp->threshold;
+        off_count_reg = susp->off_count;
+        stop_count_reg = susp->stop_count;
+        delay_len_reg = susp->delay_len;
+        state_reg = susp->state;
+        value_reg = susp->value;
+        signal_ptr_reg = susp->signal_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             {
             sample_type future = *signal_ptr_reg++;
-            long now = susp->susp.current + cnt + togo - n;
+            int64_t now = susp->susp.current + cnt + togo - n;
             
             switch (state_reg) {
               /* hold at 1.0 and look for the moment to begin fall: */
@@ -166,12 +170,13 @@ void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                       off_count_reg = now + delay_len_reg;
                   } else if (now >= off_count_reg) {
                       state_reg = ST_FALL;
-                      stop_count_reg = (long) (now + susp->fall_time);
+                      stop_count_reg = now + susp->fall_samps;
                       susp->start_fall = now;
                   }
                   break;
               /* fall until stop_count_reg while looking for next rise time */
               case ST_FALL:
+                value_reg *= susp->fall_factor;
                 if (future >= threshold_reg) {
                     off_count_reg = susp->on_count = now + delay_len_reg;
                     compute_start_rise(susp);
@@ -179,7 +184,7 @@ void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 } else if (now == stop_count_reg) {
                     state_reg = ST_OFF;
                     value_reg = susp->floor;
-                } else value_reg *= susp->fall_factor;
+                }
                 break;
               /* fall until start_rise while looking for next fall time */
               case ST_FALL_UNTIL:
@@ -199,10 +204,14 @@ void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 if (future >= threshold_reg) {
                     off_count_reg = susp->on_count = now + delay_len_reg;
                     compute_start_rise(susp);
-                    state_reg = ST_OFF_UNTIL;
+                    if (now >= susp->start_rise) {
+                        state_reg = ST_RISE;
+                    } else {
+                        state_reg = ST_OFF_UNTIL;
+                    }
                 }
                 break;
-              /* hold at floor until start_rise while looking for next fall time */
+              /* hold at floor until start_rise and look for next fall time */
               case ST_OFF_UNTIL:
                   if (future >= threshold_reg) {
                       off_count_reg = now + delay_len_reg;
@@ -225,43 +234,43 @@ void gate_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
               }
               *out_ptr_reg++ = (sample_type) value_reg;
             };
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->off_count = off_count_reg;
-	susp->stop_count = stop_count_reg;
-	susp->state = state_reg;
-	susp->value = value_reg;
-	/* using signal_ptr_reg is a bad idea on RS/6000: */
-	susp->signal_ptr += togo;
-	out_ptr += togo;
-	susp_took(signal_cnt, togo);
-	cnt += togo;
+        togo -= n;
+        susp->off_count = off_count_reg;
+        susp->stop_count = stop_count_reg;
+        susp->state = state_reg;
+        susp->value = value_reg;
+        /* using signal_ptr_reg is a bad idea on RS/6000: */
+        susp->signal_ptr += togo;
+        out_ptr += togo;
+        susp_took(signal_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* gate_n_fetch */
 
 
 void gate_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     gate_susp_type susp = (gate_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from signal up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->signal->t0) * susp->signal->sr)) >=
-	   susp->signal->current)
-	susp_get_samples(signal, signal_ptr, signal_cnt);
+           susp->signal->current)
+        susp_get_samples(signal, signal_ptr, signal_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->signal->t0) * susp->signal->sr -
+    n = (int) ROUNDBIG((final_time - susp->signal->t0) * susp->signal->sr -
          (susp->signal->current - susp->signal_cnt));
     susp->signal_ptr += n;
     susp_took(signal_cnt, n);
@@ -301,23 +310,16 @@ sound_type snd_make_gate(sound_type signal, time_type lookahead, double risetime
     time_type t0 = signal->t0;
     sample_type scale_factor = 1.0F;
     time_type t0_min = t0;
-    /* combine scale factors of linear inputs (SIGNAL) */
-    scale_factor *= signal->scale;
-    signal->scale = 1.0F;
-
-    /* try to push scale_factor back to a low sr input */
-    if (signal->sr < sr) { signal->scale = scale_factor; scale_factor = 1.0F; }
-
     falloc_generic(susp, gate_susp_node, "snd_make_gate");
-    susp->rise_time = signal->sr * risetime + 0.5;
-    susp->fall_time = signal->sr * falltime + 0.5;
-    susp->floor = floor; floor = log(floor);;
-    susp->threshold = threshold;
+    susp->rise_samps = (int64_t) (signal->sr * risetime + 0.5);
+    susp->fall_samps = (int64_t) (signal->sr * falltime + 0.5);
+    susp->floor = floor; floor = log(floor / signal->scale);
+    susp->threshold = threshold; threshold /= signal->scale;
     susp->on_count = 0;
     susp->off_count = 0;
-    susp->rise_factor = exp(- floor / susp->rise_time);
-    susp->fall_factor = exp(floor / susp->fall_time);
-    susp->start_fall = 0;
+    susp->rise_factor = exp(- floor / susp->rise_samps);
+    susp->fall_factor = exp(floor / susp->fall_samps);
+    susp->start_fall = -susp->fall_samps;
     susp->start_rise = 0;
     susp->stop_count = 0;
     susp->delay_len = max(1, ROUND32(signal->sr * lookahead));

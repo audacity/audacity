@@ -112,10 +112,10 @@ private boolean cl_rdy = FALSE;    /* set to TRUE when initialized */
 /*****************************************************************************
 *    Routines local to this module
 *****************************************************************************/
-private char *cl_search();
-private int find_string();
+private char *cl_search(char *name, int opt_sw, int n);
+private int find_string(char *s, boolean *abbr);
 private void indirect_command(char *filename, char *oldarg0);
-private void ready_check();
+private void ready_check(void);
 
 /****************************************************************
 *           cl_arg
@@ -194,9 +194,7 @@ void cl_help()
 *    TRUE if syntax checks OK, otherwise false
 *****************************************************************************/
 
-boolean cl_init(av, ac)
-  char *av[];
-  int ac;
+boolean cl_init(char *av[], int ac)
 {
     argv = av;      
     argc = ac;
@@ -257,10 +255,7 @@ long cl_int_option(name, deflt)
 *    not start with "-"
 *****************************************************************/
 
-private char *cl_search(name, opt_sw, n)
-  char *name;
-  int opt_sw;
-  int n;        /* if opt_sw is cl_ARG, n > 0 tells which one */
+private char *cl_search(char *name, int opt_sw, int n)
 {
     register int i = 1;    /* index into command line */
     boolean abbr;
@@ -365,9 +360,7 @@ boolean cl_syntax(char *s)
 *    0 = FALSE = not found, 1 = cl_OPT = option, 2 = cl_SW = switch
 *****************************************************************/
 
-private int find_string(s, abbr)
-  char *s;
-  boolean *abbr;
+private int find_string(char *s, boolean *abbr)
 {
     int found_it = FALSE;
     int i;
@@ -425,9 +418,7 @@ private int find_string(s, abbr)
 
 /* get_arg -- get an argument from a file */
 /**/
-boolean get_arg(file, arg)
-  FILE *file;
-  char *arg;
+boolean get_arg(FILE *file, char *arg)
 {
     int c;
     while ((c = getc(file)) != EOF && isspace(c)) ;
@@ -443,9 +434,7 @@ boolean get_arg(file, arg)
 
 /* indirect_command -- get argv, argc from a file */
 /**/
-private void indirect_command(filename, oldarg0)
-  char *filename;
-  char *oldarg0;
+private void indirect_command(char *filename, char *oldarg0)
 {
     FILE *argfile = NULL;
     if (ok_to_open(filename, "r"))
@@ -478,7 +467,7 @@ private void indirect_command(filename, oldarg0)
 * Effect:
 *    Halt program if cl_rdy is not true.
 *****************************************************************/
-private void ready_check()
+private void ready_check(void)
 {
     if (!cl_rdy) {
         gprintf(ERROR,

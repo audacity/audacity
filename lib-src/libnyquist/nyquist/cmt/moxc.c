@@ -112,9 +112,9 @@ struct MsgPort pub_port;
 *       Routines local to this module
 *****************************************************************************/
 
-private void callrun();
-private void decode();
-private void moxcterm();
+private void callrun(void);
+private void decode(void);
+private void moxcterm(void);
 
 /****************************************************************************
 *                           callallcancel
@@ -127,7 +127,7 @@ private void moxcterm();
 *             (not necessarily the timebase) and repeat.
 ****************************************************************************/
 
-void callallcancel()
+void callallcancel(void)
 {
     if (moxcdebug) gprintf(GDEBUG, "cancel all calls\n");
     while (timebase_queue) {
@@ -142,7 +142,7 @@ void callallcancel()
 
 /* catchup -- bring current timebase up to date by running its calls */
 /**/
-void catchup()
+void catchup(void)
 {
     register call_type call;
     /* Remember where we're going in virtual time because setting the
@@ -310,7 +310,7 @@ void causepri(delay_type delay, int pri, void (*routine)(call_args_type args), c
 *       executes the previously scheduled call call and deallocates it
 ****************************************************************************/
 
-private void callrun()
+private void callrun(void)
 {
     call_type call;
     if (moxcdebug) {
@@ -326,7 +326,7 @@ private void callrun()
 
     /* remove first call from timebase */
     call = remove_call(timebase);
-    if (debug) gprintf(TRANS, "callrun call %lx\n", (ulong)call);
+    if (debug) gprintf(TRANS, "callrun call %p\n", call);
     insert_base(timebase);
     virttime = call->u.e.time;          /* virtual time of the call */
     if (moxcdebug) callshow(call);
@@ -461,7 +461,7 @@ void moxcwait(dateoftimeout)
 * Effect: dispatch on user inputs, cause calls
 ****************************************************************************/
 
-private void decode()
+private void decode(void)
 {
     /* It is important that midi_data is on a word boundary because we
         copy to it by doing a word transfer.
@@ -658,7 +658,7 @@ void moxcrun()
 
 /* moxcterm -- clean up after moxcinit */
 /**/
-private void moxcterm()
+private void moxcterm(void)
 {
 #ifdef AMIGA
     FreeSignal((long) pub_port_signal);

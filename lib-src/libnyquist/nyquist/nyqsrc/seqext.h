@@ -1,9 +1,9 @@
 /* seqext.h -- header for seq extensions for xlisp */
 
 
-void seqext_init();
-void seqext_symbols();
-boolean seqp();
+void seqext_init(void);
+void seqext_symbols(void);
+boolean seqp(LVAL s);
 
 extern xtype_desc seq_desc;
 extern LVAL s_seq;

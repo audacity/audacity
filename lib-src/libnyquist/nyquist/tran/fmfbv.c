@@ -15,10 +15,10 @@ void fmfbv_free(snd_susp_type a_susp);
 typedef struct fmfbv_susp_struct {
     snd_susp_node susp;
     boolean started;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type index;
-    long index_cnt;
+    int index_cnt;
     sample_block_values_type index_ptr;
 
     /* support for interpolation of index */
@@ -28,7 +28,7 @@ typedef struct fmfbv_susp_struct {
 
     /* support for ramp between samples of index */
     double output_per_index;
-    long index_n;
+    int64_t index_n;
 
     double yy;
     double sin_y;
@@ -58,56 +58,56 @@ void fmfbv_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the index input sample block: */
-	susp_check_term_log_samples(index, index_ptr, index_cnt);
-	togo = min(togo, susp->index_cnt);
+        /* don't run past the index input sample block: */
+        susp_check_term_log_samples(index, index_ptr, index_cnt);
+        togo = min(togo, susp->index_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	yy_reg = susp->yy;
-	sin_y_reg = susp->sin_y;
-	phase_reg = susp->phase;
-	ph_incr_reg = susp->ph_incr;
-	index_ptr_reg = susp->index_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        yy_reg = susp->yy;
+        sin_y_reg = susp->sin_y;
+        phase_reg = susp->phase;
+        ph_incr_reg = susp->ph_incr;
+        index_ptr_reg = susp->index_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             phase_reg += ph_incr_reg;
             if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
             /* PHASE is incremented and INDEX scaled to table INDEX, and
@@ -118,31 +118,31 @@ void fmfbv_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
             sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
             /* sin_y_reg is now a signal ready for table lookup */
-            *out_ptr_reg++ =  sin_y_reg;
-	} while (--n); /* inner loop */
+            *out_ptr_reg++ =  (sample_type) sin_y_reg;
+        } while (--n); /* inner loop */
 
-	susp->yy = yy_reg;
-	susp->sin_y = sin_y_reg;
-	susp->phase = phase_reg;
-	/* using index_ptr_reg is a bad idea on RS/6000: */
-	susp->index_ptr += togo;
-	out_ptr += togo;
-	susp_took(index_cnt, togo);
-	cnt += togo;
+        susp->yy = yy_reg;
+        susp->sin_y = sin_y_reg;
+        susp->phase = phase_reg;
+        /* using index_ptr_reg is a bad idea on RS/6000: */
+        susp->index_ptr += togo;
+        out_ptr += togo;
+        susp_took(index_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* fmfbv_n_fetch */
 
@@ -169,56 +169,56 @@ void fmfbv_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the index input sample block: */
-	susp_check_term_log_samples(index, index_ptr, index_cnt);
-	togo = min(togo, susp->index_cnt);
+        /* don't run past the index input sample block: */
+        susp_check_term_log_samples(index, index_ptr, index_cnt);
+        togo = min(togo, susp->index_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	yy_reg = susp->yy;
-	sin_y_reg = susp->sin_y;
-	phase_reg = susp->phase;
-	ph_incr_reg = susp->ph_incr;
-	index_ptr_reg = susp->index_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        yy_reg = susp->yy;
+        sin_y_reg = susp->sin_y;
+        phase_reg = susp->phase;
+        ph_incr_reg = susp->ph_incr;
+        index_ptr_reg = susp->index_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             phase_reg += ph_incr_reg;
             if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
             /* PHASE is incremented and INDEX scaled to table INDEX, and
@@ -229,31 +229,31 @@ void fmfbv_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
             sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
             /* sin_y_reg is now a signal ready for table lookup */
-            *out_ptr_reg++ =  sin_y_reg;
-	} while (--n); /* inner loop */
+            *out_ptr_reg++ =  (sample_type) sin_y_reg;
+        } while (--n); /* inner loop */
 
-	susp->yy = yy_reg;
-	susp->sin_y = sin_y_reg;
-	susp->phase = phase_reg;
-	/* using index_ptr_reg is a bad idea on RS/6000: */
-	susp->index_ptr += togo;
-	out_ptr += togo;
-	susp_took(index_cnt, togo);
-	cnt += togo;
+        susp->yy = yy_reg;
+        susp->sin_y = sin_y_reg;
+        susp->phase = phase_reg;
+        /* using index_ptr_reg is a bad idea on RS/6000: */
+        susp->index_ptr += togo;
+        out_ptr += togo;
+        susp_took(index_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* fmfbv_s_fetch */
 
@@ -282,68 +282,68 @@ void fmfbv_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp_check_term_log_samples(index, index_ptr, index_cnt);
-	susp->index_x1_sample = susp_fetch_sample(index, index_ptr, index_cnt);
+        susp->started = true;
+        susp_check_term_log_samples(index, index_ptr, index_cnt);
+        susp->index_x1_sample = susp_fetch_sample(index, index_ptr, index_cnt);
     }
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	yy_reg = susp->yy;
-	sin_y_reg = susp->sin_y;
-	phase_reg = susp->phase;
-	ph_incr_reg = susp->ph_incr;
-	index_pHaSe_ReG = susp->index_pHaSe;
-	index_x1_sample_reg = susp->index_x1_sample;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
-	    if (index_pHaSe_ReG >= 1.0) {
+        n = togo;
+        yy_reg = susp->yy;
+        sin_y_reg = susp->sin_y;
+        phase_reg = susp->phase;
+        ph_incr_reg = susp->ph_incr;
+        index_pHaSe_ReG = susp->index_pHaSe;
+        index_x1_sample_reg = susp->index_x1_sample;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
+            if (index_pHaSe_ReG >= 1.0) {
 /* fixup-depends index */
-		/* pick up next sample as index_x1_sample: */
-		susp->index_ptr++;
-		susp_took(index_cnt, 1);
-		index_pHaSe_ReG -= 1.0;
-		susp_check_term_log_samples_break(index, index_ptr, index_cnt, index_x1_sample_reg);
-		index_x1_sample_reg = susp_current_sample(index, index_ptr);
-	    }
+                /* pick up next sample as index_x1_sample: */
+                susp->index_ptr++;
+                susp_took(index_cnt, 1);
+                index_pHaSe_ReG -= 1.0;
+                susp_check_term_log_samples_break(index, index_ptr, index_cnt, index_x1_sample_reg);
+                index_x1_sample_reg = susp_current_sample(index, index_ptr);
+            }
             phase_reg += ph_incr_reg;
             if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
             /* PHASE is incremented and INDEX scaled to table INDEX, and
@@ -354,32 +354,32 @@ void fmfbv_i_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
             sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
             /* sin_y_reg is now a signal ready for table lookup */
-            *out_ptr_reg++ =  sin_y_reg;
-	    index_pHaSe_ReG += index_pHaSe_iNcR_rEg;
-	} while (--n); /* inner loop */
+            *out_ptr_reg++ =  (sample_type) sin_y_reg;
+            index_pHaSe_ReG += index_pHaSe_iNcR_rEg;
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->yy = yy_reg;
-	susp->sin_y = sin_y_reg;
-	susp->phase = phase_reg;
-	susp->index_pHaSe = index_pHaSe_ReG;
-	susp->index_x1_sample = index_x1_sample_reg;
-	out_ptr += togo;
-	cnt += togo;
+        togo -= n;
+        susp->yy = yy_reg;
+        susp->sin_y = sin_y_reg;
+        susp->phase = phase_reg;
+        susp->index_pHaSe = index_pHaSe_ReG;
+        susp->index_x1_sample = index_x1_sample_reg;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* fmfbv_i_fetch */
 
@@ -406,70 +406,70 @@ void fmfbv_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp->index_pHaSe = 1.0;
+        susp->started = true;
+        susp->index_pHaSe = 1.0;
     }
 
     susp_check_term_log_samples(index, index_ptr, index_cnt);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* grab next index_x1_sample when phase goes past 1.0; */
-	/* use index_n (computed below) to avoid roundoff errors: */
-	if (susp->index_n <= 0) {
-	    susp_check_term_log_samples(index, index_ptr, index_cnt);
-	    susp->index_x1_sample = susp_fetch_sample(index, index_ptr, index_cnt);
-	    susp->index_pHaSe -= 1.0;
-	    /* index_n gets number of samples before phase exceeds 1.0: */
-	    susp->index_n = (long) ((1.0 - susp->index_pHaSe) *
-					susp->output_per_index);
-	}
-	togo = min(togo, susp->index_n);
-	index_val = susp->index_x1_sample;
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* grab next index_x1_sample when phase goes past 1.0; */
+        /* use index_n (computed below) to avoid roundoff errors: */
+        if (susp->index_n <= 0) {
+            susp_check_term_log_samples(index, index_ptr, index_cnt);
+            susp->index_x1_sample = susp_fetch_sample(index, index_ptr, index_cnt);
+            susp->index_pHaSe -= 1.0;
+            /* index_n gets number of samples before phase exceeds 1.0: */
+            susp->index_n = (int64_t) ((1.0 - susp->index_pHaSe) *
+                                        susp->output_per_index);
+        }
+        togo = (int) min(togo, susp->index_n);
+        index_val = susp->index_x1_sample;
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	yy_reg = susp->yy;
-	sin_y_reg = susp->sin_y;
-	phase_reg = susp->phase;
-	ph_incr_reg = susp->ph_incr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        yy_reg = susp->yy;
+        sin_y_reg = susp->sin_y;
+        phase_reg = susp->phase;
+        ph_incr_reg = susp->ph_incr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             phase_reg += ph_incr_reg;
             if (phase_reg > SINE_TABLE_LEN) phase_reg -= SINE_TABLE_LEN;
             /* PHASE is incremented and INDEX scaled to table INDEX, and
@@ -480,47 +480,47 @@ void fmfbv_r_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             while (yy_reg < 0) yy_reg += SINE_TABLE_LEN;
             sin_y_reg = sine_table[(int) yy_reg]; /* truncation gets valid index */
             /* sin_y_reg is now a signal ready for table lookup */
-            *out_ptr_reg++ =  sin_y_reg;
-	} while (--n); /* inner loop */
+            *out_ptr_reg++ =  (sample_type) sin_y_reg;
+        } while (--n); /* inner loop */
 
-	susp->yy = yy_reg;
-	susp->sin_y = sin_y_reg;
-	susp->phase = phase_reg;
-	out_ptr += togo;
-	susp->index_pHaSe += togo * susp->index_pHaSe_iNcR;
-	susp->index_n -= togo;
-	cnt += togo;
+        susp->yy = yy_reg;
+        susp->sin_y = sin_y_reg;
+        susp->phase = phase_reg;
+        out_ptr += togo;
+        susp->index_pHaSe += togo * susp->index_pHaSe_iNcR;
+        susp->index_n -= togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* fmfbv_r_fetch */
 
 
 void fmfbv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     fmfbv_susp_type susp = (fmfbv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from index up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->index->t0) * susp->index->sr)) >=
-	   susp->index->current)
-	susp_get_samples(index, index_ptr, index_cnt);
+           susp->index->current)
+        susp_get_samples(index, index_ptr, index_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->index->t0) * susp->index->sr -
+    n = (int) ROUNDBIG((final_time - susp->index->t0) * susp->index->sr -
          (susp->index->current - susp->index_cnt));
     susp->index_ptr += n;
     susp_took(index_cnt, n);
@@ -566,7 +566,7 @@ sound_type snd_make_fmfbv(time_type t0, double hz, rate_type sr, sound_type inde
     susp->sin_y = 0.0;
     susp->phase = 0.0;
     susp->ph_incr = hz * SINE_TABLE_LEN / sr;
-    index->scale *= SINE_TABLE_LEN / PI2
+    index->scale *= SINE_TABLE_LEN / (sample_type) PI2
 ;
 
     /* make sure no sample rate is too high */

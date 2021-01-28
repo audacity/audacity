@@ -71,12 +71,17 @@ struct seti_struct {
 
 
 #define SEQ_MAX_PARMS 8
+
+typedef struct seq_arg_struct {
+    long a[SEQ_MAX_PARMS];
+} seq_arg_t;
+
+typedef int (*seq_cmd_fn)(seq_arg_t args);
+
 struct cause_struct {
-    int (*routine)();
+    seq_cmd_fn routine;
     /* make a structure so we can copy by value */
-    struct seq_arg_struct {
-        long a[SEQ_MAX_PARMS];
-    } args;
+    seq_arg_t args;
 };
 
 
@@ -228,16 +233,16 @@ chunk_type chunk_create(boolean first_flag);
 extern boolean seq_print;       /* debugging switch */
 
 void seq_extensions(void);      /* to be defined outside of seq -- user dependent */
-event_type insert_call(seq_type seq, time_type ctime, int cline,
-                       int voice, int (*addr)(), long value[], int n);
+event_type insert_call(seq_type seq, time_type ctime, int cline, int voice,
+        int (*addr)(seq_arg_t args), long value[SEQ_MAX_PARMS], int n);
 event_type insert_clock(seq_type seq, time_type ctime, int cline,
                         time_type ticksize);
 event_type insert_ctrl(seq_type seq, time_type ctime, int cline, int ctrl,
                        int voice, int value);
- /* LISP: (SEQ-INSERT-CTRL SEQ FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM) */
+ /* LISP: (SEQ-INSERT-CTRL SEQ LONG LONG LONG LONG LONG) */
 event_type insert_ctrlramp(seq_type seq, time_type rtime, int rline, int voice,
                       time_type step, time_type dur, int ctrl, int v1, int v2);
- /* LISP: (SEQ-INSERT-RAMP SEQ FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM) */
+ /* LISP: (SEQ-INSERT-RAMP SEQ LONG LONG LONG LONG LONG LONG LONG LONG) */
 def_type insert_def(seq_type seq, char *symbol, unsigned char *definition,
                     int deflen);
 event_type insert_deframp(seq_type seq, time_type rtime, int rline, int voice,
@@ -245,12 +250,12 @@ event_type insert_deframp(seq_type seq, time_type rtime, int rline, int voice,
                      int nparms, short parms[], int parm_num, int to_value);
 event_type insert_macctrl(seq_type seq, time_type ctime, int cline, int ctrl,
                           int voice, int value);
- /* LISP: (SEQ-INSERT-MACCTRL SEQ FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM) */
+ /* LISP: (SEQ-INSERT-MACCTRL SEQ LONG LONG LONG LONG LONG) */
 event_type insert_macro(seq_type seq, time_type ctime, int cline,
                         def_type def, int voice, int nparms, short *parms);
 event_type insert_note(seq_type seq, time_type ntime, int nline, int voice,
                        int pitch, time_type dur, int loud);
- /* LISP: (SEQ-INSERT-NOTE SEQ FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM FIXNUM) */
+ /* LISP: (SEQ-INSERT-NOTE SEQ LONG LONG LONG LONG LONG LONG) */
 event_type insert_seti(seq_type seq, time_type stime, int sline, int voice,
                        int *addr, int value);
 void noop(seq_type seq);

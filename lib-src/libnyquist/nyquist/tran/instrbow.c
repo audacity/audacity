@@ -14,9 +14,9 @@ void bowed_free(snd_susp_type a_susp);
 
 typedef struct bowed_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     sound_type bowpress_env;
-    long bowpress_env_cnt;
+    int bowpress_env_cnt;
     sample_block_values_type bowpress_env_ptr;
 
     struct instr *mybow;
@@ -47,63 +47,63 @@ void bowed_n_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the bowpress_env input sample block: */
-	susp_check_term_samples(bowpress_env, bowpress_env_ptr, bowpress_env_cnt);
-	togo = min(togo, susp->bowpress_env_cnt);
+        /* don't run past the bowpress_env input sample block: */
+        susp_check_term_samples(bowpress_env, bowpress_env_ptr, bowpress_env_cnt);
+        togo = min(togo, susp->bowpress_env_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	mybow_reg = susp->mybow;
-	bow_scale_reg = susp->bow_scale;
-	bowpress_env_ptr_reg = susp->bowpress_env_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        mybow_reg = susp->mybow;
+        bow_scale_reg = susp->bow_scale;
+        bowpress_env_ptr_reg = susp->bowpress_env_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             controlChange(mybow_reg, 128, bow_scale_reg * *bowpress_env_ptr_reg++);
             *out_ptr_reg++ = (sample_type) tick(mybow_reg);
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->mybow = mybow_reg;
-	/* using bowpress_env_ptr_reg is a bad idea on RS/6000: */
-	susp->bowpress_env_ptr += togo;
-	out_ptr += togo;
-	susp_took(bowpress_env_cnt, togo);
-	cnt += togo;
+        susp->mybow = mybow_reg;
+        /* using bowpress_env_ptr_reg is a bad idea on RS/6000: */
+        susp->bowpress_env_ptr += togo;
+        out_ptr += togo;
+        susp_took(bowpress_env_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* bowed_n_fetch */
 
 
 void bowed_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     bowed_susp_type susp = (bowed_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from bowpress_env up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr)) >=
-	   susp->bowpress_env->current)
-	susp_get_samples(bowpress_env, bowpress_env_ptr, bowpress_env_cnt);
+           susp->bowpress_env->current)
+        susp_get_samples(bowpress_env, bowpress_env_ptr, bowpress_env_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr -
+    n = (int) ROUNDBIG((final_time - susp->bowpress_env->t0) * susp->bowpress_env->sr -
          (susp->bowpress_env->current - susp->bowpress_env_cnt));
     susp->bowpress_env_ptr += n;
     susp_took(bowpress_env_cnt, n);

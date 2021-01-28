@@ -24,8 +24,8 @@
     ;; this loop computes and applies substitutions to the INNER-LOOP spec
 
     (setf inner-loop (substitute inner-loop "output" "*out_ptr_reg++" nil))
-    (push "\tout_ptr_reg = out_ptr;\n" register-init)
-    (push "\tout_ptr += togo;\n" register-cleanup)
+    (push "        out_ptr_reg = out_ptr;\n" register-init)
+    (push "        out_ptr += togo;\n" register-cleanup)
 
     (dotimes (n (length interp))
       (let ((name (nth n sound-names))
@@ -41,114 +41,117 @@
                 ;      <expr> ::= *NAME_ptr_reg++
                 ;-----------------
                (pushnew (format nil
- "    register sample_block_values_type ~A_ptr_reg;~%" name)
+                "    register sample_block_values_type ~A_ptr_reg;~%" name)
                         register-decl)
                (pushnew (format nil 
-                "\t~A_ptr_reg = susp->~A_ptr;~%" name name)
-                register-init)
+                "        ~A_ptr_reg = susp->~A_ptr;~%" name name)
+                        register-init)
                (pushnew (format nil
-                "\t/* using ~A_ptr_reg is a bad idea on RS/6000: */~
-                ~%\tsusp->~A_ptr += togo;~%" name name name)
-                register-cleanup)
+                "        /* using ~A_ptr_reg is a bad idea on RS/6000: */~
+                ~%        susp->~A_ptr += togo;~%" name name name)
+                        register-cleanup)
 
                (setf expression (format nil "*~A_ptr_reg++" name)))
 
               ((eq method 'SCALE)
                 ;-----------------
                 ; SCALE
-                ;	<expr> ::= (NAME_scale_reg * *NAME_ptr_reg++)
+                ;       <expr> ::= (NAME_scale_reg * *NAME_ptr_reg++)
                 ;-----------------
                (pushnew (format nil
- "    register sample_block_values_type ~A_ptr_reg;~%" name)
+                "    register sample_block_values_type ~A_ptr_reg;~%" name)
                         register-decl)
                (pushnew (format nil
- "    register sample_type ~A_scale_reg = susp->~A->scale;~%" name name)
+                "    register sample_type ~A_scale_reg = susp->~A->scale;~%"
+                name name)
                         register-decl)
                (pushnew (format nil 
-                "\t~A_ptr_reg = susp->~A_ptr;~%" name name)
-                register-init)
+                         "        ~A_ptr_reg = susp->~A_ptr;~%" name name)
+                        register-init)
                (pushnew (format nil
-                "\t/* using ~A_ptr_reg is a bad idea on RS/6000: */~
-                ~%\tsusp->~A_ptr += togo;~%" name name name)
-                register-cleanup)
+                "        /* using ~A_ptr_reg is a bad idea on RS/6000: */~
+                ~%        susp->~A_ptr += togo;~%" name name name)
+                        register-cleanup)
                (setf expression (format nil
                 "(~A_scale_reg * *~A_ptr_reg++)" name name)))
 
               ((and interpolate-samples (eq method 'INTERP))
                 ;-----------------
                 ; INTERP:
-                ;	<expr> ::= susp->NAME_x1_sample * (1 - 
-                ;			susp->NAME_pHaSe +
-                ;  	              susp->NAME_x2_sample * susp->NAME_pHaSe)
+                ;       <expr> ::= susp->NAME_x1_sample * (1 - 
+                ;                       susp->NAME_pHaSe +
+                ;                     susp->NAME_x2_sample * susp->NAME_pHaSe)
                 ;-----------------
                (pushnew (format nil
- "    register sample_type ~A_x1_sample_reg;~%" name)
+                "    register sample_type ~A_x1_sample_reg;~%" name)
                         register-decl)
                (pushnew (format nil
- "    register double ~A_pHaSe_ReG;~%" name)
+                "    register double ~A_pHaSe_ReG;~%" name)
                         register-decl)
                (pushnew (format nil
- "    register double ~A_pHaSe_iNcR_rEg = susp->~A_pHaSe_iNcR;~%" name name)
+                "    register double ~A_pHaSe_iNcR_rEg = susp->~A_pHaSe_iNcR;~%"
+                name name)
                         register-decl)
 
                (pushnew (format nil
-                "\t~A_x1_sample_reg = susp->~A_x1_sample;~%" name name)
-                register-init)
+                "        ~A_x1_sample_reg = susp->~A_x1_sample;~%" name name)
+                        register-init)
                (pushnew (format nil
-                "\t~A_pHaSe_ReG = susp->~A_pHaSe;~%" name name)
-                register-init)
+                "        ~A_pHaSe_ReG = susp->~A_pHaSe;~%" name name)
+                        register-init)
 
                (pushnew (format nil
-                "\tsusp->~A_x1_sample = ~A_x1_sample_reg;~%" name name)
-                register-cleanup)
+                "        susp->~A_x1_sample = ~A_x1_sample_reg;~%" name name)
+                        register-cleanup)
                (pushnew (format nil
-                "\tsusp->~A_pHaSe = ~A_pHaSe_ReG;~%" name name)
-                register-cleanup)
+                "        susp->~A_pHaSe = ~A_pHaSe_ReG;~%" name name)
+                        register-cleanup)
 
                (setf expression (format nil 
-                    "\n\t\t(~A_x1_sample_reg * (1 - ~A_pHaSe_ReG) + ~A_x2_sample * ~A_pHaSe_ReG)"
+                    "\n                (~A_x1_sample_reg * (1 - ~A_pHaSe_ReG) + ~A_x2_sample * ~A_pHaSe_ReG)"
                                  name name name name)))
 
               ((eq method 'INTERP)
                 ;-----------------
                 ; STEP FUNCTION:
-                ;	<expr> ::= NAME_x1_sample_reg
+                ;       <expr> ::= NAME_x1_sample_reg
                 ;-----------------
                (pushnew (format nil
- "    register sample_type ~A_x1_sample_reg;~%" name)
+                "    register sample_type ~A_x1_sample_reg;~%" name)
                         register-decl)
                (pushnew (format nil
- "    register double ~A_pHaSe_ReG;~%" name)
+                "    register double ~A_pHaSe_ReG;~%" name)
                         register-decl)
                (pushnew (format nil
- "    register double ~A_pHaSe_iNcR_rEg = susp->~A_pHaSe_iNcR;~%" name name)
+                "    register double ~A_pHaSe_iNcR_rEg = susp->~A_pHaSe_iNcR;~%"
+                name name)
                         register-decl)
 
                (pushnew (format nil
-                "\t~A_x1_sample_reg = susp->~A_x1_sample;~%" name name)
-                register-init)
+                "        ~A_x1_sample_reg = susp->~A_x1_sample;~%" name name)
+                        register-init)
                (pushnew (format nil
-                "\t~A_pHaSe_ReG = susp->~A_pHaSe;~%" name name)
-                register-init)
+                "        ~A_pHaSe_ReG = susp->~A_pHaSe;~%" name name)
+                        register-init)
 
                (pushnew (format nil
-                "\tsusp->~A_x1_sample = ~A_x1_sample_reg;~%" name name)
-                register-cleanup)
+                "        susp->~A_x1_sample = ~A_x1_sample_reg;~%" name name)
+                        register-cleanup)
                (pushnew (format nil
-                "\tsusp->~A_pHaSe = ~A_pHaSe_ReG;~%" name name)
-                register-cleanup)
+                "        susp->~A_pHaSe = ~A_pHaSe_ReG;~%" name name)
+                        register-cleanup)
 
                (setf expression (format nil "~A_x1_sample_reg" name)))
               ((and interpolate-samples (eq method 'RAMP))
                 ;-----------------
                 ; RAMP:
-                ;	<expr>  ::= NAME_val
+                ;       <expr>  ::= NAME_val
                 ;-----------------
                (setf expression (format nil "~A_val" name)))
               ((eq method 'RAMP)
                 ;-----------------
                 ; RAMP:
-                ;	<expr>  ::= NAME_val
+                ;       <expr>  ::= NAME_val
                 ;-----------------
                 ; this doesn't seem to be used -RBD 7/97
                ;(pushnew (format nil
@@ -177,18 +180,19 @@
       (let ((var-name (cadr state))
             maintain)
         (pushnew (format nil "    register ~A ~A_reg;~%" (car state) var-name)
-                        register-decl)
-        (pushnew (format nil "\t~A_reg = susp->~A;~%" var-name var-name)
-                       register-init)
+                 register-decl)
+        (pushnew (format nil "        ~A_reg = susp->~A;~%" var-name var-name)
+                 register-init)
         (setf maintain (find-maintain-stmt var-name maintain-list))
 ;        (display "find-maintain-stmt returned:" maintain)
         (cond (maintain
-               (pushnew (format nil "\t~A;~%" maintain) register-cleanup))
+               (pushnew (format nil "        ~A;~%" maintain) register-cleanup))
               ((not (is-constant-in-inner-loop var-name constant-list))
                ;(pushnew (format nil "var-name: ~A constant-list: ~A~%" var-name constant-list)
                ;        register-cleanup)
-               (pushnew (format nil "\tsusp->~A = ~A_reg;~%" var-name var-name)
-                       register-cleanup)))
+               (pushnew (format nil
+                         "        susp->~A = ~A_reg;~%" var-name var-name)
+                        register-cleanup)))
         (setf inner-loop (substitute inner-loop var-name 
                           (format nil "~A_reg" var-name) t))
         ))
@@ -201,7 +205,7 @@
     ;; because it makes n a live variable and affects compiler optimization.
     (cond ((or (member 'INTERP interp)
                (string-search "break" inner-loop))
-           (push "\ttogo -= n;\n" register-cleanup)))
+           (push "        togo -= n;\n" register-cleanup)))
 
     (put-slot alg inner-loop 'inner-loop-stmts)
     (put-slot alg register-decl 'register-decl)
@@ -218,7 +222,7 @@
     ; so I don't know where to get it...
     ;-----------------
 ;    (if *WATCH*
-;      (format stream "\t    show_samples(1,s1,s1_ptr - s1_samples);~%")
+;      (format stream "            show_samples(1,s1,s1_ptr - s1_samples);~%")
 ;    )
     ))
 
@@ -246,10 +250,10 @@
 ;;**********
 ;; substitute -- string substitution 
 ;; Inputs:
-;;	s - input string
-;;	pat - pattern
-;;	repl - replacement for pattern
-;;	all - T or NIL (T : replace everywhere; NIL : replace once)
+;;      s - input string
+;;      pat - pattern
+;;      repl - replacement for pattern
+;;      all - T or NIL (T : replace everywhere; NIL : replace once)
 ;;
 ;;**********
 
@@ -288,24 +292,24 @@
                 ;
                 ;    NAME_pHaSe_ReG += NAME_pHaSe_iNcR_rEg;
                 ;-----------------
-                (format stream "\t    ~A_pHaSe_ReG += ~A_pHaSe_iNcR_rEg;~%"
+                (format stream "            ~A_pHaSe_ReG += ~A_pHaSe_iNcR_rEg;~%"
                      name name))
 
               ((and interpolate-samples (eq method 'RAMP))
                 ;-----------------
                 ; RAMP:
-                ;	NAME_val += NAME_DeLtA
+                ;       NAME_val += NAME_DeLtA
                 ;-----------------
-               (format stream "\t    ~A_val += ~A_DeLtA;~%" name name)))))
+               (format stream "            ~A_val += ~A_DeLtA;~%" name name)))))
 
     ;----------------------------
     ; WATCH:
-    ;	    show_samples(0,out,out_ptr - 1 - out->samples);
+    ;       show_samples(0,out,out_ptr - 1 - out->samples);
     ;----------------------------
 
 ;    (if *WATCH*
-;       (format stream "\t    show_samples(0,out,out_ptr - 1 - out->samples);~%"))
+;       (format stream "            show_samples(0,out,out_ptr - 1 - out->samples);~%"))
     ;----------------------------
     ;  } while (--n); /* inner loop */
     ;----------------------------
-    (format stream "\t} while (--n); /* inner loop */~%~%")))
+    (format stream "        } while (--n); /* inner loop */~%~%")))

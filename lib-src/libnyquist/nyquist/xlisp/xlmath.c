@@ -115,7 +115,7 @@ LOCAL LVAL binary(int fcn)
             switch (mode) {
             case 'I':
                 mode = 'F';
-                fval = ival;
+                fval = (double) ival;
             case 'F':
                 fval = atan(fval);
                 break;

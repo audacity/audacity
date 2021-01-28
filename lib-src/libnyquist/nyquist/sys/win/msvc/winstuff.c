@@ -82,7 +82,7 @@ static char *linebuf = NULL, *lineptr;
 static int numChars;
 
 /* input thread */
-unsigned long input_thread_handle = -1;
+static uintptr_t input_thread_handle = -1;
 #define NEED_INPUT if (input_thread_handle == -1) start_input_thread();
 #define input_buffer_max 1024
 #define input_buffer_mask (input_buffer_max - 1)
@@ -425,3 +425,18 @@ LVAL xechoenabled()
 }
 
 
+/* xgetrealtime - get current time in seconds */
+LVAL xgetrealtime()
+{
+    static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);
+    SYSTEMTIME system_time;
+    FILETIME file_time;
+    uint64_t time;
+    GetSystemTime(&system_time);
+    SystemTimeToFileTime(&system_time, &file_time);
+    time = (uint64_t) file_time.dwLowDateTime;
+    time += ((uint64_t) file_time.dwHighDateTime) << 32;
+    time -= EPOCH;
+    time /= 10000000L;
+    return cvflonum((double) time + system_time.wMilliseconds * 0.001);
+}

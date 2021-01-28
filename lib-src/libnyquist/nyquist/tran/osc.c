@@ -14,7 +14,7 @@ void osc_free(snd_susp_type a_susp);
 
 typedef struct osc_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
 
     double ph_incr;
     table_type the_table;
@@ -44,44 +44,44 @@ void osc__fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	ph_incr_reg = susp->ph_incr;
-	table_ptr_reg = susp->table_ptr;
-	table_len_reg = susp->table_len;
-	phase_reg = susp->phase;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        ph_incr_reg = susp->ph_incr;
+        table_ptr_reg = susp->table_ptr;
+        table_len_reg = susp->table_len;
+        phase_reg = susp->phase;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             long table_index = (long) phase_reg;
             double x1 = table_ptr_reg[table_index];
             *out_ptr_reg++ = (sample_type) (x1 + (phase_reg - table_index) * 
                   (table_ptr_reg[table_index + 1] - x1));
             phase_reg += ph_incr_reg;
             while (phase_reg >= table_len_reg) phase_reg -= table_len_reg;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->phase = phase_reg;
-	out_ptr += togo;
-	cnt += togo;
+        susp->phase = phase_reg;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* osc__fetch */
 

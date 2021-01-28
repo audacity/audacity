@@ -92,7 +92,7 @@ extern int sample_blocks_since_gc;
 
 #if defined(TRACK_POOLS) && TRACK_POOLS
 // extern CQUE *pools;
-void falloc_gc();
+void falloc_gc(void);
 #endif
 
 void falloc_init(void);

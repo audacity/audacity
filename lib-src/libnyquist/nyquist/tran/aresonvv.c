@@ -15,13 +15,13 @@ void aresonvv_free(snd_susp_type a_susp);
 typedef struct aresonvv_susp_struct {
     snd_susp_node susp;
     boolean started;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s1;
-    long s1_cnt;
+    int s1_cnt;
     sample_block_values_type s1_ptr;
     sound_type hz1;
-    long hz1_cnt;
+    int hz1_cnt;
     sample_block_values_type hz1_ptr;
 
     /* support for interpolation of hz1 */
@@ -31,9 +31,9 @@ typedef struct aresonvv_susp_struct {
 
     /* support for ramp between samples of hz1 */
     double output_per_hz1;
-    long hz1_n;
+    int64_t hz1_n;
     sound_type bw;
-    long bw_cnt;
+    int bw_cnt;
     sample_block_values_type bw_ptr;
 
     /* support for interpolation of bw */
@@ -43,7 +43,7 @@ typedef struct aresonvv_susp_struct {
 
     /* support for ramp between samples of bw */
     double output_per_bw;
-    long bw_n;
+    int64_t bw_n;
 
     double scale1;
     double c3co;
@@ -92,124 +92,124 @@ void aresonvv_nss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* don't run past the hz1 input sample block: */
-	susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	togo = min(togo, susp->hz1_cnt);
+        /* don't run past the hz1 input sample block: */
+        susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+        togo = min(togo, susp->hz1_cnt);
 
-	/* don't run past the bw input sample block: */
-	susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	togo = min(togo, susp->bw_cnt);
+        /* don't run past the bw input sample block: */
+        susp_check_term_samples(bw, bw_ptr, bw_cnt);
+        togo = min(togo, susp->bw_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	bw_ptr_reg = susp->bw_ptr;
-	hz1_ptr_reg = susp->hz1_ptr;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        bw_ptr_reg = susp->bw_ptr;
+        hz1_ptr_reg = susp->hz1_ptr;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
-	    recompute_reg = true;
-	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
-	    c3p1_reg = c3co_reg + 1.0;
-	    c3t4_reg = c3co_reg * 4.0;
-	    omc3_reg = 1.0 - c3co_reg;
-	    recompute_reg = true;
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+            coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
+            recompute_reg = true;
+            c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
+            c3p1_reg = c3co_reg + 1.0;
+            c3t4_reg = c3co_reg * 4.0;
+            omc3_reg = 1.0 - c3co_reg;
+            recompute_reg = true;
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	/* using bw_ptr_reg is a bad idea on RS/6000: */
-	susp->bw_ptr += togo;
-	/* using hz1_ptr_reg is a bad idea on RS/6000: */
-	susp->hz1_ptr += togo;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp_took(hz1_cnt, togo);
-	susp_took(bw_cnt, togo);
-	cnt += togo;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        /* using bw_ptr_reg is a bad idea on RS/6000: */
+        susp->bw_ptr += togo;
+        /* using hz1_ptr_reg is a bad idea on RS/6000: */
+        susp->hz1_ptr += togo;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp_took(hz1_cnt, togo);
+        susp_took(bw_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nss_fetch */
 
@@ -248,142 +248,142 @@ void aresonvv_nsi_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
-	susp->c3co = exp(susp->bw_x1_sample);
-	susp->c3p1 = susp->c3co + 1.0;
-	susp->c3t4 = susp->c3co * 4.0;
-	susp->omc3 = 1.0 - susp->c3co;
-	susp->recompute = true;
+        susp->started = true;
+        susp_check_term_samples(bw, bw_ptr, bw_cnt);
+        susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+        susp->c3co = exp(susp->bw_x1_sample);
+        susp->c3p1 = susp->c3co + 1.0;
+        susp->c3t4 = susp->c3co * 4.0;
+        susp->omc3 = 1.0 - susp->c3co;
+        susp->recompute = true;
     }
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* don't run past the hz1 input sample block: */
-	susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	togo = min(togo, susp->hz1_cnt);
+        /* don't run past the hz1 input sample block: */
+        susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+        togo = min(togo, susp->hz1_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	bw_pHaSe_ReG = susp->bw_pHaSe;
-	bw_x1_sample_reg = susp->bw_x1_sample;
-	hz1_ptr_reg = susp->hz1_ptr;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        bw_pHaSe_ReG = susp->bw_pHaSe;
+        bw_x1_sample_reg = susp->bw_x1_sample;
+        hz1_ptr_reg = susp->hz1_ptr;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    if (bw_pHaSe_ReG >= 1.0) {
+            if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
-		/* pick up next sample as bw_x1_sample: */
-		susp->bw_ptr++;
-		susp_took(bw_cnt, 1);
-		bw_pHaSe_ReG -= 1.0;
-		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
-		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = exp(bw_x1_sample_reg);
-		c3p1_reg = c3co_reg + 1.0;
-		c3t4_reg = c3co_reg * 4.0;
-		omc3_reg = 1.0 - c3co_reg;
-		recompute_reg = true;
-	    }
-	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
-	    recompute_reg = true;
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+                /* pick up next sample as bw_x1_sample: */
+                susp->bw_ptr++;
+                susp_took(bw_cnt, 1);
+                bw_pHaSe_ReG -= 1.0;
+                susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
+                bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
+                c3co_reg = exp(bw_x1_sample_reg);
+                c3p1_reg = c3co_reg + 1.0;
+                c3t4_reg = c3co_reg * 4.0;
+                omc3_reg = 1.0 - c3co_reg;
+                recompute_reg = true;
+            }
+            coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
+            recompute_reg = true;
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	    bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
-	} while (--n); /* inner loop */
+            bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	susp->bw_pHaSe = bw_pHaSe_ReG;
-	susp->bw_x1_sample = bw_x1_sample_reg;
-	/* using hz1_ptr_reg is a bad idea on RS/6000: */
-	susp->hz1_ptr += togo;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp_took(hz1_cnt, togo);
-	cnt += togo;
+        togo -= n;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        susp->bw_pHaSe = bw_pHaSe_ReG;
+        susp->bw_x1_sample = bw_x1_sample_reg;
+        /* using hz1_ptr_reg is a bad idea on RS/6000: */
+        susp->hz1_ptr += togo;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp_took(hz1_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nsi_fetch */
 
@@ -420,137 +420,137 @@ void aresonvv_nsr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp->bw_pHaSe = 1.0;
+        susp->started = true;
+        susp->bw_pHaSe = 1.0;
     }
 
     susp_check_term_samples(bw, bw_ptr, bw_cnt);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* don't run past the hz1 input sample block: */
-	susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	togo = min(togo, susp->hz1_cnt);
+        /* don't run past the hz1 input sample block: */
+        susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+        togo = min(togo, susp->hz1_cnt);
 
-	/* grab next bw_x1_sample when phase goes past 1.0; */
-	/* use bw_n (computed below) to avoid roundoff errors: */
-	if (susp->bw_n <= 0) {
-	    susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	    susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
-	    susp->bw_pHaSe -= 1.0;
-	    /* bw_n gets number of samples before phase exceeds 1.0: */
-	    susp->bw_n = (long) ((1.0 - susp->bw_pHaSe) *
-					susp->output_per_bw);
-	    susp->c3co = exp(susp->bw_x1_sample);
-	    susp->c3p1 = susp->c3co + 1.0;
-	    susp->c3t4 = susp->c3co * 4.0;
-	    susp->omc3 = 1.0 - susp->c3co;
-	    susp->recompute = true;
-	}
-	togo = min(togo, susp->bw_n);
-	bw_val = susp->bw_x1_sample;
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* grab next bw_x1_sample when phase goes past 1.0; */
+        /* use bw_n (computed below) to avoid roundoff errors: */
+        if (susp->bw_n <= 0) {
+            susp_check_term_samples(bw, bw_ptr, bw_cnt);
+            susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+            susp->bw_pHaSe -= 1.0;
+            /* bw_n gets number of samples before phase exceeds 1.0: */
+            susp->bw_n = (int64_t) ((1.0 - susp->bw_pHaSe) *
+                                        susp->output_per_bw);
+            susp->c3co = exp(susp->bw_x1_sample);
+            susp->c3p1 = susp->c3co + 1.0;
+            susp->c3t4 = susp->c3co * 4.0;
+            susp->omc3 = 1.0 - susp->c3co;
+            susp->recompute = true;
+        }
+        togo = (int) min(togo, susp->bw_n);
+        bw_val = susp->bw_x1_sample;
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	hz1_ptr_reg = susp->hz1_ptr;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        hz1_ptr_reg = susp->hz1_ptr;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
-	    recompute_reg = true;
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+            coshz_reg = cos((hz1_scale_reg * *hz1_ptr_reg++));
+            recompute_reg = true;
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	/* using hz1_ptr_reg is a bad idea on RS/6000: */
-	susp->hz1_ptr += togo;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp_took(hz1_cnt, togo);
-	susp->bw_pHaSe += togo * susp->bw_pHaSe_iNcR;
-	susp->bw_n -= togo;
-	cnt += togo;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        /* using hz1_ptr_reg is a bad idea on RS/6000: */
+        susp->hz1_ptr += togo;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp_took(hz1_cnt, togo);
+        susp->bw_pHaSe += togo * susp->bw_pHaSe_iNcR;
+        susp->bw_n -= togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nsr_fetch */
 
@@ -589,139 +589,139 @@ void aresonvv_nis_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
-	susp->coshz = cos(susp->hz1_x1_sample);
-	susp->recompute = true;
+        susp->started = true;
+        susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+        susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
+        susp->coshz = cos(susp->hz1_x1_sample);
+        susp->recompute = true;
     }
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* don't run past the bw input sample block: */
-	susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	togo = min(togo, susp->bw_cnt);
+        /* don't run past the bw input sample block: */
+        susp_check_term_samples(bw, bw_ptr, bw_cnt);
+        togo = min(togo, susp->bw_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	bw_ptr_reg = susp->bw_ptr;
-	hz1_pHaSe_ReG = susp->hz1_pHaSe;
-	hz1_x1_sample_reg = susp->hz1_x1_sample;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        bw_ptr_reg = susp->bw_ptr;
+        hz1_pHaSe_ReG = susp->hz1_pHaSe;
+        hz1_x1_sample_reg = susp->hz1_x1_sample;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    if (hz1_pHaSe_ReG >= 1.0) {
+            if (hz1_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz1 */
-		/* pick up next sample as hz1_x1_sample: */
-		susp->hz1_ptr++;
-		susp_took(hz1_cnt, 1);
-		hz1_pHaSe_ReG -= 1.0;
-		susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
-		hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
-		coshz_reg = cos(hz1_x1_sample_reg);
-		recompute_reg = true;
-	    }
-	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
-	    c3p1_reg = c3co_reg + 1.0;
-	    c3t4_reg = c3co_reg * 4.0;
-	    omc3_reg = 1.0 - c3co_reg;
-	    recompute_reg = true;
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+                /* pick up next sample as hz1_x1_sample: */
+                susp->hz1_ptr++;
+                susp_took(hz1_cnt, 1);
+                hz1_pHaSe_ReG -= 1.0;
+                susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
+                hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
+                coshz_reg = cos(hz1_x1_sample_reg);
+                recompute_reg = true;
+            }
+            c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
+            c3p1_reg = c3co_reg + 1.0;
+            c3t4_reg = c3co_reg * 4.0;
+            omc3_reg = 1.0 - c3co_reg;
+            recompute_reg = true;
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	    hz1_pHaSe_ReG += hz1_pHaSe_iNcR_rEg;
-	} while (--n); /* inner loop */
+            hz1_pHaSe_ReG += hz1_pHaSe_iNcR_rEg;
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	/* using bw_ptr_reg is a bad idea on RS/6000: */
-	susp->bw_ptr += togo;
-	susp->hz1_pHaSe = hz1_pHaSe_ReG;
-	susp->hz1_x1_sample = hz1_x1_sample_reg;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp_took(bw_cnt, togo);
-	cnt += togo;
+        togo -= n;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        /* using bw_ptr_reg is a bad idea on RS/6000: */
+        susp->bw_ptr += togo;
+        susp->hz1_pHaSe = hz1_pHaSe_ReG;
+        susp->hz1_x1_sample = hz1_x1_sample_reg;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp_took(bw_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nis_fetch */
 
@@ -761,152 +761,152 @@ void aresonvv_nii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
-	susp->coshz = cos(susp->hz1_x1_sample);
-	susp->recompute = true;
-	susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
-	susp->c3co = exp(susp->bw_x1_sample);
-	susp->c3p1 = susp->c3co + 1.0;
-	susp->c3t4 = susp->c3co * 4.0;
-	susp->omc3 = 1.0 - susp->c3co;
-	susp->recompute = true;
+        susp->started = true;
+        susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+        susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
+        susp->coshz = cos(susp->hz1_x1_sample);
+        susp->recompute = true;
+        susp_check_term_samples(bw, bw_ptr, bw_cnt);
+        susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+        susp->c3co = exp(susp->bw_x1_sample);
+        susp->c3p1 = susp->c3co + 1.0;
+        susp->c3t4 = susp->c3co * 4.0;
+        susp->omc3 = 1.0 - susp->c3co;
+        susp->recompute = true;
     }
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	bw_pHaSe_ReG = susp->bw_pHaSe;
-	bw_x1_sample_reg = susp->bw_x1_sample;
-	hz1_pHaSe_ReG = susp->hz1_pHaSe;
-	hz1_x1_sample_reg = susp->hz1_x1_sample;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        bw_pHaSe_ReG = susp->bw_pHaSe;
+        bw_x1_sample_reg = susp->bw_x1_sample;
+        hz1_pHaSe_ReG = susp->hz1_pHaSe;
+        hz1_x1_sample_reg = susp->hz1_x1_sample;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    if (hz1_pHaSe_ReG >= 1.0) {
+            if (hz1_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz1 */
-		/* pick up next sample as hz1_x1_sample: */
-		susp->hz1_ptr++;
-		susp_took(hz1_cnt, 1);
-		hz1_pHaSe_ReG -= 1.0;
-		susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
-		hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
-		coshz_reg = cos(hz1_x1_sample_reg);
-		recompute_reg = true;
-	    }
-	    if (bw_pHaSe_ReG >= 1.0) {
+                /* pick up next sample as hz1_x1_sample: */
+                susp->hz1_ptr++;
+                susp_took(hz1_cnt, 1);
+                hz1_pHaSe_ReG -= 1.0;
+                susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
+                hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
+                coshz_reg = cos(hz1_x1_sample_reg);
+                recompute_reg = true;
+            }
+            if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
-		/* pick up next sample as bw_x1_sample: */
-		susp->bw_ptr++;
-		susp_took(bw_cnt, 1);
-		bw_pHaSe_ReG -= 1.0;
-		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
-		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = exp(bw_x1_sample_reg);
-		c3p1_reg = c3co_reg + 1.0;
-		c3t4_reg = c3co_reg * 4.0;
-		omc3_reg = 1.0 - c3co_reg;
-		recompute_reg = true;
-	    }
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+                /* pick up next sample as bw_x1_sample: */
+                susp->bw_ptr++;
+                susp_took(bw_cnt, 1);
+                bw_pHaSe_ReG -= 1.0;
+                susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
+                bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
+                c3co_reg = exp(bw_x1_sample_reg);
+                c3p1_reg = c3co_reg + 1.0;
+                c3t4_reg = c3co_reg * 4.0;
+                omc3_reg = 1.0 - c3co_reg;
+                recompute_reg = true;
+            }
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	    hz1_pHaSe_ReG += hz1_pHaSe_iNcR_rEg;
-	    bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
-	} while (--n); /* inner loop */
+            hz1_pHaSe_ReG += hz1_pHaSe_iNcR_rEg;
+            bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	susp->bw_pHaSe = bw_pHaSe_ReG;
-	susp->bw_x1_sample = bw_x1_sample_reg;
-	susp->hz1_pHaSe = hz1_pHaSe_ReG;
-	susp->hz1_x1_sample = hz1_x1_sample_reg;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	cnt += togo;
+        togo -= n;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        susp->bw_pHaSe = bw_pHaSe_ReG;
+        susp->bw_x1_sample = bw_x1_sample_reg;
+        susp->hz1_pHaSe = hz1_pHaSe_ReG;
+        susp->hz1_x1_sample = hz1_x1_sample_reg;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nii_fetch */
 
@@ -944,148 +944,148 @@ void aresonvv_nir_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
-	susp->coshz = cos(susp->hz1_x1_sample);
-	susp->recompute = true;
-	susp->bw_pHaSe = 1.0;
+        susp->started = true;
+        susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+        susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
+        susp->coshz = cos(susp->hz1_x1_sample);
+        susp->recompute = true;
+        susp->bw_pHaSe = 1.0;
     }
 
     susp_check_term_samples(bw, bw_ptr, bw_cnt);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* grab next bw_x1_sample when phase goes past 1.0; */
-	/* use bw_n (computed below) to avoid roundoff errors: */
-	if (susp->bw_n <= 0) {
-	    susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	    susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
-	    susp->bw_pHaSe -= 1.0;
-	    /* bw_n gets number of samples before phase exceeds 1.0: */
-	    susp->bw_n = (long) ((1.0 - susp->bw_pHaSe) *
-					susp->output_per_bw);
-	    susp->c3co = exp(susp->bw_x1_sample);
-	    susp->c3p1 = susp->c3co + 1.0;
-	    susp->c3t4 = susp->c3co * 4.0;
-	    susp->omc3 = 1.0 - susp->c3co;
-	    susp->recompute = true;
-	}
-	togo = min(togo, susp->bw_n);
-	bw_val = susp->bw_x1_sample;
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* grab next bw_x1_sample when phase goes past 1.0; */
+        /* use bw_n (computed below) to avoid roundoff errors: */
+        if (susp->bw_n <= 0) {
+            susp_check_term_samples(bw, bw_ptr, bw_cnt);
+            susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+            susp->bw_pHaSe -= 1.0;
+            /* bw_n gets number of samples before phase exceeds 1.0: */
+            susp->bw_n = (int64_t) ((1.0 - susp->bw_pHaSe) *
+                                        susp->output_per_bw);
+            susp->c3co = exp(susp->bw_x1_sample);
+            susp->c3p1 = susp->c3co + 1.0;
+            susp->c3t4 = susp->c3co * 4.0;
+            susp->omc3 = 1.0 - susp->c3co;
+            susp->recompute = true;
+        }
+        togo = (int) min(togo, susp->bw_n);
+        bw_val = susp->bw_x1_sample;
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	hz1_pHaSe_ReG = susp->hz1_pHaSe;
-	hz1_x1_sample_reg = susp->hz1_x1_sample;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        hz1_pHaSe_ReG = susp->hz1_pHaSe;
+        hz1_x1_sample_reg = susp->hz1_x1_sample;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    if (hz1_pHaSe_ReG >= 1.0) {
+            if (hz1_pHaSe_ReG >= 1.0) {
 /* fixup-depends hz1 */
-		/* pick up next sample as hz1_x1_sample: */
-		susp->hz1_ptr++;
-		susp_took(hz1_cnt, 1);
-		hz1_pHaSe_ReG -= 1.0;
-		susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
-		hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
-		coshz_reg = cos(hz1_x1_sample_reg);
-		recompute_reg = true;
-	    }
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+                /* pick up next sample as hz1_x1_sample: */
+                susp->hz1_ptr++;
+                susp_took(hz1_cnt, 1);
+                hz1_pHaSe_ReG -= 1.0;
+                susp_check_term_samples_break(hz1, hz1_ptr, hz1_cnt, hz1_x1_sample_reg);
+                hz1_x1_sample_reg = susp_current_sample(hz1, hz1_ptr);
+                coshz_reg = cos(hz1_x1_sample_reg);
+                recompute_reg = true;
+            }
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	    hz1_pHaSe_ReG += hz1_pHaSe_iNcR_rEg;
-	} while (--n); /* inner loop */
+            hz1_pHaSe_ReG += hz1_pHaSe_iNcR_rEg;
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	susp->hz1_pHaSe = hz1_pHaSe_ReG;
-	susp->hz1_x1_sample = hz1_x1_sample_reg;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp->bw_pHaSe += togo * susp->bw_pHaSe_iNcR;
-	susp->bw_n -= togo;
-	cnt += togo;
+        togo -= n;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        susp->hz1_pHaSe = hz1_pHaSe_ReG;
+        susp->hz1_x1_sample = hz1_x1_sample_reg;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp->bw_pHaSe += togo * susp->bw_pHaSe_iNcR;
+        susp->bw_n -= togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nir_fetch */
 
@@ -1122,137 +1122,137 @@ void aresonvv_nrs_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp->hz1_pHaSe = 1.0;
+        susp->started = true;
+        susp->hz1_pHaSe = 1.0;
     }
 
     susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* grab next hz1_x1_sample when phase goes past 1.0; */
-	/* use hz1_n (computed below) to avoid roundoff errors: */
-	if (susp->hz1_n <= 0) {
-	    susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	    susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
-	    susp->hz1_pHaSe -= 1.0;
-	    /* hz1_n gets number of samples before phase exceeds 1.0: */
-	    susp->hz1_n = (long) ((1.0 - susp->hz1_pHaSe) *
-					susp->output_per_hz1);
-	    susp->coshz = cos(susp->hz1_x1_sample);
-	    susp->recompute = true;
-	}
-	togo = min(togo, susp->hz1_n);
-	hz1_val = susp->hz1_x1_sample;
-	/* don't run past the bw input sample block: */
-	susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	togo = min(togo, susp->bw_cnt);
+        /* grab next hz1_x1_sample when phase goes past 1.0; */
+        /* use hz1_n (computed below) to avoid roundoff errors: */
+        if (susp->hz1_n <= 0) {
+            susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+            susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
+            susp->hz1_pHaSe -= 1.0;
+            /* hz1_n gets number of samples before phase exceeds 1.0: */
+            susp->hz1_n = (int64_t) ((1.0 - susp->hz1_pHaSe) *
+                                        susp->output_per_hz1);
+            susp->coshz = cos(susp->hz1_x1_sample);
+            susp->recompute = true;
+        }
+        togo = (int) min(togo, susp->hz1_n);
+        hz1_val = susp->hz1_x1_sample;
+        /* don't run past the bw input sample block: */
+        susp_check_term_samples(bw, bw_ptr, bw_cnt);
+        togo = min(togo, susp->bw_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	bw_ptr_reg = susp->bw_ptr;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        bw_ptr_reg = susp->bw_ptr;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
-	    c3p1_reg = c3co_reg + 1.0;
-	    c3t4_reg = c3co_reg * 4.0;
-	    omc3_reg = 1.0 - c3co_reg;
-	    recompute_reg = true;
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+            c3co_reg = exp((bw_scale_reg * *bw_ptr_reg++));
+            c3p1_reg = c3co_reg + 1.0;
+            c3t4_reg = c3co_reg * 4.0;
+            omc3_reg = 1.0 - c3co_reg;
+            recompute_reg = true;
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	/* using bw_ptr_reg is a bad idea on RS/6000: */
-	susp->bw_ptr += togo;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp->hz1_pHaSe += togo * susp->hz1_pHaSe_iNcR;
-	susp->hz1_n -= togo;
-	susp_took(bw_cnt, togo);
-	cnt += togo;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        /* using bw_ptr_reg is a bad idea on RS/6000: */
+        susp->bw_ptr += togo;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp->hz1_pHaSe += togo * susp->hz1_pHaSe_iNcR;
+        susp->hz1_n -= togo;
+        susp_took(bw_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nrs_fetch */
 
@@ -1290,151 +1290,151 @@ void aresonvv_nri_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp->hz1_pHaSe = 1.0;
-	susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
-	susp->c3co = exp(susp->bw_x1_sample);
-	susp->c3p1 = susp->c3co + 1.0;
-	susp->c3t4 = susp->c3co * 4.0;
-	susp->omc3 = 1.0 - susp->c3co;
-	susp->recompute = true;
+        susp->started = true;
+        susp->hz1_pHaSe = 1.0;
+        susp_check_term_samples(bw, bw_ptr, bw_cnt);
+        susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+        susp->c3co = exp(susp->bw_x1_sample);
+        susp->c3p1 = susp->c3co + 1.0;
+        susp->c3t4 = susp->c3co * 4.0;
+        susp->omc3 = 1.0 - susp->c3co;
+        susp->recompute = true;
     }
 
     susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* grab next hz1_x1_sample when phase goes past 1.0; */
-	/* use hz1_n (computed below) to avoid roundoff errors: */
-	if (susp->hz1_n <= 0) {
-	    susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	    susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
-	    susp->hz1_pHaSe -= 1.0;
-	    /* hz1_n gets number of samples before phase exceeds 1.0: */
-	    susp->hz1_n = (long) ((1.0 - susp->hz1_pHaSe) *
-					susp->output_per_hz1);
-	    susp->coshz = cos(susp->hz1_x1_sample);
-	    susp->recompute = true;
-	}
-	togo = min(togo, susp->hz1_n);
-	hz1_val = susp->hz1_x1_sample;
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* grab next hz1_x1_sample when phase goes past 1.0; */
+        /* use hz1_n (computed below) to avoid roundoff errors: */
+        if (susp->hz1_n <= 0) {
+            susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+            susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
+            susp->hz1_pHaSe -= 1.0;
+            /* hz1_n gets number of samples before phase exceeds 1.0: */
+            susp->hz1_n = (int64_t) ((1.0 - susp->hz1_pHaSe) *
+                                        susp->output_per_hz1);
+            susp->coshz = cos(susp->hz1_x1_sample);
+            susp->recompute = true;
+        }
+        togo = (int) min(togo, susp->hz1_n);
+        hz1_val = susp->hz1_x1_sample;
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c3p1_reg = susp->c3p1;
-	c3t4_reg = susp->c3t4;
-	omc3_reg = susp->omc3;
-	coshz_reg = susp->coshz;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	normalization_reg = susp->normalization;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	bw_pHaSe_ReG = susp->bw_pHaSe;
-	bw_x1_sample_reg = susp->bw_x1_sample;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c3p1_reg = susp->c3p1;
+        c3t4_reg = susp->c3t4;
+        omc3_reg = susp->omc3;
+        coshz_reg = susp->coshz;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        normalization_reg = susp->normalization;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        bw_pHaSe_ReG = susp->bw_pHaSe;
+        bw_x1_sample_reg = susp->bw_x1_sample;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
-	    if (bw_pHaSe_ReG >= 1.0) {
+            if (bw_pHaSe_ReG >= 1.0) {
 /* fixup-depends bw */
-		/* pick up next sample as bw_x1_sample: */
-		susp->bw_ptr++;
-		susp_took(bw_cnt, 1);
-		bw_pHaSe_ReG -= 1.0;
-		susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
-		bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
-		c3co_reg = exp(bw_x1_sample_reg);
-		c3p1_reg = c3co_reg + 1.0;
-		c3t4_reg = c3co_reg * 4.0;
-		omc3_reg = 1.0 - c3co_reg;
-		recompute_reg = true;
-	    }
-	    if (recompute_reg) {
-	        recompute_reg = false;
-	        c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
-	        c1_reg = (normalization_reg == 0 ? 0.0 :
-	              (normalization_reg == 1 ? 
-	               1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
-	               1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
-	               omc3_reg / c3p1_reg));
-	    }
+                /* pick up next sample as bw_x1_sample: */
+                susp->bw_ptr++;
+                susp_took(bw_cnt, 1);
+                bw_pHaSe_ReG -= 1.0;
+                susp_check_term_samples_break(bw, bw_ptr, bw_cnt, bw_x1_sample_reg);
+                bw_x1_sample_reg = susp_current_sample(bw, bw_ptr);
+                c3co_reg = exp(bw_x1_sample_reg);
+                c3p1_reg = c3co_reg + 1.0;
+                c3t4_reg = c3co_reg * 4.0;
+                omc3_reg = 1.0 - c3co_reg;
+                recompute_reg = true;
+            }
+            if (recompute_reg) {
+                recompute_reg = false;
+                c2_reg = c3t4_reg * coshz_reg / c3p1_reg;
+                c1_reg = (normalization_reg == 0 ? 0.0 :
+                      (normalization_reg == 1 ? 
+                       1.0 - omc3_reg * sqrt(1.0 - c2_reg * c2_reg / c3t4_reg) :
+                       1.0 - sqrt(c3p1_reg * c3p1_reg - c2_reg * c2_reg) * 
+                       omc3_reg / c3p1_reg));
+            }
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	    bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
-	} while (--n); /* inner loop */
+            bw_pHaSe_ReG += bw_pHaSe_iNcR_rEg;
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	susp->bw_pHaSe = bw_pHaSe_ReG;
-	susp->bw_x1_sample = bw_x1_sample_reg;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp->hz1_pHaSe += togo * susp->hz1_pHaSe_iNcR;
-	susp->hz1_n -= togo;
-	cnt += togo;
+        togo -= n;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        susp->bw_pHaSe = bw_pHaSe_ReG;
+        susp->bw_x1_sample = bw_x1_sample_reg;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp->hz1_pHaSe += togo * susp->hz1_pHaSe_iNcR;
+        susp->hz1_n -= togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nri_fetch */
 
@@ -1465,9 +1465,9 @@ void aresonvv_nrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* make sure sounds are primed with first values */
     if (!susp->started) {
-	susp->started = true;
-	susp->hz1_pHaSe = 1.0;
-	susp->bw_pHaSe = 1.0;
+        susp->started = true;
+        susp->hz1_pHaSe = 1.0;
+        susp->bw_pHaSe = 1.0;
     }
 
     susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
@@ -1475,164 +1475,164 @@ void aresonvv_nrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     susp_check_term_samples(bw, bw_ptr, bw_cnt);
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the s1 input sample block: */
-	susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
-	togo = min(togo, susp->s1_cnt);
+        /* don't run past the s1 input sample block: */
+        susp_check_term_log_samples(s1, s1_ptr, s1_cnt);
+        togo = min(togo, susp->s1_cnt);
 
-	/* grab next hz1_x1_sample when phase goes past 1.0; */
-	/* use hz1_n (computed below) to avoid roundoff errors: */
-	if (susp->hz1_n <= 0) {
-	    susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
-	    susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
-	    susp->hz1_pHaSe -= 1.0;
-	    /* hz1_n gets number of samples before phase exceeds 1.0: */
-	    susp->hz1_n = (long) ((1.0 - susp->hz1_pHaSe) *
-					susp->output_per_hz1);
-	    susp->coshz = cos(susp->hz1_x1_sample);
-	    susp->recompute = true;
-	}
-	togo = min(togo, susp->hz1_n);
-	hz1_val = susp->hz1_x1_sample;
-	/* grab next bw_x1_sample when phase goes past 1.0; */
-	/* use bw_n (computed below) to avoid roundoff errors: */
-	if (susp->bw_n <= 0) {
-	    susp_check_term_samples(bw, bw_ptr, bw_cnt);
-	    susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
-	    susp->bw_pHaSe -= 1.0;
-	    /* bw_n gets number of samples before phase exceeds 1.0: */
-	    susp->bw_n = (long) ((1.0 - susp->bw_pHaSe) *
-					susp->output_per_bw);
-	    susp->c3co = exp(susp->bw_x1_sample);
-	    susp->c3p1 = susp->c3co + 1.0;
-	    susp->c3t4 = susp->c3co * 4.0;
-	    susp->omc3 = 1.0 - susp->c3co;
-	    susp->recompute = true;
-	}
-	togo = min(togo, susp->bw_n);
-	bw_val = susp->bw_x1_sample;
-	if (susp->recompute) {
-	    susp->recompute = false;
-	    susp->c2 = susp->c3t4 * susp->coshz / susp->c3p1;
-	    susp->c1 = (susp->normalization == 0 ? 0.0 :
-	          (susp->normalization == 1 ? 
-	           1.0 - susp->omc3 * sqrt(1.0 - susp->c2 * susp->c2 / susp->c3t4) :
-	           1.0 - sqrt(susp->c3p1 * susp->c3p1 - susp->c2 * susp->c2) * 
-	           susp->omc3 / susp->c3p1));
-	}
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* grab next hz1_x1_sample when phase goes past 1.0; */
+        /* use hz1_n (computed below) to avoid roundoff errors: */
+        if (susp->hz1_n <= 0) {
+            susp_check_term_samples(hz1, hz1_ptr, hz1_cnt);
+            susp->hz1_x1_sample = susp_fetch_sample(hz1, hz1_ptr, hz1_cnt);
+            susp->hz1_pHaSe -= 1.0;
+            /* hz1_n gets number of samples before phase exceeds 1.0: */
+            susp->hz1_n = (int64_t) ((1.0 - susp->hz1_pHaSe) *
+                                        susp->output_per_hz1);
+            susp->coshz = cos(susp->hz1_x1_sample);
+            susp->recompute = true;
+        }
+        togo = (int) min(togo, susp->hz1_n);
+        hz1_val = susp->hz1_x1_sample;
+        /* grab next bw_x1_sample when phase goes past 1.0; */
+        /* use bw_n (computed below) to avoid roundoff errors: */
+        if (susp->bw_n <= 0) {
+            susp_check_term_samples(bw, bw_ptr, bw_cnt);
+            susp->bw_x1_sample = susp_fetch_sample(bw, bw_ptr, bw_cnt);
+            susp->bw_pHaSe -= 1.0;
+            /* bw_n gets number of samples before phase exceeds 1.0: */
+            susp->bw_n = (int64_t) ((1.0 - susp->bw_pHaSe) *
+                                        susp->output_per_bw);
+            susp->c3co = exp(susp->bw_x1_sample);
+            susp->c3p1 = susp->c3co + 1.0;
+            susp->c3t4 = susp->c3co * 4.0;
+            susp->omc3 = 1.0 - susp->c3co;
+            susp->recompute = true;
+        }
+        togo = (int) min(togo, susp->bw_n);
+        bw_val = susp->bw_x1_sample;
+        if (susp->recompute) {
+            susp->recompute = false;
+            susp->c2 = susp->c3t4 * susp->coshz / susp->c3p1;
+            susp->c1 = (susp->normalization == 0 ? 0.0 :
+                  (susp->normalization == 1 ? 
+                   1.0 - susp->omc3 * sqrt(1.0 - susp->c2 * susp->c2 / susp->c3t4) :
+                   1.0 - sqrt(susp->c3p1 * susp->c3p1 - susp->c2 * susp->c2) * 
+                   susp->omc3 / susp->c3p1));
+        }
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
-	n = togo;
-	c3co_reg = susp->c3co;
-	c2_reg = susp->c2;
-	c1_reg = susp->c1;
-	recompute_reg = susp->recompute;
-	y1_reg = susp->y1;
-	y2_reg = susp->y2;
-	s1_ptr_reg = susp->s1_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        c3co_reg = susp->c3co;
+        c2_reg = susp->c2;
+        c1_reg = susp->c1;
+        recompute_reg = susp->recompute;
+        y1_reg = susp->y1;
+        y2_reg = susp->y2;
+        s1_ptr_reg = susp->s1_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             register double y0, current;
             current = *s1_ptr_reg++;
             y0 = c1_reg * current + c2_reg * y1_reg - c3co_reg * y2_reg;
             *out_ptr_reg++ = (sample_type) y0;
             y2_reg = y1_reg; y1_reg = y0 - current;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->recompute = recompute_reg;
-	susp->y1 = y1_reg;
-	susp->y2 = y2_reg;
-	/* using s1_ptr_reg is a bad idea on RS/6000: */
-	susp->s1_ptr += togo;
-	out_ptr += togo;
-	susp_took(s1_cnt, togo);
-	susp->hz1_pHaSe += togo * susp->hz1_pHaSe_iNcR;
-	susp->hz1_n -= togo;
-	susp->bw_pHaSe += togo * susp->bw_pHaSe_iNcR;
-	susp->bw_n -= togo;
-	cnt += togo;
+        susp->recompute = recompute_reg;
+        susp->y1 = y1_reg;
+        susp->y2 = y2_reg;
+        /* using s1_ptr_reg is a bad idea on RS/6000: */
+        susp->s1_ptr += togo;
+        out_ptr += togo;
+        susp_took(s1_cnt, togo);
+        susp->hz1_pHaSe += togo * susp->hz1_pHaSe_iNcR;
+        susp->hz1_n -= togo;
+        susp->bw_pHaSe += togo * susp->bw_pHaSe_iNcR;
+        susp->bw_n -= togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* aresonvv_nrr_fetch */
 
 
 void aresonvv_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     aresonvv_susp_type susp = (aresonvv_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from s1 up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr)) >=
-	   susp->s1->current)
-	susp_get_samples(s1, s1_ptr, s1_cnt);
+           susp->s1->current)
+        susp_get_samples(s1, s1_ptr, s1_cnt);
     /* fetch samples from hz1 up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->hz1->t0) * susp->hz1->sr)) >=
-	   susp->hz1->current)
-	susp_get_samples(hz1, hz1_ptr, hz1_cnt);
+           susp->hz1->current)
+        susp_get_samples(hz1, hz1_ptr, hz1_cnt);
     /* fetch samples from bw up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->bw->t0) * susp->bw->sr)) >=
-	   susp->bw->current)
-	susp_get_samples(bw, bw_ptr, bw_cnt);
+           susp->bw->current)
+        susp_get_samples(bw, bw_ptr, bw_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
+    n = (int) ROUNDBIG((final_time - susp->s1->t0) * susp->s1->sr -
          (susp->s1->current - susp->s1_cnt));
     susp->s1_ptr += n;
     susp_took(s1_cnt, n);
-    n = ROUNDBIG((final_time - susp->hz1->t0) * susp->hz1->sr -
+    n = (int) ROUNDBIG((final_time - susp->hz1->t0) * susp->hz1->sr -
          (susp->hz1->current - susp->hz1_cnt));
     susp->hz1_ptr += n;
     susp_took(hz1_cnt, n);
-    n = ROUNDBIG((final_time - susp->bw->t0) * susp->bw->sr -
+    n = (int) ROUNDBIG((final_time - susp->bw->t0) * susp->bw->sr -
          (susp->bw->current - susp->bw_cnt));
     susp->bw_ptr += n;
     susp_took(bw_cnt, n);

@@ -151,10 +151,10 @@ void print_sound_type(sound_type s)
     nyquist_printf("\t(0x%p:0x%p)->", list, list->block);
     while (list->block) {
         list = list->u.next;
-        if (blockcount < 5) {
-            nyquist_printf("(0x%p:0x%p)->", list, list->block);
+        if (blockcount < 50) {
+            nyquist_printf("(0x%p block 0x%p)->", list, list->block);
         }
-        else if (blockcount == 5) {
+        else {
             stdputstr(" ... ");
             break;
         }

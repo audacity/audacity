@@ -74,7 +74,11 @@ int nosc_init()
         lo_server_add_method(the_server, "/slider", "if", slider_handler, NULL);
         lo_server_add_method(the_server, "/wii/orientation", "ff",
                              wii_orientation_handler, NULL);
-        lo_fd = lo_server_get_socket_fd(the_server);
+		/* On Win64 this is technically incorrect because socket_type is 64 bits,
+		   but *currently* the high-order WIN64 handle bits are zero and this 
+		   works. It is likely to continue working because changing it would cause
+		   many failures. */
+        lo_fd = (int) lo_server_get_socket_fd(the_server);
         nosc_enabled = true;
     }
     return 0;

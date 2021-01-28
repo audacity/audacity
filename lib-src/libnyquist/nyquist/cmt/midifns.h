@@ -106,7 +106,7 @@ void midi_clock(void);
 void midi_cont(boolean onflag);
 void midi_ctrl(int channel, int control, int value);
 void midi_exclusive(unsigned char *msg);
-void midi_flush();
+void midi_flush(void);
 void midi_note(int channel, int pitch, int velocity);
 void midi_program(int channel, int program);
 void midi_real(boolean onflag);

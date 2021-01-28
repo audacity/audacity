@@ -229,7 +229,7 @@ LVAL xrdint(void)
     /* get byte count */
     if (moreargs()) {
         LVAL count = typearg(fixp);
-        n = getfixnum(count);
+        n = (int) getfixnum(count);
         if (n < 0) {
             n = -n;
             index = n - 1;
@@ -277,7 +277,7 @@ LVAL xrdfloat(void)
     /* get byte count */
     if (moreargs()) {
         LVAL count =  typearg(fixp);
-        n = getfixnum(count);
+        n = (int) getfixnum(count);
         if (n < 0) {
             n = -n;
             index = 0;
@@ -385,14 +385,14 @@ LVAL xwrint(void)
     int n = 4;
     int index = 3;     /* where to start in array */
     int incr = -1;  /* how to step through array */
-    int v;
+    int v; /* xwrint only allows up to 4 bytes, so int is enough */
     /* get the int and file pointer and optional byte count */
     val = xlgafixnum();
-    v = getfixnum(val);
+    v = (int) getfixnum(val);
     fptr = (moreargs() ? xlgetfile() : getvalue(s_stdout));
     if (moreargs()) {
         LVAL count = typearg(fixp);
-        n = getfixnum(count);
+        n = (int) getfixnum(count);
         index = n - 1;
         if (n < 0) {
             n = -n;
@@ -440,7 +440,7 @@ LVAL xwrfloat(void)
     fptr = (moreargs() ? xlgetfile() : getvalue(s_stdout));
     if (moreargs()) {
         LVAL count = typearg(fixp);
-        n = getfixnum(count);
+        n = (int) getfixnum(count);
         if (n < 0) {
             n = -n;
             index = 0;

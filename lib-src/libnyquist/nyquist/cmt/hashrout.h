@@ -144,7 +144,7 @@ extern COUNTER;
 #ifdef HASHPOINT
 HASHTYPE *
 #else
-int
+intptr_t
 #endif
 HASHENTER (s)
 char *s;
@@ -158,63 +158,63 @@ char *s;
      * I haven't bothered.
      */
 
-for(i = 0, hash = 0; s[i] != '\0' && i < 15; i++)
-    hash += (i + 1) * s[i];
-hash %= HASHVAL;
+    for (i = 0, hash = 0; s[i] != '\0' && i < 15; i++)
+        hash += (i + 1) * s[i];
+    hash %= HASHVAL;
 
-/*
-      * search for s in the table
+    /*
+     * search for s in the table
      */
 
-for(elem = hashtab[hash]; elem != NULL; elem = elem->h_next)
-    if(strcmp(s, HASHELEM((elem->h_elem))) == 0) {    /* found it */
+    for (elem = hashtab[hash]; elem != NULL; elem = elem->h_next)
+        if (strcmp(s, HASHELEM((elem->h_elem))) == 0) {    /* found it */
 #ifdef HASHPOINT
-        return(&elem->h_elem);
+            return &elem->h_elem;
 #else
-        return(elem - hashfirstchunk);
+            return (int) (elem - hashfirstchunk);
 #endif
-    }
+        }
 
-if(hashindex >= HASHENTRIES) {
+    if (hashindex >= HASHENTRIES) {
 #ifdef HASHPOINT
-    char *calloc();
+        char *calloc();
 
-    hashindex = 0;
-    hashchunk = (hashelem *) calloc(HASHENTRIES, sizeof(hashelem));
-    if(hashchunk == NULL) {
-        gprintf(FATAL, "No mem for hash symbol table\n");
-        EXIT(1);
+        hashindex = 0;
+        hashchunk = (hashelem *) calloc(HASHENTRIES, sizeof(hashelem));
+        if (hashchunk == NULL) {
+            gprintf(FATAL, "No mem for hash symbol table\n");
+            EXIT(1);
 #ifdef COUNTER
-        COUNTER++; /* optional symbol counter */
+            COUNTER++; /* optional symbol counter */
+#endif
+        }
+#else
+        gprintf(FATAL, "No hash table space, increase HASHENTRIES\n");
+        EXIT(1);
 #endif
     }
-#else
-    gprintf(FATAL, "No hash table space, increase HASHENTRIES\n");
-    EXIT(1);
-#endif
-}
 
-/*
-      * Splice a new entry into the list and fill in the string field
+    /*
+     * Splice a new entry into the list and fill in the string field
      */
 
-elem = &hashchunk[hashindex++];
-elem->h_next = hashtab[hash];
-hashtab[hash] = elem;
+    elem = &hashchunk[hashindex++];
+    elem->h_next = hashtab[hash];
+    hashtab[hash] = elem;
 
 #ifdef HASHNOCOPY
-HASHELEM((elem->h_elem)) = s;
+    HASHELEM((elem->h_elem)) = s;
 #else
-{
-    char *strcpy();
-    HASHELEM((elem->h_elem)) = memget((strlen(s) + 1));
-    strcpy(HASHELEM((elem->h_elem)), s);
-}
+    {
+        char *strcpy();
+        HASHELEM((elem->h_elem)) = memget((strlen(s) + 1));
+        strcpy(HASHELEM((elem->h_elem)), s);
+    }
 #endif
 
 #ifdef HASHPOINT
-return(&elem->h_elem);
+    return &elem->h_elem;
 #else
-return(elem - hashfirstchunk);
+    return (int) (elem - hashfirstchunk);
 #endif
 }

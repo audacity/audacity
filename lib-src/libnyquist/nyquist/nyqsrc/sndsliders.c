@@ -14,7 +14,7 @@
 LVAL xslider_read(void)
 {
     LVAL arg = xlgafixnum();
-    int index = getfixnum(arg);
+    int index = (int) getfixnum(arg);
     xllastarg();
     if (index >= 0 && index < SLIDERS_MAX) {
         return cvflonum(slider_array[index]);
@@ -46,12 +46,12 @@ LVAL xosc_enable(void)
 }
 
 
-void slider_free();
+void slider_free(snd_susp_type a_susp);
 
 
 typedef struct slider_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
 
     int index;
 } slider_susp_node, *slider_susp_type;
@@ -86,7 +86,7 @@ void slider__fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
             if (togo == 0) break;
         }
 

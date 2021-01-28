@@ -37,8 +37,8 @@ points, remembered as sample counts are saved in variables:
     off_count -- the time at which the fall should begin
     rise_factor -- multiply by this to get exponential rise
     fall_factor -- multiply by this to get exponential fall
-    rise_time -- number of samples for a full rise
-    fall_time -- number of samples for a full fall
+    rise_samps -- number of samples for a full rise
+    fall_samps -- number of samples for a full fall
     floor -- the lowest value to output
     threshold -- compare the signal s to this value
     start_rise -- the sample count at which a rise begins
@@ -58,48 +58,52 @@ computing fall_factor:
 void compute_start_rise(gate_susp_type susp)
 {
     /* to compute when to start rise to achieve 0dB at on_count:
-    By similar triangles:
-        truncated rise time    truncated fall time
-        ------------------- == -------------------
-            full rise time         full fall time
-    when you enter ST_FALL, set start_fall = now
-    then if (on_count - start_fall) < (rise_time + fall_time)
-    then start rise at
-    on_time - rise_time * (on_count-start_fall)/(rise_time+fall_time)
+    let frt = full rise time = rise_time, art = actual rise time, 
+        fft = full fall time = fall_time, aft = actual fall time
+    If there's no time for a fft + frt, scale both the the fall time
+    and rise times proportionally by available time / (fft + frt).
+
+    When you enter ST_FALL, set start_fall = now.
+    Let avail = available time = (on_count - start_fall).
+    If there is not enough time for a full fall and full rise,
+    i.e. if avail < (fft + frt) then let
+        art = frt * avail / (fft + frt)
+    So start rise at
+        on_time - rise_time * (on_count-start_fall)/(rise_time+fall_time)
     */
-    long total = (long) (susp->rise_time + susp->fall_time);
+    int64_t total = susp->rise_samps + susp->fall_samps;
     if ((susp->on_count - susp->start_fall) < total) {
-        susp->start_rise = (long) (susp->on_count - 
-            (susp->rise_time * susp->on_count - susp->start_fall) / total);
-    } else susp->start_rise = (long) (susp->on_count - susp->rise_time);
+        susp->start_rise = susp->on_count - 
+            (susp->rise_samps * (susp->on_count - susp->start_fall)) / total;
+    } else susp->start_rise = susp->on_count - susp->rise_samps;
 }
 ")
 (STATE 
-       ("double" "rise_time" "signal->sr * risetime + 0.5")
-       ("double" "fall_time" "signal->sr * falltime + 0.5")
-       ("double" "floor" "floor; floor = log(floor);")
-       ("double" "threshold" "threshold")
-       ("long" "on_count" "0")
-       ("long" "off_count" "0")
-       ("double" "rise_factor" "exp(- floor / susp->rise_time)")
-       ("double" "fall_factor" "exp(floor / susp->fall_time)")
-       ("long" "start_fall" "0")
-       ("long" "start_rise" "0")
-       ("long" "stop_count" "0")
+       ("int64_t" "rise_samps" "(int64_t) (signal->sr * risetime + 0.5)")
+       ("int64_t" "fall_samps" "(int64_t) (signal->sr * falltime + 0.5)")
+       ("double" "floor" "floor; floor = log(floor / signal->scale)")
+       ("double" "threshold" "threshold; threshold /= signal->scale")
+       ("int64_t" "on_count" "0")
+       ("int64_t" "off_count" "0")
+       ("double" "rise_factor" "exp(- floor / susp->rise_samps)")
+       ("double" "fall_factor" "exp(floor / susp->fall_samps)")
+       ("int64_t" "start_fall" "-susp->fall_samps")
+       ("int64_t" "start_rise" "0")
+       ("int64_t" "stop_count" "0")
        ("long" "delay_len" "max(1, ROUND32(signal->sr * lookahead))")
        ("int" "state" "ST_OFF")
        ("double" "value" "susp->floor"))
 
-(CONSTANT "lookahead" "rise_time" "fall_time" "floor" 
-          "threshold" "delay_len" "end_ptr"
+(CONSTANT "lookahead" "rise_time" "rise_samps" "fall_time" "fall_samps"
+          "floor" "threshold" "delay_len" "end_ptr"
           "rise_factor" "fall_factor")
-(NOT-REGISTER delay_buf rise_factor fall_factor rise_time fall_time floor 
-              on_count start_fall start_rise)
-(LINEAR signal)
+(NOT-REGISTER delay_buf rise_factor fall_factor rise_time rise_samps
+              fall_time fall_samps floor on_count start_fall start_rise)
 (TERMINATE (MIN signal))
+(INTERNAL-SCALING signal)
 (INNER-LOOP "{
             sample_type future = signal;
-            long now = susp->susp.current + cnt + togo - n;
+            int64_t now = susp->susp.current + cnt + togo - n;
             
             switch (state) {
               /* hold at 1.0 and look for the moment to begin fall: */
@@ -108,12 +112,13 @@ void compute_start_rise(gate_susp_type susp)
                       off_count = now + delay_len;
                   } else if (now >= off_count) {
                       state = ST_FALL;
-                      stop_count = (long) (now + susp->fall_time);
+                      stop_count = now + susp->fall_samps;
                       susp->start_fall = now;
                   }
                   break;
               /* fall until stop_count while looking for next rise time */
               case ST_FALL:
+                value *= susp->fall_factor;
                 if (future >= threshold) {
                     off_count = susp->on_count = now + delay_len;
                     compute_start_rise(susp);
@@ -121,7 +126,7 @@ void compute_start_rise(gate_susp_type susp)
                 } else if (now == stop_count) {
                     state = ST_OFF;
                     value = susp->floor;
-                } else value *= susp->fall_factor;
+                }
                 break;
               /* fall until start_rise while looking for next fall time */
               case ST_FALL_UNTIL:
@@ -141,10 +146,14 @@ void compute_start_rise(gate_susp_type susp)
                 if (future >= threshold) {
                     off_count = susp->on_count = now + delay_len;
                     compute_start_rise(susp);
-                    state = ST_OFF_UNTIL;
+                    if (now >= susp->start_rise) {
+                        state = ST_RISE;
+                    } else {
+                        state = ST_OFF_UNTIL;
+                    }
                 }
                 break;
-              /* hold at floor until start_rise while looking for next fall time */
+              /* hold at floor until start_rise and look for next fall time */
               case ST_OFF_UNTIL:
                   if (future >= threshold) {
                       off_count = now + delay_len;

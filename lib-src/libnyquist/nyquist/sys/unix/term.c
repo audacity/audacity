@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void ctcinit();
+void ctcinit(void);
 
 /* This will be used for new terminal settings. */
 static struct termios current;
@@ -34,14 +34,14 @@ void term_restore(void)
 }
 
 /* Clean up termianl; called on exit. */
-void term_exit()
+void term_exit(void)
 {
     term_restore();
 }
 
 /* Will be called when contrl-Z is pressed;
  * this correctly handles the terminal. */
-void term_ctrlz()
+void term_ctrlz(int i)
 {
     signal(SIGTSTP, term_ctrlz);
     term_restore();
@@ -50,10 +50,16 @@ void term_ctrlz()
 
 /* Will be called when the application is continued
  * after having been stopped. */
-void term_cont()
+void term_cont(int i)
 {
     signal(SIGCONT, term_cont);
     tcsetattr(0, TCSANOW, &current);
+}
+
+/* callback for SIGQUIT is different type from atexit callback */
+void term_quit(int i)
+{
+    term_exit();
 }
 
 /* Needs to be called to initialize the terminal. */
@@ -67,7 +73,7 @@ void term_init(void)
     /* We _must_ clean up when we exit. */
     /* signal(SIGINT, term_exit); */
     ctcinit(); /* XLisp wants to catch ctrl C */
-    signal(SIGQUIT, term_exit);
+    signal(SIGQUIT, term_quit);
     /* Control-Z must also be handled. */
     signal(SIGTSTP, term_ctrlz);
     signal(SIGCONT, term_cont);
@@ -103,7 +109,7 @@ void term_line(void)
  *
  * if ready, return it, otherwise return -2
  */
-int term_testchar()
+int term_testchar(void)
 {
     int n;
     char c;
@@ -124,7 +130,7 @@ int term_testchar()
 
 /* term_getchar -- get a character (block if necessary) */
 /**/
-int term_getchar()
+int term_getchar(void)
 {
     char c;
     int rslt = read(0, &c, 1);

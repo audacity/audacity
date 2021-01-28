@@ -16,7 +16,7 @@ typedef struct call {
         struct {
             time_type time;     /* virtual time of this call */
             int priority;       /* an 8-bit the priority, low priority first */
-            void (*routine)();   /* who to call */
+            void (*routine)(call_args_type args);   /* who to call */
             call_args_node p; /* what to pass */
         } e;
         struct call *p; /* used to link free calls */
