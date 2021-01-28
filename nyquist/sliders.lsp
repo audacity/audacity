@@ -42,7 +42,7 @@
 ;;   
 ;;   This code takes advantage of the fact that dotimes and dolist
 ;;   return nil when they end normally, so we signal that we found
-;;   or did not find i by explictly returning. Note that RETURN
+;;   or did not find i by explicitly returning. Note that RETURN
 ;;   returns from the innermost dotimes or dolist -- they do not
 ;;   return from allocate-slider-num.
 ;;

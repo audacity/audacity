@@ -364,7 +364,7 @@ _PS_CONST(coscof_p2,  4.166664568298827E-002);
 _PS_CONST(cephes_FOPI, 1.27323954473516); // 4 / M_PI
 
 
-/* evaluation of 4 sines at onces, using only SSE1+MMX intrinsics so
+/* evaluation of 4 sines at once, using only SSE1+MMX intrinsics so
    it runs also on old athlons XPs and the pentium III of your grand
    mother.
 

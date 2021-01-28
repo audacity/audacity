@@ -135,7 +135,7 @@
     (:hann        (hann-window len))
     (:none        nil)
     (:hamming     (hamming-window len))
-    (t (print "Warning: invalid window-type paramter: ~A~%" win-type)
+    (t (print "Warning: invalid window-type parameter: ~A~%" win-type)
        (print "    Using :HAMMING instead.~%")
        (hamming-window len))))
   

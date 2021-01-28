@@ -51,7 +51,7 @@
     (:/ "/" /)
     (:% "%" rem)
     (:^ "^" expt)
-    (:= "=" sal-equal)   ; equality and assigment
+    (:= "=" sal-equal)   ; equality and assignment
     (:!= "!=" not-sal-equal)
     (:< "<" <)
     (:> ">" >)
@@ -62,9 +62,9 @@
     (:-= "-=" -=) ; assignment increment-and-store
     (:*= "*=" *=) ; assignment multiply-and-store
     (:/= "/=" /=) ; assignment multiply-and-store
-    (:&= "&=" &=) ; assigment list collecting
-    (:@= "@=" @=) ; assigment list prepending
-    (:^= "^=" ^=) ; assigment list appending
+    (:&= "&=" &=) ; assignment list collecting
+    (:@= "@=" @=) ; assignment list prepending
+    (:^= "^=" ^=) ; assignment list appending
     (:! "!" not)
     (:& "&" and)
     (:\| "|" or)
@@ -211,7 +211,7 @@
     (setf line-no (pos-to-line beg source))
     ; (display "pperror" beg end (sal-error-start x))
       
-    ;; print the error. include the specfic line of input containing
+    ;; print the error. include the specific line of input containing
     ;; the error as well as a line below it marking the error position
     ;; with an arrow: ^
     (let* ((pos (- (sal-error-start x) beg))
@@ -484,7 +484,7 @@
             (setq end (search-delim input delimit start len))
             (if (equal start end)                ; have a delimiter
                (cond ((char= char +semic+)
-                      ;; comment skips to next line and trys again...
+                      ;; comment skips to next line and try again...
                       (while (and (< start len)
                                   (char/= (char input start) #\newline))
                         (incf start))
@@ -1015,7 +1015,7 @@
 ;; with embedded operator symbols, e.g. x+y results in a warning
 ;; that this is an odd variable name. But if the symbol is declared
 ;; as a local, a parameter, a function name, or a global variable,
-;; then the warning is supressed.
+;; then the warning is suppressed.
 ;;
 (defun token-is (type &optional (suspicious-id-warn t))
   (let ((token-type
@@ -1174,7 +1174,7 @@
   ;; kargs is a flag indicating previous parameter was a keyword (all
   ;;   the following parameters must then also be keyword parameters)
   ;; returns: (<keyword> <default>) or (nil <identifier>)
-  ;;   where <keyword> is a keyward parameter name (nil if not a keyword parm)
+  ;;   where <keyword> is a keyword parameter name (nil if not a keyword parm)
   ;;         <default> is an expression for the default value
   ;;         <identifier> is the parameter name (if not a keyword parm)
   (let (key default-value id)
@@ -1450,7 +1450,7 @@
             ((eq op '^=) (setq expr `(nconc ,vref (append ,expr nil))))
             ((eq op '<=) (setq expr `(min ,vref ,expr)))
             ((eq op '>=) (setq expr `(max ,vref ,expr)))
-            (t (errexit (format nil "unknown assigment operator ~A" op))))
+            (t (errexit (format nil "unknown assignment operator ~A" op))))
       (push (list 'setf vref expr) rslt))
     (setf rslt (add-line-info-to-stmts rslt set-token))
     (if (> (length rslt) 1)

@@ -8,7 +8,7 @@
 
 
 (defun char-remove (ch str)
-  ;;; Remove all occurances of character from string.
+  ;;; Remove all occurrences of character from string.
   (do ((out "")
        (i 0 (1+ i)))
       ((= i (length str)) out)

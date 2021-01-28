@@ -2346,7 +2346,7 @@ loop
 
 ;; SELECT-IMPLEMENTATION-1-2 -- 1 sound arg, 2 selectors
 ;;
-;; choose implemenation according to args 2 and 3. In this implementation,
+;; choose implementation according to args 2 and 3. In this implementation,
 ;; since we have two arguments to test for types, we return from prog
 ;; if we find good types. That way, we can fall through the decision tree
 ;; and all paths lead to one call to ERROR if good types are not found.
