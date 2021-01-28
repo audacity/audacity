@@ -47,7 +47,6 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
-#include "../FFmpeg.h"
 #include "FileNames.h"
 #include "../ShuttleGui.h"
 #include "Project.h"
@@ -814,15 +813,19 @@ bool Importer::Import( AudacityProject &project,
       }
 
       // we were not able to recognize the file type
+      TranslatableString extraMessages;
+      for(const auto &importPlugin : sImportPluginList()) {
+         auto message = importPlugin->FailureHint();
+         if (!message.empty()) {
+            extraMessages += message;
+            extraMessages += Verbatim("\n");
+         }
+      }
+
       errorMessage = XO(
 /* i18n-hint: %s will be the filename */
 "Audacity did not recognize the type of the file '%s'.\n\n%sFor uncompressed files, also try File > Import > Raw Data.")
-         .Format( fName,
-#if defined(USE_FFMPEG)
-               !FFmpegFunctions::Load()
-                  ? XO("Try installing FFmpeg.\n\n") :
-#endif
-                  Verbatim("") );
+         .Format( fName, extraMessages );
    }
    else
    {
