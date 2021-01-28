@@ -35,8 +35,8 @@ extern "C"
    /* should return return 0 for success, -1 for error */
    typedef int (*nyx_audio_callback)(float *buffer,
                                      int channel,
-                                     long start, long len,
-                                     long totlen,
+                                     int64_t start, int64_t len,
+                                     int64_t totlen,
                                      void *userdata);
 
    typedef void (*nyx_output_callback)(int c,
@@ -56,12 +56,12 @@ extern "C"
    void        nyx_break();
    void        nyx_continue();
 
-   void        nyx_set_audio_params(double rate, long len);
+   void        nyx_set_audio_params(double rate, int64_t len);
 
    void        nyx_set_input_audio(nyx_audio_callback callback,
                                    void *userdata,
                                    int num_channels,
-                                   long len, double rate);
+                                   int64_t len, double rate);
 
    char       *nyx_get_audio_name();
    void        nyx_set_audio_name(const char *name);

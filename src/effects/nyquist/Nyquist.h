@@ -145,18 +145,18 @@ private:
    FileNames::FileTypes ParseFileTypes(const wxString & text);
 
    static int StaticGetCallback(float *buffer, int channel,
-                                long start, long len, long totlen,
+                                int64_t start, int64_t len, int64_t totlen,
                                 void *userdata);
    static int StaticPutCallback(float *buffer, int channel,
-                                long start, long len, long totlen,
+                                int64_t start, int64_t len, int64_t totlen,
                                 void *userdata);
    static void StaticOutputCallback(int c, void *userdata);
    static void StaticOSCallback(void *userdata);
 
    int GetCallback(float *buffer, int channel,
-                   long start, long len, long totlen);
+                   int64_t start, int64_t len, int64_t totlen);
    int PutCallback(float *buffer, int channel,
-                   long start, long len, long totlen);
+                   int64_t start, int64_t len, int64_t totlen);
    void OutputCallback(int c);
    void OSCallback();
 

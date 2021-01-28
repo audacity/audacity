@@ -2400,7 +2400,7 @@ bool NyquistEffect::ParseCommand(const wxString & cmd)
 }
 
 int NyquistEffect::StaticGetCallback(float *buffer, int channel,
-                                     long start, long len, long totlen,
+                                     int64_t start, int64_t len, int64_t totlen,
                                      void *userdata)
 {
    NyquistEffect *This = (NyquistEffect *)userdata;
@@ -2408,7 +2408,7 @@ int NyquistEffect::StaticGetCallback(float *buffer, int channel,
 }
 
 int NyquistEffect::GetCallback(float *buffer, int ch,
-                               long start, long len, long WXUNUSED(totlen))
+                               int64_t start, int64_t len, int64_t WXUNUSED(totlen))
 {
    if (mCurBuffer[ch].ptr()) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
@@ -2467,7 +2467,7 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
 }
 
 int NyquistEffect::StaticPutCallback(float *buffer, int channel,
-                                     long start, long len, long totlen,
+                                     int64_t start, int64_t len, int64_t totlen,
                                      void *userdata)
 {
    NyquistEffect *This = (NyquistEffect *)userdata;
@@ -2475,7 +2475,7 @@ int NyquistEffect::StaticPutCallback(float *buffer, int channel,
 }
 
 int NyquistEffect::PutCallback(float *buffer, int channel,
-                               long start, long len, long totlen)
+                               int64_t start, int64_t len, int64_t totlen)
 {
    // Don't let C++ exceptions propagate through the Nyquist library
    return GuardedCall<int>( [&] {
