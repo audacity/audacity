@@ -374,13 +374,13 @@ size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
 
    // Compute coefficients of the low shelf biquand IIR filter
    if (data.bass != oldBass)
-      Coefficents(data.hzBass, data.slope, mBass, data.samplerate, kBass,
+      Coefficients(data.hzBass, data.slope, mBass, data.samplerate, kBass,
                   data.a0Bass, data.a1Bass, data.a2Bass,
                   data.b0Bass, data.b1Bass, data.b2Bass);
 
    // Compute coefficients of the high shelf biquand IIR filter
    if (data.treble != oldTreble)
-      Coefficents(data.hzTreble, data.slope, mTreble, data.samplerate, kTreble,
+      Coefficients(data.hzTreble, data.slope, mTreble, data.samplerate, kTreble,
                   data.a0Treble, data.a1Treble, data.a2Treble,
                   data.b0Treble, data.b1Treble, data.b2Treble);
 
@@ -396,7 +396,7 @@ size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
 // Effect implementation
 
 
-void EffectBassTreble::Coefficents(double hz, double slope, double gain, double samplerate, int type,
+void EffectBassTreble::Coefficients(double hz, double slope, double gain, double samplerate, int type,
                                    double& a0, double& a1, double& a2,
                                    double& b0, double& b1, double& b2)
 {
