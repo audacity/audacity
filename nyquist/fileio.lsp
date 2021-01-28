@@ -34,56 +34,103 @@
 
 ;; s-save -- saves a file
 (setf *in-s-save* nil)
-(setf NY:ALL 1000000000)	; 1GIG constant for maxlen
-(defmacro s-save (expression &optional (maxlen NY:ALL) filename 
-                  &key (format '*default-sf-format*)
-                  (mode '*default-sf-mode*) (bits '*default-sf-bits*)
-                  (endian NIL) ; nil, :big, or :little -- specifies file format
-                  (play nil))
-  `(let ((ny:fname ,filename)
-         (ny:maxlen ,maxlen)
-         (ny:endian ,endian)
-         (ny:swap 0) 
-         max-sample)     ; return value
-     (cond (*in-s-save*
-            (error "Recursive call to s-save (maybe play?) detected!")))
-     (progv '(*in-s-save*) '(t)
-       ; allow caller to omit maxlen, in which case the filename will
-       ; be a string in the maxlen parameter position and filename will be null
-       (cond ((null ny:fname)
-              (cond ((stringp ny:maxlen)
-                     (setf ny:fname ny:maxlen)
-                     (setf ny:maxlen NY:ALL))
-                    (t
-                     (setf ny:fname *default-sound-file*)))))
-     
-       (cond ((equal ny:fname "")
-              (cond ((not ,play)
-                     (format t "s-save: no file to write! play option is off!\n"))))
-             (t
-              (setf ny:fname (soundfilename ny:fname))
-              (format t "Saving sound file to ~A~%" ny:fname)))
-       (cond ((eq ny:endian :big)
-              (setf ny:swap (if (bigendianp) 0 1)))
-             ((eq ny:endian :little)
-              (setf ny:swap (if (bigendianp) 1 0))))
-       ; print device info the first time sound is played
-       (cond (,play
-              (cond ((not (boundp '*snd-list-devices*))
-                     (setf *snd-list-devices* t))))) ; one-time show
-       (setf max-sample
-             (snd-save ',expression ny:maxlen ny:fname ,format 
-                       ,mode ,bits ny:swap ,play))
-       ; more information if *snd-list-devices* was unbound:
-       (cond (,play
-              (cond (*snd-list-devices*
-		     (format t "\nSet *snd-list-devices* = t\n~A\n~A\n~A\n~A\n\n"
-                  "  and call play to see device list again."
-                  "Set *snd-device* to a fixnum to select an output device"
-                  "  or set *snd-device* to a substring of a device name"
-                  "  to select the first device containing the substring.")))
-	      (setf *snd-list-devices* nil))) ; normally nil
-       max-sample)))
+(setf NY:ALL 576460752303423488)  ; constant for maxlen == 1 << 59
+;; note that at 16-bytes-per-frame, this could generate a file byte offset
+;; that overflows an int64_t. Is this big enough? Time will tell.
+;; What if Nyquist is compiled for 32-bit machines and FIXNUM is 32-bits?
+;; if we don't have 64-bit ints, use 0x7f000000, which is about 10M less
+;; than the maximum signed 32-bit int, giving a lot of "headroom" but still
+;; over 2 billion, or about 13.4 hours at 44.1KHz
+(if (/= 10000000000 (* 100000 100000))
+    (setf NY:ALL 2130706432))
+
+
+;; S-SAVE combines optional and keyword parameters, but this is a really bad
+;; idea because keywords and values are used as optional parameters until
+;; all the optional parameters are used up. Thus if you leave out filename
+;; and progress, but you provide :endian T, then filename becomes :endian and
+;; progress becomes T.  AARRGG!!
+;;     I should have required filename and made everything else keyword, but
+;; rather than breaking compatibility, I'm using &rest to grab everything,
+;; parse the parameters for keywords (giving them priority over optional
+;; parameters, and filling in optional parameters as they are encountered.
+;;
+(defmacro s-save (expression &rest parameters)
+  (prog (parm (format *default-sf-format*)
+              (mode *default-sf-mode*)
+              (bits *default-sf-bits*)
+              ;; endian can be nil, :big, or :little
+              endian play optionals maxlen filename progress swap)
+    loop ;; until all parameters are used
+    (cond ((setf parm (car parameters))
+           (setf parameters (cdr parameters))
+           (case parm
+             (:format (setf format (car parameters)
+                            parameters (cdr parameters)))
+             (:mode   (setf mode (car parameters)
+                            parameters (cdr parameters)))
+             (:bits   (setf bits (car parameters)
+                            parameters (cdr parameters)))
+             (:endian (setf endian (car parameters)
+                            parameters (cdr parameters)))
+             (:play   (setf play (car parameters)
+                            parameters (cdr parameters)))
+             (t (setf optionals (cons parm optionals))))
+           (go loop)))
+    (cond ((> (length optionals) 3)
+           (error "S-SAVE got extra parameter(s)")))
+    (cond ((< (length optionals) 1) ;; need maxlen
+           (setf optionals (list ny:all))))
+    (cond ((< (length optionals) 2) ;; need filename
+           (setf optionals (cons nil optionals))))
+    (cond ((< (length optionals) 3) ;; need progress
+           (setf optionals (cons 0 optionals))))
+    (setf progress (first optionals) ;; note that optionals are in reverse order
+          filename (second optionals)
+          maxlen (third optionals))
+    (cond (*in-s-save*
+           (error "Recursive call to S-SAVE (or maybe PLAY) detected!")))
+
+    ;; finally, we have all the parameters and we can call snd-save
+    (return
+     `(let ((ny:fname ,filename) (ny:swap 0) (ny:endian ,endian)
+            (ny:play ,play)
+            ny:max-sample)     ; return value
+        (progv '(*in-s-save*) '(t)
+          (if (null ny:fname)
+              (setf ny:fname *default-sound-file*))
+
+          (cond ((equal ny:fname "")
+                 (cond ((not ,play)
+                        (format t "S-SAVE: no file to write! ~
+                                  play option is off!\n"))))
+                (t
+                 (setf ny:fname (soundfilename ny:fname))
+                 (format t "Saving sound file to ~A~%" ny:fname)))
+
+          (cond ((eq ny:endian :big)
+                 (setf ny:swap (if (bigendianp) 0 1)))
+                ((eq ny:endian :little)
+                 (setf ny:swap (if (bigendianp) 1 0))))
+
+          ; print device info the first time sound is played
+          (cond (ny:play
+                 (cond ((not (boundp '*snd-list-devices*))
+                        (setf *snd-list-devices* t))))) ; one-time show
+          (setf max-sample
+                (snd-save ',expression ,maxlen ny:fname ,format 
+                       ,mode ,bits ny:swap ny:play ,progress))
+          ; more information if *snd-list-devices* was unbound:
+          (cond (ny:play
+                 (cond (*snd-list-devices*
+                        (format t "\nSet *snd-lfist-devices* = t \n  ~
+                  and call play to see device list again.\n~
+                  Set *snd-device* to a fixnum to select an output device\n  ~
+                  or set *snd-device* to a substring of a device name\n  ~
+                  to select the first device containing the substring.\n")))
+                 (setf *snd-list-devices* nil))) ; normally nil
+          max-sample)))))
+
 
 ;; MULTICHANNEL-MAX -- find peak over all channels
 ;;
@@ -226,7 +273,7 @@
 
 ;; s-read -- reads a file
 (defun s-read (filename &key (time-offset 0) (srate *sound-srate*)
-        (dur 10000.0) (nchans 1) (format *default-sf-format*)
+        (dur 10e20) (nchans 1) (format *default-sf-format*)
         (mode *default-sf-mode*) (bits *default-sf-bits*) (endian NIL))
   (let ((swap 0))
     (cond ((eq endian :big)
@@ -319,7 +366,6 @@
 (defun snd-read-srate (rslt) (cadr (cddddr rslt)))
 (defun snd-read-dur (rslt) (caddr (cddddr rslt)))
 (defun snd-read-flags (rslt) (cadddr (cddddr rslt)))
-(defun snd-read-byte-offset (rslt) (cadr (cddddr (cddddr rslt))))
 
 ;; round is tricky because truncate rounds toward zero as does C
 ;; in other words, rounding is down for positive numbers and up
@@ -339,7 +385,8 @@
 (defun coterm (snd1 snd2)
   (multichan-expand #'snd-coterm snd1 snd2))
 
-(defmacro s-add-to (expr maxlen filename &optional (time-offset 0.0))
+(defmacro s-add-to (expr maxlen filename
+                    &optional (time-offset 0.0) (progress 0))
   `(let ((ny:fname (soundfilename ,filename))
          ny:peak ny:input (ny:offset ,time-offset))
     (format t "Adding sound to ~A at offset ~A~%" 
@@ -350,19 +397,18 @@
                                           :time-offset ny:offset)
                                          ny:addend)
                                     ny:addend))
-                   ,maxlen ny:fname ny:offset SND-HEAD-NONE 0 0 0))
+                   ,maxlen ny:fname ny:offset ,progress))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 
 
-(defmacro s-overwrite (expr maxlen filename &optional (time-offset 0.0))
+(defmacro s-overwrite (expr maxlen filename
+                       &optional (time-offset 0.0) (progress 0))
   `(let ((ny:fname (soundfilename ,filename))
          (ny:peak 0.0)
          ny:input ny:rslt (ny:offset ,time-offset))
     (format t "Overwriting ~A at offset ~A~%" ny:fname ny:offset)
-    (setf ny:offset (snd-read-byte-offset ny:rslt))
-    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ny:offset
-                   SND-HEAD-NONE 0 0 0))
+    (setf ny:peak (snd-overwrite `,expr ,maxlen ny:fname ny:offset ,progress))
     (format t "Duration written: ~A~%" (car *rslt*))
     ny:peak))
 

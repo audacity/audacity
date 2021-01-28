@@ -11,7 +11,8 @@
 (load "seqfnint.lsp" :verbose NIL)
 
 (load "velocity.lsp" :verbose NIL) ; linear-to-vel etc
-(load "system.lsp" :verbose NIL)
+(if (not (load "system.lsp" :verbose NIL))
+    (error "Nyquist could not load system.lsp - check your installation"))
 ;; now *file-separator* is defined, used by nyquist.lsp...
 (load "nyquist.lsp" :verbose NIL)
 
@@ -26,8 +27,8 @@
 
 
 (format t "~%Nyquist -- A Language for Sound Synthesis and Composition~%")
-(format t "    Copyright (c) 1991,1992,1995,2007-2018 by Roger B. Dannenberg~%")
-(format t "    Version 3.15~%~%")
+(format t "    Copyright (c) 1991,1992,1995,2007-2020 by Roger B. Dannenberg~%")
+(format t "    Version 3.16~%~%")
 (load "extensions.lsp" :verbose NIL)
 
 ;(setf *gc-flag* t)

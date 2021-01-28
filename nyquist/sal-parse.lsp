@@ -102,7 +102,7 @@
                          (:WHEN "when") (:UNLESS "unless") (:SET "set")
                          (:= "=") (:+= "+=") (:*= "*=") (:&= "&=") (:@= "@=")
                          (:^= "^=") (:<= "<=") (:>= ">=") (:PRINT "print")
-                         (:LOOP "loop")
+                         (:LOOP "loop") (:SEQV "seqv") (:SEQREPV "seqrepv")
                          (:RUN "run") (:REPEAT "repeat") (:FOR "for")
                          (:FROM "from") (:IN "in") (:BELOW "below") (:TO "to")
                          (:ABOVE "above") (:DOWNTO "downto") (:BY "by")
@@ -110,8 +110,10 @@
                          (:FINALLY "finally") (:RETURN "return")
                          (:WAIT "wait") (:BEGIN "begin") (:WITH "with")
                          (:END "end") (:VARIABLE "variable")
-                         (:FUNCTION "function") (:PROCESS "process")
-                         (:CHDIR "chdir") (:DEFINE "define") (:LOAD "load")
+                         (:FUNCTION "function")
+                         ; not in nyquist: (:PROCESS "process")
+                         (:CHDIR "chdir")
+                         (:DEFINE "define") (:LOAD "load")
                          (:PLAY "play") (:PLOT "plot")
                          (:EXEC "exec") (:exit "exit") (:DISPLAY "display")
                          (:~ "~") (:~~ "~~") (:@ ":@") (:@@ ":@@")))
@@ -772,7 +774,7 @@
                 ;; class token has <> removed!
                 (if tok (progn (set-token-type tok ':class)
                                tok)
-                    (errexit "Not a class identifer" pos)))
+                    (errexit "Not a class identifier" pos)))
               (errexit "Not a class identifer" pos)))
         nil)))
 
@@ -1114,7 +1116,7 @@
 ;;   SAL returns nil from begin-end statement lists
 ;;
 (defun returnize (stmt)
-  (let (rev)
+  (let (rev expr)
     (setf rev (reverse stmt))
     (setf expr (car rev)) ; last expression in list
     (cond ((and (consp expr) (eq (car expr) 'sal-return-from))
@@ -1672,7 +1674,7 @@
 ;; to do term-1 followed by indexing operations
 ;;
 (defun parse-term-1 ()
-  (let (sexpr id)
+  (let (sexpr id vars loopvar n)
     (cond ((token-is '(:- :!))
            (list (token-lisp (parse-token)) (parse-term)))
           ((token-is :lp)
@@ -1701,8 +1703,48 @@
                       (errexit "right paren not found"))
                   sexpr)
                  (t id)))
+          ((token-is '(:seqv :seqrepv))
+           (setf id (intern (string-upcase (token-string (parse-token)))))
+           (display "parse-term-1" id)
+           (setf vars (parse-idlist))
+           (if (not (token-is :lp))
+               (errexit "expected list of behaviors"))
+           (parse-token)
+           (setf sexpr (parse-pargs nil))
+           ;; if this is seqrepv, move the first 2 parameters (loop var and
+           ;; count expression) in front of the var list
+           (cond ((eq id 'SEQREPV)
+                  (setf loopvar (pop sexpr))
+                  (if (not (and loopvar (symbolp loopvar)))
+                      (errexit "expected identifier as first \"parameter\""))
+                  (setf n (pop sexpr))
+                  (if (null n)
+                      (errexit "expected repetition count as second parameter"))
+                  (setf vars (cons id (cons n vars)))))
+           (setf sexpr (cons id (cons vars sexpr)))
+           (if (token-is :rp)
+               (parse-token)
+               (errexit "right paren not found"))
+           sexpr)
           (t
            (errexit "expression not found")))))
+
+
+(defun parse-idlist ()
+  ; similar to parse-parms, but simpler because no keywords and default vals
+  (let (parms parm kargs expecting)
+    (if (token-is :lp) (parse-token) ;; eat the left paren
+        (errexit "expected left parenthesis"))
+    (setf expecting (not (token-is :rp)))
+    (while expecting
+      (if (token-is :id)
+          (push (token-lisp (parse-token)) parms)
+          (errexit "expected variable name"))
+      (if (token-is :co) (parse-token)
+          (setf expecting nil)))
+    (if (token-is :rp) (parse-token)
+        (errexit "expected right parenthesis"))
+    (reverse parms)))
 
 
 (defun parse-term ()
@@ -1752,7 +1794,7 @@
        (loop ; look for one or more [keyword] sexpr
          ; optional keyword test
          (setf keyword nil)
-         ;(display "pargs" (car *sal-tokens*))
+         ; (display "pargs" (car *sal-tokens*))
          (if (token-is :key)
              (setf keyword (token-lisp (parse-token))))
          ; (display "parse-pargs" keyword)

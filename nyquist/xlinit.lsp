@@ -51,7 +51,7 @@
 
 (load "profile.lsp" :verbose NIL)
 
-(setq *breakenable* t)
+; (setf *breakenable* t) -- good idea, but set it in init.lsp, so user can decide
 (setq *tracenable* nil)
 
 (defmacro defclass (name super locals class-vars)
