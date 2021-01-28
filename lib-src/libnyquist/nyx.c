@@ -60,6 +60,7 @@ extern LVAL fnodes;
 /* nyquist externs */
 extern LVAL a_sound;
 extern snd_list_type zero_snd_list;
+extern FILE *tfp;  /* transcript file pointer */
 
 /* globals */
 LOCAL nyx_os_callback     nyx_os_cb = NULL;
@@ -1292,6 +1293,9 @@ void ostputc(int ch)
 
    if (nyx_output_cb) {
       nyx_output_cb(ch, nyx_output_ud);
+      if (tfp) {
+         putc(ch, tfp);
+      }
    }
    else {
       putchar((char) ch);
