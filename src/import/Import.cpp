@@ -477,6 +477,14 @@ bool Importer::Import( AudacityProject &project,
    }
 #endif
 
+   // Bug #2647: Peter has a Word 2000 .doc file that is recognized and imported by FFmpeg.
+   if (wxFileName(fName).GetExt() == wxT("doc")) {
+      errorMessage =
+         XO("\"%s\" \nis a not an audio file. \nAudacity cannot open this type of file.")
+         .Format( fName );
+      return false;
+   }
+
    using ImportPluginPtrs = std::vector< ImportPlugin* >;
 
    // This list is used to call plugins in correct order
