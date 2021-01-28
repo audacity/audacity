@@ -2269,6 +2269,13 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
 
 void PluginManager::Save()
 {
+   if (!wxFileName(FileNames::PluginRegistry()).IsFileWritable()) {
+      AudacityMessageBox(
+         XO("The plugin registry file is not writable:\n\n%s\n\nSettings were not saved.")
+            .Format(FileNames::PluginRegistry()));
+      return;
+   }
+
    // Create/Open the registry
    wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
 
