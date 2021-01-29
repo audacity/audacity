@@ -487,8 +487,7 @@ bool Exporter::Process(unsigned numChannels,
    mActualName = mFilename;
 
    int i = -1;
-   for (const auto &pPlugin : mPlugins)
-   {
+   for (const auto &pPlugin : mPlugins) {
       ++i;
       for (int j = 0; j < pPlugin->GetFormatCount(); j++)
       {
@@ -496,26 +495,7 @@ bool Exporter::Process(unsigned numChannels,
          {
             mFormat = i;
             mSubFormat = j;
-
-            // Gather track information
-            if (!ExamineTracks())
-            {
-               return false;
-            }
-
-            // Check for down mixing
-            if (!CheckMix(false))
-            {
-               return false;
-            }
-
-            // Ensure filename doesn't interfere with project files.
-            if (!CheckFilename())
-            {
-               return false;
-            }
-
-            return ExportTracks();
+            return CheckFilename() && ExportTracks();
          }
       }
    }
