@@ -18,11 +18,11 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 ;i18n-hint: "Browse..." is text on a button that launches a file browser.
 $control files (_ "Select file(s) to install") file (_ "Browse...") "~/Desktop/" (((_ "Plug-in") (ny NY))
-										  ((_ "Lisp file") (lsp LSP))
-										  ((_ "HTML file") (htm HTM html HTML))
-										  ((_ "Text file") (txt TXT))
-										  ((_ "All supported") (ny NY lsp LSP htm HTM html HTML txt TXT))
-										  ((_ "All files") (""))) "open,exists,multiple"
+                      ((_ "Lisp file") (lsp LSP))
+                      ((_ "HTML file") (htm HTM html HTML))
+                      ((_ "Text file") (txt TXT))
+                      ((_ "All supported") (ny NY lsp LSP htm HTM html HTML txt TXT))
+                      ((_ "All files") (""))) "open,exists,multiple"
 $control overwrite (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
 
 

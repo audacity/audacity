@@ -13,9 +13,9 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 $control number (_ "Limit output to first") int-text (_ "samples") 100 1 1000000
 $control units (_ "Measurement scale") choice ((_ "dB") (_ "Linear")) 0
 $control filename (_ "Export data to") file (_ "Select a file") "*default*/sample-data.txt" (((_ "Text file") (txt TXT))
-											     ((_ "CSV files") (csv CSV))
-											     ((_ "HTML files") (html HTML htm HTM))
-											     ((_ "All files") (""))) "save,overwrite"
+                           ((_ "CSV files") (csv CSV))
+                           ((_ "HTML files") (html HTML htm HTM))
+                           ((_ "All files") (""))) "save,overwrite"
 $control fileformat (_ "Index (text files only)") choice ((_ "None")
                                                           ("Count" (_ "Sample Count"))
                                                           ("Time" (_ "Time Indexed")))

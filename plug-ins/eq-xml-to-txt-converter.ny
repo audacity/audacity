@@ -21,7 +21,7 @@ $control fxname (_ "Select target EQ effect") choice (("Graphic" (_ "Graphic EQ"
                                                       ("FilterCurve" (_ "Filter Curve EQ"))) 0
 
 $control infile (_ "Equalization XML file") file "" "*default*/EQCurves.xml" (((_ "XML file") (xml XML))
-									      ((_ "All files") ("")))  "open,exists"
+                        ((_ "All files") ("")))  "open,exists"
 
 $control overwrite (_ "If output text file exists") choice (("Append" (_ "Append number"))
                                                             ("Overwrite" (_ "Overwrite"))

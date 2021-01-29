@@ -39,7 +39,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
     (cond
       ((not (or f0 f1)) ; This should never happen for a 'spectral' effect.
         (throw 'error-message
-	  (format nil (_ "~aPlease select frequencies.") p-err)))
+            (format nil (_ "~aPlease select frequencies.") p-err)))
       ((and f0 f1 (= f0 f1))
         (throw 'error-message
           (format nil (_ "~aBandwidth is zero (the upper and lower~%~
