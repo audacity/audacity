@@ -20,6 +20,7 @@ namespace SelectUtilities {
 void DoSelectTimeAndTracks(
    AudacityProject &project, bool bAllTime, bool bAllTracks);
 void SelectAllIfNone( AudacityProject &project );
+bool SelectAllIfNoneAndAllowed( AudacityProject &project );
 void SelectNone( AudacityProject &project );
 void DoListSelection(
    AudacityProject &project, Track *t,

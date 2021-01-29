@@ -549,11 +549,19 @@ bool MacroCommands::ApplyEffectCommand(
 
    AudacityProject *project = &mProject;
 
-   // FIXME: for later versions may want to not select-all in batch mode.
-   // IF nothing selected, THEN select everything
+   // IF nothing selected, THEN select everything depending
+   // on preferences setting.
    // (most effects require that you have something selected).
    if( plug->GetPluginType() != PluginTypeAudacityCommand )
-      SelectUtilities::SelectAllIfNone( *project );
+   {
+      if( !SelectUtilities::SelectAllIfNoneAndAllowed( *project ) )
+      {
+         AudacityMessageBox(
+            // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+            XO("\"%s\" requires one or more tracks to be selected.").Format(friendlyCommand));
+         return false;
+      }
+   }
 
    bool res = false;
 

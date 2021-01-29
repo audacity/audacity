@@ -90,6 +90,24 @@ void SelectAllIfNone( AudacityProject &project )
       DoSelectAllAudio( project );
 }
 
+// Select the full time range, if no time range is selected and
+// selecting is allowed. Returns "false" selecting not allowed.
+bool SelectAllIfNoneAndAllowed( AudacityProject &project )
+{
+   auto allowed = gPrefs->ReadBool(wxT("/GUI/SelectAllOnNone"), false);
+   auto &viewInfo = ViewInfo::Get( project );
+   auto flags = MenuManager::Get( project ).GetUpdateFlags();
+
+   if((flags & TracksSelectedFlag()).none() ||
+      viewInfo.selectedRegion.isPoint()) {
+      if (!allowed) {
+         return false;
+      }
+      DoSelectAllAudio( project );
+   }
+   return true;
+}
+
 void DoListSelection
 (AudacityProject &project, Track *t, bool shift, bool ctrl, bool modifyState)
 {
