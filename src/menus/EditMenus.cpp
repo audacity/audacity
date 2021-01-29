@@ -11,7 +11,6 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../TimeTrack.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../UndoManager.h"
@@ -76,8 +75,6 @@ bool DoPasteText(AudacityProject &project)
 bool DoPasteNothingSelected(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -94,44 +91,18 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
       Track* pFirstNewTrack = NULL;
       for (auto pClip : clipTrackRange) {
-         Track::Holder uNewTrack;
-         Track *pNewTrack;
-         pClip->TypeSwitch(
-            [&](const WaveTrack *wc) {
-               uNewTrack = wc->EmptyCopy( pSampleBlockFactory );
-               pNewTrack = uNewTrack.get();
-            },
-#ifdef USE_MIDI
-            [&](const NoteTrack *) {
-               uNewTrack = std::make_shared<NoteTrack>(),
-               pNewTrack = uNewTrack.get();
-            },
-#endif
-            [&](const LabelTrack *) {
-               uNewTrack = std::make_shared<LabelTrack>(),
-               pNewTrack = uNewTrack.get();
-            },
-            [&](const TimeTrack *) {
-               // Maintain uniqueness of the time track!
-               pNewTrack = *tracks.Any<TimeTrack>().begin();
-               if (!pNewTrack)
-                  uNewTrack = std::make_shared<TimeTrack>( &viewInfo ),
-                  pNewTrack = uNewTrack.get();
-            }
-         );
-
+         auto pNewTrack = pClip->PasteInto( project );
+         bool newTrack = (pNewTrack.use_count() == 1);
          wxASSERT(pClip);
 
-         pNewTrack->Paste(0.0, pClip);
-
          if (!pFirstNewTrack)
-            pFirstNewTrack = pNewTrack;
+            pFirstNewTrack = pNewTrack.get();
 
          pNewTrack->SetSelected(true);
-         if (uNewTrack)
-            FinishCopy(pClip, uNewTrack, tracks);
+         if (newTrack)
+            FinishCopy(pClip, pNewTrack, tracks);
          else
-            Track::FinishCopy(pClip, pNewTrack);
+            Track::FinishCopy(pClip, pNewTrack.get());
       }
 
       // Select some pasted samples, which is probably impossible to get right

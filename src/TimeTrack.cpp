@@ -136,6 +136,18 @@ bool TimeTrack::SupportsBasicEditing() const
    return false;
 }
 
+Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
+{
+   // Maintain uniqueness of the time track!
+   std::shared_ptr<TimeTrack> pNewTrack;
+   if( auto pTrack = *TrackList::Get( project ).Any<TimeTrack>().begin() )
+      pNewTrack = pTrack->SharedPointer<TimeTrack>();
+   else
+      pNewTrack = std::make_shared<TimeTrack>( &ViewInfo::Get( project ) );
+   pNewTrack->Paste(0.0, this);
+   return pNewTrack;
+}
+
 Track::Holder TimeTrack::Cut( double t0, double t1 )
 {
    auto result = Copy( t0, t1, false );

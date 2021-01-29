@@ -537,6 +537,8 @@ private:
       std::shared_ptr<WaveClip> pClip;
    };
 
+   Track::Holder PasteInto( AudacityProject & ) const override;
+
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;
 
