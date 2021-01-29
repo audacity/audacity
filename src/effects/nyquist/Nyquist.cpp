@@ -1282,16 +1282,7 @@ bool NyquistEffect::ProcessOne()
       nyx_set_audio_params(mCurTrack[0]->GetRate(), 0);
    }
    else {
-      // UNSAFE_SAMPLE_COUNT_TRUNCATION
-      // Danger!  Truncation of long long to long!
-      // Don't say we didn't warn you!
-
-      // Note mCurLen was elsewhere limited to mMaxLen, which is normally
-      // the greatest long value, and yet even mMaxLen may be experimentally
-      // increased with a nyquist comment directive.
-      // See the parsing of "maxlen"
-
-      auto curLen = long(mCurLen.as_long_long());
+      auto curLen = mCurLen.as_long_long();
       nyx_set_audio_params(mCurTrack[0]->GetRate(), curLen);
 
       nyx_set_input_audio(StaticGetCallback, (void *)this,
