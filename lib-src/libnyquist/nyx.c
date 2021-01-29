@@ -863,7 +863,10 @@ nyx_rval nyx_eval_expression(const char *expr_string)
       expr = NULL;
 
       // Simulate the prompt
-      stdputstr("> ");
+      if (tfp) {
+         ostputc('>');
+         ostputc(' ');
+      }
 
       // Read an expression
       if (!xlread(getvalue(s_stdin), &expr, FALSE)) {
@@ -871,7 +874,9 @@ nyx_rval nyx_eval_expression(const char *expr_string)
       }
 
       // Simulate the prompt
-      ostputc('\n');
+      if (tfp) {
+         ostputc('\n');
+      }
 
       #if 0
       /* save the input expression (so the user can refer to it
@@ -883,7 +888,9 @@ nyx_rval nyx_eval_expression(const char *expr_string)
       nyx_result = xleval(expr);
 
       // Print it
-      stdprint(nyx_result);
+      if (tfp) {
+         stdprint(nyx_result);
+      }
    }
 
    // This will unwind the xlisp context and restore internals to a point just
@@ -1213,14 +1220,18 @@ int ostgetc()
 {
    if (nyx_expr_pos < nyx_expr_len) {
       fflush(stdout);
-      ostputc(nyx_expr_string[nyx_expr_pos]);
+      if (tfp && nyx_expr_string[nyx_expr_pos] != '\n') {
+         ostputc(nyx_expr_string[nyx_expr_pos]);
+      }
       return (nyx_expr_string[nyx_expr_pos++]);
    }
    else if (nyx_expr_pos == nyx_expr_len) {
       /* Add whitespace at the end so that the parser
          knows that this is the end of the expression */
       nyx_expr_pos++;
-      ostputc('\n');
+      if (tfp) {
+         ostputc('\n');
+      }
       return '\n';
    }
 
