@@ -933,6 +933,7 @@ wxAccStatus GridAx::GetLocation(wxRect & rect, int elementId)
 
    if (GetRowCol(elementId, row, col)) {
       rect = mGrid->CellToRect(row, col);
+      rect.SetPosition(mGrid->CalcScrolledPosition(rect.GetPosition()));
       rect.SetPosition(mGrid->GetGridWindow()->ClientToScreen(rect.GetPosition()));
    }
    else {
