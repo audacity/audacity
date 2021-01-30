@@ -69,7 +69,7 @@ public:
    SBSMSEffectInterface(Resampler *resampler,
                         Slide *rateSlide, Slide *pitchSlide,
                         bool bReferenceInput,
-                        long samples, long preSamples,
+                        const SampleCountType samples, long preSamples,
                         SBSMSQuality *quality)
       : SBSMSInterfaceSliding(rateSlide,pitchSlide,bReferenceInput,samples,preSamples,quality)
    {
@@ -237,9 +237,9 @@ bool EffectSBSMS::Process()
          if (!leftTrack->GetSelected())
             return fallthrough();
 
-         //Get start and end times from track
-         mCurT0 = leftTrack->GetStartTime();
-         mCurT1 = leftTrack->GetEndTime();
+         //Get start and end times from selection
+         mCurT0 = mT0;
+         mCurT1 = mT1;
 
          //Set the current bounds to whichever left marker is
          //greater and whichever right marker is less
@@ -273,10 +273,6 @@ bool EffectSBSMS::Process()
 
                mCurTrackNum++; // Increment for rightTrack, too.
             }
-            const auto trackStart =
-               leftTrack->TimeToLongSamples(leftTrack->GetStartTime());
-            const auto trackEnd =
-               leftTrack->TimeToLongSamples(leftTrack->GetEndTime());
 
             // SBSMS has a fixed sample rate - we just convert to its sample rate and then convert back
             float srTrack = leftTrack->GetRate();
@@ -328,30 +324,13 @@ bool EffectSBSMS::Process()
               rb.sbsms = std::make_unique<SBSMS>(rightTrack ? 2 : 1, rb.quality.get(), true);
               rb.SBSMSBlockSize = rb.sbsms->getInputFrameSize();
               rb.SBSMSBuf.reinit(static_cast<size_t>(rb.SBSMSBlockSize), true);
-
-              // Note: width of getMaxPresamples() is only long.  Widen it
-              decltype(start) processPresamples = rb.quality->getMaxPresamples();
-              processPresamples =
-                 std::min(processPresamples,
-                          decltype(processPresamples)
-                             (( start - trackStart ).as_float() *
-                                 (srProcess/srTrack)));
-              auto trackPresamples = start - trackStart;
-              trackPresamples =
-                  std::min(trackPresamples,
-                           decltype(trackPresamples)
-                              (processPresamples.as_float() *
-                                  (srTrack/srProcess)));
-              rb.offset = start - trackPresamples;
-              rb.end = trackEnd;
+              rb.offset = start;
+              rb.end = end;
               rb.iface = std::make_unique<SBSMSEffectInterface>
                   (rb.resampler.get(), &rateSlide, &pitchSlide,
                    bPitchReferenceInput,
-                   // UNSAFE_SAMPLE_COUNT_TRUNCATION
-                   // The argument type is only long!
-                   static_cast<long> ( samplesToProcess.as_long_long() ),
-                   // This argument type is also only long!
-                   static_cast<long> ( processPresamples.as_long_long() ),
+                   static_cast<_sbsms_::SampleCountType>( samplesToProcess.as_long_long() ),
+                   0,
                    rb.quality.get());
             }
             
@@ -443,10 +422,6 @@ bool EffectSBSMS::Process()
 
    if (bGoodResult) {
       ReplaceProcessedTracks(bGoodResult);
-
-      // Update selection
-      mT0 = mCurT0;
-      mT1 = mCurT0 + maxDuration;
    }
 
    return bGoodResult;
@@ -486,7 +461,10 @@ void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *wa
    for (auto gap : gaps) {
       auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
       auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
-      orig->SplitDelete(warper->Warp(st), warper->Warp(et));
+      if (st >= mCurT0 && et <= mCurT1 && st != et)
+      {
+         orig->SplitDelete(warper->Warp(st), warper->Warp(et));
+      }
    }
 }
 

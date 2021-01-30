@@ -115,6 +115,11 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
          mCurT0 = mT0;
          mCurT1 = mT1;
 
+         //Set the current bounds to whichever left marker is
+         //greater and whichever right marker is less
+         mCurT0 = wxMax(mT0, mCurT0);
+         mCurT1 = wxMin(mT1, mCurT1);
+
          // Process only if the right marker is to the right of the left marker
          if (mCurT1 > mCurT0) {
             mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
@@ -171,11 +176,9 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
       }
    );
 
-   if (bGoodResult)
+   if (bGoodResult) {
       ReplaceProcessedTracks(bGoodResult);
-
-//   mT0 = mCurT0;
-//   mT1 = mCurT0 + m_maxNewLength; // Update selection.
+   }
 
    return bGoodResult;
 }
@@ -429,7 +432,10 @@ void EffectSoundTouch::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarpe
    for (auto gap : gaps) {
       auto st = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.first));
       auto et = orig->LongSamplesToTime(orig->TimeToLongSamples(gap.second));
-      orig->SplitDelete(warper.Warp(st), warper.Warp(et));
+      if (st >= mCurT0 && et <= mCurT1 && st != et)
+      {
+         orig->SplitDelete(warper.Warp(st), warper.Warp(et));
+      }
    }
 }
 
