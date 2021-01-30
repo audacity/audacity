@@ -221,11 +221,11 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Plugin Options"));
    {
       S.TieCheckBox(XXO("Check for updated plugins when Audacity starts"),
-                     wxT("/Plugins/CheckForUpdates"),
-                     true);
+                     {wxT("/Plugins/CheckForUpdates"),
+                     true});
       S.TieCheckBox(XXO("Rescan plugins next time Audacity is started"),
-                     wxT("/Plugins/Rescan"),
-                     false);
+                     {wxT("/Plugins/Rescan"),
+                     false});
    }
    S.EndStatic();
 #endif
@@ -234,8 +234,8 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Instruction Set"));
    {
       S.TieCheckBox(XXO("&Use SSE/SSE2/.../AVX"),
-                    wxT("/SSE/GUI"),
-                    true);
+                    {wxT("/SSE/GUI"),
+                    true});
    }
    S.EndStatic();
 #endif
