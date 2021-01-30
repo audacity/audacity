@@ -1015,7 +1015,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       else {
          snd = getsound(getelement(nyx_result, ch));
       }
-      snds[ch] = snd;
+      snds[ch] = sound_copy(snd);
       totals[ch] = 0;
       lens[ch] = nyx_input_length;
    }
@@ -1051,6 +1051,10 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
 
          totals[ch] += cnt;
       }
+   }
+
+   for (ch = 0 ; ch < num_channels; ch++) {
+      sound_unref(snds[ch]);
    }
 
    // This will unwind the xlisp context and restore internals to a point just
