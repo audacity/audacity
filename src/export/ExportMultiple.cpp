@@ -1143,7 +1143,7 @@ wxString ExportMultipleDialog::MakeFileName(const wxString &input)
       if( excluded.length() > 1 ){
          msg = XO(
 // i18n-hint: The second %s gives some letters that can't be used.
-"Label or track \"%s\" is not a legal file name. You cannot use\nthese characters:\n\n%s\n\nSuggested replacement:")
+"Label or track \"%s\" is not a legal file name.\nYou cannot use any of these characters:\n\n%s\n\nSuggested replacement:")
             .Format( input, excluded );
       } else {
          msg = XO(
