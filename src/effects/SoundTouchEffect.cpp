@@ -213,8 +213,8 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
       auto s = start;
       while (s < end) {
          //Get a block of samples (smaller than the size of the buffer)
-         const auto block =
-            limitSampleBufferSize( track->GetBestBlockSize(s), end - s );
+         const auto block = wxMin(8192,
+            limitSampleBufferSize( track->GetBestBlockSize(s), end - s ));
 
          //Get the samples from the track and put them in the buffer
          track->Get((samplePtr)buffer.get(), floatSample, s, block);
