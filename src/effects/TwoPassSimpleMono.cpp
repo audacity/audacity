@@ -25,29 +25,46 @@ doing the second pass over all selected tracks.
 
 bool EffectTwoPassSimpleMono::Process()
 {
-    mPass = 0;
-    mSecondPassDisabled = false;
+   mPass = 0;
+   mSecondPassDisabled = false;
 
-    InitPass1();
-    this->CopyInputTracks(); // Set up mOutputTracks.
-    bool bGoodResult = ProcessPass();
+   InitPass1();
+   this->CopyInputTracks(); // Set up mOutputTracks.
 
-    if (bGoodResult && !mSecondPassDisabled)
-    {
-        mPass = 1;
-        if (InitPass2())
-            bGoodResult = ProcessPass();
-    }
+   mWorkTracks = TrackList::Create(
+      const_cast<AudacityProject*>( FindProject() ) );
+   for (auto track : mOutputTracks->Selected< WaveTrack >()) {
+      mWorkTracks->Add(track->EmptyCopy())->ConvertToSampleFormat(floatSample);
+   }
 
-    this->ReplaceProcessedTracks(bGoodResult);
-    return bGoodResult;
+   mTrackLists[0] = &mOutputTracks;
+   mTrackLists[1] = mSecondPassDisabled ? &mOutputTracks : &mWorkTracks;
+
+   bool bGoodResult = ProcessPass();
+
+   if (bGoodResult && !mSecondPassDisabled)
+   {
+      mPass = 1;
+      if (InitPass2())
+         bGoodResult = ProcessPass();
+   }
+
+   mWorkTracks->Clear();
+   mWorkTracks.reset();
+
+   this->ReplaceProcessedTracks(bGoodResult);
+   return bGoodResult;
 }
 
 bool EffectTwoPassSimpleMono::ProcessPass()
 {
    //Iterate over each track
    mCurTrackNum = 0;
-   for( auto track : mOutputTracks->Selected< WaveTrack >() ) {
+
+   auto outTracks = (*mTrackLists[1 - mPass])->Selected< WaveTrack >().begin();
+   for( auto track : (*mTrackLists[mPass])->Selected< WaveTrack >() ) {
+      auto outTrack = *outTracks;
+
       //Get start and end times from track
       double trackStart = track->GetStartTime();
       double trackEnd = track->GetEndTime();
@@ -78,11 +95,12 @@ bool EffectTwoPassSimpleMono::ProcessPass()
             return false;
 
          //ProcessOne() (implemented below) processes a single track
-         if (!ProcessOne(track, start, end))
+         if (!ProcessOne(track, outTrack, start, end))
             return false;
       }
 
       mCurTrackNum++;
+      outTracks++;
    }
 
    return true;
@@ -91,7 +109,7 @@ bool EffectTwoPassSimpleMono::ProcessPass()
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes TwoBufferProcessPass1 or TwoBufferProcessPass2 on these blocks
-bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
+bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack,
                                          sampleCount start, sampleCount end)
 {
    bool ret;
@@ -145,7 +163,12 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
 
       //Processing succeeded. copy the newly-changed samples back
       //onto the track.
-      track->Set((samplePtr)buffer1.get(), floatSample, s - samples1, samples1);
+      if (mSecondPassDisabled || mPass != 0) {
+         outTrack->Set((samplePtr)buffer1.get(), floatSample, s - samples1, samples1);
+      }
+      else {
+         outTrack->Append((samplePtr)buffer1.get(), floatSample, samples1);
+      }
 
       //Increment s one blockfull of samples
       s += samples2;
@@ -181,7 +204,13 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track,
 
    //Processing succeeded. copy the newly-changed samples back
    //onto the track.
-   track->Set((samplePtr)buffer1.get(), floatSample, s - samples1, samples1);
+   if (mSecondPassDisabled || mPass != 0) {
+      outTrack->Set((samplePtr)buffer1.get(), floatSample, s - samples1, samples1);
+   }
+   else {
+      outTrack->Append((samplePtr)buffer1.get(), floatSample, samples1);
+      outTrack->Flush();
+   }
 
    //Return true because the effect processing succeeded.
    return true;
