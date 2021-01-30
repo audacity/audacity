@@ -21,7 +21,6 @@
 
 #include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/icon.h>
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 

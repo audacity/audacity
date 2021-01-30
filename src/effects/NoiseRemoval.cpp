@@ -66,7 +66,6 @@
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>
-#include <wx/dcmemory.h>
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>

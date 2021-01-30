@@ -38,7 +38,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/font.h>
 #include <wx/frame.h>
 #include <wx/menu.h>

@@ -50,7 +50,6 @@
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>
-#include <wx/dcmemory.h>
 #include <wx/frame.h>
 #include <wx/image.h>
 #include <wx/intl.h>

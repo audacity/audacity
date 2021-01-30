@@ -29,8 +29,6 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/app.h>
-#include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/dcbuffer.h>
 #include <wx/eventfilter.h>
 #include <wx/image.h>

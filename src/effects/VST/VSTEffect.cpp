@@ -52,7 +52,6 @@
 #include <wx/busyinfo.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
-#include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/imaglist.h>

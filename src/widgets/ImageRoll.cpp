@@ -97,9 +97,9 @@
 #include "../Audacity.h"
 #include "ImageRoll.h"
 
-#include <wx/wx.h>
 #include <wx/bitmap.h>
 #include <wx/dcmemory.h>
+#include <wx/dcclient.h>
 #include <wx/image.h>
 
 // static

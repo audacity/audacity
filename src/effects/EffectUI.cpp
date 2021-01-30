@@ -30,7 +30,6 @@
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
-#include <wx/dcmemory.h>
 #include <wx/frame.h>
 #include <wx/image.h>
 #include <wx/imaglist.h>

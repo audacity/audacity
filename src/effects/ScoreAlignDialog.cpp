@@ -35,7 +35,6 @@ It \TODO: description
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/image.h>
-#include <wx/dcmemory.h>
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>

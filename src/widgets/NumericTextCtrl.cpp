@@ -182,7 +182,6 @@ different formats.
 
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
-#include <wx/dcmemory.h>
 #include <wx/font.h>
 #include <wx/intl.h>
 #include <wx/menu.h>
