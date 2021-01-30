@@ -1138,17 +1138,17 @@ wxString ExportMultipleDialog::MakeFileName(const wxString &input)
    {  // need to get user to fix file name
       // build the dialog
       TranslatableString msg;
-      wxString excluded = ::wxJoin( Internat::GetExcludedCharacters(), wxChar(' ') );
+      wxString excluded = ::wxJoin( Internat::GetExcludedCharacters(), wxT(' '), wxT('\0') );
       // TODO: For Russian language we should have separate cases for 2 and more than 2 letters.
       if( excluded.length() > 1 ){
          msg = XO(
 // i18n-hint: The second %s gives some letters that can't be used.
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\nUse...")
+"Label or track \"%s\" is not a legal file name. You cannot use\nthese characters:\n\n%s\n\nSuggested replacement:")
             .Format( input, excluded );
       } else {
          msg = XO(
 // i18n-hint: The second %s gives a letter that can't be used.
-"Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\nUse...")
+"Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n\nSuggested replacement:")
             .Format( input, excluded );
       }
 
