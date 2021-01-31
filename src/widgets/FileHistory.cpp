@@ -143,6 +143,8 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
    }
 
    config.SetPath(wxT(""));
+
+   config.Flush();
 }
 
 void FileHistory::NotifyMenus()
