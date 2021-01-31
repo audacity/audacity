@@ -24,7 +24,6 @@ messaging from a command back to its invoker.
 #include "CommandContext.h"
 
 #include <map>
-#include <wx/app.h>
 #include <wx/log.h>
 #include <wx/string.h>
 #include <wx/variant.h>
@@ -86,9 +85,6 @@ void CommandContext::Progress( double d ) const
    if( pOutput )
       pOutput->Progress( d );
 }
-
-AudacityApp * CommandContext::GetApp() const
-{  return (AudacityApp *) wxTheApp;}
 
 void CommandContext::StartArray() const
 {
