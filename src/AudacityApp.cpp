@@ -189,11 +189,10 @@ void PopulatePreferences()
    {
       const wxString fullPath{fn.GetFullPath()};
 
-      AudacityFileConfig ini(wxEmptyString,
-                     wxEmptyString,
-                     fullPath,
-                     wxEmptyString,
-                     wxCONFIG_USE_LOCAL_FILE);
+      auto pIni =
+         AudacityFileConfig::Create({}, {}, fullPath, {},
+            wxCONFIG_USE_LOCAL_FILE);
+      auto &ini = *pIni;
 
       wxString lang;
       if (ini.Read(wxT("/FromInno/Language"), &lang))
@@ -1249,7 +1248,7 @@ bool AudacityApp::OnInit()
    {
       wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
       auto appName = wxTheApp->GetAppName();
-      InitPreferences( std::make_unique<AudacityFileConfig>(
+      InitPreferences( AudacityFileConfig::Create(
          appName, wxEmptyString,
          configFileName.GetFullPath(),
          wxEmptyString, wxCONFIG_USE_LOCAL_FILE) );

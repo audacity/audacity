@@ -1930,8 +1930,9 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   AudacityFileConfig registry(
+   auto pRegistry = AudacityFileConfig::Create(
       {}, {}, FileNames::PluginRegistry());
+   auto &registry = *pRegistry;
 
    // If this group doesn't exist then we have something that's not a registry.
    // We should probably warn the user, but it's pretty unlikely that this will happen.
@@ -2272,8 +2273,9 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   AudacityFileConfig registry(
+   auto pRegistry = AudacityFileConfig::Create(
       {}, {}, FileNames::PluginRegistry());
+   auto &registry = *pRegistry;
 
    // Clear it out
    registry.DeleteAll();
@@ -2780,7 +2782,8 @@ FileConfig *PluginManager::GetSettings()
 {
    if (!mSettings)
    {
-      mSettings = std::make_unique<AudacityFileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
+      mSettings =
+         AudacityFileConfig::Create({}, {}, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))

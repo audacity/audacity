@@ -46,6 +46,10 @@ FileConfig::FileConfig(const wxString& appName,
    mConfigPath(localFilename),
    mDirty(false)
 {
+}
+
+void FileConfig::Init()
+{
    // Prevent wxFileConfig from attempting a Flush() during object deletion. This happens
    // because we don't use the wxFileConfig::Flush() method and so the wxFileConfig dirty
    // flag never gets reset. During deleting it is checked and a Flush() performed. This

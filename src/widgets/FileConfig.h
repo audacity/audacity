@@ -25,6 +25,7 @@ public:
               const wxString& globalFilename = wxEmptyString,
               long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE,
               const wxMBConv& conv = wxConvAuto());
+   void Init();
    virtual ~FileConfig();
 
    virtual bool Flush(bool bCurrentOnly = false) wxOVERRIDE;
