@@ -51,9 +51,13 @@ protected:
    virtual bool DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf) wxOVERRIDE;
 #endif // wxUSE_BASE64
 
-private:
-   void Warn(bool canRetry = true);
+protected:
+   //! Override to notify the user of error conditions involving writability of config files
+   virtual void Warn(bool canRetry = true) = 0;
 
+   const FilePath &GetFilePath() const { return mConfigPath; }
+
+private:
    const FilePath mConfigPath;
 
    // values of the version major/minor/micro keys in audacity.cfg
