@@ -73,7 +73,7 @@ ErrorDialog::ErrorDialog(
       S.StartVerticalLay();
       {
          S.SetBorder(20);
-         S.AddFixedText(message);
+         S.AddFixedText(message, false, 500);
          S.SetBorder(2);
          S.AddStandardButtons(buttonMask);
       }
