@@ -25,9 +25,24 @@ public:
               const wxString& globalFilename = wxEmptyString,
               long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE,
               const wxMBConv& conv = wxConvAuto());
+   void Init();
    virtual ~FileConfig();
 
    virtual bool Flush(bool bCurrentOnly = false) wxOVERRIDE;
+
+   // Set and Get values of the version major/minor/micro keys in audacity.cfg when Audacity first opens
+   void SetVersionKeysInit( int major, int minor, int micro)
+   {
+      mVersionMajorKeyInit = major;
+      mVersionMinorKeyInit = minor;
+      mVersionMicroKeyInit = micro;
+   }
+   void GetVersionKeysInit( int& major, int& minor, int& micro) const
+   {
+      major = mVersionMajorKeyInit;
+      minor = mVersionMinorKeyInit;
+      micro = mVersionMicroKeyInit;
+   }
 
 protected:
    virtual bool DoWriteString(const wxString& key, const wxString& szValue) wxOVERRIDE;
@@ -36,10 +51,21 @@ protected:
    virtual bool DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf) wxOVERRIDE;
 #endif // wxUSE_BASE64
 
-private:
-   void Warn(bool canRetry = true);
+protected:
+   //! Override to notify the user of error conditions involving writability of config files
+   virtual void Warn(bool canRetry = true) = 0;
 
-   FilePath mConfigPath;
+   const FilePath &GetFilePath() const { return mConfigPath; }
+
+private:
+   const FilePath mConfigPath;
+
+   // values of the version major/minor/micro keys in audacity.cfg
+   // when Audacity first opens
+   int mVersionMajorKeyInit{};
+   int mVersionMinorKeyInit{};
+   int mVersionMicroKeyInit{};
+
    bool mDirty;
 };
 
