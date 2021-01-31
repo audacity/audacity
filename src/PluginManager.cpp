@@ -1777,6 +1777,9 @@ void PluginManager::Initialize()
    // Always load the registry first
    Load();
 
+   // And force load of setting to verify it's accessible
+   GetSettings();
+
    // Then look for providers (they may autoregister plugins)
    ModuleManager::Get().DiscoverProviders();
 
