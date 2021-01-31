@@ -33,7 +33,6 @@ from the project that will own the track.
 #include "WaveClip.h"
 
 #include <wx/defs.h>
-#include <wx/intl.h>
 #include <wx/debug.h>
 #include <wx/log.h>
 

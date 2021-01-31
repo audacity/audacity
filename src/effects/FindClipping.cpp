@@ -25,7 +25,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"

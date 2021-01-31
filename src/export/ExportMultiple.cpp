@@ -24,15 +24,12 @@
 #include <wx/choice.h>
 #include <wx/dialog.h>
 #include <wx/dirdlg.h>
-#include <wx/event.h>
 #include <wx/listbase.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
-#include <wx/intl.h>
 #include <wx/log.h>
 #include <wx/radiobut.h>
 #include <wx/simplebook.h>
-#include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>

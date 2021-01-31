@@ -65,12 +65,10 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/dialog.h>
 #include <wx/radiobut.h>
 #include <wx/slider.h>
 #include <wx/valtext.h>
 #include <wx/textctrl.h>
-#include <wx/sizer.h>
 
 // SPECTRAL_SELECTION not to affect this effect for now, as there might be no indication that it does.
 // [Discussed and agreed for v2.1 by Steve, Paul, Bill].

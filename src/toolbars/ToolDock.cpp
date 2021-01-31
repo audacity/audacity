@@ -32,9 +32,7 @@
 #ifndef WX_PRECOMP
 #include <wx/dcclient.h>
 #include <wx/defs.h>
-#include <wx/event.h>
 #include <wx/gdicmn.h>
-#include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/settings.h>
 #include <wx/window.h>

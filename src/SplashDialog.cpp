@@ -25,14 +25,9 @@ most commonly asked questions about Audacity.
 
 
 
-#include <wx/dialog.h>
 #include <wx/frame.h>
 #include <wx/html/htmlwin.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
 #include <wx/statbmp.h>
-#include <wx/intl.h>
-#include <wx/image.h>
 
 #include "FileNames.h"
 #include "Project.h"

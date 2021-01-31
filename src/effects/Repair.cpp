@@ -26,8 +26,6 @@ the audio, rather than actually finding the clicks.
 
 #include <math.h>
 
-#include <wx/intl.h>
-
 #include "InterpolateAudio.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"

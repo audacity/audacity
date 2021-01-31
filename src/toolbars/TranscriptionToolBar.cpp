@@ -25,8 +25,6 @@
 #include <wx/choice.h>
 #include <wx/defs.h>
 #include <wx/brush.h>
-#include <wx/image.h>
-#include <wx/intl.h>
 #endif // WX_PRECOMP
 
 #include "Envelope.h"

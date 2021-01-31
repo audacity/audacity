@@ -44,11 +44,8 @@
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
-#include <wx/dialog.h>
 #include <wx/dcbuffer.h>
 #include <wx/frame.h>
-#include <wx/image.h>
-#include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/settings.h>
 #include <wx/textdlg.h>

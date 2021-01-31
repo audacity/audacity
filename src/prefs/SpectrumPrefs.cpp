@@ -19,7 +19,6 @@
 
 #include <wx/choice.h>
 #include <wx/defs.h>
-#include <wx/intl.h>
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 

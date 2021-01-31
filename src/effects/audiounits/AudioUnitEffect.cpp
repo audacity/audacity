@@ -25,7 +25,6 @@
 #include <optional>
 #include <wx/defs.h>
 #include <wx/base64.h>
-#include <wx/button.h>
 #include <wx/control.h>
 #include <wx/crt.h>
 #include <wx/dir.h>

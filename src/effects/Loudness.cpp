@@ -19,7 +19,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/simplebook.h>
 #include <wx/valgen.h>
 

@@ -26,13 +26,9 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/event.h>
-#include <wx/string.h>
-
 #if wxUSE_TOOLTIPS
 #include <wx/tooltip.h>
 #endif
-#include <wx/utils.h>
 
 #include <math.h>
 
@@ -48,7 +44,6 @@
 #include <malloc.h>
 #endif
 
-#include <stdio.h>
 #include <math.h>
 #include <emmintrin.h>
 

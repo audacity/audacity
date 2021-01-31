@@ -17,8 +17,6 @@
 
 #include "Invert.h"
 
-#include <wx/intl.h>
-
 #include "LoadEffects.h"
 
 const ComponentInterfaceSymbol EffectInvert::Symbol

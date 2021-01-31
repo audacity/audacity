@@ -28,7 +28,6 @@ used throughout Audacity into this one place.
 
 #include <wx/defs.h>
 #include <wx/filename.h>
-#include <wx/intl.h>
 #include <wx/stdpaths.h>
 #include <wx/utils.h>
 #include "BasicUI.h"

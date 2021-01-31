@@ -75,7 +75,6 @@ ExpandingToolBar.
 #include <wx/wx.h>
 #include <wx/dcmemory.h>
 #include <wx/log.h>
-#include <wx/dialog.h>
 
 #include "AButton.h"
 #include "AllThemeResources.h"

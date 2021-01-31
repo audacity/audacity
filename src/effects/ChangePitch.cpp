@@ -30,7 +30,6 @@ the pitch without changing the tempo.
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 #include <wx/valtext.h>

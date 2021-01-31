@@ -14,7 +14,6 @@
 #include <wx/defs.h>
 #include <wx/ffile.h>
 #include <wx/frame.h>
-#include <wx/intl.h>
 
 #if defined(USE_MIDI)
 

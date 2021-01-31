@@ -22,9 +22,7 @@ the ability to not see similar warnings again for this session.
 #include "../ShuttleGui.h"
 
 #include <wx/artprov.h>
-#include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include "wxPanelWrapper.h"

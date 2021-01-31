@@ -37,9 +37,7 @@ AliasedFile s.
 #include "Audacity.h"
 #include "Dependencies.h"
 
-#include <wx/button.h>
 #include <wx/defs.h>
-#include <wx/dialog.h>
 #include <wx/filename.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>

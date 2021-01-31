@@ -23,16 +23,11 @@
 #include "HelpSystem.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
-#include <wx/button.h>
 #include <wx/frame.h>
 #include <wx/icon.h>
-#include <wx/dialog.h>
-#include <wx/intl.h>
 #include <wx/log.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/utils.h>
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>

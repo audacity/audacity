@@ -21,17 +21,12 @@ of sample block storage.
 #include <wx/app.h>
 #include <wx/log.h>
 #include <wx/textctrl.h>
-#include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/dialog.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
-#include <wx/timer.h>
-#include <wx/utils.h>
+#include <wx/stopwatch.h>
 #include <wx/valgen.h>
 #include <wx/valtext.h>
-#include <wx/intl.h>
 
 #include "SampleBlock.h"
 #include "ShuttleGui.h"

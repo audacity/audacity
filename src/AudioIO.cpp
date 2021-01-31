@@ -95,9 +95,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <wx/frame.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
-#include <wx/textctrl.h>
-#include <wx/timer.h>
-#include <wx/intl.h>
+#include <wx/time.h>
 #include <wx/debug.h>
 
 #if defined(__WXMAC__) || defined(__WXMSW__)

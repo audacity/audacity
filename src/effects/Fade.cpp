@@ -16,8 +16,6 @@
 
 #include "Fade.h"
 
-#include <wx/intl.h>
-
 #include "LoadEffects.h"
 
 const ComponentInterfaceSymbol EffectFadeIn::Symbol

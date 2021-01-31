@@ -20,7 +20,6 @@ MP3 and FFmpeg encoding libraries.
 #include "LibraryPrefs.h"
 
 #include <wx/defs.h>
-#include <wx/button.h>
 #include <wx/stattext.h>
 
 #include "../FFmpeg.h"

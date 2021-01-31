@@ -23,7 +23,6 @@
 #include <wx/clipbrd.h>
 #include <wx/dc.h>
 #include <wx/grid.h>
-#include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 

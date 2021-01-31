@@ -36,7 +36,6 @@
 #include "MousePrefs.h"
 
 #include <wx/defs.h>
-#include <wx/intl.h>
 #include <wx/listctrl.h>
 
 #include "Prefs.h"

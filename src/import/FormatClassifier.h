@@ -25,8 +25,6 @@
 
 #ifdef FORMATCLASSIFIER_SIGNAL_DEBUG
 
-#include <cstdio>
-
 class DebugWriter
 {
    FILE* mpFid;

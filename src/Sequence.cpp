@@ -36,7 +36,6 @@
 #include <float.h>
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/ffile.h>
 #include <wx/log.h>

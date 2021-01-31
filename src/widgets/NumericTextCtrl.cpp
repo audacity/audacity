@@ -185,9 +185,7 @@ different formats.
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
 #include <wx/font.h>
-#include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/tooltip.h>
 #include <wx/toplevel.h>

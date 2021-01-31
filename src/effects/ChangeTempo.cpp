@@ -26,7 +26,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 

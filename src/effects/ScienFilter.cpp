@@ -44,7 +44,6 @@ a graph for EffectScienFilter.
 #include <wx/choice.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
-#include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>

@@ -20,8 +20,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
-
 #include "../LabelTrack.h"
 #include "../SyncLock.h"
 #include "../WaveClip.h"

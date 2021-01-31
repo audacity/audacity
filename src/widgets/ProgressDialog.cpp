@@ -32,16 +32,12 @@
 #include <algorithm>
 
 #include <wx/defs.h>
-#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/dcclient.h>
 #include <wx/datetime.h>
-#include <wx/dialog.h>
-#include <wx/event.h>
 #include <wx/evtloop.h>
 #include <wx/gauge.h>
 #include <wx/frame.h>
-#include <wx/intl.h>
 #include <wx/msgdlg.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>

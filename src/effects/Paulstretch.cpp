@@ -22,7 +22,6 @@
 
 #include <math.h>
 
-#include <wx/intl.h>
 #include <wx/valgen.h>
 
 #include "../ShuttleGui.h"

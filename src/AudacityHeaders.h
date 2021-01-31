@@ -19,7 +19,6 @@
 
 
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -32,7 +31,6 @@
 #include <wx/wx.h>
 #include <wx/bitmap.h>
 #include <wx/filefn.h>
-#include <wx/image.h>
 #include <wx/ffile.h>
 #include <wx/filename.h>
 #include <wx/textfile.h>

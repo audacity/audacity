@@ -13,9 +13,7 @@
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/event.h>
 #include <wx/stattext.h>
-#include <wx/string.h>
 #include <wx/textctrl.h>
 
 #include "Effect.h"

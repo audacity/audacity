@@ -39,17 +39,12 @@ or ASlider.
 #include <wx/dcbuffer.h>
 #include <wx/frame.h>
 #include <wx/graphics.h>
-#include <wx/image.h>
 #include <wx/panel.h>
 #include <wx/tooltip.h>
 #include <wx/debug.h>
 #include <wx/textctrl.h>
 #include <wx/valtext.h>
-#include <wx/dialog.h>
-#include <wx/sizer.h>
-#include <wx/button.h>
 #include <wx/statline.h>
-#include <wx/sizer.h>
 #include <wx/settings.h>
 #include <wx/popupwin.h>
 #include <wx/window.h>

@@ -44,11 +44,8 @@ the mouse around.
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/font.h>
-#include <wx/image.h>
 #include <wx/file.h>
-#include <wx/intl.h>
 #include <wx/scrolbar.h>
-#include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>

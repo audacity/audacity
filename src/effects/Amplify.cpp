@@ -27,7 +27,6 @@
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>

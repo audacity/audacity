@@ -21,7 +21,6 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include <wx/app.h>
 
 FilePath PlatformCompatibility::GetLongFileName(const FilePath &shortFileName)
 {

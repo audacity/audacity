@@ -25,7 +25,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include <wx/dynlib.h>
 #include <wx/log.h>
-#include <wx/string.h>
 #include <wx/filename.h>
 
 #include "FileNames.h"
