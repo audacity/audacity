@@ -48,7 +48,7 @@ FileConfig::FileConfig(const wxString& appName,
 {
    // Prevent wxFileConfig from attempting a Flush() during object deletion. This happens
    // because we don't use the wxFileConfig::Flush() method and so the wxFileConfig dirty
-   // flag never gets reset. During deletiong it is checked a a Flush() performed. This
+   // flag never gets reset. During deleting it is checked and a Flush() performed. This
    // can (and probably will) create bogus temporary files.
    DisableAutoSave();
 
@@ -82,7 +82,7 @@ FileConfig::FileConfig(const wxString& appName,
 
       // If we can't read an existing config file, we must not allow the user to retry
       // since the wxFileConfig initialization will not have read it and the caller
-      // will assume that the file was didn't exist and possibly initialize it. This
+      // will assume that the file didn't exist and possibly initialize it. This
       // could lead to wiping out the original contents.
       //
       // If the wxFileConfig class allowed us to call wxFileConfig::Init(), we wouldn't

@@ -56,7 +56,6 @@
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/intl.h>
-#include <wx/fileconf.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 
