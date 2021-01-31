@@ -42,6 +42,7 @@ for shared and private configs - which need to move out.
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"
 
+#include "AudacityFileConfig.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
@@ -1929,7 +1930,8 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   FileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   AudacityFileConfig registry(
+      {}, {}, FileNames::PluginRegistry());
 
    // If this group doesn't exist then we have something that's not a registry.
    // We should probably warn the user, but it's pretty unlikely that this will happen.
@@ -2270,7 +2272,8 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   FileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   AudacityFileConfig registry(
+      {}, {}, FileNames::PluginRegistry());
 
    // Clear it out
    registry.DeleteAll();
@@ -2777,7 +2780,7 @@ FileConfig *PluginManager::GetSettings()
 {
    if (!mSettings)
    {
-      mSettings = std::make_unique<FileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
+      mSettings = std::make_unique<AudacityFileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))
@@ -2805,7 +2808,7 @@ FileConfig *PluginManager::GetSettings()
 
 bool PluginManager::HasGroup(const RegistryPath & group)
 {
-   FileConfig *settings = GetSettings();
+   auto settings = GetSettings();
 
    bool res = settings->HasGroup(group);
    if (res)

@@ -71,6 +71,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
 #include "AColor.h"
+#include "AudacityFileConfig.h"
 #include "AudioIO.h"
 #include "Benchmark.h"
 #include "Clipboard.h"
@@ -188,7 +189,7 @@ void PopulatePreferences()
    {
       const wxString fullPath{fn.GetFullPath()};
 
-      FileConfig ini(wxEmptyString,
+      AudacityFileConfig ini(wxEmptyString,
                      wxEmptyString,
                      fullPath,
                      wxEmptyString,
@@ -1245,9 +1246,15 @@ bool AudacityApp::OnInit()
 #endif
 
    // Initialize preferences and language
-   wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
-   InitPreferences( configFileName );
-   PopulatePreferences();
+   {
+      wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
+      auto appName = wxTheApp->GetAppName();
+      InitPreferences( std::make_unique<AudacityFileConfig>(
+         appName, wxEmptyString,
+         configFileName.GetFullPath(),
+         wxEmptyString, wxCONFIG_USE_LOCAL_FILE) );
+      PopulatePreferences();
+   }
 
 #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
    this->AssociateFileTypes();

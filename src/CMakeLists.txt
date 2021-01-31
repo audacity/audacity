@@ -78,6 +78,8 @@ list( APPEND SOURCES
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
       AudacityException.cpp
       AudacityException.h
+      AudacityFileConfig.cpp
+      AudacityFileConfig.h
       AudacityHeaders.cpp
       AudacityHeaders.h
       AudacityLogger.cpp
