@@ -892,6 +892,8 @@ list( APPEND SOURCES
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
       widgets/ExpandingToolBar.h
+      widgets/FileConfig.cpp
+      widgets/FileConfig.h
       widgets/FileDialog/FileDialog.cpp
       widgets/FileDialog/FileDialog.h
       $<$<BOOL:${wxIS_WIN}>:

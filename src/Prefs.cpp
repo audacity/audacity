@@ -178,12 +178,12 @@ AudacityPrefs::AudacityPrefs(const wxString& appName,
                const wxString& globalFilename,
                long style,
                const wxMBConv& conv) :
-   wxFileConfig(appName,
-               vendorName,
-               localFilename,
-               globalFilename,
-               style,
-               conv)
+   FileConfig(appName,
+              vendorName,
+              localFilename,
+              globalFilename,
+              style,
+              conv)
 {
 }
 
@@ -200,18 +200,6 @@ void InitPreferences( const wxFileName &configFileName )
    gPrefs = ugPrefs.get();
 
    wxConfigBase::Set(gPrefs);
-}
-
-bool CheckWritablePreferences()
-{
-   return gPrefs->Write("/TEST", true) && gPrefs->Flush();
-}
-
-TranslatableString UnwritablePreferencesErrorMessage( const wxFileName &configFileName )
-{
-   return
-     XO("Audacity cannot start because the settings file at %s is not writable.")
-        .Format(configFileName.GetFullPath());
 }
 
 void FinishPreferences()

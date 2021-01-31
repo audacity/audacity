@@ -33,16 +33,14 @@
 
 #include "../include/audacity/ComponentInterface.h"
 #include "MemoryX.h" // for wxArrayStringEx
+#include "widgets/FileConfig.h"
 
 #include <memory>
-#include <wx/fileconf.h>  // to inherit wxFileConfig
 #include <wx/event.h> // to declare custom event types
 
 class wxFileName;
 
 void InitPreferences( const wxFileName &configFileName );
-bool CheckWritablePreferences();
-TranslatableString UnwritablePreferencesErrorMessage( const wxFileName &configFileName );
 void FinishPreferences();
 
 class AudacityPrefs;
@@ -55,7 +53,7 @@ extern int gMenusDirty;
 /// \brief Our own specialisation of wxFileConfig.  It is essentially a renaming,
 /// though it does provide one new access function.  Most of the prefs work
 /// is actually done by the InitPreferences() function.
-class  AUDACITY_DLL_API AudacityPrefs : public wxFileConfig 
+class  AUDACITY_DLL_API AudacityPrefs : public FileConfig
 {
 public:
    AudacityPrefs(const wxString& appName = {},

@@ -106,6 +106,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "prefs/DirectoriesPrefs.h"
 #include "prefs/GUIPrefs.h"
 #include "tracks/ui/Scrubbing.h"
+#include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
@@ -187,11 +188,11 @@ void PopulatePreferences()
    {
       const wxString fullPath{fn.GetFullPath()};
 
-      wxFileConfig ini(wxEmptyString,
-                       wxEmptyString,
-                       fullPath,
-                       wxEmptyString,
-                       wxCONFIG_USE_LOCAL_FILE);
+      FileConfig ini(wxEmptyString,
+                     wxEmptyString,
+                     fullPath,
+                     wxEmptyString,
+                     wxCONFIG_USE_LOCAL_FILE);
 
       wxString lang;
       if (ini.Read(wxT("/FromInno/Language"), &lang))
@@ -1247,14 +1248,6 @@ bool AudacityApp::OnInit()
    wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
    InitPreferences( configFileName );
    PopulatePreferences();
-   // This test must follow PopulatePreferences, because if an error message
-   // must be shown, we need internationalization to have been initialized
-   // first, which was done in PopulatePreferences
-   if ( !CheckWritablePreferences() ) {
-      ::AudacityMessageBox(
-         UnwritablePreferencesErrorMessage( configFileName ) );
-      return false;
-   }
 
 #if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
    this->AssociateFileTypes();

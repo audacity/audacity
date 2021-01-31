@@ -21,6 +21,7 @@
 #include "audacity/PluginInterface.h"
 
 class wxArrayString;
+class FileConfig;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -270,13 +271,13 @@ private:
    ~PluginManager();
 
    void Load();
-   void LoadGroup(wxFileConfig *pRegistry, PluginType type);
+   void LoadGroup(FileConfig *pRegistry, PluginType type);
    void Save();
-   void SaveGroup(wxFileConfig *pRegistry, PluginType type);
+   void SaveGroup(FileConfig *pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
 
-   wxFileConfig *GetSettings();
+   FileConfig *GetSettings();
 
    bool HasGroup(const RegistryPath & group);
    bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
@@ -312,7 +313,7 @@ private:
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
-   std::unique_ptr<wxFileConfig> mSettings;
+   std::unique_ptr<FileConfig> mSettings;
 
    bool mDirty;
    int mCurrentIndex;

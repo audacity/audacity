@@ -17,7 +17,6 @@
 #include "FileHistory.h"
 
 #include <wx/defs.h>
-#include <wx/fileconf.h>
 #include <wx/menu.h>
 
 #include "../Internat.h"

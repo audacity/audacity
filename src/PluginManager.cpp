@@ -1929,7 +1929,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   FileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
 
    // If this group doesn't exist then we have something that's not a registry.
    // We should probably warn the user, but it's pretty unlikely that this will happen.
@@ -2008,7 +2008,7 @@ void PluginManager::Load()
    return;
 }
 
-void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
+void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 {
 #ifdef __WXMAC__
    // Bug 1590: On Mac, we should purge the registry of Nyquist plug-ins
@@ -2269,15 +2269,8 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
 
 void PluginManager::Save()
 {
-   if (!wxFileName(FileNames::PluginRegistry()).IsFileWritable()) {
-      AudacityMessageBox(
-         XO("The plugin registry file is not writable:\n\n%s\n\nSettings were not saved.")
-            .Format(FileNames::PluginRegistry()));
-      return;
-   }
-
    // Create/Open the registry
-   wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   FileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
 
    // Clear it out
    registry.DeleteAll();
@@ -2303,7 +2296,7 @@ void PluginManager::Save()
    registry.Flush();
 }
 
-void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
+void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
 {
    wxString group = GetPluginTypeString(type);
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
@@ -2780,11 +2773,11 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
    return plug;
 }
 
-wxFileConfig *PluginManager::GetSettings()
+FileConfig *PluginManager::GetSettings()
 {
    if (!mSettings)
    {
-      mSettings = std::make_unique<wxFileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
+      mSettings = std::make_unique<FileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))
@@ -2812,7 +2805,7 @@ wxFileConfig *PluginManager::GetSettings()
 
 bool PluginManager::HasGroup(const RegistryPath & group)
 {
-   wxFileConfig *settings = GetSettings();
+   FileConfig *settings = GetSettings();
 
    bool res = settings->HasGroup(group);
    if (res)
