@@ -50,7 +50,7 @@ std::unique_ptr<AudacityFileConfig> AudacityFileConfig::Create(
    return result;
 }
 
-void AudacityFileConfig::Warn(bool canRetry)
+void AudacityFileConfig::Warn()
 {
    wxDialogWrapper dlg(nullptr, wxID_ANY, XO("Audacity Configuration Error"));
 
@@ -65,24 +65,16 @@ void AudacityFileConfig::Warn(bool canRetry)
       S.SetBorder(15);
       S.StartHorizontalLay(wxALIGN_RIGHT, 0);
       {
-         auto cause = canRetry
-            ? XO("The following configuration file could not be written:")
-            : XO("The following configuration file could not be read:");
-            
-         auto retryMsg = canRetry
-            ? XO("You can attempt to correct the issue and then click \"Retry\" to coninue.\n\n")
-            : XO("");
-
          S.AddFixedText(
-            XO("%s:\n\n"
+            XO("The following configuration file could not be accessed:\n\n"
                "\t%s\n\n"
                "This could be caused by many reasons, but the most likely are that "
                "the disk is full or you do not have write permissions to the file. "
                "More information can be obtained by clicking the help button below.\n\n"
-               "%s"
+               "You can attempt to correct the issue and then click \"Retry\" to coninue.\n\n"
                "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
                "state which will be recovered the next time you open it.")
-            .Format(cause, GetFilePath(), retryMsg),
+            .Format(GetFilePath()),
             false,
             500);
       }
@@ -98,12 +90,8 @@ void AudacityFileConfig::Warn(bool canRetry)
          b->SetLabel(XO("Help").Translation());       // for screen readers
 
          b = S.Id(wxID_CANCEL).AddButton(XXO("&Quit Audacity"));
-
-         if (canRetry)
-         {
-            b = S.Id(wxID_OK).AddButton(XXO("&Retry"));
-            dlg.SetAffirmativeId(wxID_OK);
-         }
+         b = S.Id(wxID_OK).AddButton(XXO("&Retry"));
+         dlg.SetAffirmativeId(wxID_OK);
 
          b->SetDefault();
          b->SetFocus();

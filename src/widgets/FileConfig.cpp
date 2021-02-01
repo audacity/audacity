@@ -37,27 +37,35 @@ FileConfig::FileConfig(const wxString& appName,
                        const wxString& globalFilename,
                        long style,
                        const wxMBConv& conv)
-:  wxFileConfig(appName, vendorName, localFilename, globalFilename, style, conv),
-   mConfigPath(localFilename),
+:  wxConfigBase(appName, vendorName, localFilename, globalFilename, style),
+   mAppName(appName),
+   mVendorName(vendorName),
+   mLocalFilename(localFilename),
+   mGlobalFilename(globalFilename),
+   mStyle(style),
+   mConv(conv),
    mDirty(false)
 {
 }
 
 void FileConfig::Init()
 {
-   // Prevent wxFileConfig from attempting a Flush() during object deletion. This happens
-   // because we don't use the wxFileConfig::Flush() method and so the wxFileConfig dirty
-   // flag never gets reset. During deleting it is checked and a Flush() performed. This
-   // can (and probably will) create bogus temporary files.
-   DisableAutoSave();
-
    while (true)
    {
+      mConfig = std::make_unique<wxFileConfig>
+         (mAppName, mVendorName, mLocalFilename, mGlobalFilename, mStyle, mConv);
+
+      // Prevent wxFileConfig from attempting a Flush() during object deletion. This happens
+      // because we don't use the wxFileConfig::Flush() method and so the wxFileConfig dirty
+      // flag never gets reset. During deletion, the dirty flag is checked and a Flush()
+      // performed. This can (and probably will) create bogus temporary files.
+      mConfig->DisableAutoSave();
+
       bool canRead = false;
       bool canWrite = false;
       int fd;
 
-      fd = wxOpen(mConfigPath, O_RDONLY, S_IREAD);
+      fd = wxOpen(mLocalFilename, O_RDONLY, S_IREAD);
       if (fd != -1 || errno == ENOENT)
       {
          canRead = true;
@@ -67,7 +75,7 @@ void FileConfig::Init()
          }
       }
 
-      fd = wxOpen(mConfigPath, O_WRONLY | O_CREAT, S_IWRITE);
+      fd = wxOpen(mLocalFilename, O_WRONLY | O_CREAT, S_IWRITE);
       if (fd != -1)
       {
          canWrite = true;
@@ -79,22 +87,63 @@ void FileConfig::Init()
          break;
       }
 
-      // If we can't read an existing config file, we must not allow the user to retry
-      // since the wxFileConfig initialization will not have read it and the caller
-      // will assume that the file didn't exist and possibly initialize it. This
-      // could lead to wiping out the original contents.
-      //
-      // If the wxFileConfig class allowed us to call wxFileConfig::Init(), we wouldn't
-      // have to do all this mess.
-      // (Note that invocation of virtual Warn() can't be done in the ctor,
-      // which is why this is two-phase construction.)
-      Warn(canRead == true);
+      Warn();
    }
 }
 
 FileConfig::~FileConfig()
 {
    wxASSERT(mDirty == false);
+}
+
+void FileConfig::SetPath(const wxString& strPath)
+{
+   mConfig->SetPath(strPath);
+}
+
+const wxString& FileConfig::GetPath() const
+{
+   return mConfig->GetPath();
+}
+
+bool FileConfig::GetFirstGroup(wxString& str, long& lIndex) const
+{
+   return mConfig->GetFirstGroup(str, lIndex);
+}
+
+bool FileConfig::GetNextGroup(wxString& str, long& lIndex) const
+{
+   return mConfig->GetNextGroup(str, lIndex);
+}
+
+bool FileConfig::GetFirstEntry(wxString& str, long& lIndex) const
+{
+   return mConfig->GetFirstEntry(str, lIndex);
+}
+
+bool FileConfig::GetNextEntry(wxString& str, long& lIndex) const
+{
+   return mConfig->GetNextEntry(str, lIndex);
+}
+
+size_t FileConfig::GetNumberOfEntries(bool bRecursive) const
+{
+   return mConfig->GetNumberOfEntries(bRecursive);
+}
+
+size_t FileConfig::GetNumberOfGroups(bool bRecursive) const
+{
+   return mConfig->GetNumberOfGroups(bRecursive);
+}
+
+bool FileConfig::HasGroup(const wxString& strName) const
+{
+   return mConfig->HasGroup(strName);
+}
+
+bool FileConfig::HasEntry(const wxString& strName) const
+{
+   return mConfig->HasEntry(strName);
 }
 
 bool FileConfig::Flush(bool WXUNUSED(bCurrentOnly))
@@ -106,16 +155,16 @@ bool FileConfig::Flush(bool WXUNUSED(bCurrentOnly))
 
    while (true)
    {
-      FilePath backup = mConfigPath + ".bkp";
+      FilePath backup = mLocalFilename + ".bkp";
 
       if (!wxFileExists(backup) || (wxRemove(backup) == 0))
       {
-         if (!wxFileExists(mConfigPath) || (wxRename(mConfigPath, backup) == 0))
+         if (!wxFileExists(mLocalFilename) || (wxRename(mLocalFilename, backup) == 0))
          {
-            wxFileOutputStream stream(mConfigPath);
+            wxFileOutputStream stream(mLocalFilename);
             if (stream.IsOk())
             {
-               if (Save(stream))
+               if (mConfig->Save(stream))
                {
                   stream.Sync();
                   if (stream.IsOk() && stream.Close())
@@ -131,8 +180,8 @@ bool FileConfig::Flush(bool WXUNUSED(bCurrentOnly))
 
             if (wxFileExists(backup))
             {
-               wxRemove(mConfigPath);
-               wxRename(backup, mConfigPath);
+               wxRemove(mLocalFilename);
+               wxRename(backup, mLocalFilename);
             }
          }
       }
@@ -143,9 +192,51 @@ bool FileConfig::Flush(bool WXUNUSED(bCurrentOnly))
    return false;
 }
 
+bool FileConfig::RenameEntry(const wxString& oldName, const wxString& newName)
+{
+   return mConfig->RenameEntry(oldName, newName);
+}
+
+bool FileConfig::RenameGroup(const wxString& oldName, const wxString& newName)
+{
+   return mConfig->RenameGroup(oldName, newName);
+}
+
+bool FileConfig::DeleteEntry(const wxString& key, bool bDeleteGroupIfEmpty)
+{
+   return mConfig->DeleteEntry(key, bDeleteGroupIfEmpty);
+}
+
+bool FileConfig::DeleteGroup(const wxString& key)
+{
+   return mConfig->DeleteGroup(key);
+}
+
+bool FileConfig::DeleteAll()
+{
+   return mConfig->DeleteAll();
+}
+
+bool FileConfig::DoReadString(const wxString& key, wxString *pStr) const
+{
+   return mConfig->Read(key, pStr);
+}
+
+bool FileConfig::DoReadLong(const wxString& key, long *pl) const
+{
+   return mConfig->Read(key, pl);
+}
+
+#if wxUSE_BASE64
+bool FileConfig::DoReadBinary(const wxString& key, wxMemoryBuffer* buf) const
+{
+   return mConfig->Read(key, buf);
+}
+#endif // wxUSE_BASE64
+
 bool FileConfig::DoWriteString(const wxString& key, const wxString& szValue)
 {
-   bool res = wxFileConfig::DoWriteString(key, szValue);
+   bool res = mConfig->Write(key, szValue);
    if (res)
    {
       mDirty = true;
@@ -155,7 +246,7 @@ bool FileConfig::DoWriteString(const wxString& key, const wxString& szValue)
 
 bool FileConfig::DoWriteLong(const wxString& key, long lValue)
 {
-   bool res = wxFileConfig::DoWriteLong(key, lValue);
+   bool res = mConfig->Write(key, lValue);
    if (res)
    {
       mDirty = true;
@@ -166,7 +257,7 @@ bool FileConfig::DoWriteLong(const wxString& key, long lValue)
 #if wxUSE_BASE64
 bool FileConfig::DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf)
 {
-   bool res = wxFileConfig::DoWriteBinary(key, buf);
+   bool res = mConfig->Write(key, buf);
    if (res)
    {
       mDirty = true;

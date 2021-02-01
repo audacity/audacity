@@ -32,7 +32,7 @@ public:
    ~AudacityFileConfig() override;
 
 protected:
-   void Warn(bool canRetry) override;
+   void Warn() override;
 
 private:
    //! Disallow direct constructor call, because a two-phase initialization is required
