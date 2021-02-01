@@ -674,7 +674,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       }
       else if (!wxStrcmp(attr, wxT("h")))
       {
-         if (!Internat::CompatibleToDouble(value, &dValue) || (dValue < 0.0))
+         if (!Internat::CompatibleToDouble(value, &dValue))
          {
             return SetError(XO("Invalid project 'h' attribute."));
          }
