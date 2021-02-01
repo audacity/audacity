@@ -71,7 +71,7 @@ void AudacityFileConfig::Warn()
                "This could be caused by many reasons, but the most likely are that "
                "the disk is full or you do not have write permissions to the file. "
                "More information can be obtained by clicking the help button below.\n\n"
-               "You can attempt to correct the issue and then click \"Retry\" to coninue.\n\n"
+               "You can attempt to correct the issue and then click \"Retry\" to continue.\n\n"
                "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
                "state which will be recovered the next time you open it.")
             .Format(GetFilePath()),
