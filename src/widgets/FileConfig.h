@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_WIDGETS_FILECONFIG__
 #define __AUDACITY_WIDGETS_FILECONFIG__
 
+#include <memory>
+
 #include <wx/defs.h>
 #include <wx/fileconf.h>
 
