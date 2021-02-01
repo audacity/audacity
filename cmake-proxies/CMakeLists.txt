@@ -150,7 +150,7 @@ addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6
 addlib( portmidi           midi        MIDI        NO    YES   "portmidi >= 0.1" )
 addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
 addlib( portsmf            portsmf     PORTSMF     NO    YES   "portSMF >= 0.1" )
-addlib( libsbsms           sbsms       SBSMS       NO    YES   "libsbsms >= 2.1.0" )
+addlib( libsbsms           sbsms       SBSMS       NO    YES   "sbsms >= 2.2.0" )
 addlib( soundtouch         soundtouch  SOUNDTOUCH  NO    YES   "soundtouch >= 1.7.1" )
 addlib( twolame            twolame     LIBTWOLAME  NO    YES   "twolame >= 0.3.13" )
 

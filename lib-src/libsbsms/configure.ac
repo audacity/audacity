@@ -1,4 +1,4 @@
-AC_INIT([sbsms],[2.1.0])
+AC_INIT([sbsms],[2.2.0])
 
 dnl Use the m4/ directory to contain libtool macros that will be needed to 
 dnl go with the ltmain.sh script (both will be created/updated via the command

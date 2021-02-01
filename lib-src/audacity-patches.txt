@@ -155,8 +155,8 @@ sbsms
 https://github.com/claytonotey/libsbsms
 An audio stretching library for changing pitch or tempo without changing the
 other. Alternative to SoundTouch, better on large changes but slower.
-Version in Audacity GIT: 2.1.0
-Upstream Version: 2.1.0
+Version in Audacity GIT: 2.2.0
+Upstream Version: 2.2.0
 
 soundtouch
 ----------
