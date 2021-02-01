@@ -136,13 +136,7 @@ void AudacityFileConfig::Warn(bool canRetry)
       break;
 
       case wxID_CANCEL:
-         // This REALLY needs to use an exception with decent cleanup and program exit
-         wxExit();
-#if defined(__WXGTK__)
-         wxAbort();
-#else
-         exit(-1);
-#endif
+         _exit(-1);
       break;
    }
 
