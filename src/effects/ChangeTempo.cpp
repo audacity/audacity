@@ -21,7 +21,6 @@
 #include "ChangeTempo.h"
 
 #if USE_SBSMS
-#include "../../../lib-src/header-substitutes/sbsms.h"
 #include <wx/valgen.h>
 #endif
 
