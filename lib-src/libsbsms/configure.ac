@@ -1,4 +1,4 @@
-AC_INIT([sbsms],[2.0.0])
+AC_INIT([sbsms],[2.1.0])
 
 dnl Use the m4/ directory to contain libtool macros that will be needed to 
 dnl go with the ltmain.sh script (both will be created/updated via the command
@@ -9,7 +9,7 @@ AC_CONFIG_MACRO_DIR([m4])
 # Library's "official" release version:
 
 LIBSBSMS_RELEASE_MAJOR=2
-LIBSBSMS_RELEASE_MINOR=0
+LIBSBSMS_RELEASE_MINOR=1
 LIBSBSMS_RELEASE_BUILD=0
 AC_CONFIG_SRCDIR([src/sbsms.cpp])
 AC_CANONICAL_TARGET([])
@@ -90,8 +90,6 @@ fi
 if test x$enable_multithreaded = xyes; then
     AC_DEFINE(MULTITHREADED,1,[Define to compile multithreaded sbsms])
 fi
-
-echo "${ax_cv_cxx_compiler_vendor} XXX"
 
 if test x$enable_sse = xyes; then
 
