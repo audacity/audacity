@@ -152,23 +152,11 @@ by the Audacity project with some help from portaudio development.
 
 sbsms
 -----
-http://sbsms.sourceforge.net/
+https://github.com/claytonotey/libsbsms
 An audio stretching library for changing pitch or tempo without changing the
 other. Alternative to SoundTouch, better on large changes but slower.
-Version in Audacity SVN: 2.0.2
-Patches:
-Misc fixes to configure.in/Makefile.am for autoconf macros and libtool. More
-files added to m4/ directory by libtoolizing committed to Audacity SVN.
-AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
-by default
-dont-mangle-cflags.patch	patch to stop sed-ing the CXXFLAGS and achieve the
-same ends by better means, replacing a hacked version from Gentoo. Patch
-linked to from upstream tracker at
-https://sourceforge.net/tracker/index.php?func=detail&aid=2561247&group_id=177794&atid=882654
-because attachments there don't seem to work.
-autotools.patch: Fix all autotools warnings.
-autotools-fix-make-dist.patch: Correct file lists to make dist target work.
-sbsms-srcdir.patch: Adds srcdir handling
+Version in Audacity GIT: 2.1.0
+Upstream Version: 2.1.0
 
 soundtouch
 ----------
