@@ -774,47 +774,53 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    FreeLibs();
 
 #if defined(__WXMSW__)
+   wxString oldpath;
    wxString syspath;
-   bool pathfix = false;
+   bool pathExisted = false;
+
+   // Return PATH to normal
+   auto restorePath = finally([&]()
+   {
+      if (oldpath != syspath)
+      {
+         if (pathExisted)
+         {
+            wxLogMessage(wxT("Returning PATH to previous setting: %s"), oldpath);
+            wxSetEnv(wxT("PATH"), oldpath);
+         }
+         else
+         {
+            wxLogMessage(wxT("Removing PATH environment variable"));
+            wxUnsetEnv(wxT("PATH"));
+         }
+      }
+   });
 
    wxLogMessage(wxT("Looking up PATH environment variable..."));
    // First take PATH environment variable and store its content.
-   if (wxGetEnv(wxT("PATH"),&syspath))
-   {
-      wxLogMessage(wxT("PATH = '%s'"), syspath);
-      const wxString &fmtdir{ wxPathOnly(libpath_format) };
-      wxString fmtdirsc = fmtdir + wxT(";");
-      wxString scfmtdir = wxT(";") + fmtdir;
-      wxLogMessage(wxT("Checking that '%s' is in PATH..."), fmtdir);
-      // If the directory, where libavformat is, is not in PATH - add it
-      if (!syspath.Contains(fmtdirsc) && !syspath.Contains(scfmtdir) && !syspath.Contains(fmtdir))
-      {
-         wxLogWarning(wxT("FFmpeg directory '%s' is not in PATH."), fmtdir);
-         if (syspath.Left(1) == wxT(';'))
-         {
-            wxLogMessage(wxT("Temporarily prepending '%s' to PATH..."), fmtdir);
-            syspath.Prepend(scfmtdir);
-         }
-         else
-         {
-            wxLogMessage(wxT("Temporarily prepending '%s' to PATH..."), scfmtdir);
-            syspath.Prepend(fmtdirsc);
-         }
+   pathExisted = wxGetEnv(wxT("PATH"),&syspath);
+   oldpath = syspath;
 
-         if (wxSetEnv(wxT("PATH"),syspath))
-            // Remember to change PATH back to normal after we're done
-            pathfix = true;
-         else
-            wxLogSysError(wxT("Setting PATH via wxSetEnv('%s') failed."),syspath);
-      }
-      else
-      {
-         wxLogMessage(wxT("FFmpeg directory is in PATH."));
-      }
+   wxLogMessage(wxT("PATH = '%s'"), syspath);
+
+   const wxString &fmtdir{ wxPathOnly(libpath_format) };
+   wxString fmtdirsc = fmtdir + wxT(";");
+   wxString scfmtdir = wxT(";") + fmtdir;
+
+   if (syspath.Left(1) == wxT(';'))
+   {
+      wxLogMessage(wxT("Temporarily prepending '%s' to PATH..."), fmtdir);
+      syspath.Prepend(scfmtdir);
    }
    else
    {
-      wxLogSysError(wxT("PATH does not exist."));
+      wxLogMessage(wxT("Temporarily prepending '%s' to PATH..."), scfmtdir);
+      syspath.Prepend(fmtdirsc);
+   }
+
+   if (!wxSetEnv(wxT("PATH"),syspath))
+   {
+      wxLogSysError(wxT("Setting PATH via wxSetEnv('%s') failed."), syspath);
    }
 #endif
 
@@ -883,16 +889,6 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
       wxLogMessage(wxT("Loading avformat from '%s'."), nameFull);
       gotError = !avformat->Load(nameFull, wxDL_LAZY);
    }
-
-#if defined(__WXMSW__)
-   //Return PATH to normal
-   if ( pathfix )
-   {
-      wxString oldpath = syspath.BeforeLast(wxT(';'));
-      wxLogMessage(wxT("Returning PATH to previous setting..."));
-      wxSetEnv(wxT("PATH"),oldpath);
-   }
-#endif
 
    if (gotError) {
       wxLogError(wxT("Failed to load FFmpeg libraries."));
