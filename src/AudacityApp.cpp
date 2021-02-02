@@ -1297,6 +1297,10 @@ bool AudacityApp::OnInit()
 
 bool AudacityApp::InitPart2()
 {
+#if defined(__WXMAC__)
+   SetExitOnFrameDelete(false);
+#endif
+
    // Make sure the temp dir isn't locked by another process.
    {
       auto key =
@@ -1427,8 +1431,6 @@ bool AudacityApp::InitPart2()
 
       auto &recentFiles = FileHistory::Global();
       recentFiles.UseMenu(recentMenu);
-
-      SetExitOnFrameDelete(false);
 
 #endif //__WXMAC__
       temporarywindow.Show(false);
