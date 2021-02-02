@@ -90,7 +90,6 @@ Param( ReleaseTime,    double,  wxT("ReleaseTime"),        1.0,     0.00001, 30.
 Param( LookaheadTime,  double,  wxT("LookaheadTime"),      0.0,     0.0,     10.0,   200.0 );
 Param( LookbehindTime, double,  wxT("LookbehindTime"),     0.1,     0.0,     10.0,   200.0 );
 Param( MakeupGain,     double,  wxT("MakeupGain"),         0.0,     0.0,    100.0,     1.0 );
-Param( DryWet,         double,  wxT("DryWet"),           100.0,     0.0,    100.0,     1.0 );
 
 inline int ScaleToPrecision(double scale)
 {
@@ -530,7 +529,6 @@ EffectCompressor2::EffectCompressor2()
    mLookaheadTime = DEF_LookaheadTime;
    mLookbehindTime = DEF_LookbehindTime;
    mMakeupGainPct = DEF_MakeupGain;
-   mDryWetPct = DEF_DryWet;
 
    SetLinearEffectFlag(false);
 }
@@ -665,7 +663,6 @@ bool EffectCompressor2::DefineParams( ShuttleParams & S )
    S.SHUTTLE_PARAM(mLookaheadTime, LookaheadTime);
    S.SHUTTLE_PARAM(mLookbehindTime, LookbehindTime);
    S.SHUTTLE_PARAM(mMakeupGainPct, MakeupGain);
-   S.SHUTTLE_PARAM(mDryWetPct, DryWet);
 
    return true;
 }
@@ -684,7 +681,6 @@ bool EffectCompressor2::GetAutomationParameters(CommandParameters & parms)
    parms.Write(KEY_LookaheadTime, mLookaheadTime);
    parms.Write(KEY_LookbehindTime, mLookbehindTime);
    parms.Write(KEY_MakeupGain, mMakeupGainPct);
-   parms.Write(KEY_DryWet, mDryWetPct);
 
    return true;
 }
@@ -703,7 +699,6 @@ bool EffectCompressor2::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyDouble(LookaheadTime);
    ReadAndVerifyDouble(LookbehindTime);
    ReadAndVerifyDouble(MakeupGain);
-   ReadAndVerifyDouble(DryWet);
 
    mAlgorithm = Algorithm;
    mCompressBy = CompressBy;
@@ -717,7 +712,6 @@ bool EffectCompressor2::SetAutomationParameters(CommandParameters & parms)
    mLookaheadTime = LookaheadTime;
    mLookbehindTime = LookbehindTime;
    mMakeupGainPct = MakeupGain;
-   mDryWetPct = DryWet;
 
    return true;
 }
@@ -747,7 +741,6 @@ bool EffectCompressor2::Startup()
       mLookaheadTime = DEF_LookaheadTime;
       mLookbehindTime = DEF_LookbehindTime;
       mMakeupGainPct = DEF_MakeupGain;
-      mDryWetPct = DEF_DryWet;
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -962,17 +955,6 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
          ctrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("%"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-
-         S.AddVariableText(XO("Dry/Wet:"), true,
-            wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Dry/Wet"))
-            .Style(SliderTextCtrl::HORIZONTAL)
-            .AddSliderTextCtrl({}, DEF_DryWet, MAX_DryWet,
-               MIN_DryWet, ScaleToPrecision(SCL_DryWet),
-               &mDryWetPct);
-         ctrl->SetMinTextboxWidth(textbox_width);
-         S.AddVariableText(XO("%"), true,
-            wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
       S.EndMultiColumn();
       S.EndVerticalLay();
@@ -1066,7 +1048,6 @@ bool EffectCompressor2::TransferDataFromWindow()
 
 void EffectCompressor2::InitGainCalculation()
 {
-   mDryWet = mDryWetPct / 100.0;
    mMakeupGainDB = mMakeupGainPct / 100.0 *
       -(mThresholdDB * (1.0 - 1.0 / mRatio));
    mMakeupGain = DB_TO_LINEAR(mMakeupGainDB);
@@ -1480,7 +1461,7 @@ inline float EffectCompressor2::EnvelopeSample(PipelineBuffer& pbuf, size_t rp)
 
 inline void EffectCompressor2::CompressSample(float env, size_t wp)
 {
-   float gain = (1.0 - mDryWet) + CompressorGain(env) * mDryWet;
+   float gain = CompressorGain(env);
 
 #ifdef DEBUG_COMPRESSOR2_TRACE2
    float ThresholdDB = mThresholdDB;
@@ -1491,7 +1472,6 @@ inline void EffectCompressor2::CompressSample(float env, size_t wp)
    float LookaheadTime = mLookaheadTime;
    float LookbehindTime = mLookbehindTime;
    float MakeupGainPct = mMakeupGainPct;
-   float DryWetPct = mDryWetPct;
 
    debugfile.write((char*)&ThresholdDB, sizeof(float));
    debugfile.write((char*)&Ratio, sizeof(float));
@@ -1501,7 +1481,6 @@ inline void EffectCompressor2::CompressSample(float env, size_t wp)
    debugfile.write((char*)&LookaheadTime, sizeof(float));
    debugfile.write((char*)&LookbehindTime, sizeof(float));
    debugfile.write((char*)&MakeupGainPct, sizeof(float));
-   debugfile.write((char*)&DryWetPct, sizeof(float));
    debugfile.write((char*)&mPipeline[0][0][wp], sizeof(float));
    if(mProcStereo)
       debugfile.write((char*)&mPipeline[0][1][wp], sizeof(float));
