@@ -27,6 +27,7 @@
 
 #include "../UndoManager.h"
 
+#include <wx/dcmemory.h>
 #include <wx/defs.h>
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
