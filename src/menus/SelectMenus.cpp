@@ -483,7 +483,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    bool selected = false;
-   for (auto t : tracks.Any()
+   for (auto t : tracks.Any() + &Track::SupportsBasicEditing
          + &Track::IsSyncLockSelected - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;
@@ -866,7 +866,7 @@ void OnCursorTrackStart(const CommandContext &context)
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto trackRange = tracks.Selected();
+   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
@@ -892,7 +892,7 @@ void OnCursorTrackEnd(const CommandContext &context)
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto trackRange = tracks.Selected();
+   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
@@ -1059,7 +1059,7 @@ BaseItemSharedPtr SelectMenu()
             ,
             Command( wxT("SelSyncLockTracks"), XXO("In All &Sync-Locked Tracks"),
                FN(OnSelectSyncLockSel),
-               TracksSelectedFlag() | IsSyncLockedFlag(),
+               EditableTracksSelectedFlag() | IsSyncLockedFlag(),
                Options{ wxT("Ctrl+Shift+Y"), XO("Select Sync-Locked") } )
    #endif
          ),
@@ -1131,7 +1131,7 @@ BaseItemSharedPtr SelectMenu()
 
       Section( "",
          Command( wxT("ZeroCross"), XXO("At &Zero Crossings"),
-            FN(OnZeroCrossing), TracksSelectedFlag(),
+            FN(OnZeroCrossing), EditableTracksSelectedFlag(),
             Options{ wxT("Z"), XO("Select Zero Crossing") } )
       )
    ) ) };
@@ -1216,11 +1216,11 @@ BaseItemSharedPtr CursorMenu()
 
       Command( wxT("CursTrackStart"), XXO("Track &Start"),
          FN(OnCursorTrackStart),
-         TracksSelectedFlag(),
+         EditableTracksSelectedFlag(),
          Options{ wxT("J"), XO("Cursor to Track Start") } ),
       Command( wxT("CursTrackEnd"), XXO("Track &End"),
          FN(OnCursorTrackEnd),
-         TracksSelectedFlag(),
+         EditableTracksSelectedFlag(),
          Options{ wxT("K"), XO("Cursor to Track End") } ),
 
       Command( wxT("CursProjectStart"), XXO("&Project Start"),

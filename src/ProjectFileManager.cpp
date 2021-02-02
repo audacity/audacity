@@ -1137,6 +1137,29 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
    //   HandleResize();
 }
 
+namespace {
+bool ImportProject(AudacityProject &dest, const FilePath &fileName)
+{
+   InvisibleTemporaryProject temp;
+   auto &project = temp.Project();
+
+   auto &projectFileIO = ProjectFileIO::Get(project);
+   if (!projectFileIO.LoadProject(fileName, false))
+      return false;
+   auto &srcTracks = TrackList::Get(project);
+   auto &destTracks = TrackList::Get(dest);
+   for (const Track *pTrack : srcTracks.Any()) {
+      auto destTrack = pTrack->PasteInto(dest);
+      Track::FinishCopy(pTrack, destTrack.get());
+      if (destTrack.use_count() == 1)
+         destTracks.Add(destTrack);
+   }
+   Tags::Get(dest).Merge(Tags::Get(project));
+
+   return true;
+}
+}
+
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::Import(
    const FilePath &fileName,
@@ -1151,7 +1174,7 @@ bool ProjectFileManager::Import(
 
    // Handle AUP3 ("project") files directly
    if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
-      if (projectFileIO.ImportProject(fileName)) {
+      if (ImportProject(project, fileName)) {
          auto &history = ProjectHistory::Get(project);
 
          // If the project was clean and temporary (not permanently saved), then set

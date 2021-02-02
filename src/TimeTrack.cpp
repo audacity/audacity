@@ -53,6 +53,11 @@ TimeTrack::TimeTrack(const ZoomInfo *zoomInfo):
    Track()
    , mZoomInfo(zoomInfo)
 {
+   CleanState();
+}
+
+void TimeTrack::CleanState()
+{
    mEnvelope = std::make_unique<BoundedEnvelope>(true, TIMETRACK_MIN, TIMETRACK_MAX, 1.0);
 
    SetRangeLower( 0.9 );
@@ -129,6 +134,31 @@ void TimeTrack::SetRangeLower(double lower)
 void TimeTrack::SetRangeUpper(double upper)
 {
    mEnvelope->SetRangeUpper( upper );
+}
+
+bool TimeTrack::SupportsBasicEditing() const
+{
+   return false;
+}
+
+Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
+{
+   // Maintain uniqueness of the time track!
+   std::shared_ptr<TimeTrack> pNewTrack;
+   if( auto pTrack = *TrackList::Get( project ).Any<TimeTrack>().begin() )
+      pNewTrack = pTrack->SharedPointer<TimeTrack>();
+   else
+      pNewTrack = std::make_shared<TimeTrack>( &ViewInfo::Get( project ) );
+
+   // Should come here only for .aup3 import, not for paste (because the
+   // track is skipped in cut/copy commands)
+   // And for import we agree to replace the track contents completely
+   pNewTrack->CleanState();
+   pNewTrack->Init(*this);
+   pNewTrack->Paste(0.0, this);
+   pNewTrack->SetRangeLower(this->GetRangeLower());
+   pNewTrack->SetRangeUpper(this->GetRangeUpper());
+   return pNewTrack;
 }
 
 Track::Holder TimeTrack::Cut( double t0, double t1 )

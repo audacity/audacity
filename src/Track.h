@@ -318,6 +318,15 @@ class AUDACITY_DLL_API Track /* not final */
    using ConstInterval = ConstTrackInterval;
    using ConstIntervals = std::vector< ConstInterval >;
 
+   //! Whether this track type implements cut-copy-paste; by default, true
+   virtual bool SupportsBasicEditing() const;
+
+   using Holder = std::shared_ptr<Track>;
+
+   //! Find or create the destination track for a paste, maybe in a different project
+   /*! @return A smart pointer to the track; its `use_count()` can tell whether it is new */
+   virtual Holder PasteInto( AudacityProject & ) const = 0;
+
    //! Report times on the track where important intervals begin and end, for UI to snap to
    /*!
    Some intervals may be empty, and no ordering of the intervals is assumed.
@@ -390,7 +399,6 @@ private:
 
    void Init(const Track &orig);
 
-   using Holder = std::shared_ptr<Track>;
    // public nonvirtual duplication function that invokes Clone():
    virtual Holder Duplicate() const;
 

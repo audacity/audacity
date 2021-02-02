@@ -88,6 +88,8 @@ class AUDACITY_DLL_API Tags final
 
    std::shared_ptr<Tags> Duplicate() const;
 
+   void Merge( const Tags &other );
+
    Tags & operator= (const Tags & src );
 
    bool ShowEditDialog(

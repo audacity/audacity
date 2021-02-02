@@ -41,16 +41,16 @@ cycles.
 
 */
 
-// Really means, some track is selected, that isn't a time track
-bool TracksSelectedPred( const AudacityProject &project )
+// Strong predicate excludes tracks that do not support basic editing.
+bool EditableTracksSelectedPred( const AudacityProject &project )
 {
    auto range = TrackList::Get( project ).Selected()
      - []( const Track *pTrack ){
-        return track_cast<const TimeTrack*>( pTrack ); };
+        return !pTrack->SupportsBasicEditing(); };
    return !range.empty();
 };
 
-// This predicate includes time tracks too.
+// Weaker predicate.
 bool AnyTracksSelectedPred( const AudacityProject &project )
 {
    auto range = TrackList::Get( project ).Selected();
@@ -177,8 +177,8 @@ const ReservedCommandFlag&
       CommandFlagOptions{}.DisableDefaultMessage()
    }; return flag; }
 const ReservedCommandFlag&
-   TracksSelectedFlag() { static ReservedCommandFlag flag{
-      TracksSelectedPred, // exclude TimeTracks
+   EditableTracksSelectedFlag() { static ReservedCommandFlag flag{
+      EditableTracksSelectedPred,
       { []( const TranslatableString &Name ){ return
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          XO("\"%s\" requires one or more tracks to be selected.").Format( Name );
@@ -186,7 +186,7 @@ const ReservedCommandFlag&
    }; return flag; }
 const ReservedCommandFlag&
    AnyTracksSelectedFlag() { static ReservedCommandFlag flag{
-      AnyTracksSelectedPred, // Allow TimeTracks
+      AnyTracksSelectedPred,
       { []( const TranslatableString &Name ){ return
          // i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
          XO("\"%s\" requires one or more tracks to be selected.").Format( Name );

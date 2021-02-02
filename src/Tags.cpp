@@ -268,6 +268,13 @@ std::shared_ptr<Tags> Tags::Duplicate() const
    return std::make_shared<Tags>(*this);
 }
 
+void Tags::Merge( const Tags &other )
+{
+   for ( auto &pair : other.mMap ) {
+      SetTag( pair.first, pair.second );
+   }
+}
+
 Tags & Tags::operator=(const Tags & src)
 {
    mEditTitle = src.mEditTitle;

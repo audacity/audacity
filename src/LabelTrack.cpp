@@ -85,6 +85,13 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    }
 }
 
+Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
+{
+   auto pNewTrack = std::make_shared<LabelTrack>();
+   pNewTrack->Paste(0.0, this);
+   return pNewTrack;
+}
+
 template<typename IntervalType>
 static IntervalType DoMakeInterval(const LabelStruct &label, size_t index)
 {

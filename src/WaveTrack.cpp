@@ -334,6 +334,15 @@ static Container MakeIntervals(const std::vector<WaveClipHolder> &clips)
    return result;
 }
 
+Track::Holder WaveTrack::PasteInto( AudacityProject &project ) const
+{
+   auto &trackFactory = WaveTrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+   auto pNewTrack = EmptyCopy( pSampleBlockFactory );
+   pNewTrack->Paste(0.0, this);
+   return pNewTrack;
+}
+
 auto WaveTrack::GetIntervals() const -> ConstIntervals
 {
    return MakeIntervals<ConstIntervals>( mClips );
