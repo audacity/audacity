@@ -582,7 +582,7 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
          * the decimal point for your locale. Don't change the numbers.
          * The decimal separator is specified using '<' if your language uses a ',' or
          * to '>' if your language uses a '.'. */
-         XO("0100000>0100 Hz")
+         XO("010,01000>0100 Hz")
          , XO("centihertz")
       }
    },
