@@ -267,10 +267,8 @@ private:
    double    mLookaheadTime;
    double    mLookbehindTime;
    double    mMakeupGainPct;
-   double    mDryWetPct;
 
    // cached intermediate values
-   double mDryWet;
    double mMakeupGain;
    double mMakeupGainDB;
    size_t mLookaheadLength;
