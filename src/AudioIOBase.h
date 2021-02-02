@@ -16,10 +16,10 @@ Paul Licameli split from AudioIO.h
 
 #include <cfloat>
 #include <functional>
-#include <memory>
 #include <vector>
 #include <wx/string.h>
 #include <wx/weakref.h> // member variable
+#include "MemoryX.h"
 
 struct PaDeviceInfo;
 typedef void PaStream;
@@ -117,6 +117,7 @@ struct AudioIOStartStreamOptions
 ///\brief A singleton object supporting queries of the state of any active
 /// audio streams, and audio device capabilities
 class AUDACITY_DLL_API AudioIOBase /* not final */
+   : public NonInterferingBase
 {
 public:
    static AudioIOBase *Get();

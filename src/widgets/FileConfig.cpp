@@ -23,6 +23,8 @@
 
 #include "FileConfig.h"
 
+#include <cerrno> // for ENOENT
+
 #if !defined(F_OK)
 #define F_OK 0x00
 #endif
