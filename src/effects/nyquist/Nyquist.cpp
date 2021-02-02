@@ -242,7 +242,7 @@ TranslatableString NyquistEffect::GetDescription()
 wxString NyquistEffect::ManualPage()
 {
       return mIsPrompt
-         ? wxT("Nyquist_Prompt")
+         ? wxString("Nyquist_Prompt")
          : mManPage;
 }
 
@@ -2183,7 +2183,7 @@ bool NyquistEffect::Parse(
          ctrl.label = tokens[4];
 
          // valStr may or may not be a quoted string
-         ctrl.valStr = len > 5 ? tokens[5] : wxT("");
+         ctrl.valStr = len > 5 ? tokens[5] : wxString{};
          ctrl.val = GetCtrlValue(ctrl.valStr);
          if (ctrl.valStr.length() > 0 &&
                (ctrl.valStr[0] == wxT('(') ||

@@ -93,6 +93,6 @@ wxString ActiveProjects::Find(const FilePath &path)
 
    gPrefs->SetPath(configPath);
 
-   return found ? key : wxT("");
+   return found ? key : wxString{};
 }
 
