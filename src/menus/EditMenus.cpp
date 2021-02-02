@@ -323,6 +323,8 @@ void OnDelete(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    for (auto n : tracks.Any()) {
+      if (!n->SupportsBasicEditing())
+         continue;
       if (n->GetSelected() || n->IsSyncLockSelected()) {
          n->Clear(selectedRegion.t0(), selectedRegion.t1());
       }
@@ -647,6 +649,9 @@ void OnDuplicate(const CommandContext &context)
    auto range = tracks.Selected();
    auto last = *range.rbegin();
    for (auto n : range) {
+      if (!n->SupportsBasicEditing())
+         continue;
+
       // Make copies not for clipboard but for direct addition to the project
       auto dest = n->Copy(selectedRegion.t0(),
               selectedRegion.t1(), false);
@@ -687,12 +692,14 @@ void OnSplitCut(const CommandContext &context)
             FinishCopy(n, dest, newClipboard);
       },
       [&](Track *n) {
-         dest = n->Copy(selectedRegion.t0(),
-                 selectedRegion.t1());
-         n->Silence(selectedRegion.t0(),
+         if (n->SupportsBasicEditing()) {
+            dest = n->Copy(selectedRegion.t0(),
                     selectedRegion.t1());
-         if (dest)
-            FinishCopy(n, dest, newClipboard);
+            n->Silence(selectedRegion.t0(),
+                       selectedRegion.t1());
+            if (dest)
+               FinishCopy(n, dest, newClipboard);
+         }
       }
    );
 
@@ -717,8 +724,9 @@ void OnSplitDelete(const CommandContext &context)
                          selectedRegion.t1());
       },
       [&](Track *n) {
-         n->Silence(selectedRegion.t0(),
-                    selectedRegion.t1());
+         if (n->SupportsBasicEditing())
+            n->Silence(selectedRegion.t0(),
+                       selectedRegion.t1());
       }
    );
 

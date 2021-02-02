@@ -483,7 +483,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    bool selected = false;
-   for (auto t : tracks.Any()
+   for (auto t : tracks.Any() + &Track::SupportsBasicEditing
          + &Track::IsSyncLockSelected - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;
@@ -866,7 +866,7 @@ void OnCursorTrackStart(const CommandContext &context)
 
    double kWayOverToRight = std::numeric_limits<double>::max();
 
-   auto trackRange = tracks.Selected();
+   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
@@ -892,7 +892,7 @@ void OnCursorTrackEnd(const CommandContext &context)
 
    double kWayOverToLeft = std::numeric_limits<double>::lowest();
 
-   auto trackRange = tracks.Selected();
+   auto trackRange = tracks.Selected() + &Track::SupportsBasicEditing;
    if (trackRange.empty())
       // This should have been prevented by command manager
       return;
