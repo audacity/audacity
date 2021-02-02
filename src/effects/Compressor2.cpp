@@ -59,7 +59,7 @@ enum kAlgorithms
 static const ComponentInterfaceSymbol kAlgorithmStrings[nAlgos] =
 {
    { XO("Exponential-Fit") },
-   { XO("Analog Model (PT1)") }
+   { XO("Analog Model") }
 };
 
 enum kCompressBy
