@@ -263,9 +263,11 @@ void OnCut(const CommandContext &context)
       },
 #endif
       [&](Track *n) {
-         auto dest = n->Copy(selectedRegion.t0(),
-                 selectedRegion.t1());
-         FinishCopy(n, dest, newClipboard);
+         if (n->SupportsBasicEditing()) {
+            auto dest = n->Copy(selectedRegion.t0(),
+                    selectedRegion.t1());
+            FinishCopy(n, dest, newClipboard);
+         }
       }
    );
 
@@ -298,8 +300,8 @@ void OnCut(const CommandContext &context)
             fallthrough();
       },
       [&](Track *n) {
-         n->Clear(selectedRegion.t0(),
-                  selectedRegion.t1());
+         if (n->SupportsBasicEditing())
+            n->Clear(selectedRegion.t0(), selectedRegion.t1());
       }
    );
 
@@ -359,9 +361,11 @@ void OnCopy(const CommandContext &context)
    auto &newClipboard = *pNewClipboard;
 
    for (auto n : tracks.Selected()) {
-      auto dest = n->Copy(selectedRegion.t0(),
-              selectedRegion.t1());
-      FinishCopy(n, dest, newClipboard);
+      if (n->SupportsBasicEditing()) {
+         auto dest = n->Copy(selectedRegion.t0(),
+                 selectedRegion.t1());
+         FinishCopy(n, dest, newClipboard);
+      }
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
