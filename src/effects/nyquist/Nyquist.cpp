@@ -2497,7 +2497,7 @@ void NyquistEffect::OutputCallback(int c)
 {
    // Always collect Nyquist error messages for normal plug-ins
    if (!mRedirectOutput) {
-      mDebugOutputStr += (char)c;
+      mDebugOutputStr += (wxChar)c;
       return;
    }
 
