@@ -1219,23 +1219,20 @@ bool ProjectFileManager::Import(
       auto newTags = oldTags->Duplicate();
       Tags::Set( project, newTags );
 
-      bool success = true;
-
 #ifndef EXPERIMENTAL_IMPORT_AUP3
       // Handle AUP3 ("project") files specially
       if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
-         errorMessage = XO( "Cannot import aup3 format.  Use Open instead");
-         success = false;
+         ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
+            XO( "Cannot import AUP3 format.  Use File > Open instead"),
+            wxT("File_Menu"));
+         return false;
       }
 #endif
-      if( success ){
-         success = Importer::Get().Import(project, fileName,
+      bool success = Importer::Get().Import(project, fileName,
                                             &WaveTrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),
                                             errorMessage);
-      }
-
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
