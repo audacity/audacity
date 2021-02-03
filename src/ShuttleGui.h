@@ -19,12 +19,13 @@
 
 #include <vector>
 #include <wx/slider.h> // to inherit
-#include "MemoryX.h"
 #include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
 #include "Prefs.h"
 #include "WrappedType.h"
 #include "ComponentInterfaceSymbol.h"
+
+#include <optional>
 
 class ChoiceSetting;
 
@@ -572,7 +573,7 @@ private:
 
    std::vector<EnumValueSymbol> mRadioSymbols;
    wxString mRadioSettingName; /// The setting controlled by a group.
-   Optional<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
+   std::optional<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    int mRadioCount;       /// The index of this radio item.  -1 for none.
    wxString mRadioValueString; /// Unwrapped string value.
    wxRadioButton * DoAddRadioButton(

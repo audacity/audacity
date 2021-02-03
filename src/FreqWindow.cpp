@@ -1026,7 +1026,7 @@ void FrequencyPlotDialog::Recalc()
    // controls while the plot was being recalculated.  This doesn't appear to be necessary
    // so just use the top level window instead.
    {
-      Optional<wxWindowDisabler> blocker;
+      std::optional<wxWindowDisabler> blocker;
       if (IsShown())
          blocker.emplace(this);
       wxYieldIfNeeded();
