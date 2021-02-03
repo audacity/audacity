@@ -244,6 +244,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Fully qualified local help file name
    virtual wxString HelpPage();
 
+   virtual void SetUIFlags(unsigned flags);
+   virtual unsigned TestUIFlags(unsigned mask);
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
 
@@ -476,6 +478,7 @@ protected:
    wxDialog       *mUIDialog;
    wxWindow       *mUIParent;
    int            mUIResultID;
+   unsigned       mUIFlags;
 
    sampleCount    mSampleCnt;
 

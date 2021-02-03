@@ -377,6 +377,14 @@ struct Handler : CommandHandlerObject {
 void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
+   auto &menuManager = MenuManager::Get(project);
+   menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypenone;
+   menuManager.mLastToolRegistration = MenuCreator::repeattypenone;
+   menuManager.mLastGenerator = "";
+   menuManager.mLastEffect = "";
+   menuManager.mLastAnalyzer = "";
+   menuManager.mLastTool = "";
+
    gPrefs->DeleteAll();
 
    // Directory will be reset on next restart.
@@ -429,46 +437,72 @@ void OnManageEffects(const CommandContext &context)
    DoManagePluginsMenu(project, EffectTypeProcess);
 }
 
+void OnAnalyzer2(wxCommandEvent& evt) { return; }
+
 void OnRepeatLastGenerator(const CommandContext &context)
 {
-   auto lastEffect = MenuManager::Get(context.project).mLastGenerator;
+   auto& menuManager = MenuManager::Get(context.project);
+   auto lastEffect = menuManager.mLastGenerator;
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, EffectManager::kConfigured | EffectManager::kRepeatGen);
+         lastEffect, context, menuManager.mRepeatGeneratorFlags | EffectManager::kRepeatGen);
    }
 }
 
 void OnRepeatLastEffect(const CommandContext &context)
 {
-   auto lastEffect = MenuManager::Get(context.project).mLastEffect;
+   auto& menuManager = MenuManager::Get(context.project);
+   auto lastEffect = menuManager.mLastEffect;
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, EffectManager::kConfigured);
+         lastEffect, context, menuManager.mRepeatGeneratorFlags);
    }
 }
 
-void OnRepeatLastAnalyzer(const CommandContext &context)
+void OnRepeatLastAnalyzer(const CommandContext& context)
 {
-   auto lastEffect = MenuManager::Get(context.project).mLastAnalyzer;
-   if (!lastEffect.empty())
-   {
-      EffectUI::DoEffect(
-         lastEffect, context, EffectManager::kConfigured);
-   }
-}
-
-void OnRepeatLastTool(const CommandContext &context)
-{
-   auto lastEffect = MenuManager::Get(context.project).mLastTool;
-   if (!lastEffect.empty())
-   {
-      if (!MenuManager::Get(context.project).mLastToolIsMacro)
+   auto& menuManager = MenuManager::Get(context.project);
+   switch (menuManager.mLastAnalyzerRegistration) {
+   case MenuCreator::repeattypeplugin:
+     {
+       auto lastEffect = menuManager.mLastAnalyzer;
+       if (!lastEffect.empty())
+       {
          EffectUI::DoEffect(
-            lastEffect, context, EffectManager::kConfigured);
-      else
-         OnApplyMacroDirectlyByName(context, lastEffect);
+            lastEffect, context, menuManager.mRepeatAnalyzerFlags);
+       }
+     }
+      break;
+   case MenuCreator::repeattypeunique:
+      CommandManager::Get(context.project).DoRepeatProcess(context,
+         menuManager.mLastAnalyzerRegisteredId);
+      break;
+   }
+}
+
+void OnRepeatLastTool(const CommandContext& context)
+{
+   auto& menuManager = MenuManager::Get(context.project);
+   switch (menuManager.mLastToolRegistration) {
+     case MenuCreator::repeattypeplugin:
+     {
+        auto lastEffect = menuManager.mLastTool;
+        if (!lastEffect.empty())
+        {
+           EffectUI::DoEffect(
+              lastEffect, context, menuManager.mRepeatToolFlags);
+        }
+     }
+       break;
+     case MenuCreator::repeattypeunique:
+        CommandManager::Get(context.project).DoRepeatProcess(context,
+           menuManager.mLastToolRegisteredId);
+        break;
+     case MenuCreator::repeattypeapplymacro:
+        OnApplyMacroDirectlyByName(context, menuManager.mLastTool);
+        break;
    }
 }
 
@@ -488,6 +522,7 @@ void OnManageTools(const CommandContext &context )
 void OnManageMacros(const CommandContext &context )
 {
    auto &project = context.project;
+   CommandManager::Get(project).RegisterLastTool(context);  //Register Macros as Last Tool
    auto macrosWindow =
       &project.AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
    if (macrosWindow) {
@@ -500,6 +535,7 @@ void OnManageMacros(const CommandContext &context )
 void OnApplyMacrosPalette(const CommandContext &context )
 {
    auto &project = context.project;
+   CommandManager::Get(project).RegisterLastTool(context);  //Register Palette as Last Tool
    auto macrosWindow =
       &project.AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
    if (macrosWindow) {
@@ -511,12 +547,14 @@ void OnApplyMacrosPalette(const CommandContext &context )
 
 void OnScreenshot(const CommandContext &context )
 {
+   CommandManager::Get(context.project).RegisterLastTool(context);  //Register Screenshot as Last Tool
    ::OpenScreenshotTools( context.project );
 }
 
 void OnBenchmark(const CommandContext &context)
 {
    auto &project = context.project;
+   CommandManager::Get(project).RegisterLastTool(context);  //Register Run Benchmark as Last Tool
    auto &window = GetProjectFrame( project );
    ::RunBenchmark( &window, project);
 }
@@ -570,19 +608,20 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
     * repeated if this menu item is chosen */
    MenuManager::ModifyUndoMenuItems( project );
 
-      TranslatableString desc;
-      EffectManager& em = EffectManager::Get();
-      auto shortDesc = em.GetCommandName(Name);
-      auto& undoManager = UndoManager::Get(project);
-      auto& commandManager = CommandManager::Get(project);
-      int cur = undoManager.GetCurrentState();
-      if (undoManager.UndoAvailable()) {
-         undoManager.GetShortDescription(cur, &desc);
-         commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
-            .Format(desc));
-         MenuManager::Get(project).mLastTool = Name;
-         MenuManager::Get(project).mLastToolIsMacro = true;
-      }
+   TranslatableString desc;
+   EffectManager& em = EffectManager::Get();
+   auto shortDesc = em.GetCommandName(Name);
+   auto& undoManager = UndoManager::Get(project);
+   auto& commandManager = CommandManager::Get(project);
+   int cur = undoManager.GetCurrentState();
+   if (undoManager.UndoAvailable()) {
+       undoManager.GetShortDescription(cur, &desc);
+       commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat %s")
+          .Format(desc));
+       auto& menuManager = MenuManager::Get(project);
+       menuManager.mLastTool = Name;
+       menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
+   }
 
 }
 

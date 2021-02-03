@@ -235,6 +235,7 @@ CommandManager::CommandManager():
 {
    mbSeparatorAllowed = false;
    SetMaxList();
+   mLastProcessId = 0;
 }
 
 ///
@@ -722,23 +723,6 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
          entry->id = wxID_EXIT;
       else if (name == wxT("About"))
          entry->id = wxID_ABOUT;
-
-#if defined(BE_CAREFUL)
-      // Don't be tempted to do this unless you're willing to change how
-      // HandleMenuID() decides if a menu action should be performed.
-      // (see comments 6-9 in bug #2642 for symptoms)
-      else if (name == wxT("Copy"))
-         entry->id = wxID_COPY;
-      else if (name == wxT("Cut"))
-         entry->id = wxID_CUT;
-      else if (name == wxT("Delete"))
-         entry->id = wxID_CLEAR;
-      else if (name == wxT("Paste"))
-         entry->id = wxID_PASTE;
-      else if (name == wxT("SelectAll"))
-         entry->id = wxID_SELECTALL;
-#endif
-
 #endif
 
       entry->name = name;
@@ -1192,6 +1176,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    return false;
 }
 
+
 /// HandleCommandEntry() takes a CommandListEntry and executes it
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
@@ -1219,14 +1204,53 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
       // Otherwise we may get other handlers having a go at obeying the command.
       if (!allowed)
          return true;
+      mNiceName = NiceName;
+   }
+   else {
+      mNiceName = XO("");
    }
 
    const CommandContext context{ project, evt, entry->index, entry->parameter };
    auto &handler = entry->finder(project);
    (handler.*(entry->callback))(context);
-
+   mLastProcessId = 0;
    return true;
 }
+
+// Called by Contrast and Plot Spectrum Plug-ins to mark them as Last Analzers.
+// Note that Repeat data has previously been collected
+void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
+   if (mLastProcessId != 0) {
+      auto& menuManager = MenuManager::Get(context.project);
+      menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypeunique;
+      menuManager.mLastAnalyzerRegisteredId = mLastProcessId;
+      auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
+      Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
+   }
+   return;
+}
+
+// Called by Selected Tools to mark them as Last Tools.
+// Note that Repeat data has previously been collected
+void CommandManager::RegisterLastTool(const CommandContext& context) {
+   if (mLastProcessId != 0) {
+      auto& menuManager = MenuManager::Get(context.project);
+      menuManager.mLastToolRegistration = MenuCreator::repeattypeunique;
+      menuManager.mLastToolRegisteredId = mLastProcessId;
+      auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
+      Modify(wxT("RepeatLastTool"), lastEffectDesc);
+   }
+   return;
+}
+
+// Used to invoke Repeat Last Analyzer Process for built-in, non-nyquist plug-ins.
+void CommandManager::DoRepeatProcess(const CommandContext& context, int id) {
+   mLastProcessId = 0;  //Don't Process this as repeat
+   CommandListEntry* entry = mCommandNumericIDHash[id];
+   auto& handler = entry->finder(context.project);
+   (handler.*(entry->callback))(context);
+}
+
 
 ///Call this when a menu event is received.
 ///If it matches a command, it will call the appropriate
@@ -1236,6 +1260,7 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 bool CommandManager::HandleMenuID(
    AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled)
 {
+   mLastProcessId = id;
    CommandListEntry *entry = mCommandNumericIDHash[id];
 
    auto hook = sMenuHook();

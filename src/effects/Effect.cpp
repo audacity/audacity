@@ -100,6 +100,7 @@ Effect::Effect()
 
    mUIParent = NULL;
    mUIDialog = NULL;
+   mUIFlags = 0;
 
    mNumAudioIn = 0;
    mNumAudioOut = 0;
@@ -1177,6 +1178,14 @@ wxString Effect::ManualPage()
 wxString Effect::HelpPage()
 {
    return wxEmptyString;
+}
+
+void Effect::SetUIFlags(unsigned flags) {
+   mUIFlags = flags;
+}
+
+unsigned Effect::TestUIFlags(unsigned mask) {
+   return mask & mUIFlags;
 }
 
 bool Effect::IsBatchProcessing()
