@@ -549,7 +549,7 @@ void CommandManager::AddItem(AudacityProject &project,
                              const Options &options)
 {
    if (options.global) {
-      wxASSERT( flags == AlwaysEnabledFlag );
+      //wxASSERT( flags == AlwaysEnabledFlag );
       AddGlobalCommand(
          name, label_in, finder, callback, options );
       return;
@@ -717,6 +717,8 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->parameter = parameter;
 
 #if defined(__WXMAC__)
+      // See bug #2642 for some history as to why these items 
+      // on Mac have their IDs set explicitly and not others.
       if (name == wxT("Preferences"))
          entry->id = wxID_PREFERENCES;
       else if (name == wxT("Exit"))

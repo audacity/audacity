@@ -816,6 +816,8 @@ BaseItemSharedPtr GenerateMenu()
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
+   using Options = CommandManager::Options;
+
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XXO("&Generate"),
@@ -842,7 +844,7 @@ BaseItemSharedPtr GenerateMenu()
                FN(OnRepeatLastGenerator),
                AudioIONotBusyFlag() |
                    HasLastGeneratorFlag(),
-               {}, findCommandHandler);
+               Options{}.IsGlobal(), findCommandHandler);
          }
       ),
 
@@ -929,6 +931,8 @@ BaseItemSharedPtr AnalyzeMenu()
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
 
+   using Options = CommandManager::Options;
+
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XXO("&Analyze"),
@@ -955,7 +959,7 @@ BaseItemSharedPtr AnalyzeMenu()
                FN(OnRepeatLastAnalyzer),
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastAnalyzerFlag(),
-               {}, findCommandHandler);
+               Options{}.IsGlobal(), findCommandHandler);
          }
       ),
 
@@ -1011,7 +1015,7 @@ BaseItemSharedPtr ToolsMenu()
                FN(OnRepeatLastTool),
                AudioIONotBusyFlag() |
                   HasLastToolFlag(),
-               {}, findCommandHandler );
+               Options{}.IsGlobal(), findCommandHandler );
          }
       ),
 
