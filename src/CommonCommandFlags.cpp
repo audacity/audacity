@@ -238,36 +238,6 @@ const ReservedCommandFlag&
       }
    }; return flag; }
 const ReservedCommandFlag&
-   HasLastGeneratorFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
-         return !MenuManager::Get( project ).mLastGenerator.empty();
-      }
-   }; return flag; }
-const ReservedCommandFlag&
-   HasLastEffectFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
-         return !MenuManager::Get(project).mLastEffect.empty();
-      }
-   }; return flag;
-}
-const ReservedCommandFlag&
-   HasLastAnalyzerFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
-         if (MenuManager::Get(project).mLastAnalyzerRegistration == MenuCreator::repeattypeunique) return true;
-         return !MenuManager::Get(project).mLastAnalyzer.empty();
-      }
-   }; return flag;
-}
-const ReservedCommandFlag&
-   HasLastToolFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
-      auto& menuManager = MenuManager::Get(project);
-         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
-         return !menuManager.mLastTool.empty();
-      }
-   }; return flag;
-}
-const ReservedCommandFlag&
    UndoAvailableFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return ProjectHistory::Get( project ).UndoAvailable();

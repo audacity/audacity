@@ -811,6 +811,14 @@ MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
 // Under /MenuBar
 namespace {
 using namespace MenuTable;
+
+const ReservedCommandFlag&
+   HasLastGeneratorFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return !MenuManager::Get( project ).mLastGenerator.empty();
+      }
+   }; return flag; }
+
 BaseItemSharedPtr GenerateMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
@@ -873,6 +881,14 @@ AttachedItem sAttachment1{
    Shared( GenerateMenu() )
 };
 
+const ReservedCommandFlag&
+   HasLastEffectFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project) {
+         return !MenuManager::Get(project).mLastEffect.empty();
+      }
+   }; return flag;
+}
+
 BaseItemSharedPtr EffectMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
@@ -925,6 +941,15 @@ AttachedItem sAttachment2{
    wxT(""),
    Shared( EffectMenu() )
 };
+
+const ReservedCommandFlag&
+   HasLastAnalyzerFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project) {
+         if (MenuManager::Get(project).mLastAnalyzerRegistration == MenuCreator::repeattypeunique) return true;
+         return !MenuManager::Get(project).mLastAnalyzer.empty();
+      }
+   }; return flag;
+}
 
 BaseItemSharedPtr AnalyzeMenu()
 {
@@ -982,6 +1007,16 @@ AttachedItem sAttachment3{
    wxT(""),
    Shared( AnalyzeMenu() )
 };
+
+const ReservedCommandFlag&
+   HasLastToolFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project) {
+      auto& menuManager = MenuManager::Get(project);
+         if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
+         return !menuManager.mLastTool.empty();
+      }
+   }; return flag;
+}
 
 BaseItemSharedPtr ToolsMenu()
 {
