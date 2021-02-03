@@ -587,8 +587,9 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       {
          // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
          // for overwrite ourselves later, and we disallow it.
-         // We disallow overwrite because we would have to DELETE the many
-         // smaller files too, or prompt to move them.
+         // Previously we disallowed overwrite because we would have had 
+         // to DELETE the many smaller files too, or prompt to move them.
+         // Maybe we could allow it now that we have aup3 format?
          fName = FileNames::SelectFile(FileNames::Operation::Export,
                                        title,
                                        filename.GetPath(),
@@ -1172,6 +1173,7 @@ bool ProjectFileManager::Import(
    TrackHolders newTracks;
    TranslatableString errorMessage;
 
+#ifdef EXPERIMENTAL_IMPORT_AUP3
    // Handle AUP3 ("project") files directly
    if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
       if (ImportProject(project, fileName)) {
@@ -1205,6 +1207,7 @@ bool ProjectFileManager::Import(
 
       return false;
    }
+#endif
 
    {
       // Backup Tags, before the import.  Be prepared to roll back changes.
@@ -1216,11 +1219,22 @@ bool ProjectFileManager::Import(
       auto newTags = oldTags->Duplicate();
       Tags::Set( project, newTags );
 
-      bool success = Importer::Get().Import(project, fileName,
+      bool success = true;
+
+#ifndef EXPERIMENTAL_IMPORT_AUP3
+      // Handle AUP3 ("project") files specially
+      if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
+         errorMessage = XO( "Cannot import aup3 format.  Use Open instead");
+         success = false;
+      }
+#endif
+      if( success ){
+         success = Importer::Get().Import(project, fileName,
                                             &WaveTrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),
                                             errorMessage);
+      }
 
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
