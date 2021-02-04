@@ -586,16 +586,17 @@ void Tags::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("tags"));
 }
 
-bool Tags::ShowEditDialog(wxWindow *parent, const TranslatableString &title, bool force)
+bool TagsEditorDialog::ShowEditDialog(Tags &tags, wxWindow *parent, const TranslatableString &title, bool force)
 {
    if (force) {
-      TagsEditorDialog dlg(parent, title, this, true, true);
+      TagsEditorDialog dlg(parent, title, &tags, true, true);
 
       return dlg.ShowModal() == wxID_OK;
    }
 
    return true;
 }
+
 //
 // ComboEditor - Wrapper to prevent unwanted background erasure
 //
