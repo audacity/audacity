@@ -10,15 +10,20 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../Audacity.h"
 #include "TimeTrackVRulerControls.h"
+#include "TimeTrackVZoomHandle.h"
 
 #include "../../../HitTestResult.h"
 
 #include "../../../AColor.h"
 #include "../../../AllThemeResources.h"
+#include "../../../ProjectHistory.h"
+#include "../../../RefreshCode.h"
 #include "../../../Theme.h"
 #include "../../../TimeTrack.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelDrawingContext.h"
+#include "../../../TrackPanelMouseEvent.h"
+#include "../../../UIHandle.h"
 #include "../../../widgets/Ruler.h"
 
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
@@ -31,6 +36,28 @@ namespace {
       static Ruler theRuler;
       return theRuler;
    }
+}
+
+std::vector<UIHandlePtr> TimeTrackVRulerControls::HitTest(
+   const TrackPanelMouseState &st,
+   const AudacityProject *pProject)
+{
+   std::vector<UIHandlePtr> results;
+
+   if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
+      auto pTrack = FindTrack()->SharedPointer<TimeTrack>(  );
+      if (pTrack) {
+         auto result = std::make_shared<TimeTrackVZoomHandle>(
+            pTrack, st.rect, st.state.m_y );
+         result = AssignUIHandlePtr(mVZoomHandle, result);
+         results.push_back(result);
+      }
+   }
+
+   auto more = TrackVRulerControls::HitTest(st, pProject);
+   std::copy(more.begin(), more.end(), std::back_inserter(results));
+
+   return results;
 }
 
 void TimeTrackVRulerControls::Draw(

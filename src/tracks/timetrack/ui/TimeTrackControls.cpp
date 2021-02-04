@@ -38,39 +38,20 @@ enum
    OnSetTimeTrackRangeID,
 };
 
-class TimeTrackMenuTable : public PopupMenuTable
-{
-   TimeTrackMenuTable()
-      : PopupMenuTable{ "TimeTrack" }
-   {}
-   DECLARE_POPUP_MENU(TimeTrackMenuTable);
-
-public:
-   static TimeTrackMenuTable &Instance();
-
-private:
-   void InitUserData(void *pUserData) override
-   {
-      mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
-   }
-
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
-   CommonTrackControls::InitMenuData *mpData{};
-
-   void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
-   void OnTimeTrackLin(wxCommandEvent & /*event*/);
-   void OnTimeTrackLog(wxCommandEvent & /*event*/);
-   void OnTimeTrackLogInt(wxCommandEvent & /*event*/);
-};
-
 TimeTrackMenuTable &TimeTrackMenuTable::Instance()
 {
    static TimeTrackMenuTable instance;
    return instance;
+}
+
+void TimeTrackMenuTable::InitUserData(void *pUserData)
+{
+   mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
+}
+
+void TimeTrackMenuTable::DestroyMenu()
+{
+   mpData = nullptr;
 }
 
 void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
@@ -86,17 +67,19 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
          _("Lower speed limit"),
          _("Lower speed limit"),
          lower,
-         10,
-         1000);
+         TimeTrackControls::kRangeMin,
+         TimeTrackControls::kRangeMax);
 
       upper = wxGetNumberFromUser(_("Change upper speed limit (%) to:"),
          _("Upper speed limit"),
          _("Upper speed limit"),
          upper,
          lower + 1,
-         1000);
+         TimeTrackControls::kRangeMax);
 
-      if (lower >= 10 && upper <= 1000 && lower < upper) {
+      if (lower >= TimeTrackControls::kRangeMin &&
+          upper <= TimeTrackControls::kRangeMax &&
+          lower < upper) {
          AudacityProject *const project = &mpData->project;
          pTrack->SetRangeLower((double)lower / 100.0);
          pTrack->SetRangeUpper((double)upper / 100.0);
