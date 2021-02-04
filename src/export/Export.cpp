@@ -410,7 +410,8 @@ bool Exporter::DoEditMetadata(AudacityProject &project,
    // BEFORE doing any editing of it!
    auto newTags = tags.Duplicate();
 
-   if (newTags->ShowEditDialog(&GetProjectFrame( project ), title, force)) {
+   if (TagsEditorDialog::ShowEditDialog(
+      *newTags, &GetProjectFrame( project ), title, force)) {
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );

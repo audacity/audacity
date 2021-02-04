@@ -92,9 +92,6 @@ class AUDACITY_DLL_API Tags final
 
    Tags & operator= (const Tags & src );
 
-   bool ShowEditDialog(
-      wxWindow *parent, const TranslatableString &title, bool force = false);
-
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
@@ -145,6 +142,9 @@ class TagsEditorDialog final : public wxDialogWrapper
               bool editTrack);
 
    virtual ~TagsEditorDialog();
+
+   AUDACITY_DLL_API static bool ShowEditDialog( Tags &tags,
+      wxWindow *parent, const TranslatableString &title, bool force = false);
 
 #if !defined(__WXMSW__)
    bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }
