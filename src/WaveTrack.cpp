@@ -44,7 +44,6 @@ from the project that will own the track.
 
 #include "Envelope.h"
 #include "Sequence.h"
-#include "Spectrum.h"
 
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
