@@ -834,6 +834,8 @@ list( APPEND SOURCES
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackVRulerControls.cpp
       tracks/timetrack/ui/TimeTrackVRulerControls.h
+      tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+      tracks/timetrack/ui/TimeTrackVZoomHandle.h
       tracks/timetrack/ui/TimeTrackView.cpp
       tracks/timetrack/ui/TimeTrackView.h
 
