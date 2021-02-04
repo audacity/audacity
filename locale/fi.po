@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2020-11-23 19:23+0200\n"
-"Last-Translator: VeikkoM\n"
+"PO-Revision-Date: 2021-02-04 22:21+0200\n"
+"Last-Translator: Sampo Hippeläinen\n"
 "Language-Team: fi\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -450,9 +450,9 @@ msgstr "%s (sisältää %s, %s, %s, %s ja %s)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "About %s"
-msgstr "Tietoja"
+msgstr "%s-tiedot"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -463,55 +463,54 @@ msgstr "OK"
 #. i18n-hint: First and third %s will be the program's name,
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Audacity on ilmainen ohjelma, jonka on kirjoittanut maailmanlaajuinen tiimi "
-"[[https://www.audacityteam.org/about/credits|vapaaehtoisia]]. Audacity on "
-"tarkoitettu [[https://www.audacityteam.org/download|available]] Windowsille, "
-"Macille ja GNU/Linuxille (ja muille Unixin kaltaisille järjestelmille)."
+"%s on ilmainen ohjelma, jonka on kirjoittanut maailmanlaajuinen tiimi "
+"[[https://www.audacityteam.org/about/credits|%s]]. %s on %s [[https://www."
+"audacityteam.org/download|available]] Windowsille, Macille ja GNU/Linuxille "
+"(ja muille Unixin kaltaisille järjestelmille)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr ""
+msgstr "vapaaehtoisia"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "available"
-msgstr "Muuttuja"
+msgstr "saatavilla"
 
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Jos löydät vian tai sinulla on ehdotus meille, kirjoita englanniksi "
-"osoitteeseen [[https://forum.audacityteam.org/|forum]]. Jos tarvitset apua, "
-"tutustu [[https://wiki.audacityteam.org/|wikin]] vinkkeihin ja temppuihin "
-"tai käy [[https://forum.audacityteam.org/|keskustelupalstallamme]]."
+"[[https://forum.audacityteam.org/|%s]]. Jos tarvitset apua, tutustu "
+"[[https://wiki.audacityteam.org/|%s]] vinkkeihin ja temppuihin tai käy "
+"[[https://forum.audacityteam.org/|%s]]."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
 msgctxt "dative"
 msgid "forum"
-msgstr ""
+msgstr "palstallemme"
 
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr ""
+msgstr "wikimme"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
 msgctxt "accusative"
 msgid "forum"
-msgstr ""
+msgstr "palstallamme"
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -526,17 +525,17 @@ msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
-msgstr ""
+msgstr "<h3>"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"Audacity on ilmainen, avoimen lähdekoodin, järjestelmäriippumaton ohjelmisto "
-"äänen nauhoitukseen ja editointiin."
+"%s on ilmainen, avoimen lähdekoodin, järjestelmäriippumaton ohjelmisto äänen "
+"nauhoitukseen ja editointiin."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -548,9 +547,9 @@ msgstr "DarkAudacityn mukauttaminen"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Team Members"
-msgstr " Emeritus tiimijäsenet"
+msgstr "%s-tiimijäsenet"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -558,10 +557,10 @@ msgstr "Emeritus:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Distinguished %s Team members, not currently active"
 msgstr ""
-"Arvostetut Audacity Teamin jäsenet, jotka eivät ole tällä hetkellä aktiivisia"
+"Arvostetut %s-tiimin jäsenet, jotka eivät ole tällä hetkellä aktiivisia"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -581,9 +580,9 @@ msgstr "Kirjastot"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s includes code from the following projects:"
-msgstr "Audacity sisältää koodia seuraavista projekteista:"
+msgstr "%s sisältää koodia seuraavista projekteista:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -591,24 +590,22 @@ msgstr "Erityiskiitokset:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s website: "
-msgstr "Audacityn verkkosivusto: "
+msgstr "%s-verkkosivusto: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2020 %s Team."
-msgstr ""
+msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2020 %s-tiimi."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr ""
-"&nbsp; &nbsp; Nimi <b>Audacity</b> on Dominic Mazzonin rekisteröity "
-"tavaramerkki.<br><br>"
+msgstr "Nimi %s on Dominic Mazzonin rekisteröity tavaramerkki."
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -717,12 +714,12 @@ msgstr "Koontitunnus:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "Virheenkorjausversio (taso %d)"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release build (debug level %d)"
-msgstr "Julkaisuversio"
+msgstr "Julkaisuversio (virheenkorjaustaso %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -910,7 +907,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr ""
+msgstr "SQLite-kirjastoa ei voitu alustaa.  Audacity ei voi käynnistyä."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -1023,6 +1020,11 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Semaforeja ei voitu lukita.\n"
+"\n"
+"Resurssit saattavat olla vähissä.\n"
+"Järjestelmä tulee ehkä käynnistää\n"
+"uudelleen."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
@@ -1035,6 +1037,11 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Semaforeja ei voitu luoda.\n"
+"\n"
+"Resurssit saattavat olla vähissä.\n"
+"Järjestelmä tulee ehkä käynnistää\n"
+"uudelleen."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1043,6 +1050,11 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Lukkosemaforia ei voitu lukita.\n"
+"\n"
+"Resurssit saattavat olla vähissä.\n"
+"Järjestelmä tulee ehkä käynnistää\n"
+"uudelleen."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1051,6 +1063,11 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Palvelinsemaforia ei voitu lukita.\n"
+"\n"
+"Resurssit saattavat olla vähissä.\n"
+"Järjestelmä tulee ehkä käynnistää\n"
+"uudelleen."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1059,6 +1076,11 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Audacityn IPC-palvelin ei käynnistynyt.\n"
+"\n"
+"Resurssit saattavat olla vähissä.\n"
+"Järjestelmä tulee ehkä käynnistää\n"
+"uudelleen."
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
@@ -1092,17 +1114,16 @@ msgid "audio or project file name"
 msgstr "ääni- tai projektitiedoston nimi"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid ""
 "Audacity project (.aup3) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Audacityn projektitiedostoja (.AUP) ei ole\n"
+"Audacityn projektitiedostoja (.aup3) ei ole\n"
 "asetettu käynnistymään Audacityssä.\n"
 "\n"
-"Tehdäänkö asetus, jotta voit avata\n"
+"Kytketäänkö tiedostomuoto, jotta voit avata\n"
 "projektitiedostot kaksoisnapsautuksella?"
 
 #: src/AudacityApp.cpp
@@ -1115,9 +1136,8 @@ msgid "Message"
 msgstr "Viesti"
 
 #: src/AudacityFileConfig.cpp
-#, fuzzy
 msgid "Audacity Configuration Error"
-msgstr "DarkAudacityn mukauttaminen"
+msgstr "Audacityn määritysvirhe"
 
 #: src/AudacityFileConfig.cpp
 #, c-format
@@ -1135,6 +1155,18 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
 "state which will be recovered the next time you open it."
 msgstr ""
+"Seuraavaa määritystiedostoa ei voitu avata:\n"
+"\n"
+"\t%s\n"
+"\n"
+"Tähän voi johtaa useat eri asiat, mutta todennäköisimmin levysi on täynnä "
+"tai sinulla ei ole oikeuksia kirjoittaa tiedostoon. Alla olevasta "
+"ohjenapista löytää lisätietoja.\n"
+"\n"
+"Voit yrittää korjata ongelman ja painaa \"Yritä uudelleen\" jatkaaksesi.\n"
+"\n"
+"Jos päätät sulkea Audacityn, projekti saattaa jäädä keskeneräiseen tilaan ja "
+"Audacityn pitää palauttaa se ensi kerralla."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
@@ -1143,13 +1175,12 @@ msgid "Help"
 msgstr "Ohje"
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Quit Audacity"
-msgstr "Lopeta Audacity"
+msgstr "&Lopeta Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
-msgstr ""
+msgstr "&Yritä uudelleen"
 
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
@@ -1472,7 +1503,6 @@ msgid "Automatic Crash Recovery"
 msgstr "Automaattinen kaatumispalautus"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid ""
 "The following projects were not saved properly the last time Audacity was "
 "run and can be automatically recovered.\n"
@@ -1480,13 +1510,14 @@ msgid ""
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
 "Joitakin projekteja ei tallennettu oikein Audacityn viimeisen käyttökerran "
-"aikana.\n"
-"Onneksi seuraavat projektit voidaan palauttaa automaattisesti:"
+"aikana, mutta ne voidaan palauttaa automaattisesti.\n"
+"\n"
+"Palautuksen jälkeen projektit tulee tallentaa, tai muuten niiden tiedot "
+"eivät välttämättä tallennu levylle."
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "Recoverable &projects"
-msgstr "Palautettavissa olevat projektit"
+msgstr "Palautettavissa olevat &projektit"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
@@ -1500,35 +1531,30 @@ msgid "Name"
 msgstr "Nimi"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Discard Selected"
-msgstr " Valittu"
+msgstr "&Hylkää valitut"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Recover Selected"
-msgstr "Ei valittuja"
+msgstr "&Palauta valitut"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Skip"
-msgstr ""
+msgstr "&Ohita"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "No projects selected"
-msgstr "Makroa ei ole valittu"
+msgstr "Projekteja ei valittu"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid ""
 "Are you sure you want to discard the selected projects?\n"
 "\n"
 "Choosing \"Yes\" permanently deletes the selected projects immediately."
 msgstr ""
-"Haluatko varmasti hylätä kaikki palautettavissa olevat projektit?\n"
+"Haluatko varmasti hylätä kaikki valitut projektit?\n"
 "\n"
-"Jos valitset \"Kyllä\", kaikki palautettavissa olevat projektit hylätään "
-"välittömästi."
+"Jos valitset \"Kyllä\", kaikki valitut projektit poistetaan pysyvästi."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1567,22 +1593,17 @@ msgid "Fade Ends"
 msgstr "Häivytä päät"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Import Macro"
-msgstr "Tuo raaka"
+msgstr "Tuo makro"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
-msgstr ""
-"Tiedostoa \"%s\" ei ole.\n"
-"\n"
-"Luodaanko se?"
+msgstr "Makro %s on jo olemassa. Korvataanko se?"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Export Macro"
-msgstr "Vie MIDI"
+msgstr "Vie makro"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1890,18 +1911,18 @@ msgid "Test data size should be in the range 1 - 2000 MB."
 msgstr "Testitietojen koon on oltava 1 - 2000 Mt väliltä."
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr "Käytetään %ld-pätkää %ld-näytteestä yhteensä %.1f MB.\n"
+msgstr "Käytetään %lld palaa, jokaisessa %lld näytettä, yhteensä %.1f Mt.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
 msgstr "Valmistellaan...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Expected len %lld, track len %lld.\n"
-msgstr "Odotettu pituus %ld, raidan pituus %lld.\n"
+msgstr "Odotettu pituus %lld, raidan pituus %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1909,9 +1930,9 @@ msgid "Performing %d edits...\n"
 msgstr "Suoritetaan %d muokkausta...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut: %lld - %lld \n"
-msgstr "Leikkaus: %ld - %ld\n"
+msgstr "Leikkaus: %lld - %lld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1919,14 +1940,14 @@ msgid "Trial %d\n"
 msgstr "Kokeilu %d\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut (%lld, %lld) failed.\n"
-msgstr "Leikkaus (%ld, %ld) epäonnistui.\n"
+msgstr "Leikkaus (%lld, %lld) epäonnistui.\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Paste: %lld\n"
-msgstr "Liitä: %ld\n"
+msgstr "Liitä: %lld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1960,18 +1981,18 @@ msgid "Doing correctness check...\n"
 msgstr "Suoritetaan virheettömyystarkistusta...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Bad: chunk %lld sample %lld\n"
-msgstr "Virheellinen: lohko %ld näyte %ld\n"
+msgstr "Virheellinen: pala %lld näyte %lld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
 msgstr "Läpäissyt oikeellisuustarkistuksen!\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Errors in %d/%lld chunks\n"
-msgstr "Virheitä %d/%ld lohkoissa\n"
+msgstr "Virheitä %d/%lld palassa\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1988,13 +2009,13 @@ msgid "Time to check all data (2): %ld ms\n"
 msgstr "Aika tarkistaa kaikki tiedot (2): %ld ms\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
-"44100 Hz:n taajuudella, 16 bittiä näytettä kohti arvioidut\n"
-"samanaikaiset kappaleet, joita voidaan toistaa kerralla: %.1f\n"
+"Jos näytteet ovat %d tavun kokoisia ja näytetaajuus 44100 Hz,\n"
+"raitoja voi toistaa kerralla arviolta enintään: %.1f\n"
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
@@ -2094,23 +2115,22 @@ msgid "Audacity Support Data"
 msgstr "Audacityn tukidata"
 
 #: src/DBConnection.cpp
-#, fuzzy
 msgid "Checkpointing project"
-msgstr "Nykyinen projekti"
+msgstr "Lisätään projektiin tarkistuspisteitä"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Checkpointing %s"
-msgstr "Tuodaan %s"
+msgstr "Lisätään kohteeseen %s tarkistuspisteitä"
 
 #: src/DBConnection.cpp src/ProjectFileIO.cpp
 msgid "This may take several seconds"
-msgstr ""
+msgstr "Tässä voi kestää joitain sekunteja"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write to %s.\n"
-msgstr "Tiedostoon ei voitu kirjoittaa: %s"
+msgstr "Tiedostoon ei voitu kirjoittaa: %s\n"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2119,30 +2139,35 @@ msgid ""
 "%s\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
+"Levy on täynnä.\n"
+"%s\n"
+"Ohjenapista löytää vihjeitä levytilan vapauttamiseen."
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to create savepoint:\n"
 "\n"
 "%s"
 msgstr ""
-"Rekisteröinti epäonnistui:\n"
+"Tallennuspisteen luominen epäonnistui:\n"
+"\n"
 "%s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to release savepoint:\n"
 "\n"
 "%s"
 msgstr ""
-"Rekisteröinti epäonnistui:\n"
+"Tallennuspisteen vapautus epäonnistui:\n"
+"\n"
 "%s"
 
 #: src/DBConnection.cpp
 msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
+msgstr "Tietokantavirhe.  Valitettavasti emme tiedä siitä enempää."
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -2243,12 +2268,11 @@ msgstr "&Kopioi nimet leikepöydälle"
 #: src/Dependencies.cpp
 #, c-format
 msgid "\"%s\", \"%s\", \"%s\"\n"
-msgstr ""
+msgstr "\"%s\", \"%s\", \"%s\"\n"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "Missing"
-msgstr "Tiedostoja puuttuu"
+msgstr "Puuttuu"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2463,14 +2487,15 @@ msgstr ""
 "nimelle %s ei onnistunut."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
 "Audacity ei voinut kirjoittaa tiedostoon.\n"
-"Ehkä %s ei ole kirjoitettavissa tai levy on täynnä."
+"Ehkä %s ei ole kirjoitettavissa tai levy on täynnä.\n"
+"Ohjenapista löytyy vihjeitä tilan vapauttamiseen."
 
 #: src/FileException.h
 msgid "File Error"
@@ -2511,9 +2536,8 @@ msgstr "Kaikki tiedostot"
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
-#, fuzzy
 msgid "AUP3 project files"
-msgstr "Tallennetaan projektin datatiedostoja"
+msgstr "AUP3-projektitiedostot"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
@@ -2929,9 +2953,8 @@ msgid "Action"
 msgstr "Toimenpide"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Used Space"
-msgstr "Levytila"
+msgstr "Käytetty levytila"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
@@ -2951,24 +2974,21 @@ msgid "&Discard"
 msgstr "&Hylkää"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Clip&board space used"
-msgstr "Käytetty leikepöytätila"
+msgstr "Käytetty l&eikepöytätila"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "D&iscard"
-msgstr "Hylkää"
+msgstr "H&ylkää"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Compact"
-msgstr "&Komento"
+msgstr "Tii&vistä"
 
 #: src/HistoryWindow.cpp src/ProjectFileManager.cpp
 #, c-format
 msgid "Compacting actually freed %s of disk space."
-msgstr ""
+msgstr "Tiivistys vapautti %s verran levytilaa."
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -3639,13 +3659,13 @@ msgid "Print"
 msgstr "Tulosta"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "There is very little free disk space left on %s\n"
 "Please select a bigger temporary directory location in\n"
 "Directories Preferences."
 msgstr ""
-"Tässä taltiossa on hyvin vähän vapaata levytilaa jäljellä.\n"
+"Taltiossa %s on hyvin vähän vapaata levytilaa jäljellä.\n"
 "Valitse asetuksista toinen tilapäinen hakemisto."
 
 #: src/ProjectAudioManager.cpp
@@ -3727,7 +3747,7 @@ msgstr "Sammuta katkosten tunnistus"
 #. "Found problems with <sequence> when checking project file."
 #: src/ProjectFSCK.cpp
 msgid "Project check read faulty Sequence tags."
-msgstr "Projektin tarkistus luki viallisia sekvenssitunnisteita."
+msgstr "Projektin tarkistus luki viallisia jaksotunnisteita."
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no changes"
@@ -3745,7 +3765,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
-msgstr "Varoitus - Ongelmia luettaessa sekvenssitunnisteita"
+msgstr "Varoitus - Ongelmia luettaessa jaksotunnisteita"
 
 #: src/ProjectFSCK.cpp
 msgid "Inspecting project file data"
@@ -3925,35 +3945,38 @@ msgid "[Project %02i] "
 msgstr "[Projekti %02i] "
 
 #: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Failed to open the project's database"
-msgstr "Esimääritysnimen asettaminen epäonnistui"
+msgstr "Projektin tietokantaa ei voitu avata"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to discard connection"
-msgstr "Koodekkia ei löytynyt"
+msgstr "Yhteyttä ei voitu hylätä"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to restore connection"
-msgstr "Esimääritetyn sisällön noutaminen epäonnistui"
+msgstr "Yhteyttä ei voitu palauttaa"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to execute a project file command:\n"
 "\n"
 "%s"
-msgstr "Esimäärityksen koodaaminen kohteesta \"%s\" epäonnistui"
+msgstr ""
+"Projektitiedoston komentoa ei voitu suorittaa\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to prepare project file command:\n"
 "\n"
 "%s"
-msgstr "Esiasetustiedostoa ei voida lukea."
+msgstr ""
+"Projektitiedoston komentoa ei voitu alustaa\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3963,11 +3986,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Projektitiedostosta ei voitu hakea tietoja.\n"
+"Seuraava komento epäonnistui:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "This is not an Audacity project file"
-msgstr "Tallennetaan Audacity-projektia"
+msgstr "Tämä ei ole Audacity-projektitiedosto"
 
 #: src/ProjectFileIO.cpp
 msgid ""
@@ -3975,43 +4001,42 @@ msgid ""
 "\n"
 "You will need to upgrade to process it"
 msgstr ""
+"Projekti luotiin Audacityn uudemmalla versiolla:\n"
+"\n"
+"Päivitä Audacity avataksesi se."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to initialize the project file"
-msgstr "MP3-virtaa ei voitu alustaa"
+msgstr "Projektitiedostoa ei voitu alustaa"
 
 #: src/ProjectFileIO.cpp
 msgid "Cleanup of orphan blocks failed"
-msgstr ""
+msgstr "Orpolohkojen siivous epäonnistui"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Total orphan blocks deleted %d"
-msgstr "Orpo lohkotiedosto: '%s'"
+msgstr "Orpolohkoja poistettu yhteensä %d"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to rollback transaction during import"
-msgstr ""
+msgstr "Transaktiota ei voitu kumota tuonnin aikana"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to attach destination database"
-msgstr "Virran tilaa ei voi asettaa tauotetuksi."
+msgstr "Kohdetietokantaa ei voitu liittää"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
-msgstr ""
+msgstr "Ei voitu vaihtaa nopeaan journalointiin"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to copy tags"
-msgstr "Kohteen %s poisto epäonnistui"
+msgstr "Tunnisteita ei voitu kopioida"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to bind SQL parameter"
-msgstr "Koodekkia ei löytynyt"
+msgstr "SQL-parametria ei voitu sitoa"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4021,34 +4046,37 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Projektitiedostoa ei voitu päivittää.\n"
+"Seuraava komento epäonnistui:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Destination project could not be detached"
-msgstr ""
+msgstr "Kohdeprojektia ei voitu irrottaa"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Copying Project"
-msgstr "Virhe projektia avatessa"
+msgstr "Kopioidaan projektia"
 
 #: src/ProjectFileIO.cpp
 msgid "Error Writing to File"
 msgstr "Virhe tiedoston kirjoituksessa"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
-"Audacity ei voinut kirjoittaa tiedostoa %s.\n"
-"Levy on ehkä täynnä tai kirjoitussuojattu."
+"Audacity ei voinut kirjoittaa tiedostoon %s.\n"
+"Levy on ehkä täynnä tai kirjoitussuojattu.\n"
+"Ohjenapista löytyy vihjeitä tilan vapauttamiseen."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Compacting project"
-msgstr "&Projekteja tallennettaessa"
+msgstr "Tiivistetään projektia"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4079,28 +4107,27 @@ msgstr "Projektitiedoston avaaminen ei onnistu"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr ""
+msgstr "Projektitiedoston automaattitallennustietoja ei voitu poistaa."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to decode project document"
-msgstr "Dekooderia ei voi lisätä putkeen"
+msgstr "Projektitiedostoa ei voitu purkaa"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to parse project information."
-msgstr "Esiasetustiedostoa ei voida lukea."
+msgstr "Projektin tietoja ei voitu jäsentää."
 
 #: src/ProjectFileIO.cpp
 msgid ""
 "The project's database failed to reopen, possibly because of limited space "
 "on the storage device."
 msgstr ""
+"Projektin tietokantaa ei voitu avata uudelleen. Tallennuslaitteen tila voi "
+"olla vähissä."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Saving project"
-msgstr "&Projekteja tallennettaessa"
+msgstr "Tallennetaan projektia"
 
 #: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "Error Saving Project"
@@ -4108,7 +4135,7 @@ msgstr "Virhe projektin tallennuksessa"
 
 #: src/ProjectFileIO.cpp
 msgid "Syncing"
-msgstr ""
+msgstr "Synkronoidaan"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4118,6 +4145,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Projektia avata uudelleen. Tallennuslaitteen tila\n"
+"voi olla vähissä.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4127,22 +4158,25 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Automaattitallennuksen tietoja ei voitu poistaa. Tallennuslaitteen tila\n"
+"voi olla vähissä.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Backing up project"
-msgstr "&Tyhjää projektia tallennettaessa"
+msgstr "Varmuuskopioidaan projektia"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "This project was not saved properly the last time Audacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Joitakin projekteja ei tallennettu oikein Audacityn viimeisen käyttökerran "
+"Tätä projektia ei tallennettu oikein Audacityn viimeisen käyttökerran "
 "aikana.\n"
-"Onneksi seuraavat projektit voidaan palauttaa automaattisesti:"
+"\n"
+"Se on palautettu viimeisimpään vedokseen."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4151,15 +4185,18 @@ msgid ""
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
 msgstr ""
+"Projekti ei tallentunut oikein viime Audacityn käyttökerralla.\n"
+"\n"
+"Se on palautettu viimeisimpään vedokseen, mutta sinun\n"
+"pitää tallentaa se säilyttääksesi sen sisällön."
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Project Recovered"
-msgstr "Projekti palautettiin"
+msgstr "Projekti palautettu"
 
 #: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
 msgid "Projects cannot be saved to FAT drives."
-msgstr ""
+msgstr "Projekteja ei voi tallentaa FAT-asemille."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4186,9 +4223,8 @@ msgid "Warning - Empty Project"
 msgstr "Varoitus - Tyhjä projekti"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Insufficient Disk Space"
-msgstr "Levytila"
+msgstr "Levytila ei riitä"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4196,12 +4232,17 @@ msgid ""
 "\n"
 "Please select a different disk with more free space."
 msgstr ""
+"Projektin koko ylittää kohdelevyn vapaan tilan määrän.\n"
+"\n"
+"Valitse toinen levy, jolla on enemmän vapaata tilaa."
 
 #: src/ProjectFileManager.cpp
 msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
 msgstr ""
+"Projektin koko ylittää 4 Gt:n rajan, joten sitä ei voi tallentaa FAT32-"
+"tiedostojärjestelmille."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4235,7 +4276,7 @@ msgstr ""
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "   Do you want to overwrite the project:\n"
 "\"%s\"?\n"
@@ -4244,12 +4285,12 @@ msgid ""
 "\"%s\"\n"
 "   will be irreversibly overwritten."
 msgstr ""
-"Haluatko korvata projektin:\n"
+"   Haluatko korvata projektin:\n"
 "\"%s\"?\n"
 "\n"
-"Jos valitset \"Kyllä\", projekti\n"
+"   Jos valitset \"Kyllä\", projekti\n"
 "\"%s\"\n"
-"päällekirjoitetaan peruuttamattomasti."
+"   korvataan peruuttamattomasti."
 
 #. i18n-hint: Heading: A warning that a project is about to be overwritten.
 #: src/ProjectFileManager.cpp
@@ -4257,20 +4298,19 @@ msgid "Overwrite Project Warning"
 msgstr "Projektin päällekirjoitusvaroitus"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "The project was not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Projektia ei tallenneta, koska valittu projekti on avoinna toisessa "
+"Projektia ei tallennettu, koska valittu projekti on avoinna toisessa "
 "ikkunassa.\n"
-"Yritä uudelleen ja valitse alkuperäinen nimi."
+"Yritä uudelleen ja valitse jokin toinen nimi."
 
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Copy of Project \"%s\" As..."
-msgstr "%sTallenna projektin \"%s\" häviötön kopio nimellä..."
+msgstr "%sTallenna projektin \"%s\" kopio nimellä..."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4302,6 +4342,8 @@ msgid ""
 "Project resides on FAT formatted drive.\n"
 "Copy it to another drive to open it."
 msgstr ""
+"Projekti on FAT-levyllä.\n"
+"Kopioi se toiselle levylle avataksesi."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4358,9 +4400,8 @@ msgid "Import"
 msgstr "Tuo"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Failed to import project"
-msgstr "Koodekkia ei löytynyt"
+msgstr "Projektia ei voitu tuoda"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Importing"
@@ -4368,12 +4409,11 @@ msgstr "Tuontivirhe"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr ""
+msgstr "Ei voi tuoda AUP3-muotoa.  Käytä Tiedosto > Avaa"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Compact Project"
-msgstr "Aseta projekti"
+msgstr "Tiivistä projekti"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -4388,24 +4428,31 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
+"Projektin tiivistäminen vapauttaa levytilaa poistamalla siitä käyttämättömiä "
+"tavuja.\n"
+"\n"
+"Vapaata levytilaa on tällä hetkellä %s ja projekti vie tilaa %s verran.\n"
+"\n"
+"Jos jatkat, kumoamishistoria ja leikepöydän sisältö menetetään, ja vapaata "
+"tilaa tulee noin %s verran lisää.\n"
+"\n"
+"Haluatko jatkaa?"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Compacted project file"
-msgstr "Projektitiedoston avaaminen ei onnistu"
+msgstr "Tiivistetty projektitiedosto"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact"
-msgstr ""
+msgstr "Tiivistä"
 
 #: src/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "Luotiin uusi projekti"
 
 #: src/ProjectHistory.cpp
-#, fuzzy
 msgid "Automatic database backup failed."
-msgstr "Automaattinen tallennus käytössä:"
+msgstr "Tietokannan automaattinen varmuuskopiointi epäonnistui."
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4765,7 +4812,7 @@ msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
 msgstr ""
-"Sekvenssissä on lohkotiedosto, joka ylittää maksimimäärän %s näytettä lohkoa "
+"Jaksossa on lohkotiedosto, joka ylittää maksimimäärän %s näytettä lohkoa "
 "kohti.\n"
 "Katkaistaan tähän enimmäispituuteen."
 
@@ -4932,15 +4979,16 @@ msgid "Error Saving Tags File"
 msgstr "Virhe tunnistetiedoston tallennuksessa"
 
 #: src/TempDirectory.cpp
-#, fuzzy
 msgid "Unsuitable"
-msgstr "Moduuli yhteensopimaton"
+msgstr "Ei sovi"
 
 #: src/TempDirectory.cpp
 msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
 msgstr ""
+"Väliaikaistiedostojen kansio on FAT-levyllä.\n"
+"Se palautetaan oletusasetukseen."
 
 #: src/TempDirectory.cpp
 #, c-format
@@ -4949,6 +4997,9 @@ msgid ""
 "\n"
 "For tips on suitable drives, click the help button."
 msgstr ""
+"%s\n"
+"\n"
+"Ohjenapista voi löytyä vihjeitä joillekin asemille."
 
 #: src/Theme.cpp
 #, c-format
@@ -5556,7 +5607,7 @@ msgstr "Siirrä raitaa alas"
 
 #: src/UndoManager.cpp
 msgid "Discarding undo/redo history"
-msgstr ""
+msgstr "Kumoamishistoriaa hylätään"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5851,9 +5902,8 @@ msgid "Gets track values as JSON."
 msgstr "Hakee raidan arvot JSON-muodossa."
 
 #: src/commands/HelpCommand.cpp
-#, fuzzy
 msgid "Comment"
-msgstr "Kommentit"
+msgstr "Kommentti"
 
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
@@ -5861,7 +5911,7 @@ msgstr "Komento:"
 
 #: src/commands/HelpCommand.cpp
 msgid "_"
-msgstr ""
+msgstr "_"
 
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
@@ -5869,7 +5919,7 @@ msgstr "Antaa apua komennolle."
 
 #: src/commands/HelpCommand.h
 msgid "For comments in a macro."
-msgstr ""
+msgstr "Kommenteille makroissa."
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -5935,19 +5985,16 @@ msgid "Save Project2"
 msgstr "Tallenna projekti2"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Save Copy"
-msgstr "Kopioi merkillä"
+msgstr "Tallenna kopio"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Save Log"
-msgstr "Tallennettu "
+msgstr "Tallenna loki"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Clear Log"
-msgstr "Tyhjennä"
+msgstr "Tyhjennä loki"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5958,17 +6005,16 @@ msgid "Saves a project."
 msgstr "Tallenna projektina."
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Saves a copy of current project."
-msgstr "Tallenna projektina."
+msgstr "Tallentaa nykyisestä projektista kopion."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Saves the log contents."
-msgstr ""
+msgstr "Tallentaa lokin sisällön."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Clears the log contents."
-msgstr ""
+msgstr "Tyhjentää lokin sisällön."
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference"
@@ -6076,7 +6122,6 @@ msgstr "Sininen"
 
 #. i18n-hint:  This really means the color, not as in "white noise"
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgctxt "color"
 msgid "White"
 msgstr "Valkoinen"
@@ -7288,9 +7333,8 @@ msgid "Walkie-talkie"
 msgstr "Radiopuhelin"
 
 #: src/effects/Distortion.cpp
-#, fuzzy
 msgid "Blues drive sustain"
-msgstr "Blues ajurituki"
+msgstr "Blues-kaiku"
 
 #: src/effects/Distortion.cpp
 msgid "Light Crunch Overdrive"
@@ -9306,19 +9350,16 @@ msgid "Converts stereo tracks to mono"
 msgstr "Muuntaa stereoraidan monoksi"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Resampling left channel"
-msgstr "Uudelleennäytteistys epäonnistui."
+msgstr "Muutetaan vasemman kanavan näytetaajuutta"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Resampling right channel"
-msgstr "Oikea kanava"
+msgstr "Muutetaan oikean kanavan näytetaajuutta"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Mixing down to mono"
-msgstr "Miksaus &monoksi vietäessä"
+msgstr "Miksataan monoksi"
 
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
@@ -10338,11 +10379,13 @@ msgid "Mixer Panel"
 msgstr "Mikseripaneeli"
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to export.\n"
 "Error %s"
-msgstr "Ei voida viedä"
+msgstr ""
+"Ei voida viedä.\n"
+"Virhe %s"
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
@@ -11678,7 +11721,7 @@ msgstr "Jatketaanko jäljellä olevien tiedostojen vientiä?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name.\n"
 "You cannot use any of these characters:\n"
@@ -11687,13 +11730,16 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"Merkki tai raita \"%s\" ei ole kelvollinen tiedostonimi. Et voi käyttää "
-"mitään seuraavista: %s\n"
-"Käytä..."
+"Merkki tai raita \"%s\" ei ole kelvollinen tiedostonimi.\n"
+"Et voi käyttää mitään näistä merkeistä:\n"
+"\n"
+"%s\n"
+"\n"
+"Korjausehdotus:"
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 "\n"
@@ -11701,7 +11747,8 @@ msgid ""
 msgstr ""
 "Merkki tai raita \"%s\" ei ole kelvollinen tiedostonimi. Et voi käyttää osaa "
 "\"%s\".\n"
-"Käytä..."
+"\n"
+"Korjausehdotus:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
@@ -11831,16 +11878,15 @@ msgstr ""
 "muokata sitä valitsemalla Tiedosto > Tuo > MIDI."
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\"%s\" \n"
 "is a not an audio file. \n"
 "Audacity cannot open this type of file."
 msgstr ""
 "\"%s\" \n"
-"on MIDI-tiedosto, ei äänitiedosto. \n"
-"Audacity ei voi avata ja toistaa tällaista tiedostoa, mutta voit\n"
-"muokata sitä valitsemalla Tiedosto > Tuo > MIDI."
+"ei ole äänitiedosto. \n"
+"Audacity ei voi avata tällaista tiedostoa."
 
 #: src/import/Import.cpp
 msgid "Select stream(s) to import"
@@ -12022,21 +12068,24 @@ msgstr "Tiedostoa %s ei löydy."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
 "Audacity ei tunnistanut tiedoston '%s' tyyppiä.\n"
-"Yritä asentaa FFmpeg. Pakkaamattomille tiedostoille voit myös kokeilla "
-"Tiedosto > Tuo > Raakadata."
+"\n"
+"%s Pakkaamattomille tiedostoille voit myös kokeilla Tiedosto > Tuo > "
+"Raakadata."
 
 #: src/import/Import.cpp
 msgid ""
 "Try installing FFmpeg.\n"
 "\n"
 msgstr ""
+"Kokeile asentaa FFmpeg.\n"
+"\n"
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -12059,23 +12108,22 @@ msgstr ""
 
 #: src/import/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
-msgstr ""
+msgstr "AUP-projektitiedostot (*.aup)"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Couldn't import the project:\n"
 "\n"
 "%s"
 msgstr ""
-"Esiasetusta %s ei voitu tuoda\n"
+"Projektia ei voitu tuoda:\n"
 "\n"
 "%s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Import Project"
-msgstr "Tuo esiasetukset"
+msgstr "Tuo projekti"
 
 #: src/import/ImportAUP.cpp
 msgid ""
@@ -12085,44 +12133,48 @@ msgid ""
 "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
 "you may import it with this version of Audacity."
 msgstr ""
+"Projekti tallennettiin Audacityn versiolla 1.0 tai vanhemmalla.\n"
+"Koska tiedostomuoto on muuttunut, tämä versio ei voi tuoda sitä.\n"
+"\n"
+"Käytä Audacityn vanhempaa versiota (vanhempi kuin v3.0.0), tuo\n"
+"projekti sillä ja sitten tuo päivitetty projekti tällä Audacity-versiolla."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Internal error in importer...tag not recognized"
-msgstr "Tasausprosessi ilmoitti sisäisestä virheestä."
+msgstr "Tuontivirhe...ei tunnistettu tunnistetta"
 
 #: src/import/ImportAUP.cpp
 #, c-format
 msgid "Invalid project '%s' attribute."
-msgstr ""
+msgstr "Projektin määre '%s' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
-msgstr ""
+msgstr "Projektin määre 'vpos' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
-msgstr ""
+msgstr "Projektin määre 'h' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
-msgstr ""
+msgstr "Projektin määre 'zoom' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
-msgstr ""
+msgstr "Projektin määre 'sel0' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
-msgstr ""
+msgstr "Projektin määre 'sel1' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
-msgstr ""
+msgstr "Projektin määre 'selLow' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
-msgstr ""
+msgstr "Projektin määre 'selHigh' virheellinen."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12134,35 +12186,36 @@ msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
 msgstr ""
+"Projektitiedostossa on MIDI-raitoja, mutta tämä koontiversio Audacitysta ei "
+"tue niitä, joten ne ohitetaan."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Project Import"
-msgstr "Projektin alku"
+msgstr "Projektin tuonti"
 
 #: src/import/ImportAUP.cpp
 msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
 msgstr ""
+"Projektissa on jo aikaraita ja tuotavasta projektista löytyi sellainen; "
+"tuotava aikaraita ohitetaan."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'maxsamples' attribute."
-msgstr "Virheellinen näytetaajuus"
+msgstr "Jakson määre 'maxsamples' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
-msgstr ""
+msgstr "Jakson määre 'sampleformat' virheellinen."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'numsamples' attribute."
-msgstr "Virheellinen näytetaajuus"
+msgstr "Jakson määre 'numsamples' virheellinen."
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
-msgstr ""
+msgstr "Aaltolohkon määrettä 'start' ei voitu jäsentää"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12171,14 +12224,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"Projektitiedosto %s puuttuu\n"
+"\n"
+"Tilalle pannaan hiljaisuutta."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
-msgstr ""
+msgstr "Simple-lohkotiedoston määre 'len' virheellinen tai puuttuu."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
-msgstr ""
+msgstr "Silent-lohkotiedoston määre 'len' virheellinen tai puuttuu."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12187,14 +12243,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"Aliastiedosto %s puuttuu\n"
+"\n"
+"Tilalle pannaan hiljaisuutta."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
-msgstr ""
+msgstr "Pcmalias-lohkotiedoston määre 'aliasstart' virheellinen tai puuttuu."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
-msgstr ""
+msgstr "Pcmalias-lohkotiedoston määre 'aliaslen' virheellinen tai puuttuu."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12203,21 +12262,24 @@ msgid ""
 "\n"
 "Inserting silence."
 msgstr ""
+"Virhe tiedoston %s käsittelyssä\n"
+"\n"
+"Tilalle pannaan hiljaisuutta."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open %s"
-msgstr "Kohteen %s poisto epäonnistui"
+msgstr "Ei voitu avata %s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to seek to position %lld in %s"
-msgstr "Esimääritysnimen asettaminen epäonnistui"
+msgstr "EI voitu siirtyä sijaintiin %lld tiedostossa %s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to read %lld samples from %s"
-msgstr "Esiasetusta ei voi lukea kohteesta \"%s\""
+msgstr "Ei voitu lukea %lld näytettä tiedostosta %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -12333,6 +12395,10 @@ msgid ""
 "This is likely caused by a malformed MP3.\n"
 "\n"
 msgstr ""
+"Tuonti epäonnistui\n"
+"\n"
+"Tämän voi aiheuttaa vioittunut MP3.\n"
+"\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12655,7 +12721,7 @@ msgstr "&Tuo"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
-msgstr ""
+msgstr "Tiedon koko virheellinen. Ääntä ei voi tuoda"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12782,14 +12848,12 @@ msgid "Cursor to Next Clip Boundary"
 msgstr "Kohdistimesta seuraavan leikkeen reunaan"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Time Shift &Left"
-msgstr "Aikasiirtotyökalu"
+msgstr "Aikasiirto &vasemmalle"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Time Shift &Right"
-msgstr "Aikasiirtotyökalu"
+msgstr "Aikasiirto &oikealle"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -13152,9 +13216,8 @@ msgid "Save Project &As..."
 msgstr "Tallenna projekti &nimellä..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Backup Project..."
-msgstr "Avaa projekti..."
+msgstr "T&ee projektista varmuuskopio..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -13224,7 +13287,7 @@ msgstr "&Lopeta"
 
 #: src/menus/FileMenus.cpp
 msgid "Hidden File Menu"
-msgstr ""
+msgstr "Salainen tiedostovalikko"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as FLAC"
@@ -13595,9 +13658,9 @@ msgid "Unknown"
 msgstr "Tuntematon"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Repeat %s"
-msgstr "Toista - %s"
+msgstr "&Toista - %s"
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -13613,9 +13676,8 @@ msgid "Add / Remove Plug-ins..."
 msgstr "Lisää / poista laajennuksia..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Generator"
-msgstr "Toista viimeisin tehoste"
+msgstr "Toista viimeisin generaattori"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -13630,18 +13692,16 @@ msgid "&Analyze"
 msgstr "&Analyysi"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Analyzer"
-msgstr "Toista viimeisin tehoste"
+msgstr "Toista viimeisin analyysi"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
 msgstr "Työ&kalut"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Tool"
-msgstr "Toista viimeisin tehoste"
+msgstr "Toista viimeisin työkalu"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
@@ -14753,14 +14813,12 @@ msgid "&Decrease Playback Speed"
 msgstr "&Laske toistonopeutta"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Move to Pre&vious Label"
-msgstr "Siirry &edelliseen merkkiin"
+msgstr "Siirrä &edelliseen merkkiin"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Move to Ne&xt Label"
-msgstr "Siirry seuraavaa&n merkkiin"
+msgstr "Siirrä seuraavaa&n merkkiin"
 
 #: src/menus/ViewMenus.cpp
 msgid "&View"
@@ -14978,53 +15036,48 @@ msgid "Preferences for Directories"
 msgstr "Hakemistojen asetukset"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Default directories"
-msgstr "Hakemistot"
+msgstr "Oletushakemistot"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
 msgstr ""
+"Jätä kenttä tyhjäksi, jos siirrytään viime toiminnon käyttämään kansioon.\n"
+"Täytä kenttä, jos siirrytään aina samaan kansioon toimintoa varten."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "O&pen:"
-msgstr ""
+msgstr "A&vaa:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Browse..."
-msgstr "Selaa..."
+msgstr "&Selaa..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "S&ave:"
-msgstr ""
+msgstr "&Tallenna:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "B&rowse..."
-msgstr "Selaa..."
+msgstr "S&elaa..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Import:"
-msgstr "&Tuo"
+msgstr "&Tuo:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Br&owse..."
-msgstr "Selaa..."
+msgstr "Se&laa..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Export:"
-msgstr "Vi&e"
+msgstr "&Vie:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Bro&wse..."
-msgstr "Selaa..."
+msgstr "Sel&aa..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -15035,24 +15088,21 @@ msgid "&Location:"
 msgstr "&Sijainti:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Väliaikaistiedostojen hakemisto"
+msgstr "Väliaikaistiedostojen hakemisto ei voi olla FAT-levyllä."
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "Brow&se..."
-msgstr "Selaa..."
+msgstr "Sela&a..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Free Space:"
-msgstr "Vapaa tila:"
+msgstr "Va&paa tila:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Free Space"
-msgstr "Vapaa tila:"
+msgstr "Vapaa tila"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15063,9 +15113,8 @@ msgid "unavailable - above location doesn't exist"
 msgstr "ei saatavilla - edellistä sijaintia ei ole olemassa"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Choose a location"
-msgstr "Valitse sijainti tallennettaville tiedostoille"
+msgstr "Valitse sijainti"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15415,14 +15464,12 @@ msgid "&Use Advanced Mixing Options"
 msgstr "Käytä miksa&uksen lisäasetuksia"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "S&tandard"
-msgstr "Vakio"
+msgstr "&Vakio"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "E&xtended (with frequency ranges)"
-msgstr "Valitsee taajuusalueen."
+msgstr "&Laajennettu (taajuusalueet)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
@@ -15446,9 +15493,8 @@ msgid "&Ignore blank space at the beginning"
 msgstr "Oh&ita tyhjä tila alussa"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Exported Label Style:"
-msgstr "Vie merkit nimellä:"
+msgstr "Vietyjen merkkien tyyli:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -17196,7 +17242,7 @@ msgstr "Aika&työkalupalkki"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Audacity %s Toolbar"
 msgstr "Audacityn %s-palkki"
 
@@ -17504,19 +17550,18 @@ msgid "&Format"
 msgstr "&Muoto"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "Changing sample format"
-msgstr "Muutetaan tempoa"
+msgstr "Muutetaan näytemuotoa"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing...   0%%"
-msgstr "Käsitellään: %s"
+msgstr "Käsitellään...  0%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing...   %i%%"
-msgstr "Käsitellään: %s"
+msgstr "Käsitellään...  %i%%"
 
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
@@ -17976,9 +18021,8 @@ msgid "Click and drag to move a track in time"
 msgstr "Napsautus ja raahaus siirtää raitaa aikajanalla"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, fuzzy
 msgid "Could not shift between tracks"
-msgstr "Siirrä leikettä ylös/alas tai raitojen välillä"
+msgstr "Ei voitu siirtää raitojen välillä"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
@@ -18313,9 +18357,8 @@ msgstr "tt:mm:ss + sadannekset"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060>0100 s"
-msgstr "0100 h 060 m 060.01000 s"
+msgstr "0100 h 060 m 060>0100 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and milliseconds (1/1000 second)
@@ -18331,9 +18374,8 @@ msgstr "tt:mm:ss + millisekunnit"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060>01000 s"
-msgstr "0100 h 060 m 060.01000 s"
+msgstr "0100 h 060 m 060>01000 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -18349,9 +18391,8 @@ msgstr "tt:mm:ss + näytteet"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 h 060 m 060 s+.# näytettä"
+msgstr "0100 h 060 m 060 s+># näytettä"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -18383,9 +18424,8 @@ msgstr "tt:mm:ss + filmiruudut (24/sek)"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 h 060 m 060 s+.24 ruutua"
+msgstr "0100 h 060 m 060 s+>24 ruutua"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
@@ -18415,9 +18455,8 @@ msgstr "tt:mm:ss + NTSC-kuvaruudut (pudotuksella)"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 h 060 m 060 s+.30 ruutua|N"
+msgstr "0100 h 060 m 060 s+>30 ruutua|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
@@ -18434,9 +18473,8 @@ msgstr "tt:mm:ss + NTSC-kuvaruudut (ilman pudotusta)"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 h 060 m 060 s+.030 ruutua| .999000999"
+msgstr "0100 h 060 m 060 s+>030 ruutua| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
@@ -18466,9 +18504,8 @@ msgstr "tt:mm:ss + PAL-kuvaruudut (25/sek)"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 h 060 m 060 s+.25 ruutua"
+msgstr "0100 h 060 m 060 s+>25 ruutua"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
 #. * TV frame rate (used for European TV)
@@ -18497,9 +18534,8 @@ msgstr "tt:mm:ss + CDDA-sektorit (75/sek)"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 h 060 m 060 s+.75 sektoria"
+msgstr "0100 h 060 m 060 s+>75 kehystä"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
@@ -18520,13 +18556,12 @@ msgstr "01000,01000 sektoria|75"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "010,01000>0100 Hz"
-msgstr "0100000.0100 Hz"
+msgstr "010,01000>0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "senttihertsi"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18538,13 +18573,12 @@ msgstr "kHz"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "01000>01000 kHz|0.001"
-msgstr "01000.01000 kHz|0.001"
+msgstr "01000>01000 kHz|0.001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
-msgstr "Hz"
+msgstr "hertsiä"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -18557,9 +18591,8 @@ msgstr "oktaavia"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "100>01000 octaves|1.442695041"
-msgstr "100.01000 oktaavia|1.442695041"
+msgstr "100>01000 oktaavia|1.442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -18578,9 +18611,8 @@ msgstr "puolisävelaskeleet + sentit"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "1000 semitones >0100 cents|17.312340491"
-msgstr "1000 puolisävelaskelta .0100 senttiä|17.312340491"
+msgstr "1000 puoliaskelta >0100 senttiä|17.312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
@@ -18596,9 +18628,8 @@ msgstr "dekadeja"
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "10>01000 decades|0.434294482"
-msgstr "10.01000 kymmenosat|0.434294482"
+msgstr "10>01000 dekadia|0.434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -18614,9 +18645,9 @@ msgid "centiseconds"
 msgstr "senttisekuntia"
 
 #: src/widgets/PopupMenuTable.h
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%s)"
-msgstr "(%s)"
+msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18737,9 +18768,8 @@ msgid "Could not load file: \"%s\""
 msgstr "Ei voitu ladata tiedostoa: \"%s\""
 
 #: src/xml/XMLFileReader.cpp
-#, fuzzy
 msgid "Could not parse XML"
-msgstr "Tiedostoa ei voitu avata"
+msgstr "XML:ää ei voitu jäsentää"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
@@ -18995,7 +19025,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aProsentti-arvot voivat olla korkeintaan 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -19003,7 +19033,7 @@ msgid ""
 msgstr ""
 "~adB-arvot voivat olla korkeintaan +100 dB.~%~%~%~\n"
 "                                 Vihje: 6 dB kaksinkertaistaa amplitudin~%~\n"
-"                                 \t-6 dB puolittaa amplitudin."
+"                                 -6 dB puolittaa amplitudin."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -19389,87 +19419,75 @@ msgstr ""
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Label Sounds"
-msgstr "Liitä yhteen merkillä"
+msgstr "Merkitse äänet"
 
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-#, fuzzy
 msgid ""
 "Released under terms of the GNU General Public License version 2 or later."
-msgstr "Julkaistu GNU General Public License -version 2 ehtojen mukaisesti"
+msgstr ""
+"Julkaistu GNU General Public License -version 2 tai uudemman ehtojen "
+"mukaisesti."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Threshold level (dB)"
-msgstr "Kynnysarvo %d dB"
+msgstr "Kynnysarvo (dB)"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Threshold measurement"
-msgstr "Kynnysarvon prosenttiosuus"
+msgstr "Kynnysarvon mittaus"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Peak level"
-msgstr "Märkätaso"
+msgstr "Huipputaso"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Average level"
-msgstr "Keskiarvo"
+msgstr "Keskitaso"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "RMS level"
-msgstr "Märkätaso"
+msgstr "RMS-taso"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Minimum silence duration"
-msgstr "Hiljaisuuden kesto:"
+msgstr "Hiljaisuuden lyhin kesto"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Minimum label interval"
-msgstr "Merkkien aikaväli"
+msgstr "Merkkien lyhin aikaväli"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Label type"
-msgstr "Merkin teksti"
+msgstr "Merkin tyyppi"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Point before sound"
-msgstr "Yhdistetty stereo"
+msgstr "Kohta ennen ääntä"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Point after sound"
-msgstr "Yhdistetty stereo"
+msgstr "Kohta äänen jälkeen"
 
 #: plug-ins/label-sounds.ny
 msgid "Region around sounds"
-msgstr ""
+msgstr "Ääniä ympäröivä alue"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Region between sounds"
-msgstr "~aAluepituus = ~a sekuntia."
+msgstr "Äänien välinen alue"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Maximum leading silence"
-msgstr "Lyhentää hiljaisuutta..."
+msgstr "Etuhiljaisuuden pisin kesto"
 
 #: plug-ins/label-sounds.ny
 msgid "Maximum trailing silence"
-msgstr ""
+msgstr "Loppuhiljaisuuden enimmäispituus"
 
 #: plug-ins/label-sounds.ny
 msgid "Sound ##1"
-msgstr ""
+msgstr "Ääni ##1"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/label-sounds.ny
@@ -19480,20 +19498,22 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 msgid "Too many silences detected.nOnly the first 10000 labels added."
 msgstr ""
+"Liian monta hiljaista kohtaa.\n"
+"Vain ensimmäiset 1000 merkkiä lisätään."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Selection must be less than ~a."
-msgstr "Valinnan tulee olla vähintään %d näytettä."
+msgstr "Virhe.~%Valinnan tulee olla alle ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
 "duration'."
 msgstr ""
-"Ääniä ei löytynyt. Yritä lyhentää hiljaisuus~%tasoa ja minimihiljaisuuden "
+"Ääniä ei löytynyt.ˇ%Yritä vähentää kynnysarvoa tai hiljaisuuden lyhintä "
 "kestoa."
 
 #: plug-ins/label-sounds.ny
@@ -19502,6 +19522,8 @@ msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
 msgstr ""
+"Äänien välisten alueiden merkitseminen vaatii~%vahintään kaksi ääntä.~%Niitä "
+"havaittiin vain yksi."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -19581,7 +19603,6 @@ msgid "Gate"
 msgstr "Portti"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Analyze Noise Level"
 msgstr "Analysoi kohinataso"
 
@@ -19610,14 +19631,12 @@ msgid "Level reduction (dB)"
 msgstr "Tason alennus (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Attack (ms)"
-msgstr "Nousu-/päästö (ms)"
+msgstr "Nousu (ms)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Decay (ms)"
-msgstr "Nousu-/päästö (ms)"
+msgstr "Päästö (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19639,15 +19658,19 @@ msgid ""
 "Selection too long.\n"
 "Maximum length is ~a."
 msgstr ""
+"Virhe.\n"
+"Valinta on liian pitkä.\n"
+"Enimmäispituus on ~a."
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.\n"
 "Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
-"~%Liian vähän ääntä valittu.\n"
+"Virhe.\n"
+"Liian vähän ääntä valittu.\n"
 "Tee valinnasta pidempi kuin ~a ms."
 
 #: plug-ins/noisegate.ny
@@ -19661,9 +19684,9 @@ msgstr ""
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~ah ~am"
-msgstr "~ah ~am ~as"
+msgstr "~ah ~am"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
