@@ -17,8 +17,6 @@
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
 
-#include "RealFFTf.h"
-
 #include <wx/longlong.h>
 
 #include <vector>
