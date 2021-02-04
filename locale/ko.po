@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-06-09 10:48+0100\n"
+"POT-Creation-Date: 2021-02-04 18:53+0000\n"
 "PO-Revision-Date: 2020-08-13 23:26+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
@@ -150,9 +150,11 @@ msgid "Script was not saved."
 msgstr "스크립트를 저장하지 않았습니다."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
-#: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/ImportPCM.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
+#: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
+#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
+#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
+#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "경고"
 
@@ -596,8 +598,8 @@ msgstr "%s 웹사이트: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2018 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2020 %s Team."
 msgstr "%s software is copyright %s 1999-2018 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -754,6 +756,8 @@ msgstr "녹음 중에는 시간표시줄 동작은 사용할 수 없습니다"
 msgid "Click and drag to adjust, double-click to reset"
 msgstr "조정하려면 선택 후 드래그, 더블 클릭은 초기화"
 
+#. i18n-hint: This text is a tooltip on the icon (of a pin) representing
+#. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
 msgid "Record/Play head"
 msgstr "맨 앞부분 레코드/재생"
@@ -854,8 +858,7 @@ msgstr ""
 "프로젝트 외부 영역은\n"
 "잠글 수 없습니다."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/AutoRecoveryDialog.cpp
-#: src/ProjectAudioManager.cpp src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
 #: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
 #: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
@@ -903,38 +906,12 @@ msgstr ""
 "최근 파일 목록에서 제거되었습니다."
 
 #: src/AudacityApp.cpp
-#, c-format
-msgid ""
-"One or more external audio files could not be found.\n"
-"It is possible they were moved, deleted, or the drive they were on was "
-"unmounted.\n"
-"Silence is being substituted for the affected audio.\n"
-"The first detected missing file is:\n"
-"%s\n"
-"There may be additional missing files.\n"
-"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
-"of the missing files."
+msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
-"하나 이상의 외부 오디오 파일을 찾을 수 없습니다.\n"
-"옮겨졌거나, 삭제되었거나, 파일이 있는 드라이브의 마운트를 해제했을 가능성이 "
-"있습니다.\n"
-"영향을 받는 오디오에 대해 무음 처리할 것입니다.\n"
-"처음 발견한 누락된 파일은 다음과 같습니다:\n"
-"%s\n"
-"아마도 누락된 파일이 더 있을지도 모릅니다.\n"
-"누락된 파일의 위치 목록을 보려면 '도움말 > 진단 > 종속성 확인'을 선택하세요."
-
-#: src/AudacityApp.cpp
-msgid "Files Missing"
-msgstr "파일 누락"
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "블럭 크기는 256 ~100,000,000 이어야 합니다\n"
-
-#: src/AudacityApp.cpp
-msgid "File decoded successfully\n"
-msgstr "파일을 성공적으로 디코딩했습니다\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is starting up..."
@@ -1036,23 +1013,58 @@ msgid "Audacity is already running"
 msgstr "오데시티가 이미 실행 중입니다"
 
 #: src/AudacityApp.cpp
-msgid "An unrecoverable error has occurred during startup"
-msgstr "시작 중에 복구할 수 없는 오류가 발생"
+msgid ""
+"Unable to acquire semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
 msgstr "오데시티 스타트업 실패"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to create semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire lock semaphore.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire server semaphore.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+
+#: src/AudacityApp.cpp
+msgid ""
+"The Audacity IPC server failed to initialize.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+
+#: src/AudacityApp.cpp
+msgid "An unrecoverable error has occurred during startup"
+msgstr "시작 중에 복구할 수 없는 오류가 발생"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
 #: src/AudacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "최대 디스크 블럭 크기 설정 (바이트)"
-
-#. i18n-hint: This decodes an autosave file
-#: src/AudacityApp.cpp
-msgid "decode an autosave file"
-msgstr "자동저장 파일 디코드"
 
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
@@ -1076,8 +1088,9 @@ msgid "audio or project file name"
 msgstr "오디오 혹는 프로젝트 파일명"
 
 #: src/AudacityApp.cpp
+#, fuzzy
 msgid ""
-"Audacity project (.AUP) files are not currently \n"
+"Audacity project (.aup3) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
@@ -1095,6 +1108,43 @@ msgstr "오데시티 프로젝트 파일"
 #: src/widgets/AudacityMessageBox.cpp
 msgid "Message"
 msgstr "메시지"
+
+#: src/AudacityFileConfig.cpp
+#, fuzzy
+msgid "Audacity Configuration Error"
+msgstr "검은색 오데시티 사용자 정의"
+
+#: src/AudacityFileConfig.cpp
+#, c-format
+msgid ""
+"The following configuration file could not be accessed:\n"
+"\n"
+"\t%s\n"
+"\n"
+"This could be caused by many reasons, but the most likely are that the disk "
+"is full or you do not have write permissions to the file. More information "
+"can be obtained by clicking the help button below.\n"
+"\n"
+"You can attempt to correct the issue and then click \"Retry\" to continue.\n"
+"\n"
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
+"state which will be recovered the next time you open it."
+msgstr ""
+
+#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/widgets/MultiDialog.cpp
+msgid "Help"
+msgstr "도움말"
+
+#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#, fuzzy
+msgid "&Quit Audacity"
+msgstr "오데시티 끝내기"
+
+#: src/AudacityFileConfig.cpp
+msgid "&Retry"
+msgstr ""
 
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
@@ -1406,33 +1456,31 @@ msgstr "선택한 MIDI 재생 장치 : %d - %s\n"
 msgid "No MIDI playback device found for '%s'.\n"
 msgstr "'%s'에 대한 MIDI 재생 장치가 없습니다.\n"
 
-#: src/AutoRecovery.cpp
-msgid ""
-"This recovery file was saved by Audacity 2.3.0 or before.\n"
-"You need to run that version of Audacity to recover the project."
-msgstr ""
-"이 복구 파일은 2.3.0 이전 버전에서 저장됨. \n"
-"이 프로젝트를 복구하려면 해당 버전을 실행하여야 함."
-
-#: src/AutoRecovery.cpp
-msgid "Error Decoding File"
-msgstr "파일 디코딩 중 오류"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "자동 충돌 복구"
 
 #: src/AutoRecoveryDialog.cpp
+#, fuzzy
 msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
-"Fortunately, the following projects can be automatically recovered:"
+"The following projects were not saved properly the last time Audacity was "
+"run and can be automatically recovered.\n"
+"\n"
+"After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
 "몇몇 프로젝트는 마지막 오데시티 실행시 제대로 저장되지 않았습니다.\n"
 "다행이도 다음 프로젝트는 자동으로 복구할 수 있습니다:"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Recoverable projects"
+#, fuzzy
+msgid "Recoverable &projects"
 msgstr "복구 가능한 프로젝트"
+
+#. i18n-hint: (verb).  It instruct the user to select items.
+#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
+#: src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "선택"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
 #: src/AutoRecoveryDialog.cpp src/PluginManager.cpp src/TrackInfo.cpp
@@ -1440,38 +1488,34 @@ msgid "Name"
 msgstr "이름"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "After recovery, save the project to save the changes to disk."
-msgstr "복구 후, 변경사항을 디스크에 저장하려면 프로젝트를 저장하세요."
+#, fuzzy
+msgid "&Discard Selected"
+msgstr " 선택됨"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Quit Audacity"
-msgstr "오데시티 끝내기"
+#, fuzzy
+msgid "&Recover Selected"
+msgstr "선택 없음"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Discard Projects"
-msgstr "프로젝트 버리기"
+msgid "&Skip"
+msgstr ""
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Recover Projects"
-msgstr "프로젝트 복구"
+#, fuzzy
+msgid "No projects selected"
+msgstr "선택한 매크로가 없습니다"
 
 #: src/AutoRecoveryDialog.cpp
+#, fuzzy
 msgid ""
-"Are you sure you want to discard all recoverable projects?\n"
+"Are you sure you want to discard the selected projects?\n"
 "\n"
-"Choosing \"Yes\" discards all recoverable projects immediately."
+"Choosing \"Yes\" permanently deletes the selected projects immediately."
 msgstr ""
 "복구 가능한 모든 프로젝트를 정말로 버릴까요?\n"
 "\n"
 "\"예\"를 선택하면 복구 가능한 모든 프로젝트를 즉시 삭제합니다."
-
-#: src/AutoRecoveryDialog.cpp
-msgid "Confirm Discard Projects"
-msgstr "프로젝트 버리기 확인"
-
-#: src/AutoRecoveryDialog.cpp src/TimerRecordDialog.cpp
-msgid "Could not enumerate files in auto save directory."
-msgstr "자동 저장 폴더에 있는 파일을 열거할 수 없습니다."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1502,40 +1546,6 @@ msgid "Choose command"
 msgstr "명령 선택"
 
 #: src/BatchCommands.cpp
-msgid "No Action"
-msgstr "동작 없음"
-
-#. i18n-hint: before is adverb; MP3 names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as MP3 56k before"
-msgstr "MP3 56K로 내보내기 (앞에)"
-
-#. i18n-hint: after is adverb; MP3 names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as MP3 56k after"
-msgstr "MP3 56K로 내보내기 (뒤에)"
-
-#. i18n-hint: FLAC names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as FLAC"
-msgstr "FLAC로 내보내기"
-
-#. i18n-hint: MP3 names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as MP3"
-msgstr "MP3로 내보내기"
-
-#. i18n-hint: Ogg names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as Ogg"
-msgstr "Ogg로 내보내기"
-
-#. i18n-hint: WAV names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as WAV"
-msgstr "WAV로 내보내기"
-
-#: src/BatchCommands.cpp
 msgid "MP3 Conversion"
 msgstr "MP3 변환"
 
@@ -1544,12 +1554,22 @@ msgid "Fade Ends"
 msgstr "페이드 종료"
 
 #: src/BatchCommands.cpp
-msgid "Select to Ends"
-msgstr "끝부분까지 선택"
+#, fuzzy
+msgid "Import Macro"
+msgstr "원시 데이터 가져오기"
 
 #: src/BatchCommands.cpp
-msgid "Special Command"
-msgstr "특수 명령"
+#, fuzzy, c-format
+msgid "Macro %s already exists. Would you like to replace it?"
+msgstr ""
+"\"%s\"이 존재하지 않습니다.\n"
+"\n"
+"새롭게 만들까요?"
+
+#: src/BatchCommands.cpp
+#, fuzzy
+msgid "Export Macro"
+msgstr "미디 내보내기"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1568,40 +1588,11 @@ msgstr "(%s)"
 msgid "Menu Command (No Parameters)"
 msgstr "메뉴 명령 (매개 변수 없음)"
 
-#: src/BatchCommands.cpp
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Export recording to %s\n"
-"/%s/%s.%s"
-msgstr ""
-"기록을 %s로 내보내기\n"
-"/%s/%s.%s"
-
-#: src/BatchCommands.cpp
-msgid "Export recording"
-msgstr "녹음 내보내기"
-
-#: src/BatchCommands.cpp
-#, c-format
-msgid ""
-"Cannot create directory '%s'. \n"
-"File already exists that is not a directory"
-msgstr ""
-"'%s' 폴더를 만들 수 없습니다.\n"
-"폴더가 아닌 파일이 이미 있습니다"
-
-#: src/BatchCommands.cpp
-msgid "Ogg Vorbis support is not included in this build of Audacity"
-msgstr "Ogg Vorbis 지원은 이 빌드의 오데시티에 포함되지 않음"
-
-#: src/BatchCommands.cpp
-msgid "FLAC support is not included in this build of Audacity"
-msgstr "FLAC 지원은 이 빌드의 오데시티에 포함되지 않음"
-
-#: src/BatchCommands.cpp
-#, c-format
-msgid "Command %s not implemented yet"
-msgstr "%s 명령은 아직 구현되지 않았습니다"
+msgid "\"%s\" requires one or more tracks to be selected."
+msgstr "\"%s\"은 하나 이상의 트랙을 선택해야 합니다."
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1886,8 +1877,8 @@ msgid "Test data size should be in the range 1 - 2000 MB."
 msgstr "시험 데이터 크기는 1 ~ 2000 MB 범위 내여야 합니다."
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Using %ld chunks of %ld samples each, for a total of %.1f MB.\n"
+#, fuzzy, c-format
+msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
 msgstr "%ld 청크 (각 %ld 샘플의) 사용, 총 %.1f MB.\n"
 
 #: src/Benchmark.cpp
@@ -1895,8 +1886,8 @@ msgid "Preparing...\n"
 msgstr "준비 중...\n"
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Expected len %ld, track len %lld.\n"
+#, fuzzy, c-format
+msgid "Expected len %lld, track len %lld.\n"
 msgstr ""
 "예상 길이 %ld, 크랙 길이 %lld.\n"
 "\n"
@@ -1907,8 +1898,8 @@ msgid "Performing %d edits...\n"
 msgstr "%d 편집 항목 수행 중...\n"
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Cut: %ld - %ld \n"
+#, fuzzy, c-format
+msgid "Cut: %lld - %lld \n"
 msgstr "자르기: %ld - %ld \n"
 
 #: src/Benchmark.cpp
@@ -1917,13 +1908,13 @@ msgid "Trial %d\n"
 msgstr "시도 %d\n"
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Cut (%ld, %ld) failed.\n"
+#, fuzzy, c-format
+msgid "Cut (%lld, %lld) failed.\n"
 msgstr "자르기 (%ld, %ld) 실패.\n"
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Paste: %ld\n"
+#, fuzzy, c-format
+msgid "Paste: %lld\n"
 msgstr "붙여넣기: %ld\n"
 
 #: src/Benchmark.cpp
@@ -1958,8 +1949,8 @@ msgid "Doing correctness check...\n"
 msgstr "정확도 검사 중...\n"
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Bad: chunk %ld sample %ld\n"
+#, fuzzy, c-format
+msgid "Bad: chunk %lld sample %lld\n"
 msgstr "불량: 청크 %ld 샘플 %ld\n"
 
 #: src/Benchmark.cpp
@@ -1967,8 +1958,8 @@ msgid "Passed correctness check!\n"
 msgstr "정확도 검사 통과!\n"
 
 #: src/Benchmark.cpp
-#, c-format
-msgid "Errors in %d/%ld chunks\n"
+#, fuzzy, c-format
+msgid "Errors in %d/%lld chunks\n"
 msgstr "%d/%ld 청크에 오류\n"
 
 #: src/Benchmark.cpp
@@ -1986,9 +1977,9 @@ msgid "Time to check all data (2): %ld ms\n"
 msgstr "전체 데이터 검사 시간 (2): %ld ms\n"
 
 #: src/Benchmark.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"At 44100 Hz, 16-bits per sample, the estimated number of\n"
+"At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
 "44100 Hz, 샘플당 16 bit에서, 한 번에 재생할 수 있는\n"
@@ -2080,12 +2071,6 @@ msgstr ""
 "이 동작을 수행하려면 일부 오디오를 우선 선택해야 합니다.\n"
 "(다른 종류의 트랙을 선택하면 동작하지 않을 것입니다.)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid "\"%s\" requires one or more tracks to be selected."
-msgstr "\"%s\"은 하나 이상의 트랙을 선택해야 합니다."
-
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr "보고서 생성:"
@@ -2093,6 +2078,57 @@ msgstr "보고서 생성:"
 #: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "오데시티 지원 자료"
+
+#: src/DBConnection.cpp
+#, fuzzy
+msgid "Checkpointing project"
+msgstr "현재 프로젝트"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Checkpointing %s"
+msgstr "%s 가져오는 중"
+
+#: src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Could not write to %s.\n"
+msgstr "파일에 쓸 수 없습니다: %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid ""
+"Disk is full.\n"
+"%s\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to create savepoint:\n"
+"\n"
+"%s"
+msgstr ""
+"등록에 실패했습니다:\n"
+"%s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to release savepoint:\n"
+"\n"
+"%s"
+msgstr ""
+"등록에 실패했습니다:\n"
+"%s"
+
+#: src/DBConnection.cpp
+msgid "Database error.  Sorry, but we don't have more details."
+msgstr ""
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -2207,22 +2243,6 @@ msgstr ""
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is currently self-contained; it does not depend on any external "
-"audio files. \n"
-"\n"
-"If you change the project to a state that has external dependencies on "
-"imported files, it will no longer be self-contained. If you then Save "
-"without copying those files in, you may lose data."
-msgstr ""
-"프로젝트는 현재 독립적으로 되어 있습니다; 어떤 외부 오디오 파일에 의존하지 않"
-"습니다. \n"
-"\n"
-"가져온 파일에 대해 외부 종속성을 가진 상태로 프로젝트를 바꾸면, 더 이상 독립"
-"적이지 않게 될 것입니다. 이 파일을 복사하지 않고 저장하는 경우, 데이터를 잃"
-"을 수 있습니다."
-
-#: src/Dependencies.cpp
-msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
 "\n"
@@ -2240,80 +2260,6 @@ msgstr ""
 #: src/Dependencies.cpp
 msgid "Dependency Check"
 msgstr "종속성 확인"
-
-#. i18n-hint: This title appears on a dialog that indicates the progress
-#. in doing something.
-#: src/DirManager.cpp src/ProjectFSCK.cpp
-msgid "Progress"
-msgstr "진행"
-
-#: src/DirManager.cpp
-msgid ""
-"There is very little free disk space left on this volume.\n"
-"Please select another temporary directory in Preferences."
-msgstr ""
-"이 볼륨에 남아 있는 디스크 공간이 매우 적습니다.\n"
-"환경설정에서 다른 임시 폴더를 선택하세요."
-
-#: src/DirManager.cpp
-msgid "Cleaning project temporary files"
-msgstr "프로젝트 임시 파일 삭제 중"
-
-#: src/DirManager.cpp
-msgid "Cleaning up temporary files"
-msgstr "임시 파일을 지우는 중"
-
-#: src/DirManager.cpp
-msgid "Cleaning up after failed save"
-msgstr "저장 실패 후 정리 중"
-
-#: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "프로젝트 데이터 파일 저장 중"
-
-#: src/DirManager.cpp
-msgid "Cleaning up cache directories"
-msgstr "캐쉬 폴더 정리 중"
-
-#. i18n-hint: This is the pattern for filenames that are created
-#. * when a file needs to be backed up to a different name.  For
-#. * example, mysong would become mysong-old1, mysong-old2, etc.
-#. * 'old' is part of a filename used when a file is renamed.
-#. * e.g. Try to go from "mysong.wav" to "mysong-old1.wav".
-#: src/DirManager.cpp
-#, c-format
-msgid "%s-old%d"
-msgstr "%s-old%d"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Renamed file: %s\n"
-msgstr "파일 이름을 변경했습니다: %s\n"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Changed block %s to new alias name\n"
-msgstr "%s 블록을 새로운 별명으로 바꾸었습니다\n"
-
-#: src/DirManager.cpp src/ProjectFSCK.cpp
-msgid "Inspecting project file data"
-msgstr "프로젝트 파일 데이터 검사 중"
-
-#: src/DirManager.cpp
-msgid "Caching audio"
-msgstr "오디오를 캐쉬하는 중"
-
-#: src/DirManager.cpp
-msgid "Caching audio into memory"
-msgstr "오디오를 메모리에 캐쉬하는 중"
-
-#: src/DirManager.cpp
-msgid "Saving recorded audio"
-msgstr "녹음한 오디오 저장 중"
-
-#: src/DirManager.cpp
-msgid "Saving recorded audio to disk"
-msgstr "녹음한 오디오를 디스크에 저장하는 중"
 
 #: src/Dither.cpp src/commands/ScreenshotCommand.cpp
 #: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
@@ -2497,17 +2443,18 @@ msgstr "오데시티가 %s의 파일에서 읽는데 실패."
 
 #: src/FileException.cpp
 #, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr "오데시티에서 %s에 파일 작성에 성공했으나, 이름을 %s로 바꾸는데 실패."
+
+#: src/FileException.cpp
+#, fuzzy, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
-"Perhaps %s is not writable or the disk is full."
+"Perhaps %s is not writable or the disk is full.\n"
+"For tips on freeing up space, click the help button."
 msgstr ""
 "오데시티에서 파일 저장에 실패.\n"
 "%s에 쓸 수 없거나 디스크가 꽉 찬 것 같습니다."
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "오데시티에서 %s에 파일 작성에 성공했으나, 이름을 %s로 바꾸는데 실패."
 
 #: src/FileException.h
 msgid "File Error"
@@ -2548,8 +2495,9 @@ msgstr "전체 파일"
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
-msgid "Audacity projects"
-msgstr "오데시티 프로젝트"
+#, fuzzy
+msgid "AUP3 project files"
+msgstr "프로젝트 데이터 파일 저장 중"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
@@ -2962,8 +2910,9 @@ msgid "Action"
 msgstr "동작"
 
 #: src/HistoryWindow.cpp
-msgid "Reclaimable Space"
-msgstr "회수 가능한 공간"
+#, fuzzy
+msgid "Used Space"
+msgstr "디스크 공간"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
@@ -2983,16 +2932,24 @@ msgid "&Discard"
 msgstr "버리기(&D)"
 
 #: src/HistoryWindow.cpp
-msgid "Clipboard space used"
+#, fuzzy
+msgid "Clip&board space used"
 msgstr "클립보드 점유 공간"
 
 #: src/HistoryWindow.cpp
-msgid "Discard"
+#, fuzzy
+msgid "D&iscard"
 msgstr "버리기"
 
-#: src/HistoryWindow.cpp src/export/ExportCL.cpp
-msgid "&OK"
-msgstr "확인(&O)"
+#: src/HistoryWindow.cpp
+#, fuzzy
+msgid "&Compact"
+msgstr "명령(&C)"
+
+#: src/HistoryWindow.cpp src/ProjectFileManager.cpp
+#, c-format
+msgid "Compacting actually freed %s of disk space."
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -3218,6 +3175,7 @@ msgstr ""
 msgid "Disallowed"
 msgstr "허용되지 않음"
 
+#. i18n-hint: noun, means a track, made by mixing other tracks
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "믹싱"
@@ -3368,7 +3326,7 @@ msgid "Yes"
 msgstr "예"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "아니요"
 
@@ -3649,11 +3607,6 @@ msgstr[0] "플러그인을 활성화?\n"
 msgid "Enable new plug-ins"
 msgstr "새 플러그인 활성화"
 
-#: src/Prefs.cpp
-#, c-format
-msgid "Audacity cannot start because the settings file at %s is not writable."
-msgstr "%s 파일이 쓰기 금지로 설정되어 오대시티를 시작할 수 없음."
-
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "인쇄 중에 문제가 발생했습니다."
@@ -3661,6 +3614,16 @@ msgstr "인쇄 중에 문제가 발생했습니다."
 #: src/Printing.cpp
 msgid "Print"
 msgstr "인쇄"
+
+#: src/Project.cpp
+#, fuzzy, c-format
+msgid ""
+"There is very little free disk space left on %s\n"
+"Please select a bigger temporary directory location in\n"
+"Directories Preferences."
+msgstr ""
+"이 볼륨에 남아 있는 디스크 공간이 매우 적습니다.\n"
+"환경설정에서 다른 임시 폴더를 선택하세요."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3697,6 +3660,14 @@ msgstr ""
 msgid "Too Few Compatible Tracks Selected"
 msgstr "너무 적은 수의 호환 트랙이 선택됨"
 
+#: src/ProjectAudioManager.cpp
+msgid "Recorded Audio"
+msgstr "녹음된 오디오"
+
+#: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
+msgid "Record"
+msgstr "녹음"
+
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
 #. At most, about 11 Latin characters.
@@ -3724,14 +3695,6 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "드롭아웃 감지 끄기"
 
-#: src/ProjectAudioManager.cpp
-msgid "Recorded Audio"
-msgstr "녹음된 오디오"
-
-#: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
-msgid "Record"
-msgstr "녹음"
-
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
@@ -3758,6 +3721,10 @@ msgstr ""
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
 msgstr "경고 - 시퀀스 태그를 읽는데 문제가 있습니다"
+
+#: src/ProjectFSCK.cpp
+msgid "Inspecting project file data"
+msgstr "프로젝트 파일 데이터 검사 중"
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -3896,6 +3863,13 @@ msgstr "부모 없는 파일 삭제 (즉시 영구)"
 msgid "Warning - Orphan Block File(s)"
 msgstr "경고 - 부모 없는 블럭 파일입니다"
 
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
+#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/UndoManager.cpp
+#: src/menus/TransportMenus.cpp
+msgid "Progress"
+msgstr "진행"
+
 #: src/ProjectFSCK.cpp
 msgid "Cleaning up unused directories in project data"
 msgstr "프로젝트 데이터에서 사용되지 않는 디렉터리 정리"
@@ -3923,6 +3897,132 @@ msgstr "<untitled>"
 msgid "[Project %02i] "
 msgstr "[프로젝트 %02i] "
 
+#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Failed to open the project's database"
+msgstr "사전설정 이름을 설정하지 못했습니다"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to discard connection"
+msgstr "코덱을 찾지 못했습니다"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to restore connection"
+msgstr "사전설정 내용을 가져오는데 실패"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to execute a project file command:\n"
+"\n"
+"%s"
+msgstr "\"%s\"에서 사전설정을 인코딩하지 못했습니다."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr "사전설정 파일을 읽을 수 없습니다."
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to retrieve data from the project file.\n"
+"The following command failed:\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "This is not an Audacity project file"
+msgstr "오데시티 프로젝트 저장 중"
+
+#: src/ProjectFileIO.cpp
+msgid ""
+"This project was created with a newer version of Audacity:\n"
+"\n"
+"You will need to upgrade to process it"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to initialize the project file"
+msgstr "MP3 스트림을 초기화할 수 없습니다"
+
+#: src/ProjectFileIO.cpp
+msgid "Cleanup of orphan blocks failed"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid "Total orphan blocks deleted %d"
+msgstr "부모 없는 블록 파일: '%s'"
+
+#: src/ProjectFileIO.cpp
+msgid "Failed to rollback transaction during import"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to attach destination database"
+msgstr "스트림을 일시 정지 상태로 설정할 수 없습니다."
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to switch to fast journaling mode"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to copy tags"
+msgstr "%s 제거에 실패했습니다"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Failed to bind SQL parameter"
+msgstr "코덱을 찾지 못했습니다"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to update the project file.\n"
+"The following command failed:\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+msgid "Destination project could not be detached"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Copying Project"
+msgstr "프로젝트 열기 오류"
+
+#: src/ProjectFileIO.cpp
+msgid "Error Writing to File"
+msgstr "파일에 쓰기 오류"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Audacity failed to write file %s.\n"
+"Perhaps disk is full or not writable.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"오데시티에서 파일 저장에 실패했습니다.\n"
+"%s에 쓸 수 없거나 디스크가 꽉 찬 것 같습니다."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Compacting project"
+msgstr "프로젝트를 저장할 때(&P)"
+
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3933,49 +4033,6 @@ msgstr "[프로젝트 %02i] 오데시티 \"%s\""
 #: src/ProjectFileIO.cpp
 msgid "(Recovered)"
 msgstr "(복구됨)"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"This file was saved by Audacity version %s. The format has changed. \n"
-"\n"
-"Audacity can try to open and save this file, but saving it in this \n"
-"version will then prevent any 1.2 or earlier version opening it. \n"
-"\n"
-"Audacity might corrupt the file in opening it, so you should back it up "
-"first. \n"
-"\n"
-"Open this file now?"
-msgstr ""
-"이것은 오데시티 %s 버전에서 저장한 파일인데 그 형식이 바뀌었습니다.\n"
-"\n"
-"오데시티는 이 파일을 열어서 저장을 시도할 수 있지만, 이 버전으로 저장하면\n"
-"1.2 이전의 버전에서 열 수 없게 될 것입니다.\n"
-"\n"
-"오데시티에서 이 파일을 열면  파일이 깨질 수도 있기 때문에, 먼저 백업하세요.\n"
-"\n"
-"지금 파일을 열까요?"
-
-#: src/ProjectFileIO.cpp
-msgid "1.0 or earlier"
-msgstr "1.0 이전"
-
-#: src/ProjectFileIO.cpp
-msgid "Warning - Opening Old Project File"
-msgstr "경고 - 이전 프로젝트 파일을 여는 중입니다"
-
-#: src/ProjectFileIO.cpp
-msgid "<unrecognized version -- possibly corrupt project file>"
-msgstr "<버전 인식 불가 -- 깨진 프로젝트 파일인 것 같습니다>"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid "Couldn't find the project data folder: \"%s\""
-msgstr "프로젝트 데이터 폴더를 찾을 수 없습니다: \"%s\""
-
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
-msgid "Error Opening Project"
-msgstr "프로젝트 열기 오류"
 
 #. i18n-hint: %s will be replaced by the version number.
 #: src/ProjectFileIO.cpp
@@ -3995,18 +4052,87 @@ msgid "Can't open project file"
 msgstr "프로젝트 파일을 열 수 없음"
 
 #: src/ProjectFileIO.cpp
-#, c-format
-msgid "Could not create autosave file: %s"
-msgstr "자동 저장 파일을 만들 수 없습니다: %s"
+msgid "Failed to remove the autosave information from the project file."
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to decode project document"
+msgstr "디코더를 파이프라인에 추가할 수 없습니다"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to parse project information."
+msgstr "사전설정 파일을 읽을 수 없습니다."
+
+#: src/ProjectFileIO.cpp
+msgid ""
+"The project's database failed to reopen, possibly because of limited space "
+"on the storage device."
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Saving project"
+msgstr "프로젝트를 저장할 때(&P)"
+
+#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+msgid "Error Saving Project"
+msgstr "프로젝트 저장 중 오류"
+
+#: src/ProjectFileIO.cpp
+msgid "Syncing"
+msgstr ""
 
 #: src/ProjectFileIO.cpp
 #, c-format
-msgid "Could not remove old autosave file: %s"
-msgstr "이전 자동 저장 파일을 제거할 수 없습니다: %s"
+msgid ""
+"The project failed to open, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Unable to remove autosave information, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Backing up project"
+msgstr "빈 프로젝트를 저장할 때(&E)"
 
 #: src/ProjectFileManager.cpp
-msgid "Error decoding file"
-msgstr "파일 디코딩 중 오류"
+#, fuzzy
+msgid ""
+"This project was not saved properly the last time Audacity ran.\n"
+"\n"
+"It has been recovered to the last snapshot."
+msgstr ""
+"몇몇 프로젝트는 마지막 오데시티 실행시 제대로 저장되지 않았습니다.\n"
+"다행이도 다음 프로젝트는 자동으로 복구할 수 있습니다:"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"This project was not saved properly the last time Audacity ran.\n"
+"\n"
+"It has been recovered to the last snapshot, but you must save it\n"
+"to preserve its contents."
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Project Recovered"
+msgstr "프로젝트를 복구했습니다"
+
+#: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "Projects cannot be saved to FAT drives."
+msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4033,39 +4159,22 @@ msgid "Warning - Empty Project"
 msgstr "경고 - 빈 프로젝트입니다"
 
 #: src/ProjectFileManager.cpp
-#, c-format
+#, fuzzy
+msgid "Insufficient Disk Space"
+msgstr "디스크 공간"
+
+#: src/ProjectFileManager.cpp
 msgid ""
-"Audacity failed to write file %s.\n"
-"Perhaps disk is full or not writable."
+"The project size exceeds the available free space on the target disk.\n"
+"\n"
+"Please select a different disk with more free space."
 msgstr ""
-"오데시티에서 파일 저장에 실패했습니다.\n"
-"%s에 쓸 수 없거나 디스크가 꽉 찬 것 같습니다."
 
 #: src/ProjectFileManager.cpp
-msgid "Error Writing to File"
-msgstr "파일에 쓰기 오류"
-
-#: src/ProjectFileManager.cpp
-#, c-format
 msgid ""
-"Could not save project. Perhaps %s \n"
-"is not writable or the disk is full."
+"The project exceeds the maximum size of 4GB when writing to a FAT32 "
+"formatted filesystem."
 msgstr ""
-"프로젝트를 저장할 수 없습니다. 아마도 %s에\n"
-"쓸 수 없거나 디스크가 꽉 찬 것 같습니다."
-
-#: src/ProjectFileManager.cpp
-msgid "Error Saving Project"
-msgstr "프로젝트 저장 중 오류"
-
-#: src/ProjectFileManager.cpp
-#, c-format
-msgid ""
-"Could not save project. Path not found. Try creating \n"
-"directory \"%s\" before saving project with this name."
-msgstr ""
-"프로젝트를 저장할 수 없습니다. 경로를 찾지 못했습니다.\n"
-"프로젝트를 저장하기 전에 \"%s\" 폴더를 만들어 보세요."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4084,48 +4193,6 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 #, c-format
-msgid "%sSave Lossless Copy of Project \"%s\" As..."
-msgstr "%s프로젝트 \"%s\"ㄹ 무손실 복사본 저장 ..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-"file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-"\n"
-"Lossless copies of project are a good way to backup your project, \n"
-"with no loss of quality, but the projects are large.\n"
-msgstr ""
-"'프로젝트의 무손실 복사본 저장'은 오디오 파일이 아닌 프로젝트를 위한 것입니"
-"다.\n"
-"다른 앱에서 사용할 오디오 파일의 경우 '내보내기'를 사용합니다.\n"
-"\n"
-"무손실 프로젝트 복사본은 프로젝트를 백업하는 좋은 방법입니다. \n"
-"품질의 손실은 없지만 프로젝트의 파일 크기가 커집니다.\n"
-
-#: src/ProjectFileManager.cpp
-#, c-format
-msgid "%sSave Compressed Copy of Project \"%s\" As..."
-msgstr "%s프로젝트 \"%s\"를 압축 복사본 저장..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Compressed Copy of Project' is for an Audacity project, not an audio "
-"file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-"\n"
-"Compressed project files are a good way to transmit your project online, \n"
-"but they have some loss of fidelity.\n"
-msgstr ""
-"'프로젝트의 압축 복사본 저장'은 오디오 파일이 아닌 프로젝트를 위한 것입니"
-"다.\n"
-"다른 앱에서 열리는 오디오 파일의 경우 '내보내기'를 사용합니다.\n"
-"\n"
-"압축된 프로젝트 파일은 프로젝트를 온라인으로 전송하는 좋은 방법입니다. \n"
-"그러나 음질에 일부 손실이 있습니다.\n"
-
-#: src/ProjectFileManager.cpp
-#, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "%s프로젝트 \"%s\"를 다른 이름으로 저장..."
 
@@ -4137,29 +4204,17 @@ msgstr ""
 "'프로젝트 저장'은 오디오 파일이 아니라 오데시티 프로젝트용입니다.\n"
 "다른 앱에서 열려는 오디오 파일에 대해서는 '내보내기'를 사용하세요.\n"
 
-#: src/ProjectFileManager.cpp
-msgid ""
-"Saving a copy must not overwrite an existing saved project.\n"
-"Please try again and select an original name."
-msgstr ""
-"복사본 저장에서는 기존의 프로젝트에 덮어쓸 수 없습니다.\n"
-"다시 시도해 보고, 원 이름을 선택하십시오."
-
-#: src/ProjectFileManager.cpp
-msgid "Error Saving Copy of Project"
-msgstr "프로젝트 복사본 저장 오류"
-
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
 #: src/ProjectFileManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Do you want to overwrite the project:\n"
+"   Do you want to overwrite the project:\n"
 "\"%s\"?\n"
 "\n"
-"If you select \"Yes\" the project\n"
+"   If you select \"Yes\" the project\n"
 "\"%s\"\n"
-"will be irreversibly overwritten."
+"   will be irreversibly overwritten."
 msgstr ""
 "프로젝트를 덮어쓰시겠습니까?\n"
 "\"%s\"?\n"
@@ -4174,13 +4229,31 @@ msgid "Overwrite Project Warning"
 msgstr "프로젝트 덮어 쓰기 경고"
 
 #: src/ProjectFileManager.cpp
+#, fuzzy
 msgid ""
-"The project will not saved because the selected project is open in another "
+"The project was not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
 "선택한 프로젝트가 다른 창에서 열려 있으므로 프로젝트가 저장되지 않습니다.\n"
 "다시 시도하고 새로운 이름을 선택하십시오."
+
+#: src/ProjectFileManager.cpp
+#, fuzzy, c-format
+msgid "%sSave Copy of Project \"%s\" As..."
+msgstr "%s프로젝트 \"%s\"ㄹ 무손실 복사본 저장 ..."
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Saving a copy must not overwrite an existing saved project.\n"
+"Please try again and select an original name."
+msgstr ""
+"복사본 저장에서는 기존의 프로젝트에 덮어쓸 수 없습니다.\n"
+"다시 시도해 보고, 원 이름을 선택하십시오."
+
+#: src/ProjectFileManager.cpp
+msgid "Error Saving Copy of Project"
+msgstr "프로젝트 복사본 저장 오류"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4190,6 +4263,16 @@ msgstr "하나 이상의 파일 선택"
 #, c-format
 msgid "%s is already open in another window."
 msgstr "%s은 다른 창에 이미 열려 있습니다."
+
+#: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
+msgid "Error Opening Project"
+msgstr "프로젝트 열기 오류"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4229,23 +4312,12 @@ msgid "Error Opening File or Project"
 msgstr "파일이나 프로젝트를 여는 중 오류"
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"Audacity was unable to convert an Audacity 1.0 project to the new project "
-"format."
-msgstr ""
-"오데시티는 오데시티 1.0 프로젝트를 새 프로젝트 형식으로 변환할 수 없습니다."
-
-#: src/ProjectFileManager.cpp
 msgid "Project was recovered"
 msgstr "프로젝트를 복구했습니다"
 
 #: src/ProjectFileManager.cpp
 msgid "Recover"
 msgstr "복구"
-
-#: src/ProjectFileManager.cpp
-msgid "Could not remove old auto save file"
-msgstr "이전 자동 저장 파일을 제거할 수 없습니다"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -4257,12 +4329,54 @@ msgid "Import"
 msgstr "가져오기"
 
 #: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Failed to import project"
+msgstr "코덱을 찾지 못했습니다"
+
+#: src/ProjectFileManager.cpp
 msgid "Error Importing"
 msgstr "가져오기 오류"
+
+#: src/ProjectFileManager.cpp
+msgid "Cannot import AUP3 format.  Use File > Open instead"
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Compact Project"
+msgstr "프로젝트 설정"
+
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid ""
+"Compacting this project will free up disk space by removing unused bytes "
+"within the file.\n"
+"\n"
+"There is %s of free disk space and this project is currently using %s.\n"
+"\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be "
+"discarded and you will recover approximately %s of disk space.\n"
+"\n"
+"Do you want to continue?"
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Compacted project file"
+msgstr "프로젝트 파일을 열 수 없음"
+
+#: src/ProjectFileManager.cpp
+msgid "Compact"
+msgstr ""
 
 #: src/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "새 프로젝트를 만들었습니다"
+
+#: src/ProjectHistory.cpp
+#, fuzzy
+msgid "Automatic database backup failed."
+msgstr "자동 저장 사용:"
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4301,26 +4415,6 @@ msgid "Disk space remaining for recording: %s"
 msgstr "녹음 가능한 디스크 공간: %s"
 
 #: src/ProjectManager.cpp
-msgid "On-demand import and waveform calculation complete."
-msgstr "온디멘드 가져오기와 파형 계산을 완료했습니다."
-
-#: src/ProjectManager.cpp
-#, c-format
-msgid ""
-"Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f"
-"%% complete."
-msgstr ""
-"가져오기가 완료되었습니다. %d 온디맨드 파형 계산 실행. 전체 %2.0f%% 완료."
-
-#: src/ProjectManager.cpp
-#, c-format
-msgid ""
-"Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
-msgstr ""
-"가져오기를 완료했습니다. 온디멘드 파형 계산을 실행 중입니다. %2.0f%% 완료했습"
-"니다."
-
-#: src/ProjectManager.cpp
 msgid "Less than 1 minute"
 msgstr "1분 이내"
 
@@ -4341,6 +4435,14 @@ msgstr[0] "%d분"
 #, c-format
 msgid "%s and %s."
 msgstr "%s 및 %s."
+
+#: src/ProjectSerializer.cpp
+msgid ""
+"This recovery file was saved by Audacity 2.3.0 or before.\n"
+"You need to run that version of Audacity to recover the project."
+msgstr ""
+"이 복구 파일은 2.3.0 이전 버전에서 저장됨. \n"
+"이 프로젝트를 복구하려면 해당 버전을 실행하여야 함."
 
 #. i18n-hint: This is an experimental feature where the main panel in
 #. Audacity is put on a notebook tab, and this is the name on that tab.
@@ -4637,11 +4739,6 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "경고 - 긴 블럭 파일을 잘라내는 중입니다"
 
-#: src/ShuttleGui.cpp src/commands/HelpCommand.cpp src/effects/Equalization.cpp
-#: src/menus/HelpMenus.cpp src/widgets/MultiDialog.cpp
-msgid "Help"
-msgstr "도움말"
-
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
 msgstr "미리보기(&P)"
@@ -4797,6 +4894,25 @@ msgstr "다른 이름으로 메타데이터 저장:"
 #: src/Tags.cpp
 msgid "Error Saving Tags File"
 msgstr "태그 파일을 저장하는 중 오류"
+
+#: src/TempDirectory.cpp
+#, fuzzy
+msgid "Unsuitable"
+msgstr "모듈이 적합하지 않음"
+
+#: src/TempDirectory.cpp
+msgid ""
+"The temporary files directory is on a FAT formatted drive.\n"
+"Resetting to default location."
+msgstr ""
+
+#: src/TempDirectory.cpp
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"For tips on suitable drives, click the help button."
+msgstr ""
 
 #: src/Theme.cpp
 #, c-format
@@ -5278,10 +5394,6 @@ msgstr "오데시티 타이머 녹음 - 대기 중"
 msgid "Stereo, 999999Hz"
 msgstr "스테레오, 999999Hz"
 
-#: src/TrackInfo.cpp src/commands/SelectCommand.cpp src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "선택"
-
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -5405,6 +5517,10 @@ msgstr "트랙을 위로"
 msgid "Move Track Down"
 msgstr "트랙을 아래로"
 
+#: src/UndoManager.cpp
+msgid "Discarding undo/redo history"
+msgstr ""
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -5508,6 +5624,14 @@ msgstr "매개 변수 '%s'에 대한 잘못된 값 : %s 여야합니다"
 #: src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "명령"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/commands/CommandManager.cpp src/effects/EffectUI.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "%s 반복하기"
 
 #: src/commands/CommandManager.cpp
 #, c-format
@@ -5688,13 +5812,26 @@ msgstr "유형:"
 msgid "Gets track values as JSON."
 msgstr "트랙 값을 JSON으로 가져옵니다."
 
+#: src/commands/HelpCommand.cpp
+#, fuzzy
+msgid "Comment"
+msgstr "코멘트"
+
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
 msgstr "명령:"
 
+#: src/commands/HelpCommand.cpp
+msgid "_"
+msgstr ""
+
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
 msgstr "명령의 도움말을 출력합니다."
+
+#: src/commands/HelpCommand.h
+msgid "For comments in a macro."
+msgstr ""
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -5760,8 +5897,19 @@ msgid "Save Project2"
 msgstr "프로젝트2 저장"
 
 #: src/commands/OpenSaveCommands.cpp
-msgid "Compress"
-msgstr "압축"
+#, fuzzy
+msgid "Save Copy"
+msgstr "레이블 복사"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Save Log"
+msgstr "로그 저장:"
+
+#: src/commands/OpenSaveCommands.cpp
+#, fuzzy
+msgid "Clear Log"
+msgstr "지우기"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5770,6 +5918,19 @@ msgstr "프로젝트 열기."
 #: src/commands/OpenSaveCommands.h
 msgid "Saves a project."
 msgstr "프로젝트를 저장."
+
+#: src/commands/OpenSaveCommands.h
+#, fuzzy
+msgid "Saves a copy of current project."
+msgstr "프로젝트를 저장."
+
+#: src/commands/OpenSaveCommands.h
+msgid "Saves the log contents."
+msgstr ""
+
+#: src/commands/OpenSaveCommands.h
+msgid "Clears the log contents."
+msgstr ""
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference"
@@ -7689,12 +7850,9 @@ msgstr "재생 정지(&P)"
 msgid "Play"
 msgstr "재생"
 
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "%s 반복하기"
+#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Prompt"
+msgstr "나이퀴스트 프롬프트"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -8215,10 +8373,6 @@ msgstr "스테레오 채널을 독립적으로 정규화하기"
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
 msgstr "모노를 듀얼 모노로 취급 (권장) (&T)"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-msgid "Waiting for waveform to finish computing..."
-msgstr "파형의 계산이 끝나기를 기다리는 중..."
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "(Maximum 0dB)"
@@ -9095,6 +9249,21 @@ msgstr "스테레오를 모노로"
 msgid "Converts stereo tracks to mono"
 msgstr "스테레오 트랙을 모노로 변환합니다"
 
+#: src/effects/StereoToMono.cpp
+#, fuzzy
+msgid "Resampling left channel"
+msgstr "리샘플링에 실패했습니다."
+
+#: src/effects/StereoToMono.cpp
+#, fuzzy
+msgid "Resampling right channel"
+msgstr "오른쪽 채널"
+
+#: src/effects/StereoToMono.cpp
+#, fuzzy
+msgid "Mixing down to mono"
+msgstr "내보내기 중 모노로 다운믹싱할 때(&M)"
+
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
 msgstr "슬라이딩 스트레치 (템포 서서히 변경)"
@@ -9734,10 +9903,6 @@ msgstr "나이퀴스트 효과 지원을 오데시티에 제공합니다"
 msgid "Applying Nyquist Effect..."
 msgstr "나이퀴스트 효과 적용 중..."
 
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "나이퀴스트 프롬프트"
-
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
@@ -9905,10 +10070,6 @@ msgid "Enter Nyquist Command: "
 msgstr "나이퀴스트 명령 입력: "
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "&Use legacy (version 3) syntax."
-msgstr "레거시 (버전 3) 구문 사용(&U)"
-
-#: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "불러오기(&L)"
 
@@ -10030,12 +10191,6 @@ msgstr "선택한 모든 오디오를 음소거했습니다."
 msgid "All audio is muted."
 msgstr "모든 오디오가 음소거됩니다."
 
-#: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportFLAC.cpp src/export/ExportMP2.cpp src/export/ExportMP3.cpp
-#: src/export/ExportOGG.cpp src/export/ExportPCM.cpp
-msgid "Unable to export"
-msgstr "내보낼 수 없습니다"
-
 #: src/export/Export.cpp
 #, c-format
 msgid "Are you sure you want to export the file as \"%s\"?\n"
@@ -10061,21 +10216,6 @@ msgstr ""
 #: src/export/Export.cpp
 msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr "죄송합니다. 256자보다 더 긴 경로명은 지원하지 않습니다."
-
-#: src/export/Export.cpp
-msgid ""
-"You are attempting to overwrite an aliased file that is missing.\n"
-"The file cannot be written because the path is needed to restore the "
-"original audio to the project.\n"
-"Choose Help > Diagnostics > Check Dependencies to view the locations of all "
-"missing files.\n"
-"If you still wish to export, please choose a different filename or folder."
-msgstr ""
-"누락된 별칭 파일을 덮어쓰려고 합니다.\n"
-"원래 오디오를 프로젝트에 복원하는 데 경로가 필요하기 때문에 파일을 쓸 수 없습"
-"니다.\n"
-"도움말 > 진단 > 종속성을 확인하여 누락된 모든 파일의 위치를 확인합니다.\n"
-"그래도 내보내려면 다른 파일 이름 또는 폴더를 선택하십시오."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10130,6 +10270,13 @@ msgstr "출력 채널: %2d"
 msgid "Mixer Panel"
 msgstr "믹서 패널"
 
+#: src/export/Export.cpp
+#, fuzzy, c-format
+msgid ""
+"Unable to export.\n"
+"Error %s"
+msgstr "내보낼 수 없습니다"
+
 #: src/export/ExportCL.cpp
 msgid "Show output"
 msgstr "출력 표시"
@@ -10181,6 +10328,10 @@ msgstr "명령행 인코더를 사용하여 오디오를 내보내는 중"
 #: src/export/ExportCL.cpp
 msgid "Command Output"
 msgstr "명령 출력"
+
+#: src/export/ExportCL.cpp
+msgid "&OK"
+msgstr "확인(&O)"
 
 #: src/export/ExportCL.cpp
 msgid "You've specified a file name without an extension. Are you sure?"
@@ -10307,10 +10458,6 @@ msgstr "FFmpeg : 오류 - nAudioFrameSizeOut이 너무 큽니다."
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't encode audio frame."
 msgstr "FFmpeg : 오류 - 오디오 프레임을 인코딩할 수 없습니다."
-
-#: src/export/ExportFFmpeg.cpp
-msgid "FFmpeg : ERROR - Failed to write audio frame to file."
-msgstr "FFmpeg : 오류 - 오디오 프레임을 파일에 쓰지 못했습니다."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11463,10 +11610,14 @@ msgstr "나머지 파일을 계속 내보내시나요?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
-"Use..."
+"Label or track \"%s\" is not a legal file name.\n"
+"You cannot use any of these characters:\n"
+"\n"
+"%s\n"
+"\n"
+"Suggested replacement:"
 msgstr ""
 "\"%s\" 레이블/트랙은 올바른 파일명이 아닙니다. 다음 문자는 사용할 수 없습니"
 "다: %s\n"
@@ -11474,10 +11625,11 @@ msgstr ""
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
-"Use..."
+"\n"
+"Suggested replacement:"
 msgstr ""
 "\"%s\" 레이블/트랙은 올바른 파일명이 아닙니다. \"%s\"는 사용할 수 없습니다.\n"
 "사용..."
@@ -11603,6 +11755,18 @@ msgid ""
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
+msgstr ""
+"\"%s\" \n"
+"는 오디오 파일이 아니라 미디 파일입니다. \n"
+"오데시티에서 이 형식을 재생하기 위해 열 수 없지만,\n"
+"파일 > 가져오기 > 미디를 눌러 편집할 수 있습니다."
+
+#: src/import/Import.cpp
+#, fuzzy, c-format
+msgid ""
+"\"%s\" \n"
+"is a not an audio file. \n"
+"Audacity cannot open this type of file."
 msgstr ""
 "\"%s\" \n"
 "는 오디오 파일이 아니라 미디 파일입니다. \n"
@@ -11779,16 +11943,6 @@ msgstr ""
 "오데시티에서 현재 이 형식의 파일을 열 수 없습니다. \n"
 "WAV나 AIFF와 같은 지원 형식으로 오디오를 추출할 필요가 있습니다."
 
-#. i18n-hint: %s will be the filename
-#: src/import/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" is an Audacity Project file. \n"
-"Use the 'File > Open' command to open Audacity Projects."
-msgstr ""
-"\"%s\"는 오데시티 프로젝트 파일입니다.\n"
-"오데시티 프로젝트를 열려면 '파일 > 열기' 명령를 사용하세요."
-
 #: src/import/Import.cpp
 #, c-format
 msgid "File \"%s\" not found."
@@ -11796,15 +11950,21 @@ msgstr "\"%s\" 파일이 없습니다."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
-"Try installing FFmpeg. For uncompressed files, also try File > Import > Raw "
-"Data."
+"\n"
+"%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
 "오데시티는 파일 '%s'의 형식을 인식하지 못했습니다.\n"
 "FFmpeg을 설치해 보세요. 무압축 파일은, 파일 > 가져오기 > Raw 데이터에서 해보"
 "세요."
+
+#: src/import/Import.cpp
+msgid ""
+"Try installing FFmpeg.\n"
+"\n"
+msgstr ""
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -11824,6 +11984,168 @@ msgstr ""
 "가져오기 프로그램에서는 아마 다음 파일을 지원합니다:\n"
 "%s,\n"
 "하지만 이 파일 형식을 인식하는 프로그램은 없습니다."
+
+#: src/import/ImportAUP.cpp
+msgid "AUP project files (*.aup)"
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, fuzzy, c-format
+msgid ""
+"Couldn't import the project:\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\" 사전설정을 가져올 수 없습니다.\n"
+"\n"
+"%s"
+
+#: src/import/ImportAUP.cpp
+#, fuzzy
+msgid "Import Project"
+msgstr "사전설정 가져오기"
+
+#: src/import/ImportAUP.cpp
+msgid ""
+"This project was saved by Audacity version 1.0 or earlier. The format has\n"
+"changed and this version of Audacity is unable to import the project.\n"
+"\n"
+"Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
+"you may import it with this version of Audacity."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, fuzzy
+msgid "Internal error in importer...tag not recognized"
+msgstr "맞춤 프로세스가 내부 오류를 보고했습니다."
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Invalid project '%s' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'vpos' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'h' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'zoom' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'sel0' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'sel1' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'selLow' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'selHigh' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Couldn't find the project data folder: \"%s\""
+msgstr "프로젝트 데이터 폴더를 찾을 수 없습니다: \"%s\""
+
+#: src/import/ImportAUP.cpp
+msgid ""
+"MIDI tracks found in project file, but this build of Audacity does not "
+"include MIDI support, bypassing track."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, fuzzy
+msgid "Project Import"
+msgstr "프로젝트 시작"
+
+#: src/import/ImportAUP.cpp
+msgid ""
+"The active project already has a time track and one was encountered in the "
+"project being imported, bypassing imported time track."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, fuzzy
+msgid "Invalid sequence 'maxsamples' attribute."
+msgstr "무효한 샘플링 주파수"
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid sequence 'sampleformat' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, fuzzy
+msgid "Invalid sequence 'numsamples' attribute."
+msgstr "무효한 샘플링 주파수"
+
+#: src/import/ImportAUP.cpp
+msgid "Unable to parse the waveblock 'start' attribute"
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Missing project file %s\n"
+"\n"
+"Inserting silence instead."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid simpleblockfile 'len' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid silentblockfile 'len' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Missing alias file %s\n"
+"\n"
+"Inserting silence instead."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Error while processing %s\n"
+"\n"
+"Inserting silence."
+msgstr ""
+
+#: src/import/ImportAUP.cpp
+#, fuzzy, c-format
+msgid "Failed to open %s"
+msgstr "%s 제거에 실패했습니다"
+
+#: src/import/ImportAUP.cpp
+#, fuzzy, c-format
+msgid "Failed to seek to position %lld in %s"
+msgstr "사전설정 이름을 설정하지 못했습니다"
+
+#: src/import/ImportAUP.cpp
+#, fuzzy, c-format
+msgid "Unable to read %lld samples from %s"
+msgstr "\"%s\"에서 사전설정을 읽을 수 없음"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -11933,15 +12255,12 @@ msgid "MP3 files"
 msgstr "MP3 파일"
 
 #: src/import/ImportMP3.cpp
-#, c-format
 msgid ""
-"MP3 Decoding Failed:\n"
+"Import failed\n"
 "\n"
-"%s"
+"This is likely caused by a malformed MP3.\n"
+"\n"
 msgstr ""
-"MP3 디코딩 실패:\n"
-"\n"
-"%s"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12153,64 +12472,6 @@ msgstr "8 bit DPCM"
 msgid "Vorbis"
 msgstr "Vorbis"
 
-#: src/import/ImportPCM.cpp
-msgid ""
-"When importing uncompressed audio files you can either copy them into the "
-"project, or read them directly from their current location (without "
-"copying).\n"
-"\n"
-msgstr ""
-"비압축 오디오 파일을 가져올 때, 프로젝트에 비압축 오디오 파일을 복사하거나, "
-"해당 파일이 있는 위치에서 (복사 없이) 직접 비압축 오디오 파일을 읽을 수 있습"
-"니다.\n"
-"\n"
-
-#: src/import/ImportPCM.cpp
-msgid ""
-"Your current preference is set to copy in.\n"
-"\n"
-msgstr "현재 환경설정은 복사하는 것으로 되어 있습니다.\n"
-
-#: src/import/ImportPCM.cpp
-msgid ""
-"Your current preference is set to read directly.\n"
-"\n"
-msgstr "현재 환경설정은 해당 위치에서 직접 읽기로 되어 있습니다.\n"
-
-#: src/import/ImportPCM.cpp
-msgid ""
-"Reading the files directly allows you to play or edit them almost "
-"immediately. This is less safe than copying in, because you must retain the "
-"files with their original names in their original locations.\n"
-"Help > Diagnostics > Check Dependencies will show the original names and "
-"locations of any files that you are reading directly.\n"
-"\n"
-"How do you want to import the current file(s)?"
-msgstr ""
-"파일을 직접 읽으면 거의 즉시 재생하거나 편집할 수 있습니다. 이것은 파일을 원"
-"래 위치에 원래 이름으로 유지해야 하기 때문에 복사하는 것보다 안전하지 않습니"
-"다. \n"
-"직접 읽는 파일의 원래 이름과 위치는 도움말 > 진단 > 종속성 확인에서 볼 수 있"
-"습니다.\n"
-"\n"
-"현재 파일을 어떤 방식으로 가져올까요?"
-
-#: src/import/ImportPCM.cpp
-msgid "Choose an import method"
-msgstr "가져오기 방법 선택"
-
-#: src/import/ImportPCM.cpp
-msgid "Make a &copy of the files before editing (safer)"
-msgstr "편집하기 전에 파일의 복사본 만들기 (안전)(&C)"
-
-#: src/import/ImportPCM.cpp
-msgid "Read the files &directly from the original (faster)"
-msgstr "원본에서 파일 직접 읽기 (더 빠름)(&D)"
-
-#: src/import/ImportPCM.cpp
-msgid "Don't &warn again and always use my choice above"
-msgstr "다시 경고하지 않고 항상 위의 내 선택을 사용(&W)"
-
 #: src/import/ImportPlugin.cpp src/import/ImportRaw.cpp
 #, c-format
 msgid "Importing %s"
@@ -12244,7 +12505,7 @@ msgstr "스트림 설명을 검색할 수 없습니다"
 msgid "Unable to get fill buffer"
 msgstr "채우기 버퍼를 가져올 수 없습니다"
 
-#. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
+#. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
 msgid "Import Raw"
 msgstr "원시 데이터 가져오기"
@@ -12321,8 +12582,8 @@ msgid "&Import"
 msgstr "가져오기(&I)"
 
 #: src/import/RawAudioGuess.cpp
-msgid "Bad data size"
-msgstr "잘못된 데이터 크기"
+msgid "Bad data size. Could not import audio"
+msgstr ""
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12446,12 +12707,14 @@ msgid "Cursor to Next Clip Boundary"
 msgstr "다음 클립 경계로 커서 이동"
 
 #: src/menus/ClipMenus.cpp
-msgid "Clip L&eft"
-msgstr "클립 왼쪽으로(&E)"
+#, fuzzy
+msgid "Time Shift &Left"
+msgstr "시간 이동 도구"
 
 #: src/menus/ClipMenus.cpp
-msgid "Clip Rig&ht"
-msgstr "클립 오른쪽으로(&H)"
+#, fuzzy
+msgid "Time Shift &Right"
+msgstr "시간 이동 도구"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -12709,6 +12972,15 @@ msgid "&Full Screen (on/off)"
 msgstr "전체 화면 (켬/끔)(&F)"
 
 #: src/menus/FileMenus.cpp
+#, c-format
+msgid ""
+"Cannot create directory '%s'. \n"
+"File already exists that is not a directory"
+msgstr ""
+"'%s' 폴더를 만들 수 없습니다.\n"
+"폴더가 아닌 파일이 이미 있습니다"
+
+#: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
 msgstr "선택한 오디오 내보내기"
 
@@ -12805,12 +13077,9 @@ msgid "Save Project &As..."
 msgstr "다른 이름으로 프로젝트 저장(&A)..."
 
 #: src/menus/FileMenus.cpp
-msgid "Save Lossless Copy of Project..."
-msgstr "프로젝트의 무손실 복사본 저장..."
-
-#: src/menus/FileMenus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "프로젝트 압축 복사본 저장(&S)..."
+#, fuzzy
+msgid "&Backup Project..."
+msgstr "프로젝트 열기..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -12877,6 +13146,14 @@ msgstr "인쇄(&P)..."
 #: src/menus/FileMenus.cpp
 msgid "E&xit"
 msgstr "종료(&X)"
+
+#: src/menus/FileMenus.cpp
+msgid "Hidden File Menu"
+msgstr ""
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "FLAC로 내보내기"
 
 #: src/menus/HelpMenus.cpp
 #, c-format
@@ -12975,10 +13252,6 @@ msgstr "로그 보기(&L)..."
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "지원 요청 자료 만들기(&G)..."
-
-#: src/menus/HelpMenus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "종속성 확인(&K)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Menu Tree..."
@@ -13247,6 +13520,11 @@ msgid "Unknown"
 msgstr "알 수 없음"
 
 #: src/menus/PluginMenus.cpp
+#, fuzzy, c-format
+msgid "&Repeat %s"
+msgstr "%s 반복하기"
+
+#: src/menus/PluginMenus.cpp
 #, c-format
 msgid "Plug-in %d to %d"
 msgstr "플러그인 %d에서 %d까지"
@@ -13260,6 +13538,11 @@ msgid "Add / Remove Plug-ins..."
 msgstr "플러그인 추가/제거..."
 
 #: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Repeat Last Generator"
+msgstr "마지막 효과 반복"
+
+#: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
 msgstr "효과(&C)"
 
@@ -13271,9 +13554,19 @@ msgstr "마지막 효과 반복"
 msgid "&Analyze"
 msgstr "분석(&A)"
 
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Repeat Last Analyzer"
+msgstr "마지막 효과 반복"
+
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
 msgstr "도구(&O)"
+
+#: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Repeat Last Tool"
+msgstr "마지막 효과 반복"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
@@ -14140,6 +14433,20 @@ msgstr "포커스된 트랙: 맨 위로 이동(&O)"
 msgid "Move Focused Track to &Bottom"
 msgstr "포커스된 트랙: 맨 아래로 이동(&B)"
 
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused.
+#: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
+msgid "Playing"
+msgstr "재생 중"
+
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused.
+#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
+#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+msgid "Recording"
+msgstr "녹음"
+
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
 msgstr "레이블 트랙이 없습니다"
@@ -14370,11 +14677,13 @@ msgid "&Decrease Playback Speed"
 msgstr "재생 속도 감소(&D)"
 
 #: src/menus/TransportMenus.cpp
-msgid "Move to &Previous Label"
+#, fuzzy
+msgid "Move to Pre&vious Label"
 msgstr "이전 레이블로 이동(&P)"
 
 #: src/menus/TransportMenus.cpp
-msgid "Move to &Next Label"
+#, fuzzy
+msgid "Move to Ne&xt Label"
 msgstr "다음 레이블로 이동(&N)"
 
 #: src/menus/ViewMenus.cpp
@@ -14542,14 +14851,6 @@ msgstr "재생"
 msgid "&Device:"
 msgstr "장치(&D):"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
-#: src/toolbars/ControlToolBar.cpp
-msgid "Recording"
-msgstr "녹음"
-
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "장치(&V):"
@@ -14591,7 +14892,7 @@ msgstr "1 (모노)"
 msgid "2 (Stereo)"
 msgstr "2 (스테레오)"
 
-#. i18n-hint:  Directories, also called folders, in computer file systems
+#. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "폴더"
@@ -14599,6 +14900,55 @@ msgstr "폴더"
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Preferences for Directories"
 msgstr "환경설정 : 경로"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Default directories"
+msgstr "폴더"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid ""
+"Leave a field empty to go to the last directory used for that operation.\n"
+"Fill in a field to always go to that directory for that operation."
+msgstr ""
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "O&pen:"
+msgstr ""
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Browse..."
+msgstr "찾아보기..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "S&ave:"
+msgstr ""
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "B&rowse..."
+msgstr "찾아보기..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Import:"
+msgstr "가져오기(&I)"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Br&owse..."
+msgstr "찾아보기..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Export:"
+msgstr "내보내기(&E)"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Bro&wse..."
+msgstr "찾아보기..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -14609,32 +14959,24 @@ msgid "&Location:"
 msgstr "위치(&L):"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space:"
+#, fuzzy
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "임시 파일 폴더"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Brow&se..."
+msgstr "찾아보기..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Free Space:"
 msgstr "남은 공간:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "C&hoose..."
-msgstr "선택(&H)..."
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Audio cache"
-msgstr "오디오 캐쉬"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Play and/or record using &RAM (useful for slow drives)"
-msgstr "램을 사용하여 재생/녹음 (느린 드라이브에 유용함)(&R)"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Mi&nimum Free Memory (MB):"
-msgstr "최소 여유 메모리 (MB)(&N):"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
-"be cached in memory and will be written to disk."
-msgstr ""
-"사용 가능한 시스템 메모리가 이 값 밑으로 떨어지면,\n"
-"오디오를 더 이상 메모리에 캐슁하지 않고 디스크에 쓸 것입니다."
+#, fuzzy
+msgid "Free Space"
+msgstr "남은 공간:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -14643,6 +14985,11 @@ msgstr "임시 폴더로 사용할 위치를 선택하세요"
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
 msgstr "사용할 수 없음 - 위의 위치가 존재하지 않음"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Choose a location"
+msgstr "파일 저장 위치 선택"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -14988,16 +15335,22 @@ msgid "&Use Advanced Mixing Options"
 msgstr "고급 믹싱 옵션 사용(&U)"
 
 #: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "S&tandard"
+msgstr "표준"
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "E&xtended (with frequency ranges)"
+msgstr "주파수 범위를 선택하세요."
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
 msgstr "초(&S)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Beats"
 msgstr "박자(&B)"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "When importing audio files"
-msgstr "오디오 파일 가져올 때"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
@@ -15011,6 +15364,11 @@ msgstr "내보내기 전에 메타데이터 태그 편집기 보기(&H)"
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ignore blank space at the beginning"
 msgstr "시작부분에서 무음을 무시합니다"
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "Exported Label Style:"
+msgstr "다른 이름으로 레이블 내보내기:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -15259,10 +15617,6 @@ msgstr "위치 찾기(&T)..."
 #: src/prefs/LibraryPrefs.cpp
 msgid "Dow&nload"
 msgstr "다운로드(&N)"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Allow &background on-demand loading"
-msgstr "백그라운드로 온디맨드 불러오기 허용(&B)"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid ""
@@ -15646,19 +16000,6 @@ msgstr "카테고리"
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences:"
 msgstr "환경설정:"
-
-#. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
-msgid "Projects"
-msgstr "프로젝트"
-
-#: src/prefs/ProjectsPrefs.cpp
-msgid "Preferences for Projects"
-msgstr "환경설정 : 프로젝트"
-
-#: src/prefs/ProjectsPrefs.cpp
-msgid "When saving a project that depends on other audio files"
-msgstr "다른 오디오 파일에 의존하는 프로젝트를 저장할 때"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "16-bit"
@@ -16341,10 +16682,6 @@ msgid "Saving &empty project"
 msgstr "빈 프로젝트를 저장할 때(&E)"
 
 #: src/prefs/WarningsPrefs.cpp
-msgid "&Low disk space at launch or new project"
-msgstr "시작시나 새 프로젝트에서 디스크 공간이 부족할 때(&L)"
-
-#: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &mono during export"
 msgstr "내보내기 중 모노로 다운믹싱할 때(&M)"
 
@@ -16360,10 +16697,6 @@ msgstr "내보내기 중 다운믹싱할 때 (사용자 정의 FFmpeg이나 외�
 msgid "Missing file &name extension during export"
 msgstr "내보내기 중에 파일 이름 및 확장명이 누락됨 (&N)"
 
-#: src/prefs/WarningsPrefs.cpp
-msgid "&Importing uncompressed audio files"
-msgstr "비압축 오디오 파일을 가져올 때(&I)"
-
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
@@ -16376,12 +16709,6 @@ msgstr "환경설정 : 파형"
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range:"
 msgstr "파형 dB 범위(&R):"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/toolbars/ControlToolBar.cpp
-msgid "Playing"
-msgstr "재생 중"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -16971,6 +17298,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
 msgid "Right-click for menu."
 msgstr "메뉴는 우클릭."
 
@@ -17088,6 +17416,21 @@ msgstr "스펙트로그램 설정(&P)..."
 msgid "&Format"
 msgstr "형식(&F)"
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy
+msgid "Changing sample format"
+msgstr "무효한 샘플링 주파수"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy, c-format
+msgid "Processing...   0%%"
+msgstr "처리 중: %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy, c-format
+msgid "Processing...   %i%%"
+msgstr "처리 중: %s"
+
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -17171,6 +17514,7 @@ msgid "Set Rate"
 msgstr "속도 설정"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
 msgid "&Multi-view"
 msgstr "다중 뷰 (&M)"
 
@@ -17545,6 +17889,11 @@ msgid "Click and drag to move a track in time"
 msgstr "트랙을 제시간으로 이동하려면 클릭 후 드래그하세요"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
+#, fuzzy
+msgid "Could not shift between tracks"
+msgstr "클립을 좌/우나 트랙 사이로 이동"
+
+#: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
 msgstr "클립을 다른 트랙으로 이동했습니다"
 
@@ -17870,8 +18219,10 @@ msgstr "hh:mm:ss + 100분의 1"
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
-#. * (the hundredths are shown as decimal seconds) . Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale
+#. * (the hundredths are shown as decimal seconds). Don't change the numbers
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>0100 s"
 msgstr "0100 시간 060 분 060>0100 초"
@@ -17886,7 +18237,9 @@ msgstr "hh:mm:ss + 1/1000 초"
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>01000 s"
 msgstr "0100 시간 060 분 060>01000 초"
@@ -17901,7 +18254,9 @@ msgstr "hh:mm:ss + 샘플"
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
 msgstr "0100 시간 060 분 060 초+># 샘플"
@@ -17932,7 +18287,9 @@ msgstr "hh:mm:ss + 필름 프레임 (24 fps)"
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
 msgstr "0100 시간 060 분 060 초+>24 프레임"
@@ -17962,6 +18319,8 @@ msgstr "hh:mm:ss + NTSC 드롭 프레임"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
 msgstr "0100 시간 060 분 060 초+>30 프레임|N"
@@ -17978,6 +18337,8 @@ msgstr "hh:mm:ss + NTSC 비드롭 프레임"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
 msgstr "0100 시간 060 분 060 초+>030 프레임| .999000999"
@@ -18007,6 +18368,8 @@ msgstr "hh:mm:ss + PAL 프레임 (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
 msgstr "0100 시간 060 분 060 초+>25 프레임"
@@ -18035,6 +18398,8 @@ msgstr "hh:mm:ss + CDDA 프레임(75 fps)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
 msgstr "0100 시간 060 분 060 초+>75 프레임"
@@ -18055,8 +18420,11 @@ msgstr "01000,01000 프레임|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100000>0100 Hz"
+#, fuzzy
+msgid "010,01000>0100 Hz"
 msgstr "0100000>0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
@@ -18070,6 +18438,8 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000>01000 kHz|0.001"
 msgstr "01000>01000 kHz|0.001"
@@ -18086,6 +18456,8 @@ msgstr "옥타브"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100>01000 octaves|1.442695041"
 msgstr "100>01000 옥타브|1.442695041"
@@ -18104,6 +18476,8 @@ msgstr "반음 + 센트"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
 msgstr "1000 반음 >0100 센트|17.312340491"
@@ -18261,112 +18635,10 @@ msgstr "오류: %s - 라인%lu에서"
 msgid "Could not load file: \"%s\""
 msgstr "파일을 불러올 수 없음: \"%s\""
 
-#: plug-ins/SilenceMarker.ny
-msgid "Silence Finder"
-msgstr "무음 검색기"
-
-#: plug-ins/SilenceMarker.ny plug-ins/StudioFadeOut.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-#: plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr "스티브 달튼"
-
-#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
-#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocoder.ny
-msgid "Released under terms of the GNU General Public License version 2"
-msgstr "GNU 일반 공중 라이선스 버전 2의 규정에 따라 배포됨"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence (dB)"
-msgstr "이 수준 이하의 오디오를 무음으로 처리합니다 (dB)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence (seconds)"
-msgstr "무음의 최소 지속 시간 [초]"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement (seconds before silence ends)"
-msgstr "레이블 배치 [무음 끝나기 전, 초]"
-
-#. i18n-hint: Abbreviation of "Silence".
-#: plug-ins/SilenceMarker.ny
-msgid "S"
-msgstr "S"
-
-#. i18n-hint: hours minutes and seconds. Do not translate "~a".
-#: plug-ins/SilenceMarker.ny
-#, lisp-format
-msgid "~ah ~am ~as"
-msgstr "~ah ~am ~as"
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found.\n"
-"Try reducing the silence level and\n"
-"the minimum silence duration."
-msgstr ""
-"무음을 찾을 수 없습니다.\n"
-"무음 수준을 줄이시고\n"
-"최소 무음 지속 시간입니다."
-
-#: plug-ins/SoundFinder.ny
-msgid "Sound Finder"
-msgstr "소리 검색기"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr "소리 찾는 중..."
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr "제레미 R. 브라운"
-
-#: plug-ins/SoundFinder.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr "이 수준 이하의 오디오는 무음으로 취급 [ -dB]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr "소리 사이의 최소 무음 지속 시간 [초]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr "레이블 시작 지점 [소리 시작 전, 초]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr "레이블 종료 지점 [소리 끝난 후, 초]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr "트랙의 끝에 레이블을 추가할까요? [아니요=0, 예=1]"
-
-#: plug-ins/SoundFinder.ny
-#, lisp-format
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"소리을 찾지 못했습니다. 무음~%수준 및 최소 무음 지속 시간을 낮춰 보세요."
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr "[끝]"
+#: src/xml/XMLFileReader.cpp
+#, fuzzy
+msgid "Could not parse XML"
+msgstr "파일을 열 수 없습니다"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
@@ -18381,6 +18653,20 @@ msgstr "필터링..."
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
 msgstr "폴 리카멜리"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocoder.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr "GNU 일반 공중 라이선스 버전 2의 규정에 따라 배포됨"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18473,6 +18759,15 @@ msgstr "스튜디오 페이드 아웃"
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 msgid "Applying Fade..."
 msgstr "페이드 적용 중..."
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "Steve Daulton"
+msgstr "스티브 달튼"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -18599,11 +18894,11 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~a백분율 값은1000 %를 초과할 수 없습니다."
 
 #: plug-ins/adjustable-fade.ny
-#, lisp-format
+#, fuzzy, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
+"                                 -6 dB halves the amplitude."
 msgstr ""
 "~adB 값은 +100 dB를 초과할 수  없습니다.~%~%~\n"
 "                                 힌트: 6 dB는 진폭을 두 배로 만들고~%~\n"
@@ -18855,7 +19150,8 @@ msgstr "레이블 영역의 길이 (초)"
 msgid "Adjust label interval to fit length"
 msgstr "길이에 맞도록 레이블 간격 조정"
 
-#: plug-ins/equalabel.ny
+#. i18n-hint: Do not translate '##1'
+#: plug-ins/equalabel.ny plug-ins/label-sounds.ny
 msgid "Label text"
 msgstr "레이블 문자"
 
@@ -18988,6 +19284,121 @@ msgstr ""
 "                 트랙의 샘플링 주파수는 ~a Hz.~%~\n"
 "                 주파수는 ~a Hz 보다 낮아야 합니다."
 
+#. i18n-hint: Name of effect that labels sounds
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Label Sounds"
+msgstr "레이블 결합"
+
+#: plug-ins/label-sounds.ny plug-ins/noisegate.ny
+#, fuzzy
+msgid ""
+"Released under terms of the GNU General Public License version 2 or later."
+msgstr "GNU 일반 공중 라이선스 버전 2의 규정에 따라 배포됨"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Threshold level (dB)"
+msgstr "임계값 %d dB"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Threshold measurement"
+msgstr "임계값 백분율"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Peak level"
+msgstr "Wet 레벨"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Average level"
+msgstr "평균"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "RMS level"
+msgstr "Wet 레벨"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Minimum silence duration"
+msgstr "무음 지속 시간:"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Minimum label interval"
+msgstr "레이블 간격"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Label type"
+msgstr "레이블 문자"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Point before sound"
+msgstr "조인트 스테레오"
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Point after sound"
+msgstr "조인트 스테레오"
+
+#: plug-ins/label-sounds.ny
+msgid "Region around sounds"
+msgstr ""
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Region between sounds"
+msgstr "~a영역의 길이 = ~a 초."
+
+#: plug-ins/label-sounds.ny
+#, fuzzy
+msgid "Maximum leading silence"
+msgstr "무음 찾는 중..."
+
+#: plug-ins/label-sounds.ny
+msgid "Maximum trailing silence"
+msgstr ""
+
+#: plug-ins/label-sounds.ny
+msgid "Sound ##1"
+msgstr ""
+
+#. i18n-hint: hours minutes and seconds. Do not translate "~a".
+#: plug-ins/label-sounds.ny
+#, lisp-format
+msgid "~ah ~am ~as"
+msgstr "~ah ~am ~as"
+
+#: plug-ins/label-sounds.ny
+msgid "Too many silences detected.nOnly the first 10000 labels added."
+msgstr ""
+
+#. i18n-hint: '~a' will be replaced by a time duration
+#: plug-ins/label-sounds.ny
+#, fuzzy, lisp-format
+msgid "Error.~%Selection must be less than ~a."
+msgstr "선택은 %d 개의 샘플보다 더 커야 합니다."
+
+#: plug-ins/label-sounds.ny
+#, fuzzy, lisp-format
+msgid ""
+"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
+"duration'."
+msgstr ""
+"소리을 찾지 못했습니다. 무음~%수준 및 최소 무음 지속 시간을 낮춰 보세요."
+
+#: plug-ins/label-sounds.ny
+#, lisp-format
+msgid ""
+"Labelling regions between sounds requires~%at least two sounds.~%Only one "
+"sound detected."
+msgstr ""
+
 #: plug-ins/limiter.ny
 msgid "Limiter"
 msgstr "리미터"
@@ -19033,7 +19444,7 @@ msgstr "입력 게인 오른쪽 채널"
 msgid "Limit to (dB)"
 msgstr "레벨 제한 (dB)(&V):"
 
-#: plug-ins/limiter.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "홀딩"
 
@@ -19054,10 +19465,6 @@ msgid "Noise Gate"
 msgstr "노이즈 게이트"
 
 #: plug-ins/noisegate.ny
-msgid "Gating audio..."
-msgstr "게이팅 오디오..."
-
-#: plug-ins/noisegate.ny
 msgid "Select Function"
 msgstr "함수 선택"
 
@@ -19066,7 +19473,8 @@ msgid "Gate"
 msgstr "게이트"
 
 #: plug-ins/noisegate.ny
-msgid "Analyse Noise Level"
+#, fuzzy
+msgid "Analyze Noise Level"
 msgstr "소음 수준 분석"
 
 #: plug-ins/noisegate.ny
@@ -19082,16 +19490,8 @@ msgid "Don't Link Stereo"
 msgstr "스테레오를 연결하지 마십시오"
 
 #: plug-ins/noisegate.ny
-msgid "Apply Low-Cut filter"
-msgstr "로우 컷 필터 적용"
-
-#: plug-ins/noisegate.ny
-msgid "10Hz 6dB/octave"
-msgstr "10Hz 6dB/옥타브"
-
-#: plug-ins/noisegate.ny
-msgid "20Hz 6dB/octave"
-msgstr "20Hz 6dB/옥타브"
+msgid "Gate threshold (dB)"
+msgstr "게이트 임계값(dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Gate frequencies above (kHz)"
@@ -19102,11 +19502,13 @@ msgid "Level reduction (dB)"
 msgstr "레벨 감소(dB)"
 
 #: plug-ins/noisegate.ny
-msgid "Gate threshold (dB)"
-msgstr "게이트 임계값(dB)"
+#, fuzzy
+msgid "Attack (ms)"
+msgstr "어태/감쇠 (ms)"
 
 #: plug-ins/noisegate.ny
-msgid "Attack/Decay (ms)"
+#, fuzzy
+msgid "Decay (ms)"
 msgstr "어태/감쇠 (ms)"
 
 #: plug-ins/noisegate.ny
@@ -19125,7 +19527,16 @@ msgstr ""
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"~%Insufficient audio selected.\n"
+"Error.\n"
+"Selection too long.\n"
+"Maximum length is ~a."
+msgstr ""
+
+#: plug-ins/noisegate.ny
+#, fuzzy, lisp-format
+msgid ""
+"Error.\n"
+"Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
 "~% 오디오가 부족합니다.\n"
@@ -19139,6 +19550,12 @@ msgid ""
 msgstr ""
 "첫 번째 ~a 초에 따라 피크 ~a dB ~%\n"
 "제안된 임계값 설정 ~a dB."
+
+#. i18n-hint: hours and minutes. Do not translate "~a".
+#: plug-ins/noisegate.ny
+#, fuzzy, lisp-format
+msgid "~ah ~am"
+msgstr "~ah ~am ~as"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
@@ -20035,6 +20452,483 @@ msgstr "레이더 니들의 주파수 (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "오류.~%스테레오 트랙이 필요합니다."
 
+#~ msgid ""
+#~ "One or more external audio files could not be found.\n"
+#~ "It is possible they were moved, deleted, or the drive they were on was "
+#~ "unmounted.\n"
+#~ "Silence is being substituted for the affected audio.\n"
+#~ "The first detected missing file is:\n"
+#~ "%s\n"
+#~ "There may be additional missing files.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
+#~ "locations of the missing files."
+#~ msgstr ""
+#~ "하나 이상의 외부 오디오 파일을 찾을 수 없습니다.\n"
+#~ "옮겨졌거나, 삭제되었거나, 파일이 있는 드라이브의 마운트를 해제했을 가능성"
+#~ "이 있습니다.\n"
+#~ "영향을 받는 오디오에 대해 무음 처리할 것입니다.\n"
+#~ "처음 발견한 누락된 파일은 다음과 같습니다:\n"
+#~ "%s\n"
+#~ "아마도 누락된 파일이 더 있을지도 모릅니다.\n"
+#~ "누락된 파일의 위치 목록을 보려면 '도움말 > 진단 > 종속성 확인'을 선택하세"
+#~ "요."
+
+#~ msgid "Files Missing"
+#~ msgstr "파일 누락"
+
+#~ msgid "File decoded successfully\n"
+#~ msgstr "파일을 성공적으로 디코딩했습니다\n"
+
+#~ msgid "decode an autosave file"
+#~ msgstr "자동저장 파일 디코드"
+
+#~ msgid "Error Decoding File"
+#~ msgstr "파일 디코딩 중 오류"
+
+#~ msgid "After recovery, save the project to save the changes to disk."
+#~ msgstr "복구 후, 변경사항을 디스크에 저장하려면 프로젝트를 저장하세요."
+
+#~ msgid "Discard Projects"
+#~ msgstr "프로젝트 버리기"
+
+#~ msgid "Recover Projects"
+#~ msgstr "프로젝트 복구"
+
+#~ msgid "Confirm Discard Projects"
+#~ msgstr "프로젝트 버리기 확인"
+
+#~ msgid "Could not enumerate files in auto save directory."
+#~ msgstr "자동 저장 폴더에 있는 파일을 열거할 수 없습니다."
+
+#~ msgid "No Action"
+#~ msgstr "동작 없음"
+
+#~ msgid "Export as MP3 56k before"
+#~ msgstr "MP3 56K로 내보내기 (앞에)"
+
+#~ msgid "Export as MP3 56k after"
+#~ msgstr "MP3 56K로 내보내기 (뒤에)"
+
+#~ msgid "Export as MP3"
+#~ msgstr "MP3로 내보내기"
+
+#~ msgid "Export as Ogg"
+#~ msgstr "Ogg로 내보내기"
+
+#~ msgid "Export as WAV"
+#~ msgstr "WAV로 내보내기"
+
+#~ msgid "Select to Ends"
+#~ msgstr "끝부분까지 선택"
+
+#~ msgid "Special Command"
+#~ msgstr "특수 명령"
+
+#~ msgid ""
+#~ "Export recording to %s\n"
+#~ "/%s/%s.%s"
+#~ msgstr ""
+#~ "기록을 %s로 내보내기\n"
+#~ "/%s/%s.%s"
+
+#~ msgid "Export recording"
+#~ msgstr "녹음 내보내기"
+
+#~ msgid "Ogg Vorbis support is not included in this build of Audacity"
+#~ msgstr "Ogg Vorbis 지원은 이 빌드의 오데시티에 포함되지 않음"
+
+#~ msgid "FLAC support is not included in this build of Audacity"
+#~ msgstr "FLAC 지원은 이 빌드의 오데시티에 포함되지 않음"
+
+#~ msgid "Command %s not implemented yet"
+#~ msgstr "%s 명령은 아직 구현되지 않았습니다"
+
+#~ msgid ""
+#~ "Your project is currently self-contained; it does not depend on any "
+#~ "external audio files. \n"
+#~ "\n"
+#~ "If you change the project to a state that has external dependencies on "
+#~ "imported files, it will no longer be self-contained. If you then Save "
+#~ "without copying those files in, you may lose data."
+#~ msgstr ""
+#~ "프로젝트는 현재 독립적으로 되어 있습니다; 어떤 외부 오디오 파일에 의존하"
+#~ "지 않습니다. \n"
+#~ "\n"
+#~ "가져온 파일에 대해 외부 종속성을 가진 상태로 프로젝트를 바꾸면, 더 이상 독"
+#~ "립적이지 않게 될 것입니다. 이 파일을 복사하지 않고 저장하는 경우, 데이터"
+#~ "를 잃을 수 있습니다."
+
+#~ msgid "Cleaning project temporary files"
+#~ msgstr "프로젝트 임시 파일 삭제 중"
+
+#~ msgid "Cleaning up temporary files"
+#~ msgstr "임시 파일을 지우는 중"
+
+#~ msgid "Cleaning up after failed save"
+#~ msgstr "저장 실패 후 정리 중"
+
+#~ msgid "Cleaning up cache directories"
+#~ msgstr "캐쉬 폴더 정리 중"
+
+#~ msgid "%s-old%d"
+#~ msgstr "%s-old%d"
+
+#~ msgid "Renamed file: %s\n"
+#~ msgstr "파일 이름을 변경했습니다: %s\n"
+
+#~ msgid "Changed block %s to new alias name\n"
+#~ msgstr "%s 블록을 새로운 별명으로 바꾸었습니다\n"
+
+#~ msgid "Caching audio"
+#~ msgstr "오디오를 캐쉬하는 중"
+
+#~ msgid "Caching audio into memory"
+#~ msgstr "오디오를 메모리에 캐쉬하는 중"
+
+#~ msgid "Saving recorded audio"
+#~ msgstr "녹음한 오디오 저장 중"
+
+#~ msgid "Saving recorded audio to disk"
+#~ msgstr "녹음한 오디오를 디스크에 저장하는 중"
+
+#~ msgid "Audacity projects"
+#~ msgstr "오데시티 프로젝트"
+
+#~ msgid "Reclaimable Space"
+#~ msgstr "회수 가능한 공간"
+
+#~ msgid ""
+#~ "Audacity cannot start because the settings file at %s is not writable."
+#~ msgstr "%s 파일이 쓰기 금지로 설정되어 오대시티를 시작할 수 없음."
+
+#~ msgid ""
+#~ "This file was saved by Audacity version %s. The format has changed. \n"
+#~ "\n"
+#~ "Audacity can try to open and save this file, but saving it in this \n"
+#~ "version will then prevent any 1.2 or earlier version opening it. \n"
+#~ "\n"
+#~ "Audacity might corrupt the file in opening it, so you should back it up "
+#~ "first. \n"
+#~ "\n"
+#~ "Open this file now?"
+#~ msgstr ""
+#~ "이것은 오데시티 %s 버전에서 저장한 파일인데 그 형식이 바뀌었습니다.\n"
+#~ "\n"
+#~ "오데시티는 이 파일을 열어서 저장을 시도할 수 있지만, 이 버전으로 저장하"
+#~ "면\n"
+#~ "1.2 이전의 버전에서 열 수 없게 될 것입니다.\n"
+#~ "\n"
+#~ "오데시티에서 이 파일을 열면  파일이 깨질 수도 있기 때문에, 먼저 백업하세"
+#~ "요.\n"
+#~ "\n"
+#~ "지금 파일을 열까요?"
+
+#~ msgid "1.0 or earlier"
+#~ msgstr "1.0 이전"
+
+#~ msgid "Warning - Opening Old Project File"
+#~ msgstr "경고 - 이전 프로젝트 파일을 여는 중입니다"
+
+#~ msgid "<unrecognized version -- possibly corrupt project file>"
+#~ msgstr "<버전 인식 불가 -- 깨진 프로젝트 파일인 것 같습니다>"
+
+#~ msgid "Could not create autosave file: %s"
+#~ msgstr "자동 저장 파일을 만들 수 없습니다: %s"
+
+#~ msgid "Could not remove old autosave file: %s"
+#~ msgstr "이전 자동 저장 파일을 제거할 수 없습니다: %s"
+
+#~ msgid "Error decoding file"
+#~ msgstr "파일 디코딩 중 오류"
+
+#~ msgid ""
+#~ "Could not save project. Perhaps %s \n"
+#~ "is not writable or the disk is full."
+#~ msgstr ""
+#~ "프로젝트를 저장할 수 없습니다. 아마도 %s에\n"
+#~ "쓸 수 없거나 디스크가 꽉 찬 것 같습니다."
+
+#~ msgid ""
+#~ "Could not save project. Path not found. Try creating \n"
+#~ "directory \"%s\" before saving project with this name."
+#~ msgstr ""
+#~ "프로젝트를 저장할 수 없습니다. 경로를 찾지 못했습니다.\n"
+#~ "프로젝트를 저장하기 전에 \"%s\" 폴더를 만들어 보세요."
+
+#~ msgid ""
+#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
+#~ "file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ "\n"
+#~ "Lossless copies of project are a good way to backup your project, \n"
+#~ "with no loss of quality, but the projects are large.\n"
+#~ msgstr ""
+#~ "'프로젝트의 무손실 복사본 저장'은 오디오 파일이 아닌 프로젝트를 위한 것입"
+#~ "니다.\n"
+#~ "다른 앱에서 사용할 오디오 파일의 경우 '내보내기'를 사용합니다.\n"
+#~ "\n"
+#~ "무손실 프로젝트 복사본은 프로젝트를 백업하는 좋은 방법입니다. \n"
+#~ "품질의 손실은 없지만 프로젝트의 파일 크기가 커집니다.\n"
+
+#~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
+#~ msgstr "%s프로젝트 \"%s\"를 압축 복사본 저장..."
+
+#~ msgid ""
+#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
+#~ "audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ "\n"
+#~ "Compressed project files are a good way to transmit your project "
+#~ "online, \n"
+#~ "but they have some loss of fidelity.\n"
+#~ msgstr ""
+#~ "'프로젝트의 압축 복사본 저장'은 오디오 파일이 아닌 프로젝트를 위한 것입니"
+#~ "다.\n"
+#~ "다른 앱에서 열리는 오디오 파일의 경우 '내보내기'를 사용합니다.\n"
+#~ "\n"
+#~ "압축된 프로젝트 파일은 프로젝트를 온라인으로 전송하는 좋은 방법입니다. \n"
+#~ "그러나 음질에 일부 손실이 있습니다.\n"
+
+#~ msgid ""
+#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
+#~ "format."
+#~ msgstr ""
+#~ "오데시티는 오데시티 1.0 프로젝트를 새 프로젝트 형식으로 변환할 수 없습니"
+#~ "다."
+
+#~ msgid "Could not remove old auto save file"
+#~ msgstr "이전 자동 저장 파일을 제거할 수 없습니다"
+
+#~ msgid "On-demand import and waveform calculation complete."
+#~ msgstr "온디멘드 가져오기와 파형 계산을 완료했습니다."
+
+#~ msgid ""
+#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
+#~ "%2.0f%% complete."
+#~ msgstr ""
+#~ "가져오기가 완료되었습니다. %d 온디맨드 파형 계산 실행. 전체 %2.0f%% 완료."
+
+#~ msgid ""
+#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
+#~ "complete."
+#~ msgstr ""
+#~ "가져오기를 완료했습니다. 온디멘드 파형 계산을 실행 중입니다. %2.0f%% 완료"
+#~ "했습니다."
+
+#~ msgid "Compress"
+#~ msgstr "압축"
+
+#~ msgid "Waiting for waveform to finish computing..."
+#~ msgstr "파형의 계산이 끝나기를 기다리는 중..."
+
+#~ msgid "&Use legacy (version 3) syntax."
+#~ msgstr "레거시 (버전 3) 구문 사용(&U)"
+
+#~ msgid ""
+#~ "You are attempting to overwrite an aliased file that is missing.\n"
+#~ "The file cannot be written because the path is needed to restore the "
+#~ "original audio to the project.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of "
+#~ "all missing files.\n"
+#~ "If you still wish to export, please choose a different filename or folder."
+#~ msgstr ""
+#~ "누락된 별칭 파일을 덮어쓰려고 합니다.\n"
+#~ "원래 오디오를 프로젝트에 복원하는 데 경로가 필요하기 때문에 파일을 쓸 수 "
+#~ "없습니다.\n"
+#~ "도움말 > 진단 > 종속성을 확인하여 누락된 모든 파일의 위치를 확인합니다.\n"
+#~ "그래도 내보내려면 다른 파일 이름 또는 폴더를 선택하십시오."
+
+#~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
+#~ msgstr "FFmpeg : 오류 - 오디오 프레임을 파일에 쓰지 못했습니다."
+
+#~ msgid ""
+#~ "\"%s\" is an Audacity Project file. \n"
+#~ "Use the 'File > Open' command to open Audacity Projects."
+#~ msgstr ""
+#~ "\"%s\"는 오데시티 프로젝트 파일입니다.\n"
+#~ "오데시티 프로젝트를 열려면 '파일 > 열기' 명령를 사용하세요."
+
+#~ msgid ""
+#~ "MP3 Decoding Failed:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "MP3 디코딩 실패:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "When importing uncompressed audio files you can either copy them into the "
+#~ "project, or read them directly from their current location (without "
+#~ "copying).\n"
+#~ "\n"
+#~ msgstr ""
+#~ "비압축 오디오 파일을 가져올 때, 프로젝트에 비압축 오디오 파일을 복사하거"
+#~ "나, 해당 파일이 있는 위치에서 (복사 없이) 직접 비압축 오디오 파일을 읽을 "
+#~ "수 있습니다.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Your current preference is set to copy in.\n"
+#~ "\n"
+#~ msgstr "현재 환경설정은 복사하는 것으로 되어 있습니다.\n"
+
+#~ msgid ""
+#~ "Your current preference is set to read directly.\n"
+#~ "\n"
+#~ msgstr "현재 환경설정은 해당 위치에서 직접 읽기로 되어 있습니다.\n"
+
+#~ msgid ""
+#~ "Reading the files directly allows you to play or edit them almost "
+#~ "immediately. This is less safe than copying in, because you must retain "
+#~ "the files with their original names in their original locations.\n"
+#~ "Help > Diagnostics > Check Dependencies will show the original names and "
+#~ "locations of any files that you are reading directly.\n"
+#~ "\n"
+#~ "How do you want to import the current file(s)?"
+#~ msgstr ""
+#~ "파일을 직접 읽으면 거의 즉시 재생하거나 편집할 수 있습니다. 이것은 파일을 "
+#~ "원래 위치에 원래 이름으로 유지해야 하기 때문에 복사하는 것보다 안전하지 않"
+#~ "습니다. \n"
+#~ "직접 읽는 파일의 원래 이름과 위치는 도움말 > 진단 > 종속성 확인에서 볼 수 "
+#~ "있습니다.\n"
+#~ "\n"
+#~ "현재 파일을 어떤 방식으로 가져올까요?"
+
+#~ msgid "Choose an import method"
+#~ msgstr "가져오기 방법 선택"
+
+#~ msgid "Make a &copy of the files before editing (safer)"
+#~ msgstr "편집하기 전에 파일의 복사본 만들기 (안전)(&C)"
+
+#~ msgid "Read the files &directly from the original (faster)"
+#~ msgstr "원본에서 파일 직접 읽기 (더 빠름)(&D)"
+
+#~ msgid "Don't &warn again and always use my choice above"
+#~ msgstr "다시 경고하지 않고 항상 위의 내 선택을 사용(&W)"
+
+#~ msgid "Bad data size"
+#~ msgstr "잘못된 데이터 크기"
+
+#~ msgid "Clip L&eft"
+#~ msgstr "클립 왼쪽으로(&E)"
+
+#~ msgid "Clip Rig&ht"
+#~ msgstr "클립 오른쪽으로(&H)"
+
+#~ msgid "Save Lossless Copy of Project..."
+#~ msgstr "프로젝트의 무손실 복사본 저장..."
+
+#~ msgid "&Save Compressed Copy of Project..."
+#~ msgstr "프로젝트 압축 복사본 저장(&S)..."
+
+#~ msgid "Chec&k Dependencies..."
+#~ msgstr "종속성 확인(&K)..."
+
+#~ msgid "C&hoose..."
+#~ msgstr "선택(&H)..."
+
+#~ msgid "Audio cache"
+#~ msgstr "오디오 캐쉬"
+
+#~ msgid "Play and/or record using &RAM (useful for slow drives)"
+#~ msgstr "램을 사용하여 재생/녹음 (느린 드라이브에 유용함)(&R)"
+
+#~ msgid "Mi&nimum Free Memory (MB):"
+#~ msgstr "최소 여유 메모리 (MB)(&N):"
+
+#~ msgid ""
+#~ "If the available system memory falls below this value, audio will no "
+#~ "longer\n"
+#~ "be cached in memory and will be written to disk."
+#~ msgstr ""
+#~ "사용 가능한 시스템 메모리가 이 값 밑으로 떨어지면,\n"
+#~ "오디오를 더 이상 메모리에 캐슁하지 않고 디스크에 쓸 것입니다."
+
+#~ msgid "When importing audio files"
+#~ msgstr "오디오 파일 가져올 때"
+
+#~ msgid "Allow &background on-demand loading"
+#~ msgstr "백그라운드로 온디맨드 불러오기 허용(&B)"
+
+#~ msgid "Projects"
+#~ msgstr "프로젝트"
+
+#~ msgid "Preferences for Projects"
+#~ msgstr "환경설정 : 프로젝트"
+
+#~ msgid "When saving a project that depends on other audio files"
+#~ msgstr "다른 오디오 파일에 의존하는 프로젝트를 저장할 때"
+
+#~ msgid "&Low disk space at launch or new project"
+#~ msgstr "시작시나 새 프로젝트에서 디스크 공간이 부족할 때(&L)"
+
+#~ msgid "&Importing uncompressed audio files"
+#~ msgstr "비압축 오디오 파일을 가져올 때(&I)"
+
+#~ msgid "Silence Finder"
+#~ msgstr "무음 검색기"
+
+#~ msgid "Treat audio below this level as silence (dB)"
+#~ msgstr "이 수준 이하의 오디오를 무음으로 처리합니다 (dB)"
+
+#~ msgid "Minimum duration of silence (seconds)"
+#~ msgstr "무음의 최소 지속 시간 [초]"
+
+#~ msgid "Label placement (seconds before silence ends)"
+#~ msgstr "레이블 배치 [무음 끝나기 전, 초]"
+
+#~ msgid "S"
+#~ msgstr "S"
+
+#~ msgid ""
+#~ "No silences found.\n"
+#~ "Try reducing the silence level and\n"
+#~ "the minimum silence duration."
+#~ msgstr ""
+#~ "무음을 찾을 수 없습니다.\n"
+#~ "무음 수준을 줄이시고\n"
+#~ "최소 무음 지속 시간입니다."
+
+#~ msgid "Sound Finder"
+#~ msgstr "소리 검색기"
+
+#~ msgid "Finding sound..."
+#~ msgstr "소리 찾는 중..."
+
+#~ msgid "Jeremy R. Brown"
+#~ msgstr "제레미 R. 브라운"
+
+#~ msgid "Treat audio below this level as silence [ -dB]"
+#~ msgstr "이 수준 이하의 오디오는 무음으로 취급 [ -dB]"
+
+#~ msgid "Minimum duration of silence between sounds [seconds]"
+#~ msgstr "소리 사이의 최소 무음 지속 시간 [초]"
+
+#~ msgid "Label starting point [seconds before sound starts]"
+#~ msgstr "레이블 시작 지점 [소리 시작 전, 초]"
+
+#~ msgid "Label ending point [seconds after sound ends]"
+#~ msgstr "레이블 종료 지점 [소리 끝난 후, 초]"
+
+#~ msgid "Add a label at the end of the track? [No=0, Yes=1]"
+#~ msgstr "트랙의 끝에 레이블을 추가할까요? [아니요=0, 예=1]"
+
+#~ msgid "[End]"
+#~ msgstr "[끝]"
+
+#~ msgid "Gating audio..."
+#~ msgstr "게이팅 오디오..."
+
+#~ msgid "Apply Low-Cut filter"
+#~ msgstr "로우 컷 필터 적용"
+
+#~ msgid "10Hz 6dB/octave"
+#~ msgstr "10Hz 6dB/옥타브"
+
+#~ msgid "20Hz 6dB/octave"
+#~ msgstr "20Hz 6dB/옥타브"
+
 #~ msgid "File dialog failed with error code %0lx."
 #~ msgstr "파일 대화상자는 %0lx 오류 코드로 실패했습니다."
 
@@ -20083,9 +20977,6 @@ msgstr "오류.~%스테레오 트랙이 필요합니다."
 
 #~ msgid "Missing data block file: '%s'"
 #~ msgstr "누락된 데이터 블럭 파일: '%s'"
-
-#~ msgid "Orphan block file: '%s'"
-#~ msgstr "부모 없는 블록 파일: '%s'"
 
 #~ msgid "KB"
 #~ msgstr "KB"
@@ -20462,9 +21353,6 @@ msgstr "오류.~%스테레오 트랙이 필요합니다."
 
 #~ msgid "&Waveform (dB)"
 #~ msgstr "파형 (dB)(&W)"
-
-#~ msgid "Finding silence..."
-#~ msgstr "무음 찾는 중..."
 
 #~ msgid "Alex S. Brown"
 #~ msgstr "알렉스 S. 브라운"

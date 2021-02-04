@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.3.0\n"
+"Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-05-24 14:42-0400\n"
 "PO-Revision-Date: 2020-10-18 18:31+0530\n"
