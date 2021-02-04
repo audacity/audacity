@@ -192,6 +192,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          viewInfo.GetScreenEndTime() + tolerance);
 
       auto gAudioIO = AudioIO::Get();
+      const auto &scrubber = Scrubber::Get( *mProject );
 
       // BG: Scroll screen if option is set
       if( viewInfo.bUpdateTrackIndicator &&
@@ -201,7 +202,9 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          auto mode = ProjectAudioManager::Get( *mProject ).GetLastPlayMode();
          if (!pinned &&
              mode != PlayMode::oneSecondPlay &&
-             !gAudioIO->IsPaused())
+             !gAudioIO->IsPaused() && 
+             !scrubber.IsPaused()
+            )
          {
             auto newPos = playPos;
             if (playPos < viewInfo.h) {
