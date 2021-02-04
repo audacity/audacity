@@ -62,7 +62,7 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "../TagsEditor.h"
 #include "Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"

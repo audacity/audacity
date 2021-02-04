@@ -255,10 +255,12 @@ list( APPEND SOURCES
       SqliteSampleBlock.cpp
       SseMathFuncs.cpp
       SseMathFuncs.h
-      Tags.cpp
-      Tags.h
       SyncLock.cpp
       SyncLock.h
+      Tags.cpp
+      Tags.h
+      TagsEditor.cpp
+      TagsEditor.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp

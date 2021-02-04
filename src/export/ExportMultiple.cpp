@@ -47,7 +47,7 @@
 #include "Prefs.h"
 #include "../SelectionState.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "../TagsEditor.h"
 #include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
