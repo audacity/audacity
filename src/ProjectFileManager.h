@@ -24,7 +24,6 @@ class Track;
 class TrackList;
 class WaveTrack;
 class XMLTagHandler;
-namespace ProjectFileIORegistry{ struct Entry; }
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using TrackHolders = std::vector< WaveTrackArray >;

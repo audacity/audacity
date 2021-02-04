@@ -32,7 +32,6 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectFileIORegistry.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSelectionManager.h"
