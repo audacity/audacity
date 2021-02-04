@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-04-13 11:38+0200\n"
+"PO-Revision-Date: 2020-10-04 17:26+0200\n"
 "Last-Translator: scootergrisen\n"
-"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"Language-Team: Danish\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,9 +454,9 @@ msgstr "%s (med %s, %s, %s, %s og %s)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "About %s"
-msgstr "Om"
+msgstr "Om %s"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -467,55 +467,51 @@ msgstr "OK"
 #. i18n-hint: First and third %s will be the program's name,
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Audacity er et frit program skrevet af et verdensomspændende team af "
-"[[https://www.audacityteam.org/about/credits|frivillige]]. Audacity "
-"[[https://www.audacityteam.org/download|fås]] til Windows, Mac, og GNU/Linux "
-"(og andre Unix-lignende systemer)."
+"%s er et frit program skrevet af et verdensomspændende team af %s. %s %s til "
+"Windows, Mac, og GNU/Linux (og andre Unix-lignende systemer)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr ""
+msgstr "frivillige"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "available"
-msgstr "Variabel"
+msgstr "fås"
 
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Hvis du finder en fejl eller har et forslag til os, skriv da venligst på "
-"engelsk i vores [[https://forum.audacityteam.org/|forum]]. For at få hjælp, "
-"se tips og tricks på vores [[https://wiki.audacityteam.org/|wiki]], eller "
-"besøg vores [[https://forum.audacityteam.org/|forum]]."
+"engelsk i vores %s. For at få hjælp, se tips og tricks på vores %s, eller "
+"besøg vores %s."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
 msgctxt "dative"
 msgid "forum"
-msgstr ""
+msgstr "forum"
 
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr ""
+msgstr "wiki"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
 msgctxt "accusative"
 msgid "forum"
-msgstr ""
+msgstr "forum"
 
 #. i18n-hint: The translation of "translator_credits" will appear
 #. *  in the credits in the About Audacity window.  Use this to add
@@ -528,17 +524,17 @@ msgstr "Dansk oversættelse af Thomas Breinstrup og scootergrisen"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
-msgstr ""
+msgstr "<h3>"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"Audacity, det frie, open source, platformsuafhængige software til optagelse "
-"og redigering af lyd."
+"%s, det frie, open source, platformsuafhængige software til optagelse og "
+"redigering af lyd."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -550,9 +546,9 @@ msgstr "DarkAudacity-tilpasning"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s Team Members"
-msgstr "Audacity-teammedlemmer"
+msgstr "%s-teammedlemmer"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
@@ -560,10 +556,9 @@ msgstr "Emeritus:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr ""
-"Fremstående Audacity-teammedlemmer, som på nuværende tidspunkt ikke er aktive"
+msgstr "Fremstående %s-teammedlemmer, som på nuværende tidspunkt ikke er aktive"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -583,9 +578,9 @@ msgstr "Biblioteker"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s includes code from the following projects:"
-msgstr "Audacity inkluderer kode fra følgende projekter:"
+msgstr "%s inkluderer kode fra følgende projekter:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -593,24 +588,22 @@ msgstr "Særlig tak til:"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s website: "
-msgstr "Audacity-websted: "
+msgstr "%s-websted: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2018 %s Team."
-msgstr ""
+msgstr "%s-software er ophavsret %s 1999-2018 %s-teamet."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr ""
-"&nbsp; &nbsp; Navnet <b>Audacity</b> er et registreret varemærke ved Dominic "
-"Mazzoni.<br><br>"
+msgstr "Navnet %s er et registreret varemærke ved Dominic Mazzoni."
 
 #. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
@@ -719,12 +712,12 @@ msgstr "Commit-id:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr ""
+msgstr "Fejlfindingsbyg (fejlfindingsniveau %d)"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release build (debug level %d)"
-msgstr "Udgivelsesbyg"
+msgstr "Udgivelsesbyg (fejlfindingsniveau %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -2210,12 +2203,11 @@ msgstr "&Kopiér navne til udklipsholderen"
 #: src/Dependencies.cpp
 #, c-format
 msgid "\"%s\", \"%s\", \"%s\"\n"
-msgstr ""
+msgstr "\"%s\", \"%s\", \"%s\"\n"
 
 #: src/Dependencies.cpp
-#, fuzzy
 msgid "Missing"
-msgstr "Filer mangler"
+msgstr "Mangler"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2715,7 +2707,7 @@ msgstr "&Genplot..."
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr ""
-"For at kunne vise spektrum skal alle markerede spor have samme "
+"For at kunne vise spektrum skal alle markerede spor have den samme "
 "samplingshastighed."
 
 #: src/FreqWindow.cpp
@@ -3055,27 +3047,27 @@ msgid "Unable to determine"
 msgstr "Kan ikke fastslå"
 
 #: src/Internat.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s bytes"
-msgstr "byte"
+msgstr "%s byte"
 
 #. i18n-hint: Abbreviation for Kilo bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s KB"
-msgstr ""
+msgstr "%s KB"
 
 #. i18n-hint: Abbreviation for Mega bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s MB"
-msgstr ""
+msgstr "%s MB"
 
 #. i18n-hint: Abbreviation for Giga bytes
 #: src/Internat.cpp
 #, c-format
 msgid "%s GB"
-msgstr ""
+msgstr "%s GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3671,7 +3663,6 @@ msgstr ""
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: src/PluginManager.cpp
-#, fuzzy
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
@@ -3711,15 +3702,13 @@ msgstr ""
 "Prøv at ændre lydværten, afspilningsenheden og projektets samplingshastighed."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr ""
-"For at kunne bruge et filter skal alle markerede spor have samme "
-"samplingshastighed."
+"De markerede spor til optagelse skal alle have den samme samplingshastighed."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
-msgstr ""
+msgstr "Uoverensstemmende samplingshastigheder"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid ""
@@ -3727,10 +3716,13 @@ msgid ""
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
+"Der er markeret for få spor til optagelse ved denne samplingshastighed.\n"
+"(Audacity kræver to kanaler ved den samme samplingshastighed for hvert "
+"stereospor)"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
-msgstr ""
+msgstr "For få kompatible spor markeret"
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3955,9 +3947,9 @@ msgid "<untitled>"
 msgstr "<uden titel>"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "[Project %02i] "
-msgstr "[Projekt %02i] Audacity \"%s\""
+msgstr "[Projekt %02i] "
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4438,7 +4430,6 @@ msgstr "16-bit PCM"
 msgid "24-bit PCM"
 msgstr "24-bit PCM"
 
-# scootergrisen: float skulle vel egentligt være flydende kommatal men ved ikke hvor meget gavn det giver at oversætte det
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
 msgid "32-bit float"
@@ -5925,7 +5916,6 @@ msgstr "Blå"
 
 #. i18n-hint:  This really means the color, not as in "white noise"
 #: src/commands/ScreenshotCommand.cpp
-#, fuzzy
 msgctxt "color"
 msgid "White"
 msgstr "Hvid"
@@ -6422,14 +6412,12 @@ msgstr "Tonehøjde"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "from"
 msgstr "fra"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&from"
 msgstr "&fra"
@@ -6440,14 +6428,12 @@ msgstr "fra oktav"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "to"
 msgstr "til"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
-#, fuzzy
 msgctxt "change pitch"
 msgid "&to"
 msgstr "&til"
@@ -6549,7 +6535,6 @@ msgstr "Fra o/min"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&from"
 msgstr "&fra"
@@ -6563,7 +6548,6 @@ msgstr "Til o/min"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "&to"
 msgstr "&til"
@@ -6582,7 +6566,6 @@ msgstr "Nuværende længde på markeringen."
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "from"
 msgstr "fra"
@@ -6593,7 +6576,6 @@ msgstr "&Ny varighed:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
-#, fuzzy
 msgctxt "change speed"
 msgid "to"
 msgstr "til"
@@ -6625,7 +6607,6 @@ msgstr "Taktslag i minuttet, fra"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&from"
 msgstr "&fra"
@@ -6637,7 +6618,6 @@ msgstr "Taktslag i minuttet, til"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "&to"
 msgstr "&til"
@@ -6648,14 +6628,12 @@ msgstr "Længde (sekunder)"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "from"
 msgstr "fra"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
-#, fuzzy
 msgctxt "change tempo"
 msgid "t&o"
 msgstr "&til"
@@ -7423,9 +7401,8 @@ msgid "Built-in"
 msgstr "Indbygget"
 
 #: src/effects/Effect.cpp
-#, fuzzy
 msgid "Presets"
-msgstr "Forudindstillet"
+msgstr "Forudindstillinger"
 
 #: src/effects/Effect.cpp
 msgid "Export Effect Parameters"
@@ -8296,7 +8273,6 @@ msgstr "(maksimum 0 dB)"
 
 #. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "White"
 msgstr "Hvid"
@@ -8304,14 +8280,12 @@ msgstr "Hvid"
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Pink"
 msgstr "Lyserød"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: src/effects/Noise.cpp
-#, fuzzy
 msgctxt "noise"
 msgid "Brownian"
 msgstr "Brun"
@@ -9022,7 +8996,7 @@ msgstr "Udfører IIR-filtering der emulerer analoge filtre"
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
 msgstr ""
-"For at kunne bruge et filter skal alle markerede spor have samme "
+"For at kunne bruge et filter skal alle markerede spor have den samme "
 "samplingshastighed."
 
 #: src/effects/ScienFilter.cpp
@@ -9157,7 +9131,6 @@ msgstr "%.3f"
 
 #. i18n-hint: noun
 #: src/effects/Silence.cpp
-#, fuzzy
 msgctxt "generator"
 msgid "Silence"
 msgstr "Stilhed"
@@ -9750,9 +9723,9 @@ msgid "LV2 Effect Settings"
 msgstr "LV2-effektindstillinger"
 
 #: src/effects/lv2/LV2Effect.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Buffer Size (8 to %d) samples:"
-msgstr "&Bufferstørrelse (8 til %d datapunkter):"
+msgstr "&Bufferstørrelse (8 til %d) datapunkter:"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
@@ -11621,7 +11594,6 @@ msgstr "Eksporterer lyden som Ogg Vorbis"
 msgid "AIFF (Apple/SGI)"
 msgstr "AIFF (Apple/SGI)"
 
-# scootergrisen: float skulle vel egentligt være flydende kommatal men ved ikke hvor meget gavn det giver at oversætte det
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
 msgid "WAV (Microsoft)"
 msgstr "WAV (Microsoft)"
@@ -11638,7 +11610,6 @@ msgstr "Kodning:"
 msgid "Other uncompressed files"
 msgstr "Andre ukomprimerede filer"
 
-# scootergrisen: gennemlæst diff hertil
 #: src/export/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than "
@@ -12035,12 +12006,15 @@ msgid "MP3 files"
 msgstr "MP3-filer"
 
 #: src/import/ImportMP3.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "MP3 Decoding Failed:\n"
 "\n"
 "%s"
-msgstr "Fejl ved afkodning af fil"
+msgstr ""
+"MP3-afkodning mislykkedes:\n"
+"\n"
+"%s"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12156,7 +12130,6 @@ msgstr "W64 (SoundFoundry WAVE 64)"
 msgid "WAV (NIST Sphere)"
 msgstr "WAV (NIST Sphere)"
 
-# scootergrisen: float skulle vel egentligt være flydende kommatal men ved ikke hvor meget gavn det giver at oversætte det
 #: src/import/ImportPCM.cpp
 msgid "WAVEX (Microsoft)"
 msgstr "WAVEX (Microsoft)"
@@ -12189,12 +12162,10 @@ msgstr "32 bit PCM med fortegn"
 msgid "Unsigned 8 bit PCM"
 msgstr "8 bit PCM uden fortegn"
 
-# scootergrisen: float skulle vel egentligt være flydende kommatal men ved ikke hvor meget gavn det giver at oversætte det
 #: src/import/ImportPCM.cpp
 msgid "32 bit float"
 msgstr "32 bit float"
 
-# scootergrisen: float skulle vel egentligt være flydende kommatal men ved ikke hvor meget gavn det giver at oversætte det
 #: src/import/ImportPCM.cpp
 msgid "64 bit float"
 msgstr "64 bit float"
@@ -12628,7 +12599,6 @@ msgstr "Lavede stilhed i markerede spor i %.2f sekunder ved %.2f"
 
 #. i18n-hint: verb
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgctxt "command"
 msgid "Silence"
 msgstr "Stilhed"
@@ -13399,9 +13369,8 @@ msgid "Palette..."
 msgstr "Palet..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Reset &Configuration"
-msgstr "Bekræftelse af sletning af regel"
+msgstr "Nulstil &konfiguration"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -14295,9 +14264,8 @@ msgid "Please select in a mono track."
 msgstr "Vælg venligst i et monospor."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "Vælg venligst i et stereospor."
+msgstr "Vælg venligst i et stereospor eller to monospor."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14634,7 +14602,6 @@ msgstr "Præferencer for enhed"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgctxt "device"
 msgid "Interface"
 msgstr "Grænseflade"
@@ -14972,10 +14939,9 @@ msgstr "Udvidet import"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
-#, fuzzy
 msgctxt "GUI"
 msgid "Interface"
-msgstr "Grænseflade"
+msgstr "Brugerflade"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
@@ -15223,11 +15189,13 @@ msgid "&Defaults"
 msgstr "Stan&dard"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
-msgstr "\"  (fordi genvejen '"
+msgstr ""
+"\n"
+"   *   \"%s\"  (fordi genvejen '%s' bruges af \"%s\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15238,12 +15206,14 @@ msgid "Error Importing Keyboard Shortcuts"
 msgstr "Fejl ved indlæsning af tastaturgenveje"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
 "and \"%s\".\n"
 "Nothing is imported."
-msgstr "Filen med genvejene indeholder ugyldige genvejsduplikater for \""
+msgstr ""
+"Filen med genvejene indeholder ugyldige genvejsduplikater for \"%s\" og \"%s\".\n"
+"Intet importeres."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15288,9 +15258,14 @@ msgid ""
 "\n"
 "\t"
 msgstr ""
+"\n"
+"\n"
+"\t og\n"
+"\n"
+"\t"
 
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The keyboard shortcut '%s' is already assigned to:\n"
 "\n"
@@ -15305,11 +15280,12 @@ msgid ""
 msgstr ""
 "Tastaturgenvejen \"%s\" bruges allerede til:\n"
 "\n"
-"\t\"%s\"\n"
+"\t%s\n"
+"\n"
 "\n"
 "Klik på OK for at tildele genvejen til\n"
 "\n"
-"\t\"%s\"\n"
+"\t%s\n"
 "\n"
 "i stedet. Ellers, klik på Annuller."
 
@@ -15400,7 +15376,6 @@ msgstr "Præferencer for midi-io"
 
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
-#, fuzzy
 msgctxt "MIDI"
 msgid "Interface"
 msgstr "Grænseflade"
@@ -17102,16 +17077,14 @@ msgstr "Zoom nulstil"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Shift-Right-Click"
-msgstr "Skift+Venstreklik"
+msgstr "Skift+Højreklik"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Left-Click/Left-Drag"
-msgstr "Zoom ind\tVenstreklik/Venstretræk"
+msgstr "Venstreklik/Venstretræk"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17184,9 +17157,8 @@ msgid "k"
 msgstr "k"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#, fuzzy
 msgid "Zoom to Fit"
-msgstr "Zoom ind på et punkt"
+msgstr "Zoom tilpasset"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18191,7 +18163,7 @@ msgstr "0100000<0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "centihertz"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18206,7 +18178,7 @@ msgstr "01000<01000 kHz|0,001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
-msgstr ""
+msgstr "hertz"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
@@ -18222,9 +18194,8 @@ msgstr "100<01000 oktaver|1,442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of octaves"
-msgstr "tusinddele af "
+msgstr "tusinddele af oktaver"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18241,9 +18212,8 @@ msgstr "1000 halvtoner <0100 cent|17,312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "hundredths of cents"
-msgstr "hundreddele af "
+msgstr "hundreddele af cent"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18259,9 +18229,8 @@ msgstr "10<01000 dekader|0,434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "thousandths of decades"
-msgstr "tusinddele af "
+msgstr "tusinddele af dekader"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18272,9 +18241,9 @@ msgid "centiseconds"
 msgstr "centisekunder"
 
 #: src/widgets/PopupMenuTable.h
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%s)"
-msgstr "(%s)"
+msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
@@ -18364,7 +18333,7 @@ msgid "Value must not be less than %s"
 msgstr "Værdien må ikke være mindre end %s"
 
 #: src/widgets/valnum.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Value must not be greater than %s"
 msgstr "Værdien må ikke være større end %s"
 
@@ -18922,9 +18891,8 @@ msgid "Equalization XML file"
 msgstr "Equaliserings XML-fil"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
 msgid "XML file"
-msgstr "XML-filer"
+msgstr "XML-fil"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "If output text file exists"
@@ -19321,30 +19289,25 @@ msgid "Select file(s) to install"
 msgstr "Vælg fil(er) som skal installeres"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Plug-in"
-msgstr "plugin"
+msgstr "Plugin"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Lisp file"
-msgstr "%s-filer"
+msgstr "Lisp-fil"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "HTML file"
-msgstr "XML-filer"
+msgstr "HTML-fil"
 
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny
-#, fuzzy
 msgid "Text file"
-msgstr "Tekstfiler"
+msgstr "Tekstfil"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "All supported"
-msgstr "Alle understøttede filer"
+msgstr "Alle understøttede"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
@@ -19611,14 +19574,12 @@ msgid "Export data to"
 msgstr "Eksportér data til"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "CSV files"
-msgstr "FLAC-filer"
+msgstr "CSV-filer"
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
 msgid "HTML files"
-msgstr "XML-filer"
+msgstr "HTML-filer"
 
 #: plug-ins/sample-data-export.ny
 msgid "Index (text files only)"
@@ -20196,209 +20157,3 @@ msgstr "Frekvens af radarnåle (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Fejl.~%Stereospor kræves."
-
-#~ msgid "File dialog failed with error code %0lx."
-#~ msgstr "Fildialog mislykkedes med fejlkoden %0lx."
-
-#~ msgid "About Audacity"
-#~ msgstr "Om Audacity"
-
-#~ msgid "<h3>Audacity "
-#~ msgstr "<h3>Audacity "
-
-#~ msgid ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-#~ msgstr ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software er "
-#~ "ophavsret &copy; 1999-2018 Audacity-teamet.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Fejlfindingsbyg"
-
-#~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
-#~ msgstr "mkdir i DirManager::MakeBlockFilePath mislykkedes."
-
-#~ msgid ""
-#~ "Audacity found an orphan block file: %s. \n"
-#~ "Please consider saving and reloading the project to perform a complete "
-#~ "project check."
-#~ msgstr ""
-#~ "Audacity har fundet en herreløs blokfil %s. \n"
-#~ "Overvej venligst at gemme eller genindlæse projektet, så det bliver "
-#~ "kontrolleret fuldstændig."
-
-#~ msgid "Unable to open/create test file."
-#~ msgstr "Kan ikke åbne/oprette en testfil."
-
-#~ msgid "Unable to remove '%s'."
-#~ msgstr "Kan ikke fjerne \"%s\"."
-
-#~ msgid "Unable to rename '%s' to '%s'."
-#~ msgstr "Kan ikke omdøbe \"%s\" til \"%s\"."
-
-#~ msgid "Missing aliased audio file: '%s'"
-#~ msgstr "Manglende alias-lydfil: \"%s\""
-
-#~ msgid "Missing alias (.auf) block file: '%s'"
-#~ msgstr "Manglende alias-blokfil (.auf): \"%s\""
-
-#~ msgid "Missing data block file: '%s'"
-#~ msgstr "Manglende datafil: \"%s\""
-
-#~ msgid "Orphan block file: '%s'"
-#~ msgstr "Herreløs blokfil: \"%s\""
-
-#~ msgid "KB"
-#~ msgstr "KB"
-
-#~ msgid "MB"
-#~ msgstr "MB"
-
-#~ msgid "GB"
-#~ msgstr "GB"
-
-#~ msgid "Unable to load the module \"%s\". Error: %s"
-#~ msgstr "Kan ikke indlæse modulet \"%s\". Fejl: %s"
-
-#~ msgid ""
-#~ "The module \"%s\" does not provide a version string. It will not be "
-#~ "loaded."
-#~ msgstr ""
-#~ "Modulet \"%s\" har ikke en versionsstreng. Det vil ikke blive indlæst."
-
-#~ msgid ""
-#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-#~ "loaded."
-#~ msgstr ""
-#~ "Modulet \"%s\" passer til Audacity-versionen \"%s\". Det vil ikke blive "
-#~ "indlæst."
-
-#~ msgid ""
-#~ "The module \"%s\" failed to initialize.\n"
-#~ "It will not be loaded."
-#~ msgstr ""
-#~ "Modulet \"%s\" kunne ikke initieres.\n"
-#~ "Det vil ikke blive indlæst."
-
-#~ msgid ""
-#~ "The module \"%s\" does not provide any of the required functions. It will "
-#~ "not be loaded."
-#~ msgstr ""
-#~ "Modulet \"%s\" har ikke nogen af de krævede funktioner. Det vil ikke "
-#~ "blive indlæst."
-
-#~ msgid "   Project check replaced missing aliased file(s) with silence."
-#~ msgstr "   Projektkontrollen erstattede manglende fil(er) med stilhed."
-
-#~ msgid "   Project check regenerated missing alias summary file(s)."
-#~ msgstr ""
-#~ "   Projektkontrollen regenerede manglende alias-opsummeringsfil(er)."
-
-#~ msgid ""
-#~ "   Project check replaced missing audio data block file(s) with silence."
-#~ msgstr ""
-#~ "   Projektkontrollen erstattede manglende lyddatablokfil(er) med stilhed."
-
-#~ msgid ""
-#~ "   Project check ignored orphan block file(s). They will be deleted when "
-#~ "project is saved."
-#~ msgstr ""
-#~ "   Projektkontrollen sprang herreløs(e) blokfil(er) over. De vil blive "
-#~ "slettet, når projektet gemmes."
-
-#~ msgid ""
-#~ "Project check found file inconsistencies inspecting the loaded project "
-#~ "data."
-#~ msgstr ""
-#~ "Projektkontrollen fandt filuoverensstemmelser i de indlæste projektdata."
-
-#~ msgid "Presets (*.txt)|*.txt|All files|*"
-#~ msgstr "Forudindstillinger (*.txt)|*.txt|Alle filer|*"
-
-#~ msgid "VST plugin registration failed for %s\n"
-#~ msgstr "Registrering af VST-plugin mislykkedes for %s\n"
-
-#~ msgid "VST plugin initialization failed\n"
-#~ msgstr "Initialisering af VST-plugin mislykkedes\n"
-
-#~ msgid "Couldn't create the \"%s\" directory"
-#~ msgstr "Kunne ikke oprette mappen \"%s\""
-
-#~ msgid "LV2 sequence buffer overflow"
-#~ msgstr "LV2-sekvens bufferoverløb"
-
-#~ msgid "%s requires unsupported feature %s"
-#~ msgstr "%s kræver ikke-understøttet funktionalitet %s"
-
-#~ msgid "%s requires unsupported option %s"
-#~ msgstr "%s kræver ikke-understøttet valgmulighed %s"
-
-#~ msgid ""
-#~ "'%s' returned:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\"%s\" returnerede:\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-#~ "Control not created."
-#~ msgstr ""
-#~ "Dårlig Nyquist \"kontrol\"-type specifikation: \"%s\" i plugin-filen \"%s"
-#~ "\".\n"
-#~ "Kontrol ikke oprettet."
-
-#~ msgid ""
-#~ "Invalid wildcard string in 'path' control.'\n"
-#~ "Using empty string instead."
-#~ msgstr ""
-#~ "Ugyldig jokertegnstreng i 'path'-styring.'\n"
-#~ "Bruger tom streng i stedet."
-
-#~ msgid "%d kpbs"
-#~ msgstr "%d kpbs"
-
-#~ msgid "dummyStringClipBoundaryMessage"
-#~ msgstr "TeststrengKlipgrænseMeddelelse"
-
-#~ msgid "dummyStringClipBoundaryMessageLong"
-#~ msgstr "TeststrengKlipgrænseMeddelelseLang"
-
-#~ msgid "dummyStringOnSelectClip"
-#~ msgstr "TeststrengVedVælgKlip"
-
-#~ msgid ""
-#~ "\n"
-#~ "   *   \""
-#~ msgstr ""
-#~ "\n"
-#~ "   *   \""
-
-#~ msgid "' is used by \""
-#~ msgstr "' bruges af \""
-
-#~ msgid "\")\n"
-#~ msgstr "\")\n"
-
-#~ msgid "\" and \""
-#~ msgstr "\" og \""
-
-#~ msgid ""
-#~ "\".\n"
-#~ "Nothing is imported."
-#~ msgstr ""
-#~ "\".\n"
-#~ "Intet at importere."
-
-#~ msgid "Zoom Reset\tShift-Right-Click"
-#~ msgstr "Zoom nulstil\tSkift-Højreklik"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Zoom ud\tSkift-Venstreklik"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "Zoom tilpasset\tSkift-Højreklik"
-
-#~ msgid "e"
-#~ msgstr "e"
