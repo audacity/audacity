@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-06-10 19:57+0900\n"
+"PO-Revision-Date: 2020-08-13 23:26+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/"
 "ko/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -3360,7 +3360,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"신뢰하는 소스의 모듈만 사용합니다"
+"신뢰하는 출처의 모듈만 사용합니다"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
@@ -15142,8 +15142,8 @@ msgid ""
 "their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"다음 명령은 가져온 파일에는 언급되지 않지만 다른 새 단축키와 충돌로 인해 단축"
-"키가 제거됩니다:\n"
+"다음 명령들은 가져온 파일에는 언급되지 않지만, 다른 새 단축키와 충돌로 인해 "
+"이전 단축키가 제거됩니다:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -15339,20 +15339,19 @@ msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-" '묻기'는 오데시티 시작시마다 모듈을 불러오고 싶은지 물어볼 것이라는 뜻입니"
-"다."
+" '묻기'는 오데시티 시작시마다 모듈을 불러올 것인지 묻는다는 의미입니다."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
+#, fuzzy
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr ""
-" '실패'는 모듈이 고장났다고 생각하고 오데시티를 실행하지 않는다는 것을 의미합"
-"니다."
+" '실패'는 오데시티가 모듈이 깨진것으로 판단하고 실행하지 않음을 의미합니다."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'New' means no choice has been made yet."
-msgstr "  '새로운'은 아직 아무 선택도 하지 않았음을 뜻합니다."
+msgstr "  '새로운'은 아직 아무 선택도 하지 않았음을 의미합니다."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
