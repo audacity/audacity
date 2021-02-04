@@ -2,6 +2,7 @@
 #include "../Menus.h"
 #include "Prefs.h"
 #include "../Project.h"
+#include "../ProjectWindows.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/MixerToolBar.h"

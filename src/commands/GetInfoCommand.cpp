@@ -25,6 +25,7 @@ This class now lists
 
 #include "LoadCommands.h"
 #include "../Project.h"
+#include "../ProjectWindows.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"
 #include "../effects/EffectManager.h"

@@ -23,6 +23,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "DBConnection.h"
 #include "Project.h"
 #include "ProjectSerializer.h"
+#include "ProjectWindows.h"
 #include "SampleBlock.h"
 #include "TempDirectory.h"
 #include "WaveTrack.h"
@@ -1455,7 +1456,7 @@ void ProjectFileIO::UpdatePrefs()
 void ProjectFileIO::SetProjectTitle(int number)
 {
    auto &project = mProject;
-   auto pWindow = project.GetFrame();
+   auto pWindow = FindProjectFrame(&project);
    if (!pWindow)
    {
       return;

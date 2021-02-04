@@ -26,6 +26,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
+#include "ProjectWindows.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"

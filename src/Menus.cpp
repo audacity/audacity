@@ -35,6 +35,7 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
+#include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
 #include "toolbars/ToolManager.h"

@@ -12,6 +12,7 @@
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "../TimeDialog.h"
 #include "../TrackPanel.h"

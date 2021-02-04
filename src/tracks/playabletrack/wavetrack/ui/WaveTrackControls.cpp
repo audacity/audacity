@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Project.h"
 #include "../../../../ProjectAudioIO.h"
 #include "../../../../ProjectHistory.h"
+#include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"
 #include "../../../../TrackArtist.h"

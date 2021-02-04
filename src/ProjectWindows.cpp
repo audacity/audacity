@@ -1,134 +1,77 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  Project.cpp
+  @file ProjectWindows.cpp
 
-  Dominic Mazzoni
-  Vaughan Johnson
+  Paul Licameli split from Project.cpp
 
-*//*******************************************************************/
+**********************************************************************/
 
-
+#include "ProjectWindows.h"
 #include "Project.h"
-
 #include "widgets/wxWidgetsBasicUI.h"
 
-#include <wx/display.h>
-#include <wx/filename.h>
 #include <wx/frame.h>
 
-wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
-
-size_t AllProjects::size() const
+namespace {
+struct ProjectWindows final : ClientData::Base
 {
-   return gAudacityProjects.size();
-}
+   static ProjectWindows &Get( AudacityProject &project );
+   static const ProjectWindows &Get( const AudacityProject &project );
+   explicit ProjectWindows(AudacityProject &project)
+      : mAttachedWindows{project}
+   {}
 
-auto AllProjects::begin() const -> const_iterator
-{
-   return gAudacityProjects.begin();
-}
+   wxWeakRef< wxWindow > mPanel{};
+   wxWeakRef< wxFrame > mFrame{};
 
-auto AllProjects::end() const -> const_iterator
-{
-   return gAudacityProjects.end();
-}
+   AttachedWindows mAttachedWindows;
+};
 
-auto AllProjects::rbegin() const -> const_reverse_iterator
-{
-   return gAudacityProjects.rbegin();
-}
-
-auto AllProjects::rend() const -> const_reverse_iterator
-{
-   return gAudacityProjects.rend();
-}
-
-auto AllProjects::Remove( AudacityProject &project ) -> value_type
-{
-   std::lock_guard<std::mutex> guard{ Mutex() };
-   auto start = begin(), finish = end(), iter = std::find_if(
-      start, finish,
-      [&]( const value_type &ptr ){ return ptr.get() == &project; }
-   );
-   if (iter == finish)
-      return nullptr;
-   auto result = *iter;
-   gAudacityProjects.erase( iter );
-   return result;
-}
-
-void AllProjects::Add( const value_type &pProject )
-{
-   if (!pProject) {
-      wxASSERT(false);
-      return;
+const AudacityProject::AttachedObjects::RegisteredFactory key{
+   [](AudacityProject &project) {
+      return std::make_unique<ProjectWindows>(project);
    }
-   std::lock_guard<std::mutex> guard{ Mutex() };
-   gAudacityProjects.push_back( pProject );
+};
+
+ProjectWindows &ProjectWindows::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< ProjectWindows >( key );
 }
 
-std::mutex &AllProjects::Mutex()
+const ProjectWindows &ProjectWindows::Get( const AudacityProject &project )
 {
-   static std::mutex theMutex;
-   return theMutex;
+   return Get( const_cast< AudacityProject & >( project ) );
+}
 }
 
-int AudacityProject::mProjectCounter=0;// global counter.
-
-/* Define Global Variables */
-//This array holds onto all of the projects currently open
-AllProjects::Container AllProjects::gAudacityProjects;
-
-AudacityProject::AudacityProject()
+AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project )
 {
-   mProjectNo = mProjectCounter++; // Bug 322
-   AttachedObjects::BuildAll();
-   // But not for the attached windows.  They get built only on demand, such as
-   // from menu items.
+   auto ptr = ProjectWindows::Get(project).mPanel;
+   if ( !ptr )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *ptr;
 }
 
-AudacityProject::~AudacityProject()
+AUDACITY_DLL_API const wxWindow &GetProjectPanel(
+   const AudacityProject &project )
 {
+   auto ptr = ProjectWindows::Get(project).mPanel;
+   if ( !ptr )
+      THROW_INCONSISTENCY_EXCEPTION;
+   return *ptr;
 }
 
-void AudacityProject::SetFrame( wxFrame *pFrame )
+AUDACITY_DLL_API void SetProjectPanel(
+   AudacityProject &project, wxWindow &panel )
 {
-   mFrame = pFrame;
-}
-
-void AudacityProject::SetPanel( wxWindow *pPanel )
-{
-   mPanel = pPanel;
-}
-
-const wxString &AudacityProject::GetProjectName() const
-{
-   return mName;
-}
-
-void AudacityProject::SetProjectName(const wxString &name)
-{
-   mName = name;
-}
-
-FilePath AudacityProject::GetInitialImportPath() const
-{
-   return mInitialImportPath;
-}
-
-void AudacityProject::SetInitialImportPath(const FilePath &path)
-{
-   if (mInitialImportPath.empty())
-   {
-      mInitialImportPath = path;
-   }
+   ProjectWindows::Get(project).mPanel = &panel;
 }
 
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
 {
-   auto ptr = project.GetFrame();
+   auto ptr = ProjectWindows::Get(project).mFrame;
    if ( !ptr )
       THROW_INCONSISTENCY_EXCEPTION;
    return *ptr;
@@ -136,10 +79,22 @@ AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
 
 AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project )
 {
-   auto ptr = project.GetFrame();
+   auto ptr = ProjectWindows::Get(project).mFrame;
    if ( !ptr )
       THROW_INCONSISTENCY_EXCEPTION;
    return *ptr;
+}
+
+wxFrame *FindProjectFrame( AudacityProject *project ) {
+   if (!project)
+      return nullptr;
+   return ProjectWindows::Get(*project).mFrame;
+}
+
+const wxFrame *FindProjectFrame( const AudacityProject *project ) {
+   if (!project)
+      return nullptr;
+   return ProjectWindows::Get(*project).mFrame;
 }
 
 std::unique_ptr<const BasicUI::WindowPlacement>
@@ -151,22 +106,12 @@ ProjectFramePlacement( AudacityProject *project )
       &GetProjectFrame(*project));
 }
 
-AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project )
+void SetProjectFrame(AudacityProject &project, wxFrame &frame )
 {
-   auto ptr = project.GetPanel();
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
+   ProjectWindows::Get(project).mFrame = &frame;
 }
 
-AUDACITY_DLL_API const wxWindow &GetProjectPanel(
-   const AudacityProject &project )
+AUDACITY_DLL_API AttachedWindows &GetAttachedWindows(AudacityProject &project)
 {
-   auto ptr = project.GetPanel();
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
+   return ProjectWindows::Get(project).mAttachedWindows;
 }
-
-// Generate the needed, linkable registry functions
-DEFINE_XML_METHOD_REGISTRY( ProjectFileIORegistry );

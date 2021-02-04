@@ -10,6 +10,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"

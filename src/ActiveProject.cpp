@@ -11,6 +11,7 @@
 #include "ActiveProject.h"
 #include "KeyboardCapture.h"
 #include "Project.h"
+#include "ProjectWindows.h"
 
 #include <wx/app.h>
 #include <wx/frame.h>

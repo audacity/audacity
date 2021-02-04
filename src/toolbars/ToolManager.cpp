@@ -57,6 +57,7 @@
 #include "../ImageManipulation.h"
 #include "Prefs.h"
 #include "../Project.h"
+#include "../ProjectWindows.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/MeterPanelBase.h"

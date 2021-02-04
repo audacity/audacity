@@ -12,11 +12,8 @@
 
 #include "Project.h"
 
-#include "widgets/wxWidgetsBasicUI.h"
-
 #include <wx/display.h>
 #include <wx/filename.h>
-#include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
@@ -93,16 +90,6 @@ AudacityProject::~AudacityProject()
 {
 }
 
-void AudacityProject::SetFrame( wxFrame *pFrame )
-{
-   mFrame = pFrame;
-}
-
-void AudacityProject::SetPanel( wxWindow *pPanel )
-{
-   mPanel = pPanel;
-}
-
 const wxString &AudacityProject::GetProjectName() const
 {
    return mName;
@@ -124,48 +111,6 @@ void AudacityProject::SetInitialImportPath(const FilePath &path)
    {
       mInitialImportPath = path;
    }
-}
-
-AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
-{
-   auto ptr = project.GetFrame();
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
-}
-
-AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project )
-{
-   auto ptr = project.GetFrame();
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
-}
-
-std::unique_ptr<const BasicUI::WindowPlacement>
-ProjectFramePlacement( AudacityProject *project )
-{
-   if (!project)
-      return std::make_unique<BasicUI::WindowPlacement>();
-   return std::make_unique<wxWidgetsWindowPlacement>(
-      &GetProjectFrame(*project));
-}
-
-AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project )
-{
-   auto ptr = project.GetPanel();
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
-}
-
-AUDACITY_DLL_API const wxWindow &GetProjectPanel(
-   const AudacityProject &project )
-{
-   auto ptr = project.GetPanel();
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
 }
 
 // Generate the needed, linkable registry functions

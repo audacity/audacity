@@ -42,6 +42,7 @@ undo memory so as to free up space.
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
+#include "ProjectWindows.h"
 #include "ShuttleGui.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
@@ -412,7 +413,7 @@ void HistoryDialog::UpdatePrefs()
 namespace {
 
 // History window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sHistoryWindowKey{
+AttachedWindows::RegisteredFactory sHistoryWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &undoManager = UndoManager::Get( parent );
       return safenew HistoryDialog( &parent, &undoManager );
@@ -425,7 +426,7 @@ struct Handler : CommandHandlerObject {
    {
       auto &project = context.project;
 
-      auto historyWindow = &project.AttachedWindows::Get( sHistoryWindowKey );
+      auto historyWindow = &GetAttachedWindows(project).Get(sHistoryWindowKey);
       historyWindow->Show();
       historyWindow->Raise();
    }

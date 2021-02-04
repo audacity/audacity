@@ -16,6 +16,7 @@
 #include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
+#include "../ProjectWindows.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"

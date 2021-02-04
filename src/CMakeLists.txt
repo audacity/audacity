@@ -228,6 +228,8 @@ list( APPEND SOURCES
       ProjectWindowBase.cpp
       ProjectWindowBase.h
       RefreshCode.h
+      ProjectWindows.cpp
+      ProjectWindows.h
       RingBuffer.cpp
       RingBuffer.h
       SampleBlock.cpp
