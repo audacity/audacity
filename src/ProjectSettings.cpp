@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/QualitySettings.h"
 #include "widgets/NumericTextCtrl.h"
 #include "prefs/TracksBehaviorsPrefs.h"
+#include "xml/XMLWriter.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
@@ -207,3 +208,16 @@ void ProjectSettings::SetSyncLock(bool flag)
    }
 }
 
+static ProjectFileIORegistry::WriterEntry entry {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   auto &settings = ProjectSettings::Get(project);
+   xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
+   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
+   xmlFile.WriteAttr(wxT("selectionformat"),
+                     settings.GetSelectionFormat().Internal());
+   xmlFile.WriteAttr(wxT("frequencyformat"),
+                     settings.GetFrequencySelectionFormatName().Internal());
+   xmlFile.WriteAttr(wxT("bandwidthformat"),
+                     settings.GetBandwidthSelectionFormatName().Internal());
+}
+};

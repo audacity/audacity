@@ -31,3 +31,16 @@ XMLTagHandler *XMLMethodRegistryBase::CallObjectAccessor(
          return fn( p );
    return nullptr;
 }
+
+void XMLMethodRegistryBase::Register( TypeErasedWriter writer )
+{
+   mWriterTable.emplace_back( move( writer ) );
+}
+
+void XMLMethodRegistryBase::CallWriters( const void *p, XMLWriter &writer )
+{
+   const auto &table = mWriterTable;
+   for ( auto &fn : table )
+      if (fn)
+         fn( p, writer );
+}
