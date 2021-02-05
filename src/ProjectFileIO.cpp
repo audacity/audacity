@@ -15,6 +15,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/app.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/sstream.h>
 
 #include "ActiveProjects.h"
@@ -22,13 +23,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "DBConnection.h"
 #include "Project.h"
 #include "ProjectSerializer.h"
-#include "ProjectSettings.h"
 #include "SampleBlock.h"
 #include "TempDirectory.h"
-#include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/NumericTextCtrl.h"
 #include "BasicUI.h"
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
@@ -1517,13 +1515,10 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get(project);
-   auto &settings = ProjectSettings::Get(project);
 
    wxString fileVersion;
    wxString audacityVersion;
    int requiredTags = 0;
-   long longVpos = 0;
 
    // loop through attrs, which is a null-terminated list of
    // attribute-value pairs
@@ -1537,12 +1532,9 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          break;
       }
 
-      if (viewInfo.ReadXMLAttribute(attr, value))
-      {
-         // We need to save vpos now and restore it below
-         longVpos = std::max(longVpos, long(viewInfo.vpos));
+      if ( ProjectFileIORegistry::Get()
+          .CallAttributeHandler( attr, project, value ) )
          continue;
-      }
 
       else if (!wxStrcmp(attr, wxT("version")))
       {
@@ -1555,43 +1547,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          audacityVersion = value;
          requiredTags++;
       }
-
-      else if (!wxStrcmp(attr, wxT("rate")))
-      {
-         double rate;
-         Internat::CompatibleToDouble(value, &rate);
-         settings.SetRate( rate );
-      }
-
-      else if (!wxStrcmp(attr, wxT("snapto")))
-      {
-         settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
-      }
-
-      else if (!wxStrcmp(attr, wxT("selectionformat")))
-      {
-         settings.SetSelectionFormat(
-            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("frequencyformat")))
-      {
-         settings.SetFrequencySelectionFormatName(
-            NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-      {
-         settings.SetBandwidthSelectionFormatName(
-            NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
-      }
    } // while
-
-   if (longVpos != 0)
-   {
-      // PRL: It seems this must happen after SetSnapTo
-      viewInfo.vpos = longVpos;
-   }
 
    if (requiredTags < 2)
    {

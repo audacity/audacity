@@ -221,3 +221,32 @@ static ProjectFileIORegistry::WriterEntry entry {
                      settings.GetBandwidthSelectionFormatName().Internal());
 }
 };
+
+static ProjectFileIORegistry::AttributeReaderEntries entries {
+// Just a pointer to function, but needing overload resolution as non-const:
+(ProjectSettings& (*)(AudacityProject &)) &ProjectSettings::Get, {
+   { L"rate", [](auto &settings, auto value){
+      double rate;
+      Internat::CompatibleToDouble(value, &rate);
+      settings.SetRate( rate );
+   } },
+
+   // PRL:  The following have persisted as per-project settings for long.
+   // Maybe that should be abandoned.  Enough to save changes in the user
+   // preference file.
+   { L"snapto", [](auto &settings, auto value){
+      settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
+   } },
+   { L"selectionformat", [](auto &settings, auto value){
+      settings.SetSelectionFormat(
+         NumericConverter::LookupFormat( NumericConverter::TIME, value) );
+   } },
+   { L"frequencyformat", [](auto &settings, auto value){
+      settings.SetFrequencySelectionFormatName(
+         NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
+   } },
+   { L"bandwidthformat", [](auto &settings, auto value){
+      settings.SetBandwidthSelectionFormatName(
+         NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
+   } },
+} };

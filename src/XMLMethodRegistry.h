@@ -13,7 +13,9 @@
 
 #include <wx/string.h>
 #include <functional>
+#include <type_traits>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 class XMLTagHandler;
@@ -24,6 +26,15 @@ class XMLWriter;
  supply thin inline type-erasing wrappers. */
 class AUDACITY_DLL_API XMLMethodRegistryBase {
 public:
+
+   //! A helper type alias for a function taking a structure and a string value
+template< typename Substructure >
+using Mutator = std::function< void(Substructure&, const wchar_t *) >;
+
+//! A helper type alias for a list of mutators, associated with tag strings
+template< typename Substructure >
+using Mutators = std::vector< std::pair< wxString, Mutator<Substructure> > >;
+
    XMLMethodRegistryBase();
    ~XMLMethodRegistryBase();
 protected:
@@ -34,6 +45,23 @@ protected:
 
    void Register( const wxString &tag, TypeErasedObjectAccessor accessor );
    XMLTagHandler *CallObjectAccessor( const wxString &tag, void *p );
+
+   using TypeErasedAccessor = std::function< void*( void* ) >;
+   using TypeErasedAccessors = std::vector< TypeErasedAccessor >;
+   TypeErasedAccessors mAccessors;
+
+   void PushAccessor( TypeErasedAccessor accessor );
+
+   using TypeErasedMutator = std::function< void( void*, const wchar_t* ) >;
+   //! From attribute name, to index in accessor table with a mutator
+   using MutatorTable =
+      std::unordered_map< wxString, std::pair< size_t, TypeErasedMutator > >;
+   MutatorTable mMutatorTable;
+
+   void Register( const wxString &tag, TypeErasedMutator mutator );
+
+   bool CallAttributeHandler( const wxString &tag,
+      void *p, const wchar_t *value );
 
    using TypeErasedWriter = std::function< void(const void *, XMLWriter &) >;
    using WriterTable = std::vector< TypeErasedWriter >;
@@ -75,6 +103,47 @@ XMLTagHandler *CallObjectAccessor(
    const wxString &tag, Host &host )
 {
    return XMLMethodRegistryBase::CallObjectAccessor( tag, &host );
+}
+
+/*! Typically statically constructed */
+/*!
+   Registers procedures to update the host for certain attributes, in two
+   steps:  first the `accessor` which fetches some substructure owned by the
+   host, which is the common step; then, the `mutators` that rewrite the
+   substructure, each of them associated with one attribute string, and
+   taking a reference to the substructure and a value string.
+ */
+struct AttributeReaderEntries {
+   template<
+      typename Accessor, /*!< Often a lambda.
+         Takes const Host& and returns Substructure& */
+      typename Substructure //<! Type deduction of the return of Accessor
+         = std::remove_reference_t< decltype(
+            std::declval<Accessor>()( std::declval<Host &>() )
+         ) >
+   >
+   AttributeReaderEntries( Accessor fn, Mutators<Substructure> pairs )
+   {
+      // Remember the functions, type-erased
+      auto &registry = Get();
+      registry.PushAccessor(
+         [ fn = std::move(fn) ] ( void *p ) {
+            // CallAttributeHandler will guarantee p is not null
+            return &fn( *static_cast<Host *>(p) ); }
+      );
+      for (auto &pair : pairs)
+         registry.Register( pair.first,
+            [ fn = move(pair.second) ]( auto p, auto value ){
+               fn( *static_cast<Substructure*>(p), value ); }
+         );
+   }
+};
+
+// @return whether any function was found and called for the tag
+bool CallAttributeHandler(
+   const wxString &tag, Host &host, const wchar_t *value )
+{
+   return XMLMethodRegistryBase::CallAttributeHandler( tag, &host, value );
 }
 
 //! Typically statically constructed
