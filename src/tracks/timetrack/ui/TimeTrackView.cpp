@@ -105,7 +105,7 @@ void DrawHorzRulerAndCurve
    ruler.Draw(dc, track.GetEnvelope());
    
    Doubles envValues{ size_t(mid.width) };
-   Envelope::GetValues( *track.GetEnvelope(),
+   CommonTrackView::GetEnvelopeValues( *track.GetEnvelope(),
     0, 0, envValues.get(), mid.width, 0, zoomInfo );
    
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
