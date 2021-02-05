@@ -1,73 +1,56 @@
-/**********************************************************************
+/*!********************************************************************
 
 Audacity: A Digital Audio Editor
 
-ProjectSettings.cpp
+@file ProjectRate.cpp
 
-Paul Licameli split from AudacityProject.cpp
+Paul Licameli split from ProjectSettings.cpp
 
 **********************************************************************/
 
-#include "ProjectSettings.h"
-
-
+#include "ProjectRate.h"
 
 #include "AudioIOBase.h"
+#include "Prefs.h"
 #include "Project.h"
 #include "prefs/QualitySettings.h"
-#include "widgets/NumericTextCtrl.h"
-#include "prefs/TracksBehaviorsPrefs.h"
 #include "XMLWriter.h"
 
-wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
+wxDEFINE_EVENT(EVT_PROJECT_RATE_CHANGE, wxEvent);
 
 namespace {
-   void Notify( AudacityProject &project, ProjectSettings::EventCode code )
+   struct MyEvent : wxEvent {
+      MyEvent() : wxEvent{ 0, EVT_PROJECT_RATE_CHANGE } {}
+      wxEvent *Clone() const override { return new MyEvent{*this}; }
+   };
+
+   void Notify( AudacityProject &project )
    {
-      wxCommandEvent e{ EVT_PROJECT_SETTINGS_CHANGE };
-      e.SetInt( static_cast<int>( code ) );
+      MyEvent e;
       project.ProcessEvent( e );
    }
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
-sProjectSettingsKey{
+sKey{
   []( AudacityProject &project ){
-     auto result = std::make_shared< ProjectSettings >( project );
+     auto result = std::make_shared< ProjectRate >(project);
      return result;
    }
 };
 
-ProjectSettings &ProjectSettings::Get( AudacityProject &project )
+ProjectRate &ProjectRate::Get( AudacityProject &project )
 {
-   return project.AttachedObjects::Get< ProjectSettings >(
-      sProjectSettingsKey );
+   return project.AttachedObjects::Get< ProjectRate >( sKey );
 }
 
-const ProjectSettings &ProjectSettings::Get( const AudacityProject &project )
+const ProjectRate &ProjectRate::Get( const AudacityProject &project )
 {
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-ProjectSettings::ProjectSettings(AudacityProject &project)
+ProjectRate::ProjectRate(AudacityProject &project)
    : mProject{ project }
-   , mSelectionFormat{ NumericTextCtrl::LookupFormat(
-      NumericConverter::TIME,
-      gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
-}
-, mAudioTimeFormat{ NumericTextCtrl::LookupFormat(
-   NumericConverter::TIME,
-   gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
-}
-, mFrequencySelectionFormatName{ NumericTextCtrl::LookupFormat(
-   NumericConverter::FREQUENCY,
-   gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
-}
-, mBandwidthSelectionFormatName{ NumericTextCtrl::LookupFormat(
-   NumericConverter::BANDWIDTH,
-   gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
-}
-, mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 {
    int intRate = 0;
    bool wasDefined = QualitySettings::DefaultSampleRate.Read( &intRate );
@@ -80,173 +63,33 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
       QualitySettings::DefaultSampleRate.Write( mRate );
       gPrefs->Flush();
    }
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
-
-   bool multiToolActive = false;
-   gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
-
-   if (multiToolActive)
-      mCurrentTool = ToolCodes::multiTool;
-   else
-      mCurrentTool = ToolCodes::selectTool;
-
-   UpdatePrefs();
 }
 
-void ProjectSettings::UpdatePrefs()
-{
-   gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
-   gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true);
-   gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
-   mSoloPref = TracksBehaviorsSolo.Read();
-   // Update the old default to the NEW default.
-   if (mSoloPref == wxT("Standard"))
-      mSoloPref = wxT("Simple");
-   gPrefs->Read(wxT("/GUI/TracksFitVerticallyZoomed"),
-      &mTracksFitVerticallyZoomed, false);
-   //   gPrefs->Read(wxT("/GUI/UpdateSpectrogram"),
-   //     &mViewInfo.bUpdateSpectrogram, true);
-
-   // This code to change an empty projects rate is currently disabled, after
-   // discussion.  The rule 'Default sample rate' only affects newly created
-   // projects was felt to be simpler and better.
-#if 0
-   // The DefaultProjectSample rate is the rate for new projects.
-   // Do not change this project's rate, unless there are no tracks.
-   if( TrackList::Get( *this ).size() == 0){
-      mRate = QualityDefaultSampleRate.Read();
-      // If necessary, we change this rate in the selection toolbar too.
-      auto bar = SelectionBar::Get( *this );
-      bar.SetRate( mRate );
-   }
-#endif
-}
-
-const NumericFormatSymbol &
-ProjectSettings::GetFrequencySelectionFormatName() const
-{
-   return mFrequencySelectionFormatName;
-}
-
-void ProjectSettings::SetFrequencySelectionFormatName(
-   const NumericFormatSymbol & formatName)
-{
-   mFrequencySelectionFormatName = formatName;
-}
-
-const NumericFormatSymbol &
-ProjectSettings::GetBandwidthSelectionFormatName() const
-{
-   return mBandwidthSelectionFormatName;
-}
-
-void ProjectSettings::SetBandwidthSelectionFormatName(
-   const NumericFormatSymbol & formatName)
-{
-   mBandwidthSelectionFormatName = formatName;
-}
-
-void ProjectSettings::SetSelectionFormat(const NumericFormatSymbol & format)
-{
-   mSelectionFormat = format;
-}
-
-const NumericFormatSymbol & ProjectSettings::GetSelectionFormat() const
-{
-   return mSelectionFormat;
-}
-
-void ProjectSettings::SetAudioTimeFormat(const NumericFormatSymbol & format)
-{
-   mAudioTimeFormat = format;
-}
-
-const NumericFormatSymbol & ProjectSettings::GetAudioTimeFormat() const
-{
-   return mAudioTimeFormat;
-}
-
-double ProjectSettings::GetRate() const
+double ProjectRate::GetRate() const
 {
    return mRate;
 }
 
-void ProjectSettings::SetRate(double rate)
+void ProjectRate::SetRate(double rate)
 {
-   auto &project = mProject;
    if (rate != mRate) {
       mRate = rate;
-      Notify( project, ChangedProjectRate );
-   }
-}
-
-void ProjectSettings::SetSnapTo(int snap)
-{
-   mSnapTo = snap;
-}
-   
-int ProjectSettings::GetSnapTo() const
-{
-   return mSnapTo;
-}
-
-bool ProjectSettings::IsSyncLocked() const
-{
-#ifdef EXPERIMENTAL_SYNC_LOCK
-   return mIsSyncLocked;
-#else
-   return false;
-#endif
-}
-
-void ProjectSettings::SetSyncLock(bool flag)
-{
-   auto &project = mProject;
-   if (flag != mIsSyncLocked) {
-      mIsSyncLocked = flag;
-      Notify( project, ChangedSyncLock );
+      Notify(mProject);
    }
 }
 
 static ProjectFileIORegistry::WriterEntry entry {
 [](const AudacityProject &project, XMLWriter &xmlFile){
-   auto &settings = ProjectSettings::Get(project);
-   xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
-   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
-   xmlFile.WriteAttr(wxT("selectionformat"),
-                     settings.GetSelectionFormat().Internal());
-   xmlFile.WriteAttr(wxT("frequencyformat"),
-                     settings.GetFrequencySelectionFormatName().Internal());
-   xmlFile.WriteAttr(wxT("bandwidthformat"),
-                     settings.GetBandwidthSelectionFormatName().Internal());
+   xmlFile.WriteAttr(wxT("rate"), ProjectRate::Get(project).GetRate());
 }
 };
 
 static ProjectFileIORegistry::AttributeReaderEntries entries {
 // Just a pointer to function, but needing overload resolution as non-const:
-(ProjectSettings& (*)(AudacityProject &)) &ProjectSettings::Get, {
+(ProjectRate& (*)(AudacityProject &)) &ProjectRate::Get, {
    { L"rate", [](auto &settings, auto value){
       double rate;
       Internat::CompatibleToDouble(value, &rate);
       settings.SetRate( rate );
-   } },
-
-   // PRL:  The following have persisted as per-project settings for long.
-   // Maybe that should be abandoned.  Enough to save changes in the user
-   // preference file.
-   { L"snapto", [](auto &settings, auto value){
-      settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
-   } },
-   { L"selectionformat", [](auto &settings, auto value){
-      settings.SetSelectionFormat(
-         NumericConverter::LookupFormat( NumericConverter::TIME, value) );
-   } },
-   { L"frequencyformat", [](auto &settings, auto value){
-      settings.SetFrequencySelectionFormatName(
-         NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
-   } },
-   { L"bandwidthformat", [](auto &settings, auto value){
-      settings.SetBandwidthSelectionFormatName(
-         NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
    } },
 } };

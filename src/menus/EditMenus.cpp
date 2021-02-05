@@ -8,6 +8,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectHistory.h"
+#include "../ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
@@ -109,7 +110,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
       // Select some pasted samples, which is probably impossible to get right
       // with various project and track sample rates.
       // So do it at the sample rate of the project
-      double projRate = ProjectSettings::Get( project ).GetRate();
+      double projRate = ProjectRate::Get( project ).GetRate();
       double quantT0 = QUANTIZED_TIME(clipboard.T0(), projRate);
       double quantT1 = QUANTIZED_TIME(clipboard.T1(), projRate);
       selectedRegion.setTimes(

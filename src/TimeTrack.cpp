@@ -24,7 +24,7 @@
 #include "widgets/Ruler.h"
 #include "Envelope.h"
 #include "Project.h"
-#include "ProjectSettings.h"
+#include "ProjectRate.h"
 #include "ViewInfo.h"
 
 #include "tracks/ui/TrackView.h"
@@ -175,7 +175,7 @@ namespace {
 double GetRate() {
    auto pProject = GetActiveProject().lock();
    return pProject
-      ? ProjectSettings::Get( *pProject ).GetRate()
+      ? ProjectRate::Get( *pProject ).GetRate()
       : 44100.0;
 }
 }

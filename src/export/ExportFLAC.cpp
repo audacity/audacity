@@ -30,7 +30,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "FLAC++/encoder.h"
 
 #include "float_cast.h"
-#include "../ProjectSettings.h"
+#include "../ProjectRate.h"
 #include "../Mix.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
@@ -255,8 +255,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                         const Tags *metadata,
                         int WXUNUSED(subformat))
 {
-   const auto &settings = ProjectSettings::Get( *project );
-   double    rate    = settings.GetRate();
+   double    rate    = ProjectRate::Get(*project).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages

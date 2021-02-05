@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "Project.h"
 #include "../../../ProjectHistory.h"
+#include "../../../ProjectRate.h"
 #include "../../../ProjectSettings.h"
 #include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
@@ -2224,7 +2225,7 @@ void LabelTrackView::DoEditLabels
    auto format = settings.GetSelectionFormat(),
       freqFormat = settings.GetFrequencySelectionFormatName();
    auto &tracks = TrackList::Get( project );
-   auto rate = ProjectSettings::Get( project ).GetRate();
+   auto rate = ProjectRate::Get( project ).GetRate();
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 

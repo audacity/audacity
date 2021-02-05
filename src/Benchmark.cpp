@@ -40,7 +40,7 @@ of sample block storage.
 #include "WaveTrack.h"
 #include "Sequence.h"
 #include "Prefs.h"
-#include "ProjectSettings.h"
+#include "ProjectRate.h"
 #include "ViewInfo.h"
 
 #include "FileNames.h"
@@ -73,7 +73,7 @@ private:
    void FlushPrint();
 
    AudacityProject &mProject;
-   const ProjectSettings &mSettings;
+   const ProjectRate &mRate;
 
    bool      mHoldPrint;
    wxString  mToPrint;
@@ -146,7 +146,7 @@ BenchmarkDialog::BenchmarkDialog(
                 wxDEFAULT_DIALOG_STYLE |
                 wxRESIZE_BORDER)
    , mProject(project)
-   , mSettings{ ProjectSettings::Get(project) }
+   , mRate{ ProjectRate::Get(project) }
 {
    SetName();
 
@@ -374,7 +374,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    HoldPrint(true);
 
    const auto t =
-      WaveTrackFactory{ mSettings,
+      WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
          .NewWaveTrack(SampleFormat);
 
