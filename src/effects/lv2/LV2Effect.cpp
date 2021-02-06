@@ -221,7 +221,7 @@ LV2EffectSettingsDialog::LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *ef
 {
    mEffect = effect;
 
-   mEffect->mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), mBufferSize, 8192);
+   mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize, 8192);
    mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
    mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
 
