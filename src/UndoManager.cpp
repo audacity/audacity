@@ -298,12 +298,13 @@ bool UndoManager::RedoAvailable()
 }
 
 void UndoManager::ModifyState(const TrackList * l,
-                              const SelectedRegion &selectedRegion,
-                              const std::shared_ptr<Tags> &tags)
+                              const SelectedRegion &selectedRegion)
 {
    if (current == wxNOT_FOUND) {
       return;
    }
+
+   auto tags = Tags::Get(mProject).shared_from_this();
 
 //   SonifyBeginModifyState();
    // Delete current -- not necessary, but let's reclaim space early
@@ -344,7 +345,6 @@ void UndoManager::RenameState( int state,
 
 void UndoManager::PushState(const TrackList * l,
                             const SelectedRegion &selectedRegion,
-                            const std::shared_ptr<Tags> &tags,
                             const TranslatableString &longDescription,
                             const TranslatableString &shortDescription,
                             UndoPush flags)
@@ -353,7 +353,7 @@ void UndoManager::PushState(const TrackList * l,
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
-      ModifyState(l, selectedRegion, tags);
+      ModifyState(l, selectedRegion);
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
       if (current == saved) {
@@ -373,6 +373,8 @@ void UndoManager::PushState(const TrackList * l,
    mayConsolidate = true;
 
    AbandonRedo();
+
+   auto tags = Tags::Get(mProject).shared_from_this();
 
    // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.

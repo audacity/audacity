@@ -45,12 +45,11 @@ void ProjectHistory::InitialState()
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
 
    undoManager.ClearStates();
 
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
+      &tracks, viewInfo.selectedRegion,
       XO("Created new project"), {});
 
    undoManager.StateSaved();
@@ -106,9 +105,8 @@ void ProjectHistory::PushState(const TranslatableString &desc,
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
+      &tracks, viewInfo.selectedRegion,
       desc, shortDesc, flags);
 
    mDirty = true;
@@ -132,9 +130,7 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
-   undoManager.ModifyState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this());
+   undoManager.ModifyState(&tracks, viewInfo.selectedRegion);
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
