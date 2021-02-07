@@ -76,7 +76,6 @@ struct UndoRedoMessage {
 };
 
 class AudacityProject;
-class Tags;
 class Track;
 class TrackList;
 
@@ -107,15 +106,13 @@ struct UndoState {
 
    UndoState( Extensions extensions,
       std::shared_ptr<TrackList> &&tracks_,
-      const std::shared_ptr<Tags> &tags_,
       const SelectedRegion &selectedRegion_)
       : extensions(std::move(extensions))
-      , tracks(std::move(tracks_)), tags(tags_), selectedRegion(selectedRegion_)
+      , tracks(std::move(tracks_)), selectedRegion(selectedRegion_)
    {}
 
    Extensions extensions;
    std::shared_ptr<TrackList> tracks;
-   std::shared_ptr<Tags> tags;
    SelectedRegion selectedRegion; // by value
 };
 
@@ -125,9 +122,8 @@ struct UndoStackElem {
       std::shared_ptr<TrackList> &&tracks_,
       const TranslatableString &description_,
       const TranslatableString &shortDescription_,
-      const SelectedRegion &selectedRegion_,
-      const std::shared_ptr<Tags> &tags_)
-      : state(std::move(extensions), std::move(tracks_), tags_, selectedRegion_)
+      const SelectedRegion &selectedRegion_)
+      : state(std::move(extensions), std::move(tracks_), selectedRegion_)
       , description(description_)
       , shortDescription(shortDescription_)
    {
