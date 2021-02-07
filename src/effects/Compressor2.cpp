@@ -815,6 +815,9 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
    {
       PlotData* plot;
 
+      S.StartVerticalLay();
+      S.AddVariableText(XO("Envelope dependent gain"), 0,
+         wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL);
       mGainPlot = S.MinSize( { 200, 200 } )
          .AddPlot({}, -60, 0, -60, 0, XO("dB"), XO("dB"),
             Ruler::LinearDBFormat, Ruler::LinearDBFormat);
@@ -826,10 +829,15 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       plot->ydata.resize(61);
       std::iota(plot->xdata.begin(), plot->xdata.end(), -60);
 
+      S.EndVerticalLay();
+      S.StartVerticalLay();
+
+      S.AddVariableText(XO("Envelope detector step response"), 0,
+         wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL);
       mResponsePlot = S.MinSize( { 200, 200 } )
          .AddPlot({}, 0, 5, -0.2, 1.2, XO("s"), XO(""),
             Ruler::IntFormat, Ruler::RealFormat, 2);
-      mResponsePlot->SetName(XO("Compressor step response plot"));
+      mResponsePlot->SetName(XO("Envelope detector step response plot"));
 
       plot = mResponsePlot->GetPlotData(0);
       plot->pen = std::unique_ptr<wxPen>(
@@ -847,6 +855,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       plot->ydata.resize(RESPONSE_PLOT_SAMPLES+1);
       for(size_t x = 0; x < plot->xdata.size(); ++x)
          plot->xdata[x] = x * float(RESPONSE_PLOT_TIME) / float(RESPONSE_PLOT_SAMPLES);
+      S.EndVerticalLay();
    }
    S.EndHorizontalLay();
 
@@ -967,9 +976,9 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       {
          S.SetStretchyCol(1);
 
-         S.AddVariableText(XO("Attack Time:"), true,
+         S.AddVariableText(XO("Attack:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         mAttackTimeCtrl = S.Name(XO("Attack Time"))
+         mAttackTimeCtrl = S.Name(XO("Attack"))
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_AttackTime, MAX_AttackTime,
                MIN_AttackTime, ScaleToPrecision(SCL_AttackTime),
@@ -978,9 +987,9 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         S.AddVariableText(XO("Release Time:"), true,
+         S.AddVariableText(XO("Release:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Release Time"))
+         ctrl = S.Name(XO("Release"))
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_ReleaseTime, MAX_ReleaseTime,
                MIN_ReleaseTime, ScaleToPrecision(SCL_ReleaseTime),
