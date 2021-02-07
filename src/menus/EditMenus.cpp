@@ -1118,14 +1118,13 @@ BaseItemSharedPtr EditMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-#ifndef __WXMAC__
       ),
 
+      // Note that on Mac, the Preferences menu item is specially handled in
+      // CommandManager (assigned a special wxWidgets id) so that it does
+      // not appear in the Edit menu but instead under Audacity, consistent with
+      // MacOS conventions.
       Section( "Preferences",
-#else
-      ,
-#endif
-
          Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
             AudioIONotBusyFlag(), prefKey )
       )
