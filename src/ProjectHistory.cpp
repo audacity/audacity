@@ -153,6 +153,11 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
 
    viewInfo.selectedRegion = state.selectedRegion;
 
+   // Restore extra state
+   for (auto &pExtension : state.extensions)
+      if (pExtension)
+         pExtension->RestoreUndoRedoState(project);
+
    // Restore tags
    Tags::Set( project, state.tags );
 

@@ -40,6 +40,31 @@ UndoManager
 
 #include <unordered_set>
 
+UndoStateExtension::~UndoStateExtension() = default;
+
+namespace {
+   using Savers = std::vector<UndoRedoExtensionRegistry::Saver>;
+   static Savers &GetSavers()
+   {
+      static Savers theSavers;
+      return theSavers;
+   }
+
+   UndoState::Extensions GetExtensions(AudacityProject &project)
+   {
+      UndoState::Extensions result;
+      for (auto &saver : GetSavers())
+         if (saver)
+            result.emplace_back(saver(project));
+      return result;
+   }
+}
+
+UndoRedoExtensionRegistry::Entry::Entry(const Saver &saver)
+{
+   GetSavers().emplace_back(saver);
+}
+
 using SampleBlockID = long long;
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
@@ -294,6 +319,7 @@ void UndoManager::ModifyState(const TrackList * l,
    }
 
    // Replace
+   stack[current]->state.extensions = GetExtensions(mProject);
    stack[current]->state.tracks = std::move(tracksCopy);
    stack[current]->state.tags = tags;
 
@@ -352,7 +378,7 @@ void UndoManager::PushState(const TrackList * l,
    // Just save a NEW shared_ptr to it.
    stack.push_back(
       std::make_unique<UndoStackElem>
-         (std::move(tracksCopy),
+         (GetExtensions(mProject), std::move(tracksCopy),
             longDescription, shortDescription, selectedRegion, tags)
    );
 

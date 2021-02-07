@@ -49,6 +49,8 @@
 #ifndef __AUDACITY_UNDOMANAGER__
 #define __AUDACITY_UNDOMANAGER__
 
+#include <functional>
+#include <memory>
 #include <vector>
 #include "ClientData.h"
 #include "Observer.h"
@@ -78,13 +80,40 @@ class Tags;
 class Track;
 class TrackList;
 
+//! Base class for extra information attached to undo/redo states
+class AUDACITY_DLL_API UndoStateExtension {
+public:
+   virtual ~UndoStateExtension();
+
+   //! Modify the project when undoing or redoing to some state in history
+   virtual void RestoreUndoRedoState(AudacityProject &) = 0;
+};
+
+class AUDACITY_DLL_API UndoRedoExtensionRegistry {
+public:
+   //! Type of function that produces an UndoStateExtension object when saving state of a project
+   /*! Shared pointer allows easy sharing of unchanging parts of project state among history states */
+   using Saver =
+      std::function<std::shared_ptr<UndoStateExtension>(AudacityProject&)>;
+
+   //! Typically statically constructed
+   struct AUDACITY_DLL_API Entry {
+      Entry(const Saver &saver);
+   };
+};
+
 struct UndoState {
-   UndoState(std::shared_ptr<TrackList> &&tracks_,
+   using Extensions = std::vector<std::shared_ptr<UndoStateExtension>>;
+
+   UndoState( Extensions extensions,
+      std::shared_ptr<TrackList> &&tracks_,
       const std::shared_ptr<Tags> &tags_,
       const SelectedRegion &selectedRegion_)
-      : tracks(std::move(tracks_)), tags(tags_), selectedRegion(selectedRegion_)
+      : extensions(std::move(extensions))
+      , tracks(std::move(tracks_)), tags(tags_), selectedRegion(selectedRegion_)
    {}
 
+   Extensions extensions;
    std::shared_ptr<TrackList> tracks;
    std::shared_ptr<Tags> tags;
    SelectedRegion selectedRegion; // by value
@@ -92,12 +121,13 @@ struct UndoState {
 
 struct UndoStackElem {
 
-   UndoStackElem(std::shared_ptr<TrackList> &&tracks_,
+   UndoStackElem( UndoState::Extensions extensions,
+      std::shared_ptr<TrackList> &&tracks_,
       const TranslatableString &description_,
       const TranslatableString &shortDescription_,
       const SelectedRegion &selectedRegion_,
       const std::shared_ptr<Tags> &tags_)
-      : state(std::move(tracks_), tags_, selectedRegion_)
+      : state(std::move(extensions), std::move(tracks_), tags_, selectedRegion_)
       , description(description_)
       , shortDescription(shortDescription_)
    {
