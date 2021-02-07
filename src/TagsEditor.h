@@ -31,6 +31,12 @@ class TagsEditorDialog final : public wxDialogWrapper
    AUDACITY_DLL_API static bool ShowEditDialog( Tags &tags,
       wxWindow *parent, const TranslatableString &title, bool force = false);
 
+   //! Invoke ShowEditDialog on project's tags;  commit change in undo history,
+   //! return true if not cancelled
+   AUDACITY_DLL_API static bool DoEditMetadata(AudacityProject &project,
+      const TranslatableString &title,
+      const TranslatableString &shortUndoDescription, bool force);
+
 #if !defined(__WXMSW__)
    bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }
 #endif
