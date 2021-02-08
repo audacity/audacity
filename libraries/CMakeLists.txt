@@ -8,6 +8,7 @@ set( LIBRARIES
    lib-utility
    lib-uuid
    lib-components
+   lib-basic-ui
 )
 
 if ( ${_OPT}has_networking )
