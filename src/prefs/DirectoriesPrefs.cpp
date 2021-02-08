@@ -68,6 +68,16 @@ public:
       return true;
    }
 
+   virtual bool TransferToWindow() wxOVERRIDE
+   {
+      return true;
+   }
+
+   virtual bool TransferFromWindow() wxOVERRIDE
+   {
+      return true;
+   }
+
    void OnChar(wxKeyEvent &evt)
    {
       evt.Skip();
