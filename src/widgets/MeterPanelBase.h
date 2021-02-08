@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 MeterPanelBase.h
 
-Paul Licameli split from Meter.h
+Paul Licameli split from MeterPanel.h
 
 **********************************************************************/
 

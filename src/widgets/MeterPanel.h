@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Meter.h
+  MeterPanel.h
 
   Dominic Mazzoni
 
@@ -13,8 +13,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_METER__
-#define __AUDACITY_METER__
+#ifndef __AUDACITY_METER_PANEL__
+#define __AUDACITY_METER_PANEL__
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/brush.h> // member variable
@@ -296,4 +296,4 @@ class AUDACITY_DLL_API MeterPanel final
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_METER__
+#endif // __AUDACITY_METER_PANEL__

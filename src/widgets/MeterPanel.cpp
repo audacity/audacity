@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Meter.cpp
+  MeterPanel.cpp
 
   Dominic Mazzoni
   Vaughan Johnson
@@ -38,8 +38,7 @@
 
 *//******************************************************************/
 
-
-#include "Meter.h"
+#include "MeterPanel.h"
 
 #include <algorithm>
 #include <wx/setup.h> // for wxUSE_* macros

@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 MeterPanelBase.cpp
 
-Paul Licameli split from Meter.cpp
+Paul Licameli split from MeterPanel.cpp
 
 **********************************************************************/
 
