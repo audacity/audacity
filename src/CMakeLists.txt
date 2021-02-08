@@ -986,6 +986,8 @@ list( APPEND SOURCES
       widgets/wxPanelWrapper.cpp
       widgets/wxPanelWrapper.h
       widgets/wxTextCtrlWrapper.h
+      widgets/wxWidgetsBasicUI.cpp
+      widgets/wxWidgetsBasicUI.h
 
       # XML handling
       xml/XMLFileReader.cpp

@@ -112,6 +112,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
 #include "update/UpdateManager.h"
+#include "widgets/wxWidgetsBasicUI.h"
 
 #ifdef HAS_NETWORKING
 #include "NetworkManager.h"
@@ -1056,6 +1057,12 @@ bool AudacityApp::OnInit()
 
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
+
+   // Inject basic GUI services behind the facade
+   {
+      static wxWidgetsBasicUI uiServices;
+      (void)BasicUI::Install(&uiServices);
+   }
 
    // Fire up SQLite
    if ( !ProjectFileIO::InitializeSQL() )
