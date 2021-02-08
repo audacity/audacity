@@ -9,6 +9,9 @@ Paul Licameli
 **********************************************************************/
 #include "BasicUI.h"
 
+#include <mutex>
+#include <vector>
+
 namespace  BasicUI {
 Services::~Services() = default;
 
@@ -22,4 +25,40 @@ Services *Install(Services *pInstance)
    theInstance = pInstance;
    return result;
 }
+
+static std::recursive_mutex sActionsMutex;
+static std::vector<Action> sActions;
+
+void CallAfter(Action action)
+{
+   if (auto p = Get())
+      p->DoCallAfter(action);
+   else {
+      // No services yet -- but don't lose the action.  Put it in a queue
+      auto guard = std::lock_guard{ sActionsMutex };
+      sActions.emplace_back(std::move(action));
+   }
+}
+
+void Yield()
+{
+   do {
+      // Dispatch anything in the queue, added while there were no Services
+      {
+         auto guard = std::lock_guard{ sActionsMutex };
+         std::vector<Action> actions;
+         actions.swap(sActions);
+         for (auto &action : actions)
+            action();
+      }
+
+      // Dispatch according to Services, if present
+      if (auto p = Get())
+         p->DoYield();
+   }
+   // Re-test for more actions that might have been enqueued by actions just
+   // dispatched
+   while ( !sActions.empty() );
+}
+
 }
