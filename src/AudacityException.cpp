@@ -12,7 +12,6 @@
 
 #include "AudacityException.h"
 
-#include <wx/app.h>
 #include <wx/atomic.h>
 
 #include "BasicUI.h"
@@ -25,7 +24,7 @@ void AudacityException::EnqueueAction(
    std::exception_ptr pException,
    std::function<void(AudacityException*)> delayedHandler)
 {
-   wxTheApp->CallAfter( [
+   BasicUI::CallAfter( [
       pException = std::move(pException), delayedHandler = std::move(delayedHandler)
    ] {
       try {
