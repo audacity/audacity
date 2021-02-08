@@ -11,10 +11,14 @@ Paul Licameli
 #ifndef __AUDACITY_BASIC_UI__
 #define __AUDACITY_BASIC_UI__
 
+#include <functional>
+
 namespace BasicUI {
 
 //! @name Types used in the Services interface
 //! @{
+
+using Action = std::function<void()>;
 
 //! @}
 
@@ -25,6 +29,8 @@ namespace BasicUI {
 class BASIC_UI_API Services {
 public:
    virtual ~Services();
+   virtual void DoCallAfter(const Action &action) = 0;
+   virtual void DoYield() = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -39,6 +45,21 @@ BASIC_UI_API Services *Install(Services *pInstance);
    the main thread only, except as noted.
  */
 //! @{
+
+//! Schedule an action to be done later, and in the main thread
+/*! This function may be called in other threads than the main.  If no Services
+ are yet installed, the action is not lost, but may be dispatched by Yield().
+ The action may itself invoke CallAfter to enqueue other actions.
+ */
+void CallAfter(Action action);
+
+//! Dispatch waiting events, including actions enqueued by CallAfter
+/*! This function must be called by the main thread.  Actions enqueued by
+ CallAfter before Services were installed will be dispatched in the sequence
+ they were enqueued, unless an exception thrown by one of them stops the
+ dispatching.
+ */
+void Yield();
 
 //! @}
 }

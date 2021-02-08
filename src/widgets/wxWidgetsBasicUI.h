@@ -18,6 +18,9 @@ Paul Licameli
 class wxWidgetsBasicUI final : public BasicUI::Services {
 public:
    ~wxWidgetsBasicUI() override;
+
+   void DoCallAfter(const BasicUI::Action &action) override;
+   void DoYield() override;
 };
 
 #endif
