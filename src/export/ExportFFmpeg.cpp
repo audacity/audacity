@@ -45,6 +45,7 @@ function.
 #include "Export.h"
 
 #include "ExportFFmpegDialogs.h"
+#include "SelectFile.h"
 
 #if defined(WIN32) && _MSC_VER < 1900
 #define snprintf _snprintf

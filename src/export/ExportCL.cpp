@@ -32,6 +32,7 @@
 
 #include "../Mix.h"
 #include "Prefs.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
@@ -187,7 +188,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
    type = { XO("Executables"), { ext } };
 #endif
 
-   path = FileNames::SelectFile(FileNames::Operation::Open,
+   path = SelectFile(FileNames::Operation::Open,
       XO("Find path to command"),
       wxEmptyString,
       wxEmptyString,

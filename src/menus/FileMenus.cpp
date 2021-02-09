@@ -12,6 +12,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
+#include "../SelectFile.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
@@ -282,7 +283,7 @@ void OnExportLabels(const CommandContext &context)
    else
       fName = (*trackRange.rbegin())->GetName();
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Labels As:"),
       wxEmptyString,
       fName,
@@ -367,7 +368,7 @@ void OnExportMIDI(const CommandContext &context)
 
       wxString fName;
 
-      fName = FileNames::SelectFile(FileNames::Operation::Export,
+      fName = SelectFile(FileNames::Operation::Export,
          XO("Export MIDI As:"),
          wxEmptyString,
          fName,
@@ -435,7 +436,7 @@ void OnImportLabels(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    wxString fileName =
-       FileNames::SelectFile(FileNames::Operation::Open,
+       SelectFile(FileNames::Operation::Open,
          XO("Select a text file containing labels"),
          wxEmptyString,     // Path
          wxT(""),       // Name
@@ -479,7 +480,7 @@ void OnImportMIDI(const CommandContext &context)
    auto &project = context.project;
    auto &window = GetProjectFrame( project );
 
-   wxString fileName = FileNames::SelectFile(FileNames::Operation::Open,
+   wxString fileName = SelectFile(FileNames::Operation::Open,
       XO("Select a MIDI file"),
       wxEmptyString,     // Path
       wxT(""),       // Name

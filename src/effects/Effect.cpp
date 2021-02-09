@@ -35,6 +35,7 @@
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
 #include "../prefs/QualitySettings.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
@@ -680,7 +681,7 @@ void Effect::ExportPresets()
    wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
-   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+   auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Export Effect Parameters"),
                                      wxEmptyString,
                                      wxEmptyString,
@@ -725,7 +726,7 @@ void Effect::ImportPresets()
 {
    wxString params;
 
-   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+   auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Import Effect Parameters"),
                                      wxEmptyString,
                                      wxEmptyString,

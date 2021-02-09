@@ -21,6 +21,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 
 #include "FileNames.h"
 #include "Internat.h"
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 
 #include <mutex>
@@ -285,7 +286,7 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
 {
    wxString fName = _("log.txt");
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Save log to:"),
       wxEmptyString,
       fName,

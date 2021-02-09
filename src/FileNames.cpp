@@ -37,8 +37,6 @@ used throughout Audacity into this one place.
 #include "Internat.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
-#include "widgets/AudacityMessageBox.h"
-#include "widgets/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
 #include <dlfcn.h>
@@ -407,6 +405,8 @@ FilePath FileNames::PathFromAddr(void *addr)
     wxFileName name;
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
+#define OSFILENAME(X) ((char *) (const char *)(X).fn_str())
+#define OSINPUT(X) OSFILENAME(X)
    Dl_info info;
    if (dladdr(addr, &info)) {
       char realname[PLATFORM_MAX_PATH + 1];
@@ -578,27 +578,6 @@ void FileNames::UpdateDefaultPath(Operation op, const FilePath &path)
    }
 }
 
-FilePath
-FileNames::SelectFile(Operation op,
-   const TranslatableString& message,
-   const FilePath& default_path,
-   const FilePath& default_filename,
-   const FileExtension& default_extension,
-   const FileTypes& fileTypes,
-   int flags,
-   wxWindow *parent)
-{
-   return WithDefaultPath(op, default_path, [&](const FilePath &path) {
-      wxString filter;
-      if ( !default_extension.empty() )
-         filter = wxT("*.") + default_extension;
-      return FileSelector(
-            message.Translation(), path, default_filename, filter,
-            FormatWildcard( fileTypes ),
-            flags, parent, wxDefaultCoord, wxDefaultCoord);
-   });
-}
-
 bool FileNames::IsMidi(const FilePath &fName)
 {
    const auto extension = fName.AfterLast(wxT('.'));
@@ -669,53 +648,6 @@ void FileNames::FindFilesInPathList(const wxString & pattern,
       wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), flags);
    }
 }
-
-#if defined(__WXMSW__)
-static wxCharBuffer mFilename;
-
-//
-// On Windows, wxString::mb_str() can return a NULL pointer if the
-// conversion to multi-byte fails.  So, based on direction intent,
-// returns a pointer to an empty string or prompts for a NEW name.
-//
-char *FileNames::VerifyFilename(const wxString &s, bool input)
-{
-   static wxCharBuffer buf;
-   wxString name = s;
-
-   if (input) {
-      if ((char *) (const char *)name.mb_str() == NULL) {
-         name = wxEmptyString;
-      }
-   }
-   else {
-      wxFileName ff(name);
-      FileExtension ext;
-      while ((char *) (const char *)name.mb_str() == NULL) {
-         AudacityMessageBox(
-            XO(
-"The specified filename could not be converted due to Unicode character use."));
-
-         ext = ff.GetExt();
-         name = FileNames::SelectFile(FileNames::Operation::_None,
-            XO("Specify New Filename:"),
-            wxEmptyString,
-            name,
-            ext,
-            { ext.empty()
-               ? FileNames::AllFiles
-               : FileType{ {}, { ext } }
-            },
-            wxFD_SAVE | wxRESIZE_BORDER,
-            wxGetTopLevelParent(NULL));
-      }
-   }
-
-   mFilename = name.mb_str();
-
-   return (char *) (const char *) mFilename;
-}
-#endif
 
 bool FileNames::WritableLocationCheck(const FilePath& path)
 {

@@ -85,6 +85,7 @@
 #include "Prefs.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
@@ -658,7 +659,7 @@ public:
        * "Where would I find the file %s" instead if you want. */
       auto question = XO("Where is %s?").Format( mName );
 
-      wxString path = FileNames::SelectFile(FileNames::Operation::_None,
+      wxString path = SelectFile(FileNames::Operation::_None,
          question,
             mLibPath.GetPath(),
             mLibPath.GetName(),

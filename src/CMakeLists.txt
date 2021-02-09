@@ -236,6 +236,8 @@ list( APPEND SOURCES
       Screenshot.h
       SelectUtilities.cpp
       SelectUtilities.h
+      SelectFile.cpp
+      SelectFile.h
       SelectedRegion.cpp
       SelectedRegion.h
       SelectionState.cpp

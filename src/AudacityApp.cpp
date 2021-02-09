@@ -97,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ProjectWindow.h"
 #include "Screenshot.h"
 #include "Sequence.h"
+#include "SelectFile.h"
 #include "TempDirectory.h"
 #include "Track.h"
 #include "prefs/PrefsDialog.h"

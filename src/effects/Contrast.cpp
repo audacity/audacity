@@ -19,6 +19,7 @@
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../FileNames.h"
 #include "../ViewInfo.h"
@@ -532,7 +533,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    auto project = FindProjectFromWindow( this );
    wxString fName = wxT("contrast.txt");
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Contrast Result As:"),
       wxEmptyString,
       fName,

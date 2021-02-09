@@ -16,6 +16,7 @@
 #include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "../Theme.h"
@@ -63,7 +64,7 @@ void ShowDiagnostics(
    if (dlg.ShowModal() == wxID_OK)
    {
       const auto fileDialogTitle = XO("Save %s").Format( description );
-      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+      wxString fName = SelectFile(FileNames::Operation::Export,
          fileDialogTitle,
          wxEmptyString,
          defaultPath,

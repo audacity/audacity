@@ -84,6 +84,7 @@
 
 #include "../../FileNames.h"
 #include "../../PlatformCompatibility.h"
+#include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
 #include "../../effects/Effect.h"
 #include "../../widgets/valnum.h"
@@ -1852,8 +1853,8 @@ void VSTEffect::ExportPresets()
    // Ask the user for the real name
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the FileNames::SelectFile().
-   path = FileNames::SelectFile(FileNames::Operation::Presets,
+   // upon returning from the SelectFile().
+   path = SelectFile(FileNames::Operation::Presets,
       XO("Save VST Preset As:"),
       wxEmptyString,
       wxT("preset"),
@@ -1910,7 +1911,7 @@ void VSTEffect::ImportPresets()
    wxString path;
 
    // Ask the user for the real name
-   path = FileNames::SelectFile(FileNames::Operation::Presets,
+   path = SelectFile(FileNames::Operation::Presets,
       XO("Load VST Preset:"),
       wxEmptyString,
       wxT("preset"),

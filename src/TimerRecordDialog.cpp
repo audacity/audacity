@@ -41,6 +41,7 @@
 #include <wx/dynlib.h> //<! For windows.h
 
 #include "AudioIO.h"
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
@@ -302,7 +303,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
 
-   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+   wxString fName = SelectFile(FileNames::Operation::Export,
       XO("Save Timer Recording As"),
       m_fnAutoSaveFile.GetPath(),
       m_fnAutoSaveFile.GetFullName(),

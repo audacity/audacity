@@ -8,6 +8,7 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
+#include "../SelectFile.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../ViewInfo.h"
