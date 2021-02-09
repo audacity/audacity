@@ -29,7 +29,7 @@ class SamplePreprocessor
    public:
       virtual float ProcessSample(float value) = 0;
       virtual float ProcessSample(float valueL, float valueR) = 0;
-      virtual void Reset() = 0;
+      virtual void Reset(float value = 0) = 0;
       virtual void SetWindowSize(size_t windowSize) = 0;
 };
 
@@ -40,7 +40,7 @@ class SlidingRmsPreprocessor : public SamplePreprocessor
 
       virtual float ProcessSample(float value);
       virtual float ProcessSample(float valueL, float valueR);
-      virtual void Reset();
+      virtual void Reset(float value = 0);
       virtual void SetWindowSize(size_t windowSize);
 
       static const size_t REFRESH_WINDOW_EVERY = 1048576; // 1 MB
@@ -63,7 +63,7 @@ class SlidingMaxPreprocessor : public SamplePreprocessor
 
       virtual float ProcessSample(float value);
       virtual float ProcessSample(float valueL, float valueR);
-      virtual void Reset();
+      virtual void Reset(float value = 0);
       virtual void SetWindowSize(size_t windowSize);
 
    private:
@@ -87,6 +87,7 @@ class EnvelopeDetector
       inline float InitialCondition() const { return mInitialCondition; }
       inline size_t InitialConditionSize() const { return mInitialBlockSize; }
 
+      virtual void Reset(float value = 0) = 0;
       virtual void SetParams(float sampleRate, float attackTime,
          float releaseTime) = 0;
 
@@ -110,6 +111,7 @@ class ExpFitEnvelopeDetector : public EnvelopeDetector
       ExpFitEnvelopeDetector(float rate, float attackTime, float releaseTime,
          size_t buffer_size);
 
+      virtual void Reset(float value);
       virtual void SetParams(float sampleRate, float attackTime,
          float releaseTime);
 
@@ -127,6 +129,7 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
          size_t buffer_size, bool correctGain = true);
       virtual void CalcInitialCondition(float value);
 
+      virtual void Reset(float value);
       virtual void SetParams(float sampleRate, float attackTime,
          float releaseTime);
       virtual float AttackFactor();
