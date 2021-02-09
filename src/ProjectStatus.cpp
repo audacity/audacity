@@ -74,3 +74,13 @@ void ProjectStatus::Set(const TranslatableString &msg, StatusBarField field )
       project.ProcessEvent( evt );
    }
 }
+
+void ProjectStatus::UpdatePrefs()
+{
+   auto &project = mProject;
+   for (auto field = 1; field <= nStatusBarFields; field++) {
+      wxCommandEvent evt{ EVT_PROJECT_STATUS_UPDATE };
+      evt.SetInt( field );
+      project.ProcessEvent( evt );
+   }
+}

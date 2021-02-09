@@ -35,6 +35,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 
 class ProjectStatus final
    : public ClientData::Base
+   , public PrefsListener
 {
 public:
    static ProjectStatus &Get( AudacityProject &project );
@@ -66,6 +67,9 @@ public:
    const TranslatableString &Get( StatusBarField field = mainStatusBarField ) const;
    void Set(const TranslatableString &msg,
       StatusBarField field = mainStatusBarField);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
 private:
    AudacityProject &mProject;
