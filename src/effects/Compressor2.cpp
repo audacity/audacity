@@ -131,9 +131,9 @@ float SlidingRmsPreprocessor::ProcessSample(float valueL, float valueR)
    return DoProcessSample((valueL * valueL + valueR * valueR) / 2.0);
 }
 
-void SlidingRmsPreprocessor::Reset()
+void SlidingRmsPreprocessor::Reset(float level)
 {
-   mSum = 0;
+   mSum = (level / mGain) * (level / mGain) * float(mWindow.size());
    mPos = 0;
    mInsertCount = 0;
    std::fill(mWindow.begin(), mWindow.end(), 0);
@@ -203,11 +203,11 @@ float SlidingMaxPreprocessor::ProcessSample(float valueL, float valueR)
    return DoProcessSample((fabs(valueL) + fabs(valueR)) / 2.0);
 }
 
-void SlidingMaxPreprocessor::Reset()
+void SlidingMaxPreprocessor::Reset(float value)
 {
    mPos = 0;
-   std::fill(mWindow.begin(), mWindow.end(), 0);
-   std::fill(mMaxes.begin(), mMaxes.end(), 0);
+   std::fill(mWindow.begin(), mWindow.end(), value);
+   std::fill(mMaxes.begin(), mMaxes.end(), value);
 }
 
 void SlidingMaxPreprocessor::SetWindowSize(size_t windowSize)
@@ -301,6 +301,13 @@ ExpFitEnvelopeDetector::ExpFitEnvelopeDetector(
    : EnvelopeDetector(bufferSize)
 {
    SetParams(rate, attackTime, releaseTime);
+}
+
+void ExpFitEnvelopeDetector::Reset(float value)
+{
+   std::fill(mProcessedBuffer.begin(), mProcessedBuffer.end(), value);
+   std::fill(mProcessingBuffer.begin(), mProcessingBuffer.end(), value);
+   std::fill(mLookaheadBuffer.begin(), mLookaheadBuffer.end(), value);
 }
 
 void ExpFitEnvelopeDetector::SetParams(
@@ -408,6 +415,14 @@ float Pt1EnvelopeDetector::AttackFactor()
 float Pt1EnvelopeDetector::DecayFactor()
 {
    return mReleaseFactor;
+}
+
+void Pt1EnvelopeDetector::Reset(float value)
+{
+   value *= mGainCorrection;
+   std::fill(mProcessedBuffer.begin(), mProcessedBuffer.end(), value);
+   std::fill(mProcessingBuffer.begin(), mProcessingBuffer.end(), value);
+   std::fill(mLookaheadBuffer.begin(), mLookaheadBuffer.end(), value);
 }
 
 void Pt1EnvelopeDetector::SetParams(
@@ -818,7 +833,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       S.StartVerticalLay();
       S.AddVariableText(XO("Envelope dependent gain"), 0,
          wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL);
-      mGainPlot = S.MinSize( { 200, 200 } )
+      mGainPlot = S.MinSize( { 400, 200 } )
          .AddPlot({}, -60, 0, -60, 0, XO("dB"), XO("dB"),
             Ruler::LinearDBFormat, Ruler::LinearDBFormat);
 
@@ -832,19 +847,19 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       S.EndVerticalLay();
       S.StartVerticalLay();
 
-      S.AddVariableText(XO("Envelope detector step response"), 0,
+      S.AddVariableText(XO("Compressor step response"), 0,
          wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL);
-      mResponsePlot = S.MinSize( { 200, 200 } )
+      mResponsePlot = S.MinSize( { 400, 200 } )
          .AddPlot({}, 0, 5, -0.2, 1.2, XO("s"), XO(""),
             Ruler::IntFormat, Ruler::RealFormat, 2);
-      mResponsePlot->SetName(XO("Envelope detector step response plot"));
+      mResponsePlot->SetName(XO("Compressor step response plot"));
 
       plot = mResponsePlot->GetPlotData(0);
       plot->pen = std::unique_ptr<wxPen>(
          safenew wxPen(AColor::WideEnvelopePen));
       plot->xdata = {0, RESPONSE_PLOT_STEP_START, RESPONSE_PLOT_STEP_START,
          RESPONSE_PLOT_STEP_STOP, RESPONSE_PLOT_STEP_STOP, 5};
-      plot->ydata = {0, 0, 1, 1, 0, 0};
+      plot->ydata = {0.1, 0.1, 1, 1, 0.1, 0.1};
 
       plot = mResponsePlot->GetPlotData(1);
       plot->pen = std::unique_ptr<wxPen>(
@@ -1655,10 +1670,15 @@ void EffectCompressor2::UpdateResponsePlot()
    float plot_rate = RESPONSE_PLOT_SAMPLES / RESPONSE_PLOT_TIME;
 
    size_t lookahead_size = CalcLookaheadLength(plot_rate);
+   lookahead_size -= (lookahead_size > 0);
    ssize_t block_size = float(TAU_FACTOR) * (mAttackTime + 1.0) * plot_rate;
 
+   InitGainCalculation();
    preproc = InitPreprocessor(plot_rate, true);
    envelope = InitEnvelope(plot_rate, block_size, true);
+
+   preproc->Reset(0.1);
+   envelope->Reset(0.1);
 
    ssize_t step_start = RESPONSE_PLOT_STEP_START * plot_rate - lookahead_size;
    ssize_t step_stop = RESPONSE_PLOT_STEP_STOP * plot_rate - lookahead_size;
@@ -1667,12 +1687,21 @@ void EffectCompressor2::UpdateResponsePlot()
    for(ssize_t i = -lookahead_size; i < 2*block_size; ++i)
    {
       if(i < step_start || i > step_stop)
-         envelope->ProcessSample(preproc->ProcessSample(0));
+         envelope->ProcessSample(preproc->ProcessSample(0.1));
       else
          envelope->ProcessSample(preproc->ProcessSample(1));
    }
+
    for(ssize_t i = 0; i < xsize; ++i)
-      plot->ydata[i] = envelope->ProcessSample(preproc->ProcessSample(0));
+   {
+      float x = 1;
+      if(i < RESPONSE_PLOT_STEP_START * plot_rate ||
+            i > RESPONSE_PLOT_STEP_STOP * plot_rate)
+          x = 0.1;
+
+      plot->ydata[i] = x * CompressorGain(
+         envelope->ProcessSample(preproc->ProcessSample(0.1)));
+   }
 
    mResponsePlot->Refresh(false);
 }
