@@ -30,6 +30,7 @@
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/textctrl.h>
 #include <wx/artprov.h>
 
 #include "../AllThemeResources.h"
@@ -197,21 +198,4 @@ void ShowModelessErrorDialog(wxWindow *parent,
    // is this actually a mem leak.
    // PRL: answer is that the parent window guarantees destruction of the dialog
    // but in practice Destroy() in OnOK does that
-}
-
-void AudacityTextEntryDialog::SetInsertionPointEnd()
-{
-   mSetInsertionPointEnd = true;
-}
-
-bool AudacityTextEntryDialog::Show(bool show)
-{
-   bool ret = wxTabTraversalWrapper< wxTextEntryDialog >::Show(show);
-
-   if (show && mSetInsertionPointEnd) {
-      // m_textctrl is protected member of wxTextEntryDialog
-      m_textctrl->SetInsertionPointEnd();
-   }
-
-   return ret;
 }

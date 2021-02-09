@@ -70,33 +70,4 @@ void ShowModelessErrorDialog(wxWindow *parent,
                      bool Close = true,
                      const std::wstring &log = {});
 
-#include <wx/textdlg.h> // to inherit
-
-/**************************************************************************//**
-\class AudacityTextEntryDialog
-\brief Wrap wxTextEntryDialog so that caption IS translatable.
-********************************************************************************/
-class AUDACITY_DLL_API AudacityTextEntryDialog
-   : public wxTabTraversalWrapper< wxTextEntryDialog >
-{
-public:
-    AudacityTextEntryDialog(
-         wxWindow *parent,
-         const TranslatableString& message,
-         const TranslatableString& caption, // don't use = wxGetTextFromUserPromptStr,
-         const wxString& value = {},
-         long style = wxTextEntryDialogStyle,
-         const wxPoint& pos = wxDefaultPosition)
-   : wxTabTraversalWrapper< wxTextEntryDialog>(
-      parent,
-      message.Translation(), caption.Translation(), value, style, pos )
-   {}
-   
-   void SetInsertionPointEnd();
-   bool Show(bool show = true) override;
-
-private:
-   bool mSetInsertionPointEnd{};
-};
-
 #endif // __AUDACITY_ERRORDIALOG__
