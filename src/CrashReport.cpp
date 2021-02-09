@@ -11,6 +11,9 @@
 #include "Experimental.h"
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
+#include <atomic>
+#include <thread>
+
 #include <wx/progdlg.h>
 
 #if defined(__WXMSW__)
