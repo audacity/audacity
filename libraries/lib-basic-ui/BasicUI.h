@@ -13,8 +13,7 @@ Paul Licameli
 
 #include <functional>
 #include "Identifier.h"
-
-class TranslatableString;
+#include "Internat.h"
 
 namespace BasicUI {
 
@@ -74,6 +73,66 @@ struct ErrorDialogOptions {
 //! "Message", suitably translated
 BASIC_UI_API TranslatableString DefaultCaption();
 
+enum class Icon {
+   None,
+   Warning,
+   Error,
+   Question,
+   Information,
+};
+
+enum class Button {
+   Default, //!< Like Ok, except maybe minor difference of dialog position
+   Ok,      //!< One button
+   YesNo    //!< Two buttons
+};
+
+struct MessageBoxOptions {
+   //! @name Chain-call style initializers
+   //! @{
+
+   MessageBoxOptions &&Parent(WindowPlacement *parent_) &&
+   { parent = parent_; return std::move(*this); }
+
+   MessageBoxOptions &&Caption(TranslatableString caption_) &&
+   { caption = std::move(caption_); return std::move(*this); }
+
+   MessageBoxOptions &&IconStyle(Icon style) &&
+   { iconStyle = style; return std::move(*this); }
+
+   MessageBoxOptions &&ButtonStyle(Button style) &&
+   { buttonStyle = style; return std::move(*this); }
+
+   //! Override the usual defaulting to Yes; affects only the YesNo case
+   MessageBoxOptions &&DefaultIsNo() &&
+   { yesOrOkDefaultButton = false; return std::move(*this); }
+
+   MessageBoxOptions &&CancelButton() &&
+   { cancelButton = true; return std::move(*this); }
+
+   //! Center the dialog on its parent window, if any
+   MessageBoxOptions &&Centered() &&
+   { centered = true; return std::move(*this); }
+
+   //! @}
+
+   WindowPlacement *parent{ nullptr };
+   TranslatableString caption{ DefaultCaption() };
+   Icon iconStyle{ Icon::None };
+   Button buttonStyle{ Button::Default };
+   bool yesOrOkDefaultButton{ true };
+   bool cancelButton{ false };
+   bool centered{ false };
+};
+
+enum class MessageBoxResult : int {
+   None, //!< May be returned if no Services are installed
+   Yes,
+   No,
+   Ok,
+   Cancel,
+};
+
 //! @}
 
 //! Abstract class defines a few user interface services, not mentioning particular toolkits
@@ -90,6 +149,9 @@ public:
       const TranslatableString &message,
       const ManualPageID &helpPage,
       const ErrorDialogOptions &options) = 0;
+   virtual MessageBoxResult DoMessageBox(
+      const TranslatableString& message,
+      MessageBoxOptions options) = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -130,6 +192,19 @@ inline void ShowErrorDialog(
 {
    if (auto p = Get())
       p->DoShowErrorDialog(placement, dlogTitle, message, helpPage, options);
+}
+
+//! Show a modal message box with either Ok or Yes and No, and optionally Cancel
+/*!
+ @return indicates which button was pressed
+ */
+inline MessageBoxResult ShowMessageBox( const TranslatableString &message,
+   MessageBoxOptions options = {})
+{
+   if (auto p = Get())
+      return p->DoMessageBox(message, std::move(options));
+   else
+      return MessageBoxResult::None;
 }
 
 //! @}

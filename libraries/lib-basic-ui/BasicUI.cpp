@@ -8,7 +8,6 @@ Paul Licameli
 
 **********************************************************************/
 #include "BasicUI.h"
-#include "Internat.h"
 
 #include <mutex>
 #include <vector>
