@@ -41,6 +41,9 @@ protected:
       const TranslatableString &message,
       const ManualPageID &helpPage,
       const BasicUI::ErrorDialogOptions &options) override;
+   BasicUI::MessageBoxResult DoMessageBox(
+      const TranslatableString &message,
+      BasicUI::MessageBoxOptions options) override;
 };
 
 #endif

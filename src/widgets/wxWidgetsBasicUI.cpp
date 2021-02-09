@@ -13,6 +13,7 @@ Paul Licameli
 #ifdef HAS_SENTRY_REPORTING
 #include "widgets/ErrorReportDialog.h"
 #endif
+#include "widgets/AudacityMessageBox.h"
 #include <wx/app.h>
 
 using namespace BasicUI;
@@ -86,5 +87,74 @@ void wxWidgetsBasicUI::DoShowErrorDialog(
    else {
       pDlog->Show();
       pDlog.release(); // not a memory leak, because it has a parent
+   }
+}
+
+BasicUI::MessageBoxResult
+wxWidgetsBasicUI::DoMessageBox(
+   const TranslatableString &message,
+   MessageBoxOptions options)
+{
+   // Compute the style argument to pass to wxWidgets
+   long style = 0;
+   switch (options.iconStyle) {
+      case Icon::Warning :
+         style = wxICON_WARNING;
+         break;
+      case Icon::Error :
+         style = wxICON_ERROR;
+         break;
+      case Icon::Question :
+         style = wxICON_QUESTION;
+         break;
+      case Icon::Information :
+         style = wxICON_INFORMATION;
+         break;
+      default:
+         break;
+   }
+   switch (options.buttonStyle) {
+      case Button::Ok :
+         style |= wxOK;
+         break;
+      case Button::YesNo :
+         style |= wxYES_NO;
+         break;
+      default:
+         break;
+   }
+   if (!options.yesOrOkDefaultButton && options.buttonStyle == Button::YesNo)
+      style |= wxNO_DEFAULT;
+   if (options.cancelButton)
+      style |= wxCANCEL;
+   if (options.centered)
+      style |= wxCENTER;
+
+   // Preserving the default style AudacityMessageBox had,
+   // when none of the above were explicitly specified
+   if (!style)
+      style = wxOK | wxCENTRE;
+
+   // This calls through to ::wxMessageBox:
+   auto wxResult =
+      ::AudacityMessageBox(message, options.caption, style,
+         options.parent ? GetParent(*options.parent) : nullptr);
+   // This switch exhausts all possibilities for the return from::wxMessageBox.
+   // see utilscmn.cpp in wxWidgets.
+   // Remap to our toolkit-neutral enumeration.
+   switch (wxResult) {
+   case wxID_YES:
+      return MessageBoxResult::Yes;
+   case wxID_NO:
+      return MessageBoxResult::No;
+   case wxID_OK:
+      return MessageBoxResult::Ok;
+   case wxID_CANCEL:
+      return MessageBoxResult::Cancel;
+   case wxID_HELP:
+      // should not happen, because we don't ever pass wxHELP
+   default:
+      wxASSERT(false);
+      return MessageBoxResult::None;
    }
 }
