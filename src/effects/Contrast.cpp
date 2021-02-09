@@ -25,7 +25,6 @@
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 
 #include <cmath>
 #include <limits>
@@ -40,6 +39,7 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
+#include <wx/textctrl.h>
 
 #include "../PlatformCompatibility.h"
 

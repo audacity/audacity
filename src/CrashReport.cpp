@@ -28,7 +28,7 @@
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "prefs/GUIPrefs.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityTextEntryDialog.h"
 
 namespace CrashReport {
 
