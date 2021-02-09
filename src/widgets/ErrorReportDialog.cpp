@@ -209,14 +209,3 @@ void ErrorReportDialog::OnHelp(wxCommandEvent& event)
 
    HelpSystem::ShowHelp(this, mHelpUrl, false);
 }
-
-void ShowErrorReportDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage,
-   const wxString& log)
-{
-   ErrorReportDialog dlog(parent, dlogTitle, message, helpPage, log, true);
-
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-}

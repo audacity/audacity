@@ -8,6 +8,7 @@ Paul Licameli
 
 **********************************************************************/
 #include "BasicUI.h"
+#include "Internat.h"
 
 #include <mutex>
 #include <vector>
@@ -63,4 +64,8 @@ void Yield()
    while ( !sActions.empty() );
 }
 
+TranslatableString DefaultCaption()
+{
+   return XO("Message");
+}
 }

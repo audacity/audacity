@@ -46,28 +46,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-/// Displays an error dialog with a button that offers help
-AUDACITY_DLL_API
-void ShowErrorDialog(wxWindow *parent,
-                     const TranslatableString &dlogTitle,
-                     const TranslatableString &message,
-                     const ManualPageID &helpPage,
-                     bool Close = true,
-                     const std::wstring &log = {});
-
-/// Displays an error dialog, possibly allowing to send error report.
-AUDACITY_DLL_API
-void ShowExceptionDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage,
-   bool Close = true, const wxString& log = {});
-
-/// Displays a modeless error dialog with a button that offers help
-void ShowModelessErrorDialog(wxWindow *parent,
-                     const TranslatableString &dlogTitle,
-                     const TranslatableString &message,
-                     const ManualPageID &helpPage,
-                     bool Close = true,
-                     const std::wstring &log = {});
-
 #endif // __AUDACITY_ERRORDIALOG__
