@@ -59,11 +59,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-/// Displays an error dialog that allows to send the error report
-AUDACITY_DLL_API
-void ShowErrorReportDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage = {},
-   const wxString& log = {});
-
 #endif // __AUDACITY_SENTRYERRORDIALOG__

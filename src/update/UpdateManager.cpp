@@ -11,11 +11,10 @@
 #include "UpdatePopupDialog.h"
 
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "NetworkManager.h"
 #include "IResponse.h"
 #include "Request.h"
-
-#include "widgets/ErrorDialog.h"
 
 #include <wx/platinfo.h>
 #include <wx/utils.h>
@@ -69,17 +68,17 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
 
     response->setRequestFinishedCallback([response, ignoreNetworkErrors, this](audacity::network_manager::IResponse*) {
 
+        using namespace BasicUI;
         auto gAudioIO = AudioIO::Get();
         if (response->getError() != audacity::network_manager::NetworkError::NoError)
         {
            if (!ignoreNetworkErrors)
            {
-              gAudioIO->CallAfterRecording([] {
-                 ShowExceptionDialog(
-                    nullptr, XC("Error checking for update", "update dialog"),
-                    XC("Unable to connect to Audacity update server.",
-                       "update dialog"),
-                    wxString());
+              gAudioIO->CallAfterRecording([] {ShowErrorDialog( {},
+                 XC("Error checking for update", "update dialog"),
+                 XC("Unable to connect to Audacity update server.", "update dialog"),
+                 wxString(),
+                 ErrorDialogOptions{ ErrorDialogType::ModalErrorReport });
               });
            }
            
@@ -90,11 +89,11 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
         {
            if (!ignoreNetworkErrors)
            {
-              gAudioIO->CallAfterRecording([] {
-                 ShowExceptionDialog(
-                    nullptr, XC("Error checking for update", "update dialog"),
-                    XC("Update data was corrupted.", "update dialog"),
-                    wxString());
+              gAudioIO->CallAfterRecording([] {ShowErrorDialog( {},
+                 XC("Error checking for update", "update dialog"),
+                 XC("Update data was corrupted.", "update dialog"),
+                 wxString(),
+                 ErrorDialogOptions{ ErrorDialogType::ModalErrorReport });
               });
            }
            
@@ -111,10 +110,11 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
                 {
                     if (!wxLaunchDefaultBrowser(mVersionPatch.download))
                     {
-                        ShowExceptionDialog(nullptr,
+                        ShowErrorDialog( {},
                             XC("Error downloading update.", "update dialog"),
                             XC("Can't open the Audacity download link.", "update dialog"),
-                            wxString());
+                            wxString(),
+                            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport });
                     }
                 }
             });

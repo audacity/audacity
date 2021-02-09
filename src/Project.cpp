@@ -12,9 +12,9 @@
 
 #include "Project.h"
 
+#include "FileNames.h"
 #include "KeyboardCapture.h"
 #include "TempDirectory.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/wxWidgetsBasicUI.h"
 
 #include <wx/display.h>
@@ -135,7 +135,7 @@ AudacityProject::AudacityProject()
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
          auto volume = FileNames::AbbreviatePath( path );
          /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
-         ShowErrorDialog(nullptr, 
+         BasicUI::ShowErrorDialog( {},
             XO("Warning"),
             XO("There is very little free disk space left on %s\n"
                "Please select a bigger temporary directory location in\n"

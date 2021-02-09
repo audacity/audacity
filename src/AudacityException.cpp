@@ -15,7 +15,7 @@
 #include <wx/atomic.h>
 
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "BasicUI.h"
 
 AudacityException::~AudacityException()
 {
@@ -75,28 +75,25 @@ void MessageBoxException::DelayedHandlerAction()
       // common cause such as exhaustion of disk space so that the others
       // give the user no useful added information.
       
+      using namespace BasicUI;
       if ( wxAtomicDec( sOutstandingMessages ) == 0 ) {
-         if (exceptionType == ExceptionType::Internal)
-         {
-            ShowExceptionDialog(
-               nullptr,
-               (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
-               ErrorMessage(), ErrorHelpUrl());
-         }
-         // We show BadEnvironment and BadUserAction in a similar way
-         else if (ErrorHelpUrl().IsEmpty())
-         {
+         if (exceptionType != ExceptionType::Internal
+             && ErrorHelpUrl().IsEmpty()) {
+            // We show BadEnvironment and BadUserAction in a similar way
             ::AudacityMessageBox(
                ErrorMessage(),
-               (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
+                (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
                wxICON_ERROR);
          }
-         else
-         {
-            ShowErrorDialog(
-               nullptr,
-               (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
-               ErrorMessage(), ErrorHelpUrl());
+         else {
+            using namespace BasicUI;
+            auto type = exceptionType == ExceptionType::Internal
+               ? ErrorDialogType::ModalErrorReport : ErrorDialogType::ModalError;
+            ShowErrorDialog( {},
+               (caption.empty() ? DefaultCaption() : caption),
+               ErrorMessage(),
+               ErrorHelpUrl(),
+               ErrorDialogOptions{ type } );
          }
       }
 

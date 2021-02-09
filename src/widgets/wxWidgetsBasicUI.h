@@ -33,8 +33,14 @@ class wxWidgetsBasicUI final : public BasicUI::Services {
 public:
    ~wxWidgetsBasicUI() override;
 
+protected:
    void DoCallAfter(const BasicUI::Action &action) override;
    void DoYield() override;
+   void DoShowErrorDialog(const BasicUI::WindowPlacement &placement,
+      const TranslatableString &dlogTitle,
+      const TranslatableString &message,
+      const ManualPageID &helpPage,
+      const BasicUI::ErrorDialogOptions &options) override;
 };
 
 #endif

@@ -11,7 +11,7 @@
 #include "TempDirectory.h"
 
 #include "FileNames.h"
-#include "widgets/ErrorDialog.h"
+#include "BasicUI.h"
 
 static wxString &TempDirPath()
 {
@@ -33,8 +33,7 @@ wxString TempDirectory::TempDir()
 
    if (FileNames::IsOnFATFileSystem(path))
    {
-      ShowErrorDialog(
-         nullptr,
+      BasicUI::ShowErrorDialog( {},
          XO("Unsuitable"),
          XO("The temporary files directory is on a FAT formatted drive.\n"
             "Resetting to default location."),
@@ -114,13 +113,11 @@ wxString TempDirectory::UnsavedProjectFileName()
 }
 
 bool TempDirectory::FATFilesystemDenied( const FilePath &path,
-                                     const TranslatableString &msg,
-                                     wxWindow *window /* = nullptr */ )
+   const TranslatableString &msg, const BasicUI::WindowPlacement &placement )
 {
    if (FileNames::IsOnFATFileSystem(path))
    {
-      ShowErrorDialog(
-         window,
+      BasicUI::ShowErrorDialog( placement,
          XO("Unsuitable"),
          XO("%s\n\nFor tips on suitable drives, click the help button.").Format(msg),
          "Error:_Unsuitable_drive"

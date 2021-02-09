@@ -12,6 +12,9 @@ Paul Licameli
 #define __AUDACITY_BASIC_UI__
 
 #include <functional>
+#include "Identifier.h"
+
+class TranslatableString;
 
 namespace BasicUI {
 
@@ -34,6 +37,43 @@ public:
    virtual ~WindowPlacement();
 };
 
+enum class ErrorDialogType {
+   ModelessError,
+   ModalError,
+   ModalErrorReport, /*!< If error reporting is enabled, may give option to
+                      send; if not, then like ModalError
+                      */
+};
+
+//! Options for variations of error dialogs; the default is for modal dialogs
+struct ErrorDialogOptions {
+
+   ErrorDialogOptions() = default;
+   //! Non-explicit
+   ErrorDialogOptions( ErrorDialogType type ) : type{ type } {}
+
+   //! @name Chain-call style initializers
+   //! @{
+
+   ErrorDialogOptions &&ModalHelp( bool modalHelp_ ) &&
+   { modalHelp = modalHelp_; return std::move(*this); }
+
+   ErrorDialogOptions &&Log( std::wstring log_ ) &&
+   { log = std::move(log_); return std::move(*this); }
+
+   //! @}
+
+   //! Type of help dialog
+   ErrorDialogType type{ ErrorDialogType::ModalError };
+   //! Whether the secondary help dialog with more information should be modal
+   bool modalHelp{ true };
+   //! Optional extra logging information to be shown
+   std::wstring log;
+};
+
+//! "Message", suitably translated
+BASIC_UI_API TranslatableString DefaultCaption();
+
 //! @}
 
 //! Abstract class defines a few user interface services, not mentioning particular toolkits
@@ -45,6 +85,11 @@ public:
    virtual ~Services();
    virtual void DoCallAfter(const Action &action) = 0;
    virtual void DoYield() = 0;
+   virtual void DoShowErrorDialog(const WindowPlacement &placement,
+      const TranslatableString &dlogTitle,
+      const TranslatableString &message,
+      const ManualPageID &helpPage,
+      const ErrorDialogOptions &options) = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -74,6 +119,18 @@ void CallAfter(Action action);
  dispatching.
  */
 void Yield();
+
+//! Show an error dialog with a link to the manual for further help
+inline void ShowErrorDialog(
+   const WindowPlacement &placement,    //!< how to parent the dialog
+   const TranslatableString &dlogTitle, //!< Text for title bar
+   const TranslatableString &message,   //!< The main message text
+   const ManualPageID &helpPage,          //!< Identifies manual page (and maybe an anchor)
+   const ErrorDialogOptions &options = {})
+{
+   if (auto p = Get())
+      p->DoShowErrorDialog(placement, dlogTitle, message, helpPage, options);
+}
 
 //! @}
 }
