@@ -1317,6 +1317,14 @@ void LWSlider::SendUpdate( float newValue )
 
    Refresh();
 
+   // Update the project's status bar as well
+   if (mTipPanel) {
+      auto tip = GetTip(mCurrentValue);
+      auto pProject = FindProjectFromWindow( mParent );
+      if (pProject)
+         ProjectStatus::Get( *pProject ).Set( tip );
+   }
+
    wxCommandEvent e( wxEVT_COMMAND_SLIDER_UPDATED, mID );
    int intValue = (int)( ( mCurrentValue - mMinValue ) * 1000.0f /
                          ( mMaxValue - mMinValue ) );
