@@ -57,7 +57,7 @@ void SoundActivatedRecordDialog::PopulateOrExchange(ShuttleGui & S)
          XXO("Activation level (dB):"),
          {wxT("/AudioIO/SilenceLevel"), -50},
          0, -gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE)
-      );
+      )->SetMinSize(wxSize(300, wxDefaultCoord));
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
