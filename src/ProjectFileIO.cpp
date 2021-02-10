@@ -283,6 +283,24 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
    mTemporary = true;
 
    UpdatePrefs();
+
+   // Make sure there is plenty of space for Sqlite files
+   wxLongLong freeSpace = 0;
+
+   auto path = TempDirectory::TempDir();
+   if (wxGetDiskSpace(path, NULL, &freeSpace)) {
+      if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
+         auto volume = FileNames::AbbreviatePath( path );
+         /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
+         BasicUI::ShowErrorDialog( {},
+            XO("Warning"),
+            XO("There is very little free disk space left on %s\n"
+               "Please select a bigger temporary directory location in\n"
+               "Directories Preferences.").Format( volume ),
+            "Error:_Disk_full_or_not_writable"
+            );
+      }
+   }
 }
 
 ProjectFileIO::~ProjectFileIO()
