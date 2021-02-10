@@ -16,6 +16,7 @@ Paul Licameli
 #include <vector>
 #include <wx/event.h> // to declare custom event type
 #include "ClientData.h" // to inherit
+#include "Prefs.h"
 
 class AudacityProject;
 class wxWindow;
@@ -35,6 +36,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 
 class ProjectStatus final
    : public ClientData::Base
+   , public PrefsListener
 {
 public:
    static ProjectStatus &Get( AudacityProject &project );
@@ -66,6 +68,9 @@ public:
    const TranslatableString &Get( StatusBarField field = mainStatusBarField ) const;
    void Set(const TranslatableString &msg,
       StatusBarField field = mainStatusBarField);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
 private:
    AudacityProject &mProject;
