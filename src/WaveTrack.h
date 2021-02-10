@@ -13,6 +13,7 @@
 
 #include "Track.h"
 #include "SampleCount.h"
+#include "SampleFormat.h"
 
 #include <vector>
 #include <functional>

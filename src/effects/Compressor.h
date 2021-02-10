@@ -19,6 +19,9 @@ class wxStaticText;
 class EffectCompressorPanel;
 class ShuttleGui;
 
+using Floats = ArrayOf<float>;
+using Doubles = ArrayOf<double>;
+
 class EffectCompressor final : public EffectTwoPassSimpleMono
 {
 public:

@@ -16,6 +16,8 @@
 
 class ShuttleGui;
 
+using Floats = ArrayOf<float>;
+
 class EffectEcho final : public Effect
 {
 public:

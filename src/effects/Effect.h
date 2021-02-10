@@ -55,6 +55,8 @@ class TrackList;
 class WaveTrackFactory;
 class WaveTrack;
 
+using FloatBuffers = ArraysOf<float>;
+
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the

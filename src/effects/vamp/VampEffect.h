@@ -26,6 +26,8 @@ class wxCheckBox;
 class wxTextCtrl;
 class LabelTrack;
 
+using Floats = ArrayOf<float>;
+
 #define VAMPEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
    It is not an abbreviation for anything.  See http://vamp-plugins.org */

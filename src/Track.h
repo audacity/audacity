@@ -23,7 +23,6 @@
 #include <wx/longlong.h>
 
 #include "ClientData.h"
-#include "SampleFormat.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
