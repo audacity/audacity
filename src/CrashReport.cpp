@@ -40,51 +40,52 @@ void Generate(wxDebugReport::Context ctx)
    // latter.
    // rpt.AddAll(ctx);
 
-   // Provides a progress dialog with indeterminate mode
-   wxGenericProgressDialog pd(XO("Audacity Support Data").Translation(),
-                              XO("This may take several seconds").Translation(),
-                              300000,     // range
-                              nullptr,    // parent
-                              wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
-
-   std::atomic_bool done = {false};
-   auto thread = std::thread([&]
    {
-      wxFileNameWrapper fn{ FileNames::DataDir(), wxT("audacity.cfg") };
-      rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));
-      rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
-      rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
-   
-      if (ctx == wxDebugReport::Context_Current)
+      // Provides a progress dialog with indeterminate mode
+      wxGenericProgressDialog pd(XO("Audacity Support Data").Translation(),
+                                 XO("This may take several seconds").Translation(),
+                                 300000,     // range
+                                 nullptr,    // parent
+                                 wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+
+      std::atomic_bool done = {false};
+      auto thread = std::thread([&]
       {
-         auto saveLang = GUIPrefs::GetLangShort();
-         GUIPrefs::InitLang( wxT("en") );
-         auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
+         wxFileNameWrapper fn{ FileNames::DataDir(), wxT("audacity.cfg") };
+         rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));
+         rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
+         rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
+   
+         if (ctx == wxDebugReport::Context_Current)
+         {
+            auto saveLang = GUIPrefs::GetLangShort();
+            GUIPrefs::InitLang( wxT("en") );
+            auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
       
-         auto gAudioIO = AudioIOBase::Get();
-         rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
-#ifdef EXPERIMENTAL_MIDI_OUT
-         rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));
-#endif
-      }
+            auto gAudioIO = AudioIOBase::Get();
+            rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
+   #ifdef EXPERIMENTAL_MIDI_OUT
+            rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));
+   #endif
+         }
    
-      auto logger = AudacityLogger::Get();
-      if (logger)
+         auto logger = AudacityLogger::Get();
+         if (logger)
+         {
+            rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Audacity Log"));
+         }
+   
+         done = true;
+      });
+   
+      // Wait for information to be gathered
+      while (!done)
       {
-         rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Audacity Log"));
+         wxMilliSleep(50);
+         pd.Pulse();
       }
-   
-      done = true;
-   });
-   
-   // Wait for information to be gathered
-   while (!done)
-   {
-      wxMilliSleep(50);
-      pd.Pulse();
+      thread.join();
    }
-   thread.join();
-
 
    bool ok = wxDebugReportPreviewStd().Show(rpt);
    
