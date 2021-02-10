@@ -948,7 +948,6 @@ bool FFmpegLibs::InitLibs(const wxString &libpath_format, bool WXUNUSED(showerr)
    FFMPEG_INITDYN(mCodec, avcodec_open2);
    FFMPEG_INITDYN(mCodec, avcodec_register_all);
    FFMPEG_INITDYN(mCodec, avcodec_version);
-   FFMPEG_INITDYN(mCodec, avcodec_versionz);
 
    // =========================================================================
    // avutil (alphabetical order)
