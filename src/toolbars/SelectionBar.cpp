@@ -357,8 +357,18 @@ void SelectionBar::UpdatePrefs()
    // As of 13-Sep-2018, changes to the sample rate pref will only affect 
    // creation of new projects, not the sample rate in existing ones.
 
+   // This will only change the selection mode during a "Reset Configuration"
+   // action since the read value will be the same during a normal preferences
+   // update.
+   mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
+
+   // This will only change the time format during a "Reset Configuration"
+   // action since the read value will be the same during a normal preferences
+   // update.
    wxCommandEvent e;
-   e.SetInt(mStartTime->GetFormatIndex());
+   e.SetString(NumericTextCtrl::LookupFormat(
+               NumericConverter::TIME,
+               gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
 
    // Set label to pull in language change
@@ -497,7 +507,6 @@ void SelectionBar::OnChangedTime(wxCommandEvent & event)
 // Called when one of the format drop downs is changed.
 void SelectionBar::OnUpdate(wxCommandEvent &evt)
 {
-   int index = evt.GetInt();
    wxWindow *w = FindFocus();
    NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
    int i;
@@ -508,10 +517,11 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    evt.Skip(false);
 
+   auto format = NumericTextCtrl::LookupFormat(NumericConverter::TIME, evt.GetString());
+
    // Save format name before recreating the controls so they resize properly
    if (mStartTime)
    {
-      auto format = mStartTime->GetBuiltinName(index);
       if (mListener)
          mListener->AS_SetSelectionFormat(format);
    }
@@ -530,10 +540,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    ValuesToControls();
 
-   auto format = mStartTime->GetBuiltinFormat(index);
    for( i=0;i<5;i++)
       if( *Ctrls[i] )
-         (*Ctrls[i])->SetFormatString( format );
+         (*Ctrls[i])->SetFormatName( format );
 
    if( iFocus >=0 )
       if( *Ctrls[iFocus] )
@@ -712,7 +721,7 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
    // Test first whether changed, to avoid infinite recursion from OnUpdate
    if ( changed ) {
       wxCommandEvent e;
-      e.SetInt(mStartTime->GetFormatIndex());
+      e.SetString(format.Internal());
       OnUpdate(e);
    }
 }
