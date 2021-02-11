@@ -795,6 +795,8 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
       double upp;
       if (mOrientation == wxHORIZONTAL)
       {
+         // Bug #2446 - A bit of a hack, but it should suffice.
+         divs = (mWidth - 1) / 10;
          upp = divs / (double)(mWidthX-1);
       }
       else
