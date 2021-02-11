@@ -62,6 +62,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/stat.h>
+#include <stdio.h>
 #endif
 
 #if defined(__WXMSW__)
@@ -714,7 +715,25 @@ extern "C" int WINAPI WinMain(HINSTANCE hInstance,
 }
 
 #else
-IMPLEMENT_APP(AudacityApp)
+IMPLEMENT_APP_NO_MAIN(AudacityApp)
+IMPLEMENT_WX_THEME_SUPPORT
+
+int main(int argc, char *argv[])
+{
+   wxDISABLE_DEBUG_SUPPORT();
+
+#if defined(__WXGTK__) && defined(NDEBUG)
+   // Bug #1986 workaround - This doesn't actually reduce the number of 
+   // messages, it simply hides them in Release builds. We'll probably
+   // never be able to get rid of the messages entirely, but we should
+   // look into what's causing them, so allow them to show in Debug
+   // builds.
+   stdout = freopen("/dev/null", "w", stdout);
+   stderr = freopen("/dev/null", "w", stderr);
+#endif
+
+   return wxEntry(argc, argv);
+}
 #endif
 
 #ifdef __WXMAC__
