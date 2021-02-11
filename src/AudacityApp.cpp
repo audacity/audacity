@@ -691,30 +691,8 @@ int main(int argc, char *argv[])
    return wxEntry(argc, argv);
 }
 
-#elif defined(__WXMSW__) && !wxCHECK_VERSION(3, 1, 0)
-// Disable telling Windows that we support HiDPI displays.  It is forced on
-// in wxWidget versions between 3.0.0 and 3.1.0.
-IMPLEMENT_APP_NO_MAIN(AudacityApp)
-IMPLEMENT_WX_THEME_SUPPORT
+#elif defined(__WXGTK__) && defined(NDEBUG)
 
-extern "C" int WINAPI WinMain(HINSTANCE hInstance,
-                              HINSTANCE hPrevInstance,
-                              wxCmdLineArgType WXUNUSED(lpCmdLine),
-                              int nCmdShow)
-{
-   wxDISABLE_DEBUG_SUPPORT();
-
-   // Disable setting of HiDPI aware mode
-   wxMSWDisableSettingHighDPIAware();
-
-   /* NB: We pass NULL in place of lpCmdLine to behave the same as  */
-   /*     Borland-specific wWinMain() above. If it becomes needed   */
-   /*     to pass lpCmdLine to wxEntry() here, you'll have to fix   */
-   /*     wWinMain() above too.                                     */
-   return wxEntry(hInstance, hPrevInstance, NULL, nCmdShow);
-}
-
-#else
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
@@ -722,7 +700,6 @@ int main(int argc, char *argv[])
 {
    wxDISABLE_DEBUG_SUPPORT();
 
-#if defined(__WXGTK__) && defined(NDEBUG)
    // Bug #1986 workaround - This doesn't actually reduce the number of 
    // messages, it simply hides them in Release builds. We'll probably
    // never be able to get rid of the messages entirely, but we should
@@ -730,10 +707,12 @@ int main(int argc, char *argv[])
    // builds.
    stdout = freopen("/dev/null", "w", stdout);
    stderr = freopen("/dev/null", "w", stderr);
-#endif
 
    return wxEntry(argc, argv);
 }
+
+#else
+IMPLEMENT_APP(AudacityApp)
 #endif
 
 #ifdef __WXMAC__
