@@ -220,7 +220,7 @@ do_test_equ(settled(y, fs, 0.1), ...
 CURRENT_TEST = "Compressor2, mono, ultra short attack time";
 remove_all_tracks();
 x = export_to_aud(x1, fs);
-aud_do("DynamicCompressor: Threshold=-20 Algorithm=1 CompressBy=0 Ratio=2 AttackTime=0.00001 ReleaseTime=0.00001 LookaheadTime=0 LookbehindTime=0 KneeWidth=10\n");
+aud_do("DynamicCompressor: Threshold=-20 Algorithm=1 CompressBy=0 Ratio=2 AttackTime=0.0001 ReleaseTime=0.0001 LookaheadTime=0 LookbehindTime=0 KneeWidth=10\n");
 y = import_from_aud(2);
 
 # XXX: use larger epsilon due to numerical issues

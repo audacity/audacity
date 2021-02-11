@@ -83,10 +83,10 @@ Param( CompressBy,     int,     wxT("CompressBy"),   kAmplitude,      0,   nBy-1
 Param( StereoInd,      bool,    wxT("StereoIndependent"), false,   false,   true,      1   );
 
 Param( Threshold,      double,  wxT("Threshold"),        -12.0,   -60.0,     -1.0,     1.0 );
-Param( Ratio,          double,  wxT("Ratio"),              2.0,     1.1,    100.0,    10.0 );
+Param( Ratio,          double,  wxT("Ratio"),              2.0,     1.1,    100.0,    20.0 );
 Param( KneeWidth,      double,  wxT("KneeWidth"),         10.0,     0.0,     20.0,    10.0 );
-Param( AttackTime,     double,  wxT("AttackTime"),         0.2,     0.00001, 30.0, 20000.0 );
-Param( ReleaseTime,    double,  wxT("ReleaseTime"),        1.0,     0.00001, 30.0, 20000.0 );
+Param( AttackTime,     double,  wxT("AttackTime"),         0.2,     0.0001,  30.0,  2000.0 );
+Param( ReleaseTime,    double,  wxT("ReleaseTime"),        1.0,     0.0001,  30.0,  2000.0 );
 Param( LookaheadTime,  double,  wxT("LookaheadTime"),      0.0,     0.0,     10.0,   200.0 );
 Param( LookbehindTime, double,  wxT("LookbehindTime"),     0.1,     0.0,     10.0,   200.0 );
 Param( MakeupGain,     double,  wxT("MakeupGain"),         0.0,     0.0,    100.0,     1.0 );
@@ -931,7 +931,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Compressor"));
    {
-      int textbox_width = S.GetParent()->GetTextExtent("10.000001XX").GetWidth();
+      int textbox_width = S.GetParent()->GetTextExtent("10.00001XX").GetWidth();
       SliderTextCtrl* ctrl = nullptr;
 
       S.StartHorizontalLay(wxEXPAND, true);
@@ -1002,7 +1002,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_AttackTime, MAX_AttackTime,
                MIN_AttackTime, ScaleToPrecision(SCL_AttackTime),
-               &mAttackTime, SCL_AttackTime / 1000);
+               &mAttackTime, SCL_AttackTime / 100, 0.033);
          mAttackTimeCtrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -1013,7 +1013,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_ReleaseTime, MAX_ReleaseTime,
                MIN_ReleaseTime, ScaleToPrecision(SCL_ReleaseTime),
-               &mReleaseTime, SCL_ReleaseTime / 1000);
+               &mReleaseTime, SCL_ReleaseTime / 100, 0.033);
          ctrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -1024,7 +1024,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_LookaheadTime, MAX_LookaheadTime,
                MIN_LookaheadTime, ScaleToPrecision(SCL_LookaheadTime),
-               &mLookaheadTime);
+               &mLookaheadTime, SCL_LookaheadTime / 10);
          mLookaheadTimeCtrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -1035,7 +1035,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
             .Style(SliderTextCtrl::HORIZONTAL | SliderTextCtrl::LOG)
             .AddSliderTextCtrl({}, DEF_LookbehindTime, MAX_LookbehindTime,
                MIN_LookbehindTime, ScaleToPrecision(SCL_LookbehindTime),
-               &mLookbehindTime);
+               &mLookbehindTime, SCL_LookbehindTime / 10);
          ctrl->SetMinTextboxWidth(textbox_width);
          S.AddVariableText(XO("s"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
