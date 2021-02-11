@@ -20,6 +20,21 @@ AudacityException::~AudacityException()
 {
 }
 
+void AudacityException::EnqueueAction(
+   std::exception_ptr pException,
+   std::function<void(AudacityException*)> delayedHandler)
+{
+   wxTheApp->CallAfter( [
+      pException = std::move(pException), delayedHandler = std::move(delayedHandler)
+   ] {
+      try {
+         std::rethrow_exception(pException);
+      }
+      catch( AudacityException &e )
+         { delayedHandler( &e ); }
+   } );
+}
+
 wxAtomicInt sOutstandingMessages {};
 
 MessageBoxException::MessageBoxException(

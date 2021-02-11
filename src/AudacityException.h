@@ -14,6 +14,7 @@
 #include "MemoryX.h"
 #include <wx/app.h> // used in inline function template
 #include <exception>
+#include <functional>
 
 #include "Internat.h"
 
@@ -37,6 +38,10 @@ public:
 
    //! Action to do in the main thread at idle time of the event loop.
    virtual void DelayedHandlerAction() = 0;
+
+   AUDACITY_DLL_API static void EnqueueAction(
+      std::exception_ptr pException,
+      std::function<void(AudacityException*)> delayedHandler);
 
 protected:
    //! Make this protected to prevent slicing copies
@@ -191,17 +196,16 @@ template <
 
    typename F1, // function object with signature R()
 
-   typename F2 = SimpleGuard< R >, // function object
+   typename F2 = SimpleGuard< R > // function object
       // with signature R( AudacityException * )
-
-   typename F3 =
-      DefaultDelayedHandlerAction // Any( AudacityException * ), ignore return
 >
 //! Execute some code on any thread; catch any AudacityException; enqueue error report on the main thread
 R GuardedCall(
    const F1 &body, //!< typically a lambda
    const F2 &handler = F2::Default(), //!< default just returns false or void; see also @ref MakeSimpleGuard
-   const F3 &delayedHandler = {} //!< called later in the main thread, passing it a stored exception; usually defaulted
+   std::function<void(AudacityException*)> delayedHandler
+      = DefaultDelayedHandlerAction{} /*!<called later in the main thread,
+                                       passing it a stored exception; usually defaulted */
 )
 {
    try { return body(); }
@@ -213,11 +217,8 @@ R GuardedCall(
          // other exception object.
          if (!std::uncaught_exception()) {
             auto pException = std::current_exception(); // This points to e
-            wxTheApp->CallAfter( [=] { // capture pException by value
-               try { std::rethrow_exception(pException); }
-               catch( AudacityException &e )
-                  { delayedHandler( &e ); }
-            } );
+            AudacityException::EnqueueAction(
+               pException, std::move(delayedHandler));
          }
       });
 
