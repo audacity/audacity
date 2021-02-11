@@ -160,11 +160,6 @@ private:
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
 
-class ComponentInterfaceSymbol;
-AUDACITY_DLL_API TranslatableStrings Msgids(
-   const EnumValueSymbol strings[], size_t nStrings);
-AUDACITY_DLL_API TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
-
 // Whether disambiguationg contexts are supported
 // If not, then the program builds and runs, but strings in the catalog with
 // contexts will fail to translate

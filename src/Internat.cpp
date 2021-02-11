@@ -22,17 +22,12 @@ and on Mac OS X for the filesystem.
 
 #include "Internat.h"
 
-
-#include "MemoryX.h"
-
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
 
 #include <locale.h>
 #include <math.h> // for pow()
-
-#include "../include/audacity/ComponentInterface.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -264,20 +259,6 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
    return result;
 }
 
-TranslatableStrings Msgids(
-   const EnumValueSymbol strings[], size_t nStrings)
-{
-   return transform_range<TranslatableStrings>(
-      strings, strings + nStrings,
-      std::mem_fn( &EnumValueSymbol::Msgid )
-   );
-}
-
-TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings )
-{
-   return Msgids( strings.data(), strings.size() );
-}
-
 const wxChar *const TranslatableString::NullContextName = wxT("*");
 
 const TranslatableString::Formatter
@@ -316,8 +297,22 @@ TranslatableString &TranslatableString::Strip( unsigned codes ) &
                   prevFormatter,
                   str, TranslatableString::DoGetContext( prevFormatter ),
                   debug );
-            if ( codes & MenuCodes )
-               result = wxStripMenuCodes( result );
+            if ( codes & MenuCodes ) {
+               // Don't use this, it's in wxCore
+               // result = wxStripMenuCodes( result );
+               decltype( result ) temp;
+               temp.swap(result);
+               for ( auto iter = temp.begin(), end = temp.end();
+                    iter != end; ++iter ) {
+                  // Stop at trailing hot key name
+                  if ( *iter == '\t' )
+                     break;
+                  // Strip & (unless escaped by another preceding &)
+                  if ( *iter == '&' && ++iter == end )
+                     break;
+                  result.append( 1, *iter );
+               }
+            }
             if ( codes & Ellipses ) {
                if (result.EndsWith(wxT("...")))
                   result = result.Left( result.length() - 3 );

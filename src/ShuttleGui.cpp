@@ -2480,3 +2480,17 @@ void ShuttleGui::SetMinSize( wxWindow *window, const std::vector<int> & items )
    SetMinSize( window, strs );
 }
 */
+
+TranslatableStrings Msgids(
+   const EnumValueSymbol strings[], size_t nStrings)
+{
+   return transform_range<TranslatableStrings>(
+      strings, strings + nStrings,
+      std::mem_fn( &EnumValueSymbol::Msgid )
+   );
+}
+
+TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings )
+{
+   return Msgids( strings.data(), strings.size() );
+}
