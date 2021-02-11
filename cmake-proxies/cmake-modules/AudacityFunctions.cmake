@@ -270,6 +270,7 @@ endfunction()
 function( import_export_symbol var module_name )
    # compute, e.g. "TRACK_UI_API" from module name "mod-track-ui"
    string( REGEX REPLACE "^mod-" "" symbol "${module_name}" )
+   string( REGEX REPLACE "^lib-" "" symbol "${symbol}" )
    string( TOUPPER "${symbol}" symbol )
    string( REPLACE "-" "_" symbol "${symbol}" )
    string( APPEND symbol "_API" )
@@ -301,7 +302,7 @@ function( export_symbol_define var module_name )
 endfunction()
 
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
-   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
+   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
    set( TARGET ${NAME} )
    set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -310,12 +311,30 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    def_vars()
 
-   if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-      set( LIBTYPE SHARED )
+   if (LIBTYPE STREQUAL "MODULE" AND CMAKE_SYSTEM_NAME MATCHES "Windows")
+      set( REAL_LIBTYPE SHARED )
    else()
-      set( LIBTYPE MODULE )
+      set( REAL_LIBTYPE "${LIBTYPE}" )
    endif()
-   add_library( ${TARGET} ${LIBTYPE} )
+   add_library( ${TARGET} ${REAL_LIBTYPE} )
+
+   if (LIBTYPE STREQUAL "MODULE")
+      set( SHAPE "box" )
+      set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_MODDIR}" )
+      set_target_properties( ${TARGET}
+         PROPERTIES
+            PREFIX ""
+            FOLDER "modules" # for IDE organization
+      )
+   else()
+      set( SHAPE "octagon" )
+      set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_EXEDIR}" )
+      set_target_properties( ${TARGET}
+         PROPERTIES
+            PREFIX ""
+            FOLDER "libraries" # for IDE organization
+      )
+   endif()
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
@@ -337,13 +356,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endforeach()
    list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
 
-   set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_MODDIR}" )
-   set_target_properties( ${TARGET}
-      PROPERTIES
-         PREFIX ""
-         FOLDER "modules"
-   )
-
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
 
    # Compute compilation options.
@@ -362,7 +374,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # define an additional interface library target
    set(INTERFACE_TARGET "${TARGET}-interface")
-   if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+   if (NOT REAL_LIBTYPE STREQUAL "MODULE")
       add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
    else()
       add_library("${INTERFACE_TARGET}" INTERFACE)
@@ -377,7 +389,10 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif()
 
    # collect dependency information
-   list( APPEND GRAPH_EDGES "\"${TARGET}\" [shape=box]" )
+   list( APPEND GRAPH_EDGES "\"${TARGET}\" [shape=${SHAPE}]" )
+   if (NOT LIBTYPE STREQUAL "MODULE")
+      list( APPEND GRAPH_EDGES "\"Audacity\" -> \"${TARGET}\"" )
+   endif ()
    set(ACCESS PUBLIC PRIVATE INTERFACE)
    foreach( IMPORT ${IMPORT_TARGETS} )
       if(IMPORT IN_LIST ACCESS)
@@ -409,8 +424,33 @@ macro( audacity_module NAME SOURCES IMPORT_TARGETS
       "${IMPORT_TARGETS}"
       "${ADDITIONAL_DEFINES}"
       "${ADDITIONAL_LIBRARIES}"
+      "MODULE"
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+endmacro()
+
+# Set up for defining a library target.
+# The application depends on all libraries.
+# Pass a name and sources, and a list of other targets.
+# Use the interface compile definitions and include directories of the
+# other targets, and link to them.
+# More defines, and more target libraries (maybe generator expressions)
+# may be given too.
+macro( audacity_library NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
+   # ditto comment in the previous macro
+   audacity_module_fn(
+      "${NAME}"
+      "${SOURCES}"
+      "${IMPORT_TARGETS}"
+      "${ADDITIONAL_DEFINES}"
+      "${ADDITIONAL_LIBRARIES}"
+      "SHARED"
+   )
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+   # Collect list of libraries for the executable to declare dependency on
+   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
+   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
 
 #
