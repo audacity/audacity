@@ -433,6 +433,17 @@ add_subdirectory( "plug-ins" )
 add_subdirectory( "src" )
 add_subdirectory( "scripts" )
 
+# Generate config file, which is included by Audacity.h
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   configure_file( src/audacity_config.h.in src/private/configwin.h )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( HAVE_VISIBILITY 1 )
+   configure_file( src/audacity_config.h.in src/private/configmac.h )
+else()
+   set( HAVE_VISIBILITY 1 )
+   configure_file( src/audacity_config.h.in src/private/configunix.h )
+endif()
+
 # Uncomment what follows for symbol values.
 #[[
    get_cmake_property( _variableNames VARIABLES )
