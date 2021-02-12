@@ -37,7 +37,8 @@ class SliderTextCtrl : public wxPanelWrapper
 
       SliderTextCtrl(wxWindow *parent, wxWindowID winid,
          double value, double min, double max, int precision = 2,
-         double scale = 0, const wxPoint& pos = wxDefaultPosition,
+         double scale = 0, double offset = 0,
+         const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize, long style = HORIZONTAL,
          double* varValue = NULL);
 
@@ -69,6 +70,7 @@ class SliderTextCtrl : public wxPanelWrapper
       double m_min;
       double m_max;
       double m_zero;
+      double m_offset;
       wxString m_format;
 
       DECLARE_EVENT_TABLE()

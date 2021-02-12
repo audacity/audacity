@@ -280,7 +280,7 @@ public:
 
    SliderTextCtrl* AddSliderTextCtrl(
       const TranslatableString &Prompt, double pos, double Max, double Min = 0,
-      int precision = 2, double* value = NULL, double scale = 0);
+      int precision = 2, double* value = NULL, double scale = 0, double offset = 0);
 
    // Pass the same initValue to the sequence of calls to AddRadioButton and
    // AddRadioButtonToGroup.
