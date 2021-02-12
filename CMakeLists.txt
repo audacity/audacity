@@ -427,10 +427,10 @@ add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
 add_subdirectory( "images" )
 add_subdirectory( "locale" )
+add_subdirectory( "src" )
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
-add_subdirectory( "src" )
 add_subdirectory( "scripts" )
 
 # Generate config file, which is included by Audacity.h
