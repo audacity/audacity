@@ -215,6 +215,16 @@ void Grabber::OnLeftDown(wxMouseEvent & event)
 //
 void Grabber::OnEnter(wxMouseEvent & WXUNUSED(event))
 {
+#if defined(__WXMAC__)
+   // Bug 2416:  On Mac, we can get Enter events from grabbers other
+   // than the one being dragged. So, ignore Enter events if another
+   // window has captured the mouse.
+   if (wxWindow::GetCapture() != nullptr)
+   {
+      return;
+   }
+#endif
+
    // Bug 1201:  On Mac, unsetting and re-setting the tooltip may be needed
    // to make it pop up when we want it.
    const auto text = GetToolTipText();
@@ -234,6 +244,16 @@ void Grabber::OnEnter(wxMouseEvent & WXUNUSED(event))
 //
 void Grabber::OnLeave(wxMouseEvent & WXUNUSED(event))
 {
+#if defined(__WXMAC__)
+   // Bug 2416:  On Mac, we can get Leave events from grabbers other
+   // than the one being dragged. So, ignore Leave events if another
+   // window has captured the mouse.
+   if (wxWindow::GetCapture() != nullptr)
+   {
+      return;
+   }
+#endif
+
    if (!GetCapture()) {
       // Redraw plain
       mOver = false;
