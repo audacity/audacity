@@ -1105,9 +1105,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       ../win/audacity.rc
    )
 
-   # Create the config file
-   configure_file( audacity_config.h.in private/configwin.h )
-
    # Copy over the wxWidgets DLLs
    if( ${_OPT}use_wxwidgets STREQUAL "system" )
       set( wxlibs "$ENV{WXWIN}" )
@@ -1205,10 +1202,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # Use the Aqua theme
    set( USE_AQUA_THEME 1 )
 
-   # Create the config file
-   set( HAVE_VISIBILITY 1 )
-   configure_file( audacity_config.h.in private/configmac.h )
-
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
@@ -1232,10 +1225,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 
 else()
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DEST}" )
-
-   # Create the config file
-   set( HAVE_VISIBILITY 1 )
-   configure_file( audacity_config.h.in private/configunix.h )
 
    # Build the list of mimetypes
    #
