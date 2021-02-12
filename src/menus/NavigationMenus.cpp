@@ -170,6 +170,10 @@ void DoPrevTrack(
          {
             auto range = tracks.Leaders();
             p = * range.rbegin(); // null if range is empty
+
+            // Deselect all other tracks and select this one.
+            selectionState.SelectNone( tracks );
+            selectionState.SelectTrack( *p, true, true );
             trackFocus.Set( p );   // Wrap to the last track
             if (p)
                p->EnsureVisible( true );
@@ -183,6 +187,9 @@ void DoPrevTrack(
       }
       else
       {
+         // Deselect all other tracks and select this one.
+         selectionState.SelectNone( tracks );
+         selectionState.SelectTrack( *p, true, true );
          trackFocus.Set( p );   // move focus to next track up
          p->EnsureVisible( true );
          return;
@@ -205,6 +212,9 @@ void DoNextTrack(
    if( t == NULL )   // if there isn't one, focus on first
    {
       t = *tracks.Any().begin();
+      // Deselect all other tracks and select this one.
+      selectionState.SelectNone( tracks );
+      selectionState.SelectTrack( *t, true, true );
       trackFocus.Set( t );
       if (t)
          t->EnsureVisible( true );
@@ -273,6 +283,10 @@ void DoNextTrack(
          if( circularTrackNavigation )
          {
             n = *tracks.Any().begin();
+
+            // Deselect all other tracks and select this one.
+            selectionState.SelectNone( tracks );
+            selectionState.SelectTrack( *n, true, true );
             trackFocus.Set( n );   // Wrap to the first track
             if (n)
                n->EnsureVisible( true );
@@ -286,6 +300,9 @@ void DoNextTrack(
       }
       else
       {
+         // Deselect all other tracks and select this one.
+         selectionState.SelectNone( tracks );
+         selectionState.SelectTrack( *n, true, true );
          trackFocus.Set( n );   // move focus to next track down
          n->EnsureVisible( true );
          return;
