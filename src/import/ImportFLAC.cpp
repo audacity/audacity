@@ -443,34 +443,36 @@ ProgressResult FLACImportFileHandle::Import(WaveTrackFactory *trackFactory,
    wxString comment;
    wxString description;
 
-   tags->Clear();
    size_t cnt = mFile->mComments.size();
-   for (size_t c = 0; c < cnt; c++) {
-      wxString name = mFile->mComments[c].BeforeFirst(wxT('='));
-      wxString value = mFile->mComments[c].AfterFirst(wxT('='));
-      wxString upper = name.Upper();
-      if (upper == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
-         long val;
-         if (value.length() == 4 && value.ToLong(&val)) {
-            name = TAG_YEAR;
+   if (cnt > 0) {
+      tags->Clear();
+      for (size_t c = 0; c < cnt; c++) {
+         wxString name = mFile->mComments[c].BeforeFirst(wxT('='));
+         wxString value = mFile->mComments[c].AfterFirst(wxT('='));
+         wxString upper = name.Upper();
+         if (upper == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
+            long val;
+            if (value.length() == 4 && value.ToLong(&val)) {
+               name = TAG_YEAR;
+            }
          }
+         else if (upper == wxT("COMMENT") || upper == wxT("COMMENTS")) {
+            comment = value;
+            continue;
+         }
+         else if (upper == wxT("DESCRIPTION")) {
+            description = value;
+            continue;
+         }
+         tags->SetTag(name, value);
       }
-      else if (upper == wxT("COMMENT") || upper == wxT("COMMENTS")) {
-         comment = value;
-         continue;
-      }
-      else if (upper == wxT("DESCRIPTION")) {
-         description = value;
-         continue;
-      }
-      tags->SetTag(name, value);
-   }
 
-   if (comment.empty()) {
-      comment = description;
-   }
-   if (!comment.empty()) {
-      tags->SetTag(TAG_COMMENTS, comment);
+      if (comment.empty()) {
+         comment = description;
+      }
+      if (!comment.empty()) {
+         tags->SetTag(TAG_COMMENTS, comment);
+      }
    }
 
    return mUpdateResult;

@@ -661,8 +661,6 @@ bool MP3ImportFileHandle::FillBuffer()
 void MP3ImportFileHandle::LoadID3(Tags *tags)
 {
 #ifdef USE_LIBID3TAG
-   tags->Clear();
-
    struct id3_file *id3file = NULL;
    auto cleanup = finally([&]
    {
@@ -686,7 +684,7 @@ void MP3ImportFileHandle::LoadID3(Tags *tags)
 
    // Load the tags
    struct id3_tag *id3tags = id3_file_tag(id3file);
-   if (!id3tags)
+   if (!id3tags || id3tags->nframes == 0)
    {
       return;
    }
@@ -721,6 +719,8 @@ void MP3ImportFileHandle::LoadID3(Tags *tags)
       // Finally convert to and return wxString
       return wxString((char *) buf, converter);
    };
+
+   tags->Clear();
 
    // Extract tags from ID3 frames and add to our tags
    bool have_year = false;
