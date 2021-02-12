@@ -313,6 +313,8 @@ void ExpFitEnvelopeDetector::Reset(float value)
 void ExpFitEnvelopeDetector::SetParams(
    float sampleRate, float attackTime, float releaseTime)
 {
+   attackTime = std::max(attackTime, 1.0f / sampleRate);
+   releaseTime = std::max(releaseTime, 1.0f / sampleRate);
    mAttackFactor = exp(-1.0 / (sampleRate * attackTime));
    mReleaseFactor = exp(-1.0 / (sampleRate * releaseTime));
 }
@@ -428,6 +430,9 @@ void Pt1EnvelopeDetector::Reset(float value)
 void Pt1EnvelopeDetector::SetParams(
    float sampleRate, float attackTime, float releaseTime)
 {
+   attackTime = std::max(attackTime, 1.0f / sampleRate);
+   releaseTime = std::max(releaseTime, 1.0f / sampleRate);
+
    // Approximate peak amplitude correction factor.
    if(mCorrectGain)
       mGainCorrection = 1.0 + exp(attackTime / 30.0);
