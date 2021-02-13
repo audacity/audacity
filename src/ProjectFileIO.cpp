@@ -103,14 +103,6 @@ static const char *ProjectFileSchema =
    "  doc                  BLOB"
    ");"
    ""
-   // CREATE SQL tags
-   // tags is not used (yet)
-   "CREATE TABLE IF NOT EXISTS <schema>.tags"
-   "("
-   "  name                 TEXT,"
-   "  value                BLOB"
-   ");"
-   ""
    // CREATE SQL sampleblocks
    // 'samples' are fixed size blocks of int16, int32 or float32 numbers.
    // The blocks may be partially empty.
