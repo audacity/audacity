@@ -288,6 +288,16 @@ DBConnection &ProjectFileIO::GetConnection()
    return *curConn;
 }
 
+wxString ProjectFileIO::GenerateDoc()
+{
+   auto &trackList = TrackList::Get( mProject );
+
+   XMLStringWriter doc;
+   WriteXMLHeader(doc);
+   WriteXML(doc, false, trackList.empty() ? nullptr : &trackList);
+   return doc;
+}
+
 sqlite3 *ProjectFileIO::DB()
 {
    return GetConnection().DB();
