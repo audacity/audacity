@@ -34,6 +34,7 @@ km ខេមរភាសា
 ko 한국어
 lt Lietuvių
 mk Македонски
+mr मराठी
 my မြန်မာစာ
 nb Norsk
 nl Nederlands
