@@ -4,112 +4,133 @@ Fuller instructions that include
    * Installing CMake 
    * Portable Settings
    * Building an Installer
-can be found on our wiki at http://wiki.audacityteam.org/wiki/Building_On_Windows
+can be found on our wiki at 
+http://wiki.audacityteam.org/wiki/Building_On_Windows
 
 
 1. MSVC 2019: Download and install Microsoft Visual Studio 2019
 
- https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
+  https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
+  be sure to include the Desktop Development with C++ Workflow
+  this build was testing using VS 16.8.5
 
 2. Git: Download and install Git, for example by installing:
 
   Git for Windows: https://git-scm.com/download/win
   and optionally GitExtensions: http://gitextensions.github.io/
 
- download and run the .msi installer.  GitExtensions has a GUI interface, includes Git for
- Windows and has a Git bash command line in the bottom panel of the screen.
+  download and run the .msi installer.  GitExtensions has a GUI interface, 
+  includes Git for Windows and has a Git bash command line in the bottom panel 
+  of the screen.
 
 3. Python
-  We currently depend on Python 2.7.18 during the build.  We are working on a switch to a Python 3.
-  At the time of writing, Python 2.7.18 must be on your path.
+
+  We no longer use Python 2.7.18 during the build. Instead we must use Python 3.
+  You can download Python 3.9.1 from https://www.python.org/downloads/windows/
+  Select the Python 3.9.1 Windows Installer (32-bit)
 
 4. wxWidgets:
 
- 1) Clone wxWidgets and checkout 3.1.3 from the Audacity fork of the 
+ a) Clone wxWidgets and checkout 3.1.3 from the Audacity fork of the 
     wxWidgets project: 
        https://github.com/audacity/wxWidgets/
 
-    for example, in the git-bash command line
-      mkdir ./wxWidgets
-      cd ./wxWidgets
+    for example, in the git-bash command line:
+      mkdir wxWidgets
       git clone --recurse-submodules https://github.com/audacity/wxWidgets/
       
     IF you forgot the --recurse-submodules, you can correct that later by:
       git submodule update --init
 
-  2) Follow instructions for building at 
+    It is instructive to review but do NOT follow the instructions for 
+    building at 
     https://github.com/audacity/wxWidgets/blob/audacity-fixes-3.1.3/README-GIT.md
     https://github.com/audacity/wxWidgets/blob/audacity-fixes-3.1.3/docs/msw/install.md
-
-    We (currently) build the 32 bit DLL version, 
+ 
+ b) We (currently) build the 32 bit DLL version, 
     and Audacity is built 32 bit too.
 
-    Set WXWIN environment variable to the appropriate directory where you installed 
-    wxWidgets. This will tell CMake where to find wxWidgets later.
+    Set WXWIN environment variable to the appropriate directory where you 
+    installed wxWidgets. This will tell CMake where to find wxWidgets later.
 
-    To set WXWIN, click on Settings (the cogwheel icon from the start menu)
-    Then in the 'find settings' search box type 'env'.
-    Choose 'Edit the system environment variables'
-    Then the 'Environment Variables' button 
-    Then in system variables, for variable and value,  add (for example)     
-        WXWIN         C:\wxWidgets-3.1.3
+      To set WXWIN, click on Settings (the cogwheel icon from the start menu)
+      Then in the 'find a setting' search box type 'env'.
+      Choose 'Edit the system environment variables'
+      Then the 'Environment Variables' button 
+      Then in system variables, for variable and value,  add (for example)     
+
+      WXWIN         C:\aud300\wxWidgets
 
     You will be building a dll version with MSVC2019 IDE, so...
 
-    In MSVC 2019 open wx_vc15.sln, and select dll, release.
-    Then build.
+	    In Windows File Manager, right-click on ../wxWidgets/build/msw/wx_vc16.sln,
+	    Select Visual Studio 2019.
+	    In the solutions configurations drop-down list, change "Debug" to 
+      "DLL Release",
+     	Then select Build > Build Solution.
+	
+	  When the build completes, you will get a message such as:
+	  ========= Build: 24 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
 
-  3) Having got this far, it is well worth trying out building some wxWidgets
-    examples to confirm that building has worked OK
+	    Close Visual Studio.
+
+    You can check this worked also by looking in C:\aud300\wxWidgets\lib\vc_dll
+    There should be dll files there with _'ud' in their name.    
+    The ud stands for 'unicode debug'.  If you only have files with 'u' then 
+    you only have release.
+
 
 5. Audacity
 
- 1) Clone Audacity from the Audacity GitHub project.
+  a) Clone Audacity from the Audacity GitHub project.
        https://github.com/audacity/audacity/
 
     for example, in the git-bash command line
-      mkdir ./audacity
-      cd ./audacity
+      mkdir audacity
       git clone https://github.com/audacity/audacity/
 
-    Audacity itself does not use/need git submodules.
+  b) Open the CMake GUI
 
-  2) Open the CMake GUI
-    - Open VS 2019 > "continue without code" > File > Open > CMake
-    - Pick CMakeLists.txt in root of audacity source folder you cloned
-    - Click "Open the CMake Settings Editor"
+     Open VS 2019 > "continue without code" > File > Open > CMake
+     Open CMakeLists.txt in root of audacity source folder you cloned
 
-  4) Check "Show advanced variables", click "Show advanced settings"
-  5) Set CMake Settings:
-    - configuration type > Release
-    - toolset > msvc_x86_x86 or msvc_x86_x64
-    - CMake generator > VS 16 2019
+     Wait for the CMake Overview Pages tab to appear (be patient)
+	   Click "Open the CMake Settings Editor" in this new tab
+	   Scroll up to the top of the window and settings
+	   In the Configurations window, click the green "+", then select x86-Release
+	   Set Configuration type: Release
 
-  6) Set CMake variables:
-    - wxWidgets_LIB_DIR > 'C:/wxWidgets/lib/vc_dll' (your path may be slightly different)
-    - CMAKE_BINARY_DIR > `${projectDir}\out\install\${name}` (default, you can change it)
+	   Verify Toolset: msvc_86
+	   Keep Build Root: ${projectDir}\out\build\${name} (default, you can 
+     change it) (this corresponds to CMAKE_BINARY_DIR)
 
-  7) Save (should automatically generate CMake file)
-    - if it doesn't, Project > Generate CMake Cache
+     Click on "Show advanced settings" (scroll down).
+	   Change CMake generator: VS 16 2019 (was Ninja)
+	   Click "Save and Generate CMake cache to load variables" once, then
+	   Click "Save and Generate CMake cache to load variables" a second time
+	     or select Project > Generate CMake Cache
+	 
+  c) Switch to the Ouput tab
 
-  8) Build > Build All
+     Wait for "CMake generation finished".
+	   Check the Error List window:
+	     you should have 0 Errors and 0 Warnings.
+		 
+  d) Return to the CMakeSettings.json window
+       Review CMake variables and cache
+	   Note that:
 
-    Check the output directory indicated in step 6 to find `Audacity.exe`
+	   wxWidgets_LIB_DIR > 'C:/aud300/wxWidgets/lib/vc_dll' (your path 
+       may be slightly different)
+     wxWidgets_ROOT_DIR > 'C:/aud300/wxWidgets' (your path 
+       may be slightly different)
+       
+
+  e) Build
+
+       Select Build > Build All
+       Click on the Output tab and wait for the message "Build All succeeded" 
+	     Check the Error List tab.  There should be 0 Errors and 17 Warnings.
+       Check the output directory indicated in step 6 to find 
+         `../bin/Release/Audacity.exe`
     
-
- Old VS 2017 instructions: 
-
- 2) Open the CMake GUI.
-
-     Set the 'Where is the source code' location to where your copy of the git repo is.
-     Set the 'Where to build the binaries' to where you want the results.
-
- 3) Click on Generate.
-
- 4) Click on Open Project.
-
-    From here on you should be able to use the project.
-
- 5)
-    Choose Release or Debug.
-    Click compile.
