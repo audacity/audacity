@@ -31,6 +31,7 @@
 #include "../Audacity.h" // for USE_* macros
 #include "Export.h"
 
+#include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filectrl.h>
