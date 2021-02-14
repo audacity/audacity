@@ -610,6 +610,11 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       size_t maxBlockLen = 44100 * 5;
 
       {
+         std::vector<char> dither;
+         if (info.format & SF_FORMAT_PCM_24) {
+            dither.reserve(maxBlockLen * info.channels * SAMPLE_SIZE(int24Sample));
+         }
+
          wxASSERT(info.channels >= 0);
          auto mixer = CreateMixer(tracks, selectionOnly,
                                   t0, t1,
@@ -631,6 +636,21 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                break;
 
             samplePtr mixed = mixer->GetBuffer();
+
+            // Bug 1572: Not ideal, but it does add the desired dither
+            if (info.format & SF_FORMAT_PCM_24) {
+               for (int c = 0; c < info.channels; ++c) {
+                  CopySamples(
+                     mixed + (c * SAMPLE_SIZE(format)), format,
+                     dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
+                     numSamples, true, info.channels, info.channels
+                  );
+                  CopySamplesNoDither(
+                     dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
+                     mixed + (c * SAMPLE_SIZE(format)), format,
+                     numSamples, info.channels, info.channels);
+               }
+            }
 
             if (format == int16Sample)
                samplesWritten = SFCall<sf_count_t>(sf_writef_short, sf.get(), (short *)mixed, numSamples);
