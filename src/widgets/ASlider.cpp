@@ -63,6 +63,7 @@ or ASlider.
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
+#include "valnum.h"
 
 #include "../AllThemeResources.h"
 
@@ -275,13 +276,34 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
 {
    SetName();
    mpOrigin = pSource;
+   mValue = mpOrigin->Get(false);
+
+   auto prec = 2;
+   auto trailing = NumValidatorStyle::TWO_TRAILING_ZEROES;
+   if (style == DB_SLIDER)
+   {
+      prec = 1;
+      trailing = NumValidatorStyle::ONE_TRAILING_ZERO;
+   }
+
    ShuttleGui S(this, eIsCreating);
 
    S.StartVerticalLay();
    {
-      mTextCtrl = S.Validator<wxTextValidator>(wxFILTER_NUMERIC)
-         .AddTextBox( {}, wxEmptyString, 15);
-
+      if (style == PAN_SLIDER)
+      {
+         mTextCtrl = S
+            .Validator<IntegerValidator<float>>(
+               &mValue, NumValidatorStyle::DEFAULT, -100.0, 100.0)
+            .AddTextBox({}, wxEmptyString, 15);
+      }
+      else
+      {
+         mTextCtrl = S
+            .Validator<FloatingPointValidator<float>>(
+               prec, &mValue, trailing, mpOrigin->GetMinValue(), mpOrigin->GetMaxValue())
+            .AddTextBox({}, wxEmptyString, 15);
+      }
       mSlider = safenew ASlider(S.GetParent(),
                             wxID_ANY,
                             title,
@@ -308,7 +330,10 @@ SliderDialog::~SliderDialog()
 bool SliderDialog::TransferDataToWindow()
 {
    float value = mSlider->Get(false);
-   mTextCtrl->SetValue(wxString::Format(wxT("%g"), value));
+   mValue = mStyle == PAN_SLIDER
+      ? value * 100.0
+      : value;
+   mTextCtrl->GetValidator()->TransferToWindow();
    mTextCtrl->SetSelection(-1, -1);
    if (mpOrigin) {
       mpOrigin->Set(value);
@@ -320,18 +345,13 @@ bool SliderDialog::TransferDataToWindow()
 
 bool SliderDialog::TransferDataFromWindow()
 {
-   // Bug #2458
-   //
-   // If the user clears the text control, the ToDouble below will NOT set "value"
-   // since it checks the length of the incoming string and bypasses setting it if
-   // it's empty. So initialize "value" for good measure and check the return value
-   // of ToDouble for success before using "value".
-   double value = 0.0;
-
-   if (mTextCtrl->GetValue().ToDouble(&value))
+   if (mTextCtrl->GetValidator()->TransferFromWindow())
    {
+      float value = mValue;
       if (mStyle == DB_SLIDER)
          value = DB_TO_LINEAR(value);
+      else if (mStyle == PAN_SLIDER)
+         value /= 100.0;
       mSlider->Set(value);
       if (mpOrigin) {
          mpOrigin->Set(value);
@@ -350,7 +370,10 @@ void SliderDialog::OnSlider(wxCommandEvent & event)
 
 void SliderDialog::OnTextChange(wxCommandEvent & event)
 {
-   TransferDataFromWindow();
+   if (mTextCtrl->GetValidator()->TransferFromWindow())
+   {
+      TransferDataFromWindow();
+   }
    event.Skip(false);
 }
 
@@ -1502,7 +1525,7 @@ void LWSlider::Refresh()
       mParent->Refresh(false);
 }
 
-bool LWSlider::GetEnabled()
+bool LWSlider::GetEnabled() const
 {
    return mEnabled;
 }
@@ -1515,6 +1538,16 @@ void LWSlider::SetEnabled(bool enabled)
    mThumbBitmapHilited.reset();
 
    Refresh();
+}
+
+float LWSlider::GetMinValue() const
+{
+   return mMinValue;
+}
+
+float LWSlider::GetMaxValue() const
+{
+   return mMaxValue;
 }
 
 //
