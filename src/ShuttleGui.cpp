@@ -2346,6 +2346,13 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       }
    }
 
+   // Add any buttons that need to cuddle up to the right hand cluster
+   if( buttons & eDebugButton )
+   {
+      b = safenew wxButton(parent, eDebugID, XO("Debu&g").Translation());
+      bs->Insert( ++lastLastSpacer, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
+   }
+
 #if !defined(__WXMSW__)
    // Bug #2432: Couldn't find GTK guidelines, but Mac HIGs state:
    //
@@ -2354,7 +2361,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
    //    Dialog without dismissal buttons. 	                  Lower-left or lower-right corner.
    //    Preference window or pane. 	                        Lower-left or lower-right corner.
    //
-   // So, we just choose the lower-left for Mac and GTK.
+   // So, we're gonna cheat a little and use the lower-right corner.
    if( buttons & eHelpButton )
    {
       // Replace standard Help button with smaller icon button.
@@ -2362,16 +2369,10 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( XO("Help").Translation() );
       b->SetLabel(XO("Help").Translation());       // for screen readers
-      bs->Insert( 0, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
+      bs->Add( b, 0, wxALIGN_CENTER );
    }
 #endif
 
-   // Add any buttons that need to cuddle up to the right hand cluster
-   if( buttons & eDebugButton )
-   {
-      b = safenew wxButton(parent, eDebugID, XO("Debu&g").Translation());
-      bs->Insert( ++lastLastSpacer, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
-   }
 
    auto s = std::make_unique<wxBoxSizer>( wxVERTICAL );
    s->Add( bs.release(), 1, wxEXPAND | wxALL, 7 );
