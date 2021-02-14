@@ -297,6 +297,13 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
                &mValue, NumValidatorStyle::DEFAULT, -100.0, 100.0)
             .AddTextBox({}, wxEmptyString, 15);
       }
+      else if (style == VEL_SLIDER)
+      {
+         mTextCtrl = S
+            .Validator<IntegerValidator<float>>(
+               &mValue, NumValidatorStyle::DEFAULT, -50.0, 50.0)
+            .AddTextBox({}, wxEmptyString, 15);
+      }
       else
       {
          mTextCtrl = S
