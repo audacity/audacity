@@ -279,6 +279,9 @@ private:
    void OnSize(wxSizeEvent &evt);
    void OnKeyEvent(wxKeyEvent &evt);
 
+   void SetWindowTitle();
+
+   AudacityProject *mProject;
 public:
    MixerBoard* mMixerBoard;
 
