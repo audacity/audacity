@@ -375,7 +375,7 @@ bool LongMessageDialog::Init()
 
    Layout();
    Fit();
-   SetMinSize(wxSize(600,700));
+   SetMinSize(wxSize(600,350));
    Center();
    return true;
 }
