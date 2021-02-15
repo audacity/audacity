@@ -95,7 +95,15 @@ ToolFrame::ToolFrame
 
    // Transfer the bar to the ferry
    bar->Reparent(this);
-   SetMinSize(bar->GetDockedSize());
+
+   // Bug 2120 (comment 6 residual): No need to set a minimum size
+   // if the toolbar is not resizable. On GTK, setting a minimum
+   // size will prevent the frame from shrinking if the toolbar gets
+   // reconfigured and needs to resize smaller.
+   if (bar->IsResizable())
+   {
+      SetMinSize(bar->GetDockedSize());
+   }
 
    {
       // We use a sizer to maintain proper spacing
