@@ -229,7 +229,7 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
    )
 
    # compute LIBRARIES
-   set( LIBRARIES PRIVATE )
+   set( LIBRARIES )
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
@@ -243,12 +243,11 @@ function( audacity_module NAME SOURCES IMPORT_TARGETS
    )
 
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
-   list( PREPEND SOURCES "PRIVATE" )
 
    organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
    target_sources( ${TARGET} PRIVATE ${SOURCES} )
    target_compile_definitions( ${TARGET} PRIVATE ${ADDITIONAL_DEFINES} )
    target_include_directories( ${TARGET} PUBLIC ${TARGET_ROOT} )
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
-   target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+   target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
 endfunction()
