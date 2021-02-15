@@ -12,7 +12,7 @@ set( DEFINES
       # versions of wxWidgets...even if the build is for Release.
       wxDEBUG_LEVEL=0
 )
-audacity_module( ${TARGET} "${SOURCES}" "wxWidgets;portaudio-v19;libnyquist"
+audacity_module( ${TARGET} "${SOURCES}" "Audacity"
    "${DEFINES}" "" )
 
 set_target_properties( ${TARGET} PROPERTIES EXCLUDE_FROM_ALL YES )
