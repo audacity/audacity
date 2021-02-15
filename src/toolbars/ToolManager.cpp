@@ -1527,7 +1527,12 @@ void ToolManager::HandleEscapeKey()
 
 void ToolManager::DoneDragging()
 {
-   // Done dragging
+   // Done dragging - ensure grabber button isn't pushed
+   if( mDragBar )
+   {
+      mDragBar->SetDocked( NULL, false );
+   }
+
    // Release capture
    auto &window = GetProjectFrame( *mParent );
    if( window.HasCapture() )

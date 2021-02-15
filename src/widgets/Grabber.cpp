@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(Grabber, wxWindow)
    EVT_ENTER_WINDOW(Grabber::OnEnter)
    EVT_LEAVE_WINDOW(Grabber::OnLeave)
    EVT_LEFT_DOWN(Grabber::OnLeftDown)
+   EVT_LEFT_UP(Grabber::OnLeftUp)
    EVT_ERASE_BACKGROUND( Grabber::OnErase )
    EVT_PAINT(Grabber::OnPaint)
    EVT_KEY_DOWN(Grabber::OnKeyDown)
@@ -188,6 +189,8 @@ void Grabber::PushButton(bool state )
 {
    if( mAsSpacer )
       return;
+   if (!state)
+      mPressed = state;
    wxRect r = GetRect();
    mOver = r.Contains(ScreenToClient(wxGetMousePosition()));
 
@@ -206,6 +209,19 @@ void Grabber::OnLeftDown(wxMouseEvent & event)
 
    // Notify parent
    SendEvent(EVT_GRABBER_CLICKED, event.GetPosition(), false);
+
+   event.Skip();
+}
+
+//
+// Handle left button up events
+//
+void Grabber::OnLeftUp(wxMouseEvent & event)
+{
+   // Normally, "left up" events are handled by the ToolManager::OnMouse() method
+   // but, if the user double clicks a grabber, the "left up" event will come here
+   // instead, so just "unpush" the button.
+   PushButton(false);
 
    event.Skip();
 }
