@@ -89,7 +89,7 @@ Param( AttackTime,     double,  wxT("AttackTime"),         0.2,     0.0001,  30.
 Param( ReleaseTime,    double,  wxT("ReleaseTime"),        1.0,     0.0001,  30.0,  2000.0 );
 Param( LookaheadTime,  double,  wxT("LookaheadTime"),      0.0,     0.0,     10.0,   200.0 );
 Param( LookbehindTime, double,  wxT("LookbehindTime"),     0.1,     0.0,     10.0,   200.0 );
-Param( MakeupGain,     double,  wxT("MakeupGain"),         0.0,     0.0,    100.0,     1.0 );
+Param( OutputGain,     double,  wxT("OutputGain"),         0.0,     0.0,     50.0,    10.0 );
 
 inline int ScaleToPrecision(double scale)
 {
@@ -548,7 +548,7 @@ EffectCompressor2::EffectCompressor2()
    mReleaseTime = DEF_ReleaseTime;          // seconds
    mLookaheadTime = DEF_LookaheadTime;
    mLookbehindTime = DEF_LookbehindTime;
-   mMakeupGainPct = DEF_MakeupGain;
+   mOutputGainDB = DEF_OutputGain;
 
    SetLinearEffectFlag(false);
 }
@@ -682,7 +682,7 @@ bool EffectCompressor2::DefineParams( ShuttleParams & S )
    S.SHUTTLE_PARAM(mReleaseTime, ReleaseTime);
    S.SHUTTLE_PARAM(mLookaheadTime, LookaheadTime);
    S.SHUTTLE_PARAM(mLookbehindTime, LookbehindTime);
-   S.SHUTTLE_PARAM(mMakeupGainPct, MakeupGain);
+   S.SHUTTLE_PARAM(mOutputGainDB, OutputGain);
 
    return true;
 }
@@ -700,7 +700,7 @@ bool EffectCompressor2::GetAutomationParameters(CommandParameters & parms)
    parms.Write(KEY_ReleaseTime, mReleaseTime);
    parms.Write(KEY_LookaheadTime, mLookaheadTime);
    parms.Write(KEY_LookbehindTime, mLookbehindTime);
-   parms.Write(KEY_MakeupGain, mMakeupGainPct);
+   parms.Write(KEY_OutputGain, mOutputGainDB);
 
    return true;
 }
@@ -718,7 +718,7 @@ bool EffectCompressor2::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyDouble(ReleaseTime);
    ReadAndVerifyDouble(LookaheadTime);
    ReadAndVerifyDouble(LookbehindTime);
-   ReadAndVerifyDouble(MakeupGain);
+   ReadAndVerifyDouble(OutputGain);
 
    mAlgorithm = Algorithm;
    mCompressBy = CompressBy;
@@ -731,7 +731,7 @@ bool EffectCompressor2::SetAutomationParameters(CommandParameters & parms)
    mReleaseTime = ReleaseTime;
    mLookaheadTime = LookaheadTime;
    mLookbehindTime = LookbehindTime;
-   mMakeupGainPct = MakeupGain;
+   mOutputGainDB = OutputGain;
 
    return true;
 }
@@ -760,7 +760,7 @@ bool EffectCompressor2::Startup()
       mReleaseTime = DEF_ReleaseTime;          // seconds
       mLookaheadTime = DEF_LookaheadTime;
       mLookbehindTime = DEF_LookbehindTime;
-      mMakeupGainPct = DEF_MakeupGain;
+      mOutputGainDB = DEF_OutputGain;
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -805,7 +805,6 @@ bool EffectCompressor2::Process()
 
       mProcStereo = range.size() > 1;
 
-      InitGainCalculation();
       mPreproc = InitPreprocessor(mSampleRate);
       mEnvelope = InitEnvelope(mSampleRate, mPipeline[0].capacity());
 
@@ -973,16 +972,15 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(XO("dB"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
-         /* i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.*/
-         S.AddVariableText(XO("Make-up Gain:"), true,
+         S.AddVariableText(XO("Output Gain:"), true,
             wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         ctrl = S.Name(XO("Make-up Gain"))
+         ctrl = S.Name(XO("Output Gain"))
             .Style(SliderTextCtrl::HORIZONTAL)
-            .AddSliderTextCtrl({}, DEF_MakeupGain, MAX_MakeupGain,
-               MIN_MakeupGain, ScaleToPrecision(SCL_MakeupGain),
-               &mMakeupGainPct);
+            .AddSliderTextCtrl({}, DEF_OutputGain, MAX_OutputGain,
+               MIN_OutputGain, ScaleToPrecision(SCL_OutputGain),
+               &mOutputGainDB);
          ctrl->SetMinTextboxWidth(textbox_width);
-         S.AddVariableText(XO("%"), true,
+         S.AddVariableText(XO("dB"), true,
             wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
       }
       S.EndMultiColumn();
@@ -1075,13 +1073,6 @@ bool EffectCompressor2::TransferDataFromWindow()
 
 // EffectCompressor2 implementation
 
-void EffectCompressor2::InitGainCalculation()
-{
-   mMakeupGainDB = mMakeupGainPct / 100.0 *
-      -(mThresholdDB * (1.0 - 1.0 / mRatio));
-   mMakeupGain = DB_TO_LINEAR(mMakeupGainDB);
-}
-
 double EffectCompressor2::CompressorGain(double env)
 {
    double kneeCond;
@@ -1096,13 +1087,13 @@ double EffectCompressor2::CompressorGain(double env)
    if(kneeCond < -mKneeWidthDB)
    {
       // Below threshold: only apply make-up gain
-      return mMakeupGain;
+      return DB_TO_LINEAR(mOutputGainDB);
    }
    else if(kneeCond >= mKneeWidthDB)
    {
       // Above threshold: apply compression and make-up gain
       return DB_TO_LINEAR(mThresholdDB +
-         (envDB - mThresholdDB) / mRatio + mMakeupGainDB - envDB);
+         (envDB - mThresholdDB) / mRatio + mOutputGainDB - envDB);
    }
    else
    {
@@ -1110,7 +1101,7 @@ double EffectCompressor2::CompressorGain(double env)
       return DB_TO_LINEAR(
          (1.0 / mRatio - 1.0)
          * pow(envDB - mThresholdDB + mKneeWidthDB / 2.0, 2)
-         / (2.0 * mKneeWidthDB) + mMakeupGainDB);
+         / (2.0 * mKneeWidthDB) + mOutputGainDB);
    }
 }
 
@@ -1500,7 +1491,7 @@ inline void EffectCompressor2::CompressSample(float env, size_t wp)
    float ReleaseTime = mReleaseTime;
    float LookaheadTime = mLookaheadTime;
    float LookbehindTime = mLookbehindTime;
-   float MakeupGainPct = mMakeupGainPct;
+   float OutputGainDB = mOutputGainDB;
 
    debugfile.write((char*)&ThresholdDB, sizeof(float));
    debugfile.write((char*)&Ratio, sizeof(float));
@@ -1509,7 +1500,7 @@ inline void EffectCompressor2::CompressSample(float env, size_t wp)
    debugfile.write((char*)&ReleaseTime, sizeof(float));
    debugfile.write((char*)&LookaheadTime, sizeof(float));
    debugfile.write((char*)&LookbehindTime, sizeof(float));
-   debugfile.write((char*)&MakeupGainPct, sizeof(float));
+   debugfile.write((char*)&OutputGainDB, sizeof(float));
    debugfile.write((char*)&mPipeline[0][0][wp], sizeof(float));
    if(mProcStereo)
       debugfile.write((char*)&mPipeline[0][1][wp], sizeof(float));
@@ -1641,10 +1632,9 @@ void EffectCompressor2::UpdateCompressorPlot()
        return;
    if(!IsInRange(mKneeWidthDB, MIN_KneeWidth, MAX_KneeWidth))
        return;
-   if(!IsInRange(mMakeupGainPct, MIN_MakeupGain, MAX_MakeupGain))
+   if(!IsInRange(mOutputGainDB, MIN_OutputGain, MAX_OutputGain))
        return;
 
-   InitGainCalculation();
    size_t xsize = plot->xdata.size();
    for(size_t i = 0; i < xsize; ++i)
       plot->ydata[i] = plot->xdata[i] +
@@ -1678,7 +1668,6 @@ void EffectCompressor2::UpdateResponsePlot()
    lookahead_size -= (lookahead_size > 0);
    ssize_t block_size = float(TAU_FACTOR) * (mAttackTime + 1.0) * plot_rate;
 
-   InitGainCalculation();
    preproc = InitPreprocessor(plot_rate, true);
    envelope = InitEnvelope(plot_rate, block_size, true);
 
