@@ -436,12 +436,12 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
    // Here we compute 'i' which combines the identity of the two 
    // driving controls, to use it as an index.
    // The order of the two drivers generally does not matter much,
-   // except that we have want:
+   // except that we want:
    //    start < end
    // and preserve that by adjusting the least dominant driving
    // control.
    int i = mDrive1 + 4 * mDrive2;
-   switch(i){
+   switch(i) {
    case StartTimeID + 4 * EndTimeID:
       if( mEnd < mStart )
          mStart = mEnd;
@@ -451,51 +451,42 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
       mLength = mEnd - mStart;
       mCenter = (mStart+mEnd)/2.0;
       break;
+
    case StartTimeID + 4 * LengthTimeID:
    case StartTimeID * 4 + LengthTimeID:
-      if( mLength < 0 )
-         mLength = 0;
       mEnd = mStart+mLength;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case StartTimeID + 4 * CenterTimeID:
-      if( mCenter < mStart )
-         mCenter = mStart;
-   case StartTimeID * 4 + CenterTimeID:
-      if( mStart > mCenter )
-         mStart = mCenter;
-      mEnd = mCenter * 2 - mStart;
-      mLength = mStart - mEnd;
-      break;
+
    case EndTimeID + 4 * LengthTimeID:
+      if( mEnd - mLength < 0 )
+         mEnd += (mLength - mEnd);
    case EndTimeID * 4 + LengthTimeID:
-      if( mLength < 0 )
-         mLength = 0;
+      if( mEnd - mLength < 0)
+         mLength -= (mLength - mEnd);
       mStart = mEnd - mLength;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case EndTimeID + 4 * CenterTimeID:
-      if( mCenter > mEnd )
-         mCenter = mEnd;
-   case EndTimeID * 4 + CenterTimeID:
-      if( mEnd < mCenter )
-         mEnd = mCenter;
-      mStart = mCenter * 2.0 - mEnd;
-      mLength = mEnd - mStart;
-      break;
+
    case LengthTimeID + 4 * CenterTimeID:
+      if( mCenter - (mLength / 2) < 0 )
+         mLength = (mCenter * 2);
    case LengthTimeID * 4 + CenterTimeID:
-      if( mLength < 0 )
-         mLength = 0;
+      if( mCenter - (mLength / 2) < 0 )
+         mCenter = (mLength / 2);
       mStart = mCenter - mLength/2.0;
       mEnd = mCenter + mLength/2.0;
       break;
+
    default:
       // The above should cover all legal combinations of two distinct controls.
       wxFAIL_MSG( "Illegal sequence of selection changes");
    }
 
-   // Places the start-end mrkers on the track panel.
+   // Refresh the controls now
+   ValuesToControls();
+
+   // Places the start-end markers on the track panel.
    mListener->AS_ModifySelection(mStart, mEnd, done);
 }
 
