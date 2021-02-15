@@ -19,7 +19,7 @@ data.attack_time = raw_data(:,4);
 data.release_time = raw_data(:,5);
 data.lookahead_time = raw_data(:,6);
 data.lookbehind_time = raw_data(:,7);
-data.makeup_gain_pct = raw_data(:,8);
+data.output_gain_DB = raw_data(:,8);
 
 if stereo
   data.in = horzcat(raw_data(:,9), raw_data(:,10));
@@ -44,7 +44,7 @@ plot(data.attack_time.*10, 'c', "linewidth", 2);
 plot(data.release_time.*10, 'c', "linewidth", 2);
 plot(data.lookahead_time, 'm');
 plot(data.lookbehind_time, 'm');
-plot(data.makeup_gain_pct, 'r');
+plot(data.output_gain_DB, 'r');
 plot(data.env.*100, 'k', "linewidth", 2);
 plot(data.gain.*50, 'k', "linestyle", '--');
 hold off;
@@ -53,9 +53,9 @@ grid;
 if stereo
   legend("in*100", "in*100", "out*100", "out*100", "threshold", "ratio", ...
     "kneewidth", "attack*10", "release*10", "lookahead", "lookbehind", ...
-    "makeup", "env*100", "gain*50");
+    "out_gain", "env*100", "gain*50");
 else
   legend("in*100", "out*100", "threshold", "ratio", ...
     "kneewidth", "attack*10", "release*10", "lookahead", "lookbehind", ...
-    "makeup", "env*100", "gain*50");
+    "out_gain", "env*100", "gain*50");
 end

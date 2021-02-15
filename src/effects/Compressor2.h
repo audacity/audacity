@@ -209,7 +209,6 @@ public:
 
 private:
    // EffectCompressor2 implementation
-   void InitGainCalculation();
    double CompressorGain(double env);
    std::unique_ptr<SamplePreprocessor> InitPreprocessor(
       double rate, bool preview = false);
@@ -269,11 +268,9 @@ private:
    double    mReleaseTime;
    double    mLookaheadTime;
    double    mLookbehindTime;
-   double    mMakeupGainPct;
+   double    mOutputGainDB;
 
    // cached intermediate values
-   double mMakeupGain;
-   double mMakeupGainDB;
    size_t mLookaheadLength;
 
    static const size_t RESPONSE_PLOT_SAMPLES = 200;

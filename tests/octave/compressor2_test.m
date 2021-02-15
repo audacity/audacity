@@ -48,8 +48,7 @@ function y = env_PT1_asym(x, fs, t_a, t_r, gain = 0)
 end
 
 ## Compressor gain helper function
-function gain = comp_gain(env, thresh_DB, ratio, kneeW_DB, makeup)
-  makeupG_DB  = -thresh_DB * (1-1/ratio) * makeup / 100;
+function gain = comp_gain(env, thresh_DB, ratio, kneeW_DB, outG_DB)
   env_DB      = 20*log10(env);
   kneeCond_DB = 2*(env_DB-thresh_DB);
 
@@ -59,15 +58,15 @@ function gain = comp_gain(env, thresh_DB, ratio, kneeW_DB, makeup)
   withinKnee = (kneeCond_DB >= -kneeW_DB) & (kneeCond_DB < kneeW_DB);
 
   gain_DB = zeros(size(env));
-  gain_DB(belowKnee) = makeupG_DB;
+  gain_DB(belowKnee) = outG_DB;
   gain_DB(aboveKnee) = thresh_DB + ...
     (env_DB(aboveKnee) - thresh_DB) / ratio + ...
-    makeupG_DB - env_DB(aboveKnee);
+    outG_DB - env_DB(aboveKnee);
   # Prevent division by zero
   kneeW_DB(kneeW_DB==0) = 0.000001;
   gain_DB(withinKnee) = (1/ratio-1) * ...
     (env_DB(withinKnee) - thresh_DB + kneeW_DB/2).^2 / ...
-    (2*kneeW_DB) + makeupG_DB;
+    (2*kneeW_DB) + outG_DB;
 
   gain = 10.^(gain_DB/20);
 end
@@ -173,7 +172,7 @@ CURRENT_TEST = "Compressor2, mono compression PT1 - sinewave - asymetric attack 
 x2 = sin(2*pi*300/fs*(1:1:20*fs)).';
 remove_all_tracks();
 x = export_to_aud(x2, fs, "Compressor-mono-sine-test.wav");
-aud_do("DynamicCompressor: Threshold=-6 Algorithm=1 CompressBy=0 Ratio=2.0 AttackTime=1.0 ReleaseTime=0.3 LookaheadTime=0 LookbehindTime=0 KneeWidth=0 MakeupGain=0\n");
+aud_do("DynamicCompressor: Threshold=-6 Algorithm=1 CompressBy=0 Ratio=2.0 AttackTime=1.0 ReleaseTime=0.3 LookaheadTime=0 LookbehindTime=0 KneeWidth=0 OutputGain=0\n");
 y = import_from_aud(1);
 
 do_test_equ(settled(y, fs, 1), ...
@@ -184,22 +183,22 @@ do_test_equ(settled(y, fs, 1), ...
 CURRENT_TEST = "Compressor2, mono asymmetric lookaround max";
 remove_all_tracks();
 x = export_to_aud(x1, fs);
-aud_do("DynamicCompressor: Threshold=-17 Algorithm=1 CompressBy=0 Ratio=1.2 AttackTime=0.3 ReleaseTime=0.3 LookaheadTime=0.2 LookbehindTime=0.1 KneeWidth=5 MakeupGain=50\n");
+aud_do("DynamicCompressor: Threshold=-17 Algorithm=1 CompressBy=0 Ratio=1.2 AttackTime=0.3 ReleaseTime=0.3 LookaheadTime=0.2 LookbehindTime=0.1 KneeWidth=5 OutputGain=1\n");
 y = import_from_aud(1);
 
 do_test_equ(settled(y, fs, 0.6), ...
   comp_gain(settled(env_PT1(lookaround_max(x, fs, 0.2, 0.1), fs, 0.3, 1), fs, 0.6), ...
-  -17, 1.2, 5, 50).*settled(x, fs, 0.6));
+  -17, 1.2, 5, 1).*settled(x, fs, 0.6));
 
 ## Test Compressor, mono lookaround RMS
 CURRENT_TEST = "Compressor2, mono asymmetric lookaround RMS";
 remove_all_tracks();
 x = export_to_aud(x1, fs);
-aud_do("DynamicCompressor: Threshold=-20 Algorithm=1 CompressBy=1 Ratio=3 AttackTime=1 ReleaseTime=1 LookaheadTime=0.1 LookbehindTime=0.2 KneeWidth=3 MakeupGain=80\n");
+aud_do("DynamicCompressor: Threshold=-20 Algorithm=1 CompressBy=1 Ratio=3 AttackTime=1 ReleaseTime=1 LookaheadTime=0.1 LookbehindTime=0.2 KneeWidth=3 OutputGain=2\n");
 y = import_from_aud(1);
 
 do_test_equ(settled(y, fs, 2), ...
-  comp_gain(settled(env_PT1(lookaround_RMS(x, fs, 0.1, 0.2), fs, 1), fs, 2), -20, 3, 3, 80) ...
+  comp_gain(settled(env_PT1(lookaround_RMS(x, fs, 0.1, 0.2), fs, 1), fs, 2), -20, 3, 3, 2) ...
   .*settled(x, fs, 2));
 
 ## Test Compressor, mono lookaround max with selection
@@ -208,13 +207,13 @@ remove_all_tracks();
 x = export_to_aud(x1, fs);
 
 aud_do("Select: Start=2 End=5 Mode=Set\n");
-aud_do("DynamicCompressor: Threshold=-17 Algorithm=1 CompressBy=0 Ratio=1.2 AttackTime=0.3 ReleaseTime=0.3 LookaheadTime=0.2 LookbehindTime=0.2 KneeWidth=5 MakeupGain=50\n");
+aud_do("DynamicCompressor: Threshold=-17 Algorithm=1 CompressBy=0 Ratio=1.2 AttackTime=0.3 ReleaseTime=0.3 LookaheadTime=0.2 LookbehindTime=0.2 KneeWidth=5 OutputGain=0.5\n");
 y = import_from_aud(1);
 x = x(2*fs+1:5*fs);
 
 do_test_equ(settled(y, fs, 0.1), ...
   comp_gain(settled(env_PT1(lookaround_max(x, fs, 0.2, 0.2), fs, 0.3, 1), fs, 0.1), ...
-  -17, 1.2, 5, 50).*settled(x, fs, 0.1));
+  -17, 1.2, 5, 0.5).*settled(x, fs, 0.1));
 
 ## Test Compressor, mono, ultra short attack time
 CURRENT_TEST = "Compressor2, mono, ultra short attack time";
@@ -287,20 +286,20 @@ do_test_equ(settled(y(:,2), fs, 1), ...
 CURRENT_TEST = "Compressor2, stereo lookaround max";
 remove_all_tracks();
 x = export_to_aud(x1, fs);
-aud_do("DynamicCompressor: Threshold=-17 Algorithm=1 Ratio=1.2 AttackTime=0.3 ReleaseTime=0.3 LookaheadTime=0.2 LookbehindTime=0.2 KneeWidth=5 MakeupGain=50\n");
+aud_do("DynamicCompressor: Threshold=-17 Algorithm=1 Ratio=1.2 AttackTime=0.3 ReleaseTime=0.3 LookaheadTime=0.2 LookbehindTime=0.2 KneeWidth=5 OutputGain=1\n");
 y = import_from_aud(2);
 
 do_test_equ(settled(y, fs, 0.6), ...
   comp_gain(settled(env_PT1(lookaround_max(x, fs, 0.2, 0.2), fs, 0.3, 1), fs, 0.6), ...
-  -17, 1.2, 5, 50).*settled(x, fs, 0.6));
+  -17, 1.2, 5, 1).*settled(x, fs, 0.6));
 
 ## Test Compressor, stereo lookaround RMS
 CURRENT_TEST = "Compressor2, stereo lookaround RMS";
 remove_all_tracks();
 x = export_to_aud(x1, fs);
-aud_do("DynamicCompressor: Threshold=-20 Algorithm=1 Ratio=3 AttackTime=1 ReleaseTime=1 LookaheadTime=0.1 LookbehindTime=0.1 KneeWidth=3 CompressBy=1 MakeupGain=60\n");
+aud_do("DynamicCompressor: Threshold=-20 Algorithm=1 Ratio=3 AttackTime=1 ReleaseTime=1 LookaheadTime=0.1 LookbehindTime=0.1 KneeWidth=3 CompressBy=1 OutputGain=1.3\n");
 y = import_from_aud(2);
 
 do_test_equ(settled(y, fs, 2.5), ...
-  comp_gain(settled(env_PT1(lookaround_RMS(x, fs, 0.1, 0.1), fs, 1), fs, 2.5), -20, 3, 3, 60) ...
+  comp_gain(settled(env_PT1(lookaround_RMS(x, fs, 0.1, 0.1), fs, 1), fs, 2.5), -20, 3, 3, 1.3) ...
   .*settled(x, fs, 2.5));
