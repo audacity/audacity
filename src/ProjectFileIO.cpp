@@ -811,21 +811,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
       return false;
    }
 
-   // Copy over tags (not really used yet)
-   rc = sqlite3_exec(db,
-                     "INSERT INTO outbound.tags SELECT * FROM main.tags;",
-                     nullptr,
-                     nullptr,
-                     nullptr);
-   if (rc != SQLITE_OK)
-   {
-      SetDBError(
-         XO("Failed to copy tags")
-      );
-
-      return false;
-   }
-
    {
       // Ensure statement gets cleaned up
       sqlite3_stmt *stmt = nullptr;
