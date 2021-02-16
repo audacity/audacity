@@ -38,7 +38,7 @@ function.
 #include "Mix.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"

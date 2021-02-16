@@ -40,7 +40,7 @@
 #include <wx/intl.h>
 #include "Import.h"
 #include "Prefs.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "../widgets/ProgressDialog.h"
 
 

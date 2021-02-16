@@ -29,7 +29,7 @@
 #include<wavpack/wavpack.h>
 
 #include "Prefs.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/AudacityMessageBox.h"

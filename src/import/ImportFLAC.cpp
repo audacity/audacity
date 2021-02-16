@@ -40,7 +40,7 @@
 #include "ImportPlugin.h"
 
 #include "../SelectFile.h"
-#include "../Tags.h"
+#include "Tags.h"
 #include "../widgets/ProgressDialog.h"
 
 #define FLAC_HEADER "fLaC"
