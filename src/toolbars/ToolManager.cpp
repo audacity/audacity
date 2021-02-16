@@ -1530,7 +1530,7 @@ void ToolManager::DoneDragging()
    // Done dragging - ensure grabber button isn't pushed
    if( mDragBar )
    {
-      mDragBar->SetDocked( NULL, false );
+      mDragBar->SetDocked( mDragBar->GetDock(), false );
    }
 
    // Release capture
