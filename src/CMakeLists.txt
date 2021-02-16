@@ -270,8 +270,6 @@ list( APPEND SOURCES
       SseMathFuncs.h
       SyncLock.cpp
       SyncLock.h
-      Tags.cpp
-      Tags.h
       TagsEditor.cpp
       TagsEditor.h
       ThemedWrappers.h
@@ -1551,9 +1549,9 @@ set( AUDACITY_LIBRARIES
    lib-theme-resources-interface
    lib-sample-track-interface
    lib-module-manager-interface
-   lib-project-history-interface
    lib-graphics-interface
    lib-audio-graph
+   lib-tags-interface
 )
 
 if (${_OPT}use_ffmpeg)

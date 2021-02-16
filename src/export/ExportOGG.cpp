@@ -29,7 +29,7 @@
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Tags.h"
+#include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"

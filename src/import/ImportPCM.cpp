@@ -22,7 +22,7 @@
 
 
 #include "Import.h"
-#include "../Tags.h"
+#include "Tags.h"
 
 #include <wx/wx.h>
 #include <wx/string.h>
