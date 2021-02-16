@@ -283,8 +283,15 @@ id3_ucs4_t *id3_utf16_deserialize(id3_byte_t const **ptr, id3_length_t length,
            unsigned char lo_byte = (*ptr)[i + 1];
            unsigned char hi_byte = (*ptr)[i];
 
-           lo_byte_diff += max(lo_byte, last_lo_byte) - min(lo_byte, last_lo_byte);
-           hi_byte_diff += max(hi_byte, last_hi_byte) - min(hi_byte, last_hi_byte);
+#if !defined(MIN)
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#endif
+#if !defined(MAX)
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#endif
+
+           lo_byte_diff += MAX(lo_byte, last_lo_byte) - MIN(lo_byte, last_lo_byte);
+           hi_byte_diff += MAX(hi_byte, last_hi_byte) - MIN(hi_byte, last_hi_byte);
 
            last_lo_byte = lo_byte;
            last_hi_byte = hi_byte;
