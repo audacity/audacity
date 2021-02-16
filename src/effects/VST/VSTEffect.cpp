@@ -1866,7 +1866,7 @@ void VSTEffect::ExportPresets()
    path = FileNames::SelectFile(FileNames::Operation::_None,
       XO("Save VST Preset As:"),
       FileNames::DataDir(),
-      wxEmptyString,
+      wxT("preset"),
       wxT("xml"),
       {
         { XO("Standard VST bank file"), { wxT("fxb") }, true },
