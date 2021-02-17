@@ -18,7 +18,7 @@
 /*! String manipulations are discouraged, other than splitting and joining on separator characters.
 Wherever GET is used to fetch the underlying wxString, there should be a comment explaining the need for it.
  */
-class AUDACITY_DLL_API Identifier
+class STRINGS_API Identifier
 {
 public:
 

@@ -54,7 +54,7 @@ effects from this one class.
 #include "../EffectManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
-#include "../../Languages.h"
+#include "Languages.h"
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"

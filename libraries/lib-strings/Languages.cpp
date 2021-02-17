@@ -36,6 +36,7 @@
 #include "wxArrayStringEx.h"
 
 #include "Internat.h"
+#include "wxArrayStringEx.h"
 
 #include <wx/defs.h>
 #include <wx/dir.h>

@@ -4,6 +4,7 @@
 # that it depends on
 set( LIBRARIES
    "lib-string-utils"
+   lib-strings
 )
 
 if ( ${_OPT}has_networking )

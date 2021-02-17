@@ -19,7 +19,7 @@
 #include <wx/defs.h>
 #include <wx/menu.h>
 
-#include "../Internat.h"
+#include "Internat.h"
 #include "../Prefs.h"
 
 #include <mutex>

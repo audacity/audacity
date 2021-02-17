@@ -29,7 +29,7 @@ class Identifier;
 
  Implicit conversions to and from wxString are intentionally disabled
 */
-class AUDACITY_DLL_API TranslatableString {
+class STRINGS_API TranslatableString {
    enum class Request;
    template< size_t N > struct PluralTemp;
 

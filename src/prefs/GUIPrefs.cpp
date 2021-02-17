@@ -24,7 +24,7 @@
 #include <wx/defs.h>
 
 #include "../FileNames.h"
-#include "../Languages.h"
+#include "Languages.h"
 #include "../Theme.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"

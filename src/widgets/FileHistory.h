@@ -17,7 +17,7 @@
 #include <wx/weakref.h> // member variable
 
 #include "Identifier.h"
-#include "../wxArrayStringEx.h"
+#include "wxArrayStringEx.h"
 
 class wxConfigBase;
 class wxMenu;

@@ -20,8 +20,8 @@
 class wxArrayString;
 class wxArrayStringEx;
 
-extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
-extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str1 );
+extern STRINGS_API const wxString& GetCustomTranslation(const wxString& str1 );
+extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
 
 // Marks string for substitution only.
 #define _TS( s ) GetCustomSubstitution( s )
@@ -100,7 +100,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define XPC(sing, plur, n, c) \
    TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
 
-class AUDACITY_DLL_API Internat
+class STRINGS_API Internat
 {
 public:
    /** \brief Initialize internationalisation support. Call this once at

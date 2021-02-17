@@ -22,7 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/Overlay.h" // to inherit
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h" // for MenuTable
-#include "../../Identifier.h"
+#include "Identifier.h"
 
 class AudacityProject;
 class TranslatableString;
