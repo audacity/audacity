@@ -735,7 +735,9 @@ void SelectionBar::SetRate(double rate)
 
 void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
 {
-   if (mRateBox->GetValue().ToDouble(&mRate) && // is a numeric value
+   auto value = mRateBox->GetValue();
+
+   if (value.ToDouble(&mRate) && // is a numeric value
          (mRate != 0.0))
    {
       NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
@@ -744,6 +746,13 @@ void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
          if( *Ctrls[i] )
             (*Ctrls[i])->SetSampleRate( mRate );
       if (mListener) mListener->AS_SetRate(mRate);
+
+      mLastValidText = value;
+   }
+   else
+   {
+      // Bug 2497 - Undo paste into text box if it's not numeric
+      mRateBox->SetValue(mLastValidText);
    }
 }
 
