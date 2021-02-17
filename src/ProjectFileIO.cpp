@@ -1452,7 +1452,10 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    int crev;
    wxSscanf(wxT(AUDACITY_FILE_FORMAT_VERSION), wxT("%i.%i.%i"), &cver, &crel, &crev);
 
-   if (cver < fver || crel < frel || crev < frev)
+   int fileVer = ((fver *100)+frel)*100+frev;
+   int codeVer = ((cver *100)+crel)*100+crev;
+
+   if (codeVer<fileVer)
    {
       /* i18n-hint: %s will be replaced by the version number.*/
       auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
