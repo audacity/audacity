@@ -14,7 +14,7 @@
 
 #if USE_AUDIO_UNITS
 
-#include "../../MemoryX.h"
+#include "MemoryX.h"
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
