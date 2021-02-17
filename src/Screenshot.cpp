@@ -642,6 +642,7 @@ void ScreenshotBigDialog::OnMainWindowLarge(wxCommandEvent & WXUNUSED(event))
 void ScreenshotBigDialog::DoCapture(int captureMode)
 {
    Hide();
+   wxYieldIfNeeded();
    //mCommand->SetParameter(wxT("FilePath"), mDirectoryTextBox->GetValue());
    //mCommand->SetParameter(wxT("CaptureMode"), captureMode);
    mCommand->mBack = mWhite->GetValue()
