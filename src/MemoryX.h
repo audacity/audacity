@@ -138,17 +138,6 @@ public:
   with *, ->, reset(), or in if()
  */
 
-// Placement-NEW is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
-#ifdef _DEBUG
-#ifdef _MSC_VER
-#undef new
-
-// wx/any.h also uses Placement-NEW so include it before redefining "new" at comment:
-//    "Restore definition of debug new"
-#include <wx/any.h>
-#endif
-#endif
-
 template<typename X>
 class Optional {
 public:
@@ -264,15 +253,6 @@ private:
 #endif
    X* pp{ nullptr };
 };
-
-// Restore definition of debug new
-#ifdef _DEBUG
-#ifdef _MSC_VER
-#undef THIS_FILE
-static const char THIS_FILE[] = __FILE__;
-#define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
-#endif
-#endif
 
 /**
   A deleter for pointers obtained with malloc
