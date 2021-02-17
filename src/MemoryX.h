@@ -2,6 +2,7 @@
 #define __AUDACITY_MEMORY_X_H__
 
 // C++ standard header <memory> with a few extensions
+#include <iterator>
 #include <memory>
 #include <cstdlib> // Needed for free.
 #ifndef safenew
@@ -329,7 +330,6 @@ Final_action<F> finally (F f)
    return Final_action<F>(f);
 }
 
-#include <wx/utils.h> // for wxMin, wxMax
 #include <algorithm>
 
 /**

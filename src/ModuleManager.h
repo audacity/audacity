@@ -23,6 +23,7 @@ class wxArrayString;
 class wxDynamicLibrary;
 class ComponentInterface;
 class ModuleInterface;
+class wxWindow;
 
 //
 // Module Manager

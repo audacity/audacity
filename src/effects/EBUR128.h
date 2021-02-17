@@ -15,6 +15,8 @@ Max Maisel
 #include <memory>
 #include "SampleFormat.h"
 
+#include <cmath>
+
 /// \brief Implements EBU-R128 loudness measurement.
 class EBUR128
 {
