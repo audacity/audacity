@@ -743,6 +743,11 @@ void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
       GetMetadata(temp, TAG_ARTIST, "artist");
       GetMetadata(temp, TAG_YEAR, "date");
    }
+   else if (wxString(mFormatContext->iformat->name).Contains("asf")) /* wma */
+   {
+      GetMetadata(temp, TAG_ARTIST, "artist");
+      GetMetadata(temp, TAG_YEAR, "year");
+   }
    else
    {
       GetMetadata(temp, TAG_ARTIST, "author");
