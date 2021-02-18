@@ -45,8 +45,32 @@ wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 wxDEFINE_EVENT( EVT_CHECKPOINT_FAILURE, wxCommandEvent);
 wxDEFINE_EVENT( EVT_RECONNECTION_FAILURE, wxCommandEvent);
 
-static const int ProjectFileID = ('A' << 24 | 'U' << 16 | 'D' << 8 | 'Y');
-static const int ProjectFileVersion = 1;
+// Used to convert 4 byte-sized values into an integer for use in SQLite
+// PRAGMA statements. These values will be store in the database header.
+//
+// Note that endianness is not an issue here since SQLite integers are
+// architecture independent.
+#define PACK(b1, b2, b3, b4) ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4)
+
+// The ProjectFileID is stored in the SQLite database header to identify the file
+// as an Audacity project file. It can be used by applications that identify file
+// types, such as the Linux "file" command.
+static const int ProjectFileID = PACK('A', 'U', 'D', 'Y');
+
+// The "ProjectFileVersion" represents the version of Audacity at which a specific
+// database schema was used. It is assumed that any changes to the database schema
+// will require a new Audacity version so if schema changes are required set this
+// to the new release being produced.
+//
+// This version is checked before accessing any tables in the database since there's
+// no guarantee what tables exist. If it's found that the database is newer than the
+// currently running Audacity, an error dialog will be displayed informing the user
+// that they need a newer version of Audacity.
+//
+// Note that this is NOT the "schema_version" that SQLite maintains. The value
+// specified here is stored in the "user_version" field of the SQLite database
+// header.
+static const int ProjectFileVersion = PACK(3, 0, 0, 0);
 
 // Navigation:
 //
