@@ -7,7 +7,6 @@
 
 */
 
-
 #include "InconsistencyException.h"
 #include <wx/filename.h>
 

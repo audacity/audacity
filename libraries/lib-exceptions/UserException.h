@@ -13,7 +13,7 @@
 
  //! Can be thrown when user cancels operations, as with a progress dialog.  Delayed handler does nothing
 /*! This class does not inherit from MessageBoxException. */
-class AUDACITY_DLL_API UserException final : public AudacityException
+class EXCEPTIONS_API UserException final : public AudacityException
 {
 public:
    UserException() {}

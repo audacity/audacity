@@ -88,8 +88,6 @@ list( APPEND SOURCES
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
-      AudacityException.cpp
-      AudacityException.h
       AudacityFileConfig.cpp
       AudacityFileConfig.h
       AudacityHeaders.cpp
@@ -159,8 +157,6 @@ list( APPEND SOURCES
       HitTestResult.h
       ImageManipulation.cpp
       ImageManipulation.h
-      InconsistencyException.cpp
-      InconsistencyException.h
       InterpolateAudio.cpp
       InterpolateAudio.h
       KeyboardCapture.cpp
@@ -325,8 +321,6 @@ list( APPEND SOURCES
       UIHandle.h
       UndoManager.cpp
       UndoManager.h
-      UserException.cpp
-      UserException.h
       ViewInfo.cpp
       ViewInfo.h
       VoiceKey.cpp

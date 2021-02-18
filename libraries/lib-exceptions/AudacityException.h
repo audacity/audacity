@@ -38,7 +38,7 @@ public:
    //! Action to do in the main thread at idle time of the event loop.
    virtual void DelayedHandlerAction() = 0;
 
-   AUDACITY_DLL_API static void EnqueueAction(
+   EXCEPTIONS_API static void EnqueueAction(
       std::exception_ptr pException,
       std::function<void(AudacityException*)> delayedHandler);
 
@@ -48,16 +48,16 @@ protected:
 
    //! Don't allow moves of this class or subclasses
    // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
-   AudacityException( AudacityException&& ) = delete;
+   AudacityException( AudacityException&& ) PROHIBITED;
 
    //! Disallow assignment
-   AudacityException &operator = ( const AudacityException & ) = delete;
+   AudacityException &operator = ( const AudacityException & ) PROHIBITED;
 };
 
 //! Abstract AudacityException subclass displays a message, specified by further subclass
 /*! At most one message will be displayed for each pass through the main event idle loop,
  no matter how many exceptions were caught. */
-class AUDACITY_DLL_API MessageBoxException /* not final */
+class EXCEPTIONS_API MessageBoxException /* not final */
    : public AudacityException
 {
    //! Privatize the inherited function
@@ -90,7 +90,7 @@ protected:
 };
 
 //! A MessageBoxException that shows a given, unvarying string.
-class AUDACITY_DLL_API SimpleMessageBoxException /* not final */
+class EXCEPTIONS_API SimpleMessageBoxException /* not final */
    : public MessageBoxException
 {
 public:

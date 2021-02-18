@@ -9,6 +9,7 @@ set( LIBRARIES
    lib-uuid
    lib-components
    lib-basic-ui
+   lib-exceptions
 )
 
 if ( ${_OPT}has_networking )
