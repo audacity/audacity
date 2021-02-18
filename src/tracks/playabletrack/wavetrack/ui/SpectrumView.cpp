@@ -16,7 +16,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrackViewConstants.h"
 
 #include "../../../../AColor.h"
-#include "../../../../Prefs.h"
+#include "Prefs.h"
 #include "../../../../NumberScale.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"

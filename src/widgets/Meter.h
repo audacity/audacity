@@ -22,7 +22,7 @@
 #include <wx/timer.h> // member variable
 
 #include "../SampleFormat.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "MeterPanelBase.h" // to inherit
 #include "Ruler.h" // member variable
 

@@ -10,6 +10,7 @@ set( LIBRARIES
    lib-components
    lib-basic-ui
    lib-exceptions
+   lib-preferences
 )
 
 if ( ${_OPT}has_networking )

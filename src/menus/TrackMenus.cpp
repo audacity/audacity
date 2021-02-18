@@ -5,7 +5,7 @@
 #include "../Menus.h"
 #include "../Mix.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"

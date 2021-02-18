@@ -47,7 +47,7 @@
 #endif
 #include <wx/tooltip.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
 #include "../Project.h"

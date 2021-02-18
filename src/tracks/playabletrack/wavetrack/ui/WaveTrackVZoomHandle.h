@@ -16,7 +16,7 @@ class PopupMenuTable;
 class WaveTrack;
 #include "WaveTrackViewConstants.h"
 #include "../../../../UIHandle.h"
-#include "../../../../Prefs.h"
+#include "Prefs.h"
 
 namespace WaveTrackVZoomHandle
 {

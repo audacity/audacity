@@ -14,7 +14,7 @@
 
 #include "../CommonCommandFlags.h"
 #include "../WaveTrack.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"

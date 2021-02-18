@@ -67,7 +67,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 
 #include "FLAC++/decoder.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 

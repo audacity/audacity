@@ -17,7 +17,7 @@
 #include <vector>
 #include <wx/defs.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Theme.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include <wx/windowptr.h>

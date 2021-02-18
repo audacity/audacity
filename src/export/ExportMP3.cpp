@@ -82,7 +82,7 @@
 #include "../FileNames.h"
 #include "../float_cast.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ShuttleGui.h"

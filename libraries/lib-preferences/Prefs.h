@@ -36,35 +36,34 @@
 
 #include <functional>
 
-#include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
 #include "wxArrayStringEx.h"
-#include "widgets/FileConfig.h"
+#include "FileConfig.h"
 
 #include <memory>
 #include <wx/event.h> // to declare custom event types
 
 class wxFileName;
 
-void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
+PREFERENCES_API void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
 //! Call this to reset preferences to an (almost)-"new" default state
 /*!
  There is at least one exception to that: user preferences we want to make
  more "sticky."  Notably, whether automatic update checking is preferred.
  */
-void ResetPreferences();
-void FinishPreferences();
+PREFERENCES_API void ResetPreferences();
+PREFERENCES_API void FinishPreferences();
 
-extern AUDACITY_DLL_API FileConfig *gPrefs;
+extern PREFERENCES_API FileConfig *gPrefs;
 extern int gMenusDirty;
 
 
 struct ByColumns_t{};
-extern ByColumns_t ByColumns;
+extern PREFERENCES_API ByColumns_t ByColumns;
 
 //! Base class for settings objects.  It holds a configuration key path.
 /* The constructors are non-explicit for convenience */
-class AUDACITY_DLL_API SettingBase
+class PREFERENCES_API SettingBase
 {
 public:
    SettingBase( const char *path ) : mPath{ path } {}
@@ -231,10 +230,12 @@ public:
    using Setting::Setting;
 };
 
+using EnumValueSymbol = ComponentInterfaceSymbol;
+
 /// A table of EnumValueSymbol that you can access by "row" with
 /// operator [] but also allowing access to the "columns" of internal or
 /// translated strings, and also allowing convenient column-wise construction
-class AUDACITY_DLL_API EnumValueSymbols : public std::vector< EnumValueSymbol >
+class PREFERENCES_API EnumValueSymbols : public std::vector< EnumValueSymbol >
 {
 public:
    EnumValueSymbols() = default;
@@ -262,7 +263,7 @@ private:
 
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
-class AUDACITY_DLL_API ChoiceSetting
+class PREFERENCES_API ChoiceSetting
 {
 public:
    ChoiceSetting(
@@ -312,7 +313,7 @@ protected:
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class AUDACITY_DLL_API EnumSettingBase : public ChoiceSetting
+class PREFERENCES_API EnumSettingBase : public ChoiceSetting
 {
 public:
    EnumSettingBase(
@@ -384,7 +385,7 @@ public:
 };
 
 //! A listener notified of changes in preferences
-class AUDACITY_DLL_API PrefsListener
+class PREFERENCES_API PrefsListener
 {
 public:
    //! Call this static function to notify all PrefsListener objects
@@ -418,14 +419,14 @@ private:
 /// Return the config file key associated with a warning dialog identified
 /// by internalDialogName.  When the box is checked, the value at the key
 /// becomes false.
-AUDACITY_DLL_API
+PREFERENCES_API
 wxString WarningDialogKey(const wxString &internalDialogName);
 
-/*
+/*!
  Meant to be statically constructed.  A callback to repopulate configuration
  files after a reset.
  */
-struct AUDACITY_DLL_API PreferenceInitializer {
+struct PREFERENCES_API PreferenceInitializer {
    PreferenceInitializer();
    virtual ~PreferenceInitializer();
    virtual void operator () () = 0;
@@ -434,6 +435,6 @@ struct AUDACITY_DLL_API PreferenceInitializer {
 };
 
 // Special extra-sticky settings
-extern AUDACITY_DLL_API BoolSetting DefaultUpdatesCheckingFlag;
+extern PREFERENCES_API BoolSetting DefaultUpdatesCheckingFlag;
 
 #endif

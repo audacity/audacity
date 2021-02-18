@@ -54,7 +54,7 @@
 #include "../src/AllThemeResources.h"
 #include "BasicUI.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"

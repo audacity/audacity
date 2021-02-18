@@ -29,7 +29,7 @@
 #if defined(USE_MIDI)
 #include "../NoteTrack.h"
 #endif
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"

@@ -62,7 +62,7 @@ static Importer::RegisteredUnusableImportPlugin registered
 #include <wx/file.h>
 #include <wx/string.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"

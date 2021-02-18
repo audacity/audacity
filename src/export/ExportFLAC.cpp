@@ -32,7 +32,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../float_cast.h"
 #include "../ProjectSettings.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "../Tags.h"

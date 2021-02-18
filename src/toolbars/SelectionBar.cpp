@@ -54,7 +54,7 @@ with changes in the SelectionBar.
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectSettings.h"

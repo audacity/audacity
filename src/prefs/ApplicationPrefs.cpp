@@ -21,7 +21,7 @@
 #include <wx/defs.h>
 #include <wx/hyperlink.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "ui/AccessibleLinksFormatter.h"
