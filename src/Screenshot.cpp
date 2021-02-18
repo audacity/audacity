@@ -653,15 +653,21 @@ void ScreenshotBigDialog::DoCapture(int captureMode)
    mCommand->mWhat = captureMode;
    if (!mCommand->Apply(mContext))
       mStatus->SetStatusText(_("Capture failed!"), mainStatusBarField);
-   Show();
 
    // Bug 2323: (100% hackage alert) Since the command target dialog is not
    // accessible from outside the command, this seems to be the only way we
    // can get the window on top of this dialog. 
-   wxWindow *w = wxFindWindowByLabel(XO("Long Message").Translation());
+   auto w = static_cast<wxDialogWrapper *>(wxFindWindowByLabel(XO("Long Message").Translation()));
    if (w) {
-      w->SetWindowStyle(w->GetWindowStyle() | wxSTAY_ON_TOP);
+      auto endmodal = [w](wxCommandEvent &evt)
+      {
+         w->EndModal(0);
+      };
+      w->Bind(wxEVT_BUTTON, endmodal);
+      w->ShowModal();
    }
+
+   Show();
 }
 
 void ScreenshotBigDialog::OnCaptureSomething(wxCommandEvent &  event)
