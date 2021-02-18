@@ -214,7 +214,9 @@ function( audacity_append_common_compiler_options var )
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
 	 # Yes, CMake will change -D to /D as needed for Windows:
-	 -DWXINTL_NO_GETTEXT_MACRO
+         -DWXINTL_NO_GETTEXT_MACRO
+         $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
+         $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
    )
    set( ${var} "${${var}}" PARENT_SCOPE )
 endfunction()
