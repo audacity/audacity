@@ -28,7 +28,7 @@ public:
    virtual ~TrackControls() = 0;
 };
 
-#include "../../AttachedVirtualFunction.h"
+#include "AttachedVirtualFunction.h"
 
 struct DoGetControlsTag;
 

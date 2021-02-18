@@ -30,7 +30,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #include <functional>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "ComponentInterface.h"
-#include "../Registry.h"
+#include "Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
 #define PREFS_FONT_SIZE     8

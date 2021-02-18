@@ -15,7 +15,7 @@ Paul Licameli
 #include <unordered_map>
 #include <vector>
 
-#include "../../AttachedVirtualFunction.h"
+#include "AttachedVirtualFunction.h"
 #include "../../UIHandle.h"
 
 class SnapManager;

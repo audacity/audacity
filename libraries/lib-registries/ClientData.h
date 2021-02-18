@@ -24,9 +24,9 @@ Paul Licameli
 namespace ClientData {
 
 //! A convenient default parameter for class template @b Site
-struct AUDACITY_DLL_API Base
+struct REGISTRIES_API Base
 {
-   virtual ~Base() {}
+   virtual ~Base();
 };
 
 //! A one-argument alias template for the default template-template parameter of ClientData::Site
@@ -44,12 +44,12 @@ template< typename Object > using BarePtr = Object*;
  */
 template<
    template<typename> class Owner = UniquePtr
-> struct AUDACITY_DLL_API Cloneable
+> struct REGISTRIES_API Cloneable
 {
    using Base = Cloneable;
    using PointerType = Owner< Base >;
 
-   virtual ~Cloneable() {}
+   virtual ~Cloneable();
    virtual PointerType Clone() const = 0;
 };
 
