@@ -24,7 +24,6 @@ the general functionality for creating XML in UTF8 encoding.
 
 *//*******************************************************************/
 
-
 #include "XMLWriter.h"
 
 #include <wx/defs.h>

@@ -309,8 +309,6 @@ list( APPEND SOURCES
       WaveTrackLocation.h
       WrappedType.cpp
       WrappedType.h
-      XMLMethodRegistry.cpp
-      XMLMethodRegistry.h
       ZoomInfo.cpp
       ZoomInfo.h
 
@@ -960,15 +958,6 @@ list( APPEND SOURCES
       widgets/wxWidgetsBasicUI.cpp
       widgets/wxWidgetsBasicUI.h
 
-      # XML handling
-      xml/XMLFileReader.cpp
-      xml/XMLFileReader.h
-      xml/XMLTagHandler.cpp
-      xml/XMLTagHandler.h
-      xml/XMLWriter.cpp
-      xml/XMLWriter.h
-      xml/audacityproject.dtd
-
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:
           update/VersionId.h
@@ -1067,7 +1056,6 @@ list( APPEND LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
       wxwidgets::wxwidgets
-      expat::expat
       libmp3lame::libmp3lame
       SndFile::sndfile
       PortAudio::PortAudio

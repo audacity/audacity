@@ -16,7 +16,7 @@
 #include <functional>
 
 #include "SampleFormat.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include "SampleCount.h"
 

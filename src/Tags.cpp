@@ -52,7 +52,7 @@
 #include "widgets/Grid.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>

@@ -17,7 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/QualitySettings.h"
 #include "widgets/NumericTextCtrl.h"
 #include "prefs/TracksBehaviorsPrefs.h"
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 

@@ -30,7 +30,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "BasicUI.h"
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "SentryHelper.h"
 
 // Don't change this unless the file format changes

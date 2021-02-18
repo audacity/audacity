@@ -19,7 +19,7 @@
 #define __AUDACITY_XML_TAG_HANDLER__
 
 #include "XMLWriter.h"
-class AUDACITY_DLL_API XMLValueChecker
+class XML_API XMLValueChecker
 {
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.
@@ -59,7 +59,7 @@ public:
 };
 
 
-class AUDACITY_DLL_API XMLTagHandler /* not final */ {
+class XML_API XMLTagHandler /* not final */ {
  public:
    XMLTagHandler(){};
    virtual ~XMLTagHandler(){};

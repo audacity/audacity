@@ -10,7 +10,7 @@
 
 #include "VersionPatch.h"
 
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include <wx/arrstr.h>
 #include <map>

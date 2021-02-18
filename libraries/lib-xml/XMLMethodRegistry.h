@@ -24,7 +24,7 @@ class XMLWriter;
 //! Implementation helper for ProjectFileIORegistry.
 /*! It makes most of the work non-inline and is used by derived classes that
  supply thin inline type-erasing wrappers. */
-class AUDACITY_DLL_API XMLMethodRegistryBase {
+class XML_API XMLMethodRegistryBase {
 public:
 
    //! A helper type alias for a function taking a structure and a string value

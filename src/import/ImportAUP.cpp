@@ -46,7 +46,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ProgressDialog.h"
-#include "../xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
 
 #include <map>
