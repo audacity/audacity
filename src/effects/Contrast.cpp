@@ -21,7 +21,7 @@
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../ViewInfo.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -42,7 +42,7 @@
 #include <wx/txtstrm.h>
 #include <wx/textctrl.h>
 
-#include "../PlatformCompatibility.h"
+#include "PlatformCompatibility.h"
 
 #define DB_MAX_LIMIT 0.0   // Audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.

@@ -23,7 +23,7 @@
 #include <wx/app.h>
 #include <wx/defs.h>
 
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "Languages.h"
 #include "../Theme.h"
 #include "Prefs.h"

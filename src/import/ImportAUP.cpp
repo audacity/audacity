@@ -24,7 +24,7 @@
 
 #include "../Envelope.h"
 #include "../FileFormats.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../LabelTrack.h"
 #if defined(USE_MIDI)
 #include "../NoteTrack.h"
@@ -47,7 +47,7 @@
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ProgressDialog.h"
 #include "../xml/XMLFileReader.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 #include <map>
 

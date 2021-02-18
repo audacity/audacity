@@ -35,7 +35,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/wxWidgetsBasicUI.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 

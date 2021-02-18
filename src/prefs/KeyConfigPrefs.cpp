@@ -42,7 +42,7 @@ KeyConfigPrefs and MousePrefs use.
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 
-#include "../FileNames.h"
+#include "FileNames.h"
 
 #include "../widgets/KeyView.h"
 #include "../widgets/AudacityMessageBox.h"

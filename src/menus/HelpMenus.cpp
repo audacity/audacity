@@ -9,7 +9,7 @@
 #include "../AudioIOBase.h"
 #include "../CommonCommandFlags.h"
 #include "../CrashReport.h" // for HAS_CRASH_REPORT
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../HelpText.h"
 #include "../LogWindow.h"
 #include "../Menus.h"

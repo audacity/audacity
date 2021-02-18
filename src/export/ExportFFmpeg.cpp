@@ -40,7 +40,7 @@ function.
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 

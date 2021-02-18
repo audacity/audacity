@@ -15,7 +15,6 @@
 
 #include <wx/defs.h>
 #include <wx/fileconf.h>
-
 #include "Identifier.h"
 
 class PREFERENCES_API FileConfig : public wxConfigBase

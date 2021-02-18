@@ -17,7 +17,7 @@
 #include "Identifier.h"
 #include "SampleFormat.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
-#include "../FileNames.h" // for FileTypes
+#include "FileNames.h" // for FileTypes
 
 #include "../Registry.h"
 

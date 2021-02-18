@@ -1,7 +1,7 @@
 
 
 #include "../CommonCommandFlags.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
 #include "Prefs.h"

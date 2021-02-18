@@ -92,8 +92,6 @@ list( APPEND SOURCES
       AudacityFileConfig.h
       AudacityHeaders.cpp
       AudacityHeaders.h
-      AudacityLogger.cpp
-      AudacityLogger.h
       AudioIO.cpp
       AudioIO.h
       AudioIOBase.cpp
@@ -135,14 +133,8 @@ list( APPEND SOURCES
       EnvelopeEditor.h
       FFmpeg.cpp
       FFmpeg.h
-      FileException.cpp
-      FileException.h
       FileFormats.cpp
       FileFormats.h
-      FileIO.cpp
-      FileIO.h
-      FileNames.cpp
-      FileNames.h
       FreqWindow.cpp
       FreqWindow.h
       HelpText.cpp
@@ -186,8 +178,6 @@ list( APPEND SOURCES
       NumberScale.h
       PitchName.cpp
       PitchName.h
-      PlatformCompatibility.cpp
-      PlatformCompatibility.h
       PlaybackSchedule.cpp
       PlaybackSchedule.h
       PluginManager.cpp
@@ -267,8 +257,6 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
-      TempDirectory.cpp
-      TempDirectory.h
       Theme.cpp
       Theme.h
       ThemeAsCeeCode.h
@@ -318,7 +306,6 @@ list( APPEND SOURCES
       WrappedType.h
       ZoomInfo.cpp
       ZoomInfo.h
-      wxFileNameWrapper.h
 
       # Commands
 

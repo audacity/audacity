@@ -17,7 +17,7 @@
 class wxFrame;
 class wxTextCtrl;
 
-class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
+class FILES_API AudacityLogger final : public wxEvtHandler,
                              public wxLog
 {
  public:

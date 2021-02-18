@@ -40,7 +40,7 @@
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"

@@ -14,12 +14,10 @@ Provides thread-safe logging based on the wxWidgets log facility.
 *//*******************************************************************/
 
 
-
 #include "AudacityLogger.h"
 
-
-
 #include "Internat.h"
+#include "MemoryX.h"
 
 #include <memory>
 #include <mutex>

@@ -13,7 +13,7 @@
 #include <vector>
 #include <wx/ffile.h> // to inherit
 
-#include "../FileException.h"
+#include "FileException.h"
 
 #include "Identifier.h"
 
