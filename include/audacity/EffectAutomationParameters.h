@@ -50,6 +50,7 @@
 #include <algorithm>
 
 #include "ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
 
 
 /**

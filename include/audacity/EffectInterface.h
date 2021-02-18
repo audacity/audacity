@@ -46,6 +46,7 @@
 
 #include "Identifier.h"
 #include "audacity/ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectAutomationParameters.h" // for command automation
 

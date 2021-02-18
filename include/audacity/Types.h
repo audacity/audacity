@@ -256,17 +256,4 @@ typedef enum
    ChannelNameBottomFrontRight,
 } ChannelName, *ChannelNames;
 
-// ----------------------------------------------------------------------------
-// some frequently needed forward declarations
-// ----------------------------------------------------------------------------
-
-class ComponentInterfaceSymbol;
-
-using EnumValueSymbol = ComponentInterfaceSymbol;
-using NumericFormatSymbol = EnumValueSymbol;
-
-using VendorSymbol = ComponentInterfaceSymbol;
-
-using EffectFamilySymbol = ComponentInterfaceSymbol;
-
 #endif // __AUDACITY_TYPES_H__

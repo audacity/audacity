@@ -120,6 +120,7 @@ list( APPEND SOURCES
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
+      ComponentInterfaceSymbol.h
       CrashReport.cpp
       CrashReport.h
       DarkThemeAsCeeCode.h
