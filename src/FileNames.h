@@ -225,6 +225,9 @@ namespace FileNames
    AUDACITY_DLL_API
    //! Give enough of the path to identify the device.  (On Windows, drive letter plus ':')
    wxString AbbreviatePath(const wxFileName &fileName);
+
+   AUDACITY_DLL_API
+   extern const wxString AppName;
 };
 
 #endif

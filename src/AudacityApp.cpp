@@ -1118,16 +1118,7 @@ bool AudacityApp::OnInit()
                        "widget_class \"*GtkCombo*\" style \"audacity\"");
 #endif
 
-   // Don't use AUDACITY_NAME here.
-   // We want Audacity with a capital 'A'
-
-// DA: App name
-#ifndef EXPERIMENTAL_DA
-   wxString appName = wxT("Audacity");
-#else
-   wxString appName = wxT("DarkAudacity");
-#endif
-
+   const auto &appName = FileNames::AppName;
    wxTheApp->SetAppName(appName);
    // Explicitly set since OSX will use it for the "Quit" menu item
    wxTheApp->SetAppDisplayName(appName);
