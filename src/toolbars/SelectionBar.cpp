@@ -62,6 +62,7 @@ with changes in the SelectionBar.
 #include "ViewInfo.h"
 #include "QualitySettings.h"
 #include "../AllThemeResources.h"
+#include "../widgets/auStaticText.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

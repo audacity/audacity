@@ -963,6 +963,8 @@ list( APPEND SOURCES
       widgets/Warning.h
       widgets/WindowAccessible.cpp
       widgets/WindowAccessible.h
+      widgets/auStaticText.cpp
+      widgets/auStaticText.h
       widgets/numformatter.cpp
       widgets/numformatter.h
       widgets/valnum.cpp

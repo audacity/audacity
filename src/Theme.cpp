@@ -51,12 +51,6 @@ This class is currently used by Theme to pack its images into the image
 cache.  Perhaps someday we will improve FlowPacker and make it more flexible,
 and use it for toolbar and window layouts too.
 
-*//*****************************************************************//**
-
-\class auStaticText
-\brief is like wxStaticText, except it can be themed.  wxStaticText 
-can't be.
-
 *//*****************************************************************/
 
 
@@ -67,8 +61,8 @@ can't be.
 #include <map>
 
 #include <wx/wxprec.h>
-#include <wx/dcclient.h>
-#include <wx/image.h>
+#include <wx/brush.h>
+#include <wx/pen.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
 #include <wx/mstream.h>
@@ -1113,40 +1107,6 @@ void ThemeBase::RotateImageInto( int iTo, int iFrom, bool bClockwise )
    wxImage img(theTheme.Bitmap( iFrom ).ConvertToImage() );
    wxImage img2 = img.Rotate90( bClockwise );
    ReplaceImage( iTo, &img2 );
-}
-
-BEGIN_EVENT_TABLE(auStaticText, wxWindow)
-    EVT_PAINT(auStaticText::OnPaint)
-    EVT_ERASE_BACKGROUND(auStaticText::OnErase)
-END_EVENT_TABLE()
-
- 
-auStaticText::auStaticText(wxWindow* parent, wxString textIn) :
- wxWindow(parent, wxID_ANY)
-{
-   int textWidth, textHeight;
-
-   int fontSize = 11;
-   #ifdef __WXMSW__
-      fontSize = 9;
-   #endif
-   wxFont font(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   GetTextExtent(textIn, &textWidth, &textHeight, NULL, NULL, &font);
-
-   SetFont( font );
-   SetMinSize( wxSize(textWidth, textHeight) );
-   SetBackgroundColour( theTheme.Colour( clrMedium));
-   SetForegroundColour( theTheme.Colour( clrTrackPanelText));
-   SetName(textIn);
-   SetLabel(textIn);
-}
- 
-void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
-{
-   wxPaintDC dc(this);
-   //dc.SetTextForeground( theTheme.Colour( clrTrackPanelText));
-   dc.Clear();
-   dc.DrawText( GetLabel(), 0,0);
 }
 
 ChoiceSetting &GUITheme()

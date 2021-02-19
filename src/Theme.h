@@ -17,8 +17,9 @@
 
 
 #include <vector>
+#include <wx/arrstr.h>
 #include <wx/defs.h>
-#include <wx/window.h> // to inherit
+#include <wx/gdicmn.h>
 #include "ComponentInterfaceSymbol.h"
 
 #include "Prefs.h"
@@ -168,24 +169,6 @@ public:
    void RegisterImages();
    void RegisterColours();
    bool mbInitialised;
-};
-
-// A bit cheeky - putting a themable wxStaticText control into
-// theme, rather than in a new file.  Saves sorting out makefiles (for now).
-class wxWindow;
-class wxString;
-class wxPaintEvent;
-
-class AUDACITY_DLL_API auStaticText : public wxWindow
-{
-public:
-   auStaticText(wxWindow* parent, wxString text);
-   void OnPaint(wxPaintEvent & evt);
-   bool AcceptsFocus() const override { return false; }
-   void OnErase(wxEraseEvent& event) {
-      static_cast<void>(event);
-   };
-   DECLARE_EVENT_TABLE();
 };
 
 extern AUDACITY_DLL_API Theme theTheme;
