@@ -49,6 +49,10 @@ protected:
       const TranslatableString &message,
       unsigned flags,
       const TranslatableString &remainingLabelText) override;
+   std::unique_ptr<BasicUI::GenericProgressDialog>
+   DoMakeGenericProgress(const BasicUI::WindowPlacement &placement,
+      const TranslatableString &title,
+      const TranslatableString &message) override;
 };
 
 #endif

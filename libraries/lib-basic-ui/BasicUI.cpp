@@ -19,6 +19,8 @@ Services::~Services() = default;
 
 ProgressDialog::~ProgressDialog() = default;
 
+GenericProgressDialog::~GenericProgressDialog() = default;
+
 static Services *theInstance = nullptr;
 
 Services *Get() { return theInstance; }
