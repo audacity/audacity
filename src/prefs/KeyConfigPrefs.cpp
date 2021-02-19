@@ -51,7 +51,7 @@ KeyConfigPrefs and MousePrefs use.
 #include "../widgets/wxWidgetsWindowPlacement.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 //

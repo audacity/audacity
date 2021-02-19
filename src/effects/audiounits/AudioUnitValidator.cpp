@@ -19,7 +19,7 @@
 #include <wx/app.h>
 #include <wx/sizer.h>
 #include "../../ShuttleGui.h"
-#include "../../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 AudioUnitValidator::AudioUnitValidator(CreateToken,
    EffectUIClientInterface &effect,

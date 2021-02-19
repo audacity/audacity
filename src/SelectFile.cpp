@@ -10,7 +10,7 @@
 
 #include "SelectFile.h"
 #include "FileNames.h"
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 #include "widgets/AudacityMessageBox.h"
 
 FilePath

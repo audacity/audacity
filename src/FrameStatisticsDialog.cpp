@@ -14,7 +14,7 @@
 #include "FrameStatistics.h"
 
 #include "ShuttleGui.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 #include <string>
 

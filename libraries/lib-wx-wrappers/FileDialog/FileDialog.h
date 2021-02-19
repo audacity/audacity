@@ -19,7 +19,7 @@ custom controls.
 
 #include <wx/filedlg.h> // to inherit
 
-class AUDACITY_DLL_API FileDialogBase : public wxFileDialogBase
+class WX_WRAPPERS_API FileDialogBase : public wxFileDialogBase
 {
 public:
    FileDialogBase();
@@ -68,7 +68,7 @@ protected:
 // FileDialog convenience functions
 //----------------------------------------------------------------------------
 
-wxString
+WX_WRAPPERS_API wxString
 FileSelector(const wxString& message = wxFileSelectorPromptStr,
              const wxString& default_path = wxEmptyString,
              const wxString& default_filename = wxEmptyString,
@@ -79,7 +79,7 @@ FileSelector(const wxString& message = wxFileSelectorPromptStr,
              int x = wxDefaultCoord, int y = wxDefaultCoord);
 
 // An extended version of FileSelector
-wxString
+WX_WRAPPERS_API wxString
 FileSelectorEx(const wxString& message = wxFileSelectorPromptStr,
                const wxString& default_path = wxEmptyString,
                const wxString& default_filename = wxEmptyString,

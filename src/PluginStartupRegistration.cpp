@@ -22,7 +22,7 @@
 
 #include "PluginManager.h"
 #include "PluginDescriptor.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 namespace
 {

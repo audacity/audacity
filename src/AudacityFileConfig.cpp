@@ -12,7 +12,7 @@ Paul Licameli split from Prefs.cpp
 #include "AudacityFileConfig.h"
 
 #include "widgets/HelpSystem.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include "ShuttleGui.h"
 #include "../images/Help.xpm"
 

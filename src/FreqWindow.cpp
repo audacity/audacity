@@ -83,7 +83,7 @@ the mouse around.
 #include "widgets/VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #define FrequencyAnalysisTitle XO("Frequency Analysis")

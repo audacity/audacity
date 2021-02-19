@@ -46,7 +46,7 @@
 #include "BasicUI.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 namespace

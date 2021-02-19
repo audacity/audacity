@@ -28,7 +28,7 @@
 struct AudioIOEvent;
 
 #include "EffectInterface.h"
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 #include "SelectedRegion.h"
 

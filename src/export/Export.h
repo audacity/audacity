@@ -16,7 +16,7 @@
 #include <wx/filename.h> // member variable
 #include "Identifier.h"
 #include "SampleFormat.h"
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 #include "FileNames.h" // for FileTypes
 
 #include "Registry.h"

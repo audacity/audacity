@@ -60,7 +60,7 @@
 
 #include "commands/CommandManagerWindowClasses.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 // If defined, make a checkbox for smart selection of the fundamental
 // independently of overtones

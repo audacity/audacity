@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_AUDIOUNIT_EFFECT_OPTIONS_DIALOG__
 #define __AUDACITY_AUDIOUNIT_EFFECT_OPTIONS_DIALOG__
 
-#include "../../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 class ShuttleGui;
 

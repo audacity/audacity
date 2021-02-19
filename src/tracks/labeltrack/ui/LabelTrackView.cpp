@@ -37,7 +37,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../../../widgets/AudacityTextEntryDialog.h"
+#include "AudacityTextEntryDialog.h"
 #include "../../../widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/clipbrd.h>

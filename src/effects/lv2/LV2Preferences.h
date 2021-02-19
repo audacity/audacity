@@ -25,7 +25,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
-#include "../../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 class EffectDefinitionInterface;
 class ShuttleGui;

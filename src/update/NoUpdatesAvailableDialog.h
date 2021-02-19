@@ -12,7 +12,7 @@
 #pragma once
 
 
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 //! Information dialog about no updates available, that allows to navigate to settings quickly
 class NoUpdatesAvailableDialog final : public wxDialogWrapper

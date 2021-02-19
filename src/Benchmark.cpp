@@ -40,7 +40,7 @@ of sample block storage.
 #include "FileNames.h"
 #include "SelectFile.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 // Change these to the desired format...should probably make the
 // choice available in the dialog

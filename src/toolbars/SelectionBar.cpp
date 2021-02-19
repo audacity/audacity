@@ -62,7 +62,7 @@ with changes in the SelectionBar.
 #include "../widgets/auStaticText.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 IMPLEMENT_CLASS(SelectionBar, ToolBar);

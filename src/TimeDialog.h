@@ -15,7 +15,7 @@
 
 #include "ComponentInterface.h" // member variable
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class NumericTextCtrl;
 class ShuttleGui;

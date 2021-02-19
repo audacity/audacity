@@ -15,7 +15,7 @@
 
 #include <wx/listctrl.h>
 #include "../ShuttleGui.h"
-#include "../widgets/AudacityTextEntryDialog.h"
+#include "AudacityTextEntryDialog.h"
 
 BEGIN_EVENT_TABLE(EqualizationCurvesDialog, wxDialogWrapper)
    EVT_BUTTON(UpButtonID, EqualizationCurvesDialog::OnUp)

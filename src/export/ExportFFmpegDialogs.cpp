@@ -57,7 +57,7 @@
 #include <wx/combobox.h>
 #include <wx/stattext.h>
 
-#include "../widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 
 #include "Mix.h"
 #include "Tags.h"

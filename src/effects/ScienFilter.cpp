@@ -61,7 +61,7 @@ a graph for EffectScienFilter.
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Ruler.h"
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795

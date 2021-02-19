@@ -13,7 +13,7 @@
 #include <chrono>
 #include <memory>
 
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include "Prefs.h"
 #include "Observer.h"
 

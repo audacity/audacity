@@ -19,7 +19,7 @@ Describes shared object that is used to access FFmpeg libraries.
 
 
 #include "audacity/Types.h"
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class wxCheckBox;
 

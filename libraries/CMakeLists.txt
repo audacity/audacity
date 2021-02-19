@@ -37,6 +37,7 @@ set( LIBRARIES
    lib-wave-track
    lib-command-parameters
    lib-numeric-formats
+   lib-wx-wrappers
 )
 
 if ( ${_OPT}has_networking )

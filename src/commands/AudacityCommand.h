@@ -17,7 +17,7 @@
 
 #include <wx/defs.h>
 
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 #include "ComponentInterface.h"
 #include "EffectAutomationParameters.h"

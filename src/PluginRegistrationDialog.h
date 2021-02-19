@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
 #define __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
 
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 #include <vector>
 #include <unordered_map> // member
 

@@ -34,7 +34,7 @@
 #include "ViewInfo.h"
 #include "tracks/labeltrack/ui/LabelTrackView.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/AudacityTextEntryDialog.h"
+#include "AudacityTextEntryDialog.h"
 #include "widgets/Grid.h"
 #include "widgets/HelpSystem.h"
 

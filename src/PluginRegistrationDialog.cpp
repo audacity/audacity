@@ -38,7 +38,7 @@
 //
 // ============================================================================
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 class CheckListAx final : public WindowAccessible
 {
