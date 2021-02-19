@@ -162,6 +162,15 @@ public:
       const TranslatableString &message = {}) = 0;
 };
 
+//! Abstraction of a progress dialog with undefined time-to-completion estimate
+class BASIC_UI_API GenericProgressDialog
+{
+public:
+   virtual ~GenericProgressDialog();
+   //! Give some visual indication of progress.  Call only on the main thread.
+   virtual void Pulse() = 0;
+};
+
 //! @}
 
 //! Abstract class defines a few user interface services, not mentioning particular toolkits
@@ -186,6 +195,10 @@ public:
       const TranslatableString &message,
       unsigned flag,
       const TranslatableString &remainingLabelText) = 0;
+   virtual std::unique_ptr<GenericProgressDialog>
+   DoMakeGenericProgress(const WindowPlacement &placement,
+      const TranslatableString &title,
+      const TranslatableString &message) = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -255,6 +268,22 @@ inline std::unique_ptr<ProgressDialog> MakeProgress(
 {
    if (auto p = Get())
       return p->DoMakeProgress(title, message, flags, remainingLabelText);
+   else
+      return nullptr;
+}
+
+//! Create and display a progress dialog (return nullptr if Services not installed)
+/*!
+ This function makes a "generic" progress dialog, for the case when time
+ to completion cannot be estimated, but some indication of progress is still
+ given
+ */
+inline std::unique_ptr<GenericProgressDialog> MakeGenericProgress(
+   const WindowPlacement &placement,
+   const TranslatableString &title, const TranslatableString &message)
+{
+   if (auto p = Get())
+      return p->DoMakeGenericProgress(placement, title, message);
    else
       return nullptr;
 }

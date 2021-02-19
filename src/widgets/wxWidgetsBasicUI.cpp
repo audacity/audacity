@@ -16,6 +16,7 @@ Paul Licameli
 #include "widgets/AudacityMessageBox.h"
 #include "ProgressDialog.h"
 #include <wx/app.h>
+#include <wx/progdlg.h>
 #include <wx/windowptr.h>
 
 using namespace BasicUI;
@@ -203,4 +204,33 @@ wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    return std::make_unique<MyProgressDialog>(
       safenew ::ProgressDialog(
          title, message, options, remainingLabelText));
+}
+
+namespace {
+struct MyGenericProgress : GenericProgressDialog {
+   wxWindowPtr<wxGenericProgressDialog> mpDialog;
+
+   MyGenericProgress(const TranslatableString &title,
+      const TranslatableString &message,
+      wxWindow *parent = nullptr)
+      : mpDialog{ safenew wxGenericProgressDialog(
+         title.Translation(), message.Translation(),
+         300000,     // range
+         parent,
+         wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH
+      ) }
+   {}
+   ~MyGenericProgress() override = default;
+   void Pulse() override { mpDialog->Pulse(); }
+};
+}
+
+std::unique_ptr<GenericProgressDialog>
+wxWidgetsBasicUI::DoMakeGenericProgress(
+   const BasicUI::WindowPlacement &placement,
+   const TranslatableString &title,
+   const TranslatableString &message)
+{
+   return std::make_unique<MyGenericProgress>(
+      title, message, GetParent(placement));
 }
