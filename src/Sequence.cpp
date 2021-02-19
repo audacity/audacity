@@ -41,9 +41,9 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
+#include "BasicUI.h"
 #include "SampleBlock.h"
 #include "InconsistencyException.h"
-#include "widgets/AudacityMessageBox.h"
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 
@@ -963,13 +963,16 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
          // editing operation that caused this, not fixing
          // the problem but moving the point of detection earlier if we
          // find a reproducible case.
+         using namespace BasicUI;
          auto sMsg =
             XO("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length.")
                .Format( Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0) );
-         AudacityMessageBox(
+         ShowMessageBox(
             sMsg,
-            XO("Warning - Truncating Overlong Block File"),
-            wxICON_EXCLAMATION | wxOK);
+            MessageBoxOptions{}
+               .Caption(XO("Warning - Truncating Overlong Block File"))
+               .IconStyle(Icon::Warning)
+               .ButtonStyle(Button::Ok));
          wxLogWarning(sMsg.Translation()); //Debug?
 //         bb.sb->SetLength(mMaxSamples);
       }
