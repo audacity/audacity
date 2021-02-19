@@ -233,6 +233,8 @@ list( APPEND SOURCES
       Sequence.h
       Shuttle.cpp
       Shuttle.h
+      ShuttleAutomation.cpp
+      ShuttleAutomation.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
       ShuttleGui.cpp
