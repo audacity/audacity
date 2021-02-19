@@ -41,6 +41,7 @@ set( LIBRARIES
    lib-numeric-formats
    lib-effects
    lib-time-frequency-selection
+   lib-wx-wrappers
 )
 
 if ( ${_OPT}has_networking )

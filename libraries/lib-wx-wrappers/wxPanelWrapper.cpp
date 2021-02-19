@@ -6,7 +6,6 @@
 //
 //
 
-
 #include "wxPanelWrapper.h"
 
 #include <wx/grid.h>
@@ -82,3 +81,5 @@ void wxDialogWrapper::SetName()
 {
    wxDialog::SetName( wxDialog::GetTitle() );
 }
+
+AudacityMessageDialog::~AudacityMessageDialog() = default;

@@ -118,12 +118,12 @@ for registering for changes.
 
 #include "ComponentInterface.h"
 #include "widgets/ReadOnlyText.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include "widgets/wxTextCtrlWrapper.h"
 #include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 ShuttleGuiBase::ShuttleGuiBase(

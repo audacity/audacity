@@ -47,7 +47,7 @@
 
 #include "sndfile.h"
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 
 #include "AllThemeResources.h"
 #include "BasicUI.h"

@@ -19,7 +19,7 @@ Vaughan Johnson (Preview)
 
 #include "StatefulPerTrackEffect.h"
 #include "ShuttleAutomation.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include <float.h> // for FLT_MAX
 
 class wxBitmap;

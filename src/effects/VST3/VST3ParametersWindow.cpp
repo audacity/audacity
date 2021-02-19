@@ -24,7 +24,7 @@
 #include "MemoryX.h"
 #include "VST3Utils.h"
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 

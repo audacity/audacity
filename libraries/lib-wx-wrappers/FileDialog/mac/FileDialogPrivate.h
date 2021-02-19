@@ -22,7 +22,7 @@ class wxChoice;
 // wxFileDialog
 //-------------------------------------------------------------------------
 
-class AUDACITY_DLL_API FileDialog: public FileDialogBase
+class FileDialog: public FileDialogBase
 {
 DECLARE_DYNAMIC_CLASS(FileDialog)
 protected:

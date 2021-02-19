@@ -55,15 +55,15 @@
 
 #include "AllThemeResources.h"
 
-#include "widgets/FileDialog/FileDialog.h"
+#include "FileDialog/FileDialog.h"
 #include "FileNames.h"
 #include "import/Import.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/AudacityTextEntryDialog.h"
+#include "AudacityTextEntryDialog.h"
 #include "widgets/HelpSystem.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #define MacrosPaletteTitle XO("Macros Palette")

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 /// An error dialog about missing plugins
 class MissingPluginsErrorDialog final : public wxDialogWrapper

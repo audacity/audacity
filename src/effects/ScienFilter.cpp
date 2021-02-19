@@ -62,7 +62,7 @@ a graph for EffectScienFilter.
 #include "../widgets/RulerPanel.h"
 #include "../widgets/IntFormat.h"
 #include "../widgets/LinearDBFormat.h"
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795

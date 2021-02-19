@@ -12,7 +12,7 @@
 #define __AUDACITY_TAGS_EDITOR__
 
 #include "Tags.h" // member variable
-#include "widgets/wxPanelWrapper.h" // to inherit
+#include "wxPanelWrapper.h" // to inherit
 
 class ShuttleGui;
 

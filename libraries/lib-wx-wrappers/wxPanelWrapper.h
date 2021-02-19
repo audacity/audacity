@@ -9,7 +9,6 @@
 #ifndef __AUDACITY_WXPANEL_WRAPPER__
 #define __AUDACITY_WXPANEL_WRAPPER__
 
-#include <memory>
 #include <wx/panel.h> // to inherit
 #include <wx/dialog.h> // to inherit
 
@@ -17,10 +16,10 @@
 
 #include "Identifier.h"
 
-AUDACITY_DLL_API void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
+WX_WRAPPERS_API void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
 template <typename Base>
-class AUDACITY_DLL_API wxTabTraversalWrapper : public Base
+class WX_WRAPPERS_API wxTabTraversalWrapper : public Base
 {
 public:
    template <typename... Args>
@@ -37,7 +36,7 @@ public:
 
 };
 
-class AUDACITY_DLL_API wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>
+class WX_WRAPPERS_API wxPanelWrapper : public wxTabTraversalWrapper<wxPanel>
 {
 public:
    // Constructors
@@ -77,7 +76,7 @@ public:
    void SetName();
 };
 
-class AUDACITY_DLL_API wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
+class WX_WRAPPERS_API wxDialogWrapper : public wxTabTraversalWrapper<wxDialog>
 {
 public:
    // Constructors
@@ -121,7 +120,7 @@ public:
 
 #include <wx/dirdlg.h> // to inherit
 
-class AUDACITY_DLL_API wxDirDialogWrapper
+class WX_WRAPPERS_API wxDirDialogWrapper
    : public wxTabTraversalWrapper<wxDirDialog>
 {
 public:
@@ -160,7 +159,7 @@ public:
 #include "FileDialog/FileDialog.h"
 #include "FileNames.h" // for FileTypes
 
-class AUDACITY_DLL_API FileDialogWrapper
+class WX_WRAPPERS_API FileDialogWrapper
    : public wxTabTraversalWrapper<FileDialog>
 {
 public:
@@ -211,7 +210,8 @@ public:
 
 \brief Wrap wxMessageDialog so that caption IS translatable.
 ********************************************************************************/
-class AudacityMessageDialog : public wxTabTraversalWrapper< wxMessageDialog >
+class WX_WRAPPERS_API AudacityMessageDialog
+   : public wxTabTraversalWrapper< wxMessageDialog >
 {
 public:
     AudacityMessageDialog(
@@ -223,6 +223,7 @@ public:
    : wxTabTraversalWrapper< wxMessageDialog>
       ( parent, message.Translation(), caption.Translation(), style, pos )
    {}
+   ~AudacityMessageDialog();
 };
 
 #endif

@@ -90,7 +90,7 @@
 #include "Base64.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 #include "ConfigInterface.h"

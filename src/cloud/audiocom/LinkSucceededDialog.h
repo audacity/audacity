@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 namespace cloud::audiocom
 {

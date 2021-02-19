@@ -18,7 +18,7 @@
 \class AudacityTextEntryDialog
 \brief Wrap wxTextEntryDialog so that caption IS translatable.
 ********************************************************************************/
-class AUDACITY_DLL_API AudacityTextEntryDialog
+class WX_WRAPPERS_API AudacityTextEntryDialog
    : public wxTabTraversalWrapper< wxTextEntryDialog >
 {
 public:

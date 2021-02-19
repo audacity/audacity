@@ -16,7 +16,7 @@
 #include "../ShuttleGui.h"
 
 #if wxUSE_ACCESSIBILITY
-#include "../widgets/WindowAccessible.h"
+#include "WindowAccessible.h"
 #endif
 
 static const double kThirdOct[] =

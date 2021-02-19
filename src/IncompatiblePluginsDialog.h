@@ -12,7 +12,7 @@
 
 #include <vector>
 #include <wx/string.h>
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 
 class wxStaticText;
 class wxTextCtrl;

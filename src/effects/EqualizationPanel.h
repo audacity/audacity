@@ -17,7 +17,7 @@
 #define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
 
 #include "SampleFormat.h"
-#include "../widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 class EnvelopeEditor;
 
 class EqualizationCurvesList;

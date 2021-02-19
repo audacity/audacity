@@ -51,7 +51,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
 #include "widgets/Warning.h"
-#include "widgets/wxPanelWrapper.h"
+#include "wxPanelWrapper.h"
 #include "XMLFileReader.h"
 
 #include "HelpText.h"
