@@ -1142,7 +1142,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
       {
          // This attribute is a sample format, normal int
          long fValue;
-         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !XMLValueChecker::IsValidSampleFormat(fValue))
+         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !Sequence::IsValidSampleFormat(fValue))
          {
             return SetError(XO("Invalid sequence 'sampleformat' attribute."));
          }

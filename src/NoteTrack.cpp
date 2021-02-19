@@ -885,6 +885,13 @@ bool NoteTrack::ExportAllegro(const wxString &f) const
 }
 
 
+namespace {
+bool IsValidVisibleChannels(const int nValue)
+{
+    return (nValue >= 0 && nValue < (1 << 16));
+}
+}
+
 bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if (!wxStrcmp(tag, wxT("notetrack"))) {
@@ -907,7 +914,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("visiblechannels"))) {
              if (!XMLValueChecker::IsGoodInt(strValue) ||
                  !strValue.ToLong(&nValue) ||
-                 !XMLValueChecker::IsValidVisibleChannels(nValue))
+                 !IsValidVisibleChannels(nValue))
                  return false;
              mVisibleChannels = nValue;
          }

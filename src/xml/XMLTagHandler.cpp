@@ -29,13 +29,11 @@
    #include <wx/msw/winundef.h>
 #endif
 
-#include "audacity/Types.h"
 #include <wx/defs.h>
 #include <wx/arrstr.h>
 #include <wx/filename.h>
 
 #include "FileNames.h"
-#include "SampleFormat.h"
 
 // Length check.  Is in part about not supplying malicious strings to file functions.
 bool XMLValueChecker::IsGoodString(const wxString & str)
@@ -167,23 +165,6 @@ bool XMLValueChecker::IsGoodInt64(const wxString & strInt)
 {
    // Signed 64-bit:  -9,223,372,036,854,775,808 to +9,223,372,036,854,775,807, i.e., -2^63 to 2^63-1
    return IsGoodIntForRange( strInt, "9223372036854775808" );
-}
-
-bool XMLValueChecker::IsValidChannel(const int nValue)
-{
-   return (nValue >= LeftChannel) && (nValue <= MonoChannel);
-}
-
-#ifdef USE_MIDI
-bool XMLValueChecker::IsValidVisibleChannels(const int nValue)
-{
-    return (nValue >= 0 && nValue < (1 << 16));
-}
-#endif
-
-bool XMLValueChecker::IsValidSampleFormat(const int nValue)
-{
-   return (nValue == int16Sample) || (nValue == int24Sample) || (nValue == floatSample);
 }
 
 bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)

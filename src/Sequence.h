@@ -68,6 +68,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    static void SetMaxDiskBlockSize(size_t bytes);
    static size_t GetMaxDiskBlockSize();
 
+   //! true if nValue is one of the sampleFormat enum values
+   static bool IsValidSampleFormat(const int nValue);
+
    //
    // Constructor / Destructor / Duplicator
    //
