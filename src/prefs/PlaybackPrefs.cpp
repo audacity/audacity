@@ -24,7 +24,7 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Prefs.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)

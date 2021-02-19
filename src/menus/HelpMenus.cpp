@@ -19,7 +19,7 @@
 #include "../ProjectSelectionManager.h"
 #include "../ProjectWindows.h"
 #include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "Theme.h"
 #include "../commands/CommandContext.h"

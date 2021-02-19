@@ -29,7 +29,7 @@
 #include <wx/stattext.h>
 
 #include "../LabelTrack.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../SyncLock.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"

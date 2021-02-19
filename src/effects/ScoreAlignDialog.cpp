@@ -38,7 +38,7 @@ It \TODO: description
 
 #include <fstream>
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../lib-src/header-substitutes/allegro.h"
 #include "audioreader.h"
 #include "scorealign.h"

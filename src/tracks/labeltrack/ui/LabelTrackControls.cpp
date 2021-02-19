@@ -17,7 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../widgets/PopupMenuTable.h"
 #include "Prefs.h"
 #include "../../../RefreshCode.h"
-#include "../../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "wxPanelWrapper.h"
 #include <wx/fontenum.h>
 #include <wx/listbox.h>

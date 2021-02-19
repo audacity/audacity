@@ -20,7 +20,7 @@
 #include <wx/vlbox.h>
 
 #include "AColor.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../commands/CommandManager.h"
 
 #include <wx/dc.h>

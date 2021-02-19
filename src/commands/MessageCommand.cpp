@@ -22,7 +22,7 @@
 #include "LoadCommands.h"
 #include "CommandContext.h"
 #include "SettingsVisitor.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 const ComponentInterfaceSymbol MessageCommand::Symbol
 { XO("Message") };

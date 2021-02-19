@@ -28,7 +28,7 @@
 #include "ProjectNumericFormats.h"
 #include "../SelectFile.h"
 #include "ShuttleAutomation.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"

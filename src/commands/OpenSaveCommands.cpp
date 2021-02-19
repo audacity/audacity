@@ -28,7 +28,7 @@
 #include "../ProjectManager.h"
 #include "../export/Export.h"
 #include "SettingsVisitor.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "CommandContext.h"
 
 

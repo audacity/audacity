@@ -41,7 +41,7 @@ KeyConfigPrefs and MousePrefs use.
 #include "XMLFileReader.h"
 
 #include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include "FileNames.h"
 

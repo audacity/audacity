@@ -41,7 +41,7 @@ explicitly code all three.
 #include "../ProjectSelectionManager.h"
 #include "../TrackPanel.h"
 #include "SettingsVisitor.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Track.h"
 #include "../effects/Effect.h"
 #include "ViewInfo.h"

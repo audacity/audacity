@@ -56,7 +56,7 @@ effects from this one class.
 
 #include "AudacityException.h"
 #include "FileNames.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/valnum.h"
 #include "wxPanelWrapper.h"

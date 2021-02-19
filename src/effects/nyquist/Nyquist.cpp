@@ -63,7 +63,7 @@ effects from this one class.
 #include "ProjectRate.h"
 #include "ShuttleAutomation.h"
 #include "../../ShuttleGetDefinition.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "TempDirectory.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"

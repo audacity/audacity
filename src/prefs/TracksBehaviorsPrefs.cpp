@@ -19,7 +19,7 @@
 #include "ViewInfo.h"
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "WaveTrack.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)

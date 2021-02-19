@@ -26,7 +26,7 @@
 #include "../LabelTrack.h"
 #include "Prefs.h"
 #include "Resample.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"

@@ -21,7 +21,7 @@
 
 #include "LoadCommands.h"
 #include "SettingsVisitor.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "CommandContext.h"
 
 const ComponentInterfaceSymbol GetTrackInfoCommand::Symbol

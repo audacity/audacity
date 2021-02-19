@@ -26,8 +26,8 @@ MP3 and FFmpeg encoding libraries.
 #include "../export/ExportMP3.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ReadOnlyText.h"
-#include "../widgets/wxTextCtrlWrapper.h"
+#include "ReadOnlyText.h"
+#include "wxTextCtrlWrapper.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////

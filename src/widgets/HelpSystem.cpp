@@ -35,7 +35,7 @@
 
 #include "FileNames.h"
 #include "AllThemeResources.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
 #include "../HelpText.h"
 #include "Prefs.h"

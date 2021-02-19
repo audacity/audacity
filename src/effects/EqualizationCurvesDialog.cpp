@@ -14,7 +14,7 @@
 #include "EqualizationCurvesDialog.h"
 
 #include <wx/listctrl.h>
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "AudacityTextEntryDialog.h"
 
 BEGIN_EVENT_TABLE(EqualizationCurvesDialog, wxDialogWrapper)

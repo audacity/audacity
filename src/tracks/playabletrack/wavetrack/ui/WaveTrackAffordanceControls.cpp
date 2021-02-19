@@ -27,7 +27,7 @@
 #include "WaveTrack.h"
 #include "WaveClip.h"
 #include "UndoManager.h"
-#include "../../../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../commands/AudacityCommand.h"
 

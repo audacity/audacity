@@ -20,7 +20,7 @@
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/stattext.h>
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/Ruler.h"
 
 #if wxUSE_ACCESSIBILITY

@@ -23,7 +23,7 @@
 #include "Echo.h"
 #include "LoadEffects.h"
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 

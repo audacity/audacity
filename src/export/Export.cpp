@@ -60,7 +60,7 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "Theme.h"
 #include "WaveTrack.h"

@@ -38,6 +38,7 @@ set( LIBRARIES
    lib-command-parameters
    lib-numeric-formats
    lib-wx-wrappers
+   lib-shuttlegui
 )
 
 if ( ${_OPT}has_networking )

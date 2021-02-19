@@ -52,7 +52,7 @@
 #include "widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
-#include "widgets/wxTextCtrlWrapper.h"
+#include "wxTextCtrlWrapper.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

@@ -93,7 +93,6 @@ for registering for changes.
 *//******************************************************************/
 
 
-
 #include "ShuttleGui.h"
 
 
@@ -116,10 +115,9 @@ for registering for changes.
 #include <wx/bmpbuttn.h>
 #include <wx/wrapsizer.h>
 
-#include "ComponentInterface.h"
-#include "widgets/ReadOnlyText.h"
+#include "ReadOnlyText.h"
 #include "wxPanelWrapper.h"
-#include "widgets/wxTextCtrlWrapper.h"
+#include "wxTextCtrlWrapper.h"
 #include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY

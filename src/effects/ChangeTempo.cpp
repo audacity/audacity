@@ -29,7 +29,7 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
 

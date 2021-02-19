@@ -18,7 +18,7 @@ class wxArrayString;
 
 #include "LV2FeaturesList.h"
 #include "LV2Ports.h"
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "SampleFormat.h"
 #include "../PerTrackEffect.h"
 
