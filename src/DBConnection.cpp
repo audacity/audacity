@@ -13,10 +13,10 @@ Paul Licameli -- split from ProjectFileIO.cpp
 
 #include "sqlite3.h"
 
-#include <wx/progdlg.h>
 #include <wx/string.h>
 
 #include "AudacityLogger.h"
+#include "BasicUI.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "Project.h"
@@ -240,17 +240,16 @@ bool DBConnection::Close()
       }
 
       // Provides a progress dialog with indeterminate mode
-      wxGenericProgressDialog pd(title.Translation(),
-                                 XO("This may take several seconds").Translation(),
-                                 300000,     // range
-                                 nullptr,    // parent
-                                 wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+      using namespace BasicUI;
+      auto pd = MakeGenericProgress({},
+         title, XO("This may take several seconds"));
+      wxASSERT(pd);
 
       // Wait for the checkpoints to end
       while (mCheckpointPending || mCheckpointActive)
       {
          wxMilliSleep(50);
-         pd.Pulse();
+         pd->Pulse();
       }
    }
 

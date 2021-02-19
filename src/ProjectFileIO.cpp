@@ -14,7 +14,6 @@ Paul Licameli split from AudacityProject.cpp
 #include <sqlite3.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
-#include <wx/progdlg.h>
 #include <wx/sstream.h>
 #include <wx/xml/xml.h>
 
@@ -1171,20 +1170,17 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
       done = true;
    });
 
-   auto &window = GetProjectFrame( mProject );
-
    // Provides a progress dialog with indeterminate mode
-   wxGenericProgressDialog pd(XO("Copying Project").Translation(),
-                              XO("This may take several seconds").Translation(),
-                              300000,     // range
-                              &window,     // parent
-                              wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+   using namespace BasicUI;
+   auto pd = MakeGenericProgress(*ProjectFramePlacement(&mProject),
+      XO("Copying Project"), XO("This may take several seconds"));
+   wxASSERT(pd);
 
    // Wait for the checkpoints to end
    while (!done)
    {
       wxMilliSleep(50);
-      pd.Pulse();
+      pd->Pulse();
    }
    thread.join();
 
@@ -2102,17 +2098,16 @@ bool ProjectFileIO::SaveProject(
          });
 
          // Provides a progress dialog with indeterminate mode
-         wxGenericProgressDialog pd(XO("Syncing").Translation(),
-                                    XO("This may take several seconds").Translation(),
-                                    300000,     // range
-                                    nullptr,    // parent
-                                    wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+         using namespace BasicUI;
+         auto pd = MakeGenericProgress({},
+            XO("Syncing"), XO("This may take several seconds"));
+         wxASSERT(pd);
 
          // Wait for the checkpoints to end
          while (!done)
          {
             wxMilliSleep(50);
-            pd.Pulse();
+            pd->Pulse();
          }
          thread.join();
 
