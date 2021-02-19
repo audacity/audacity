@@ -42,6 +42,7 @@ set( LIBRARIES
    lib-effects
    lib-time-frequency-selection
    lib-wx-wrappers
+   lib-shuttlegui
 )
 
 if ( ${_OPT}has_networking )

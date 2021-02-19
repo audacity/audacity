@@ -223,8 +223,6 @@ list( APPEND SOURCES
       SelectFile.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
-      ShuttleGui.cpp
-      ShuttleGui.h
       Snap.cpp
       Snap.h
       SoundActivatedRecord.cpp
@@ -1054,7 +1052,6 @@ list( APPEND SOURCES
       widgets/PopupMenuTable.h
       widgets/ProgressDialog.cpp
       widgets/ProgressDialog.h
-      widgets/ReadOnlyText.h
       widgets/RealFormat.cpp
       widgets/RealFormat.h
       widgets/Ruler.cpp
@@ -1082,7 +1079,6 @@ list( APPEND SOURCES
       widgets/numformatter.h
       widgets/valnum.cpp
       widgets/valnum.h
-      widgets/wxTextCtrlWrapper.h
       widgets/wxWidgetsBasicUI.cpp
       widgets/wxWidgetsBasicUI.h
       widgets/wxWidgetsWindowPlacement.cpp
@@ -1538,6 +1534,7 @@ set( AUDACITY_LIBRARIES
    lib-project-file-io-interface
    lib-effects-interface
    lib-wx-wrappers-interface
+   lib-shuttlegui-interface
 )
 
 if (${_OPT}use_ffmpeg)

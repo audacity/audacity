@@ -13,7 +13,7 @@
 **********************************************************************/
 #include "EqualizationBandSliders.h"
 #include "SampleFormat.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

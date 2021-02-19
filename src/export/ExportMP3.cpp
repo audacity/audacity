@@ -84,7 +84,7 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
 #include "../widgets/HelpSystem.h"

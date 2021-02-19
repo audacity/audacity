@@ -26,7 +26,7 @@
 #include <wx/choice.h>
 #include <wx/stream.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../ProjectSettings.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"

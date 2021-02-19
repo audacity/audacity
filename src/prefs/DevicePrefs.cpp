@@ -37,7 +37,7 @@ other settings.
 #include "portaudio.h"
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "DeviceManager.h"
 
 enum {

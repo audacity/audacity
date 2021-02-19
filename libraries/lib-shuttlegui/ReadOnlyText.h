@@ -9,7 +9,6 @@
 #ifndef __AUDACITY_READONLYTEXT__
 #define __AUDACITY_READONLYTEXT__
 
-
 #include <wx/wx.h>
 
 

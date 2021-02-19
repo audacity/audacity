@@ -15,7 +15,7 @@
 #include "../prefs/LibraryPrefs.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
-#include "widgets/ReadOnlyText.h"
+#include "ReadOnlyText.h"
 #include <wx/stattext.h>
 
 namespace {

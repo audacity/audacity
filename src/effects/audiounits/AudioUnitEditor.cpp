@@ -18,7 +18,7 @@
 #include "AUControl.h"
 #include <wx/app.h>
 #include <wx/sizer.h>
-#include "../../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "wxPanelWrapper.h"
 
 AudioUnitEditor::AudioUnitEditor(CreateToken,

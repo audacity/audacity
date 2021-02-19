@@ -16,7 +16,7 @@
 #include "EffectEditor.h"
 #include "LoadEffects.h"
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 

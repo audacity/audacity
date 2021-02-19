@@ -43,7 +43,7 @@
 #include "EffectManager.h"
 #include "EffectUI.h"
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../widgets/HelpSystem.h"
 #include "FFT.h"
 #include "Prefs.h"

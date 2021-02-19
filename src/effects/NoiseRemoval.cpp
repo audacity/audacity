@@ -48,7 +48,7 @@
 #include "WaveTrack.h"
 #include "Prefs.h"
 #include "FileNames.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include <math.h>
 

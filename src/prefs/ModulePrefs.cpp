@@ -23,7 +23,7 @@ with names like mod-script-pipe that add NEW features.
 #include <wx/defs.h>
 #include <wx/filename.h>
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include "Prefs.h"
 #include "ModuleSettings.h"

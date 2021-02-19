@@ -43,7 +43,7 @@
 #include "ProjectWindows.h"
 #include "Prefs.h"
 #include "SelectionState.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "WaveTrack.h"
 #include "../widgets/HelpSystem.h"

@@ -54,7 +54,7 @@ a graph for EffectScienFilter.
 #include "PlatformCompatibility.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Theme.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"

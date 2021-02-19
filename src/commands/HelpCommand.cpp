@@ -22,7 +22,7 @@
 #include "../CommonCommandFlags.h"
 #include "SettingsVisitor.h"
 #include "LoadCommands.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "CommandTargets.h"
 #include "CommandContext.h"
 #include "../effects/EffectManager.h"

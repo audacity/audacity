@@ -23,7 +23,7 @@
 #include <wx/statbox.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "WaveTrack.h"
 #include "WindowAccessible.h"
 

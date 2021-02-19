@@ -20,7 +20,7 @@
 #include "MultiDialog.h"
 #include "MemoryX.h"
 
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 
 #include <wx/app.h>
 #include <wx/icon.h>

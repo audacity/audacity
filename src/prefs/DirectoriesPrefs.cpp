@@ -29,11 +29,10 @@
 #include <wx/filename.h>
 
 #include "Prefs.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "TempDirectory.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ReadOnlyText.h"
-#include "../widgets/wxTextCtrlWrapper.h"
+#include "ReadOnlyText.h"
 #include "FileNames.h"
 
 using namespace FileNames;

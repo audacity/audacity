@@ -26,7 +26,7 @@
 #include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
-#include "../ShuttleGui.h"
+#include "ShuttleGui.h"
 #include "Tags.h"
 #include "Track.h"
 #include "../widgets/AudacityMessageBox.h"
