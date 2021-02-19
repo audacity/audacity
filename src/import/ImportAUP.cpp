@@ -1096,6 +1096,15 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 
    WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
 
+   // Earlier versions of Audacity had a single implied waveclip, so for
+   // these versions, we get or create the only clip in the track.
+   if (mParentTag.IsSameAs(wxT("wavetrack")))
+   {
+      XMLTagHandler *dummy;
+      HandleWaveClip(dummy);
+      waveclip = mClip;
+   }
+
    while(*mAttrs)
    {
       const wxChar *attr = *mAttrs++;
