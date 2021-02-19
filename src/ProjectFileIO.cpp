@@ -1485,11 +1485,12 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
          .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
-      AudacityMessageBox(
-         msg,
+      ShowErrorDialog(
+         &window,
          XO("Can't open project file"),
-         wxOK | wxICON_EXCLAMATION | wxCENTRE,
-         &window);
+         msg, 
+         "FAQ:Errors_opening_an_Audacity_project"
+         );
 
       return false;
    }
