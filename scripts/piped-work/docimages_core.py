@@ -49,14 +49,17 @@ def sendCommand( command ) :
     tofile.flush()
 
 def getResponse() :
+    """Return the command response."""
     global fromfile
     result = ''
     line = ''
-    while line != '\n' :
+    while True:
         result += line
         line = fromfile.readline()
-	#print(" I read line:["+line+"]")
+        if line == '\n' and len(result) > 0:
+            break
     return result
+
 
 def doCommand( command ) :
     sendCommand( command )
