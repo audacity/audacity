@@ -35,7 +35,7 @@ def startPipes() :
 
     print( "-- Both pipes exist.  Good." )
 
-    tofile = open( toname, 'wt+' )
+    tofile = open( toname, 'wt' )
     print( "-- File to write to has been opened" )
     fromfile = open( fromname, 'rt')
     print( "-- File to read from has now been opened too\r\n" )
