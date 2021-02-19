@@ -220,7 +220,7 @@ bool ProjectFileManager::Save()
    // Prompt for file name?
    if (projectFileIO.IsTemporary())
    {
-      return SaveAs();
+      return SaveAs(true);
    }
 
    return DoSave(projectFileIO.GetFileName(), false);
@@ -409,7 +409,7 @@ bool ProjectFileManager::SaveAs(const FilePath &newFileName, bool addToHistory /
    return(success);
 }
 
-bool ProjectFileManager::SaveAs()
+bool ProjectFileManager::SaveAs(bool allowOverwrite /* = false */)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -466,7 +466,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
 
       filename.SetExt(wxT("aup3"));
 
-      if (!bPrompt && filename.FileExists()) {
+      if ((!bPrompt || !allowOverwrite) && filename.FileExists()) {
          // Saving a copy of the project should never overwrite an existing project.
          AudacityMessageDialog m(
             nullptr,
