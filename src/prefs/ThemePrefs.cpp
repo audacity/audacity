@@ -34,9 +34,9 @@ Provides:
 #include <wx/app.h>
 #include <wx/wxprec.h>
 #include "Prefs.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "../ShuttleGui.h"
-#include "../AColor.h"
+#include "AColor.h"
 
 wxDEFINE_EVENT(EVT_THEME_CHANGE, wxCommandEvent);
 

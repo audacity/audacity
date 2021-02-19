@@ -22,7 +22,7 @@ class wxDC;
 class wxGraphicsContext;
 class wxRect;
 
-class AUDACITY_DLL_API AColor {
+class THEME_API AColor {
  public:
 
     enum ColorGradientChoice {

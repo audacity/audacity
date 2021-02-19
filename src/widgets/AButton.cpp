@@ -24,7 +24,7 @@
 
 #include "AButton.h"
 
-#include "../AColor.h"
+#include "AColor.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 

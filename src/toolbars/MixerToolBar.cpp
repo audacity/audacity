@@ -33,10 +33,10 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "../AudioIO.h"
-#include "../ImageManipulation.h"
+#include "ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "Prefs.h"
 #include "../widgets/ASlider.h"

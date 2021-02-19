@@ -87,7 +87,7 @@
 #include <wx/tooltip.h>
 #include <wx/utils.h>
 
-#include "../AColor.h"
+#include "AColor.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
@@ -97,7 +97,7 @@
 #include "FFT.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
 #include "ViewInfo.h"
@@ -105,7 +105,7 @@
 #include "../widgets/Ruler.h"
 #include "../widgets/AudacityTextEntryDialog.h"
 #include "XMLFileReader.h"
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY

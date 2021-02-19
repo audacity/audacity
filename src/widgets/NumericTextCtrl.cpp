@@ -169,11 +169,11 @@ different formats.
 #include "NumericTextCtrl.h"
 
 #include "SampleCount.h"
-#include "../AllThemeResources.h"
-#include "../AColor.h"
+#include "AllThemeResources.h"
+#include "AColor.h"
 #include "BasicMenu.h"
 #include "../KeyboardCapture.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "wxWidgetsWindowPlacement.h"
 
 #include <algorithm>

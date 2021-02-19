@@ -5,7 +5,7 @@
 #include <wx/frame.h>
 
 #include "../AboutDialog.h"
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "AudioIOBase.h"
 #include "../CommonCommandFlags.h"
 #include "../CrashReport.h" // for HAS_CRASH_REPORT
@@ -21,7 +21,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/PrefsDialog.h"

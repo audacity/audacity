@@ -54,16 +54,16 @@ or ASlider.
 #include <wx/popupwin.h>
 #include <wx/window.h>
 
-#include "../AColor.h"
-#include "../ImageManipulation.h"
+#include "AColor.h"
+#include "ImageManipulation.h"
 #include "Project.h"
 #include "ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "valnum.h"
 
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
