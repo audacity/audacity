@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackControls.h"
 
-#include "../../Track.h"
+#include "Track.h"
 
 TrackControls::TrackControls( std::shared_ptr<Track> pTrack )
    : CommonTrackCell{ pTrack }

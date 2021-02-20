@@ -24,7 +24,7 @@
 #include "../SelectUtilities.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../Track.h"
+#include "Track.h"
 #include "wxFileNameWrapper.h"
 #include "CommandContext.h"
 

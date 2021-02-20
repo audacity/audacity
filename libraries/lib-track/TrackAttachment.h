@@ -13,7 +13,6 @@ Paul Licameli split from CommonTrackPanelCell.h
 #define __AUDACITY_TRACK_ATTACHMENT__
 
 #include <wx/chartype.h>
-
 #include <memory>
 
 #include "ClientData.h"
@@ -22,7 +21,7 @@ class Track;
 class XMLAttributeValueView;
 class XMLWriter;
 
-class AUDACITY_DLL_API TrackAttachment /* not final */ : public ClientData::Base
+class TRACK_API TrackAttachment /* not final */ : public ClientData::Base
 {
 public:
    virtual ~TrackAttachment();

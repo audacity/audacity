@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Project.h"
 #include "../../RefreshCode.h"
 #include "../../SelectionState.h"
-#include "../../Track.h"
+#include "Track.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanel.h"
 #include "../../TrackPanelConstants.h"

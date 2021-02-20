@@ -9,7 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "TrackView.h"
-#include "../../Track.h"
+#include "Track.h"
 
 #include "ClientData.h"
 #include "Project.h"

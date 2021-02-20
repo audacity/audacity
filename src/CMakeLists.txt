@@ -273,14 +273,10 @@ list( APPEND SOURCES
       TimeTrack.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
-      Track.cpp
-      Track.h
       TrackArtist.cpp
       TrackArtist.h
       TrackInfo.cpp
       TrackInfo.h
-      TrackAttachment.h
-      TrackAttachment.cpp
       TrackPanel.cpp
       TrackPanel.h
       TrackPanelAx.cpp
