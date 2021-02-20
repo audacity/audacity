@@ -332,5 +332,5 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetLabelEdges(true);
       vruler->SetLog(false);
    }
-   vruler->GetMaxSize( &wt->vrulerSize.x, &wt->vrulerSize.y );
+   vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

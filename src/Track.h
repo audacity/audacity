@@ -14,12 +14,11 @@
 
 
 
-
-
+#include <utility>
 #include <vector>
 #include <list>
 #include <functional>
-#include <wx/event.h> // to inherit wxCommandEvent
+#include <wx/event.h> // to inherit wxEvent
 #include <wx/longlong.h>
 
 #include "ClientData.h"
@@ -365,7 +364,7 @@ private:
    virtual Intervals GetIntervals();
 
  public:
-   mutable wxSize vrulerSize;
+   mutable std::pair<int, int> vrulerSize;
 
    int GetIndex() const;
    void SetIndex(int index);
@@ -1247,13 +1246,13 @@ template <
 
 
 //! Notification of changes in individual tracks of TrackList, or of TrackList's composition
-struct TrackListEvent : public wxCommandEvent
+struct TrackListEvent : public wxEvent
 {
    explicit
    TrackListEvent(
       wxEventType commandType,
       const std::weak_ptr<Track> &pTrack = {}, int code = -1)
-   : wxCommandEvent{ commandType }
+   : wxEvent{ 0, commandType }
    , mpTrack{ pTrack }
    , mCode{ code }
    {}
@@ -1266,6 +1265,10 @@ struct TrackListEvent : public wxCommandEvent
 
    std::weak_ptr<Track> mpTrack;
    int mCode;
+
+   void SetInt( int extra ) { mExtra = extra; }
+   int GetInt() const { return mExtra; }
+   int mExtra = 0;
 };
 
 //! Posted when the set of selected tracks changes.

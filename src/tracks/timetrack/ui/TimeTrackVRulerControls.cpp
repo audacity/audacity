@@ -87,8 +87,8 @@ void TimeTrackVRulerControls::Draw(
       // Right align the ruler
       wxRect rr = rect;
       rr.width--;
-      if (t && t->vrulerSize.GetWidth() < rect.GetWidth()) {
-         int adj = rr.GetWidth() - t->vrulerSize.GetWidth();
+      if (t && t->vrulerSize.first < rect.GetWidth()) {
+         int adj = rr.GetWidth() - t->vrulerSize.first;
          rr.x += adj;
          rr.width -= adj;
       }
@@ -122,5 +122,5 @@ void TimeTrackVRulerControls::UpdateRuler( const wxRect &rect )
    vruler->SetLabelEdges(false);
    vruler->SetLog(tt->GetDisplayLog());
 
-   vruler->GetMaxSize( &tt->vrulerSize.x, &tt->vrulerSize.y );
+   vruler->GetMaxSize( &tt->vrulerSize.first, &tt->vrulerSize.second );
 }

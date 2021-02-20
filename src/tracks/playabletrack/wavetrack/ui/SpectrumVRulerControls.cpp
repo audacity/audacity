@@ -197,5 +197,5 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       }
          break;
    }
-   vruler->GetMaxSize( &wt->vrulerSize.x, &wt->vrulerSize.y );
+   vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }
