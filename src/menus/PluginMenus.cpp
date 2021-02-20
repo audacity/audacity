@@ -9,7 +9,7 @@
 #include "../PluginManager.h"
 #include "../PluginRegistrationDialog.h"
 #include "Prefs.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"

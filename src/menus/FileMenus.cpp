@@ -6,7 +6,7 @@
 #include "../NoteTrack.h"
 #include "Prefs.h"
 #include "../Printing.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"

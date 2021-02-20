@@ -31,7 +31,7 @@ The pointers are never null.
 However iterators will be invalid if addition or deletion of projects occur
 during traversal.
 */
-class AUDACITY_DLL_API AllProjects
+class PROJECT_API AllProjects
 {
 
    // Use shared_ptr to projects, because elsewhere we need weak_ptr
@@ -76,7 +76,7 @@ using AttachedProjectObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
 
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(PROJECT_API,
                          EVT_TRACK_PANEL_TIMER, wxCommandEvent);
 
 ///\brief The top-level handle to an Audacity project.  It serves as a source
@@ -85,7 +85,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 /// message and a few other things.
 /// There is very little in this class, most of the intelligence residing in
 /// the cooperating attached objects.
-class AUDACITY_DLL_API AudacityProject final
+class PROJECT_API AudacityProject final
    : public wxEvtHandler
    , public AttachedProjectObjects
    , public std::enable_shared_from_this<AudacityProject>
@@ -133,6 +133,6 @@ private:
 #include "XMLMethodRegistry.h"
 class AudacityProject;
 using ProjectFileIORegistry = XMLMethodRegistry<AudacityProject>;
-DECLARE_XML_METHOD_REGISTRY( AUDACITY_DLL_API, ProjectFileIORegistry );
+DECLARE_XML_METHOD_REGISTRY( PROJECT_API, ProjectFileIORegistry );
 
 #endif

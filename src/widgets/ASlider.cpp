@@ -56,8 +56,8 @@ or ASlider.
 
 #include "../AColor.h"
 #include "../ImageManipulation.h"
-#include "../Project.h"
-#include "../ProjectStatus.h"
+#include "Project.h"
+#include "ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"

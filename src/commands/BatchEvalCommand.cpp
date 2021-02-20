@@ -18,7 +18,7 @@
 
 #include "CommandContext.h"
 #include "CommandDirectory.h"
-#include "../Project.h"
+#include "Project.h"
 
 static CommandDirectory::RegisterType sRegisterType{
    std::make_unique<BatchEvalCommandType>()

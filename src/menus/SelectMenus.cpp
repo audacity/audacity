@@ -5,7 +5,7 @@
 #include "../CommonCommandFlags.h"
 #include "../SpectrumAnalyst.h"
 #include "Prefs.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectHistory.h"

@@ -24,7 +24,7 @@ This class now lists
 #include "GetInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectWindows.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"

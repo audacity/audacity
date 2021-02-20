@@ -16,6 +16,7 @@ set( LIBRARIES
    lib-registries
    lib-xml
    lib-audio-devices
+   lib-project
 )
 
 if ( ${_OPT}has_networking )

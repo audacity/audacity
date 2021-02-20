@@ -14,7 +14,7 @@
 #include "../LogWindow.h"
 #include "../Menus.h"
 #include "Prefs.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectWindows.h"
 #include "../SelectFile.h"

@@ -201,8 +201,6 @@ list( APPEND SOURCES
       Printing.h
       Profiler.cpp
       Profiler.h
-      Project.cpp
-      Project.h
       ProjectAudioIO.cpp
       ProjectAudioIO.h
       ProjectAudioManager.cpp
@@ -221,8 +219,6 @@ list( APPEND SOURCES
       ProjectSerializer.h
       ProjectSettings.cpp
       ProjectSettings.h
-      ProjectStatus.cpp
-      ProjectStatus.h
       ProjectWindow.cpp
       ProjectWindow.h
       ProjectWindowBase.cpp

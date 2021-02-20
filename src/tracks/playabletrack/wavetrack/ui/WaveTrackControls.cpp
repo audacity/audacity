@@ -18,7 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackViewConstants.h"
 #include "AudioIOBase.h"
 #include "../../../../CellularPanel.h"
-#include "../../../../Project.h"
+#include "Project.h"
 #include "../../../../ProjectAudioIO.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../ProjectWindows.h"

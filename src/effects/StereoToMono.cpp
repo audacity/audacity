@@ -20,7 +20,7 @@
 #include <wx/intl.h>
 
 #include "../Mix.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
 

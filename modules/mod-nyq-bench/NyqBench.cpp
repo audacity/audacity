@@ -1337,8 +1337,8 @@ void NyqBench::OnGo(wxCommandEvent & e)
    mEffect->SetCommand(mScript->GetValue());
    mEffect->RedirectOutput();
 
-   AudacityProject *p = GetActiveProject();
-   wxASSERT(p != NULL);
+   auto p = GetActiveProject().lock();
+   wxASSERT(p);
 
    if (p) {
       wxWindowDisabler disable(this);
@@ -1529,7 +1529,7 @@ void NyqBench::OnViewUpdate(wxUpdateUIEvent & e)
 
 void NyqBench::OnRunUpdate(wxUpdateUIEvent & e)
 {
-   AudacityProject *p = GetActiveProject();
+   auto p = GetActiveProject().lock();
    wxToolBar *tbar = GetToolBar();
    wxMenuBar *mbar = GetMenuBar();
 

@@ -60,7 +60,7 @@ effects from this one class.
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../PluginManager.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectSettings.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"

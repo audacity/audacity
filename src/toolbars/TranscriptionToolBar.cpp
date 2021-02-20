@@ -35,7 +35,7 @@
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "../Envelope.h"

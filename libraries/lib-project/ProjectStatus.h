@@ -29,7 +29,7 @@ enum StatusBarField : int {
    nStatusBarFields = 3
 };
 
-struct AUDACITY_DLL_API ProjectStatusEvent final : wxEvent{
+struct PROJECT_API ProjectStatusEvent final : wxEvent{
    explicit ProjectStatusEvent( StatusBarField field );
    ~ProjectStatusEvent() override;
    wxEvent *Clone() const override;
@@ -37,10 +37,10 @@ struct AUDACITY_DLL_API ProjectStatusEvent final : wxEvent{
 };
 
 // Type of event emitted by the project when its status message is set
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(PROJECT_API,
                          EVT_PROJECT_STATUS_UPDATE, ProjectStatusEvent);
 
-class AUDACITY_DLL_API ProjectStatus final
+class PROJECT_API ProjectStatus final
    : public ClientData::Base
    , public PrefsListener
 {
@@ -63,7 +63,7 @@ public:
    using StatusWidthFunctions = std::vector< StatusWidthFunction >;
 
    // Typically a static instance of this struct is used.
-   struct AUDACITY_DLL_API RegisteredStatusWidthFunction
+   struct PROJECT_API RegisteredStatusWidthFunction
    {
       explicit
       RegisteredStatusWidthFunction( const StatusWidthFunction &function );

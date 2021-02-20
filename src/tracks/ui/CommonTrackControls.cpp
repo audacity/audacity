@@ -14,7 +14,7 @@ Paul Licameli split from TrackControls.cpp
 #include "TrackSelectHandle.h"
 #include "../../AColor.h"
 #include "../../RefreshCode.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectHistory.h"
 #include "../../ProjectWindows.h"
 #include "../../TrackArtist.h"
