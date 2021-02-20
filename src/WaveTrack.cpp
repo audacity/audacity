@@ -52,7 +52,7 @@ from the project that will own the track.
 
 #include "Prefs.h"
 
-#include "effects/TimeWarper.h"
+#include "TimeWarper.h"
 #include "QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/WaveformSettings.h"
