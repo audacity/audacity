@@ -254,6 +254,9 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    std::lock_guard<std::mutex> guard(mStatementMutex);
 
    int rc;
+   // See bug 2673
+   // We must not use the same prepared statement from two different threads.
+   // Therefore, in the cache, use the thread id too.
    StatementIndex ndx(id, std::this_thread::get_id());
 
    // Return an existing statement if it's already been prepared
@@ -272,9 +275,23 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
       THROW_INCONSISTENCY_EXCEPTION;
    }
 
-   // And remember it
+   // There are a small number (10 or so) of different id's corresponding 
+   // to different SQL statements, see enum StatementID
+   // We have relatively few threads running at any one time,
+   // e.g. main gui thread, a playback thread, a thread for compacting.
+   // However the cache might keep growing, as we start/stop audio,
+   // perhaps, if we chose to use a new thread each time.
+   // For 3.0.0 I think that's OK.  If it's a data leak it's a slow 
+   // enough one.  wxLogDebugs seem to show that the audio play thread
+   // is being reused, not recreated with a new ID, i.e. no leak at all.
+   // ANSWER-ME Just how serious is the data leak?  How best to fix?
+
+   // Remember the cached statement.
    mStatements.insert({ndx, stmt});
 
+   //Thread Id not convertible to int.
+   //wxLogDebug( "Cached a statement for thread:%i thread:%i ", (int)ndx.first, (int)ndx.second);
+   wxLogDebug( "Cached a statement for %i", (int)id);
    return stmt;
 }
 
