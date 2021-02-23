@@ -76,7 +76,6 @@ public:
       GetRootPage,
       GetDBPage
    };
-   sqlite3_stmt *GetStatement(enum StatementID id);
    sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
 
    void SetBypass( bool bypass );
@@ -109,7 +108,9 @@ private:
    std::atomic_bool mCheckpointPending{ false };
    std::atomic_bool mCheckpointActive{ false };
 
-   std::map<enum StatementID, sqlite3_stmt *> mStatements;
+   std::mutex mStatementMutex;
+   using StatementIndex = std::pair<enum StatementID, std::thread::id>;
+   std::map<StatementIndex, sqlite3_stmt *> mStatements;
 
    std::shared_ptr<DBConnectionErrors> mpErrors;
    CheckpointFailureCallback mCallback;

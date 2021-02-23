@@ -165,12 +165,15 @@ bool DBConnection::Close()
    mCheckpointThread.join();
 
    // We're done with the prepared statements
-   for (auto stmt : mStatements)
    {
-      // No need to check return code.
-      sqlite3_finalize(stmt.second);
+      std::lock_guard<std::mutex> guard(mStatementMutex);
+      for (auto stmt : mStatements)
+      {
+         // No need to check return code.
+         sqlite3_finalize(stmt.second);
+      }
+      mStatements.clear();
    }
-   mStatements.clear();
 
    // Close the DB
    rc = sqlite3_close(mDB);
@@ -248,10 +251,13 @@ const wxString DBConnection::GetLastMessage() const
 
 sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
 {
+   std::lock_guard<std::mutex> guard(mStatementMutex);
+
    int rc;
+   StatementIndex ndx(id, std::this_thread::get_id());
 
    // Return an existing statement if it's already been prepared
-   auto iter = mStatements.find(id);
+   auto iter = mStatements.find(ndx);
    if (iter != mStatements.end())
    {
       return iter->second;
@@ -267,23 +273,10 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    }
 
    // And remember it
-   mStatements.insert({id, stmt});
+   mStatements.insert({ndx, stmt});
 
    return stmt;
 }
-
-sqlite3_stmt *DBConnection::GetStatement(enum StatementID id)
-{
-   // Look it up
-   auto iter = mStatements.find(id);
-
-   // It should always be there
-   wxASSERT(iter != mStatements.end());
-
-   // Return it
-   return iter->second;
-}
-
 
 void DBConnection::CheckpointThread()
 {
