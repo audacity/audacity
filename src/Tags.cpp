@@ -558,7 +558,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          wxString value = *attrs++;
 
          if (!XMLValueChecker::IsGoodString(attr) ||
-             !XMLValueChecker::IsGoodString(value)) {
+             !XMLValueChecker::IsGoodLongString(value)) {
             break;
          }
 

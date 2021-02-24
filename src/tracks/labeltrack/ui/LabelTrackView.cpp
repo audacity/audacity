@@ -1829,7 +1829,16 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
       wxASSERT(success);
       static_cast<void>(success); // Suppress unused variable warning if debug mode is disabled
 
+      // Bug #2571: Hackage alert! For some reason wxGTK does not like
+      // displaying the LabelDialog from within the PopupMenu "context".
+      // So, workaround it by editing the label AFTER the popup menu is
+      // closed. It's really ugly, but it works.  :-(
+      mEditIndex = -1;
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
+      if (mEditIndex >= 0)
+      {
+         DoEditLabels( project, FindLabelTrack().get(), mEditIndex );
+      }
    }
 }
 
@@ -1881,9 +1890,8 @@ void LabelTrackView::OnContextMenu(
       break;
 
    case OnEditSelectedLabelID: {
-      int ndx = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
-      if (ndx != -1)
-         DoEditLabels( project, FindLabelTrack().get(), ndx );
+      // Bug #2571: See above
+      mEditIndex = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
    }
       break;
    }

@@ -62,6 +62,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <sys/types.h>
 #include <sys/file.h>
 #include <sys/stat.h>
+#include <stdio.h>
 #endif
 
 #if defined(__WXMSW__)
@@ -690,27 +691,24 @@ int main(int argc, char *argv[])
    return wxEntry(argc, argv);
 }
 
-#elif defined(__WXMSW__) && !wxCHECK_VERSION(3, 1, 0)
-// Disable telling Windows that we support HiDPI displays.  It is forced on
-// in wxWidget versions between 3.0.0 and 3.1.0.
+#elif defined(__WXGTK__) && defined(NDEBUG)
+
 IMPLEMENT_APP_NO_MAIN(AudacityApp)
 IMPLEMENT_WX_THEME_SUPPORT
 
-extern "C" int WINAPI WinMain(HINSTANCE hInstance,
-                              HINSTANCE hPrevInstance,
-                              wxCmdLineArgType WXUNUSED(lpCmdLine),
-                              int nCmdShow)
+int main(int argc, char *argv[])
 {
    wxDISABLE_DEBUG_SUPPORT();
 
-   // Disable setting of HiDPI aware mode
-   wxMSWDisableSettingHighDPIAware();
+   // Bug #1986 workaround - This doesn't actually reduce the number of 
+   // messages, it simply hides them in Release builds. We'll probably
+   // never be able to get rid of the messages entirely, but we should
+   // look into what's causing them, so allow them to show in Debug
+   // builds.
+   stdout = freopen("/dev/null", "w", stdout);
+   stderr = freopen("/dev/null", "w", stderr);
 
-   /* NB: We pass NULL in place of lpCmdLine to behave the same as  */
-   /*     Borland-specific wWinMain() above. If it becomes needed   */
-   /*     to pass lpCmdLine to wxEntry() here, you'll have to fix   */
-   /*     wWinMain() above too.                                     */
-   return wxEntry(hInstance, hPrevInstance, NULL, nCmdShow);
+   return wxEntry(argc, argv);
 }
 
 #else
@@ -1500,16 +1498,12 @@ bool AudacityApp::InitPart2()
             QuitAudacity(true);
          }
 
-         // As of wx3, there's no need to process the filename arguments as they
-         // will be sent via the MacOpenFile() method.
-#if !defined(__WXMAC__)
          for (size_t i = 0, cnt = parser->GetParamCount(); i < cnt; i++)
          {
             // PRL: Catch any exceptions, don't try this file again, continue to
             // other files.
             SafeMRUOpen(parser->GetParam(i));
          }
-#endif
       }
    } );
 

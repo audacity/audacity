@@ -31,6 +31,7 @@
 #include "../Audacity.h" // for USE_* macros
 #include "Export.h"
 
+#include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filectrl.h>
@@ -50,6 +51,7 @@
 
 #include "../widgets/FileDialog/FileDialog.h"
 
+#include "../src/AllThemeResources.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
@@ -59,6 +61,7 @@
 #include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
+#include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Warning.h"
@@ -964,38 +967,35 @@ void Exporter::CreateUserPane(wxWindow *parent)
 {
    ShuttleGui S(parent, eIsCreating);
 
-   S.StartVerticalLay();
+   S.StartStatic(XO("Format Options"), 1);
    {
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.StartStatic(XO("Format Options"), 1);
+         mBook = S.Position(wxEXPAND).StartSimplebook();
          {
-            mBook = S.Position(wxEXPAND)
-               .StartSimplebook();
-
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
                   // Name of simple book page is not displayed
                   S.StartNotebookPage( {} );
-                  pPlugin->OptionsCreate(S, j);
+                  {
+                     pPlugin->OptionsCreate(S, j);
+                  }
                   S.EndNotebookPage();
                }
             }
-
-            S.EndSimplebook();
          }
-         S.EndStatic();
+         S.EndSimplebook();
+
+         auto b = safenew wxBitmapButton(S.GetParent(), wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
+         b->SetToolTip( XO("Help").Translation() );
+         b->SetLabel(XO("Help").Translation());       // for screen readers
+         S.Position(wxALIGN_BOTTOM | wxRIGHT | wxBOTTOM).AddWindow(b);
       }
       S.EndHorizontalLay();
    }
-   S.StartHorizontalLay(wxALIGN_RIGHT, 0);
-   {
-      S.AddStandardButtons(eHelpButton);
-   }
-   S.EndHorizontalLay();
-   S.EndVerticalLay();
+   S.EndStatic();
 
    return;
 }

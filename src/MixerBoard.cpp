@@ -39,6 +39,7 @@
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
+#include "ProjectFileIO.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
@@ -60,6 +61,8 @@
 #endif
 
 #include "commands/CommandManager.h"
+
+#define AudacityMixerBoardTitle XO("Audacity Mixer Board%s")
 
 // class MixerTrackSlider
 
@@ -1405,15 +1408,19 @@ const wxSize kDefaultSize =
    wxSize(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
-: wxFrame( &GetProjectFrame( *parent ), -1,
-          wxString::Format(_("Audacity Mixer Board%s"),
-                           ((parent->GetProjectName().empty()) ?
-                              wxT("") :
-                              wxString::Format(wxT(" - %s"),
-                                             parent->GetProjectName()))),
+:  wxFrame( &GetProjectFrame( *parent ), -1, {},
             wxDefaultPosition, kDefaultSize,
             wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
+   , mProject(parent)
 {
+   SetWindowTitle();
+   auto titleChanged = [&](wxCommandEvent &evt)
+   {
+      SetWindowTitle();
+      evt.Skip();
+   };
+   wxTheApp->Bind( EVT_PROJECT_TITLE_CHANGE, titleChanged );
+
    mMixerBoard = safenew MixerBoard(parent, this, wxDefaultPosition, kDefaultSize);
 
    this->SetSizeHints(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
@@ -1487,6 +1494,18 @@ void MixerBoardFrame::Recreate( AudacityProject *pProject )
    mMixerBoard->SetSize( siz );
 
    this->SetSize( siz2 );
+   SetWindowTitle();
+}
+
+void MixerBoardFrame::SetWindowTitle()
+{
+   wxString name = mProject->GetProjectName();
+   if (!name.empty())
+   {
+      name.Prepend(wxT(" - "));
+   }
+
+   SetTitle(AudacityMixerBoardTitle.Format(name).Translation());
 }
 
 // Remaining code hooks this add-on into the application

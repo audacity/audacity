@@ -8,7 +8,7 @@ We welcome feedback on Audacity, suggestions for new or improved features,
 and bug reports. Please visit 
 https://forum.audacityteam.org/viewforum.php?f=25 .
 
-Audacity is copyright (c) 1999-2019 by Audacity Team. This copyright 
+Audacity is copyright (c) 1999-2021 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
 except as otherwise noted (mostly in the lib-src subdirectories). 
 "Audacity" is a registered trademark of Dominic Mazzoni. 
@@ -29,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.4.2
+Version 3.0.0
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.4.1
+2.  Changes since version 3.0.0
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,41 +64,71 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 --------------------------------------------------------------------------------
 
-2. Changes since version 2.4.1: 
+2. Changes since version 2.4.2: 
 
 
 Improvements
 
- * Audacity is now built with (our version of) the wx3.1.3 library.
-   Previously we used wx3.1.1.
- * We added a command 'Reset Configuration' to reset to default 
-   settings.
- * MP3 Audio is now exported without padding.
+ * Audacity now uses 'aup3' format, with all audio in one file, rather than 
+   the previous 'pile of file' format.  We are using the SQLite library to 
+   manageis the contents of this file.  Too many users were previously getting
+   caught out by copying part of the project only, when backing up.
+ * 'Backup Project' command replaces 'Save Lossless Copy of Project' and 'Save 
+   Compressed Copy of Project'
+ * Added Corsican and Marathi languages.
+ * 'Label Sounds' replaces 'Sound Finder' and 'Silence Finder'.
+ * Added Import and Export of Macros.
+ * Added Attack, Hold and Delay times to Noise Gate.
+ * Added Multi-View option to Track Preferences
+ * Added hidden (bindable to shortcuts) commands for repeating last generator, 
+   analyzer or tool.  Previously only most recent effect could be repeated.
+ * Upgraded Nyquist to 3.16
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.0
 
 
 Bug Fixes
 
- Over 30 bugs in 2.4.1 fixed, including:
+ Over 160 bugs in 2.4.2 fixed, including:
 
- * 2442 - Windows: Crash when importing (or editing) to a disk 
-   with insufficient disk space available
- * 2471 - Mix Stereo down to Mono fails if space at start of track.
- * 2439 - Mix and Render to New Track selects left channel of new
-   stereo track
+ *  208 - Some effects (including equalization effects) delete Envelope Control 
+          Points, or do not move them when timeline changes
+ * 2367 - Change Pitch effect may create spurious clip at end
+ * 2492 - Linux: Crash when applying or previewing Sliding Stretch effect on 
+          stereo track
+ * 2544 - "Editing a clip can move other clips" turned off can cause corruption 
+          when copying and pasting audio
+ * 2630 - A project saved with an imported MP3 with Unicode metadata cannot be 
+          opened
+ * 2656 - Cannot horizontal scroll when paused in Play-at-Speed
+ * 2669 - Win: Save As can be used to overwrite the existing project without 
+          warning
+ * 1300 - Mac: COMMAND + V paste limitations in standard file save dialogs
+ * 1579 - Mac: Cut/Copy from file save dialogs using shortcuts does not work
+ * 2187 - No error/warning message when using a missing aliased audio file
+ * 2296 - There is no Import or Export for Macros
+ * 2464 - Cannot drag just the selected audio and label with Time Shift Tool
+ * 2437 - Mac: "Open with" fails when Audacity is running
+ * 2473 - Linux: Numbers on meters have opaque backgrounds
+ * 2487 - Playback meters do not respond during preview of non-real-time effects
+ * 2491 - Reset Configuration does not reset Extended Import preferences
+ * 2509 - Filter curve and Graphic EQ help links are broken in release version
+ * 2527 - Reset Configuration does not reset Project rate or selection timers
+ * 2573 - High / Low Pass filters limited to ~94 mins stereo at 44100 Hz
+ * 2581 - Inconsistent behavior when pasting and not enough room
+ * 2593 - Play-at-Speed does not play unless you have used normal Play first
+ * 2616 - Labelled Audio Cut and Delete disabled by Sync-Lock
 
-
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.0
 
 
 -------------------------------------------------------------------------------
 
 
-3. Some Known Issues in 2.4.2:
+3. Some Known Issues in 3.0.0:
 
-For best workarounds and other known issues in 2.4.2, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2/Issues 
+For best workarounds and other known issues in 3.0.0, please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.0/Issues 
 
 
 -------------------------------------------------------------------------------
@@ -194,7 +224,7 @@ Additional copyright information:
 
 Nyquist
 
-Copyright (c) 2000-2002, by Roger B. Dannenberg
+Copyright (c) 2000-2021, by Roger B. Dannenberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

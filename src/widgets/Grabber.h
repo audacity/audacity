@@ -124,6 +124,7 @@ class Grabber final : public wxWindow
  protected:
 
    void OnLeftDown(wxMouseEvent & event);
+   void OnLeftUp(wxMouseEvent & event);
    void OnEnter(wxMouseEvent & event);
    void OnLeave(wxMouseEvent & event);
    void OnErase(wxEraseEvent & event);

@@ -1863,10 +1863,10 @@ void VSTEffect::ExportPresets()
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
    // upon returning from the FileNames::SelectFile().
-   path = FileNames::SelectFile(FileNames::Operation::_None,
+   path = FileNames::SelectFile(FileNames::Operation::Presets,
       XO("Save VST Preset As:"),
-      FileNames::DataDir(),
       wxEmptyString,
+      wxT("preset"),
       wxT("xml"),
       {
         { XO("Standard VST bank file"), { wxT("fxb") }, true },
@@ -1920,10 +1920,10 @@ void VSTEffect::ImportPresets()
    wxString path;
 
    // Ask the user for the real name
-   path = FileNames::SelectFile(FileNames::Operation::_None,
+   path = FileNames::SelectFile(FileNames::Operation::Presets,
       XO("Load VST Preset:"),
-      FileNames::DataDir(),
       wxEmptyString,
+      wxT("preset"),
       wxT("xml"),
       { {
          XO("VST preset files"),

@@ -66,6 +66,9 @@
 #include "widgets/WindowAccessible.h"
 #endif
 
+#define MacrosPaletteTitle XO("Macros Palette")
+#define ManageMacrosTitle XO("Manage Macros")
+
 #define MacrosListID       7001
 #define CommandsListID     7002
 #define ApplyToProjectID   7003
@@ -82,7 +85,7 @@ END_EVENT_TABLE()
 
 ApplyMacroDialog::ApplyMacroDialog(
    wxWindow * parent, AudacityProject &project, bool bInherited):
-   wxDialogWrapper(parent, wxID_ANY, XO("Macros Palette"),
+   wxDialogWrapper(parent, wxID_ANY, MacrosPaletteTitle,
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
    , mMacroCommands{ project }
@@ -93,8 +96,8 @@ ApplyMacroDialog::ApplyMacroDialog(
    mbExpanded = false;
    if( bInherited )
       return;
-   SetLabel(XO("Macros Palette"));         // Provide visual label
-   SetName(XO("Macros Palette"));          // Provide audible label
+   SetLabel(MacrosPaletteTitle);          // Provide visual label
+   SetName(MacrosPaletteTitle);           // Provide audible label
    Populate();
 
 }
@@ -758,9 +761,6 @@ void MacrosWindow::UpdateMenus()
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )
 {
-   if( bExpanded == mbExpanded )
-      return;
-
    if( !SaveChanges() )
       return;
 
@@ -1318,5 +1318,11 @@ void MacrosWindow::OnKeyDown(wxKeyEvent &event)
 
 TranslatableString MacrosWindow::WindowTitle() const
 {
-   return mbExpanded ? XO("Manage Macros") : XO("Macros Palette");
+   return mbExpanded ? ManageMacrosTitle : MacrosPaletteTitle;
+}
+
+// PrefsListener implementation
+void MacrosWindow::UpdatePrefs()
+{
+   UpdateDisplay(mbExpanded);
 }

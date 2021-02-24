@@ -16,6 +16,7 @@
 #include "Prefs.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectFileIO.h"
 #include "ViewInfo.h"
 
 #include <wx/radiobut.h>
@@ -32,6 +33,8 @@
    #include <Carbon/Carbon.h>
 #endif
 
+#define AudacityKaraokeTitle XO("Audacity Karaoke%s")
+
 enum {
    kID_RadioButton_BouncingBall = 10101,
    kID_RadioButton_Highlight,
@@ -46,13 +49,7 @@ END_EVENT_TABLE()
 const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 
 LyricsWindow::LyricsWindow(AudacityProject *parent)
-   : wxFrame( &GetProjectFrame( *parent ), -1,
-            wxString::Format(_("Audacity Karaoke%s"),
-                              ((parent->GetProjectName().empty()) ?
-                                 wxT("") :
-                                 wxString::Format(
-                                   wxT(" - %s"),
-                                   parent->GetProjectName()))),
+   : wxFrame( &GetProjectFrame( *parent ), -1, {},
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow,
@@ -67,6 +64,14 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
    //      SetWindowClass((WindowRef) MacGetWindowRef(), kFloatingWindowClass);
    //   #endif
    mProject = parent;
+
+   SetWindowTitle();
+   auto titleChanged = [&](wxCommandEvent &evt)
+   {
+      SetWindowTitle();
+      evt.Skip();
+   };
+   wxTheApp->Bind( EVT_PROJECT_TITLE_CHANGE, titleChanged );
 
    // loads either the XPM or the windows resource, depending on the platform
 #if !defined(__WXMAC__) && !defined(__WXX11__)
@@ -167,6 +172,22 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
 
    // Let other listeners get the notification
    event.Skip();
+}
+
+void LyricsWindow::SetWindowTitle()
+{
+   wxString name = mProject->GetProjectName();
+   if (!name.empty())
+   {
+      name.Prepend(wxT(" - "));
+   }
+
+   SetTitle(AudacityKaraokeTitle.Format(name).Translation());
+}
+
+void LyricsWindow::UpdatePrefs()
+{
+   SetWindowTitle();
 }
 
 // Remaining code hooks this add-on into the application

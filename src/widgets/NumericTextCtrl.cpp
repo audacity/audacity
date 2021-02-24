@@ -1019,7 +1019,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    }
 
    for(i = 0; i < mFields.size(); i++) {
-      int value = -1;
+      long long value = -1;
 
       if (mFields[i].frac) {
          // JKC: This old code looks bogus to me.
@@ -1027,7 +1027,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
          //value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
          // I did the rounding earlier.
          if (t_frac >= 0)
-            value = (int)(t_frac * mFields[i].base);
+            value = t_frac * mFields[i].base;
          // JKC: TODO: Find out what the range is supposed to do.
          // It looks bogus too.
          //if (mFields[i].range > 0)
@@ -1035,9 +1035,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
       }
       else {
          if (t_int >= 0) {
-            // UNSAFE_SAMPLE_COUNT_TRUNCATION
-            // truncation danger!
-            value = (t_int.as_long_long() / mFields[i].base);
+            value = t_int.as_long_long() / mFields[i].base;
             if (mFields[i].range > 0)
                value = value % mFields[i].range;
          }
@@ -1049,7 +1047,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
             field += wxT("-");
       }
       else
-         field = wxString::Format(mFields[i].formatStr, value);
+         field = wxString::Format(mFields[i].formatStr, (int) value);
       mValueString += field;
       mValueString += mFields[i].label;
    }

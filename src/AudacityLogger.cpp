@@ -294,3 +294,16 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    }
 }
 
+void AudacityLogger::UpdatePrefs()
+{
+   if (mFrame) {
+      bool shown = mFrame->IsShown();
+      if (shown) {
+         Show(false);
+      }
+      mFrame.reset();
+      if (shown) {
+         Show(true);
+      }
+   }
+}

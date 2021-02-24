@@ -252,6 +252,9 @@ private:
    std::weak_ptr<LabelTextHandle> mTextHandle;
 
    static wxFont msFont;
+
+   // Bug #2571: See explanation in ShowContextMenu()
+   int mEditIndex;
 };
 
 #endif

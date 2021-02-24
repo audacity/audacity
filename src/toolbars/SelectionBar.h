@@ -113,6 +113,8 @@ class SelectionBar final : public ToolBar {
    wxChoice          *mSnapTo;
    wxWindow          *mRateText;
 
+   wxString mLastValidText;
+
  public:
 
    DECLARE_CLASS(SelectionBar)

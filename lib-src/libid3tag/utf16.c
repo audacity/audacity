@@ -267,6 +267,47 @@ id3_ucs4_t *id3_utf16_deserialize(id3_byte_t const **ptr, id3_length_t length,
       byteorder = ID3_UTF16_BYTEORDER_LE;
       *ptr += 2;
       break;
+    default:
+       // The text is missing the BOM, so attempt to detect the byte order.
+       // This is using code from ReactOS and, while it's not foolproof, it
+       // does provide some hope of getting the endianness correct.
+       {
+         unsigned char last_lo_byte = 0;
+         unsigned char last_hi_byte = 0;
+         unsigned int hi_byte_diff = 0;
+         unsigned int lo_byte_diff = 0;
+
+         int i;
+         for (i = 0; i < length; i += 2)
+         {
+           unsigned char lo_byte = (*ptr)[i + 1];
+           unsigned char hi_byte = (*ptr)[i];
+
+#if !defined(MIN)
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#endif
+#if !defined(MAX)
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+#endif
+
+           lo_byte_diff += MAX(lo_byte, last_lo_byte) - MIN(lo_byte, last_lo_byte);
+           hi_byte_diff += MAX(hi_byte, last_hi_byte) - MIN(hi_byte, last_hi_byte);
+
+           last_lo_byte = lo_byte;
+           last_hi_byte = hi_byte;
+         }
+
+          if (lo_byte_diff < 127 && !hi_byte_diff)
+          {
+            byteorder = ID3_UTF16_BYTEORDER_BE;
+          }
+
+          if (hi_byte_diff && !lo_byte_diff)
+          {
+            byteorder = ID3_UTF16_BYTEORDER_LE;
+          }
+       }
+       break;
     }
   }
 

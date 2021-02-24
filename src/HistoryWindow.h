@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_HISTORY_WINDOW__
 #define __AUDACITY_HISTORY_WINDOW__
 
+#include "Prefs.h"
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 class wxButton;
@@ -22,7 +23,9 @@ class AudacityProject;
 class ShuttleGui;
 class UndoManager;
 
-class HistoryDialog final : public wxDialogWrapper {
+class HistoryDialog final : public wxDialogWrapper,
+                            public PrefsListener
+{
 
  public:
    HistoryDialog(AudacityProject * parent, UndoManager *manager);
@@ -32,6 +35,8 @@ class HistoryDialog final : public wxDialogWrapper {
    bool Show( bool show = true ) override;
 
  private:
+   void Populate(ShuttleGui & S);
+
    void OnAudioIO(wxCommandEvent & evt);
    void DoUpdate();
    void UpdateLevels();
@@ -45,6 +50,9 @@ class HistoryDialog final : public wxDialogWrapper {
    void OnDiscardClipboard(wxCommandEvent & event);
    void OnCompact(wxCommandEvent & event);
    void OnGetURL(wxCommandEvent & event);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
    AudacityProject   *mProject;
    UndoManager       *mManager;

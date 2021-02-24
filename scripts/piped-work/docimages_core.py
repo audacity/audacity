@@ -35,7 +35,7 @@ def startPipes() :
 
     print( "-- Both pipes exist.  Good." )
 
-    tofile = open( toname, 'wt+' )
+    tofile = open( toname, 'wt' )
     print( "-- File to write to has been opened" )
     fromfile = open( fromname, 'rt')
     print( "-- File to read from has now been opened too\r\n" )
@@ -49,14 +49,17 @@ def sendCommand( command ) :
     tofile.flush()
 
 def getResponse() :
+    """Return the command response."""
     global fromfile
     result = ''
     line = ''
-    while line != '\n' :
+    while True:
         result += line
         line = fromfile.readline()
-	#print(" I read line:["+line+"]")
+        if line == '\n' and len(result) > 0:
+            break
     return result
+
 
 def doCommand( command ) :
     sendCommand( command )

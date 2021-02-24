@@ -2293,6 +2293,8 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       bs->AddButton(safenew wxButton(parent, wxID_CANCEL, XO("&Close").Translation()));
    }
 
+#if defined(__WXMSW__)
+   // See below for explanation
    if( buttons & eHelpButton )
    {
       // Replace standard Help button with smaller icon button.
@@ -2302,6 +2304,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       b->SetLabel(XO("Help").Translation());       // for screen readers
       bs->AddButton( b );
    }
+#endif
 
    if (buttons & ePreviewButton)
    {
@@ -2328,27 +2331,48 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
    bs->AddStretchSpacer();
    bs->Realize();
 
+   size_t lastLastSpacer = 0;
+   size_t lastSpacer = 0;
+   wxSizerItemList & list = bs->GetChildren();
+   for( size_t i = 0, cnt = list.size(); i < cnt; i++ )
+   {
+      if( list[i]->IsSpacer() )
+      {
+         lastSpacer = i;
+      }
+      else
+      {
+         lastLastSpacer = lastSpacer;
+      }
+   }
+
    // Add any buttons that need to cuddle up to the right hand cluster
    if( buttons & eDebugButton )
    {
-      size_t lastLastSpacer = 0;
-      size_t lastSpacer = 0;
-      wxSizerItemList & list = bs->GetChildren();
-      for( size_t i = 0, cnt = list.size(); i < cnt; i++ )
-      {
-         if( list[i]->IsSpacer() )
-         {
-            lastSpacer = i;
-         }
-         else  
-         {
-            lastLastSpacer = lastSpacer;
-         }
-      }
-
       b = safenew wxButton(parent, eDebugID, XO("Debu&g").Translation());
-      bs->Insert( lastLastSpacer + 1, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
+      bs->Insert( ++lastLastSpacer, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
    }
+
+#if !defined(__WXMSW__)
+   // Bug #2432: Couldn't find GTK guidelines, but Mac HIGs state:
+   //
+   //    View style 	                                          Help button position
+   //    Dialog with dismissal buttons (like OK and Cancel). 	Lower-left corner, vertically aligned with the dismissal buttons.
+   //    Dialog without dismissal buttons. 	                  Lower-left or lower-right corner.
+   //    Preference window or pane. 	                        Lower-left or lower-right corner.
+   //
+   // So, we're gonna cheat a little and use the lower-right corner.
+   if( buttons & eHelpButton )
+   {
+      // Replace standard Help button with smaller icon button.
+      // bs->AddButton(safenew wxButton(parent, wxID_HELP));
+      b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
+      b->SetToolTip( XO("Help").Translation() );
+      b->SetLabel(XO("Help").Translation());       // for screen readers
+      bs->Add( b, 0, wxALIGN_CENTER );
+   }
+#endif
+
 
    auto s = std::make_unique<wxBoxSizer>( wxVERTICAL );
    s->Add( bs.release(), 1, wxEXPAND | wxALL, 7 );

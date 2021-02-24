@@ -108,6 +108,53 @@ void DoExport(AudacityProject &project, const FileExtension &format)
    }
 }
 
+void DoImport(const CommandContext &context, bool isRaw)
+{
+   auto &project = context.project;
+   auto &trackFactory = WaveTrackFactory::Get( project );
+   auto &window = ProjectWindow::Get( project );
+
+   auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
+   if (selectedFiles.size() == 0) {
+      Importer::SetLastOpenType({});
+      return;
+   }
+
+   // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
+   // to false.  Should it also be set to true on other paths that reach
+   // AudacityProject::Import ?
+   gPrefs->Write(wxT("/NewImportingSession"), true);
+
+   selectedFiles.Sort(FileNames::CompareNoCase);
+
+   auto cleanup = finally( [&] {
+
+      Importer::SetLastOpenType({});
+      window.ZoomAfterImport(nullptr);
+      window.HandleResize(); // Adjust scrollers for NEW track sizes.
+   } );
+
+   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
+      wxString fileName = selectedFiles[ff];
+
+      FileNames::UpdateDefaultPath(FileNames::Operation::Import, ::wxPathOnly(fileName));
+
+      if (isRaw) {
+         TrackHolders newTracks;
+
+         ::ImportRaw(project, &window, fileName, &trackFactory, newTracks);
+
+         if (newTracks.size() > 0) {
+            ProjectFileManager::Get( project )
+               .AddImportedTracks(fileName, std::move(newTracks));
+         }
+      }
+      else {
+         ProjectFileManager::Get( project ).Import(fileName);
+      }
+   }
+}
+
 }
 
 // Menu handler functions
@@ -367,36 +414,7 @@ void OnExportMIDI(const CommandContext &context)
 
 void OnImport(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-
-   auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
-   if (selectedFiles.size() == 0) {
-      Importer::SetLastOpenType({});
-      return;
-   }
-
-   // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
-   // to false.  Should it also be set to true on other paths that reach
-   // AudacityProject::Import ?
-   gPrefs->Write(wxT("/NewImportingSession"), true);
-
-   selectedFiles.Sort(FileNames::CompareNoCase);
-
-   auto cleanup = finally( [&] {
-      Importer::SetLastOpenType({});
-      window.HandleResize(); // Adjust scrollers for NEW track sizes.
-   } );
-
-   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
-      wxString fileName = selectedFiles[ff];
-
-      FileNames::UpdateDefaultPath(FileNames::Operation::Import, ::wxPathOnly(fileName));
-
-      ProjectFileManager::Get( project ).Import(fileName);
-   }
-
-   window.ZoomAfterImport(nullptr);
+   DoImport(context, false);
 }
 
 void OnImportLabels(const CommandContext &context)
@@ -475,33 +493,7 @@ void OnImportMIDI(const CommandContext &context)
 
 void OnImportRaw(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   wxString fileName =
-       FileNames::SelectFile(FileNames::Operation::Open,
-         XO("Select any uncompressed audio file"),
-         wxEmptyString,     // Path
-         wxT(""),       // Name
-         wxT(""),       // Extension
-         { FileNames::AllFiles },
-         wxRESIZE_BORDER,        // Flags
-         &window);    // Parent
-
-   if (fileName.empty())
-      return;
-
-   TrackHolders newTracks;
-
-   ::ImportRaw(project, &window, fileName, &trackFactory, newTracks);
-
-   if (newTracks.size() <= 0)
-      return;
-
-   ProjectFileManager::Get( project )
-      .AddImportedTracks(fileName, std::move(newTracks));
-   window.HandleResize(); // Adjust scrollers for NEW track sizes.
+   DoImport(context, true);
 }
 
 void OnPageSetup(const CommandContext &context)
