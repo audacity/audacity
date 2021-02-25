@@ -95,20 +95,4 @@ public:
    virtual bool RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key) = 0;
 };
 
-#if 0
-/*************************************************************************************//**
-
-\class ConfigHostInterface
-
-\brief ConfigHostInterface appears not to be used.
-
-*******************************************************************************************/
-class ConfigHostInterface
-{
-public:
-   virtual ~ConfigHostInterface() {};
-
-};
-#endif
-
 #endif // __AUDACITY_CONFIGINTERFACE_H__

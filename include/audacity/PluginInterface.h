@@ -45,7 +45,6 @@
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectInterface.h"
 #include "audacity/ComponentInterface.h"
-#include "audacity/ImporterInterface.h"
 
 
 class ModuleInterface;
@@ -72,7 +71,6 @@ public:
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) = 0;
-   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) = 0;
 
    virtual void FindFilesInPathList(const wxString & pattern,
                                     const FilePaths & pathList,

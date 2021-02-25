@@ -247,24 +247,4 @@ public:
    virtual void ShowOptions() = 0;
 };
 
-
-/*************************************************************************************//**
-
-\class EffectManagerInterface
-
-\brief UNUSED.  EffectManagerInterface provides a single function to find files matching 
-a pattern in a list.
-
-*******************************************************************************************/
-class AUDACITY_DLL_API EffectManagerInterface
-{
-public:
-   virtual ~EffectManagerInterface() {};
-
-   virtual void FindFilesInPathList(const wxString & pattern,
-                                    const FilePaths & pathList,
-                                    FilePaths & files,
-                                    int searchFlags) = 0;
-};
-
 #endif // __AUDACITY_EFFECTINTERFACE_H__

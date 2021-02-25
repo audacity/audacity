@@ -46,8 +46,6 @@
 #include "audacity/Types.h"
 #include <wx/string.h> // member variables
 
-STRINGS_API const wxString& GetCustomTranslation(const wxString& str1 );
-
 class ComponentInterfaceSymbol;
 using VendorSymbol = ComponentInterfaceSymbol;
 

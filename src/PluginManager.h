@@ -18,7 +18,6 @@
 #include <memory>
 
 #include "audacity/EffectInterface.h"
-#include "audacity/ImporterInterface.h"
 #include "audacity/PluginInterface.h"
 
 class wxArrayString;
@@ -186,7 +185,6 @@ public:
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
    const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer) override;
 
    void FindFilesInPathList(const wxString & pattern,
                                     const FilePaths & pathList,
@@ -240,7 +238,6 @@ public:
 
    static PluginID GetID(ComponentInterface *command);
    static PluginID GetID(EffectDefinitionInterface *effect);
-   static PluginID GetID(ImporterInterface *importer);
 
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions

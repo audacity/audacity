@@ -1014,7 +1014,6 @@ list( APPEND HEADERS
    ../include/audacity/PluginInterface.h
    ../include/audacity/ComponentInterface.h
    ../include/audacity/EffectAutomationParameters.h
-   ../include/audacity/ImporterInterface.h
 )
 
 #
