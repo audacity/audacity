@@ -20,7 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
-#include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../SyncLock.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -28,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "../../../../../images/Cursors.h"
 
+#include <wx/event.h>
 #include <algorithm>
 
 StretchHandle::StretchHandle
@@ -230,9 +230,8 @@ UIHandle::Result StretchHandle::Release
 
    bool left = mStretchState.mMode == stretchLeft;
    bool right = mStretchState.mMode == stretchRight;
-   const auto &settings = ProjectSettings::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
-   if ( settings.IsSyncLocked() && ( left || right ) ) {
+   if ( SyncLockState::Get(*pProject).IsSyncLocked() && ( left || right ) ) {
       for ( auto track :
            SyncLock::Group( mpTrack.get() ) ) {
          if ( track != mpTrack.get() ) {

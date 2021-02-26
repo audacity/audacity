@@ -8,7 +8,6 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
-#include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
@@ -524,10 +523,9 @@ void OnPaste(const CommandContext &context)
    auto& trackPanel = TrackPanel::Get(project);
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto isSyncLocked = settings.IsSyncLocked();
+   auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
 
    // Handle text paste (into active label) first.
    if (DoPasteText(project))

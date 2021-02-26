@@ -74,8 +74,6 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 , mCurrentBrushRadius ( 5 )
 {
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
-
    bool multiToolActive = false;
    gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
 
@@ -174,20 +172,6 @@ void ProjectSettings::SetTool(int tool) {
    if (auto oldValue = mCurrentTool; oldValue != tool) {
       mCurrentTool = tool;
       Notify( mProject, ChangedTool, oldValue );
-   }
-}
-
-bool ProjectSettings::IsSyncLocked() const
-{
-   return mIsSyncLocked;
-}
-
-void ProjectSettings::SetSyncLock(bool flag)
-{
-   auto &project = mProject;
-   if (auto oldValue = mIsSyncLocked; flag != oldValue) {
-      mIsSyncLocked = flag;
-      Notify( project, ChangedSyncLock, oldValue );
    }
 }
 

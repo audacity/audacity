@@ -31,6 +31,7 @@
 #include "../../../../SelectionState.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../SyncLock.h"
 #include "Theme.h"
 
 class NoteTrackAffordanceHandle final : public AffordanceHandle
@@ -46,10 +47,9 @@ public:
     UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* pProject) override
     {
         auto& viewInfo = ViewInfo::Get(*pProject);
-        const auto& settings = ProjectSettings::Get(*pProject);
         const auto track = TrackList::Get(*pProject).Lock<Track>(GetTrack());
 
-        SelectionState::SelectTrackLength(viewInfo, *track, settings.IsSyncLocked());
+        SelectionState::SelectTrackLength(viewInfo, *track, SyncLockState::Get(*pProject).IsSyncLocked());
 
         ProjectHistory::Get(*pProject).ModifyState(false);
 

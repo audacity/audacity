@@ -22,7 +22,6 @@
 
 #include "ConfigInterface.h"
 #include "../LabelTrack.h"
-#include "../ProjectSettings.h"
 #include "../SelectFile.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"

@@ -13,6 +13,29 @@ Paul Licameli split from Track.cpp
 
 #include "Track.h" // for TrackIterRange
 #include "AttachedVirtualFunction.h"
+#include "Observer.h"
+
+//! Sent after sync lock setting changes, with its new state
+struct SyncLockChangeMessage{ const bool on; };
+
+class AUDACITY_DLL_API SyncLockState final
+   : public ClientData::Base
+   , public Observer::Publisher<SyncLockChangeMessage>
+{
+public:
+   static SyncLockState &Get( AudacityProject &project );
+   static const SyncLockState &Get( const AudacityProject &project );
+   explicit SyncLockState( AudacityProject &project );
+   SyncLockState( const SyncLockState & ) = delete;
+   SyncLockState &operator=( const SyncLockState & ) = delete;
+
+   bool IsSyncLocked() const;
+   void SetSyncLock(bool flag);
+
+private:
+   AudacityProject &mProject;
+   bool mIsSyncLocked{ false };
+};
 
 class AUDACITY_DLL_API SyncLock {
 public:

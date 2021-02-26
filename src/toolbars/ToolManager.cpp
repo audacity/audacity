@@ -55,6 +55,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
+#include "SyncLock.h"
 #include "widgets/AButton.h"
 #include "widgets/ASlider.h"
 #include "widgets/MeterPanelBase.h"
@@ -1554,14 +1555,11 @@ void ToolManager::ModifyAllProjectToolbarMenus()
 }
 
 #include "../commands/CommandManager.h"
-#include "../ProjectSettings.h"
 void ToolManager::ModifyToolbarMenus(AudacityProject &project)
 {
    // Refreshes can occur during shutdown and the toolmanager may already
    // be deleted, so protect against it.
    auto &toolManager = ToolManager::Get( project );
-
-   auto &settings = ProjectSettings::Get( project );
 
    // Now, go through each toolbar, and call EnableDisableButtons()
    toolManager.ForEach([](auto bar){
@@ -1574,7 +1572,7 @@ void ToolManager::ModifyToolbarMenus(AudacityProject &project)
    bool active;
 
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &active, false);
-   settings.SetSyncLock(active);
+   SyncLockState::Get(project).SetSyncLock(active);
 
    CommandManager::Get( project ).UpdateCheckmarks( project );
 }

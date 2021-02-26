@@ -545,7 +545,7 @@ UIHandle::Result TimeShiftHandle::Click
       clickTime,
 
       viewInfo, trackList,
-      ProjectSettings::Get( *pProject ).IsSyncLocked() );
+      SyncLockState::Get( *pProject ).IsSyncLocked() );
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
