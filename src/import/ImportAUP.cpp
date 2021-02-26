@@ -742,7 +742,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          requiredTags++;
 
          mProjDir = mFilename;
-         wxString altname = mProjDir.GetName() + wxT("-data");
+         wxString altname = mProjDir.GetName() + wxT("_data");
          mProjDir.SetFullName(wxEmptyString);
 
          wxString projName = value;
