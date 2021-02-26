@@ -62,7 +62,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
 #ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
-   if( bHalfWave )
+   if( bHalfWave && minimized)
    {
       // It is all right to set the top of scale to a huge number,
       // not knowing the track rate here -- because when retrieving the
