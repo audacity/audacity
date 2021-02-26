@@ -713,7 +713,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
          if (unit)
          {
             // Really should use lilv_world_get_symbol()
-            controlPort->mUnits = LilvString(lilv_world_get_symbol(gWorld, unit));
+            LilvNode *symbol = lilv_world_get_symbol(gWorld, unit);
+            if (symbol)
+            {
+               controlPort->mUnits = LilvString(symbol);
+               lilv_node_free(symbol);
+            }
             lilv_node_free(unit);
          }
 
@@ -2176,10 +2181,14 @@ bool LV2Effect::BuildFancy()
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
    // as the main DLL, so add this plugin's path to the DLL search order.
-   const char *const libPath = lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)));
+   char *libPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
    wxString path = wxPathOnly(libPath);
    SetDllDirectory(path.c_str());
+   lilv_free(libPath);
 #endif
+
+   char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
+   char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
 
    mSuilInstance = suil_instance_new(mSuilHost,
                                      this,
@@ -2187,10 +2196,12 @@ bool LV2Effect::BuildFancy()
                                      lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
                                      lilv_node_as_uri(lilv_ui_get_uri(ui)),
                                      lilv_node_as_uri(uiType),
-                                     lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui))),
-                                     lilv_uri_to_path(lilv_node_as_uri(lilv_ui_get_binary_uri(ui))),
+                                     bundlePath,
+                                     binaryPath,
                                      reinterpret_cast<const LV2_Feature * const *>(mFeatures.data()));
 
+   lilv_free(binaryPath);
+   lilv_free(bundlePath);
    lilv_uis_free(uis);
 
    // Bail if the instance (no compatible UI) couldn't be created
@@ -3324,9 +3335,10 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
    // as the main DLL, so add this plugin's path to the DLL search order.
    const LilvNode *const libNode = lilv_plugin_get_library_uri(plugin);
    const char *const libUri = lilv_node_as_uri(libNode);
-   const char *const libPath = lilv_uri_to_path(libUri);
+   char *libPath = lilv_file_uri_parse(libUri, NULL);
    wxString path = wxPathOnly(libPath);
    SetDllDirectory(path.c_str());
+   lilv_free(libPath);
 #endif
 
    mInstance = lilv_plugin_instantiate(plugin,
