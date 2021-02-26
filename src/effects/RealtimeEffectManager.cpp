@@ -11,7 +11,7 @@
 
 #include "RealtimeEffectManager.h"
 
-#include "audacity/EffectInterface.h"
+#include "EffectInterface.h"
 #include <memory>
 
 #include <atomic>

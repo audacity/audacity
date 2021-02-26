@@ -120,7 +120,6 @@ list( APPEND SOURCES
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
-      ComponentInterfaceSymbol.h
       CrashReport.cpp
       CrashReport.h
       DarkThemeAsCeeCode.h
@@ -1007,13 +1006,7 @@ list( APPEND SOURCES
 #
 #
 list( APPEND HEADERS
-   ../include/audacity/EffectInterface.h
    ../include/audacity/Types.h
-   ../include/audacity/ConfigInterface.h
-   ../include/audacity/ModuleInterface.h
-   ../include/audacity/PluginInterface.h
-   ../include/audacity/ComponentInterface.h
-   ../include/audacity/EffectAutomationParameters.h
 )
 
 #

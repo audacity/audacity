@@ -52,7 +52,6 @@
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
 
-
 /**
 \brief CommandParameters, derived from wxFileConfig, is essentially doing 
 the same things as the Shuttle classes.  It does text <-> binary conversions of
@@ -64,7 +63,7 @@ wxWidget validators, and can create default dialogs.  However until that convers
 done, we need this class, and we use a pointer to one from within a Shuttle when interfacing
 with the code that still uses it.
 */
-class CommandParameters final : public wxFileConfig
+class COMPONENTS_API CommandParameters final : public wxFileConfig
 {
 public:
    CommandParameters(const wxString & parms = {})
@@ -78,9 +77,7 @@ public:
       SetParameters(parms);
    }
 
-   virtual ~CommandParameters()
-   {
-   }
+   virtual ~CommandParameters();
 
    virtual bool HasGroup(const wxString & strName) const override
    {

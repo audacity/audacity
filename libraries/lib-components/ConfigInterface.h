@@ -43,6 +43,7 @@
 #define __AUDACITY_CONFIGINTERFACE_H__
 
 #include "Identifier.h"
+#include <vector>
 
 /*************************************************************************************//**
 
@@ -53,10 +54,10 @@ differentiates between private and shared config.  It should probably be replace
 with a Shuttle.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API ConfigClientInterface /* not final */
+class COMPONENTS_API ConfigClientInterface /* not final */
 {
 public:
-   virtual ~ConfigClientInterface() {};
+   virtual ~ConfigClientInterface();
 
    virtual bool HasSharedConfigGroup(const RegistryPath & group) = 0;
    virtual bool GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths & subgroups) = 0;

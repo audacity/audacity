@@ -28,7 +28,7 @@ for shared and private configs - which need to move out.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
-#include "audacity/ModuleInterface.h"
+#include "ModuleInterface.h"
 
 #include "AudacityFileConfig.h"
 #include "Internat.h" // for macro XO

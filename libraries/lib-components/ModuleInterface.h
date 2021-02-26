@@ -45,8 +45,8 @@
 #include <functional>
 #include <memory>
 #include "Identifier.h"
-#include "audacity/ComponentInterface.h"
-#include "audacity/PluginInterface.h"
+#include "ComponentInterface.h"
+#include "PluginInterface.h"
 
 // ============================================================================
 //
@@ -65,10 +65,11 @@
 ///
 // ============================================================================
 
-class ModuleInterface  /* not final */ : public ComponentInterface
+class COMPONENTS_API ModuleInterface  /* not final */
+   : public ComponentInterface
 {
 public:
-   virtual ~ModuleInterface() {};
+   virtual ~ModuleInterface();
 
    // Called immediately after creation to give the instance a chance to
    // initialize.  Return "true" if initialziation was successful.

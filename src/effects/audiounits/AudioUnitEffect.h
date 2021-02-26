@@ -21,9 +21,9 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ModuleInterface.h"
-#include "audacity/PluginInterface.h"
+#include "EffectInterface.h"
+#include "ModuleInterface.h"
+#include "PluginInterface.h"
 
 #include "AUControl.h"
 

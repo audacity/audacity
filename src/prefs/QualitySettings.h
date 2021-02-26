@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_QUALITY_SETTINGS__
 #define __AUDACITY_QUALITY_SETTINGS__
 
+#include <audacity/Types.h>
 #include "Prefs.h" // for EnumSetting
 
 class IntSetting;

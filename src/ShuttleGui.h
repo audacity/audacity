@@ -24,6 +24,7 @@
 
 #include "Prefs.h"
 #include "WrappedType.h"
+#include "ComponentInterfaceSymbol.h"
 
 class ChoiceSetting;
 
@@ -745,8 +746,6 @@ public:
 
    teShuttleMode GetMode() { return  mShuttleMode; };
 };
-
-class ComponentInterfaceSymbol;
 
 //! Convenience function often useful when adding choice controls
 AUDACITY_DLL_API TranslatableStrings Msgids(

@@ -13,6 +13,7 @@ Paul Licameli
 
 #include <functional>
 #include <unordered_map>
+#include <vector>
 
 #include "../../AttachedVirtualFunction.h"
 #include "../../UIHandle.h"

@@ -42,17 +42,20 @@
 #ifndef __AUDACITY_PLUGININTERFACE_H__
 #define __AUDACITY_PLUGININTERFACE_H__
 
-#include "audacity/ConfigInterface.h"
-#include "audacity/EffectInterface.h"
-#include "audacity/ComponentInterface.h"
-
+#include "ConfigInterface.h"
+#include "EffectInterface.h"
+#include "ComponentInterface.h"
+#include "Identifier.h"
 
 class ModuleInterface;
+using PluginID = wxString;
+using PluginIDs = wxArrayString;
 
-
-class AUDACITY_DLL_API PluginManagerInterface /* not final */
+class COMPONENTS_API PluginManagerInterface /* not final */
 {
 public:
+
+   virtual ~PluginManagerInterface();
 
    static const PluginID &DefaultRegistrationCallback(
       ModuleInterface *provider, ComponentInterface *ident );
