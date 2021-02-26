@@ -419,6 +419,27 @@ void InitBreakpad()
 static bool gInited = false;
 static bool gIsQuitting = false;
 
+static bool CloseAllProjects( bool force )
+{
+   ProjectManager::SetClosingAll(true);
+   auto cleanup = finally([]{ ProjectManager::SetClosingAll(false); });
+   while (AllProjects{}.size())
+   {
+      // Closing the project has global side-effect
+      // of deletion from gAudacityProjects
+      if ( force )
+      {
+         GetProjectFrame( **AllProjects{}.begin() ).Close(true);
+      }
+      else
+      {
+         if (! GetProjectFrame( **AllProjects{}.begin() ).Close())
+            return false;
+      }
+   }
+   return true;
+}
+
 static void QuitAudacity(bool bForce)
 {
    // guard against recursion
@@ -449,7 +470,7 @@ static void QuitAudacity(bool bForce)
          // PRL:  Always did at least once before close might be vetoed
          // though I don't know why that is important
          ProjectManager::SaveWindowSize();
-      bool closedAll = AllProjects::Close( bForce );
+      bool closedAll = CloseAllProjects( bForce );
       if ( !closedAll )
       {
          gIsQuitting = false;
@@ -2241,7 +2262,7 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
       // PRL:  Always did at least once before close might be vetoed
       // though I don't know why that is important
       ProjectManager::SaveWindowSize();
-   bool closedAll = AllProjects::Close( force );
+   bool closedAll = CloseAllProjects( force );
    if ( !closedAll )
    {
       gIsQuitting = false;

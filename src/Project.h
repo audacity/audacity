@@ -25,13 +25,19 @@ namespace BasicUI { class WindowPlacement; }
 
 class AudacityProject;
 
-/// \brief an object of class AllProjects acts like a standard library
-/// container, but refers to a global array of open projects.  So you can
-/// iterate easily over shared pointers to them with range-for :
-/// for (auto pProject : AllProjects{}) { ... }
-/// The pointers are never null.
+//! Like a standard library container of all open projects.
+//! @invariant pointers accessible through the iterators are not null
+/*!
+So you can iterate easily over shared pointers to them with range-for :
+for (auto pProject : AllProjects{}) { ... }
+The pointers are never null.
+
+However iterators will be invalid if addition or deletion of projects occur
+during traversal.
+*/
 class AUDACITY_DLL_API AllProjects
 {
+
    // Use shared_ptr to projects, because elsewhere we need weak_ptr
    using AProjectHolder = std::shared_ptr< AudacityProject >;
    using Container = std::vector< AProjectHolder >;
@@ -57,22 +63,15 @@ public:
    // a shared pointer, else return null.  This invalidates any iterators.
    value_type Remove( AudacityProject &project );
 
-   // This invalidates iterators
+   //! This invalidates iterators
+   /*!
+    @pre pProject is not null
+    */
    void Add( const value_type &pProject );
 
    /// In case you must iterate in a non-main thread, use this to prevent
    /// changes in the set of open projects
    static std::mutex &Mutex();
-
-   // Return true if all projects do close (always so if force == true)
-   // But if return is false, that means the user cancelled close of at least
-   // one un-saved project.
-   static bool Close( bool force = false );
-
-   static bool Closing() { return sbClosing; }
-
-private:
-   static bool sbClosing;
 };
 
 // Container of various objects associated with the project, which is

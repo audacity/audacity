@@ -61,30 +61,12 @@ auto AllProjects::Remove( AudacityProject &project ) -> value_type
 
 void AllProjects::Add( const value_type &pProject )
 {
+   if (!pProject) {
+      wxASSERT(false);
+      return;
+   }
    std::lock_guard<std::mutex> guard{ Mutex() };
    gAudacityProjects.push_back( pProject );
-}
-
-bool AllProjects::sbClosing = false;
-
-bool AllProjects::Close( bool force )
-{
-   ValueRestorer<bool> cleanup{ sbClosing, true };
-   while (AllProjects{}.size())
-   {
-      // Closing the project has global side-effect
-      // of deletion from gAudacityProjects
-      if ( force )
-      {
-         GetProjectFrame( **AllProjects{}.begin() ).Close(true);
-      }
-      else
-      {
-         if (! GetProjectFrame( **AllProjects{}.begin() ).Close())
-            return false;
-      }
-   }
-   return true;
 }
 
 std::mutex &AllProjects::Mutex()

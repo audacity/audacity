@@ -109,6 +109,8 @@ public:
    void SetStatusText( const TranslatableString &text, int number );
    void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
+   static void SetClosingAll(bool closing);
+
 private:
    void OnReconnectionFailure(wxCommandEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
