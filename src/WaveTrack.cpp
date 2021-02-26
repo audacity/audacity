@@ -916,8 +916,8 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       // Restore the envelope points
       for (auto point : envPoints) {
          auto t = warper->Warp(point.GetT());
-         WaveClip *clip = GetClipAtTime(t);
-         clip->GetEnvelope()->Insert(t, point.GetVal());
+         if (auto clip = GetClipAtTime(t))
+            clip->GetEnvelope()->Insert(t, point.GetVal());
       }
    }
 }
