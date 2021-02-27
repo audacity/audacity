@@ -529,8 +529,8 @@ void OnPunchAndRoll(const CommandContext &context)
    auto tracks =
       ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected);
    if (tracks.empty()) {
-      int recordingChannels =
-         std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+      auto recordingChannels =
+         std::max(0, AudioIORecordChannels.Read());
       auto message =
          (recordingChannels == 1)
          ? XO("Please select in a mono track.")

@@ -1053,9 +1053,8 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
 
    // Obtain the current settings
    auto oCaptureFormat = QualityPrefs::SampleFormatChoice();
-   if (lCaptureChannels == 0) {
-      gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
-   }
+   if (lCaptureChannels == 0)
+      lCaptureChannels = AudioIORecordChannels.Read();
 
    // Find out how much free space we have on disk
    wxLongLong lFreeSpace = ProjectFileIO::Get( project ).GetFreeDiskSpace();
