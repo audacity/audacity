@@ -2,24 +2,16 @@
 
   Audacity: A Digital Audio Editor
 
-  ModulePrefs.h
+  @file ModuleSettings.h
 
-  Brian Gunlogson
-  Joshua Haberman
-  James Crook
+  Paul Licameli split from ModulePrefs.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MODULE_PREFS__
-#define __AUDACITY_MODULE_PREFS__
+#ifndef __AUDACITY_MODULE_SETTINGS__
+#define __AUDACITY_MODULE_SETTINGS__
 
-#include <wx/defs.h>
-
-#include "PrefsPanel.h"
-
-
-class wxArrayString;
-class ShuttleGui;
+#include "audacity/Types.h"
 
 enum {
    kModuleDisabled = 0,
@@ -29,30 +21,11 @@ enum {
    kModuleNew = 4      // Audacity will ask once, and remember the answer.
 };
 
+namespace ModuleSettings {
 
-#define MODULE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Module") }
+int GetModuleStatus( const FilePath &fname );
+void SetModuleStatus( const FilePath &fname, int iStatus );
 
-class ModulePrefs final : public PrefsPanel
-{
- public:
-   ModulePrefs(wxWindow * parent, wxWindowID winid);
-   ~ModulePrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-
-   bool Commit() override;
-   wxString HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-
-   static int GetModuleStatus( const FilePath &fname );
-   static void SetModuleStatus( const FilePath &fname, int iStatus );
-
- private:
-   void GetAllModuleStatuses();
-   void Populate();
-   wxArrayString mModules;
-   std::vector<int> mStatuses;
-   FilePaths mPaths;
-};
+}
 
 #endif

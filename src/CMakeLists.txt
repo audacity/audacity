@@ -182,6 +182,8 @@ list( APPEND SOURCES
       ModuleConstants.h
       ModuleManager.cpp
       ModuleManager.h
+      ModuleSettings.cpp
+      ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
       NumberScale.h

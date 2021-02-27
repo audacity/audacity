@@ -36,7 +36,7 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
-#include "./prefs/ModulePrefs.h"
+#include "ModuleSettings.h"
 #endif
 
 #include "widgets/MultiDialog.h"
@@ -256,7 +256,7 @@ void ModuleManager::TryLoadModules(
          continue;
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
-      int iModuleStatus = ModulePrefs::GetModuleStatus( file );
+      int iModuleStatus = ModuleSettings::GetModuleStatus( file );
       if( iModuleStatus == kModuleDisabled )
          continue;
       if( iModuleStatus == kModuleFailed )
@@ -265,7 +265,7 @@ void ModuleManager::TryLoadModules(
       if( iModuleStatus == kModuleNew ){
          // To ensure it is noted in config file and so
          // appears on modules page.
-         ModulePrefs::SetModuleStatus( file, kModuleNew);
+         ModuleSettings::SetModuleStatus( file, kModuleNew);
          continue;
       }
 
@@ -290,7 +290,7 @@ void ModuleManager::TryLoadModules(
          // If we're not prompting always, accept the answer permanently
          if( iModuleStatus == kModuleNew ){
             iModuleStatus = (action==1)?kModuleDisabled : kModuleEnabled;
-            ModulePrefs::SetModuleStatus( file, iModuleStatus );
+            ModuleSettings::SetModuleStatus( file, iModuleStatus );
          }
 #endif
          if(action == 1){   // "No"
@@ -301,7 +301,7 @@ void ModuleManager::TryLoadModules(
 #ifdef EXPERIMENTAL_MODULE_PREFS
       // Before attempting to load, we set the state to bad.
       // That way, if we crash, we won't try again.
-      ModulePrefs::SetModuleStatus( file, kModuleFailed );
+      ModuleSettings::SetModuleStatus( file, kModuleFailed );
 #endif
 
       wxString Error;
@@ -326,7 +326,7 @@ void ModuleManager::TryLoadModules(
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
             // Loaded successfully, restore the status.
-            ModulePrefs::SetModuleStatus(file, iModuleStatus);
+            ModuleSettings::SetModuleStatus(file, iModuleStatus);
 #endif
          }
       }
@@ -334,7 +334,7 @@ void ModuleManager::TryLoadModules(
          // Module is not yet decided in this pass.
          // Maybe it depends on another which has not yet been loaded.
          // But don't take the kModuleAsk path again in a later pass.
-         ModulePrefs::SetModuleStatus( file, kModuleEnabled );
+         ModuleSettings::SetModuleStatus( file, kModuleEnabled );
          errors.emplace_back( std::move( umodule ), Error );
       }
    }
@@ -363,7 +363,7 @@ void ModuleManager::Initialize()
    for ( const auto &pair : errors ) {
       auto &pModule = pair.first;
       pModule->ShowLoadFailureError(pair.second);
-      ModulePrefs::SetModuleStatus( pModule->GetName(), kModuleFailed );
+      ModuleSettings::SetModuleStatus( pModule->GetName(), kModuleFailed );
    }
 }
 
