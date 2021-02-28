@@ -637,4 +637,6 @@ class AUDACITY_DLL_API WaveTrackFactory final
 
 extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
 
+AUDACITY_DLL_API bool GetEditClipsCanMove();
+
 #endif // __AUDACITY_WAVETRACK__

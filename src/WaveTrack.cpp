@@ -55,7 +55,6 @@ from the project that will own the track.
 #include "effects/TimeWarper.h"
 #include "QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
-#include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformSettings.h"
 
 #include "InconsistencyException.h"
@@ -2851,3 +2850,18 @@ StringSetting AudioTrackNameSetting{
    // Computed default value depends on chosen language
    []{ return DefaultName.Translation(); }
 };
+
+// Bug 825 is essentially that SyncLock requires EditClipsCanMove.
+// SyncLock needs rethinking, but meanwhile this function
+// fixes the issues of Bug 825 by allowing clips to move when in
+// SyncLock.
+bool GetEditClipsCanMove()
+{
+   bool mIsSyncLocked;
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
+   if( mIsSyncLocked )
+      return true;
+   bool editClipsCanMove;
+   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, false);
+   return editClipsCanMove;
+}
