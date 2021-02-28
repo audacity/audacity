@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackVRulerControls.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../../../Envelope.h"
+#include "Envelope.h"
 #include "../../../EnvelopeEditor.h"
 #include "../../../HitTestResult.h"
 #include "Theme.h"

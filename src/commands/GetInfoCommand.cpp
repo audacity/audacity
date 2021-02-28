@@ -38,7 +38,7 @@ This class now lists
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
 #include "../TimeTrack.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 
 #include "SelectCommand.h"
 #include "../ShuttleGui.h"

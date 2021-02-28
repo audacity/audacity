@@ -29,8 +29,6 @@ a draggable point type.
 
 #include "Envelope.h"
 
-
-
 #include <math.h>
 
 #include <wx/wxcrtvararg.h>

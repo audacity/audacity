@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackView.h"
 
-#include "../../Envelope.h"
+#include "Envelope.h"
 #include "../../EnvelopeEditor.h"
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"

@@ -29,7 +29,7 @@
 #include <wx/intl.h>
 #endif // WX_PRECOMP
 
-#include "../Envelope.h"
+#include "Envelope.h"
 
 #include "AllThemeResources.h"
 #include "../AudioIO.h"
@@ -39,7 +39,7 @@
 #include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
