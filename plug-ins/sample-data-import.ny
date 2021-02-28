@@ -40,11 +40,11 @@ $control bad-data (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Er
         t)))
 
 ;; ':new' creates a new class 'streamreader'
-;; 'filestream' and 'chanel' are its instance variables.
+;; 'filestream' and 'channel' are its instance variables.
 ;; (every object of class 'streamreader' has its own
 ;; copy of these variables)
 (setq streamreader
-  (send class :new '(filestream chanel)))
+  (send class :new '(filestream channel)))
 
 ;; Initialize class 'streamreader'
 (send streamreader :answer :isnew '(stream ch) '(
