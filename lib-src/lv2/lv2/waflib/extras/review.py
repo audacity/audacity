@@ -207,7 +207,7 @@ class ReviewContext(Context.Context):
 		# Convert value to string. It's important that 'None' maps to
 		# the empty string.
 		def val_to_str(val):
-			if val == None or val == '':
+			if val is None or val == '':
 				return ''
 			return str(val)
 
@@ -271,7 +271,7 @@ class ReviewContext(Context.Context):
 		Return the string representing the option specified.
 		"""
 		def val_to_str(val):
-			if val == None or val == '':
+			if val is None or val == '':
 				return "(void)"
 			return str(val)
 
