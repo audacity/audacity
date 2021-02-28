@@ -28,6 +28,7 @@ class wxWindow;
 #include "ConfigInterface.h"
 #include "EffectInterface.h"
 
+#include "../SampleCount.h"
 #include "../SelectedRegion.h"
 
 #include "../Track.h"
