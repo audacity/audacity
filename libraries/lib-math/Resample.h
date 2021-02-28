@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_RESAMPLE_H__
 #define __AUDACITY_RESAMPLE_H__
 
-
-
 #include "SampleFormat.h"
 
 template< typename Enum > class EnumSetting;
@@ -25,7 +23,7 @@ struct soxr_deleter {
 };
 using soxrHandle = std::unique_ptr<soxr, soxr_deleter>;
 
-class AUDACITY_DLL_API Resample final
+class MATH_API Resample final
 {
  public:
    /// Resamplers may have more than one method, offering a

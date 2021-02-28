@@ -2,6 +2,8 @@
 A library of mathematical utilities and manipulation of samples
 ]]#
 
+addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
+
 set( SOURCES
    Dither.cpp
    Dither.h
@@ -13,6 +15,8 @@ set( SOURCES
    Matrix.h
    RealFFTf.cpp
    RealFFTf.h
+   Resample.cpp
+   Resample.h
    SampleCount.cpp
    SampleCount.h
    SampleFormat.cpp
@@ -22,6 +26,7 @@ set( SOURCES
    float_cast.h
 )
 set( LIBRARIES
+   libsoxr
    lib-preferences-interface
    PRIVATE
    wxBase
