@@ -26,7 +26,7 @@ and sample size to help you importing data of an unknown format.
 
 #include "ImportPlugin.h"
 
-#include "../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "../FileFormats.h"
 #include "Prefs.h"
 #include "../ProjectSettings.h"

@@ -12,7 +12,7 @@ Paul Licameli split from MeterPanelBase.h
 #define __AUDACITY_METER__
 
 //! AudioIO uses this to send sample buffers for real-time display updates
-class AUDACITY_DLL_API Meter /* not final */
+class AUDIO_DEVICES_API Meter /* not final */
 {
 public:
    virtual ~Meter();

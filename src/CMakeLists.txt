@@ -103,8 +103,6 @@ list( APPEND SOURCES
       AudacityHeaders.h
       AudioIO.cpp
       AudioIO.h
-      AudioIOBase.cpp
-      AudioIOBase.h
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
@@ -128,10 +126,6 @@ list( APPEND SOURCES
       DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
-      DeviceChange.cpp
-      DeviceChange.h
-      DeviceManager.cpp
-      DeviceManager.h
       Diags.cpp
       Diags.h
       Envelope.cpp
@@ -182,8 +176,6 @@ list( APPEND SOURCES
       MacroMagic.h
       Menus.cpp
       Menus.h
-      Meter.cpp
-      Meter.h
       Mix.cpp
       Mix.h
       MixerBoard.cpp

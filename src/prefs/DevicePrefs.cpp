@@ -39,7 +39,7 @@ other settings.
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../DeviceManager.h"
+#include "DeviceManager.h"
 
 enum {
    HostID = 10000,
