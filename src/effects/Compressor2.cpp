@@ -91,6 +91,29 @@ Param( LookaheadTime,  double,  wxT("LookaheadTime"),      0.0,     0.0,     10.
 Param( LookbehindTime, double,  wxT("LookbehindTime"),     0.1,     0.0,     10.0,   200.0 );
 Param( OutputGain,     double,  wxT("OutputGain"),         0.0,     0.0,     50.0,    10.0 );
 
+struct FactoryPreset
+{
+   const TranslatableString name;
+   int algorithm;
+   int compressBy;
+   bool stereoInd;
+   double thresholdDB;
+   double ratio;
+   double kneeWidthDB;
+   double attackTime;
+   double releaseTime;
+   double lookaheadTime;
+   double lookbehindTime;
+   double outputGainDB;
+};
+
+static const FactoryPreset FactoryPresets[] =
+{
+   { XO("Dynamic Reduction"), kEnvPT1, kAmplitude, false, -40, 2.5, 6, 0.3, 0.3, 0.5, 0.5, 23 },
+   { XO("Peak Reduction"), kEnvPT1, kAmplitude, false, -10, 10, 0, 0.001, 0.05, 0, 0, 0 },
+   { XO("Analog Limiter"), kEnvPT1, kAmplitude, false, -6, 100, 6, 0.0001, 0.0001, 0, 0, 0 }
+};
+
 inline int ScaleToPrecision(double scale)
 {
    return ceil(log10(scale));
@@ -733,6 +756,40 @@ bool EffectCompressor2::SetAutomationParameters(CommandParameters & parms)
    mLookbehindTime = LookbehindTime;
    mOutputGainDB = OutputGain;
 
+   return true;
+}
+
+RegistryPaths EffectCompressor2::GetFactoryPresets()
+{
+   RegistryPaths names;
+
+   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
+      names.push_back( FactoryPresets[i].name.Translation() );
+
+   return names;
+}
+
+bool EffectCompressor2::LoadFactoryPreset(int id)
+{
+   if (id < 0 || id >= int(WXSIZEOF(FactoryPresets)))
+      return false;
+
+   const FactoryPreset* preset = &FactoryPresets[id];
+
+   mAlgorithm = preset->algorithm;
+   mCompressBy = preset->compressBy;
+   mStereoInd = preset->stereoInd;
+
+   mThresholdDB = preset->thresholdDB;
+   mRatio = preset->ratio;
+   mKneeWidthDB = preset->kneeWidthDB;
+   mAttackTime = preset->attackTime;
+   mReleaseTime = preset->releaseTime;
+   mLookaheadTime = preset->lookaheadTime;
+   mLookbehindTime = preset->lookbehindTime;
+   mOutputGainDB = preset->outputGainDB;
+
+   TransferDataToWindow();
    return true;
 }
 
