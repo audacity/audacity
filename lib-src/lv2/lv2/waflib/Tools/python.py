@@ -219,7 +219,7 @@ def get_python_variables(self, variables, imports=None):
 		s = s.strip()
 		if not s:
 			continue
-		if s == 'None':
+		if s is 'None':
 			return_values.append(None)
 		elif (s[0] == "'" and s[-1] == "'") or (s[0] == '"' and s[-1] == '"'):
 			return_values.append(eval(s))

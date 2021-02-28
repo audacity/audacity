@@ -1423,7 +1423,7 @@ def getOntologyNS(m):
         if not isBlank(getSubject(s)):
             ns = str(getSubject(s))
 
-    if (ns == None):
+    if (ns is None):
         sys.exit("Impossible to get ontology's namespace")
     else:
         return ns
