@@ -26,7 +26,7 @@
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
+#include "../WaveTrack.h"
 
 int TracksPrefs::iPreferencePinned = -1;
 
@@ -362,8 +362,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
                      sampleDisplaySetting );
 
          S.TieTextBox(XXO("Default audio track &name:"),
-                      {wxT("/GUI/TrackNames/DefaultTrackName"),
-                       _("Audio Track")},
+                      AudioTrackNameSetting,
                       30);
       }
       S.EndMultiColumn();
@@ -420,20 +419,6 @@ void TracksPrefs::SetPinnedHeadPositionPreference(double value, bool flush)
       gPrefs->Flush();
 }
 
-wxString TracksPrefs::GetDefaultAudioTrackNamePreference()
-{
-   const auto name =
-      gPrefs->Read(wxT("/GUI/TrackNames/DefaultTrackName"), wxT(""));
-
-   if (name.empty() || ( name == "Audio Track" ))
-      // When nothing was specified,
-      // the default-default is whatever translation of...
-      /* i18n-hint: The default name for an audio track. */
-      return _("Audio Track");
-   else
-      return name;
-}
-
 bool TracksPrefs::Commit()
 {
    // Bug 1583: Clear the caching of the preference pinned state.
@@ -443,8 +428,9 @@ bool TracksPrefs::Commit()
 
    // Bug 1661: Don't store the name for new tracks if the name is the
    // default in that language.
-   if (GetDefaultAudioTrackNamePreference() == _("Audio Track")) {
-      gPrefs->DeleteEntry(wxT("/GUI/TrackNames/DefaultTrackName"));
+   if (WaveTrack::GetDefaultAudioTrackNamePreference() ==
+       AudioTrackNameSetting.GetDefault()) {
+      AudioTrackNameSetting.Delete();
       gPrefs->Flush();
    }
 

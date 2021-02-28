@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "Prefs.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include "SampleTrack.h"
@@ -69,6 +70,7 @@ class Envelope;
 class AUDACITY_DLL_API WaveTrack final : public WritableSampleTrack
 {
 public:
+   static wxString GetDefaultAudioTrackNamePreference();
 
    //
    // Constructor / Destructor / Duplicator
@@ -632,5 +634,7 @@ class AUDACITY_DLL_API WaveTrackFactory final
       sampleFormat format = (sampleFormat)0,
       double rate = 0);
 };
+
+extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
 
 #endif // __AUDACITY_WAVETRACK__

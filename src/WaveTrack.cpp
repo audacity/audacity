@@ -55,7 +55,6 @@ from the project that will own the track.
 #include "effects/TimeWarper.h"
 #include "QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
-#include "prefs/TracksPrefs.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformSettings.h"
 
@@ -95,6 +94,21 @@ Track::LinkType ToLinkType(int value)
    return static_cast<Track::LinkType>(value);
 }
 
+}
+
+static auto DefaultName = XO("Audio Track");
+
+wxString WaveTrack::GetDefaultAudioTrackNamePreference()
+{
+   const auto name = AudioTrackNameSetting.ReadWithDefault(L"");
+
+   if (name.empty() || ( name == DefaultName.MSGID() ))
+      // When nothing was specified,
+      // the default-default is whatever translation of...
+      /* i18n-hint: The default name for an audio track. */
+      return DefaultName.Translation();
+   else
+      return name;
 }
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
@@ -145,7 +159,7 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
-   SetDefaultName(TracksPrefs::GetDefaultAudioTrackNamePreference());
+   SetDefaultName(GetDefaultAudioTrackNamePreference());
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
@@ -2831,3 +2845,9 @@ ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
       return BaseProjectFormatVersion;
    }
 );
+
+StringSetting AudioTrackNameSetting{
+   L"/GUI/TrackNames/DefaultTrackName",
+   // Computed default value depends on chosen language
+   []{ return DefaultName.Translation(); }
+};
