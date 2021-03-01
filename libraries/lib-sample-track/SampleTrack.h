@@ -16,8 +16,9 @@ Paul Licameli split from WaveTrack.h
 #include "SampleFormat.h"
 #include "Track.h"
 
-class AUDACITY_DLL_API SampleTrack /* not final */
-   : public PlayableTrack {
+class SAMPLE_TRACK_API SampleTrack /* not final */
+   : public PlayableTrack
+{
 public:
    ~SampleTrack() override;
 
@@ -107,7 +108,7 @@ public:
 
 ENUMERATE_TRACK_TYPE(SampleTrack)
 
-class AUDACITY_DLL_API WritableSampleTrack /* not final */
+class SAMPLE_TRACK_API WritableSampleTrack /* not final */
    : public SampleTrack
 {
 public:

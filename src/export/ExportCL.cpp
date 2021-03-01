@@ -28,7 +28,7 @@
 #include "FileNames.h"
 #include "Export.h"
 
-#include "../Mix.h"
+#include "Mix.h"
 #include "Prefs.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"

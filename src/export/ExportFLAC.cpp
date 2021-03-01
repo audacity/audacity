@@ -27,7 +27,7 @@ Joshua Haberman
 
 #include "float_cast.h"
 #include "ProjectRate.h"
-#include "../Mix.h"
+#include "Mix.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 

@@ -12,7 +12,6 @@ Paul Licameli split from WaveTrack.h
 #ifndef __AUDACITY_SAMPLE_TRACK_CACHE__
 #define __AUDACITY_SAMPLE_TRACK_CACHE__
 
-#include "audacity/Types.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include <memory>
@@ -22,7 +21,7 @@ class SampleTrack;
 //! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
 /*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).
  */
-class AUDACITY_DLL_API SampleTrackCache {
+class SAMPLE_TRACK_API SampleTrackCache {
 public:
    SampleTrackCache()
       : mBufferSize(0)

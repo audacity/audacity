@@ -21,14 +21,9 @@
 *//*******************************************************************/
 
 
-
 #include "Mix.h"
 
 #include <math.h>
-
-#include <wx/textctrl.h>
-#include <wx/timer.h>
-#include <wx/intl.h>
 
 #include "Envelope.h"
 #include "SampleTrack.h"
