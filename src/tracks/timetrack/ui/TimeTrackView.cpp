@@ -32,9 +32,14 @@ Paul Licameli split from TrackPanel.cpp
 
 using Doubles = ArrayOf<double>;
 
-TimeTrackView::TimeTrackView( const std::shared_ptr<Track> &pTrack )
+TimeTrackView::TimeTrackView(
+   const std::shared_ptr<Track> &pTrack, const ZoomInfo &zoomInfo )
    : CommonTrackView{ pTrack }
 {
+   mRuler = std::make_unique<Ruler>();
+   mRuler->SetUseZoomInfo(0, &zoomInfo);
+   mRuler->SetLabelEdges(false);
+   mRuler->SetFormat(Ruler::TimeFormat);
 }
 
 TimeTrackView::~TimeTrackView()
@@ -57,7 +62,8 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
 using DoGetTimeTrackView = DoGetView::Override< TimeTrack >;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
    return [](TimeTrack &track) {
-      return std::make_shared<TimeTrackView>( track.SharedPointer() );
+      return std::make_shared<TimeTrackView>(
+         track.SharedPointer(), track.GetZoomInfo() );
    };
 }
 
@@ -159,6 +165,6 @@ void TimeTrackView::Draw(
    if ( iPass == TrackArtist::PassTracks ) {
       const auto tt = std::static_pointer_cast<const TimeTrack>(
          FindTrack()->SubstitutePendingChangedTrack());
-      DrawTimeTrack( context, *tt, tt->GetRuler(), rect );
+      DrawTimeTrack( context, *tt, GetRuler(), rect );
    }
 }

@@ -14,6 +14,8 @@ Paul Licameli split from class TimeTrack
 #include "../../ui/CommonTrackView.h"
 
 class EnvelopeHandle;
+class Ruler;
+class ZoomInfo;
 
 class TimeTrackView final : public CommonTrackView
 {
@@ -22,12 +24,15 @@ class TimeTrackView final : public CommonTrackView
 
 public:
    explicit
-   TimeTrackView( const std::shared_ptr<Track> &pTrack );
+   TimeTrackView(
+      const std::shared_ptr<Track> &pTrack, const ZoomInfo &zoomInfo );
    ~TimeTrackView() override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
 private:
+   Ruler &GetRuler() const { return *mRuler; }
+
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)
@@ -39,6 +44,8 @@ private:
    void Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
+
+   std::unique_ptr<Ruler> mRuler;
 };
 
 #endif
