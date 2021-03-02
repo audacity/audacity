@@ -60,7 +60,7 @@ with changes in the SelectionBar.
 #include "../ProjectSettings.h"
 #include "../Snap.h"
 #include "ViewInfo.h"
-#include "../prefs/QualitySettings.h"
+#include "QualitySettings.h"
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY

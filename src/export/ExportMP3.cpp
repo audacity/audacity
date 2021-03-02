@@ -83,7 +83,7 @@
 #include "float_cast.h"
 #include "../Mix.h"
 #include "Prefs.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"

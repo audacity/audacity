@@ -18,6 +18,7 @@ set( LIBRARIES
    lib-audio-devices
    lib-project
    lib-screen-geometry
+   lib-project-rate
 )
 
 if ( ${_OPT}has_networking )

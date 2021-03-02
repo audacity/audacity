@@ -11,7 +11,7 @@
 
 **********************************************************************/
 
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 
 #include <wx/app.h>
 #include <wx/button.h>

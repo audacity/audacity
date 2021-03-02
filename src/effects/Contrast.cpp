@@ -17,7 +17,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"

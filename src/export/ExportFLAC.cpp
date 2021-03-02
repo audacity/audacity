@@ -30,7 +30,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "FLAC++/encoder.h"
 
 #include "float_cast.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../Mix.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"

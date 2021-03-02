@@ -13,7 +13,7 @@ Paul Licameli split from ProjectSettings.cpp
 #include "AudioIOBase.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "prefs/QualitySettings.h"
+#include "QualitySettings.h"
 #include "XMLWriter.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_RATE_CHANGE, wxEvent);

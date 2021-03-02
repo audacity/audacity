@@ -8,7 +8,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectHistory.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"

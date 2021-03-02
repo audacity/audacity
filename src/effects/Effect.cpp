@@ -34,7 +34,7 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
-#include "../prefs/QualitySettings.h"
+#include "QualitySettings.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"

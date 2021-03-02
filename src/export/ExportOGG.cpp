@@ -28,7 +28,7 @@
 #include <vorbis/vorbisenc.h>
 
 #include "FileIO.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../Mix.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"

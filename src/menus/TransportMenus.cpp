@@ -12,7 +12,7 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectHistory.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"

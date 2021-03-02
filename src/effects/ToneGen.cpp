@@ -30,7 +30,7 @@ frequency changes smoothly during the tone.
 #include <wx/valgen.h>
 
 #include "Project.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"

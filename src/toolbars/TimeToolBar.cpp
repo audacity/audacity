@@ -30,7 +30,7 @@
 #include "../AudioIO.h"
 #include "Project.h"
 #include "../ProjectAudioIO.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "ViewInfo.h"
 

@@ -1844,7 +1844,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
 };
 
 #include "../PluginManager.h"
-#include "../ProjectRate.h"
+#include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"

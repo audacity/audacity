@@ -13,7 +13,7 @@ Paul Licameli split from Import.cpp
 #include <wx/filename.h>
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
-#include "../prefs/QualitySettings.h"
+#include "QualitySettings.h"
 
 ImportPlugin::ImportPlugin(FileExtensions supportedExtensions):
    mExtensions( std::move( supportedExtensions ) )

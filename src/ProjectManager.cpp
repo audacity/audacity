@@ -39,7 +39,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "prefs/QualitySettings.h"
+#include "QualitySettings.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"

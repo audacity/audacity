@@ -18,11 +18,11 @@ class AudacityProject;
 #include <wx/event.h> // to declare custom event type
 
 // Sent to the project when the rate changes
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(PROJECT_RATE_API,
    EVT_PROJECT_RATE_CHANGE, wxEvent);
 
 ///\brief Holds project sample rate
-class AUDACITY_DLL_API ProjectRate final
+class PROJECT_RATE_API ProjectRate final
    : public ClientData::Base
 {
 public:
