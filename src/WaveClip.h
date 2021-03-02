@@ -35,6 +35,7 @@ class SpectrogramSettings;
 class WaveCache;
 class SampleTrackCache;
 class wxFileNameWrapper;
+namespace BasicUI { class ProgressDialog; }
 
 class AUDACITY_DLL_API SpecCache {
 public:
@@ -216,7 +217,7 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};

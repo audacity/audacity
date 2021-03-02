@@ -27,6 +27,7 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "BasicUI.h"
 #include "SampleTrackCache.h"
 #include "Sequence.h"
 #include "Spectrum.h"
@@ -34,12 +35,10 @@
 #include "Envelope.h"
 #include "Resample.h"
 #include "WaveTrack.h"
-#include "Profiler.h"
 #include "InconsistencyException.h"
 #include "UserException.h"
 
 #include "prefs/SpectrogramSettings.h"
-#include "widgets/ProgressDialog.h"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -1670,7 +1669,7 @@ void WaveClip::SetRate(int rate)
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::Resample(int rate, ProgressDialog *progress)
+void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get resampled as needed when they are expanded.
@@ -1726,11 +1725,11 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
 
       if (progress)
       {
-         auto updateResult = progress->Update(
+         auto updateResult = progress->Poll(
             pos.as_long_long(),
             numSamples.as_long_long()
          );
-         error = (updateResult != ProgressResult::Success);
+         error = (updateResult != BasicUI::ProgressResult::Success);
          if (error)
             throw UserException{};
       }

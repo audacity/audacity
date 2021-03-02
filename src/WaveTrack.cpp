@@ -2686,7 +2686,7 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
 */
-void WaveTrack::Resample(int rate, ProgressDialog *progress)
+void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
    for (const auto &clip : mClips)
       clip->Resample(rate, progress);

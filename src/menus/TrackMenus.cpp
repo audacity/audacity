@@ -711,14 +711,15 @@ void OnResample(const CommandContext &context)
    {
       auto msg = XO("Resampling track %d").Format( ++ndx );
 
-      ProgressDialog progress(XO("Resample"), msg);
+      using namespace BasicUI;
+      auto progress = MakeProgress(XO("Resample"), msg);
 
       // The resampling of a track may be stopped by the user.  This might
       // leave a track with multiple clips in a partially resampled state.
       // But the thrown exception will cause rollback in the application
       // level handler.
 
-       wt->Resample(newRate, &progress);
+       wt->Resample(newRate, progress.get());
 
       // Each time a track is successfully, completely resampled,
       // commit that to the undo stack.  The second and later times,
