@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_BASIC_UI__
 
 #include <functional>
+#include <memory>
 #include "Identifier.h"
 #include "Internat.h"
 
@@ -133,6 +134,34 @@ enum class MessageBoxResult : int {
    Cancel,
 };
 
+enum ProgressDialogOptions : unsigned {
+   ProgressShowStop            = (1 << 0),
+   ProgressShowCancel          = (1 << 1),
+   ProgressHideTime            = (1 << 2),
+   ProgressConfirmStopOrCancel = (1 << 3),
+};
+
+enum class ProgressResult : unsigned
+{
+   Cancelled = 0, //<! User says that whatever is happening is undesirable and shouldn't have happened at all
+   Success,       //<! User says nothing, everything works fine, continue doing whatever we're doing
+   Failed,        //<! Something has gone wrong, we should stop and cancel everything we did
+   Stopped        //<! Nothing is wrong, but user says we should stop now and leave things as they are now
+};
+
+//! Abstraction of a progress dialog with well defined time-to-completion estimate
+class BASIC_UI_API ProgressDialog
+{
+public:
+   virtual ~ProgressDialog();
+
+   //! Update the bar and poll for clicks.  Call only on the main thread.
+   virtual ProgressResult Poll(
+      unsigned long long numerator,
+      unsigned long long denominator,
+      const TranslatableString &message = {}) = 0;
+};
+
 //! @}
 
 //! Abstract class defines a few user interface services, not mentioning particular toolkits
@@ -152,6 +181,11 @@ public:
    virtual MessageBoxResult DoMessageBox(
       const TranslatableString& message,
       MessageBoxOptions options) = 0;
+   virtual std::unique_ptr<ProgressDialog>
+   DoMakeProgress(const TranslatableString &title,
+      const TranslatableString &message,
+      unsigned flag,
+      const TranslatableString &remainingLabelText) = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -207,8 +241,25 @@ inline MessageBoxResult ShowMessageBox( const TranslatableString &message,
       return MessageBoxResult::None;
 }
 
-//! @}
+//! Create and display a progress dialog
+/*!
+ @param flags bitwise OR of values in ProgressDialogOptions
+ @param remainingLabelText if not empty substitutes for "Remaining Time:"
+ @return nullptr if Services not installed
+ */
+inline std::unique_ptr<ProgressDialog> MakeProgress(
+   const TranslatableString & title,
+   const TranslatableString & message,
+   unsigned flags = (ProgressShowStop | ProgressShowCancel),
+   const TranslatableString & remainingLabelText = {})
+{
+   if (auto p = Get())
+      return p->DoMakeProgress(title, message, flags, remainingLabelText);
+   else
+      return nullptr;
 }
 
+//! @}
+}
 
 #endif

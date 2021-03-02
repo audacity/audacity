@@ -44,6 +44,11 @@ protected:
    BasicUI::MessageBoxResult DoMessageBox(
       const TranslatableString &message,
       BasicUI::MessageBoxOptions options) override;
+   std::unique_ptr<BasicUI::ProgressDialog>
+   DoMakeProgress(const TranslatableString & title,
+      const TranslatableString &message,
+      unsigned flags,
+      const TranslatableString &remainingLabelText) override;
 };
 
 #endif

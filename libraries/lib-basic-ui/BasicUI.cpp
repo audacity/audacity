@@ -17,6 +17,8 @@ WindowPlacement::~WindowPlacement() = default;
 
 Services::~Services() = default;
 
+ProgressDialog::~ProgressDialog() = default;
+
 static Services *theInstance = nullptr;
 
 Services *Get() { return theInstance; }
