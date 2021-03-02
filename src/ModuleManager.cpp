@@ -45,37 +45,9 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
-#define mainPanelFnName "MainPanelFunc"
 
-typedef wxWindow * pwxWindow;
-typedef int (*tModuleInit)(int);
 //typedef wxString (*tVersionFn)();
 typedef wxChar * (*tVersionFn)();
-typedef pwxWindow (*tPanelFn)(int);
-
-// This variable will hold the address of a subroutine in 
-// a DLL that can hijack the normal panel.
-static tPanelFn pPanelHijack=NULL;
-
-// Next two commented out lines are handy when investigating
-// strange DLL behaviour.  Instead of dynamic linking,
-// link the library which has the replacement panel statically.
-// Give the address of the routine here.
-// This is a great help in identifying missing 
-// symbols which otherwise cause a dll to unload after loading
-// without an explanation as to why!
-//extern wxWindow * MainPanelFunc( int i );
-//tPanelFn pPanelHijack=&MainPanelFunc;
-
-/// IF pPanelHijack has been found in a module DLL
-/// THEN when this function is called we'll go and
-/// create that window instead of the normal one.
-wxWindow * MakeHijackPanel()
-{
-   if( pPanelHijack == NULL )
-      return NULL;
-   return pPanelHijack(0);
-}
 
 Module::Module(const FilePath & name)
    : mName{ name }
@@ -144,8 +116,7 @@ bool Module::Load(wxString &deferredErrorMessage)
 
    mDispatch = (fnModuleDispatch) mLib->GetSymbol(wxT(ModuleDispatchName));
    if (!mDispatch) {
-      // Module does not provide a dispatch function. Special case modules like this could be:
-      // (a) for hijacking the entire Audacity panel (MainPanelFunc entry point)
+      // Module does not provide a dispatch function.
       return true;
    }
 
@@ -340,19 +311,7 @@ void ModuleManager::TryLoadModules(
          decided.Add( ShortName );
          auto module = umodule.get();
 
-         {
-            // We've loaded and initialised OK.
-            // So look for special case functions:
-            wxLogNull logNo; // Don't show wxWidgets errors if we can't do these. (Was: Fix bug 544.)
-
-            // (a) for hijacking the entire Audacity panel.
-            if (pPanelHijack == NULL)
-            {
-               pPanelHijack = (tPanelFn)(module->GetSymbol(wxT(mainPanelFnName)));
-            }
-         }
-
-         if (!module->HasDispatch() && !pPanelHijack)
+         if (!module->HasDispatch())
          {
             auto ShortName = wxFileName(file).GetName();
             AudacityMessageBox(

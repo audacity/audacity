@@ -34,15 +34,8 @@ click from the menu into the actual function to be called.
 #include "CommonCommandFlags.h"
 
 /*
-There are several functions that can be used in a GUI module.
 //#define ModuleDispatchName "ModuleDispatch"
-The most useful function.  See the example in this 
-file.  It has several cases/options in it.
-
-//#define mainPanelFnName "MainPanelFunc"
-This function is the hijacking function, to take over Audacity
-and replace the main project window with our own wxFrame.
-
+See the example in this file.  It has several cases/options in it.
 */
 
 // derived from wxFrame as it needs to be some kind of event handler.

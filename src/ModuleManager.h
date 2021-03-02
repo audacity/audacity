@@ -23,8 +23,6 @@ class wxDynamicLibrary;
 class ComponentInterface;
 class ModuleInterface;
 
-wxWindow *  MakeHijackPanel();
-
 //
 // Module Manager
 //
