@@ -18,7 +18,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UIHandle.h"
-#include "../../../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
 

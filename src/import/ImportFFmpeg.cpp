@@ -154,7 +154,7 @@ static const auto exts = {
 // all the includes live here by default
 #include "Import.h"
 #include "Tags.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "ImportPlugin.h"
 
 class FFmpegImportFileHandle;

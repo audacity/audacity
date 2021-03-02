@@ -51,7 +51,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include "FileNames.h"
 #include "../ShuttleGui.h"
 #include "Project.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 #include "Prefs.h"
 

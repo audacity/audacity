@@ -14,7 +14,7 @@
 #include "../SelectUtilities.h"
 #include "../SyncLock.h"
 #include "../TrackPanel.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"

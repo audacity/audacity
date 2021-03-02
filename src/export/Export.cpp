@@ -63,7 +63,7 @@
 #include "../ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "Theme.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"

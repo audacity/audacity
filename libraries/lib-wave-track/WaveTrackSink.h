@@ -22,7 +22,7 @@
 
 class WaveTrack;
 
-class WaveTrackSink final : public AudioGraph::Sink {
+class WAVE_TRACK_API WaveTrackSink final : public AudioGraph::Sink {
 public:
    WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
       sampleCount start, bool isGenerator, bool isProcessor,

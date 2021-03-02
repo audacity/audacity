@@ -27,7 +27,7 @@
 #include "../ShuttleGui.h"
 
 #include "../TrackPanel.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 
 #include <algorithm>

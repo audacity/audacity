@@ -19,7 +19,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 
 SpectrumVZoomHandle::SpectrumVZoomHandle

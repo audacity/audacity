@@ -32,8 +32,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
-#include "../../WaveClip.h"
-#include "../../WaveTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../../images/Cursors.h"
 

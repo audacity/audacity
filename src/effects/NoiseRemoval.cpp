@@ -45,7 +45,7 @@
 
 #include "LoadEffects.h"
 
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "Prefs.h"
 #include "FileNames.h"
 #include "../ShuttleGui.h"

@@ -31,7 +31,7 @@
 #include "../widgets/AudacityMessageBox.h"
 
 #include "../LabelTrack.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 const EffectParameterMethods& EffectFindClipping::Parameters() const
 {

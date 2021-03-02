@@ -47,7 +47,7 @@ using WaveClipConstPointers = std::vector < const WaveClip* >;
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack final : public WritableSampleTrack
+class WAVE_TRACK_API WaveTrack final : public WritableSampleTrack
 {
 public:
    /// \brief Structure to hold region of a wavetrack and a comparison function
@@ -555,12 +555,12 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs = nullptr);
 
 // Non-mutating version of the above
-void InspectBlocks(const TrackList &tracks,
+WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
    BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
 class ProjectRate;
 
-class AUDACITY_DLL_API WaveTrackFactory final
+class WAVE_TRACK_API WaveTrackFactory final
    : public ClientData::Base
 {
  public:
@@ -601,17 +601,17 @@ class AUDACITY_DLL_API WaveTrackFactory final
    SampleBlockFactoryPtr mpFactory;
 };
 
-extern AUDACITY_DLL_API BoolSetting
+extern WAVE_TRACK_API BoolSetting
      EditClipsCanMove
 ;
 
-extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
+extern WAVE_TRACK_API StringSetting AudioTrackNameSetting;
 
-AUDACITY_DLL_API bool GetEditClipsCanMove();
+WAVE_TRACK_API bool GetEditClipsCanMove();
 
 // Generate a registry for serialized data
 #include "XMLMethodRegistry.h"
 using WaveTrackIORegistry = XMLMethodRegistry<WaveTrack>;
-DECLARE_XML_METHOD_REGISTRY( AUDACITY_DLL_API, WaveTrackIORegistry );
+DECLARE_XML_METHOD_REGISTRY( WAVE_TRACK_API, WaveTrackIORegistry );
 
 #endif // __AUDACITY_WAVETRACK__

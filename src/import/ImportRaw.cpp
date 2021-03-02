@@ -33,7 +33,7 @@ and sample size to help you importing data of an unknown format.
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "UserException.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
 
 #include <cmath>

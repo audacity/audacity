@@ -40,7 +40,7 @@ public:
 ///\brief Abstract class allows access to contents of a block of sound samples,
 /// serialization as XML, and reference count management that can suppress
 /// reclamation of its storage
-class SampleBlock
+class WAVE_TRACK_API SampleBlock
 {
 public:
    //! Type of function that is informed when a block is about to be deleted
@@ -106,11 +106,11 @@ BlockSpaceUsageAccumulator (unsigned long long &total)
 };
 
 ///\brief abstract base class with methods to produce @ref SampleBlock objects
-class SampleBlockFactory
+class WAVE_TRACK_API SampleBlockFactory
 {
 public:
    //! Global factory of per-project factories of sample blocks
-   struct AUDACITY_DLL_API Factory : GlobalHook<Factory,
+   struct WAVE_TRACK_API Factory : GlobalHook<Factory,
       SampleBlockFactoryPtr( AudacityProject& )
    >{};
 

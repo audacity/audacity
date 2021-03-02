@@ -14,7 +14,7 @@
 #include "../SelectUtilities.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "RealtimeEffectList.h"

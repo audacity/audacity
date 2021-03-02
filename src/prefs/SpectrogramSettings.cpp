@@ -23,7 +23,7 @@ Paul Licameli
 
 #include "FFT.h"
 #include "Prefs.h"
-#include "../WaveTrack.h"
+#include "WaveTrack.h"
 
 #include <cmath>
 

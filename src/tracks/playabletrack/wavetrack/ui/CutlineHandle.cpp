@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../../../../WaveTrack.h"
+#include "WaveTrack.h"
 #include "../../../../../images/Cursors.h"
 
 CutlineHandle::CutlineHandle

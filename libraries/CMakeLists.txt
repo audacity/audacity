@@ -34,6 +34,7 @@ set( LIBRARIES
    lib-tags
    lib-realtime-effects
    lib-audio-io
+   lib-wave-track
 )
 
 if ( ${_OPT}has_networking )
