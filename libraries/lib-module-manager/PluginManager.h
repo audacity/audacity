@@ -41,7 +41,7 @@ typedef enum : unsigned {
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
-class AUDACITY_DLL_API PluginDescriptor
+class MODULE_MANAGER_API PluginDescriptor
 {
 public:
    PluginDescriptor();
@@ -171,7 +171,7 @@ typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
-class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
+class MODULE_MANAGER_API PluginManager final : public PluginManagerInterface
 {
 public:
 
@@ -239,7 +239,7 @@ public:
 
    //! @name iteration over plugins of certain types, supporting range-for syntax
    //! @{
-   class Iterator {
+   class MODULE_MANAGER_API Iterator {
    public:
       //! Iterates all, even disabled
       explicit Iterator(PluginManager &manager);

@@ -18,7 +18,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
-#include "../../ModuleManager.h"
+#include "ModuleManager.h"
 #include "SampleCount.h"
 
 #include <wx/defs.h>

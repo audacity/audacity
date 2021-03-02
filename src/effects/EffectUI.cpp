@@ -17,7 +17,7 @@
 #include "widgets/BasicMenu.h"
 #include "Effect.h"
 #include "EffectManager.h"
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
@@ -1781,7 +1781,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface &host,
    return nullptr;
 };
 
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"

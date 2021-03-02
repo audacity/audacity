@@ -18,7 +18,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
-
 #include "ModuleManager.h"
 #include "ModuleInterface.h"
 

@@ -9,7 +9,7 @@
 #include "../ProjectHistory.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
