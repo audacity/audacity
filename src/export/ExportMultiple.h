@@ -32,6 +32,7 @@ class Track;
 class AUDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
 {
 public:
+   using ProgressResult = BasicUI::ProgressResult;
 
    ExportMultipleDialog(AudacityProject *parent);
    virtual ~ExportMultipleDialog();

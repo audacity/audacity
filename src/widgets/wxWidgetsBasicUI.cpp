@@ -14,7 +14,9 @@ Paul Licameli
 #include "widgets/ErrorReportDialog.h"
 #endif
 #include "widgets/AudacityMessageBox.h"
+#include "ProgressDialog.h"
 #include <wx/app.h>
+#include <wx/windowptr.h>
 
 using namespace BasicUI;
 
@@ -157,4 +159,48 @@ wxWidgetsBasicUI::DoMessageBox(
       wxASSERT(false);
       return MessageBoxResult::None;
    }
+}
+
+namespace {
+struct MyProgressDialog : BasicUI::ProgressDialog {
+   wxWindowPtr<::ProgressDialog> mpDialog;
+
+   explicit MyProgressDialog(::ProgressDialog *pDialog)
+   : mpDialog{ pDialog }
+   {
+      wxASSERT(pDialog);
+   }
+   ~MyProgressDialog() override = default;
+   ProgressResult Poll(
+      unsigned long long numerator,
+      unsigned long long denominator,
+      const TranslatableString &message) override
+   {
+      return mpDialog->Update(numerator, denominator, message);
+   }
+};
+}
+
+std::unique_ptr<BasicUI::ProgressDialog>
+wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
+   const TranslatableString &message,
+   unsigned flags,
+   const TranslatableString &remainingLabelText)
+{
+   unsigned options = 0;
+   if (~(flags & ProgressShowStop))
+      options |= pdlgHideStopButton;
+   if (~(flags & ProgressShowCancel))
+      options |= pdlgHideCancelButton;
+   if ((flags & ProgressHideTime))
+      options |= pdlgHideElapsedTime;
+   if ((flags & ProgressConfirmStopOrCancel))
+      options |= pdlgConfirmStopCancel;
+   // Note that wxWindow objects should not be managed by std::unique_ptr
+   // See https://docs.wxwidgets.org/3.0/overview_windowdeletion.html
+   // So there is an extra indirection:  return a deletable object that holds
+   // the proper kind of smart pointer to a wxWindow.
+   return std::make_unique<MyProgressDialog>(
+      safenew ::ProgressDialog(
+         title, message, options, remainingLabelText));
 }
