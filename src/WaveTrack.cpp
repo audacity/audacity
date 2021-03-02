@@ -1646,8 +1646,6 @@ void WaveTrack::Disjoin(double t0, double t1)
    Floats buffer{ maxAtOnce };
    Regions regions;
 
-   wxBusyCursor busy;
-
    for (const auto &clip : mClips)
    {
       double startTime = clip->GetPlayStartTime();
