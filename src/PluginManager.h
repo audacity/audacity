@@ -293,8 +293,6 @@ public:
 
    void CheckForUpdates(bool bFast = false);
 
-   bool ShowManager(wxWindow *parent, EffectType type = EffectTypeNone);
-
    //! Used only by Nyquist Workbench module
    const PluginID & RegisterPlugin(
       std::unique_ptr<EffectDefinitionInterface> effect, PluginType type );
