@@ -607,7 +607,7 @@ EffectType EffectCompressor2::GetType()
 bool EffectCompressor2::SupportsRealtime()
 {
 #if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
-   return true;
+   return false;
 #else
    return false;
 #endif
