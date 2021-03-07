@@ -56,6 +56,7 @@
    /*	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
+#if _MSC_VER < 1928
 	__inline long int
 	lrint (double flt)
 	{	int intgr;
@@ -79,7 +80,7 @@
 
 		return intgr ;
 	}
-
+#endif
 	__inline long long int
 	llrint (double flt)
 	{	long long int intgr;
