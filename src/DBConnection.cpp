@@ -82,12 +82,12 @@ void DBConnection::SetDBError(
    printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
 }
 
-bool DBConnection::Open(const char *fileName)
+bool DBConnection::Open(const FilePath fileName)
 {
    wxASSERT(mDB == nullptr);
    int rc;
 
-   rc = sqlite3_open(fileName, &mDB);
+   rc = sqlite3_open(fileName.ToUTF8(), &mDB);
    if (rc != SQLITE_OK)
    {
       sqlite3_close(mDB);

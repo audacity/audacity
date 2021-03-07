@@ -46,7 +46,7 @@ public:
       CheckpointFailureCallback callback);
    ~DBConnection();
 
-   bool Open(const char *fileName);
+   bool Open(const FilePath fileName);
    bool Close();
 
    //! throw and show appropriate message box
