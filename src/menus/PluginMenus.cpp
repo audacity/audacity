@@ -462,7 +462,7 @@ void OnRepeatLastEffect(const CommandContext &context)
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, menuManager.mRepeatGeneratorFlags);
+         lastEffect, context, menuManager.mRepeatEffectFlags);
    }
 }
 
