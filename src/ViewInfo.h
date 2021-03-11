@@ -17,6 +17,7 @@
 #include <wx/weakref.h> // member variable
 #include "SelectedRegion.h"
 #include <memory>
+#include "Prefs.h"
 #include "XMLMethodRegistry.h"
 #include "ZoomInfo.h" // to inherit
 
@@ -228,4 +229,5 @@ private:
    struct ProjectFileIORegistration;
 };
 
+extern AUDACITY_DLL_API BoolSetting ScrollingPreference;
 #endif
