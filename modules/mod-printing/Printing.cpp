@@ -231,3 +231,6 @@ AttachedItem sAttachment{ { "File", { OrderingHint::Before, "Exit" } },
 };
 
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
