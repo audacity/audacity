@@ -24,6 +24,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../ProjectSettings.h"
 #include "SelectedRegion.h"
 #include "../../../../SyncLock.h"
+#include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
