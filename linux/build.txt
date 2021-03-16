@@ -60,6 +60,39 @@ wxWidgets:
 
   3) Having got this far, it is well worth trying out building some wxWidgets
     examples to confirm that building has worked OK
+    For testing the installation follow the instruction below.
+
+    Check the version you have installed on your machine
+    	wx-config --version
+    
+    1. Sample testing - The source code for samples lives in sample subdir of 
+       source dir & makefiles are in buildgtk/samples
+       So, to build 'minimal':
+       
+       cd ~/<path>/buildgtk/samples/minimal
+       make
+       ./minimal
+
+   2. Building apps with wxWidgets
+   	Go to https://docs.wxwidgets.org/trunk/overview_helloworld.html and 
+	clone the source code of the Hello World Example to a file having a 
+	.cpp extenstion (eg. hello.cpp).
+
+	Now to build this app
+
+	g++ hello.cp `wx-config --cxflags --libs` -o hello
+
+	above command will compile hello.cpp and create a binary called 'hello'.
+
+   *  Runnig the app
+   	./hello
+   	If your get an error while running the app like:
+	
+	hello.out: error while loading shared libraries: libwx_baseu-3.0.so.0: cannot open shared object file: No such file or directory 
+	
+	Write the following to your ~/.bashrc file
+
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 Audacity:
 
