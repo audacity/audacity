@@ -65,7 +65,7 @@ effects from this one class.
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
 #include "TempDirectory.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"

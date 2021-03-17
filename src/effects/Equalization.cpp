@@ -100,7 +100,7 @@
 #include "../Theme.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
 #include "../widgets/AudacityTextEntryDialog.h"

@@ -30,7 +30,7 @@ class wxWindow;
 #include "PluginInterface.h"
 
 #include "SampleCount.h"
-#include "../SelectedRegion.h"
+#include "SelectedRegion.h"
 
 #include "../Track.h"
 

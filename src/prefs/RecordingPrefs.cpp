@@ -26,7 +26,7 @@
 #include <wx/textctrl.h>
 #include <algorithm>
 
-#include "../Decibels.h"
+#include "Decibels.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 

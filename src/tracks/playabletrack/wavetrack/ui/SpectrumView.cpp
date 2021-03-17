@@ -17,10 +17,10 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "../../../../AColor.h"
 #include "Prefs.h"
-#include "../../../../NumberScale.h"
+#include "NumberScale.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"

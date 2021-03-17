@@ -16,7 +16,7 @@
 
 
 #include "TracksBehaviorsPrefs.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"

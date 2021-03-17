@@ -38,7 +38,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"

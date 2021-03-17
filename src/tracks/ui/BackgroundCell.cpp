@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UIHandle.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 
 #include <wx/cursor.h>
 #include <wx/event.h>

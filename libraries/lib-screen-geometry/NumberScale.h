@@ -13,7 +13,6 @@ Paul Licameli
 
 #include <algorithm>
 #include <cmath>
-#include <wx/defs.h>
 
 enum NumberScaleType {
    nstLinear,

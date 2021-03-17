@@ -128,8 +128,6 @@ list( APPEND SOURCES
       DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
-      Decibels.cpp
-      Decibels.h
       Diags.cpp
       Diags.h
       Envelope.cpp
@@ -190,7 +188,6 @@ list( APPEND SOURCES
       ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
-      NumberScale.h
       PitchName.cpp
       PitchName.h
       PlaybackSchedule.cpp
@@ -238,8 +235,6 @@ list( APPEND SOURCES
       SelectUtilities.h
       SelectFile.cpp
       SelectFile.h
-      SelectedRegion.cpp
-      SelectedRegion.h
       SelectionState.cpp
       SelectionState.h
       Sequence.cpp
@@ -302,8 +297,6 @@ list( APPEND SOURCES
       UIHandle.h
       UndoManager.cpp
       UndoManager.h
-      ViewInfo.cpp
-      ViewInfo.h
       VoiceKey.cpp
       VoiceKey.h
       WaveClip.cpp
@@ -313,8 +306,6 @@ list( APPEND SOURCES
       WaveTrackLocation.h
       WrappedType.cpp
       WrappedType.h
-      ZoomInfo.cpp
-      ZoomInfo.h
 
       # Commands
 

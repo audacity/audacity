@@ -62,7 +62,7 @@
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../ImageManipulation.h"
-#include "../Decibels.h"
+#include "Decibels.h"
 #include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectStatus.h"

@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UndoManager.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../images/Cursors.h"
 
 TimeShiftHandle::TimeShiftHandle

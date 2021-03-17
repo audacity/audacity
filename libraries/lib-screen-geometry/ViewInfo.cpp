@@ -254,8 +254,7 @@ ProjectFileIORegistry::AttributeReaderEntries entries2 {
 
 int ViewInfo::UpdateScrollPrefsID()
 {
-   static int value = wxNewId();
-   return value;
+   return 10000;
 }
 
 static ProjectFileIORegistry::WriterEntry entry {

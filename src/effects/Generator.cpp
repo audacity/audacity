@@ -18,7 +18,7 @@
 
 #include "Project.h"
 #include "Prefs.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
 

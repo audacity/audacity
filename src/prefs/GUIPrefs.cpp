@@ -29,7 +29,7 @@
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
-#include "../Decibels.h"
+#include "Decibels.h"
 
 #include "ThemePrefs.h"
 #include "../AColor.h"

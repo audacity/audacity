@@ -27,8 +27,7 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
-#include "MemoryX.h"
-#include "../SelectedRegion.h"
+#include "SelectedRegion.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"

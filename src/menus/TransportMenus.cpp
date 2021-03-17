@@ -25,7 +25,7 @@
 #include "../prefs/RecordingPrefs.h"
 #include "../prefs/TracksPrefs.h"
 #include "../WaveTrack.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
