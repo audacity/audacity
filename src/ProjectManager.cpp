@@ -1024,7 +1024,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    RestartTimer();
 }
 
-void ProjectManager::OnStatusChange( wxCommandEvent &evt )
+void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
 {
    evt.Skip();
 
@@ -1040,7 +1040,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    window.UpdateStatusWidths();
 
-   auto field = static_cast<StatusBarField>( evt.GetInt() );
+   auto field = evt.mField;
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
    
