@@ -4,24 +4,21 @@
 # Translators:
 # Kaya Zeren <kayazeren@gmail.com>, 2013-2018
 # Serkan ÖNDER <serkanonder@outlook.com>, 2021
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-03-17 12:14+0300\n"
-"Last-Translator: Serkan ÖNDER <serkanonder@outlook.com>\n"
+"PO-Revision-Date: 2021-03-17 14:43+0300\n"
 "Language-Team: \n"
-"language/tr_TR/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.3\n"
-"X-Language: tr_TR\n"
-"X-Source-Language: C\n"
+"Last-Translator: Serkan ÖNDER <serkanonder@outlook.com>\n"
+"Language: tr\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -521,7 +518,9 @@ msgstr "forum"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "çevirmenler"
+msgstr ""
+"Kaya Zeren ,\n"
+"Serkan Önder,"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -2660,7 +2659,7 @@ msgstr "&Yeniden Çiz..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
-msgstr "Spektrum çizdirmek için, tüm seçili izler aynı örnek hızında olmalıdır."
+msgstr "Spektrum çizdirmek için, tüm seçili parçalar aynı örnek hızında olmalıdır."
 
 #: src/FreqWindow.cpp
 #, c-format
@@ -2838,7 +2837,7 @@ msgid ""
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 "[[yardım: Quick_Help|Hızlı Yardım]] - yerel olarak kurulmamışsa, [[https://"
-"manual.audacityteam.org/quick_help.html|internet görünümü]]"
+"manual.audacityteam.org/quick_help.html|online görüntüle]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
@@ -2846,8 +2845,8 @@ msgid ""
 " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
 "audacityteam.org/|view online]]"
 msgstr ""
-" [[yardım: Main_Page|Manual]] - yerel olarak kurulmamışsa, [[https://manual."
-"audacityteam.org/|view online]]"
+" [[yardım: Main_Page|Klavuz]] - yerel olarak kurulmamışsa, [[https://manual."
+"audacityteam.org/|online görüntüle]]"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2885,7 +2884,7 @@ msgid ""
 msgstr ""
 "Ayrıca [[http://manual.audacityteam.org/man/faq_opening_and_saving_files."
 "html#midi|MIDI dosyaları]] ve [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#fromcd| ses CD]] izlerini almak için yardım "
+"faq_opening_and_saving_files.html#fromcd| ses CD]] parçalarını almak için yardım "
 "bölümlerini okuyabilirsiniz."
 
 #: src/HelpText.cpp
@@ -3082,18 +3081,18 @@ msgstr "Etiketleri Şu Şekilde Dışa Aktar:"
 
 #: src/LabelDialog.cpp
 msgid "New Label Track"
-msgstr "Yeni Etiket İzi"
+msgstr "Yeni Etiket Parçası"
 
 #: src/LabelDialog.cpp
 msgid "Enter track name"
-msgstr "İz adını yazın"
+msgstr "Parça adını girin"
 
 #. i18n-hint: (noun) it's the name of a kind of track.
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Label track.
 #: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp src/TrackPanelAx.cpp
 msgid "Label Track"
-msgstr "Etiket İzi"
+msgstr "Etiket Parçası"
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -3198,7 +3197,7 @@ msgstr "Karıştır ve Çevir"
 
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
-msgstr "İzler karıştırılıp çevriliyor"
+msgstr "Parçalar karıştırılıp çevriliyor"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
@@ -3364,7 +3363,7 @@ msgstr ""
 #. this is a Note track.
 #: src/NoteTrack.cpp src/TrackPanelAx.cpp
 msgid "Note Track"
-msgstr "Not Parça"
+msgstr "Nota Parçası"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -4447,10 +4446,10 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 "\n"
-"Kaydederseniz projede hiç iz bulunmayacak.\n"
+"Kaydederseniz projede hiç parça bulunmayacak.\n"
 "\n"
 "Daha önce açılmış dosyaları kaydetmek için:\n"
-"İptal, Düzenle > Geri Al ile tüm izleri\n"
+"İptal, Düzenle > Geri Al ile tüm parçalar\n"
 "açın ve Dosya > Projeyi Kaydet seçin."
 
 #: src/ProjectManager.cpp
@@ -5133,7 +5132,7 @@ msgstr "Süre"
 #. this is a Time track.
 #: src/TimeTrack.cpp src/TrackPanelAx.cpp
 msgid "Time Track"
-msgstr "Zaman İzi"
+msgstr "Parça Zamanı"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
@@ -5453,14 +5452,14 @@ msgstr "(İptal etmek için Esc)"
 
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
-msgstr "İz Görünümü"
+msgstr "Parça Görünümü"
 
 #. i18n-hint: The %d is replaced by the number of the track.
 #. i18n-hint: compose a name identifying an unnamed track by number
 #: src/TrackPanelAx.cpp src/menus/ClipMenus.cpp
 #, c-format
 msgid "Track %d"
-msgstr "İz %d"
+msgstr "Parça %d"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -6814,7 +6813,8 @@ msgstr "Tıkırtı Kaldırma"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Tıkırtı Kaldırma ses izlerindeki tıklamaları kaldırmak için tasarlanmıştır"
+msgstr ""
+"Tıkırtı Kaldırma ses parçalarınızdaki tıklamaları kaldırmak için tasarlanmıştır"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -6966,11 +6966,11 @@ msgstr "Bırakma Süresi %.1f saniye"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
-msgstr "Aynı anda yalnız bir izi ölçebilirsiniz."
+msgstr "Bir seferde yalnızca bir parçayı ölçebilirsiniz."
 
 #: src/effects/Contrast.cpp
 msgid "Please select an audio track."
-msgstr "Lütfen bir ses izi seçin."
+msgstr "Lütfen bir ses parçası seçin."
 
 #: src/effects/Contrast.cpp
 msgid ""
@@ -6986,7 +6986,7 @@ msgid ""
 "Please select a section of a track."
 msgstr ""
 "Ölçülecek bir şey yok.\n"
-"Lütfen izin bir bölümünü seçin."
+"Lütfen bir parçanın bir bölümünü seçin."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -7982,7 +7982,7 @@ msgstr "Filter Curve EQ'nun farklı bir adı gerekiyor"
 #: src/effects/Equalization.cpp
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr ""
-"Dengeleme uygulayabilmek için, tüm seçili izler aynı örnek hızında olmalıdır."
+"Dengeleme uygulayabilmek için, tüm seçili parçalar aynı örnek hızında olmalıdır."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -8754,7 +8754,7 @@ msgstr "Normalleştir"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
-msgstr "Bir ya da bir kaç izin tepe genliğini ayarlar"
+msgstr "Bir veya daha fazla parçanın tepe genliğini ayarlar"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
@@ -8775,12 +8775,12 @@ msgstr "Herhangi bir şey yapılmıyor...\n"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr "Kanal çiftinin ilk izi inceleniyor: %s"
+msgstr "Stereo çiftin ilk parçasının analizi: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "Kanal çiftinin ikinci izi inceleniyor: %s"
+msgstr "Stereo çiftinin ikinci parçasının analizi: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
@@ -8790,12 +8790,12 @@ msgstr "Kanal çifti bağımsız olarak işleniyor: %s"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing first track of stereo pair: %s"
-msgstr "Kanal çiftinin ilk izi işleniyor: %s"
+msgstr "Stereo çiftin ilk parçasının işlenmesi: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing second track of stereo pair: %s"
-msgstr "Kanal çiftinin ikinci izi işleniyor: %s"
+msgstr "Stereo çiftinin ikinci parçasının işlenmesi: %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
@@ -8945,7 +8945,7 @@ msgstr "Onar"
 
 #: src/effects/Repair.cpp
 msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "Bir ya da bir kaç izin tepe genliğini ayarlar"
+msgstr "Bir veya daha fazla parçanın tepe genliğini ayarlar"
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -9143,7 +9143,7 @@ msgstr "Analog süzgeçleri taklit eden IIR süzme yapar"
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
 msgstr ""
-"Bir süzgeç uygulayabilmek için, tüm seçili izler aynı örnek hızında olmalıdır."
+"Bir süzgeç uygulayabilmek için, tüm seçili parçalar aynı örnek hızında olmalıdır."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -9291,7 +9291,7 @@ msgstr "Çift Kanallıdan Tek Kanallıya"
 
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
-msgstr "Çift kanallı izi tek kanallıya dönüştürür"
+msgstr "Stereo parçaları monoya dönüştürür"
 
 #: src/effects/StereoToMono.cpp
 msgid "Resampling left channel"
@@ -9429,8 +9429,8 @@ msgid ""
 "When truncating independently, there may only be one selected audio track in "
 "each Sync-Locked Track Group."
 msgstr ""
-"Bağımsız olarak budanırken, her bir Eş Kilitlenmiş İz Grubunda yalnız bir "
-"seçilmiş ses izi olabilir."
+"Bağımsız olarak kesilirken, her Senkronizasyon Kilitli Parça Grubunda yalnızca "
+"bir seçili ses parçası olabilir."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -9450,7 +9450,7 @@ msgstr "Şuna s&ıkıştır:"
 
 #: src/effects/TruncSilence.cpp
 msgid "Trunc&ate tracks independently"
-msgstr "İzleri bağımsız olarak kısal&tın"
+msgstr "Parçaları bağımsız olarak kısal&tın"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
@@ -9980,8 +9980,7 @@ msgstr "Nyquist Hatası"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr ""
-"İzlerin eşleşmediği yerlerde, çift kanallı izler üzerine etki uygulanamadı."
+msgstr "Maalesef, parçaların eşleşmediği stereo parçalara efekt uygulanamaz."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10184,7 +10183,7 @@ msgid ""
 "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
 "channels of the track do not match."
 msgstr ""
-"Vamp Eklentileri, çift kanallı izlerde, parçanın her kanalı birbiriyle "
+"Vamp Eklentileri, çift kanallı parçalarda, parçanın her kanalı birbiriyle "
 "eşleşmediği sürece çalıştırılamaz."
 
 #: src/effects/vamp/VampEffect.cpp
@@ -10279,7 +10278,7 @@ msgid ""
 "Your tracks will be mixed down to one exported file according to the encoder "
 "settings."
 msgstr ""
-"İzleriniz, kodlayıcı ayarlarınıza göre dışa aktarılacak dosya içinde bire "
+"Parçalarınız, kodlayıcı ayarlarınıza göre dışa aktarılacak dosya içinde bire "
 "indirgenecek."
 
 #: src/export/Export.cpp
@@ -11841,9 +11840,9 @@ msgid ""
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
 msgstr ""
-"\"%s\" bir CD ses izi. \n"
+"\"%s\" bir CD ses parçası. \n"
 "Audacity ses CDlerini doğrudan açamaz. \n"
-"CD izlerini Audacity tarafından içe aktarılabilecek \n"
+"CD parçalarını Audacity tarafından içe aktarılabilecek \n"
 "WAV ya da AIFF gibi biçimlere dönüştürün."
 
 #. i18n-hint: %s will be the filename
@@ -12130,8 +12129,8 @@ msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
 msgstr ""
-"Aktif projenin halihazırda bir zaman izi var ve içe aktarılan zaman izi "
-"atlanarak içe aktarılan projede biriyle karşılaşıldı."
+"Aktif proje halihazırda bir zaman izine sahip ve içe aktarılmakta olan projede, "
+"içe aktarılan zaman izi atlanarak karşılaşıldı."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -12284,7 +12283,7 @@ msgstr "LOF dosyasındaki süre geçersiz."
 
 #: src/import/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr "MIDI izleri tek tek dallanamaz, yalnız ses dosyaları dallanabilir."
+msgstr "MIDI parçaları tek tek dallanamaz, yalnız ses dosyaları dallanabilir."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
@@ -12817,7 +12816,7 @@ msgstr "Bir iz türünden diğerine yapıştırma yapamazsınız."
 
 #: src/menus/EditMenus.cpp
 msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Çift kanallı ses tek kanallı ize kopyalanamaz."
+msgstr "Stereo sesin bir mono parçaya kopyalanmasına izin verilmez."
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -12847,7 +12846,7 @@ msgstr "Ayır ve Sil"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Seçilen izler %.2f' zamanında %.2f saniye için susturuldu"
+msgstr "Seçilen parçalar %.2f' zamanında %.2f saniye için susturuldu"
 
 #. i18n-hint: verb
 #: src/menus/EditMenus.cpp
@@ -12858,7 +12857,7 @@ msgstr "Sessizlik"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Seçilmiş izleri %.2f ile %.2f saniyeleri arasında buda"
+msgstr "Seçilmiş parçaları %.2f ile %.2f saniyeleri arasında buda"
 
 #: src/menus/EditMenus.cpp
 msgid "Trim Audio"
@@ -13061,15 +13060,15 @@ msgstr "labels.txt"
 
 #: src/menus/FileMenus.cpp
 msgid "There are no label tracks to export."
-msgstr "Dışa aktarılacak bir etiket izi bulunamadı."
+msgstr "Dışa aktarılacak etiket parçası yok."
 
 #: src/menus/FileMenus.cpp
 msgid "Please select only one Note Track at a time."
-msgstr "Lütfen aynı anda yalnız bir Nota İzi seçin."
+msgstr "Lütfen aynı anda yalnız bir Nota Parçası seçin."
 
 #: src/menus/FileMenus.cpp
 msgid "Please select a Note Track."
-msgstr "Lütfen bir Nota İzi seçin."
+msgstr "Lütfen bir Nota Parçası seçin."
 
 #: src/menus/FileMenus.cpp
 msgid "Export MIDI As:"
@@ -13570,11 +13569,11 @@ msgstr "Sonrakin&e Odaklan ve Seç"
 
 #: src/menus/NavigationMenus.cpp
 msgid "&Toggle Focused Track"
-msgstr "O&daklanılan İzi Değiştir"
+msgstr "&Odaklanmış Parçayı Değiştir"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Toggle Focuse&d Track"
-msgstr "&Odaklanılan İzi Değiştir"
+msgstr "Odaklanı&lan Parçayı Değiştir"
 
 #: src/menus/PluginMenus.cpp
 msgid "Uncategorized"
@@ -13788,15 +13787,15 @@ msgstr "Hiçbirini Seçme"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
-msgstr "İ&zler"
+msgstr "&Parçalar"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Tracks"
-msgstr "&Tüm İzler İçinde"
+msgstr "&Tüm parçaların İçinde"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "Tüm Eş Kilitlenmiş İ&zlerde"
+msgstr "Tüm &Senkronizasyon Kilitli Parçalarda"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
@@ -14054,7 +14053,7 @@ msgstr "A&raç Çubuklarını Sıfırla"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
-msgstr "'%s' izindeki tüm ses çevrildi"
+msgstr "'%s' parçasındaki tüm ses işlendi"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
@@ -14065,12 +14064,12 @@ msgstr "Çevir"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d iz yeni bir çift kanallı ize karıştırılıp çevrildi"
+msgstr "%d parçayı yeni bir stereo parçaya karıştırıp işledi"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d iz yeni bir tek kanallı ize karıştırılıp çevrildi"
+msgstr "%d parça tek bir yeni mono parçada karışık ve oluşturulmuş"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
@@ -14202,7 +14201,7 @@ msgstr "MIDI ile Sesi Eşleştir"
 
 #: src/menus/TrackMenus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "MIDI ve Ses İzleri Eşleştiriliyor"
+msgstr "MIDI ve Ses Parçaları Eşleştiriliyor"
 
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted gain"
@@ -14214,19 +14213,19 @@ msgstr "Ayarlanmış kaydırma"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new audio track"
-msgstr "Yeni ses izi oluşturuldu"
+msgstr "Yeni ses parçası oluşturuldu"
 
 #: src/menus/TrackMenus.cpp
 msgid "New Track"
-msgstr "Yeni İz"
+msgstr "Yeni Parça"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new stereo audio track"
-msgstr "Yeni çift kanallı ses izi oluşturuldu"
+msgstr "Yeni stereo ses parçası oluşturuldu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new label track"
-msgstr "Yeni etiket izi oluşturuldu"
+msgstr "Yeni etiket parçası oluşturuldu"
 
 #: src/menus/TrackMenus.cpp
 msgid ""
@@ -14236,7 +14235,7 @@ msgstr ""
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new time track"
-msgstr "Yeni zaman izi oluşturuldu"
+msgstr "Yeni zaman parçası oluşturuldu"
 
 #: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -14251,15 +14250,15 @@ msgstr "Yazdığınız değer geçersiz"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Resampling track %d"
-msgstr "%d izi yeniden örnekleniyor"
+msgstr "%d parçası yeniden örnekleniyor"
 
 #: src/menus/TrackMenus.cpp
 msgid "Resampled audio track(s)"
-msgstr "Ses izleri yeniden örneklendi"
+msgstr "Ses parçaları yeniden örneklendi"
 
 #: src/menus/TrackMenus.cpp
 msgid "Resample Track"
-msgstr "İzi Yeniden Örnekle"
+msgstr "Parçayı Yeniden Örnekle"
 
 #: src/menus/TrackMenus.cpp
 msgid "Please select at least one audio track and one MIDI track."
@@ -14292,7 +14291,7 @@ msgstr "Hizalama işlemi tarafından iç hata oluştuğu bildirildi."
 
 #: src/menus/TrackMenus.cpp
 msgid "Tracks sorted by time"
-msgstr "Zamana göre sıralanmış izler"
+msgstr "Zamana göre sıralanmış parçalar"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sort by Time"
@@ -14300,7 +14299,7 @@ msgstr "Tarihe Göre Sıralansın"
 
 #: src/menus/TrackMenus.cpp
 msgid "Tracks sorted by name"
-msgstr "İsme göre sıralanmış izler"
+msgstr "İsme göre sıralanmış parçalar"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sort by Name"
@@ -14308,27 +14307,27 @@ msgstr "Ada Göre Sıralansın"
 
 #: src/menus/TrackMenus.cpp
 msgid "Can't delete track with active audio"
-msgstr "Etkin sesin bulunduğu izi silemezsiniz"
+msgstr "Etkin sesin bulunduğu parçayı silemezsiniz"
 
 #: src/menus/TrackMenus.cpp
 msgid "Add &New"
-msgstr "&Yeni İz Ekle"
+msgstr "&Yeni Ekle"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Mono Track"
-msgstr "&Tek Kanallı İz"
+msgstr "&Tek Kanallı Parça"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Stereo Track"
-msgstr "&Çift Kanallı İz"
+msgstr "&Çift Kanallı Parça"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Label Track"
-msgstr "&Etiket İzi"
+msgstr "Parça &Etiketi"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Time Track"
-msgstr "&Zaman İzi"
+msgstr "Parça &Zamanı"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x"
@@ -14344,7 +14343,7 @@ msgstr "&Karıştır ve Oluştur"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Karıştır ve &Yeni İz Oluştur"
+msgstr "Karıştır ve Y&eni Parça Oluştur"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
@@ -14352,7 +14351,7 @@ msgstr "Yeniden Ö&rnekle..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
-msgstr "İzleri &Kaldır"
+msgstr "Parçaları Kald&ır"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute"
@@ -14360,11 +14359,11 @@ msgstr "Kı&s/Aç"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Mute All Tracks"
-msgstr "Tü&m İzlerin Sesini Sustur"
+msgstr "Tüm Parçaların Sesini &Kapat"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Unmute All Tracks"
-msgstr "Tüm İzlerin &Sesi Açılsın"
+msgstr "Tüm Parçaların Sesini &Aç"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mut&e Tracks"
@@ -14404,7 +14403,7 @@ msgstr "Merkez Kaydır"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align Tracks"
-msgstr "İzleri Hiz&ala"
+msgstr "Parçaları &Hizala"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align End to End"
@@ -14416,15 +14415,15 @@ msgstr "Birlik&te Hizalayın"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Move Selection with Tracks (on/off)"
-msgstr "Seçimi İzlerle &Taşı (aç/kapat)"
+msgstr "Parçalarla Seçimi &Taşı (açık / kapalı)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Sele&ction and Tracks"
-msgstr "Seçimi ve İ&zleri Taşı"
+msgstr "Seç&imi ve Parçaları Taşı"
 
 #: src/menus/TrackMenus.cpp
 msgid "S&ort Tracks"
-msgstr "İ&zler Sıralansın"
+msgstr "Parçalar Sıralansın"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
@@ -14436,11 +14435,11 @@ msgstr "&Ada Göre"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Eş Ki&litlenmiş İzler (aç/kapat)"
+msgstr "Senkron-&Kilitleme Parçaları (açık / kapalı)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Track"
-msgstr "İ&z"
+msgstr "&Parça"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change P&an on Focused Track..."
@@ -14514,11 +14513,11 @@ msgstr "Kaydetme"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
-msgstr "herhangi bir etiket izi yok"
+msgstr "parça etiketi yok"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track at or below focused track"
-msgstr "odaklanılan izde ve altında herhangi bir etiket izi yok"
+msgstr "odaklanan parçada veya altında parça etiketi yok"
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -14527,7 +14526,7 @@ msgstr "%s %d nın %d"
 
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
-msgstr "etiket izinde herhangi bir etiket yok"
+msgstr "etiket parçasında herhangi bir etiket yok"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14608,7 +14607,7 @@ msgstr "&Kayıt Ekle"
 
 #: src/menus/TransportMenus.cpp
 msgid "Record &New Track"
-msgstr "Ye&ni İz Ekle"
+msgstr "&Yeni Parça Kaydet"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Timer Record..."
@@ -14785,7 +14784,7 @@ msgstr "Gelişmiş &Dikey Yakınlaştırma"
 
 #: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
-msgstr "İ&z Boyutu"
+msgstr "P&arça Boyutu"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Fit to Width"
@@ -14797,11 +14796,11 @@ msgstr "&Yüksekliğe Sığdır"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Collapse All Tracks"
-msgstr "&Tüm İzleri Daralt"
+msgstr "Tüm Parçaları &Daralt"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xpand Collapsed Tracks"
-msgstr "&Daraltılmış İzleri Genişlet"
+msgstr "Daraltılmış Parçaları G&enişlet"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sk&ip to"
@@ -14894,7 +14893,7 @@ msgstr "Cihaz Tercihleri"
 #: src/prefs/DevicePrefs.cpp
 msgctxt "device"
 msgid "Interface"
-msgstr "Arayüz"
+msgstr "Arabirim"
 
 #. i18n-hint: (noun)
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
@@ -15312,7 +15311,7 @@ msgstr "Di&l:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Location of &Manual:"
-msgstr "Kullanım Kitabı &Konumu:"
+msgstr "Kullanıcı Klavuzu &Konumu:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Th&eme:"
@@ -15406,7 +15405,7 @@ msgstr "&Vuruş"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
-msgstr "İzler bir ses dosyasına dışa aktarılırken"
+msgstr "Parçalar bir ses dosyasına dışa aktarılırken"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&how Metadata Tags editor before export"
@@ -15841,7 +15840,7 @@ msgstr "Sol Çift Tıklama"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Select Clip or Entire Track"
-msgstr "Parçayı ya da Tüm İzi Seç"
+msgstr "Klip veya Tüm Parçayı Seçin"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Wheel-Rotate"
@@ -15897,7 +15896,7 @@ msgstr "Yakınlaştırma varsayılanı"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Move clip left/right or between tracks"
-msgstr "Parçayı izler arasında sola/sağa taşı"
+msgstr "Klibi sola / sağa veya parçalar arasında taşı"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Shift-Left-Drag"
@@ -15905,7 +15904,7 @@ msgstr "Shift ile Sol Tıklama"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Move all clips in track left/right"
-msgstr "İzdeki tüm parçaları sola/sağa taşı"
+msgstr "Parçadaki tüm klipleri sola/sağa taşı"
 
 #: src/prefs/MousePrefs.cpp
 msgid "-Left-Drag"
@@ -15913,7 +15912,7 @@ msgstr "-Sol-Sürükleme"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Move clip up/down between tracks"
-msgstr "Parçaları izler arasında yukarı/aşağı taşı"
+msgstr "Klibi parçalar arasında yukarı / aşağı taşı"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
@@ -15967,7 +15966,7 @@ msgstr "Herhangi"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Scroll tracks up or down"
-msgstr "İzleri aşağı ya da yukarı kaydır"
+msgstr "Parçaları yukarı veya aşağı kaydır"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Shift-Wheel-Rotate"
@@ -16149,7 +16148,7 @@ msgstr "Dü&zey (dB):"
 #. i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Name newly recorded tracks"
-msgstr "Yeni kaydedilen izlerin adlandırılması"
+msgstr "Yeni kaydedilen parçaları adlandırın"
 
 #. i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"
 #: src/prefs/RecordingPrefs.cpp
@@ -16158,7 +16157,7 @@ msgstr "Şununla:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
-msgstr "Ö&zel İz Adı"
+msgstr "Özel Parça &Adı"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom name text"
@@ -16170,7 +16169,7 @@ msgstr "Kaydedilmis_Ses"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Track Number"
-msgstr "İz &Numarası"
+msgstr "&Parça Numarası"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "System &Date"
@@ -16520,7 +16519,7 @@ msgstr "Dosyaları Yükle"
 #. i18n-hint: i.e. the behaviors of tracks
 #: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
-msgstr "İz Davranışları"
+msgstr "Parça Davranışları"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Preferences for TracksBehaviors"
@@ -16532,7 +16531,7 @@ msgstr "Basit"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Multi-track"
-msgstr "Çoklu İz"
+msgstr "Çoklu-parça"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -16553,7 +16552,7 @@ msgstr "Bir parçayı düzenle&mek diğerlerini taşıyabilir"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
-msgstr "\"İz odağını değiştir\" i&zler arasında sürekli dolaşır"
+msgstr "Parçalar arasında art arda \"parça odağını taşıma\" d&öngüleri"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
@@ -16662,7 +16661,7 @@ msgstr "Parçalar için Tercihler"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
-msgstr "İz &yüksekliği otomatik ayarlansın"
+msgstr "Otomatik-&sığdırma parça yüksekliği"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w track name as overlay"
@@ -16698,12 +16697,12 @@ msgstr "Ö&rnekleri görüntüle:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default audio track &name:"
-msgstr "Varsayıla&n ses izi adı:"
+msgstr "Varsayılan ses parçası &adı:"
 
 #. i18n-hint: The default name for an audio track.
 #: src/prefs/TracksPrefs.cpp
 msgid "Audio Track"
-msgstr "Ses İzi"
+msgstr "Müzik parçası"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
@@ -16790,7 +16789,7 @@ msgstr "Sürekli Oynat"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Record New Track"
-msgstr "Yeni İz Kaydet"
+msgstr "Yeni Parça Kaydet"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Append Record"
@@ -16892,7 +16891,7 @@ msgstr "Seçilmiş Sesi Sustur"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Sync-Lock Tracks"
-msgstr "Eş Kilitlenmiş İzler"
+msgstr "Senkron-Kilitli Parçalar"
 
 #: src/toolbars/EditToolBar.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
@@ -17225,7 +17224,7 @@ msgstr "&Kılıf Aracı"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Draw Tool"
-msgstr "Çi&zim Aracı"
+msgstr "&Çizim Aracı"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Zoom Tool"
@@ -17294,7 +17293,7 @@ msgstr "&Yazı Türü..."
 #. i18n-hint: (noun) This is the font for the label track.
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
 msgid "Label Track Font"
-msgstr "Etiket İzi Yazı Türü"
+msgstr "Etiket Parça Yazı Tipi"
 
 #. i18n-hint: (noun) The name of the typeface
 #: src/tracks/labeltrack/ui/LabelTrackControls.cpp
@@ -17385,7 +17384,7 @@ msgstr "Seçili aralığı esnetmek için tıklayıp sürükleyin."
 #. dragged to change their duration.
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Stretch Note Track"
-msgstr "Not İzini Esnet"
+msgstr "Uzatılmış Nota Parçası"
 
 #. i18n-hint: In the history list, indicates a MIDI note has
 #. been dragged to change its duration (stretch it). Using either past
@@ -17576,7 +17575,7 @@ msgstr "&Çoklu-görünüm"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
-msgstr "İzi Çift &Kanallı Yap"
+msgstr "Stereo Parça Y&ap"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Swap Stereo &Channels"
@@ -17584,7 +17583,7 @@ msgstr "&Kanalların Yerini Değiştir"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Spl&it Stereo Track"
-msgstr "Çift Kanallı İzi A&yır"
+msgstr "Stereo Parçayı B&öl"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split Stereo to Mo&no"
@@ -17610,7 +17609,7 @@ msgstr "Kanal"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
-msgstr "'%s' izi çift kanallı yapıldı"
+msgstr "'%s' adlı stereo parça oluşturuldu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Make Stereo"
@@ -17630,7 +17629,7 @@ msgstr "Kanalları Değiştir"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
-msgstr "'%s' çift kanallı izini ayır"
+msgstr "'%s' stereo parçasını böl"
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -17758,7 +17757,7 @@ msgstr "Aralık Ayarı"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to linear"
-msgstr "Zaman izi görüntüsü doğrusal olsun"
+msgstr "Zaman izleme görüntüsünü doğrusal olarak ayarla"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set Display"
@@ -17766,7 +17765,7 @@ msgstr "Görünüm Ayarı"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to logarithmic"
-msgstr "Zaman izi görüntüsü logaritmik olsun"
+msgstr "Zaman izi görüntüsünü logaritmik olarak ayarla"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track interpolation to linear"
@@ -17802,19 +17801,19 @@ msgstr "&Ad..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
-msgstr "İzi Y&ukarı Taşı"
+msgstr "Parçayı &Yukarı Taşı"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Down"
-msgstr "İ&zi Aşağı Taşı"
+msgstr "Parçayı &Aşağı Taşı"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Top"
-msgstr "İzi En Üs&te Taşı"
+msgstr "Parçayı En &Üste Taşı"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track to &Bottom"
-msgstr "İzi En A&lta Taşı"
+msgstr "Parçayı &Alta Taşı"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Set Track Name"
@@ -17940,7 +17939,7 @@ msgstr "(hizalanıyor)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
-msgstr "İzi zamanda taşımak için tıklayıp sürükleyin"
+msgstr "Parçayı zamanda taşımak için tıklayıp sürükleyin"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Could not shift between tracks"
@@ -17953,12 +17952,12 @@ msgstr "Parçalar başka bir ize taşındı"
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, c-format
 msgid "Time shifted tracks/clips right %.02f seconds"
-msgstr "İzler/parçalar zamanda %.02f saniye sağa kaydırıldı"
+msgstr "Parçalar / klipler %.02f saniye sağa kaydırıldı"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, c-format
 msgid "Time shifted tracks/clips left %.02f seconds"
-msgstr "İzler/parçalar zamanda %.02f saniye sola kaydırıldı"
+msgstr "Parçalar/klipler zamanda %.02f saniye sola kaydırıldı"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Collapse"
@@ -17995,14 +17994,14 @@ msgstr "Ctrl-Tıklayın"
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
 msgstr ""
-"İzi seçmek ya da bırakmak için %s. İz sıralamasını değiştirmek için aşağı ya da "
-"yukarı sürükleyin."
+"Parçayı seçmek veya seçimi kaldırmak için %s. Parça sırasını değiştirmek için "
+"yukarı veya aşağı sürükleyin."
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
-msgstr "İzi seçmek ya da bırakmak için %s."
+msgstr "Parçayı seçmek veya seçimi kaldırmak için %s."
 
 #. i18n-hint: will substitute name of track for %s
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -18017,7 +18016,7 @@ msgstr "'%s' aşağı taşındı"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Move Track"
-msgstr "İzi Taşı"
+msgstr "Parçayı Taşı"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
