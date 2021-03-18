@@ -7,12 +7,15 @@
   Paul Licameli split from DBConnection.h
 
 **********************************************************************/
-
 #ifndef __AUDACITY_TRANSACTION_SCOPE__
 #define __AUDACITY_TRANSACTION_SCOPE__
 
+class AudacityProject;
+#include <functional>
+#include <memory>
 #include <wx/string.h>
-class DBConnection;
+
+class TransactionScopeImpl;
 
 //! RAII for a database transaction, possibly nested
 /*! Make a savepoint (a transaction, possibly nested) with the given name;
@@ -23,19 +26,42 @@ class DBConnection;
 class AUDACITY_DLL_API TransactionScope
 {
 public:
-   TransactionScope(DBConnection &connection, const char *name);
+   //! Type of function supplying implementation of steps
+   using TransactionScopeImplFactory = std::function<
+      std::unique_ptr<TransactionScopeImpl>(AudacityProject &) >;
+
+   //! Installs global factory; returns previously installed factory
+   static TransactionScopeImplFactory
+   InstallImplementation(TransactionScopeImplFactory factory);
+
+   //! Construct from a project
+   /*!
+    If no implementation factory is installed, or the factory returns null,
+    then this object does nothing */
+   TransactionScope(AudacityProject &project, const char *name);
+
+   //! Rollback transaction if it was not yet committed
    ~TransactionScope();
 
+   //! Commit the transaction
    bool Commit();
 
 private:
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
-
-   DBConnection &mConnection;
+   std::unique_ptr<TransactionScopeImpl> mpImpl;
    bool mInTrans;
    wxString mName;
+};
+
+//! Abstract base class for implementation of steps of TransactionScope
+class AUDACITY_DLL_API TransactionScopeImpl {
+public:
+   virtual ~TransactionScopeImpl();
+   //! @return success; if false, TransactionScope ctor throws
+   virtual bool TransactionStart(const wxString &name) = 0;
+   //! @return success
+   virtual bool TransactionCommit(const wxString &name) = 0;
+   //! @return success
+   virtual bool TransactionRollback(const wxString &name) = 0;
 };
 
 #endif
