@@ -295,8 +295,6 @@ list( APPEND SOURCES
       TrackPanelResizerCell.h
       TrackUtilities.cpp
       TrackUtilities.h
-      TransactionScope.cpp
-      TransactionScope.h
       UIHandle.cpp
       UIHandle.h
       UndoManager.cpp

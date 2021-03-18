@@ -37,7 +37,7 @@
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../SyncLock.h"
-#include "../TransactionScope.h"
+#include "TransactionScope.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "wxFileNameWrapper.h"
