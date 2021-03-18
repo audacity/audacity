@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-03-18 08:16+0300\n"
+"PO-Revision-Date: 2021-03-18 14:53+0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +131,7 @@ msgstr "Betik"
 #. i18n-hint noun
 #: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp src/effects/BassTreble.cpp
 msgid "Output"
-msgstr "Çıktı"
+msgstr "Çıkış"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Load Nyquist script"
@@ -454,7 +454,7 @@ msgstr "%s (birleştiren %s, %s, %s, %s ve %s)"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "About %s"
-msgstr "Hakkında %s"
+msgstr "%s Hakkında"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
@@ -490,7 +490,7 @@ msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to our "
 "%s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
-"Bir hata bulursanız veya bizim için bir öneriniz varsa, lütfen% s sayfamıza "
+"Bir hata bulursanız veya bizim için bir öneriniz varsa lütfen %s sayfamıza "
 "İngilizce olarak yazın. Yardım için, %s sayfamızdaki ipuçlarını ve püf "
 "noktalarını görüntüleyin veya %s sayfamızı ziyaret edin."
 
@@ -503,7 +503,7 @@ msgstr "forum"
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr "wiki"
+msgstr "viki"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
@@ -558,7 +558,7 @@ msgstr "Emekli:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Seçkin %s Ekip üyeleri, şu anda aktif değil"
+msgstr "Şu anda etkin olmayan, eski Audacity takımı üyeleri %s"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -590,7 +590,7 @@ msgstr "Özel teşekkürler:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s website: "
-msgstr "%s website: "
+msgstr "%s web sitesi: "
 
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
@@ -675,7 +675,7 @@ msgstr "Ses oynatma ve kaydetme"
 
 #: src/AboutDialog.cpp
 msgid "Cross-platform GUI library"
-msgstr "Çapraz platform ARAYÜZ kitaplığı"
+msgstr "Çapraz platform grafik arabirim kitaplığı"
 
 #: src/AboutDialog.cpp
 msgid "Features"
@@ -722,7 +722,7 @@ msgstr "Sürüm derlemesi (hata ayıklama düzeyi %d)"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 64 bits"
-msgstr "%s, 64 bits"
+msgstr "%s, 64 bit"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -747,7 +747,7 @@ msgstr "GPL Lisansı"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
-msgstr "Kayıt sırasında devre dışı bırakılan zaman çizelgesi eylemleri"
+msgstr "Kayıt sırasında zaman akışı işlemleri devre dışıdır"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
@@ -785,7 +785,7 @@ msgstr "Sarmayı başlatmak için tıklayın ya da sürükleyin"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Scrub'a & taşı öğesini tıklayın. Aramak için & sürükle tıklayın."
+msgstr "Sarmak için tıklayıp taşıyın. Taramak için tıklayıp sürükleyin."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -805,7 +805,7 @@ msgstr "Sarmaya Taşı"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
-msgstr "Aramak için sürükleyin. Aramayı durdurmak için bırakın."
+msgstr "Taramak için sürükleyin. Taramayı durdurmak için bırakın."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
@@ -883,7 +883,7 @@ msgid ""
 "This is a one-time question, after an 'install' where you asked to have the "
 "Preferences reset."
 msgstr ""
-"Tercihleri sıfırla?\n"
+"Tercihler sıfırlansın mı?\n"
 "\n"
 "Bu seçenek 'kurulumdan' sonra ayarları sıfırlamak için bir kez sorulur."
 
@@ -1097,7 +1097,7 @@ msgstr "kendi kendini sına"
 #. i18n-hint: This displays the Audacity version
 #: src/AudacityApp.cpp
 msgid "display Audacity version"
-msgstr "görüntüle Audacity sürümü"
+msgstr "Audacity sürümünü görüntüle"
 
 #. i18n-hint: This is a list of one or more files that Audacity
 #. *           should open upon startup
@@ -1124,7 +1124,7 @@ msgstr "Audacity Proje Dosyaları"
 #: src/AudacityException.h src/commands/MessageCommand.cpp
 #: src/widgets/AudacityMessageBox.cpp
 msgid "Message"
-msgstr "Mesaj"
+msgstr "İleti"
 
 #: src/AudacityFileConfig.cpp
 msgid "Audacity Configuration Error"
@@ -1243,7 +1243,7 @@ msgstr "MIDI Başlatılırken Sorun Çıktı"
 
 #: src/AudioIO.cpp
 msgid "Audacity Audio"
-msgstr "Audacity Audio"
+msgstr "Audacity Sesi"
 
 #: src/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -1289,24 +1289,24 @@ msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses has "
 "been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. Kabul edilebilir bir hacim bulamadan "
-"toplam analiz sayısı aşıldı. Hala çok yüksek."
+"Otomatik Kayıt Seviyesi Ayarı durduruldu. Kabul edilebilir bir ses seviyesi "
+"bulamadan toplam analiz sayısı aşıldı. Hala çok yüksek."
 
 #: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses has "
 "been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. Kabul edilebilir bir hacim bulamadan "
-"toplam analiz sayısı aşıldı. Hala çok düşük."
+"Otomatik Kayıt Seviyesi Ayarı durduruldu. Kabul edilebilir bir ses seviyesi "
+"bulamadan toplam analiz sayısı aşıldı. Hala çok düşük."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. %.2f kabul edilebilir bir hacim gibi "
-"görünüyor."
+"Otomatik Kayıt Seviyesi Ayarı durduruldu. %.2f kabul edilebilir bir ses seviyesi "
+"gibi görünüyor."
 
 #: src/AudioIOBase.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -1576,7 +1576,7 @@ msgstr "MP3 Dönüştürme"
 
 #: src/BatchCommands.cpp
 msgid "Fade Ends"
-msgstr "Solma Bitişi"
+msgstr "Bitişte Ses seviyesini azalt"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
@@ -3668,7 +3668,7 @@ msgid ""
 msgstr ""
 "Bu örnekleme hızında kayıt için çok az parça seçildi.\n"
 "(Audacity için aynı örnekleme hızında iki kanal gerekir)\n"
-"her stereo parça)"
+"her çift kanal parça)"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
@@ -5504,7 +5504,7 @@ msgid ""
 "Click and drag to adjust relative size of stereo tracks, double-click to make "
 "heights equal"
 msgstr ""
-"Stereo parçaların göreli boyutunu ayarlamak için tıklayın ve sürükleyin, "
+"Çift kanallı parçaların göreli boyutunu ayarlamak için tıklayın ve sürükleyin, "
 "yükseklikleri eşit yapmak için çift tıklayın"
 
 #: src/TrackPanelResizeHandle.cpp
@@ -5707,7 +5707,7 @@ msgstr "Kısayollar kaldırıldı"
 
 #: src/commands/CommandTargets.cpp
 msgid "Long Message"
-msgstr "Uzun Mesaj"
+msgstr "Uzun İleti"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -5931,7 +5931,7 @@ msgstr "Metin:"
 
 #: src/commands/MessageCommand.h
 msgid "Echos a message."
-msgstr "Bir mesaj yankılanır."
+msgstr "Bir ileti yankılanır."
 
 #: src/commands/OpenSaveCommands.cpp
 msgid "Open Project2"
@@ -6482,19 +6482,19 @@ msgstr "Mak&simum duraklama:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &down length:"
-msgstr "Dış &kısma uzunluğu:"
+msgstr "Harici &kısma uzunluğu:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &up length:"
-msgstr "Dış solma &yukarı uzunluğu:"
+msgstr "Harici Ses &açma uzunluğu:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner fade d&own length:"
-msgstr "İç solma k&endi uzunluğu:"
+msgstr "Dahili Ses Kı&sılma uzunluğu:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner &fade up length:"
-msgstr "İç &solma yukarı uzunluğu:"
+msgstr "Dahili &ses yükseltme uzunluğu:"
 
 #: src/effects/AutoDuck.cpp src/effects/Compressor.cpp src/effects/TruncSilence.cpp
 msgid "&Threshold:"
@@ -7919,7 +7919,7 @@ msgstr "Dengele"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Filter Curve EQ"
-msgstr "Eğri EQ Filtresi"
+msgstr "Eğri EQ Süzgeci"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
@@ -7971,13 +7971,13 @@ msgid ""
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then "
 "use that one."
 msgstr ""
-"Bu filtre eğrisini bir makroda kullanmak için lütfen yeni bir ad seçin.\n"
+"Bu süzgeç eğrisini bir makroda kullanmak için lütfen yeni bir ad seçin.\n"
 "'Eğrileri Kaydet/Yönet...' düğmesini seçin ve 'adsız' eğriyi yeniden adlandırın, "
 "ardından onu kullanın."
 
 #: src/effects/Equalization.cpp
 msgid "Filter Curve EQ needs a different name"
-msgstr "Filter Curve EQ'nun farklı bir adı gerekiyor"
+msgstr "Süzgeç Eğrisi EQ'nun farklı bir adı gerekiyor"
 
 #: src/effects/Equalization.cpp
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
@@ -8059,7 +8059,7 @@ msgstr "Do&ğrusal Frekans Ölçeği"
 
 #: src/effects/Equalization.cpp
 msgid "Length of &Filter:"
-msgstr "&Filtrenin Uzunluğu:"
+msgstr "&Süzgeç Uzunluğu:"
 
 #: src/effects/Equalization.cpp
 msgid "Length of Filter"
@@ -8412,11 +8412,11 @@ msgstr "RMS dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
-msgstr "Kanalları bağımsız olarak normalleştirin ve &stereo yapın"
+msgstr "Kanalları bağımsız olarak normalleştirin ve &çift kanal yapın"
 
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
-msgstr "&Monoyu dual-mono olarak ele alın (önerilir)"
+msgstr "&Tek kanalı çift tek kanallı olarak ele alın (önerilir)"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "(Maximum 0dB)"
@@ -8775,27 +8775,27 @@ msgstr "Herhangi bir şey yapılmıyor...\n"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr "Stereo çiftin ilk parçasının analizi: %s"
+msgstr "Çift kanal çiftin ilk parçasının analizi: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "Stereo çiftinin ikinci parçasının analizi: %s"
+msgstr "Çift kanal çiftinin ikinci parçasının analizi: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr "Kanal çifti bağımsız olarak işleniyor: %s"
+msgstr "Çift kanal bağımsız olarak işleniyor: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing first track of stereo pair: %s"
-msgstr "Stereo çiftin ilk parçasının işlenmesi: %s"
+msgstr "Çift kanal çiftin ilk parçasının işlenmesi: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing second track of stereo pair: %s"
-msgstr "Stereo çiftinin ikinci parçasının işlenmesi: %s"
+msgstr "Çift kanal çiftinin ikinci parçasının işlenmesi: %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
@@ -8811,7 +8811,7 @@ msgstr "Tepe genliği dB"
 
 #: src/effects/Normalize.cpp
 msgid "N&ormalize stereo channels independently"
-msgstr "Stereo kanalları bağımsız olarak n&ormalleştirin"
+msgstr "Çift kanal kanalları bağımsız olarak n&ormalleştirin"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
@@ -9291,7 +9291,7 @@ msgstr "Çift Kanallıdan Tek Kanallıya"
 
 #: src/effects/StereoToMono.cpp
 msgid "Converts stereo tracks to mono"
-msgstr "Stereo parçaları monoya dönüştürür"
+msgstr "Çift kanallı parçaları tek kanallıya dönüştürür"
 
 #: src/effects/StereoToMono.cpp
 msgid "Resampling left channel"
@@ -9303,7 +9303,7 @@ msgstr "Sağ kanalı yeniden örnekleme"
 
 #: src/effects/StereoToMono.cpp
 msgid "Mixing down to mono"
-msgstr "Monoya karıştırmak"
+msgstr "Tek kanallıya karıştırmak"
 
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
@@ -9980,7 +9980,7 @@ msgstr "Nyquist Hatası"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr "Maalesef, parçaların eşleşmediği stereo parçalara efekt uygulanamaz."
+msgstr "Maalesef, parçaların eşleşmediği çift kanal parçalara efekt uygulanamaz."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10266,12 +10266,14 @@ msgstr "\"%s\" adlı bir dosya zaten var. Değiştirilsin mi?"
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one mono file."
 msgstr ""
-"Parçalarınız karıştırılacak ve tek bir mono dosya olarak dışa aktarılacaktır."
+"Parçalarınız karıştırılacak ve tek bir tek kanallı dosya olarak dışa "
+"aktarılacaktır."
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr ""
-"Parçalarınız karıştırılacak ve tek bir stereo dosyası olarak dışa aktarılacaktır."
+"Parçalarınız karıştırılacak ve tek bir çift kanal dosyası olarak dışa "
+"aktarılacaktır."
 
 #: src/export/Export.cpp
 msgid ""
@@ -11377,7 +11379,7 @@ msgstr "Kanal Kipi:"
 
 #: src/export/ExportMP3.cpp
 msgid "Force export to mono"
-msgstr "Dışa aktarma mono olmaya zorlansın"
+msgstr "Dışa aktarma tek kanallı olmaya zorlansın"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
 #: src/export/ExportMP3.cpp
@@ -11767,7 +11769,7 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
-msgstr "GSM 6.10, mono gerektirir"
+msgstr "GSM 6.10, tek kanallı gerektirir"
 
 #: src/export/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
@@ -12608,7 +12610,7 @@ msgstr "Varsayılan endiansızlık"
 
 #: src/import/ImportRaw.cpp
 msgid "1 Channel (Mono)"
-msgstr "Tek Kanallı (Mono)"
+msgstr "1 Kanal (Tek kanallı)"
 
 #: src/import/ImportRaw.cpp
 msgid "2 Channels (Stereo)"
@@ -12816,7 +12818,7 @@ msgstr "Bir iz türünden diğerine yapıştırma yapamazsınız."
 
 #: src/menus/EditMenus.cpp
 msgid "Copying stereo audio into a mono track is not allowed."
-msgstr "Stereo sesin bir mono parçaya kopyalanmasına izin verilmez."
+msgstr "Çift kanal sesin bir tek kanal parçaya kopyalanmasına izin verilmez."
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -13733,7 +13735,7 @@ msgstr "Bilgi Al..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Message..."
-msgstr "Mesaj..."
+msgstr "İleti..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Help..."
@@ -14064,12 +14066,12 @@ msgstr "Oluştur"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d parçayı yeni bir stereo parçaya karıştırıp işledi"
+msgstr "%d parçayı yeni bir çift kanal parçaya karıştırıp işledi"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d parça tek bir yeni mono parçada karışık ve oluşturulmuş"
+msgstr "%d parça tek bir yeni tek kanal parçada karışık ve oluşturulmuş"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
@@ -14221,7 +14223,7 @@ msgstr "Yeni Parça"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new stereo audio track"
-msgstr "Yeni stereo ses parçası oluşturuldu"
+msgstr "Yeni çift kanal ses parçası oluşturuldu"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new label track"
@@ -14335,7 +14337,7 @@ msgstr "&Karıştır"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix Stereo Down to &Mono"
-msgstr "Stereo Aşağı &Monoya Karıştırın"
+msgstr "Çift kanalı Aşağı &Tek kanala Karıştırın"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x and Render"
@@ -14550,11 +14552,11 @@ msgstr ""
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
-msgstr "Lütfen bir mono parça seçin."
+msgstr "Lütfen bir tek kanallı parça seçin."
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "Lütfen bir stereo parça veya iki mono parça seçin."
+msgstr "Lütfen bir çift kanal parça veya iki tek kanal parça seçin."
 
 #: src/menus/TransportMenus.cpp
 #, c-format
@@ -15178,7 +15180,7 @@ msgstr "Dahili İçe Aktarma Tercihleri"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
-msgstr "Önce Dosya Aç iletişim kutusunda filtre kullanmayı d&eneyin"
+msgstr "Önce Dosya Aç iletişim kutusunda süzgeç kullanmayı d&eneyin"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rules to choose import filters"
@@ -15210,7 +15212,7 @@ msgstr "Süzgec&i yukarı taşı"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move &filter down"
-msgstr "Süzgeci &aşağı taşı"
+msgstr "&Süzgeci aşağı taşı"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "&Add new rule"
@@ -16702,7 +16704,7 @@ msgstr "Varsayılan ses parçası &adı:"
 #. i18n-hint: The default name for an audio track.
 #: src/prefs/TracksPrefs.cpp
 msgid "Audio Track"
-msgstr "Müzik parçası"
+msgstr "Ses parçası"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
@@ -16841,11 +16843,11 @@ msgstr "Kayıt Kanalları"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1 (Mono) Kayıt"
+msgstr "1 (Tek kanal) Kayıt Kanalları"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 (Stereo) Kayıt"
+msgstr "2 (Çift kanal) Kayıt Kanalları"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
@@ -17202,7 +17204,7 @@ msgstr "Çizim Aracı"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Multi-Tool"
-msgstr "Çoklu-Araç"
+msgstr "Çoklu Araç"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Slide Tool"
@@ -17442,7 +17444,7 @@ msgstr "Örnek Düzenleme"
 #. i18n-hint k abbreviating kilo meaning thousands
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
 msgid "k"
-msgstr "k"
+msgstr "bin"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
@@ -17457,8 +17459,8 @@ msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
 msgstr ""
-"Spektrogram Ayarlarını değiştirmek için herhangi bir\n"
-" önce oynatma veya kaydetme."
+"Spektrogram Ayarlarını değiştirmek için önce tüm\n"
+" oynatma ya da kaydetme işlemlerini durdurun."
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Stop the Audio First"
@@ -17474,7 +17476,7 @@ msgstr "&Biçim"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Changing sample format"
-msgstr "Örnek formatın değiştirilmesi"
+msgstr "Örnek biçim değiştiriliyor"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -17571,19 +17573,19 @@ msgstr "Oranı Ayarla"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
 msgid "&Multi-view"
-msgstr "&Çoklu-görünüm"
+msgstr "&Çoklu görünüm"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
-msgstr "Stereo Parça Y&ap"
+msgstr "Çift kanallı Parça Y&ap"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Swap Stereo &Channels"
-msgstr "&Kanalların Yerini Değiştir"
+msgstr "Çift &Kanalları Değiştirin"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Spl&it Stereo Track"
-msgstr "Stereo Parçayı B&öl"
+msgstr "Çift kanallı Parçayı B&öl"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split Stereo to Mo&no"
@@ -17609,7 +17611,7 @@ msgstr "Kanal"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
-msgstr "'%s' adlı stereo parça oluşturuldu"
+msgstr "'%s' adlı çift kanallı parça oluşturuldu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Make Stereo"
@@ -17629,7 +17631,7 @@ msgstr "Kanalları Değiştir"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
-msgstr "'%s' stereo parçasını böl"
+msgstr "'%s' çift kanal parçasını böl"
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -17982,7 +17984,7 @@ msgstr "Menüyü aç..."
 #. i18n-hint: Command names a modifier key on Macintosh keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Command+Click"
-msgstr "Komut-Tıklayın"
+msgstr "Command+Tıklayın"
 
 #. i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -18482,7 +18484,7 @@ msgstr "010,01000>0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr "centihertz"
+msgstr "santihertz"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18518,7 +18520,7 @@ msgstr "100>01000 oktav|1.442695041"
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
 msgid "thousandths of octaves"
-msgstr "binde octave"
+msgstr "binlerce octav"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in semitones and cents
@@ -18699,7 +18701,7 @@ msgstr "Spektral düzenleme çoklu aracı"
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
 msgid "Filtering..."
-msgstr "Filtreleniyor..."
+msgstr "Süzülüyor..."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18717,7 +18719,7 @@ msgstr "Paul Licameli"
 #: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
-msgstr "GNU Genel Kamu Lisansı sürüm 2'nin koşulları altında yayınlandı"
+msgstr "GNU Genel Kamu Lisansı, ikinci sürümün koşulları altında yayımlanmıştır"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18745,7 +18747,7 @@ msgid ""
 msgstr ""
 "~aNotch filtre parametreleri uygulanamaz.~%~\n"
 "                       Düşük frekans sınırını artırmayı deneyin~%~\n"
-"                       veya 'Genişlik' filtresini azaltın."
+"                       veya 'Genişlik' süzgecini azaltın."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18805,7 +18807,7 @@ msgstr "Spektral düzenleme rafları"
 
 #: plug-ins/StudioFadeOut.ny
 msgid "Studio Fade Out"
-msgstr "Studyo Karartma Çıkışı"
+msgstr "Stüdyo Ses düzeyini azaltarak çıkış"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 msgid "Applying Fade..."
@@ -18825,21 +18827,24 @@ msgstr "Steve Daulton"
 msgid "Selection too short.~%It must be more than 2 samples."
 msgstr "Seçim çok kısa.~% 2'den fazla örnek olmalıdır."
 
+# Ses seviyesini kısmak yada açmak için kullanılır solma efekti uygular.
 #: plug-ins/adjustable-fade.ny
 msgid "Adjustable Fade"
-msgstr "Ayarlanabilir Solma"
+msgstr "Ayarlanabilir kısma yükseltme"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
-msgstr "Karartma Türü"
+msgstr "Ses düzeyi Türü"
 
+# Giriş çıkışlarda ses düzeyini kın yada yükseltin
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
-msgstr "Karart"
+msgstr "Ses Düzeyi (yüksek)"
 
+# Giriş çıkışlarda ses düzeyini kın yada yükseltin
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Down"
-msgstr "Karartma Aşağı"
+msgstr "Ses Düzeyi (kısık)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve Up"
@@ -18851,11 +18856,11 @@ msgstr "S-Eğrisi Aşağı"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
-msgstr "Orta-Solma Ayarı (%)"
+msgstr "Orta-Kısılma Ayarı (%)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start/End as"
-msgstr "Başla/Bitir"
+msgstr "Başla/olarak Bitir"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
@@ -18957,11 +18962,11 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "Ritim Bulucu"
+msgstr "Vuruş Bulucu"
 
 #: plug-ins/beat.ny
 msgid "Finding beats..."
-msgstr "Vuruş bulmak..."
+msgstr "Vuruşlar bulunuyor..."
 
 #: plug-ins/beat.ny
 msgid "Threshold Percentage"
@@ -19020,7 +19025,7 @@ msgstr "Çapraz Geçişli Parçalar"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade type"
-msgstr "Karartma türü"
+msgstr "Ses düzeyi azaltma türü"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Gain"
@@ -19044,7 +19049,7 @@ msgstr "Özel eğri"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade direction"
-msgstr "Karartma yönü"
+msgstr "Ses düzeyi azaltma yönü"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
@@ -19243,7 +19248,7 @@ msgstr "Numaralandırmaya başla"
 
 #: plug-ins/equalabel.ny
 msgid "Message on completion"
-msgstr "Tamamlandığında mesaj"
+msgstr "Tamamlandığında ileti"
 
 #: plug-ins/equalabel.ny
 msgid "Details"
@@ -19280,11 +19285,11 @@ msgstr "~aBölge uzunluğu = ~a saniye."
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
-msgstr "Yüksek-Geçişli Filtre"
+msgstr "Yüksek Geçişli Süzgeç"
 
 #: plug-ins/highpass.ny
 msgid "Performing High-Pass Filter..."
-msgstr "Yüksek-Geçişli Filtre Gerçekleştirme..."
+msgstr "Yüksek Geçişli Süzgeç Gerçekleştirme..."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
 msgid "Dominic Mazzoni"
@@ -19363,7 +19368,7 @@ msgstr "Ortalama seviye"
 
 #: plug-ins/label-sounds.ny
 msgid "RMS level"
-msgstr "RMS seviyesi"
+msgstr "RMS düzeyi"
 
 #: plug-ins/label-sounds.ny
 msgid "Minimum silence duration"
@@ -19419,7 +19424,7 @@ msgstr "Çok fazla sessizlik algılandı. Yalnızca ilk 10000 etiket eklendi."
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Error.~%Selection must be less than ~a."
-msgstr "Hata.~%Seçim, ~a'dan küçük olmalıdır."
+msgstr "Hata.~%Seçim, ~a dan küçük olmalıdır."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -19472,7 +19477,7 @@ msgid ""
 "mono/Left"
 msgstr ""
 "Giriş Kazancı (dB)\n"
-"mono/Sol"
+"tek kanallı/Sol"
 
 #: plug-ins/limiter.ny
 msgid ""
@@ -19496,11 +19501,11 @@ msgstr "Makyaj Kazancı uygulayın"
 
 #: plug-ins/lowpass.ny
 msgid "Low-Pass Filter"
-msgstr "Düşük Geçişli Filtre"
+msgstr "Düşük Geçişli Süzgeç"
 
 #: plug-ins/lowpass.ny
 msgid "Performing Low-Pass Filter..."
-msgstr "Düşük Geçişli Filtre Gerçekleştirme..."
+msgstr "Düşük Geçişli Süzgeç Gerçekleştirme..."
 
 #: plug-ins/noisegate.ny
 msgid "Noise Gate"
@@ -19520,15 +19525,15 @@ msgstr "Gürültü Seviyesini Analiz Edin"
 
 #: plug-ins/noisegate.ny
 msgid "Stereo Linking"
-msgstr "Stereo Bağlama"
+msgstr "Çift kanallı Bağlama"
 
 #: plug-ins/noisegate.ny
 msgid "Link Stereo Tracks"
-msgstr "Stereo Kanalları Bağla"
+msgstr "Çift Kanalları Bağla"
 
 #: plug-ins/noisegate.ny
 msgid "Don't Link Stereo"
-msgstr "Stereo suz"
+msgstr "Çift kanallı Yapma"
 
 #: plug-ins/noisegate.ny
 msgid "Gate threshold (dB)"
@@ -19602,11 +19607,11 @@ msgstr "~ah ~am"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
-msgstr "Notch Filtresi"
+msgstr "Notch Süzgeci"
 
 #: plug-ins/notch.ny
 msgid "Applying Notch Filter..."
-msgstr "Notch Filtresi Uygulanıyor..."
+msgstr "Notch Süzgeci Uygulanıyor..."
 
 #: plug-ins/notch.ny
 msgid "Steve Daulton and Bill Wharrie"
@@ -19767,7 +19772,7 @@ msgstr "Tempo (bpm)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "30 - 300 beats/minute"
-msgstr "30 - 300 atım/dakika"
+msgstr "30 - 300 vuruş/dakika"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beats per bar"
@@ -19792,11 +19797,11 @@ msgstr ""
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
-msgstr "Bar sayısı"
+msgstr "Çubuk sayısı"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 1000 bars"
-msgstr "1 - 1000 bars"
+msgstr "1 - 1000 çubuk"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
@@ -19812,11 +19817,11 @@ msgstr "Başlangıç zamanı ofseti"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Silence before first beat"
-msgstr "İlk ritimden önce sessizlik"
+msgstr "İlk vuruştan önce sessizlik"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beat sound"
-msgstr "Ritim Sesi"
+msgstr "Vuruş Sesi"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
@@ -19860,23 +19865,23 @@ msgstr "18 - 116"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of weak beat"
-msgstr "MIDI zayıf vuruş aralığı"
+msgstr "Zayıf vuruşun MIDI perdesi"
 
 #: plug-ins/rhythmtrack.ny
 msgid ""
 "Set either 'Number of bars' or\n"
 "'Rhythm track duration' to greater than zero."
 msgstr ""
-"'Çubuk sayısı' nı veya\n"
-"'Ritim izleme süresi' sıfırdan büyük."
+"'Çubuk sayısı'nı veya\n"
+"'Ritim izleme süresi'sıfırdan büyük."
 
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
-msgstr "Risset Davul"
+msgstr "Risset Davulu"
 
 #: plug-ins/rissetdrum.ny
 msgid "Generating Risset Drum..."
-msgstr "Risset Tamburu Oluşturuluyor..."
+msgstr "Risset Davulu Oluşturuluyor..."
 
 #: plug-ins/rissetdrum.ny
 msgid "Steven Jones"
@@ -19960,7 +19965,7 @@ msgstr "İsteğe bağlı başlık metni"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
-msgstr "Stereo için kanal düzeni"
+msgstr "Çift kanal için kanal düzeni"
 
 #. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
@@ -19978,7 +19983,7 @@ msgstr "Sol Kanal Önce"
 
 #: plug-ins/sample-data-export.ny
 msgid "Show messages"
-msgstr "Mesajları göster"
+msgstr "İletileri göster"
 
 #: plug-ins/sample-data-export.ny
 msgid "Errors Only"
@@ -20002,7 +20007,7 @@ msgstr "~%~%Sağ Kanal.~%~%"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~aData written to:~%~a"
-msgstr "~aVeri yazılan:~%~a"
+msgstr "~aVeri şuraya yazıldı:~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20045,7 +20050,7 @@ msgstr "~a doğrusal, ~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
-msgstr "Sol: ~a lin, ~a dB | Sağ: ~a lin, ~a dB."
+msgstr "Sol: ~a doğrusal, ~a dB | Sağ: ~a doğrusal, ~a dB."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20082,7 +20087,7 @@ msgstr "<b>RMS</b> (ağırlıksız): &nbsp;&nbsp;~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr "<b>DC Offset:</b> &nbsp;&nbsp;~a"
+msgstr "<b>DC Offseti:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20147,11 +20152,11 @@ msgstr "doğrusal"
 
 #: plug-ins/sample-data-export.ny
 msgid "2 channels (stereo)"
-msgstr "2Kanallı (Stereo)"
+msgstr "2 kanal (çift kanallı)"
 
 #: plug-ins/sample-data-export.ny
 msgid "1 channel (mono)"
-msgstr "1 Kanallı (Mono)"
+msgstr "1 Kanal (Tek kanallı)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20247,7 +20252,7 @@ msgstr ""
 #: plug-ins/sample-data-import.ny
 #, lisp-format
 msgid "Error.~%Unable to open file"
-msgstr "Hata. ~% Dosya açılamıyor"
+msgstr "Hata.~%Dosya açılamıyor"
 
 #: plug-ins/spectral-delete.ny
 msgid "Spectral Delete"
@@ -20280,7 +20285,7 @@ msgstr "Başlangıç aşaması (derece)"
 
 #: plug-ins/tremolo.ny
 msgid "Wet level (percent)"
-msgstr "Islak seviye (yüzde)"
+msgstr "Islak düzey (yüzde)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -20296,7 +20301,7 @@ msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals: to mono"
-msgstr "Vokalleri Kaldır: monoya"
+msgstr "Vokalleri Kaldır: tek kanal"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
@@ -20312,7 +20317,7 @@ msgstr "Vokalleri İzole Et ve Ters Çevir"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center: to mono"
-msgstr "Merkezi Kaldır: monoya"
+msgstr "Merkezi Kaldır: tek kanal"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
@@ -20378,7 +20383,7 @@ msgid ""
 "                The center can't be removed.\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
-" - İki kanal aynıdır, yani ikili mono.\n"
+" - İki kanal aynıdır, yani ikili tek kanal.\n"
 "                 Merkez kaldırılamaz.\n"
 "                 Kalan herhangi bir fark, kayıplı kodlamadan kaynaklanıyor "
 "olabilir."
@@ -20395,14 +20400,15 @@ msgstr ""
 #: plug-ins/vocalrediso.ny
 msgid " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr ""
-" - Oldukça iyi bir değer, en azından ortalama olarak stereo ve çok geniş değil."
+" - Oldukça iyi bir değer, en azından ortalama olarak çift kanallı ve çok geniş "
+"değil."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
 "                However, the center extraction depends also on the used reverb."
 msgstr ""
-" - Stereo için ideal bir değer.\n"
+" - Çift kanal için ideal bir değer.\n"
 "                 Bununla birlikte, merkez çıkarma aynı zamanda kullanılan "
 "yankıya da bağlıdır."
 
@@ -20424,7 +20430,7 @@ msgid ""
 "                This can cause strange effects.\n"
 "                Especially when played by only one speaker."
 msgstr ""
-" - Parça stereo olmasına rağmen, alan açıkça çok geniştir.\n"
+" - Parça çift kanal olmasına rağmen, alan açıkça çok geniştir.\n"
 "                 Bu tuhaf efektlere neden olabilir.\n"
 "                 Özellikle tek bir hoparlörle çalındığında."
 
@@ -20437,14 +20443,14 @@ msgid ""
 "                  Don't expect good results from a center removal."
 msgstr ""
 " - İki kanal neredeyse aynı.\n"
-"                   Açıkçası, sözde bir stereo efekti kullanılmış\n"
+"                   Açıkçası, sözde bir çift kanal efekti kullanılmış\n"
 "                   Sinyali hoparlörler arasındaki fiziksel mesafeye yaymak "
 "için.\n"
 "                   Bir merkezin kaldırılmasından iyi sonuçlar beklemeyin."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
-msgstr "Bu eklenti yalnızca stereo parçalarla çalışır."
+msgstr "Bu eklenti yalnızca çift kanal parçalarla çalışır."
 
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
@@ -20497,7 +20503,7 @@ msgstr "Radar İğnelerinin Frekansı (Hz)"
 #: plug-ins/vocoder.ny
 #, lisp-format
 msgid "Error.~%Stereo track required."
-msgstr "Hata.~%Stereo parça gerekli."
+msgstr "Hata.~%Çift kanal parça gerekli."
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
