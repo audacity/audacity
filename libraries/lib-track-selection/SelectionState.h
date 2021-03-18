@@ -18,13 +18,13 @@ class ViewInfo;
 #include <vector>
 
 // State relating to the set of selected tracks
-class AUDACITY_DLL_API SelectionState final
+class TRACK_SELECTION_API SelectionState final
    : public ClientData::Base
 {
 public:
    SelectionState() = default;
-   SelectionState( const SelectionState & ) PROHIBITED;
-   SelectionState &operator=( const SelectionState & ) PROHIBITED;
+   SelectionState( const SelectionState & ) = delete;
+   SelectionState &operator=( const SelectionState & ) = delete;
 
    static SelectionState &Get( AudacityProject &project );
    static const SelectionState &Get( const AudacityProject &project );
@@ -52,7 +52,7 @@ private:
 
 // For committing or rolling-back of changes in selectedness of tracks.
 // When rolling back, it is assumed that no tracks have been added or removed.
-class AUDACITY_DLL_API SelectionStateChanger
+class TRACK_SELECTION_API SelectionStateChanger
 {
 public:
    SelectionStateChanger( SelectionState &state, TrackList &tracks );

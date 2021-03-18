@@ -8,7 +8,7 @@
 #include "../ProjectWindows.h"
 #include "../RealtimeEffectPanel.h"
 #include "Track.h"
-#include "../SelectionState.h"
+#include "SelectionState.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../commands/CommandContext.h"

@@ -29,7 +29,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../SyncLock.h"
+#include "SyncLock.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelAx.h"

@@ -28,10 +28,10 @@
 
 
 #include "ProjectHistory.h"
-#include "../../../../SelectionState.h"
+#include "SelectionState.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../SyncLock.h"
+#include "SyncLock.h"
 #include "Theme.h"
 
 class NoteTrackAffordanceHandle final : public AffordanceHandle

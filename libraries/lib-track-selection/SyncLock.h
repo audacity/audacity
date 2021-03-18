@@ -18,7 +18,7 @@ Paul Licameli split from Track.cpp
 //! Sent after sync lock setting changes, with its new state
 struct SyncLockChangeMessage{ const bool on; };
 
-class AUDACITY_DLL_API SyncLockState final
+class TRACK_SELECTION_API SyncLockState final
    : public ClientData::Base
    , public Observer::Publisher<SyncLockChangeMessage>
 {
@@ -37,7 +37,7 @@ private:
    bool mIsSyncLocked{ false };
 };
 
-class AUDACITY_DLL_API SyncLock {
+class TRACK_SELECTION_API SyncLock {
 public:
    //! @return pTrack is not null, sync lock is on, and some member of its group is selected
    static bool IsSyncLockSelected( const Track *pTrack );
@@ -71,6 +71,6 @@ AttachedVirtualFunction<
    SyncLockPolicy,
    const Track
 >;
-DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, GetSyncLockPolicy);
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(TRACK_SELECTION_API, GetSyncLockPolicy);
 
 #endif

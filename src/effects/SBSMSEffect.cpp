@@ -19,7 +19,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 #include <math.h>
 
 #include "../LabelTrack.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "TimeWarper.h"

@@ -21,7 +21,7 @@
 #include <math.h>
 
 #include "../LabelTrack.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 

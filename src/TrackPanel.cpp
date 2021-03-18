@@ -316,6 +316,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    auto theProject = GetProject();
    mSyncLockSubscription = SyncLockState::Get(*theProject)
       .Subscribe(*this, &TrackPanel::OnSyncLockChange);
+
    mFocusChangeSubscription = TrackFocus::Get(*theProject)
       .Subscribe(*this, &TrackPanel::OnTrackFocusChange);
 

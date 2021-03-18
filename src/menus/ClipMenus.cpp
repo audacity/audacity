@@ -1,6 +1,6 @@
 #include "../CommonCommandFlags.h"
 #include "ProjectHistory.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "../TrackPanelAx.h"
 #include "../ProjectWindow.h"
 #include "UndoManager.h"

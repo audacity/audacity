@@ -42,7 +42,7 @@
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "Prefs.h"
-#include "../SelectionState.h"
+#include "SelectionState.h"
 #include "../ShuttleGui.h"
 #include "../TagsEditor.h"
 #include "WaveTrack.h"

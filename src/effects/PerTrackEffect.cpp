@@ -25,7 +25,7 @@
 #include "EffectStage.h"
 #include "MixAndRender.h"
 #include "SampleTrackSource.h"
-#include "../SyncLock.h"
+#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackSink.h"

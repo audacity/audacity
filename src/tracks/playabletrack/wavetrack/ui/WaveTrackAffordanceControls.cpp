@@ -38,7 +38,7 @@
 
 #include "ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
-#include "../../../../SelectionState.h"
+#include "SelectionState.h"
 #include "../../../../RefreshCode.h"
 #include "Theme.h"
 #include "../../../../../images/Cursors.h"
