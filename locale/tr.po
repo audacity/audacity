@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-03-17 14:43+0300\n"
+"PO-Revision-Date: 2021-03-18 08:16+0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,7 +180,7 @@ msgstr "(C) 2009 by Leland Lucius"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Yazma etkileri için basit bir IDE oluşturan dış Audacity modülü."
+msgstr "Efekt yazmak için basit bir IDE sağlayan Harici Audacity modülü."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -4626,7 +4626,7 @@ msgstr "Tüm Araç Çubukları"
 
 #: src/Screenshot.cpp
 msgid "All Effects"
-msgstr "Tüm Etkiler"
+msgstr "Tüm Efektler"
 
 #: src/Screenshot.cpp
 msgid "All Scriptables"
@@ -7689,7 +7689,7 @@ msgstr "Komut başlatılamadı"
 
 #: src/effects/EffectUI.cpp
 msgid "Effects Rack"
-msgstr "Etki Kabini"
+msgstr "Efekt Rafı"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
@@ -8353,11 +8353,11 @@ msgstr "Ses örneklerinin uçlarını yukarıdan aşağıya ters çevirir"
 
 #: src/effects/LoadEffects.cpp
 msgid "Builtin Effects"
-msgstr "İç Etkiler"
+msgstr "Yerleşik Efektler"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
-msgstr "Audacity için iç etkileri sağlar"
+msgstr "Audacity için iç efektleri sağlar"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
@@ -9454,11 +9454,11 @@ msgstr "Parçaları bağımsız olarak kısal&tın"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST Effects"
-msgstr "VST Etkileri"
+msgstr "VST Efektleri"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Adds the ability to use VST effects in Audacity."
-msgstr "Audacity içinde VST etkilerinin kullanılabilmesini sağlar."
+msgstr "Audacity içinde VST efektlerinin kullanılabilmesini sağlar."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
@@ -9643,11 +9643,11 @@ msgstr "Yüzde olarak Wah frekans ötelemesi"
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effects"
-msgstr "Audio Unit Etkileri"
+msgstr "Audio Unit Efektleri"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Audacity için Audio Unit etkileri desteği sağlar"
+msgstr "Audacity için Audio Unit efektleri desteği sağlar"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not find component"
@@ -9659,7 +9659,7 @@ msgstr "Bileşen başlatılamadı"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Audio Unit Effect Options"
-msgstr "Audio Unit Etkileri Ayarları"
+msgstr "Audio Unit Efektleri Ayarları"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
@@ -9824,11 +9824,11 @@ msgstr "Audio Unit"
 #.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
-msgstr "LADSPA Etkileri"
+msgstr "LADSPA Efektleri"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Provides LADSPA Effects"
-msgstr "LADSPA Etkileri Sağlar"
+msgstr "LADSPA Efektleri Sağlar"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Audacity no longer uses vst-bridge"
@@ -9848,7 +9848,7 @@ msgstr ""
 "İşlemelerinin bir parçası olarak, bazı LADSPA efektlerinin sesin Audacity'ye "
 "geri döndürülmesini geciktirmesi gerekir. Bu gecikmeyi telafi etmediğinizde, "
 "sese küçük sessizliklerin eklendiğini fark edeceksiniz. Bu seçeneğin "
-"etkinleştirilmesi bu telafiyi sağlayacaktır, ancak tüm LADSPA etkileri için "
+"etkinleştirilmesi bu telafiyi sağlayacaktır, ancak tüm LADSPA efektleri için "
 "çalışmayabilir."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
@@ -9927,19 +9927,19 @@ msgstr "LV2"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "LV2 Effects"
-msgstr "LV2 Etkileri"
+msgstr "LV2 Efekleri"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Audacity"
-msgstr "Audacity için LV2 etkileri desteği sağlar"
+msgstr "Audacity için LV2 efektleri desteği sağlar"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
-msgstr "Nyquist Etkileri"
+msgstr "Nyquist Efektleri"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Audacity için Nyquist etkileri desteği sağlar"
+msgstr "Audacity için Nyquist efektleri desteği sağlar"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
@@ -9960,7 +9960,7 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"'Spektral etkileri' kullanabilmek için iz Spektrogram\n"
+"'Spektral efektleri' kullanabilmek için iz Spektrogram\n"
 "ayarlarından 'Spektral Seçim' özelliğini etkinleştirin ve\n"
 "etkinin uygulanacağı frekans aralığını seçin."
 
@@ -10172,11 +10172,11 @@ msgstr "adsız"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
-msgstr "Vamp Etkileri"
+msgstr "Vamp Efektleri"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Provides Vamp Effects support to Audacity"
-msgstr "Audacity için Vamp etkileri desteği sağlar"
+msgstr "Audacity için Vamp efekleri desteği sağlar"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid ""
@@ -10893,7 +10893,7 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
-"Bit Hızı (bit/saniye) - sonuç dosyasının boyutu ve kalitesini etkiler\n"
+"Bit Hızı (bit/saniye) - sonuç dosyasının boyutu ve kalitesini efektleri\n"
 "Bazı kodlayıcı-çözücüler yalnız belirli değerleri kabul eder (128k, 192k, 256k "
 "gibi)\n"
 "0 - otomatik\n"
@@ -13611,7 +13611,7 @@ msgstr "Son Üreteci Tekrarla"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
-msgstr "Et&kiler"
+msgstr "Efektl&er"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -13823,7 +13823,7 @@ msgstr "Oynatma Konumunda Seçimi Sağa Ayarla"
 
 #: src/menus/SelectMenus.cpp
 msgid "Track &Start to Cursor"
-msgstr "İ&z Başını İmlece Getir"
+msgstr "İmleci Parça &Başlangıcına Getir"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Track Start to Cursor"
@@ -13855,7 +13855,7 @@ msgstr "Seçimi &Hatırla"
 
 #: src/menus/SelectMenus.cpp
 msgid "S&pectral"
-msgstr "&Spektral"
+msgstr "S&pektral"
 
 #: src/menus/SelectMenus.cpp
 msgid "To&ggle Spectral Selection"
@@ -14059,7 +14059,7 @@ msgstr "'%s' parçasındaki tüm ses işlendi"
 #. * panning and amplification and write to some external file.
 #: src/menus/TrackMenus.cpp
 msgid "Render"
-msgstr "Çevir"
+msgstr "Oluştur"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -14631,7 +14631,7 @@ msgstr "Kili&di Aç"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
-msgstr "S&es Aygıtlarını Yeniden Tara"
+msgstr "Ses Aygıtlarını Y&eniden Tara"
 
 #: src/menus/TransportMenus.cpp
 msgid "Transport &Options"
@@ -14673,7 +14673,7 @@ msgstr "Oyn&at"
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Sto&p"
-msgstr "D&urdur"
+msgstr "Durdu&r"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &One Second"
@@ -14879,7 +14879,7 @@ msgstr "Davranışlar"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "&Yığın kipinde etkileri uygulama"
+msgstr "&Yığın kipinde efektleri uygulama"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Devices"
@@ -15132,7 +15132,7 @@ msgstr "V&ST"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
-msgstr "Etkileri Etkinleştir"
+msgstr "Efektleri Etkinleştir"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16841,11 +16841,11 @@ msgstr "Kayıt Kanalları"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1 (Mono) Kayıt Kanalı"
+msgstr "1 (Mono) Kayıt"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 (Stereo) Kayıt Kanalı"
+msgstr "2 (Stereo) Kayıt"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
@@ -20425,7 +20425,7 @@ msgid ""
 "                Especially when played by only one speaker."
 msgstr ""
 " - Parça stereo olmasına rağmen, alan açıkça çok geniştir.\n"
-"                 Bu tuhaf etkilere neden olabilir.\n"
+"                 Bu tuhaf efektlere neden olabilir.\n"
 "                 Özellikle tek bir hoparlörle çalındığında."
 
 #: plug-ins/vocalrediso.ny
