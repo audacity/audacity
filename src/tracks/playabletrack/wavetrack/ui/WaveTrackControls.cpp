@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../CellularPanel.h"
 #include "Project.h"
 #include "../../../../ProjectAudioIO.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"

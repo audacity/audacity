@@ -88,7 +88,7 @@ class Track;
 class TrackList;
 
 //! Base class for extra information attached to undo/redo states
-class AUDACITY_DLL_API UndoStateExtension {
+class PROJECT_HISTORY_API UndoStateExtension {
 public:
    virtual ~UndoStateExtension();
 
@@ -96,7 +96,7 @@ public:
    virtual void RestoreUndoRedoState(AudacityProject &) = 0;
 };
 
-class AUDACITY_DLL_API UndoRedoExtensionRegistry {
+class PROJECT_HISTORY_API UndoRedoExtensionRegistry {
 public:
    //! Type of function that produces an UndoStateExtension object when saving state of a project
    /*! Shared pointer allows easy sharing of unchanging parts of project state among history states */
@@ -104,7 +104,7 @@ public:
       std::function<std::shared_ptr<UndoStateExtension>(AudacityProject&)>;
 
    //! Typically statically constructed
-   struct AUDACITY_DLL_API Entry {
+   struct PROJECT_HISTORY_API Entry {
       Entry(const Saver &saver);
    };
 };
@@ -160,7 +160,7 @@ inline UndoPush operator & (UndoPush a, UndoPush b)
 
 //! Maintain a non-persistent list of states of the project, to support undo and redo commands
 /*! The history should be cleared before destruction */
-class AUDACITY_DLL_API UndoManager final
+class PROJECT_HISTORY_API UndoManager final
    : public ClientData::Base
    , public Observer::Publisher<UndoRedoMessage>
    , public std::enable_shared_from_this<UndoManager>

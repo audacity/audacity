@@ -18,7 +18,7 @@ class AudacityProject;
 struct UndoState;
 enum class UndoPush : unsigned char;
 
-class AUDACITY_DLL_API ProjectHistory final
+class PROJECT_HISTORY_API ProjectHistory final
    : public ClientData::Base
 {
 public:
@@ -28,7 +28,7 @@ public:
     Invoked when undo states are added or modified, or when the
     current state changes because of undo or redo
     */
-   struct AUDACITY_DLL_API AutoSave : GlobalHook<AutoSave,
+   struct PROJECT_HISTORY_API AutoSave : GlobalHook<AutoSave,
       void(AudacityProject &)
    > {};
 
@@ -38,8 +38,8 @@ public:
    explicit ProjectHistory( AudacityProject &project )
       : mProject{ project }
    {}
-   ProjectHistory( const ProjectHistory & ) PROHIBITED;
-   ProjectHistory &operator=( const ProjectHistory & ) PROHIBITED;
+   ProjectHistory( const ProjectHistory & ) = delete;
+   ProjectHistory &operator=( const ProjectHistory & ) = delete;
    ~ProjectHistory() override;
 
    void InitialState();

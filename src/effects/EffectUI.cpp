@@ -18,7 +18,7 @@
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectList.h"

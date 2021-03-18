@@ -831,7 +831,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 }
 
 #include "../LabelTrack.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"

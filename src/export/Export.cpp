@@ -57,7 +57,7 @@
 #include "Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
 #include "Project.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
