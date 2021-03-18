@@ -41,8 +41,11 @@
 **	process and the values HAVE_LRINT and HAVE_LRINTF are set accordingly in
 **	the config.h file.
 */
-
 #if (defined (WIN32) || defined (_WIN32)) && defined(_MSC_VER) && defined(_M_IX86)
+	// As of Visual Studio 2019 16.9, these functions have been made intrinsic and the build
+	// will fail. Unfortunately, the intrinsic versions run a LOT slower than the ones
+   // below, so force the compiler to use ours instead.
+	#pragma function( lrint, lrintf )
 
    // Including math.h allows us to use the inline assembler versions without
    // producing errors in newer Visual Studio versions.
@@ -56,7 +59,6 @@
    /*	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
-#if _MSC_VER < 1928
 	__inline long int
 	lrint (double flt)
 	{	int intgr;
@@ -80,7 +82,7 @@
 
 		return intgr ;
 	}
-#endif
+
 	__inline long long int
 	llrint (double flt)
 	{	long long int intgr;
