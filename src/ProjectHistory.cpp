@@ -11,7 +11,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 
 #include "Project.h"
-#include "ProjectFileIO.h"
 #include "Track.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -72,19 +71,6 @@ bool ProjectHistory::RedoAvailable() const
       !tracks.HasPendingTracks();
 }
 
-namespace {
-   void AutoSaveOrThrow( ProjectFileIO &projectFileIO )
-   {
-      if ( !projectFileIO.AutoSave() )
-         throw SimpleMessageBoxException{
-            ExceptionType::Internal,
-            XO("Automatic database backup failed."),
-            XO("Warning"),
-            "Error:_Disk_full_or_not_writable"
-         };
-   }
-}
-
 void ProjectHistory::PushState(
    const TranslatableString &desc, const TranslatableString &shortDesc)
 {
@@ -96,9 +82,8 @@ void ProjectHistory::PushState(const TranslatableString &desc,
                                 UndoPush flags )
 {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    if((flags & UndoPush::NOAUTOSAVE) == UndoPush::NONE)
-      AutoSaveOrThrow( projectFileIO );
+      AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
@@ -121,9 +106,8 @@ void ProjectHistory::RollbackState()
 void ProjectHistory::ModifyState(bool bWantsAutoSave)
 {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    if (bWantsAutoSave)
-      AutoSaveOrThrow( projectFileIO );
+      AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
@@ -138,9 +122,8 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
 void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
 {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    if (doAutosave)
-      AutoSaveOrThrow( projectFileIO );
+      AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &dstTracks = TrackList::Get( project );
