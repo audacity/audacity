@@ -2494,7 +2494,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
 // Limit values to -1.0..+1.0
 void ClampBuffer(float * pBuffer, unsigned long len){
    for(unsigned i = 0; i < len; i++)
-      pBuffer[i] = wxClip( pBuffer[i], -1.0f, 1.0f);
+      pBuffer[i] = std::clamp(pBuffer[i], -1.0f, 1.0f);
 };
 
 
@@ -2822,7 +2822,7 @@ void AudioIoCallback::DrainInputBuffers(
             short *tempShorts = (short *)tempFloats;
             for( unsigned i = 0; i < len; i++) {
                float tmp = inputShorts[numCaptureChannels*i+t];
-               tmp = wxClip( -32768, tmp, 32767 );
+               tmp = std::clamp(tmp, -32768.0f, 32767.0f);
                tempShorts[i] = (short)(tmp);
             }
          } break;
