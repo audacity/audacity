@@ -68,7 +68,7 @@ struct PlaybackSlice {
 
  Methods of the object are passed a PlaybackSchedule as context.
  */
-class PlaybackPolicy {
+class AUDIO_IO_API PlaybackPolicy {
 public:
    using Duration = std::chrono::duration<double>;
 
@@ -156,8 +156,8 @@ protected:
    double mRate = 0;
 };
 
-struct AUDACITY_DLL_API PlaybackSchedule {
 
+struct AUDIO_IO_API PlaybackSchedule {
    /// Playback starts at offset of mT0, which is measured in seconds.
    double              mT0;
    /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
@@ -206,7 +206,7 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     thread, what the last consumed track time is.  The main thread can use that
     for other purposes such as refreshing the display of the play head position.
     */
-   class TimeQueue {
+   class AUDIO_IO_API TimeQueue {
    public:
 
       //! @section called by main thread

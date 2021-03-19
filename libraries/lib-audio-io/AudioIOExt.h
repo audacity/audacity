@@ -25,7 +25,7 @@ struct PaStreamInfo;
 struct PlaybackSchedule;
 struct TransportTracks;
 
-class AUDACITY_DLL_API AudioIOExt : public AudioIOExtBase
+class AUDIO_IO_API AudioIOExt : public AudioIOExtBase
 {
 public:
    using Factory = std::function<
@@ -34,7 +34,7 @@ public:
    static Factories &GetFactories();
 
    //! Typically statically constructed
-   struct AUDIO_DEVICES_API RegisteredFactory{
+   struct AUDIO_IO_API RegisteredFactory{
       explicit RegisteredFactory(Factory factory);
       ~RegisteredFactory();
    };

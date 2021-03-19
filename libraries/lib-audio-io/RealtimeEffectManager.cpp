@@ -8,7 +8,6 @@
  
  **********************************************************************/
 
-
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 

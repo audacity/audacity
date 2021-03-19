@@ -23,7 +23,7 @@
 #include "Observer.h"
 #include "PluginInterface.h"
 #include "commands/CommandManagerWindowClasses.h"
-#include "effects/RealtimeEffectManager.h"
+#include "RealtimeEffectManager.h"
 
 struct AudioIOEvent;
 

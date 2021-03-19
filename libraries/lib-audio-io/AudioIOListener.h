@@ -13,13 +13,11 @@
 #ifndef __AUDACITY_AUDIO_IO_LISTENER__
 #define __AUDACITY_AUDIO_IO_LISTENER__
 
-
-
 class WritableSampleTrack;
 using WritableSampleTrackArray =
    std::vector < std::shared_ptr < WritableSampleTrack > >;
 
-class AUDACITY_DLL_API AudioIOListener /* not final */ {
+class AUDIO_IO_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}
    virtual ~AudioIOListener() {}

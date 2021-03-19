@@ -24,7 +24,7 @@ struct SpeedChangeMessage {};
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
-class AUDACITY_DLL_API ProjectAudioIO final
+class AUDIO_IO_API ProjectAudioIO final
    : public ClientData::Base
    , public Observer::Publisher<SpeedChangeMessage>
 {
@@ -33,8 +33,8 @@ public:
    static const ProjectAudioIO &Get( const AudacityProject &project );
 
    explicit ProjectAudioIO( AudacityProject &project );
-   ProjectAudioIO( const ProjectAudioIO & ) PROHIBITED;
-   ProjectAudioIO &operator=( const ProjectAudioIO & ) PROHIBITED;
+   ProjectAudioIO( const ProjectAudioIO & ) = delete;
+   ProjectAudioIO &operator=( const ProjectAudioIO & ) = delete;
    ~ProjectAudioIO();
 
    int GetAudioIOToken() const;

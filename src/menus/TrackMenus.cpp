@@ -5,7 +5,7 @@
 
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectAudioIO.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"

@@ -21,7 +21,7 @@
 #include "EffectBase.h"
 
 #include <thread>
-#include "../AudioIO.h"
+#include "AudioIO.h"
 #include "ConfigInterface.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 #include "../MixAndRender.h"

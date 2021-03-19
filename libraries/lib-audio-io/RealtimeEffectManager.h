@@ -44,7 +44,7 @@ struct RealtimeEffectManagerMessage
    std::shared_ptr<Track> track; ///< null, if changes happened in the project scope
 };
 
-class AUDACITY_DLL_API RealtimeEffectManager final :
+class AUDIO_IO_API RealtimeEffectManager final :
    public ClientData::Base,
    public Observer::Publisher<RealtimeEffectManagerMessage>
 {
@@ -135,7 +135,7 @@ private:
    void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
-   struct AllListsLock {
+   struct AUDIO_IO_API AllListsLock {
       RealtimeEffectManager *mpManager{};
       AllListsLock(RealtimeEffectManager *pManager = nullptr);
       AllListsLock(AllListsLock &&other);
