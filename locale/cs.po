@@ -1,12 +1,12 @@
 # Header entry was created by Lokalize.
 #
-# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
+# Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2020-06-13 23:13+0200\n"
+"PO-Revision-Date: 2021-03-20 09:04+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 19.04.0\n"
+"X-Generator: Lokalize 20.12.0\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -595,9 +595,9 @@ msgstr "Stránky %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2020 %s Team."
-msgstr "%s software je kopírovací právo %s 1999-2018 %s tým."
+msgstr "Kopírovací právo k software %s %s 1999-2020 tým %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -918,6 +918,7 @@ msgstr ""
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
+"Knihovnu SQLite se nepodařilo inicializovat. Audacity nemůže pokračovat."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -1030,6 +1031,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Nelze získat semafory.\n"
+"\n"
+"To je pravděpodobně způsobeno nedostatkem zdrojů\n"
+"a může být vyžadován restart."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
@@ -1042,6 +1047,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Nelze vytvořit semafory.\n"
+"\n"
+"To je pravděpodobně způsobeno nedostatkem zdrojů\n"
+"a může být vyžadován restart."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1050,6 +1059,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Nelze získat semafor zámku.\n"
+"\n"
+"To je pravděpodobně způsobeno nedostatkem zdrojů\n"
+"a může být vyžadován restart."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1058,6 +1071,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Nelze získat semafor serveru.\n"
+"\n"
+"To je pravděpodobně způsobeno nedostatkem zdrojů\n"
+"a může být vyžadován restart."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1066,6 +1083,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"Nepodařilo se inicializovat server IPC Audacity.\n"
+"\n"
+"To je pravděpodobně způsobeno nedostatkem zdrojů\n"
+"a může být vyžadován restart."
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
@@ -1099,17 +1120,16 @@ msgid "audio or project file name"
 msgstr "Název souboru se zvukem nebo s projektem"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid ""
 "Audacity project (.aup3) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Projektové soubory Audacity (.AUP) nejsou nyní \n"
+"Projektové soubory Audacity (.aup3) nejsou nyní \n"
 "otevírány programem Audacity. \n"
 "\n"
-"Přiřaďte asociace a budou se otevírat dvojklikem myši."
+"Přiřaďte je a budou se otevírat dvojklepnutím myši."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -1121,9 +1141,8 @@ msgid "Message"
 msgstr "Zpráva"
 
 #: src/AudacityFileConfig.cpp
-#, fuzzy
 msgid "Audacity Configuration Error"
-msgstr "Přizpůsobení DarkAudacity"
+msgstr "Chyba v nastavení Audacity"
 
 #: src/AudacityFileConfig.cpp
 #, c-format
@@ -1141,6 +1160,20 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
 "state which will be recovered the next time you open it."
 msgstr ""
+"Nelze získat přístup k následujícímu nastavovacímu souboru: \n"
+"\n"
+"\t%s\n"
+"\n"
+"To může být způsobeno mnoha důvody, ale nejpravděpodobnější je, že disk"
+"je plný nebo nemáte oprávnění k zápisu do souboru. Více informací"
+"lze získat klepnutím na tlačítko nápovědy níže. \n"
+"\n"
+"Můžete se pokusit problém opravit a poté pokračovat klepnutím na „Zkusit"
+" znovu“. \n"
+"\n"
+"Pokud se rozhodnete „Ukončit Audacity“, může být váš projekt ponechán v"
+" neuloženém stavu, "
+"který bude obnoven při příštím otevření."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
@@ -1149,13 +1182,12 @@ msgid "Help"
 msgstr "Nápověda"
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Quit Audacity"
-msgstr "Zavřít Audacity"
+msgstr "&Ukončit Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
-msgstr ""
+msgstr "&Zkusit znovu"
 
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
@@ -1474,20 +1506,20 @@ msgid "Automatic Crash Recovery"
 msgstr "Automatické obnovení po chybě"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid ""
 "The following projects were not saved properly the last time Audacity was "
 "run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Některé projekty nebyly naposledy správně uloženy.\n"
-"Naštěstí lze tyto projekty automaticky obnovit:"
+"Následující projekty nebyly správně uloženy naposledy, co byl Audacity"
+"spuštěn a lze je automaticky obnovit.\n"
+"\n"
+"Po obnovení projekty uložte, abyste zajistili zápis změn na disk."
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "Recoverable &projects"
-msgstr "Zpětně získatelné projekty"
+msgstr "Obnovitelné &projekty"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
@@ -1501,34 +1533,30 @@ msgid "Name"
 msgstr "Název"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Discard Selected"
-msgstr "Vybráno"
+msgstr "Vybráno &zahození"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Recover Selected"
-msgstr "Nevybráno nic"
+msgstr "Vybráno &obnovení"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Skip"
-msgstr ""
+msgstr "&Přeskočit"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "No projects selected"
-msgstr "Nebylo vybráno žádné makro"
+msgstr "Nebyly vybrány žádné projekty"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid ""
 "Are you sure you want to discard the selected projects?\n"
 "\n"
 "Choosing \"Yes\" permanently deletes the selected projects immediately."
 msgstr ""
-"Opravdu chcete zahodit všechny obnovitelné projekty?\n"
+"Opravdu chcete zahodit všechny vybrané projekty?\n"
 "\n"
-"Volba Ano okamžitě zahodí všechny obnovitelné projekty."
+"Volba Ano okamžitě a trvale smaže vybrané projekty."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1567,22 +1595,17 @@ msgid "Fade Ends"
 msgstr "Konec prolínání"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Import Macro"
-msgstr "Nahrát nezpracovaná data"
+msgstr "Nahrát makro"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
-msgstr ""
-"\"%s\" neexistuje.\n"
-"\n"
-"Chcete ho vytvořit?"
+msgstr "Makro %s již existuje. Chcete je nahradit?"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Export Macro"
-msgstr "Uložit jako MIDI"
+msgstr "Vyvést makro"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1890,18 +1913,18 @@ msgid "Test data size should be in the range 1 - 2000 MB."
 msgstr "Velikost zkušebních dat má být v rozsahu 1 - 2000 MB."
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr "Použití %ld kousků %ld vzorků (každý), pro celkem %.1f MB.\n"
+msgstr "Použití %lld kousků %lld vzorků (každý), pro celkem %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
 msgstr "Připravuje se...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Expected len %lld, track len %lld.\n"
-msgstr "Očekávaná délka %ld, délka stopy %lld.\n"
+msgstr "Očekávaná délka %lld, délka stopy %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1909,9 +1932,9 @@ msgid "Performing %d edits...\n"
 msgstr "Provádí se %d úprav...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut: %lld - %lld \n"
-msgstr "Vyjmout: %ld - %ld \n"
+msgstr "Vyjmout: %lld - %lld \n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1919,14 +1942,14 @@ msgid "Trial %d\n"
 msgstr "Zkouška %d\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut (%lld, %lld) failed.\n"
-msgstr "Vyjmutí (%ld, %ld) se nezdařilo.\n"
+msgstr "Vyjmutí (%lld, %lld) se nezdařilo.\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Paste: %lld\n"
-msgstr "Vložit: %ld\n"
+msgstr "Vložit: %lld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1960,18 +1983,18 @@ msgid "Doing correctness check...\n"
 msgstr "Ověřuje se správnost...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Bad: chunk %lld sample %lld\n"
-msgstr "Špatný kousek %ld vzorek %ld\n"
+msgstr "Špatný: kousek %lld vzorek %lld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
 msgstr "Ověření správnosti proběhlo úspěšně!\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Errors in %d/%lld chunks\n"
-msgstr "Chyby v %d/%ld kouscích\n"
+msgstr "Chyby v %d/%lld kouscích\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1988,13 +2011,13 @@ msgid "Time to check all data (2): %ld ms\n"
 msgstr "Čas k ověření všech dat (2): %ld ms\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
-"Při 44100 Hz, 16-bitů na vzorek, odhadovaný počet\n"
-" souběžných stop přehrávatelných najednou: %.1f\n"
+"Při 44100 Hz, %d na vzorek, odhadovaný počet\n"
+" souběžných najednou přehrávatelných stop: %.1f\n"
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
@@ -2092,23 +2115,22 @@ msgid "Audacity Support Data"
 msgstr "Data podpory Audacity"
 
 #: src/DBConnection.cpp
-#, fuzzy
 msgid "Checkpointing project"
-msgstr "Nynější projekt"
+msgstr "Kontrola projektu"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Checkpointing %s"
-msgstr "Nahrává se %s"
+msgstr "Kontrola %s"
 
 #: src/DBConnection.cpp src/ProjectFileIO.cpp
 msgid "This may take several seconds"
-msgstr ""
+msgstr "To může trvat několik sekund"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write to %s.\n"
-msgstr "Nelze zapisovat do souboru: %s"
+msgstr "Nepodařilo se zapisovat do %s.\n"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2117,30 +2139,35 @@ msgid ""
 "%s\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
+"Disk je plný.\n"
+"%s\n"
+"Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy."
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to create savepoint:\n"
 "\n"
 "%s"
 msgstr ""
-"Nepodařilo se zaregistrovat:\n"
+"Vytvoření bodu uložení se nezdařilo:\n"
+"\n"
 "%s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to release savepoint:\n"
 "\n"
 "%s"
 msgstr ""
-"Nepodařilo se zaregistrovat:\n"
+"Uvolnění bodu uložení se nezdařilo:\n"
+"\n"
 "%s"
 
 #: src/DBConnection.cpp
 msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
+msgstr "Chyba databáze. Litujeme, ale nemáme více podrobností."
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -2465,14 +2492,15 @@ msgstr ""
 "přejmenovat na %s."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
 "Audacity se nepodařilo provést zápis do souboru.\n"
-"Možná není %s zapisovatelný, nebo je disk plný."
+"Možná není %s zapisovatelný, nebo je disk plný.\n"
+"Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy."
 
 #: src/FileException.h
 msgid "File Error"
@@ -2513,9 +2541,8 @@ msgstr "Všechny soubory"
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
-#, fuzzy
 msgid "AUP3 project files"
-msgstr "Ukládání datových souborů projektu"
+msgstr "Soubory projektu AUP3"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
@@ -2934,9 +2961,8 @@ msgid "Action"
 msgstr "Činnost"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Used Space"
-msgstr "Místo na disku"
+msgstr "Použité místo"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
@@ -2956,24 +2982,21 @@ msgid "&Discard"
 msgstr "&Zrušit"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Clip&board space used"
-msgstr "Použité místo schránky"
+msgstr "Použité místo ve &schránce"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "D&iscard"
-msgstr "Zahodit"
+msgstr "&Zahodit"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Compact"
-msgstr "&Příkaz"
+msgstr "&Scelit"
 
 #: src/HistoryWindow.cpp src/ProjectFileManager.cpp
 #, c-format
 msgid "Compacting actually freed %s of disk space."
-msgstr ""
+msgstr "Scelení skutečně uvolnilo %s místa na disku."
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -3644,14 +3667,15 @@ msgid "Print"
 msgstr "Tisk"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "There is very little free disk space left on %s\n"
 "Please select a bigger temporary directory location in\n"
 "Directories Preferences."
 msgstr ""
-"Na disku zbývá velmi málo volného místa.\n"
-"Vyberte, prosím, jiný dočasný adresář v Nastavení."
+"Na disku %s zbývá velmi málo volného místa\n"
+"Vyberte, prosím, větší dočasné umístění adresáře\n"
+"v nastavení adresářů."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3931,35 +3955,38 @@ msgid "[Project %02i] "
 msgstr "[Projekt %02i]"
 
 #: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Failed to open the project's database"
-msgstr "Nepodařilo se nastavit název přednastavení"
+msgstr "Nepodařilo se otevřít databázi projektu"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to discard connection"
-msgstr "Nepodařilo se najít kodek"
+msgstr "Nepodařilo se zahodit spojení"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to restore connection"
-msgstr "Nepodařilo se získat obsah přednastavení"
+msgstr "Nepodařilo se obnovit spojení"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to execute a project file command:\n"
 "\n"
 "%s"
-msgstr "Nepodařilo se zakódovat přednastavení z \"%s\""
+msgstr ""
+"Nepodařilo se provést příkaz pro soubor s projektem:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to prepare project file command:\n"
 "\n"
 "%s"
-msgstr "Nelze přečíst soubor s přednastaveními."
+msgstr ""
+"Nelze připravit příkaz pro soubor s projektem:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3969,11 +3996,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Nepodařilo se získat data ze souboru s projektem.\n"
+"Následující příkaz selhal:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "This is not an Audacity project file"
-msgstr "Ukládání projektu Audacity"
+msgstr "Toto není soubor s projektem Audacity"
 
 #: src/ProjectFileIO.cpp
 msgid ""
@@ -3981,43 +4011,42 @@ msgid ""
 "\n"
 "You will need to upgrade to process it"
 msgstr ""
+"Tento projekt byl vytvořen s novější verzí Audacity:\n"
+"\n"
+"Abyste jej mohli zpracovat, budete muset program povýšit"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to initialize the project file"
-msgstr "Nelze inicializovat proud MP3"
+msgstr "Nelze inicializovat soubor s projektem"
 
 #: src/ProjectFileIO.cpp
 msgid "Cleanup of orphan blocks failed"
-msgstr ""
+msgstr "Nepodařilo se uklidit osiřelé bloky"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Total orphan blocks deleted %d"
-msgstr "Osiřelý blokový soubor: '%s'"
+msgstr "Osiřelých bloků celkem smazáno %d"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to rollback transaction during import"
-msgstr ""
+msgstr "Během nahrávání se transakci nepodařilo vrátit zpět"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to attach destination database"
-msgstr "Nelze nastavit stav proudu na pozastaveno."
+msgstr "Nelze připojit cílovou databázi"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
-msgstr ""
+msgstr "Nelze přepnout do režimu rychlého žurnálování"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to copy tags"
-msgstr "Selhalo odstranění %s"
+msgstr "Nepodařilo se zkopírovat značky"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to bind SQL parameter"
-msgstr "Nepodařilo se najít kodek"
+msgstr "Nepodařilo se svázat parametr SQL"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4027,34 +4056,37 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Nepodařilo se aktualizovat soubor s projektem.\n"
+"Následující příkaz selhal:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Destination project could not be detached"
-msgstr ""
+msgstr "Nepodařilo se odpojit cílový projekt"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Copying Project"
-msgstr "Chyba při otevírání projektu"
+msgstr "Kopíruje se projekt"
 
 #: src/ProjectFileIO.cpp
 msgid "Error Writing to File"
 msgstr "Chyba při zapisování do souboru"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
 "Audacity se nepodařilo provést zápis do souboru %s.\n"
-"Možná je disk plný nebo není zapisovatelný."
+"Možná je disk plný nebo není zapisovatelný.\n"
+"Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Compacting project"
-msgstr "Uložit &projekty"
+msgstr "Sceluje se projekt"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4086,27 +4118,29 @@ msgstr "Nelze otevřít soubor s projektem"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+"Nepodařilo se odstranit informaci o automatickém uložení ze souboru s"
+" projektem."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to decode project document"
-msgstr "Do komunikačního spojení nelze přidat dekodér"
+msgstr "Dokument projektu nelze dekódovat"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to parse project information."
-msgstr "Nelze přečíst soubor s přednastaveními."
+msgstr "Nelze zpracovat informace o projektu."
 
 #: src/ProjectFileIO.cpp
 msgid ""
 "The project's database failed to reopen, possibly because of limited space "
 "on the storage device."
 msgstr ""
+"Databázi projektu se nepodařilo znovu otevřít, pravděpodobně kvůli omezenému"
+" prostoru"
+"na úložném zařízení."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Saving project"
-msgstr "Uložit &projekty"
+msgstr "Ukládá se projekt"
 
 #: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "Error Saving Project"
@@ -4114,7 +4148,7 @@ msgstr "Chyba při ukládání projektu"
 
 #: src/ProjectFileIO.cpp
 msgid "Syncing"
-msgstr ""
+msgstr "Seřizuje se"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4124,6 +4158,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Projekt se nepodařilo otevřít, pravděpodobně kvůli omezenému prostoru\n"
+"na úložném zařízení.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4133,21 +4171,25 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Nelze odebrat informace o automatickém ukládání, pravděpodobně kvůli"
+" omezenému prostoru\n"
+"na úložném zařízení.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Backing up project"
-msgstr "Uložit &prázdný projekt"
+msgstr "Zálohování projektu"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "This project was not saved properly the last time Audacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Některé projekty nebyly naposledy správně uloženy.\n"
-"Naštěstí lze tyto projekty automaticky obnovit:"
+"Tento projekt nebyl při posledním spuštění Audacity správně uložen.\n"
+"\n"
+"Byl obnoven ve stavu pořízení posledního snímku."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4156,15 +4198,18 @@ msgid ""
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
 msgstr ""
+"Tento projekt nebyl při posledním spuštění Audacity správně uložen.\n"
+"\n"
+"Byl obnoven ve stavu pořízení posledního snímku., musíte jej ale\n"
+"pro zachování jeho obsahu uložit."
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Project Recovered"
-msgstr "Projekt byl obnoven"
+msgstr "Projekt obnoven"
 
 #: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
 msgid "Projects cannot be saved to FAT drives."
-msgstr ""
+msgstr "Projekty nelze uložit na diskové jednotky FAT."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4192,9 +4237,8 @@ msgid "Warning - Empty Project"
 msgstr "Varování - prázdný projekt"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Insufficient Disk Space"
-msgstr "Místo na disku"
+msgstr "Nedostatek místa na disku"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4202,12 +4246,17 @@ msgid ""
 "\n"
 "Please select a different disk with more free space."
 msgstr ""
+"Velikost projektu přesahuje dostupné volné místo na cílovém disku.\n"
+"\n"
+"Vyberte jiný disk s větším volným místem."
 
 #: src/ProjectFileManager.cpp
 msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
 msgstr ""
+"Při zápisu na formátovaný souborový systém FAT32 projekt překračuje "
+"největší velikost 4 GB."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4241,7 +4290,7 @@ msgstr ""
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "   Do you want to overwrite the project:\n"
 "\"%s\"?\n"
@@ -4263,19 +4312,18 @@ msgid "Overwrite Project Warning"
 msgstr "Varování ohledně přepsání projektu"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "The project was not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Projekt nebude uložen, protože vybraný projekt je otevřen v jiném okně.\n"
+"Projekt nebyl uložen, protože vybraný projekt je otevřen v jiném okně.\n"
 "Zkuste to, prosím, znovu a vyberte původní název."
 
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Copy of Project \"%s\" As..."
-msgstr "%sUložit nezkomprimovanou kopii projektu \"%s\" jako..."
+msgstr "%sUložit kopii projektu \"%s\" jako..."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4307,6 +4355,8 @@ msgid ""
 "Project resides on FAT formatted drive.\n"
 "Copy it to another drive to open it."
 msgstr ""
+"Projekt je umístěn na diskové jednotce formátované jako FAT.\n"
+"Zkopírujte jej na jiný disk a otevřete jej."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4362,9 +4412,8 @@ msgid "Import"
 msgstr "Nahrát"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Failed to import project"
-msgstr "Nepodařilo se najít kodek"
+msgstr "Nepodařilo se zavést projekt"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Importing"
@@ -4372,12 +4421,11 @@ msgstr "Chyba při nahrávání"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr ""
+msgstr "Nelze zavést formát AUP3. Místo toho použijte Soubor → Otevřít"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Compact Project"
-msgstr "Nastavit projekt"
+msgstr "Scelit projekt"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -4392,24 +4440,32 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
+"Scelením tohoto projektu uvolníte místo na disku odstraněním nevyužitých bajtů"
+"v souboru.\n"
+"\n"
+"Na disku je %s volného místa a tento projekt aktuálně používá %s.\n"
+"\n"
+"Pokud budete pokračovat, budou aktuální historie kroků Zpět/Znovu a obsah"
+" schránky"
+"zahozeny a obnovíte přibližně %s místa na disku.\n"
+"\n"
+"Chceš pokračovat?"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Compacted project file"
-msgstr "Nelze otevřít soubor s projektem"
+msgstr "Scelený soubor s projektem"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact"
-msgstr ""
+msgstr "Scelit"
 
 #: src/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "Nový projekt vytvořen"
 
 #: src/ProjectHistory.cpp
-#, fuzzy
 msgid "Automatic database backup failed."
-msgstr "Automatické ukládání povoleno:"
+msgstr "Automatické zálohování databáze selhalo."
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4938,15 +4994,16 @@ msgid "Error Saving Tags File"
 msgstr "Chyba při ukládání souboru se značkami"
 
 #: src/TempDirectory.cpp
-#, fuzzy
 msgid "Unsuitable"
-msgstr "Modul nevyhovuje"
+msgstr "Nevhodný"
 
 #: src/TempDirectory.cpp
 msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
 msgstr ""
+"Adresář dočasných souborů je na jednotce ve formátu FAT.\n"
+"Obnovuje se výchozí umístění."
 
 #: src/TempDirectory.cpp
 #, c-format
@@ -4955,6 +5012,9 @@ msgid ""
 "\n"
 "For tips on suitable drives, click the help button."
 msgstr ""
+"%s\n"
+"\n"
+"Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy."
 
 #: src/Theme.cpp
 #, c-format
@@ -5562,7 +5622,7 @@ msgstr "Přesunout stopu dolů"
 
 #: src/UndoManager.cpp
 msgid "Discarding undo/redo history"
-msgstr ""
+msgstr "Zahazuje se historie zpět/znovu"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5612,7 +5672,7 @@ msgstr "Za klipem není dost místa pro otevření střihu"
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
 msgid "This operation cannot be done until importation of %s completes."
-msgstr "Tuto operaci nelze udělat, dokud nebude dokončeno zavedení %s."
+msgstr "Tuto operaci nelze udělat, dokud nebude dokončeno nahrávání %s."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
@@ -5857,9 +5917,8 @@ msgid "Gets track values as JSON."
 msgstr "Získat hodnoty stopy jako JSON."
 
 #: src/commands/HelpCommand.cpp
-#, fuzzy
 msgid "Comment"
-msgstr "Poznámky"
+msgstr "Poznámka"
 
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
@@ -5867,7 +5926,7 @@ msgstr "Příkaz:"
 
 #: src/commands/HelpCommand.cpp
 msgid "_"
-msgstr ""
+msgstr "_"
 
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
@@ -5875,7 +5934,7 @@ msgstr "Podá nápovědu k příkazu."
 
 #: src/commands/HelpCommand.h
 msgid "For comments in a macro."
-msgstr ""
+msgstr "Pro poznámky v makru."
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -5941,19 +6000,16 @@ msgid "Save Project2"
 msgstr "Uložit projekt 2"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Save Copy"
-msgstr "Kopírovat štítek"
+msgstr "Uložit kopii"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Save Log"
-msgstr "Uloženo"
+msgstr "Uložit zápis"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Clear Log"
-msgstr "Vyprázdnit"
+msgstr "Vyprázdnit zápis"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5964,17 +6020,16 @@ msgid "Saves a project."
 msgstr "Uloží projekt."
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Saves a copy of current project."
-msgstr "Uloží projekt."
+msgstr "Uloží kopii nynějšího projektu."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Saves the log contents."
-msgstr ""
+msgstr "Uloží obsah zápisu."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Clears the log contents."
-msgstr ""
+msgstr "Vyprázdní obsah zápisu."
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference"
@@ -9308,19 +9363,16 @@ msgid "Converts stereo tracks to mono"
 msgstr "Převede stereofonní stopu na monofonní"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Resampling left channel"
-msgstr "Převzorkování selhalo"
+msgstr "Převzorkování levého kanálu"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Resampling right channel"
-msgstr "Pravý kanál"
+msgstr "Převzorkování pravého kanálu"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Mixing down to mono"
-msgstr "Při ukládání spojit (smíchat) do mono"
+msgstr "Smíchání do mono"
 
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
@@ -10338,11 +10390,13 @@ msgid "Mixer Panel"
 msgstr "Míchací panel"
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to export.\n"
 "Error %s"
-msgstr "Nelze uložit"
+msgstr ""
+"Nelze vyvést.\n"
+"Chyba %s"
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
@@ -10846,7 +10900,7 @@ msgstr "Nahrát přednastavení"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Import Presets"
-msgstr "Nahrát přednastavení"
+msgstr "Zavést přednastavení"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Export Presets"
@@ -11687,7 +11741,7 @@ msgstr "Pokračovat a vyvést zbývající soubory?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name.\n"
 "You cannot use any of these characters:\n"
@@ -11696,20 +11750,24 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"Štítek nebo stopa \"%s\" není možný souborový název. Nemůžete použít: %s\n"
-"Použijte..."
+"Štítek nebo stopa \"%s\" není možný souborový název.\n"
+"Nemůžete použít žádný z těchto znaků:\n"
+"\n"
+"%s\n"
+"\n"
+"Navrhovaná náhrada:"
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 "\n"
 "Suggested replacement:"
 msgstr ""
-"Štítek nebo stopa \"%s\" není možný souborový název. Nemůžete použít \"%s"
-"\".\n"
-"Použijte..."
+"Štítek nebo stopa \"s\" není možný souborový název. Nemůžete použít \"%s\".\n"
+"\n"
+"Navrhovaná náhrada:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
@@ -11840,17 +11898,15 @@ msgstr ""
 "klepnutím na Soubor → Nahrát → MIDI."
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\"%s\" \n"
 "is a not an audio file. \n"
 "Audacity cannot open this type of file."
 msgstr ""
 "\"%s\" \n"
-"je soubor MIDI, ne zvukový soubor. \n"
-"Audacity nedokáže soubory MIDI otevřít, a pak přehrávat, ale můžete jej "
-"upravit\n"
-"klepnutím na Soubor → Nahrát → MIDI."
+"ne zvukový soubor.\n"
+"Audacity nedokáže otevřít tento typ souboru."
 
 #: src/import/Import.cpp
 msgid "Select stream(s) to import"
@@ -12037,14 +12093,15 @@ msgstr "Soubor \"%s\" nalezen."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
-"Audacity se nepodařilo rozpoznat souborový typ souboru '%s'.\n"
-"Zkuste nainstalovat FFmpeg. Pro nekomprimované soubory vyzkoušejte i Soubor "
+"Audacity se nepodařilo rozpoznat typ souboru '%s'.\n"
+"\n"
+"%sPro nekomprimované soubory vyzkoušejte i Soubor "
 "→ Nahrát → Nezpracovaná data."
 
 #: src/import/Import.cpp
@@ -12052,6 +12109,8 @@ msgid ""
 "Try installing FFmpeg.\n"
 "\n"
 msgstr ""
+"Zkuste nainstalovat FFmpeg.\n"
+"\n"
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -12074,23 +12133,22 @@ msgstr ""
 
 #: src/import/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
-msgstr ""
+msgstr "Soubory projektu AUP (*.aup)"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Couldn't import the project:\n"
 "\n"
 "%s"
 msgstr ""
-"Nepodařilo se zavést přednastavení \"%s\"\n"
+"Nepodařilo se zavést projekt:\n"
 "\n"
 "%s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Import Project"
-msgstr "Nahrát přednastavení"
+msgstr "Zavést projekt"
 
 #: src/import/ImportAUP.cpp
 msgid ""
@@ -12100,44 +12158,48 @@ msgid ""
 "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
 "you may import it with this version of Audacity."
 msgstr ""
+"Tento projekt byl uložen Audacity verze 1.0 nebo starší. Formát se\n"
+"změnil a tato verze Audacity projekt nedokáže zavést.\n"
+"\n"
+"K povýšení projektu použijte verzi Audacity před 3.0.0. Poté\n"
+"jej můžete zavést s touto verzí Audacity."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Internal error in importer...tag not recognized"
-msgstr "Vnitřní chyba nahlášena procesem zarovnávání."
+msgstr "Vnitřní chyba v zaváděcím programu. Značka nerozpoznána."
 
 #: src/import/ImportAUP.cpp
 #, c-format
 msgid "Invalid project '%s' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu '%s'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'vpos'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'h'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'zoom'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'sel0'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'sel1'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'selLow'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost projektu 'selHigh'."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12149,35 +12211,36 @@ msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
 msgstr ""
+"V souboru projektu byly nalezeny stopy MIDI, ale toto sestavení Audacity"
+"nezahrnuje podporu MIDI, proto se stopa obejde."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Project Import"
-msgstr "Začátek projektu"
+msgstr "Zavedení projektu"
 
 #: src/import/ImportAUP.cpp
 msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
 msgstr ""
+"Činný projekt již má časovou stopu a jedna byl nalezen v zaváděném projektu, "
+"proto se zavedená časová stopa obejde."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'maxsamples' attribute."
-msgstr "Neplatný vzorkovací kmitočet"
+msgstr "Neplatná vlastnost sekvence 'maxsamples'."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
-msgstr ""
+msgstr "Neplatná vlastnost sekvence 'sampleformat'."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'numsamples' attribute."
-msgstr "Neplatný vzorkovací kmitočet"
+msgstr "Neplatná vlastnost sekvence 'numsamples'."
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
-msgstr ""
+msgstr "Nelze zpracovat vlastnost vlnového bloku 'start'."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12186,14 +12249,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"Chybí soubor projektu %s\n"
+"\n"
+"Místo toho se vkládá ticho."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
-msgstr ""
+msgstr "Chybí nebo neplatná vlastnost simpleblockfile 'len'."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
-msgstr ""
+msgstr "Chybí nebo neplatná vlastnost silentblockfile 'len'."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12202,14 +12268,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"Chybí zástupný soubor %s\n"
+"\n"
+"Místo toho se vkládá ticho."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
-msgstr ""
+msgstr "Chybí nebo neplatná vlastnost pcmaliasblockfile 'len'."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
-msgstr ""
+msgstr "Chybí nebo neplatná vlastnost pcmaliasblockfile 'aliaslen'."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12218,21 +12287,24 @@ msgid ""
 "\n"
 "Inserting silence."
 msgstr ""
+"Chyba při zpracování %s\n"
+"\n"
+"Vkládá se ticho."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open %s"
-msgstr "Selhalo odstranění %s"
+msgstr "Nepodařilo se otevřít %s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to seek to position %lld in %s"
-msgstr "Nepodařilo se nastavit název přednastavení"
+msgstr "Nepodařilo se vyhledat polohu %lld v %s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to read %lld samples from %s"
-msgstr "Nelze přečíst přednastavení z \"%s\""
+msgstr "Nelze přečíst %lld vzorků z %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -12277,7 +12349,7 @@ msgstr "Soubor neobsahuje žádné zvukové proudy."
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to import file, state change failed."
-msgstr "Nelze zavést soubor. Nepodařila se změna stavu."
+msgstr "Nelze nahrát soubor. Nepodařila se změna stavu."
 
 #: src/import/ImportGStreamer.cpp
 #, c-format
@@ -12348,6 +12420,10 @@ msgid ""
 "This is likely caused by a malformed MP3.\n"
 "\n"
 msgstr ""
+"Zavedení selhalo.\n"
+"\n"
+"To je pravděpodobně způsobeno vadným MP3.\n"
+"\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12670,7 +12746,7 @@ msgstr "&Nahrát"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
-msgstr ""
+msgstr "Špatná velikost dat. Nepodařilo se zavést zvuk"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12800,14 +12876,12 @@ msgid "Cursor to Next Clip Boundary"
 msgstr "Ukazatel na hranici dalšího klipu"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Time Shift &Left"
-msgstr "Nástroj pro časový posun"
+msgstr "Časový posun &vlevo"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Time Shift &Right"
-msgstr "Nástroj pro časový posun"
+msgstr "Časový posun &vpravo"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -13170,9 +13244,8 @@ msgid "Save Project &As..."
 msgstr "Uložit jako projekt &Audacity..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Backup Project..."
-msgstr "Otevřít projekt..."
+msgstr "&Zálohovat projekt..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -13242,7 +13315,7 @@ msgstr "&Ukončit"
 
 #: src/menus/FileMenus.cpp
 msgid "Hidden File Menu"
-msgstr ""
+msgstr "Skrytá nabídka souborů"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as FLAC"
@@ -13614,9 +13687,9 @@ msgid "Unknown"
 msgstr "Neznámý"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Repeat %s"
-msgstr "Zopakovat %s"
+msgstr "&Zopakovat %s"
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -13632,9 +13705,8 @@ msgid "Add / Remove Plug-ins..."
 msgstr "Přidat/Odstranit přídavné moduly..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Generator"
-msgstr "Zopakovat naposledy použitý efekt"
+msgstr "Zopakovat naposledy použitý generátor"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -13649,18 +13721,16 @@ msgid "&Analyze"
 msgstr "R&ozbor"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Analyzer"
-msgstr "Zopakovat naposledy použitý efekt"
+msgstr "Zopakovat naposledy použitý analyzátor"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
 msgstr "Nástr&oje"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Tool"
-msgstr "Zopakovat naposledy použitý efekt"
+msgstr "Zopakovat naposledy použitý nástroj"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
@@ -14771,12 +14841,10 @@ msgid "&Decrease Playback Speed"
 msgstr "&Snížit rychlost přehrávání"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Move to Pre&vious Label"
 msgstr "Přesunout se k &předchozímu štítku"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Move to Ne&xt Label"
 msgstr "Přesunout se k &dalšímu štítku"
 
@@ -14996,53 +15064,49 @@ msgid "Preferences for Directories"
 msgstr "Nastavení adresářů"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Default directories"
-msgstr "Adresáře"
+msgstr "Výchozí adresáře"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
 msgstr ""
+"Ponechte pole prázdné a přejděte do posledního adresáře použitého pro tuto"
+" operaci.\n"
+"Vyplňte pole, abyste pro danou operaci vždy přešli do daného adresáře."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "O&pen:"
-msgstr ""
+msgstr "&Otevřít:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Browse..."
-msgstr "Procházet ..."
+msgstr "&Procházet..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "S&ave:"
-msgstr ""
+msgstr "&Uložit:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "B&rowse..."
-msgstr "Procházet ..."
+msgstr "P&rocházet..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Import:"
-msgstr "&Nahrát"
+msgstr "&Nahrát:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Br&owse..."
-msgstr "Procházet ..."
+msgstr "Pr&ocházet..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Export:"
-msgstr "&Uložit v jiném formátu"
+msgstr "&Uložit v jiném formátu:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Bro&wse..."
-msgstr "Procházet ..."
+msgstr "Pro&cházet..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -15053,24 +15117,20 @@ msgid "&Location:"
 msgstr "&Umístění:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Adresář pro dočasné soubory"
+msgstr "Adresář pro dočasné soubory nemůže být na jednotce ve formátu FAT."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Brow&se..."
-msgstr "Procházet ..."
+msgstr "Proc&házet..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Free Space:"
-msgstr "Volné místo:"
+msgstr "&Volné místo:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Free Space"
-msgstr "Volné místo:"
+msgstr "Volné místo"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15081,9 +15141,8 @@ msgid "unavailable - above location doesn't exist"
 msgstr "nedostupné - umístění výše neexistuje"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Choose a location"
-msgstr "Vyberte umístění pro uložení souborů"
+msgstr "Vyberte umístění"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15292,7 +15351,7 @@ msgstr "Potvrzení smazání pravidla"
 
 #: src/prefs/ExtImportPrefs.h
 msgid "Ext Import"
-msgstr "Ext Import"
+msgstr "Rozš. Import"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
@@ -15432,14 +15491,12 @@ msgid "&Use Advanced Mixing Options"
 msgstr "&Použít pokročilé možnosti míchání"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "S&tandard"
-msgstr "Standardní"
+msgstr "&Standardní"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "E&xtended (with frequency ranges)"
-msgstr "Vybere kmitočtový rozsah."
+msgstr "&Rozšířený (s kmitočtovými rozsahy)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
@@ -15463,9 +15520,8 @@ msgid "&Ignore blank space at the beginning"
 msgstr "&Nevšímat si prázdného místa na začátku"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Exported Label Style:"
-msgstr "Uložit štítky jako:"
+msgstr "Uložený styl štítků:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -17524,19 +17580,18 @@ msgid "&Format"
 msgstr "&Formát"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "Changing sample format"
-msgstr "Mění se tempo"
+msgstr "Změna formátu vzorku"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing...   0%%"
-msgstr "Zpracovává se: %s"
+msgstr "Zpracovává se... 0%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing...   %i%%"
-msgstr "Zpracovává se: %s"
+msgstr "Zpracovává se... %i%%"
 
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
@@ -17998,9 +18053,8 @@ msgid "Click and drag to move a track in time"
 msgstr "Klepněte a táhněte pro přesunutí zvukové stopy na časové ose"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, fuzzy
 msgid "Could not shift between tracks"
-msgstr "Přesunout klip nalevo nebo napravo mezi stopami"
+msgstr "Nepodařilo se posunout mezi stopami"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
@@ -18536,9 +18590,8 @@ msgstr "01000,01000 frames - rámce|75"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "010,01000>0100 Hz"
-msgstr "0100000>0100 Hz"
+msgstr "010,01000 > 0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
@@ -18749,9 +18802,8 @@ msgid "Could not load file: \"%s\""
 msgstr "Nepodařilo se nahrát soubor: \"%s\""
 
 #: src/xml/XMLFileReader.cpp
-#, fuzzy
 msgid "Could not parse XML"
-msgstr "Nepodařilo se otevřít soubor"
+msgstr "Nepodařilo se zpracovat XML"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
@@ -19008,7 +19060,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aProcentní hodnoty nesmí být větší než 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -19016,7 +19068,7 @@ msgid ""
 msgstr ""
 "~adB hodnoty nesmí být větší než +100 dB.~%~%~\n"
 "                                 Rada: 6 dB zdvojí rozkmit (amplituda)~%~\n"
-"                                 \t-6 dB zkrátí rozkmit na polovinu."
+"                                 -6 dB zkrátí rozkmit na polovinu."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -19401,87 +19453,73 @@ msgstr ""
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Label Sounds"
-msgstr "Připojit štítek"
+msgstr "Označit zvuky"
 
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-#, fuzzy
 msgid ""
 "Released under terms of the GNU General Public License version 2 or later."
-msgstr "Vydáno za podmínek GNU General Public License verze 2"
+msgstr "Vydáno za podmínek GNU General Public License verze 2 nebo novější."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Threshold level (dB)"
-msgstr "Práh: %d dB"
+msgstr "Prahová úroveň (dB)"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Threshold measurement"
-msgstr "Procento prahové hodnoty"
+msgstr "Měření prahu"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Peak level"
-msgstr "Ostrá úroveň"
+msgstr "Vrcholová úroveň"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Average level"
-msgstr "Průměrný"
+msgstr "Průměrná úroveň"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "RMS level"
-msgstr "Ostrá úroveň"
+msgstr "Úroveň RMS"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Minimum silence duration"
-msgstr "Nejmenší doba trvání ticha:"
+msgstr "Nejmenší doba trvání ticha"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Minimum label interval"
-msgstr "Interval štítků"
+msgstr "Nejmenší interval štítků"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Label type"
-msgstr "Text štítku"
+msgstr "Typ štítku"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Point before sound"
-msgstr "Společné stereo"
+msgstr "Bod před zvukem"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Point after sound"
-msgstr "Společné stereo"
+msgstr "Bod po zvuku"
 
 #: plug-ins/label-sounds.ny
 msgid "Region around sounds"
-msgstr ""
+msgstr "Oblast okolo zvuků"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Region between sounds"
-msgstr "~a délka oblasti = ~a sekund."
+msgstr "Oblast mezi zvuky"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Maximum leading silence"
-msgstr "Hledá se ticho..."
+msgstr "Největší ticho na začátku"
 
 #: plug-ins/label-sounds.ny
 msgid "Maximum trailing silence"
-msgstr ""
+msgstr "Největší ticho na konci"
 
 #: plug-ins/label-sounds.ny
 msgid "Sound ##1"
-msgstr ""
+msgstr "Zvuk ##1"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/label-sounds.ny
@@ -19491,21 +19529,21 @@ msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
 msgid "Too many silences detected.nOnly the first 10000 labels added."
-msgstr ""
+msgstr "Bylo zjištěno příliš mnoho ticha. Přidáno pouze prvních 10 000 štítků."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Selection must be less than ~a."
-msgstr "Výběr musí být rozsáhlejší než %d vzorků."
+msgstr "Chyba.~%Výběr musí být menší než ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
 "duration'."
 msgstr ""
-"Nenalezeny žádné zvuky. Zkuste snížit hladinu ticha ~% a nejmenší dobu "
+"Nebyly nalezeny žádné zvuky.~%Zkuste snížit práh nebo zmenšit nejmenší dobu "
 "trvání ticha."
 
 #: plug-ins/label-sounds.ny
@@ -19514,6 +19552,8 @@ msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
 msgstr ""
+"Označení oblastí mezi zvuky vyžaduje~% alespoň dva zvuky.~%Zjištěn pouze jeden"
+"zvuk."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -19593,9 +19633,8 @@ msgid "Gate"
 msgstr "Brána"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Analyze Noise Level"
-msgstr "Rozebrat hladinu šumu"
+msgstr "Rozebrat úroveň šumu"
 
 #: plug-ins/noisegate.ny
 msgid "Stereo Linking"
@@ -19622,14 +19661,12 @@ msgid "Level reduction (dB)"
 msgstr "Snížení hladiny (dB):"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Attack (ms)"
-msgstr "Čas náběhu/dozvuku (ms)"
+msgstr "Náběh (ms)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Decay (ms)"
-msgstr "Čas náběhu/dozvuku (ms)"
+msgstr "Dozvuk (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19651,15 +19688,19 @@ msgid ""
 "Selection too long.\n"
 "Maximum length is ~a."
 msgstr ""
+"Chyba.\n"
+"Výběr je příliš dlouhý.\n"
+"Největší délka je ~a."
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.\n"
 "Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
-"~%Nevybráno dost zvuku.\n"
+"Chyba.\n"
+"Nevybráno dost zvuku.\n"
 "Vyberte více než ~a ms."
 
 #: plug-ins/noisegate.ny
@@ -19673,9 +19714,9 @@ msgstr ""
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~ah ~am"
-msgstr "~ah ~am ~as"
+msgstr "~ah ~am"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
