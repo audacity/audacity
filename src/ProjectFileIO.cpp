@@ -28,6 +28,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectHistory.h"
 #include "ProjectSerializer.h"
 #include "ProjectWindows.h"
+#include "FileNames.h"
 #include "SampleBlock.h"
 #include "TempDirectory.h"
 #include "TransactionScope.h"
@@ -422,48 +423,6 @@ bool ProjectFileIO::InitializeSQL()
 {
    static SQLiteIniter sqliteIniter;
    return sqliteIniter.mRc == SQLITE_OK;
-}
-
-static void RefreshAllTitles(bool bShowProjectNumbers )
-{
-   for ( auto pProject : AllProjects{} ) {
-      if ( !GetProjectFrame( *pProject ).IsIconized() ) {
-         ProjectFileIO::Get( *pProject ).SetProjectTitle(
-            bShowProjectNumbers ? pProject->GetProjectNumber() : -1 );
-      }
-   }
-}
-
-TitleRestorer::TitleRestorer(
-   wxTopLevelWindow &window, AudacityProject &project )
-{
-   if( window.IsIconized() )
-      window.Restore();
-   window.Raise(); // May help identifying the window on Mac
-
-   // Construct this project's name and number.
-   sProjName = project.GetProjectName();
-   if ( sProjName.empty() ) {
-      sProjName = _("<untitled>");
-      UnnamedCount = std::count_if(
-         AllProjects{}.begin(), AllProjects{}.end(),
-         []( const AllProjects::value_type &ptr ){
-            return ptr->GetProjectName().empty();
-         }
-      );
-      if ( UnnamedCount > 1 ) {
-         sProjNumber.Printf(
-            _("[Project %02i] "), project.GetProjectNumber() + 1 );
-         RefreshAllTitles( true );
-      } 
-   }
-   else
-      UnnamedCount = 0;
-}
-
-TitleRestorer::~TitleRestorer() {
-   if( UnnamedCount > 1 )
-      RefreshAllTitles( false );
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{

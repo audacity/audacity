@@ -312,18 +312,6 @@ private:
    bool mPrevTemporary;
 };
 
-class wxTopLevelWindow;
-
-// TitleRestorer restores project window titles to what they were, in its destructor.
-class TitleRestorer{
-public:
-   TitleRestorer( wxTopLevelWindow &window, AudacityProject &project );
-   ~TitleRestorer();
-   wxString sProjNumber;
-   wxString sProjName;
-   size_t UnnamedCount;
-};
-
 //! Makes a temporary project that doesn't display on the screen
 class AUDACITY_DLL_API InvisibleTemporaryProject
 {
