@@ -357,11 +357,11 @@ Time (in seconds, = total_sample_count / sample_rate)
 #include "MIDIPlay.h"
 #include "AudioIO.h"
 
+#include "BasicUI.h"
 #include "Prefs.h"
 #include "portaudio.h"
 #include <portmidi.h>
 #include <porttime.h>
-#include "widgets/AudacityMessageBox.h"
 
 #define ROUND(x) (int) ((x)+0.5)
 
@@ -531,10 +531,13 @@ MIDIPlay::MIDIPlay(const PlaybackSchedule &schedule)
          errStr += XO("Error: %s").Format( pmErrStr );
       // XXX: we are in libaudacity, popping up dialogs not allowed!  A
       // long-term solution will probably involve exceptions
-      AudacityMessageBox(
+      using namespace BasicUI;
+      ShowMessageBox(
          errStr,
-         XO("Error Initializing Midi"),
-         wxICON_ERROR|wxOK);
+         MessageBoxOptions{}
+            .Caption(XO("Error Initializing Midi"))
+            .ButtonStyle(Button::Ok)
+            .IconStyle(Icon::Error));
 
       // Same logic for PortMidi as described above for PortAudio
    }
