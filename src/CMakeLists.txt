@@ -87,8 +87,6 @@ list( APPEND SOURCES
    PRIVATE
       ActiveProject.cpp
       ActiveProject.h
-      ActiveProjects.cpp
-      ActiveProjects.h
       AboutDialog.cpp
       AboutDialog.h
       $<$<NOT:$<BOOL:${${_OPT}bundle_gplv3}>>:AboutDialogGPLv2Text.cpp>
@@ -122,8 +120,6 @@ list( APPEND SOURCES
       CommonCommandFlags.h
       CrashReport.cpp
       CrashReport.h
-      DBConnection.cpp
-      DBConnection.h
       DefaultPlaybackPolicy.cpp
       DefaultPlaybackPolicy.h
       Diags.cpp
@@ -196,16 +192,12 @@ list( APPEND SOURCES
       Profiler.h
       ProjectAudioManager.cpp
       ProjectAudioManager.h
-      ProjectFileIO.cpp
-      ProjectFileIO.h
       ProjectFileManager.cpp
       ProjectFileManager.h
       ProjectManager.cpp
       ProjectManager.h
       ProjectSelectionManager.cpp
       ProjectSelectionManager.h
-      ProjectSerializer.cpp
-      ProjectSerializer.h
       ProjectSettings.cpp
       ProjectSettings.h
       ProjectWindow.cpp
@@ -248,7 +240,6 @@ list( APPEND SOURCES
       SpectrumTransformer.h
       SplashDialog.cpp
       SplashDialog.h
-      SqliteSampleBlock.cpp
       SseMathFuncs.cpp
       SseMathFuncs.h
       TagsEditor.cpp
@@ -1227,7 +1218,6 @@ set( LIBRARIES
       ZLIB::ZLIB
       libmp3lame::libmp3lame
       SndFile::sndfile
-      sqlite
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::pluginterfaces>
       $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
@@ -1546,12 +1536,11 @@ endif()
 
 set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
-   lib-uuid-interface
    lib-theme-resources-interface
    lib-graphics-interface
    lib-tags-interface
    lib-audio-io-interface
-   lib-wave-track-interface
+   lib-project-file-io-interface
 )
 
 if (${_OPT}use_ffmpeg)

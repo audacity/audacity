@@ -36,6 +36,7 @@ set( LIBRARIES
    lib-audio-io
    lib-wave-track
    lib-track-selection
+   lib-project-file-io
 )
 
 if ( ${_OPT}has_networking )

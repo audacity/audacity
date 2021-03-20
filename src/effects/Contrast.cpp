@@ -16,7 +16,7 @@
 #include "WaveTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectFileIO.h"
+#include "ProjectFileIO.h"
 #include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"

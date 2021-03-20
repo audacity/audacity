@@ -33,7 +33,7 @@ using NameMap = std::unordered_map<wxString, unsigned short>;
 using IdMap = std::unordered_map<unsigned short, std::string>;
 
 // This class's overrides do NOT throw AudacityException.
-class AUDACITY_DLL_API ProjectSerializer final : public XMLWriter
+class PROJECT_FILE_IO_API ProjectSerializer final : public XMLWriter
 {
 public:
 

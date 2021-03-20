@@ -13,7 +13,6 @@
 
 *//********************************************************************/
 
-
 #include "ProjectSerializer.h"
 
 #include <algorithm>

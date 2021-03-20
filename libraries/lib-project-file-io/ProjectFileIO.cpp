@@ -16,9 +16,9 @@ Paul Licameli split from AudacityProject.cpp
 #include <cstring>
 
 #include <wx/crt.h>
-#include <wx/frame.h>
 #include <wx/log.h>
 #include <wx/sstream.h>
+#include <wx/utils.h>
 
 #include "ActiveProjects.h"
 #include "CodeConversions.h"
@@ -32,7 +32,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "TempDirectory.h"
 #include "TransactionScope.h"
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 #include "wxFileNameWrapper.h"
 #include "XMLFileReader.h"
