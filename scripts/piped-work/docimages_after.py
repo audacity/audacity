@@ -116,6 +116,7 @@ def spaceDemo():
     capture( 'BeforeTruncateSilence.png' , 'AllTracks' )
     do( 'Select: Start=0 End=0')
     capture( 'SpaceyTrack.png' , 'AllTracks' )
+    do('SelectAll')
     do( 'TruncateSilence' )
     capture( 'AfterTruncateSilence1.png' , 'AllTracks' )
     do( 'Select: Start=0 End=0')
