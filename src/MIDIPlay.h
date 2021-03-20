@@ -13,6 +13,7 @@ Paul Licameli split from AudIOBase.h
 #define __AUDACITY_MIDI_PLAY__
 
 #include "AudioIOExt.h"
+#include "NoteTrack.h"
 #include <optional>
 #include "../lib-src/header-substitutes/allegro.h"
 
@@ -20,7 +21,6 @@ typedef void PmStream;
 typedef int32_t PmTimestamp;
 class Alg_event;
 class Alg_iterator;
-class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 class AudioThread;
@@ -28,8 +28,6 @@ class AudioThread;
 // This workaround makes pause and stop work when output is to GarageBand,
 // which seems not to implement the notes-off message correctly.
 #define AUDIO_IO_GB_MIDI_WORKAROUND
-
-#define DEFAULT_SYNTH_LATENCY 5
 
 #include "PlaybackSchedule.h"
 
@@ -56,7 +54,7 @@ struct MIDIPlay : AudioIOExt
    int              mLastPmError = 0;
 
    /// Latency of MIDI synthesizer
-   long             mSynthLatency = DEFAULT_SYNTH_LATENCY; // ms
+   long             mSynthLatency = MIDISynthLatency_ms.GetDefault();
 
    // These fields are used to synchronize MIDI with audio:
 

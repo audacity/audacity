@@ -366,8 +366,6 @@ Time (in seconds, = total_sample_count / sample_rate)
 
 #define ROUND(x) (int) ((x)+0.5)
 
-#include "NoteTrack.h"
-
 class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
@@ -665,10 +663,8 @@ bool MIDIPlay::StartPortMidiStream(double rate)
 
    /* get midi playback device */
    PmDeviceID playbackDevice = Pm_GetDefaultOutputDeviceID();
-   wxString playbackDeviceName = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"),
-                                              wxT(""));
-   mSynthLatency = gPrefs->Read(wxT("/MidiIO/SynthLatency"),
-                                DEFAULT_SYNTH_LATENCY);
+   auto playbackDeviceName = MIDIPlaybackDevice.Read();
+   mSynthLatency = MIDISynthLatency_ms.Read();
    if (wxStrcmp(playbackDeviceName, wxT("")) != 0) {
       for (i = 0; i < Pm_CountDevices(); i++) {
          const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
