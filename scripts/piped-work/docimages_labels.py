@@ -11,7 +11,7 @@ exec( open("docimages_core.py" ).read() )
 
 
 def addLabels():
-    do( 'Select: Start=0 End=1' )
+    #do( 'Select: Start=0 End=1' )
     do( 'AddLabel' )
     do( 'AddLabel' )
     do( 'AddLabel' )
@@ -23,7 +23,7 @@ def addLabels():
     do( 'Select: Start=45 End=60' )
 
 def addLabels2():
-    do( 'Select: Start=0 End=1' )
+    #do( 'Select: Start=0 End=1' )
     do( 'AddLabel' )
     do( 'AddLabel' )
     do( 'AddLabel' )
