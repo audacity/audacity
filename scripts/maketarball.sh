@@ -196,7 +196,7 @@ cd "${tmpsrc}"
 printf "Done\n"
 
 # The script relies on make working, so Makefiles need to be present. This
-# means that configure must have been run on the sources. In general it doesn't 
+# means that configure must have been run on the sources. In general, it doesn't 
 # matter what options, but the generation of a Makefile in lib-src/ in
 # particular is important. Check that lib-src/Makefile is present and newer than
 # lib-src/Makefile.in before continuing
@@ -241,7 +241,7 @@ fi
 # The version number is stored in a C++ header as a set of #defines. Trying to 
 # parse this with another language (as was done first with Perl and then with
 # awk) is always going to be fragile, so we use a C++ pre-processor (which
-# strangely enough we are pretty much garunteed to have) to do it. Essentially
+# strangely enough we are pretty much guaranteed to have) to do it. Essentially
 # we have a trivial bit of C++ code stored in-line in this script which is fed
 # through the pre-processor to get the version string components where we can
 # find them.
