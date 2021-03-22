@@ -37,6 +37,8 @@ $control low-transition (_ "Low Cut for Vocals (Hz)") real "" 120 1 24000
 $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
 
 
+(setf bignum 1000000000)
+
 ;;control rotation "Rotation (Degrees)" real "" 0 -180 180
 (setf rotation 0.0)
 
@@ -204,7 +206,7 @@ $control high-transition (_ "High Cut for Vocals (Hz)") real "" 9000 1 24000
                (wt-exp (s-exp   (scale strength    (diff power-dif power-sum))))
                (weight (shape wt-exp *map* 0))
                ;(weight (shape (db-to-linear power-dif)  (s-exp  (mult 2 (s-log *map2*))) 1))
-               (weight (snd-samples weight ny:all)))
+               (weight (snd-samples weight bignum)))  ;Fix for bug 2706
           (do ((i low-transition (+ i 2)))
               ((>= i high-transition))
             (setf (: out i) (: weight (/ (1+ i) 2)))
