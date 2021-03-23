@@ -632,14 +632,12 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
               .AddListControlReportMode( { XO("Macro") } );
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
-               S.Id(AddButtonID).AddButton(XXO("&New"));
-               mRemove = S.Id(RemoveButtonID).AddButton(XXO("Remo&ve"));
-               mRename = S.Id(RenameButtonID).AddButton(XXO("&Rename..."));
-               mRestore = S.Id(RestoreButtonID).AddButton(XXO("Re&store"));
-               mImport = S.Id(ImportButtonID).AddButton(XO("I&mport..."));
-               mExport = S.Id(ExportButtonID).AddButton(XO("E&xport..."));
-               mSave = S.Id(SaveButtonID).AddButton(XO("&Save"));
-               mSave->Enable( mChanged );
+               S.Id(AddButtonID).AddButton(XXO("&New"), wxALIGN_LEFT);
+               mRemove = S.Id(RemoveButtonID).AddButton(XXO("Remo&ve"), wxALIGN_LEFT);
+               mRename = S.Id(RenameButtonID).AddButton(XXO("&Rename..."), wxALIGN_LEFT);
+               mRestore = S.Id(RestoreButtonID).AddButton(XXO("Re&store"), wxALIGN_LEFT);
+               mImport = S.Id(ImportButtonID).AddButton(XO("I&mport..."), wxALIGN_LEFT);
+               mExport = S.Id(ExportButtonID).AddButton(XO("E&xport..."), wxALIGN_LEFT);
             }
             S.EndVerticalLay();
          }
@@ -668,6 +666,8 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
                S.Id(DeleteButtonID).AddButton(XXO("De&lete"), wxALIGN_LEFT);
                S.Id(UpButtonID).AddButton(XXO("Move &Up"), wxALIGN_LEFT);
                S.Id(DownButtonID).AddButton(XXO("Move &Down"), wxALIGN_LEFT);
+               mSave = S.Id(SaveButtonID).AddButton(XO("&Save"), wxALIGN_LEFT);
+               mSave->Enable( mChanged );
             }
             S.EndVerticalLay();
          }
