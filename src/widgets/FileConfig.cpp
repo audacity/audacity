@@ -194,27 +194,52 @@ bool FileConfig::Flush(bool WXUNUSED(bCurrentOnly))
 
 bool FileConfig::RenameEntry(const wxString& oldName, const wxString& newName)
 {
-   return mConfig->RenameEntry(oldName, newName);
+   auto res = mConfig->RenameEntry(oldName, newName);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
 }
 
 bool FileConfig::RenameGroup(const wxString& oldName, const wxString& newName)
 {
-   return mConfig->RenameGroup(oldName, newName);
+   auto res = mConfig->RenameGroup(oldName, newName);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
 }
 
 bool FileConfig::DeleteEntry(const wxString& key, bool bDeleteGroupIfEmpty)
 {
-   return mConfig->DeleteEntry(key, bDeleteGroupIfEmpty);
+   auto res = mConfig->DeleteEntry(key, bDeleteGroupIfEmpty);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
 }
 
 bool FileConfig::DeleteGroup(const wxString& key)
 {
-   return mConfig->DeleteGroup(key);
+   auto res = mConfig->DeleteGroup(key);
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
 }
 
 bool FileConfig::DeleteAll()
 {
-   return mConfig->DeleteAll();
+   auto res = mConfig->DeleteAll();
+   if (res)
+   {
+      mDirty = true;
+   }
+   return res;
 }
 
 bool FileConfig::DoReadString(const wxString& key, wxString *pStr) const
