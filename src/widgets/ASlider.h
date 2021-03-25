@@ -141,7 +141,10 @@ class LWSlider
    bool ShowDialog(wxPoint pos);
 
    void SetEnabled(bool enabled);
-   bool GetEnabled();
+   bool GetEnabled() const;
+
+   float GetMinValue() const;
+   float GetMaxValue() const;
 
    static void DeleteSharedTipPanel();
 
@@ -353,6 +356,7 @@ class SliderDialog final : public wxDialogWrapper
    wxTextCtrl * mTextCtrl;
    int mStyle;
    LWSlider * mpOrigin;
+   float mValue;
 
  public:
    DECLARE_EVENT_TABLE()

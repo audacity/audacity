@@ -15,6 +15,7 @@
 #include <wx/defs.h>
 
 #include "BatchCommands.h"
+#include "Prefs.h"
 
 class wxWindow;
 class wxTextCtrl;
@@ -47,7 +48,6 @@ class ApplyMacroDialog : public wxDialogWrapper {
    void ApplyMacroToProject( int iMacro, bool bHasGui=true );
    void ApplyMacroToProject( const CommandID & MacroID, bool bHasGui=true );
 
-
    // These will be reused in the derived class...
    wxListCtrl *mList;
    wxListCtrl *mMacros;
@@ -69,7 +69,8 @@ protected:
    DECLARE_EVENT_TABLE()
 };
 
-class MacrosWindow final : public ApplyMacroDialog
+class MacrosWindow final : public ApplyMacroDialog,
+                           public PrefsListener
 {
 public:
    MacrosWindow(
@@ -106,6 +107,8 @@ private:
    void OnRestore(wxCommandEvent &event);
    void OnImport(wxCommandEvent &event);
    void OnExport(wxCommandEvent &event);
+   void OnSave(wxCommandEvent &event);
+
    void OnExpand(wxCommandEvent &event);
    void OnShrink(wxCommandEvent &event);
    void OnSize(wxSizeEvent &event);
@@ -125,6 +128,9 @@ private:
    void InsertCommandAt(int item);
    bool SaveChanges();
 
+   // PrefsListener implementation
+   void UpdatePrefs() override;
+
    AudacityProject &mProject;
 
    wxButton *mRemove;
@@ -132,6 +138,7 @@ private:
    wxButton *mRestore;
    wxButton *mImport;
    wxButton *mExport;
+   wxButton *mSave;
 
    int mSelectedCommand;
    bool mChanged;

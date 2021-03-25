@@ -49,14 +49,17 @@ wxWidgets:
       git submodule update --init
 
   2) Follow instructions for building at 
-    https://github.com/audacity/wxWidgets/blob/v3.1.3/docs/gtk/install.txt
+    https://github.com/audacity/wxWidgets/blob/audacity-fixes-3.1.3/docs/gtk/install.md
 
     So...
 
     mkdir buildgtk
     cd buildgtk
     ../configure --with-gtk
-    make    
+    make
+    su <type root password>
+    make install
+    ldconfig    
 
   3) Having got this far, it is well worth trying out building some wxWidgets
     examples to confirm that building has worked OK

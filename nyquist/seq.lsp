@@ -192,10 +192,18 @@
          (,seq-prim ,snd-expr seqrep%closure))))
 
 
+;; TRIGGER - sums instances of beh which are launched when input becomes
+;;     positive (> 0). New in 2021: input is resampled to *sound-srate*.
+;;     As before, beh sample rates must match, so now they must also be
+;;     *sound-srate*. This implementation uses eval-seq-behavior to create
+;;     a more helpful stack trace for SAL.
 (defmacro trigger (input beh)
-  `(let ((nyq%environment (nyq:the-environment)))
-     (snd-trigger ,input #'(lambda (t0) (with%environment nyq%environment
-                                                (at-abs t0 ,beh))))))
+  `(let* ((nyq%environment (nyq:the-environment))
+          (gate%signal (force-srate *sound-srate* ,input))
+          (s%rate (snd-srate gate%signal)))
+     (snd-trigger gate%signal
+                  #'(lambda (t0) (eval-seq-behavior ,beh "TRIGGER")))))
+
 
 ;; EVENT-EXPRESSION -- the sound of the event
 ;;

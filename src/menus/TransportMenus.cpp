@@ -52,7 +52,7 @@ void PlayCurrentRegionAndWait(const CommandContext &context,
 
    projectAudioManager.PlayCurrentRegion(looped, cutpreview);
 
-   if (project.mBatchMode > 0 && t0 != t1) {
+   if (project.mBatchMode > 0 && t0 != t1 && !looped) {
       wxYieldIfNeeded();
 
       /* i18n-hint: This title appears on a dialog that indicates the progress

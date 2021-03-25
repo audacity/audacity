@@ -390,7 +390,7 @@ visit our %s.")
       << wxT("</center></h3>")
       << wxT("Customised version of the Audacity free, open source, cross-platform software " )
       << wxT("for recording and editing sounds.")
-      << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2020 Audacity Team.<br>")
+      << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2021 Audacity Team.<br>")
       << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
 
 #else
@@ -480,7 +480,7 @@ visit our %s.")
       << wxT("<p><br>&nbsp; &nbsp; ")
       /* i18n-hint Audacity's name substitutes for first and third %s,
        and a "copyright" symbol for the second */
-      << XO("%s software is copyright %s 1999-2020 %s Team.")
+      << XO("%s software is copyright %s 1999-2021 %s Team.")
          .Format(
             Verbatim("<b>%s<sup>&reg;</sup></b>").Format( ProgramName ),
             wxT("&copy;"),
@@ -567,16 +567,90 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       << wxT("<h2><center>")
       << XO("Build Information")
       << wxT("</center></h2>\n")
-      << VerCheckHtml()
-      // top level heading
+      << VerCheckHtml();
+ 
+   informationStr
       << wxT("<h3>")
-      << XO("File Format Support")
-      << wxT("</h3>\n<p>");
-   // 2nd level headings to split things up a bit
+   /* i18n-hint: Information about when audacity was compiled follows */
+      << XO("The Build")
+      << wxT("</h3>\n<table>"); // start build info table
+
+   // Current date
+   AddBuildinfoRow(&informationStr, XO("Program build date:"), __TDATE__);
+   AddBuildinfoRow(&informationStr, XO("Commit Id:"), REV_IDENT );
+
+   auto buildType =
+#ifdef _DEBUG
+      XO("Debug build (debug level %d)").Format(wxDEBUG_LEVEL);
+#else
+      XO("Release build (debug level %d)").Format(wxDEBUG_LEVEL);
+#endif
+   ;
+   if( (sizeof(void*) == 8) )
+      buildType = XO("%s, 64 bits").Format( buildType );
+
+// Remove this once the transition to CMake is complete
+#if defined(CMAKE)
+   buildType = Verbatim("CMake %s").Format( buildType );
+#endif
+
+   AddBuildinfoRow(&informationStr, XO("Build type:"), buildType.Translation());
+
+#ifdef _MSC_FULL_VER
+   AddBuildinfoRow(&informationStr, XO("Compiler:"),
+	   wxString::Format(wxT("MSVC %02d.%02d.%05d.%02d"), _MSC_VER / 100, _MSC_VER % 100, _MSC_FULL_VER % 100000, _MSC_BUILD));
+#endif
+
+#ifdef __GNUC_PATCHLEVEL__
+#ifdef __MINGW32__
+   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("MinGW ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+#else
+   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("GCC ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
+#endif
+#endif
+
+#ifdef __clang_version__
+   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("clang ") __clang_version__);
+#endif
+
+   // Install prefix
+#ifdef __WXGTK__
+   /* i18n-hint: The directory audacity is installed into (on *nix systems) */
+   AddBuildinfoRow(&informationStr, XO("Installation Prefix:"), \
+         wxT(INSTALL_PREFIX));
+#endif
+
+   // Location of settings
+   AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
+      FileNames::DataDir());
+
+   informationStr << wxT("</table>\n"); // end of build info table
 
 
    informationStr
-      << wxT("<table>");   // start table of libraries
+      << wxT("<h3>")
+      /* i18n-hint: Libraries that are essential to audacity */
+      << XO("Core Libraries")
+      << wxT("</h3>\n<table>");  // start table of core libraries
+
+   AddBuildinfoRow(&informationStr, wxT("wxWidgets"),
+         XO("Cross-platform GUI library"), Verbatim(wxVERSION_NUM_DOT_STRING_T));
+
+   AddBuildinfoRow(&informationStr, wxT("PortAudio"),
+         XO("Audio playback and recording"), Verbatim(wxT("v19")));
+
+   AddBuildinfoRow(&informationStr, wxT("libsoxr"),
+         XO("Sample rate conversion"), enabled);
+
+   informationStr << wxT("</table>\n"); // end table of core libraries
+
+   informationStr
+      << wxT("<h3>")
+      << XO("File Format Support")
+      << wxT("</h3>\n<p>");
+
+   informationStr
+      << wxT("<table>");   // start table of file formats supported
 
 
    #ifdef USE_LIBMAD
@@ -642,24 +716,9 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    AddBuildinfoRow(&informationStr, wxT("gstreamer"), XO("Import via GStreamer"), disabled);
    #endif
 
-   informationStr
-      << wxT("</table>\n")  //end table of file format libraries
-      << wxT("<h3>")
-      /* i18n-hint: Libraries that are essential to audacity */
-      << XO("Core Libraries")
-      << wxT("</h3>\n<table>");  // start table of features
-
-   AddBuildinfoRow(&informationStr, wxT("libsoxr"),
-         XO("Sample rate conversion"), enabled);
-
-   AddBuildinfoRow(&informationStr, wxT("PortAudio"),
-         XO("Audio playback and recording"), Verbatim(wxT("v19")));
-
-   AddBuildinfoRow(&informationStr, wxT("wxWidgets"),
-         XO("Cross-platform GUI library"), Verbatim(wxVERSION_NUM_DOT_STRING_T));
+   informationStr << wxT("</table>\n");  //end table of file formats supported
 
    informationStr
-      << wxT("</table>\n")  //end table of libraries
       << wxT("<h3>")
       << XO("Features")
       << wxT("</h3>\n<table>");  // start table of features
@@ -743,63 +802,6 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    # endif
 
    informationStr << wxT("</table>\n");   // end of table of features
-
-   informationStr
-      << wxT("<h3>")
-   /* i18n-hint: Information about when audacity was compiled */
-      << XO("Build Information")
-      << wxT("</h3>\n<table>");
-
-   // Current date
-   AddBuildinfoRow(&informationStr, XO("Program build date:"), __TDATE__);
-   AddBuildinfoRow(&informationStr, XO("Commit Id:"), REV_IDENT );
-
-   auto buildType =
-#ifdef _DEBUG
-      XO("Debug build (debug level %d)").Format(wxDEBUG_LEVEL);
-#else
-      XO("Release build (debug level %d)").Format(wxDEBUG_LEVEL);
-#endif
-   ;
-   if( (sizeof(void*) == 8) )
-      buildType = XO("%s, 64 bits").Format( buildType );
-
-// Remove this once the transition to CMake is complete
-#if defined(CMAKE)
-   buildType = Verbatim("CMake %s").Format( buildType );
-#endif
-
-   AddBuildinfoRow(&informationStr, XO("Build type:"), buildType.Translation());
-
-#ifdef _MSC_FULL_VER
-   AddBuildinfoRow(&informationStr, XO("Compiler:"),
-	   wxString::Format(wxT("MSVC %02d.%02d.%05d.%02d"), _MSC_VER / 100, _MSC_VER % 100, _MSC_FULL_VER % 100000, _MSC_BUILD));
-#endif
-
-#ifdef __GNUC_PATCHLEVEL__
-#ifdef __MINGW32__
-   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("MinGW ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
-#else
-   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("GCC ") wxMAKE_VERSION_DOT_STRING_T(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__));
-#endif
-#endif
-
-#ifdef __clang_version__
-   AddBuildinfoRow(&informationStr, XO("Compiler:"), wxT("clang ") __clang_version__);
-#endif
-
-   // Install prefix
-#ifdef __WXGTK__
-   /* i18n-hint: The directory audacity is installed into (on *nix systems) */
-   AddBuildinfoRow(&informationStr, XO("Installation Prefix:"), \
-         wxT(INSTALL_PREFIX));
-#endif
-
-   // Location of settings
-   AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
-      FileNames::DataDir());
-   // end of table
-   informationStr << wxT("</table>\n");
 
    html->SetPage( FormatHtmlText( o.GetString() ) );   // push the page into the html renderer
    S.Prop(2)

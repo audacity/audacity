@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-02-05 08:08+0000\n"
+"PO-Revision-Date: 2021-02-10 21:22+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -4083,7 +4083,7 @@ msgid ""
 "If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
-msgstr "Skompaktowanie tego projektu zwolni miejsce na dysku, usuwając nieużywane bajty z pliku.\n\nPozostało %s wolnego miejsca na dysku i ten projekt jest obecnie używany %s.\n\nJeśli będziesz kontynuować, bieżąca historia cofania/ponawiania i zawartość schowka zostanie porzucana i odzyskasz około %s miejsca na dysku.\n\nChcesz kontynuować?"
+msgstr "Skompaktowanie tego projektu zwolni miejsce na dysku, usuwając nieużywane bajty z pliku.\n\nPozostało %s wolnego miejsca na dysku i ten projekt jest obecnie używany %s.\n\nJeśli będziesz kontynuować, bieżąca historia cofania/ponawiania i zawartość schowka zostanie porzucona i odzyskasz około %s miejsca na dysku.\n\nChcesz kontynuować?"
 
 #: src/ProjectFileManager.cpp
 msgid "Compacted project file"
@@ -13816,7 +13816,7 @@ msgstr "brak etykiety ścieżki"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track at or below focused track"
-msgstr "brak etykiety nad lub poniżej zaznaczonej ścieżki"
+msgstr "brak etykiety powyżej lub poniżej zaznaczonej ścieżki"
 
 #: src/menus/TransportMenus.cpp
 #, c-format

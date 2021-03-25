@@ -389,9 +389,7 @@ void OnResetConfig(const CommandContext &context)
 
    // Directory will be reset on next restart.
    FileNames::UpdateDefaultPath(FileNames::Operation::Temp, TempDirectory::DefaultTempDir());
-   gPrefs->Write("/GUI/SyncLockTracks", 0);
-   gPrefs->Write("/SnapTo", 0 );
-   ProjectSelectionManager::Get( project ).AS_SetSnapTo( 0 );
+
    // There are many more things we could reset here.
    // Beeds discussion as to which make sense to.
    // Maybe in future versions?
@@ -401,8 +399,9 @@ void OnResetConfig(const CommandContext &context)
    // - Reset Play-at-speed speed to x1
    // - Stop playback/recording and unapply pause.
    // - Set Zoom sensibly.
-   //ProjectSelectionManager::Get(project).AS_SetRate(44100.0);
+   gPrefs->Write("/GUI/SyncLockTracks", 0);
    gPrefs->Write("/AudioIO/SoundActivatedRecord", 0);
+   gPrefs->Write("/SelectionToolbarMode", 0);
    gPrefs->Flush();
    DoReloadPreferences(project);
    ToolManager::OnResetToolBars(context);
@@ -411,12 +410,18 @@ void OnResetConfig(const CommandContext &context)
    // In particular the Device Toolbar ends up short on next restart, 
    // if they are left out.
    gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
    gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
 
    gPrefs->Flush();
+
+   ProjectSelectionManager::Get( project )
+      .AS_SetSnapTo(gPrefs->ReadLong("/SnapTo", SNAP_OFF));
+   ProjectSelectionManager::Get( project )
+      .AS_SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
 }
 
 void OnManageGenerators(const CommandContext &context)
@@ -457,7 +462,7 @@ void OnRepeatLastEffect(const CommandContext &context)
    if (!lastEffect.empty())
    {
       EffectUI::DoEffect(
-         lastEffect, context, menuManager.mRepeatGeneratorFlags);
+         lastEffect, context, menuManager.mRepeatEffectFlags);
    }
 }
 

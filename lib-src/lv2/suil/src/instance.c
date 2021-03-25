@@ -346,8 +346,8 @@ suil_instance_free(SuilInstance* instance)
 		// Close libraries and free everything
 		if (instance->wrapper) {
 #ifndef _WIN32
-			// Never unload modules on windows, causes mysterious segfaults
-			dlclose(instance->wrapper->lib);
+			// Never unload modules, causes mysterious segfaults
+			// dlclose(instance->wrapper->lib);
 #endif
 			free(instance->wrapper);
 		}

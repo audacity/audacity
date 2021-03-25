@@ -558,7 +558,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          wxString value = *attrs++;
 
          if (!XMLValueChecker::IsGoodString(attr) ||
-             !XMLValueChecker::IsGoodString(value)) {
+             !XMLValueChecker::IsGoodLongString(value)) {
             break;
          }
 
@@ -841,7 +841,7 @@ TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
    if (IsWindowRectValid(&r))
       Move(r.GetPosition());
 
-   //SetSize(r.GetSize());
+   SetSize(r.GetSize());
    Layout();
 
    // Resize value column width based on width of columns and the vertical scrollbar

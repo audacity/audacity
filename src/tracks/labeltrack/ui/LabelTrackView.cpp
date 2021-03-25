@@ -936,6 +936,11 @@ int LabelTrackView::FindCursorPosition(wxCoord xPos)
    const int length = title.length();
    while (!finished && (charIndex < length + 1))
    {
+      int unichar = (int)title.at( charIndex-1 );
+      if( (0xDC00 <= unichar) && (unichar <= 0xDFFF)){
+         charIndex++;
+         continue;
+      }
       subString = title.Left(charIndex);
       // Get the width of substring
       dc.GetTextExtent(subString, &partWidth, NULL);
@@ -1460,6 +1465,9 @@ bool LabelTrackView::DoKeyDown(
    if ( HasSelection( project ) ) {
       auto labelStruct = mLabels[mSelIndex];
       auto &title = labelStruct.title;
+      wxUniChar wchar;
+      bool more=true;
+
       switch (keyCode) {
 
       case WXK_BACK:
@@ -1474,11 +1482,15 @@ bool LabelTrackView::DoKeyDown(
                   RemoveSelectedText();
                else
                {
-                  // DELETE one letter
-                  if (mCurrentCursorPos > 0) {
+                  // DELETE one codepoint leftwards
+                  while ((mCurrentCursorPos > 0) && more) {
+                     wchar = title.at( mCurrentCursorPos-1 );
                      title.erase(mCurrentCursorPos-1, 1);
                      mCurrentCursorPos--;
-                     pTrack->SetLabel(mSelIndex, labelStruct);
+                     if( ((int)wchar > 0xDFFF) || ((int)wchar <0xDC00)){
+                        pTrack->SetLabel(mSelIndex, labelStruct);
+                        more = false;
+                     }
                   }
                }
             }
@@ -1505,10 +1517,14 @@ bool LabelTrackView::DoKeyDown(
                   RemoveSelectedText();
                else
                {
-                  // DELETE one letter
-                  if (mCurrentCursorPos < len) {
+                  // DELETE one codepoint rightwards
+                  while ((mCurrentCursorPos < len) && more) {
+                     wchar = title.at( mCurrentCursorPos );
                      title.erase(mCurrentCursorPos, 1);
-                     pTrack->SetLabel(mSelIndex, labelStruct);
+                     if( ((int)wchar > 0xDBFF) || ((int)wchar <0xD800)){
+                        pTrack->SetLabel(mSelIndex, labelStruct);
+                        more = false;
+                     }
                   }
                }
             }
@@ -1545,7 +1561,10 @@ bool LabelTrackView::DoKeyDown(
       case WXK_LEFT:
       case WXK_NUMPAD_LEFT:
          // Moving cursor left
-         if (mCurrentCursorPos > 0) {
+         while ((mCurrentCursorPos > 0) && more) {
+            wchar = title.at( mCurrentCursorPos-1 );
+            more = !( ((int)wchar > 0xDFFF) || ((int)wchar <0xDC00));
+
             mCurrentCursorPos--;
             if (mods == wxMOD_SHIFT)
                ;
@@ -1558,7 +1577,10 @@ bool LabelTrackView::DoKeyDown(
       case WXK_RIGHT:
       case WXK_NUMPAD_RIGHT:
          // Moving cursor right
-         if (mCurrentCursorPos < (int)title.length()) {
+         while ((mCurrentCursorPos < (int)title.length())&& more) {
+            wchar = title.at( mCurrentCursorPos );
+            more = !( ((int)wchar > 0xDBFF) || ((int)wchar <0xD800));
+
             mCurrentCursorPos++;
             if (mods == wxMOD_SHIFT)
                ;
@@ -1829,7 +1851,16 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
       wxASSERT(success);
       static_cast<void>(success); // Suppress unused variable warning if debug mode is disabled
 
+      // Bug #2571: Hackage alert! For some reason wxGTK does not like
+      // displaying the LabelDialog from within the PopupMenu "context".
+      // So, workaround it by editing the label AFTER the popup menu is
+      // closed. It's really ugly, but it works.  :-(
+      mEditIndex = -1;
       parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
+      if (mEditIndex >= 0)
+      {
+         DoEditLabels( project, FindLabelTrack().get(), mEditIndex );
+      }
    }
 }
 
@@ -1881,9 +1912,8 @@ void LabelTrackView::OnContextMenu(
       break;
 
    case OnEditSelectedLabelID: {
-      int ndx = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
-      if (ndx != -1)
-         DoEditLabels( project, FindLabelTrack().get(), ndx );
+      // Bug #2571: See above
+      mEditIndex = GetLabelIndex(selectedRegion.t0(), selectedRegion.t1());
    }
       break;
    }

@@ -59,7 +59,7 @@ public:
    void CompactProjectOnClose();
 
    bool Save();
-   bool SaveAs();
+   bool SaveAs(bool allowOverwrite = false);
    bool SaveAs(const FilePath &newFileName, bool addToHistory = true);
    // strProjectPathName is full path for aup except extension
    bool SaveFromTimerRecording( wxFileName fnFile );

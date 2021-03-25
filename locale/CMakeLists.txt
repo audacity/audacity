@@ -1,4 +1,3 @@
-
 set( TARGET locale )
 set( TARGET_ROOT ${topdir}/locale )
 

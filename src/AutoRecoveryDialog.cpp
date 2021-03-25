@@ -165,6 +165,10 @@ void AutoRecoveryDialog::PopulateList()
             files.push_back(fullPath);
          }
       }
+      else
+      {
+         ActiveProjects::Remove(file);
+      }
    }
 
    FilePath activeFile;

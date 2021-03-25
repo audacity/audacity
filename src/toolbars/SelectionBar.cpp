@@ -357,8 +357,18 @@ void SelectionBar::UpdatePrefs()
    // As of 13-Sep-2018, changes to the sample rate pref will only affect 
    // creation of new projects, not the sample rate in existing ones.
 
+   // This will only change the selection mode during a "Reset Configuration"
+   // action since the read value will be the same during a normal preferences
+   // update.
+   mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
+
+   // This will only change the time format during a "Reset Configuration"
+   // action since the read value will be the same during a normal preferences
+   // update.
    wxCommandEvent e;
-   e.SetInt(mStartTime->GetFormatIndex());
+   e.SetString(NumericTextCtrl::LookupFormat(
+               NumericConverter::TIME,
+               gPrefs->Read(wxT("/SelectionFormat"), wxT(""))).Internal());
    OnUpdate(e);
 
    // Set label to pull in language change
@@ -426,12 +436,12 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
    // Here we compute 'i' which combines the identity of the two 
    // driving controls, to use it as an index.
    // The order of the two drivers generally does not matter much,
-   // except that we have want:
+   // except that we want:
    //    start < end
    // and preserve that by adjusting the least dominant driving
    // control.
    int i = mDrive1 + 4 * mDrive2;
-   switch(i){
+   switch(i) {
    case StartTimeID + 4 * EndTimeID:
       if( mEnd < mStart )
          mStart = mEnd;
@@ -441,51 +451,42 @@ void SelectionBar::ModifySelection(int newDriver, bool done)
       mLength = mEnd - mStart;
       mCenter = (mStart+mEnd)/2.0;
       break;
+
    case StartTimeID + 4 * LengthTimeID:
    case StartTimeID * 4 + LengthTimeID:
-      if( mLength < 0 )
-         mLength = 0;
       mEnd = mStart+mLength;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case StartTimeID + 4 * CenterTimeID:
-      if( mCenter < mStart )
-         mCenter = mStart;
-   case StartTimeID * 4 + CenterTimeID:
-      if( mStart > mCenter )
-         mStart = mCenter;
-      mEnd = mCenter * 2 - mStart;
-      mLength = mStart - mEnd;
-      break;
+
    case EndTimeID + 4 * LengthTimeID:
+      if( mEnd - mLength < 0 )
+         mEnd += (mLength - mEnd);
    case EndTimeID * 4 + LengthTimeID:
-      if( mLength < 0 )
-         mLength = 0;
+      if( mEnd - mLength < 0)
+         mLength -= (mLength - mEnd);
       mStart = mEnd - mLength;
       mCenter = (mStart+mEnd)/2.0;
       break;
-   case EndTimeID + 4 * CenterTimeID:
-      if( mCenter > mEnd )
-         mCenter = mEnd;
-   case EndTimeID * 4 + CenterTimeID:
-      if( mEnd < mCenter )
-         mEnd = mCenter;
-      mStart = mCenter * 2.0 - mEnd;
-      mLength = mEnd - mStart;
-      break;
+
    case LengthTimeID + 4 * CenterTimeID:
+      if( mCenter - (mLength / 2) < 0 )
+         mLength = (mCenter * 2);
    case LengthTimeID * 4 + CenterTimeID:
-      if( mLength < 0 )
-         mLength = 0;
+      if( mCenter - (mLength / 2) < 0 )
+         mCenter = (mLength / 2);
       mStart = mCenter - mLength/2.0;
       mEnd = mCenter + mLength/2.0;
       break;
+
    default:
       // The above should cover all legal combinations of two distinct controls.
       wxFAIL_MSG( "Illegal sequence of selection changes");
    }
 
-   // Places the start-end mrkers on the track panel.
+   // Refresh the controls now
+   ValuesToControls();
+
+   // Places the start-end markers on the track panel.
    mListener->AS_ModifySelection(mStart, mEnd, done);
 }
 
@@ -497,7 +498,6 @@ void SelectionBar::OnChangedTime(wxCommandEvent & event)
 // Called when one of the format drop downs is changed.
 void SelectionBar::OnUpdate(wxCommandEvent &evt)
 {
-   int index = evt.GetInt();
    wxWindow *w = FindFocus();
    NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
    int i;
@@ -508,10 +508,11 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    evt.Skip(false);
 
+   auto format = NumericTextCtrl::LookupFormat(NumericConverter::TIME, evt.GetString());
+
    // Save format name before recreating the controls so they resize properly
    if (mStartTime)
    {
-      auto format = mStartTime->GetBuiltinName(index);
       if (mListener)
          mListener->AS_SetSelectionFormat(format);
    }
@@ -530,10 +531,9 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
 
    ValuesToControls();
 
-   auto format = mStartTime->GetBuiltinFormat(index);
    for( i=0;i<5;i++)
       if( *Ctrls[i] )
-         (*Ctrls[i])->SetFormatString( format );
+         (*Ctrls[i])->SetFormatName( format );
 
    if( iFocus >=0 )
       if( *Ctrls[iFocus] )
@@ -712,7 +712,7 @@ void SelectionBar::SetSelectionFormat(const NumericFormatSymbol & format)
    // Test first whether changed, to avoid infinite recursion from OnUpdate
    if ( changed ) {
       wxCommandEvent e;
-      e.SetInt(mStartTime->GetFormatIndex());
+      e.SetString(format.Internal());
       OnUpdate(e);
    }
 }
@@ -735,7 +735,9 @@ void SelectionBar::SetRate(double rate)
 
 void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
 {
-   if (mRateBox->GetValue().ToDouble(&mRate) && // is a numeric value
+   auto value = mRateBox->GetValue();
+
+   if (value.ToDouble(&mRate) && // is a numeric value
          (mRate != 0.0))
    {
       NumericTextCtrl ** Ctrls[5] = { &mStartTime, &mEndTime, &mLengthTime, &mCenterTime, &mAudioTime };
@@ -744,6 +746,13 @@ void SelectionBar::OnRate(wxCommandEvent & WXUNUSED(event))
          if( *Ctrls[i] )
             (*Ctrls[i])->SetSampleRate( mRate );
       if (mListener) mListener->AS_SetRate(mRate);
+
+      mLastValidText = value;
+   }
+   else
+   {
+      // Bug 2497 - Undo paste into text box if it's not numeric
+      mRateBox->SetValue(mLastValidText);
    }
 }
 

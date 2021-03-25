@@ -45,8 +45,32 @@ wxDEFINE_EVENT(EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 wxDEFINE_EVENT( EVT_CHECKPOINT_FAILURE, wxCommandEvent);
 wxDEFINE_EVENT( EVT_RECONNECTION_FAILURE, wxCommandEvent);
 
-static const int ProjectFileID = ('A' << 24 | 'U' << 16 | 'D' << 8 | 'Y');
-static const int ProjectFileVersion = 1;
+// Used to convert 4 byte-sized values into an integer for use in SQLite
+// PRAGMA statements. These values will be store in the database header.
+//
+// Note that endianness is not an issue here since SQLite integers are
+// architecture independent.
+#define PACK(b1, b2, b3, b4) ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4)
+
+// The ProjectFileID is stored in the SQLite database header to identify the file
+// as an Audacity project file. It can be used by applications that identify file
+// types, such as the Linux "file" command.
+static const int ProjectFileID = PACK('A', 'U', 'D', 'Y');
+
+// The "ProjectFileVersion" represents the version of Audacity at which a specific
+// database schema was used. It is assumed that any changes to the database schema
+// will require a new Audacity version so if schema changes are required set this
+// to the new release being produced.
+//
+// This version is checked before accessing any tables in the database since there's
+// no guarantee what tables exist. If it's found that the database is newer than the
+// currently running Audacity, an error dialog will be displayed informing the user
+// that they need a newer version of Audacity.
+//
+// Note that this is NOT the "schema_version" that SQLite maintains. The value
+// specified here is stored in the "user_version" field of the SQLite database
+// header.
+static const int ProjectFileVersion = PACK(3, 0, 0, 0);
 
 // Navigation:
 //
@@ -101,14 +125,6 @@ static const char *ProjectFileSchema =
    "  id                   INTEGER PRIMARY KEY,"
    "  dict                 BLOB,"
    "  doc                  BLOB"
-   ");"
-   ""
-   // CREATE SQL tags
-   // tags is not used (yet)
-   "CREATE TABLE IF NOT EXISTS <schema>.tags"
-   "("
-   "  name                 TEXT,"
-   "  value                BLOB"
    ");"
    ""
    // CREATE SQL sampleblocks
@@ -286,6 +302,16 @@ DBConnection &ProjectFileIO::GetConnection()
    }
 
    return *curConn;
+}
+
+wxString ProjectFileIO::GenerateDoc()
+{
+   auto &trackList = TrackList::Get( mProject );
+
+   XMLStringWriter doc;
+   WriteXMLHeader(doc);
+   WriteXML(doc, false, trackList.empty() ? nullptr : &trackList);
+   return doc;
 }
 
 sqlite3 *ProjectFileIO::DB()
@@ -778,7 +804,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
    // Attach the destination database 
    wxString sql;
-   sql.Printf("ATTACH DATABASE '%s' AS outbound;", destpath);
+   sql.Printf("ATTACH DATABASE '%s' AS outbound;", destpath.ToUTF8());
 
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
@@ -806,21 +832,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    if (!InstallSchema(db, "outbound"))
    {
       // Message already set
-      return false;
-   }
-
-   // Copy over tags (not really used yet)
-   rc = sqlite3_exec(db,
-                     "INSERT INTO outbound.tags SELECT * FROM main.tags;",
-                     nullptr,
-                     nullptr,
-                     nullptr);
-   if (rc != SQLITE_OK)
-   {
-      SetDBError(
-         XO("Failed to copy tags")
-      );
-
       return false;
    }
 
@@ -1465,17 +1476,21 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    int crev;
    wxSscanf(wxT(AUDACITY_FILE_FORMAT_VERSION), wxT("%i.%i.%i"), &cver, &crel, &crev);
 
-   if (cver < fver || crel < frel || crev < frev)
+   int fileVer = ((fver *100)+frel)*100+frev;
+   int codeVer = ((cver *100)+crel)*100+crev;
+
+   if (codeVer<fileVer)
    {
       /* i18n-hint: %s will be replaced by the version number.*/
       auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
          .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
-      AudacityMessageBox(
-         msg,
+      ShowErrorDialog(
+         &window,
          XO("Can't open project file"),
-         wxOK | wxICON_EXCLAMATION | wxCENTRE,
-         &window);
+         msg, 
+         "FAQ:Errors_opening_an_Audacity_project"
+         );
 
       return false;
    }
@@ -1740,7 +1755,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       XMLFileReader xmlFile;
 
       // Load 'er up
-      success = xmlFile.ParseString(this, project.ToUTF8());
+      success = xmlFile.ParseString(this, project);
       if (!success)
       {
          SetError(

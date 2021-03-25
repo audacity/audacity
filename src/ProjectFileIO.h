@@ -189,6 +189,9 @@ public:
    //! Return a reference to a connection, creating it as needed on demand; throw on failure
    DBConnection &GetConnection();
 
+   //! Return a strings representation of the active project XML doc
+   wxString GenerateDoc();
+
 private:
    void OnCheckpointFailure();
 

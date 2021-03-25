@@ -742,7 +742,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          requiredTags++;
 
          mProjDir = mFilename;
-         wxString altname = mProjDir.GetName() + wxT("-data");
+         wxString altname = mProjDir.GetName() + wxT("_data");
          mProjDir.SetFullName(wxEmptyString);
 
          wxString projName = value;
@@ -777,7 +777,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          if (projName.empty())
          {
             AudacityMessageBox(
-               XO("Couldn't find the project data folder: \"%s\"").Format(*value),
+               XO("Couldn't find the project data folder: \"%s\"").Format(value),
                XO("Error Opening Project"),
                wxOK | wxCENTRE,
                &window);
@@ -1095,6 +1095,15 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
    struct node node = mHandlers.back();
 
    WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
+
+   // Earlier versions of Audacity had a single implied waveclip, so for
+   // these versions, we get or create the only clip in the track.
+   if (mParentTag.IsSameAs(wxT("wavetrack")))
+   {
+      XMLTagHandler *dummy;
+      HandleWaveClip(dummy);
+      waveclip = mClip;
+   }
 
    while(*mAttrs)
    {

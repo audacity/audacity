@@ -67,8 +67,10 @@ BEGIN_EVENT_TABLE(HistoryDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_HELP, HistoryDialog::OnGetURL)
 END_EVENT_TABLE()
 
+#define HistoryTitle XO("History")
+
 HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
-   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, XO("History"),
+   wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, HistoryTitle,
       wxDefaultPosition, wxDefaultSize,
       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 {
@@ -79,13 +81,33 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    mSelected = 0;
    mAudioIOBusy = false;
 
-   auto imageList = std::make_unique<wxImageList>(9, 16);
-   imageList->Add(wxIcon(empty9x16_xpm));
-   imageList->Add(wxIcon(arrow_xpm));
-
    //------------------------- Main section --------------------
    // Construct the GUI.
    ShuttleGui S(this, eIsCreating);
+   Populate(S);
+
+   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
+                     &HistoryDialog::OnAudioIO,
+                     this);
+
+   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
+                     &HistoryDialog::OnAudioIO,
+                     this);
+
+   Clipboard::Get().Bind(
+      EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_PUSHED, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_MODIFIED, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_OR_REDO, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_RESET, &HistoryDialog::UpdateDisplay, this);
+   parent->Bind(EVT_UNDO_PURGE, &HistoryDialog::UpdateDisplay, this);
+}
+
+void HistoryDialog::Populate(ShuttleGui & S)
+{
+   auto imageList = std::make_unique<wxImageList>(9, 16);
+   imageList->Add(wxIcon(empty9x16_xpm));
+   imageList->Add(wxIcon(arrow_xpm));
 
    S.SetBorder(5);
    S.StartVerticalLay(true);
@@ -150,26 +172,11 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
+   Layout();
    Fit();
    SetMinSize(GetSize());
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
-
-   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &HistoryDialog::OnAudioIO,
-                     this);
-
-   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &HistoryDialog::OnAudioIO,
-                     this);
-
-   Clipboard::Get().Bind(
-      EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PUSHED, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_MODIFIED, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_OR_REDO, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_RESET, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PURGE, &HistoryDialog::UpdateDisplay, this);
 }
 
 void HistoryDialog::OnAudioIO(wxCommandEvent& evt)
@@ -376,6 +383,26 @@ void HistoryDialog::OnSize(wxSizeEvent & WXUNUSED(event))
    mList->SetColumnWidth(0, mList->GetClientSize().x - mList->GetColumnWidth(1));
    if (mList->GetItemCount() > 0)
       mList->EnsureVisible(mSelected);
+}
+
+// PrefsListener implementation
+void HistoryDialog::UpdatePrefs()
+{
+   bool shown = IsShown();
+   if (shown) {
+      Show(false);
+   }
+
+   SetSizer(nullptr);
+   DestroyChildren();
+
+   SetTitle(HistoryTitle);
+   ShuttleGui S(this, eIsCreating);
+   Populate(S);
+
+   if (shown) {
+      Show(true);
+   }
 }
 
 // Remaining code hooks this add-on into the application

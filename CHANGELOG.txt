@@ -1,6 +1,33 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
 
+Changes in version 2.4.2: 
+
+
+Improvements
+
+ * Audacity is now built with (our version of) the wx3.1.3 library.
+   Previously we used wx3.1.1.
+ * We added a command 'Reset Configuration' to reset to default 
+   settings.
+ * MP3 Audio is now exported without padding.
+
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
+
+
+Bug Fixes
+
+ Over 30 bugs in 2.4.1 fixed, including:
+
+ * 2442 - Windows: Crash when importing (or editing) to a disk 
+   with insufficient disk space available
+ * 2471 - Mix Stereo down to Mono fails if space at start of track.
+ * 2439 - Mix and Render to New Track selects left channel of new
+   stereo track
+
+
+
+
 Changes in version 2.4.1:
 
 Critical Bug Fix:
