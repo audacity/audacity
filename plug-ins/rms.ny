@@ -61,7 +61,7 @@
       (format nil "~a: \t~a ~a~%~
                   ~a: \t~a ~a~%~
                   ~a: \t~a ~a"
-                  (_ "Left") (linear-to-db (aref rms 0)) (_ "dB")
-                  (_ "Right") (linear-to-db (aref rms 1)) (_ "dB")
-                  (_ "Stereo") (linear-to-db (stereo-rms rms)) (_ "dB"))
-      (format nil "~a: \t~a ~a" (_ "Mono")(linear-to-db rms)(_ "dB"))))
+                  (_ "Left") (linear-to-db (aref rms 0)) (_ "dBov")
+                  (_ "Right") (linear-to-db (aref rms 1)) (_ "dBov")
+                  (_ "Stereo") (linear-to-db (stereo-rms rms)) (_ "dBov"))
+      (format nil "~a: \t~a ~a" (_ "Mono")(linear-to-db rms)(_ "dBov"))))
