@@ -166,10 +166,13 @@ public:
    {
       // Enable URI filenames for all connections
       mRc = sqlite3_config(SQLITE_CONFIG_URI, 1);
-
       if (mRc == SQLITE_OK)
       {
-         mRc = sqlite3_initialize();
+         mRc = sqlite3_config(SQLITE_CONFIG_LOG, LogCallback, nullptr);
+         if (mRc == SQLITE_OK)
+         {
+            mRc = sqlite3_initialize();
+         }
       }
 
 #ifdef NO_SHM
@@ -193,6 +196,12 @@ public:
       // It returns a value, but there's nothing we can do with it
       (void) sqlite3_shutdown();
    }
+
+   static void LogCallback(void *WXUNUSED(arg), int code, const char *msg)
+   {
+      wxLogMessage("sqlite3 message: (%d) %s", code, msg);
+   }
+
    int mRc;
 };
 
@@ -356,6 +365,9 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
       mProject.shared_from_this(), mpErrors, [this]{ OnCheckpointFailure(); } );
    if (!curConn->Open(fileName))
    {
+      SetDBError(
+         XO("Failed to open database file:\n\n%s").Format(fileName)
+      );
       curConn.reset();
       return false;
    }
