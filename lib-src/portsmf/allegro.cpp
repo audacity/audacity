@@ -132,7 +132,7 @@ void Alg_parameter::show()
         printf("%s:%s", attr_name(), s);
         break;
     case 'i':
-        printf("%s:%ld", attr_name(), i);
+        printf("%s:%lld", attr_name(), i);
         break;
     case 'l':
         printf("%s:%s", attr_name(), (l ? "t" : "f"));
@@ -176,7 +176,7 @@ void Alg_parameters::insert_string(Alg_parameters **list, const char *name,
 
 
 void Alg_parameters::insert_integer(Alg_parameters **list, const char *name, 
-                                    long i)
+                                    int64_t i)
 {
     Alg_parameters_ptr a = new Alg_parameters(*list);
     *list = a;
@@ -328,7 +328,7 @@ void Alg_event::set_logical_value(const char *a, bool value)
 }
 
 
-void Alg_event::set_integer_value(const char *a, long value)
+void Alg_event::set_integer_value(const char *a, int64_t value)
 {
     assert(a); // must be non-null
     Alg_attribute attr = symbol_table.insert_string(a);
@@ -475,7 +475,7 @@ bool Alg_event::get_logical_value(const char *a, bool value)
 }
 
 
-long Alg_event::get_integer_value(const char *a, long value)
+int64_t Alg_event::get_integer_value(const char *a, int64_t value)
 {	
     assert(is_note());
     assert(a);
@@ -556,7 +556,7 @@ bool Alg_event::get_logical_value()
 }
 
 
-long Alg_event::get_integer_value()
+int64_t Alg_event::get_integer_value()
 {
     assert(is_update());
     Alg_update* update = (Alg_update *) this;
