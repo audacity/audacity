@@ -122,7 +122,7 @@ public:
     union {
         double r;// real
         const char *s; // string
-        long i;  // integer
+        int64_t i;  // integer -- 64 bit for 32/64-bit compatibility
         bool l;  // logical
         const char *a; // symbol (atom)
     }; // anonymous union
@@ -162,7 +162,8 @@ public:
     // insert string will copy string to heap
     static void insert_string(Alg_parameters **list, const char *name, 
                               const char *s);
-    static void insert_integer(Alg_parameters **list, const char *name, long i);
+    static void insert_integer(Alg_parameters **list, const char *name,
+                               int64_t i);
     static void insert_logical(Alg_parameters **list, const char *name, bool l);
     static void insert_atom(Alg_parameters **list, const char *name, 
                             const char *s);
@@ -190,11 +191,11 @@ typedef class Alg_event {
 protected:
     bool selected;
     char type; // 'e' event, 'n' note, 'u' update
-    long key; // note identifier
-    static const char* description; // static buffer for debugging (in Alg_event)
+    int32_t key; // note identifier -- fixed at 32 bits
+    static const char* description; // static buffer for debugging
 public:
     double time;
-    long chan;
+    int32_t chan; // generalization of MIDI channels -- fixed at 32 bits
     virtual void show() = 0;
     // Note: there is no Alg_event() because Alg_event is an abstract class.
     bool is_note() { return (type == 'n'); }   // tell whether an Alg_event is a note
@@ -210,8 +211,10 @@ public:
     // For midi, the identifier is the key number (pitch). The identifier
     // does not have to represent pitch; it's main purpose is to identify
     // notes so that they can be named by subsequent update events.
-    long get_identifier() { return key; } // get MIDI key or note identifier of note or update
-    void set_identifier(long i) { key = i; } // set the identifier
+
+    // get MIDI key or note identifier of note or update:
+    int32_t get_identifier() { return key; }
+    void set_identifier(int32_t i) { key = i; } // set the identifier
     // In all of these set_ methods, strings are owned by the caller and
     // copied as necessary by the callee. For notes, an attribute/value
     // pair is added to the parameters list. For updates, the single
@@ -222,7 +225,7 @@ public:
     void set_string_value(const char *attr, const char *value);
     void set_real_value(const char *attr, double value);
     void set_logical_value(const char *attr, bool value);
-    void set_integer_value(const char *attr, long value);
+    void set_integer_value(const char *attr, int64_t value);
     void set_atom_value(const char *attr, const char *atom);
 
     // Some note methods. These fail (via assert()) if this is not a note:
@@ -246,7 +249,7 @@ public:
     bool has_attribute(const char *attr);      // test if note has attribute/value pair
     char get_attribute_type(const char *attr); // get the associated type: 
         // 's' = string, 
-        // 'r' = real (double), 'l' = logical (bool), 'i' = integer (long),
+        // 'r' = real (double), 'l' = logical (bool), 'i' = integer (int64_t),
         // 'a' = atom (char *), a unique string stored in Alg_seq
     // get the string value
     const char *get_string_value(const char *attr, const char *value = NULL);
@@ -255,7 +258,7 @@ public:
     // get the logical value
     bool get_logical_value(const char *attr, bool value = false);
     // get the integer value
-    long get_integer_value(const char *attr, long value = 0);
+    int64_t get_integer_value(const char *attr, int64_t value = 0);
     // get the atom value
     const char *get_atom_value(const char *attr, const char *value = NULL);
     void delete_attribute(const char *attr);   // delete an attribute/value pair
@@ -267,14 +270,14 @@ public:
     // 
     const char *get_attribute();    // get the update's attribute (string)
     char get_update_type();   // get the update's type: 's' = string, 
-        // 'r' = real (double), 'l' = logical (bool), 'i' = integer (long),
+        // 'r' = real (double), 'l' = logical (bool), 'i' = integer (int64_t),
         // 'a' = atom (char *), a unique string stored in Alg_seq
     const char *get_string_value(); // get the update's string value
         // Notes: Caller does not own the return value. Do not modify.
         // Do not use after underlying Alg_seq is modified.
     double get_real_value();  // get the update's real value
     bool get_logical_value(); // get the update's logical value
-    long get_integer_value(); // get the update's integer value
+    int64_t get_integer_value(); // get the update's integer value
     const char *get_atom_value();   // get the update's atom value
         // Notes: Caller does not own the return value. Do not modify.
         // The return value's lifetime is forever.
@@ -521,6 +524,25 @@ public:
 } *Alg_time_map_ptr;
 
 
+// Aligner is a simple class to allow 64-bit data to be stored and
+//     retrieved from Serial_buffer, where data is 32-bit aligned,
+//     in an architecture-independent fashion. On some architectures,
+//     read/writes of int64_t or doubles must be aligned to 8 bytes.
+class Aligner {
+  public:
+    union {
+        int64_t i64;
+        double d64;
+        struct {
+            int32_t int32a;
+            int32_t int32b;
+        };
+    };
+    Aligner(double d) { d64 = d; }
+    Aligner(int64_t i) { i64 = i; }
+    Aligner(int32_t a, int32_t b) { int32a = a; int32b = b; }
+};
+
 // Serial_buffer is an abstract class with common elements of
 //     Serial_read_buffer and Serial_write_buffer
 class Serial_buffer {
@@ -549,10 +571,12 @@ public:
     // does nothing.
     virtual ~Serial_read_buffer() {  }
 #if defined(_WIN32)
+    // TODO: revisit warning disables now that ptr is more properly cast
+    // to/from size_t (not long):
 #pragma warning(disable: 546) // cast to int is OK, we only want low 7 bits
 #pragma warning(disable: 4311) // type cast pointer to long warning
 #endif
-    void get_pad() { while (((long) ptr) & 7) ptr++; }
+    void get_pad() { while (((size_t) ptr) & 3) ptr++; }
 #if defined(_WIN32)
 #pragma warning(default: 4311 546)
 #endif
@@ -566,11 +590,16 @@ public:
     }
     char get_char() { return *ptr++; }
     void unget_chars(int n) { ptr -= n; } // undo n get_char() calls
-    long get_int32() { long i = *((long *) ptr); ptr += 4; return i; }
+    double get_double() {
+        int32_t a = get_int32();
+        int32_t b = get_int32();
+        Aligner aligner(a, b);
+        return aligner.d64; }
+    int32_t get_int32() { int32_t i = *((int32_t *) ptr); ptr += 4; return i; }
+    int64_t get_int64();
     float get_float() { float f = *((float *) ptr); ptr += 4; return f; }
-    double get_double() { double d = *((double *) ptr); ptr += sizeof(double); 
-                          return d; }
     const char *get_string() { char *s = ptr; char *fence = buffer + len;
+                         ptr += strlen(s);
                          assert(ptr < fence);
                          while (*ptr++) assert(ptr < fence);
                          get_pad();
@@ -592,9 +621,9 @@ typedef class Serial_write_buffer: public Serial_buffer {
     }
     void init_for_write() { ptr = buffer; }
     // store_long writes a long at a given offset
-    void store_long(long offset, long value) {
-        assert(offset <= get_posn() - 4);
-        long *loc = (long *) (buffer + offset);
+    void store_int32(long offset, int32_t value) {
+        assert(offset <= get_posn() - sizeof(value));
+        int32_t *loc = (int32_t *) (buffer + offset);
         *loc = value;
     }
     void check_buffer(long needed);
@@ -604,25 +633,32 @@ typedef class Serial_write_buffer: public Serial_buffer {
         // two brackets surpress a g++ warning, because this is an
         // assignment operator inside a test.
         while ((*ptr++ = *s++)) assert(ptr < fence);
+        // TODO: revisit warning disables because now we are more
+        //    properly casting pointer to size_t (not long) and back -RBD
         // 4311 is type cast pointer to long warning
         // 4312 is type cast long to pointer warning
 #if defined(_WIN32)
 #pragma warning(disable: 4311 4312)
 #endif
-        assert((char *)(((long) (ptr + 7)) & ~7) <= fence);
+        assert((char *)(((size_t) (ptr + 3)) & ~3) <= fence);
 #if defined(_WIN32)
 #pragma warning(default: 4311 4312)
 #endif
         pad(); }
-    void set_int32(long v) { *((long *) ptr) = v; ptr += 4; }
-    void set_double(double v) { *((double *) ptr) = v; ptr += 8; }
+    void set_int32(int32_t v) { *((int32_t *) ptr) = v; ptr += 4; }
+    void set_double(double v) {
+        Aligner aligner(v);
+        set_int32(aligner.int32a);
+        set_int32(aligner.int32b); }
     void set_float(float v) { *((float *) ptr) = v; ptr += 4; }
     void set_char(char v) { *ptr++ = v; }
 #if defined(_WIN32)
-#pragma warning(disable: 546) // cast to int is OK, we only want low 7 bits
+    // TODO: reassess warning disables now that pointer is more properly
+    // cast to/from size_t (not long):
+#pragma warning(disable: 546) // cast to int is OK, we only want low few bits
 #pragma warning(disable: 4311) // type cast pointer to long warning
 #endif
-    void pad() { while (((long) ptr) & 7) set_char(0); }
+    void pad() { while (((size_t) ptr) & 3) set_char(0); }
 #if defined(_WIN32)
 #pragma warning(default: 4311 546)
 #endif
@@ -640,10 +676,10 @@ typedef class Alg_track : public Alg_event_list {
 protected:
     Alg_time_map *time_map;
     bool units_are_seconds;
-    char *get_string(char **p, long *b);
-    long get_int32(char **p, long *b);
-    double get_double(char **p, long *b);
-    float get_float(char **p, long *b);
+    // char *get_string(char **p, long *b);  -- these seem to be orphaned
+    // int32_t get_int32(char **p, long *b); -- declarations. Maybe they
+    // double get_double(char **p, long *b); -- were intended for 
+    // float get_float(char **p, long *b);   -- serialization. Delete them?
     static Serial_read_buffer ser_read_buf;
     static Serial_write_buffer ser_write_buf;
     void serialize_parameter(Alg_parameter *parm);
@@ -804,9 +840,11 @@ public:
     // somewhere else. Part of the mask allows us to search for 
     // selected events. If this is an Alg_seq, search all tracks
     // (otherwise, call track[i].find())
-    // If channel_mask == 0, accept ALL channels
+    // If channel_mask == 0, accept ALL channels, otherwise
+    // accept only channels < 32 where corresponding bit is set in
+    // channel_mask.
     virtual Alg_event_list *find(double t, double len, bool all,
-                                 long channel_mask, long event_type_mask);
+                                 int32_t channel_mask, int32_t event_type_mask);
 
     virtual void set_in_use(bool flag) { in_use = flag; }
     //
@@ -1077,8 +1115,8 @@ public:
     void clear_track(int track_num, double start, double len, bool all);
     void silence_track(int track_num, double start, double len, bool all);
     Alg_event_list_ptr find_in_track(int track_num, double t, double len,
-                                     bool all, long channel_mask, 
-                                     long event_type_mask);
+                                     bool all, int32_t channel_mask, 
+                                     int32_t event_type_mask);
 
     // find index of first score event after time
     long seek_time(double time, int track_num);

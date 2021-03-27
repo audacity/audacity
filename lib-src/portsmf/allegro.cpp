@@ -23,6 +23,9 @@ using namespace std;
 // #include "trace.h" -- only needed for debugging
 #include "math.h"
 
+#define ALGDBG(x) ;
+// #define ALGDBG(x) x;  // turn on some printing for tracing/debugging
+
 #define STREQL(x, y) (strcmp(x, y) == 0)
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define ROUND(x) ((int) ((x) + 0.5))
@@ -592,11 +595,11 @@ Alg_note::Alg_note(Alg_note_ptr note)
     *this = *note; // copy all fields
     // parameters is now a shared pointer. We need to copy the 
     // parameters
-    Alg_parameters_ptr next_param_ptr = parameters;
-    while (next_param_ptr) {
-        Alg_parameters_ptr new_params = new Alg_parameters(next_param_ptr->next);
-        new_params->parm.copy(&(next_param_ptr->parm)); // copy the attribute and value
-        next_param_ptr = new_params->next;
+    Alg_parameters_ptr next_parm_ptr = parameters;
+    while (next_parm_ptr) {
+        Alg_parameters_ptr new_parms = new Alg_parameters(next_parm_ptr->next);
+        new_parms->parm.copy(&(next_parm_ptr->parm)); // copy the attribute and value
+        next_parm_ptr = new_parms->next;
     }
 }
 
@@ -613,7 +616,7 @@ Alg_note::~Alg_note()
 
 void Alg_note::show()
 {
-    printf("Alg_note: time %g, chan %ld, dur %g, key %ld, "
+    printf("Alg_note: time %g, chan %d, dur %g, key %d, "
            "pitch %g, loud %g, attributes ",
            time, chan, dur, key, pitch, loud);
     Alg_parameters_ptr parms = parameters;
@@ -1370,17 +1373,26 @@ void Alg_seq::serialize(void **buffer, long *bytes)
     ser_write_buf.init_for_write();
     serialize_seq();
     *buffer = ser_write_buf.to_heap(bytes); 
+    ALGDBG(int chksum = 0; unsigned char *data = (unsigned char *) *buffer);
+    // not a reliable checksum, just a sanity check:
+    ALGDBG(for (int i = 0; i < *bytes; i++) chksum += data[i]);
+    ALGDBG(printf("Alg_seq::serialize %ld bytes, chksum %d\n", *bytes, chksum));
 }
 
 
+// make sure we can write at least needed more bytes into buffer
 void Serial_write_buffer::check_buffer(long needed)
 {
-    if (len < (ptr - buffer) + needed) { // do we need more space?
+    needed += (ptr - buffer);
+    assert(needed > 0); // did we overflow?
+    if (len < needed) { // do we need more space?
         long new_len = len * 2; // exponential growth is important
+        assert(new_len >= 0); // did we overflow?
         // initially, length is zero, so bump new_len to a starting value
         if (new_len == 0) new_len = 1024;
-         // make sure new_len is as big as needed
+        // make sure new_len is as big as needed
         if (needed > new_len) new_len = needed;
+        assert(new_len <= 0x7FFFFFFF);  // we use 32-bit offsets
         char *new_buffer = new char[new_len]; // allocate space
         ptr = new_buffer + (ptr - buffer); // relocate ptr to new buffer
         if (len > 0) { // we had a buffer already
@@ -1430,7 +1442,8 @@ void Alg_seq::serialize_seq()
         track(i)->serialize_track();
     }
     // do not include ALGS, include padding at end
-    ser_write_buf.store_long(length_offset, ser_write_buf.get_posn() - length_offset);
+    ser_write_buf.store_int32(length_offset,
+                              ser_write_buf.get_posn() - length_offset);
 }
 
 
@@ -1453,6 +1466,7 @@ void Alg_track::serialize_track()
         ser_write_buf.check_buffer(24);
         Alg_event *event = (*this)[j];
         ser_write_buf.set_int32(event->get_selected());
+        assert(event->get_type() == 'n' || event->get_type() == 'u');
         ser_write_buf.set_int32(event->get_type());
         ser_write_buf.set_int32(event->get_identifier());
         ser_write_buf.set_int32(event->chan);
@@ -1472,7 +1486,7 @@ void Alg_track::serialize_track()
                 parms = parms->next;
                 parm_num++;
             }
-            ser_write_buf.store_long(parm_num_offset, parm_num);
+            ser_write_buf.store_int32(parm_num_offset, parm_num);
         } else {
             assert(event->is_update());
             Alg_update *update = (Alg_update *) event;
@@ -1482,7 +1496,8 @@ void Alg_track::serialize_track()
         ser_write_buf.pad();
     }
     // write length, not including ALGT, including padding at end
-    ser_write_buf.store_long(length_offset, ser_write_buf.get_posn() - length_offset);
+    ser_write_buf.store_int32(length_offset,
+                              ser_write_buf.get_posn() - length_offset);
 }
 
 
@@ -1493,7 +1508,6 @@ void Alg_track::serialize_parameter(Alg_parameter *parm)
     long len = strlen(parm->attr_name()) + 8;
     ser_write_buf.check_buffer(len);
     ser_write_buf.set_string(parm->attr_name());
-    ser_write_buf.pad();
     switch (parm->attr_type()) {
     case 'r':
         ser_write_buf.check_buffer(8);
@@ -1523,6 +1537,11 @@ void Alg_track::serialize_parameter(Alg_parameter *parm)
 Alg_track *Alg_track::unserialize(void *buffer, long len)
 {
     assert(len > 8);
+    // should match serialized checksum (just for sanity checks):
+    ALGDBG(int chksum = 0; unsigned char *data = (unsigned char *) buffer);
+    ALGDBG(for (int i = 0; i < len; i++) chksum += data[i]);
+    ALGDBG(printf("Alg_track::unserialize %ld bytes, chksum %d\n",
+                  len, chksum));
     ser_read_buf.init_for_read(buffer, len);
     bool alg = ser_read_buf.get_char() == 'A' &&
                ser_read_buf.get_char() == 'L' &&
@@ -1605,7 +1624,7 @@ void Alg_track::unserialize_track()
                 (ser_read_buf.get_char() == 'G') &&
                 (ser_read_buf.get_char() == 'T');
     assert(algt);
-    long offset = ser_read_buf.get_posn(); // stored length does not include 'ALGT'
+    long offset = ser_read_buf.get_posn(); // length does not include 'ALGT'
     long bytes = ser_read_buf.get_int32();
     assert(bytes <= ser_read_buf.get_len() - offset);
     units_are_seconds = (bool) ser_read_buf.get_int32();
@@ -1616,7 +1635,7 @@ void Alg_track::unserialize_track()
         ser_read_buf.check_input_buffer(24);
         long selected = ser_read_buf.get_int32();
         char type = (char) ser_read_buf.get_int32();
-        long key = ser_read_buf.get_int32();
+        int32_t key = ser_read_buf.get_int32();
         long channel = ser_read_buf.get_int32();
         double time = ser_read_buf.get_double();
         if (type == 'n') {
@@ -1627,12 +1646,12 @@ void Alg_track::unserialize_track()
             Alg_note *note = 
                     create_note(time, channel, key, pitch, loud, dur);
             note->set_selected(selected != 0);
-            long param_num = ser_read_buf.get_int32();
+            long parm_num = ser_read_buf.get_int32();
             int j;
             // this builds a list of parameters in the correct order
             // (although order shouldn't matter)
             Alg_parameters_ptr *list = &note->parameters;
-            for (j = 0; j < param_num; j++) {
+            for (j = 0; j < parm_num; j++) {
                 *list = new Alg_parameters(NULL);
                 unserialize_parameter(&((*list)->parm));
                 list = &((*list)->next);
@@ -1957,7 +1976,7 @@ void Alg_track::insert_silence(double t, double len)
 
 
 Alg_event_list *Alg_track::find(double t, double len, bool all,
-                         long channel_mask, long event_type_mask)
+                         int32_t channel_mask, int32_t event_type_mask)
 {
     int i;
     Alg_event_list *list = new Alg_event_list(this);
@@ -3215,8 +3234,8 @@ void Alg_seq::clear(double start, double len, bool all)
 
 
 Alg_event_list_ptr Alg_seq::find_in_track(int track_num, double t, double len,
-                                          bool all, long channel_mask, 
-                                          long event_type_mask)
+                                          bool all, int32_t channel_mask, 
+                                          int32_t event_type_mask)
 {
     return track(track_num)->find(t, len, all, channel_mask, event_type_mask);
 }
