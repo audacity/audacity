@@ -41,7 +41,7 @@
 #define NYX_FULL_COPY 1
 
 /* show memory stats */
-#define NYX_MEMORY_STATS 1
+// #define NYX_MEMORY_STATS 1
 
 /* show details of obarray copy */
 // #define NYX_DEBUG_COPY 1
@@ -486,7 +486,7 @@ void nyx_init()
    xlprot1(nyx_result);
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
-   stdputstr("\nnyx_init\n");
+   printf("\nnyx_init\n");
    xmem();
 #endif
 }
@@ -531,7 +531,7 @@ void nyx_cleanup()
    }
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
-   stdputstr("\nnyx_cleanup\n");
+   printf("\nnyx_cleanup\n");
    xmem();
 #endif
 }
@@ -830,7 +830,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    LVAL expr = NULL;
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
-   stdputstr("\nnyx_eval_expression before\n");
+   printf("\nnyx_eval_expression before\n");
    xmem();
 #endif
 
@@ -914,7 +914,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    gc();
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
-   stdputstr("\nnyx_eval_expression after\n");
+   printf("\nnyx_eval_expression after\n");
    xmem();
 #endif
 
@@ -970,20 +970,20 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    }
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
-   stdputstr("\nnyx_get_audio before\n");
+   printf("\nnyx_get_audio before\n");
    xmem();
 #endif
 
    num_channels = nyx_get_audio_num_channels();
 
-   buffer = (sample_type *) malloc(max_sample_block_len * sizeof(sample_type *));
+   buffer = (sample_type *) malloc(max_sample_block_len * sizeof(sample_type));
    if (buffer == NULL) {
-       goto finish;
+      goto finish;
    }
 
    states = (sound_state_type) malloc(num_channels * sizeof(sound_state_node));
    if (states == NULL) {
-       goto finish;
+      goto finish;
    }
    for (ch = 0; ch < num_channels; ch++) {
        states[ch].cnt = 0;       // force initial fetch
@@ -1121,7 +1121,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
  finish:
 
    if (buffer) {
-       free(buffer);
+      free(buffer);
    }
 
    if (states) {
@@ -1131,7 +1131,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    gc();
 
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
-   stdputstr("\nnyx_get_audio after\n");
+   printf("\nnyx_get_audio after\n");
    xmem();
 #endif
 
