@@ -65,6 +65,10 @@ bool DBConnection::ShouldBypass()
 void DBConnection::SetError(
    const TranslatableString &msg, const TranslatableString &libraryError)
 {
+   wxLogMessage(wxT("Connection msg: %s"), msg.Debug());
+   if (!libraryError.empty())
+      wxLogMessage(wxT("Connection error: %s"), libraryError.Debug());
+
    mpErrors->mLastError = msg;
    mpErrors->mLibraryError = libraryError;
 }
@@ -73,12 +77,12 @@ void DBConnection::SetDBError(
    const TranslatableString &msg, const TranslatableString &libraryError)
 {
    mpErrors->mLastError = msg;
-   wxLogDebug(wxT("SQLite error: %s"), mpErrors->mLastError.Debug());
-   printf("   Lib error: %s", mpErrors->mLastError.Debug().mb_str().data());
+   wxLogMessage(wxT("SQLite error: %s"), mpErrors->mLastError.Debug());
+   printf("SQLite error: %s", mpErrors->mLastError.Debug().mb_str().data());
 
    mpErrors->mLibraryError = libraryError.empty()
       ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
-   wxLogDebug(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
+   wxLogMessage(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
    printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
 }
 
@@ -271,7 +275,7 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug("prepare error %s", sqlite3_errmsg(mDB));
+      wxLogMessage("prepare error %s", sqlite3_errmsg(mDB));
       THROW_INCONSISTENCY_EXCEPTION;
    }
 
