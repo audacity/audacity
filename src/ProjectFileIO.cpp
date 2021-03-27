@@ -1800,7 +1800,8 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
             ->GetActiveBlockIDs();
       if (blockids.size() > 0)
       {
-         if (!DeleteBlocks(blockids, true))
+         success = DeleteBlocks(blockids, true);
+         if (!success)
          {
             return false;
          }
@@ -1823,7 +1824,8 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    // we use that knowledge to determine if this file is an unsaved/temporary
    // file or a permanent project file
    wxString result;
-   if (!GetValue("SELECT Count(*) FROM project;", result))
+   success = GetValue("SELECT Count(*) FROM project;", result);
+   if (!success)
    {
       return false;
    }
