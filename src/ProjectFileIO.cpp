@@ -691,7 +691,9 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      wxLogDebug(wxT("Unable to add 'inset' function"));
+      /* i18n-hint: An error message.  Don't translate inset or blockids.*/
+      SetError(XO("Unable to add 'inset' function (can't verify blockids)"));
+      wxLogWarning(GetLastError().Translation());
       return false;
    }
 
@@ -702,7 +704,33 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      wxLogWarning(XO("Cleanup of orphan blocks failed").Translation());
+      // we give the string 'error' to get the default url for read project errors.
+      if( rc==SQLITE_READONLY)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Project is read only\n(can't clean orphan blockfiles)"), XO("error"));
+      else if( rc==SQLITE_LOCKED)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Project is locked\n(can't clean orphan blockfiles)"), XO("error"));
+      else if( rc==SQLITE_BUSY)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Project is busy\n(can't clean orphan blockfiles)"), XO("error"));
+      else if( rc==SQLITE_CORRUPT)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Project is corrupt\n(can't clean orphan blockfiles)"), XO("error"));
+      else if( rc==SQLITE_PERM)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Some permissions issue\n(can't clean orphan blockfiles)"), XO("error"));
+      else if( rc==SQLITE_IOERR)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("A disk I/O error\n(can't clean orphan blockfiles)"), XO("error"));
+      else if( rc==SQLITE_AUTH)
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Not authorized\n(can't clean orphan blockfiles)"), XO("error"));
+      else
+         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
+         SetError(XO("Cleanup of orphan blocks failed"), XO("error"));
+
+      wxLogWarning(GetLastError().Translation());
       return false;
    }
 
