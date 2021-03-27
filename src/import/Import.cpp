@@ -484,7 +484,23 @@ bool Importer::Import( AudacityProject &project,
          .Format( fName );
       return false;
    }
+  
+   // Bug #2124: Peter imports a non-audio file and the error message is misleading
+   wxString* p;
+   // supported file types in audacity taken from https://manual.audacityteam.org/man/importing_audio.html
+   wxString supportedTypes[] = { "wav", "aiff", "pcm", "aif", "au", "aup", "caf", "htb", "lof", "mogg",
+                                 "ogg", "flac", "mp2", "mp3", "raw", "tun", "aup3", "caff", "gro", "muz",
+                                 "ac3", "amr", "m4a", "mp4", "wma", "ny", "vst"};
 
+   p = std::find(supportedTypes, supportedTypes+12, wxFileName(fName).GetExt());
+
+   if(p == supportedTypes+12) {
+      errorMessage =
+          XO("\"%s\" \nis a not an audio file. \nAudacity cannot open \"%s\" type of file.")
+          .Format(fName, wxFileName(fName).GetExt());
+      return false;
+   }
+  
    using ImportPluginPtrs = std::vector< ImportPlugin* >;
 
    // This list is used to call plugins in correct order
