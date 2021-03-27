@@ -692,43 +692,44 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    if (rc != SQLITE_OK)
    {
       /* i18n-hint: An error message.  Don't translate inset or blockids.*/
-      SetError(XO("Unable to add 'inset' function (can't verify blockids)"));
+      SetDBError(XO("Unable to add 'inset' function (can't verify blockids)"));
       wxLogWarning(GetLastError().Translation());
       return false;
    }
 
    // Delete all rows in the set, or not in it
+   // This is the first command that writes to the database, and so we
+   // do more informative error reporting than usual, if it fails.
    auto sql = wxString::Format(
       "DELETE FROM sampleblocks WHERE %sinset(blockid);",
       complement ? "NOT " : "" );
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      // we give the string 'error' to get the default url for read project errors.
       if( rc==SQLITE_READONLY)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Project is read only\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Project is read only\n(Unable to work with the blockfiles)"));
       else if( rc==SQLITE_LOCKED)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Project is locked\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Project is locked\n(Unable to work with the blockfiles)"));
       else if( rc==SQLITE_BUSY)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Project is busy\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Project is busy\n(Unable to work with the blockfiles)"));
       else if( rc==SQLITE_CORRUPT)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Project is corrupt\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Project is corrupt\n(Unable to work with the blockfiles)"));
       else if( rc==SQLITE_PERM)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Some permissions issue\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Some permissions issue\n(Unable to work with the blockfiles)"));
       else if( rc==SQLITE_IOERR)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("A disk I/O error\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("A disk I/O error\n(Unable to work with the blockfiles)"));
       else if( rc==SQLITE_AUTH)
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Not authorized\n(can't clean orphan blockfiles)"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Not authorized\n(Unable to work with the blockfiles)"));
       else
-         /* i18n-hint: An error message.  Don't translate orphan or blockfiles.*/
-         SetError(XO("Cleanup of orphan blocks failed"), XO("error"));
+         /* i18n-hint: An error message.  Don't translate blockfiles.*/
+         SetDBError(XO("Unable to work with the blockfiles"));
 
       wxLogWarning(GetLastError().Translation());
       return false;
