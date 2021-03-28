@@ -245,6 +245,7 @@ private:
    int mFormat;
    int mSubFormat;
    int mNumSelected;
+   int mNumMute;
    unsigned mNumLeft;
    unsigned mNumRight;
    unsigned mNumMono;
