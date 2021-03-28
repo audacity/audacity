@@ -363,7 +363,7 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
    pathVar = wxString::FromUTF8(getenv("LADSPA_PATH"));
    if (!pathVar.empty())
    {
-      wxStringTokenizer tok(pathVar);
+      wxStringTokenizer tok(pathVar, wxPATH_SEP);
       while (tok.HasMoreTokens())
       {
          pathList.push_back(tok.GetNextToken());
