@@ -74,6 +74,21 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
 
 	    Close Visual Studio.
 
+    After build successfully done , set path of all dll files in "PATH" environment variable.
+    To set dll file folder path to "PATH" environment variable.
+
+    click on Settings (the cogwheel icon from the start menu)
+      Then in the 'find a setting' search box type 'env'.
+      Choose 'Edit the system environment variables'
+      Then the 'Environment Variables' button 
+      Then in "User variables for User",
+      select "Path" variable and click on Edit... button
+      then click on "New" button and add path to dll files folder of wxWidgets as shown in example.
+
+      example:C:\Users\User\Desktop\wxWidgets\lib\vc_dll (this can be different in PC.)
+
+      then click on "ok button".
+
     You can check this worked also by looking in C:\aud300\wxWidgets\lib\vc_dll
     There should be dll files there with _'ud' in their name.    
     The ud stands for 'unicode debug'.  If you only have files with 'u' then 
