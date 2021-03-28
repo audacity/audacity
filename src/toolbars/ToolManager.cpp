@@ -1210,6 +1210,8 @@ void ToolManager::OnMouse( wxMouseEvent & event )
             if (mPrevDock)
                mPrevDock->GetConfiguration().Remove( mDragBar );
             UndockBar(mp);
+            // Rearrange the remaining toolbars before trying to re-insert this one.
+            LayoutToolBars();
          }
       }
 

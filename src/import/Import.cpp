@@ -805,7 +805,7 @@ bool Importer::Import( AudacityProject &project,
          .Format( fName,
                   !FFmpegLibsInst()
                   ? XO("Try installing FFmpeg.\n\n")
-                  : XO("") );
+                  : Verbatim("") );
    }
    else
    {
