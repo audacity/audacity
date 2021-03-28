@@ -513,6 +513,7 @@ bool Exporter::ExamineTracks()
    mNumLeft = 0;
    mNumRight = 0;
    mNumMono = 0;
+   mNumMute = 0;
 
    // First analyze the selected audio, perform sanity checks, and provide
    // information as appropriate.
@@ -565,7 +566,26 @@ bool Exporter::ExamineTracks()
          latestEnd = tr->GetEndTime();
       }
    }
+  
+   // Bug 1334 - Enh: No warning is provided that if some tracks are muted then they are not exported.
+   // Get number of muted tracks
+   for (auto tr :
+      tracks.Any< const WaveTrack >()
+      + (&WaveTrack::GetMute)
+      ) {
+         mNumMute++;
+   }
 
+   // Ensure that all selected tracks are not muted
+   if (mNumMute>0 && mNumSelected!=0) {
+      auto pWindow = ProjectWindow::Find(mProject);
+      if(ShowWarningDialog(pWindow,
+         wxT("SomeMuted"),
+         XO("Some Tracks are Muted and won't be there in exported file."),
+         true) == wxID_CANCEL)
+            return false;
+   }
+  
    if (mNumSelected == 0) {
       TranslatableString message;
       if(mSelectedOnly)
