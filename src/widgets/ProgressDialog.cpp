@@ -1158,7 +1158,7 @@ bool ProgressDialog::Create(const TranslatableString & title,
    Init();
 
    wxWindow *parent = 
-#if defined(__WXMAC__),
+#if defined(__WXMAC__)
       // Bug 2703: In release builds, the progress dialog will fall behind
       // the top level dialog (like effects dialogs). This does not happen
       // in debug builds and I was not able to track down the reason. So,
