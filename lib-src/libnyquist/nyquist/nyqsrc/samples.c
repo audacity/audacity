@@ -109,7 +109,7 @@ double snd_maxsamp(sound_type s)
 
 /* snd_samples -- convert sound (prefix) to lisp array */
 /**/
-LVAL snd_samples(sound_type s, long len)
+LVAL snd_samples(sound_type s, int64_t len)
 {
     LVAL v;
     long vx = 0;

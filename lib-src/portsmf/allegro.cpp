@@ -22,6 +22,7 @@ using namespace std;
 #include "algsmfrd_internal.h"
 // #include "trace.h" -- only needed for debugging
 #include "math.h"
+#include "inttypes.h" // for PRId64
 
 #define ALGDBG(x) ;
 // #define ALGDBG(x) x;  // turn on some printing for tracing/debugging
@@ -132,7 +133,7 @@ void Alg_parameter::show()
         printf("%s:%s", attr_name(), s);
         break;
     case 'i':
-        printf("%s:%lld", attr_name(), i);
+        printf("%s:%" PRId64, attr_name(), i);
         break;
     case 'l':
         printf("%s:%s", attr_name(), (l ? "t" : "f"));
