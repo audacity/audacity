@@ -114,8 +114,9 @@ public:
    // specific database. This is the workhorse for the above 3 methods.
    static int64_t GetDiskUsage(DBConnection &conn, SampleBlockID blockid);
 
-   const TranslatableString &GetLastError();
-   const TranslatableString &GetLibraryError();
+   const TranslatableString &GetLastError() const;
+   const TranslatableString &GetLibraryError() const;
+   int GetLastErrorCode() const;
 
    // Provides a means to bypass "DELETE"s at shutdown if the database
    // is just going to be deleted anyway.  This prevents a noticeable
@@ -256,11 +257,13 @@ private:
 
    //! Just set stored errors
    void SetError(const TranslatableString & msg,
-      const TranslatableString &libraryError = {});
+       const TranslatableString& libraryError = {},
+       int errorCode = {});
 
    //! Set stored errors and write to log; and default libraryError to what database library reports
    void SetDBError(const TranslatableString & msg,
-      const TranslatableString &libraryError = {});
+       const TranslatableString& libraryError = {},
+       int errorCode = -1);
 
    bool ShouldCompact(const std::vector<const TrackList *> &tracks);
 
