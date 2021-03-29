@@ -199,9 +199,8 @@
 ;;     a more helpful stack trace for SAL.
 (defmacro trigger (input beh)
   `(let* ((nyq%environment (nyq:the-environment))
-          (gate%signal (force-srate *sound-srate* ,input))
-          (s%rate (snd-srate gate%signal)))
-     (snd-trigger gate%signal
+          (s%rate *sound-srate*))
+     (snd-trigger (force-srate *sound-srate* ,input)
                   #'(lambda (t0) (eval-seq-behavior ,beh "TRIGGER")))))
 
 
