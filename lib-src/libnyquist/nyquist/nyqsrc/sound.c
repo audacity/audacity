@@ -545,7 +545,6 @@ void snd_list_unref(snd_list_type list)
             break; // the rest of the list is shared, nothing more to free
         }
 
-        next = NULL;
         // list nodes either point to a block of samples or this is the 
         // last list node (list->block == NULL) which points to a suspension
         // lists can also terminate at the zero_block, which is an infinite
@@ -1111,7 +1110,21 @@ sample_block_type SND_get_first(sound_type snd, int *cnt)
             /* block boundary: replace with zero sound */
             snd->list = zero_snd_list;
             snd_list_unref(snd_list);
-        } else {
+        // the idea here is that we have reached snd->stop, which
+        // means the next samples have to be zero, but we are reading
+        // from the middle of a block of samples. Maybe, for example,
+        // snd was constructed by snd_xform that imposed a new stop
+        // time. Since we haven't read the next sample, we can take
+        // care of this by just creating a new snd_list with a shorter
+        // block_len to take whatever samples we need before stop, then
+        // link ot zero_snd_list so that subsequent samples are zero.
+        // However, if we actually start reading zeros from zero_snd_list,
+        // the test above for > snd->stop will bring us back here. We
+        // ignore these cases just below by testing if the current list
+        // is the zero_snd_list. If so, we're just reading zeros, we're
+        // past the stop time, and we can just keep reading zeros, so
+        // do nothing.
+        } else if (snd->list != zero_snd_list) {
             /* not a block boundary: build new list */
             snd->list = snd_list_create((snd_susp_type) zero_snd_list);
             snd->list->block_len = (short) (snd->stop - snd->current);
@@ -1123,6 +1136,7 @@ sample_block_type SND_get_first(sound_type snd, int *cnt)
     }
 
     *cnt = snd_list->block_len;
+    assert(snd_list->block_len >= 0);
     /* this should never happen */
     if (*cnt == 0) {
         stdputstr("SND_get_first returned 0 samples\n");

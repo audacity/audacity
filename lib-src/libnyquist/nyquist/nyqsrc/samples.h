@@ -9,7 +9,7 @@ void samples_symbols(void);
 sound_type snd_from_array(double t0, double sr, LVAL array);
   /* LISP: (SND-FROM-ARRAY ANYNUM ANYNUM ANY) */
 
-LVAL snd_samples(sound_type s, long len); /* LISP: (SND-SAMPLES SOUND LONG) */
+LVAL snd_samples(sound_type s, int64_t len); /* LISP: (SND-SAMPLES SOUND FIXNUM) */
 int64_t snd_length(sound_type s, int64_t len); /* LISP: (SND-LENGTH SOUND FIXNUM) */
 
 double snd_maxsamp(sound_type s); /* LISP: (SND-MAXSAMP SOUND) */
