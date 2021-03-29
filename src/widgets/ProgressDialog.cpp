@@ -1157,7 +1157,12 @@ bool ProgressDialog::Create(const TranslatableString & title,
 {
    Init();
 
-   wxWindow *parent = GetParentForModalDialog(NULL, 0);
+   wxWindow *parent = 
+#if defined(__WXMAC__),
+      GetParentForModalDialog(mHadFocus, 0);
+#else
+      GetParentForModalDialog(nullptr, 0);
+#endif
 
    // Set this boolean to indicate if we are using the "Elapsed" labels
    m_bShowElapsedTime = !(flags & pdlgHideElapsedTime);
