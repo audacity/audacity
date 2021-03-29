@@ -1,12 +1,12 @@
 # Header entry was created by Lokalize.
 #
-# Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
+# Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 2.4.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2020-06-18 00:12+0100\n"
+"PO-Revision-Date: 2021-02-17 11:22+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "Language: es\n"
@@ -596,9 +596,9 @@ msgstr "Sitio web de %s:"
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2020 %s Team."
-msgstr "El software %s tiene copyright %s 1999-2018 Equipo de %s."
+msgstr "El software %s tiene copyright %s 1999-2020. Equipo de %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -787,8 +787,8 @@ msgstr "Haga clic y arrastre para comenzar la reproducción por desplazamiento"
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
 msgstr ""
-"Clic y mover para reproducción por desplazamiento. Clic y arrastrar para "
-"buscar."
+"Clic y mover para reproducción por desplazamiento. Clic y arrastrar para"
+" buscar."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -910,6 +910,7 @@ msgstr ""
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
+"Fallo al inicializar la biblioteca SQLite. Audacity no se puede ejecutar."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -1025,6 +1026,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"No se puede controlar los semáforos.\n"
+"\n"
+"Este error se produce por una falta de recursos\n"
+"que requiere un reinicio."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
@@ -1037,6 +1042,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"No se puede crear los semáforos.\n"
+"\n"
+"Este error se produce por una falta de recursos\n"
+"que requiere un reinicio."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1045,6 +1054,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"No se puede bloquear los semáforos.\n"
+"\n"
+"Este error se produce por una falta de recursos\n"
+"que requiere un reinicio."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1053,6 +1066,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"No se puede controlar el servidor de semáforos.\n"
+"\n"
+"Este error se produce por una falta de recursos\n"
+"que requiere un reinicio."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1061,6 +1078,10 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
+"El servidor IPC de Audacity no se ha podido inicializar.\n"
+"\n"
+"Este error se produce por una falta de recursos\n"
+"que requiere un reinicio."
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
@@ -1094,14 +1115,13 @@ msgid "audio or project file name"
 msgstr "audio o nombre del archivo de proyecto"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid ""
 "Audacity project (.aup3) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Los archivos de proyecto de Audacity (.AUP) no están \n"
+"Los archivos de proyecto de Audacity (.aup3) no están \n"
 "asociados a Audacity.\n"
 "\n"
 "¿Desea asociarlos para que se abran al hacer doble clic sobre ellos?"
@@ -1116,9 +1136,8 @@ msgid "Message"
 msgstr "Mensaje"
 
 #: src/AudacityFileConfig.cpp
-#, fuzzy
 msgid "Audacity Configuration Error"
-msgstr "Apariencia DarkAudacity"
+msgstr "Error en la configuración de Audacity"
 
 #: src/AudacityFileConfig.cpp
 #, c-format
@@ -1136,6 +1155,19 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
 "state which will be recovered the next time you open it."
 msgstr ""
+"No se ha podido acceder al siguiente archivo de configuración:\n"
+"\n"
+"\t%s\n"
+"\n"
+"Este error se puede producir por varios motivos, pero el más habitual "
+"es que el disco esté lleno o que no tenga permiso de escritura. Puede "
+"obtener más información haciendo clic en el botón de ayuda.\n"
+"\n"
+"Puede intentar corregir el problema y hacer clic en \"Reintentar\" para"
+" continuar.\n"
+"\n"
+"Si hace clic en \"Cerrar Audacity\" el proyecto puede quedar en un estado "
+"no guardado, en cuyo caso se intentará recuperar la próxima vez que se abra."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
@@ -1144,13 +1176,12 @@ msgid "Help"
 msgstr "Ayuda"
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Quit Audacity"
-msgstr "Salir de Audacity"
+msgstr "&Cerrar Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
-msgstr ""
+msgstr "&Reintentar"
 
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
@@ -1471,7 +1502,6 @@ msgid "Automatic Crash Recovery"
 msgstr "Recuperación automática"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid ""
 "The following projects were not saved properly the last time Audacity was "
 "run and can be automatically recovered.\n"
@@ -1479,14 +1509,14 @@ msgid ""
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
 "Algunos proyectos no se guardaron correctamente la última vez que se ejecutó "
-"Audacity.\n"
-"Afortunadamente, los siguientes proyectos se pueden recuperar "
-"automáticamente:"
+"Audacity y pueden ser recuperados automáticamente.\n"
+"\n"
+"Tras la recuperación, guarde los proyectos para asegurar que los cambios"
+" quedan almacenados."
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "Recoverable &projects"
-msgstr "Proyectos recuperables"
+msgstr "&Proyectos recuperables"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
@@ -1500,34 +1530,31 @@ msgid "Name"
 msgstr "Nombre"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Discard Selected"
-msgstr "Seleccionado"
+msgstr "&Descartar seleccionado"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "&Recover Selected"
-msgstr "Ninguno seleccionado"
+msgstr "&Recuperar seleccionado"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Skip"
-msgstr ""
+msgstr "&Saltar"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid "No projects selected"
-msgstr "No se ha seleccionado ninguna macro"
+msgstr "No se ha seleccionado ningún proyecto"
 
 #: src/AutoRecoveryDialog.cpp
-#, fuzzy
 msgid ""
 "Are you sure you want to discard the selected projects?\n"
 "\n"
 "Choosing \"Yes\" permanently deletes the selected projects immediately."
 msgstr ""
-"¿Está seguro de que descartar todos los proyectos recuperables?\n"
+"¿Está seguro de que descartar los proyectos seleccionados?\n"
 "\n"
-"Se descartarán todos los proyectos inmediatamente."
+"Haciendo clic en \"Sí\" se borrarán todos los proyectos seleccionados"
+" inmediatamente."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1566,22 +1593,17 @@ msgid "Fade Ends"
 msgstr "Fin de Fundido"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Import Macro"
-msgstr "Importar datos en bruto (RAW)"
+msgstr "Importar macro"
 
 #: src/BatchCommands.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
-msgstr ""
-"\"%s\" no existe.\n"
-"\n"
-"¿Desea crearlo?"
+msgstr "Ya existe la macro %s. ¿Desea reemplazarla?"
 
 #: src/BatchCommands.cpp
-#, fuzzy
 msgid "Export Macro"
-msgstr "Exportar MIDI"
+msgstr "Exportar macro"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1889,18 +1911,18 @@ msgid "Test data size should be in the range 1 - 2000 MB."
 msgstr "El tamaño de los datos de prueba debe estar entre 1 - 2000 MB."
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr "Usando %ld trozos de %ld muestras, con un total de %.1f MB.\n"
+msgstr "Usando %lld trozos de %lld muestras, con un total de %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
 msgstr "Preparando...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Expected len %lld, track len %lld.\n"
-msgstr "Longitud esperada %ld, longitud de pista %lld.\n"
+msgstr "Longitud esperada %lld, longitud de pista %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1908,9 +1930,9 @@ msgid "Performing %d edits...\n"
 msgstr "Aplicando %d ediciones...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut: %lld - %lld \n"
-msgstr "Cortar: %ld - %ld \n"
+msgstr "Cortar: %lld - %lld \n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1918,14 +1940,14 @@ msgid "Trial %d\n"
 msgstr "Prueba %d\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Cut (%lld, %lld) failed.\n"
-msgstr "No se ha podido cortar (%ld, %ld).\n"
+msgstr "No se ha podido cortar (%lld, %lld).\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Paste: %lld\n"
-msgstr "Pegar: %ld\n"
+msgstr "Pegar: %lld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1959,18 +1981,18 @@ msgid "Doing correctness check...\n"
 msgstr "Realizando el test de corrección...\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Bad: chunk %lld sample %lld\n"
-msgstr "Mal: trozo %ld muestra %ld\n"
+msgstr "Mal: trozo %lld muestra %lld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
 msgstr "Test de corrección superado\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Errors in %d/%lld chunks\n"
-msgstr "Errores en %d/%ld trozos\n"
+msgstr "Errores en %d/%lld trozos\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1987,12 +2009,12 @@ msgid "Time to check all data (2): %ld ms\n"
 msgstr "Tiempo de comprobación de todos los datos (2): %ld ms\n"
 
 #: src/Benchmark.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
-"A 44100 Hz, 16-bits por muestra, número estimado de\n"
+"A 44100 Hz, %d bytes por muestra, número estimado de\n"
 "pistas que pueden reproducirse al mismo tiempo: %.1f\n"
 
 #: src/Benchmark.cpp
@@ -2094,23 +2116,22 @@ msgid "Audacity Support Data"
 msgstr "Datos de asistencia de Audacity"
 
 #: src/DBConnection.cpp
-#, fuzzy
 msgid "Checkpointing project"
-msgstr "Proyecto actual"
+msgstr "Realizando un control del proyecto"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Checkpointing %s"
-msgstr "Importando %s"
+msgstr "Realizando control %s"
 
 #: src/DBConnection.cpp src/ProjectFileIO.cpp
 msgid "This may take several seconds"
-msgstr ""
+msgstr "Esta operación llevará unos segundos"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write to %s.\n"
-msgstr "No se ha podido escribir en el archivo: %s"
+msgstr "No se ha podido escribir en %s.\n"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2119,30 +2140,36 @@ msgid ""
 "%s\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
+"El disco está lleno.\n"
+"%s\n"
+"Haga clic en el botón de ayuda para obtener recomendaciones sobre cómo"
+" liberar espacio."
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to create savepoint:\n"
 "\n"
 "%s"
 msgstr ""
-"No se ha podido registrar:\n"
+"No se ha podido crear un punto de guardado:\n"
+"\n"
 "%s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to release savepoint:\n"
 "\n"
 "%s"
 msgstr ""
-"No se ha podido registrar:\n"
+"No se ha podido liberar un punto de guardado:\n"
+"\n"
 "%s"
 
 #: src/DBConnection.cpp
 msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
+msgstr "Error en la base de datos. No se ha podido determinar el motivo."
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -2466,14 +2493,16 @@ msgstr ""
 "renombrarlo como %s."
 
 #: src/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
 "Audacity no ha podido escribir en un archivo.\n"
-"Tal vez %s no se pueda escribir o el disco esté lleno."
+"Tal vez %s no se pueda escribir o el disco esté lleno.\n"
+"Haga clic en el botón de ayuda para obtener recomendaciones sobre cómo"
+" liberar espacio."
 
 #: src/FileException.h
 msgid "File Error"
@@ -2517,9 +2546,8 @@ msgstr "Todos los archivos"
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
-#, fuzzy
 msgid "AUP3 project files"
-msgstr "Guardando archivos de datos del proyecto"
+msgstr "Archivos de proyecto AUP3"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
@@ -2946,9 +2974,8 @@ msgid "Action"
 msgstr "Acción"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Used Space"
-msgstr "Espacio de disco"
+msgstr "Espacio usado"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
@@ -2968,24 +2995,21 @@ msgid "&Discard"
 msgstr "&Descartar"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "Clip&board space used"
-msgstr "Espacio del portapapeles usado"
+msgstr "Espacio del &portapapeles usado"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "D&iscard"
-msgstr "Descartar"
+msgstr "D&escartar"
 
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&Compact"
-msgstr "&Comando"
+msgstr "&Compactar"
 
 #: src/HistoryWindow.cpp src/ProjectFileManager.cpp
 #, c-format
 msgid "Compacting actually freed %s of disk space."
-msgstr ""
+msgstr "La compactación libera %s de espacio en disco."
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -3656,14 +3680,15 @@ msgid "Print"
 msgstr "Imprimir"
 
 #: src/Project.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "There is very little free disk space left on %s\n"
 "Please select a bigger temporary directory location in\n"
 "Directories Preferences."
 msgstr ""
-"Hay muy poco espacio disponible en este disco.\n"
-"Seleccione otra carpeta temporal en la ventana Preferencias."
+"Hay muy poco espacio disponible en %s.\n"
+"Seleccione otra carpeta temporal más grande en\n"
+" Preferencias."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3948,37 +3973,38 @@ msgid "[Project %02i] "
 msgstr "[Project %02i] "
 
 #: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Failed to open the project's database"
-msgstr "No se ha podido establecer el nombre de los valores predefinidos"
+msgstr "No se ha podido abrir la base de datos del proyecto"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to discard connection"
-msgstr "No se pudo encontrar el códec"
+msgstr "No se ha podido descartar la conexión"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to restore connection"
-msgstr "No se ha podido recuperar el contenido de los valores predefinidos"
+msgstr "No se ha podido restablecer la conexión"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to execute a project file command:\n"
 "\n"
 "%s"
 msgstr ""
-"No se ha podido registrar:\n"
+"No se ha podido ejecutar un archivo de comando del proyecto:\n"
+"\n"
 "%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to prepare project file command:\n"
 "\n"
 "%s"
-msgstr "No se puede leer el archivo de valores predefinidos."
+msgstr ""
+"No se ha podido preparar un archivo de comando del proyecto:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3988,11 +4014,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"No se ha podido recuperar datos del archivo de proyecto.\n"
+"No se ejecutó el comando:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "This is not an Audacity project file"
-msgstr "Guardado de un proyecto de Audacity"
+msgstr "Esto no es un archivo de proyecto de Audacity"
 
 #: src/ProjectFileIO.cpp
 msgid ""
@@ -4000,43 +4029,42 @@ msgid ""
 "\n"
 "You will need to upgrade to process it"
 msgstr ""
+"Este proyecto ha sido creado con una versión más moderna de Audacity:\n"
+"\n"
+"Debe actualizar a una nueva versión para procesarlo"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to initialize the project file"
-msgstr "No se puede inicializar el flujo MP3"
+msgstr "No se puede inicializar el archivo de proyecto"
 
 #: src/ProjectFileIO.cpp
 msgid "Cleanup of orphan blocks failed"
-msgstr ""
+msgstr "No se ha podido realizar la limpieza de bloques huérfanos"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Total orphan blocks deleted %d"
-msgstr "Bloque huérfano: '%s'"
+msgstr "Bloques huérfanos eliminados %d"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to rollback transaction during import"
-msgstr ""
+msgstr "No se ha podido completar una transacción durante la importación"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to attach destination database"
-msgstr "No se puede establecer el flujo de datos como pausado."
+msgstr "No se ha podido adjuntar la base de datos de destino"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
-msgstr ""
+msgstr "No se ha podido cambiar al modo de diario rápido"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to copy tags"
-msgstr "No se ha podido eliminar %s"
+msgstr "No se ha podido copiar etiquetas"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Failed to bind SQL parameter"
-msgstr "No se pudo encontrar el códec"
+msgstr "No se ha podido enlazar con el parámetro SQL"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4046,34 +4074,38 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"No se ha podido actualizar el archivo de proyecto.\n"
+"No se ha ejecutado el siguiente comando:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Destination project could not be detached"
-msgstr ""
+msgstr "No se ha podido desconectar el proyecto de destino"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Copying Project"
-msgstr "Error al abrir el proyecto"
+msgstr "Copiando proyecto"
 
 #: src/ProjectFileIO.cpp
 msgid "Error Writing to File"
 msgstr "Error al escribir el archivo"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
 "Audacity no ha podido escribir en el archivo %s.\n"
-"Tal vez el disco esté lleno o no esté protegido contra escritura."
+"Tal vez el disco esté lleno o no esté protegido contra escritura.\n"
+"Haga clic en el botón de ayuda para obtener recomendaciones sobre cómo"
+" liberar espacio."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Compacting project"
-msgstr "Al guardar &proyectos"
+msgstr "Compactando proyecto"
 
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
@@ -4105,27 +4137,29 @@ msgstr "No se puede abrir el archivo de proyecto"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+"No se ha podido eliminar la información de autoguardado del archivo de"
+" proyeto."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to decode project document"
-msgstr "No se puede agregar el decodificador al canal"
+msgstr "No se ha podido decodificar el documento de proyecto"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to parse project information."
-msgstr "No se puede leer el archivo de valores predefinidos."
+msgstr "No se ha podido analizar la información del proyecto."
 
 #: src/ProjectFileIO.cpp
 msgid ""
 "The project's database failed to reopen, possibly because of limited space "
 "on the storage device."
 msgstr ""
+"No se ha podido reabrir la base de datos del proyecto, posiblemente por un"
+" problema "
+"de espacio en el dispositivo de almacenamiento."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Saving project"
-msgstr "Al guardar &proyectos"
+msgstr "Guardando proyecto"
 
 #: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "Error Saving Project"
@@ -4133,7 +4167,7 @@ msgstr "Error al guardar el proyecto"
 
 #: src/ProjectFileIO.cpp
 msgid "Syncing"
-msgstr ""
+msgstr "Sincronizando"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4143,6 +4177,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"No se ha podido abrir el proyecto, posiblemente por un problema de espacio\n"
+"en el dispositivo de almacenamiento.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4152,23 +4190,26 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"No se ha podido eliminar la información de autoguardado, posiblemente por un"
+" problema de espacio\n"
+"en el dispositivo de almacenamiento.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Backing up project"
-msgstr "Al guardar un proy&ecto vacío"
+msgstr "Creando copia de seguridad del proyecto"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "This project was not saved properly the last time Audacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Algunos proyectos no se guardaron correctamente la última vez que se ejecutó "
-"Audacity.\n"
-"Afortunadamente, los siguientes proyectos se pueden recuperar "
-"automáticamente:"
+"Este proyecto no se ha guardado correctamente la última vez que se ejecutó"
+" Audacity.\n"
+"\n"
+"Se ha recuperado desde la ultima copia automática."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4177,15 +4218,19 @@ msgid ""
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
 msgstr ""
+"Este proyecto no se ha guardado correctamente la última vez que se ejecutó"
+" Audacity.\n"
+"\n"
+"Se ha recuperado desde la ultima copia automática, pero debe guardarlo\n"
+"para preservar su contenido."
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Project Recovered"
-msgstr "El proyecto fue recuperado"
+msgstr "Proyecto recuperado"
 
 #: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
 msgid "Projects cannot be saved to FAT drives."
-msgstr ""
+msgstr "No se puede guardar los proyectos en unidades FAT."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4213,9 +4258,8 @@ msgid "Warning - Empty Project"
 msgstr "Advertencia: Proyecto vacío"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Insufficient Disk Space"
-msgstr "Espacio de disco"
+msgstr "Espacio de disco insuficiente"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4223,12 +4267,19 @@ msgid ""
 "\n"
 "Please select a different disk with more free space."
 msgstr ""
+"El tamaño del proyecto es superior al espacio disponible en el disco de"
+" destino.\n"
+"\n"
+"Seleccione un disco diferente con más espacio libre."
 
 #: src/ProjectFileManager.cpp
 msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
 msgstr ""
+"El tamaño del proyecto es superior al límite de 4GB permitido por los"
+" sistemas "
+"de archivos formateados mediante FAT32."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4263,7 +4314,7 @@ msgstr ""
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "   Do you want to overwrite the project:\n"
 "\"%s\"?\n"
@@ -4272,12 +4323,12 @@ msgid ""
 "\"%s\"\n"
 "   will be irreversibly overwritten."
 msgstr ""
-"¿Quiere sobrescribir el proyecto:\n"
+"  ¿Quiere sobrescribir el proyecto:\n"
 "\"%s\"?\n"
 "\n"
-"Si selecciona \"Sí\" el proyecto\n"
+"  Si selecciona \"Sí\" el proyecto\n"
 "\"%s\"\n"
-"se sobrescribirá de forma irreversible."
+"  se sobrescribirá de forma irreversible."
 
 #. i18n-hint: Heading: A warning that a project is about to be overwritten.
 #: src/ProjectFileManager.cpp
@@ -4285,20 +4336,19 @@ msgid "Overwrite Project Warning"
 msgstr "Advertencia al sobrescribir proyecto"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid ""
 "The project was not saved because the selected project is open in another "
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"El proyecto no fue guardado porque el proyecto seleccionado está abierto en "
+"El proyecto no se ha guardado porque ya está abierto en "
 "otra ventana.\n"
 "Inténtelo de nuevo y escoja un nombre diferente."
 
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%sSave Copy of Project \"%s\" As..."
-msgstr "%sGuardar una copia sin pérdida del proyecto \"%s\" como..."
+msgstr "%sGuardar una copia del proyecto \"%s\" como..."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4330,6 +4380,8 @@ msgid ""
 "Project resides on FAT formatted drive.\n"
 "Copy it to another drive to open it."
 msgstr ""
+"El proyecto se encuentra en una unidad formateada con FAT.\n"
+"Copiar a otra unidad para abrirlo."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4387,9 +4439,8 @@ msgid "Import"
 msgstr "Importar"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Failed to import project"
-msgstr "No se pudo encontrar el códec"
+msgstr "No se ha podido importar el proyecto"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Importing"
@@ -4397,12 +4448,11 @@ msgstr "Error al importar"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr ""
+msgstr "El formato AUP3 no se puede importar. Utilice Archivo > Abrir"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Compact Project"
-msgstr "Establecer proyecto"
+msgstr "Compactar proyecto"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -4417,24 +4467,34 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
+"Compactar este proyecto liberará espacio en disco eliminando  partes no"
+" usadas "
+"dentro del archivo.\n"
+"\n"
+"Hay %s de espacio libre en disco y este proyecto está utilizando %s.\n"
+"\n"
+"Si continua las opciones de Deshacer/Rehacer historial y el contenido del"
+" portapapeles "
+"se descartarán y recuperará aproximadamente %s de espacio en disco.\n"
+"\n"
+"¿Quiere continuar?"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Compacted project file"
-msgstr "No se puede abrir el archivo de proyecto"
+msgstr "Archivo de proyecto compactado"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact"
-msgstr ""
+msgstr "Compactar"
 
 #: src/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "Nuevo proyecto creado"
 
 #: src/ProjectHistory.cpp
-#, fuzzy
 msgid "Automatic database backup failed."
-msgstr "Grabación automática habilitada:"
+msgstr ""
+"No se ha podido realizar la copia de seguridad automática de la base de datos."
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4968,15 +5028,17 @@ msgid "Error Saving Tags File"
 msgstr "Error al guardar el archivo de etiquetas"
 
 #: src/TempDirectory.cpp
-#, fuzzy
 msgid "Unsuitable"
-msgstr "Módulo no adecuado"
+msgstr "No adecuado"
 
 #: src/TempDirectory.cpp
 msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
 msgstr ""
+"La carpeta de archivos temporales se encuentra en una unidad formateada con"
+" FAT.\n"
+"Restableciendo a la ubicación predeterminada."
 
 #: src/TempDirectory.cpp
 #, c-format
@@ -4985,6 +5047,10 @@ msgid ""
 "\n"
 "For tips on suitable drives, click the help button."
 msgstr ""
+"%s\n"
+"\n"
+"Haga clic en el botón de ayuda para obtener recomendaciones sobre unidades"
+" apropiadas."
 
 #: src/Theme.cpp
 #, c-format
@@ -5592,7 +5658,7 @@ msgstr "Desplazar pista hacia abajo"
 
 #: src/UndoManager.cpp
 msgid "Discarding undo/redo history"
-msgstr ""
+msgstr "Descartando Deshacer/Rehacer historial"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -5890,9 +5956,8 @@ msgid "Gets track values as JSON."
 msgstr "Obtiene los valores de la pista como JSON."
 
 #: src/commands/HelpCommand.cpp
-#, fuzzy
 msgid "Comment"
-msgstr "Comentarios"
+msgstr "Comentario"
 
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
@@ -5900,7 +5965,7 @@ msgstr "Comando:"
 
 #: src/commands/HelpCommand.cpp
 msgid "_"
-msgstr ""
+msgstr "_"
 
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
@@ -5908,7 +5973,7 @@ msgstr "Proporciona ayuda sobre un comando."
 
 #: src/commands/HelpCommand.h
 msgid "For comments in a macro."
-msgstr ""
+msgstr "Para comentarios en una macro."
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -5974,19 +6039,16 @@ msgid "Save Project2"
 msgstr "Guardar proyecto2"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Save Copy"
-msgstr "Copiar etiqueta"
+msgstr "Guardar copia"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Save Log"
-msgstr "Guardado "
+msgstr "Guardar registro"
 
 #: src/commands/OpenSaveCommands.cpp
-#, fuzzy
 msgid "Clear Log"
-msgstr "Limpiar"
+msgstr "Limpiar registro"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5997,17 +6059,16 @@ msgid "Saves a project."
 msgstr "Guardar un proyecto."
 
 #: src/commands/OpenSaveCommands.h
-#, fuzzy
 msgid "Saves a copy of current project."
-msgstr "Guardar un proyecto."
+msgstr "Guarda una copia del proyecto actual."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Saves the log contents."
-msgstr ""
+msgstr "Guarda el contenido del registro."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Clears the log contents."
-msgstr ""
+msgstr "Limpia el contenido del registro."
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference"
@@ -9353,19 +9414,16 @@ msgid "Converts stereo tracks to mono"
 msgstr "Convierte pistas estéreo a mono"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Resampling left channel"
-msgstr "No se ha podido remuestrear."
+msgstr "Remuestreando el canal izquierdo"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Resampling right channel"
-msgstr "Canal derecho"
+msgstr "Remuestreando el canal derecho"
 
 #: src/effects/StereoToMono.cpp
-#, fuzzy
 msgid "Mixing down to mono"
-msgstr "Al mezclar varias pistas a &mono durante la exportación"
+msgstr "Mezclando a mono"
 
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
@@ -10395,11 +10453,13 @@ msgid "Mixer Panel"
 msgstr "Panel mezclador"
 
 #: src/export/Export.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to export.\n"
 "Error %s"
-msgstr "No se puede exportar"
+msgstr ""
+"No se puede exportar.\n"
+"Error %s"
 
 #: src/export/ExportCL.cpp
 msgid "Show output"
@@ -11741,7 +11801,7 @@ msgid ""
 msgstr ""
 "\"%s\" no existe.\n"
 "\n"
-"¿Desea crearlo?"
+"¿Desea que se cree?"
 
 #: src/export/ExportMultiple.cpp
 msgid "Continue to export remaining files?"
@@ -11749,7 +11809,7 @@ msgstr "¿Continuar con la exportación de los archivos restantes?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name.\n"
 "You cannot use any of these characters:\n"
@@ -11758,21 +11818,25 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"La etiqueta \"%s\" no es un nombre de archivo permitido. No puede utilizar: "
+"El nombre etiqueta o pista \"%s\" no es un valor permitido para un archivo.\n"
+"No puede utilizar estos caracteres:\n"
+"\n"
 "%s\n"
-"Utilice..."
+"\n"
+"Utilice en su lugar:"
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 "\n"
 "Suggested replacement:"
 msgstr ""
-"La etiqueta o pista \"%s\" no es un nombre de archivo permitido. No puede "
-"utilizar %s.\n"
-"Utilice..."
+"El nombre etiqueta o pista \"%s\" no es un valor permitido para un archivo."
+" No puede utilizar %s.\n"
+"\n"
+"Utilice en su lugar:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
@@ -11902,16 +11966,15 @@ msgstr ""
 "editarlo pulsando en Archivo > Importar > MIDI."
 
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\"%s\" \n"
 "is a not an audio file. \n"
 "Audacity cannot open this type of file."
 msgstr ""
 "\"%s\" \n"
-"es un archivo MIDI, no un archivo de audio. \n"
-"Audacity no puede abrir este tipo de archivo para escucharlo, pero puede \n"
-"editarlo pulsando en Archivo > Importar > MIDI."
+"no es un archivo de audio. \n"
+"Audacity no puede abrir este tipo de archivo."
 
 #: src/import/Import.cpp
 msgid "Select stream(s) to import"
@@ -12093,21 +12156,24 @@ msgstr "No se ha encontrado el archivo \"%s\"."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
 "Audacity no reconoce el tipo de archivo '%s'.\n"
-"Intente instalar FFmpeg. Si es audio sin compresión, intente importarlo "
-"usando Archivo > Importar > Datos en bruto (RAW)."
+"\n"
+"%sPara sin compresión, intente usando Archivo > Importar > Datos en bruto"
+" (RAW)."
 
 #: src/import/Import.cpp
 msgid ""
 "Try installing FFmpeg.\n"
 "\n"
 msgstr ""
+"Intente instalando FFmpeg.\n"
+"\n"
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -12130,23 +12196,22 @@ msgstr ""
 
 #: src/import/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
-msgstr ""
+msgstr "Archivos de proyecto AUP (*.aup)"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Couldn't import the project:\n"
 "\n"
 "%s"
 msgstr ""
-"No se ha podido importar los valores predeterminados \"%s\"\n"
+"No se ha podido importar el proyecto:\n"
 "\n"
 "%s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Import Project"
-msgstr "Importar valores predefinidos"
+msgstr "Importar proyecto"
 
 #: src/import/ImportAUP.cpp
 msgid ""
@@ -12156,44 +12221,50 @@ msgid ""
 "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
 "you may import it with this version of Audacity."
 msgstr ""
+"Este proyecto se guardó con la versión 1.0 o anterior de Audacity. El formato"
+" ha\n"
+"cambiado por lo que esta versión de Audacity no puede importar el proyecto.\n"
+"\n"
+"Puede resolverlo utilizando una versión de Audacity anterior a la v.3.0.0"
+" para \n"
+"actualizar el proyecto y a continuación importarlo a la esta versión."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Internal error in importer...tag not recognized"
-msgstr "El proceso de alineado generó un error interno"
+msgstr "Error interno al importar...no se reconoce la etiqueta"
 
 #: src/import/ImportAUP.cpp
 #, c-format
 msgid "Invalid project '%s' attribute."
-msgstr ""
+msgstr "Atributo de proyecto '%s' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'vpos' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'h' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'zoom' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'sel0' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'sel1' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'selLow' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
-msgstr ""
+msgstr "Atributo de proyecto 'selHigh' no válido."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12205,35 +12276,38 @@ msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
 msgstr ""
+"El proyecto contiene pistas MIDI, pero esta versión de Audacity no cuenta "
+"con compatibilidad MIDI, por lo que se omite la pista."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Project Import"
-msgstr "Inicio del proyecto"
+msgstr "Importar proyecto"
 
 #: src/import/ImportAUP.cpp
 msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
 msgstr ""
+"El proyecto activo ya cuenta con una pista de tiempo, pero se ha encontrado"
+" otra "
+"en el proyecto que se está importando, por lo que se omite la pista de tiempo"
+" importada."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'maxsamples' attribute."
-msgstr "Frecuencia de muestreo inválida"
+msgstr "Atributo de secuencia 'maxsamples' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
-msgstr ""
+msgstr "Atributo de secuencia 'sampleformat' no válido."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'numsamples' attribute."
-msgstr "Frecuencia de muestreo inválida"
+msgstr "Atributo de secuencia 'numsamples' no válido."
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
-msgstr ""
+msgstr "No se puede analizar el atributo de forma de onda 'start'"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12242,14 +12316,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"No se encuentra el archivo de proyecto %s\n"
+"\n"
+"Se insertan silencios en su lugar."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
-msgstr ""
+msgstr "El atributo simpleblockfile 'len' no se encuentra o es inválido."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
-msgstr ""
+msgstr "El atributo silentblockfile 'len' no se encuentra o es inválido."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12258,14 +12335,19 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"No se encuentra el archivo de alias %s\n"
+"\n"
+"Se insertan silencios en su lugar."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
 msgstr ""
+"El atributo pcmaliasblockfile 'aliasstart' no se encuentra o es inválido."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
 msgstr ""
+"El atributo pcmaliasblockfile 'aliaslen' no se encuentra o es inválido."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12274,21 +12356,24 @@ msgid ""
 "\n"
 "Inserting silence."
 msgstr ""
+"Error al procesar %s\n"
+"\n"
+"Se insertan silencios."
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open %s"
-msgstr "No se ha podido eliminar %s"
+msgstr "no se puede abrir %s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to seek to position %lld in %s"
-msgstr "No se ha podido establecer el nombre de los valores predefinidos"
+msgstr "No se ha podido buscar la posición %lld en %s"
 
 #: src/import/ImportAUP.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to read %lld samples from %s"
-msgstr "No se puede leer los valores predefinidos de \"%s\""
+msgstr "No se ha podido leer %lld muestras de %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -12407,6 +12492,10 @@ msgid ""
 "This is likely caused by a malformed MP3.\n"
 "\n"
 msgstr ""
+"No se ha podido importar\n"
+"\n"
+"Esto se suele deber a un MP3 mal formado.\n"
+"\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12730,7 +12819,7 @@ msgstr "&Importar"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
-msgstr ""
+msgstr "Tamaño de datos incorrecto. No se ha podido importar el audio"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12797,11 +12886,11 @@ msgstr[1] "%d de %d bloques %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
-msgstr "Bloques con tiempo cambiado a la derecha"
+msgstr "Bloques con cambio de tiempo a la derecha"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the left"
-msgstr "Bloques con tiempo cambiado a la izquierda"
+msgstr "Bloques con cambio de tiempo a la izquierda"
 
 #: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
 #: src/tracks/ui/TimeShiftHandle.cpp
@@ -12857,14 +12946,12 @@ msgid "Cursor to Next Clip Boundary"
 msgstr "Cursor al límite del bloque siguiente"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Time Shift &Left"
-msgstr "Herramienta de cambio de tiempo"
+msgstr "Cambio de tiempo a la &izquierda"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Time Shift &Right"
-msgstr "Herramienta de cambio de tiempo"
+msgstr "Cambio de tiempo a la &derecha"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -13228,9 +13315,8 @@ msgid "Save Project &As..."
 msgstr "Guardar &proyecto como..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Backup Project..."
-msgstr "Abrir proyecto..."
+msgstr "&Copia de seguridad del proyecto..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -13300,7 +13386,7 @@ msgstr "Sa&lir"
 
 #: src/menus/FileMenus.cpp
 msgid "Hidden File Menu"
-msgstr ""
+msgstr "Menú archivo oculto"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as FLAC"
@@ -13671,9 +13757,9 @@ msgid "Unknown"
 msgstr "Desconocido"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "&Repeat %s"
-msgstr "Repetir %s"
+msgstr "&Repetir %s"
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -13689,9 +13775,8 @@ msgid "Add / Remove Plug-ins..."
 msgstr "Agregar / eliminar complementos..."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Generator"
-msgstr "Repetir el último efecto"
+msgstr "Repetir el último Generar"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -13706,18 +13791,16 @@ msgid "&Analyze"
 msgstr "&Analizar"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Analyzer"
-msgstr "Repetir el último efecto"
+msgstr "Repetir el último Analizar"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
 msgstr "&Herramientas"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Repeat Last Tool"
-msgstr "Repetir el último efecto"
+msgstr "Repetir la última Herramienta"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
@@ -14831,12 +14914,10 @@ msgid "&Decrease Playback Speed"
 msgstr "&Reducir la velocidad de reproducción"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Move to Pre&vious Label"
 msgstr "Des&plazar a la etiqueta anterior"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Move to Ne&xt Label"
 msgstr "Desplazar a la etiqueta siguie&nte"
 
@@ -15056,53 +15137,49 @@ msgid "Preferences for Directories"
 msgstr "Preferencias de carpetas"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Default directories"
-msgstr "Carpetas"
+msgstr "Carpetas predeterminadas"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
 msgstr ""
+"Deje el campo vacío para ir a la última carpeta utilizada para esa"
+" operación.\n"
+"Rellene el campo para ir siempre a esa carpeta para esa operación."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "O&pen:"
-msgstr ""
+msgstr "&Abrir:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Browse..."
-msgstr "Explorar..."
+msgstr "&Explorar..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "S&ave:"
-msgstr ""
+msgstr "Gu&ardar:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "B&rowse..."
-msgstr "Explorar..."
+msgstr "Explo&rar..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Import:"
-msgstr "&Importar"
+msgstr "&Importar:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Br&owse..."
-msgstr "Explorar..."
+msgstr "Expl&orar..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Export:"
-msgstr "&Exportar"
+msgstr "&Exportar:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Bro&wse..."
-msgstr "Explorar..."
+msgstr "E&xplorar..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -15113,24 +15190,20 @@ msgid "&Location:"
 msgstr "&Ubicación:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Carpeta de archivos temporales"
+msgstr "La carpeta de archivos temporales no puede estar en una unidad FAT."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Brow&se..."
-msgstr "Explorar..."
+msgstr "Ex&plorar..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Free Space:"
-msgstr "Espacio libre:"
+msgstr "Es&pacio libre:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Free Space"
-msgstr "Espacio libre:"
+msgstr "Espacio libre"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15141,9 +15214,8 @@ msgid "unavailable - above location doesn't exist"
 msgstr "no disponible - la ubicación indicada no existe"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Choose a location"
-msgstr "Seleccione una carpeta para guardar los archivos"
+msgstr "Seleccione una ubicacóin"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15493,14 +15565,12 @@ msgid "&Use Advanced Mixing Options"
 msgstr "&Utlizar opciones de mezcla avanzadas"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "S&tandard"
-msgstr "Estándar"
+msgstr "Es&tándar"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "E&xtended (with frequency ranges)"
-msgstr "Selecciona un rango de frecuencia."
+msgstr "E&xtendida (con rangos de frecuencia)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
@@ -15524,9 +15594,8 @@ msgid "&Ignore blank space at the beginning"
 msgstr "&Ignorar espacio vacío en el inicio"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Exported Label Style:"
-msgstr "Exportar etiquetas como:"
+msgstr "Estilo de etiquetas exportadas:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -16892,11 +16961,11 @@ msgstr "Pausa"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Skip to Start"
-msgstr "Ir al inicio"
+msgstr "Saltar al inicio"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Skip to End"
-msgstr "Ir al final"
+msgstr "Saltar al final"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Loop Play"
@@ -17591,19 +17660,18 @@ msgid "&Format"
 msgstr "&Formato"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "Changing sample format"
-msgstr "Cambiando ritmo"
+msgstr "Cambiando formato de muestra"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing...   0%%"
-msgstr "Procesando: %s"
+msgstr "Procesando...   0%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Processing...   %i%%"
-msgstr "Procesando: %s"
+msgstr "Procesando...   %i%%"
 
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
@@ -18071,9 +18139,8 @@ msgid "Click and drag to move a track in time"
 msgstr "Haga clic y arrastre para desplazar una pista en el tiempo"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, fuzzy
 msgid "Could not shift between tracks"
-msgstr "Mover bloque a izquierda/derecha o entre pistas"
+msgstr "No se ha podido desplazar entre pistas"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
@@ -18608,9 +18675,8 @@ msgstr "01000,01000 cuadros|75"
 #. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-#, fuzzy
 msgid "010,01000>0100 Hz"
-msgstr "0100000>0100 Hz"
+msgstr "010,01000>0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
@@ -18821,9 +18887,8 @@ msgid "Could not load file: \"%s\""
 msgstr "No se ha podido abrir el archivo: \"%s\""
 
 #: src/xml/XMLFileReader.cpp
-#, fuzzy
 msgid "Could not parse XML"
-msgstr "No se ha podido abrir el archivo"
+msgstr "No se ha podido analizar el código XML"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
@@ -19082,7 +19147,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aLos valores porcentuales no pueden superar el 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -19090,7 +19155,7 @@ msgid ""
 msgstr ""
 "~aLos valores de dB no pueden ser mayores que +100 dB.~%~%~\n"
 "                                 Consejo: 6 dB doblan la amplitud~%~\n"
-"                                 \t-6 dB dividen por la mitad la amplitud."
+"                                 -6 dB dividen por la mitad la amplitud."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -19477,88 +19542,75 @@ msgstr ""
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Label Sounds"
-msgstr "Unir etiqueta"
+msgstr "Etiquetar sonidos"
 
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-#, fuzzy
 msgid ""
 "Released under terms of the GNU General Public License version 2 or later."
 msgstr ""
-"Publicado bajo los términos de la Licencia Pública General de GNU versión 2"
+"Publicado bajo los términos de la Licencia Pública General de GNU versión 2 o"
+" posterior."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Threshold level (dB)"
-msgstr "Umbral %d dB"
+msgstr "Umbral (dB)"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Threshold measurement"
-msgstr "Porcentaje de umbral"
+msgstr "Medición de umbral"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Peak level"
-msgstr "Nivel wet"
+msgstr "Nivel de pico"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Average level"
-msgstr "Intermedio"
+msgstr "Nivel medio"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "RMS level"
-msgstr "Nivel wet"
+msgstr "Nivel RMS"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Minimum silence duration"
-msgstr "Duración mínima del silencio:"
+msgstr "Duración mínima del silencio "
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Minimum label interval"
-msgstr "Intervalo de etiquetas"
+msgstr "Etiqueta de intervalo mínimo"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Label type"
-msgstr "Texto de etiqueta"
+msgstr "Tipo de etiqueta"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Point before sound"
-msgstr "Estéreo unido"
+msgstr "Punto antes del sonido"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Point after sound"
-msgstr "Estéreo unido"
+msgstr "Punto después del sonido"
 
 #: plug-ins/label-sounds.ny
 msgid "Region around sounds"
-msgstr ""
+msgstr "Región alrededor de los sonidos"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Region between sounds"
-msgstr "~aLongitud de la region = ~a segundos."
+msgstr "Región entre los sonidos"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy
 msgid "Maximum leading silence"
-msgstr "Buscando silencio..."
+msgstr "Silencio principal máximo"
 
 #: plug-ins/label-sounds.ny
 msgid "Maximum trailing silence"
-msgstr ""
+msgstr "Silencio posterior máximo"
 
 #: plug-ins/label-sounds.ny
 msgid "Sound ##1"
-msgstr ""
+msgstr "Sonido ##1"
 
 #. i18n-hint: hours minutes and seconds. Do not translate "~a".
 #: plug-ins/label-sounds.ny
@@ -19569,21 +19621,23 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 msgid "Too many silences detected.nOnly the first 10000 labels added."
 msgstr ""
+"Se han detectado demasiados silencios.nSólo se añaden las primeras 10000"
+" etiquetas."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Error.~%Selection must be less than ~a."
-msgstr "La selección debe ser mayor que %d muestras."
+msgstr "Error. ~% La selección debe ser menor que ~a."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
 "duration'."
 msgstr ""
-"No se han encontrado sonidos. Intente reducir el ~%nivel y reducir al mínimo "
-"la duración del silencio."
+"No se han encontrado sonidos. ~%  Intente bajar  el 'Umbral' o reducir el"
+" valor 'Duración mínima del silencio'."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -19591,6 +19645,9 @@ msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
 msgstr ""
+"El etiquetado de regiones entre silencios requiere ~%dos sonidos al menos.~"
+"%Sólo "
+"se ha detectado uno."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -19670,9 +19727,8 @@ msgid "Gate"
 msgstr "Puerta"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Analyze Noise Level"
-msgstr "Análisis del nivel de ruido"
+msgstr "Analizar nivel de ruido"
 
 #: plug-ins/noisegate.ny
 msgid "Stereo Linking"
@@ -19699,14 +19755,12 @@ msgid "Level reduction (dB)"
 msgstr "Reducción de ruido (dB)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Attack (ms)"
-msgstr "Ataque/decaimiento (ms)"
+msgstr "Ataque (ms)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy
 msgid "Decay (ms)"
-msgstr "Ataque/decaimiento (ms)"
+msgstr "Decaimiento (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19728,15 +19782,19 @@ msgid ""
 "Selection too long.\n"
 "Maximum length is ~a."
 msgstr ""
+"Error.\n"
+"Selección demasiado larga.\n"
+"La longitud máxima es ~a."
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.\n"
 "Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
-"~%audio seleccionado no es suficiente.\n"
+"Error.\n"
+"El audio seleccionado no es suficiente.\n"
 "Realice una selección mayor que ~a ms."
 
 #: plug-ins/noisegate.ny
@@ -19750,9 +19808,9 @@ msgstr ""
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "~ah ~am"
-msgstr "~ah ~am ~as"
+msgstr "~ah ~am"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
