@@ -48,7 +48,7 @@ the previous value so re-reading will not re-trigger.)
 #include "cext.h"
 #include "assert.h"
 
-#define TRIGGERDBG 1
+#define TRIGGERDBG 0
 #define D if (TRIGGERDBG) 
 
 /* Note: this structure is identical to an add_susp structure up

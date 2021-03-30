@@ -499,7 +499,8 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    {
       SetDBError(
          XO("Failed to execute a project file command:\n\n%s").Format(query),
-         Verbatim(errmsg)
+         Verbatim(errmsg),
+         rc
       );
    }
    if (errmsg)
@@ -596,6 +597,17 @@ bool ProjectFileIO::CheckVersion()
    wxString result;
    if (!GetValue("SELECT Count(*) FROM sqlite_master WHERE type='table';", result))
    {
+      // Bug 2718 workaround for a better error message:
+      // If at this point we get SQLITE_CANTOPEN, then the directory is read-only
+      if (GetLastErrorCode() == SQLITE_CANTOPEN)
+      {
+          SetError(
+              /* i18n-hint: An error message. */
+              XO("Project is in a read only directory\n(Unable to create the required temporary files)"),
+              GetLibraryError()
+          );
+      }
+
       return false;
    }
 
@@ -2170,30 +2182,35 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
    return -1;
 }
 
-const TranslatableString &ProjectFileIO::GetLastError()
+const TranslatableString &ProjectFileIO::GetLastError() const
 {
    return mpErrors->mLastError;
 }
 
-const TranslatableString &ProjectFileIO::GetLibraryError()
+const TranslatableString &ProjectFileIO::GetLibraryError() const
 {
    return mpErrors->mLibraryError;
 }
 
+int ProjectFileIO::GetLastErrorCode() const
+{
+    return mpErrors->mErrorCode;
+}
+
 void ProjectFileIO::SetError(
-   const TranslatableString &msg, const TranslatableString &libraryError )
+    const TranslatableString& msg, const TranslatableString& libraryError, int errorCode)
 {
    auto &currConn = CurrConn();
    if (currConn)
-      currConn->SetError(msg, libraryError);
+      currConn->SetError(msg, libraryError, errorCode);
 }
 
 void ProjectFileIO::SetDBError(
-   const TranslatableString &msg, const TranslatableString &libraryError)
+   const TranslatableString &msg, const TranslatableString &libraryError, int errorCode)
 {
    auto &currConn = CurrConn();
    if (currConn)
-      currConn->SetDBError(msg, libraryError);
+      currConn->SetDBError(msg, libraryError, errorCode);
 }
 
 void ProjectFileIO::SetBypass()

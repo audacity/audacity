@@ -668,7 +668,7 @@ loop
     (ny:error "SAMPLER" 2 '((SOUND) "modulation") modulation))
   (ny:assert-sample "SAMPLER" 3 "table" sample)
   (ny:typecheck (not (integerp npoints))
-    (ny:error "BUZZ" 3 '((INTEGER) "npoints") npoints))
+    (ny:error "SAMPLER" 3 '((INTEGER) "npoints") npoints))
   (let ((samp (car sample))
         (samp-pitch (cadr sample))
         (samp-loop-start (caddr sample))

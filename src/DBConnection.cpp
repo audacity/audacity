@@ -63,25 +63,37 @@ bool DBConnection::ShouldBypass()
 }
 
 void DBConnection::SetError(
-   const TranslatableString &msg, const TranslatableString &libraryError)
+   const TranslatableString &msg, const TranslatableString &libraryError, int errorCode)
 {
    wxLogMessage(wxT("Connection msg: %s"), msg.Debug());
+
    if (!libraryError.empty())
       wxLogMessage(wxT("Connection error: %s"), libraryError.Debug());
 
    mpErrors->mLastError = msg;
    mpErrors->mLibraryError = libraryError;
+   mpErrors->mErrorCode = errorCode;
 }
 
 void DBConnection::SetDBError(
-   const TranslatableString &msg, const TranslatableString &libraryError)
+   const TranslatableString &msg, const TranslatableString &libraryError, int errorCode)
 {
+    mpErrors->mErrorCode = errorCode < 0 ?
+        sqlite3_errcode(DB()) : errorCode;
+
    mpErrors->mLastError = msg;
-   wxLogMessage(wxT("SQLite error: %s"), mpErrors->mLastError.Debug());
+
+   wxLogMessage(
+       wxT("SQLite error (%d): %s"), 
+       mpErrors->mErrorCode, 
+       mpErrors->mLastError.Debug()
+   );
+
    printf("SQLite error: %s", mpErrors->mLastError.Debug().mb_str().data());
 
    mpErrors->mLibraryError = libraryError.empty()
       ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
+
    wxLogMessage(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
    printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
 }

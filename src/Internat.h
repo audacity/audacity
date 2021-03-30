@@ -116,6 +116,7 @@ public:
     * Normally, this is a decimal point ('.'), but e.g. Germany uses a
     * comma (',').*/
    static wxChar GetDecimalSeparator();
+   static void SetCeeNumberFormat();
 
    /** \brief Convert a string to a number.
     *

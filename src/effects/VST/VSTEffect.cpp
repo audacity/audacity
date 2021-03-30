@@ -402,7 +402,7 @@ PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    wxString vstpath = wxString::FromUTF8(getenv("VST_PATH"));
    if (!vstpath.empty())
    {
-      wxStringTokenizer tok(vstpath);
+      wxStringTokenizer tok(vstpath, wxPATH_SEP);
       while (tok.HasMoreTokens())
       {
          pathList.push_back(tok.GetNextToken());

@@ -1157,7 +1157,17 @@ bool ProgressDialog::Create(const TranslatableString & title,
 {
    Init();
 
-   wxWindow *parent = GetParentForModalDialog(NULL, 0);
+   wxWindow *parent = 
+#if defined(__WXMAC__)
+      // Bug 2703: In release builds, the progress dialog will fall behind
+      // the top level dialog (like effects dialogs). This does not happen
+      // in debug builds and I was not able to track down the reason. So,
+      // this is a workaround and should be reviewed as some point, like
+      // when upgrading to the next WX version.
+      GetParentForModalDialog(mHadFocus, 0);
+#else
+      GetParentForModalDialog(nullptr, 0);
+#endif
 
    // Set this boolean to indicate if we are using the "Elapsed" labels
    m_bShowElapsedTime = !(flags & pdlgHideElapsedTime);

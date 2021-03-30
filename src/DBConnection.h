@@ -31,6 +31,7 @@ struct DBConnectionErrors
 {
    TranslatableString mLastError;
    TranslatableString mLibraryError;
+   int mErrorCode { 0 };
 };
 
 class DBConnection
@@ -84,12 +85,14 @@ public:
    //! Just set stored errors
    void SetError(
       const TranslatableString &msg,
-      const TranslatableString &libraryError = {} );
+      const TranslatableString &libraryError = {}, 
+      int errorCode = {});
 
    //! Set stored errors and write to log; and default libraryError to what database library reports
    void SetDBError(
       const TranslatableString &msg,
-      const TranslatableString &libraryError = {} );
+      const TranslatableString& libraryError = {},
+      int errorCode = -1);
 
 private:
    bool ModeConfig(sqlite3 *db, const char *schema, const char *config);

@@ -588,7 +588,7 @@ LVAL xlc_snd_from_array(void)
 LVAL xlc_snd_samples(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = (long) getfixnum(xlgafixnum());
+    int64_t arg2 = getfixnum(xlgafixnum());
     LVAL result;
 
     xllastarg();
