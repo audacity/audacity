@@ -210,6 +210,11 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
          {"/GUI/RtlWorkaround",
           true});
 #endif
+#ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
+      S.TieCheckBox(XXO("Never use comma as decimal point"),
+                    {wxT("/Locale/CeeNumberFormat"),
+                     false});
+#endif
    }
    S.EndStatic();
 
@@ -316,6 +321,13 @@ wxString GUIPrefs::SetLang( const wxString & lang )
    // creating the wxLocale instance sets the application-wide locale.
 
    Internat::Init();
+
+#ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
+   bool forceCeeNumbers;
+   gPrefs->Read(wxT("/Locale/CeeNumberFormat"), &forceCeeNumbers, false);
+   if( forceCeeNumbers )
+      Internat::SetCeeNumberFormat();
+#endif
 
    // Unused strings that we want to be translated, even though
    // we're not using them yet...

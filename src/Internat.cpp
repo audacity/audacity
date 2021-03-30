@@ -124,6 +124,13 @@ void Internat::Init()
    }
 }
 
+void Internat::SetCeeNumberFormat()
+{
+   wxSetlocale( LC_NUMERIC, "C" );
+   mDecimalSeparator = '.';
+}
+
+
 wxChar Internat::GetDecimalSeparator()
 {
    return mDecimalSeparator;

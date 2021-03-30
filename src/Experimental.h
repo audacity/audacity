@@ -46,6 +46,10 @@
 // JKC (effect by Norm C, 02 Oct 2013)
 #define EXPERIMENTAL_SCIENCE_FILTERS
 
+// JKC an experiement to work around bug 2709
+// disabled.
+//define EXPERIMENTAL_CEE_NUMBERS_OPTION
+
 // LLL, 01 Oct 2013:
 // NEW key assignment view for preferences
 #define EXPERIMENTAL_KEY_VIEW
