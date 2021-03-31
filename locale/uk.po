@@ -9,17 +9,14 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-04 21:32+0200\n"
+"PO-Revision-Date: 2021-03-31 16:03+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Lokalize 20.11.70\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -605,9 +602,9 @@ msgstr "Сайт %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "%s, %s Команда %s, 1999–2020."
+msgstr "%s, %s Команда %s, 1999–2021."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -634,6 +631,7 @@ msgstr "Вимкнено"
 #: src/AboutDialog.cpp
 msgid "The Build"
 msgstr ""
+"Збірка"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -4002,12 +4000,15 @@ msgid "Failed to open the project's database"
 msgstr "Не вдалося відкрити базу даних проєкту"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "Не вдалося відкрити %s"
+msgstr ""
+"Не вдалося відкрити файл бази даних:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4058,6 +4059,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"Проєкт є каталогом, який призначено лише для читання\n"
+"(Неможливо створити необхідні тимчасові файли)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4081,6 +4084,8 @@ msgstr "Не вдалося ініціалізувати файл проєкту
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+"Не вдалося додати вкладену функцію ( не вдалося перевірити ідентифікатори "
+"блоків)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4088,6 +4093,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Проєкт призначено лише для читання\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4095,6 +4102,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Проєкт заблоковано\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4102,6 +4111,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Проєкт зайнято\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4109,6 +4120,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Проєкт пошкоджено\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4116,6 +4129,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Якісь проблеми із правами доступу\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4123,6 +4138,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Помилка введення-виведення на диску\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4130,12 +4147,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Немає прав доступу\n"
+"(Неможливо працювати із блоковими файлами)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "Не вдалося ініціалізувати файл проєкту"
+msgstr "Неможливо працювати із блоковими файлами"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -5005,9 +5023,8 @@ msgid "Don't show this again at start up"
 msgstr "Не показувати цього знову під час запуску"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "Вивчення даних файла проєкту"
+msgstr "З'єднання із файлом проєкту є порожнім"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -15628,6 +15645,7 @@ msgstr "Використовувати компонування зліва пр�
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
 msgstr ""
+"Ніколи не використовувати кому замість десяткової крапки"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
