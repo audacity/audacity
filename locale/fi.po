@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.0\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2021-02-04 22:21+0200\n"
 "Last-Translator: Sampo Hippeläinen\n"
 "Language-Team: fi\n"
@@ -597,8 +597,8 @@ msgstr "%s-verkkosivusto: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2020 %s-tiimi."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -607,7 +607,6 @@ msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2020 %s-tiimi."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Nimi %s on Dominic Mazzonin rekisteröity tavaramerkki."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Koosteen tiedot"
@@ -620,6 +619,69 @@ msgstr "Käytössä"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Ei käytössä"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "The Build"
+msgstr "Virheidenjäljitysversio"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Ohjelman koontipäivä:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Koontitunnus:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Virheenkorjausversio (taso %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Julkaisuversio (virheenkorjaustaso %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64-bittinen"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Koostetyyppi:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Kääntäjä:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Asennuksen etuliite:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Asetuskansio:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Ydinkirjastot"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Järjestelmien välinen graafinen käyttöliittymäkirjasto"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Äänen toisto ja nauhoitus"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Näytetaajuuden muuttaminen"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -662,23 +724,6 @@ msgstr "FFmpeg-tuonti/vienti"
 msgid "Import via GStreamer"
 msgstr "Tuo GStreamerin avulla"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Ydinkirjastot"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Näytetaajuuden muuttaminen"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Äänen toisto ja nauhoitus"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Järjestelmien välinen graafinen käyttöliittymäkirjasto"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Ominaisuudet"
@@ -702,46 +747,6 @@ msgstr "Sävelkorkeuden ja tempomuutoksen tuki"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Erityisen sävelkorkeuden ja tempomuutoksen tuki"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Ohjelman koontipäivä:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Koontitunnus:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Virheenkorjausversio (taso %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Julkaisuversio (virheenkorjaustaso %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64-bittinen"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Koostetyyppi:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Kääntäjä:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Asennuksen etuliite:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Asetuskansio:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1169,7 +1174,7 @@ msgstr ""
 "Audacityn pitää palauttaa se ensi kerralla."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Ohje"
@@ -1677,6 +1682,10 @@ msgstr "Käytä %s"
 msgid "Macros Palette"
 msgstr "Makropaletti"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Makrojen hallinta"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1800,6 +1809,11 @@ msgstr "Siirrä &ylös"
 msgid "Move &Down"
 msgstr "Siirrä &alas"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Tallenna"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1842,10 +1856,6 @@ msgstr "Nimet eivät saa sisältää '%c' ja '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Haluatko varmasti poistaa kohteen %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Makrojen hallinta"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2107,12 +2117,16 @@ msgstr ""
 "(Muuntyyppiset raidat eivät kelpaa.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Raportti luotu paikkaan:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacityn tukidata"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Tässä voi kestää joitain sekunteja"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Raportti luotu paikkaan:"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2122,10 +2136,6 @@ msgstr "Lisätään projektiin tarkistuspisteitä"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Lisätään kohteeseen %s tarkistuspisteitä"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Tässä voi kestää joitain sekunteja"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2575,6 +2585,10 @@ msgstr "Määritettyä tiedostonimeä ei voitu muuntaa Unicode-merkkien takia."
 msgid "Specify New Filename:"
 msgstr "Määritä uusi tiedostonimi:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Taajuusanalyysi"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektri"
@@ -2747,10 +2761,6 @@ msgstr "Taajuus (Hz)\tTaso (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Viive (sekuntia)\tTaajuus (Hz)\tTaso"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Taajuusanalyysi"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3228,6 +3238,11 @@ msgstr "Miksaa ja hahmonna"
 msgid "Mixing and rendering tracks"
 msgstr "Miksataan ja hahmonnetaan raitoja"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacityn miksauspöytä%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3287,11 +3302,6 @@ msgstr "Siirretty nopeussäädintä"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Siirretty panorointisäädintä"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacityn miksauspöytä%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3944,9 +3954,17 @@ msgstr "<nimetön>"
 msgid "[Project %02i] "
 msgstr "[Projekti %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Projektin tietokantaa ei voitu avata"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Ei voitu avata %s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -3991,6 +4009,13 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "Tämä ei ole Audacity-projektitiedosto"
@@ -4009,9 +4034,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Projektitiedostoa ei voitu alustaa"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Orpolohkojen siivous epäonnistui"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Projektitiedostoa ei voitu alustaa"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4029,10 +4110,6 @@ msgstr "Kohdetietokantaa ei voitu liittää"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr "Ei voitu vaihtaa nopeaan journalointiin"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Tunnisteita ei voitu kopioida"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -4806,6 +4883,10 @@ msgstr "Valitse sijainti tallennettaville kuvakaappauksille"
 msgid "Capture failed!"
 msgstr "Sieppaus epäonnistui!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Pitkä viesti"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4863,6 +4944,11 @@ msgstr "Tervetuloa käyttämään Audacityä!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Älä näytä tätä käynnistyksessä"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Tarkistetaan projektitiedoston tietoja"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5743,10 +5829,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Pikanäppäimet on poistettu"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Pitkä viesti"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10179,10 +10261,6 @@ msgstr "Syötä Nyquist-komento: "
 msgid "&Load"
 msgstr "&Lataa"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Tallenna"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -13190,10 +13268,6 @@ msgid "Allegro files"
 msgstr "Allegro-tiedostot"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Valitse mikä tahansa pakkaamaton äänitiedosto"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Vaarallinen nollaus..."
 
@@ -15427,6 +15501,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Käytä enimmäkseen vasemmalta oikealle -asetteluja RTL-kielissä"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Näytä aikajanan työkaluvihjeet"
 
@@ -15768,6 +15846,10 @@ msgstr "MIDI-laitteet"
 msgid "Preferences for MidiIO"
 msgstr "MidiIO:n asetukset"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Ei MIDI-rajapintoja"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15781,10 +15863,6 @@ msgstr "Käytössä: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "MIDI-syntetisaattori&viive (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Ei MIDI-rajapintoja"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20593,6 +20671,15 @@ msgstr "Ryöppytaajuus (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Virhe.~%Stereoraita vaaditaan."
 
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "Orpolohkojen siivous epäonnistui"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "Tunnisteita ei voitu kopioida"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Valitse mikä tahansa pakkaamaton äänitiedosto"
+
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -21099,9 +21186,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Virheidenjäljitysversio"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir komennossa DirManager::MakeBlockFilePath epäonnistui."

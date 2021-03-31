@@ -5,9 +5,9 @@
 # அருண் குமார் - Arun Kumar <thangam.arunx@gmail.com>, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -636,7 +636,7 @@ msgstr "Audacity யின் முதலாவது பாவனை"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -646,7 +646,6 @@ msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 "<b>Audacity&reg;</b> எனும் பெயரானது Dominic Mazzoni இன் பதியப்பட்ட அடையாளமாகும்"
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "உருவாக்கிய தகவல்"
@@ -660,90 +659,11 @@ msgstr "செயல்படுத்த பட்டுள்ளது"
 msgid "Disabled"
 msgstr "முடக்கி விடப்படுள்ளது"
 
-#: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "கோப்பு வகை உதவிகளுக்கு"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "MP3 இறக்குமதி"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Ogg Vorbis இறக்குமதியும் ஏற்றுமதியும்"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "ID3 ஒட்டு ஆதரவு"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "FLAC இறக்குமதியும் ஏற்றுமதியும்"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "MP2 ஏற்றுமதிக்கு"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "QuickTime ஊடாக இறக்குமதிச் செய்"
-
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
-msgid "FFmpeg Import/Export"
-msgstr "FFmpeg இறக்கு/ஏற்று"
-
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "Import via GStreamer"
-msgstr "GStreamer ஊடாக இறக்குமதிச் செய்"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "முக்கிய நூலகங்கள்"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "மாற்றலிற்க்கான மாதிரி வீதம்"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "ஒலி பின்னணிக்கும் பதிவிற்கும்"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "அம்சங்கள்"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Plug-in ஆதரவிற்கு"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "ஒலி அட்டை கலப்பு ஆதரவு"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "சுருதியையும் போக்கையும் மாற்றும் ஆதரவு"
-
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "உட்சக்கட்ட சுருதியையும் போக்கையும் மாற்றும் ஆதரவு"
+msgid "The Build"
+msgstr "வழுநீக்க கட்டல்"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -789,6 +709,91 @@ msgstr "நிறுவப்பட்டும் கோப்பகம்:"
 #, fuzzy
 msgid "Settings folder:"
 msgstr "அடைவு அமைவுகள்"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "முக்கிய நூலகங்கள்"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "ஒலி பின்னணிக்கும் பதிவிற்கும்"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "மாற்றலிற்க்கான மாதிரி வீதம்"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "கோப்பு வகை உதவிகளுக்கு"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "MP3 இறக்குமதி"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Ogg Vorbis இறக்குமதியும் ஏற்றுமதியும்"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "ID3 ஒட்டு ஆதரவு"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "FLAC இறக்குமதியும் ஏற்றுமதியும்"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "MP2 ஏற்றுமதிக்கு"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "QuickTime ஊடாக இறக்குமதிச் செய்"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "FFmpeg Import/Export"
+msgstr "FFmpeg இறக்கு/ஏற்று"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Import via GStreamer"
+msgstr "GStreamer ஊடாக இறக்குமதிச் செய்"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "அம்சங்கள்"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Plug-in ஆதரவிற்கு"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "ஒலி அட்டை கலப்பு ஆதரவு"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "சுருதியையும் போக்கையும் மாற்றும் ஆதரவு"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "உட்சக்கட்ட சுருதியையும் போக்கையும் மாற்றும் ஆதரவு"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1192,7 +1197,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "உதவி"
@@ -1723,6 +1728,11 @@ msgstr "%s ஐ நிறைவேற்றுக"
 msgid "Macros Palette"
 msgstr ""
 
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Manage Macros"
+msgstr "வளைவுகளை நிர்வாகி"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1860,6 +1870,12 @@ msgstr "&மேலே நகர்த்த"
 msgid "Move &Down"
 msgstr "கிழே நகர்த்&த"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "சேமிக்க"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1904,11 +1920,6 @@ msgstr "பெயர்கள் '%c' மற்றும் '%c' கொண்ட
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "நீங்கள் %s இனை அழிக்க உடன்படுகிறீர்களா?"
-
-#: src/BatchProcessDialog.cpp
-#, fuzzy
-msgid "Manage Macros"
-msgstr "வளைவுகளை நிர்வாகி"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2158,13 +2169,17 @@ msgid ""
 msgstr "இதை பயன்படுத்த கட்டாயம் முதலில் நிங்கள் எதாவது ஒலியை தெரிவு செய்ய வேண்டும்"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr ""
-
-#: src/CrashReport.cpp
 #, fuzzy
 msgid "Audacity Support Data"
 msgstr "Audacity இணை அணி"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2175,10 +2190,6 @@ msgstr "தற்போதைய &செயற்திட்டத்தில�
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "இறக்குமதி %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2634,6 +2645,10 @@ msgstr "குறிப்பிடப்பட்ட கோப்பு பெ�
 msgid "Specify New Filename:"
 msgstr "புதிய கோப்பு பெயரை குறிப்பிடுக:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "அதிர்வெண் ஆய்வு"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "வர்ணப்பட்டை"
@@ -2814,10 +2829,6 @@ msgstr "மீடிறன் (Hz)\tமட்டம் (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Lag (seconds)\tமீடிறன் (Hz)\tமட்டம்"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "அதிர்வெண் ஆய்வு"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3277,6 +3288,11 @@ msgstr "கலந்து வழங்கு"
 msgid "Mixing and rendering tracks"
 msgstr "கலந்து வழங்கப்பட்ட தடங்கள்"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacity கலக்கும் பலகை %s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3336,11 +3352,6 @@ msgstr ""
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "நகர்த்தும் நகர்த்தி நகர்த்தப்பட்டுள்ளது"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacity கலக்கும் பலகை %s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3967,10 +3978,18 @@ msgstr "பெயரிடப்படாத"
 msgid "[Project %02i] "
 msgstr "திட்டங்கள்"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "சோதனை கோப்பை திறக்க/உருவாக்க முடியவில்லை"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "%s இனை நீக்க முடியாதுள்ளது"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4007,6 +4026,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -4024,9 +4050,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4045,11 +4127,6 @@ msgstr "'%s' இருந்து   '%s' ஆக மறுபடி பெயர
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "%s இனை நீக்க முடியாதுள்ளது"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4795,6 +4872,11 @@ msgstr "பிடிக்கப்பட்ட படங்களை சேம�
 msgid "Capture failed!"
 msgstr ""
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+#, fuzzy
+msgid "Long Message"
+msgstr "\t-help (இச்செய்தி)"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4854,6 +4936,11 @@ msgstr "Audacity இற்கு வரவேற்கிறோம்"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "இதனை ஆரம்பத்தில் மறுபடி காட்ட வேண்டாம்"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "செயற்திட்ட தரவு கோப்புகளை ஆய்வு செய்கிறது..."
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5723,11 +5810,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr ""
-
-#: src/commands/CommandTargets.cpp
-#, fuzzy
-msgid "Long Message"
-msgstr "\t-help (இச்செய்தி)"
 
 #: src/commands/CompareAudioCommand.cpp
 #, fuzzy
@@ -10448,11 +10530,6 @@ msgstr "Nyquist கட்டளையை உள்ளிடுக: "
 msgid "&Load"
 msgstr "ஏற்ற"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "சேமிக்க"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13346,11 +13423,6 @@ msgstr "எல்லா கோப்புகளும்  (*)|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "ஏதேனும் ஒரு சுருக்கப்படாத ஒலி கோப்பினை தெரியவும்..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
 msgstr "முன்னமைக்கப்பட்டவையை சேமி"
 
@@ -15847,6 +15919,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr ""
 
@@ -16199,6 +16275,10 @@ msgstr "MIDI கருவிகள்"
 msgid "Preferences for MidiIO"
 msgstr "விருப்பங்கள்: "
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "MIDI இடைமுகம் ஏதும் இல்லை"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -16214,10 +16294,6 @@ msgstr "பாவனையில் : PortMidi"
 #, fuzzy
 msgid "MIDI Synth L&atency (ms):"
 msgstr "MIDI கூட்டிணைப்பு கண்ணுக்கு புலப்படாமல் இருக்கும் நிலை(ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "MIDI இடைமுகம் ஏதும் இல்லை"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -21338,6 +21414,14 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "%s இனை நீக்க முடியாதுள்ளது"
+
+#, fuzzy
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "ஏதேனும் ஒரு சுருக்கப்படாத ஒலி கோப்பினை தெரியவும்..."
+
+#, fuzzy
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -21683,9 +21767,6 @@ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
 #~ msgstr "<b>Audacity&reg;</b>மென்பொருள்  பதிப்புரிமை உள்ளது"
-
-#~ msgid "Debug build"
-#~ msgstr "வழுநீக்க கட்டல்"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir in DirManager::MakeBlockFilePath தோல்வி."

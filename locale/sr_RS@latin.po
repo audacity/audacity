@@ -5,9 +5,9 @@
 # Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2011—2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -647,7 +647,7 @@ msgstr "Prvo pokretanje Odvažnosti"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -657,7 +657,6 @@ msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 "Naziv <b>Audacity&reg;</b> je registrovani zaštitni znak Dominika Maconija."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Podaci o izgradnji"
@@ -671,87 +670,11 @@ msgstr "uključeno"
 msgid "Disabled"
 msgstr "isključeno"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Podrška formata datoteke"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "MP3 uvoz"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Ogg Vorbis uvoz i izvoz"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "podrška ID3 oznake"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "FLAC uvoz i izvoz"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "MP2 izvoz"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "uvoz putem KvikTajma"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "uvoz/izvoz FFmpeg-a"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "uvoz putem Gstrimera"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Biblioteke jezgra"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "pretvaranje protoka uzorka"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "puštanje i snimanje zvuka"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Mogućnosti"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "podrška priključka"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "podrška mešača zvučne kartice"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "podrška promene vrhunca i takta"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "podrška krajnjeg vrhunca i promene takta"
+#, fuzzy
+msgid "The Build"
+msgstr "izgradnja za uklanjanje grešaka"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -797,6 +720,88 @@ msgstr "Fascikla instalacije: "
 #, fuzzy
 msgid "Settings folder:"
 msgstr "Fascikla podešavanja: "
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Biblioteke jezgra"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "puštanje i snimanje zvuka"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "pretvaranje protoka uzorka"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Podrška formata datoteke"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "MP3 uvoz"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Ogg Vorbis uvoz i izvoz"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "podrška ID3 oznake"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "FLAC uvoz i izvoz"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "MP2 izvoz"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "uvoz putem KvikTajma"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "uvoz/izvoz FFmpeg-a"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "uvoz putem Gstrimera"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Mogućnosti"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "podrška priključka"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "podrška mešača zvučne kartice"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "podrška promene vrhunca i takta"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "podrška krajnjeg vrhunca i promene takta"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1210,7 +1215,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Pomoć"
@@ -1744,6 +1749,11 @@ msgstr "Primeni „%s“"
 msgid "Macros Palette"
 msgstr ""
 
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Manage Macros"
+msgstr "Upravljaj krivama"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1878,6 +1888,11 @@ msgstr "Premesti &gore"
 msgid "Move &Down"
 msgstr "Premesti &dole"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Sačuvaj"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1922,11 +1937,6 @@ msgstr "Nazivi ne mogu da sadrže „%c“ i „%c“"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Da li ste sigurni da želite da izbrišete %s?"
-
-#: src/BatchProcessDialog.cpp
-#, fuzzy
-msgid "Manage Macros"
-msgstr "Upravljaj krivama"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2181,13 +2191,17 @@ msgstr ""
 "(Biranjem drugih vrsta numera neće raditi.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr ""
-
-#: src/CrashReport.cpp
 #, fuzzy
 msgid "Audacity Support Data"
 msgstr "Tim podrške Odvažnosti"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2198,10 +2212,6 @@ msgstr "Primeni na tekući &projekat"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "Uvozim %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2667,6 +2677,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Odredi novi naziv datoteke:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Analiziranje učestanosti"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektar"
@@ -2846,10 +2860,6 @@ msgstr "Učestanost (Hz)\tNivo (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Usporavanje (sekunde)\tUčestanost (Hz)\tNivo"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Analiziranje učestanosti"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3343,6 +3353,11 @@ msgstr "Izmešaj i iscrtaj"
 msgid "Mixing and rendering tracks"
 msgstr "Mešam i iscrtavam numere"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Tabla mešača%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3402,11 +3417,6 @@ msgstr "Pomeren je klizač brzine"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Pomeren je klizač kanalisanja"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Tabla mešača%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -4054,10 +4064,18 @@ msgstr "<bez naslova>"
 msgid "[Project %02i] "
 msgstr "Projekti"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Ne mogu da otvorim/stvorim probnu datoteku."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Nisam uspeo da uklonim „%s“"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4094,6 +4112,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -4111,9 +4136,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Ne mogu da započnem MP3 tok"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Ne mogu da započnem MP3 tok"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4132,11 +4213,6 @@ msgstr "Ne mogu da preimenujem „%s“ u „%s“."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "Nisam uspeo da uklonim „%s“"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4899,6 +4975,10 @@ msgstr "Izaberite mesto za čuvanje slika snimaka ekrana"
 msgid "Capture failed!"
 msgstr ""
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr ""
+
 #: src/Sequence.cpp
 #, fuzzy, c-format
 msgid ""
@@ -4958,6 +5038,11 @@ msgstr "Dobrodošli u Odvažnost!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Ne prikazuj više pri pokretanju"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Nadgledam podatke datoteke projekta"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5841,10 +5926,6 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
 msgstr ""
 
 #: src/commands/CompareAudioCommand.cpp
@@ -10581,10 +10662,6 @@ msgstr "Unesite naredbu Nikvista: "
 msgid "&Load"
 msgstr "&Učitaj"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Sačuvaj"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13660,11 +13737,6 @@ msgstr "Sve datoteke (*)|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "Izaberite bilo koju nesažetu datoteku zvuka..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
 msgstr "Sačuvaj podešenost"
 
@@ -16162,6 +16234,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr ""
 
@@ -16505,6 +16581,10 @@ msgstr "MIDI uređaji"
 msgid "Preferences for MidiIO"
 msgstr "Postavke: "
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Nema MIDI sučelja"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -16520,10 +16600,6 @@ msgstr "Korišćenje: Midi port"
 #, fuzzy
 msgid "MIDI Synth L&atency (ms):"
 msgstr "Pritajenost MIDI sintetisajzera (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Nema MIDI sučelja"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -21649,6 +21725,14 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Nisam uspeo da uklonim „%s“"
+
+#, fuzzy
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Izaberite bilo koju nesažetu datoteku zvuka..."
+
+#, fuzzy
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -22109,9 +22193,6 @@ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
 #~ msgstr "Autorska prava softvera <b>Audacity&reg;</b>"
-
-#~ msgid "Debug build"
-#~ msgstr "izgradnja za uklanjanje grešaka"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr ""

@@ -8,9 +8,9 @@
 # Shervin Afshar <shervinafshar@gmail.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2012-02-27 19:02-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: Persian\n"
@@ -630,7 +630,7 @@ msgstr "اولین اجرای اوداسیتی"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -639,7 +639,6 @@ msgstr ""
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr ""
@@ -653,87 +652,9 @@ msgstr "روشن"
 msgid "Disabled"
 msgstr "خاموش"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr ""
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr ""
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr ""
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr ""
-
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "Import via GStreamer"
-msgstr "ورود دادهٔ خام"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
+msgid "The Build"
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -777,6 +698,89 @@ msgstr ""
 #, fuzzy
 msgid "Settings folder:"
 msgstr "پوشهٔ تنظیمات: "
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr ""
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr ""
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr ""
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr ""
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Import via GStreamer"
+msgstr "ورود دادهٔ خام"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr ""
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1174,7 +1178,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr ""
@@ -1679,6 +1683,10 @@ msgstr ""
 msgid "Macros Palette"
 msgstr ""
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr ""
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1813,6 +1821,12 @@ msgstr "&بالاتر"
 msgid "Move &Down"
 msgstr "&پایین‌تر"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "&ذخیره کردن..."
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1857,10 +1871,6 @@ msgstr "نام نمی‌تواند دارای «%c» و «%c» باشد"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "آیا مطمئنید که می‌خواهید %s را حذف کنید؟"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr ""
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2104,13 +2114,17 @@ msgid ""
 msgstr ""
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr ""
-
-#: src/CrashReport.cpp
 #, fuzzy
 msgid "Audacity Support Data"
 msgstr "تیم پشتیبانی اوداسیتی %s"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2120,10 +2134,6 @@ msgstr "اِعمال بر پر&وژهٔ فعلی"
 #: src/DBConnection.cpp
 #, c-format
 msgid "Checkpointing %s"
-msgstr ""
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
 msgstr ""
 
 #: src/DBConnection.cpp
@@ -2555,6 +2565,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr ""
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "تحلیل بسامدی"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "طیف"
@@ -2731,10 +2745,6 @@ msgstr "فرکانس (هرتز)\tسطح (دسی‌بل)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "تأخیر (ثانیه)\tفرکانس (هرتز)\tسطح"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "تحلیل بسامدی"
 
 #: src/FreqWindow.cpp
 #, fuzzy
@@ -3193,6 +3203,11 @@ msgstr "&میکس و رندر"
 msgid "Mixing and rendering tracks"
 msgstr "میکس و رندر شیارها"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr ""
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3252,11 +3267,6 @@ msgstr ""
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "دکمهٔ لغزندهٔ حرکت افقی، حرکت داده شده"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr ""
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3844,10 +3854,18 @@ msgstr ""
 msgid "[Project %02i] "
 msgstr "جادادن پروژه"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "باز کردن/ایجاد پروندهٔ آزمایشی مممکن نیست"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "حذف «‎%s» ممکن نیست"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -3884,6 +3902,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -3901,9 +3926,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "باز کردن/ایجاد پروندهٔ آزمایشی مممکن نیست"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "باز کردن/ایجاد پروندهٔ آزمایشی مممکن نیست"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3922,11 +4003,6 @@ msgstr "تغییر نام «‎%s» به «‎%s» ممکن نیست"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "حذف «‎%s» ممکن نیست"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4651,6 +4727,10 @@ msgstr ""
 msgid "Capture failed!"
 msgstr ""
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr ""
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4709,6 +4789,11 @@ msgstr ""
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr ""
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "نمی‌توان پروندهٔ پروژه را باز کرد"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5583,10 +5668,6 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
 msgstr ""
 
 #: src/commands/CompareAudioCommand.cpp
@@ -10218,11 +10299,6 @@ msgstr "یک فرمان Nyquist را وارد کنید: "
 msgid "&Load"
 msgstr "&بار کردن..."
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "&ذخیره کردن..."
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13087,11 +13163,6 @@ msgstr "همهٔ پرونده‌ها (*)|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "یک پروندهٔ صوتی نافشرده انتخاب کنید..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
 msgstr "ذخیره به نام..."
 
@@ -15587,6 +15658,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr ""
 
@@ -15920,6 +15995,10 @@ msgstr ""
 msgid "Preferences for MidiIO"
 msgstr "ترجیحات..."
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr ""
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -15933,10 +16012,6 @@ msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
-msgstr ""
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
 msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
@@ -21051,6 +21126,14 @@ msgstr "بسامد (هرتز)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "حذف «‎%s» ممکن نیست"
+
+#, fuzzy
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "یک پروندهٔ صوتی نافشرده انتخاب کنید..."
 
 #, fuzzy
 #~ msgid "decode an autosave file"

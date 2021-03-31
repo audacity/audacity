@@ -5,9 +5,9 @@
 # empar <montoro_mde@gva.es>, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2019-09-30 13:51+0200\n"
 "Last-Translator: Alfredo vicente <alviboi@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -602,7 +602,7 @@ msgstr "Lloc web d'Audacity: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -613,7 +613,6 @@ msgstr ""
 "&nbsp; &nbsp; El nom <b>Audacity</b> és una marca registrada de Dominic "
 "Mazzoni.<br><br>"
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Informació de compilació"
@@ -627,87 +626,11 @@ msgstr "Habilitat"
 msgid "Disabled"
 msgstr "Inhabilitat"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Compatibilitat amb formats de fitxers"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "Importació d'MP3"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Importació i exportació Ogg Vorbis"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "Compatibilitat amb les etiquetes ID3"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "Importació i exportació  FLAC"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "Exportació a MP2"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Importa mitjançant QuickTime"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "Importació i exportació FFmpeg"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "Importa mitjançant GStreamer"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Biblioteques centrals"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Conversió de la freqüència de mostreig"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Reproducció i gravació de so"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Biblioteca d'interfície gràfica multiplataforma"
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Característiques"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr "Extres del tema fosc"
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Compatibilitat dels connectors"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Compatibilitat del mesclador de la targeta de so"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Compatibilitat dels canvis de to i de tempo"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Compatibilitat dels canvis de to extrem i de temps"
+#, fuzzy
+msgid "The Build"
+msgstr "Versió de proves"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -751,6 +674,88 @@ msgstr "Prefix d'instal·lació: "
 #, fuzzy
 msgid "Settings folder:"
 msgstr "Carpeta de configuració: "
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Biblioteques centrals"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Biblioteca d'interfície gràfica multiplataforma"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Reproducció i gravació de so"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Conversió de la freqüència de mostreig"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Compatibilitat amb formats de fitxers"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "Importació d'MP3"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Importació i exportació Ogg Vorbis"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "Compatibilitat amb les etiquetes ID3"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "Importació i exportació  FLAC"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "Exportació a MP2"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Importa mitjançant QuickTime"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "Importació i exportació FFmpeg"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "Importa mitjançant GStreamer"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Característiques"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr "Extres del tema fosc"
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Compatibilitat dels connectors"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Compatibilitat del mesclador de la targeta de so"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Compatibilitat dels canvis de to i de tempo"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Compatibilitat dels canvis de to extrem i de temps"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1148,7 +1153,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Ajuda"
@@ -1686,6 +1691,10 @@ msgstr "Aplica %s"
 msgid "Macros Palette"
 msgstr "Paleta de macros"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Gestiona les macros"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1809,6 +1818,11 @@ msgstr "Mou am&unt"
 msgid "Move &Down"
 msgstr "Mou a&vall"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Guarda"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1851,10 +1865,6 @@ msgstr "Els noms no poden contenir «%c» ni «%c»"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "De segur que voleu eliminar %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Gestiona les macros"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2125,12 +2135,16 @@ msgstr ""
 "(Seleccionar altres tipus de pistes no funcionarà.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Informe generat per a:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Dades de suport d'Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Informe generat per a:"
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2141,10 +2155,6 @@ msgstr "Projecte actual"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "S'està important %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2605,6 +2615,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Especifiqueu un nom de fitxer nou:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Anàlisi de freqüències"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Espectre"
@@ -2779,10 +2793,6 @@ msgstr "Freqüència (Hz)\tNivell (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Retard (segons)\tFreqüència (Hz)\tNivell"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Anàlisi de freqüències"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3273,6 +3283,11 @@ msgstr "Mescla i renderitza"
 msgid "Mixing and rendering tracks"
 msgstr "S'estan mesclant i renderitzant les pistes"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Taula de mescles d'Audacity%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3332,11 +3347,6 @@ msgstr "S'ha mogut el regulador de guany"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "S'ha mogut el botó lliscant de la panoramització"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Taula de mescles d'Audacity%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3989,10 +3999,18 @@ msgstr "<Sense títol>"
 msgid "[Project %02i] "
 msgstr "Projecte"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "No s'ha pogut llegir el fitxer dels valors predefinits."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "No s'ha pogut eliminar %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4031,6 +4049,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -4048,9 +4073,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "No s'ha pogut inicialitzar el flux de dades MP3"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "No s'ha pogut inicialitzar el flux de dades MP3"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4069,11 +4150,6 @@ msgstr "No s'ha pogut establir l'estat del flux per a pausar-lo."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "No s'ha pogut eliminar %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4829,6 +4905,10 @@ msgstr "Trieu una ubicació per a guardar les captures de pantalla"
 msgid "Capture failed!"
 msgstr "Ha fallat la captura."
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Missatge llarg"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4886,6 +4966,11 @@ msgstr "Us donem la benvinguda a l'Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "No tornes a mostrar-ho a l'inici"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "S'estan inspeccionant les dades del fitxer del projecte"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5757,10 +5842,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Missatge llarg"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10290,10 +10371,6 @@ msgstr "Escriviu l'orde del Nyquist: "
 msgid "&Load"
 msgstr "&Carrega"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Guarda"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13355,10 +13432,6 @@ msgid "Allegro files"
 msgstr "Tots els fitxers|*"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Seleccioneu qualsevol fitxer d'àudio que no estiga comprimit"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "Reinicialització perillo&sa..."
 
@@ -15617,6 +15690,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Utilitza sobretot distribucions d'esquerra a dreta amb llenguatges RTL"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 #, fuzzy
 msgid "Show Timeline Tooltips"
 msgstr "Habilita els consells d'eina de la línia de temps"
@@ -15951,6 +16028,10 @@ msgstr "Dispositius MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Preferències de MidiIO"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Sense interfícies MIDI"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -15965,10 +16046,6 @@ msgstr "S'està utilitzant un PortMIDI"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "Latència del sintonitzador MIDI (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Sense interfícies MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20871,6 +20948,13 @@ msgstr "Freqüència de les agulles del radar (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Error.~%Es requereix la pista estèreo."
 
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "No s'ha pogut eliminar %s"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Seleccioneu qualsevol fitxer d'àudio que no estiga comprimit"
+
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -21385,9 +21469,6 @@ msgstr "Error.~%Es requereix la pista estèreo."
 #~ msgstr ""
 #~ "p><br>&nbsp; &nbsp; El programari d'<b>Audacity<sup>&reg;</sup></b> és "
 #~ "propietat intel·lectual de l'equip d'Audacity &copy; 1999-2018.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Versió de proves"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir en DirManager:: ha fallat MakeBlockFilePath."

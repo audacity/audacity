@@ -11,7 +11,7 @@ xargs xgettext \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
 --package-name="audacity" \
---package-version='2.4.2' \
+--package-version='3.0.1' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L C -o audacity.pot 
 echo ";; Adding nyquist files to audacity.pot"
@@ -25,7 +25,7 @@ xargs xgettext \
 --add-location=file  \
 --copyright-holder='Audacity Team' \
 --package-name="audacity" \
---package-version='2.4.2' \
+--package-version='3.0.1' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
 if test "${AUDACITY_ONLY_POT:-}" = 'y'; then
@@ -33,7 +33,7 @@ if test "${AUDACITY_ONLY_POT:-}" = 'y'; then
 fi
 echo ";; Updating the .po files - Updating Project-Id-Version"
 for i in *.po; do
-    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 2.4.2\\n"' $i
+    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 3.0.1\\n"' $i
 done
 echo ";; Updating the .po files"
 sed 's/.*/echo "msgmerge --lang=& &.po audacity.pot -o &.po";\

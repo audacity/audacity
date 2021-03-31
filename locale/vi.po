@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# 
+#
 # Translators:
 # brad freedom <brad.freedom@gmail.com>, 2020-2021
 # hong cuong <hongcuongvn282@gmail.com>, 2021
@@ -10,16 +10,17 @@
 # Nguyen Mien <Hamien0604@gmail.com>, 2020-2021
 msgid ""
 msgstr ""
-"Project-Id-Version: Audacity\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2021-02-11 01:50+0000\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/klyok/audacity/language/vi/)\n"
+"Language-Team: Vietnamese (http://www.transifex.com/klyok/audacity/language/"
+"vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -153,8 +154,7 @@ msgstr "Tập lệnh chưa lưu."
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
 #: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
-#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Cảnh báo"
 
@@ -185,7 +185,8 @@ msgstr "(C) 2009 by Leland Lucius"
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
 "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Mô-đun ngoài của Audacity cung cấp bộ IDE đơn giản về hiểu ứng chữ viết."
+msgstr ""
+"Mô-đun ngoài của Audacity cung cấp bộ IDE đơn giản về hiểu ứng chữ viết."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -372,92 +373,79 @@ msgstr "Dừng Tập lệnh"
 msgid "No revision identifier was provided"
 msgstr "Không có nhận dạng sửa đổi nào được cung cấp."
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, điều hành hệ thống"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, đồng sáng lập và phát triển"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, lập trình phát triển"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%stài liệu và hỗ trợ"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%stài liệu và hỗ trợ, tiếng Pháp"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, giám sát chất lượng"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, cố vấn truy cập"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, nghệ sỹ đồ họa"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, soạn nhạc"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, kiểm tra thử phần mềm"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, Plug-ins - Điện toán Nyquist"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, phát triển trang mạng"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
@@ -474,8 +462,7 @@ msgstr "%s (bao gồm %s, %s, %s, %s và %s)"
 msgid "About %s"
 msgstr "Về %s"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
-#. button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
@@ -488,7 +475,9 @@ msgstr "OK"
 msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "%s là phần mềm miễn phí được viết bởi nhóm trên toàn thế giới.  %s. %s là %s cho  Windows, Mac và GNU / Linux (và các hệ thống giống Unix khác)."
+msgstr ""
+"%s là phần mềm miễn phí được viết bởi nhóm trên toàn thế giới.  %s. %s là %s "
+"cho  Windows, Mac và GNU / Linux (và các hệ thống giống Unix khác)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
@@ -506,7 +495,10 @@ msgstr "sẵn sàng"
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr "Nếu bạn tìm thấy lỗi hoặc có gợi ý dành cho chúng tôi, hãy viết bằng tiếng anh tới %s. Để nhận sự giúp đỡ, xem gợi ý hoặc thủ thật hãy xem %s, hoặc thăm trang mạng %s."
+msgstr ""
+"Nếu bạn tìm thấy lỗi hoặc có gợi ý dành cho chúng tôi, hãy viết bằng tiếng "
+"anh tới %s. Để nhận sự giúp đỡ, xem gợi ý hoặc thủ thật hãy xem %s, hoặc "
+"thăm trang mạng %s."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
@@ -532,7 +524,9 @@ msgstr "diễn đàn"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "Vietnamese translation by  Brad 'Bảo' Hirsch, and Cuong and Ha Mien, and Mersoid, and Nguyễn Đình Trung"
+msgstr ""
+"Vietnamese translation by  Brad 'Bảo' Hirsch, and Cuong and Ha Mien, and "
+"Mersoid, and Nguyễn Đình Trung"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -544,7 +538,9 @@ msgstr "<h3>"
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
-msgstr "%sphần mềm miễn phí, mã nguồn mở, đa nền tảng để ghi âm và chỉnh sửa âm thanh."
+msgstr ""
+"%sphần mềm miễn phí, mã nguồn mở, đa nền tảng để ghi âm và chỉnh sửa âm "
+"thanh."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -605,8 +601,8 @@ msgstr "%s trang mạng:"
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s phần mềm bản quyền %s1999-2020  nhóm%s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -615,7 +611,6 @@ msgstr "%s phần mềm bản quyền %s1999-2020  nhóm%s."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Tựa tên %s được đăng ký nhẵn hiệu bởi Dominic Mazzoni."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Thông tin biên dịch"
@@ -624,10 +619,72 @@ msgstr "Thông tin biên dịch"
 msgid "Enabled"
 msgstr "Đã bật"
 
-#: src/AboutDialog.cpp src/PluginManager.cpp
-#: src/export/ExportFFmpegDialogs.cpp src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginManager.cpp src/export/ExportFFmpegDialogs.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Đã Tắt"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+msgid "The Build"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Ngày tạo phần mềm:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Nhập Id:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Thiết lập sửa lỗi (mức sửa lỗi %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "thiết lập phát hành (mức sửa lỗi %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 bits"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Dựng kiểu:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Trình biên dịch:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Cài đặt tiền tố:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Thư mục cài đặt:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Các thư viện lõi"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Thư viện hệ thống GUI (Giao diện người dùng đồ họa)"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Phát và ghi âm"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Chuyển đổi tốc độ lấy mẫu"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -670,23 +727,6 @@ msgstr "Nhập/ Xuất FFmpeg"
 msgid "Import via GStreamer"
 msgstr "Nhập bằng GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Các thư viện lõi"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Chuyển đổi tốc độ lấy mẫu"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Phát và ghi âm"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Thư viện hệ thống GUI (Giao diện người dùng đồ họa)"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Các tính năng"
@@ -710,46 +750,6 @@ msgstr "Hỗ trợ thay đổi nhịp độ và cao độ"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Hỗ trợ thay đổi âm tần và tốc độ cực trị"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Ngày tạo phần mềm:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Nhập Id:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Thiết lập sửa lỗi (mức sửa lỗi %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "thiết lập phát hành (mức sửa lỗi %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64 bits"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Dựng kiểu:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Trình biên dịch:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Cài đặt tiền tố:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Thư mục cài đặt:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -776,6 +776,7 @@ msgstr "Thời gian biểu"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
 msgstr "Nhấp chuột và kéo để Seek (tua ngắt quãng)"
@@ -783,6 +784,7 @@ msgstr "Nhấp chuột và kéo để Seek (tua ngắt quãng)"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
 msgstr "Nhấp chuột và kéo để Scrub (tua rê chuột)"
@@ -790,13 +792,17 @@ msgstr "Nhấp chuột và kéo để Scrub (tua rê chuột)"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Nhấp chuột & rê chuột để Scrub (tua rê). Nhấp & kéo thả để Seek (tua ngắt quãng)"
+msgstr ""
+"Nhấp chuột & rê chuột để Scrub (tua rê). Nhấp & kéo thả để Seek (tua ngắt "
+"quãng)"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
 msgstr "Rê chuột để Seek (tua rê)"
@@ -804,6 +810,7 @@ msgstr "Rê chuột để Seek (tua rê)"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
 msgstr "Rê chuột để Scrub (tua ngắt quãng)"
@@ -856,7 +863,9 @@ msgstr "Ghim đầu đánh dấu"
 msgid ""
 "Cannot lock region beyond\n"
 "end of project."
-msgstr "Không thể khóa được vùng tua nhạc nằm ngoài \nkết thúc của dự án."
+msgstr ""
+"Không thể khóa được vùng tua nhạc nằm ngoài \n"
+"kết thúc của dự án."
 
 #: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
 #: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
@@ -883,8 +892,13 @@ msgstr "Không thành công!"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr "Cài lại Cài đặt Ưu tiên? \n\nCâu hỏi này chỉ được thực hiện một lần sau khi \"cài đặt\" xong, khi bạn được hỏi để cài đặt lại Cài đặt Uu tiên"
+"This is a one-time question, after an 'install' where you asked to have the "
+"Preferences reset."
+msgstr ""
+"Cài lại Cài đặt Ưu tiên? \n"
+"\n"
+"Câu hỏi này chỉ được thực hiện một lần sau khi \"cài đặt\" xong, khi bạn "
+"được hỏi để cài đặt lại Cài đặt Uu tiên"
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
@@ -896,7 +910,10 @@ msgid ""
 "%s could not be found.\n"
 "\n"
 "It has been removed from the list of recent files."
-msgstr "%s không được tìm thấy.\n\nTệp tin đã bị loại bỏ trong danh sách các tệp gần đây."
+msgstr ""
+"%s không được tìm thấy.\n"
+"\n"
+"Tệp tin đã bị loại bỏ trong danh sách các tệp gần đây."
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
@@ -939,34 +956,48 @@ msgstr "&Tập tin"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the "
+"temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr "Audacity đã không tìm thấy nơi an toàn nào để chứa các tệp tin tạm thời.\nAudacity cần tìm vùng đĩa trong máy không bị xóa bỏ bởi phần mềm dọn rác để lưu tệp tin tạm thời.\nHãy nhập vào một địa chỉ thư mục trong các hộp thoại cài đặt ưu tiên."
+msgstr ""
+"Audacity đã không tìm thấy nơi an toàn nào để chứa các tệp tin tạm thời.\n"
+"Audacity cần tìm vùng đĩa trong máy không bị xóa bỏ bởi phần mềm dọn rác để "
+"lưu tệp tin tạm thời.\n"
+"Hãy nhập vào một địa chỉ thư mục trong các hộp thoại cài đặt ưu tiên."
 
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr "Audacity không tìm được nơi nào để chứa các tập tin tạm thời.\nXin hãy nhập vào địa chỉ thích hợp và chọn thư mục chứa các tập tin tạm thời."
+msgstr ""
+"Audacity không tìm được nơi nào để chứa các tập tin tạm thời.\n"
+"Xin hãy nhập vào địa chỉ thích hợp và chọn thư mục chứa các tập tin tạm thời."
 
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity is now going to exit. Please launch Audacity again to use the new "
 "temporary directory."
-msgstr "Đang thoát Audacity. Thư mục tạm thời mới sẽ được dùng trong lần chạy kế tiếp."
+msgstr ""
+"Đang thoát Audacity. Thư mục tạm thời mới sẽ được dùng trong lần chạy kế "
+"tiếp."
 
 #: src/AudacityApp.cpp
 msgid ""
 "Running two copies of Audacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
-msgstr "Chạy 2 tiến trình Audacity cùng lúc có thể gây ra \nmất dữ liệu hay làm hỏng hệ thống của bạn.\n\n"
+msgstr ""
+"Chạy 2 tiến trình Audacity cùng lúc có thể gây ra \n"
+"mất dữ liệu hay làm hỏng hệ thống của bạn.\n"
+"\n"
 
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Audacity.\n"
-msgstr "Audacity không thể sử dụng thư mục chứa các tệp tạm thời,\ncó lẽ thư mục này đang được sử dùng bỡi 1 bản Audacity khác.\n"
+msgstr ""
+"Audacity không thể sử dụng thư mục chứa các tệp tạm thời,\n"
+"có lẽ thư mục này đang được sử dùng bỡi 1 bản Audacity khác.\n"
 
 #: src/AudacityApp.cpp
 msgid "Do you still want to start Audacity?"
@@ -984,7 +1015,9 @@ msgstr "Hệ thống phát hiện ra một bản Audacity khác đang chạy.\n"
 msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
-msgstr "Dùng lệnh Mới hoặc Mở trên bản Audacity đang chạy \nđể mở nhiều dự án cùng lúc.\n"
+msgstr ""
+"Dùng lệnh Mới hoặc Mở trên bản Audacity đang chạy \n"
+"để mở nhiều dự án cùng lúc.\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is already running"
@@ -996,7 +1029,11 @@ msgid ""
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
-msgstr "Không thể tìm ra tín hiệu.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
+msgstr ""
+"Không thể tìm ra tín hiệu.\n"
+"\n"
+"Điều này có thể vì thiếu tài nguyên.\n"
+"Bạn có thể thử khởi động lại chương trình."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
@@ -1008,7 +1045,11 @@ msgid ""
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
-msgstr "Không thể tạo ra tín hiệu.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
+msgstr ""
+"Không thể tạo ra tín hiệu.\n"
+"\n"
+"Điều này có thể vì thiếu tài nguyên.\n"
+"Bạn có thể thử khởi động lại chương trình."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1016,7 +1057,11 @@ msgid ""
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
-msgstr "Không thể khóa tín hiệu.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
+msgstr ""
+"Không thể khóa tín hiệu.\n"
+"\n"
+"Điều này có thể vì thiếu tài nguyên.\n"
+"Bạn có thể thử khởi động lại chương trình."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1024,7 +1069,11 @@ msgid ""
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
-msgstr "Không thể tìm ra tín hiệu máy chủ.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
+msgstr ""
+"Không thể tìm ra tín hiệu máy chủ.\n"
+"\n"
+"Điều này có thể vì thiếu tài nguyên.\n"
+"Bạn có thể thử khởi động lại chương trình."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1032,7 +1081,11 @@ msgid ""
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
-msgstr "Máy chủ Audacity IPC bị lỗi khởi động. \n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
+msgstr ""
+"Máy chủ Audacity IPC bị lỗi khởi động. \n"
+"\n"
+"Điều này có thể vì thiếu tài nguyên.\n"
+"Bạn có thể thử khởi động lại chương trình."
 
 #: src/AudacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
@@ -1071,7 +1124,10 @@ msgid ""
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
-msgstr "Các tập tin dự án (.aup3) chưa được liên kết với Audacity\n\nHãy liên kết chúng lại để mở chúng bằng Audacity chỉ với một lần click đúp?"
+msgstr ""
+"Các tập tin dự án (.aup3) chưa được liên kết với Audacity\n"
+"\n"
+"Hãy liên kết chúng lại để mở chúng bằng Audacity chỉ với một lần click đúp?"
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -1093,15 +1149,31 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. More information can be obtained by clicking the help button below.\n"
+"This could be caused by many reasons, but the most likely are that the disk "
+"is full or you do not have write permissions to the file. More information "
+"can be obtained by clicking the help button below.\n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
-msgstr "Không thể truy cập vào tập tin cấu trúc :\n\n\t%s\n\nCó nhiều nguyên nhân dẫn đến điều này, nhưng có vẻ như là ổ đĩa của bạn đã đầy hoặc bạn không có quyền ghi lên tệp này. bạn có thể click vào nút \"trợ giúp\" để có nhiều thông tin hơn.\n\nBạn cũng có thể thử điều chỉnh thông tin rồi click vào nút \"thử lại\" để tiếp tục.\n\nNếu bạn click vào \"thoát Audacity. dự án của bạn sẽ được tạm thời lưu vào hệ thống, nó sẽ được khôi phục ở lần tiếp theo bạn mở Audacity."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
+"state which will be recovered the next time you open it."
+msgstr ""
+"Không thể truy cập vào tập tin cấu trúc :\n"
+"\n"
+"\t%s\n"
+"\n"
+"Có nhiều nguyên nhân dẫn đến điều này, nhưng có vẻ như là ổ đĩa của bạn đã "
+"đầy hoặc bạn không có quyền ghi lên tệp này. bạn có thể click vào nút \"trợ "
+"giúp\" để có nhiều thông tin hơn.\n"
+"\n"
+"Bạn cũng có thể thử điều chỉnh thông tin rồi click vào nút \"thử lại\" để "
+"tiếp tục.\n"
+"\n"
+"Nếu bạn click vào \"thoát Audacity. dự án của bạn sẽ được tạm thời lưu vào "
+"hệ thống, nó sẽ được khôi phục ở lần tiếp theo bạn mở Audacity."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Trợ giúp"
@@ -1172,7 +1244,9 @@ msgstr "Phát hiện lỗi khởi động lớp midi i/o.\n"
 msgid ""
 "You will not be able to play midi.\n"
 "\n"
-msgstr "Bạn sẽ không thể chạy được midi.\n\n"
+msgstr ""
+"Bạn sẽ không thể chạy được midi.\n"
+"\n"
 
 #: src/AudioIO.cpp
 msgid "Error Initializing Midi"
@@ -1187,7 +1261,9 @@ msgstr "Audacity Audio"
 msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
-msgstr "Lỗi khi mở thiết bị ghi âm.\nMã lỗi:  %s"
+msgstr ""
+"Lỗi khi mở thiết bị ghi âm.\n"
+"Mã lỗi:  %s"
 
 #: src/AudioIO.cpp
 msgid "Out of memory!"
@@ -1197,7 +1273,9 @@ msgstr "Đã hết dung lượng lưu trữ!"
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
-msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã dừng hoạt động. Không thể tối ưu hóa thêm. Cấp độ còn quá cao."
+msgstr ""
+"Điều chỉnh Cấp độ Thu âm Tự động đã dừng hoạt động. Không thể tối ưu hóa "
+"thêm. Cấp độ còn quá cao."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1208,7 +1286,9 @@ msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã giảm âm lượn
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
-msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã dừng hoạt động. Không thể tối ưu hóa thêm nữa. Cấp độ còn quá thấp."
+msgstr ""
+"Điều chỉnh Cấp độ Thu âm Tự động đã dừng hoạt động. Không thể tối ưu hóa "
+"thêm nữa. Cấp độ còn quá thấp."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1219,20 +1299,26 @@ msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã tăng âm lượng
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
-msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã đừng. Tổng số phân tích đã vượt quá mức và mức âm lượng phù hợp vẫn chưa được tìm thấy. Vẫn còn quá cao."
+msgstr ""
+"Điều chỉnh Cấp độ Thu âm Tự động đã đừng. Tổng số phân tích đã vượt quá mức "
+"và mức âm lượng phù hợp vẫn chưa được tìm thấy. Vẫn còn quá cao."
 
 #: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
-msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã đừng. Tổng số phân tích đã vượt quá mức và mức âm lượng phù hợp vẫn chưa được tìm thấy. Vẫn còn quá thấp."
+msgstr ""
+"Điều chỉnh Cấp độ Thu âm Tự động đã đừng. Tổng số phân tích đã vượt quá mức "
+"và mức âm lượng phù hợp vẫn chưa được tìm thấy. Vẫn còn quá thấp."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
-msgstr "Điều chỉnh Cấp độ Thu âm Tự động đã dừng. %.2f được xem là mức âm lượng vừa phải."
+msgstr ""
+"Điều chỉnh Cấp độ Thu âm Tự động đã dừng. %.2f được xem là mức âm lượng vừa "
+"phải."
 
 #: src/AudioIOBase.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -1329,7 +1415,9 @@ msgstr "Không tìm thấy thiết bị phát âm thanh cho '%s'.\n"
 
 #: src/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Không thể kiểm tra được tỷ lệ tốc độ lấy mẫu chung khi không có đủ cả hai thiết bị.\n"
+msgstr ""
+"Không thể kiểm tra được tỷ lệ tốc độ lấy mẫu chung khi không có đủ cả hai "
+"thiết bị.\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
@@ -1416,10 +1504,16 @@ msgstr "Tự động khôi phục lỗi"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was "
+"run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
-msgstr "Các dự án sau đây chưa được lưu lại kể từ lần cuối bạn mở Audacity, và chúng sẽ được tự động khôi phục.\n\nSau khi khôi phục, bạn hãy lưu lại thêm một lần nữa để đảm bảo tất cả thay đổi đã được ghi lại."
+msgstr ""
+"Các dự án sau đây chưa được lưu lại kể từ lần cuối bạn mở Audacity, và chúng "
+"sẽ được tự động khôi phục.\n"
+"\n"
+"Sau khi khôi phục, bạn hãy lưu lại thêm một lần nữa để đảm bảo tất cả thay "
+"đổi đã được ghi lại."
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Recoverable &projects"
@@ -1457,7 +1551,10 @@ msgid ""
 "Are you sure you want to discard the selected projects?\n"
 "\n"
 "Choosing \"Yes\" permanently deletes the selected projects immediately."
-msgstr "Bạn có chắc rằng muốn bỏ chọn dự án?\n\nNếu bạn chọn \"đồng ý\" dự án đã chọn sẽ bị xóa ngay."
+msgstr ""
+"Bạn có chắc rằng muốn bỏ chọn dự án?\n"
+"\n"
+"Nếu bạn chọn \"đồng ý\" dự án đã chọn sẽ bị xóa ngay."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1525,8 +1622,7 @@ msgstr "(%s)"
 msgid "Menu Command (No Parameters)"
 msgstr "Lệnh Menu (Không có Tham số)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
-#. Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -1563,7 +1659,10 @@ msgid ""
 "Apply %s with parameter(s)\n"
 "\n"
 "%s"
-msgstr "Áp dụng %s với (các) tham số \n\n%s"
+msgstr ""
+"Áp dụng %s với (các) tham số \n"
+"\n"
+"%s"
 
 #: src/BatchCommands.cpp
 msgid "Test Mode"
@@ -1577,6 +1676,10 @@ msgstr "Áp dụng %s"
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
 msgstr "Chùm lệnh Macros Palette"
+
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Quản lý các lệnh Macro"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
@@ -1701,6 +1804,11 @@ msgstr "Chuyển lên &trên"
 msgid "Move &Down"
 msgstr "Chuyển &xuống dưới"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr ""
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1732,8 +1840,7 @@ msgstr "Tên của lệnh Macro mới"
 msgid "Name must not be blank"
 msgstr "Không được để trống phần tên"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
-#. and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -1744,10 +1851,6 @@ msgstr "Tên không được chứa '%c' và '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Bạn chắc mình muốn xoá %s chứ?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Quản lý các lệnh Macro"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -1856,7 +1959,9 @@ msgstr "dán %lld\n"
 msgid ""
 "Trial %d\n"
 "Failed on Paste.\n"
-msgstr "Kiểm tra %d\nDán thất bại.\n"
+msgstr ""
+"Kiểm tra %d\n"
+"Dán thất bại.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1913,7 +2018,9 @@ msgstr "Thời gian cần để kiểm tra toàn bộ dữ liệu (2): %ld ms\n"
 msgid ""
 "At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
-msgstr "Ở 4400 Hz, %dbytes mỗi mẫu, ước tính số lượng đoạn âm có thể chạy cùng lúc là: %.1f\n"
+msgstr ""
+"Ở 4400 Hz, %dbytes mỗi mẫu, ước tính số lượng đoạn âm có thể chạy cùng lúc "
+"là: %.1f\n"
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
@@ -1923,76 +2030,97 @@ msgstr "THỬ NGHIỆM THẤT BẠI!!!\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "Đối chuẩn đã hoàn thiện thành công.\n"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
-#. Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
 "You must first select some audio for '%s' to act on.\n"
 "\n"
 "Ctrl + A selects all audio."
-msgstr "Bạn cần phải chọn audio để tác vụ '%s' được áp dụng vào.\n\nCtrl + A để chọn toàn bộ audio."
+msgstr ""
+"Bạn cần phải chọn audio để tác vụ '%s' được áp dụng vào.\n"
+"\n"
+"Ctrl + A để chọn toàn bộ audio."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
-#. Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
-" again."
-msgstr "Hãy chọn âm thanh để thao tác %s(ví dụ, Cmd + A để chọn toàn bộ)  rồi thử lại."
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
+"again."
+msgstr ""
+"Hãy chọn âm thanh để thao tác %s(ví dụ, Cmd + A để chọn toàn bộ)  rồi thử "
+"lại."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
-#. Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
 "Select the audio for %s to use (for example, Ctrl + A to Select All) then "
 "try again."
-msgstr "Hãy Chọn audio cho %s để dùng (ví dụ: Ctrl + A để chọn tất cả) rồi thử lại."
+msgstr ""
+"Hãy Chọn audio cho %s để dùng (ví dụ: Ctrl + A để chọn tất cả) rồi thử lại."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
 msgstr "Chưa chọn Audio"
 
-#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise
-#. Reduction'.
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise "
+"profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to change\n"
+"2. When you have got your noise profile, select the audio you want to "
+"change\n"
 "and use %s to change that audio."
-msgstr "Hãy chọn audio để áp dụng hiệu ứng %s.\n\n1. Hãy chọn audio đại diện cho âm thanh và sử dụng %s để tạo 'mẫu âm thanh'.\n\n2. Khi bạn đã có mẫu âm thanh, chọn audio bạn muốn thay đổi\nvà sử dụng hiệu ứng %s để thay đổi audio."
+msgstr ""
+"Hãy chọn audio để áp dụng hiệu ứng %s.\n"
+"\n"
+"1. Hãy chọn audio đại diện cho âm thanh và sử dụng %s để tạo 'mẫu âm "
+"thanh'.\n"
+"\n"
+"2. Khi bạn đã có mẫu âm thanh, chọn audio bạn muốn thay đổi\n"
+"và sử dụng hiệu ứng %s để thay đổi audio."
 
 #: src/CommonCommandFlags.cpp
 msgid ""
 "You can only do this when playing and recording are\n"
 "stopped. (Pausing is not sufficient.)"
-msgstr "Bạn chỉ có thể làm việc này khi ngừng hẳn việc tua tiếng và ghi âm. (Dừng tạm thời thôi không đủ.)"
+msgstr ""
+"Bạn chỉ có thể làm việc này khi ngừng hẳn việc tua tiếng và ghi âm. (Dừng "
+"tạm thời thôi không đủ.)"
 
 #: src/CommonCommandFlags.cpp
 msgid ""
 "You must first select some stereo audio to perform this\n"
 "action. (You cannot use this with mono.)"
-msgstr "Bạn cần phải chọn audio stereo để hoàn thành tác vụ này. (Bạn không thể dùng chức năng này với mono.)"
+msgstr ""
+"Bạn cần phải chọn audio stereo để hoàn thành tác vụ này. (Bạn không thể dùng "
+"chức năng này với mono.)"
 
 #: src/CommonCommandFlags.cpp
 msgid ""
 "You must first select some audio to perform this action.\n"
 "(Selecting other kinds of track won't work.)"
-msgstr "Bạn cần phải chọn audio để thực hiện tác vụ này.\n(Không lựa chọn đoạn âm dạng khác.)"
-
-#: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Báo cáo được tạo thành:"
+msgstr ""
+"Bạn cần phải chọn audio để thực hiện tác vụ này.\n"
+"(Không lựa chọn đoạn âm dạng khác.)"
 
 #: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Dữ liệu Hỗ trợ của Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Xin chờ vài giây"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Báo cáo được tạo thành:"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2002,10 +2130,6 @@ msgstr "Tạo điểm kiểm tra dự án."
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Tạo điểm kiểm tra%s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Xin chờ vài giây"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2018,7 +2142,10 @@ msgid ""
 "Disk is full.\n"
 "%s\n"
 "For tips on freeing up space, click the help button."
-msgstr "Ổ đĩa đã đầy.\n%s \nđể có nhiều mẹo giải phóng ổ đĩa hơn, hãy click vào nút \"trợ giúp\"."
+msgstr ""
+"Ổ đĩa đã đầy.\n"
+"%s \n"
+"để có nhiều mẹo giải phóng ổ đĩa hơn, hãy click vào nút \"trợ giúp\"."
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2026,7 +2153,10 @@ msgid ""
 "Failed to create savepoint:\n"
 "\n"
 "%s"
-msgstr "Tạo điểm lưu trử thất bại:\n\n%s"
+msgstr ""
+"Tạo điểm lưu trử thất bại:\n"
+"\n"
+"%s"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2034,7 +2164,10 @@ msgid ""
 "Failed to release savepoint:\n"
 "\n"
 "%s"
-msgstr "Không thể giải phóng điểm lưu.\n\n%s"
+msgstr ""
+"Không thể giải phóng điểm lưu.\n"
+"\n"
+"%s"
 
 #: src/DBConnection.cpp
 msgid "Database error.  Sorry, but we don't have more details."
@@ -2056,7 +2189,9 @@ msgstr "Dự án Phụ thuộc vào các Tập tin Audio Khác."
 msgid ""
 "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
-msgstr "Sao chép các tập tin này vào dự án của bạn sẽ xóa bỏ đi sự phụ thuộc này. \nNhư thế an toàn hơn, những sẽ tốn dung lượng lưu trữ hơn."
+msgstr ""
+"Sao chép các tập tin này vào dự án của bạn sẽ xóa bỏ đi sự phụ thuộc này. \n"
+"Như thế an toàn hơn, những sẽ tốn dung lượng lưu trữ hơn."
 
 #: src/Dependencies.cpp
 msgid ""
@@ -2064,7 +2199,12 @@ msgid ""
 "\n"
 "Files shown as MISSING have been moved or deleted and cannot be copied.\n"
 "Restore them to their original location to be able to copy into project."
-msgstr "\n\nCác tập tin được hiển thị THẤT LẠC đã bị dịch chuyển hoặc xóa bỏ và không thể được sao chép.\nHồi phục chúng trở về địa điểm ban đầu để sao chép vào dự án."
+msgstr ""
+"\n"
+"\n"
+"Các tập tin được hiển thị THẤT LẠC đã bị dịch chuyển hoặc xóa bỏ và không "
+"thể được sao chép.\n"
+"Hồi phục chúng trở về địa điểm ban đầu để sao chép vào dự án."
 
 #: src/Dependencies.cpp
 msgid "Project Dependencies"
@@ -2146,12 +2286,19 @@ msgstr "Dự án của bạn sẽ không được lưu lại vào đĩa. Bạn c
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is self-contained; it does not depend on any external audio files. \n"
+"Your project is self-contained; it does not depend on any external audio "
+"files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
-msgstr "Dự án của bạn hiện đang hoàn toàn độc lập; và không phụ thuộc vào bất kỳ tập tin audio bên ngoài nào.\n\nMột số dự án Audacity khác có thể không gói gọn độc lập, và cần \nphải được để ý đến và giữ các tập tin phụ thuộc ngoại này ở đúng nơi.\nCác dự án mới sẽ luôn gói gọn độc lập và ít có rủi ro hơn."
+msgstr ""
+"Dự án của bạn hiện đang hoàn toàn độc lập; và không phụ thuộc vào bất kỳ tập "
+"tin audio bên ngoài nào.\n"
+"\n"
+"Một số dự án Audacity khác có thể không gói gọn độc lập, và cần \n"
+"phải được để ý đến và giữ các tập tin phụ thuộc ngoại này ở đúng nơi.\n"
+"Các dự án mới sẽ luôn gói gọn độc lập và ít có rủi ro hơn."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2235,7 +2382,12 @@ msgid ""
 "but this time Audacity failed to load it at startup. \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
-msgstr "FFmpeg đã được cấu hình trong Tùy chọn Ưu tiên và đã tải thành công trước đõ,\nnhưng lần này Audacity đã thất bại trong việc tải lên lúc khởi động.\n\nBạn có thể vào mục Tùy chọn Ưu tiên > Thư viện và cấu hình lại nó."
+msgstr ""
+"FFmpeg đã được cấu hình trong Tùy chọn Ưu tiên và đã tải thành công trước "
+"đõ,\n"
+"nhưng lần này Audacity đã thất bại trong việc tải lên lúc khởi động.\n"
+"\n"
+"Bạn có thể vào mục Tùy chọn Ưu tiên > Thư viện và cấu hình lại nó."
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -2297,7 +2449,12 @@ msgid ""
 "\n"
 "To use FFmpeg import, go to Edit > Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
-msgstr "Audacity đã thử sử dụng FFmpeg để thêm vào một tập tin audio,\nnhưng các thư viện đã không được tìm thấy.\n\nĐể sử dụng chức năng nhập bằng FFmpeg, hãy vào Chỉnh sửa > Tùy chọn Ưu tiên > Thư viện để tải về hoặc định vị các thư viện FFmpeg."
+msgstr ""
+"Audacity đã thử sử dụng FFmpeg để thêm vào một tập tin audio,\n"
+"nhưng các thư viện đã không được tìm thấy.\n"
+"\n"
+"Để sử dụng chức năng nhập bằng FFmpeg, hãy vào Chỉnh sửa > Tùy chọn Ưu tiên "
+"> Thư viện để tải về hoặc định vị các thư viện FFmpeg."
 
 #: src/FFmpeg.cpp
 msgid "Do not show this warning again"
@@ -2328,9 +2485,10 @@ msgstr "Audacity không đọc được tập tin   %s."
 
 #: src/FileException.cpp
 #, c-format
-msgid ""
-"Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity đã thành công trong việc tạo tập tin tại %s nhưng đã không thành công trong việc đổi tên thành %s."
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
+"Audacity đã thành công trong việc tạo tập tin tại %s nhưng đã không thành "
+"công trong việc đổi tên thành %s."
 
 #: src/FileException.cpp
 #, c-format
@@ -2338,14 +2496,16 @@ msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
-msgstr "Audacity không thể ghi được tập tin.\nCó thể %s không ghi được hoặc ổ đĩa đã đầy.\nđể có nhiều mẹo giải phóng ổ đĩa hơn, hãy click vào nút \"trợ giúp\"."
+msgstr ""
+"Audacity không thể ghi được tập tin.\n"
+"Có thể %s không ghi được hoặc ổ đĩa đã đầy.\n"
+"để có nhiều mẹo giải phóng ổ đĩa hơn, hãy click vào nút \"trợ giúp\"."
 
 #: src/FileException.h
 msgid "File Error"
 msgstr "Lỗi tập tin"
 
-#. i18n-hint: %s will be the error message from the libsndfile software
-#. library
+#. i18n-hint: %s will be the error message from the libsndfile software library
 #: src/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
@@ -2413,11 +2573,16 @@ msgstr "Tập tin %s "
 #: src/FileNames.cpp
 msgid ""
 "The specified filename could not be converted due to Unicode character use."
-msgstr "Tên tập tin cụ thể  đã không chuyển đổi được do việc sử dụng ký tự Unicode."
+msgstr ""
+"Tên tập tin cụ thể  đã không chuyển đổi được do việc sử dụng ký tự Unicode."
 
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "Đặt tên tập tin mới:"
+
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Bộ phân tích tần số"
 
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
@@ -2523,8 +2688,7 @@ msgid "&Replot..."
 msgstr "&Tái tạo tọa độ..."
 
 #: src/FreqWindow.cpp
-msgid ""
-"To plot the spectrum, all selected tracks must be the same sample rate."
+msgid "To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "Để vẽ phổ, tất cả các đoạn âm được chọn phải có cùng tốc độ lấy mẫu"
 
 #: src/FreqWindow.cpp
@@ -2532,7 +2696,9 @@ msgstr "Để vẽ phổ, tất cả các đoạn âm được chọn phải có
 msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
-msgstr "Quá nhiều Audio đã được lựa chọn. Chỉ %.1f giây đầu của audio sẽ được phân tích."
+msgstr ""
+"Quá nhiều Audio đã được lựa chọn. Chỉ %.1f giây đầu của audio sẽ được phân "
+"tích."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -2543,30 +2709,26 @@ msgstr "Chưa chọn đủ data (dữ liệu)"
 msgid "s"
 msgstr "s"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%d Hz (%s) = %d dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%d Hz (%s) = %.1f dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4f sec (%d Hz) (%s) = %f"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
@@ -2594,10 +2756,6 @@ msgstr "Tần số (Hz)\tMức (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Trễ (seconds)\tTần số (Hz)\tMức"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Bộ phân tích tần số"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -2663,14 +2821,18 @@ msgstr "Không có trợ giúp trong máy"
 
 #: src/HelpText.cpp
 msgid ""
-"<br><br>The version of Audacity you are using is an <b>Alpha test "
-"version</b>."
-msgstr "<br>Phiên bản Audacity bạn đang sử dụng là một phiên bản thử nghiệm Alpha </b>."
+"<br><br>The version of Audacity you are using is an <b>Alpha test version</"
+"b>."
+msgstr ""
+"<br>Phiên bản Audacity bạn đang sử dụng là một phiên bản thử nghiệm Alpha </"
+"b>."
 
 #: src/HelpText.cpp
 msgid ""
 "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr "<br>Phiên bản Audacity bạn đang sử dụng là một phiên bản thử nghiệm BETA </b>."
+msgstr ""
+"<br>Phiên bản Audacity bạn đang sử dụng là một phiên bản thử nghiệm BETA </"
+"b>."
 
 #: src/HelpText.cpp
 msgid "Get the Official Released Version of Audacity"
@@ -2678,15 +2840,19 @@ msgstr "Hãy dùng Phiên bản Phát hành Chính thức của Audacity"
 
 #: src/HelpText.cpp
 msgid ""
-"We strongly recommend that you use our latest stable released version, which"
-" has full documentation and support.<br><br>"
-msgstr "Chúng tôi khuyến cáo bạn dùng phiên bản phát hành ổn định gần đây nhất, phiên bản này có đầy đủ tài liệu và sự hỗ trợ.<br><br>"
+"We strongly recommend that you use our latest stable released version, which "
+"has full documentation and support.<br><br>"
+msgstr ""
+"Chúng tôi khuyến cáo bạn dùng phiên bản phát hành ổn định gần đây nhất, "
+"phiên bản này có đầy đủ tài liệu và sự hỗ trợ.<br><br>"
 
 #: src/HelpText.cpp
 msgid ""
-"You can help us get Audacity ready for release by joining our "
-"[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
-msgstr "Bạn có thể giúp chúng tối chuẩn bị cho bản phát hành tiếp theo bằng cách tham gia [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+"You can help us get Audacity ready for release by joining our [[https://www."
+"audacityteam.org/community/|community]].<hr><br><br>"
+msgstr ""
+"Bạn có thể giúp chúng tối chuẩn bị cho bản phát hành tiếp theo bằng cách "
+"tham gia [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2699,61 +2865,85 @@ msgstr "Đây là các phương pháp hỗ trợ của chúng tôi:"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
 msgid ""
-"[[help:Quick_Help|Quick Help]] - if not installed locally, "
-"[[https://manual.audacityteam.org/quick_help.html|view online]]"
-msgstr "[[help:Quick_Help|Quick Help]] - nếu chưa được cài đặt trên máy, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+"[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
+"audacityteam.org/quick_help.html|view online]]"
+msgstr ""
+"[[help:Quick_Help|Quick Help]] - nếu chưa được cài đặt trên máy, [[https://"
+"manual.audacityteam.org/quick_help.html|view online]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
 msgid ""
-" [[help:Main_Page|Manual]] - if not installed locally, "
-"[[https://manual.audacityteam.org/|view online]]"
-msgstr "[[help:Main_Page|Manual]] - nếu chưa được cài đặt trên máy, [[https://manual.audacityteam.org/|view online]]\n "
+" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
+"audacityteam.org/|view online]]"
+msgstr ""
+"[[help:Main_Page|Manual]] - nếu chưa được cài đặt trên máy, [[https://manual."
+"audacityteam.org/|view online]]\n"
+" "
 
 #: src/HelpText.cpp
 msgid ""
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
-msgstr " [[https://forum.audacityteam.org/|Forum]] - vào forum online nếu bạn có bất cứ câu hỏi nào."
+msgstr ""
+" [[https://forum.audacityteam.org/|Forum]] - vào forum online nếu bạn có bất "
+"cứ câu hỏi nào."
 
 #: src/HelpText.cpp
 msgid ""
 "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
-msgstr "Thêm nữa: </b> thăm trang web của chúng tôi để có thêm các thủ thuật, mẹo hay, hướng dẫn và nhiều điều hửu ích khác\n[[https://wiki.audacityteam.org/index.php|Wiki]]"
+msgstr ""
+"Thêm nữa: </b> thăm trang web của chúng tôi để có thêm các thủ thuật, mẹo "
+"hay, hướng dẫn và nhiều điều hửu ích khác\n"
+"[[https://wiki.audacityteam.org/index.php|Wiki]]"
 
 #: src/HelpText.cpp
 msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and"
-" WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional "
-"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|"
-" FFmpeg library]] to your computer."
-msgstr "Audacity có thể thêm vào các tệp không được bảo vệ ở nhiều định dạng (như M4A và WMA, tệp nén WAV từ các thiết bị thu âm và từ các nguồn video khác) nếu bạn tải và cài đặt thêm lựa chọn này [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] về máy."
+"Audacity can import unprotected files in many other formats (such as M4A and "
+"WMA, compressed WAV files from portable recorders and audio from video "
+"files) if you download and install the optional [[https://manual."
+"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
+"library]] to your computer."
+msgstr ""
+"Audacity có thể thêm vào các tệp không được bảo vệ ở nhiều định dạng (như "
+"M4A và WMA, tệp nén WAV từ các thiết bị thu âm và từ các nguồn video khác) "
+"nếu bạn tải và cài đặt thêm lựa chọn này [[https://manual.audacityteam.org/"
+"man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] về máy."
 
 #: src/HelpText.cpp
 msgid ""
-"You can also read our help on importing "
-"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
-"files]] and tracks from "
-"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
-" audio CDs]]."
-msgstr "Bạn có thể đọc hướng dẫn trợ giúp về việc thêm tập tin [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] và đoạn âm thanh từ [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+"You can also read our help on importing [[https://manual.audacityteam.org/"
+"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
+"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
+"CDs]]."
+msgstr ""
+"Bạn có thể đọc hướng dẫn trợ giúp về việc thêm tập tin [[https://manual."
+"audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] và đoạn âm "
+"thanh từ [[https://manual.audacityteam.org/man/faq_opening_and_saving_files."
+"html#fromcd| audio CDs]]."
 
 #: src/HelpText.cpp
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]].<br><br>To always view the Manual online, change \"Location of "
 "Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Không tìm thấy hướng dẫn để cài đặt. Hãy [[*URL*|xem hướng dẫn online]].<br><br> Để luôn xem được hướng dẫn online, hay sửa phần \"vị trí hướng dẫn\" trong tùy chọn giao diện thành \"từ internet\"."
+msgstr ""
+"Không tìm thấy hướng dẫn để cài đặt. Hãy [[*URL*|xem hướng dẫn online]]."
+"<br><br> Để luôn xem được hướng dẫn online, hay sửa phần \"vị trí hướng dẫn"
+"\" trong tùy chọn giao diện thành \"từ internet\"."
 
 #: src/HelpText.cpp
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
-" download the Manual]].<br><br>To always view the Manual online, change "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
+"download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Không tìm thấy hướng dẫn để cài đặt. Hãy [[*URL*|xem hướng dẫn online]] hoặc truy cập [[https://manual.audacityteam.org/man/unzipping_the_manual.html| để tải hướng dẫn về]]. <br><br>Để luôn xem được hướng dẫn online, hay sửa phần \"vị trí hướng dẫn\" trong tùy chọn giao diện thành \"từ internet\"."
+msgstr ""
+"Không tìm thấy hướng dẫn để cài đặt. Hãy [[*URL*|xem hướng dẫn online]] hoặc "
+"truy cập [[https://manual.audacityteam.org/man/unzipping_the_manual.html| để "
+"tải hướng dẫn về]]. <br><br>Để luôn xem được hướng dẫn online, hay sửa phần "
+"\"vị trí hướng dẫn\" trong tùy chọn giao diện thành \"từ internet\"."
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -2820,14 +3010,18 @@ msgstr "Đã &làm..."
 msgid ""
 "Internal error in %s at %s line %d.\n"
 "Please inform the Audacity team at https://forum.audacityteam.org/."
-msgstr "Lỗi %s ở %s line %d.\nVui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/."
+msgstr ""
+"Lỗi %s ở %s line %d.\n"
+"Vui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/."
 
 #: src/InconsistencyException.cpp
 #, c-format
 msgid ""
 "Internal error at %s line %d.\n"
 "Please inform the Audacity team at https://forum.audacityteam.org/."
-msgstr "Lỗi ở %s line %d.\nVui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/."
+msgstr ""
+"Lỗi ở %s line %d.\n"
+"Vui lòng thông báo cho nhóm Audacity: https://forum.audacityteam.org/."
 
 #: src/InconsistencyException.h
 msgid "Internal Error"
@@ -2958,7 +3152,8 @@ msgstr "Chọn ngôn ngữ sẽ dùng:"
 msgid ""
 "The language you have chosen, %s (%s), is not the same as the system "
 "language, %s (%s)."
-msgstr "Ngôn ngữ bạn đã chọn, %s (%s), không giống với ngôn ngữ hệ thống, %s (%s)."
+msgstr ""
+"Ngôn ngữ bạn đã chọn, %s (%s), không giống với ngôn ngữ hệ thống, %s (%s)."
 
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
@@ -2982,7 +3177,9 @@ msgstr "Lỗi không Chuyển dạng được Tập tin Phiên bản cũ"
 msgid ""
 "Converted a 1.0 project file to the new format.\n"
 "The old file has been saved as '%s'"
-msgstr "Đã chuyển tập tin dự án phiên bản 1.0 sang định dạng mới.\nTập tin cũ đã được lưu thành '%s'"
+msgstr ""
+"Đã chuyển tập tin dự án phiên bản 1.0 sang định dạng mới.\n"
+"Tập tin cũ đã được lưu thành '%s'"
 
 #: src/Legacy.cpp
 msgid "Opening Audacity Project"
@@ -3019,7 +3216,9 @@ msgstr "&Làm lại"
 msgid ""
 "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
-msgstr "Gặp lỗi với thao tác gần đây nhất. Nếu bạn nghĩ\nđây là lỗi bug, xin hãy cho chúng tôi biết cụ thể khi nào lỗi xảy ra."
+msgstr ""
+"Gặp lỗi với thao tác gần đây nhất. Nếu bạn nghĩ\n"
+"đây là lỗi bug, xin hãy cho chúng tôi biết cụ thể khi nào lỗi xảy ra."
 
 #: src/Menus.cpp
 msgid "Disallowed"
@@ -3038,6 +3237,11 @@ msgstr "&Trộn và Kết xuất"
 msgid "Mixing and rendering tracks"
 msgstr "Trộn và kết xuất đoạn âm"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Bảng Mixer Audacity %s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3047,8 +3251,7 @@ msgid "Gain"
 msgstr "Độ khuếch đại"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note
-#. tracks
+#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -3100,11 +3303,6 @@ msgid "Moved pan slider"
 msgstr "Đã di chuyển thanh trượt cân bằng trái/phải"
 
 #: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Bảng Mixer Audacity %s"
-
-#: src/MixerBoard.cpp
 msgid "&Mixer Board..."
 msgstr "Bảng &Mixer..."
 
@@ -3114,7 +3312,10 @@ msgid ""
 "Unable to load the \"%s\" module.\n"
 "\n"
 "Error: %s"
-msgstr "Không thể tải  môđun \"%s\" .\n\nLỗi: %s"
+msgstr ""
+"Không thể tải  môđun \"%s\" .\n"
+"\n"
+"Lỗi: %s"
 
 #: src/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -3126,7 +3327,10 @@ msgid ""
 "The module \"%s\" does not provide a version string.\n"
 "\n"
 "It will not be loaded."
-msgstr "Mô-đun \"%s\"  không cung cấp chuỗi mã phiên bản.\n\nKhông tải được Mô-đun."
+msgstr ""
+"Mô-đun \"%s\"  không cung cấp chuỗi mã phiên bản.\n"
+"\n"
+"Không tải được Mô-đun."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3134,7 +3338,10 @@ msgid ""
 "The module \"%s\" is matched with Audacity version \"%s\".\n"
 "\n"
 "It will not be loaded."
-msgstr "Mô-đun \"%s\" là phiên bản Audacity \"%s\".\n\nKhông tải được Mô-đun."
+msgstr ""
+"Mô-đun \"%s\" là phiên bản Audacity \"%s\".\n"
+"\n"
+"Không tải được Mô-đun."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3142,7 +3349,10 @@ msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
 "It will not be loaded."
-msgstr "Mô-đun \"%s\"  không khởi động được.\n\nKhông tải được Mô-đun."
+msgstr ""
+"Mô-đun \"%s\"  không khởi động được.\n"
+"\n"
+"Không tải được Mô-đun."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -3154,7 +3364,10 @@ msgid ""
 "\n"
 "\n"
 "Only use modules from trusted sources"
-msgstr "\n\nChỉ dùng các mô-đun đến từ nguồn có tín"
+msgstr ""
+"\n"
+"\n"
+"Chỉ dùng các mô-đun đến từ nguồn có tín"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/sample-data-export.ny
@@ -3180,7 +3393,10 @@ msgid ""
 "The module \"%s\" does not provide any of the required functions.\n"
 "\n"
 "It will not be loaded."
-msgstr "Mô-đun \"%s\" không cung cấp các hàm cần thiết.\n\nKhông tải được Mô-đun."
+msgstr ""
+"Mô-đun \"%s\" không cung cấp các hàm cần thiết.\n"
+"\n"
+"Không tải được Mô-đun."
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -3273,32 +3489,27 @@ msgstr "A♭"
 msgid "B♭"
 msgstr "B♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "C♯/D♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "D♯/E♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "F♯/G♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "G♯/A♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
@@ -3309,7 +3520,8 @@ msgstr "Quản lý Plug-ins \"điện toán\""
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Chọn các hiệu ứng, nhấp chuột lên nút Bật lên hoặc Tắt bỏ, rồi ấn vào OK."
+msgstr ""
+"Chọn các hiệu ứng, nhấp chuột lên nút Bật lên hoặc Tắt bỏ, rồi ấn vào OK."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -3386,7 +3598,10 @@ msgid ""
 "Enabling effects or commands:\n"
 "\n"
 "%s"
-msgstr "Bật tất cả hiệu ứng và lệnh:\n\n%s"
+msgstr ""
+"Bật tất cả hiệu ứng và lệnh:\n"
+"\n"
+"%s"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -3394,14 +3609,19 @@ msgid ""
 "Enabling effect or command:\n"
 "\n"
 "%s"
-msgstr "Bật hiệu ứng hoặc lệnh:\n\n%s"
+msgstr ""
+"Bật hiệu ứng hoặc lệnh:\n"
+"\n"
+"%s"
 
 #: src/PluginManager.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
-msgstr "Hiệu ứng hoặc lệnh tại %s  đã đăng ký không thành công:\n%s"
+msgstr ""
+"Hiệu ứng hoặc lệnh tại %s  đã đăng ký không thành công:\n"
+"%s"
 
 #: src/PluginManager.cpp
 #, c-format
@@ -3449,7 +3669,10 @@ msgid ""
 "There is very little free disk space left on %s\n"
 "Please select a bigger temporary directory location in\n"
 "Directories Preferences."
-msgstr "còn lại rất ít vùng trống trên đĩa %s\nHãy chọn một phân vùng đĩa khác lớn hơn để lưu trử file tạm của bạn\nTrong Tùy chọn thư mục."
+msgstr ""
+"còn lại rất ít vùng trống trên đĩa %s\n"
+"Hãy chọn một phân vùng đĩa khác lớn hơn để lưu trử file tạm của bạn\n"
+"Trong Tùy chọn thư mục."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3460,7 +3683,9 @@ msgstr "Tốc độ thật: %d"
 msgid ""
 "Error opening sound device.\n"
 "Try changing the audio host, playback device and the project sample rate."
-msgstr "Lỗi mở thiết bị âm thanh. Xin hãy kiểm tra thiết lập đầu ra và tốc độ lấy mẫu của dự án."
+msgstr ""
+"Lỗi mở thiết bị âm thanh. Xin hãy kiểm tra thiết lập đầu ra và tốc độ lấy "
+"mẫu của dự án."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
@@ -3475,7 +3700,10 @@ msgid ""
 "Too few tracks are selected for recording at this sample rate.\n"
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
-msgstr "Quá ít đoạn âm được lựa chọn để ghi tỷ lệ tốc độ mẫu này.\n(Audacity yêu cầu hai kênh sử dụng chung tỷ lệ tốc độ mẫu cho \nmỗi đoạn stereo)"
+msgstr ""
+"Quá ít đoạn âm được lựa chọn để ghi tỷ lệ tốc độ mẫu này.\n"
+"(Audacity yêu cầu hai kênh sử dụng chung tỷ lệ tốc độ mẫu cho \n"
+"mỗi đoạn stereo)"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
@@ -3505,7 +3733,12 @@ msgid ""
 "Other applications are competing with Audacity for processor time\n"
 "\n"
 "You are saving directly to a slow external storage device\n"
-msgstr "Audio thu âm bị mất ở vị trí được đánh dấu. Có thể do:\n\nMột vài ứng dụng khác đang xung đột với Audacity trong quá trình xử lý. \n\nBạn đã lưu tập tin audio vào một thiết bị bộ nhớ ngoài.\n"
+msgstr ""
+"Audio thu âm bị mất ở vị trí được đánh dấu. Có thể do:\n"
+"\n"
+"Một vài ứng dụng khác đang xung đột với Audacity trong quá trình xử lý. \n"
+"\n"
+"Bạn đã lưu tập tin audio vào một thiết bị bộ nhớ ngoài.\n"
 
 #: src/ProjectAudioManager.cpp
 msgid "Turn off dropout detection"
@@ -3527,9 +3760,12 @@ msgstr "Không thay đổi và đóng dự án ngay bây giờ"
 #: src/ProjectFSCK.cpp
 msgid ""
 "Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project "
-"immediately\" on further error alerts."
-msgstr "Tiếp tục với các sửa chữa ghi trong tập nhật lý log, và kiểm tra thêm lỗi. Việc này sẽ lưu dự án lại ở trạng thái hẹn tại, trừ khi bạn chọn \"Tắt bỏ dự án ngay lập tức\" trong các hộp thoại cảnh báo lỗi tiếp."
+"save the project in its current state, unless you \"Close project immediately"
+"\" on further error alerts."
+msgstr ""
+"Tiếp tục với các sửa chữa ghi trong tập nhật lý log, và kiểm tra thêm lỗi. "
+"Việc này sẽ lưu dự án lại ở trạng thái hẹn tại, trừ khi bạn chọn \"Tắt bỏ dự "
+"án ngay lập tức\" trong các hộp thoại cảnh báo lỗi tiếp."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -3557,15 +3793,33 @@ msgid ""
 "If you choose the third option, this will save the \n"
 "project in its current state, unless you \"Close \n"
 "project immediately\" on further error alerts."
-msgstr "Kiểm tra thư mục dự án \"%s\"\nphát hienj thấy %lld (một số) tập tin audio ngoài bị thiếu\n('tập tin có biệt danh'). Không có cách nào để Audacity\ncó thẻ phục hồi được các tập tin này tự động.\n\nNếu bạn chọn lựa chọn đầu tiên hoặc thứ hai bên dưới,\nbạn có thể tìm thử và phục hồi các tập tin thiếu này\ntrở về các địa chỉ lưu trước đây.\n\nHãy lưu ý với lụa chọn thứ hai, sóng tín hiệu\ncó thể sẽ không hiện các khoảng im lặng.\n\nNếu bạn chọn lựa chọn thứ ba, việc này sẽ lưu\ndự án ở hiện trạng, trừ khi bạn chọn \"Tắt bỏ\n dự án ngay lập tức\" trong các hộp thoại cảnh báo lỗi tiếp."
+msgstr ""
+"Kiểm tra thư mục dự án \"%s\"\n"
+"phát hienj thấy %lld (một số) tập tin audio ngoài bị thiếu\n"
+"('tập tin có biệt danh'). Không có cách nào để Audacity\n"
+"có thẻ phục hồi được các tập tin này tự động.\n"
+"\n"
+"Nếu bạn chọn lựa chọn đầu tiên hoặc thứ hai bên dưới,\n"
+"bạn có thể tìm thử và phục hồi các tập tin thiếu này\n"
+"trở về các địa chỉ lưu trước đây.\n"
+"\n"
+"Hãy lưu ý với lụa chọn thứ hai, sóng tín hiệu\n"
+"có thể sẽ không hiện các khoảng im lặng.\n"
+"\n"
+"Nếu bạn chọn lựa chọn thứ ba, việc này sẽ lưu\n"
+"dự án ở hiện trạng, trừ khi bạn chọn \"Tắt bỏ\n"
+" dự án ngay lập tức\" trong các hộp thoại cảnh báo lỗi tiếp."
 
 #: src/ProjectFSCK.cpp
 msgid "Treat missing audio as silence (this session only)"
-msgstr "Chèn đoạn âm thanh trắng vào phần âm thanh bị thiếu (chỉ áp dụng cho tác vụ này)"
+msgstr ""
+"Chèn đoạn âm thanh trắng vào phần âm thanh bị thiếu (chỉ áp dụng cho tác vụ "
+"này)"
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)."
-msgstr "Thay thế đoạn audio bị mất bằng đoạn âm thanh trắng (vĩnh viễn ngay lập tức)"
+msgstr ""
+"Thay thế đoạn audio bị mất bằng đoạn âm thanh trắng (vĩnh viễn ngay lập tức)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Aliased File(s)"
@@ -3578,7 +3832,11 @@ msgid ""
 "detected %lld missing alias (.auf) blockfile(s). \n"
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
-msgstr "Kiểm tra thư mục \"%s\"\nvà phát hiện %lld thiếu tên bí danh  (.auf) của khối tập tin. \nAudacity có thể tạo lại các tập tin này \ntừ những audio hiện tại "
+msgstr ""
+"Kiểm tra thư mục \"%s\"\n"
+"và phát hiện %lld thiếu tên bí danh  (.auf) của khối tập tin. \n"
+"Audacity có thể tạo lại các tập tin này \n"
+"từ những audio hiện tại "
 
 #: src/ProjectFSCK.cpp
 msgid "Regenerate alias summary files (safe and recommended)"
@@ -3586,7 +3844,9 @@ msgstr "Phục hồi các tập tin tóm tắc biệt hiệu (khuyến cáo an t
 
 #: src/ProjectFSCK.cpp
 msgid "Fill in silence for missing display data (this session only)"
-msgstr "Điền vào khoảng lặng cho dữ liệu hiển thị bị thiếu (chỉ áp dụng cho tác vụ này)"
+msgstr ""
+"Điền vào khoảng lặng cho dữ liệu hiển thị bị thiếu (chỉ áp dụng cho tác vụ "
+"này)"
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no further changes"
@@ -3611,11 +3871,24 @@ msgid ""
 "\n"
 "Note that for the second option, the waveform \n"
 "may not show silence."
-msgstr "Kiểm tra dự án thư  mục %s\nphát hiện %lld thiếu audio data của các khối tập tin (.au)\ncó thể là do lỗi phần mềm, lỗi hệ thống hoặc vô tình bị xoá\nAudacity không thể khôi phục \nnhững tập tin này một cách tự động \n\nNếu bạn chọn tuỳ chọn thứ nhất hoặc thứ hai bên dưới \nbạn có thể tìm và khôi phục các tập tin bị mất\ntrở về lại dúng vị trí của nó\n\nLưu ý với tuỳ chọn thứ hai,  dạng sóng \ncó thể không hiển thị im lặng "
+msgstr ""
+"Kiểm tra dự án thư  mục %s\n"
+"phát hiện %lld thiếu audio data của các khối tập tin (.au)\n"
+"có thể là do lỗi phần mềm, lỗi hệ thống hoặc vô tình bị xoá\n"
+"Audacity không thể khôi phục \n"
+"những tập tin này một cách tự động \n"
+"\n"
+"Nếu bạn chọn tuỳ chọn thứ nhất hoặc thứ hai bên dưới \n"
+"bạn có thể tìm và khôi phục các tập tin bị mất\n"
+"trở về lại dúng vị trí của nó\n"
+"\n"
+"Lưu ý với tuỳ chọn thứ hai,  dạng sóng \n"
+"có thể không hiển thị im lặng "
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "Thay thế đoạn audio bị mất bằng đoạn âm thanh trắng (vĩnh viễn ngay lập tức)"
+msgstr ""
+"Thay thế đoạn audio bị mất bằng đoạn âm thanh trắng (vĩnh viễn ngay lập tức)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
@@ -3628,7 +3901,11 @@ msgid ""
 "found %d orphan block file(s). These files are \n"
 "unused by this project, but might belong to other projects. \n"
 "They are doing no harm and are small."
-msgstr "Kiểm tra dự án thư mục \"%s\" đã tìm thấy %dkhối tập tin mồ côi.  \nCác tập tin này không được sử dụng trong dự án này, \nnhưng có thể vẫn thuộc về những dự án khác. \nChúng không gây hại và có kích thước nhỏ. "
+msgstr ""
+"Kiểm tra dự án thư mục \"%s\" đã tìm thấy %dkhối tập tin mồ côi.  \n"
+"Các tập tin này không được sử dụng trong dự án này, \n"
+"nhưng có thể vẫn thuộc về những dự án khác. \n"
+"Chúng không gây hại và có kích thước nhỏ. "
 
 #: src/ProjectFSCK.cpp
 msgid "Continue without deleting; ignore the extra files this session"
@@ -3658,7 +3935,11 @@ msgid ""
 "Project check found file inconsistencies during automatic recovery.\n"
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
-msgstr "Kiểm tra dự án tìm thấy tệp không nhất quán trong quá trình khôi phục tự động. \n\nChọn vào 'trợ giúp> chẩn đoán> Hiển thị log...' để xem chi tiết."
+msgstr ""
+"Kiểm tra dự án tìm thấy tệp không nhất quán trong quá trình khôi phục tự "
+"động. \n"
+"\n"
+"Chọn vào 'trợ giúp> chẩn đoán> Hiển thị log...' để xem chi tiết."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
@@ -3673,8 +3954,16 @@ msgstr "<untitled>"
 msgid "[Project %02i] "
 msgstr "[Dự án %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
+msgstr "Lỗi khi mở cơ sở dữ liệu của dự án"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
 msgstr "Lỗi khi mở cơ sở dữ liệu của dự án"
 
 #: src/ProjectFileIO.cpp
@@ -3691,7 +3980,10 @@ msgid ""
 "Failed to execute a project file command:\n"
 "\n"
 "%s"
-msgstr "Lỗi thi hành lệnh tập tin dự án:\n\n%s"
+msgstr ""
+"Lỗi thi hành lệnh tập tin dự án:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3699,7 +3991,10 @@ msgid ""
 "Unable to prepare project file command:\n"
 "\n"
 "%s"
-msgstr "Lệnh tập tin dự án không sẵn sàng:\n\n%s"
+msgstr ""
+"Lệnh tập tin dự án không sẵn sàng:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3708,7 +4003,18 @@ msgid ""
 "The following command failed:\n"
 "\n"
 "%s"
-msgstr "Không thể phục hồi dữ liệu từ tập tin dự án.\nKhông thể thực hiện lệnh tiếp theo.\n\n%s"
+msgstr ""
+"Không thể phục hồi dữ liệu từ tập tin dự án.\n"
+"Không thể thực hiện lệnh tiếp theo.\n"
+"\n"
+"%s"
+
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -3719,15 +4025,74 @@ msgid ""
 "This project was created with a newer version of Audacity:\n"
 "\n"
 "You will need to upgrade to process it"
-msgstr "Dự án này được tạo bằng một phiên bản Audacity mới hơn.\n\nBạn cần cập nhật Audacity để mở nó."
+msgstr ""
+"Dự án này được tạo bằng một phiên bản Audacity mới hơn.\n"
+"\n"
+"Bạn cần cập nhật Audacity để mở nó."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Không thể khởi chạy tập tin dự án"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Dọn dẹp các blocks dòng mồ côi không thành công"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Không thể khởi chạy tập tin dự án"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3747,10 +4112,6 @@ msgid "Unable to switch to fast journaling mode"
 msgstr "Không thể chuyển sang chế độ ghi nhanh"
 
 #: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Lỗi sao chép thẻ"
-
-#: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
 msgstr "Lỗi liên kết tham số SQL"
 
@@ -3761,7 +4122,11 @@ msgid ""
 "The following command failed:\n"
 "\n"
 "%s"
-msgstr "Lỗi cập nhật tập tin dự án.\nKhông thể thực hiện lệnh tiếp theo\n\n%s"
+msgstr ""
+"Lỗi cập nhật tập tin dự án.\n"
+"Không thể thực hiện lệnh tiếp theo\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Destination project could not be detached"
@@ -3781,7 +4146,10 @@ msgid ""
 "Audacity failed to write file %s.\n"
 "Perhaps disk is full or not writable.\n"
 "For tips on freeing up space, click the help button."
-msgstr "Audacity không thể ghi được tập tin%s\nCó thể không ghi được hoặc ổ đĩa đã đầy\nđể có nhiều mẹo giải phóng ổ đĩa hơn, hãy click vào nút \"trợ giúp\"."
+msgstr ""
+"Audacity không thể ghi được tập tin%s\n"
+"Có thể không ghi được hoặc ổ đĩa đã đầy\n"
+"để có nhiều mẹo giải phóng ổ đĩa hơn, hãy click vào nút \"trợ giúp\"."
 
 #: src/ProjectFileIO.cpp
 msgid "Compacting project"
@@ -3803,8 +4171,12 @@ msgstr "(Đã phục hồi)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr "Tập tin này được lưu lại bởi Audicity bản %s.\nBạn đang dùng Audacity bản %s. Bạn có thể nâng cấp lên phien bản mới hơn để mở tập tin này."
+"You are using Audacity %s. You may need to upgrade to a newer version to "
+"open this file."
+msgstr ""
+"Tập tin này được lưu lại bởi Audicity bản %s.\n"
+"Bạn đang dùng Audacity bản %s. Bạn có thể nâng cấp lên phien bản mới hơn để "
+"mở tập tin này."
 
 #: src/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -3826,7 +4198,9 @@ msgstr "Không thể phân tích thông tin dự án."
 msgid ""
 "The project's database failed to reopen, possibly because of limited space "
 "on the storage device."
-msgstr "Cơ sở dữ liệu của dự án không thể mở lại. Có thể vì vùng trống trên ổ đĩa của bạn quá ít."
+msgstr ""
+"Cơ sở dữ liệu của dự án không thể mở lại. Có thể vì vùng trống trên ổ đĩa "
+"của bạn quá ít."
 
 #: src/ProjectFileIO.cpp
 msgid "Saving project"
@@ -3847,7 +4221,11 @@ msgid ""
 "on the storage device.\n"
 "\n"
 "%s"
-msgstr "Không thể mở dự án, có thể vì vùng trổng\ntrên ổ đĩa của bạn quá ít.\n\n%s"
+msgstr ""
+"Không thể mở dự án, có thể vì vùng trổng\n"
+"trên ổ đĩa của bạn quá ít.\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3856,7 +4234,11 @@ msgid ""
 "on the storage device.\n"
 "\n"
 "%s"
-msgstr "Không thể xóa thông tin lưu tự động từ tập tin dự án, có thể vì vùng trống\ntrên ổ đĩa của bạn quá ít\n\n%s"
+msgstr ""
+"Không thể xóa thông tin lưu tự động từ tập tin dự án, có thể vì vùng trống\n"
+"trên ổ đĩa của bạn quá ít\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Backing up project"
@@ -3867,7 +4249,10 @@ msgid ""
 "This project was not saved properly the last time Audacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot."
-msgstr "Dự án này đã không được lưu lại đúng cách lần gần đây nhất Audacity được mở\n\nNó đã được phục hồi ở thao tác cuối cùng được lưu."
+msgstr ""
+"Dự án này đã không được lưu lại đúng cách lần gần đây nhất Audacity được mở\n"
+"\n"
+"Nó đã được phục hồi ở thao tác cuối cùng được lưu."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -3875,7 +4260,12 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
-msgstr "Dự án này đã không được lưu lại đúng cách lần gần đây nhất Audacity được mở\n\nNó đã được phục hồi ở thao tác cuối cùng được lưu, nhưng bạn phải lưu nó lại lần nữa\nđể giữ được tất cả nội dung."
+msgstr ""
+"Dự án này đã không được lưu lại đúng cách lần gần đây nhất Audacity được mở\n"
+"\n"
+"Nó đã được phục hồi ở thao tác cuối cùng được lưu, nhưng bạn phải lưu nó lại "
+"lần nữa\n"
+"để giữ được tất cả nội dung."
 
 #: src/ProjectFileManager.cpp
 msgid "Project Recovered"
@@ -3895,7 +4285,15 @@ msgid ""
 "are open, then File > Save Project.\n"
 "\n"
 "Save anyway?"
-msgstr "Dự án bạn hiện đang trống.\nNếu lưu lại, dự án sẽ không có đoạn âm nào.\n\nĐể lưu lại các đoạn âm đã mở:\nNhấn vào 'Không', Chỉnh sửa > Hoàn tác cho đến khi các đoạn âm đều mở, rồi vào Tập tin > Lưu lại Dự án.\n\nKệ, cứ lưu?"
+msgstr ""
+"Dự án bạn hiện đang trống.\n"
+"Nếu lưu lại, dự án sẽ không có đoạn âm nào.\n"
+"\n"
+"Để lưu lại các đoạn âm đã mở:\n"
+"Nhấn vào 'Không', Chỉnh sửa > Hoàn tác cho đến khi các đoạn âm đều mở, rồi "
+"vào Tập tin > Lưu lại Dự án.\n"
+"\n"
+"Kệ, cứ lưu?"
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Empty Project"
@@ -3910,13 +4308,18 @@ msgid ""
 "The project size exceeds the available free space on the target disk.\n"
 "\n"
 "Please select a different disk with more free space."
-msgstr "Kích thước dự án vượt quá dung lượng trống có sẵn trên ổ đĩa lưu trử.\n\nVui lòng chọn một ổ đĩa khác còn trống nhiều hơn."
+msgstr ""
+"Kích thước dự án vượt quá dung lượng trống có sẵn trên ổ đĩa lưu trử.\n"
+"\n"
+"Vui lòng chọn một ổ đĩa khác còn trống nhiều hơn."
 
 #: src/ProjectFileManager.cpp
 msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
-msgstr "Kích thước dự án đã vượt quá phạm vi 4GB cho phép khi ghi lên phân vùng đĩa FAT32."
+msgstr ""
+"Kích thước dự án đã vượt quá phạm vi 4GB cho phép khi ghi lên phân vùng đĩa "
+"FAT32."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -3925,9 +4328,13 @@ msgstr "Đã lưu %s"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite another project.\n"
+"The project was not saved because the file name provided would overwrite "
+"another project.\n"
 "Please try again and select an original name."
-msgstr "Dự án đã không được lưu lại bởi vì tên tập tin cung cấp đã ghi đè lên dự án khác.\nXin hãy thử lại và chọn một cái tên không trùng."
+msgstr ""
+"Dự án đã không được lưu lại bởi vì tên tập tin cung cấp đã ghi đè lên dự án "
+"khác.\n"
+"Xin hãy thử lại và chọn một cái tên không trùng."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -3938,7 +4345,10 @@ msgstr "%s Lưu lại Dự án \"%s\" thành..."
 msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
-msgstr "Lưu lại Dự án' dành cho dự án Audacity, không phải là tập tin audio.\nNếu dùng cho tập tin audio với các chương trình ứng dụng khác, hãy dùng 'Xuất tập'.\n"
+msgstr ""
+"Lưu lại Dự án' dành cho dự án Audacity, không phải là tập tin audio.\n"
+"Nếu dùng cho tập tin audio với các chương trình ứng dụng khác, hãy dùng "
+"'Xuất tập'.\n"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -3951,7 +4361,13 @@ msgid ""
 "   If you select \"Yes\" the project\n"
 "\"%s\"\n"
 "   will be irreversibly overwritten."
-msgstr "Bạn có muốn ghi đè lên dự án \n\"%s\"?\n\nNếu bạn chọn \"đồng ý\" dự án\n\"%s\"\nsẽ bị ghi đè vĩnh viễn."
+msgstr ""
+"Bạn có muốn ghi đè lên dự án \n"
+"\"%s\"?\n"
+"\n"
+"Nếu bạn chọn \"đồng ý\" dự án\n"
+"\"%s\"\n"
+"sẽ bị ghi đè vĩnh viễn."
 
 #. i18n-hint: Heading: A warning that a project is about to be overwritten.
 #: src/ProjectFileManager.cpp
@@ -3960,9 +4376,13 @@ msgstr "Cánh báo ghi đè dự án"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the selected project is open in another window.\n"
+"The project was not saved because the selected project is open in another "
+"window.\n"
 "Please try again and select an original name."
-msgstr "Dự án này sẽ không được lưu vì dự án được lựa chọn đang mở ở một cửa sổ khác.\nHãy thử lại và đặt một cái tên không bị trùng."
+msgstr ""
+"Dự án này sẽ không được lưu vì dự án được lựa chọn đang mở ở một cửa sổ "
+"khác.\n"
+"Hãy thử lại và đặt một cái tên không bị trùng."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -3973,7 +4393,9 @@ msgstr "%s Lưu bản sao dự án \"%s\" dưới tên..."
 msgid ""
 "Saving a copy must not overwrite an existing saved project.\n"
 "Please try again and select an original name."
-msgstr "Lưu lại một bản sao chép không bắt buộc ghi đè lên dự án đã lưu.\nHãy thử lại và lựa chọn một cái tên không bị trùng."
+msgstr ""
+"Lưu lại một bản sao chép không bắt buộc ghi đè lên dự án đã lưu.\n"
+"Hãy thử lại và lựa chọn một cái tên không bị trùng."
 
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
@@ -3996,7 +4418,9 @@ msgstr "Lỗi khi mở dự án"
 msgid ""
 "Project resides on FAT formatted drive.\n"
 "Copy it to another drive to open it."
-msgstr "Dự án đang nằm trên phân vùng đĩa FAT.\nHãy sao chép nó vào một vùng đĩa khác để chạy."
+msgstr ""
+"Dự án đang nằm trên phân vùng đĩa FAT.\n"
+"Hãy sao chép nó vào một vùng đĩa khác để chạy."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4004,7 +4428,11 @@ msgid ""
 "Doing this may result in severe data loss.\n"
 "\n"
 "Please open the actual Audacity project file instead."
-msgstr "Bạn đang mở một tập tin phục hồi được tạo tự động.\nđiều này có thể dẫn đến mất dữ liệu gốc.\n\nHãy mở một tập tin dự án chính thống."
+msgstr ""
+"Bạn đang mở một tập tin phục hồi được tạo tự động.\n"
+"điều này có thể dẫn đến mất dữ liệu gốc.\n"
+"\n"
+"Hãy mở một tập tin dự án chính thống."
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Backup File Detected"
@@ -4023,7 +4451,9 @@ msgstr "Lỗi khi mở tập tin"
 msgid ""
 "File may be invalid or corrupted: \n"
 "%s"
-msgstr "Tập tin không hợp lệ hoặc bị hỏng: \n%s"
+msgstr ""
+"Tập tin không hợp lệ hoặc bị hỏng: \n"
+"%s"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Opening File or Project"
@@ -4065,14 +4495,23 @@ msgstr "Nén dự án"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes "
+"within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be "
+"discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
-msgstr "Nén dự án này sẽ làm trống dung lượng ổ đĩa bằng cách xóa các bytes không dùng nữa trong tập tin.\n\nDung lượng trống hiện có %svà dự án này sẽ dùng %s\n\nnếu bạn tiếp tục, tất cả lịch sử thao tác của bạn trên bộ nhớ đệm sẽ bị xóa và bạn sẽ có thêm khoảng %s dung lượng đĩa."
+msgstr ""
+"Nén dự án này sẽ làm trống dung lượng ổ đĩa bằng cách xóa các bytes không "
+"dùng nữa trong tập tin.\n"
+"\n"
+"Dung lượng trống hiện có %svà dự án này sẽ dùng %s\n"
+"\n"
+"nếu bạn tiếp tục, tất cả lịch sử thao tác của bạn trên bộ nhớ đệm sẽ bị xóa "
+"và bạn sẽ có thêm khoảng %s dung lượng đĩa."
 
 #: src/ProjectFileManager.cpp
 msgid "Compacted project file"
@@ -4095,8 +4534,7 @@ msgstr "Lỗi quá trình phục hồi tự động."
 msgid "Welcome to Audacity version %s"
 msgstr "Chào bạn, bạn đang dùng Audacity phiên bản %s"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project
-#. name.
+#. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
@@ -4114,7 +4552,13 @@ msgid ""
 "To save any previously open tracks:\n"
 "Cancel, Edit > Undo until all tracks\n"
 "are open, then File > Save Project."
-msgstr "\nDự án được lưu sẽ được xoá sạch!!\n\nĐể lưu lại các dải âm đã được mở trước kia\nnhấn nút Huỷ bỏ, Chỉnh sửa > Huỷ tới khi tất cả các \ndải âm của bạn được mở, rồi chọn Tập tin > Lưu Dự án."
+msgstr ""
+"\n"
+"Dự án được lưu sẽ được xoá sạch!!\n"
+"\n"
+"Để lưu lại các dải âm đã được mở trước kia\n"
+"nhấn nút Huỷ bỏ, Chỉnh sửa > Huỷ tới khi tất cả các \n"
+"dải âm của bạn được mở, rồi chọn Tập tin > Lưu Dự án."
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4147,7 +4591,10 @@ msgstr "%s và %s."
 msgid ""
 "This recovery file was saved by Audacity 2.3.0 or before.\n"
 "You need to run that version of Audacity to recover the project."
-msgstr "Tập tin hồi phục này được lưu lại bởi Audacity 2.3.0 hoặc các phiên bản trước đo.\nBạn cần phiên bản Audacity đó để khôi phục dự án."
+msgstr ""
+"Tập tin hồi phục này được lưu lại bởi Audacity 2.3.0 hoặc các phiên bản "
+"trước đo.\n"
+"Bạn cần phiên bản Audacity đó để khôi phục dự án."
 
 #. i18n-hint: This is an experimental feature where the main panel in
 #. Audacity is put on a notebook tab, and this is the name on that tab.
@@ -4172,9 +4619,9 @@ msgstr "Nhóm thêm vào ở %s sẽ được kết hợp với nhóm xác đị
 #: src/Registry.cpp
 #, c-format
 msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was "
-"discarded"
-msgstr "Mục tin thêm vào ở %s xung đột với item xác định trước đó và đã bị loại bỏ"
+"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+"Mục tin thêm vào ở %s xung đột với item xác định trước đó và đã bị loại bỏ"
 
 #: src/Registry.cpp
 #, c-format
@@ -4336,8 +4783,7 @@ msgstr "Bộ đo"
 msgid "Play Meter"
 msgstr "Bộ đo phát"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being
-#. recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -4372,8 +4818,7 @@ msgid "Ruler"
 msgstr "Thước đo"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and
-#. musical
+#. * data associated with a time line, such as sequences of labels, and musical
 #. * notes
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
@@ -4434,12 +4879,18 @@ msgstr "Chọn nơi để lưu lại các ảnh chụp màn hình"
 msgid "Capture failed!"
 msgstr "Không thể bật!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr ""
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
-msgstr "Trình tự có tệp khối vượt quá số  %s mẫu tối đa cho mỗi khối.\nĐang cắt ngắn đến độ dài tối đa này."
+msgstr ""
+"Trình tự có tệp khối vượt quá số  %s mẫu tối đa cho mỗi khối.\n"
+"Đang cắt ngắn đến độ dài tối đa này."
 
 #: src/Sequence.cpp
 msgid "Warning - Truncating Overlong Block File"
@@ -4489,6 +4940,11 @@ msgstr "Xin chào!"
 msgid "Don't show this again at start up"
 msgstr "Không hiện hộp thoại này nữa"
 
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Đang kiểm tra dữ liệu tệp dự án"
+
 #: src/Tags.cpp
 msgid "Artist Name"
 msgstr "Tên nghệ sĩ"
@@ -4519,7 +4975,9 @@ msgstr "Ghi chú"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr "Sử dụng các phím mũi tên (hoặc phím ENTER sau khi chỉnh sửa) để điều hướng các phạm vi."
+msgstr ""
+"Sử dụng các phím mũi tên (hoặc phím ENTER sau khi chỉnh sửa) để điều hướng "
+"các phạm vi."
 
 #: src/Tags.cpp
 msgid "Tag"
@@ -4609,7 +5067,9 @@ msgstr "Không phù hợp"
 msgid ""
 "The temporary files directory is on a FAT formatted drive.\n"
 "Resetting to default location."
-msgstr "Thư mục tập tin tạm đang được lưu trên phân vùng đĩa FAT.\nHãy đặt lại địa chỉ mặc định"
+msgstr ""
+"Thư mục tập tin tạm đang được lưu trên phân vùng đĩa FAT.\n"
+"Hãy đặt lại địa chỉ mặc định"
 
 #: src/TempDirectory.cpp
 #, c-format
@@ -4617,18 +5077,22 @@ msgid ""
 "%s\n"
 "\n"
 "For tips on suitable drives, click the help button."
-msgstr "%s\n\nĐể xem các mẹo chọn ổ đĩa, click vào nút trợ giúp."
+msgstr ""
+"%s\n"
+"\n"
+"Để xem các mẹo chọn ổ đĩa, click vào nút trợ giúp."
 
 #: src/Theme.cpp
 #, c-format
 msgid ""
 "Audacity could not write file:\n"
 "  %s."
-msgstr "Audacity không ghi được tập tin:\n  %s."
+msgstr ""
+"Audacity không ghi được tập tin:\n"
+"  %s."
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of
-#. images
+#. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/Theme.cpp
@@ -4636,7 +5100,9 @@ msgstr "Audacity không ghi được tập tin:\n  %s."
 msgid ""
 "Theme written to:\n"
 "  %s."
-msgstr "Chủ đề được viết cho:\n%s."
+msgstr ""
+"Chủ đề được viết cho:\n"
+"%s."
 
 #: src/Theme.cpp
 #, c-format
@@ -4644,14 +5110,19 @@ msgid ""
 "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr "Audacity không mở được tập tin:\n  %s\nđể ghi."
+msgstr ""
+"Audacity không mở được tập tin:\n"
+"  %s\n"
+"để ghi."
 
 #: src/Theme.cpp
 #, c-format
 msgid ""
 "Audacity could not write images to file:\n"
 "  %s."
-msgstr "Audacity không thể ghi ảnh minh hoạ vào tập tin:\n  %s."
+msgstr ""
+"Audacity không thể ghi ảnh minh hoạ vào tập tin:\n"
+"  %s."
 
 #. i18n-hint "Cee" means the C computer programming language
 #: src/Theme.cpp
@@ -4659,7 +5130,9 @@ msgstr "Audacity không thể ghi ảnh minh hoạ vào tập tin:\n  %s."
 msgid ""
 "Theme as Cee code written to:\n"
 "  %s."
-msgstr "Chủ đề dưới dạng mã Cee được viết cho:\n%s."
+msgstr ""
+"Chủ đề dưới dạng mã Cee được viết cho:\n"
+"%s."
 
 #: src/Theme.cpp
 #, c-format
@@ -4667,7 +5140,10 @@ msgid ""
 "Audacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
-msgstr "Audacity không tìm thấy tập tin:\n  %s.\nChưa nạp sắc thái giao diện."
+msgstr ""
+"Audacity không tìm thấy tập tin:\n"
+"  %s.\n"
+"Chưa nạp sắc thái giao diện."
 
 #. i18n-hint: Do not translate png.  It is the name of a file format.
 #: src/Theme.cpp
@@ -4676,13 +5152,18 @@ msgid ""
 "Audacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
-msgstr "Audacity không thể nạp tập tin:\n  %s.\nCó lẽ do lỗi định dạng png?"
+msgstr ""
+"Audacity không thể nạp tập tin:\n"
+"  %s.\n"
+"Có lẽ do lỗi định dạng png?"
 
 #: src/Theme.cpp
 msgid ""
 "Audacity could not read its default theme.\n"
 "Please report the problem."
-msgstr "Audacity không hiển thị được sắc thái giao diện mặc định.\nXin hãy thông báo lại lỗi này."
+msgstr ""
+"Audacity không hiển thị được sắc thái giao diện mặc định.\n"
+"Xin hãy thông báo lại lỗi này."
 
 #: src/Theme.cpp
 #, c-format
@@ -4690,14 +5171,19 @@ msgid ""
 "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr "Không tìm thấy các tập tin cấu thành\nsắc thái giao diện trong:\n  %s."
+msgstr ""
+"Không tìm thấy các tập tin cấu thành\n"
+"sắc thái giao diện trong:\n"
+"  %s."
 
 #: src/Theme.cpp
 #, c-format
 msgid ""
 "Could not create directory:\n"
 "  %s"
-msgstr "Không tạo được thư muc:\n  %s"
+msgstr ""
+"Không tạo được thư muc:\n"
+"  %s"
 
 #: src/Theme.cpp
 #, c-format
@@ -4705,14 +5191,19 @@ msgid ""
 "Some required files in:\n"
 "  %s\n"
 "were already present. Overwrite?"
-msgstr "Một số tập tin được yêu cầu trong:\n%s\nĐã sẵn sàng. bạn có muốn ghi đè không?"
+msgstr ""
+"Một số tập tin được yêu cầu trong:\n"
+"%s\n"
+"Đã sẵn sàng. bạn có muốn ghi đè không?"
 
 #: src/Theme.cpp
 #, c-format
 msgid ""
 "Audacity could not save file:\n"
 "  %s"
-msgstr "Không lưu được tập tin: \n  %s"
+msgstr ""
+"Không lưu được tập tin: \n"
+"  %s"
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
@@ -4740,18 +5231,14 @@ msgstr "Tương phản cao"
 msgid "Custom"
 msgstr "Tùy chỉnh"
 
-#. i18n-hint: This string is used to configure the controls which shows the
-#. recording
-#. * duration. As such it is important that only the alphabetic parts of the
-#. string
+#. i18n-hint: This string is used to configure the controls which shows the recording
+#. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be
-#. the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm'
-#. indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number
-#. displayed is
+#. * The string 'days' indicates that the first number in the control will be the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
 #. * seconds.
+#.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
@@ -4778,7 +5265,10 @@ msgid ""
 "The selected file name could not be used\n"
 "for Timer Recording because it would overwrite another project.\n"
 "Please try again and select an original name."
-msgstr "Tên tập tin không thể dùng được\ncho Bộ ghi Thời gian vì nó bị trùng tên và sẽ ghi đè lên một dự án khác.\nXin vui lòng chọn một tên khác và thử lại."
+msgstr ""
+"Tên tập tin không thể dùng được\n"
+"cho Bộ ghi Thời gian vì nó bị trùng tên và sẽ ghi đè lên một dự án khác.\n"
+"Xin vui lòng chọn một tên khác và thử lại."
 
 #: src/TimerRecordDialog.cpp
 msgid "Error Saving Timer Recording Project"
@@ -4811,13 +5301,20 @@ msgstr "Lỗi xuất tự động"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, "
+"based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
-msgstr "Có thể bạn sẽ không có đủ dung lượng ổ đĩa để hoàn thành bộ đếm thời gian này. dựa trên thiết lập của bạn.\n\nBạn có muốn tiếp tục không?\nĐộ dài bản ghi dự kiến: %s\nThời gian ghi còn lại trên đĩa: %s"
+msgstr ""
+"Có thể bạn sẽ không có đủ dung lượng ổ đĩa để hoàn thành bộ đếm thời gian "
+"này. dựa trên thiết lập của bạn.\n"
+"\n"
+"Bạn có muốn tiếp tục không?\n"
+"Độ dài bản ghi dự kiến: %s\n"
+"Thời gian ghi còn lại trên đĩa: %s"
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording Disk Space Warning"
@@ -4870,7 +5367,10 @@ msgid ""
 "%s\n"
 "\n"
 "Recording saved: %s"
-msgstr "%s\n\nBản ghi âm được lưu lại: %s"
+msgstr ""
+"%s\n"
+"\n"
+"Bản ghi âm được lưu lại: %s"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -4878,7 +5378,10 @@ msgid ""
 "%s\n"
 "\n"
 "Error saving recording."
-msgstr "%s\n\nLỗi khi lưu ghi âm."
+msgstr ""
+"%s\n"
+"\n"
+"Lỗi khi lưu ghi âm."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -4886,7 +5389,10 @@ msgid ""
 "%s\n"
 "\n"
 "Recording exported: %s"
-msgstr "%s\n\nTập tin thu âm đã xuất: %s"
+msgstr ""
+"%s\n"
+"\n"
+"Tập tin thu âm đã xuất: %s"
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -4894,7 +5400,10 @@ msgid ""
 "%s\n"
 "\n"
 "Error exporting recording."
-msgstr "%s\n\nLỗi  khi xuất ghi âm."
+msgstr ""
+"%s\n"
+"\n"
+"Lỗi  khi xuất ghi âm."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -4902,7 +5411,10 @@ msgid ""
 "%s\n"
 "\n"
 "'%s' has been canceled due to the error(s) noted above."
-msgstr "%s\n\n'%s' đã hủy vì (các) lỗi."
+msgstr ""
+"%s\n"
+"\n"
+"'%s' đã hủy vì (các) lỗi."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -4910,7 +5422,10 @@ msgid ""
 "%s\n"
 "\n"
 "'%s' has been canceled as the recording was stopped."
-msgstr "%s\n\n'%s' đã bị hủy bỏ vì ghi âm đã dừng lại."
+msgstr ""
+"%s\n"
+"\n"
+"'%s' đã bị hủy bỏ vì ghi âm đã dừng lại."
 
 #: src/TimerRecordDialog.cpp src/menus/TransportMenus.cpp
 msgid "Timer Recording"
@@ -4926,15 +5441,12 @@ msgstr "099 h 060 m 060 s"
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 days 024 h 060 m 060 s"
 
-#. i18n-hint: This string is used to configure the controls for times when the
-#. recording is
-#. * started and stopped. As such it is important that only the alphabetic
-#. parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the recording is
+#. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
-#. the second number
-#. * displayed is minutes, and the 's' indicates that the third number
-#. displayed is seconds.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
+#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
+#.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
 msgstr "Ngày giờ bắt đầu"
@@ -4979,8 +5491,8 @@ msgstr "Bật Xuất thành tập tin Tự động"
 msgid "Export Project As:"
 msgstr "Xuất dự án thành:"
 
-#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
+#: src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Tùy chọn"
 
@@ -5188,8 +5700,7 @@ msgstr "Vùng chọn không đủ lớn để dùng giọng."
 msgid "Calibration Results\n"
 msgstr "Kết quả phân thang đo\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
-#. Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -5224,7 +5735,8 @@ msgstr "Không đủ chỗ để mở rộng đường cắt"
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
 msgid "This operation cannot be done until importation of %s completes."
-msgstr "thao tác này không thể thực hiện cho đến khi quá trình nhập %shoàn tất."
+msgstr ""
+"thao tác này không thể thực hiện cho đến khi quá trình nhập %shoàn tất."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
@@ -5237,15 +5749,17 @@ msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
 "\n"
 "%s"
-msgstr "%s: Không thể tải các cài đặt bên dưới. Cài đặt mặc định sẽ được sử dụng.\n\n%s"
+msgstr ""
+"%s: Không thể tải các cài đặt bên dưới. Cài đặt mặc định sẽ được sử dụng.\n"
+"\n"
+"%s"
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "Đang áp dụng %s..."
 
-#. i18n-hint: An item name followed by a value, with appropriate separating
-#. punctuation
+#. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -5302,10 +5816,6 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
 msgstr ""
 
 #: src/commands/CompareAudioCommand.cpp
@@ -6038,18 +6548,18 @@ msgid ""
 "specified \"control\" track reaches a particular level"
 msgstr ""
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
-#. volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
 msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process"
-" audio tracks."
-msgstr "Bạn đã chọn một dải âm toàn khoảng lặng. Hiệu ứng Tự động điều biên chỉ có thể xử lý dải âm có thông tin."
+"You selected a track which does not contain audio. AutoDuck can only process "
+"audio tracks."
+msgstr ""
+"Bạn đã chọn một dải âm toàn khoảng lặng. Hiệu ứng Tự động điều biên chỉ có "
+"thể xử lý dải âm có thông tin."
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
-#. volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
@@ -6282,8 +6792,7 @@ msgstr "Thay đổi tốc độ là thay đổi cả nhịp điệu và độ ca
 msgid "&Speed Multiplier:"
 msgstr ""
 
-#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per
-#. minute".
+#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
@@ -6291,6 +6800,7 @@ msgstr ""
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Từ rpm"
@@ -6303,6 +6813,7 @@ msgstr "&Từ"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "Đến rpm"
@@ -6516,23 +7027,20 @@ msgid "Attack Time"
 msgstr ""
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
-#. where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "R&elease Time:"
 msgstr ""
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
-#. where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "Release Time"
 msgstr ""
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
-#. it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
 msgstr ""
@@ -6713,8 +7221,7 @@ msgstr ""
 msgid "Background higher than foreground"
 msgstr ""
 
-#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0',
-#. see http://www.w3.org/TR/WCAG20/
+#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/
 #: src/effects/Contrast.cpp
 msgid "WCAG2 Pass"
 msgstr ""
@@ -7203,8 +7710,7 @@ msgid "Previewing"
 msgstr "Đang phát thử"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
-#. Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/effects/Effect.h
@@ -7467,7 +7973,10 @@ msgid ""
 "Preset already exists.\n"
 "\n"
 "Replace?"
-msgstr "Có Thiết lập sẵn rồi\n\nBạn có muốn thay thế không? "
+msgstr ""
+"Có Thiết lập sẵn rồi\n"
+"\n"
+"Bạn có muốn thay thế không? "
 
 #. i18n-hint: The access key "&P" should be the same in
 #. "Stop &Playback" and "Start &Playback"
@@ -7551,7 +8060,8 @@ msgstr "Treble Cut"
 #: src/effects/Equalization.cpp
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
+"then use that one."
 msgstr ""
 
 #: src/effects/Equalization.cpp
@@ -7602,8 +8112,7 @@ msgstr "%d Hz"
 msgid "%g kHz"
 msgstr "%g kHz"
 
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in
-#. translation.
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%gk"
@@ -7714,7 +8223,11 @@ msgid ""
 "%s\n"
 "Error message says:\n"
 "%s"
-msgstr "Lỗi khi nhập EQ Curves từ tập tin\n%s\nThông báo lỗi:\n%s"
+msgstr ""
+"Lỗi khi nhập EQ Curves từ tập tin\n"
+"%s\n"
+"Thông báo lỗi:\n"
+"%s"
 
 #: src/effects/Equalization.cpp
 msgid "Error Loading EQ Curves"
@@ -7869,7 +8382,13 @@ msgid ""
 "Default Threaded: %s\n"
 "SSE: %s\n"
 "SSE Threaded: %s\n"
-msgstr "Thời gian điểm chuẩn:\nBản gốc: %s\nMặc định Default Segmented: %s\nMặc định Default Threaded: %s\nSSE: %s\nSSE Threaded: %s\n"
+msgstr ""
+"Thời gian điểm chuẩn:\n"
+"Bản gốc: %s\n"
+"Mặc định Default Segmented: %s\n"
+"Mặc định Default Threaded: %s\n"
+"SSE: %s\n"
+"SSE Threaded: %s\n"
 
 #: src/effects/Fade.cpp
 msgid "Fade In"
@@ -8159,7 +8678,9 @@ msgstr "Bước 1"
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr "Chọn vùng có nhiễu để phân tích,\nBấm nút 'Phân tích nhiễu' sau khi chọn:"
+msgstr ""
+"Chọn vùng có nhiễu để phân tích,\n"
+"Bấm nút 'Phân tích nhiễu' sau khi chọn:"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "&Get Noise Profile"
@@ -8188,8 +8709,7 @@ msgstr ""
 msgid "&Isolate"
 msgstr ""
 
-#. i18n-hint: Means the difference between effect and original sound.
-#. Translate differently from "Reduce" !
+#. i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
 msgstr ""
@@ -8283,7 +8803,9 @@ msgstr ""
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr "Chọn tất cả các vùng bạn cần xoá nhiễu, chọn hệ số lọc nhiễu, sau đó\nnhấn 'OK' để bắt đầu xoá nhiễu.\n"
+msgstr ""
+"Chọn tất cả các vùng bạn cần xoá nhiễu, chọn hệ số lọc nhiễu, sau đó\n"
+"nhấn 'OK' để bắt đầu xoá nhiễu.\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -8385,6 +8907,7 @@ msgstr ""
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
+#.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
 msgstr ""
@@ -8393,8 +8916,7 @@ msgstr ""
 msgid "&Time Resolution (seconds):"
 msgstr ""
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
-#. effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -8404,8 +8926,7 @@ msgid ""
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
-#. effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -8415,8 +8936,7 @@ msgid ""
 "'Time Resolution' is %.1f seconds."
 msgstr ""
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
-#. effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -8500,10 +9020,15 @@ msgstr ""
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged "
+"audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
-msgstr "Hiệu ứng Sửa chữa chỉ áp dụng cho một vùng âm thanh bị hỏng rất ngắn (tối đa 128 mẫu).\n\nPhóng to và chọn khung thời gian cần sửa chữa."
+msgstr ""
+"Hiệu ứng Sửa chữa chỉ áp dụng cho một vùng âm thanh bị hỏng rất ngắn (tối đa "
+"128 mẫu).\n"
+"\n"
+"Phóng to và chọn khung thời gian cần sửa chữa."
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -8649,20 +9174,17 @@ msgstr ""
 msgid "SBSMS Time / Pitch Stretch"
 msgstr ""
 
-#. i18n-hint: Butterworth is the name of the person after whom the filter type
-#. is named.
+#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
 msgstr ""
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type
-#. is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type I"
 msgstr ""
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type
-#. is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type II"
 msgstr ""
@@ -8692,8 +9214,7 @@ msgstr ""
 msgid "&Filter Type:"
 msgstr ""
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number
-#. between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
 msgstr ""
@@ -8762,40 +9283,32 @@ msgstr ""
 msgid "Silence Threshold"
 msgstr ""
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
 msgstr ""
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
 msgstr ""
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
 msgstr ""
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -8806,10 +9319,8 @@ msgstr ""
 msgid "Smooth Time:"
 msgstr ""
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -8979,8 +9490,8 @@ msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
-"When truncating independently, there may only be one selected audio track in"
-" each Sync-Locked Track Group."
+"When truncating independently, there may only be one selected audio track in "
+"each Sync-Locked Track Group."
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
@@ -9141,8 +9652,7 @@ msgstr "Không thể đọc tập tin thiết lập sẵn"
 msgid "This parameter file was saved from %s. Continue?"
 msgstr ""
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
-#. protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
@@ -9216,8 +9726,8 @@ msgstr ""
 msgid ""
 "Select \"Full\" to use the graphical interface if supplied by the Audio "
 "Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this"
-" to take effect."
+"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
+"to take effect."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -9277,7 +9787,10 @@ msgid ""
 "Could not import \"%s\" preset\n"
 "\n"
 "%s"
-msgstr "Không thể nhập thiết lập sẵn \"%s\" \n\n%s"
+msgstr ""
+"Không thể nhập thiết lập sẵn \"%s\" \n"
+"\n"
+"%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9294,7 +9807,10 @@ msgid ""
 "Could not export \"%s\" preset\n"
 "\n"
 "%s"
-msgstr "Không thể xuất thiết lập sẵn \"%s\" \n\n%s"
+msgstr ""
+"Không thể xuất thiết lập sẵn \"%s\" \n"
+"\n"
+"%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
@@ -9347,6 +9863,7 @@ msgstr ""
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr ""
@@ -9371,10 +9888,8 @@ msgid ""
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 
-#. i18n-hint: An item name introducing a value, which is not part of the
-#. string but
-#. appears in a following text box window; translate with appropriate
-#. punctuation
+#. i18n-hint: An item name introducing a value, which is not part of the string but
+#. appears in a following text box window; translate with appropriate punctuation
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -9388,6 +9903,7 @@ msgstr "Đầu ra hiệu ứng"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
+#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr ""
@@ -9460,8 +9976,7 @@ msgstr ""
 msgid "Applying Nyquist Effect..."
 msgstr "Đang áp dụng hiệu ứng Nyquist..."
 
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
-#. Prompt"
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
 msgstr ""
@@ -9615,10 +10130,6 @@ msgstr "Nhập lệnh Nyquist:"
 msgid "&Load"
 msgstr ""
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr ""
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -9679,7 +10190,8 @@ msgstr ""
 msgid ""
 "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
 "channels of the track do not match."
-msgstr "Phần bổ sung Vamp không áp dụng cho dải âm stereo có các kênh khác nhau."
+msgstr ""
+"Phần bổ sung Vamp không áp dụng cho dải âm stereo có các kênh khác nhau."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -9697,8 +10209,7 @@ msgstr "Thiết lập phần bổ sung"
 msgid "Program"
 msgstr "Chương trình"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound
-#. analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
@@ -9738,7 +10249,8 @@ msgstr ""
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
 "\n"
-"Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
+"Normally these files end in \".%s\", and some programs will not open files "
+"with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
@@ -9762,8 +10274,8 @@ msgstr ""
 
 #: src/export/Export.cpp
 msgid ""
-"Your tracks will be mixed down to one exported file according to the encoder"
-" settings."
+"Your tracks will be mixed down to one exported file according to the encoder "
+"settings."
 msgstr ""
 
 #: src/export/Export.cpp
@@ -9814,8 +10326,7 @@ msgstr "Hiển thị đầu ra"
 #. i18n-hint: Some programmer-oriented terminology here:
 #. "Data" refers to the sound to be exported, "piped" means sent,
 #. and "standard in" means the default input stream that the external program,
-#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually
-#. used
+#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
@@ -9902,19 +10413,21 @@ msgstr "FFmpeg: LỖI - không thể xác định phạm vi định dạng đầ
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr "FFmpeg : LỖI  - Không thể thêm chuỗi âm thanh vào tệp tin đầu ra\"%s\"."
+msgstr ""
+"FFmpeg : LỖI  - Không thể thêm chuỗi âm thanh vào tệp tin đầu ra\"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgid ""
+"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr "Lỗi FFmpeg - Không thể mở tập tin đầu ra \"%s\"  Mã lỗi là %d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
-"%d."
-msgstr "FFmpeg : LỖI - Không thể viết tiêu đề lên tệp đầu ra \"%s\". Lỗi code là %d."
+"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr ""
+"FFmpeg : LỖI - Không thể viết tiêu đề lên tệp đầu ra \"%s\". Lỗi code là %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -9980,9 +10493,11 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected"
-" output format is %d"
-msgstr "Đã thử xuất %dkênh, nhưng số lượng kênh lớn nhất để chọn định dạng đầu ra chỉ là %d"
+"Attempted to export %d channels, but maximum number of channels for selected "
+"output format is %d"
+msgstr ""
+"Đã thử xuất %dkênh, nhưng số lượng kênh lớn nhất để chọn định dạng đầu ra "
+"chỉ là %d"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -10008,14 +10523,18 @@ msgstr "Đổi tốc độ lấy mẫu"
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
-msgstr "định dạng file đầu ra không hổ trợ \ntốc độ lấy mẫu dự án (%d)"
+msgstr ""
+"định dạng file đầu ra không hổ trợ \n"
+"tốc độ lấy mẫu dự án (%d)"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
-msgstr "Định dạng file đầu ra không hỗ trợ\nTốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
+msgstr ""
+"Định dạng file đầu ra không hỗ trợ\n"
+"Tốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -10404,7 +10923,12 @@ msgid ""
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr "Mức nén dữ liệu\nCần có FLAC\n-1 - tự động\nThấp nhất - 0 (mã hoá nhanh, tệp đầu ra lớn)\nCao nhất - 10 (mã hoá chậm, tệp đầu ra nhỏ)"
+msgstr ""
+"Mức nén dữ liệu\n"
+"Cần có FLAC\n"
+"-1 - tự động\n"
+"Thấp nhất - 0 (mã hoá nhanh, tệp đầu ra lớn)\n"
+"Cao nhất - 10 (mã hoá chậm, tệp đầu ra nhỏ)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Compression:"
@@ -10417,7 +10941,12 @@ msgid ""
 "0 - default\n"
 "min - 16\n"
 "max - 65535"
-msgstr "Kích thước khung\nkhông bắt buộc\n0 - mặc định\ntối thiểu - 16\ntối đa - 65535"
+msgstr ""
+"Kích thước khung\n"
+"không bắt buộc\n"
+"0 - mặc định\n"
+"tối thiểu - 16\n"
+"tối đa - 65535"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Frame:"
@@ -10430,7 +10959,12 @@ msgid ""
 "0 - default\n"
 "min - 1\n"
 "max - 15"
-msgstr "độ chính xác LPC \nKhông bắt buộc\n0 - mặc định\ntối thiểu- 1\ntối đa - 15"
+msgstr ""
+"độ chính xác LPC \n"
+"Không bắt buộc\n"
+"0 - mặc định\n"
+"tối thiểu- 1\n"
+"tối đa - 15"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "LPC"
@@ -10517,19 +11051,15 @@ msgid ""
 "0 - default"
 msgstr ""
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
-#. several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
-#. MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Mux Rate:"
 msgstr ""
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
-#. compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one
-#. piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "Packet size\n"
@@ -10537,10 +11067,8 @@ msgid ""
 "0 - default"
 msgstr ""
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
-#. compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one
-#. piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Packet Size:"
 msgstr ""
@@ -10764,8 +11292,7 @@ msgid "Bit Rate Mode:"
 msgstr "Chế độ bit:"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
-#: src/prefs/QualityPrefs.h
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Chất lượng"
 
@@ -10781,8 +11308,7 @@ msgstr "Chế độ kênh:"
 msgid "Force export to mono"
 msgstr ""
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be
-#. translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
 #: src/export/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr ""
@@ -10819,7 +11345,8 @@ msgstr "%s ở đâu thế?"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
+"Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 
@@ -10907,14 +11434,18 @@ msgstr "Gặp %ld lỗi khi mã hoá MP3"
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
-msgstr "Định dạng MP3 không hỗ trợ\nTốc độ lấy mẫu của dự án (%d)."
+msgstr ""
+"Định dạng MP3 không hỗ trợ\n"
+"Tốc độ lấy mẫu của dự án (%d)."
 
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
-msgstr "Định dạng MP3 không hỗ trợ\nTốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
+msgstr ""
+"Định dạng MP3 không hỗ trợ\n"
+"Tốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
 
 #: src/export/ExportMP3.cpp
 msgid "MP3 export library not found"
@@ -11029,8 +11560,7 @@ msgstr ""
 
 #: src/export/ExportMultiple.cpp
 #, c-format
-msgid ""
-"Something went really wrong after exporting the following %lld file(s)."
+msgid "Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
 
 #: src/export/ExportMultiple.cpp
@@ -11039,7 +11569,10 @@ msgid ""
 "\"%s\" doesn't exist.\n"
 "\n"
 "Would you like to create it?"
-msgstr "Không tồn tại \"%s\".\n\nBạn có muốn tạo nó không?"
+msgstr ""
+"Không tồn tại \"%s\".\n"
+"\n"
+"Bạn có muốn tạo nó không?"
 
 #: src/export/ExportMultiple.cpp
 msgid "Continue to export remaining files?"
@@ -11128,7 +11661,8 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than "
+"4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 
@@ -11167,7 +11701,9 @@ msgstr "Đang xuất âm thanh đã chọn ra %s"
 msgid ""
 "Error while writing %s file (disk full?).\n"
 "Libsndfile says \"%s\""
-msgstr "Lỗi khi lưu tập tin %s  (disk full?).\nLibsndfile nói \"%s\""
+msgstr ""
+"Lỗi khi lưu tập tin %s  (disk full?).\n"
+"Libsndfile nói \"%s\""
 
 #: src/import/Import.cpp
 msgid "All supported files"
@@ -11180,7 +11716,12 @@ msgid ""
 "is a MIDI file, not an audio file. \n"
 "Audacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr "\"%s\"\nđây là một tập tin MIDI, không phải tập tin âm thanh.\nAudacity không thể chạy định dạng tập tin này, nhưng bạn vẫn có thể chạy nó. \nchỉnh sửa tệp này bằng cách click vào Tệp>Nhập>MIDI."
+msgstr ""
+"\"%s\"\n"
+"đây là một tập tin MIDI, không phải tập tin âm thanh.\n"
+"Audacity không thể chạy định dạng tập tin này, nhưng bạn vẫn có thể chạy "
+"nó. \n"
+"chỉnh sửa tệp này bằng cách click vào Tệp>Nhập>MIDI."
 
 #: src/import/Import.cpp
 #, c-format
@@ -11207,16 +11748,26 @@ msgid ""
 "Audacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
-msgstr "\"%s\" là một bài hát trong CD âm thanh.\nAudacity không thể trực tiếp mở nó.\nBạn phải xuất (rip) nó thành một định dạng mà\nAudacity có thể mở, như WAV hay AIFF."
+msgstr ""
+"\"%s\" là một bài hát trong CD âm thanh.\n"
+"Audacity không thể trực tiếp mở nó.\n"
+"Bạn phải xuất (rip) nó thành một định dạng mà\n"
+"Audacity có thể mở, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other files. \n"
-"You may be able to open it in a text editor and download the actual audio files."
-msgstr "\"%s\" là một danh sách bài hát.\nAudacity không thể mở nó vì nó chỉ chứa liên kết tới các tập tin khác.\nBạn có thể mở nó trong một bộ soạn thảo văn bản và tải các tập tin trong đó về."
+"Audacity cannot open this file because it only contains links to other "
+"files. \n"
+"You may be able to open it in a text editor and download the actual audio "
+"files."
+msgstr ""
+"\"%s\" là một danh sách bài hát.\n"
+"Audacity không thể mở nó vì nó chỉ chứa liên kết tới các tập tin khác.\n"
+"Bạn có thể mở nó trong một bộ soạn thảo văn bản và tải các tập tin trong đó "
+"về."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11225,15 +11776,20 @@ msgid ""
 "\"%s\" is a Windows Media Audio file. \n"
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Windows Media Audio.\nAudacity không thể mở định dạng này vì lỗi vi phạm bản quyền.\nBạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
+msgstr ""
+"\"%s\" là một tập tin Windows Media Audio.\n"
+"Audacity không thể mở định dạng này vì lỗi vi phạm bản quyền.\n"
+"Bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of "
+"file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV "
+"or AIFF."
 msgstr ""
 
 #. i18n-hint: %s will be the filename
@@ -11254,7 +11810,11 @@ msgid ""
 "\"%s\" is a RealPlayer media file. \n"
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin RealPlayer.\nAudacity không mở được loại tập tin này.\nBạn phải tự mình chuyển nó về định dạng được Audacity hỗ trợ, như WAV hay AIFF."
+msgstr ""
+"\"%s\" là một tập tin RealPlayer.\n"
+"Audacity không mở được loại tập tin này.\n"
+"Bạn phải tự mình chuyển nó về định dạng được Audacity hỗ trợ, như WAV hay "
+"AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11264,7 +11824,11 @@ msgid ""
 "Audacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
-msgstr "\"%s\" là một tập tin giữ liệu gốc, không phải tập tin âm thanh.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ,\nnhư WAV hay AIFF, hoặc ghi âm nó trực tiếp trên Audacity."
+msgstr ""
+"\"%s\" là một tập tin giữ liệu gốc, không phải tập tin âm thanh.\n"
+"Audacity không thể mở loại tập tin này.\n"
+"Bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ,\n"
+"như WAV hay AIFF, hoặc ghi âm nó trực tiếp trên Audacity."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11273,9 +11837,16 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported "
+"audio \n"
 "format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Musepack.\nAudacity không thể mở định dạng này.\nNếu bạn nghĩ đây là tập tin mp3, hãy đổi đuôi nó thành \".mp3\"\nvà thử nhập lại xem sao. Nếu không, bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ\nnhư WAV hay AIFF."
+msgstr ""
+"\"%s\" là một tập tin Musepack.\n"
+"Audacity không thể mở định dạng này.\n"
+"Nếu bạn nghĩ đây là tập tin mp3, hãy đổi đuôi nó thành \".mp3\"\n"
+"và thử nhập lại xem sao. Nếu không, bạn phải tự mình chuyển nó về 1 định "
+"dạng Audacity hỗ trợ\n"
+"như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11284,7 +11855,10 @@ msgid ""
 "\"%s\" is a Wavpack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Wavpack.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
+msgstr ""
+"\"%s\" là một tập tin Wavpack.\n"
+"Audacity không thể mở loại tập tin này.\n"
+"Bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11293,7 +11867,10 @@ msgid ""
 "\"%s\" is a Dolby Digital audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Dolby Digital.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
+msgstr ""
+"\"%s\" là một tập tin Dolby Digital.\n"
+"Audacity không thể mở loại tập tin này.\n"
+"Bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11302,7 +11879,10 @@ msgid ""
 "\"%s\" is an Ogg Speex audio file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Ogg Speex.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
+msgstr ""
+"\"%s\" là một tập tin Ogg Speex.\n"
+"Audacity không thể mở loại tập tin này.\n"
+"Bạn phải tự mình chuyển nó về 1 định dạng Audacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11325,7 +11905,10 @@ msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
-msgstr "Audacity không thể nhận dạng được đuôi tập tin.%s\n\n%s để tìm các tập tin chưa nén, hãy thử chọn Tệp>Nhập>dữ liệu thô."
+msgstr ""
+"Audacity không thể nhận dạng được đuôi tập tin.%s\n"
+"\n"
+"%s để tìm các tập tin chưa nén, hãy thử chọn Tệp>Nhập>dữ liệu thô."
 
 #: src/import/Import.cpp
 msgid ""
@@ -11346,7 +11929,11 @@ msgid ""
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
-msgstr "Audacity đã nhận dạng tệp tin '%s'.\nCác trình nhập đã được cho là sẽ hổ trợ những định dạng tệp này:\n%s.\nnhưng không có trình nhập nào hiểu được định dạng tệp này."
+msgstr ""
+"Audacity đã nhận dạng tệp tin '%s'.\n"
+"Các trình nhập đã được cho là sẽ hổ trợ những định dạng tệp này:\n"
+"%s.\n"
+"nhưng không có trình nhập nào hiểu được định dạng tệp này."
 
 #: src/import/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
@@ -11358,7 +11945,10 @@ msgid ""
 "Couldn't import the project:\n"
 "\n"
 "%s"
-msgstr "Lỗi khi nhập dự án\n\n%s"
+msgstr ""
+"Lỗi khi nhập dự án\n"
+"\n"
+"%s"
 
 #: src/import/ImportAUP.cpp
 msgid "Import Project"
@@ -11419,7 +12009,9 @@ msgstr "Không tìm thấy thư mục dữ liệu của dự án: \"%s\""
 msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
-msgstr "Đã tìm thấy đoạn âm MIDI trong các tệp dự án này, tuy nhiên phiên bản Audacity này không hỗ trợ MIDI."
+msgstr ""
+"Đã tìm thấy đoạn âm MIDI trong các tệp dự án này, tuy nhiên phiên bản "
+"Audacity này không hỗ trợ MIDI."
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
@@ -11429,7 +12021,9 @@ msgstr "Nhập dự án"
 msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
-msgstr "Dự án đang hoạt động hiện có một chuỗi âm và một trong số chúng đã gây ra sung đột với dự án đang được chèn vào, bỏ qua chuỗi âm thanh được chèn."
+msgstr ""
+"Dự án đang hoạt động hiện có một chuỗi âm và một trong số chúng đã gây ra "
+"sung đột với dự án đang được chèn vào, bỏ qua chuỗi âm thanh được chèn."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -11958,6 +12552,7 @@ msgstr ""
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
+#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d of %d clip %s"
@@ -11980,6 +12575,7 @@ msgstr ""
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
+#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
@@ -12325,7 +12921,9 @@ msgstr ""
 msgid ""
 "Cannot create directory '%s'. \n"
 "File already exists that is not a directory"
-msgstr "Không thể tạo thư mục  '%s'. \nTập tin đã tồn tại. Hãy chọn một tên khác"
+msgstr ""
+"Không thể tạo thư mục  '%s'. \n"
+"Tập tin đã tồn tại. Hãy chọn một tên khác"
 
 #: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
@@ -12393,10 +12991,6 @@ msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Allegro files"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
 msgstr ""
 
 #: src/menus/FileMenus.cpp
@@ -13296,6 +13890,7 @@ msgstr ""
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
+#.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "&Tìm thấy"
@@ -13554,7 +14149,9 @@ msgstr ""
 msgid ""
 "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
 "%.2f to %.2f secs."
-msgstr "Lỗi hiệu chỉnh: đầu vào quá ngắn: MIDI từ %.2fđến %.2f giây, audio từ %.2f đến %.2f giây."
+msgstr ""
+"Lỗi hiệu chỉnh: đầu vào quá ngắn: MIDI từ %.2fđến %.2f giây, audio từ %.2f "
+"đến %.2f giây."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -13768,15 +14365,13 @@ msgstr ""
 msgid "Move Focused Track to &Bottom"
 msgstr ""
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Đang phát"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
 #: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -14331,7 +14926,8 @@ msgstr "Không thể ghi vào thư mục %s"
 msgid ""
 "Changes to temporary directory will not take effect until Audacity is "
 "restarted"
-msgstr "Việc chuyển đổi thư mục tạm thời sẽ có hiệu lực từ lần chạy sau của Audacity"
+msgstr ""
+"Việc chuyển đổi thư mục tạm thời sẽ có hiệu lực từ lần chạy sau của Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -14363,6 +14959,7 @@ msgstr ""
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
+#.
 #: src/prefs/EffectsPrefs.cpp
 msgid "&LADSPA"
 msgstr ""
@@ -14374,23 +14971,20 @@ msgid "LV&2"
 msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
-#. Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/prefs/EffectsPrefs.cpp
 msgid "N&yquist"
 msgstr ""
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound
-#. analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Vamp"
 msgstr "&Vamp"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
-#. protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
 #: src/prefs/EffectsPrefs.cpp
 msgid "V&ST"
@@ -14422,7 +15016,8 @@ msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Rescan plugins next time Audacity is started"
-msgstr "Quét lại các plugin \"điện toán\" vào lần tiếp theo Audacity được khởi động"
+msgstr ""
+"Quét lại các plugin \"điện toán\" vào lần tiếp theo Audacity được khởi động"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -14564,8 +15159,7 @@ msgstr ""
 msgid "From Internet"
 msgstr "Từ Internet"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Hiển thị"
 
@@ -14612,6 +15206,10 @@ msgstr ""
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
@@ -14764,7 +15362,8 @@ msgstr "&Đặt "
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Lưu ý: Nhấn Ctrl+Q sẽ thoát khỏi chương trình. Những phím khác đều hợp lệ."
+msgstr ""
+"Lưu ý: Nhấn Ctrl+Q sẽ thoát khỏi chương trình. Những phím khác đều hợp lệ."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -14792,9 +15391,13 @@ msgstr "Lỗi khi nhập phím tắt từ tập tin"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
+"and \"%s\".\n"
 "Nothing is imported."
-msgstr "tập tin chứa phím tắt có chứa các bản sao phím tắt không hợp lệ cho \"%s\" và \"%s\".\nkhông có phím tắt được thêm vào."
+msgstr ""
+"tập tin chứa phím tắt có chứa các bản sao phím tắt không hợp lệ cho \"%s\" "
+"và \"%s\".\n"
+"không có phím tắt được thêm vào."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -14804,8 +15407,12 @@ msgstr "Đã nhạp %d phím tắt\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
-msgstr "\nCác lệnh tiếp theo không được đề cập trong tệp được thêm vào, nhưng vẫn có các phím tắt của chúng bị xóa bởi vì xung đột giữa các phím tắc khắc.\n"
+"The following commands are not mentioned in the imported file, but have "
+"their shortcuts removed because of the conflict with other new shortcuts:\n"
+msgstr ""
+"\n"
+"Các lệnh tiếp theo không được đề cập trong tệp được thêm vào, nhưng vẫn có "
+"các phím tắt của chúng bị xóa bởi vì xung đột giữa các phím tắc khắc.\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -14930,6 +15537,10 @@ msgstr "Thiết bị MIDI"
 msgid "Preferences for MidiIO"
 msgstr ""
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr ""
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -14945,10 +15556,6 @@ msgid "MIDI Synth L&atency (ms):"
 msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr ""
-
-#: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
 msgstr ""
 
@@ -14956,8 +15563,7 @@ msgstr ""
 msgid "Midi IO"
 msgstr "Midi  IO (đầu ra/đầu vào)"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW
-#. features.
+#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr ""
@@ -14968,9 +15574,12 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+"These are experimental modules. Enable them only if you've read the Audacity "
+"Manual\n"
 "and know what you are doing."
-msgstr "Đây là các mô-đun thử nghiemj. Bật lên nếu bạn đã tham khảo Hướng dẫn sử dụng Audacity và bạn biết mình đang làm gì."
+msgstr ""
+"Đây là các mô-đun thử nghiemj. Bật lên nếu bạn đã tham khảo Hướng dẫn sử "
+"dụng Audacity và bạn biết mình đang làm gì."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -14981,8 +15590,7 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Failed' means Audacity thinks the module is broken and won't run it."
+msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr ""
 
 #. i18n-hint preserve the leading spaces
@@ -15325,8 +15933,7 @@ msgstr ""
 msgid "Sample Rate Con&verter:"
 msgstr "Bộ &chuyển đổi tốc độ lấy mẫu:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable
-#. resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
 msgstr ""
@@ -15339,8 +15946,7 @@ msgstr "Chuyển đổi HQ chất lượng cao"
 msgid "Sample Rate Conver&ter:"
 msgstr "Bộ &chuyển đổi tốc độ lấy mẫu:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable
-#. resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
@@ -15365,8 +15971,7 @@ msgstr "&chương trình đang chạy thông qua đầu vào."
 msgid "Record on a new track"
 msgstr "Ghi âm vào dải âm mới"
 
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the
-#. recording
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
 msgstr "Phát hiện các khoảng hụt tiếng 'dropout'"
@@ -15463,14 +16068,12 @@ msgstr ""
 msgid "Mel"
 msgstr "Mel"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for
-#. Heinrich Barkhausen
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Bark"
 msgstr "Bark"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates
-#. Equivalent Rectangular Bandwidth
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp
 msgid "ERB"
 msgstr "ERB"
@@ -15611,8 +16214,7 @@ msgstr ""
 msgid "Show a grid along the &Y-axis"
 msgstr "Hiển thị đường kẻ lưới bằng trục &Y"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
-#. translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
 msgstr ""
@@ -15674,8 +16276,7 @@ msgid "The maximum number of notes must be in the range 1..128"
 msgstr ""
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of
-#. images
+#. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
@@ -15694,18 +16295,22 @@ msgstr "Thông tin"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images "
+"and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
+"Click \"Load Theme Cache\" to load the changed images and colors back into "
+"Audacity.\n"
 "\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently "
+"affected, even\n"
 "though the image file shows other icons too.)"
 msgstr ""
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each image, but is\n"
+"Saving and loading individual theme files uses a separate file for each "
+"image, but is\n"
 "otherwise the same idea."
 msgstr ""
 
@@ -15984,8 +16589,7 @@ msgstr ""
 msgid "Waveform dB &range:"
 msgstr ""
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
@@ -16023,8 +16627,7 @@ msgstr "Chọn từ đây đến kết thúc"
 msgid "Select to Start"
 msgstr "Chọn đến  Đầu"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -16157,8 +16760,7 @@ msgstr "Bộ đo ghi âm"
 msgid "Playback Meter"
 msgstr "Bộ đo phát âm thanh"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being
-#. recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -16244,6 +16846,7 @@ msgstr ""
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Scrubbing"
 msgstr ""
@@ -16251,6 +16854,7 @@ msgstr ""
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
 msgstr ""
@@ -16258,6 +16862,7 @@ msgstr ""
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Seeking"
 msgstr ""
@@ -16265,6 +16870,7 @@ msgstr ""
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Seeking"
 msgstr ""
@@ -16343,7 +16949,9 @@ msgstr ""
 #: src/toolbars/SelectionBar.cpp
 #, c-format
 msgid "Selection %s. %s won't change."
-msgstr " Vùng chọn %s. \n%s không thay đổi."
+msgstr ""
+" Vùng chọn %s. \n"
+"%s không thay đổi."
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
@@ -16564,8 +17172,8 @@ msgstr ""
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
-" region."
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
+"region."
 msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
@@ -16701,8 +17309,7 @@ msgid "Processing...   %i%%"
 msgstr ""
 
 #. i18n-hint: The strings name a track and a format
-#. i18n-hint: The strings name a track and a channel choice (mono, left, or
-#. right)
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 #, c-format
@@ -17058,6 +17665,7 @@ msgstr "Đã sửa lại đường bao biên độ."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
+#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr ""
@@ -17069,6 +17677,7 @@ msgstr ""
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
+#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
 msgstr ""
@@ -17130,8 +17739,7 @@ msgstr ""
 msgid "Edit, Preferences..."
 msgstr ""
 
-#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux,
-#. "Command+," for Mac
+#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
@@ -17145,8 +17753,7 @@ msgstr ""
 msgid "Click and drag to select audio"
 msgstr "Nhấn và rê chuột để chọn âm thanh"
 
-#. i18n-hint: "Snapping" means automatic alignment of selection edges to any
-#. nearby label or clip boundaries
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
 msgstr ""
@@ -17203,15 +17810,13 @@ msgstr "Command+Click"
 msgid "Ctrl+Click"
 msgstr "Ctrl+Click"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
-#. 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
 msgstr ""
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
-#. 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
@@ -17483,12 +18088,10 @@ msgstr ""
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
-#. seconds
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
 #. * (the hundredths are shown as decimal seconds). Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>0100 s"
@@ -17501,13 +18104,11 @@ msgid "hh:mm:ss + milliseconds"
 msgstr "hh:mm:ss + milli giây"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
-#. the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>01000 s"
@@ -17524,8 +18125,7 @@ msgstr "hh:mm:ss + mẫu"
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
@@ -17534,6 +18134,7 @@ msgstr ""
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
+#.
 #: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "mẫu"
@@ -17557,8 +18158,7 @@ msgstr "hh:mm:ss + film frame (24 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
@@ -17589,8 +18189,7 @@ msgstr "hh:mm:ss + NTSC drop frame"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
@@ -17608,8 +18207,7 @@ msgstr "hh:mm:ss + NTSC non-drop frame"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
@@ -17640,8 +18238,7 @@ msgstr "hh:mm:ss + PAL frame (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
@@ -17671,8 +18268,7 @@ msgstr "hh:mm:ss + CDDA frame (75 fps)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
@@ -17694,8 +18290,7 @@ msgstr "01000,01000 frame|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "010,01000>0100 Hz"
@@ -17712,8 +18307,7 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000>01000 kHz|0.001"
@@ -17731,8 +18325,7 @@ msgstr "octaves  \"bát độ\""
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100>01000 octaves|1.442695041"
@@ -17752,8 +18345,7 @@ msgstr ""
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
@@ -17999,7 +18591,8 @@ msgstr ""
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting cannot~%~\n"
+"                        For the current track, the high frequency setting "
+"cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 
@@ -18216,8 +18809,7 @@ msgstr ""
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid ""
-"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr ""
 
 #: plug-ins/crossfadeclips.ny
@@ -18662,8 +19254,7 @@ msgstr ""
 msgid "Hard Limit"
 msgstr ""
 
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into
-#. clips
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/limiter.ny
 msgid "Soft Clip"
 msgstr ""
@@ -18676,13 +19267,17 @@ msgstr ""
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
-msgstr "Núm Gain điều chỉnh đầu vào (dB) \nMono/Left-Trái"
+msgstr ""
+"Núm Gain điều chỉnh đầu vào (dB) \n"
+"Mono/Left-Trái"
 
 #: plug-ins/limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
-msgstr "Núm Gain điều chỉnh đầu vào (dB) \nRight channel / Kênh bên phải"
+msgstr ""
+"Núm Gain điều chỉnh đầu vào (dB) \n"
+"Right channel / Kênh bên phải"
 
 #: plug-ins/limiter.ny
 msgid "Limit to (dB)"
@@ -18871,7 +19466,8 @@ msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
-msgstr "Cài đặt Plug-ins (điện toán) ( Hãy sử dụng Plug-in quản lý để bật hiệu ứng ) "
+msgstr ""
+"Cài đặt Plug-ins (điện toán) ( Hãy sử dụng Plug-in quản lý để bật hiệu ứng ) "
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -19207,8 +19803,10 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
+"~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
+"Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
 
@@ -19247,15 +19845,13 @@ msgstr ""
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr ""
 
-#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a
-#. signal; there also "weighted" versions of it but this isn't that
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: DC derives from "direct current" in electronics, really means
-#. the zero frequency component of a signal
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
@@ -19536,7 +20132,8 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+" - The two Channels are strongly related, i.e. nearly mono or extremely "
+"panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
 
@@ -19548,13 +20145,15 @@ msgstr ""
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
+"                However, the center extraction depends also on the used "
+"reverb."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a "
+"unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
 
@@ -19569,7 +20168,8 @@ msgstr ""
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
+"                  to spread the signal over the physical distance between "
+"the speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 
@@ -19629,3 +20229,9 @@ msgstr "Tần số Radar Needles (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Lỗi. Bạn phải có dải âm ~%Stereo"
+
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "Dọn dẹp các blocks dòng mồ côi không thành công"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "Lỗi sao chép thẻ"

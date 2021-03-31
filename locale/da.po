@@ -9,9 +9,9 @@
 # scootergrisen: ændret så det kan gøres ens for alle strenge i programmet.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2020-10-04 17:26+0200\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish\n"
@@ -599,7 +599,7 @@ msgstr "%s-websted: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s-software er ophavsret %s 1999-2018 %s-teamet."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -608,7 +608,6 @@ msgstr "%s-software er ophavsret %s 1999-2018 %s-teamet."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Navnet %s er et registreret varemærke ved Dominic Mazzoni."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Byginformation"
@@ -621,6 +620,68 @@ msgstr "Aktiveret"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Deaktiveret"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+msgid "The Build"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Programmets bygdato:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Commit-id:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Fejlfindingsbyg (fejlfindingsniveau %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Udgivelsesbyg (fejlfindingsniveau %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 bit"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Bygtype:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Compiler:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Installationens præfiks:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Indstillingsmappe:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Kernebiblioteker"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Grafisk brugerflade-bibliotek på tværs af platforme"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Lydafspilning og -optagelse"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Konvertering af samplingshastighed"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -663,23 +724,6 @@ msgstr "FFmpeg-import/-eksport"
 msgid "Import via GStreamer"
 msgstr "Import gennem GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Kernebiblioteker"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Konvertering af samplingshastighed"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Lydafspilning og -optagelse"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Grafisk brugerflade-bibliotek på tværs af platforme"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Funktionalitet"
@@ -703,46 +747,6 @@ msgstr "Understøttelse af tonehøjde- og temposkift"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Understøttelse af ekstrem tonehøjde- og temposkift"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Programmets bygdato:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Commit-id:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Fejlfindingsbyg (fejlfindingsniveau %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Udgivelsesbyg (fejlfindingsniveau %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64 bit"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Bygtype:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Compiler:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Installationens præfiks:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Indstillingsmappe:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1134,7 +1138,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Hjælp"
@@ -1654,6 +1658,10 @@ msgstr "Anvend %s"
 msgid "Macros Palette"
 msgstr "Makropalet"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Håndtér makroer"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1777,6 +1785,11 @@ msgstr "Flyt &op"
 msgid "Move &Down"
 msgstr "Flyt &ned"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Gem"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1819,10 +1832,6 @@ msgstr "Navne må ikke indeholde \"%c\" og \"%c\""
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Er du sikker på, at du vil slette %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Håndtér makroer"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2083,12 +2092,16 @@ msgstr ""
 "(det virker ikke at vælge andre slags spor)."
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Rapport genereret til:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacity-supportdata"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Rapport genereret til:"
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2099,10 +2112,6 @@ msgstr "Nuværende projekt"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "Importerer %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2552,6 +2561,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Angiv nyt filnavn:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Frekvensanalyse"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektrum"
@@ -2726,10 +2739,6 @@ msgstr "Frekvens (Hz)\tNiveau (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Forsinkelse (sekunder)\tFrekvens (Hz)\tNiveau"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Frekvensanalyse"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3213,6 +3222,11 @@ msgstr "Mix og render"
 msgid "Mixing and rendering tracks"
 msgstr "Mixer alle renderer spor"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacity-mixerpult%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3272,11 +3286,6 @@ msgstr "Ændrede tonehastigheden"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Ændrede på balance"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacity-mixerpult%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3926,10 +3935,18 @@ msgstr "<uden titel>"
 msgid "[Project %02i] "
 msgstr "[Projekt %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Kunne ikke sætte forudindstillingsnavn"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Kunne ikke fjerne %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -3966,6 +3983,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -3983,9 +4007,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Kan ikke initiere MP3-strøm"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Kan ikke initiere MP3-strøm"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4004,11 +4084,6 @@ msgstr "Kan ikke sætte strømtilstand til pauset."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "Kunne ikke fjerne %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4759,6 +4834,10 @@ msgstr "Vælg en placering til at gemme skærmbilleder"
 msgid "Capture failed!"
 msgstr "Kunne ikke gemme!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Lang meddelelse"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4815,6 +4894,11 @@ msgstr "Velkommen til Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Vis ikke igen ved opstart"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Undersøger projektfilens data"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5692,10 +5776,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Genvejene er blevet fjernet"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Lang meddelelse"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10135,10 +10215,6 @@ msgstr "Indtast Nyquist-kommando: "
 msgid "&Load"
 msgstr "Ind&læs"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Gem"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -13124,10 +13200,6 @@ msgid "Allegro files"
 msgstr "Allegro-filer"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Vælg en ukomprimeret lydfil"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Farlig nulstilling..."
 
@@ -15375,6 +15447,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Brug hovedsageligt venstre mod højre-layouts i RTL-sprog"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Vis værktøjstips på tidslinje"
 
@@ -15720,6 +15796,10 @@ msgstr "MIDI-enheder"
 msgid "Preferences for MidiIO"
 msgstr "Præferencer for midi-io"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Ingen MIDI-grænseflade"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15733,10 +15813,6 @@ msgstr "Bruger: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "&Forsinkelse på MIDI-synthesizer (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Ingen MIDI-grænseflade"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20565,6 +20641,13 @@ msgstr "Frekvens af radarnåle (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Fejl.~%Stereospor kræves."
+
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Kunne ikke fjerne %s"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Vælg en ukomprimeret lydfil"
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
