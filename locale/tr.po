@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-03-18 14:53+0300\n"
+"PO-Revision-Date: 2021-03-31 20:25+0300\n"
 "Last-Translator: Serkan ÖNDER <serkanonder@outlook.com>\n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -62,19 +62,19 @@ msgstr "&Eşleşen Üst\tF8"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Top S-expr\tF9"
-msgstr "&Üst S-expr\tF9"
+msgstr "&Ust Sembolik ifade\tF9"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Higher S-expr\tF10"
-msgstr "Daha &Yüksek S-expr\tF10"
+msgstr "Daha &Yüksek Sembolik ifade\tF10"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Previous S-expr\tF11"
-msgstr "&Önceki S-expr\tF11"
+msgstr "&Önceki Sembolik ifade\tF11"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Next S-expr\tF12"
-msgstr "&Sonraki S-expr\tF12"
+msgstr "&Sonraki Sembolik ifade\tF12"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
@@ -321,7 +321,7 @@ msgstr "Üst"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to top S-expr"
-msgstr "Üst S-expr git"
+msgstr "Başa git Sembolik ifade"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Up"
@@ -329,7 +329,7 @@ msgstr "Yukarı"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to higher S-expr"
-msgstr "Daha yüksek S-expr git"
+msgstr "Daha yükseğe git Sembolik ifade"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Previous"
@@ -345,7 +345,7 @@ msgstr "Sonraki"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
-msgstr "Sonraki S-expr git"
+msgstr "Sonrakine git Sembolik ifade"
 
 #. i18n-hint noun
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
@@ -451,7 +451,7 @@ msgstr "%s, grafikler"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
-msgstr "%s (birleştiren %s, %s, %s, %s ve %s)"
+msgstr "%s (%s, %s, %s, %s ve %s içerir)"
 
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
@@ -523,7 +523,7 @@ msgstr "forum"
 msgid "translator_credits"
 msgstr ""
 "Kaya Zeren ,\n"
-"Serkan Önder,"
+"Serkan Önder"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -536,8 +536,8 @@ msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
 msgstr ""
-"%s sesleri kaydetmek ve düzenlemek için ücretsiz, açık kaynaklı, çapraz "
-"platform yazılımı."
+"%s özgürce ve ücretsiz olarak dağıtılan, açık kaynaklı, farklı platformlarda "
+"çalışabilen bir ses düzenleme ve kaydetme uygulamasıdır."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -561,7 +561,7 @@ msgstr "Emekli:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Şu anda etkin olmayan, eski Audacity takımı üyeleri %s"
+msgstr "Şu anda etkin olmayan, eski %s takımı üyeleri"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -583,7 +583,7 @@ msgstr "Kitaplıklar"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s includes code from the following projects:"
-msgstr "%s, aşağıdaki projelerden kod içeriyor:"
+msgstr "%s, aşağıdaki projelerden kod içerir:"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -598,9 +598,9 @@ msgstr "%s web sitesi: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "%s yazılımının telif hakkı %s 1999-2020 %s Takımına aittir."
+msgstr "%s yazılımının telif hakkı %s 1999-2021 %s Takımına aittir."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -623,9 +623,8 @@ msgstr "Devre Dışı"
 
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "The Build"
-msgstr "Hata ayıklama sürümü"
+msgstr "Yapı"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -638,12 +637,12 @@ msgstr "Gönderim Kodu:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Debug build (debug level %d)"
-msgstr "Hata ayıklama derlemesi (hata ayıklama düzeyi %d)"
+msgstr "Hata ayıklama yapısı (derleme: compilation %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Release build (debug level %d)"
-msgstr "Sürüm derlemesi (hata ayıklama düzeyi %d)"
+msgstr "Yayın sürümü (derleme %d)"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -817,7 +816,7 @@ msgstr "Taramak için sürükleyin. Taramayı durdurmak için bırakın."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Aramak için sürükleyin. Bırakın ve Scrub'a gidin."
+msgstr "Taramak için sürükleyin. Sarmak için bırakıp taşıyın."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
@@ -997,7 +996,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Do you still want to start Audacity?"
-msgstr "Hala Audacity'yi başlatmak istiyor musunuz?"
+msgstr "Audacity'yi yine de başlatmak istiyor musunuz?"
 
 #: src/AudacityApp.cpp
 msgid "Error Locking Temporary Folder"
@@ -1166,7 +1165,7 @@ msgstr ""
 "Sorunu düzeltmeyi deneyebilir ve ardından devam etmek için \"Yeniden Dene\" "
 "yi tıklayabilirsiniz.\n"
 "\n"
-"\"Audacity'den Çık\" ı seçerseniz, projeniz kaydedilmemiş bir durumda "
+"\"Audacity'den Çık\"ı seçerseniz, projeniz kaydedilmemiş bir durumda "
 "bırakılabilir ve bir sonraki açışınızda kurtarılacaktır."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
@@ -1233,7 +1232,7 @@ msgstr "Hata: %s"
 
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
-msgstr "Sesi Başlatma Hatası"
+msgstr "Ses Başlatma Hatası"
 
 #: src/AudioIO.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
@@ -1261,7 +1260,7 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
-"Kayıt cihazı açılırken hata oluştu.\n"
+"Kayıt aygıtı açılırken hata oluştu.\n"
 "Hata kodu: %s"
 
 #: src/AudioIO.cpp
@@ -1273,33 +1272,33 @@ msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too high."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. Daha fazla optimize etmek mümkün "
+"Otomatik Kayıt Düzeyi Ayarı durduruldu. Daha fazla optimize etmek mümkün "
 "değildi. Hala çok yüksek."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Otomatik Kayıt Seviyesi Ayarı, ses seviyesini %f'ye düşürdü."
+msgstr "Otomatik Kayıt Düzeyi Ayarı, ses düzeyini %f'ye düşürdü."
 
 #: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. It was not possible to "
 "optimize it more. Still too low."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. Daha fazla optimize etmek mümkün "
-"değildi. Hala çok düşük."
+"Otomatik Kayıt Düzeyi Ayarı durduruldu. Daha fazla optimize etmek mümkün "
+"değildi. Hâlâ çok düşük."
 
 #: src/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr "Otomatik Kayıt Seviyesi Ayarı, sesi %.2f'ye yükseltti."
+msgstr "Otomatik Kayıt Düzeyi Ayarı, sesi %.2f'ye yükseltti."
 
 #: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. Kabul edilebilir bir ses seviyesi "
+"Otomatik Kayıt Düzeyi Ayarı durduruldu. Kabul edilebilir bir ses düzeyi "
 "bulamadan toplam analiz sayısı aşıldı. Hala çok yüksek."
 
 #: src/AudioIO.cpp
@@ -1307,8 +1306,8 @@ msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. Kabul edilebilir bir ses seviyesi "
-"bulamadan toplam analiz sayısı aşıldı. Hala çok düşük."
+"Otomatik Kayıt Düzeyi Ayarı durduruldu. Kabul edilebilir bir ses düzeyi "
+"bulamadan toplam analiz sayısı aşıldı. Hâlâ çok düşük."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1316,8 +1315,8 @@ msgid ""
 "Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
 "volume."
 msgstr ""
-"Otomatik Kayıt Seviyesi Ayarı durduruldu. %.2f kabul edilebilir bir ses "
-"seviyesi gibi görünüyor."
+"Otomatik Kayıt Düzeyi Ayarı durduruldu. %.2f kabul edilebilir bir ses düzeyi "
+"gibi görünüyor."
 
 #: src/AudioIOBase.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -1326,12 +1325,12 @@ msgstr "Akış etkin ... bilgi toplanamıyor.\n"
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
-msgstr "Varsayılan kayıt cihazı numarası: %d\n"
+msgstr "Varsayılan kayıt aygıtı numarası: %d\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
-msgstr "Varsayılan oynatma cihaz numarası: %d\n"
+msgstr "Varsayılan oynatma aygıt numarası: %d\n"
 
 #: src/AudioIOBase.cpp
 msgid "No devices found\n"
@@ -1340,17 +1339,17 @@ msgstr "Herhangi bir aygıt bulunamadı\n"
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
-msgstr "Cihaz bilgileri şunun için kullanılamıyor: %d\n"
+msgstr "Aygıt bilgileri şunun için kullanılamıyor: %d\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Device ID: %d\n"
-msgstr "Cihaz Kimliği: %d\n"
+msgstr "Aygıt Kimliği: %d\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Device name: %s\n"
-msgstr "Cihaz adı: %s\n"
+msgstr "Aygıt adı: %s\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
@@ -1395,31 +1394,31 @@ msgstr "Desteklenen Oranlar:\n"
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Selected recording device: %d - %s\n"
-msgstr "Seçili kayıt cihazı: %d - %s\n"
+msgstr "Seçili kayıt aygıtı: %d - %s\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr "'%s' için kayıt cihazı bulunamadı.\n"
+msgstr "'%s' için kayıt aygıtı bulunamadı.\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Selected playback device: %d - %s\n"
-msgstr "Seçili oynatma cihazı: %d - %s\n"
+msgstr "Seçili oynatma aygıtı: %d - %s\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "No playback device found for '%s'.\n"
-msgstr "\"%s\" için hiçbir oynatma cihazı bulunamadı.\n"
+msgstr "'%s' için hiçbir oynatma aygıtı bulunamadı.\n"
 
 #: src/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Her iki cihaz olmadan karşılıklı örnek hızları kontrol edilemez.\n"
+msgstr "Her iki aygıt olmadan karşılıklı örnek hızları kontrol edilemez.\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Received %d while opening devices\n"
-msgstr "Cihazlar açılırken %d alındı\n"
+msgstr "Aygıtlar açılırken %d alındı\n"
 
 #: src/AudioIOBase.cpp
 msgid "Unable to open Portmixer\n"
@@ -1440,35 +1439,35 @@ msgstr "Kullanılabilir kayıt kaynakları:\n"
 
 #: src/AudioIOBase.cpp
 msgid "Available playback volumes:\n"
-msgstr "Kullanılabilir oynatma hacimleri:\n"
+msgstr "Kullanılabilir oynatma ses düzeyi:\n"
 
 #: src/AudioIOBase.cpp
 msgid "Recording volume is emulated\n"
-msgstr "Kayıt hacmi öykünülür\n"
+msgstr "Kayıt ses düzeyi öykünülür\n"
 
 #: src/AudioIOBase.cpp
 msgid "Recording volume is native\n"
-msgstr "Kayıt hacmi yereldir\n"
+msgstr "Kayıt ses düzeyi yereldir\n"
 
 #: src/AudioIOBase.cpp
 msgid "Playback volume is emulated\n"
-msgstr "Oynatma hacmi taklit edilir\n"
+msgstr "Oynatma ses düzeyi taklit edilir\n"
 
 #: src/AudioIOBase.cpp
 msgid "Playback volume is native\n"
-msgstr "Oynatma hacmi yereldir\n"
+msgstr "Oynatma ses düzeyi yereldir\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Supports output: %d\n"
-msgstr "Çıktıyı destekler: %d\n"
+msgstr "Şu çıkışı destekler: %d\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Supports input: %d\n"
-msgstr "Girdiyi destekler: %d\n"
+msgstr "Şu girişi destekler: %d\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
@@ -1478,22 +1477,22 @@ msgstr "Açıldı: %d\n"
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Seçilen MIDI kayıt cihazı: %d - %s\n"
+msgstr "Seçilen MIDI kayıt aygıtı: %d - %s\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "No MIDI recording device found for '%s'.\n"
-msgstr "\"%s\" için MIDI kayıt cihazı bulunamadı.\n"
+msgstr "'%s' için MIDI kayıt aygıtı bulunamadı.\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Seçilen MIDI oynatma cihazı: %d - %s\n"
+msgstr "Seçilen MIDI oynatma aygıtı: %d - %s\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
 msgid "No MIDI playback device found for '%s'.\n"
-msgstr "\"%s\" için MIDI oynatma cihazı bulunamadı.\n"
+msgstr "'%s' için MIDI oynatma aygıtı bulunamadı.\n"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -1529,7 +1528,7 @@ msgstr "Ad"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Discard Selected"
-msgstr "Seçilenleri &Gözardı et"
+msgstr "Seçilenleri &At"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Recover Selected"
@@ -1551,7 +1550,7 @@ msgid ""
 msgstr ""
 "Seçili projeleri atmak istediğinizden emin misiniz?\n"
 "\n"
-"\"Evet\" seçeneğinin seçilmesi, seçilen projeleri anında kalıcı olarak siler."
+"\"Evet\" seçeneği, seçilen projeleri anında kalıcı olarak siler."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1567,7 +1566,7 @@ msgstr "Parametreleri &Düzenle"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Use Preset"
-msgstr "Ön Ayarı &Kullan"
+msgstr "Hazır Ayar &Kullanılsın"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Parameters"
@@ -1587,11 +1586,11 @@ msgstr "MP3 Dönüştürme"
 
 #: src/BatchCommands.cpp
 msgid "Fade Ends"
-msgstr "Bitişte Ses seviyesini azalt"
+msgstr "Bitişte ses düzeyini azalt"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
-msgstr "Makroyu İçe Aktar"
+msgstr "Makro İçe Aktar"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1600,7 +1599,7 @@ msgstr "%s makrosu zaten var. Değiştirmek ister misiniz?"
 
 #: src/BatchCommands.cpp
 msgid "Export Macro"
-msgstr "Makroyu Dışa Aktar"
+msgstr "Makro Dışa Aktar"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1617,7 +1616,7 @@ msgstr "(%s)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
-msgstr "Menü Komutu (Parametre Yok)"
+msgstr "Menü Komutu (Parametresiz)"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
@@ -1628,7 +1627,7 @@ msgstr "\"%s\" bir veya daha fazla parçanın seçilmesini gerektiriyor."
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Your batch command of %s was not recognized."
-msgstr "%s toplu komutunuz tanınmadı."
+msgstr "%s toplu komutunuz anlaşılmadı."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
@@ -1691,11 +1690,11 @@ msgstr "Makro"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
-msgstr "Makroyu şuraya uygula:"
+msgstr "Makro şuraya uygula:"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to project"
-msgstr "Makroyu projeye uygula"
+msgstr "Makro projeye uygula"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Project"
@@ -1703,7 +1702,7 @@ msgstr "&Projeler"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to files..."
-msgstr "Makroyu dosyalara uygula..."
+msgstr "Makro dosyalara uygula..."
 
 #: src/BatchProcessDialog.cpp
 msgid "&Files..."
@@ -2969,7 +2968,7 @@ msgstr "Kullanılan &toplam alan"
 
 #: src/HistoryWindow.cpp
 msgid "&Undo levels available"
-msgstr "&Geri alma seviyeleri mevcut"
+msgstr "&Geri alma düzeyleri mevcut"
 
 #: src/HistoryWindow.cpp
 msgid "&Levels to discard"
@@ -3958,12 +3957,15 @@ msgid "Failed to open the project's database"
 msgstr "Projenin veritabanı açılamadı"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "%s açılamadı"
+msgstr ""
+"Veritabanı dosyası açılamadı:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4014,6 +4016,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"Proje salt okunur bir dizinde\n"
+"(Gerekli geçici dosyalar oluşturulamıyor)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4036,7 +4040,7 @@ msgstr "Proje dosyası başlatılamıyor"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
+msgstr "'Ekleme' işlevi eklenemiyor (engellemeler doğrulanamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4044,6 +4048,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Proje salt okunur\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4051,6 +4057,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Proje kilitlendi\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4058,6 +4066,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Proje meşgul\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4065,6 +4075,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Proje bozuk\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4072,6 +4084,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Bazı izin sorunları\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4079,6 +4093,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Bir disk G/Ç hatası\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4086,12 +4102,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Yetkili değil\n"
+"(Blok dosyalarıyla çalışılamıyor)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "Proje dosyası başlatılamıyor"
+msgstr "Blok dosyalarıyla çalışılamıyor"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4198,7 +4215,7 @@ msgid ""
 "The project's database failed to reopen, possibly because of limited space "
 "on the storage device."
 msgstr ""
-"Muhtemelen depolama cihazındaki sınırlı alan nedeniyle, projenin veritabanı "
+"Muhtemelen depolama aygıtı sınırlı alan nedeniyle, projenin veritabanı "
 "yeniden açılamadı."
 
 #: src/ProjectFileIO.cpp
@@ -4222,7 +4239,7 @@ msgid ""
 "%s"
 msgstr ""
 "Muhtemelen sınırlı alan nedeniyle proje açılamadı\n"
-"depolama cihazında.\n"
+"depolama aygıtı.\n"
 "\n"
 "%s"
 
@@ -4236,7 +4253,7 @@ msgid ""
 msgstr ""
 "Otomatik kaydetme bilgileri, muhtemelen sınırlı alan nedeniyle "
 "kaldırılamıyor\n"
-"depolama cihazında.\n"
+"depolama aygıtı.\n"
 "\n"
 "%s"
 
@@ -4946,9 +4963,8 @@ msgid "Don't show this again at start up"
 msgstr "Bu pencere açılışta bir daha görüntülenmesin"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "Proje dosyası verisi araştırılıyor"
+msgstr "Proje dosyasına bağlantı boş"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -6561,8 +6577,8 @@ msgid ""
 "Reduces (ducks) the volume of one or more tracks whenever the volume of a "
 "specified \"control\" track reaches a particular level"
 msgstr ""
-"Belirli bir \"kontrol\" parçasının ses düzeyi belirli bir seviyeye "
-"ulaştığında bir veya daha fazla parçanın ses düzeyini azaltır (örter)"
+"Belirli bir \"kontrol\" parçasının ses düzeyi belirli bir düzeye ulaştığında "
+"bir veya daha fazla parçanın ses düzeyini azaltır (örter)"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
@@ -6672,7 +6688,7 @@ msgstr "Düzey"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
-msgstr "Ses seviyesi kontrolünü Ton kontrollerine &bağlayın"
+msgstr "Ses düzeyi kontrolünü Ton kontrollerine &bağlayın"
 
 #: src/effects/ChangePitch.cpp
 msgid "Change Pitch"
@@ -6714,7 +6730,7 @@ msgstr "&şundan"
 
 #: src/effects/ChangePitch.cpp
 msgid "from Octave"
-msgstr "Octave'den"
+msgstr "Octav'dan"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
@@ -6730,7 +6746,7 @@ msgstr "&şuna"
 
 #: src/effects/ChangePitch.cpp
 msgid "to Octave"
-msgstr "Oktave ya"
+msgstr "Oktav a"
 
 #: src/effects/ChangePitch.cpp
 msgid "Semitones (half-steps)"
@@ -13186,7 +13202,7 @@ msgstr "Ay&gıt"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Recording Device..."
-msgstr "&Kayıt Cihazını Değiştirin..."
+msgstr "&Kayıt Aygıtını Değiştirin..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Playback Device..."
@@ -15049,7 +15065,7 @@ msgstr "Aygıtlar"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Preferences for Device"
-msgstr "Cihaz Tercihleri"
+msgstr "Aygıt Tercihleri"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
@@ -15515,7 +15531,7 @@ msgstr "RTL dillerinde çoğunlukla Soldan Sağa düzenleri kullanın"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "Ondalık nokta olarak asla virgül kullanmayın"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -19263,7 +19279,7 @@ msgstr "Ters Zıplayan Top"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
-msgstr "Yankı başına gecikme seviyesi (dB)"
+msgstr "Yankı başına gecikme düzeyi (dB)"
 
 #: plug-ins/delay.ny
 msgid "Delay time (seconds)"
@@ -19526,7 +19542,7 @@ msgstr ""
 
 #: plug-ins/label-sounds.ny
 msgid "Threshold level (dB)"
-msgstr "Eşik seviyesi (dB)"
+msgstr "Eşik düzeyi (dB)"
 
 #: plug-ins/label-sounds.ny
 msgid "Threshold measurement"
@@ -19534,11 +19550,11 @@ msgstr "Eşik ölçümü"
 
 #: plug-ins/label-sounds.ny
 msgid "Peak level"
-msgstr "Tepe seviyesi"
+msgstr "Tepe düzeyi"
 
 #: plug-ins/label-sounds.ny
 msgid "Average level"
-msgstr "Ortalama seviye"
+msgstr "Ortalama düzey"
 
 #: plug-ins/label-sounds.ny
 msgid "RMS level"
@@ -19696,7 +19712,7 @@ msgstr "Geçit"
 
 #: plug-ins/noisegate.ny
 msgid "Analyze Noise Level"
-msgstr "Gürültü Seviyesini Analiz Edin"
+msgstr "Gürültü Düzeyini Analiz Edin"
 
 #: plug-ins/noisegate.ny
 msgid "Stereo Linking"
@@ -19720,7 +19736,7 @@ msgstr "Yukarıdaki geçit frekansları (kHz)"
 
 #: plug-ins/noisegate.ny
 msgid "Level reduction (dB)"
-msgstr "Seviye azaltma (dB)"
+msgstr "Düzey azaltma (dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Attack (ms)"
