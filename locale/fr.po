@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-09 00:03+0100\n"
+"PO-Revision-Date: 2021-03-31 15:13+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -634,9 +634,9 @@ msgstr "Site ouèbe d’%s : "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "Le logiciel %s est déposé %s 1999-2020 %s Team."
+msgstr "Le logiciel %s est déposé %s 1999-2021 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -659,9 +659,8 @@ msgstr "Désactivé"
 
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "The Build"
-msgstr "Construction de débogage"
+msgstr "La construction"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -4100,12 +4099,15 @@ msgid "Failed to open the project's database"
 msgstr "Impossible d’ouvrir la base de données du projet"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "Échec à l’ouverture %s"
+msgstr ""
+"Impossible d'ouvrir le fichier de la base de données :\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4155,6 +4157,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"Le projet est dans un répertoire en lecture seule\n"
+"(Impossible de créer les fichiers temporaires requis)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4177,7 +4181,7 @@ msgstr "Impossible d’initialiser le fichier de projet"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
+msgstr "Impossible d'ajouter la fonction 'inset' (ne peut pas vérifier les blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4185,6 +4189,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Le projet est en lecture seule"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4192,6 +4198,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Le projet est verrouillé\n"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4199,6 +4207,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Le projet est occupé\n"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4206,6 +4216,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Le projet est corrompu\n"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4213,6 +4225,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Quelques problèmes de permissions\n"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4220,6 +4234,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Une erreur d'E/S de disque\n"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4227,12 +4243,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Non autorisé\n"
+"(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "Impossible d’initialiser le fichier de projet"
+msgstr "Impossible de travailler avec les blockfiles"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -5099,9 +5116,8 @@ msgid "Don't show this again at start up"
 msgstr "Ne plus montrer ceci au démarrage"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "Inspection des données du fichier-projet"
+msgstr "La connexion au fichier de projet est nulle"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -15956,7 +15972,7 @@ msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "Ne jamais utiliser la virgule comme point décimal"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -19656,7 +19672,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aLes valeurs de pourcentage ne peuvent pas être à plus de 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
@@ -19664,7 +19680,7 @@ msgid ""
 msgstr ""
 "~aLes valeurs dB ne peuvent pas être supérieure à +100 dB.~%~%~\n"
 "                                 Astuce : 6 dB double l’amplitude~%~\n"
-"                                 t-6 dB divise l’amplitude par deux."
+"                                 -6 dB divise l’amplitude par deux."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -22617,3 +22633,4 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 
 #~ msgid "Spectrogram log(f)"
 #~ msgstr "Spectre logarithmique décimal"
+
