@@ -207,7 +207,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                       {PreferenceKey(Operation::Save, PathType::User),
                                        wxT("")},
                                       30);
-         mSaveText->SetValidator(FilesystemValidator(XO("Projects cannot be saved to FAT drives.")));
+         if( mSaveText )
+            mSaveText->SetValidator(FilesystemValidator(XO("Projects cannot be saved to FAT drives.")));
          S.Id(SaveButtonID).AddButton(XXO("B&rowse..."));
 
          S.Id(ImportTextID);
@@ -239,12 +240,14 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                   {PreferenceKey(Operation::Temp, PathType::_None),
                                    wxT("")},
                                   30);
-         mTempText->SetValidator(FilesystemValidator(XO("Temporary files directory cannot be on a FAT drive.")));
+         if( mTempText )
+            mTempText->SetValidator(FilesystemValidator(XO("Temporary files directory cannot be on a FAT drive.")));
          S.Id(TempButtonID).AddButton(XXO("Brow&se..."));
 
          S.AddPrompt(XXO("&Free Space:"));
          mFreeSpace = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 30);
-         mFreeSpace->SetName(XO("Free Space").Translation());
+         if( mFreeSpace )
+            mFreeSpace->SetName(XO("Free Space").Translation());
       }
       S.EndMultiColumn();
    }
