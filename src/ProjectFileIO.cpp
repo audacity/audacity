@@ -1132,7 +1132,7 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
 
    if (!success)
    {
-      ShowErrorDialog(
+      ShowError(
          &window,
          XO("Error Writing to File"),
          XO("Audacity failed to write file %s.\n"
@@ -1538,7 +1538,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
          .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
-      ShowErrorDialog(
+      ShowError(
          &window,
          XO("Can't open project file"),
          msg, 
@@ -1926,7 +1926,7 @@ bool ProjectFileIO::SaveProject(
 
          if (!reopened) {
             wxTheApp->CallAfter([this]{
-               ShowErrorDialog(nullptr,
+               ShowError(nullptr,
                   XO("Warning"),
                   XO(
 "The project's database failed to reopen, "
@@ -1950,7 +1950,7 @@ bool ProjectFileIO::SaveProject(
       // after we switch to the new file.
       if (!CopyTo(fileName, XO("Saving project"), false))
       {
-         ShowErrorDialog(
+         ShowError(
             nullptr,
             XO("Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
@@ -2001,7 +2001,7 @@ bool ProjectFileIO::SaveProject(
          if (!success)
          {
             // Additional help via a Help button links to the manual.
-            ShowErrorDialog(nullptr,
+            ShowError(nullptr,
                            XO("Error Saving Project"),
                            XO("The project failed to open, possibly due to limited space\n"
                               "on the storage device.\n\n%s").Format(GetLastError()),
@@ -2020,7 +2020,7 @@ bool ProjectFileIO::SaveProject(
       if (!AutoSaveDelete())
       {
          // Additional help via a Help button links to the manual.
-         ShowErrorDialog(nullptr,
+         ShowError(nullptr,
                         XO("Error Saving Project"),
                         XO("Unable to remove autosave information, possibly due to limited space\n"
                            "on the storage device.\n\n%s").Format(GetLastError()),
@@ -2059,7 +2059,7 @@ bool ProjectFileIO::SaveProject(
    else
    {
       if ( !UpdateSaved( nullptr ) ) {
-         ShowErrorDialog(
+         ShowError(
             nullptr,
             XO("Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
@@ -2182,6 +2182,15 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
    return -1;
 }
 
+/// Displays an error dialog with a button that offers help
+void ProjectFileIO::ShowError(wxWindow *parent,
+                              const TranslatableString &dlogTitle,
+                              const TranslatableString &message,
+                              const wxString &helpPage)
+{
+   ShowErrorDialog(parent, dlogTitle, message, helpPage, true, GetLastLog());
+}
+
 const TranslatableString &ProjectFileIO::GetLastError() const
 {
    return mpErrors->mLastError;
@@ -2195,6 +2204,11 @@ const TranslatableString &ProjectFileIO::GetLibraryError() const
 int ProjectFileIO::GetLastErrorCode() const
 {
     return mpErrors->mErrorCode;
+}
+
+const wxString &ProjectFileIO::GetLastLog() const
+{
+    return mpErrors->mLog;
 }
 
 void ProjectFileIO::SetError(

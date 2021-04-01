@@ -32,6 +32,7 @@ struct DBConnectionErrors
    TranslatableString mLastError;
    TranslatableString mLibraryError;
    int mErrorCode { 0 };
+   wxString mLog;
 };
 
 class DBConnection

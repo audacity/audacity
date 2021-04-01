@@ -31,6 +31,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/icon.h>
 #include <wx/settings.h>
 #include <wx/textctrl.h>
+#include <wx/tokenzr.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
 #include "widgets/AudacityMessageBox.h"
@@ -237,12 +238,23 @@ void AudacityLogger::Show(bool show)
    Flush();
 }
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-wxString AudacityLogger::GetLog()
+wxString AudacityLogger::GetLog(int count)
 {
-   return mBuffer;
+   if (count == 0)
+   {
+      return mBuffer;
+   }
+
+   wxString buffer;
+
+   auto lines = wxStringTokenize(mBuffer, wxT("\r\n"), wxTOKEN_RET_DELIMS);
+   for (int index = lines.size() - 1; index >= 0 && count > 0; --index, --count)
+   {
+      buffer.Prepend(lines[index]);
+   }
+
+   return buffer;
 }
-#endif
 
 void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
 {

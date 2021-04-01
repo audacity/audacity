@@ -16,6 +16,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include <wx/progdlg.h>
 #include <wx/string.h>
 
+#include "AudacityLogger.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "Project.h"
@@ -66,13 +67,23 @@ void DBConnection::SetError(
    const TranslatableString &msg, const TranslatableString &libraryError, int errorCode)
 {
    wxLogMessage(wxT("Connection msg: %s"), msg.Debug());
+   printf("Connection msg: %s", msg.Debug().mb_str().data());
 
    if (!libraryError.empty())
+   {
       wxLogMessage(wxT("Connection error: %s"), libraryError.Debug());
+      printf("Connection error: %s", libraryError.Debug().mb_str().data());
+   }
 
    mpErrors->mLastError = msg;
    mpErrors->mLibraryError = libraryError;
    mpErrors->mErrorCode = errorCode;
+
+   auto logger = AudacityLogger::Get();
+   if (logger)
+   {
+      mpErrors->mLog = logger->GetLog(10);
+   }
 }
 
 void DBConnection::SetDBError(
@@ -96,6 +107,12 @@ void DBConnection::SetDBError(
 
    wxLogMessage(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
    printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
+
+   auto logger = AudacityLogger::Get();
+   if (logger)
+   {
+      mpErrors->mLog = logger->GetLog(10);
+   }
 }
 
 bool DBConnection::Open(const FilePath fileName)

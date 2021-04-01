@@ -40,9 +40,7 @@ class AudacityLogger final : public wxEvtHandler,
    bool SaveLog(const wxString &fileName) const;
    bool ClearLog();
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-   wxString GetLog();
-#endif
+   wxString GetLog(int count = 0);
 
  protected:
    void Flush()  override;
