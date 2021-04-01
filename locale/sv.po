@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2018-12-18 20:31+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
@@ -603,7 +603,7 @@ msgstr "Audacitys webbplats: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -614,7 +614,6 @@ msgstr ""
 "&nbsp; &nbsp; Namnet <b>Audacity</b> är ett registrerat varumärke av Dominic "
 "Mazzoni.<br><br>"
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Versionsinformation"
@@ -628,87 +627,11 @@ msgstr "Aktiverad"
 msgid "Disabled"
 msgstr "Inaktiverad"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Stöd av filformat"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "MP3-import"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Import och export av Ogg Vorbis"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "Stöd för ID3-tagg"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "Import och export av FLAC"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "MP2-export"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Importera via QuickTime"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "Import-/exportbibliotek för FFmpeg"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "Importera via GStreamer"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Kärnbibliotek"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Konvertering av samplingsfrekvens"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Upp- och inspelning av ljud"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Plattformsoberoende gränssnittsbibliotek"
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Innehåll"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr "Extra för mörkt tema"
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Stöd för insticksmoduler"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Stöd för ljudkortsmixer"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Stöd för ändring av tonhöjd och tempo"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Stöd för extrem ändring av tonhöjd och tempo"
+#, fuzzy
+msgid "The Build"
+msgstr "Felsökningsversion"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -752,6 +675,88 @@ msgstr "Installationsprefix: "
 #, fuzzy
 msgid "Settings folder:"
 msgstr "Inställningsmapp: "
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Kärnbibliotek"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Plattformsoberoende gränssnittsbibliotek"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Upp- och inspelning av ljud"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Konvertering av samplingsfrekvens"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Stöd av filformat"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "MP3-import"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Import och export av Ogg Vorbis"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "Stöd för ID3-tagg"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "Import och export av FLAC"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "MP2-export"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Importera via QuickTime"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "Import-/exportbibliotek för FFmpeg"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "Importera via GStreamer"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Innehåll"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr "Extra för mörkt tema"
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Stöd för insticksmoduler"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Stöd för ljudkortsmixer"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Stöd för ändring av tonhöjd och tempo"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Stöd för extrem ändring av tonhöjd och tempo"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1147,7 +1152,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Hjälp"
@@ -1670,6 +1675,10 @@ msgstr "Tillämpa %s"
 msgid "Macros Palette"
 msgstr "Makropalett"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Hantera makron"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1794,6 +1803,11 @@ msgstr "Flytta &upp"
 msgid "Move &Down"
 msgstr "Flytta &ned"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Spara"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1836,10 +1850,6 @@ msgstr "Namn kan inte innehålla \"%c\" och \"%c\""
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Vill du verkligen radera %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Hantera makron"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2094,12 +2104,16 @@ msgstr ""
 "funktion. (Det går inte att markera andra sorters spår.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Rapporten skapades till:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacitys supportteam"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Rapporten skapades till:"
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2110,10 +2124,6 @@ msgstr "Nuvarande projekt"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "Importerar %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2574,6 +2584,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Välj nytt filnamn:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Frekvensanalys"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektrum"
@@ -2748,10 +2762,6 @@ msgstr "Frekvens (Hz)\tNivå (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Lagg (sekunder)\tFrekvens (Hz)\tNivå"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Frekvensanalys"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3245,6 +3255,11 @@ msgstr "Mixa och rendera"
 msgid "Mixing and rendering tracks"
 msgstr "Mixar och renderar spår"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacitys mixerbord%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3304,11 +3319,6 @@ msgstr "Flyttade hastighetsreglaget"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Flyttade panoreringsreglaget"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacitys mixerbord%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3953,10 +3963,18 @@ msgstr "<namnlös>"
 msgid "[Project %02i] "
 msgstr "Projekt"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Kunde inte läsa förinställningsfil."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Misslyckades att ta bort %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -3995,6 +4013,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -4012,9 +4037,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Kunde inte initialisera MP3-strömmen"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Kunde inte initialisera MP3-strömmen"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4033,11 +4114,6 @@ msgstr "Kunde inte ändra strömmens tillstånd till pausad."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "Misslyckades att ta bort %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4787,6 +4863,10 @@ msgstr "Välj en plats att spara skärmdumpar"
 msgid "Capture failed!"
 msgstr "Misslyckades att ta skärmdump!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Långt meddelande"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4843,6 +4923,11 @@ msgstr "Välkommen to Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Visa inte detta igen vid uppstart"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Undersöker data i projektfil"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5714,10 +5799,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Långt meddelande"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10233,10 +10314,6 @@ msgstr "Skriv Nyquist-kommando: "
 msgid "&Load"
 msgstr "&Läs in"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Spara"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13273,10 +13350,6 @@ msgid "Allegro files"
 msgstr "Alla filer|*"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Välj en okomprimerad ljudfil"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Farlig återställning..."
 
@@ -15543,6 +15616,10 @@ msgstr ""
 "Använd mestadels vänster-till-höger-utseenden i höger-till-vänster-språk"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 #, fuzzy
 msgid "Show Timeline Tooltips"
 msgstr "Aktivera verktygstips för tidslinje"
@@ -15885,6 +15962,10 @@ msgstr "MIDI-enheter"
 msgid "Preferences for MidiIO"
 msgstr "Inställningar: "
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Inga MIDI-gränssnitt"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -15899,10 +15980,6 @@ msgstr "Använder: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "Latens för MIDI-synthesizer (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Inga MIDI-gränssnitt"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20801,6 +20878,13 @@ msgstr "Frekvens för radarnålar (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Fel.~%Stereospår krävs."
 
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Misslyckades att ta bort %s"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Välj en okomprimerad ljudfil"
+
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -21300,9 +21384,6 @@ msgstr "Fel.~%Stereospår krävs."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; Programvaran <b>Audacity<sup>&reg;</sup></b> är "
 #~ "upphovsrättsskyddad &copy; 1999-2018 Audacity-teamet.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Felsökningsversion"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir i DirManager::MakeBlockFilePath misslyckades."

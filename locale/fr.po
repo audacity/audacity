@@ -16,10 +16,10 @@
 # Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>, 2017-2021
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-02-09 00:03+0100\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"PO-Revision-Date: 2021-03-31 15:13+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -635,8 +635,8 @@ msgstr "Site ouèbe d’%s : "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
-msgstr "Le logiciel %s est déposé %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
+msgstr "Le logiciel %s est déposé %s 1999-2021 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -644,7 +644,6 @@ msgstr "Le logiciel %s est déposé %s 1999-2020 %s Team."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Le nom %s est une marque déposée de Dominic Mazzoni."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Informations de construction"
@@ -658,88 +657,10 @@ msgstr "Activé"
 msgid "Disabled"
 msgstr "Désactivé"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Support de format de fichier"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "Importation de MP3"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Import et export Ogg Vorbis "
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "Support des balises ID3"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "Import et export FLAC"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "Export MP2"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Importer depuis QuickTime"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "Import/export FFmpeg"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "Import via GStreamer"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Bibliothèques centrales"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Conversion de taux d’échantillonnage"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Lecture et enregistrement audio"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Bibliothèque graphique multi-plateforme"
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Fonctionnalités"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr "Extras du thème Dark"
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Support de greffon"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Support du mixeur de carte-son"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Support du changement de hauteur et de tempo"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Support du changement extrême de hauteur et de tempo"
+msgid "The Build"
+msgstr "La construction"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -782,6 +703,89 @@ msgstr "Préfixe d’intallation :"
 #: src/AboutDialog.cpp
 msgid "Settings folder:"
 msgstr "Répertoire de paramètres :"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Bibliothèques centrales"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Bibliothèque graphique multi-plateforme"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Lecture et enregistrement audio"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Conversion de taux d’échantillonnage"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Support de format de fichier"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "Importation de MP3"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Import et export Ogg Vorbis "
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "Support des balises ID3"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "Import et export FLAC"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "Export MP2"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Importer depuis QuickTime"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "Import/export FFmpeg"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "Import via GStreamer"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Fonctionnalités"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr "Extras du thème Dark"
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Support de greffon"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Support du mixeur de carte-son"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Support du changement de hauteur et de tempo"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Support du changement extrême de hauteur et de tempo"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1218,7 +1222,7 @@ msgstr ""
 "l'ouvrirez."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Aide"
@@ -1735,6 +1739,10 @@ msgstr "Appliquer %s"
 msgid "Macros Palette"
 msgstr "Palette de macros"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Gérer les macros"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1863,6 +1871,11 @@ msgstr "&Monter"
 msgid "Move &Down"
 msgstr "&Descendre"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Sauvegarder"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1905,10 +1918,6 @@ msgstr "Les noms ne doivent pas contenir '%c' et '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Voulez-vous vraiment supprimer %s ?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Gérer les macros"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #. i18n-hint: Benchmark means a software speed test
@@ -1985,8 +1994,8 @@ msgstr "La taille des données de test devrait être dans la plage 1 - 2000 Mo."
 #, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
 msgstr ""
-"Utilisation de %lld parties de %lld échantillons chaque fois, pour un total de "
-"%.1f Mo.\n"
+"Utilisation de %lld parties de %lld échantillons chaque fois, pour un total "
+"de %.1f Mo.\n"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/Benchmark.cpp
@@ -2189,13 +2198,17 @@ msgstr ""
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Rapport généré pour :"
+msgid "Audacity Support Data"
+msgstr "Données de support Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Ceci peut prendre plusieurs secondes"
 
 # trebmuh to check (vérifier dans un contexte graphique)
 #: src/CrashReport.cpp
-msgid "Audacity Support Data"
-msgstr "Données de support Audacity"
+msgid "Report generated to:"
+msgstr "Rapport généré pour :"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2205,10 +2218,6 @@ msgstr "Point-de-contrôler le projet"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Pointage de contrôle %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Ceci peut prendre plusieurs secondes"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2675,6 +2684,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Spécifier un nouveau nom de fichier :"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Analyse de fréquence"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spectre"
@@ -2852,10 +2865,6 @@ msgstr "Fréquence (Hz)\tNiveau (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Décalage (secondes)\tFréquence (Hz)\tNiveau"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Analyse de fréquence"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3351,6 +3360,11 @@ msgstr "Mixage et Rendu"
 msgid "Mixing and rendering tracks"
 msgstr "Mixer et rendre les pistes"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Table de mixage %s d’Audacity"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3410,11 +3424,6 @@ msgstr "Curseur de vitesse déplacé"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Curseur de panoramique déplacé"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Table de mixage %s d’Audacity"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -4085,9 +4094,20 @@ msgstr "<sans titre>"
 msgid "[Project %02i] "
 msgstr "[Projet %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Impossible d’ouvrir la base de données du projet"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr ""
+"Impossible d'ouvrir le fichier de la base de données :\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4104,8 +4124,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Impossible d'exécuter une commande de fichier de projet :"
-"\n"
+"Impossible d'exécuter une commande de fichier de projet :\n"
 "%s"
 
 #: src/ProjectFileIO.cpp
@@ -4132,6 +4151,15 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+"Le projet est dans un répertoire en lecture seule\n"
+"(Impossible de créer les fichiers temporaires requis)"
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "Ceci n’est pas un fichier de projet Audacity"
@@ -4150,9 +4178,78 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Impossible d’initialiser le fichier de projet"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Le nettoyage des blocs orphelins a échoué"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr "Impossible d'ajouter la fonction 'inset' (ne peut pas vérifier les blockids)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Le projet est en lecture seule"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Le projet est verrouillé\n"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Le projet est occupé\n"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Le projet est corrompu\n"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Quelques problèmes de permissions\n"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Une erreur d'E/S de disque\n"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Non autorisé\n"
+"(Impossible de travailler avec les blockfiles)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid "Unable to work with the blockfiles"
+msgstr "Impossible de travailler avec les blockfiles"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4170,10 +4267,6 @@ msgstr "Incapable d’attacher la base de données de destination."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr "Incapable de passer en mode de journalisation rapide"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Échec de la copie des balises"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -4317,8 +4410,8 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Ce projet n’a pas été sauvegardé correctement lors de la dernière "
-"exécution d’Audacity.\n"
+"Ce projet n’a pas été sauvegardé correctement lors de la dernière exécution "
+"d’Audacity.\n"
 "\n"
 "Il a été récupéré au dernier cliché."
 
@@ -4958,6 +5051,10 @@ msgstr "Choisir un emplacement pour sauvegarder les copies d’écran"
 msgid "Capture failed!"
 msgstr "Enregistrement échoué !"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Message long"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -5017,6 +5114,10 @@ msgstr "Bienvenue dans Audacity !"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Ne plus montrer ceci au démarrage"
+
+#: src/SqliteSampleBlock.cpp
+msgid "Connection to project file is null"
+msgstr "La connexion au fichier de projet est nulle"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5153,8 +5254,8 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"Pour obtenir des conseils sur les lecteurs appropriés, "
-"cliquez sur le bouton d’aide."
+"Pour obtenir des conseils sur les lecteurs appropriés, cliquez sur le bouton "
+"d’aide."
 
 #: src/Theme.cpp
 #, c-format
@@ -5902,10 +6003,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Les raccourcis ont été supprimés"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Message long"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10463,10 +10560,6 @@ msgstr "Entrer une commande Nyquist : "
 msgid "&Load"
 msgstr "Charger (&l)"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Sauvegarder"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -12395,8 +12488,8 @@ msgid ""
 msgstr ""
 "Audacity n’a pas reconnu le type de ce fichier '%s'.\n"
 "\n"
-"%sPour les fichiers non-compressés, essayez Fichier > Importer > "
-"Donnée brutes (Raw)…"
+"%sPour les fichiers non-compressés, essayez Fichier > Importer > Donnée "
+"brutes (Raw)…"
 
 #: src/import/Import.cpp
 msgid ""
@@ -12452,10 +12545,12 @@ msgid ""
 "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
 "you may import it with this version of Audacity."
 msgstr ""
-"Ce projet a été sauvegardé par Audacity version 1.0 ou antérieure. Le format\n"
+"Ce projet a été sauvegardé par Audacity version 1.0 ou antérieure. Le "
+"format\n"
 "a changé et cette version d’Audacity est incapable d’importer le projet.\n"
 "\n"
-"Utilisez une version d’Audacity antérieure à la v3.0.0 pour mettre à jour le\n"
+"Utilisez une version d’Audacity antérieure à la v3.0.0 pour mettre à jour "
+"le\n"
 "projet et vous pourrez ensuite l’importer avec cette version d’Audacity."
 
 #: src/import/ImportAUP.cpp
@@ -13536,10 +13631,6 @@ msgstr "Fichiers MIDI"
 #: src/menus/FileMenus.cpp
 msgid "Allegro files"
 msgstr "Fichiers Allegro"
-
-#: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Sélectionner un fichier audio non-compressé"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
@@ -15880,6 +15971,10 @@ msgstr ""
 "RTL"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr "Ne jamais utiliser la virgule comme point décimal"
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Afficher les infobulles de la ligne du temps"
 
@@ -16234,6 +16329,10 @@ msgstr "Périphériques MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Préférences pour MIDI ES"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Pas d’interface MIDI"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -16247,10 +16346,6 @@ msgstr "Utilisation de PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "L&atence de synthétiseur MIDI (ms) :"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Pas d’interface MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -19581,11 +19676,11 @@ msgstr "~aLes valeurs de pourcentage ne peuvent pas être à plus de 1000 %."
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 t-6 dB halves the amplitude."
+"                                 -6 dB halves the amplitude."
 msgstr ""
 "~aLes valeurs dB ne peuvent pas être supérieure à +100 dB.~%~%~\n"
 "                                 Astuce : 6 dB double l’amplitude~%~\n"
-"                                 t-6 dB divise l’amplitude par deux."
+"                                 -6 dB divise l’amplitude par deux."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -19987,8 +20082,7 @@ msgstr "Marquer les sons"
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
 msgid ""
 "Released under terms of the GNU General Public License version 2 or later."
-msgstr ""
-"Fourni sous licence publique générale GNU version 2 ou suivante."
+msgstr "Fourni sous licence publique générale GNU version 2 ou suivante."
 
 #: plug-ins/label-sounds.ny
 msgid "Threshold level (dB)"
@@ -20058,7 +20152,8 @@ msgstr ""
 
 #: plug-ins/label-sounds.ny
 msgid "Too many silences detected.nOnly the first 10000 labels added."
-msgstr "Trop de silences détectés.nSeules les 10000 premières balises ajoutées."
+msgstr ""
+"Trop de silences détectés.nSeules les 10000 premières balises ajoutées."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -21177,6 +21272,15 @@ msgstr "Fréquence des aiguilles de radar (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Erreur.~%Piste stéréo nécessaire."
 
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "Le nettoyage des blocs orphelins a échoué"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "Échec de la copie des balises"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Sélectionner un fichier audio non-compressé"
+
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -21454,8 +21558,8 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 #~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
 #~ "complete."
 #~ msgstr ""
-#~ "Import achevé. Exécution d’un calcul de forme d’onde à la demande. %2.0f"
-#~ "%% achevé."
+#~ "Import achevé. Exécution d’un calcul de forme d’onde à la demande. %2.0f%"
+#~ "% achevé."
 
 #~ msgid "Compress"
 #~ msgstr "Compresser"
@@ -21692,9 +21796,6 @@ msgstr "Erreur.~%Piste stéréo nécessaire."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; Le logiciel <b>Audacity<sup>&reg;</sup></b> est sous "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Construction de débogage"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "échec de mkdir dans DirManager::MakeBlockFilePath."

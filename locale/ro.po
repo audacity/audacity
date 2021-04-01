@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2015-06-28 03:24+0200\n"
 "Last-Translator: Cristian Secară <cristi AT secarica DOT ro>\n"
 "Language-Team: Gnome Romanian Team <gnomero-list@lists.sourceforge.net>\n"
@@ -635,7 +635,7 @@ msgstr "Prima rulare a programului Audacity"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -645,7 +645,6 @@ msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 "Numele <b>Audacity&reg;</b> este o marcă înregistrată a lui Dominic Mazzoni."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Informații despre compilare"
@@ -659,88 +658,11 @@ msgstr "Activat"
 msgid "Disabled"
 msgstr "Dezactivat"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Suportul formatelor de fișiere"
-
-# hm ?
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "Import MP3"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Import și export Ogg Vorbis"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "Suport pentru etichetă ID3"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "Import și export FLAC"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "Export MP2"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Import via QuickTime"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "Import sau export FFmpeg"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "Import via GStreamer"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Biblioteci principale"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Conversie a ratei de eșantionare"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Redare și înregistrare audio"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Caracteristici"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Suport pe bază de plug-in"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Suport pe baza mixerului plăcii de sunet"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Suport pentru modificarea înălțimii și tempoului sunetului"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Suport pentru modificarea extremă a înălțimii și tempoului sunetului"
+#, fuzzy
+msgid "The Build"
+msgstr "Compilare pentru testare și depanare"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -785,6 +707,89 @@ msgstr "Prefix de instalare:"
 #, fuzzy
 msgid "Settings folder:"
 msgstr "Dosar pentru setări:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Biblioteci principale"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Redare și înregistrare audio"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Conversie a ratei de eșantionare"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Suportul formatelor de fișiere"
+
+# hm ?
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "Import MP3"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Import și export Ogg Vorbis"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "Suport pentru etichetă ID3"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "Import și export FLAC"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "Export MP2"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Import via QuickTime"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "Import sau export FFmpeg"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "Import via GStreamer"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Caracteristici"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Suport pe bază de plug-in"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Suport pe baza mixerului plăcii de sunet"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Suport pentru modificarea înălțimii și tempoului sunetului"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Suport pentru modificarea extremă a înălțimii și tempoului sunetului"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1173,7 +1178,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr ""
@@ -1675,6 +1680,10 @@ msgstr ""
 msgid "Macros Palette"
 msgstr ""
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr ""
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1806,6 +1815,11 @@ msgstr "Mută mai s&us"
 msgid "Move &Down"
 msgstr "Mută mai j&os"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr ""
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1847,10 +1861,6 @@ msgstr ""
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Are you sure you want to delete %s?"
-msgstr ""
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
 msgstr ""
 
 #. i18n-hint: Benchmark means a software speed test
@@ -2096,13 +2106,17 @@ msgid ""
 msgstr ""
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr ""
-
-#: src/CrashReport.cpp
 #, fuzzy
 msgid "Audacity Support Data"
 msgstr "Echipa de suport Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2112,10 +2126,6 @@ msgstr "Directorul curent:"
 #: src/DBConnection.cpp
 #, c-format
 msgid "Checkpointing %s"
-msgstr ""
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
 msgstr ""
 
 # hm ? urmează numele fișierului sau al unei erori ?
@@ -2551,6 +2561,11 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Specificați un nou nume de fișier:"
 
+# hm ?
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Analiza frecvenței"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr ""
@@ -2729,11 +2744,6 @@ msgstr "Frecvență (Hz)\tNivel (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr ""
-
-# hm ?
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Analiza frecvenței"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3202,6 +3212,11 @@ msgstr ""
 msgid "Mixing and rendering tracks"
 msgstr ""
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr ""
+
 # hm ? sau Amplificare ?
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
@@ -3261,11 +3276,6 @@ msgstr ""
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
-msgstr ""
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
 msgstr ""
 
 #: src/MixerBoard.cpp
@@ -3845,10 +3855,18 @@ msgstr ""
 msgid "[Project %02i] "
 msgstr "Proiecte"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Nu s-a putut citi fișierul de setări predefinite."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Nu s-a putut salva fișierul de genuri muzicale."
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -3885,6 +3903,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -3902,9 +3927,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Nu s-a putut salva fișierul de genuri muzicale."
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Nu s-a putut salva fișierul de genuri muzicale."
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3922,10 +4003,6 @@ msgstr "Nu s-a putut citi fișierul de setări predefinite."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
-msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4647,6 +4724,10 @@ msgstr ""
 msgid "Capture failed!"
 msgstr ""
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr ""
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4702,6 +4783,11 @@ msgstr "Bun venit la Audacity !"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Nu mai arăta din nou acest dialog la pornire"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "numele de fișier audio sau al proiectului"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5544,10 +5630,6 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
 msgstr ""
 
 #: src/commands/CompareAudioCommand.cpp
@@ -10069,10 +10151,6 @@ msgstr "Introduceți comanda Nyquist:"
 msgid "&Load"
 msgstr "În&carcă"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr ""
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -12948,11 +13026,6 @@ msgstr "Toate Fișierele|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "Selectați orice fișier audio necomprimat..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
 msgstr "Salvează proiectul c&a..."
 
@@ -15401,6 +15474,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr ""
 
@@ -15728,6 +15805,10 @@ msgstr ""
 msgid "Preferences for MidiIO"
 msgstr "Preferințe:"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr ""
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -15741,10 +15822,6 @@ msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
-msgstr ""
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
 msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
@@ -20760,6 +20837,10 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Selectați orice fișier audio necomprimat..."
+
+#, fuzzy
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -20932,9 +21013,6 @@ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
 #~ msgstr "Programul <b>Audacity&reg;</b> este copyright"
-
-#~ msgid "Debug build"
-#~ msgstr "Compilare pentru testare și depanare"
 
 #~ msgid "KB"
 #~ msgstr "KiB"

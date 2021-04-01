@@ -6,9 +6,9 @@
 # Xabier Aramendi <azpidatziak@gmail.com> 2011-2020
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2020-06-10 07:42+0200\n"
 "Last-Translator: EUS_Xabier Aramendi <azpidatziak@gmail.com>\n"
 "Language-Team: (EUS_Xabier Aramendi)\n"
@@ -597,7 +597,7 @@ msgstr "%s webgunea: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s softwarea copyrighta du %s 1999-2018 %s Taldea."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -606,7 +606,6 @@ msgstr "%s softwarea copyrighta du %s 1999-2018 %s Taldea."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "%s izena Dominic Mazzoni-ren egilemarka erregistratua da."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Eraiketa Argibideak"
@@ -619,6 +618,69 @@ msgstr "Gaituta"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Ezgaituta"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "The Build"
+msgstr "Garbiketa eraiketa"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Programaren eraiketa eguna:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Aurkezpen Id-a:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Garbiketa eraiketa (garbiketa maila %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Argitalpen eraiketa (garbiketa maila %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 bit"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Eraiketa mota:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Biltzailea:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Ezarpen Aurrezenbakia:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Ezarpenen agiritegia:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Core Liburutegiak"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Plataforma-arteko EIG liburutegia"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Audio irakurketa eta grabaketa"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Lagin neurri bihurketa"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -661,23 +723,6 @@ msgstr "FFmpeg Inportazio/Esportazioa"
 msgid "Import via GStreamer"
 msgstr "Inportatu GStreamer bidez"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Core Liburutegiak"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Lagin neurri bihurketa"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Audio irakurketa eta grabaketa"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Plataforma-arteko EIG liburutegia"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Ezaugarriak"
@@ -701,46 +746,6 @@ msgstr "Doinu eta Tenpo Aldaketa sostengua"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Hertzeko Doinu eta Tenpo Aldaketa sostengua"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Programaren eraiketa eguna:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Aurkezpen Id-a:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Garbiketa eraiketa (garbiketa maila %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Argitalpen eraiketa (garbiketa maila %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64 bit"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Eraiketa mota:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Biltzailea:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Ezarpen Aurrezenbakia:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Ezarpenen agiritegia:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1134,7 +1139,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Laguntza"
@@ -1656,6 +1661,10 @@ msgstr "Ezarri %s"
 msgid "Macros Palette"
 msgstr "Makroen Paleta"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Kudeatu Makroak"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1779,6 +1788,11 @@ msgstr "Mugitu &Gora"
 msgid "Move &Down"
 msgstr "Mugitu &Behera"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Gorde"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1821,10 +1835,6 @@ msgstr "Izenek ezin dute izan '%c' eta '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Zihur zaude %s ezabatzea nahi duzula?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Kudeatu Makroak"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2086,12 +2096,16 @@ msgstr ""
 "(Beste bide mota bat hautatzeak ez du lanik egiten.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Jakinarazpena hona sortuta:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacity Sostengu Datuak"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Jakinarazpena hona sortuta:"
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2102,10 +2116,6 @@ msgstr "Oraingo Egitasmoa"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "%s inportatzen"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2556,6 +2566,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Adierazi Agirizen Berria:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Maiztasun Azterketa"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Argilitza"
@@ -2730,10 +2744,6 @@ msgstr "Maiztasuna (Hz)\tMaila (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Atzerapena (segundo)\tMaiztasuna (Hz)\tMaila"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Maiztasun Azterketa"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3219,6 +3229,11 @@ msgstr "Nahasketa eta Aurkezpena"
 msgid "Mixing and rendering tracks"
 msgstr "Bide nahasketa eta aurkezpena"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacity Nahastzaile Agintea%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3278,11 +3293,6 @@ msgstr "Mugituta abiadrua irristaria"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Panel irristaria mugituta"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacity Nahastzaile Agintea%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3937,10 +3947,18 @@ msgstr "<izenburugabea>"
 msgid "[Project %02i] "
 msgstr "[Egitasmoa %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Hutsegitea aurrezarpen izena ezartzean"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Hutsegitea %s kentzerakoan"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -3977,6 +3995,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -3994,9 +4019,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Ezinezkoa MP3 jarioa abiarazi"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Ezinezkoa MP3 jarioa abiarazi"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4015,11 +4096,6 @@ msgstr "Ezinezkoa jario egoera pausatuan ezartzea."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "Hutsegitea %s kentzerakoan"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4771,6 +4847,10 @@ msgstr "Hautatu ikusleiho-argazkiak gordetzeko kokalekua"
 msgid "Capture failed!"
 msgstr "Hartze hutsegitea!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Mezu Luzea"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4828,6 +4908,11 @@ msgstr "Ongi etorri Audacity-ra!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Ez erakutsi hau hasterakoan"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Egitasmo agiri datuak aztertzen"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5703,10 +5788,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Lasterteklak kendu egin dira"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Mezu Luzea"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10153,10 +10234,6 @@ msgstr "Sartu Nyquist Agindua: "
 msgid "&Load"
 msgstr "&Gertatu"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Gorde"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -13156,10 +13233,6 @@ msgid "Allegro files"
 msgstr "Allegro agiriak"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Hautatu konprimitugabeko audio agiriren bat"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Berrezartze Arriskutsua..."
 
@@ -15408,6 +15481,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Erabili gehienbat Ezkerretik-Eskuinera antolakuntzak RTL hizkuntzetan"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Erakutsi Denbora-lerro Aholkuak"
 
@@ -15754,6 +15831,10 @@ msgstr "MIDI Gailuak"
 msgid "Preferences for MidiIO"
 msgstr "Hobespenak MidiIO-rako"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Ez dago MIDI interfazerik"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15767,10 +15848,6 @@ msgstr "Erabiltzen: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "MIDI Aldiberetze L&atentzia (sm):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Ez dago MIDI interfazerik"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20592,6 +20669,13 @@ msgstr "Erradar Orratz maiztasuna (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Akatsa.~%Estereo bidea beharrezkoa."
 
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Hutsegitea %s kentzerakoan"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Hautatu konprimitugabeko audio agiriren bat"
+
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -21101,9 +21185,6 @@ msgstr "Akatsa.~%Estereo bidea beharrezkoa."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> softwarea copyright "
 #~ "&copy; 1999-2018 Audacity Taldea.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Garbiketa eraiketa"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir ZuzKudeatzailea::Egin-Bloke-Agiri-Helburua hutsegitea."

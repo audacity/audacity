@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-02-10 21:22+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"PO-Revision-Date: 2021-04-01 09:56+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -205,7 +205,7 @@ msgstr "Nie znaleziono żadnych dopasowań"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
-msgstr "Kod został zmodyfikowany. Jesteś pewien?"
+msgstr "Kod został zmodyfikowany. Jesteś pewny/a?"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
@@ -614,7 +614,7 @@ msgstr "Strona internetowa %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s jest chroniony prawem autorskim %s 1999-2021 Zespół %s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -623,7 +623,6 @@ msgstr "%s jest chroniony prawem autorskim %s 1999-2021 Zespół %s."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Nazwa %s jest zarejestrowanym znakiem firmowym Dominica Mazzoniego."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Informacje o kompilacji"
@@ -636,6 +635,68 @@ msgstr "Włączone"
 #: src/export/ExportFFmpegDialogs.cpp src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Wyłączone"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+msgid "The Build"
+msgstr "Kompilacja"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Data kompilacji programu:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Obowiązkowy Id:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Kompilacja debugowania (poziom debugowania %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Kompilacja wydania (poziom debugowania %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64-bity"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Typ kompilacji:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Kompilator:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Przedrostek instalacji:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Folder ustawień:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Biblioteki główne"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Wieloplatformowa biblioteka GUI"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Odtwarzanie i nagrywanie dźwięku"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Przekształcanie częstotliwości próbkowania"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -678,23 +739,6 @@ msgstr "Importowanie/eksportowanie FFmpeg"
 msgid "Import via GStreamer"
 msgstr "Importowanie przez GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Biblioteki główne"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Przekształcanie częstotliwości próbkowania"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Odtwarzanie i nagrywanie dźwięku"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Wieloplatformowa biblioteka GUI"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Funkcje"
@@ -718,46 +762,6 @@ msgstr "Obsługa zmiany wysokości i tempa"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Ekstremalna obsługa zmiany wysokości i tempa"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Data kompilacji programu:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Obowiązkowy Id:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Kompilacja debugowania (poziom debugowania %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Kompilacja wydania (poziom debugowania %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64-bity"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Typ kompilacji:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Kompilator:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Przedrostek instalacji:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Folder ustawień:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -892,7 +896,7 @@ msgid ""
 "Reset Preferences?\n"
 "\n"
 "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr "Zresetować ustawienia?\n\nJest to jednorazowe pytanie po 'zainstalowaniu', w którym poprosiłeś o zresetowanie ustawień."
+msgstr "Zresetować ustawienia?\n\nJest to jednorazowe pytanie po 'zainstalowaniu', w którym poprosiłeś/aś o zresetowanie ustawień."
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
@@ -1109,7 +1113,7 @@ msgid ""
 msgstr "Nie można uzyskać dostępu do następującego pliku konfiguracyjnego:\n\n\t%s\n\nMoże to mieć wiele przyczyn, ale najprawdopodobniej dysk jest pełny lub nie masz uprawnień do zapisu do pliku. Więcej informacji można uzyskać, klikając poniższy przycisk pomocy.\n\nMożesz spróbować rozwiązać problem, a następnie kliknąć \"Spróbuj ponownie\", aby kontynuować.\n\nJeśli wybierzesz opcję \"Opuść Audacity\", Twój projekt może pozostać w stanie niezapisanym, który zostanie odzyskany przy następnym otwarciu."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Pomoc"
@@ -1586,6 +1590,10 @@ msgstr "Zastosuj %s"
 msgid "Macros Palette"
 msgstr "Paleta makr"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Zarządzaj makrami"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1709,6 +1717,11 @@ msgstr "Przesuń w &górę"
 msgid "Move &Down"
 msgstr "Przesuń w &dół"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Zapisz"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1752,10 +1765,6 @@ msgstr "Nazwy nie mogą zawierać '%c' ani '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Na pewno chcesz usunąć %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Zarządzaj makrami"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -1995,12 +2004,16 @@ msgid ""
 msgstr "Najpierw musisz zaznaczyć dźwięk, aby wykonać to działanie.\n(Zaznaczenie innych rodzajów ścieżki nie zadziała.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Raport wygenerowany z:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Dane pomocy Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Może to zająć kilka sekund"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Raport wygenerowany z:"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2010,10 +2023,6 @@ msgstr "Punkty kontrolne projektu"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Punkty kontrolne %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Może to zająć kilka sekund"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2427,6 +2436,10 @@ msgstr "Podana nazwa pliku nie może zostać przekształcona ze względu na uży
 msgid "Specify New Filename:"
 msgstr "Podaj nową nazwę pliku:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Analiza częstotliwości"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Widmo"
@@ -2602,10 +2615,6 @@ msgstr "Częstotliwość (Hz)\tPoziom (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Lag (sekundy)\tCzęstotliwość (Hz)\tPoziom"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Analiza częstotliwości"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3046,6 +3055,11 @@ msgstr "Miksuj i renderuj"
 msgid "Mixing and rendering tracks"
 msgstr "Miksowanie i renderowanie ścieżek"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Panel miksera Audacity%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3106,11 +3120,6 @@ msgstr "Przesunięto suwak prędkości"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Przesunięto suwak panoramy"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Panel miksera Audacity%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3684,9 +3693,17 @@ msgstr "<untitled>"
 msgid "[Project %02i] "
 msgstr "[Projekt %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Nie udało się otworzyć bazy danych projektu"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Nie udało się otworzyć pliku bazy danych:\n\n%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -3721,6 +3738,13 @@ msgid ""
 "%s"
 msgstr "Nie udało się pobrać danych z pliku projektu.\nNastępujące polecenie zakończone niepowodzeniem:\n\n%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr "Projekt znajduje się w katalogu tylko do odczytu\n(Nie można utworzyć wymaganych plików tymczasowych)"
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "To nie jest plik projektu Audacity"
@@ -3736,9 +3760,64 @@ msgstr "Ten projekt został utworzony przy użyciu nowszej wersji Audacity:\n\nP
 msgid "Unable to initialize the project file"
 msgstr "Nie można zainicjować pliku projektu"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Czyszczenie porzuconych bloków zakończone niepowodzeniem"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr "Nie można dodać funkcji 'wstaw' (nie można zweryfikować bloków)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr "Projekt jest tylko do odczytu\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr "Projekt jest zablokowany\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr "Projekt jest zajęty\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr "Projekt jest uszkodzony\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr "Problem z niektórymi uprawnieniami\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr "Błąd wej./wyj. dysku\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr "Nieautoryzowany\n(Nie można pracować z plikami blokowymi)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid "Unable to work with the blockfiles"
+msgstr "Nie można pracować z plikami blokowymi"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3756,10 +3835,6 @@ msgstr "Nie można dołączyć docelowej bazy danych"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr "Nie można przełączyć się w tryb szybkiego rejestrowania"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Błąd przy kopiowaniu znaczników"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -4451,6 +4526,10 @@ msgstr "Wybierz miejsce zapisywania obrazów zrzutów ekranów"
 msgid "Capture failed!"
 msgstr "Przechwytywanie zakończone niepowodzeniem!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Długi komunikat"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4505,6 +4584,10 @@ msgstr "Witamy w Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Nie pokazuj tego więcej przy starcie"
+
+#: src/SqliteSampleBlock.cpp
+msgid "Connection to project file is null"
+msgstr "Połączenie z plikiem projektu jest zerowe"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5321,10 +5404,6 @@ msgstr "Poniższe polecenia zostały usunięte, ponieważ ich domyślny skrót j
 msgid "Shortcuts have been removed"
 msgstr "Skróty zostały usunięte"
 
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Długi komunikat"
-
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
 msgstr "Porównaj dźwięk"
@@ -6063,7 +6142,7 @@ msgstr "Redukuje (ducks) liczbę jednej lub większej liczby ścieżek, gdy obj�
 msgid ""
 "You selected a track which does not contain audio. AutoDuck can only process"
 " audio tracks."
-msgstr "Zaznaczyłeś ścieżkę, która nie zawiera dźwięku. Auto Duck może tylko przetwarzać ścieżki dźwiękowe."
+msgstr "Zaznaczyłeś/aś ścieżkę, która nie zawiera dźwięku. Auto Duck może tylko przetwarzać ścieżki dźwiękowe."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
 #. volume)
@@ -9632,10 +9711,6 @@ msgstr "Podaj polecenie Nyquista:"
 msgid "&Load"
 msgstr "&Wczytaj"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Zapisz"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -9881,7 +9956,7 @@ msgstr "&OK"
 
 #: src/export/ExportCL.cpp
 msgid "You've specified a file name without an extension. Are you sure?"
-msgstr "Podałeś nazwę pliku bez rozszerzenia. Jesteś pewien?"
+msgstr "Podałeś/aś nazwę pliku bez rozszerzenia. Jesteś pewny/a?"
 
 #: src/export/ExportCL.cpp
 msgid "Program name appears to be missing."
@@ -12390,7 +12465,7 @@ msgstr "Plik Allegro"
 msgid ""
 "You have selected a filename with an unrecognized file extension.\n"
 "Do you want to continue?"
-msgstr "Zaznaczyłeś nazwę pliku z nierozpoznawalnym rozszerzeniem.\nChcesz kontynuować?"
+msgstr "Zaznaczyłeś/aś nazwę pliku z nierozpoznawalnym rozszerzeniem.\nChcesz kontynuować?"
 
 #: src/menus/FileMenus.cpp
 msgid "Export MIDI"
@@ -12420,10 +12495,6 @@ msgstr "Pliki MIDI"
 #: src/menus/FileMenus.cpp
 msgid "Allegro files"
 msgstr "Pliki Allegro"
-
-#: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Wybierz jakiś nieskompresowany plik dźwiękowy"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
@@ -14641,6 +14712,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Użyj najczęściej układy od lewej do prawej w językach RTL"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr "Nigdy nie używaj przecinka jako przecinka dziesiętnego"
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Pokaż podpowiedzi osi czasu"
 
@@ -14956,6 +15031,10 @@ msgstr "Urządzenia MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Ustawienia WEJ./WYJ. MIDI"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Brak interfejsu MIDI"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -14969,10 +15048,6 @@ msgstr "Wykorzystując: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "&Opóźnienie syntetyzatora MIDI (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Brak interfejsu MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -14996,7 +15071,7 @@ msgstr "Ustawienia modułu"
 msgid ""
 "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
 "and know what you are doing."
-msgstr "To są moduły eksperymentalne. Włącz je, jeśli już\nprzeczytałeś instrukcję i wiesz, co robisz."
+msgstr "To są moduły eksperymentalne. Włącz je, jeśli już\nprzeczytałeś/aś instrukcję i wiesz, co robisz."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp

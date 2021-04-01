@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2018-03-29 22:12+0100\n"
 "Last-Translator: Zygimantus <zygimantus@gmail.com>\n"
 "Language-Team: Sharunas <Sharunas55387@hotmail.com>\n"
@@ -614,7 +614,7 @@ msgstr "Audacity svetainė: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -625,7 +625,6 @@ msgstr ""
 "&nbsp; &nbsp; Pavadinimas: <b>Audacity</b>yra registruotas prekyženklis "
 "kurio savininkas yra: Dominic Mazzoni.<br><br>"
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Konstrukcijos informacija"
@@ -639,87 +638,10 @@ msgstr "Įjungtas"
 msgid "Disabled"
 msgstr "Išjungtas"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Failo Formato Pagalba"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "MP3 Importavimas"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Ogg Vorbis Importavimas ir Eksportavimas"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "ID3 etikečių palaikymas"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "FLAC Importavimas ir Eksportavimas"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "MP2 Eksportavimas"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Importuoti per QuickTime"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "FFmpeg Importavimas ir Eksportavimas"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "Importuoti per GStreamer"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Pagrindinės Bibliotekos"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Šablonų normos keitimas"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Garso atkūrimas ir įrašinėjimas"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Įvairių platformų GUI biblioteka"
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Ypatybės"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr "Tamsios Temos Papildai"
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Papildinių pagalba"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Garso plokštės miksavimo pagalba"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Aukštumo ir Tempo Pokyčių palaikymas"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Ypatingo Aukštumo ir Tempo Pokyčių palaikymas"
+msgid "The Build"
+msgstr ""
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -762,6 +684,88 @@ msgstr ""
 #, fuzzy
 msgid "Settings folder:"
 msgstr "Nustatymu aplankas: "
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Pagrindinės Bibliotekos"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Įvairių platformų GUI biblioteka"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Garso atkūrimas ir įrašinėjimas"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Šablonų normos keitimas"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Failo Formato Pagalba"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "MP3 Importavimas"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Ogg Vorbis Importavimas ir Eksportavimas"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "ID3 etikečių palaikymas"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "FLAC Importavimas ir Eksportavimas"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "MP2 Eksportavimas"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Importuoti per QuickTime"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "FFmpeg Importavimas ir Eksportavimas"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "Importuoti per GStreamer"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Ypatybės"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr "Tamsios Temos Papildai"
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Papildinių pagalba"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Garso plokštės miksavimo pagalba"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Aukštumo ir Tempo Pokyčių palaikymas"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Ypatingo Aukštumo ir Tempo Pokyčių palaikymas"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1160,7 +1164,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Pagalba"
@@ -1685,6 +1689,11 @@ msgstr "Pritaikyti %s"
 msgid "Macros Palette"
 msgstr ""
 
+#: src/BatchProcessDialog.cpp
+#, fuzzy
+msgid "Manage Macros"
+msgstr "&Valdyti"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1816,6 +1825,11 @@ msgstr "Pakelti į &Viršų"
 msgid "Move &Down"
 msgstr "Nuleisti &Žemyn"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Išsaugoti"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1860,11 +1874,6 @@ msgstr "Pavadinimuose negali būti '%c' ir '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Ar tikrai norite ištrinti %s?"
-
-#: src/BatchProcessDialog.cpp
-#, fuzzy
-msgid "Manage Macros"
-msgstr "&Valdyti"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2121,12 +2130,16 @@ msgstr ""
 "(Pasirinkus kitokius takelius nepavyks.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Pranešimas yra sugeneruotas:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacity Palaikymo Duomenys"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Pranešimas yra sugeneruotas:"
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2136,10 +2149,6 @@ msgstr "Dabartinis Projektas"
 #: src/DBConnection.cpp
 #, c-format
 msgid "Checkpointing %s"
-msgstr ""
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
 msgstr ""
 
 #: src/DBConnection.cpp
@@ -2601,6 +2610,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Patikslinkite Naują Failo Pavadinimą:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Dažnio Analizė"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektras"
@@ -2782,10 +2795,6 @@ msgstr "Dažnis  (Hz)\tLygis (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Atsilikimas (sek)\tDažnis (Hz)\tLygis"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Dažnio Analizė"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3282,6 +3291,11 @@ msgstr "Miksuoti ir Pakrauti"
 msgid "Mixing and rendering tracks"
 msgstr "Miksuojami ir kraunami takeliai"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacity Miksavimo Lenta%sS"
+
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: title of the Gain slider, used to adjust the volume
@@ -3345,11 +3359,6 @@ msgstr "Pajudinta greitumo slinktis"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Pajudinta balanso slinktis"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacity Miksavimo Lenta%sS"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -4008,10 +4017,18 @@ msgstr "<be pavadinimo>"
 msgid "[Project %02i] "
 msgstr "Projekto Pa&baiga"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Nepavyksta skaityti išankstinės nuostatos failo."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Nepavyko pašalinti %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4050,6 +4067,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -4067,9 +4091,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Nepavyko išsaugoti žanro failo."
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Nepavyko išsaugoti žanro failo."
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4088,11 +4168,6 @@ msgstr "Nepavyksta nustatyti srovės būklės į sustabdytą."
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "Nepavyko pašalinti %s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4843,6 +4918,11 @@ msgstr "Išsirinkite vieta kurioje bus saugojami ekrano išsaugojimai"
 msgid "Capture failed!"
 msgstr "Pagavimas nepavyko!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+#, fuzzy
+msgid "Long Message"
+msgstr "Pranešimas"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4899,6 +4979,11 @@ msgstr "Sveiki atvykę į Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Nerodykite man to daugiau tik užkrovus"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Tikrinami projekto failo duomenys"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5777,11 +5862,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr ""
-
-#: src/commands/CommandTargets.cpp
-#, fuzzy
-msgid "Long Message"
-msgstr "Pranešimas"
 
 #: src/commands/CompareAudioCommand.cpp
 #, fuzzy
@@ -10374,10 +10454,6 @@ msgstr "Įveskite Nyquist Komandą: "
 msgid "&Load"
 msgstr ""
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Išsaugoti"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13285,10 +13361,6 @@ msgid "Allegro files"
 msgstr "Visi failai|*"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Pasirinkite bet kurį nesuspaustą garso failą"
-
-#: src/menus/FileMenus.cpp
 #, fuzzy
 msgid "&Dangerous Reset..."
 msgstr "Išsaugoti išankstinę nuostatą..."
@@ -15667,6 +15739,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr ""
 
@@ -15995,6 +16071,10 @@ msgstr ""
 msgid "Preferences for MidiIO"
 msgstr "&Nuostatos..."
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr ""
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -16008,10 +16088,6 @@ msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
-msgstr ""
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
 msgstr ""
 
 #: src/prefs/MidiIOPrefs.cpp
@@ -21053,6 +21129,13 @@ msgstr "LFO Dažnis (Hz):"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr ""
+
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Nepavyko pašalinti %s"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Pasirinkite bet kurį nesuspaustą garso failą"
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"

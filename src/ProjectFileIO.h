@@ -114,9 +114,15 @@ public:
    // specific database. This is the workhorse for the above 3 methods.
    static int64_t GetDiskUsage(DBConnection &conn, SampleBlockID blockid);
 
+   // Displays an error dialog with a button that offers help
+   void ShowError(wxWindow *parent,
+                  const TranslatableString &dlogTitle,
+                  const TranslatableString &message,
+                  const wxString &helpPage);
    const TranslatableString &GetLastError() const;
    const TranslatableString &GetLibraryError() const;
    int GetLastErrorCode() const;
+   const wxString &GetLastLog() const;
 
    // Provides a means to bypass "DELETE"s at shutdown if the database
    // is just going to be deleted anyway.  This prevents a noticeable

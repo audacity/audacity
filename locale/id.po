@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
@@ -642,7 +642,7 @@ msgstr "Pengoperasian Pertama Audacity"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -652,7 +652,6 @@ msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr ""
 "<br>Nama <b>Audacity&reg;</b> adalah merk terdaftar dari Dominic Mazzoni."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Informasi Perubahan"
@@ -666,90 +665,11 @@ msgstr "Dibolehkan"
 msgid "Disabled"
 msgstr "Dilarang"
 
-#: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Dukungan Format File"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "Mengimpor MP3"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Impor dan Ekspor Ogg Vorbis"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "Dukungan Tag ID3"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "Impor dan Ekspor FLAC"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "Ekspor MP2"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Impor melalui QuickTime"
-
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
-msgid "FFmpeg Import/Export"
-msgstr "Referensi Impor/Ekspor FFmpeg"
-
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "Import via GStreamer"
-msgstr "Impor melalui QuickTime"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Referensi Utama"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Konversi sample rate"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Pemroduksian Audio dan Perekaman"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Fitur"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr ""
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Dukungan Plug-in"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Dukungan Sound card mixer"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Dukungan Perubahan Pitch dan Tempo"
-
-#: src/AboutDialog.cpp
-#, fuzzy
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Dukungan Perubahan Pitch dan Tempo"
+msgid "The Build"
+msgstr "Versi Debug"
 
 #: src/AboutDialog.cpp
 #, fuzzy
@@ -795,6 +715,91 @@ msgstr "Awalan Instalasi:"
 #, fuzzy
 msgid "Settings folder:"
 msgstr "Folder pengaturan:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Referensi Utama"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Pemroduksian Audio dan Perekaman"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Konversi sample rate"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Dukungan Format File"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "Mengimpor MP3"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Impor dan Ekspor Ogg Vorbis"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "Dukungan Tag ID3"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "Impor dan Ekspor FLAC"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "Ekspor MP2"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Impor melalui QuickTime"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "FFmpeg Import/Export"
+msgstr "Referensi Impor/Ekspor FFmpeg"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Import via GStreamer"
+msgstr "Impor melalui QuickTime"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Fitur"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Dukungan Plug-in"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Dukungan Sound card mixer"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Dukungan Perubahan Pitch dan Tempo"
+
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Dukungan Perubahan Pitch dan Tempo"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1199,7 +1204,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Bantuan"
@@ -1733,6 +1738,10 @@ msgstr "Mengaplikasikan %s"
 msgid "Macros Palette"
 msgstr ""
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr ""
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1871,6 +1880,12 @@ msgstr "Pindah ke &Atas"
 msgid "Move &Down"
 msgstr "Pindak ke &Bawah"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "&Save"
+msgstr "Simpan"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1915,10 +1930,6 @@ msgstr "Nama tidak mungkin mengandung '%c' and '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "anda yakin mau menghapus %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr ""
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2173,13 +2184,17 @@ msgstr ""
 " untuk menggunakannya. [Memilih jenis trek yang lain tidak akan bekerja.]"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr ""
-
-#: src/CrashReport.cpp
 #, fuzzy
 msgid "Audacity Support Data"
 msgstr "Tim Pendukung Audacity %s"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2190,10 +2205,6 @@ msgstr "Aplikasikan ke proyek yang tersedia"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "Mengimpor %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2653,6 +2664,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Tentukan Nama File Baru:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Analisis Frekuensi"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektrum"
@@ -2834,10 +2849,6 @@ msgstr "Frekuensi (Hz)\tTingkatan (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Waktu (detik)\tFrekuensi (Hz)\tTingkat"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Analisis Frekuensi"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3315,6 +3326,11 @@ msgstr "Mix dan Render"
 msgid "Mixing and rendering tracks"
 msgstr "Trek Mix dan Render"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Mixer Board%s Audacity"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3376,11 +3392,6 @@ msgstr "Pindahkan slider kekuatan"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Pindahkan slider pan"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Mixer Board%s Audacity"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -4000,10 +4011,18 @@ msgstr "tak berjudul"
 msgid "[Project %02i] "
 msgstr "Proyek"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Failed to open the project's database"
 msgstr "Tidak bisa membuka atau membuat file tes"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Tidak bisa membuang '%s'"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4040,6 +4059,13 @@ msgid ""
 "%s"
 msgstr ""
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Audacity project file"
@@ -4057,9 +4083,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Tidak bisa menginisialisasi strim MP3"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
+msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Tidak bisa menginisialisasi strim MP3"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -4078,11 +4160,6 @@ msgstr "Tidak bisa meganti nama '%s' ke '%s'"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-#, fuzzy
-msgid "Failed to copy tags"
-msgstr "Tidak bisa membuang '%s'"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4847,6 +4924,10 @@ msgstr "Pilih lokasi untuk menyimpan gambar hasil screenshot"
 msgid "Capture failed!"
 msgstr ""
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr ""
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4906,6 +4987,11 @@ msgstr "Selamat datang di Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Jangan tampilkan lagi waktu start up"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Memeriksa data file proyek..."
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5791,10 +5877,6 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
-msgstr ""
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
 msgstr ""
 
 #: src/commands/CompareAudioCommand.cpp
@@ -10575,11 +10657,6 @@ msgstr "Masukkan Perintah Nyquist:"
 msgid "&Load"
 msgstr "Ambil"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&Save"
-msgstr "Simpan"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -13659,11 +13736,6 @@ msgstr "Semua File (*)|*"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Select any uncompressed audio file"
-msgstr "Pilih file audio tanpa kompresi apa saja..."
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Dangerous Reset..."
 msgstr "Simpan Aturan Lanjut"
 
@@ -16204,6 +16276,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr ""
 
@@ -16544,6 +16620,10 @@ msgstr "Perangkat MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Preferensi..."
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Tidak ada pengolah MIDI"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -16558,10 +16638,6 @@ msgstr ""
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr ""
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Tidak ada pengolah MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 #, fuzzy
@@ -21728,6 +21804,14 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Tidak bisa membuang '%s'"
+
+#, fuzzy
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Pilih file audio tanpa kompresi apa saja..."
+
+#, fuzzy
 #~ msgid "Files Missing"
 #~ msgstr "Lima Mnt"
 
@@ -22041,9 +22125,6 @@ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
 #~ msgstr "Perangkat lunak <b>Audacity&reg;</b> sudah terdaftar"
-
-#~ msgid "Debug build"
-#~ msgstr "Versi Debug"
 
 #, fuzzy
 #~ msgid ""

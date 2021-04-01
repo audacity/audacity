@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.0\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-02-04 22:21+0200\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"PO-Revision-Date: 2021-03-31 18:59+0300\n"
 "Last-Translator: Sampo Hippeläinen\n"
 "Language-Team: fi\n"
 "Language: fi\n"
@@ -598,8 +598,8 @@ msgstr "%s-verkkosivusto: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
-msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2020 %s-tiimi."
+msgid "%s software is copyright %s 1999-2021 %s Team."
+msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2021 %s-tiimi."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -607,7 +607,6 @@ msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2020 %s-tiimi."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Nimi %s on Dominic Mazzonin rekisteröity tavaramerkki."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Koosteen tiedot"
@@ -621,87 +620,10 @@ msgstr "Käytössä"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
+#. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-msgid "File Format Support"
-msgstr "Tiedostomuototuki"
-
-#. i18n-hint: This is what the library (libmad) does - imports MP3 files
-#: src/AboutDialog.cpp
-msgid "MP3 Importing"
-msgstr "MP3-tuonti"
-
-#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-#. * Both are proper nouns and shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "Ogg Vorbis Import and Export"
-msgstr "Ogg Vorbis -vienti ja -tuonti"
-
-#: src/AboutDialog.cpp
-msgid "ID3 tag support"
-msgstr "ID3-tunnistetuki"
-
-#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-#. * a proper noun and so shouldn't be translated
-#: src/AboutDialog.cpp
-msgid "FLAC import and export"
-msgstr "FLAC-vienti ja -tuonti"
-
-#: src/AboutDialog.cpp
-msgid "MP2 export"
-msgstr "MP2-vienti"
-
-#: src/AboutDialog.cpp
-msgid "Import via QuickTime"
-msgstr "Tuo QuickTimen avulla"
-
-#: src/AboutDialog.cpp
-msgid "FFmpeg Import/Export"
-msgstr "FFmpeg-tuonti/vienti"
-
-#: src/AboutDialog.cpp
-msgid "Import via GStreamer"
-msgstr "Tuo GStreamerin avulla"
-
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Ydinkirjastot"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Näytetaajuuden muuttaminen"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Äänen toisto ja nauhoitus"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Järjestelmien välinen graafinen käyttöliittymäkirjasto"
-
-#: src/AboutDialog.cpp
-msgid "Features"
-msgstr "Ominaisuudet"
-
-#: src/AboutDialog.cpp
-msgid "Dark Theme Extras"
-msgstr "Tumman teeman lisävarusteet"
-
-#: src/AboutDialog.cpp
-msgid "Plug-in support"
-msgstr "Liitännäistuki"
-
-#: src/AboutDialog.cpp
-msgid "Sound card mixer support"
-msgstr "Äänikortin mikserituki"
-
-#: src/AboutDialog.cpp
-msgid "Pitch and Tempo Change support"
-msgstr "Sävelkorkeuden ja tempomuutoksen tuki"
-
-#: src/AboutDialog.cpp
-msgid "Extreme Pitch and Tempo Change support"
-msgstr "Erityisen sävelkorkeuden ja tempomuutoksen tuki"
+msgid "The Build"
+msgstr "Koontiversio"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -743,6 +665,88 @@ msgstr "Asennuksen etuliite:"
 msgid "Settings folder:"
 msgstr "Asetuskansio:"
 
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Ydinkirjastot"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Alustariippumaton käyttöliittymäkirjasto"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Äänen toisto ja nauhoitus"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Näytetaajuuden muuttaminen"
+
+#: src/AboutDialog.cpp
+msgid "File Format Support"
+msgstr "Tiedostomuototuki"
+
+#. i18n-hint: This is what the library (libmad) does - imports MP3 files
+#: src/AboutDialog.cpp
+msgid "MP3 Importing"
+msgstr "MP3-tuonti"
+
+#. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
+#. * Both are proper nouns and shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "Ogg Vorbis Import and Export"
+msgstr "Ogg Vorbis -tuonti ja -vienti"
+
+#: src/AboutDialog.cpp
+msgid "ID3 tag support"
+msgstr "ID3-tunnistetuki"
+
+#. i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
+#. * a proper noun and so shouldn't be translated
+#: src/AboutDialog.cpp
+msgid "FLAC import and export"
+msgstr "FLAC-vienti ja -tuonti"
+
+#: src/AboutDialog.cpp
+msgid "MP2 export"
+msgstr "MP2-vienti"
+
+#: src/AboutDialog.cpp
+msgid "Import via QuickTime"
+msgstr "Tuo QuickTimen avulla"
+
+#: src/AboutDialog.cpp
+msgid "FFmpeg Import/Export"
+msgstr "FFmpeg-tuonti/vienti"
+
+#: src/AboutDialog.cpp
+msgid "Import via GStreamer"
+msgstr "Tuo GStreamerin avulla"
+
+#: src/AboutDialog.cpp
+msgid "Features"
+msgstr "Ominaisuudet"
+
+#: src/AboutDialog.cpp
+msgid "Dark Theme Extras"
+msgstr "Tumman teeman lisävarusteet"
+
+#: src/AboutDialog.cpp
+msgid "Plug-in support"
+msgstr "Liitännäistuki"
+
+#: src/AboutDialog.cpp
+msgid "Sound card mixer support"
+msgstr "Äänikortin mikserituki"
+
+#: src/AboutDialog.cpp
+msgid "Pitch and Tempo Change support"
+msgstr "Sävelkorkeuden ja tempomuutoksen tuki"
+
+#: src/AboutDialog.cpp
+msgid "Extreme Pitch and Tempo Change support"
+msgstr "Erityisen sävelkorkeuden ja tempomuutoksen tuki"
+
 #: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "GPL-lisenssi"
@@ -753,7 +757,7 @@ msgstr "Aikajanan ominaisuudet ei käytössä tallennuksen aikana"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Säädä klikkaamalla ja vetämällä, palauta kaksoisklikkauksella"
+msgstr "Napsauta ja raahaa säätääksesi, kaksoisnapsauta nollataksesi"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -771,7 +775,7 @@ msgstr "Aikajana"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
-msgstr "Aloita haku klikkaamalla tai vetämällä"
+msgstr "Napsautus tai raahaus aloittaa kelauksen"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -779,7 +783,7 @@ msgstr "Aloita haku klikkaamalla tai vetämällä"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
-msgstr "Aloita hankaus klikkaamalla tai vetämällä"
+msgstr "Napsautus tai raahaus aloittaa hankauksen"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -787,7 +791,7 @@ msgstr "Aloita hankaus klikkaamalla tai vetämällä"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Hankaa klikkaamalla ja liikuttamalla. Hae klikkaamalla ja vetämällä."
+msgstr "Napsauta ja liikuta hangataksesi, tai raahaa kelataksesi."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -795,7 +799,7 @@ msgstr "Hankaa klikkaamalla ja liikuttamalla. Hae klikkaamalla ja vetämällä."
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
-msgstr "Hae liikuttamalla"
+msgstr "Kelaa liikuttamalla"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -803,19 +807,19 @@ msgstr "Hae liikuttamalla"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
-msgstr "Hae hankaamalla"
+msgstr "Hankaa liikuttamalla"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
-msgstr "Hae vetämällä. Vapautus lopettaa hakemisen."
+msgstr "Kelaa raahaamalla. Vapautus lopettaa kelaamisen."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Hae vetämällä. Hankaa vapauttamalla ja liikuttamalla."
+msgstr "Kelaa raahaamalla. Hankaa vapauttamalla ja liikuttamalla."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
-msgstr "Hankaa liikuttamalla. Hae vetämällä."
+msgstr "Liikuta hangataksesi. Raahaa kelataksesi."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
@@ -835,11 +839,11 @@ msgstr "Ota käyttöön pikatoisto"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Enable dragging selection"
-msgstr "Salli valinnan vetäminen"
+msgstr "Raahaa valintaa toistoalueen mukana"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Update display while playing"
-msgstr "Siirrä näyttöä toistettaessa"
+msgstr "Pidä toistokohta aina näytöllä"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Lock Play Region"
@@ -1169,7 +1173,7 @@ msgstr ""
 "Audacityn pitää palauttaa se ensi kerralla."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Ohje"
@@ -1677,6 +1681,10 @@ msgstr "Käytä %s"
 msgid "Macros Palette"
 msgstr "Makropaletti"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Makrojen hallinta"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1800,6 +1808,11 @@ msgstr "Siirrä &ylös"
 msgid "Move &Down"
 msgstr "Siirrä &alas"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Tallenna"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1842,10 +1855,6 @@ msgstr "Nimet eivät saa sisältää '%c' ja '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Haluatko varmasti poistaa kohteen %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Makrojen hallinta"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2107,12 +2116,16 @@ msgstr ""
 "(Muuntyyppiset raidat eivät kelpaa.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Raportti luotu paikkaan:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacityn tukidata"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Tässä voi kestää joitain sekunteja"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Raportti luotu paikkaan:"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2122,10 +2135,6 @@ msgstr "Lisätään projektiin tarkistuspisteitä"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Lisätään kohteeseen %s tarkistuspisteitä"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Tässä voi kestää joitain sekunteja"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2378,7 +2387,7 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg määriteltiin asetuksissa ja ladattiin onnistuneesti aiemmin,\n"
+"FFmpeg on määritelty asetuksissa ja sitä on käytetty aiemmin onnistuneesti,\n"
 "mutta tällä kertaa Audacity ei onnistunut lataamaan sitä käynnistettäessä.\n"
 "\n"
 "Voit palata takaisin Asetuksiin > Kirjastot ja määrittää sen uudelleen."
@@ -2399,7 +2408,7 @@ msgstr "Etsi FFmpeg"
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
-"Audacity tarvitsee tiedostoa '%s' äänen tuontiin ja vientiin FFmpeg:llä."
+"Audacity tarvitsee tiedoston '%s' äänen tuontiin ja vientiin FFmpeg:llä."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -2446,11 +2455,10 @@ msgid ""
 "to download or locate the FFmpeg libraries."
 msgstr ""
 "Audacity yritti käyttää FFmpegiä äänitiedoston tuontiin,\n"
-"mutta kirjastoja ei löytynyt.\n"
+"mutta vaadittuja kirjastoja ei löytynyt.\n"
 "\n"
-"Jos haluat käyttää FFmpeg-tuontia, siirry kohtaan Muokkaa > Asetukset > "
-"Kirjastot\n"
-"ladataksesi tai paikantaaksesi FFmpeg-kirjastot."
+"Jos haluat tuoda FFmpeg:llä, avaa Muokkaa > Asetukset >\n"
+"Kirjastot ladataksesi tai määritelläksesi FFmpeg-kirjastot."
 
 #: src/FFmpeg.cpp
 msgid "Do not show this warning again"
@@ -2458,7 +2466,7 @@ msgstr "Älä näytä tätä varoitusta uudelleen"
 
 #: src/FFmpeg.cpp
 msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Yhteensopivien FFmpeg-kirjastojen etsiminen epäonnistui."
+msgstr "Yhteensopivia FFmpeg-kirjastoja ei löytynyt."
 
 #. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
 #: src/FFmpeg.h
@@ -2564,7 +2572,7 @@ msgstr ", "
 #: src/FileNames.cpp
 #, c-format
 msgid "%s files"
-msgstr "%s tiedostoa"
+msgstr "%s-tiedostot"
 
 #: src/FileNames.cpp
 msgid ""
@@ -2574,6 +2582,10 @@ msgstr "Määritettyä tiedostonimeä ei voitu muuntaa Unicode-merkkien takia."
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "Määritä uusi tiedostonimi:"
+
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Taajuusanalyysi"
 
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
@@ -2664,7 +2676,7 @@ msgstr "&Koko:"
 
 #: src/FreqWindow.cpp src/LabelDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "&Export..."
-msgstr "Vi&e..."
+msgstr "&Vie..."
 
 #: src/FreqWindow.cpp
 msgid "&Function:"
@@ -2672,11 +2684,11 @@ msgstr "&Funktio:"
 
 #: src/FreqWindow.cpp
 msgid "&Axis:"
-msgstr "&Akseli:"
+msgstr "Aks&eli:"
 
 #: src/FreqWindow.cpp
 msgid "&Replot..."
-msgstr "&Laske uudelleen..."
+msgstr "&Päivitä..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
@@ -2747,10 +2759,6 @@ msgstr "Taajuus (Hz)\tTaso (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Viive (sekuntia)\tTaajuus (Hz)\tTaso"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Taajuusanalyysi"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -2851,7 +2859,7 @@ msgstr "Lisäohjeita"
 
 #: src/HelpText.cpp
 msgid "These are our support methods:"
-msgstr "Tässä ovat tukimenetelmämme:"
+msgstr "Tukimuotomme ovat seuraavat:"
 
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
@@ -2860,7 +2868,7 @@ msgid ""
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
 "[[help:Quick_Help|Pikaohje]] - jos ei asennettuna paikallisesti, [[https://"
-"manual.audacityteam.org/quick_help.html|katso verkossa]]"
+"manual.audacityteam.org/quick_help.html|saatavilla verkossa]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
@@ -2869,7 +2877,7 @@ msgid ""
 "audacityteam.org/|view online]]"
 msgstr ""
 " [[help:Main_Page|Käyttöohje]] - jos ei asennettuna paikallisesti, [[https://"
-"manual.audacityteam.org/|katso verkossa]]"
+"manual.audacityteam.org/|saatavilla verkossa]]"
 
 #: src/HelpText.cpp
 msgid ""
@@ -3228,6 +3236,11 @@ msgstr "Miksaa ja hahmonna"
 msgid "Mixing and rendering tracks"
 msgstr "Miksataan ja hahmonnetaan raitoja"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacityn miksauspöytä%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3287,11 +3300,6 @@ msgstr "Siirretty nopeussäädintä"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Siirretty panorointisäädintä"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacityn miksauspöytä%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3671,7 +3679,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgid "Actual Rate: %d"
-msgstr "Todellinen tahti: %d"
+msgstr "Todellinen näytetaajuus: %d"
 
 #: src/ProjectAudioManager.cpp src/effects/Effect.cpp
 msgid ""
@@ -3944,9 +3952,20 @@ msgstr "<nimetön>"
 msgid "[Project %02i] "
 msgstr "[Projekti %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Projektin tietokantaa ei voitu avata"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr ""
+"Ei voitu avata tietokantatiedostoa:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -3991,6 +4010,15 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+"Projekti on vain luku -kansiossa\n"
+"(Väliaikaistiedostoja ei voi luoda)"
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "Tämä ei ole Audacity-projektitiedosto"
@@ -4003,15 +4031,85 @@ msgid ""
 msgstr ""
 "Projekti luotiin Audacityn uudemmalla versiolla:\n"
 "\n"
-"Päivitä Audacity avataksesi se."
+"Päivitä Audacity avataksesi se"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Projektitiedostoa ei voitu alustaa"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Orpolohkojen siivous epäonnistui"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+"Ei voi lisätä 'inset'-funktiota (lohkojen tunnuksia ei voida tarkistaa)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Projekti on vain luku -tilassa\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Projekti on lukittu\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Projekti on varattu\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Projekti on vioittunut\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Käyttöoikeusongelma\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Tiedonsiirto-ongelma\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Lupa evätty\n"
+"(lohkotiedostoja ei voi työstää)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid "Unable to work with the blockfiles"
+msgstr "Lohkotiedostoja ei voi työstää"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4029,10 +4127,6 @@ msgstr "Kohdetietokantaa ei voitu liittää"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr "Ei voitu vaihtaa nopeaan journalointiin"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Tunnisteita ei voitu kopioida"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -4212,7 +4306,7 @@ msgstr ""
 "Projekti on tyhjä.\n"
 "Jos tallennat, projektiin ei tule raitoja.\n"
 "\n"
-"Jos haluat tallentaa kaikki aiemmat avoimet raidat:\n"
+"Jos haluat tallentaa aiemmin avoimia raitoja:\n"
 "Napsauta 'Ei', Muokkaa > Kumoa kunnes kaikki\n"
 "raidat ovat auki, sitten Tiedosto > Tallenna projekti.\n"
 "\n"
@@ -4806,6 +4900,10 @@ msgstr "Valitse sijainti tallennettaville kuvakaappauksille"
 msgid "Capture failed!"
 msgstr "Sieppaus epäonnistui!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Pitkä viesti"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4864,6 +4962,10 @@ msgstr "Tervetuloa käyttämään Audacityä!"
 msgid "Don't show this again at start up"
 msgstr "Älä näytä tätä käynnistyksessä"
 
+#: src/SqliteSampleBlock.cpp
+msgid "Connection to project file is null"
+msgstr "Yhteys projektitiedostoon ei kelvollinen"
+
 #: src/Tags.cpp
 msgid "Artist Name"
 msgstr "Esittäjän nimi"
@@ -4895,8 +4997,8 @@ msgstr "Kommentit"
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
 msgstr ""
-"Käytä liikkumiseen kenttien välillä nuolinäppäimiä (tai ENTERiä muokkauksen "
-"jälkeen)."
+"Liiku kenttien välillä nuolinäppäimillä (tai ENTER tallentaaksesi "
+"muokkauksen)."
 
 #: src/Tags.cpp
 msgid "Tag"
@@ -4928,7 +5030,7 @@ msgstr "Palau&ta..."
 
 #: src/Tags.cpp
 msgid "Template"
-msgstr "Malli"
+msgstr "Mallipohja"
 
 #: src/Tags.cpp
 msgid "&Load..."
@@ -4940,7 +5042,7 @@ msgstr "Aseta &oletukseksi"
 
 #: src/Tags.cpp
 msgid "Don't show this when exporting audio"
-msgstr "Älä näytä tätä ääntä viedessä"
+msgstr "Älä näytä tätä, kun ääntä viedään"
 
 #: src/Tags.cpp
 msgid "Edit Genres"
@@ -5522,7 +5624,7 @@ msgstr " Valittu"
 #. if present, Jaws reads it as "dash".
 #: src/TrackPanelAx.cpp
 msgid " Sync Locked"
-msgstr " Synkrolukittu"
+msgstr " Tahtilukittu"
 
 #: src/TrackPanelAx.cpp
 msgid " Mute On"
@@ -5743,10 +5845,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Pikanäppäimet on poistettu"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Pitkä viesti"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -6666,16 +6764,15 @@ msgstr "vanha (Hz)"
 
 #: src/effects/ChangePitch.cpp
 msgid "f&rom"
-msgstr "&vanha"
+msgstr " "
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
 msgstr "uusi (Hz)"
 
 #: src/effects/ChangePitch.cpp src/effects/Loudness.cpp
-#, fuzzy
 msgid "t&o"
-msgstr "&uusi"
+msgstr "-->"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/ChangeTempo.cpp
@@ -6967,7 +7064,7 @@ msgstr "Nousuaika"
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "R&elease Time:"
-msgstr "Vapautu&saika :"
+msgstr "Vapautu&saika:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
@@ -8518,7 +8615,7 @@ msgstr "Vanha"
 
 #: src/effects/NoiseReduction.cpp
 msgid "none, Hann (2.0.6 behavior)"
-msgstr "ei mitään, Hann (2.0.6 käyttäytyminen)"
+msgstr "ei mitään, Hann (2.0.6-version mukainen)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hann, none"
@@ -8647,8 +8744,8 @@ msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
 msgstr ""
-"Valitse muutama sekunti pelkkää kohinaa, että Audacity tietää\n"
-"mitä pitää suodattaa pois. Paina sitten \"Luo kohinaprofiili\":"
+"Valitse muutama sekunti pelkkää kohinaa, jotta Audacity tietää, mitä pitää\n"
+"suodattaa pois. Kun valinta on tehty, paina \"Luo kohinaprofiili\":"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "&Get Noise Profile"
@@ -8663,8 +8760,8 @@ msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
-"Valitse kaikki suodatettavat äänet, suodatettavan kohinan määrä\n"
-"ja napsauta 'OK' vähentääksesi kohinaa.\n"
+"Valitse työstettävä ääni, suodatettavan kohinan määrä ja napsauta 'OK'\n"
+"suorittaaksesi kohinan vaimennuksen.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -8936,7 +9033,7 @@ msgstr "Vaiheistaja"
 
 #: src/effects/Phaser.cpp
 msgid "Combines phase-shifted signals with the original signal"
-msgstr "Yhdistää vaihesiirretyt signaalit alkuperäiseen signaaliin"
+msgstr "Yhdistää vaihesiirrettyjä signaaleja alkuperäiseen signaaliin"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -9009,8 +9106,8 @@ msgid ""
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"Tätä korjaustoimintoa on tarkoitettu käytettäväksi vain hyvin lyhyille "
-"vahingoittuneille äänen osille (enintään 128 näytettä).\n"
+"Tätä korjaustoimintoa on tarkoitettu käytettäväksi vain hyvin lyhyihin "
+"vahingoittuneisiin äänen osiin (enintään 128 näytettä).\n"
 "\n"
 "Suurenna näkymää ja valitse vain sekunnin murto-osa korjattavaksesi."
 
@@ -9471,7 +9568,7 @@ msgstr "Pakkaa liika hiljaisuus"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Silence"
-msgstr "Lyhennä hiljaisuutta"
+msgstr "Lyhennä hiljaisuus"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -9486,8 +9583,8 @@ msgid ""
 "When truncating independently, there may only be one selected audio track in "
 "each Sync-Locked Track Group."
 msgstr ""
-"Kun katkaistaan itsenäisesti, kussakin synkrolukitussa raitaryhmässä voi "
-"olla vain yksi valittu ääniraita."
+"Kun katkaistaan itsenäisesti, kussakin tahtilukitussa raitaryhmässä voi olla "
+"vain yksi valittu ääniraita."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -10179,10 +10276,6 @@ msgstr "Syötä Nyquist-komento: "
 msgid "&Load"
 msgstr "&Lataa"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Tallenna"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -10402,8 +10495,8 @@ msgid ""
 "Data will be piped to standard in. \"%f\" uses the file name in the export "
 "window."
 msgstr ""
-"Tiedot siirretään putkella standardisyötteeseen. \"%f\" käyttää "
-"tiedostonimeä vienti-ikkunassa."
+"Tiedot siirretään putkella standardisyötteeseen. \"%f\" vastaa vienti-"
+"ikkunan tiedostonimeä."
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
@@ -10603,7 +10696,7 @@ msgid ""
 "file format. "
 msgstr ""
 "Projektin näytteenottotaajuutta (%d) ei tueta nykyisessä\n"
-"tulostiedostomuodossa. "
+"kohdetiedostomuodossa. "
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -10611,8 +10704,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"Projektin näytetaajuus (%d) ja bittinopeus (%d kbps) -yhdistelmää ei tueta\n"
-"nykyisessä tulostiedostomuodossa. "
+"Projektin näytetaajuuden (%d) ja bittinopeuden (%d kbps) yhdistelmää\n"
+"ei tueta nykyisessä kohdetiedostomuodossa. "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -13056,7 +13149,7 @@ msgstr "Poistonäppäin &2"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Ext&ra"
-msgstr "Ekst&rat"
+msgstr "E&kstrat"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Mi&xer"
@@ -13188,10 +13281,6 @@ msgstr "MIDI-tiedostot"
 #: src/menus/FileMenus.cpp
 msgid "Allegro files"
 msgstr "Allegro-tiedostot"
-
-#: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Valitse mikä tahansa pakkaamaton äänitiedosto"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
@@ -13681,7 +13770,7 @@ msgstr "Toista viimeisin generaattori"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
-msgstr "&Tehosteet"
+msgstr "T&ehosteet"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -13865,11 +13954,11 @@ msgstr "&Kaikissa raidoissa"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "Kaikissa &synkrolukituissa raidoissa"
+msgstr "Kaikissa &tahtilukituissa raidoissa"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
-msgstr "Valitse synkrolukittu"
+msgstr "Valitse tahtilukittu"
 
 #: src/menus/SelectMenus.cpp
 msgid "R&egion"
@@ -13901,7 +13990,7 @@ msgstr "Valitse raidan alusta kohdistimeen"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Track &End"
-msgstr "Kohdistimesta raidan loppuun"
+msgstr "&Kohdistimesta raidan loppuun"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Cursor to Track End"
@@ -13921,7 +14010,7 @@ msgstr "&Tallenna valinta"
 
 #: src/menus/SelectMenus.cpp
 msgid "Retrieve Selectio&n"
-msgstr "Hae vali&nta"
+msgstr "Palauta tallennettu vali&nta"
 
 #: src/menus/SelectMenus.cpp
 msgid "S&pectral"
@@ -13953,7 +14042,7 @@ msgstr "Tallenna kohd&istimen paikka"
 
 #: src/menus/SelectMenus.cpp
 msgid "At &Zero Crossings"
-msgstr "&Nollakohtaan"
+msgstr "Kohdistin &nollakohtaan"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Zero Crossing"
@@ -14093,23 +14182,23 @@ msgstr "Kohdistimen pitkä h&yppy oikealle"
 #.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
-msgstr "&Haku"
+msgstr "&Kelaa"
 
 #: src/menus/SelectMenus.cpp
 msgid "Short Seek &Left During Playback"
-msgstr "Lyhyt haku &vasemmalle toiston aikana"
+msgstr "Lyhyt kelaus &vasemmalle toiston aikana"
 
 #: src/menus/SelectMenus.cpp
 msgid "Short Seek &Right During Playback"
-msgstr "Lyhyt haku &oikealle toiston aikana"
+msgstr "Lyhyt kelaus &oikealle toiston aikana"
 
 #: src/menus/SelectMenus.cpp
 msgid "Long Seek Le&ft During Playback"
-msgstr "Pitkä haku &vasemmalle toiston aikana"
+msgstr "Pitkä kelaus &vasemmalle toiston aikana"
 
 #: src/menus/SelectMenus.cpp
 msgid "Long Seek Rig&ht During Playback"
-msgstr "Pitkä haku &oikealle toiston aikana"
+msgstr "Pitkä kelaus &oikealle toiston aikana"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -14123,7 +14212,7 @@ msgstr "Palauta työkalu&palkit"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
-msgstr "Hahmonnettiin kaikki ääni raidoissa '%s'"
+msgstr "Hahmonnettiin kaikki ääni raidassa '%s'"
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
@@ -14433,15 +14522,15 @@ msgstr "&Mykistä kaikki raidat"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Unmute All Tracks"
-msgstr "&Poista kaikki mykistykset"
+msgstr "&Poista kaikkien raitojen mykistykset"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mut&e Tracks"
-msgstr "Mykistä &raitoja"
+msgstr "Mykistä valitut &raidat"
 
 #: src/menus/TrackMenus.cpp
 msgid "U&nmute Tracks"
-msgstr "&Poista raitamykistykset"
+msgstr "&Poista valittujen raitojen mykistykset"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Pan"
@@ -14505,7 +14594,7 @@ msgstr "&Nimen mukaan"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Synkro&lukitut raidat (päällä/pois)"
+msgstr "Tahti&lukitse raidat (päällä/pois)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Track"
@@ -14517,11 +14606,11 @@ msgstr "Vaihda p&anorointia kohdistetussa raidassa..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Left on Focused Track"
-msgstr "Panoroi kohdistettu raita &vasemmalle"
+msgstr "Panoroi kohdistettua raitaa &vasemmalle"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Right on Focused Track"
-msgstr "Panoroi kohdistettu raita &oikealle"
+msgstr "Panoroi kohdistettua raitaa &oikealle"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change Gai&n on Focused Track..."
@@ -14537,7 +14626,7 @@ msgstr "&Laske kohdistetun raidan vahvistusta"
 
 #: src/menus/TrackMenus.cpp
 msgid "Op&en Menu on Focused Track..."
-msgstr "Avaa valikko k&ohdistetulla raidalla..."
+msgstr "Avaa k&ohdistetun raidan valikko..."
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute Focused Track"
@@ -14579,7 +14668,7 @@ msgstr "Toistetaan"
 #: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
 msgid "Recording"
-msgstr "Äänitys"
+msgstr "Äänitetään"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
@@ -14641,7 +14730,7 @@ msgstr "Valitse aika leikkeen sisällä."
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
 msgid "Tra&nsport"
-msgstr "Sii&rtyminen"
+msgstr "&Siirtyminen"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pl&aying"
@@ -14832,7 +14921,7 @@ msgstr "&Suurennus"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &In"
-msgstr "Lähe&nnä"
+msgstr "&Lähennä"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &Normal"
@@ -14848,7 +14937,7 @@ msgstr "&Suurenna valintaan"
 
 #: src/menus/ViewMenus.cpp
 msgid "Zoom &Toggle"
-msgstr "Suurennus (&on/ei)"
+msgstr "S&uurennus (päällä/pois)"
 
 #: src/menus/ViewMenus.cpp
 msgid "Advanced &Vertical Zooming"
@@ -14947,7 +15036,7 @@ msgstr "Erän asetukset"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
-msgstr "Käyttäytymiset"
+msgstr "Valinnat"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
@@ -15249,7 +15338,7 @@ msgstr "Laajennettu tuonti"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Preferences for ExtImport"
-msgstr "ExtImportin asetukset"
+msgstr "Laajennetun tuonnin asetukset"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -15269,7 +15358,7 @@ msgstr "MIME-tyypit"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Importer order"
-msgstr "Tuotijärjestys"
+msgstr "Tuontijärjestys"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Move rule &up"
@@ -15306,10 +15395,10 @@ msgid ""
 "what you are doing, it is recommended to trim spaces. Do you want Audacity "
 "to trim spaces for you?"
 msgstr ""
-"Yhdessä kohteessa on välilyöntejä (välilyönnit, rivit, välilehdet tai "
-"rivinsyötöt). Ne todennäköisesti rikkovat kuvioiden vastaavuuden. Ellet "
-"tiedä mitä teet, on suositeltavaa trimmata välilyöntejä. Haluatko Audacityn "
-"leikata välilyönnit sinulle?"
+"Jossakin kohteista on välilyöntejä (välilyönti, rivinvaihto, sarkainmerkki "
+"tai rivinsiirto), jotka aiheuttavat ongelmia hahmontunnistuksessa. Jos et "
+"ole varma, niiden poistamista suositellaan. Haluatko Audacityn tekevän niin "
+"puolestasi?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15415,7 +15504,7 @@ msgstr "&Äänimerkki pitkän toiminnon päätyttyä"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Re&tain labels if selection snaps to a label"
-msgstr "Pidä merkit, jos valinta napsahtaa merkkiin"
+msgstr "Pidä merkit, jos valinta tarraa merkkiin"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
@@ -15425,6 +15514,10 @@ msgstr "Sulauta järjestelmä- ja Audacity-teemaa"
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Käytä enimmäkseen vasemmalta oikealle -asetteluja RTL-kielissä"
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr "Älä käytä pilkkua desimaaliluvuissa"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -15768,6 +15861,10 @@ msgstr "MIDI-laitteet"
 msgid "Preferences for MidiIO"
 msgstr "MidiIO:n asetukset"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Ei MIDI-rajapintoja"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15781,10 +15878,6 @@ msgstr "Käytössä: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "MIDI-syntetisaattori&viive (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Ei MIDI-rajapintoja"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -16076,7 +16169,7 @@ msgstr "Tehosteiden esikuuntelu"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
-msgstr "&Pituus:"
+msgstr "&Kesto:"
 
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
@@ -16093,7 +16186,7 @@ msgstr "&Alueleikkauksen jälkeen:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Seek Time when playing"
-msgstr "Hakuaika toistettaessa"
+msgstr "Kelausaika toistettaessa"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Short period:"
@@ -16192,7 +16285,7 @@ msgstr "Äänitysasetukset"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Play &other tracks while recording (overdub)"
-msgstr "T&oista muita raitoja uutta raitaa äänitettäessä"
+msgstr "T&oista muut raidat uutta raitaa äänitettäessä"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
@@ -16200,7 +16293,7 @@ msgstr "Käytä &laitteistoa muiden kappaleiden toistamiseen"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Software playthrough of input"
-msgstr "Syötön läpitoi&sto ohjelman kautta"
+msgstr "Syötteen läpitoi&sto ohjelman kautta"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Record on a new track"
@@ -16443,7 +16536,7 @@ msgstr "&Nollien lisäyskerroin:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
-msgstr "Ota käyttöön &spektrinen valinta"
+msgstr "Ota käyttöön &spektrivalinta"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Show a grid along the &Y-axis"
@@ -16594,11 +16687,11 @@ msgstr "Lataa tiedostot"
 #. i18n-hint: i.e. the behaviors of tracks
 #: src/prefs/TracksBehaviorsPrefs.cpp src/prefs/TracksBehaviorsPrefs.h
 msgid "Tracks Behaviors"
-msgstr "Raitojen käyttäytyminen"
+msgstr "Raitavalinnat"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Preferences for TracksBehaviors"
-msgstr "Raidan käyttäytymisasetukset"
+msgstr "Raitavalinta-asetukset"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Simple"
@@ -16635,7 +16728,7 @@ msgstr "Luo merkki kirjoi&ttamalla"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
-msgstr "Käytä valintaikkunaa uuden merkin &nimelle"
+msgstr "Käytä valintaikkunaa uuden merkin &nimeämiseen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Enable scrolling left of &zero"
@@ -16958,7 +17051,7 @@ msgstr "Kopioi valinta"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Trim audio outside selection"
-msgstr "Rajaa pois ääni valinnan ulkopuolella"
+msgstr "Rajaa valinnan ulkopuolinen ääni pois"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Silence audio selection"
@@ -17084,7 +17177,7 @@ msgstr "Mikserityökalut"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Seek"
-msgstr "Haku"
+msgstr "Kelaus"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Scrub Ruler"
@@ -17116,7 +17209,7 @@ msgstr "Aloita hankaus"
 #.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Seeking"
-msgstr "Lopeta haku"
+msgstr "Lopeta kelaus"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -17124,7 +17217,7 @@ msgstr "Lopeta haku"
 #.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Seeking"
-msgstr "Aloita haku"
+msgstr "Aloita kelaus"
 
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Hide Scrub Ruler"
@@ -17185,7 +17278,7 @@ msgstr "Keskellä"
 #: src/toolbars/SelectionBar.cpp
 #, c-format
 msgid "Snap Clicks/Selections to %s"
-msgstr "Kiinnitä napsahdukset/valinnat kohtaan %s"
+msgstr "Tarraa kohdistukset/valinnat aikayksikön %s tarkkuudelle"
 
 #. i18n-hint: %s is replaced e.g by one of 'Length', 'Center',
 #. 'Start', or 'End' (translated), to indicate that it will be
@@ -17210,7 +17303,7 @@ msgstr "&Valintatyökalut"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Center frequency and Width"
-msgstr "Keskitaajuus ja leveys"
+msgstr "Keskitaajuus ja -leveys"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Low and High Frequencies"
@@ -17277,7 +17370,7 @@ msgstr "Piirtotyökalu"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Multi-Tool"
-msgstr "Monityökalu"
+msgstr "Monitoimityökalu"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Slide Tool"
@@ -17311,7 +17404,7 @@ msgstr "Aikasiir&totyökalu"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Multi Tool"
-msgstr "&Monityökalu"
+msgstr "&Monitoimityökalu"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Previous Tool"
@@ -17929,7 +18022,7 @@ msgstr "&Hankaa"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
-msgstr "Hakeminen"
+msgstr "Kelaus"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -17945,7 +18038,7 @@ msgstr "Soitetaan eri nopeudella"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Seek"
-msgstr "Siirrä hiiren osoitinta hakeaksesi"
+msgstr "Kelaa siirtämällä hiiren osoitinta"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Move mouse pointer to Scrub"
@@ -18208,7 +18301,7 @@ msgstr "Käynnistä napsauttamalla"
 
 #: src/widgets/Meter.cpp
 msgid "Click"
-msgstr "Klikkaus"
+msgstr "Napsautus"
 
 #: src/widgets/Meter.cpp
 msgid "Stop Monitoring"
@@ -18959,7 +19052,7 @@ msgstr "Kätevät esimääritykset (ohittaa säätimet)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "None Selected"
-msgstr "Ei valittuja"
+msgstr "Ei esiasetusta"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Linear In"
@@ -20473,7 +20566,7 @@ msgid ""
 msgstr ""
 " - Nämä kaksi kanavaa ovat identtiset eli kaksoismono.\n"
 "                Keskusta ei voi poistaa.\n"
-"                Mahdollinen jäljellä oleva ero voi johtua häviöllisistä "
+"                Mahdollinen jäljellä oleva ero voi johtua häviöllisestä "
 "koodauksesta."
 
 #: plug-ins/vocalrediso.ny
@@ -20484,7 +20577,7 @@ msgid ""
 msgstr ""
 " - Nämä kaksi kanavaa suhtautuvat vahvasti toisiinsa, eli lähes mono tai "
 "erittäin panoroitu.\n"
-"              Todennäköisesti keskuksen poisto huonontaa."
+"              Siten keskuksen poisto todennäköisesti toimii huonosti."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20498,7 +20591,8 @@ msgid ""
 "reverb."
 msgstr ""
 " - Ihanteellinen arvo stereolle.\n"
-"               Kuitenkin, keskiotanta riippuu myös käytetystä kaiusta."
+"               Keskuksen poistaminen kuitenkin riippuu myös käytetystä "
+"jälkikaiusta."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20507,7 +20601,7 @@ msgid ""
 "unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
-" - Kaksi kanavaa eivät ole läheskään toisiinsa suhtautuvia.\n"
+" - Kaksi kanavaa eivät ole läheskään toisiinsa suhdassa.\n"
 "              Joko sinulla on vain kohinaa tai kappale on masteroitu "
 "epätasapainoisesti.\n"
 "             Keskierotus voi silti olla hyvä."
@@ -20519,8 +20613,8 @@ msgid ""
 "                Especially when played by only one speaker."
 msgstr ""
 " - Vaikka raita on stereo, kenttä on selvästi erittäin leveä.\n"
-"                Tämä voi aiheuttaa outoja vaikutuksia.\n"
-"                Varsinkin kun toistetaan vain yhdestä kaiuttimesta."
+"                Tämä voi kuulostaa oudolta, varsinkin\n"
+"                jos ääntä toistetaan vain yhdestä kaiuttimesta."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20533,8 +20627,8 @@ msgstr ""
 " - Nämä kaksi kanavaa ovat lähes identtiset.\n"
 "                  Ilmeisesti pseudostereotehostusta on käytetty\n"
 "                  signaalin leventämiseen kaiuttimien välisen fyysisen "
-"etäisyyden yli.\n"
-"                  Älä odota hyviä tuloksia keskuksen poistolta."
+"etäisyyden poikki.\n"
+"                  Keskuksen poistolta ei tulisi odottaa liikoja."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
@@ -20592,6 +20686,15 @@ msgstr "Ryöppytaajuus (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Virhe.~%Stereoraita vaaditaan."
+
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "Orpolohkojen siivous epäonnistui"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "Tunnisteita ei voitu kopioida"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Valitse mikä tahansa pakkaamaton äänitiedosto"
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
@@ -21099,9 +21202,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
 #~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Virheidenjäljitysversio"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir komennossa DirManager::MakeBlockFilePath epäonnistui."

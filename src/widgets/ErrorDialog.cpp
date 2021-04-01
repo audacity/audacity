@@ -19,6 +19,7 @@
 
 #include <wx/app.h>
 #include <wx/button.h>
+#include <wx/collpane.h>
 #include <wx/icon.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
@@ -38,6 +39,7 @@
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
+   EVT_COLLAPSIBLEPANE_CHANGED( wxID_ANY, ErrorDialog::OnPane )
    EVT_BUTTON( wxID_OK, ErrorDialog::OnOk)
    EVT_BUTTON( wxID_HELP, ErrorDialog::OnHelp)
 END_EVENT_TABLE()
@@ -47,8 +49,11 @@ ErrorDialog::ErrorDialog(
    const TranslatableString & dlogTitle,
    const TranslatableString & message,
    const wxString & helpPage,
-   const bool Close, const bool modal):
-   wxDialogWrapper(parent, (wxWindowID)-1, dlogTitle)
+   const wxString & log,
+   const bool Close, const bool modal)
+:  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
+                   wxDefaultPosition, wxDefaultSize,
+                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    SetName();
 
@@ -62,29 +67,56 @@ ErrorDialog::ErrorDialog(
 
    ShuttleGui S(this, eIsCreating);
 
-   S.StartHorizontalLay();
+   S.SetBorder(2);
+   S.StartHorizontalLay(wxEXPAND, 0);
    {
-      // wxART_ERROR and wxART_INFORMATION are other possibilities.
-//      S.AddIcon( &wxArtProvider::GetBitmap( wxART_WARNING));
-      S.SetBorder( 20 );
+      S.SetBorder(20);
       wxBitmap bitmap = wxArtProvider::GetBitmap(wxART_WARNING);
-      auto icon = safenew wxStaticBitmap(S.GetParent(), -1, bitmap);
-      S.AddWindow( icon );
-      S.StartVerticalLay();
-      {
-         S.SetBorder(20);
-         S.AddFixedText(message, false, 500);
-         S.SetBorder(2);
-         S.AddStandardButtons(buttonMask);
-      }
-      S.EndVerticalLay();
+      S.AddWindow(safenew wxStaticBitmap(S.GetParent(), -1, bitmap));
+
+      S.SetBorder(20);
+      S.AddFixedText(message, false, 500);
    }
    S.EndHorizontalLay();
+
+   S.SetBorder(2);
+   if (!log.empty())
+   {
+      S.StartHorizontalLay(wxEXPAND, 1);
+      {
+         S.SetBorder(5);
+
+         auto pane = safenew wxCollapsiblePane(S.GetParent(),
+                                               wxID_ANY,
+                                               XO("Show &Log...").Translation());
+         S.Style(wxEXPAND | wxALIGN_LEFT);
+         S.Prop(1);
+         S.AddWindow(pane);
+
+         ShuttleGui SI(pane->GetPane(), eIsCreating);
+         auto text = SI.AddTextWindow(log);
+         text->SetInsertionPointEnd();
+         text->ShowPosition(text->GetLastPosition());
+         text->SetMinSize(wxSize(700, 250));
+      }
+      S.EndHorizontalLay();
+   }
+
+   S.SetBorder(2);
+   S.AddStandardButtons(buttonMask);
 
    Layout();
    GetSizer()->Fit(this);
    SetMinSize(GetSize());
    Center();
+}
+
+void ErrorDialog::OnPane(wxCollapsiblePaneEvent & event)
+{
+   if (!event.GetCollapsed())
+   {
+      Center();
+   }
 }
 
 void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
@@ -94,7 +126,6 @@ void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    else
       Destroy();
 }
-
 
 void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
@@ -118,9 +149,10 @@ void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
                      const wxString &helpPage,
-                     const bool Close)
+                     const bool Close,
+                     const wxString &log)
 {
-   ErrorDialog dlog(parent, dlogTitle, message, helpPage, Close);
+   ErrorDialog dlog(parent, dlogTitle, message, helpPage, log, Close);
    dlog.CentreOnParent();
    dlog.ShowModal();
 }
@@ -131,13 +163,14 @@ void ShowModelessErrorDialog(wxWindow *parent,
                              const TranslatableString &dlogTitle,
                              const TranslatableString &message,
                              const wxString &helpPage,
-                             const bool Close)
+                             const bool Close,
+                             const wxString &log)
 {
    // ensure it has some parent.
    if( !parent )
       parent = wxTheApp->GetTopWindow();
    wxASSERT(parent);
-   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpPage, Close, false);
+   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpPage, log, Close, false);
    dlog->CentreOnParent();
    dlog->Show();
    // ANSWER-ME: Vigilant Sentry flagged this method as not deleting dlog, so 

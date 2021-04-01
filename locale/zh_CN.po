@@ -10,9 +10,9 @@
 # mkpoli <snowwolf1001@gmail.com>, 2017-2018
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2020-07-19 16:59+0800\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/"
@@ -603,7 +603,7 @@ msgstr "%s 网站: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s 软件，%s 1999-2018 %s 团队，版权所有。"
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -612,7 +612,6 @@ msgstr "%s 软件，%s 1999-2018 %s 团队，版权所有。"
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "%s 是 Dominic Mazzoni 的注册商标。"
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "构建信息"
@@ -625,6 +624,69 @@ msgstr "已启用"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "未启用"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "The Build"
+msgstr "调试版本"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "程序构建日期:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Github 提交 ID："
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "调试版本 (调试级别 %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "发布版本 (调试级别 %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 位"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "构建类型："
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "编译器："
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "安装目录前缀："
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "设置文件夹:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "核心库"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "跨平台 GUI 库"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "音频播放和录制"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "采样率转换"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -667,23 +729,6 @@ msgstr "FFmpeg 导入／导出"
 msgid "Import via GStreamer"
 msgstr "通过 GStreamer 导入"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "核心库"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "采样率转换"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "音频播放和录制"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "跨平台 GUI 库"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "特性"
@@ -707,46 +752,6 @@ msgstr "音高和速度改变支持"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "极限音高和速度改变支持"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "程序构建日期:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Github 提交 ID："
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "调试版本 (调试级别 %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "发布版本 (调试级别 %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64 位"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "构建类型："
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "编译器："
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "安装目录前缀："
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "设置文件夹:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1133,7 +1138,7 @@ msgid ""
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "帮助"
@@ -1642,6 +1647,10 @@ msgstr "应用 %s"
 msgid "Macros Palette"
 msgstr "宏色板"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "管理宏"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1765,6 +1774,11 @@ msgstr "上移(&U)"
 msgid "Move &Down"
 msgstr "下移(&D)"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "保存(&S)"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1807,10 +1821,6 @@ msgstr "名字不能包括“%c”和“%c”"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "您确实要删除 %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "管理宏"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2067,12 +2077,16 @@ msgstr ""
 "（选择其他类型的轨道不行）"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "报告已生成到："
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Audacity 支持数据"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr ""
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "报告已生成到："
 
 #: src/DBConnection.cpp
 #, fuzzy
@@ -2083,10 +2097,6 @@ msgstr "正在导入项目"
 #, fuzzy, c-format
 msgid "Checkpointing %s"
 msgstr "正在导入 %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr ""
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
@@ -2525,6 +2535,10 @@ msgstr "无法转换指定的文件名，因为使用了 Unicode 字符。"
 msgid "Specify New Filename:"
 msgstr "指定新文件名："
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "频率分析"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "频谱"
@@ -2695,10 +2709,6 @@ msgstr "频率 (Hz)\t电平 (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "延迟 (秒)\t频率 (Hz)\t电平"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "频率分析"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3172,6 +3182,11 @@ msgstr "混音并渲染(&M)"
 msgid "Mixing and rendering tracks"
 msgstr "混音并渲染轨道"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Audacity混音板%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3231,11 +3246,6 @@ msgstr "已移动速度滑杆"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "已移动左右声道平衡滑杆"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Audacity混音板%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3879,9 +3889,20 @@ msgstr "<untitled>"
 msgid "[Project %02i] "
 msgstr "[项目 %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "无法打开项目数据库"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr ""
+"无法打开项目文件:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -3927,6 +3948,13 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "这不是一个 Audacity 项目文件"
@@ -3945,9 +3973,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "无法初始化项目文件"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "清除孤立块失败"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "无法初始化项目文件"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3966,10 +4050,6 @@ msgstr "无法附加目标数据库"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr ""
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "无法复制标签"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4714,6 +4794,10 @@ msgstr "选择保存截屏的位置"
 msgid "Capture failed!"
 msgstr "捕获失败！"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "长消息"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4770,6 +4854,11 @@ msgstr "欢迎来到Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "启动时不再显示"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "正在检查项目文件数据"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5639,10 +5728,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "快捷键已删除"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "长消息"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10035,10 +10120,6 @@ msgstr "输入 Nyquist 命令: "
 msgid "&Load"
 msgstr "加载(&L)"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "保存(&S)"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -13013,10 +13094,6 @@ msgid "Allegro files"
 msgstr "Allegro 文件"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "选择任一未压缩音频文件"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "危险重置(&D).."
 
@@ -15249,6 +15326,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "在从右向左书写的语言中使用大多数从左向右的布局"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "显示时间线工具提示"
 
@@ -15593,6 +15674,10 @@ msgstr "MIDI 设备"
 msgid "Preferences for MidiIO"
 msgstr "MidiIO 偏好设置"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "没有 MIDI 接口"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15606,10 +15691,6 @@ msgstr "正在使用：PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "MIDI 合成器延迟 (ms)："
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "没有 MIDI 接口"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20391,6 +20472,15 @@ msgstr "脉冲列频率（Hz）"
 msgid "Error.~%Stereo track required."
 msgstr "错误。~%需要立体声轨。"
 
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "清除孤立块失败"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "无法复制标签"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "选择任一未压缩音频文件"
+
 #~ msgid "After recovery, save the project to save the changes to disk."
 #~ msgstr "在恢复后，保存项目以将变更存储到硬盘。"
 
@@ -20467,15 +20557,6 @@ msgstr "错误。~%需要立体声轨。"
 
 #~ msgid "Failed to open copy of project file"
 #~ msgstr "无法打开项目文件拷贝"
-
-#~ msgid ""
-#~ "Unable to open project file:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "无法打开项目文件:\n"
-#~ "\n"
-#~ "%s"
 
 #~ msgid "Unable to load project or autosave documents"
 #~ msgstr "无法加载项目或自动保存文档"
@@ -20932,9 +21013,6 @@ msgstr "错误。~%需要立体声轨。"
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> 软件，&copy; "
 #~ "1999-2017 Audacity 团队，版权所有。<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "调试版本"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "在 DirManager::MakeBlockFilePath 中执行 mkdir (创建目录) 命令失败。"

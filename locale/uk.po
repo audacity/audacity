@@ -6,10 +6,10 @@
 # Yuri Chornoivan <yurchor@ukr.net>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-02-04 21:32+0200\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"PO-Revision-Date: 2021-03-31 16:03+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -603,8 +603,8 @@ msgstr "Сайт %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
-msgstr "%s, %s Команда %s, 1999–2020."
+msgid "%s software is copyright %s 1999-2021 %s Team."
+msgstr "%s, %s Команда %s, 1999–2021."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -614,7 +614,6 @@ msgstr ""
 "Назва продукту %s є зареєстрованою торговельною маркою Домініка Маццоні "
 "(Dominic Mazzoni)."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Інформація про випуск"
@@ -627,6 +626,69 @@ msgstr "Увімкнено"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Вимкнено"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+msgid "The Build"
+msgstr ""
+"Збірка"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Дата компіляції програми:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Ід. внеску:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Діагностична збірка (рівень діагностики %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Остаточна версія (рівень діагностики %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64-бітова"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Тип випуску:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Компілятор:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Префікс встановлення:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Тека з параметрами:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Головні бібліотеки"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Бібліотека для побудови графічних інтерфейсів на різних платформах"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Відтворення аудіо та запис"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Зміна частоти дискретизації"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -669,23 +731,6 @@ msgstr "Імпортування/Експортування даних FFmpeg"
 msgid "Import via GStreamer"
 msgstr "Імпорт за допомогою GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Головні бібліотеки"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Зміна частоти дискретизації"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Відтворення аудіо та запис"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Бібліотека для побудови графічних інтерфейсів на різних платформах"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Можливості"
@@ -709,46 +754,6 @@ msgstr "Підтримка зміни кроку і темпу"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Підтримка екстремальної зміни такту і темпу"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Дата компіляції програми:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Ід. внеску:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Діагностична збірка (рівень діагностики %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Остаточна версія (рівень діагностики %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64-бітова"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Тип випуску:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Компілятор:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Префікс встановлення:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Тека з параметрами:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1179,7 +1184,7 @@ msgstr ""
 "наступного запуску."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Довідка"
@@ -1690,6 +1695,10 @@ msgstr "Застосувати %s"
 msgid "Macros Palette"
 msgstr "Палітра макросів"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Керування макросами"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1813,6 +1822,11 @@ msgstr "В&гору"
 msgid "Move &Down"
 msgstr "В&низ"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Зберегти"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1855,10 +1869,6 @@ msgstr "Назва не може містити символів '%c' та '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Ви справді бажаєте вилучити %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Керування макросами"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2121,12 +2131,16 @@ msgstr ""
 "(Позначення інших типів доріжки не працюватиме.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Звіт створено тут:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Дані щодо супроводу Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Виконання дії може тривати декілька секунд…"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Звіт створено тут:"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2136,10 +2150,6 @@ msgstr "Створення контрольних точок проєкту"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Створення контрольної точки %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Виконання дії може тривати декілька секунд…"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2599,6 +2609,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Вкажіть нову назву файла:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Частотний аналіз"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Спектр"
@@ -2773,10 +2787,6 @@ msgstr "Частота (Гц)\tРівень (дБ)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Відставання (сек)\tЧастота (Гц)\tРівень"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Частотний аналіз"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3265,6 +3275,11 @@ msgstr "Змікшувати і перетворити"
 msgid "Mixing and rendering tracks"
 msgstr "Мікшування та зведення доріжок"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Панель мікшера Audacity%s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3324,11 +3339,6 @@ msgstr "Пересунуто повзунок швидкості"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Регулятор панорами переміщено"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Панель мікшера Audacity%s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3985,9 +3995,20 @@ msgstr "<без назви>"
 msgid "[Project %02i] "
 msgstr "[Проєкт %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Не вдалося відкрити базу даних проєкту"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr ""
+"Не вдалося відкрити файл бази даних:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4032,6 +4053,15 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+"Проєкт є каталогом, який призначено лише для читання\n"
+"(Неможливо створити необхідні тимчасові файли)"
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "Цей файл не є файлом проєкту Audacity"
@@ -4050,9 +4080,80 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Не вдалося ініціалізувати файл проєкту"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Не вдалося вилучити зайві блоки"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+"Не вдалося додати вкладену функцію ( не вдалося перевірити ідентифікатори "
+"блоків)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проєкт призначено лише для читання\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проєкт заблоковано\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проєкт зайнято\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проєкт пошкоджено\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Якісь проблеми із правами доступу\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Помилка введення-виведення на диску\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Немає прав доступу\n"
+"(Неможливо працювати із блоковими файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid "Unable to work with the blockfiles"
+msgstr "Неможливо працювати із блоковими файлами"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4070,10 +4171,6 @@ msgstr "Не вдалося долучити базу даних признач�
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr "Не вдалося перемкнутися у режим швидкого журналювання"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Не вдалося скопіювати мітки"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -4863,6 +4960,10 @@ msgstr "Оберіть адресу, за якою слід зберігати �
 msgid "Capture failed!"
 msgstr "Спроба захоплення зазнала невдачі!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Довге повідомлення"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4920,6 +5021,10 @@ msgstr "Ласкаво просимо до Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Не показувати цього знову під час запуску"
+
+#: src/SqliteSampleBlock.cpp
+msgid "Connection to project file is null"
+msgstr "З'єднання із файлом проєкту є порожнім"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5801,10 +5906,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Скорочення було вилучено"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Довге повідомлення"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10255,10 +10356,6 @@ msgstr "Введіть Nyquist-команду: "
 msgid "&Load"
 msgstr "&Завантажити"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Зберегти"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -13308,10 +13405,6 @@ msgid "Allegro files"
 msgstr "файли Allegro"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Виберіть будь-який нестиснений звуковий файл"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Небезпечне скидання…"
 
@@ -15550,6 +15643,11 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Використовувати компонування зліва праворуч для мов із лівописом"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+"Ніколи не використовувати кому замість десяткової крапки"
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Показувати підказки монтажного столу"
 
@@ -15894,6 +15992,10 @@ msgstr "Пристрої MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Налаштування MidiIO"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "MIDI-інтерфейсів немає"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15907,10 +16009,6 @@ msgstr "Використано: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "&Латентність синтезатора MIDI (у мс):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "MIDI-інтерфейсів немає"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -20742,3 +20840,12 @@ msgstr "Частота голок радару (у Гц)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Помилка.~%Потрібна стереодоріжка."
+
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "Не вдалося вилучити зайві блоки"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "Не вдалося скопіювати мітки"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Виберіть будь-який нестиснений звуковий файл"

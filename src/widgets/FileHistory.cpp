@@ -153,6 +153,7 @@ void FileHistory::NotifyMenus()
    for (auto pMenu : mMenus)
       if (pMenu)
          NotifyMenu(pMenu);
+   Save(*gPrefs, wxT("RecentFiles"));  
 }
 
 void FileHistory::NotifyMenu(wxMenu *menu)

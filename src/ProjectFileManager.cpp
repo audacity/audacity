@@ -1021,7 +1021,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
 
       wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, errorStr.Debug());
 
-      ShowErrorDialog(
+      projectFileIO.ShowError(
          &window,
          XO("Error Opening Project"),
          errorStr,

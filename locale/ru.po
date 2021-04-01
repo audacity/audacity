@@ -14,10 +14,10 @@
 # Alexandre Prokoudine <alexandre.prokoudine@gmail.com>, 2002-2018
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
-"PO-Revision-Date: 2021-02-04 21:32+0200\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"PO-Revision-Date: 2021-04-01 08:31+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 2.2.5\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -615,7 +615,6 @@ msgstr "%s software is copyright %s 1999-2020 %s Team."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Имя %s является зарегистрированной торговой маркой Доминика Маццони."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Информация о сборке"
@@ -628,6 +627,68 @@ msgstr "Включено"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Выключено"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+msgid "The Build"
+msgstr "Сборка"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Дата сборки:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Id фиксации:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Сборка отладки (уровень отладки %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Сборка выпуска (уровень отладки %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 бит"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Тип сборки:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Компилятор:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Префикс установки:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Папка настроек:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Основные библиотеки"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Кросс-платформенная библиотека GUI"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Воспроизведение и запись аудио"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Преобразование частоты дискретизации"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -670,23 +731,6 @@ msgstr "Импорт/экспорт FFmpeg"
 msgid "Import via GStreamer"
 msgstr "Импорт через GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Основные библиотеки"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Передискретизация"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Воспроизведение и запись звука"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Кроссплатформенная библиотека GUI"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Функции"
@@ -710,46 +754,6 @@ msgstr "Поддержка изменения темпа и высоты тон�
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Поддержка значительного изменения темпа и высоты тона"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Дата сборки программы:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "ID обязательства:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Отладочная сборка (уровень отладки %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Сборка выпуска (уровень отладки %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64-бит"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Тип сборки:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Компилятор:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Префикс установки:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Папка настроек:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1169,7 +1173,7 @@ msgstr ""
 "ниже."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Справка"
@@ -1672,6 +1676,10 @@ msgstr "Применить %s"
 msgid "Macros Palette"
 msgstr "Панель макросов"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Менеджер макросов"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1795,6 +1803,11 @@ msgstr "Переместить &вверх"
 msgid "Move &Down"
 msgstr "Переместить в&низ"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Сохранить"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1837,10 +1850,6 @@ msgstr "Имена не должны содержать '%c' и '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Вы действительно хотите удалить %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Менеджер макросов"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2100,15 +2109,18 @@ msgstr ""
 "(Выбор других видов треков работать не будет.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Отчёт подготовлен:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Данные для тех.поддержки Audacity"
 
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Это может занять несколько секунд"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Отчёт подготовлен:"
+
 #: src/DBConnection.cpp
-#, c-format
 msgid "Checkpointing project"
 msgstr "Контрольный проект"
 
@@ -2116,10 +2128,6 @@ msgstr "Контрольный проект"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Контрольный %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "Это может занять несколько секунд"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2570,6 +2578,10 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Укажите новое имя файла:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Частотный анализ"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Спектр"
@@ -2744,10 +2756,6 @@ msgstr "Частота (Гц)\tУровень (дБ)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Задержка (сек)\tЧастота (Гц)\tУровень"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Частотный анализ"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3218,6 +3226,11 @@ msgstr "Микшировать и свести"
 msgid "Mixing and rendering tracks"
 msgstr "Микширование и сведение треков"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Пульт микшера Audacity %s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3276,11 +3289,6 @@ msgstr "Регулятор velocity смещён"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Регулятор баланса смещён"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Пульт микшера Audacity %s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3933,9 +3941,20 @@ msgstr "<без названия>"
 msgid "[Project %02i] "
 msgstr "[Проект %02i] "
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Не удалось открыть базу данных проекта"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr ""
+"Не удалось открыть файл базы данных:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -3980,6 +3999,15 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+"Проект в каталоге тоько чтение\n"
+"(Невозможно создать требуемые временные файлы)"
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "Это не файл проекта Audacit"
@@ -3997,6 +4025,79 @@ msgstr ""
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Невозможно инициализировать файл проекта"
+
+#. i18n-hint: An error message.  Don't translate inset or blockids.
+#: src/ProjectFileIO.cpp
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr "Невозможно добавить функцию 'Вставить' (не удаётся проверить ID блоков)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проект только чтение\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проект заблокирован\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проект занят\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проект повреждён\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Проблемы с разрешениями\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Ошибка ввода-вывода диска\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Не разрешено\n"
+"(Невозможно работать с блок-файлами)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid "Unable to work with the blockfiles"
+msgstr "Невозможно работать с блок-файлами"
 
 #: src/ProjectFileIO.cpp
 msgid "Cleanup of orphan blocks failed"
@@ -10157,10 +10258,6 @@ msgstr "Введите команду Найквиста: "
 msgid "&Load"
 msgstr "З&агрузить"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Сохранить"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -13692,7 +13789,7 @@ msgstr "Повторить последний инструмент"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
-msgstr "&Макрос..."
+msgstr "&Менеджер макросов..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
@@ -14408,7 +14505,7 @@ msgstr "&Ресэмплировать..."
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
-msgstr "&Удалить треки"
+msgstr "&Удалить"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute"
@@ -14460,7 +14557,7 @@ msgstr "Баланс по центру"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align Tracks"
-msgstr "В&ыровнять треки"
+msgstr "В&ыровнять"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Align End to End"
@@ -14480,7 +14577,7 @@ msgstr "Переместить вы&деление и треки"
 
 #: src/menus/TrackMenus.cpp
 msgid "S&ort Tracks"
-msgstr "С&ортировать треки"
+msgstr "С&ортировать"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
@@ -14492,7 +14589,7 @@ msgstr "по и&мени"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync-&Lock Tracks (on/off)"
-msgstr "Син&хронизация треков"
+msgstr "Син&хронизировать"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Track"
@@ -15409,6 +15506,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr ""
 "Использовать диалоги с расположением элементов слева направо для языков с "
 "обратным направлением письма"
+
+#: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr "Не использовать запятую как десятичную точку"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"

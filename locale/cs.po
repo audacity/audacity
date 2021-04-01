@@ -3,9 +3,9 @@
 # Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-04 18:53+0000\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
 "PO-Revision-Date: 2021-03-20 09:04+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -595,8 +595,8 @@ msgstr "Stránky %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2020 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "Kopírovací právo k software %s %s 1999-2020 tým %s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -605,7 +605,6 @@ msgstr "Kopírovací právo k software %s %s 1999-2020 tým %s."
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Název %s je registrovaná ochranná známka Dominica Mazzoniho."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Informace o sestavení"
@@ -618,6 +617,69 @@ msgstr "Povoleno"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Zakázáno"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+#, fuzzy
+msgid "The Build"
+msgstr "Sestavení pro ladění"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Datum sestavení programu:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "ID zápisu (commit):"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Ladicí sestavení (úroveň ladění %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Vydavatelské sestavení (úroveň ladění %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 bitů"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Typ sestavení:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Překladač:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Předpona instalace:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Složka s nastavením:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Základní knihovny"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Knihovna rozhraní pro více systémů"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Přehrávání a nahrávání zvuku"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Převod vzorkovacího kmitočtu"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -660,23 +722,6 @@ msgstr "Nahrávání/ukládání FFmpeg"
 msgid "Import via GStreamer"
 msgstr "Nahrát přes GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Základní knihovny"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Převod vzorkovacího kmitočtu"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Přehrávání a nahrávání zvuku"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Knihovna rozhraní pro více systémů"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Funkce"
@@ -700,46 +745,6 @@ msgstr "Podpora změny výšky tónu a tempa"
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
 msgstr "Podpora změny krajní výšky tónu a tempa"
-
-#: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Datum sestavení programu:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "ID zápisu (commit):"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Ladicí sestavení (úroveň ladění %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Vydavatelské sestavení (úroveň ladění %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64 bitů"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Typ sestavení:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Překladač:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Předpona instalace:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Složka s nastavením:"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1164,19 +1169,18 @@ msgstr ""
 "\n"
 "\t%s\n"
 "\n"
-"To může být způsobeno mnoha důvody, ale nejpravděpodobnější je, že disk"
-"je plný nebo nemáte oprávnění k zápisu do souboru. Více informací"
-"lze získat klepnutím na tlačítko nápovědy níže. \n"
+"To může být způsobeno mnoha důvody, ale nejpravděpodobnější je, že diskje "
+"plný nebo nemáte oprávnění k zápisu do souboru. Více informacílze získat "
+"klepnutím na tlačítko nápovědy níže. \n"
 "\n"
-"Můžete se pokusit problém opravit a poté pokračovat klepnutím na „Zkusit"
-" znovu“. \n"
+"Můžete se pokusit problém opravit a poté pokračovat klepnutím na „Zkusit "
+"znovu“. \n"
 "\n"
-"Pokud se rozhodnete „Ukončit Audacity“, může být váš projekt ponechán v"
-" neuloženém stavu, "
-"který bude obnoven při příštím otevření."
+"Pokud se rozhodnete „Ukončit Audacity“, může být váš projekt ponechán v "
+"neuloženém stavu, který bude obnoven při příštím otevření."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
-#: src/effects/Equalization.cpp src/menus/HelpMenus.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Nápověda"
@@ -1512,8 +1516,8 @@ msgid ""
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Následující projekty nebyly správně uloženy naposledy, co byl Audacity"
-"spuštěn a lze je automaticky obnovit.\n"
+"Následující projekty nebyly správně uloženy naposledy, co byl "
+"Audacityspuštěn a lze je automaticky obnovit.\n"
 "\n"
 "Po obnovení projekty uložte, abyste zajistili zápis změn na disk."
 
@@ -1679,6 +1683,10 @@ msgstr "Použít %s"
 msgid "Macros Palette"
 msgstr "Paleta maker"
 
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Spravovat makra"
+
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
@@ -1802,6 +1810,11 @@ msgstr "Posunout &nahoru"
 msgid "Move &Down"
 msgstr "Posunout &dolů"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "&Uložit"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1844,10 +1857,6 @@ msgstr "Názvy nesmí obsahovat '%c' a '%c'"
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Opravdu chcete vymazat %s?"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Spravovat makra"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -2107,12 +2116,16 @@ msgstr ""
 "zvuk. (S jinými typy stop to nejde.)"
 
 #: src/CrashReport.cpp
-msgid "Report generated to:"
-msgstr "Zpráva vytvořena do:"
-
-#: src/CrashReport.cpp
 msgid "Audacity Support Data"
 msgstr "Data podpory Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "To může trvat několik sekund"
+
+#: src/CrashReport.cpp
+msgid "Report generated to:"
+msgstr "Zpráva vytvořena do:"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2122,10 +2135,6 @@ msgstr "Kontrola projektu"
 #, c-format
 msgid "Checkpointing %s"
 msgstr "Kontrola %s"
-
-#: src/DBConnection.cpp src/ProjectFileIO.cpp
-msgid "This may take several seconds"
-msgstr "To může trvat několik sekund"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2580,6 +2589,10 @@ msgstr "Název souboru nelze převést kvůli použití znaků Unicode."
 msgid "Specify New Filename:"
 msgstr "Zadejte nový název souboru:"
 
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Frekvenční analýza"
+
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
 msgstr "Spektrum"
@@ -2754,10 +2767,6 @@ msgstr "Kmitočet (Hz)\tÚroveň (dB)"
 #: src/FreqWindow.cpp
 msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Prodleva (sekundy)\tKmitočet (Hz)\tÚroveň"
-
-#: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Frekvenční analýza"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
@@ -3235,6 +3244,11 @@ msgstr "Smíchat (spojit) stopy"
 msgid "Mixing and rendering tracks"
 msgstr "Spojit (smíchat) stopy"
 
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Směšovač Audacity %s"
+
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/MixerBoard.cpp src/menus/TrackMenus.cpp
@@ -3294,11 +3308,6 @@ msgstr "Posuvník rychlosti přesunut"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Ovládání vyvážení (panorama) posunuto"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Směšovač Audacity %s"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3954,9 +3963,17 @@ msgstr "<bez názvu>"
 msgid "[Project %02i] "
 msgstr "[Projekt %02i]"
 
-#: src/ProjectFileIO.cpp src/SqliteSampleBlock.cpp
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Nepodařilo se otevřít databázi projektu"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr "Nepodařilo se otevřít %s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4001,6 +4018,13 @@ msgstr ""
 "\n"
 "%s"
 
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
 msgstr "Toto není soubor s projektem Audacity"
@@ -4019,9 +4043,65 @@ msgstr ""
 msgid "Unable to initialize the project file"
 msgstr "Nelze inicializovat soubor s projektem"
 
+#. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
-msgid "Cleanup of orphan blocks failed"
-msgstr "Nepodařilo se uklidit osiřelé bloky"
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to work with the blockfiles"
+msgstr "Nelze inicializovat soubor s projektem"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4039,10 +4119,6 @@ msgstr "Nelze připojit cílovou databázi"
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
 msgstr "Nelze přepnout do režimu rychlého žurnálování"
-
-#: src/ProjectFileIO.cpp
-msgid "Failed to copy tags"
-msgstr "Nepodařilo se zkopírovat značky"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -4118,8 +4194,8 @@ msgstr "Nelze otevřít soubor s projektem"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
-"Nepodařilo se odstranit informaci o automatickém uložení ze souboru s"
-" projektem."
+"Nepodařilo se odstranit informaci o automatickém uložení ze souboru s "
+"projektem."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4134,9 +4210,8 @@ msgid ""
 "The project's database failed to reopen, possibly because of limited space "
 "on the storage device."
 msgstr ""
-"Databázi projektu se nepodařilo znovu otevřít, pravděpodobně kvůli omezenému"
-" prostoru"
-"na úložném zařízení."
+"Databázi projektu se nepodařilo znovu otevřít, pravděpodobně kvůli omezenému "
+"prostoruna úložném zařízení."
 
 #: src/ProjectFileIO.cpp
 msgid "Saving project"
@@ -4171,8 +4246,8 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Nelze odebrat informace o automatickém ukládání, pravděpodobně kvůli"
-" omezenému prostoru\n"
+"Nelze odebrat informace o automatickém ukládání, pravděpodobně kvůli "
+"omezenému prostoru\n"
 "na úložném zařízení.\n"
 "\n"
 "%s"
@@ -4255,8 +4330,8 @@ msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
 msgstr ""
-"Při zápisu na formátovaný souborový systém FAT32 projekt překračuje "
-"největší velikost 4 GB."
+"Při zápisu na formátovaný souborový systém FAT32 projekt překračuje největší "
+"velikost 4 GB."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4440,14 +4515,13 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
-"Scelením tohoto projektu uvolníte místo na disku odstraněním nevyužitých bajtů"
-"v souboru.\n"
+"Scelením tohoto projektu uvolníte místo na disku odstraněním nevyužitých "
+"bajtův souboru.\n"
 "\n"
 "Na disku je %s volného místa a tento projekt aktuálně používá %s.\n"
 "\n"
-"Pokud budete pokračovat, budou aktuální historie kroků Zpět/Znovu a obsah"
-" schránky"
-"zahozeny a obnovíte přibližně %s místa na disku.\n"
+"Pokud budete pokračovat, budou aktuální historie kroků Zpět/Znovu a obsah "
+"schránkyzahozeny a obnovíte přibližně %s místa na disku.\n"
 "\n"
 "Chceš pokračovat?"
 
@@ -4823,6 +4897,10 @@ msgstr "Vyberte místo pro uložení snímků obrazovky"
 msgid "Capture failed!"
 msgstr "Zachytávání selhalo!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Dlouhá zpráva"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4879,6 +4957,11 @@ msgstr "Vítejte v Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Tento dialog už neukazovat"
+
+#: src/SqliteSampleBlock.cpp
+#, fuzzy
+msgid "Connection to project file is null"
+msgstr "Kontrola dat souboru projektu"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5758,10 +5841,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Klávesové zkratky byly odstraněny"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Dlouhá zpráva"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -10190,10 +10269,6 @@ msgstr "Zadat příkaz Nyquist: "
 msgid "&Load"
 msgstr "&Nahrát"
 
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "&Uložit"
-
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
@@ -12101,8 +12176,8 @@ msgid ""
 msgstr ""
 "Audacity se nepodařilo rozpoznat typ souboru '%s'.\n"
 "\n"
-"%sPro nekomprimované soubory vyzkoušejte i Soubor "
-"→ Nahrát → Nezpracovaná data."
+"%sPro nekomprimované soubory vyzkoušejte i Soubor → Nahrát → Nezpracovaná "
+"data."
 
 #: src/import/Import.cpp
 msgid ""
@@ -12211,8 +12286,8 @@ msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
 msgstr ""
-"V souboru projektu byly nalezeny stopy MIDI, ale toto sestavení Audacity"
-"nezahrnuje podporu MIDI, proto se stopa obejde."
+"V souboru projektu byly nalezeny stopy MIDI, ale toto sestavení "
+"Audacitynezahrnuje podporu MIDI, proto se stopa obejde."
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
@@ -13216,10 +13291,6 @@ msgstr "Soubory MIDI"
 #: src/menus/FileMenus.cpp
 msgid "Allegro files"
 msgstr "Soubory Allegro"
-
-#: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Vybrat nekomprimovaný zvukový soubor"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
@@ -15072,8 +15143,8 @@ msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
 msgstr ""
-"Ponechte pole prázdné a přejděte do posledního adresáře použitého pro tuto"
-" operaci.\n"
+"Ponechte pole prázdné a přejděte do posledního adresáře použitého pro tuto "
+"operaci.\n"
 "Vyplňte pole, abyste pro danou operaci vždy přešli do daného adresáře."
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15454,6 +15525,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Použít většinou rozvržení zleva doprava v jazycích RTL"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr ""
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Ukázat nástrojové rady k časové ose"
 
@@ -15797,6 +15872,10 @@ msgstr "Zařízení MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Nastavení vstupu/výstupu MIDI"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Žádná rozhraní MIDI"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15810,10 +15889,6 @@ msgstr "Používá se: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "Prodleva syntetizátoru MIDI (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Žádná rozhraní MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -19552,8 +19627,8 @@ msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
 msgstr ""
-"Označení oblastí mezi zvuky vyžaduje~% alespoň dva zvuky.~%Zjištěn pouze jeden"
-"zvuk."
+"Označení oblastí mezi zvuky vyžaduje~% alespoň dva zvuky.~%Zjištěn pouze "
+"jedenzvuk."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -20625,6 +20700,15 @@ msgstr "Kmitočet jehel radaru (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Chyba.~%Požadována stopa sterea."
 
+#~ msgid "Cleanup of orphan blocks failed"
+#~ msgstr "Nepodařilo se uklidit osiřelé bloky"
+
+#~ msgid "Failed to copy tags"
+#~ msgstr "Nepodařilo se zkopírovat značky"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Vybrat nekomprimovaný zvukový soubor"
+
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
 #~ "It is possible they were moved, deleted, or the drive they were on was "
@@ -20884,8 +20968,8 @@ msgstr "Chyba.~%Požadována stopa sterea."
 #~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
 #~ "%2.0f%% complete."
 #~ msgstr ""
-#~ "Nahrávání dokončeno. Vytváří se %d znázornění křivky. Celkem hotovo %2.0f"
-#~ "%%."
+#~ "Nahrávání dokončeno. Vytváří se %d znázornění křivky. Celkem hotovo %2.0f%"
+#~ "%."
 
 #~ msgid ""
 #~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
@@ -21136,9 +21220,6 @@ msgstr "Chyba.~%Požadována stopa sterea."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software je chráněn "
 #~ "autorskými právy &copy; 1999-2018 družstvo Audacity.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Sestavení pro ladění"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir v DirManager::MakeBlockFilePath se nezdařilo."
