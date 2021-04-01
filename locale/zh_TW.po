@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-11 09:41+0800\n"
+"PO-Revision-Date: 2021-03-31 23:49+0800\n"
 "Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -525,10 +525,17 @@ msgstr "討論區"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"正體中文：<br><ul><li>風逸蘭</li><li><a href=\"mailto:snowwolf1001@gmail.com"
-"\">mkpoli</a>, 2017.</li><li><a href=\"mailto:pan93412@gmail.com\">pan93412</"
-"a>, 2019, 2020.</li><li><a href=\"mailto:wwycheuk@gmail.com\">Walter Cheuk</"
-"a>, 2019.</li></ul>"
+"正體中文：<br><ul>\n"
+"<li>風逸蘭</li>\n"
+"<li><a href=\\\"mailto:snowwolf1001@gmail.com\"\n"
+"\"\\\">mkpoli</a>, 2017.</li>\n"
+"<li><a href=\\\"mailto:pan93412@gmail.com\\\">pan93412</\"\n"
+"\"a>, 2019, 2020.</li>\n"
+"<li><a href=\\\"mailto:wwycheuk@gmail.com\\\">Walter Cheuk</\"\n"
+"\"a>, 2019.</li>\n"
+"<li>傑西大叔\",  2021.</li>\n"
+"\n"
+"</ul>"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -601,9 +608,9 @@ msgstr "%s 網站："
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "%s 軟體的著作權歸屬於 %s 1999-2020 %s Team。"
+msgstr "%s 軟體的著作權歸屬於 %s 1999-2021 %s Team。"
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -626,9 +633,8 @@ msgstr "未啟用"
 
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "The Build"
-msgstr "除錯版本"
+msgstr "版本編號"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -3915,20 +3921,23 @@ msgid "Failed to open the project's database"
 msgstr "無法開啟專案資料庫"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "無法開啟 %s"
+msgstr ""
+"無法開啟專案資料庫檔案:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
-msgstr "無法捨棄連線"
+msgstr "無法捨棄資料檔案連線"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to restore connection"
-msgstr "無法復原連線"
+msgstr "無法復原資料檔案連線"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -3971,10 +3980,12 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"專案檔案在一個唯讀的資料夾\n"
+"(無法產生系統需要的暫存檔案)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
-msgstr "這並非 Audacity 專案檔案"
+msgstr "這不是 Audacity 專案檔案"
 
 #: src/ProjectFileIO.cpp
 msgid ""
@@ -3994,6 +4005,8 @@ msgstr "無法初始化專案檔案"
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+"無法處理崁入檔案\n"
+"(無法驗證blockids存儲)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4001,6 +4014,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"專案檔案目前是唯讀狀態\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4008,6 +4023,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"專案檔案被鎖定\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4015,6 +4032,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"專案目前忙碌當中\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4022,6 +4041,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"專案發生損壞\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4029,6 +4050,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"發生存取權限問題\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4036,6 +4059,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"磁碟存取發生錯誤\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4043,12 +4068,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"無法授權\n"
+"(無法處理專案區塊檔案)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "無法初始化專案檔案"
+msgstr "無法初始化專案區塊檔案"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4567,9 +4593,9 @@ msgid ""
 msgstr "位於 %s 的外掛程式項目與先前定義的項目衝突，且已捨棄"
 
 #: src/Registry.cpp
-#, c-format
+#, fuzzy, c-format
 msgid "Plug-in items at %s specify conflicting placements"
-msgstr ""
+msgstr "位於 %s 的外掛程式項目與先前定義的項目"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -4884,9 +4910,8 @@ msgid "Don't show this again at start up"
 msgstr "啟動時不再顯示本視窗"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "正在檢查專案檔案資料"
+msgstr "連接專案時檔案不存在"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -5013,7 +5038,7 @@ msgstr ""
 "重設回預設目錄。"
 
 #: src/TempDirectory.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "%s\n"
 "\n"
@@ -8408,7 +8433,6 @@ msgid "Unknown built-in effect name"
 msgstr "未知內建效果名稱"
 
 #: src/effects/Loudness.cpp
-#, fuzzy
 msgid "perceived loudness"
 msgstr "將響度正規化為"
 
@@ -8519,7 +8543,6 @@ msgid "Hann, none"
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
-#, fuzzy
 msgid "Hann, Hann (default)"
 msgstr "4（預設值）"
 
@@ -8862,7 +8885,6 @@ msgid "Paulstretch"
 msgstr "Paulstretch"
 
 #: src/effects/Paulstretch.cpp
-#, fuzzy
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr "使用 Paulstretch 僅在極端的時間拉伸或者「停滯」效果"
 
@@ -12116,7 +12138,6 @@ msgid ""
 msgstr ""
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'maxsamples' attribute."
 msgstr "無效的取樣頻率"
 
@@ -12125,7 +12146,6 @@ msgid "Invalid sequence 'sampleformat' attribute."
 msgstr ""
 
 #: src/import/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid sequence 'numsamples' attribute."
 msgstr "無效的取樣頻率"
 
@@ -13231,7 +13251,6 @@ msgid "No quick, easily fixed problems were found"
 msgstr "找不到可以快速修正的問題"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Clocks on the Tracks"
 msgstr "關閉焦點軌道(&C)"
 
@@ -16169,7 +16188,6 @@ msgid "0 means endless"
 msgstr "0 表示無限"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Punch and Roll Recording"
 msgstr "聲控啟動錄製"
 
@@ -17828,12 +17846,10 @@ msgid "Scru&bbing"
 msgstr "跟隨播放(&B)"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Scrub Bac&kwards"
 msgstr "後退"
 
 #: src/tracks/ui/Scrubbing.cpp
-#, fuzzy
 msgid "Scrub For&wards"
 msgstr "前進"
 
@@ -17895,7 +17911,6 @@ msgid "Click and drag to move a track in time"
 msgstr "點選並拖動以移動在時間範圍內的軌道"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, fuzzy
 msgid "Could not shift between tracks"
 msgstr "在軌道之間上下移動剪輯"
 
@@ -18434,7 +18449,7 @@ msgstr "010,01000>0100 赫茲"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
-msgstr ""
+msgstr "centihertz"
 
 #. i18n-hint: Name of display format that shows frequency in kilohertz
 #: src/widgets/NumericTextCtrl.cpp
@@ -18451,7 +18466,7 @@ msgstr "01000>01000 kHz|0.001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
-msgstr ""
+msgstr "hertz"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in octaves
