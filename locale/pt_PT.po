@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-10 14:57+0000\n"
+"PO-Revision-Date: 2021-03-31 23:54+0100\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -596,9 +596,9 @@ msgstr "%s website: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "%s software is copyright %s 1999-2020 %s Team."
+msgstr "%s software is copyright %s 1999-2021 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -621,9 +621,8 @@ msgstr "Desligado"
 
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "The Build"
-msgstr "Depurar compilação"
+msgstr "A Compilação"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -3192,7 +3191,7 @@ msgstr "Sistema"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
-msgstr "Erro ao Guardar Ficheiro de Projeto"
+msgstr "Erro ao Converter Ficheiro de Projeto Legado"
 
 #: src/Legacy.cpp
 #, c-format
@@ -3882,7 +3881,7 @@ msgstr "Fechar projeto imediatamente sem mais alterações"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Alias Summary File(s)"
-msgstr "Aviso - Sumário do ficheiro de áudio externo não encontrado"
+msgstr "Aviso - Ficheiro(s) de Resumo de Alias Ausente(s)"
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -3988,12 +3987,15 @@ msgid "Failed to open the project's database"
 msgstr "Falha ao abrir a base de dados do projeto"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "Falhou ao abrir %s"
+msgstr ""
+"Falha ao abrir ficheiro base de dados:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4010,7 +4012,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Falha ao executar o comando de ficheiro de projeto:\n"
+"Falha ao executar o comando de um ficheiro projeto:\n"
 "\n"
 "%s"
 
@@ -4021,7 +4023,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Incapaz de preparar o comando de ficheiro de projeto:\n"
+"Incapaz de preparar o comando de um ficheiro projeto:\n"
 "\n"
 "%s"
 
@@ -4044,6 +4046,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"O projeto está num diretório apenas de leitura\n"
+"(Impossível criar os ficheiros temporários necessários)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4066,7 +4070,7 @@ msgstr "Não foi possível iniciar o ficheiro de projeto"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
+msgstr "Impossível adicionar a função 'inset' (não pode verificar blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4074,6 +4078,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto é apenas de leitura\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4081,6 +4087,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto está bloqueado\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4088,6 +4096,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto está ocupado\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4095,6 +4105,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto está corrompido\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4102,6 +4114,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Algum erro de permissões\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4109,6 +4123,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Um erro I/O de disco\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4116,12 +4132,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Não autorizado\n"
+"(Impossível trabalhar com os blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "Não foi possível iniciar o ficheiro de projeto"
+msgstr "Impossível trabalhar com os blockfiles"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4933,7 +4950,7 @@ msgstr ""
 
 #: src/Sequence.cpp
 msgid "Warning - Truncating Overlong Block File"
-msgstr "Aviso - Truncando Ficheiro de Bloco Superlongo"
+msgstr "Aviso - Truncando Ficheiro de Bloco Demasiado Longo"
 
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
@@ -4980,9 +4997,8 @@ msgid "Don't show this again at start up"
 msgstr "Não mostrar novamente ao iniciar"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "A inspecionar os dados do ficheiro do projeto"
+msgstr "A ligação ao ficheiro projeto é nula"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -7051,7 +7067,7 @@ msgstr "Rácio: %.1f para 1"
 
 #: src/effects/Compressor.cpp
 msgid "&Noise Floor:"
-msgstr "Limite &Base do Ruído:"
+msgstr "&Noise Floor:"
 
 #: src/effects/Compressor.cpp src/effects/Distortion.cpp
 msgid "Noise Floor"
@@ -7112,7 +7128,7 @@ msgstr "Limite %d dB"
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "Noise Floor %d dB"
-msgstr "Piso de Ruído %d dB"
+msgstr "Noise Floor %d dB"
 
 #: src/effects/Compressor.cpp
 #, c-format
@@ -7483,23 +7499,23 @@ msgstr "Distorção de Expansão Cerrada"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Light, -70dB noise floor"
-msgstr "Nivelador, Leve, -70dB piso de ruído"
+msgstr "Nivelador, Leve, -70dB noise floor"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Nivelador, Moderado, -70dB piso de ruído"
+msgstr "Nivelador, Moderado, -70dB noise floor"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Nivelador, Pesado, -70dB piso de ruído"
+msgstr "Nivelador, Pesado, -70dB noise floor"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Nivelador, Forte, -70dB piso de ruído"
+msgstr "Nivelador, Mais Pesado, -70dB noise floor"
 
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Nivelador, Carregado, -70dB piso de ruído"
+msgstr "Nivelador, Muito Pesado, -70dB noise floor"
 
 #: src/effects/Distortion.cpp
 msgid "Half-wave Rectifier"
@@ -15571,7 +15587,7 @@ msgstr "Utilizar mais layouts Left-to-Right em idiomas RTL"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "Nunca use vírgula como ponto decimal"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -19766,11 +19782,11 @@ msgstr "Ligação estéreo"
 
 #: plug-ins/noisegate.ny
 msgid "Link Stereo Tracks"
-msgstr "Ligar Faixas Stereo"
+msgstr "Ligar Faixas Estéreo"
 
 #: plug-ins/noisegate.ny
 msgid "Don't Link Stereo"
-msgstr "Não Ligar Stereo"
+msgstr "Não Ligar Estéreo"
 
 #: plug-ins/noisegate.ny
 msgid "Gate threshold (dB)"
