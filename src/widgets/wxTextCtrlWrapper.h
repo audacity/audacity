@@ -31,6 +31,20 @@ public:
       const wxString &name = wxTextCtrlNameStr)
    :  wxTextCtrl(parent, id, value, pos, size, style, validator, name)
    {
+      mReadOnly = false;
+
+      Bind(wxEVT_CHAR, [&](wxKeyEvent &event)
+      {
+         auto keyCode = event.GetUnicodeKey();
+         if (!mReadOnly || keyCode < WXK_SPACE || keyCode == WXK_DELETE)
+         {
+            event.Skip();
+         }
+         else
+         {
+            event.Skip(false);
+         }
+      });
    };
 
    ~wxTextCtrlWrapper()
@@ -41,6 +55,19 @@ public:
    {
       return true;
    }
+
+   bool IsReadOnly()
+   {
+      return mReadOnly;
+   }
+
+   void SetReadOnly(bool readonly = true)
+   {
+      mReadOnly = readonly;
+   }
+
+private:
+   bool mReadOnly;
 };
 
 #endif // __AUDACITY_WXTEXTCTRLWRAPPER__

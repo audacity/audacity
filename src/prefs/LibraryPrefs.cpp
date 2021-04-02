@@ -29,6 +29,7 @@ MP3 and FFmpeg encoding libraries.
 #include "../export/ExportMP3.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/wxTextCtrlWrapper.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,32 +102,9 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartTwoColumn();
       {
-         S.AddVariableText(XO("MP3 Library Version:"),
-            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         // Change this text later:
-         mMP3Version = S.AddVariableText(Verbatim("9.99"),
-            true, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-// Old buttons, not needed now that the lib is built-in.
-#ifndef MP3_EXPORT_BUILT_IN
-
-         S.AddVariableText(XO("LAME MP3 Library:"),
-            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_MP3_FIND_BUTTON)
-#ifdef DISABLE_DYNAMIC_LOADING_LAME
-             .Disable()
-#endif
-            .AddButton(XXO("&Locate..."),
-                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-         S.AddVariableText(XO("LAME MP3 Library:"),
-            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
-         S.Id(ID_MP3_DOWN_BUTTON)
-#ifdef DISABLE_DYNAMIC_LOADING_LAME
-             .Disable()
-#endif
-            .AddButton(XXO("&Download"),
-                       wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
-
-#endif
+         mMP3Version = S
+           .AddTextBox(XO("MP3 Library Version:"), "", 50);
+         ((wxTextCtrlWrapper *) mMP3Version)->SetReadOnly();
       }
       S.EndTwoColumn();
    }
@@ -136,17 +114,17 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartTwoColumn();
       {
-         S.AddVariableText(XO("FFmpeg Library Version:"),
-            true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
+         auto version =
 #if defined(USE_FFMPEG)
-         mFFmpegVersion = S.AddVariableText(
-            XO("No compatible FFmpeg library was found"),
-            true, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+            XO("No compatible FFmpeg library was found");
 #else
-         mFFmpegVersion = S.AddVariableText(
-            XO("FFmpeg support is not compiled in"),
-            true, wxALL | wxALIGN_LEFT | wxALIGN_CENTRE_VERTICAL);
+            XO("FFmpeg support is not compiled in");
 #endif
+
+         mFFmpegVersion = S
+           .AddTextBox(XO("FFmpeg Library Version:"), version.Translation(), 50);
+         ((wxTextCtrlWrapper *) mFFmpegVersion)->SetReadOnly();
+
          S.AddVariableText(XO("FFmpeg Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
          S.Id(ID_FFMPEG_FIND_BUTTON);
@@ -177,7 +155,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 /// of the MP3 Library version.
 void LibraryPrefs::SetMP3VersionText(bool prompt)
 {
-   mMP3Version->SetLabel(GetMP3Version(this, prompt).Translation());
+   mMP3Version->SetValue(GetMP3Version(this, prompt).Translation());
    mMP3Version->SetName(mMP3Version->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
@@ -197,7 +175,7 @@ void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 
 void LibraryPrefs::SetFFmpegVersionText()
 {
-   mFFmpegVersion->SetLabel(GetFFmpegVersion().Translation());
+   mFFmpegVersion->SetValue(GetFFmpegVersion().Translation());
    mFFmpegVersion->SetName(mFFmpegVersion->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
