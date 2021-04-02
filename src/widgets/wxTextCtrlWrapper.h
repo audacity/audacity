@@ -33,17 +33,19 @@ public:
    {
       mReadOnly = false;
 
-      Bind(wxEVT_CHAR, [&](wxKeyEvent &event)
+      Bind(wxEVT_KEY_DOWN, [&](wxKeyEvent &event)
       {
-         auto keyCode = event.GetUnicodeKey();
-         if (!mReadOnly || keyCode < WXK_SPACE || keyCode == WXK_DELETE)
+         auto keyCode = event.GetKeyCode();
+         if (mReadOnly)
          {
-            event.Skip();
+            if (keyCode >= WXK_SPACE || keyCode == WXK_DELETE || keyCode == WXK_BACK)
+            {
+               event.Skip(false);
+               return;
+            }
          }
-         else
-         {
-            event.Skip(false);
-         }
+
+         event.Skip();
       });
    };
 
