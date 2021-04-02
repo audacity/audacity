@@ -854,7 +854,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                m_pTimerSavePathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOSAVEPATH_TEXT,
                   XO("Save Project As:"), sInitialValue);
-               m_pTimerSavePathTextCtrl->SetEditable(false);
+               m_pTimerSavePathTextCtrl->SetReadOnly(true);
                S.AddWindow(m_pTimerSavePathTextCtrl);
                m_pTimerSavePathButtonCtrl = S.Id(ID_AUTOSAVEPATH_BUTTON).AddButton(XXO("Select..."));
                }
@@ -871,7 +871,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                m_pTimerExportPathTextCtrl = NewPathControl(
                   S.GetParent(), ID_AUTOEXPORTPATH_TEXT,
                   XO("Export Project As:"), {});
-               m_pTimerExportPathTextCtrl->SetEditable(false);
+               m_pTimerExportPathTextCtrl->SetReadOnly(true);
                S.AddWindow(m_pTimerExportPathTextCtrl);
                m_pTimerExportPathButtonCtrl = S.Id(ID_AUTOEXPORTPATH_BUTTON).AddButton(XXO("Select..."));
             }

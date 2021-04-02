@@ -329,15 +329,22 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
       {
          // Row 1
          S.SetBorder(1);
-         mTrack = S.Id(TrackID)
-            .AddRadioButton(XXO("Tracks"));
 
-         // Row 2
-         S.SetBorder(1);
-         mLabel = S.Id(LabelID)
-            .AddRadioButtonToGroup(XXO("Labels"));
+         // Bug 2692: Place button group in panel so tabbing will work and,
+         // on the Mac, VoiceOver will announce as radio buttons.
+         S.StartPanel();
+         {
+            mTrack = S.Id(TrackID)
+               .AddRadioButton(XXO("Tracks"));
+
+            // Row 2
+            S.SetBorder(1);
+            mLabel = S.Id(LabelID)
+               .AddRadioButtonToGroup(XXO("Labels"));
+         }
+         S.EndPanel();
+
          S.SetBorder(3);
-
          S.StartMultiColumn(2, wxEXPAND);
          S.SetStretchyCol(1);
          {
@@ -372,23 +379,30 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
       S.StartStatic(XO("Name files:"), 1);
       {
          S.SetBorder(2);
-         S.StartRadioButtonGroup({
-            wxT("/Export/TrackNameWithOrWithoutNumbers"),
-            {
-               { wxT("labelTrack"), XXO("Using Label/Track Name") },
-               { wxT("numberBefore"), XXO("Numbering before Label/Track Name") },
-               { wxT("numberAfter"), XXO("Numbering after File name prefix") },
-            },
-            0 // labelTrack
-         });
+
+         // Bug 2692: Place button group in panel so tabbing will work and,
+         // on the Mac, VoiceOver will announce as radio buttons.
+         S.StartPanel();
          {
-            mByName = S.Id(ByNameID).TieRadioButton();
+            S.StartRadioButtonGroup({
+               wxT("/Export/TrackNameWithOrWithoutNumbers"),
+               {
+                  { wxT("labelTrack"), XXO("Using Label/Track Name") },
+                  { wxT("numberBefore"), XXO("Numbering before Label/Track Name") },
+                  { wxT("numberAfter"), XXO("Numbering after File name prefix") },
+               },
+               0 // labelTrack
+            });
+            {
+               mByName = S.Id(ByNameID).TieRadioButton();
 
-            mByNumberAndName = S.Id(ByNameAndNumberID).TieRadioButton();
+               mByNumberAndName = S.Id(ByNameAndNumberID).TieRadioButton();
 
-            mByNumber = S.Id(ByNumberID).TieRadioButton();
+               mByNumber = S.Id(ByNumberID).TieRadioButton();
+            }
+            S.EndRadioButtonGroup();
          }
-         S.EndRadioButtonGroup();
+         S.EndPanel();
 
          S.StartMultiColumn(3, wxEXPAND);
          S.SetStretchyCol(2);

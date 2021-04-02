@@ -345,18 +345,25 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
             S.StartTwoColumn();
             {
                S.AddPrompt(XXO("Bit Rate Mode:"));
-               S.StartHorizontalLay();
+
+               // Bug 2692: Place button group in panel so tabbing will work and,
+               // on the Mac, VoiceOver will announce as radio buttons.
+               S.StartPanel();
                {
-                  S.StartRadioButtonGroup(MP3RateModeSetting);
+                  S.StartHorizontalLay();
                   {
-                     mSET = S.Id(ID_SET).TieRadioButton();
-                     mVBR = S.Id(ID_VBR).TieRadioButton();
-                     mABR = S.Id(ID_ABR).TieRadioButton();
-                     mCBR = S.Id(ID_CBR).TieRadioButton();
+                     S.StartRadioButtonGroup(MP3RateModeSetting);
+                     {
+                        mSET = S.Id(ID_SET).TieRadioButton();
+                        mVBR = S.Id(ID_VBR).TieRadioButton();
+                        mABR = S.Id(ID_ABR).TieRadioButton();
+                        mCBR = S.Id(ID_CBR).TieRadioButton();
+                     }
+                     S.EndRadioButtonGroup();
                   }
-                  S.EndRadioButtonGroup();
+                  S.EndHorizontalLay();
                }
-               S.EndHorizontalLay();
+               S.EndPanel();
 
                /* PRL: unfortunately this bit of procedural code must
                 interrupt the mostly-declarative dialog description, until
@@ -407,20 +414,30 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                      varModeNames );
    
                S.AddPrompt(XXO("Channel Mode:"));
-               S.StartMultiColumn(3, wxEXPAND);
+               S.StartMultiColumn(2, wxEXPAND);
                {
-                  S.StartRadioButtonGroup(MP3ChannelModeSetting);
+                  // Bug 2692: Place button group in panel so tabbing will work and,
+                  // on the Mac, VoiceOver will announce as radio buttons.
+                  S.StartPanel();
                   {
-                     mJoint = S.Disable(mono)
-                        .TieRadioButton();
-                     mStereo = S.Disable(mono)
-                        .TieRadioButton();
+                     S.StartHorizontalLay();
+                     {
+                        S.StartRadioButtonGroup(MP3ChannelModeSetting);
+                        {
+                           mJoint = S.Disable(mono)
+                              .TieRadioButton();
+                           mStereo = S.Disable(mono)
+                              .TieRadioButton();
+                        }
+                        S.EndRadioButtonGroup();
+                     }
+                     S.EndHorizontalLay();
                   }
-                  S.EndRadioButtonGroup();
+                  S.EndPanel();
 
                   mMono = S.Id(ID_MONO).AddCheckBox(XXO("Force export to mono"), mono);
                }
-               S.EndTwoColumn();
+               S.EndMultiColumn();
             }
             S.EndTwoColumn();
          }
