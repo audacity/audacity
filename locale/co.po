@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-05 18:43+0100\n"
+"PO-Revision-Date: 2021-04-01 20:55+0200\n"
 "Last-Translator: \n"
 "Language-Team: Patriccollu di Santa Maria è Sichè\n"
 "Language: co\n"
@@ -597,10 +597,10 @@ msgstr "Situ web di %s : "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
-"U prugramma %s hè prutettu da diritti di copia %s 1999-2020 da a squadra %s."
+"U prugramma %s hè prutettu da diritti di copia %s 1999-2021 da a squadra %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -624,7 +624,7 @@ msgstr "Disattivatu"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr ""
+msgstr "Custruzzione"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -3990,12 +3990,15 @@ msgid "Failed to open the project's database"
 msgstr "Fiascu per apre a basa di dati di u prughjettu"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "Fiascu per apre %s"
+msgstr ""
+"Fiascu per apre u schedariu di basa di dati :\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4046,6 +4049,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"U prughjettu si trova in un cartulare solu in lettura\n"
+"(Impussibule di creacci i schedarii timpurarii richiesti)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4069,6 +4074,7 @@ msgstr "Impussibule d’inizià u schedariu di prughjettu"
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+"Impussibule d’aghjunghje a funzione « inset » (ùn si pò verificà i blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4076,6 +4082,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"U prughjettu hè in lettura sola\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4083,6 +4091,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"U prughjettu hè ammarchjunatu\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4090,6 +4100,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"U prughjettu hè affaccendatu\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4097,6 +4109,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"U prughjettu hè alteratu\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4104,6 +4118,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Certi penseri di permessu\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4111,6 +4127,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Un sbagliu d’E/S nant’à u discu\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4118,12 +4136,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Micca auturizatu\n"
+"(Impussibule di funziunà cù i schedarii di bloccu)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "Impussibule d’inizià u schedariu di prughjettu"
+msgstr "Impussibule di funziunà cù i schedarii di bloccu"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4989,9 +5008,8 @@ msgid "Don't show this again at start up"
 msgstr "Ùn affissà più stu messaghju à u lanciu"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "Inspezzione di i dati di u schedarii di prughjettu"
+msgstr "A cunnessione à u prughjettu hè nulla"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -15619,7 +15637,7 @@ msgstr ""
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "Ùn mai impiegà a virgula cum’è puntu decimale"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
