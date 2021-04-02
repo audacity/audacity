@@ -24,6 +24,7 @@
 
 #include <wx/app.h>
 #include <wx/defs.h>
+#include <locale>
 
 #include "../FileNames.h"
 #include "../Languages.h"
