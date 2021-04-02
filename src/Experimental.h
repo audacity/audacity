@@ -251,4 +251,7 @@
 // Jonatã Bolzan Loss 31 Dec 2019
 #define EXPERIMENTAL_TIMER_TOOLBAR
 
+// Poke 13 Nov 2019
+#define EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+
 #endif

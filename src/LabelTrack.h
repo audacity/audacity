@@ -13,8 +13,12 @@
 #ifndef _LABELTRACK_
 #define _LABELTRACK_
 
+#include "Experimental.h"
 #include "SelectedRegion.h"
 #include "Track.h"
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+#include "FileNames.h"
+#endif
 
 
 class wxTextFile;
@@ -25,6 +29,15 @@ class TimeWarper;
 
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
+
+enum class LabelFormat
+{
+   TEXT,
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   SUBRIP,
+   WEBVTT,
+#endif
+};
 
 class LabelStruct
 {
@@ -44,9 +57,9 @@ public:
    void MoveLabel( int iEdge, double fNewTime);
 
    struct BadFormatException {};
-   static LabelStruct Import(wxTextFile &file, int &index);
+   static LabelStruct Import(wxTextFile &file, int &index, LabelFormat format);
 
-   void Export(wxTextFile &file) const;
+   void Export(wxTextFile &file, LabelFormat format, int index) const;
 
    /// Relationships between selection region and labels
    enum TimeRelations
@@ -103,7 +116,12 @@ class AUDACITY_DLL_API LabelTrack final
    double GetEndTime() const override;
 
    using Holder = std::shared_ptr<LabelTrack>;
-   
+
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   static const FileNames::FileType SubripFiles;
+   static const FileNames::FileType WebVTTFiles;
+#endif
+
 private:
    Track::Holder Clone() const override;
 
@@ -122,8 +140,9 @@ public:
    void Silence(double t0, double t1) override;
    void InsertSilence(double t, double len) override;
 
-   void Import(wxTextFile & f);
-   void Export(wxTextFile & f) const;
+   static LabelFormat FormatForFileName(const wxString & fileName);
+   void Import(wxTextFile & f, LabelFormat format);
+   void Export(wxTextFile & f, LabelFormat format) const;
 
    int GetNumLabels() const;
    const LabelStruct *GetLabel(int index) const;
