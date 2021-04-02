@@ -270,6 +270,7 @@ wxString GUIPrefs::InitLang( wxString langCode )
 }
 
 static std::unique_ptr<wxLocale> sLocale;
+static wxString sLocaleName;
 
 wxString GUIPrefs::SetLang( const wxString & lang )
 {
@@ -337,7 +338,14 @@ wxString GUIPrefs::SetLang( const wxString & lang )
       wxApp::s_macHelpMenuTitleName = _("&Help");
 #endif
 
+   sLocaleName = wxSetlocale(LC_ALL, NULL);
+
    return result;
+}
+
+wxString GUIPrefs::GetLocaleName()
+{
+   return sLocaleName;
 }
 
 wxString GUIPrefs::GetLang()
