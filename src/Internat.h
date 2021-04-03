@@ -16,7 +16,7 @@
 
 #include <wx/longlong.h>
 
-#ifndef IN_RC
+#ifndef RC_INVOKED
 #include "audacity/Types.h"
 
 class wxArrayString;
