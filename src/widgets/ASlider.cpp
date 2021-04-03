@@ -1532,6 +1532,15 @@ void LWSlider::Refresh()
       mParent->Refresh(false);
 }
 
+void LWSlider::Redraw()
+{
+   mBitmap.reset();
+   mThumbBitmap.reset();
+   mThumbBitmapHilited.reset();
+
+   Refresh();
+}
+
 bool LWSlider::GetEnabled() const
 {
    return mEnabled;
@@ -1614,6 +1623,18 @@ ASlider::~ASlider()
 {
    if(HasCapture())
       ReleaseMouse();
+}
+
+bool ASlider::SetBackgroundColour(const wxColour& colour)
+{
+   auto res = wxPanel::SetBackgroundColour(colour);
+
+   if (res && mLWSlider)
+   {
+      mLWSlider->Redraw();
+   }
+
+   return res;
 }
 
 void ASlider::OnSlider(wxCommandEvent &event)

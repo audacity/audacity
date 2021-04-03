@@ -176,52 +176,53 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Key Bindings"), 1);
    {
-      S.StartMultiColumn(3, wxEXPAND);
+      S.StartHorizontalLay(wxEXPAND, 0);
       {
-         S.SetStretchyCol(1);
+         S.Position(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL).AddTitle(XO("View by:"));
 
-         S.StartHorizontalLay(wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+         // Bug 2692: Place button group in panel so tabbing will work and,
+         // on the Mac, VoiceOver will announce as radio buttons.
+         S.StartPanel();
          {
-            S.AddTitle(XO("View by:"));
-            S.StartRadioButtonGroup({
-               wxT("/Prefs/KeyConfig/ViewBy"),
-               {
-                  { wxT("tree"), XXO("&Tree") },
-                  { wxT("name"), XXO("&Name") },
-                  { wxT("key"), XXO("&Key") },
-               },
-               0 // tree
-            });
+            S.StartHorizontalLay();
             {
-               mViewByTree = S.Id(ViewByTreeID)
-                  .Name(XO("View by tree"))
-                  .TieRadioButton();
-               mViewByName = S.Id(ViewByNameID)
-                  .Name(XO("View by name"))
-                  .TieRadioButton();
-               mViewByKey = S.Id(ViewByKeyID)
-                  .Name(XO("View by key"))
-                  .TieRadioButton();
-#if wxUSE_ACCESSIBILITY
-               // so that name can be set on a standard control
-               if (mViewByTree) mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
-               if (mViewByName) mViewByName->SetAccessible(safenew WindowAccessible(mViewByName));
-               if (mViewByKey) mViewByKey->SetAccessible(safenew WindowAccessible(mViewByKey));
+               S.StartRadioButtonGroup({
+                  wxT("/Prefs/KeyConfig/ViewBy"),
+                  {
+                     { wxT("tree"), XXO("&Tree") },
+                     { wxT("name"), XXO("&Name") },
+                     { wxT("key"), XXO("&Key") },
+                  },
+                  0 // tree
+               });
+               {
+                  mViewByTree = S.Id(ViewByTreeID)
+                     .Name(XO("View by tree"))
+                     .TieRadioButton();
+                  mViewByName = S.Id(ViewByNameID)
+                     .Name(XO("View by name"))
+                     .TieRadioButton();
+                  mViewByKey = S.Id(ViewByKeyID)
+                     .Name(XO("View by key"))
+                     .TieRadioButton();
+#if !defined(__WXMAC__) && wxUSE_ACCESSIBILITY
+                  // so that name can be set on a standard control
+                  if (mViewByTree) mViewByTree->SetAccessible(safenew WindowAccessible(mViewByTree));
+                  if (mViewByName) mViewByName->SetAccessible(safenew WindowAccessible(mViewByName));
+                  if (mViewByKey) mViewByKey->SetAccessible(safenew WindowAccessible(mViewByKey));
 #endif
+               }
+               S.EndRadioButtonGroup();
             }
-            S.EndRadioButtonGroup();
+            S.EndHorizontalLay();
          }
-         S.EndHorizontalLay();
+         S.EndPanel();
 
-         S.StartHorizontalLay(wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 0);
-         {
-            // just a spacer
-         }
-         S.EndHorizontalLay();
+         S.AddSpace(wxDefaultCoord, wxDefaultCoord, 1);
 
-         S.StartHorizontalLay(wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+         S.StartHorizontalLay(wxALIGN_CENTER_VERTICAL, 0);
          {
-            mFilterLabel = S.AddVariableText(XO("Searc&h:"));
+            mFilterLabel = S.Position(wxALIGN_CENTER_VERTICAL).AddVariableText(XO("Searc&h:"));
 
             if (!mFilter) {
                mFilter = safenew wxTextCtrl(S.GetParent(),
@@ -245,8 +246,9 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
       }
-      S.EndThreeColumn();
-      S.AddSpace(-1, 2);
+      S.EndHorizontalLay();
+
+      S.AddSpace(wxDefaultCoord, 2);
 
       S.StartHorizontalLay(wxEXPAND, 1);
       {
@@ -273,7 +275,7 @@ void KeyConfigPrefs::PopulateOrExchange(ShuttleGui & S)
                                   wxSize(210, -1),
 #endif
                                   wxTE_PROCESS_ENTER);
-#if wxUSE_ACCESSIBILITY
+#if !defined(__WXMAC__) && wxUSE_ACCESSIBILITY
             // so that name can be set on a standard control
             mKey->SetAccessible(safenew WindowAccessible(mKey));
 #endif

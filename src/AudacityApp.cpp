@@ -1548,6 +1548,21 @@ bool AudacityApp::InitPart2()
    }
 #endif
 
+#if defined(__WXMAC__)
+   // Bug 2709: Workaround CoreSVG locale issue
+   Bind(wxEVT_MENU_OPEN, [=](wxMenuEvent &event)
+   {
+      wxSetlocale(LC_NUMERIC, wxString(wxT("C")));
+      event.Skip();
+   });
+
+   Bind(wxEVT_MENU_CLOSE, [=](wxMenuEvent &event)
+   {
+      wxSetlocale(LC_NUMERIC, GUIPrefs::GetLocaleName());
+      event.Skip();
+   });
+#endif
+
    return TRUE;
 }
 

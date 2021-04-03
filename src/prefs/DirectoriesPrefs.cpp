@@ -36,6 +36,7 @@
 #include "../ShuttleGui.h"
 #include "../TempDirectory.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/wxTextCtrlWrapper.h"
 
 using namespace FileNames;
 using namespace TempDirectory;
@@ -245,9 +246,9 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
          S.Id(TempButtonID).AddButton(XXO("Brow&se..."));
 
          S.AddPrompt(XXO("&Free Space:"));
-         mFreeSpace = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 30);
-         if( mFreeSpace )
-            mFreeSpace->SetName(XO("Free Space").Translation());
+         mFreeSpace = S.AddTextBox({}, wxT(""), 30);
+         mFreeSpace->SetName(XO("Free Space").Translation());
+         ((wxTextCtrlWrapper *) mFreeSpace)->SetReadOnly();
       }
       S.EndMultiColumn();
    }

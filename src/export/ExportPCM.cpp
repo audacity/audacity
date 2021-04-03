@@ -611,7 +611,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
 
       {
          std::vector<char> dither;
-         if (info.format & SF_FORMAT_PCM_24) {
+         if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
             dither.reserve(maxBlockLen * info.channels * SAMPLE_SIZE(int24Sample));
          }
 
@@ -638,7 +638,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
             samplePtr mixed = mixer->GetBuffer();
 
             // Bug 1572: Not ideal, but it does add the desired dither
-            if (info.format & SF_FORMAT_PCM_24) {
+            if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
                for (int c = 0; c < info.channels; ++c) {
                   CopySamples(
                      mixed + (c * SAMPLE_SIZE(format)), format,

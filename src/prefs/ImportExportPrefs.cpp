@@ -110,12 +110,18 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("When exporting tracks to an audio file"));
    {
-      S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);
+      // Bug 2692: Place button group in panel so tabbing will work and,
+      // on the Mac, VoiceOver will announce as radio buttons.
+      S.StartPanel();
       {
-         S.TieRadioButton();
-         S.TieRadioButton();
+         S.StartRadioButtonGroup(ImportExportPrefs::ExportDownMixSetting);
+         {
+            S.TieRadioButton();
+            S.TieRadioButton();
+         }
+         S.EndRadioButtonGroup();
       }
-      S.EndRadioButtonGroup();
+      S.EndPanel();
 
       S.TieCheckBox(XXO("S&how Metadata Tags editor before export"),
                     {wxT("/AudioFiles/ShowId3Dialog"),
@@ -129,24 +135,36 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Exported Label Style:"));
    {
-      S.StartRadioButtonGroup(ImportExportPrefs::LabelStyleSetting);
+      // Bug 2692: Place button group in panel so tabbing will work and,
+      // on the Mac, VoiceOver will announce as radio buttons.
+      S.StartPanel();
       {
-         S.TieRadioButton();
-         S.TieRadioButton();
+         S.StartRadioButtonGroup(ImportExportPrefs::LabelStyleSetting);
+         {
+            S.TieRadioButton();
+            S.TieRadioButton();
+         }
+         S.EndRadioButtonGroup();
       }
-      S.EndRadioButtonGroup();
+      S.EndPanel();
    }
    S.EndStatic();
 
 #ifdef USE_MIDI
    S.StartStatic(XO("Exported Allegro (.gro) files save time as:"));
    {
-      S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
+      // Bug 2692: Place button group in panel so tabbing will work and,
+      // on the Mac, VoiceOver will announce as radio buttons.
+      S.StartPanel();
       {
-         S.TieRadioButton();
-         S.TieRadioButton();
+         S.StartRadioButtonGroup(ImportExportPrefs::AllegroStyleSetting);
+         {
+            S.TieRadioButton();
+            S.TieRadioButton();
+         }
+         S.EndRadioButtonGroup();
       }
-      S.EndRadioButtonGroup();
+      S.EndPanel();
    }
    S.EndStatic();
 #endif

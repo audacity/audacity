@@ -856,11 +856,7 @@ int PluginRegistrationDialog::SortCompare(ItemData *item1, ItemData *item2)
       return 0;
    }
 
-#if defined(__WXMAC__)   
-   return str2->Cmp(*str1) * mSortDirection;
-#else
-   return str1->Cmp(*str2) * mSortDirection;
-#endif
+   return str2->CmpNoCase(*str1) * mSortDirection;
 }
 
 void PluginRegistrationDialog::OnChangedVisibility(wxCommandEvent & evt)
