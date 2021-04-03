@@ -183,7 +183,7 @@ static const TranslatableStrings varRateNames {
 
 static const TranslatableStrings varModeNames {
    XO("Fast"),
-   XO("Standard"),
+   //XO("Standard"),
 };
 
 static const TranslatableStrings setRateNames {
@@ -215,7 +215,7 @@ static const std::vector< int > sampRates {
 };
 
 #define ID_SET 7000
-#define ID_VBR 7001
+//#define ID_VBR 7001
 #define ID_ABR 7002
 #define ID_CBR 7003
 #define ID_QUALITY 7004
@@ -247,7 +247,7 @@ private:
    wxRadioButton *mJoint;
    wxCheckBox    *mMono;
    wxRadioButton *mSET;
-   wxRadioButton *mVBR;
+   //wxRadioButton *mVBR;
    wxRadioButton *mABR;
    wxRadioButton *mCBR;
    wxChoice *mRate;
@@ -263,7 +263,7 @@ private:
 
 BEGIN_EVENT_TABLE(ExportMP3Options, wxPanelWrapper)
    EVT_RADIOBUTTON(ID_SET,    ExportMP3Options::OnSET)
-   EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
+   //EVT_RADIOBUTTON(ID_VBR,    ExportMP3Options::OnVBR)
    EVT_RADIOBUTTON(ID_ABR,    ExportMP3Options::OnABR)
    EVT_RADIOBUTTON(ID_CBR,    ExportMP3Options::OnCBR)
    EVT_CHOICE(wxID_ANY,       ExportMP3Options::OnQuality)
@@ -276,7 +276,7 @@ ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
    mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
-   mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_2);
+   //mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_2);
    mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 192);
    mCbrRate = gPrefs->Read(wxT("/FileFormats/MP3CbrRate"), 192);
 
@@ -295,7 +295,7 @@ EnumSetting< MP3RateMode > MP3RateModeSetting{
    wxT("/FileFormats/MP3RateModeChoice"),
    {
       { wxT("SET"), XXO("Preset") },
-      { wxT("VBR"), XXO("Variable") },
+      //{ wxT("VBR"), XXO("Variable") },
       { wxT("ABR"), XXO("Average") },
       { wxT("CBR"), XXO("Constant") },
    },
@@ -303,7 +303,7 @@ EnumSetting< MP3RateMode > MP3RateModeSetting{
 
    // for migrating old preferences:
    {
-      MODE_SET, MODE_VBR, MODE_ABR, MODE_CBR
+      MODE_SET, /*MODE_VBR,*/ MODE_ABR, MODE_CBR
    },
    wxT("/FileFormats/MP3RateMode"),
 };
@@ -355,7 +355,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                      S.StartRadioButtonGroup(MP3RateModeSetting);
                      {
                         mSET = S.Id(ID_SET).TieRadioButton();
-                        mVBR = S.Id(ID_VBR).TieRadioButton();
+                        //mVBR = S.Id(ID_VBR).TieRadioButton();
                         mABR = S.Id(ID_ABR).TieRadioButton();
                         mCBR = S.Id(ID_CBR).TieRadioButton();
                      }
@@ -384,12 +384,12 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                      defrate = mVbrRate;
                      break;
 
-                  case MODE_ABR:
+                  /*case MODE_ABR:
                      choices = &fixRateNames;
                      codes = &fixRateValues;
                      enable = false;
                      defrate = mAbrRate;
-                     break;
+                     break;*/
 
                   case MODE_CBR:
                   default:
@@ -406,12 +406,12 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   *choices,
                   codes
                );
-
+               /*
                mMode = S.Disable(!enable)
                   .TieNumberAsChoice(
                      XXO("Variable Speed:"),
                      { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
-                     varModeNames );
+                     varModeNames );*/
    
                S.AddPrompt(XXO("Channel Mode:"));
                S.StartMultiColumn(2, wxEXPAND);
@@ -505,6 +505,7 @@ void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
 
 ///
 ///
+/*
 void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
 {
    LoadNames(varRateNames);
@@ -512,7 +513,7 @@ void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
    mRate->SetSelection(ValidateValue(varRateNames.size(), mVbrRate, 2));
    mRate->Refresh();
    mMode->Enable(true);
-}
+}*/
 
 ///
 ///
@@ -543,9 +544,9 @@ void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
    if (mSET->GetValue()) {
       mSetRate = sel;
    }
-   else if (mVBR->GetValue()) {
+   /*else if (mVBR->GetValue()) {
       mVbrRate = sel;
-   }
+   }*/
    else if (mABR->GetValue()) {
       mAbrRate = fixRateValues[ sel ];
    }
