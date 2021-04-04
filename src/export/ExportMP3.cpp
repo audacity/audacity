@@ -114,8 +114,8 @@ enum MP3ChannelMode : unsigned {
 enum : int {
    QUALITY_2 = 2,
 
-   ROUTINE_FAST = 0,
-   ROUTINE_STANDARD = 1,
+   //ROUTINE_FAST = 0,
+   //ROUTINE_STANDARD = 1,
 
    PRESET_INSANE = 0,
    PRESET_EXTREME = 1,
@@ -180,12 +180,12 @@ static const TranslatableStrings varRateNames {
    XO("65-105 kbps"),
    XO("45-85 kbps (Smaller files)"),
 };
-
+/*
 static const TranslatableStrings varModeNames {
    XO("Fast"),
    XO("Standard"),
 };
-
+*/
 static const TranslatableStrings setRateNames {
    /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
    XO("Insane, 320 kbps"),
@@ -251,7 +251,7 @@ private:
    wxRadioButton *mABR;
    wxRadioButton *mCBR;
    wxChoice *mRate;
-   wxChoice *mMode;
+   //wxChoice *mMode;
 
    long mSetRate;
    long mVbrRate;
@@ -332,7 +332,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 
    const TranslatableStrings *choices = nullptr;
    const std::vector< int > *codes = nullptr;
-   bool enable;
+   //bool enable;
    int defrate;
 
    S.StartVerticalLay();
@@ -374,20 +374,20 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                switch( MP3RateModeSetting.ReadEnum() ) {
                   case MODE_SET:
                      choices = &setRateNames;
-                     enable = true;
+                     //enable = true;
                      defrate = mSetRate;
                      break;
 
                   case MODE_VBR:
                      choices = &varRateNames;
-                     enable = true;
+                     //enable = true;
                      defrate = mVbrRate;
                      break;
 
                   case MODE_ABR:
                      choices = &fixRateNames;
                      codes = &fixRateValues;
-                     enable = false;
+                     //enable = false;
                      defrate = mAbrRate;
                      break;
 
@@ -395,7 +395,7 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   default:
                      choices = &fixRateNames;
                      codes = &fixRateValues;
-                     enable = false;
+                     //enable = false;
                      defrate = mCbrRate;
                      break;
                }
@@ -406,13 +406,13 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                   *choices,
                   codes
                );
-
+               /*
                mMode = S.Disable(!enable)
                   .TieNumberAsChoice(
                      XXO("Variable Speed:"),
                      { wxT("/FileFormats/MP3VarMode"), ROUTINE_FAST },
                      varModeNames );
-   
+               */
                S.AddPrompt(XXO("Channel Mode:"));
                S.StartMultiColumn(2, wxEXPAND);
                {
@@ -500,7 +500,7 @@ void ExportMP3Options::OnSET(wxCommandEvent& WXUNUSED(event))
 
    mRate->SetSelection(ValidateValue(setRateNames.size(), mSetRate, 2));
    mRate->Refresh();
-   mMode->Enable(true);
+   //mMode->Enable(true);
 }
 
 ///
@@ -511,7 +511,7 @@ void ExportMP3Options::OnVBR(wxCommandEvent& WXUNUSED(event))
 
    mRate->SetSelection(ValidateValue(varRateNames.size(), mVbrRate, 2));
    mRate->Refresh();
-   mMode->Enable(true);
+   //mMode->Enable(true);
 }
 
 ///
@@ -522,7 +522,7 @@ void ExportMP3Options::OnABR(wxCommandEvent& WXUNUSED(event))
 
    mRate->SetSelection(ValidateIndex(fixRateValues, mAbrRate, 10));
    mRate->Refresh();
-   mMode->Enable(false);
+   //mMode->Enable(false);
 }
 
 ///
@@ -533,7 +533,7 @@ void ExportMP3Options::OnCBR(wxCommandEvent& WXUNUSED(event))
 
    mRate->SetSelection(ValidateIndex(fixRateValues, mCbrRate, 10));
    mRate->Refresh();
-   mMode->Enable(false);
+   //mMode->Enable(false);
 }
 
 void ExportMP3Options::OnQuality(wxCommandEvent& WXUNUSED(event))
@@ -817,7 +817,7 @@ public:
    /* These global settings keep state over the life of the object */
    void SetMode(int mode);
    void SetBitrate(int rate);
-   void SetQuality(int q, int r);
+   void SetQuality(int q/*, int r*/);
    void SetChannel(int mode);
 
    /* Virtual methods that must be supplied by library interfaces */
@@ -871,7 +871,7 @@ private:
    int mMode;
    int mBitrate;
    int mQuality;
-   int mRoutine;
+   //int mRoutine;
    int mChannel;
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
@@ -947,7 +947,7 @@ MP3Exporter::MP3Exporter()
    mQuality = QUALITY_2;
    mChannel = CHANNEL_STEREO;
    mMode = MODE_CBR;
-   mRoutine = ROUTINE_FAST;
+   //mRoutine = ROUTINE_FAST;
 }
 
 MP3Exporter::~MP3Exporter()
@@ -1072,10 +1072,10 @@ void MP3Exporter::SetBitrate(int rate)
    mBitrate = rate;
 }
 
-void MP3Exporter::SetQuality(int q, int r)
+void MP3Exporter::SetQuality(int q/*, int r*/)
 {
    mQuality = q;
-   mRoutine = r;
+   //mRoutine = r;
 }
 
 void MP3Exporter::SetChannel(int mode)
@@ -1312,8 +1312,8 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
          if (mQuality == PRESET_INSANE) {
             preset = INSANE;
          }
-         else if (mRoutine == ROUTINE_FAST) {
-            if (mQuality == PRESET_EXTREME) {
+         //else if (mRoutine == ROUTINE_FAST) {
+            else if (mQuality == PRESET_EXTREME) {
                preset = EXTREME_FAST;
             }
             else if (mQuality == PRESET_STANDARD) {
@@ -1322,7 +1322,8 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
             else {
                preset = 1007;    // Not defined until 3.96
             }
-         }
+         //}
+         /*
          else {
             if (mQuality == PRESET_EXTREME) {
                preset = EXTREME;
@@ -1334,13 +1335,13 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
                preset = 1006;    // Not defined until 3.96
             }
          }
-
+         */
          lame_set_preset(mGF, preset);
       }
       break;
 
       case MODE_VBR:
-         lame_set_VBR(mGF, (mRoutine == ROUTINE_STANDARD ? vbr_rh : vbr_mtrh ));
+         lame_set_VBR(mGF, vbr_mtrh );
          lame_set_VBR_q(mGF, mQuality);
       break;
 
@@ -1804,27 +1805,27 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    int lowrate = 8000;
    int bitrate = 0;
    int brate;
-   int vmode;
+   //int vmode;
    bool forceMono;
 
    gPrefs->Read(wxT("/FileFormats/MP3Bitrate"), &brate, 128);
    auto rmode = MP3RateModeSetting.ReadEnumWithDefault( MODE_CBR );
-   gPrefs->Read(wxT("/FileFormats/MP3VarMode"), &vmode, ROUTINE_FAST);
+   //gPrefs->Read(wxT("/FileFormats/MP3VarMode"), &vmode, ROUTINE_FAST);
    auto cmode = MP3ChannelModeSetting.ReadEnumWithDefault( CHANNEL_STEREO );
    gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &forceMono, 0);
 
    // Set the bitrate/quality and mode
    if (rmode == MODE_SET) {
       brate = ValidateValue(setRateNames.size(), brate, PRESET_STANDARD);
-      int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
+      //int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
       exporter.SetMode(MODE_SET);
-      exporter.SetQuality(brate, r);
+      exporter.SetQuality(brate/*, r*/);
    }
    else if (rmode == MODE_VBR) {
       brate = ValidateValue( varRateNames.size(), brate, QUALITY_2 );
-      int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
+      //int r = ValidateValue( varModeNames.size(), vmode, ROUTINE_FAST );
       exporter.SetMode(MODE_VBR);
-      exporter.SetQuality(brate, r);
+      exporter.SetQuality(brate/*, r*/);
    }
    else if (rmode == MODE_ABR) {
       brate = ValidateIndex( fixRateValues, brate, 6 /* 128 kbps */ );
