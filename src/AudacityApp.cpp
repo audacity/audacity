@@ -432,6 +432,14 @@ static void QuitAudacity(bool bForce)
    //temporarily commented out till it is added to all projects
    //DELETE Profiler::Instance();
 
+   // Save last log for diagnosis
+   auto logger = AudacityLogger::Get();
+   if (logger)
+   {
+      wxFileName logFile(FileNames::DataDir(), wxT("lastlog.txt"));
+      logger->SaveLog(logFile.GetFullPath());
+   }
+
    //remove our logger
    std::unique_ptr<wxLog>{ wxLog::SetActiveTarget(NULL) }; // DELETE
 

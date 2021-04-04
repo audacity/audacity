@@ -6,7 +6,7 @@ $manpage "Noise_Gate"
 $debugbutton false
 $preview enabled
 $author (_ "Steve Daulton")
-$release 3.0.0
+$release 3.0.1
 $copyright (_ "Released under terms of the GNU General Public License version 2 or later.")
 ;; Released under terms of the GNU General Public License version 2 or later:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html .
@@ -32,17 +32,16 @@ $control decay (_ "Decay (ms)") float "" 100 10 4000
 ;; rather than a fixed level.
 ;;
 ;; To create the gain envelope:
-;; 1. Resample to around 1000 Hz (bug 2519).
-;; 2. If stereo track and stereo-link = 1, get the max of left and right.
-;; 3. TRIGGER hold when level > threshold.
+;; 1. If stereo track and stereo-link = 1, get the max of left and right.
+;; 2. Add 'hold' when level > threshold.
 ;;    This adds a high level signal for 'hold' seconds when the level
 ;;    falls below the threshold.
-;; 4. Nyquist GATE function to generate exponential rise and decay.
+;; 3. Nyquist GATE function to generate exponential rise and decay.
 ;;    Unlike analog noise gates, lookahead is used so that the gate
-;;    begins to open before the signal rises above the threshold, so
-;;    that when the threshold is reached, the gate is fully open.
+;;    begins to open before the signal rises above the threshold.
+;;    When the threshold is reached, the gate is fully open.
 ;;    This prevents the gate from clipping the beginning of words / sounds.
-;; 5. Scale level of envelope and offset so that we have unity gain above
+;; 4. Scale level of envelope and offset so that we have unity gain above
 ;;    threshold, and 'level-reduction' below the threshold.
 ;;    If silence-flag is set (= 1), gain below the threshold is zero.
 
@@ -52,11 +51,8 @@ $control decay (_ "Decay (ms)") float "" 100 10 4000
 (setf gate-freq (* 1000.0 gate-freq))
 (setf floor (db-to-linear level-reduction))
 (setf threshold (db-to-linear threshold))
-;; As envelope is resampled to ~1000 Hz, the rise time will always be ~1 ms
-;; longer than specified attack, so compensate here.
 (setf attack (/ attack 1000.0))
 (setf lookahead attack)
-(setf attack (+ attack 0.001))
 (setf decay (/ decay 1000.0))
 (setf hold (/ hold 1000.0))
 
@@ -110,8 +106,7 @@ Suggested Threshold Setting ~a dB.")
       (let ((peakL (peak (aref sig 0) test-len))
             (peakR (peak (aref sig 1) test-len)))
         (linear-to-db (max peakL peakR)))
-      (let ((peak (peak sig test-len)))
-        (linear-to-db peak))))
+      (linear-to-db test-len)))
 
 
 ;;; Utility functions
@@ -120,7 +115,7 @@ Suggested Threshold Setting ~a dB.")
   (round (+ num 0.5)))
 
 (defun roundn (num places)
-  ;; Round number to specified decimal places.
+  ;; Return number rounded to specified decimal places.
   (if (= places 0)
       (round num)
       (let* ((x (format NIL "~a" places))
@@ -139,17 +134,34 @@ Suggested Threshold Setting ~a dB.")
 ;;; Gate Functions
 
 
-(defun noisegate (sig follower)
-  ;; Takes a sound and a peak follower envelope (a low sample  rate sound) as arguments.
+;; Override Nyquist GATE function (from nyquist.lsp)
+;; The default version has minimum floor of -60dB, which is not low enough here.
+(defun gate (sound lookahead risetime falltime floor threshold 
+             &optional (source "GATE"))
+  (let (s) ;; s becomes sound after collapsing to one channel
+    (cond ((arrayp sound)           ;; use s-max over all channels so that
+           (setf s (aref sound 0))  ;; ANY channel opens the gate
+           (dotimes (i (1- (length sound)))
+             (setf s (s-max s (aref sound (1+ i))))))
+          (t (setf s sound)))
+    (setf s (snd-gate (seq (cue s)
+                           (stretch-abs 1.0 (s-rest lookahead)))
+                      lookahead risetime falltime floor threshold))
+    (prog1 (snd-xform s (snd-srate s) (snd-t0 s)
+                      (+ (snd-t0 s) lookahead) MAX-STOP-TIME 1.0)
+           (setf s nil) (setf sound nil))))
+
+
+(defun noisegate (sig follow)
+  ;; Takes a sound and a 'follow' sound as arguments.
   ;; Returns the gated audio.
   (let ((gain (/ (- 1 (* silence-flag floor)))) ; silence-flag is 0 or 1.
-        (env (get-env follower)))
+        (env (get-env follow)))
     (if (> gate-freq 20)
         (let* ((high (highpass8 sig gate-freq))
                (low  (lowpass8 sig (* 0.91 gate-freq)))) ;magic number 0.91 improves crossover.
           (sim (mult high gain env) low))
         (mult sig gain env))))
-
 
 (defun get-env (follow)
   ;; Return gate's envelope
@@ -157,59 +169,22 @@ Suggested Threshold Setting ~a dB.")
          (gate-env (clip gate-env 1.0)))  ;gain must not exceed unity.
     (diff gate-env (* silence-flag floor))))
 
-
-(defun gate (sound lookahead risetime falltime floor threshold)
-  ;; This replaces Nyquist's GATE function. See bug 2519
-  ;; Note: this does NOT perform the actual gating, it just generates an exponential
-  ;; rise and decay for our "gain envelope".
-  (setf sound (snd-gate (seq (cue sound) (stretch-abs 1.0 (s-rest lookahead)))
-                    lookahead risetime falltime floor threshold))
-  (snd-xform sound (snd-srate sound) (snd-t0 sound)
-             (+ (snd-t0 sound) lookahead) MAX-STOP-TIME 1.0))
-
-
-(defun peak-follower (sig)  ;;FOLLOW
+(defun peak-follower (sig)
   ;; Return signal that gate will follow.
-  ;; Reduce sample rate to around 1000 Hz to allow
-  ;;  longer tracks to be processed (bug 2519).
-  (let ((step (round (/ *sound-srate* 1000))))
-    (setf sig (multichan-expand #'snd-avg sig step step op-peak))
-    (when (and (arrayp sig)(= stereo-link 0))
-      (setf sig (s-max (aref sig 0) (aref sig 1))))
-    ; SND-AVG looks for peak in next 'step', so shift envelope one sample earlier.
-    (setf sig (multichan-expand #'trim-first-sample sig))
-    (if (> hold 0)
-        (multichan-expand #'add-hold sig)
-        sig)))
-
-(defun trim-first-sample (sig)
-  ;; Remove the first sample from sig.
-  (let ((t0 (/ (snd-srate sig))))
-    (extract-abs t0 MAX-STOP-TIME (cue sig))))
-
-
-(defun add-hold (sig)
-  ;; Extend 'above threshold peaks' by 'hold' seconds.
-  ;; TRIGGER acts when transitioning from less than or equal to zero to greater than zero,
-  ;; which is not ideal, but it's a lot faster than looping through samples with Lisp.
-  ;; We therefore need to invert the signal and offset vertically so that a fall across threshold
-  ;; becomes a rise above zero.
-  (setf sig (mult -1 (diff sig threshold)))
-  (let ((holding (trigger sig (cue (hold sig hold)))))
-    (setf sig (sum threshold (mult -1 sig)))
-    (sum sig holding)))
-
-
-(defun hold (sig dur)
-  ;; generate 'hold' sound.
-  (control-srate-abs (snd-srate sig)
-    (stretch-abs 1.0 (const 1.0 dur))))
-
+  (setf sig (multichan-expand #'snd-abs sig))
+  (when (and (arrayp sig)(= stereo-link 0))
+    (setf sig (s-max (aref sig 0) (aref sig 1))))
+  (if (> hold 0)
+      (multichan-expand #'snd-oneshot sig threshold hold)
+      sig))
 
 (defun process ()
   (error-check)
-  ;; 'peak-follower' may return a sound or array of sounds.
+  ;; For stereo tracks, 'peak-follower' may return a sound
+  ;; or array of sounds, so pass it to 'noisegate' rather than
+  ;; calculating in 'noisegate'.
   (multichan-expand #' noisegate *track* (peak-follower *track*)))
+
 
 ;; Run program
 (case mode
