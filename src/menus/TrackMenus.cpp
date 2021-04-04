@@ -832,6 +832,18 @@ void OnRemoveTracks(const CommandContext &context)
 {
    TrackUtilities::DoRemoveTracks( context.project );
 }
+void OnTest(const CommandContext &context)
+{
+   return;
+}
+void OnTest4(const CommandContext &context)
+{
+   return;
+}
+void OnTest5(const CommandContext &context)
+{
+   return;
+}
 
 static void MuteTracks(const CommandContext &context, bool mute, bool selected)
 {
@@ -1349,6 +1361,7 @@ BaseItemSharedPtr TracksMenu()
             AudioIONotBusyFlag() | AnyTracksSelectedFlag() )
       ),
 
+
       Section( "",
          Menu( wxT("Mute"), XXO("M&ute/Unmute"),
             Command( wxT("MuteAllTracks"), XXO("&Mute All Tracks"),
@@ -1376,6 +1389,18 @@ BaseItemSharedPtr TracksMenu()
                EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Center") ) )
          )
+      ),
+
+       Section( "",
+         Menu( wxT("Source Separation"), XXO("&Source Separation"),
+            Command( wxT("2 Stems (vocals & others)"), XXO("&2 Stems (vocals & others)"),
+               FN(OnTest), TracksExistFlag(), wxT("Ctrl+Alt+2") ),
+            Command( wxT("4 Stems (vocals,drums,bass & others"), XXO("&4 Stems (vocals,drums,bass & others)"),
+               FN(OnTest4), TracksExistFlag(), wxT("Ctrl+Alt+4") ),
+            Command( wxT("5 Stems (vocals,drums,bass,piano & others)"), XXO("&5 Stems (vocals,drums,bass,piano & others)"),
+               FN(OnTest5), TracksExistFlag(), wxT("Ctrl+Alt+5") )
+         )
+
       ),
 
       Section( "",

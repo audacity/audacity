@@ -463,6 +463,7 @@ void ScreenshotCommand::CaptureEffects(
       //"Invert",
       "Normalize...",
       "Paulstretch...",
+      "Test..."
       "Phaser...",
       //"Repair",
       "Repeat...",
