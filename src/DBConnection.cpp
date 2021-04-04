@@ -51,6 +51,11 @@ DBConnection::DBConnection(
 DBConnection::~DBConnection()
 {
    wxASSERT(mDB == nullptr);
+   if (mDB)
+   {
+      wxLogMessage("Database left open at connection destruction %s\n",
+                   sqlite3_db_filename(mDB, nullptr));
+   }
 }
 
 void DBConnection::SetBypass( bool bypass )
@@ -66,18 +71,21 @@ bool DBConnection::ShouldBypass()
 void DBConnection::SetError(
    const TranslatableString &msg, const TranslatableString &libraryError, int errorCode)
 {
-   wxLogMessage(wxT("Connection msg: %s"), msg.Debug());
-   printf("Connection msg: %s", msg.Debug().mb_str().data());
-
-   if (!libraryError.empty())
-   {
-      wxLogMessage(wxT("Connection error: %s"), libraryError.Debug());
-      printf("Connection error: %s", libraryError.Debug().mb_str().data());
-   }
+   mpErrors->mErrorCode = errorCode;
 
    mpErrors->mLastError = msg;
-   mpErrors->mLibraryError = libraryError;
-   mpErrors->mErrorCode = errorCode;
+
+   mpErrors->mLibraryError = errorCode && libraryError.empty()
+      ? XO("(%d): %s").Format(errorCode, sqlite3_errstr(errorCode))
+      : libraryError;
+
+   wxLogMessage("DBConnection SetError\n"
+                "\tErrorCode: %d\n"
+                "\tLastError: %s\n"
+                "\tLibraryError: %s",
+                 mpErrors->mErrorCode,
+                 mpErrors->mLastError.Debug(),
+                 mpErrors->mLibraryError.Debug());
 
    auto logger = AudacityLogger::Get();
    if (logger)
@@ -89,24 +97,27 @@ void DBConnection::SetError(
 void DBConnection::SetDBError(
    const TranslatableString &msg, const TranslatableString &libraryError, int errorCode)
 {
-    mpErrors->mErrorCode = errorCode < 0 ?
-        sqlite3_errcode(DB()) : errorCode;
+   auto db = DB();
 
-   mpErrors->mLastError = msg;
+   mpErrors->mErrorCode = errorCode < 0 && db
+      ? sqlite3_errcode(db)
+      : errorCode;
 
-   wxLogMessage(
-       wxT("SQLite error (%d): %s"), 
-       mpErrors->mErrorCode, 
-       mpErrors->mLastError.Debug()
-   );
+   mpErrors->mLastError = msg.empty()
+      ? XO("(%d): %s").Format(mpErrors->mErrorCode, sqlite3_errstr(mpErrors->mErrorCode))
+      : msg;
 
-   printf("SQLite error: %s", mpErrors->mLastError.Debug().mb_str().data());
+   mpErrors->mLibraryError = libraryError.empty() && db
+      ? Verbatim(sqlite3_errmsg(db))
+      : libraryError;
 
-   mpErrors->mLibraryError = libraryError.empty()
-      ? Verbatim(sqlite3_errmsg(DB())) : libraryError;
-
-   wxLogMessage(wxT("   Lib error: %s"), mpErrors->mLibraryError.Debug());
-   printf("   Lib error: %s", mpErrors->mLibraryError.Debug().mb_str().data());
+   wxLogMessage("DBConnection SetDBError\n"
+                "\tErrorCode: %d\n"
+                "\tLastError: %s\n"
+                "\tLibraryError: %s",
+                 mpErrors->mErrorCode,
+                 mpErrors->mLastError.Debug(),
+                 mpErrors->mLibraryError.Debug());
 
    auto logger = AudacityLogger::Get();
    if (logger)
@@ -115,7 +126,7 @@ void DBConnection::SetDBError(
    }
 }
 
-bool DBConnection::Open(const FilePath fileName)
+int DBConnection::Open(const FilePath fileName)
 {
    wxASSERT(mDB == nullptr);
    int rc;
@@ -123,10 +134,15 @@ bool DBConnection::Open(const FilePath fileName)
    rc = sqlite3_open(fileName.ToUTF8(), &mDB);
    if (rc != SQLITE_OK)
    {
+      wxLogMessage("Failed to open %s: %d, %s\n",
+         fileName,
+         rc,
+         sqlite3_errstr(rc));
+
       sqlite3_close(mDB);
       mDB = nullptr;
 
-      return false;
+      return rc;
    }
 
    // Set default mode
@@ -142,7 +158,7 @@ bool DBConnection::Open(const FilePath fileName)
    // Install our checkpoint hook
    sqlite3_wal_hook(mDB, CheckpointHook, this);
 
-   return mDB;
+   return rc;
 }
 
 bool DBConnection::Close()
@@ -202,8 +218,17 @@ bool DBConnection::Close()
       std::lock_guard<std::mutex> guard(mStatementMutex);
       for (auto stmt : mStatements)
       {
-         // No need to check return code.
-         sqlite3_finalize(stmt.second);
+         // No need to process return code, but log it for diagnosis
+         rc = sqlite3_finalize(stmt.second);
+         if (rc != SQLITE_OK)
+         {
+            wxLogMessage("Failed to finalize statement on %s\n"
+                         "\tErrMsg: %s\n"
+                         "\tSQL: %s",
+                         sqlite3_db_filename(mDB, nullptr), 
+                         sqlite3_errmsg(mDB),
+                         stmt.second);
+         }
       }
       mStatements.clear();
    }
@@ -218,7 +243,11 @@ bool DBConnection::Close()
       // Should we throw an error???
       //
       // LLL: Probably not worthwhile since the DB will just be recovered when
-      // next opened.
+      // next opened, but log it for diagnosis.
+      wxLogMessage("Failed to close %s\n"
+                   "\tError: %s\n",
+                   sqlite3_db_filename(mDB, nullptr),
+                   sqlite3_errmsg(mDB));
    }
 
    mDB = nullptr;
@@ -261,6 +290,16 @@ bool DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *confi
 
    // Set the configuration
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
+   if (rc != SQLITE_OK)
+   {
+      // Don't store in connection, just report it
+      wxLogMessage("Failed to set mode on %s\n"
+                   "\tError: %s\n"
+                   "\tSQL: %s",
+                   sqlite3_db_filename(mDB, nullptr), 
+                   sqlite3_errmsg(mDB),
+                   sql);
+   }
 
    return rc == SQLITE_OK;
 }
@@ -304,7 +343,14 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
    if (rc != SQLITE_OK)
    {
-      wxLogMessage("prepare error %s", sqlite3_errmsg(mDB));
+      wxLogMessage("Failed to prepare statement for %s\n"
+                   "\tError: %s\n"
+                   "\tSQL: %s",
+                   sqlite3_db_filename(mDB, nullptr), 
+                   sqlite3_errmsg(mDB),
+                   sql);
+
+      // TODO: Look into why this causes an access violation
       THROW_INCONSISTENCY_EXCEPTION;
    }
 
@@ -322,9 +368,6 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    // Remember the cached statement.
    mStatements.insert({ndx, stmt});
 
-   //Thread Id not convertible to int.
-   //wxLogDebug( "Cached a statement for thread:%i thread:%i ", (int)ndx.first, (int)ndx.second);
-   wxLogDebug( "Cached a statement for %i", (int)id);
    return stmt;
 }
 
@@ -337,7 +380,9 @@ void DBConnection::CheckpointThread()
    sqlite3 *db = nullptr;
    const auto name = sqlite3_db_filename(mDB, nullptr);
    bool giveUp = false;
-   if (sqlite3_open(name, &db) == SQLITE_OK)
+
+   auto rc = sqlite3_open(name, &db);
+   if (rc == SQLITE_OK)
    {
       // Configure it to be safe
       ModeConfig(db, "main", SafeConfig);
@@ -366,7 +411,6 @@ void DBConnection::CheckpointThread()
 
          // And kick off the checkpoint. This may not checkpoint ALL frames
          // in the WAL.  They'll be gotten the next time around.
-         int rc;
          using namespace std::chrono;
          do {
             rc = giveUp ? SQLITE_OK :
@@ -381,12 +425,23 @@ void DBConnection::CheckpointThread()
          // Reset
          mCheckpointActive = false;
 
-         if (rc != SQLITE_OK) {
+         if (rc != SQLITE_OK)
+         {
+            wxLogMessage("Failed to perform checkpoint on %s\n"
+                         "\tErrCode: %d\n"
+                         "\tErrMsg: %s",
+                         name,
+                         sqlite3_errcode(db),
+                         sqlite3_errmsg(db));
+
             // Can't checkpoint -- maybe the device has too little space
             wxFileNameWrapper fName{ name };
             auto path = FileNames::AbbreviatePath(fName);
             auto name = fName.GetFullName();
             auto longname = name + "-wal";
+
+            // TODO: Should we return the actual error message if it's not a
+            // disk full condition?
             auto message1 = rc == SQLITE_FULL
                ? XO("Could not write to %s.\n").Format(path)
                : TranslatableString{};
@@ -416,9 +471,27 @@ void DBConnection::CheckpointThread()
          }
       }
    }
+   else
+   {
+      wxLogMessage("Checkpoint thread failed to open %s\n"
+                   "\tErrCode: %d\n"
+                   "\tErrMsg: %s",
+                   name,
+                   rc,
+                   sqlite3_errstr(rc));
+   }
 
    // All done (always close)
-   sqlite3_close(db);
+   rc = sqlite3_close(db);
+   if (rc != SQLITE_OK)
+   {
+      wxLogMessage("Checkpoint thread failed to close %s\n"
+                   "\tErrCode: %d\n"
+                   "\tErrMsg: %s",
+                   name,
+                   rc,
+                   sqlite3_errstr(rc));
+   }
 
    return;
 }
@@ -526,6 +599,7 @@ TransactionScope::~TransactionScope()
       {
          // Do not throw from a destructor!
          // This has to be a no-fail cleanup that does the best that it can.
+         wxLogMessage("Transaction active at scope destruction");
       }
    }
 }
@@ -533,8 +607,12 @@ TransactionScope::~TransactionScope()
 bool TransactionScope::Commit()
 {
    if ( !mInTrans )
+   {
+      wxLogMessage("No active transaction to commit");
+
       // Misuse of this class
       THROW_INCONSISTENCY_EXCEPTION;
+   }
 
    mInTrans = !TransactionCommit(mName);
 
@@ -544,6 +622,10 @@ bool TransactionScope::Commit()
 ConnectionPtr::~ConnectionPtr()
 {
    wxASSERT_MSG(!mpConnection, wxT("Project file was not closed at shutdown"));
+   if (mpConnection)
+   {
+      wxLogMessage("Project file was not closed at connection destruction");
+   }
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory
