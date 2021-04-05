@@ -942,6 +942,7 @@ list( APPEND SOURCES
       widgets/PopupMenuTable.h
       widgets/ProgressDialog.cpp
       widgets/ProgressDialog.h
+      widgets/ReadOnlyText.h
       widgets/Ruler.cpp
       widgets/Ruler.h
       widgets/Warning.cpp

@@ -29,6 +29,7 @@ MP3 and FFmpeg encoding libraries.
 #include "../export/ExportMP3.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
 
 
@@ -103,8 +104,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartTwoColumn();
       {
          mMP3Version = S
-           .AddTextBox(XO("MP3 Library Version:"), "", 50);
-         ((wxTextCtrlWrapper *) mMP3Version)->SetReadOnly();
+            .Position(wxALIGN_CENTRE_VERTICAL)
+            .AddReadOnlyText(XO("MP3 Library Version:"), "");
       }
       S.EndTwoColumn();
    }
@@ -122,8 +123,8 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
          mFFmpegVersion = S
-           .AddTextBox(XO("FFmpeg Library Version:"), version.Translation(), 50);
-         ((wxTextCtrlWrapper *) mFFmpegVersion)->SetReadOnly();
+            .Position(wxALIGN_CENTRE_VERTICAL)
+            .AddReadOnlyText(XO("FFmpeg Library Version:"), version.Translation());
 
          S.AddVariableText(XO("FFmpeg Library:"),
             true, wxALL | wxALIGN_RIGHT | wxALIGN_CENTRE_VERTICAL);
@@ -155,8 +156,7 @@ void LibraryPrefs::PopulateOrExchange(ShuttleGui & S)
 /// of the MP3 Library version.
 void LibraryPrefs::SetMP3VersionText(bool prompt)
 {
-   mMP3Version->SetValue(GetMP3Version(this, prompt).Translation());
-   mMP3Version->SetName(mMP3Version->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mMP3Version->SetValue(GetMP3Version(this, prompt));
 }
 
 /// Opens a file-finder dialog so that the user can
@@ -175,8 +175,7 @@ void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 
 void LibraryPrefs::SetFFmpegVersionText()
 {
-   mFFmpegVersion->SetValue(GetFFmpegVersion().Translation());
-   mFFmpegVersion->SetName(mFFmpegVersion->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+   mFFmpegVersion->SetValue(GetFFmpegVersion());
 }
 
 void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
