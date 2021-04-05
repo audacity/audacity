@@ -10,6 +10,9 @@
 #define __AUDACITY_READONLYTEXT__
 
 #include "../Audacity.h"
+#include <wx/wx.h>
+
+
 
 #include "WindowAccessible.h"
 
