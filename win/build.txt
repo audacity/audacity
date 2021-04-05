@@ -28,6 +28,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
   We no longer use Python 2.7.18 during the build. Instead we must use Python 3.
   You can download Python 3.9.1 from https://www.python.org/downloads/windows/
   Select the Python 3.9.1 Windows Installer (32-bit)
+  Make sure to have your Python path in yoor environmental variables.
 
 4. wxWidgets:
 
@@ -57,9 +58,11 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
       Then in the 'find a setting' search box type 'env'.
       Choose 'Edit the system environment variables'
       Then the 'Environment Variables' button 
-      Then in system variables, for variable and value,  add (for example)     
+      Then in system variables, for variable and value,  add (for example)  
+      (You have to create "NEW" variable and value)
 
       WXWIN         C:\aud300\wxWidgets
+      
 
     You will be building a dll version with MSVC2019 IDE, so...
 
@@ -78,7 +81,9 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
     There should be dll files there with _'ud' in their name.    
     The ud stands for 'unicode debug'.  If you only have files with 'u' then 
     you only have release.
-
+    
+    If you only have 'u' in the names the you should again change the solutions configuration
+    to "Debug" and then select Build > Build Solution again.
 
 5. Audacity
 
@@ -127,7 +132,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
        
 
   e) Build
-
+	Make sure to have your configuration set as "Release".
        Select Build > Build All
        Click on the Output tab and wait for the message "Build All succeeded" 
 	     Check the Error List tab.  There should be 0 Errors and 17 Warnings.
