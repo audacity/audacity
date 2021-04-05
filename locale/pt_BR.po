@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-12 04:38-0300\n"
+"PO-Revision-Date: 2021-04-05 01:08-0300\n"
 "Last-Translator: Cleber Tavano <clebertavano@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) Cleber Tavano (2002-2021), com "
 "contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo "
@@ -536,7 +536,7 @@ msgstr ""
 "millemiglia (2016), Rodrigo de Araújo (2016), Diego Medeiros (2016-2017), "
 "Thomas De Rocker (2017), Bruno Ramalhete (2019), Aline Furlanetto Viero "
 "(2021). \n"
-"Comentários e sugestões são bem-vindos"
+"Comentários e sugestões são bem-vindos."
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -611,9 +611,9 @@ msgstr "Site do %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "O software %s tem copyright %s 1999-2020 %s Team."
+msgstr "O software %s tem copyright %s 1999-2021 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -637,7 +637,7 @@ msgstr "Desativado"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr ""
+msgstr "Compilação"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -3997,12 +3997,15 @@ msgid "Failed to open the project's database"
 msgstr "Não foi possível abrir banco de dados do projeto"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "Não foi possível abrir %s"
+msgstr ""
+"Não foi possível abrir o banco de dados:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4053,6 +4056,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"Projeto em pasta marcada como somente-leitura\n"
+"(Não foi possível criar os arquivos temporários necessários)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4076,6 +4081,7 @@ msgstr "Não foi possível abrir o arquivo de projeto"
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+"Impossível adicionar a função 'inset' (Não é possível verificar os blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4083,6 +4089,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto marcado como somente-leitura\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4090,6 +4098,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto bloqueado\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4097,6 +4107,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto ocupado\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4104,6 +4116,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Projeto corrompido\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4111,6 +4125,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Problema nas permissões dos arquivo\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4118,6 +4134,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Erro de E/S de disco\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4125,12 +4143,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Não autorizado\n"
+"(Não é possível acessar o bloco de arquivos)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "Não foi possível abrir o arquivo de projeto"
+msgstr "Não é possível acessar o bloco de arquivos"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4993,9 +5012,8 @@ msgid "Don't show this again at start up"
 msgstr "Não exibir novamente ao iniciar"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "Inspecionando os dados do projeto"
+msgstr "Conexão inválida com o arquivo de projeto"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -15574,7 +15592,7 @@ msgstr "Utilizar mais layouts Left-to-Right em idiomas RTL"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "Não usar vírgula para separar as casas decimais"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"

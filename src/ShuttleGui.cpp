@@ -114,6 +114,7 @@ for registering for changes.
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
 #include "../include/audacity/ComponentInterface.h"
+#include "widgets/ReadOnlyText.h"
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/wxTextCtrlWrapper.h"
 #include "AllThemeResources.h"
@@ -483,6 +484,27 @@ wxStaticText * ShuttleGuiBase::AddVariableText(
       else
          UpdateSizers();
    return pStatic;
+}
+
+ReadOnlyText * ShuttleGuiBase::AddReadOnlyText(
+   const TranslatableString &Caption, const wxString &Value)
+{
+   const auto translated = Caption.Translation();
+   auto style = GetStyle( wxBORDER_NONE );
+   HandleOptionality( Caption );
+   mItem.miStyle = wxALIGN_CENTER_VERTICAL;
+   AddPrompt( Caption );
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), ReadOnlyText);
+   ReadOnlyText * pReadOnlyText;
+   miProp=0;
+
+   mpWind = pReadOnlyText = safenew ReadOnlyText(GetParent(), miId, Value,
+      wxDefaultPosition, wxDefaultSize, GetStyle( style ));
+   mpWind->SetName(wxStripMenuCodes(translated));
+   UpdateSizers();
+   return pReadOnlyText;
 }
 
 wxComboBox * ShuttleGuiBase::AddCombo(

@@ -70,6 +70,7 @@ class wxSpinCtrl;
 class wxListBox;
 class wxGrid;
 class Shuttle;
+class ReadOnlyText;
 
 class WrappedType;
 
@@ -300,6 +301,9 @@ public:
    wxStaticText * AddVariableText(
       const TranslatableString &Str, bool bCenter = false,
       int PositionFlags = 0, int wrapWidth = 0);
+   ReadOnlyText * AddReadOnlyText(
+      const TranslatableString &Caption,
+      const wxString &Value);
    wxTextCtrl * AddTextBox(
       const TranslatableString &Caption,
       const wxString &Value, const int nChars);

@@ -36,6 +36,7 @@
 #include "../ShuttleGui.h"
 #include "../TempDirectory.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
 
 using namespace FileNames;
@@ -245,10 +246,8 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
             mTempText->SetValidator(FilesystemValidator(XO("Temporary files directory cannot be on a FAT drive.")));
          S.Id(TempButtonID).AddButton(XXO("Brow&se..."));
 
-         S.AddPrompt(XXO("&Free Space:"));
-         mFreeSpace = S.AddTextBox({}, wxT(""), 30);
-         mFreeSpace->SetName(XO("Free Space").Translation());
-         ((wxTextCtrlWrapper *) mFreeSpace)->SetReadOnly();
+         mFreeSpace = S
+            .AddReadOnlyText(XXO("&Free Space:"), "");
       }
       S.EndMultiColumn();
    }
