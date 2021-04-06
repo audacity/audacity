@@ -29,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 3.0.0
+Version 3.0.1
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 3.0.0
+2.  Changes since version 3.0.1
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,71 +64,68 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 --------------------------------------------------------------------------------
 
-2. Changes since version 2.4.2: 
+2. Changes since version 3.0.0: 
 
 
 Improvements
 
- * Audacity now uses 'aup3' format, with all audio in one file, rather than 
-   the previous 'pile of file' format.  We are using the SQLite library to 
-   manageis the contents of this file.  Too many users were previously getting
-   caught out by copying part of the project only, when backing up.
- * 'Backup Project' command replaces 'Save Lossless Copy of Project' and 'Save 
-   Compressed Copy of Project'
- * Added Corsican and Marathi languages.
- * 'Label Sounds' replaces 'Sound Finder' and 'Silence Finder'.
- * Added Import and Export of Macros.
- * Added Attack, Hold and Delay times to Noise Gate.
- * Added Multi-View option to Track Preferences
- * Added hidden (bindable to shortcuts) commands for repeating last generator, 
-   analyzer or tool.  Previously only most recent effect could be repeated.
- * Upgraded Nyquist to 3.16
+ * More information to help Audacity developers is now provided 
+   with most error reports.
+ * Manage Macros dialog is now clearer about how to save and
+   close the dialog, thanks to changes in buttons.
+ * In MP3 export we removed a legacy option for a slower encoding
+   that is no better than the faster one.
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.0
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.1
 
 
 Bug Fixes
 
- Over 160 bugs in 2.4.2 fixed, including:
+ Over 30 bugs in 3.0.0 fixed, including:
 
- *  208 - Some effects (including equalization effects) delete Envelope Control 
-          Points, or do not move them when timeline changes
- * 2367 - Change Pitch effect may create spurious clip at end
- * 2492 - Linux: Crash when applying or previewing Sliding Stretch effect on 
-          stereo track
- * 2544 - "Editing a clip can move other clips" turned off can cause corruption 
-          when copying and pasting audio
- * 2630 - A project saved with an imported MP3 with Unicode metadata cannot be 
-          opened
- * 2656 - Cannot horizontal scroll when paused in Play-at-Speed
- * 2669 - Win: Save As can be used to overwrite the existing project without 
-          warning
- * 1300 - Mac: COMMAND + V paste limitations in standard file save dialogs
- * 1579 - Mac: Cut/Copy from file save dialogs using shortcuts does not work
- * 2187 - No error/warning message when using a missing aliased audio file
- * 2296 - There is no Import or Export for Macros
- * 2464 - Cannot drag just the selected audio and label with Time Shift Tool
- * 2437 - Mac: "Open with" fails when Audacity is running
- * 2473 - Linux: Numbers on meters have opaque backgrounds
- * 2487 - Playback meters do not respond during preview of non-real-time effects
- * 2491 - Reset Configuration does not reset Extended Import preferences
- * 2509 - Filter curve and Graphic EQ help links are broken in release version
- * 2527 - Reset Configuration does not reset Project rate or selection timers
- * 2573 - High / Low Pass filters limited to ~94 mins stereo at 44100 Hz
- * 2581 - Inconsistent behavior when pasting and not enough room
- * 2593 - Play-at-Speed does not play unless you have used normal Play first
- * 2616 - Labelled Audio Cut and Delete disabled by Sync-Lock
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.0
+ * 2676 - Export: Incorrect handling over 0 dB
+ * 2692 - Mac: VI users get trapped in radio buttons of Keyboard Preferences
+ * 2694 - Coloring of tracks in Mixer Board are awry
+ * 2696 - Metadata Editor: changed size is not remembered/restored on next use
+ * 2697 - Linux: AUP3 projects use incorrect char size on "differently"
+          configured wxWidgets
+ * 2698 - Noise Gate fails silently if "hold" is non-zero
+ * 2699 - Windows: Cannot edit labels with emoji in them correctly
+ * 2701 - Progress dialog interferes with scripting
+ * 2703 - Mac: EGAT preview dialog is hidden behind the EGAT dialog
+ * 2704 - Mac: Stop button in EGATs with Preview does nor stop the preview
+ * 2706 - Win: Vocal Reduction and Isolation most options fail
+ * 2707 - Opened projects not being removed from "audacity.cfg"
+ * 2708 - Nyquist effects fail silently with One hour plus stereo
+ * 2709 - Mac: Missing sub-menu check marks in French
+ * 2710 - Compressor with audio before T=0 crashes Audacity
+ * 2714 - (Japanese & Korean) "Unable to parse project information"
+ * 2716 - Cleared "Recent Files" are restored on next launch
+ * 2718 - Failed to execute a project file command (on server)
+ * 2720 - Cannot open project that's in a read only folder - error message vague
+ * 2722 - Noise Gate fails on a one hour stereo selection
+
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.1
 
 
 -------------------------------------------------------------------------------
 
 
-3. Some Known Issues in 3.0.0:
+3. Some Known Issues in 3.0.1:
 
-For best workarounds and other known issues in 3.0.0, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.0/Issues 
+We have two significant bugs we would like help in tracking down:
+
+1) Audacity may occasionally report "Failed to open the project 
+   database".  We don't think this is causing people to lose data.
+2) Audacity may offer to 'recover' a project at start up, when
+   there is nothing to recover.
+
+If there are repeatable steps to make these bugs happen, this
+could help us track down what is causing them.
+
+For best workarounds and other known issues in 3.0.1, please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.1/Issues 
 
 
 -------------------------------------------------------------------------------
