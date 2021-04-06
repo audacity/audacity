@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-02-17 11:22+0100\n"
+"PO-Revision-Date: 2021-04-06 18:24+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
 "Language: es\n"
@@ -596,9 +596,9 @@ msgstr "Sitio web de %s:"
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "El software %s tiene copyright %s 1999-2020. Equipo de %s."
+msgstr "El software %s tiene copyright %s 1999-2021. Equipo de %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -621,9 +621,8 @@ msgstr "Deshabilitado"
 
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "The Build"
-msgstr "Compilación de depuración"
+msgstr "Compilación"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -3987,12 +3986,15 @@ msgid "Failed to open the project's database"
 msgstr "No se ha podido abrir la base de datos del proyecto"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "no se puede abrir %s"
+msgstr ""
+"No se ha podido abrir la base de datos:\n"
+"\n"
+"%s"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to discard connection"
@@ -4043,6 +4045,8 @@ msgid ""
 "Project is in a read only directory\n"
 "(Unable to create the required temporary files)"
 msgstr ""
+"El proyecto se encuentra en una carpeta de sólo lectura\n"
+"(no se pueden crear los archivos temporales necesarios)"
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
@@ -4066,6 +4070,7 @@ msgstr "No se puede inicializar el archivo de proyecto"
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
+"No se puede añadir la función 'inset' (no se puede verificar los blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4073,6 +4078,8 @@ msgid ""
 "Project is read only\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"El proyecto es de sólo lectura\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4080,6 +4087,8 @@ msgid ""
 "Project is locked\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"El proyecto está bloqueado\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4087,6 +4096,8 @@ msgid ""
 "Project is busy\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"El proyecto está ocupado\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4094,6 +4105,8 @@ msgid ""
 "Project is corrupt\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"El proyecto está corrupto\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4101,6 +4114,8 @@ msgid ""
 "Some permissions issue\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Hay un problema con los permisos\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4108,6 +4123,8 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Error de entrada/salida en disco\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4115,12 +4132,13 @@ msgid ""
 "Not authorized\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
+"Sin permiso\n"
+"(No se pueden utilizar los blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to work with the blockfiles"
-msgstr "No se puede inicializar el archivo de proyecto"
+msgstr "No se pueden utilizar los blockfiles"
 
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4990,9 +5008,8 @@ msgid "Don't show this again at start up"
 msgstr "No volver a mostrar esta ventana"
 
 #: src/SqliteSampleBlock.cpp
-#, fuzzy
 msgid "Connection to project file is null"
-msgstr "Inspeccionando los datos de archivos del proyecto"
+msgstr "La conexión con el archivo de proyecto es nula"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -15599,7 +15616,7 @@ msgstr "Usar sobre todo distribuciones Izq-a-Der con lenguajes RTL"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "No usar nunca la coma como signo decimal"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
