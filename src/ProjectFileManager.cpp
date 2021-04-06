@@ -764,6 +764,25 @@ bool ProjectFileManager::OpenProject()
    return projectFileIO.OpenProject();
 }
 
+bool ProjectFileManager::OpenNewProject()
+{
+   auto &project = mProject;
+   auto &projectFileIO = ProjectFileIO::Get(project);
+
+   bool bOK = OpenProject();
+   if( !bOK )
+   {
+      ShowErrorDialog(
+         nullptr,
+         XO("Can't open new empty project"),
+         XO("Error opening a new empty project"), 
+         "FAQ:Errors_opening_a_new_empty_project",
+         true, 
+         projectFileIO.GetLastLog());
+   }
+   return bOK;
+}
+
 void ProjectFileManager::CloseProject()
 {
    auto &project = mProject;
