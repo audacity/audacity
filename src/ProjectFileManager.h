@@ -55,6 +55,7 @@ public:
 
    bool OpenProject();
    void CloseProject();
+   bool OpenNewProject();
 
    void CompactProjectOnClose();
 

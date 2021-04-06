@@ -537,17 +537,19 @@ AudacityProject *ProjectManager::New()
    auto &window = ProjectWindow::Get( *p );
    InitProjectWindow( window );
 
+   // wxGTK3 seems to need to require creating the window using default position
+   // and then manually positioning it.
+   window.SetPosition(wndRect.GetPosition());
+
    auto &projectFileManager = ProjectFileManager::Get( *p );
-   projectFileManager.OpenProject();
+
+   // This may report an error.
+   projectFileManager.OpenNewProject();
 
    MenuManager::Get( project ).CreateMenusAndCommands( project );
    
    projectHistory.InitialState();
    projectManager.RestartTimer();
-   
-   // wxGTK3 seems to need to require creating the window using default position
-   // and then manually positioning it.
-   window.SetPosition(wndRect.GetPosition());
    
    if(bMaximized) {
       window.Maximize(true);
