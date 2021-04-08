@@ -25,6 +25,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
+   "PRAGMA <schema>.busy_timeout = 5000;"
    "PRAGMA <schema>.locking_mode = SHARED;"
    "PRAGMA <schema>.synchronous = NORMAL;"
    "PRAGMA <schema>.journal_mode = WAL;"
@@ -32,6 +33,7 @@ static const char *SafeConfig =
 
 // Configuration to provide "Fast" connections
 static const char *FastConfig =
+   "PRAGMA <schema>.busy_timeout = 5000;"
    "PRAGMA <schema>.locking_mode = SHARED;"
    "PRAGMA <schema>.synchronous = OFF;"
    "PRAGMA <schema>.journal_mode = OFF;";
