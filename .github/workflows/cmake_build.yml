@@ -8,11 +8,6 @@ env:
   WXURL: https://github.com/audacity/wxWidgets
   WXREF: audacity-fixes-3.1.3
   WXWIN: ${{ github.workspace }}/wxwin
-  # As of 2021/01/01, github is using Xcode 12.2 as the default and
-  # it has a bug in the install_name_tool.  So explicitly use 12.3
-  # instead.
-  DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
-
 
 # Define our job(s)
 jobs:
