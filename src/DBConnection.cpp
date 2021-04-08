@@ -47,6 +47,7 @@ DBConnection::DBConnection(
 , mCallback{ std::move(callback) }
 {
    mDB = nullptr;
+   mCheckpointDB = nullptr;
    mBypass = false;
 }
 
@@ -133,45 +134,76 @@ int DBConnection::Open(const FilePath fileName)
    wxASSERT(mDB == nullptr);
    int rc;
 
-   rc = sqlite3_open(fileName.ToUTF8(), &mDB);
-   if (rc != SQLITE_OK)
-   {
-      wxLogMessage("Failed to open %s: %d, %s\n",
-         fileName,
-         rc,
-         sqlite3_errstr(rc));
-
-      sqlite3_close(mDB);
-      mDB = nullptr;
-
-      return rc;
-   }
-
-   // Set default mode
-   // (See comments in ProjectFileIO::SaveProject() about threading
-   SafeMode();
-
-   // Kick off the checkpoint thread
+   // Initalize checkpoint controls
    mCheckpointStop = false;
    mCheckpointPending = false;
    mCheckpointActive = false;
 
-   // Open another connection to the DB to prevent blocking the main thread.
-   //
-   // If it fails, then we won't checkpoint until the main thread closes
-   // the associated DB.
-   sqlite3 *db = nullptr;
-   const auto name = sqlite3_db_filename(mDB, nullptr);
-   if (sqlite3_open(name, &db) == SQLITE_OK &&
-      // Configure it to be safe
-      ModeConfig(db, "main", SafeConfig) ) {
-      mCheckpointThread = std::thread([this, db]{ CheckpointThread(db); });
+   const char *name = fileName.ToUTF8();
+
+   bool success = false;
+   rc = sqlite3_open(name, &mDB);
+   if (rc == SQLITE_OK)
+   {
+      // Set default mode
+      // (See comments in ProjectFileIO::SaveProject() about threading
+      if (SafeMode())
+      {
+         rc = sqlite3_open(name, &mCheckpointDB);
+         if (rc == SQLITE_OK)
+         {
+            // Set default mode
+            // (See comments in ProjectFileIO::SaveProject() about threading
+            if (SafeMode())
+            {
+               auto db = mCheckpointDB;
+               mCheckpointThread = std::thread([this, db, name]{ CheckpointThread(db, name); });
+
+               // Install our checkpoint hook
+               sqlite3_wal_hook(mDB, CheckpointHook, this);
+
+               success = true;
+            }
+            else
+            {
+               SetDBError(XO("Failed to set safe mode on checkpoint connection to %s").Format(fileName));
+            }
+         }
+         else
+         {
+            wxLogMessage("Failed to open checkpoint connection to %s: %d, %s\n",
+               fileName,
+               rc,
+               sqlite3_errstr(rc));
+         }
+      }
+      else
+      {
+         SetDBError(XO("Failed to set safe mode on primary connection to %s").Format(fileName));
+      }
    }
    else
-      sqlite3_close(db);
+   {
+      wxLogMessage("Failed to open primary connection to %s: %d, %s\n",
+         fileName,
+         rc,
+         sqlite3_errstr(rc));
+   }
 
-   // Install our checkpoint hook
-   sqlite3_wal_hook(mDB, CheckpointHook, this);
+   if (!success)
+   {
+      if (mCheckpointDB)
+      {
+         sqlite3_close(mCheckpointDB);
+         mCheckpointDB = nullptr;
+      }
+
+      if (mDB)
+      {
+         sqlite3_close(mDB);
+         mDB = nullptr;
+      }
+   }
 
    return rc;
 }
@@ -227,7 +259,9 @@ bool DBConnection::Close()
 
    // And wait for it to do so
    if (mCheckpointThread.joinable())
+   {
       mCheckpointThread.join();
+   }
 
    // We're done with the prepared statements
    {
@@ -249,23 +283,28 @@ bool DBConnection::Close()
       mStatements.clear();
    }
 
-   // Close the DB
+   // Not much we can do if the closes fail, so just report the error
+
+   // Close the checkpoint connection
+   rc = sqlite3_close(mCheckpointDB);
+   if (rc != SQLITE_OK)
+   {
+      wxLogMessage("Failed to close checkpoint connection for %s\n"
+                   "\tError: %s\n",
+                   sqlite3_db_filename(mCheckpointDB, nullptr),
+                   sqlite3_errmsg(mCheckpointDB));
+   }
+   mCheckpointDB = nullptr;
+
+   // Close the primary connection
    rc = sqlite3_close(mDB);
    if (rc != SQLITE_OK)
    {
-      // I guess we could try to recover by repreparing statements and reinstalling
-      // the hook, but who knows if that would work either.
-      //
-      // Should we throw an error???
-      //
-      // LLL: Probably not worthwhile since the DB will just be recovered when
-      // next opened, but log it for diagnosis.
       wxLogMessage("Failed to close %s\n"
                    "\tError: %s\n",
                    sqlite3_db_filename(mDB, nullptr),
                    sqlite3_errmsg(mDB));
    }
-
    mDB = nullptr;
 
    return true;
@@ -387,119 +426,93 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    return stmt;
 }
 
-void DBConnection::CheckpointThread(sqlite3 *db)
+void DBConnection::CheckpointThread(sqlite3 *db, const char *name)
 {
    int rc = SQLITE_OK;
    bool giveUp = false;
-   const char *name = nullptr;
-   if (db)
+
+   while (true)
    {
-      name = sqlite3_db_filename(db, nullptr);
-      while (true)
       {
+         // Wait for work or the stop signal
+         std::unique_lock<std::mutex> lock(mCheckpointMutex);
+         mCheckpointCondition.wait(lock,
+                                   [&]
+                                   {
+                                      return mCheckpointPending || mCheckpointStop;
+                                   });
+
+         // Requested to stop, so bail
+         if (mCheckpointStop)
          {
-            // Wait for work or the stop signal
-            std::unique_lock<std::mutex> lock(mCheckpointMutex);
-            mCheckpointCondition.wait(lock,
-                                      [&]
-                                      {
-                                          return mCheckpointPending || mCheckpointStop;
-                                      });
-
-            // Requested to stop, so bail
-            if (mCheckpointStop)
-            {
-               break;
-            }
-
-            // Capture the number of pages that need checkpointing and reset
-            mCheckpointActive = true;
-            mCheckpointPending = false;
+            break;
          }
 
-         // And kick off the checkpoint. This may not checkpoint ALL frames
-         // in the WAL.  They'll be gotten the next time around.
-         using namespace std::chrono;
-         do {
-            rc = giveUp ? SQLITE_OK :
-               sqlite3_wal_checkpoint_v2(
-                  db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
-         }
-         // Contentions for an exclusive lock on the database are possible,
-         // even while the main thread is merely drawing the tracks, which
-         // may perform reads
-         while (rc == SQLITE_BUSY && (std::this_thread::sleep_for(1ms), true));
-
-         // Reset
-         mCheckpointActive = false;
-
-         if (rc != SQLITE_OK)
-         {
-            wxLogMessage("Failed to perform checkpoint on %s\n"
-                         "\tErrCode: %d\n"
-                         "\tErrMsg: %s",
-                         name,
-                         sqlite3_errcode(db),
-                         sqlite3_errmsg(db));
-
-            // Can't checkpoint -- maybe the device has too little space
-            wxFileNameWrapper fName{ name };
-            auto path = FileNames::AbbreviatePath(fName);
-            auto name = fName.GetFullName();
-            auto longname = name + "-wal";
-
-            // TODO: Should we return the actual error message if it's not a
-            // disk full condition?
-            auto message1 = rc == SQLITE_FULL
-               ? XO("Could not write to %s.\n").Format(path)
-               : TranslatableString{};
-            auto message = XO(
-               "Disk is full.\n"
-               "%s\n"
-               "For tips on freeing up space, click the help button."
-            ).Format(message1);
-
-            // Stop trying to checkpoint
-            giveUp = true;
-
-            // Stop the audio.
-            GuardedCall(
-               [&message] {
-               throw SimpleMessageBoxException{
-                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
-               SimpleGuard<void>{},
-               [this](AudacityException * e) {
-                  // This executes in the main thread.
-                  if (mCallback)
-                     mCallback();
-                  if (e)
-                     e->DelayedHandlerAction();
-               }
-            );
-         }
+         // Capture the number of pages that need checkpointing and reset
+         mCheckpointActive = true;
+         mCheckpointPending = false;
       }
-   }
-   else
-   {
-      wxLogMessage("Checkpoint thread failed to open %s\n"
-                   "\tErrCode: %d\n"
-                   "\tErrMsg: %s",
-                   name,
-                   rc,
-                   sqlite3_errstr(rc));
-   }
 
-   // All done (always close)
-   if (db)
-      rc = sqlite3_close(db);
-   if (rc != SQLITE_OK && name)
-   {
-      wxLogMessage("Checkpoint thread failed to close %s\n"
-                   "\tErrCode: %d\n"
-                   "\tErrMsg: %s",
-                   name,
-                   rc,
-                   sqlite3_errstr(rc));
+      // And kick off the checkpoint. This may not checkpoint ALL frames
+      // in the WAL.  They'll be gotten the next time around.
+      using namespace std::chrono;
+      do {
+         rc = giveUp ? SQLITE_OK :
+            sqlite3_wal_checkpoint_v2(
+               db, nullptr, SQLITE_CHECKPOINT_PASSIVE, nullptr, nullptr);
+      }
+      // Contentions for an exclusive lock on the database are possible,
+      // even while the main thread is merely drawing the tracks, which
+      // may perform reads
+      while (rc == SQLITE_BUSY && (std::this_thread::sleep_for(1ms), true));
+
+      // Reset
+      mCheckpointActive = false;
+
+      if (rc != SQLITE_OK)
+      {
+         wxLogMessage("Failed to perform checkpoint on %s\n"
+                      "\tErrCode: %d\n"
+                      "\tErrMsg: %s",
+                      name,
+                      sqlite3_errcode(db),
+                      sqlite3_errmsg(db));
+
+         // Can't checkpoint -- maybe the device has too little space
+         wxFileNameWrapper fName{ name };
+         auto path = FileNames::AbbreviatePath(fName);
+         auto name = fName.GetFullName();
+         auto longname = name + "-wal";
+
+         // TODO: Should we return the actual error message if it's not a
+         // disk full condition?
+         auto message1 = rc == SQLITE_FULL
+            ? XO("Could not write to %s.\n").Format(path)
+            : TranslatableString{};
+         auto message = XO(
+            "Disk is full.\n"
+            "%s\n"
+            "For tips on freeing up space, click the help button."
+         ).Format(message1);
+
+         // Stop trying to checkpoint
+         giveUp = true;
+
+         // Stop the audio.
+         GuardedCall(
+            [&message] {
+            throw SimpleMessageBoxException{
+               message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
+            SimpleGuard<void>{},
+            [this](AudacityException * e) {
+               // This executes in the main thread.
+               if (mCallback)
+                  mCallback();
+               if (e)
+                  e->DelayedHandlerAction();
+            }
+         );
+      }
    }
 
    return;

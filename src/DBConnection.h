@@ -98,12 +98,13 @@ public:
 private:
    bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
-   void CheckpointThread(sqlite3 *db);
+   void CheckpointThread(sqlite3 *db, const char *name);
    static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
 
 private:
    std::weak_ptr<AudacityProject> mpProject;
    sqlite3 *mDB;
+   sqlite3 *mCheckpointDB;
 
    std::thread mCheckpointThread;
    std::condition_variable mCheckpointCondition;
