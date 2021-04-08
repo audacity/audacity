@@ -76,7 +76,7 @@ jobs:
       uses: actions/cache@v2
       with:
         # Increment the number at the end to force recreation of the cache
-        key: ${{ env.WXHASH }}.2
+        key: ${{ env.WXHASH }}.3
         path: ${{ env.WXWIN }}
 
     # WINDOWS: Build (for all versions of Windows)
