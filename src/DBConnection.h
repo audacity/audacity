@@ -98,7 +98,7 @@ public:
 private:
    bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
-   void CheckpointThread();
+   void CheckpointThread(sqlite3 *db);
    static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
 
 private:
