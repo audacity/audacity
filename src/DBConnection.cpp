@@ -155,7 +155,20 @@ int DBConnection::Open(const FilePath fileName)
    mCheckpointStop = false;
    mCheckpointPending = false;
    mCheckpointActive = false;
-   mCheckpointThread = std::thread([this]{ CheckpointThread(); });
+
+   // Open another connection to the DB to prevent blocking the main thread.
+   //
+   // If it fails, then we won't checkpoint until the main thread closes
+   // the associated DB.
+   sqlite3 *db = nullptr;
+   const auto name = sqlite3_db_filename(mDB, nullptr);
+   if (sqlite3_open(name, &db) == SQLITE_OK &&
+      // Configure it to be safe
+      ModeConfig(db, "main", SafeConfig) ) {
+      mCheckpointThread = std::thread([this, db]{ CheckpointThread(db); });
+   }
+   else
+      sqlite3_close(db);
 
    // Install our checkpoint hook
    sqlite3_wal_hook(mDB, CheckpointHook, this);
@@ -213,7 +226,8 @@ bool DBConnection::Close()
    }
 
    // And wait for it to do so
-   mCheckpointThread.join();
+   if (mCheckpointThread.joinable())
+      mCheckpointThread.join();
 
    // We're done with the prepared statements
    {
@@ -373,22 +387,14 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    return stmt;
 }
 
-void DBConnection::CheckpointThread()
+void DBConnection::CheckpointThread(sqlite3 *db)
 {
-   // Open another connection to the DB to prevent blocking the main thread.
-   //
-   // If it fails, then we won't checkpoint until the main thread closes
-   // the associated DB.
-   sqlite3 *db = nullptr;
-   const auto name = sqlite3_db_filename(mDB, nullptr);
+   int rc = SQLITE_OK;
    bool giveUp = false;
-
-   auto rc = sqlite3_open(name, &db);
-   if (rc == SQLITE_OK)
+   const char *name = nullptr;
+   if (db)
    {
-      // Configure it to be safe
-      ModeConfig(db, "main", SafeConfig);
-
+      name = sqlite3_db_filename(db, nullptr);
       while (true)
       {
          {
@@ -484,8 +490,9 @@ void DBConnection::CheckpointThread()
    }
 
    // All done (always close)
-   rc = sqlite3_close(db);
-   if (rc != SQLITE_OK)
+   if (db)
+      rc = sqlite3_close(db);
+   if (rc != SQLITE_OK && name)
    {
       wxLogMessage("Checkpoint thread failed to close %s\n"
                    "\tErrCode: %d\n"
