@@ -48,8 +48,8 @@ class AUDACITY_DLL_API FileHistory
    // also whenever the history changes.
    void UseMenu(wxMenu *menu);
 
-   void Load(wxConfigBase& config, const wxString & group);
-   void Save(wxConfigBase& config, const wxString & group);
+   void Load(wxConfigBase& config, const wxString & group = wxEmptyString);
+   void Save(wxConfigBase& config);
 
    // stl-style accessors
    using const_iterator = FilePaths::const_iterator;
@@ -71,6 +71,7 @@ class AUDACITY_DLL_API FileHistory
    std::vector< wxWeakRef< wxMenu > > mMenus;
    FilePaths mHistory;
 
+   wxString mGroup;
 };
 
 #endif
