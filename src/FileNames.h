@@ -138,7 +138,8 @@ namespace FileNames
       Open,
       Save,
       Import,
-      Export
+      Export,
+      MacrosOut
    };
 
    enum class PathType {

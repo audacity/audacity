@@ -49,6 +49,7 @@ class DirectoriesPrefs final : public PrefsPanel
    wxTextCtrl *mSaveText;
    wxTextCtrl *mImportText;
    wxTextCtrl *mExportText;
+   wxTextCtrl *mMacrosText;
 
    DECLARE_EVENT_TABLE()
 };
