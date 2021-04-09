@@ -29,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 3.0.1
+Version 3.0.2
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 3.0.1
+2.  Changes since version 3.0.2
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -76,7 +76,7 @@ Improvements
  * In MP3 export we removed a legacy option for a slower encoding
    that is no better than the faster one.
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.1
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.2
 
 
 Bug Fixes
@@ -106,13 +106,13 @@ Bug Fixes
  * 2720 - Cannot open project that's in a read only folder - error message vague
  * 2722 - Noise Gate fails on a one hour stereo selection
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.1
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2
 
 
 -------------------------------------------------------------------------------
 
 
-3. Some Known Issues in 3.0.1:
+3. Some Known Issues in 3.0.2:
 
 We have two significant bugs we would like help in tracking down:
 
@@ -124,8 +124,8 @@ We have two significant bugs we would like help in tracking down:
 If there are repeatable steps to make these bugs happen, this
 could help us track down what is causing them.
 
-For best workarounds and other known issues in 3.0.1, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.1/Issues 
+For best workarounds and other known issues in 3.0.2, please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2/Issues 
 
 
 -------------------------------------------------------------------------------
