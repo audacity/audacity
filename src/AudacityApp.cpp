@@ -2202,7 +2202,7 @@ int AudacityApp::OnExit()
       }
    }
 
-   FileHistory::Global().Save(*gPrefs, wxT("RecentFiles"));
+   FileHistory::Global().Save(*gPrefs);
 
    FinishPreferences();
 

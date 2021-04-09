@@ -114,8 +114,11 @@ void FileHistory::UseMenu(wxMenu *menu)
 void FileHistory::Load(wxConfigBase & config, const wxString & group)
 {
    mHistory.clear();
+   mGroup = group.empty()
+      ? wxT("RecentFiles")
+      : group;
 
-   config.SetPath(group);
+   config.SetPath(mGroup);
 
    wxString file;
    long ndx;
@@ -130,11 +133,11 @@ void FileHistory::Load(wxConfigBase & config, const wxString & group)
    NotifyMenus();
 }
 
-void FileHistory::Save(wxConfigBase & config, const wxString & group)
+void FileHistory::Save(wxConfigBase & config)
 {
    config.SetPath(wxT(""));
-   config.DeleteGroup(group);
-   config.SetPath(group);
+   config.DeleteGroup(mGroup);
+   config.SetPath(mGroup);
 
    // Stored in reverse order
    int n = mHistory.size() - 1;
@@ -153,7 +156,7 @@ void FileHistory::NotifyMenus()
    for (auto pMenu : mMenus)
       if (pMenu)
          NotifyMenu(pMenu);
-   Save(*gPrefs, wxT("RecentFiles"));  
+   Save(*gPrefs);
 }
 
 void FileHistory::NotifyMenu(wxMenu *menu)

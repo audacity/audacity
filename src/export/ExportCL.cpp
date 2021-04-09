@@ -165,7 +165,7 @@ bool ExportCLOptions::TransferDataFromWindow()
    wxString cmd = mCmd->GetValue();
 
    mHistory.Append(cmd);
-   mHistory.Save(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
+   mHistory.Save(*gPrefs);
 
    gPrefs->Write(wxT("/FileFormats/ExternalProgramExportCommand"), cmd);
    gPrefs->Flush();
