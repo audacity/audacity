@@ -1052,6 +1052,7 @@ list( APPEND LIBRARIES
       libsoxr
       portaudio-v19
       sqlite
+      lib-network-manager
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
@@ -1092,6 +1093,13 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
    endif()
 endif()
 
+set(CURL_PATH "")
+
+if( "${${_OPT}use_curl}" STREQUAL "local" )
+   get_target_property(curl_location AUDACITY::libcurl LOCATION)
+   get_filename_component(CURL_PATH ${curl_location} DIRECTORY)
+endif()
+
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    set_target_properties(
       ${TARGET}
@@ -1128,6 +1136,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
                           -D DST="${_EXEDIR}"
                           -D WXWIN="${libdir}"
+                          -D CURL_PATH="${CURL_PATH}"
                           -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
@@ -1216,6 +1225,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
                           -D DST="${_PKGLIB}"
+                          -D CURL_PATH="${CURL_PATH}"
                           -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
@@ -1286,6 +1296,7 @@ else()
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
                           -D DST="${_DEST}/${_PKGLIB}"
                           -D WXWIN="${WXWIN}"
+                          -D CURLPATH="${CURL_PATH}"
                           -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
@@ -1318,7 +1329,6 @@ target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
-
 # If was have cmake 3.16 or higher, we can use precompiled headers, but
 # only use them if ccache is not available and the user hasn't disabled
 # it.

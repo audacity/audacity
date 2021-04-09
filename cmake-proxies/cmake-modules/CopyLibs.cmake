@@ -34,6 +34,8 @@ function( execute )
    set( ${outlist} ${cmd_out} PARENT_SCOPE )
 endfunction()
 
+get_filename_component(SRC_DIR ${SRC} DIRECTORY)
+
 function( gather_libs src )
    if( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows" )
       execute( output cmd /k dumpbin /dependents ${src} )
@@ -45,6 +47,14 @@ function( gather_libs src )
             list( APPEND libs ${lib} )
 
             gather_libs( ${lib} )
+         elseif (line MATCHES "^ *libcurl.*\\.dll")
+            set( lib ${CURL_PATH}/${line} )
+
+            list( APPEND libs ${lib} )
+
+            gather_libs( ${lib} )
+         elseif (line MATCHES "^ *lib-.*\\.dll")
+            gather_libs( "${SRC_DIR}/${line}" )
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
@@ -74,12 +84,12 @@ function( gather_libs src )
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" )
-      execute( output sh -c "LD_LIBRARY_PATH='${WXWIN}' ldd ${src}" )
+      execute( output sh -c "LD_LIBRARY_PATH='${WXWIN}:${CURL_PATH}' ldd ${src}" )
 
       get_filename_component( libname "${src}" NAME )
 
       foreach( line ${output} )
-         if( line MATCHES ".*libwx.*" )
+         if( line MATCHES ".*lib(wx|curl|lib-).*" )
             string( REGEX REPLACE ".* => (.*) \\(.*$" "\\1" line "${line}" )
 
             set( lib ${line} )

@@ -134,6 +134,7 @@ addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.2
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
 addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.32.0" )
+addlib( libcurl            curl        CURL        YES   YES   "libcurl >= 7.76.0" )
 
 # Optional libraries
 #

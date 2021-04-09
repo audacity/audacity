@@ -123,6 +123,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "import/Import.h"
 
+#include "../../libraries/lib-network-manager/NetworkManager.h"
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
 #endif
@@ -2215,6 +2216,8 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
+
+   audacity::network_manager::NetworkManager::Terminate();
 
    return 0;
 }
