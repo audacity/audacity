@@ -653,7 +653,7 @@ bool ProjectFileIO::CheckVersion()
    if (version > ProjectFileVersion)
    {
       SetError(
-         XO("This project was created with a newer version of Audacity:\n\nYou will need to upgrade to process it")
+         XO("This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
       );
       return false;
    }

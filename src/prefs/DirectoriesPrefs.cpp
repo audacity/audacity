@@ -122,6 +122,7 @@ enum
    SaveTextID,
    ImportTextID,
    ExportTextID,
+   MacrosTextID,
    TextsEnd,
 
    ButtonsStart = 1020,
@@ -129,6 +130,7 @@ enum
    SaveButtonID,
    ImportButtonID,
    ExportButtonID,
+   MacrosButtonID,
    ButtonsEnd
 };
 
@@ -226,6 +228,15 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                      wxT("")},
                                     30);
          S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
+
+         S.Id(MacrosTextID);
+         mMacrosText = S.TieTextBox(XXO("&Macro output:"),
+                                    {PreferenceKey(Operation::MacrosOut, PathType::User),
+                                     wxT("")},
+                                    30);
+         S.Id(MacrosButtonID).AddButton(XXO("Bro&wse..."));
+
+
       }
       S.EndMultiColumn();
    }
