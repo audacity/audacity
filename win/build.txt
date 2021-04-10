@@ -79,6 +79,11 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
     The ud stands for 'unicode debug'.  If you only have files with 'u' then 
     you only have release.
 
+  c) to generate the vc_lib folder needed to compile audacity 
+     Open Developer Command Prompt for VS 2019 (Visual Studio Command Prompt), then Build wxWidgets:
+     
+      cd %WXWIN%\build\msw
+      nmake /f makefile.vc BUILD=release
 
 5. Audacity
 
