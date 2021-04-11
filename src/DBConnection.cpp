@@ -134,7 +134,7 @@ int DBConnection::Open(const FilePath fileName)
    wxASSERT(mDB == nullptr);
    int rc;
 
-   // Initalize checkpoint controls
+   // Initialize checkpoint controls
    mCheckpointStop = false;
    mCheckpointPending = false;
    mCheckpointActive = false;
@@ -157,7 +157,8 @@ int DBConnection::Open(const FilePath fileName)
             if (SafeMode())
             {
                auto db = mCheckpointDB;
-               mCheckpointThread = std::thread([this, db, name]{ CheckpointThread(db, name); });
+               mCheckpointThread = std::thread(
+                  [this, db, fileName]{ CheckpointThread(db, fileName); });
 
                // Install our checkpoint hook
                sqlite3_wal_hook(mDB, CheckpointHook, this);
@@ -426,7 +427,7 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
    return stmt;
 }
 
-void DBConnection::CheckpointThread(sqlite3 *db, const char *name)
+void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
 {
    int rc = SQLITE_OK;
    bool giveUp = false;
@@ -474,12 +475,12 @@ void DBConnection::CheckpointThread(sqlite3 *db, const char *name)
          wxLogMessage("Failed to perform checkpoint on %s\n"
                       "\tErrCode: %d\n"
                       "\tErrMsg: %s",
-                      name,
+                      fileName,
                       sqlite3_errcode(db),
                       sqlite3_errmsg(db));
 
          // Can't checkpoint -- maybe the device has too little space
-         wxFileNameWrapper fName{ name };
+         wxFileNameWrapper fName{ fileName };
          auto path = FileNames::AbbreviatePath(fName);
          auto name = fName.GetFullName();
          auto longname = name + "-wal";
