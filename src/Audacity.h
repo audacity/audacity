@@ -39,7 +39,7 @@
 // Its value may be more than 0 for pre-release "Beta" builds that differ only
 // in the welcome screen, and hiding of some development menu commands, but
 // still link to the alpha manual online.
-#define AUDACITY_BUILD_LEVEL 0
+#define AUDACITY_BUILD_LEVEL 2
 
 // used #ifdef not #if for IS_ALPHA, IS_BETA, IS_RELEASE, USE_ALPHA_MANUAL
 #undef IS_ALPHA
