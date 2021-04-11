@@ -28,7 +28,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
   We no longer use Python 2.7.18 during the build. Instead we must use Python 3.
   You can download Python 3.9.1 from https://www.python.org/downloads/windows/
   Select the Python 3.9.1 Windows Installer (32-bit)
-  Make sure to have your Python path in yoor environmental variables.
+  Make sure to have the Python path in your environmental variables.
 
 4. wxWidgets:
 
@@ -59,7 +59,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
       Choose 'Edit the system environment variables'
       Then the 'Environment Variables' button 
       Then in system variables, for variable and value,  add (for example)  
-      (You have to create "NEW" variable and value)
+      (You have to create a "NEW" variable and a value)
 
       WXWIN         C:\aud300\wxWidgets
       
@@ -82,7 +82,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
     The ud stands for 'unicode debug'.  If you only have files with 'u' then 
     you only have release.
     
-    If you only have 'u' in the names the you should again change the solutions configuration
+    If you only have 'u' in the name, then you should change the solutions configuration
     to "Debug" and then select Build > Build Solution again.
 
 5. Audacity
