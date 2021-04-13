@@ -154,7 +154,7 @@ int DBConnection::Open(const FilePath fileName)
          {
             // Set default mode
             // (See comments in ProjectFileIO::SaveProject() about threading
-            if (SafeMode())
+            if (ModeConfig(mCheckpointDB, "main", SafeConfig))
             {
                auto db = mCheckpointDB;
                mCheckpointThread = std::thread(
