@@ -946,6 +946,7 @@ def parse_html(doc, url, filename):
     newdoc = newdoc.replace('\\n','\n')
     newdoc = newdoc.replace('\\t', '\t')
     newdoc = newdoc.replace('\\\'', '\'')
+    newdoc = newdoc.replace('\\\\', '\\')
     newdoc = newdoc.replace('\\xe2\\x80\\x99','\'')
     newdoc = newdoc.replace('\\xe2\\x80\\x90', '-')
     newdoc = newdoc.strip('b')

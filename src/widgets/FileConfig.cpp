@@ -10,6 +10,8 @@
 
 #include "../Audacity.h"
 
+#include <errno.h>
+
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/bmpbuttn.h>

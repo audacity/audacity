@@ -803,9 +803,11 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "Audacity did not recognize the type of the file '%s'.\n\n%sFor uncompressed files, also try File > Import > Raw Data.")
          .Format( fName,
+#if defined(USE_FFMPEG)
                   !FFmpegLibsInst()
-                  ? XO("Try installing FFmpeg.\n\n")
-                  : Verbatim("") );
+                  ? XO("Try installing FFmpeg.\n\n") :
+#endif
+                  Verbatim("") );
    }
    else
    {
