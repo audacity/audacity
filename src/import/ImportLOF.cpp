@@ -309,6 +309,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
    wxString targetfile;
    wxString tokenholder = tok.GetNextToken();
 
+
    if (tokenholder.IsSameAs(wxT("window"), false))
    {
       // set any duration/offset factors for last window, as all files were called
@@ -501,7 +502,9 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
    if (!mProject)
       return;
 
+   callScrollOffset = callScrollOffset && (scrollOffset != 0);
    bool doSomething = callDurationFactor || callScrollOffset;
+
    if (callDurationFactor)
    {
       double longestDuration = TrackList::Get( *mProject ).GetEndTime();
@@ -509,7 +512,7 @@ void LOFImportFileHandle::doDurationAndScrollOffset()
       callDurationFactor = false;
    }
 
-   if (callScrollOffset && (scrollOffset != 0))
+   if (callScrollOffset)
    {
       ProjectWindow::Get( *mProject ).TP_ScrollWindow(scrollOffset);
       callScrollOffset = false;
