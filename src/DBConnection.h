@@ -56,8 +56,8 @@ public:
       bool write //!< If true, a database update failed; if false, only a SELECT failed
    ) const;
 
-   bool SafeMode(const char *schema = "main");
-   bool FastMode(const char *schema = "main");
+   int SafeMode(const char *schema = "main");
+   int FastMode(const char *schema = "main");
 
    bool Assign(sqlite3 *handle);
    sqlite3 *Detach();
@@ -96,7 +96,8 @@ public:
       int errorCode = -1);
 
 private:
-   bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
+   int OpenStepByStep(const FilePath fileName);
+   int ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
    void CheckpointThread(sqlite3 *db, const FilePath &fileName);
    static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
