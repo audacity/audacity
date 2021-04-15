@@ -265,6 +265,9 @@ public:
    const PluginID & RegisterPlugin(EffectDefinitionInterface *effect, PluginType type );
    void UnregisterPlugin(const PluginID & ID);
 
+   void RemoveBadPlugins();
+   bool PluginExists(const PluginPath & path);
+
 private:
    // private! Use Get()
    PluginManager();

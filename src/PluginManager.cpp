@@ -404,6 +404,7 @@ enum
    ID_SelectAll,
    ID_Enable,
    ID_Disable,
+   ID_Refresh,
 };
 
 enum
@@ -426,6 +427,7 @@ private:
    void PopulateOrExchange(ShuttleGui & S);
    void RegenerateEffectsList(int iShowWhat);
    void SetState(int i, bool toggle, bool state = true);
+   void RefreshItems();
 
    static int wxCALLBACK SortCompare(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
    int SortCompare(ItemData *item1, ItemData *item2);
@@ -440,6 +442,7 @@ private:
    void OnClearAll(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnDisable(wxCommandEvent & evt);
+   void OnRefresh(wxCommandEvent & evt);
 
 private:
    EffectType mType;
@@ -469,6 +472,7 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_BUTTON(ID_SelectAll, PluginRegistrationDialog::OnSelectAll)
    EVT_BUTTON(ID_Enable, PluginRegistrationDialog::OnEnable)
    EVT_BUTTON(ID_Disable, PluginRegistrationDialog::OnDisable)
+   EVT_BUTTON(ID_Refresh, PluginRegistrationDialog::OnRefresh)
    EVT_RADIOBUTTON(ID_ShowAll, PluginRegistrationDialog::OnChangedVisibility)
    EVT_RADIOBUTTON(ID_ShowEnabled, PluginRegistrationDialog::OnChangedVisibility)
    EVT_RADIOBUTTON(ID_ShowDisabled, PluginRegistrationDialog::OnChangedVisibility)
@@ -601,6 +605,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             }
             S.EndHorizontalLay();
 
+            S.Id(ID_Refresh).AddButton(XXO("&Refresh"));
             S.Id(ID_Enable).AddButton(XXO("&Enable"));
             S.Id(ID_Disable).AddButton(XXO("&Disable"));
          }
@@ -627,40 +632,14 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
 
    PluginManager & pm = PluginManager::Get();
+
+   pm.RemoveBadPlugins();
+   RefreshItems();
+
    for (PluginMap::iterator iter = pm.mPlugins.begin(); iter != pm.mPlugins.end(); ++iter)
    {
-      PluginDescriptor & plug = iter->second;
-
-      PluginType plugType = plug.GetPluginType();
-      if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
-      {
-         continue;
-      }
-
-      const auto &path = plug.GetPath();
-      ItemData & item = mItems[path];  // will create NEW entry
-      item.plugs.push_back(&plug);
-      item.path = path;
-      item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
-      item.valid = plug.IsValid();
-
-      if (plugType == PluginTypeEffect)
-      {
-         item.name = plug.GetSymbol().Translation();
-      }
-      // This is not right and will not work when other plugin types are added.
-      // But it's presumed that the plugin manager dialog will be fully developed
-      // by then.
-      else if (plugType == PluginTypeStub)
-      {
-         wxFileName fname { path };
-         item.name = fname.GetName().Trim(false).Trim(true);
-         if (!item.valid)
-         {
-            item.state = STATE_New;
-         }
-      }
-
+      ItemData & item = mItems[iter->second.GetPath()];
+      
       int x;
       mEffects->GetTextExtent(item.name, &x, NULL);
       colWidths[COL_Name] = wxMax(colWidths[COL_Name], x);
@@ -771,6 +750,48 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
 #if wxUSE_ACCESSIBILITY
       mAx->SetSelected(0, false);
 #endif
+   }
+}
+
+//Clears the mItems map and regenerates it from the plugin manager
+void PluginRegistrationDialog::RefreshItems()
+{
+   mItems.clear();
+
+   PluginManager & pm = PluginManager::Get();
+   for (PluginMap::iterator iter = pm.mPlugins.begin(); iter != pm.mPlugins.end(); ++iter)
+   {
+      PluginDescriptor & plug = iter->second;
+
+      PluginType plugType = plug.GetPluginType();
+      if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
+      {
+         continue;
+      }
+
+      const auto &path = plug.GetPath();
+      ItemData & item = mItems[path];  // will create NEW entry
+      item.plugs.push_back(&plug);
+      item.path = path;
+      item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
+      item.valid = plug.IsValid();
+
+      if (plugType == PluginTypeEffect)
+      {
+         item.name = plug.GetSymbol().Translation();
+      }
+      // This is not right and will not work when other plugin types are added.
+      // But it's presumed that the plugin manager dialog will be fully developed
+      // by then.
+      else if (plugType == PluginTypeStub)
+      {
+         wxFileName fname { path };
+         item.name = fname.GetName().Trim(false).Trim(true);
+         if (!item.valid)
+         {
+            item.state = STATE_New;
+         }
+      }
    }
 }
 
@@ -967,6 +988,13 @@ void PluginRegistrationDialog::OnDisable(wxCommandEvent & WXUNUSED(evt))
    {
       SetState(items[i], false, STATE_Disabled);
    }
+}
+
+void PluginRegistrationDialog::OnRefresh(wxCommandEvent & WXUNUSED(evt)) 
+{
+   PluginManager::Get().RemoveBadPlugins();
+   RefreshItems();
+   RegenerateEffectsList(mFilter);
 }
 
 void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
@@ -2514,6 +2542,43 @@ void PluginManager::UnregisterPlugin(const PluginID & ID)
    }
 
    mPlugins.erase(ID);
+}
+
+//Iterates through the plugins and removes them if they don't exist
+void PluginManager::RemoveBadPlugins() 
+{
+   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end();) 
+   {
+      if (!PluginExists(mPluginsIter->second.GetPath()))
+      {
+         mPluginsIter = mPlugins.erase(mPluginsIter);
+      }
+      else
+      {
+         mPluginsIter++;
+      }
+   }
+}
+
+//This function will take in a PluginPath and test to see if it exists in storage
+bool PluginManager::PluginExists(const PluginPath & path)
+{
+   //If the effect is built in, it exists
+   if (path.StartsWith(wxString("Built-in Effect")))
+   {
+      return true;
+   }
+
+   //If we can open the file like this, it exists, if we can't it does not
+   if (FILE *file = fopen(path, "r")) 
+   {
+      fclose(file);
+      return true;
+   } 
+   else 
+   {
+      return false;
+   }
 }
 
 int PluginManager::GetPluginCount(PluginType type)
