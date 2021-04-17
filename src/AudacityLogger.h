@@ -6,9 +6,6 @@
 
   Dominic Mazzoni
 
-  This is the main source file for Audacity which handles
-  initialization and termination by subclassing wxApp.
-
 **********************************************************************/
 
 #ifndef __AUDACITY_LOGGER__
@@ -59,8 +56,6 @@ class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
    // PrefsListener implementation
    void UpdatePrefs() override;
 
-   Destroy_ptr<wxFrame> mFrame;
-   wxTextCtrl *mText;
    wxString mBuffer;
    bool mUpdated;
 };
