@@ -18,8 +18,6 @@
 
 
 
-#include "MemoryX.h"
-#include "Prefs.h"
 #include <functional>
 #include <wx/log.h> // to inherit
 #include <wx/event.h> // to inherit wxEvtHandler
@@ -66,14 +64,6 @@ protected:
    Listener mListener;
    wxString mBuffer;
    bool mUpdated;
-};
-
-//! Maintains the unique logging window which displays debug information
-class LogWindow
-{
-public:
-   //! Show or hide the unique logging window; create it on demand the first time it is shown
-   static void Show(bool show = true);
 };
 
 #endif
