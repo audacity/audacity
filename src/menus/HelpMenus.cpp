@@ -343,10 +343,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
 
 void OnShowLog( const CommandContext &context )
 {
-   auto logger = AudacityLogger::Get();
-   if (logger) {
-      logger->Show();
-   }
+   LogWindow::Show();
 }
 
 #if defined(HAS_CRASH_REPORT)

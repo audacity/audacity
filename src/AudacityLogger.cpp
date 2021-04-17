@@ -70,6 +70,11 @@ struct LogWindowUpdater : public PrefsListener
 // Unique PrefsListener can't be statically constructed before the application
 // object initializes, so use Optional
 std::optional<LogWindowUpdater> pUpdater;
+
+void OnCloseWindow(wxCloseEvent & e);
+void OnClose(wxCommandEvent & e);
+void OnClear(wxCommandEvent & e);
+void OnSave(wxCommandEvent & e);
 }
 
 AudacityLogger *AudacityLogger::Get()
@@ -156,7 +161,7 @@ bool AudacityLogger::ClearLog()
    return true;
 }
 
-void AudacityLogger::Show(bool show)
+void LogWindow::Show(bool show)
 {
    // Hide the frame if created, otherwise do nothing
    if (!show) {
@@ -167,9 +172,11 @@ void AudacityLogger::Show(bool show)
    }
 
    // If the frame already exists, refresh its contents and show it
+   auto pLogger = AudacityLogger::Get();
    if (sFrame) {
       if (!sFrame->IsShown() && sText) {
-         sText->ChangeValue(mBuffer);
+         if (pLogger)
+            sText->ChangeValue(pLogger->GetBuffer());
          sText->SetInsertionPointEnd();
          sText->ShowPosition(sText->GetLastPosition());
       }
@@ -207,7 +214,7 @@ void AudacityLogger::Show(bool show)
       S.StartVerticalLay(true);
       {
          sText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY | wxTE_RICH)
-            .AddTextWindow(mBuffer);
+            .AddTextWindow({}); // Populate this text window below
 
          S.AddSpace(0, 5);
          S.StartHorizontalLay(wxALIGN_CENTER, 0);
@@ -231,49 +238,41 @@ void AudacityLogger::Show(bool show)
    frame->Layout();
 
    // Hook into the frame events
-   frame->Bind(wxEVT_CLOSE_WINDOW,
-                  wxCloseEventHandler(AudacityLogger::OnCloseWindow),
-                  this);
+   frame->Bind(wxEVT_CLOSE_WINDOW, OnCloseWindow );
 
-   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
-                  &AudacityLogger::OnSave,
-                  this, LoggerID_Save);
-   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
-                  &AudacityLogger::OnClear,
-                  this, LoggerID_Clear);
-   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED,
-                  &AudacityLogger::OnClose,
-                  this, LoggerID_Close);
-   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
-                  &AudacityLogger::OnSave,
-                  this, LoggerID_Save);
-   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
-                  &AudacityLogger::OnClear,
-                  this, LoggerID_Clear);
-   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED,
-                  &AudacityLogger::OnClose,
-                  this, LoggerID_Close);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED, OnSave, LoggerID_Save);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED, OnClear, LoggerID_Clear);
+   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED, OnClose, LoggerID_Close);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED, OnSave, LoggerID_Save);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED, OnClear, LoggerID_Clear);
+   frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED, OnClose, LoggerID_Close);
 
    sFrame = std::move( frame );
 
    sFrame->Show();
 
-   Flush();
+   if (pLogger)
+      pLogger->Flush();
 
    // Also create the listeners
    if (!pUpdater)
       pUpdater.emplace();
 
-   SetListener([]{
-      if (auto pLogger = AudacityLogger::Get()) {
-         if (sFrame && sFrame->IsShown()) {
-            if (sText)
-               sText->ChangeValue(pLogger->GetBuffer());
-            return true;
+   if (pLogger) {
+      pLogger->SetListener([]{
+         if (auto pLogger = AudacityLogger::Get()) {
+            if (sFrame && sFrame->IsShown()) {
+               if (sText)
+                  sText->ChangeValue(pLogger->GetBuffer());
+               return true;
+            }
          }
-      }
-      return false;
-   });
+         return false;
+      });
+
+      // Initial flush populates sText
+      pLogger->Flush();
+   }
 }
 
 wxString AudacityLogger::GetLog(int count)
@@ -294,7 +293,8 @@ wxString AudacityLogger::GetLog(int count)
    return buffer;
 }
 
-void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
+namespace {
+void OnCloseWindow(wxCloseEvent & WXUNUSED(e))
 {
 #if defined(__WXMAC__)
    // On the Mac, destroy the window rather than hiding it since the
@@ -302,22 +302,23 @@ void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
    // project window open.
    sFrame.reset();
 #else
-   Show(false);
+   sFrame->Show(false);
 #endif
 }
 
-void AudacityLogger::OnClose(wxCommandEvent & WXUNUSED(e))
+void OnClose(wxCommandEvent & WXUNUSED(e))
 {
    wxCloseEvent dummy;
    OnCloseWindow(dummy);
 }
 
-void AudacityLogger::OnClear(wxCommandEvent & WXUNUSED(e))
+void OnClear(wxCommandEvent & WXUNUSED(e))
 {
-   ClearLog();
+   if (auto pLogger = AudacityLogger::Get())
+      pLogger->ClearLog();
 }
 
-void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
+void OnSave(wxCommandEvent & WXUNUSED(e))
 {
    wxString fName = _("log.txt");
 
@@ -350,11 +351,12 @@ void LogWindowUpdater::UpdatePrefs()
    if (sFrame) {
       bool shown = sFrame->IsShown();
       if (shown) {
-         AudacityLogger::Get()->Show(false);
+         LogWindow::Show(false);
       }
       sFrame.reset();
       if (shown) {
-         AudacityLogger::Get()->Show(true);
+         LogWindow::Show(true);
       }
    }
+}
 }
