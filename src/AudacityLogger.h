@@ -59,8 +59,6 @@ class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
    // PrefsListener implementation
    void UpdatePrefs() override;
 
-   Destroy_ptr<wxFrame> mFrame;
-   wxTextCtrl *mText;
    wxString mBuffer;
    bool mUpdated;
 };

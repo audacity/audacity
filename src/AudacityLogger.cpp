@@ -32,6 +32,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include <wx/settings.h>
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>
+#include <wx/weakref.h>
 
 #include "../images/AudacityLogoAlpha.xpm"
 #include "widgets/AudacityMessageBox.h"
@@ -55,6 +56,11 @@ enum
    LoggerID_Close
 };
 
+namespace {
+Destroy_ptr<wxFrame> sFrame;
+wxWeakRef<wxTextCtrl> sText;
+}
+
 AudacityLogger *AudacityLogger::Get()
 {
    static std::once_flag flag;
@@ -75,7 +81,6 @@ AudacityLogger::AudacityLogger()
 :  wxEvtHandler(),
    wxLog()
 {
-   mText = NULL;
    mUpdated = false;
 }
 
@@ -83,9 +88,10 @@ AudacityLogger::~AudacityLogger()  = default;
 
 void AudacityLogger::Flush()
 {
-   if (mUpdated && mFrame && mFrame->IsShown()) {
+   if (mUpdated && sFrame && sFrame->IsShown()) {
       mUpdated = false;
-      mText->ChangeValue(mBuffer);
+      if (sText)
+         sText->ChangeValue(mBuffer);
    }
 }
 
@@ -139,21 +145,21 @@ void AudacityLogger::Show(bool show)
 {
    // Hide the frame if created, otherwise do nothing
    if (!show) {
-      if (mFrame) {
-         mFrame->Show(false);
+      if (sFrame) {
+         sFrame->Show(false);
       }
       return;
    }
 
    // If the frame already exists, refresh its contents and show it
-   if (mFrame) {
-      if (!mFrame->IsShown()) {
-         mText->ChangeValue(mBuffer);
-         mText->SetInsertionPointEnd();
-         mText->ShowPosition(mText->GetLastPosition());
+   if (sFrame) {
+      if (!sFrame->IsShown() && sText) {
+         sText->ChangeValue(mBuffer);
+         sText->SetInsertionPointEnd();
+         sText->ShowPosition(sText->GetLastPosition());
       }
-      mFrame->Show();
-      mFrame->Raise();
+      sFrame->Show();
+      sFrame->Raise();
       return;
    }
 
@@ -185,7 +191,7 @@ void AudacityLogger::Show(bool show)
    {
       S.StartVerticalLay(true);
       {
-         mText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY | wxTE_RICH)
+         sText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY | wxTE_RICH)
             .AddTextWindow(mBuffer);
 
          S.AddSpace(0, 5);
@@ -233,9 +239,9 @@ void AudacityLogger::Show(bool show)
                   &AudacityLogger::OnClose,
                   this, LoggerID_Close);
 
-   mFrame = std::move( frame );
+   sFrame = std::move( frame );
 
-   mFrame->Show();
+   sFrame->Show();
 
    Flush();
 }
@@ -264,7 +270,7 @@ void AudacityLogger::OnCloseWindow(wxCloseEvent & WXUNUSED(e))
    // On the Mac, destroy the window rather than hiding it since the
    // log menu will override the root windows menu if there is no
    // project window open.
-   mFrame.reset();
+   sFrame.reset();
 #else
    Show(false);
 #endif
@@ -292,30 +298,30 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
       wxT("txt"),
       { FileNames::TextFiles },
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-      mFrame.get());
+      sFrame.get());
 
    if (fName.empty()) {
       return;
    }
 
-   if (!mText->SaveFile(fName)) {
+   if (!(sText && sText->SaveFile(fName))) {
       AudacityMessageBox(
          XO("Couldn't save log to file: %s").Format( fName ),
          XO("Warning"),
          wxICON_EXCLAMATION,
-         mFrame.get());
+         sFrame.get());
       return;
    }
 }
 
 void AudacityLogger::UpdatePrefs()
 {
-   if (mFrame) {
-      bool shown = mFrame->IsShown();
+   if (sFrame) {
+      bool shown = sFrame->IsShown();
       if (shown) {
          Show(false);
       }
-      mFrame.reset();
+      sFrame.reset();
       if (shown) {
          Show(true);
       }
