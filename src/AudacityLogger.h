@@ -11,9 +11,6 @@
 #ifndef __AUDACITY_LOGGER__
 #define __AUDACITY_LOGGER__
 
-#include <functional>
-#include "MemoryX.h"
-#include "Prefs.h"
 #include <wx/log.h> // to inherit
 #include <wx/event.h> // to inherit wxEvtHandler
 
@@ -59,14 +56,6 @@ protected:
    Listener mListener;
    wxString mBuffer;
    bool mUpdated;
-};
-
-//! Maintains the unique logging window which displays debug information
-class AUDACITY_DLL_API LogWindow
-{
-public:
-   //! Show or hide the unique logging window; create it on demand the first time it is shown
-   static void Show(bool show = true);
 };
 
 #endif

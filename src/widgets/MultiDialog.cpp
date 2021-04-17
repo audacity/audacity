@@ -36,8 +36,8 @@ for each problem encountered, since there can be many orphans.
 #include <wx/bmpbuttn.h>
 
 
-#include "../AudacityLogger.h"
 #include "wxPanelWrapper.h"
+#include "../LogWindow.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../widgets/HelpSystem.h"
