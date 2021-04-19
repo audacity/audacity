@@ -13,8 +13,10 @@
 
 #include "../Effect.h"
 #include "../../FileNames.h"
-
 #include "nyx.h"
+
+// DEBUG TODO: REMOVE THIS
+void dprintf(const wchar_t* format, ...);
 
 class wxArrayString;
 class wxFileName;
@@ -59,6 +61,10 @@ public:
    double high;
    int ticks;
 };
+
+// Here is where Nyquist gets access to the current project.
+// This is set each time a Nyquist Effect is invoked.
+extern const AudacityProject *theNyquistProject;
 
 
 class AUDACITY_DLL_API NyquistEffect final : public Effect

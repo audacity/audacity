@@ -22,10 +22,14 @@ effects from this one class.
 \class NyqControl
 \brief A control on a NyquistDialog.
 
-*//*******************************************************************/
+*//*************************/
 
+
+#include <limits>
 #include "../../Audacity.h" // for USE_* macros
+#include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
 #include "Nyquist.h"
+
 
 #include "../../Experimental.h"
 
@@ -79,6 +83,7 @@ effects from this one class.
 
 #include "../../widgets/FileDialog/FileDialog.h"
 
+// DEBUG TODO: REMOVE THIS
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist
 #endif
@@ -89,6 +94,30 @@ effects from this one class.
 #include <sstream>
 #include <float.h>
 
+// DEBUG TODO: REMOVE THIS
+#include <stdio.h>
+#include <stdlib.h>
+#if defined(_DEBUG)
+#include <stdio.h>
+#include <stdlib.h>
+void dprintf(const wchar_t *format, ...)
+{
+    wchar_t buf[4096];
+    va_list args;
+    int cnt;
+
+    va_start(args, format);
+    cnt = _vsnwprintf(buf, sizeof(buf) - 1, format, args);
+    va_end(args);
+
+    if (cnt > 0) {
+        buf[cnt] = '\0';
+        OutputDebugString(buf);
+    }
+}
+#endif
+
+const AudacityProject* theNyquistProject;
 int NyquistEffect::mReentryCount = 0;
 
 enum
@@ -746,6 +775,8 @@ bool NyquistEffect::Process()
          (int) AllProjects{}.size());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), EscapeString(project->GetProjectName()));
 
+      theNyquistProject = project;
+
       int numTracks = 0;
       int numWave = 0;
       int numLabel = 0;
@@ -994,7 +1025,7 @@ finish:
 
    if (!mProjectChanged)
       em.SetSkipStateFlag(true);
-
+   
    return success;
 }
 
@@ -3453,6 +3484,8 @@ LVAL xlc_aud_do(void)
     return (dst);
 }
 
+#include "nyquistapiintdefs.h"
+
 static void RegisterFunctions()
 {
    // Add functions to XLisp.  Do this only once,
@@ -3468,6 +3501,7 @@ static void RegisterFunctions()
          { "NGETTEXT", SUBR, ngettext },
          { "NGETTEXTC", SUBR, ngettextc },
          { "AUD-DO",  SUBR, xlc_aud_do },
+#include "nyquistapiintptrs.h"
        };
 
       xlbindfunctions( functions, WXSIZEOF( functions ) );

@@ -231,6 +231,7 @@ using AttachedTrackObjects = ClientData::Site<
 >;
 
 //! Abstract base class for an object holding data associated with points on a time axis
+//! Tracks can be organized into a TrackList object -- see TrackList.
 class AUDACITY_DLL_API Track /* not final */
    : public XMLTagHandler
    , public AttachedTrackObjects
@@ -1254,6 +1255,32 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 
 /*! @brief A flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, serialization of the list of tracks, event notifications
+ * 
+ * a TrackList contains tracks of all types: Wave, Note, Label, Time. 
+ * "Stereo Tracks" are represented by two consecutive WaveTracks in the 
+ * TrackList. To locate tracks where a stereo track counts as one entity,
+ * use auto range = trackList.Leaders(); which constructs a pair of
+ * iterators accessed through begin() and end() that enumerate only the
+ * "leaders" which are every non-wave track, every mono track, and every
+ * left channel of a stereo track.
+ *
+ * To access track content, you need to convert to a subclass, e.g. WaveTrack*
+ * or LabelTrack* using track->TypeSwitch, e.g.
+ *    track->TypeSwitch([&](const LabelTrack* labelTrack) {
+ *        for (const auto &label : labelTrack->GetLabels()) {
+ *            ....
+ *        }
+ *   });
+ * Note that TypeSwitch can accept multiple lambda functions to perform
+ * different actions for different track types.
+ * 
+ * To determine whether you have a mono or stereo track, 
+ *   auto channels = TrackList::Channels(waveTrack); will create an object
+ * with methods size() = 1 for mono, 2 for stereo. 
+ * 
+ * TODO: There are many templates and methods designed to treat Track and its
+ * subclasses as abstractions in addition to the elements mentioned above, but
+ * these abstractions are mostly undocumented. 
  */
 class TrackList final
    : public wxEvtHandler

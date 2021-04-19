@@ -30,6 +30,11 @@ extern "C"
 
    void        nyx_init();
    void        nyx_cleanup();
+   // this is defined in NyquistAPI.cpp, but NyquistAPI.h requires xlisp.h
+   // and all the XLISP declarations, whereas NyquistAPICleanup() is only
+   // needed by Nyquist.cpp for Audacity effects as are other functions
+   // here in nyx.h.
+   void        NyquistAPICleanup();
    void        nyx_set_xlisp_path(const char *path);
 
    /* should return return 0 for success, -1 for error */
@@ -75,8 +80,12 @@ extern "C"
     * Nyquist returns an array of samples (which we can't handle)
     */
    int         nyx_get_audio_num_channels();
+   double      nyx_get_sample_rate(LVAL sound);
+   int         nyx_get_num_channels(LVAL snd);
    int         nyx_get_audio(nyx_audio_callback callback,
-                             void *userdata);
+                             void* userdata);
+   int         nyx_pump_audio(LVAL sound, int64_t len, 
+                              nyx_audio_callback callback, void* userdata);
 
    int         nyx_get_int();
    double      nyx_get_double();
@@ -90,6 +99,10 @@ extern "C"
 
    const char *nyx_get_error_str();
 
+   LVAL nyx_make_input_audio(nyx_audio_callback callback,
+       void* userdata,
+       int num_channels,
+       int64_t len, double rate);
 
 
 #ifdef __cplusplus

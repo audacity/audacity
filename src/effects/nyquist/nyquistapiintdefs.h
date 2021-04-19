@@ -1,0 +1,9 @@
+extern LVAL xlc_aud_get_track_info(void);
+extern LVAL xlc_aud_get_audio(void);
+extern LVAL xlc_aud_put_audio(void);
+extern LVAL xlc_aud_get_labels(void);
+extern LVAL xlc_aud_put_labels(void);
+extern LVAL xlc_aud_get_notes(void);
+extern LVAL xlc_aud_put_notes(void);
+extern LVAL xlc_aud_get_times(void);
+extern LVAL xlc_aud_put_times(void);
