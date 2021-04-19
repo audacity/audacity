@@ -971,8 +971,9 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          {
             Import(fileName);
          }
-
-         window.ZoomAfterImport(nullptr);
+         // Bug 2743: Don't zoom with lof.
+         if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
+            window.ZoomAfterImport(nullptr);
 
          return;
       }

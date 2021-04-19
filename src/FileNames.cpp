@@ -516,6 +516,8 @@ wxString FileNames::PreferenceKey(FileNames::Operation op, FileNames::PathType t
          key = wxT("/Directories/Import"); break;
       case FileNames::Operation::Export:
          key = wxT("/Directories/Export"); break;
+      case FileNames::Operation::MacrosOut:
+         key = wxT("/Directories/MacrosOut"); break;
       case FileNames::Operation::_None:
       default:
          break;

@@ -138,60 +138,8 @@ int DBConnection::Open(const FilePath fileName)
    mCheckpointStop = false;
    mCheckpointPending = false;
    mCheckpointActive = false;
-
-   const char *name = fileName.ToUTF8();
-
-   bool success = false;
-   rc = sqlite3_open(name, &mDB);
-   if (rc == SQLITE_OK)
-   {
-      // Set default mode
-      // (See comments in ProjectFileIO::SaveProject() about threading
-      if (SafeMode())
-      {
-         rc = sqlite3_open(name, &mCheckpointDB);
-         if (rc == SQLITE_OK)
-         {
-            // Set default mode
-            // (See comments in ProjectFileIO::SaveProject() about threading
-            if (ModeConfig(mCheckpointDB, "main", SafeConfig))
-            {
-               auto db = mCheckpointDB;
-               mCheckpointThread = std::thread(
-                  [this, db, fileName]{ CheckpointThread(db, fileName); });
-
-               // Install our checkpoint hook
-               sqlite3_wal_hook(mDB, CheckpointHook, this);
-
-               success = true;
-            }
-            else
-            {
-               SetDBError(XO("Failed to set safe mode on checkpoint connection to %s").Format(fileName));
-            }
-         }
-         else
-         {
-            wxLogMessage("Failed to open checkpoint connection to %s: %d, %s\n",
-               fileName,
-               rc,
-               sqlite3_errstr(rc));
-         }
-      }
-      else
-      {
-         SetDBError(XO("Failed to set safe mode on primary connection to %s").Format(fileName));
-      }
-   }
-   else
-   {
-      wxLogMessage("Failed to open primary connection to %s: %d, %s\n",
-         fileName,
-         rc,
-         sqlite3_errstr(rc));
-   }
-
-   if (!success)
+   rc = OpenStepByStep( fileName );
+   if ( rc != SQLITE_OK)
    {
       if (mCheckpointDB)
       {
@@ -205,7 +153,52 @@ int DBConnection::Open(const FilePath fileName)
          mDB = nullptr;
       }
    }
+   return rc;
+}
 
+int DBConnection::OpenStepByStep(const FilePath fileName)
+{
+   const char *name = fileName.ToUTF8();
+
+   bool success = false;
+   int rc = sqlite3_open(name, &mDB);
+   if (rc != SQLITE_OK) {
+      wxLogMessage("Failed to open primary connection to %s: %d, %s\n",
+         fileName,
+         rc,
+         sqlite3_errstr(rc));
+      return rc;
+   }
+
+   // Set default mode
+   // (See comments in ProjectFileIO::SaveProject() about threading
+   rc = SafeMode();
+   if (rc != SQLITE_OK) {
+      SetDBError(XO("Failed to set safe mode on primary connection to %s").Format(fileName));
+      return rc;
+   }
+
+   rc = sqlite3_open(name, &mCheckpointDB);
+   if (rc != SQLITE_OK) {
+      wxLogMessage("Failed to open checkpoint connection to %s: %d, %s\n",
+         fileName,
+         rc,
+         sqlite3_errstr(rc));
+      return rc;
+   }
+
+   rc = ModeConfig(mCheckpointDB, "main", SafeConfig);
+   if (rc != SQLITE_OK) {
+      SetDBError(XO("Failed to set safe mode on checkpoint connection to %s").Format(fileName));
+      return rc;
+   }
+
+   auto db = mCheckpointDB;
+   mCheckpointThread = std::thread(
+      [this, db, fileName]{ CheckpointThread(db, fileName); });
+
+   // Install our checkpoint hook
+   sqlite3_wal_hook(mDB, CheckpointHook, this);
    return rc;
 }
 
@@ -325,17 +318,17 @@ bool DBConnection::Close()
    };
 }
 
-bool DBConnection::SafeMode(const char *schema /* = "main" */)
+int DBConnection::SafeMode(const char *schema /* = "main" */)
 {
    return ModeConfig(mDB, schema, SafeConfig);
 }
 
-bool DBConnection::FastMode(const char *schema /* = "main" */)
+int DBConnection::FastMode(const char *schema /* = "main" */)
 {
    return ModeConfig(mDB, schema, FastConfig);
 }
 
-bool DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *config)
+int DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *config)
 {
    // Ensure attached DB connection gets configured
    int rc;
@@ -357,7 +350,7 @@ bool DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *confi
                    sql);
    }
 
-   return rc == SQLITE_OK;
+   return rc;
 }
 
 sqlite3 *DBConnection::DB()
