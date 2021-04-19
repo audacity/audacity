@@ -29,7 +29,7 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 3.0.2
+Version 3.0.3
 
 Contents of this README:
 
