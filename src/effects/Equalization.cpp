@@ -1145,9 +1145,14 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    if( mOptions != kEqOptionGraphic)
       mUIParent->Layout();
 
+   if( mOptions == kEqOptionCurve)
+      mDrawMode = true;
+   if( mOptions == kEqOptionGraphic)
+      mDrawMode = false;
+
    // "show" settings for graphics mode before setting the size of the dialog
    // as this needs more space than draw mode
-   szrV->Show(szrG,true);  // eq sliders
+   szrV->Show(szrG,!mDrawMode);  // eq sliders
    szrH->Show(szrI,true);  // interpolation choice
    szrH->Show(szrL,false); // linear freq checkbox
 
