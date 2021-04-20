@@ -14,7 +14,7 @@
 #   include <uuid/uuid.h>
 #endif
 
-#include "../lib-string-utils/HexHelpers.h"
+#include "lib-string-utils/HexHelpers.h"
 
 namespace audacity
 {
