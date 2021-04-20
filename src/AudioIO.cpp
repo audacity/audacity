@@ -546,8 +546,9 @@ struct AudioIoCallback::ScrubState
    ScrubState(double t0,
               double rate,
               const ScrubbingOptions &options)
-      : mRate(rate)
-      , mStartTime( t0 )
+      : mStartTime( t0 )
+      , mRate(rate)
+
    {
       const double t1 = options.bySpeed ? options.initSpeed : t0;
       Update( t1, options );

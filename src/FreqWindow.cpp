@@ -189,8 +189,8 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
                            const wxPoint & pos)
 :  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
+   mProject{ &project },
    mAnalyst(std::make_unique<SpectrumAnalyst>())
-,  mProject{ &project }
 {
    SetName();
 
