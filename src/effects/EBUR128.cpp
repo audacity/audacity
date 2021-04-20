@@ -83,7 +83,7 @@ ArrayOf<Biquad> EBUR128::CalcWeightingFilter(double fs)
    pBiquad[1].fDenomCoeffs[Biquad::A1] = 2.0 * (K * K - 1.0) / (1.0 + K / Q + K * K);
    pBiquad[1].fDenomCoeffs[Biquad::A2] = (1.0 - K / Q + K * K) / (1.0 + K / Q + K * K);
 
-   return std::move(pBiquad);
+   return pBiquad;
 }
 
 void EBUR128::ProcessSampleFromChannel(float x_in, size_t channel)
