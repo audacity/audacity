@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-04-01 09:56+0000\n"
+"PO-Revision-Date: 2021-04-11 20:58+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -3326,7 +3326,7 @@ msgstr "Zarządzaj wtyczkami"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Wybierz efekty, kliknij przycisk Włącz lub Wyłącz, a następnie kliknij na przycisk OK."
+msgstr "Wybierz efekty, kliknij przycisk 'Włącz' lub 'Wyłącz', a następnie kliknij na przycisk 'OK'."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -3754,7 +3754,7 @@ msgid ""
 "This project was created with a newer version of Audacity:\n"
 "\n"
 "You will need to upgrade to process it"
-msgstr "Ten projekt został utworzony przy użyciu nowszej wersji Audacity:\n\nPowinieneś uaktualnić do nowszej wersji, aby go przetworzyć"
+msgstr "Ten projekt został utworzony przy użyciu nowszej wersji Audacity:\n\nMusisz uaktualnić do nowszej wersji, aby go przetworzyć."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -3890,7 +3890,7 @@ msgstr "(Odzyskane)"
 msgid ""
 "This file was saved using Audacity %s.\n"
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
-msgstr "Plik został zapisany przy użyciu Audacity %s.\nUżywasz Audacity %s - powinieneś uaktualnić do nowszej wersji, aby otworzyć ten plik."
+msgstr "Ten plik został zapisany przy użyciu Audacity %s.\nUżywasz Audacity %s. Musisz uaktualnić do nowszej wersji, aby otworzyć ten plik."
 
 #: src/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -8255,7 +8255,7 @@ msgstr "Krok 1"
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
-msgstr "Zaznacz kilka sekund szumu, aby Audacity wiedział, co odfiltrować,\nnastępnie kliknij na Uzyskaj profil szumu:"
+msgstr "Zaznacz kilka sekund szumu, aby Audacity wiedział, co odfiltrować,\nnastępnie kliknij na 'Uzyskaj profil szumu':"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "&Get Noise Profile"
@@ -8269,7 +8269,7 @@ msgstr "Krok 2"
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
-msgstr "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\nprzefiltrowania i kliknij na przycisk OK, aby zredukować szumy.\n"
+msgstr "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\nprzefiltrowania i kliknij na przycisk 'OK', aby zredukować szumy.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -8379,7 +8379,7 @@ msgstr "Usuwa stałe szumy tła, takie jak wentylatory, szumy taśmy lub buczeni
 msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to remove noise.\n"
-msgstr "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\nprzefiltrowania i kliknij na przycisk OK, aby usunąć szumy.\n"
+msgstr "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\nprzefiltrowania i kliknij na przycisk 'OK', aby usunąć szumy.\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -11403,7 +11403,7 @@ msgid ""
 "\"%s\" is a video file. \n"
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
-msgstr "\"%s\" jest plikiem zawierającym film. \nAudacity nie może otworzyć tego typu pliku. \nMusisz przekonwertować plik do obsługiwanego formatu, takiego jak WAV lub AIFF."
+msgstr "\"%s\" jest plikiem zawierającym film. \nAudacity nie może otworzyć tego typu pliku. \nMusisz wypakować plik do obsługiwanego formatu, takiego jak WAV lub AIFF."
 
 #: src/import/Import.cpp
 #, c-format
@@ -11928,7 +11928,7 @@ msgstr "Pliki QuickTime"
 
 #: src/import/ImportQT.cpp
 msgid "Unable to start QuickTime extraction"
-msgstr "Nie można uruchomić wydobywania QuickTime"
+msgstr "Nie można uruchomić wyodrębniania QuickTime"
 
 #: src/import/ImportQT.cpp
 msgid "Unable to set QuickTime render quality"
@@ -14950,7 +14950,7 @@ msgid ""
 "\t%s\n"
 "\n"
 "instead. Otherwise, click Cancel."
-msgstr "Skrót klawiaturowy '%s' jest już przypisany do:\n\n\t%s\n\n\nKliknij na przycisk OK, aby zamiast tego przypisać skrót do\n\n\t%s\n\nW przeciwnym razie kliknij Anuluj."
+msgstr "Skrót klawiaturowy '%s' jest już przypisany do:\n\n\t%s\n\n\nKliknij na przycisk 'OK', aby zamiast tego przypisać skrót do\n\n\t%s\n\nW przeciwnym razie kliknij 'Anuluj'."
 
 #: src/prefs/KeyConfigPrefs.h
 msgid "Key Config"
@@ -19639,7 +19639,7 @@ msgstr " - Te dwa kanały są identyczne, tj. dual mono.\n                Środk
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
 "                Most likely, the center extraction will be poor."
-msgstr " - Obydwa kanały są silnie powiązane, tj. prawie mono lub ekstremalne panoramowanie.\n                Najprawdopodobniej środek ekstrakcji będzie słaby."
+msgstr " - Obydwa kanały są silnie powiązane, tj. prawie mono lub ekstremalne panoramowanie.\n                Najprawdopodobniej wyodrębnienie środka będzie słabe."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -19650,14 +19650,14 @@ msgstr " - Dość dobra wartość, przynajmniej średnia stereo i nie za szeroka
 msgid ""
 " - An ideal value for Stereo.\n"
 "                However, the center extraction depends also on the used reverb."
-msgstr " - Idealna wartość dla stereo.\n                Jednak ekstrakcja środka zależy również od zastosowanego pogłosu."
+msgstr " - Idealna wartość dla stereo.\n                Jednak wyodrębnienie środka zależy również od zastosowanego pogłosu."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are almost not related.\n"
 "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
-msgstr " - Oba kanały są prawie niepowiązane.\n                Albo masz tylko szum, albo utwór jest zmasterowany w niezbalansowany sposób.\n                Ekstrakcja środka może być jednak dobra."
+msgstr " - Oba kanały są prawie niepowiązane.\n                Albo masz tylko szum, albo utwór jest zmasterowany w niezbalansowany sposób.\n                Wyodrębnienie środka może być jednak dobre."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
