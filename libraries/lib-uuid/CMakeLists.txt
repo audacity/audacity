@@ -24,16 +24,17 @@ elseif(APPLE)
     target_compile_definitions(${TARGET} PRIVATE USE_CFUUID)
 
     find_library(CORE_FOUNDATION CoreFoundation)
-    target_link_libraries(${TARGET} PRIVATE ${CoreFoundation})
+    target_link_libraries(${TARGET} PRIVATE ${CORE_FOUNDATION})
 else()
-    find_package(Libuuid REQUIRED)
+    find_package(PkgConfig REQUIRED)
+    pkg_search_module(UUID REQUIRED uuid)
 
-    if (NOT LIBUUID_FOUND)
+    if (NOT UUID_FOUND)
         message(FATAL_ERROR "You might need to run 'sudo apt-get install uuid-dev' or similar")
     endif()
 
-    target_include_directories(${TARGET} PRIVATE ${LIBUUID_INCLUDE_DIR})
-    target_link_libraries(${TARGET} ${LIBUUID_LIBRARY})
+    target_include_directories(${TARGET} PRIVATE ${UUID_INCLUDE_DIRS})
+    target_link_libraries(${TARGET} ${UUID_LIBRARIES})
     target_compile_definitions(${TARGET} PRIVATE USE_LIBUUID)
 endif()
 

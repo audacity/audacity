@@ -1,6 +1,7 @@
 #include "Uuid.h"
 
 #include <algorithm>
+#include <cstring>
 
 #ifdef USE_UUID_CREATE
 #   include <rpc.h>
@@ -97,7 +98,7 @@ Uuid Uuid::Generate ()
 
     Uuid uuid;
 
-    std::memcpy (uuid.mData.data (), newId, sizeof (bytes));
+    std::memcpy (uuid.mData.data (), newId, sizeof (newId));
 
     return uuid;
 #endif

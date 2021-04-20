@@ -111,6 +111,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
+#include "telemetry/TelemetryHelper.h"
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 #include "prefs/KeyConfigPrefs.h"
@@ -123,7 +124,8 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "import/Import.h"
 
-#include "../../libraries/lib-network-manager/NetworkManager.h"
+#include "lib-network-manager/NetworkManager.h"
+
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
 #endif
@@ -1274,6 +1276,8 @@ bool AudacityApp::OnInit()
       return false;
    }
 
+   mTelemetryHelper = std::make_unique<TelemetryHelper> ();
+
 #ifdef __WXMAC__
    // Bug2437:  When files are opened from Finder and another instance of
    // Audacity is running, we must return from OnInit() to wxWidgets before
@@ -2217,6 +2221,7 @@ int AudacityApp::OnExit()
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
 
+   mTelemetryHelper.reset ();
    audacity::network_manager::NetworkManager::Terminate();
 
    return 0;

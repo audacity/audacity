@@ -966,6 +966,10 @@ list( APPEND SOURCES
       xml/audacityproject.dtd
 
       Experimental.cmake
+
+      # Telemetry
+      telemetry/TelemetryHelper.h
+      telemetry/TelemetryHelper.cpp
 )
 
 #
@@ -989,6 +993,7 @@ list( APPEND INCLUDES
    PUBLIC
       ${_PRVDIR}
       ${topdir}/include
+      ${topdir}/libraries
       ${TARGET_ROOT}
 )
 
@@ -1053,6 +1058,8 @@ list( APPEND LIBRARIES
       portaudio-v19
       sqlite
       lib-network-manager
+      lib-telemetry
+      lib-string-utils
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>

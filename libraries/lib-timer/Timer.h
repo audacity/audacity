@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <chrono>
+#include <memory>
 
 #include <wx/timer.h>
 

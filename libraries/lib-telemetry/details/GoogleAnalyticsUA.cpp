@@ -36,14 +36,11 @@ GoogleAnalyticsUA::GoogleAnalyticsUA (const std::string& appName, const std::str
     char buffer[256] = {};
 
     snprintf (buffer, sizeof (buffer),
-        "%s/%s (%s; %s; %d.%d.%d; %s) LibTelemetry/1.0 (wxWidgets/%d.%d.%d)",
+        "%s/%s (%s; %s; %s) LibTelemetry/1.0 (wxWidgets/%d.%d.%d)",
         appName.c_str (),
         appVersion.c_str (),
         ToUTF8 (platformInfo.GetOperatingSystemFamilyName ()).c_str (),
         ToUTF8 (platformInfo.GetArchName ()).c_str (),
-        platformInfo.GetOSMajorVersion (),
-        platformInfo.GetOSMinorVersion (),
-        platformInfo.GetOSMicroVersion (),
         ToUTF8 (wxLocale (wxLocale::GetSystemLanguage ()).GetCanonicalName ()).c_str (),
         wxMAJOR_VERSION,
         wxMINOR_VERSION,

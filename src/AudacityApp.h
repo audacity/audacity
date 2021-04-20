@@ -34,6 +34,8 @@ class CommandHandler;
 class AppCommandEvent;
 class AudacityProject;
 
+class TelemetryHelper;
+
 class AudacityApp final : public wxApp {
  public:
    AudacityApp();
@@ -112,7 +114,7 @@ class AudacityApp final : public wxApp {
 #else
    std::unique_ptr<wxSocketServer> mIPCServ;
 #endif
-
+   std::unique_ptr<TelemetryHelper> mTelemetryHelper;
  public:
     DECLARE_EVENT_TABLE()
 };

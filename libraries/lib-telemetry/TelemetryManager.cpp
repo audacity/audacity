@@ -314,10 +314,10 @@ void SetService (Service service, const std::string& configuration)
             telemetryManager.AppVersion,
             configuration
         );
-
-        if (telemetryManager.TelemetryEnabled)
-            telemetryManager.processTimer ();
     }
+
+    if (telemetryManager.TelemetryService != nullptr)
+        telemetryManager.processTimer ();
 }
 
 void ReportScreenView (const std::string& screenName)
