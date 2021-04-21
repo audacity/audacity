@@ -1113,6 +1113,9 @@ bool NyquistEffect::ProcessOne()
 
    // A tool may be using AUD-DO which will potentially invalidate *TRACK*
    // so tools do not get *TRACK*.
+   // STF but the *TRACK* property list is still very useful,
+   // so it would be better to just set *TRACK* to NIL and
+   // retain the symbol.
    if (GetType() == EffectTypeTool)
       cmd += wxT("(setf S 0.25)\n");  // No Track.
    else if (mVersion >= 4) {
@@ -1466,7 +1469,14 @@ bool NyquistEffect::ProcessOne()
       if (!msg.empty()) { // Empty string may be used as a No-Op return value.
          Effect::MessageBox( msg );
       }
+      else if (GetType() == EffectTypeTool) {
+         // ;tools may change the project with aud-do commands so
+         // it is essential that the state is added to history.
+         mProjectChanged = true;
+         return true;
+      }
       else {
+         // A true no-op.
          return true;
       }
 
