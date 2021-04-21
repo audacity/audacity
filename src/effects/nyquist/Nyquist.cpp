@@ -1113,9 +1113,6 @@ bool NyquistEffect::ProcessOne()
 
    // A tool may be using AUD-DO which will potentially invalidate *TRACK*
    // so tools do not get *TRACK*.
-   // STF but the *TRACK* property list is still very useful,
-   // so it would be better to just set *TRACK* to NIL and
-   // retain the symbol.
    if (GetType() == EffectTypeTool)
       cmd += wxT("(setf S 0.25)\n");  // No Track.
    else if (mVersion >= 4) {
