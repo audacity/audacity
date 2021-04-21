@@ -151,7 +151,7 @@ private:
    AudacityProject *mProject{};
 
    // In order to know whether or not to create a NEW window
-   bool              windowCalledOnce{ false };
+   int nFilesInGroup{ 0 };
 
    // In order to zoom in, it must be done after files are opened
    bool              callDurationFactor{ false };
@@ -315,15 +315,11 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
       // set any duration/offset factors for last window, as all files were called
       doDurationAndScrollOffset();
 
-      if (windowCalledOnce)
+      if (nFilesInGroup > 0 )
          // Cause a project to be created with the next import
          mProject = nullptr;
-      else
-         // Apply any offset and duration directives of the first "window" line
-         // to the previously open project, not a NEW one.
-         ;
 
-      windowCalledOnce = true;
+      nFilesInGroup = 0;
 
       while (tok.HasMoreTokens())
       {
@@ -382,7 +378,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 
    else if (tokenholder.IsSameAs(wxT("file"), false))
    {
-
+      nFilesInGroup++;
       // To identify filename and open it
       tokenholder = temptok1.GetNextToken();
       wxString targettoken = temptok1.GetNextToken();
