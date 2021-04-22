@@ -85,6 +85,8 @@ the mouse around.
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/Ruler.h"
 
+#include "lib-telemetry/TelemetryManager.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 #endif
@@ -210,6 +212,8 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    gPrefs->Read(wxT("/FrequencyPlotDialog/AxisChoice"), &mAxis, 1);
 
    Populate();
+
+   audacity::telemetry::ReportBuiltinEvent (audacity::telemetry::BuiltinCategory::Analyzer, "Plot Spectrum", "selected");
 }
 
 FrequencyPlotDialog::~FrequencyPlotDialog()

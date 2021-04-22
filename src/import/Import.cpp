@@ -59,6 +59,9 @@ ImportLOF.cpp, and ImportAUP.cpp.
 
 #include "../widgets/ProgressDialog.h"
 
+#include "lib-telemetry/TelemetryManager.h"
+#include "lib-string-utils/CodeConversions.h"
+
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
 // ============================================================================
@@ -628,6 +631,12 @@ bool Importer::Import( AudacityProject &project,
             inFile->SetStreamUsage(0,TRUE);
 
          auto res = inFile->Import(trackFactory, tracks, tags);
+
+         audacity::telemetry::ReportBuiltinEvent (
+             audacity::telemetry::BuiltinCategory::AudioImport,
+             audacity::ToUTF8 (plugin->GetPluginFormatDescription ().Debug ()) ,
+             res == ProgressResult::Success ? "imported" : "failed"
+         );
 
          if (res == ProgressResult::Success || res == ProgressResult::Stopped)
          {

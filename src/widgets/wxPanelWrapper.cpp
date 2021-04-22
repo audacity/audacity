@@ -11,6 +11,9 @@
 
 #include <wx/grid.h>
 
+#include "lib-telemetry/TelemetryManager.h"
+#include "lib-string-utils/CodeConversions.h"
+
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
 //#ifdef __WXMAC__
@@ -61,6 +64,24 @@ void wxPanelWrapper::SetToolTip(const TranslatableString &toolTip)
 void wxPanelWrapper::SetName()
 {
    wxPanel::SetName( GetLabel() );
+}
+
+wxDialogWrapper::wxDialogWrapper (
+    wxWindow* parent, wxWindowID id, 
+    const TranslatableString& title, 
+    const wxPoint& pos /*= wxDefaultPosition*/, 
+    const wxSize& size /*= wxDefaultSize*/, 
+    long style /*= wxDEFAULT_DIALOG_STYLE*/, /* Important: default window name localizes! */ 
+    const TranslatableString& name /*= XO("Dialog")*/) 
+    : wxTabTraversalWrapper<wxDialog> (
+        parent, id, 
+        title.Translation (), 
+        pos, 
+        size, style, 
+        name.Translation ()
+      )
+{
+    audacity::telemetry::ReportScreenView (audacity::ToUTF8 (title.Debug ()));
 }
 
 void wxDialogWrapper::SetTitle(const TranslatableString & title)

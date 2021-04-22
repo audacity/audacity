@@ -73,6 +73,9 @@
 #include "../widgets/ErrorDialog.h"
 #include "../wxFileNameWrapper.h"
 
+#include "lib-telemetry/TelemetryManager.h"
+#include "lib-string-utils/CodeConversions.h"
+
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
@@ -950,6 +953,12 @@ bool Exporter::ExportTracks()
 
    success =
       result == ProgressResult::Success || result == ProgressResult::Stopped;
+
+   audacity::telemetry::ReportBuiltinEvent (
+       audacity::telemetry::BuiltinCategory::AudioExport,
+       audacity::ToUTF8 (mPlugins[mFormat]->GetFormat (mSubFormat)),
+       success ? "exported" : "failed"
+   );
 
    return success;
 }

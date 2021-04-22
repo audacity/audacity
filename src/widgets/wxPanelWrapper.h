@@ -91,10 +91,7 @@ public:
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE,
       // Important:  default window name localizes!
-      const TranslatableString& name = XO("Dialog"))
-   : wxTabTraversalWrapper<wxDialog>(
-      parent, id, title.Translation(), pos, size, style, name.Translation() )
-   {}
+      const TranslatableString& name = XO("Dialog"));
 
    // Pseudo ctor
    bool Create(

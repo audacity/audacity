@@ -497,6 +497,18 @@ protected:
                      ArrayOf< float * > &inBufPos,
                      ArrayOf< float *> &outBufPos);
 
+ // Telemetry
+ //
+private:
+    enum class TelemetryReportType
+    {
+        Selected,
+        Previewed,
+        Applied
+    };
+
+    void ReportEffectUsed (TelemetryReportType reportType, bool successful);
+
  //
  // private data
  //

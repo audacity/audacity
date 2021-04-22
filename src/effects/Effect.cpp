@@ -45,6 +45,9 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 
+#include "lib-telemetry/TelemetryManager.h"
+#include "lib-string-utils/CodeConversions.h"
+
 #include <unordered_map>
 
 // Effect application counter
@@ -1214,6 +1217,8 @@ bool Effect::DoEffect(double projectRate,
 {
    wxASSERT(selectedRegion.duration() >= 0.0);
 
+   ReportEffectUsed (TelemetryReportType::Selected, true);
+
    mOutputTracks.reset();
 
    mpSelectedRegion = &selectedRegion;
@@ -1324,6 +1329,8 @@ bool Effect::DoEffect(double projectRate,
 
       {
          returnVal = Process();
+
+         ReportEffectUsed (TelemetryReportType::Applied, returnVal);
       }
    }
 
@@ -2431,6 +2438,8 @@ void Effect::Preview(bool dryOnly)
       auto vr2 = valueRestorer( mIsPreview, true );
 
       success = Process();
+
+      ReportEffectUsed (TelemetryReportType::Previewed, success);
    }
 
    if (success)
@@ -2483,4 +2492,42 @@ int Effect::MessageBox( const TranslatableString& message,
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox( message, title, style, mUIParent );
 }
+
+static const audacity::telemetry::BuiltinCategory categoryMap[] = {
+    audacity::telemetry::BuiltinCategory::Effect, // EffectTypeNone
+    audacity::telemetry::BuiltinCategory::Effect, // EffectTypeHidden
+    audacity::telemetry::BuiltinCategory::AudioGenerator, // EffectTypeGenerate
+    audacity::telemetry::BuiltinCategory::Effect, // EffectTypeProcess
+    audacity::telemetry::BuiltinCategory::Analyzer, // EffectTypeAnalyze
+    audacity::telemetry::BuiltinCategory::Tool, // EffectTypeTool
+};
+
+void Effect::ReportEffectUsed (TelemetryReportType reportType, bool successful)
+{
+    const EffectType effectType = GetType ();
+    const audacity::telemetry::BuiltinCategory category = 
+        categoryMap[size_t (effectType)];
+
+    std::string action;
+
+    switch (reportType)
+    {
+    case Effect::TelemetryReportType::Selected:
+        action = "selected";
+        break;
+    case Effect::TelemetryReportType::Previewed:
+        action = successful ? "previewed" : "preview_failed";
+        break;
+    case Effect::TelemetryReportType::Applied:
+        action = successful ? "applied" : "apply_failed";
+        break;
+    default:
+        action = "unknown";
+        break;
+    }
+
+
+    audacity::telemetry::ReportBuiltinEvent (category, audacity::ToUTF8 (GetName ().Debug()), action);
+}
+
 
