@@ -42,8 +42,24 @@ public:
    wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
    void OnLeave();
    void SetPrefs (ExtImportPrefs *prefs);
+   ExtImportPrefs* GetPrefs() { return mPrefs; }
 private:
    ExtImportPrefs *mPrefs;
+};
+
+class extImpWxDropSource : public wxDropSource {
+public:
+   extImpWxDropSource(wxWindow*) {}
+   wxDropTarget* SourceTable = NULL;
+   wxDropTarget* CurrentTable = NULL;
+   bool GiveFeedback(wxDragResult effect)
+   {
+      return (SourceTable != CurrentTable);
+   }
+   void SetSourceTable(wxDropTarget* source) { SourceTable = source; }
+   //wxDropTarget* GetSourceTable() { return SourceTable; }
+   //wxDropTarget* GetCurrentTable() { return CurrentTable; }
+   void SetCurrentTable(wxDropTarget* current) { CurrentTable = current; }
 };
 
 class ExtImportPrefs final : public PrefsPanel
@@ -83,8 +99,11 @@ class ExtImportPrefs final : public PrefsPanel
 
    Grid *GetRuleTable() { return RuleTable; }
    wxListCtrl *GetPluginList() { return PluginList; }
+   wxDropTarget *dropRuleTable;
+   wxDropTarget *dropPluginList;
 
    wxWindow *GetDragFocus() { return mDragFocus; }
+   extImpWxDropSource *GetDropSource() { return mDropSource; }
 
  private:
 
@@ -97,6 +116,7 @@ class ExtImportPrefs final : public PrefsPanel
    wxButton *MoveRuleDown;
    wxButton *MoveFilterUp;
    wxButton *MoveFilterDown;
+   extImpWxDropSource *mDropSource;
 
    wxTextDataObject *dragtext1 {};
    wxTextDataObject *dragtext2 {};
