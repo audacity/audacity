@@ -30,13 +30,12 @@ namespace
 const char* telemetryFileName = "telemetry.cfg";
 
 const char* builtinCategoriesNames[] = {
-    "EffectApplied",
-    "EffectAddedToStack",
-    "AnalyzerUsed",
-    "AudioGenerated",
+    "Effect",
+    "Analyzer",
+    "AudioGenerator",
+    "Tool",
     "AudioExport",
     "AudioImport",
-    "Track",
 };
 
 struct TelemetryManager final
@@ -347,7 +346,7 @@ void ReportException (const std::string& exceptionMessage, bool isFatal)
     telemetryManager.persistTelemetryData ();
 }
 
-void ReportEvent (BuiltinCategory category, const std::string& name, const std::string& action)
+void ReportBuiltinEvent (BuiltinCategory category, const std::string& name, const std::string& action)
 {
     ReportCustomEvent (
         builtinCategoriesNames[size_t (category)],

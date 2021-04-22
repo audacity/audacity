@@ -18,13 +18,12 @@ enum class Service
 
 enum class BuiltinCategory
 {
-    EffectApplied,
-    EffectAddedToStack,
-    AnalyzerUsed,
-    AudioGenerated,
+    Effect,
+    Analyzer,
+    AudioGenerator,
+    Tool,
     AudioExport,
     AudioImport,
-    Track,
 };
 
 TELEMETRY_API void Initialize (const std::string& appName, const std::string& appVersion, std::string tempDir, bool enabled);
@@ -43,7 +42,7 @@ TELEMETRY_API void ReportScreenView (const std::string& screenName);
 
 TELEMETRY_API void ReportException (const std::string& exceptionMessage, bool isFatal = false);
 
-TELEMETRY_API void ReportEvent (BuiltinCategory category, const std::string& name, const std::string& action);
+TELEMETRY_API void ReportBuiltinEvent (BuiltinCategory category, const std::string& name, const std::string& action);
 
 TELEMETRY_API void ReportCustomEvent (
     const std::string& category,
