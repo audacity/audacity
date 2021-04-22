@@ -8,7 +8,7 @@
 const int nBuff = 1024;
 
 extern "C" int DoSrv( char * pIn );
-extern "C" int DoSrvMore( char * pOut, int nMax );
+extern "C" int DoSrvMore( char * pOut, size_t nMax );
 
 void PipeServer()
 {
@@ -119,7 +119,7 @@ const char fifotmpl[] = "/tmp/audacity_script_pipe.%s.%d";
 const int nBuff = 1024;
 
 extern "C" int DoSrv( char * pIn );
-extern "C" int DoSrvMore( char * pOut, int nMax );
+extern "C" int DoSrvMore( char * pOut, size_t nMax );
 
 void PipeServer()
 {
