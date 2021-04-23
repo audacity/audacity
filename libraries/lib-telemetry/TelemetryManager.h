@@ -10,10 +10,15 @@ namespace audacity
 {
 namespace telemetry
 {
-enum class Service
+enum class TelemetryService
 {
     // Measurement protocol for the "Universal Analytics" by Goggle.
-    GoogleAnalytics_UA  
+    GoogleAnalytics_UA,
+};
+
+enum class UserTrackingService
+{
+    YandexMetrica
 };
 
 enum class BuiltinCategory
@@ -32,11 +37,12 @@ TELEMETRY_API void Terminate ();
 TELEMETRY_API std::string GetClientID ();
 
 TELEMETRY_API void SetTelemetryEnabled (bool enabled);
-TELEMETRY_API bool IsTelemetryEnambled ();
+TELEMETRY_API bool IsTelemetryEnabled ();
 
 TELEMETRY_API void SetTempPath (std::string tempDir);
 
-TELEMETRY_API void SetService (Service service, const std::string& configuration);
+TELEMETRY_API void SetTelemetryService (TelemetryService service, const std::string& configuration);
+TELEMETRY_API void SetUserTrackingService (UserTrackingService service, const std::string& configuration);
 
 TELEMETRY_API void ReportScreenView (const std::string& screenName);
 

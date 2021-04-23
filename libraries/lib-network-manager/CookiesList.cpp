@@ -1,5 +1,9 @@
 #include "CookiesList.h"
 
+#include <sstream>
+
+#include "lib-string-utils/DateTimeConversions.h"
+
 namespace audacity
 {
 namespace network_manager
@@ -18,10 +22,58 @@ Cookie Cookie::Parse (const std::string& cookieString)
 
     const size_t semicolonPosition = cookieString.find (';', firstValueIndex);
 
-    if (semicolonPosition == std::string::npos)
-        return { std::move (name), cookieString.substr (firstValueIndex) };
-    else
-        return { std::move (name), cookieString.substr (firstValueIndex, semicolonPosition - firstValueIndex) };
+    Cookie cookie;
+
+    cookie.Name = std::move (name);
+    cookie.Value = semicolonPosition == std::string::npos ?
+        cookieString.substr (firstValueIndex) :
+        cookieString.substr (firstValueIndex, semicolonPosition - firstValueIndex);
+
+    size_t expiresPosition = cookieString.find("Expires=");
+
+    if (expiresPosition != std::string::npos)
+    {
+        expiresPosition += std::strlen ("Expires=");
+
+        const size_t trailingSemicolon = cookieString.find (';', expiresPosition);
+
+        std::string expiresValue =
+                semicolonPosition == std::string::npos ?
+                    cookieString.substr (expiresPosition) :
+                    cookieString.substr (expiresPosition, trailingSemicolon - expiresPosition);
+
+        // Hack around Yandex violating RFC
+        std::replace (expiresValue.begin(), expiresValue.end(), '-', ' ');
+        ParseRFC822Date (expiresValue, &cookie.Expires);
+    }
+
+    return cookie;
+}
+
+bool Cookie::isSession () const noexcept
+{
+    return Expires == ExpiresTime {};
+}
+
+std::string Cookie::toString (bool fullString) const
+{
+    std::ostringstream stream;
+
+    stream << Name << "=" << Value;
+
+    if (fullString)
+    {
+        if (!isSession())
+            stream << "; " << "Expires=" << SerializeRFC822Date(Expires);
+    }
+
+    return stream.str ();
+}
+
+bool Cookie::isExpired () const noexcept
+{
+    return !isSession() &&
+        std::chrono::system_clock::now() >= Expires;
 }
 
 void CookiesList::setCookie (const Cookie& cookie)

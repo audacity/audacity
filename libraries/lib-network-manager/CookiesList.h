@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "NetworkManagerApi.h"
 
@@ -10,12 +11,21 @@ namespace audacity
 namespace network_manager
 {
 
+using ExpiresTime = std::chrono::system_clock::time_point;
+
 struct NETWORK_MANAGER_API Cookie final
 {
     std::string Name;
     std::string Value;
 
+    ExpiresTime Expires {};
+
     static Cookie Parse (const std::string& cookieString);
+
+    bool isSession () const noexcept;
+    bool isExpired () const noexcept;
+
+    std::string toString(bool fullString) const;
 };
 
 class NETWORK_MANAGER_API CookiesList final

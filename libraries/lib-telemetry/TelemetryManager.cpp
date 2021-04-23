@@ -1,6 +1,8 @@
 #include "TelemetryManager.h"
 
 #include "lib-string-utils/UrlEncode.h"
+#include "lib-string-utils/CodeConversions.h"
+
 #include "lib-uuid/Uuid.h"
 #include "lib-timer/Timer.h"
 
@@ -17,8 +19,13 @@
 #include <wx/tokenzr.h>
 
 #include "details/Event.h"
+
 #include "details/ITelemetryService.h"
+#include "details/IUserTrackingService.h"
+
 #include "details/GoogleAnalyticsUA.h"
+#include "details/YandexMetricaUserTracking.h"
+#include "details/CommonHeaders.h"
 
 namespace audacity
 {
@@ -50,12 +57,15 @@ struct TelemetryManager final
     std::string ClientID;
     std::string SessionID;
 
+    std::unique_ptr<details::CommonHeaders> CommonHeaders;
+
     mutable std::mutex TelemetryMutex;
 
     EventsQueue QueuedEvents;
     size_t NextSubmissionIndex { 0 };
 
     std::unique_ptr<details::ITelemetryService> TelemetryService;
+    std::unique_ptr<details::IUserTrackingService> UserTtrackingService;
 
     bool TelemetryEnabled { false };
 
@@ -225,6 +235,8 @@ void Initialize (const std::string& appName, const std::string& appVersion, std:
     telemetryManager.AppName = UrlEncode (appName);
     telemetryManager.AppVersion = UrlEncode (appVersion);
 
+    telemetryManager.CommonHeaders = std::make_unique<details::CommonHeaders> (appName, appVersion);
+
     telemetryManager.TelemetryEnabled = enabled;
 
     SetTempPath (std::move (tempDir));
@@ -233,7 +245,6 @@ void Initialize (const std::string& appName, const std::string& appVersion, std:
 
     if (!telemetryManager.readTelemetryData ())
         telemetryManager.generateClientID ();
-
 
     const std::chrono::seconds ts (
         std::chrono::duration_cast<std::chrono::seconds> (
@@ -264,8 +275,13 @@ void Terminate ()
 
     std::lock_guard<std::mutex> lock (telemetryManager.TelemetryMutex);
 
+    // TrackingService may block the thread for a short period
+    // of time if required.
+    telemetryManager.UserTtrackingService->reportFinished();
+
     telemetryManager.TelemetryEnabled = false;
     telemetryManager.TelemetryService.reset ();
+    telemetryManager.UserTtrackingService.reset ();
     telemetryManager.QueuedEvents.clear ();
 }
 
@@ -290,7 +306,7 @@ void SetTelemetryEnabled (bool enabled)
     }
 }
 
-bool IsTelemetryEnambled ()
+bool IsTelemetryEnabled ()
 {
     std::lock_guard<std::mutex> lock (telemetryManager.TelemetryMutex);
 
@@ -302,21 +318,41 @@ void SetTempPath (std::string tempDir)
     telemetryManager.TempDir = std::move (tempDir);
 }
 
-void SetService (Service service, const std::string& configuration)
+void SetTelemetryService (TelemetryService service, const std::string& configuration)
 {
-    if (service == Service::GoogleAnalytics_UA)
+    if (service == TelemetryService::GoogleAnalytics_UA)
     {
         std::lock_guard<std::mutex> lock (telemetryManager.TelemetryMutex);
 
         telemetryManager.TelemetryService = std::make_unique<details::GoogleAnalyticsUA> (
-            telemetryManager.AppName,
-            telemetryManager.AppVersion,
-            configuration
+            configuration,
+            telemetryManager.CommonHeaders.get ()
         );
     }
 
     if (telemetryManager.TelemetryService != nullptr)
         telemetryManager.processTimer ();
+}
+
+void SetUserTrackingService (UserTrackingService service, const std::string& configuration)
+{
+    if (service == UserTrackingService::YandexMetrica)
+    {
+        wxString fileName = wxFileName (
+                wxString::FromUTF8 (telemetryManager.TempDir),
+                "YM.cfg"
+        ).GetFullPath ();
+
+        std::lock_guard<std::mutex> lock (telemetryManager.TelemetryMutex);
+
+        telemetryManager.UserTtrackingService = std::make_unique<details::YandexMetricaUserTracking> (
+            ToUTF8 (fileName),
+            configuration,
+            telemetryManager.CommonHeaders.get ()
+        );
+
+        telemetryManager.UserTtrackingService->reportAppStarted();
+    }
 }
 
 void ReportScreenView (const std::string& screenName)

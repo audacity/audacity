@@ -69,7 +69,18 @@ function( gather_libs src )
       endif()
 
       foreach( line ${output} )
-         if( line MATCHES "^.*libwx.*\\.dylib " )
+         if( line MATCHES "@rpath/libcurl.*\\.dylib ")
+            message(STATUS "Matched ${line}")
+
+            string( REGEX REPLACE "dylib .*" "dylib" line "${line}" )
+
+            get_filename_component( refname "${line}" NAME )
+
+            set (lib "${CURL_PATH}/${refname}")
+            list( APPEND libs ${lib} )
+
+            list( APPEND postcmds "sh -c 'install_name_tool -change @rpath/${refname} @executable_path/../Frameworks/${refname} ${libname}'" )
+         elseif( line MATCHES "^.*(libwx|lib-).*\\.dylib " )
             string( REGEX REPLACE "dylib .*" "dylib" line "${line}" )
             if( NOT line STREQUAL "${src}" AND NOT line MATCHES "@executable" )
                set( lib ${line} )
@@ -89,7 +100,7 @@ function( gather_libs src )
       get_filename_component( libname "${src}" NAME )
 
       foreach( line ${output} )
-         if( line MATCHES ".*lib(wx|curl|lib-).*" )
+         if( line MATCHES ".*lib(wx|lib-).*" )
             string( REGEX REPLACE ".* => (.*) \\(.*$" "\\1" line "${line}" )
 
             set( lib ${line} )

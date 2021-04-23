@@ -5,6 +5,7 @@
 #include <wx/xlocale.h>
 
 #include "Event.h"
+#include "CommonHeaders.h"
 
 #include "lib-network-manager/NetworkManager.h"
 #include "lib-network-manager/Request.h"
@@ -28,26 +29,10 @@ static const char* EventTypeNames[] = {
 
 constexpr size_t MaxEventsCount = 20;
 
-GoogleAnalyticsUA::GoogleAnalyticsUA (const std::string& appName, const std::string& appVersion, std::string trackingID) noexcept
-    : mTrackingID (std::move (trackingID))
+GoogleAnalyticsUA::GoogleAnalyticsUA (std::string trackingID, const CommonHeaders* commonHeaders) noexcept
+    : mTrackingID (std::move (trackingID)),
+    mCommonHeaders(commonHeaders)
 {
-    wxPlatformInfo platformInfo = wxPlatformInfo::Get ();
-
-    char buffer[256] = {};
-
-    snprintf (buffer, sizeof (buffer),
-        "%s/%s (%s; %s; %s) LibTelemetry/1.0 (wxWidgets/%d.%d.%d)",
-        appName.c_str (),
-        appVersion.c_str (),
-        ToUTF8 (platformInfo.GetOperatingSystemFamilyName ()).c_str (),
-        ToUTF8 (platformInfo.GetArchName ()).c_str (),
-        ToUTF8 (wxLocale (wxLocale::GetSystemLanguage ()).GetCanonicalName ()).c_str (),
-        wxMAJOR_VERSION,
-        wxMINOR_VERSION,
-        wxRELEASE_NUMBER
-    );
-
-    mUserAgent = buffer;
 }
 
 size_t GoogleAnalyticsUA::submitEvents (const std::string& clientId, const std::deque<Event>& list, Callback callback)
@@ -156,7 +141,8 @@ void GoogleAnalyticsUA::postAnalytics (const std::string& body, Callback callbac
 {
     network_manager::Request request ("https://www.google-analytics.com/batch");
 
-    request.setHeader ("User-Agent", mUserAgent);
+    mCommonHeaders->setupHeaders(&request);
+
     request.setHeader ("Content-Type", "application/x-www-form-urlencoded");
 
     auto response = network_manager::NetworkManager::GetInstance ().doPost (request, body.data (), body.size ());

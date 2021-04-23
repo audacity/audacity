@@ -11,11 +11,12 @@ namespace telemetry
 {
 namespace details
 {
+class CommonHeaders;
 
 class GoogleAnalyticsUA final : public ITelemetryService
 {
 public:
-	explicit GoogleAnalyticsUA (const std::string& appName, const std::string& appVersion, std::string trackingID) noexcept;
+	explicit GoogleAnalyticsUA (std::string trackingID, const CommonHeaders* commonHeaders) noexcept;
 
 	size_t submitEvents (const std::string& clientId, const std::deque<Event>& list, Callback callback) override;
 private:
@@ -25,7 +26,8 @@ private:
 	void postAnalytics (const std::string& body, Callback callback) const;
 
 	std::string mTrackingID;
-	std::string mUserAgent;
+
+	const CommonHeaders* mCommonHeaders;
 };
 
 }

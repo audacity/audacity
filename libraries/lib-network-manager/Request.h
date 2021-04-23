@@ -38,6 +38,8 @@ public:
     const HeadersList& getHeaders () const noexcept;
 
     Request& setCookie(const std::string& name, std::string value);
+    Request& appendCookies (const CookiesList& list);
+
     std::string getCookie(const std::string& name) const;
 
     const CookiesList& getCookies () noexcept;

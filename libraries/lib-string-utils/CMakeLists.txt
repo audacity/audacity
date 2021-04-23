@@ -16,6 +16,9 @@ set(SOURCES
 
     CodeConversions.h
     CodeConversions.cpp
+
+    DateTimeConversions.h
+    DateTimeConversions.cpp
 )
 
 add_library(${TARGET} SHARED ${SOURCES})

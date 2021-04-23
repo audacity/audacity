@@ -83,5 +83,16 @@ Request::Timeout Request::getTimeout () const noexcept
     return mTimeout;
 }
 
+Request& Request::appendCookies (const CookiesList& list)
+{
+    for (const Cookie& cookie : list)
+    {
+        if (!cookie.isExpired())
+            mCookies.setCookie (cookie);
+    }
+
+    return *this;
+}
+
 }
 }

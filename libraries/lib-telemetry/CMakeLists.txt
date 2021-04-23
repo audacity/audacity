@@ -9,12 +9,20 @@ set(SOURCES
     TelemetryManager.h
     TelemetryManager.cpp
 
+    details/IUserTrackingService.h
     details/ITelemetryService.h
+
     details/Event.h
     details/Event.cpp
 
     details/GoogleAnalyticsUA.h
     details/GoogleAnalyticsUA.cpp
+
+    details/YandexMetricaUserTracking.h
+    details/YandexMetricaUserTracking.cpp
+
+    details/CommonHeaders.h
+    details/CommonHeaders.cpp
 )
 
 add_library(${TARGET} SHARED ${SOURCES})
