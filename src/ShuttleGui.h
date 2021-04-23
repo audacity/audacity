@@ -268,7 +268,7 @@ public:
    void AddPrompt(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddUnits(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
-   wxWindow * AddWindow(wxWindow * pWindow);
+   wxWindow * AddWindow(wxWindow * pWindow, int PositionFlags = wxALIGN_CENTRE);
    wxSlider * AddSlider(
       const TranslatableString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const TranslatableString &Prompt, int pos, int Max);

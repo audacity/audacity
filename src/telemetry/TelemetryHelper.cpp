@@ -6,18 +6,38 @@
 #include "lib-telemetry/TelemetryManager.h"
 #include "lib-string-utils/CodeConversions.h"
 
-static const char* prefsKey = "/Telemetry/Enabled";
+#include "TelemetryDialog.h"
+
+static const char* prefsKeyEnabled = "/Telemetry/Enabled";
+static const char* prefsKeyDialogShown = "/Telemetry/PersmissionDialogShown";
 
 TelemetryHelper::TelemetryHelper ()
 {
-    audacity::telemetry::Initialize (
+    using namespace audacity;
+
+    if (!gPrefs->ReadBool (prefsKeyEnabled, false))
+    {
+        TelemetryDialog dlg (nullptr);
+        const int code = dlg.ShowModal ();
+
+        gPrefs->Write (prefsKeyDialogShown, true);
+        gPrefs->Write (prefsKeyEnabled, code == wxID_YES);
+    }
+
+    telemetry::Initialize (
         "Audacity",
-        audacity::ToUTF8 (AUDACITY_VERSION_STRING),
-        audacity::ToUTF8 (TempDirectory::TempDir ()),
-        gPrefs->ReadBool(prefsKey, true)
+        ToUTF8 (AUDACITY_VERSION_STRING),
+        ToUTF8 (TempDirectory::TempDir ()),
+        gPrefs->ReadBool(prefsKeyEnabled, false)
     );
 
-    audacity::telemetry::SetService (audacity::telemetry::Service::GoogleAnalytics_UA, "UA-193331022-1");
+#ifdef GOOGLE_UA_TRACKING_ID
+    telemetry::SetTelemetryService (telemetry::TelemetryService::GoogleAnalytics_UA, GOOGLE_UA_TRACKING_ID);
+#endif
+
+#ifdef METRICA_TRACKING_ID
+    telemetry::SetUserTrackingService (telemetry::UserTrackingService::YandexMetrica, METRICA_TRACKING_ID);
+#endif
 }
 
 TelemetryHelper::~TelemetryHelper ()
@@ -27,5 +47,5 @@ TelemetryHelper::~TelemetryHelper ()
 
 void TelemetryHelper::UpdatePrefs ()
 {
-    audacity::telemetry::SetTelemetryEnabled (gPrefs->ReadBool (prefsKey, true));
+    audacity::telemetry::SetTelemetryEnabled (gPrefs->ReadBool (prefsKeyEnabled, true));
 }

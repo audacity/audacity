@@ -720,6 +720,8 @@ list( APPEND SOURCES
       prefs/SpectrogramSettings.h
       prefs/SpectrumPrefs.cpp
       prefs/SpectrumPrefs.h
+      prefs/TelemetryPrefs.h
+      prefs/TelemetryPrefs.cpp
       prefs/ThemePrefs.cpp
       prefs/ThemePrefs.h
       prefs/TracksBehaviorsPrefs.cpp
@@ -970,6 +972,8 @@ list( APPEND SOURCES
       # Telemetry
       telemetry/TelemetryHelper.h
       telemetry/TelemetryHelper.cpp
+      telemetry/TelemetryDialog.h
+      telemetry/TelemetryDialog.cpp
 )
 
 #
@@ -1028,6 +1032,14 @@ list( APPEND DEFINES
          STRICT
       >
 )
+
+if (GOOGLE_UA_TRACKING_ID)
+   list (APPEND DEFINES "-DGOOGLE_UA_TRACKING_ID=\"${GOOGLE_UA_TRACKING_ID}\"")
+endif()
+
+if (METRICA_TRACKING_ID)
+   list (APPEND DEFINES "-DMETRICA_TRACKING_ID=\"${METRICA_TRACKING_ID}\"")
+endif()
 
 list( APPEND OPTIONS
    PRIVATE
