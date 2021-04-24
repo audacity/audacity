@@ -69,6 +69,7 @@ class GUIPrefs final : public PrefsPanel
 };
 
 int ShowClippingPrefsID();
+int ShowTrackNameInWaveformPrefsID();
 
 extern ChoiceSetting
      GUIManualLocation

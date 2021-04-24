@@ -371,6 +371,12 @@ int ShowClippingPrefsID()
    return value;
 }
 
+int ShowTrackNameInWaveformPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
+
 namespace{
 PrefsPanel::Registration sAttachment{ "GUI",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
