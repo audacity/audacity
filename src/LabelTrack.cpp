@@ -368,6 +368,27 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
+bool LabelStruct::GetHHMMSS(wxString firstline, double *t0) {
+   bool result = TRUE;
+   wxChar colon = ':';
+   unsigned long hh = 0;
+   unsigned long mm = 0;
+   wxStringTokenizer toker{ firstline, colon };
+   wxString token = toker.GetNextToken();
+   int hhmmcnt = 0;
+   while (result && toker.GetLastDelimiter() == colon) {
+      result = token.ToCULong(&mm);
+      hh += mm; hh *= 60;
+      hhmmcnt++; if (hhmmcnt > 2) result = FALSE;
+      token = toker.GetNextToken();
+   }
+   if (result) {
+      result = Internat::CompatibleToDouble(token, t0);
+      *t0 += hh;
+   }
+   return result;
+}
+
 LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
 {
    SelectedRegion sr;
@@ -386,13 +407,13 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
       auto token = toker.GetNextToken();
 
       double t0;
-      if (!Internat::CompatibleToDouble(token, &t0))
+      if (!GetHHMMSS(token, &t0))
          throw BadFormatException{};
 
       token = toker.GetNextToken();
 
       double t1;
-      if (!Internat::CompatibleToDouble(token, &t1))
+      if (!GetHHMMSS(token, &t1))
          //s1 is not a number.
          t1 = t0;  //This is a one-sided label; t1 == t0.
       else
