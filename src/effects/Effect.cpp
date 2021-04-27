@@ -19,8 +19,6 @@
 #include "Effect.h"
 #include "TimeWarper.h"
 
-#include "../Experimental.h"
-
 #include <algorithm>
 
 #include <wx/defs.h>

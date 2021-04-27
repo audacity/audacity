@@ -11,7 +11,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "Audacity.h"
 #include "ProjectAudioManager.h"
 
-#include "Experimental.h"
+
 
 #include <wx/frame.h>
 #include <wx/statusbr.h>

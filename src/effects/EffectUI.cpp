@@ -14,8 +14,6 @@
 #include "../Audacity.h"
 #include "EffectUI.h"
 
-#include "../Experimental.h"
-
 #include "Effect.h"
 #include "EffectManager.h"
 #include "../ProjectHistory.h"

@@ -18,7 +18,7 @@ with names like mnod-script-pipe that add NEW features.
 #include "../Audacity.h"
 #include "ModulePrefs.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/filename.h>

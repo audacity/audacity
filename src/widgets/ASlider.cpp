@@ -32,8 +32,6 @@ or ASlider.
 #include "../Audacity.h"
 #include "ASlider.h"
 
-#include "../Experimental.h"
-
 #include <math.h>
 
 #include <wx/setup.h> // for wxUSE_* macros

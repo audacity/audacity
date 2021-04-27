@@ -11,8 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../Audacity.h"
 #include "SampleHandle.h"
 
-#include "../../../../Experimental.h"
-
 #include <algorithm>
 #include <wx/gdicmn.h>
 

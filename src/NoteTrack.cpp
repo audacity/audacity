@@ -17,7 +17,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "NoteTrack.h"
 
-#include "Experimental.h"
+
 
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>

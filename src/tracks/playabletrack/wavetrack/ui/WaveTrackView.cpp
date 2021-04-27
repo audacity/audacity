@@ -14,8 +14,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "CutlineHandle.h"
 
-#include "../../../../Experimental.h"
-
 #include <numeric>
 #include <wx/dc.h>
 #include <wx/graphics.h>

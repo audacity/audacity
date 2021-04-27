@@ -125,7 +125,6 @@ list( APPEND SOURCES
       Envelope.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
-      Experimental.h
       FFT.cpp
       FFT.h
       FFmpeg.cpp
@@ -965,6 +964,8 @@ list( APPEND SOURCES
       xml/XMLWriter.cpp
       xml/XMLWriter.h
       xml/audacityproject.dtd
+
+      Experimental.cmake
 )
 
 #

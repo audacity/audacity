@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_TOOLBAR__
 #define __AUDACITY_TOOLBAR__
 
-#include "../Experimental.h"
-
 #include <functional>
 #include <vector>
 #include <wx/defs.h>
