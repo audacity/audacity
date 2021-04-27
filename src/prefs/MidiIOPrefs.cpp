@@ -26,8 +26,6 @@ other settings.
 #include "../Audacity.h"
 #include "MidiIOPrefs.h"
 
-#include "../Experimental.h"
-
 #ifdef EXPERIMENTAL_MIDI_OUT
 
 #include <wx/defs.h>

@@ -11,8 +11,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Audacity.h" // for USE_* macros
 #include "TimeShiftHandle.h"
 
-#include "../../Experimental.h"
-
 #include "TrackView.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"

@@ -21,7 +21,7 @@
 
 #include "WaveClip.h"
 
-#include "Experimental.h"
+
 
 #include <math.h>
 #include <vector>

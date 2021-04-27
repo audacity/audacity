@@ -57,7 +57,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "RealFFTf48x.h"
 
-#include "Experimental.h"
+
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 

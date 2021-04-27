@@ -12,7 +12,7 @@
 #include "Audacity.h" // for USE_* macros
 #include "MixerBoard.h"
 
-#include "Experimental.h"
+
 
 #include <cfloat>
 #include <math.h>

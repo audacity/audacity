@@ -12,7 +12,7 @@
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "Experimental.h"
+
 
 #include "portaudio.h"
 #ifdef __WXMSW__

@@ -19,8 +19,6 @@
 #include "Normalize.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
-
 #include <math.h>
 
 #include <wx/checkbox.h>

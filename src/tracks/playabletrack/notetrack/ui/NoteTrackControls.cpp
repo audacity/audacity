@@ -12,8 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #ifdef USE_MIDI
 #include "NoteTrackControls.h"
 
-#include "../../../../Experimental.h"
-
 #include "NoteTrackButtonHandle.h"
 
 #include "../../ui/PlayableTrackButtonHandles.h"

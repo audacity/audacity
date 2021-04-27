@@ -20,8 +20,6 @@
 #include "Distortion.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
-
 #include <cmath>
 #include <algorithm>
 #define _USE_MATH_DEFINES

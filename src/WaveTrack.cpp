@@ -28,7 +28,7 @@ from the project that will own the track.
 
 #include "WaveTrack.h"
 
-#include "Experimental.h"
+
 
 #include "WaveClip.h"
 

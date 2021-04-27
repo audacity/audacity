@@ -12,7 +12,7 @@ Paul Licameli split from AudioIO.h
 #define __AUDACITY_AUDIO_IO_BASE__
 
 #include "Audacity.h" // for USE_* macros
-#include "Experimental.h"
+
 
 #include <atomic>
 #include <cfloat>

@@ -11,8 +11,6 @@
 #include "../Audacity.h"
 #include "RealtimeEffectManager.h"
 
-#include "../Experimental.h"
-
 #include "audacity/EffectInterface.h"
 #include "MemoryX.h"
 

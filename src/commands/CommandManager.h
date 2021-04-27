@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
-#include "../Experimental.h"
-
 #include "audacity/Types.h"
 
 #include "../ClientData.h"

@@ -34,7 +34,7 @@ for drawing different aspects of the label and its text box.
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackControls.h"
 
-#include "Experimental.h"
+
 
 #include <stdio.h>
 #include <algorithm>

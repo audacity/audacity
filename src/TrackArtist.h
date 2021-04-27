@@ -19,7 +19,7 @@
 #define __AUDACITY_TRACKARTIST__
 
 #include "Audacity.h" // for USE_* macros
-#include "Experimental.h"
+
 
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variables

@@ -27,8 +27,6 @@ effects from this one class.
 #include "../../Audacity.h" // for USE_* macros
 #include "Nyquist.h"
 
-#include "../../Experimental.h"
-
 #include <algorithm>
 #include <cmath>
 
@@ -563,30 +561,38 @@ bool NyquistEffect::Init()
 
    if (!mIsPrompt && mIsSpectral) {
       auto *project = FindProject();
-      bool bAllowSpectralEditing = true;
+      bool bAllowSpectralEditing = false;
+      bool hasSpectral = false;
 
       for ( auto t :
                TrackList::Get( *project ).Selected< const WaveTrack >() ) {
          const auto displays = WaveTrackView::Get(*t).GetDisplays();
-         bool hasSpectral = (displays.end() != std::find(
+         if (displays.end() != std::find(
             displays.begin(), displays.end(),
-            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
-         ) );
-         if ( !hasSpectral ||
-             !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
-            bAllowSpectralEditing = false;
+            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
+            hasSpectral = true;
+         if ( hasSpectral &&
+             (t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
+            bAllowSpectralEditing = true;
             break;
          }
       }
 
       if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-         Effect::MessageBox(
-            XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                        "in the track Spectrogram settings and select the\n"
-                        "frequency range for the effect to act on."),
+         if (!hasSpectral) {
+            Effect::MessageBox(
+            XO("Enable track spectrogram view before\n"
+            "applying 'Spectral' effects."),
             wxOK | wxICON_EXCLAMATION | wxCENTRE,
             XO("Error") );
-
+         } else {
+            Effect::MessageBox(
+               XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                           "in the track Spectrogram settings and select the\n"
+                           "frequency range for the effect to act on."),
+               wxOK | wxICON_EXCLAMATION | wxCENTRE,
+               XO("Error") );
+         }
          return false;
       }
    }

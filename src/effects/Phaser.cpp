@@ -23,8 +23,6 @@
 #include "Phaser.h"
 #include "LoadEffects.h"
 
-#include "../Experimental.h"
-
 #include <math.h>
 
 #include <wx/intl.h>

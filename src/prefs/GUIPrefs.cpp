@@ -20,8 +20,6 @@
 #include "../Audacity.h"
 #include "GUIPrefs.h"
 
-#include "../Experimental.h"
-
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <locale>
@@ -366,6 +364,12 @@ wxString GUIPrefs::GetLangShort()
 }
 
 int ShowClippingPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
+
+int ShowTrackNameInWaveformPrefsID()
 {
    static int value = wxNewId();
    return value;
