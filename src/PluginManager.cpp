@@ -46,6 +46,7 @@ for shared and private configs - which need to move out.
 #include "FileNames.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
+#include "PluginRegistrationDialog.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
 #include "wxFileNameWrapper.h"
@@ -379,20 +380,6 @@ enum
    STATE_COUNT
 };
 
-struct ItemData
-{
-   std::vector<PluginDescriptor*> plugs;
-   wxString name;
-   PluginPath path;
-   int state;
-   bool valid;
-   int nameWidth;
-   int pathWidth;
-   int stateWidth;
-};
-
-using ItemDataMap = std::unordered_map<PluginPath, ItemData>;
-
 enum
 {
    ID_ShowAll = 10000,
@@ -413,52 +400,6 @@ enum
    COL_Path,
 
    COL_COUNT
-};
-
-class PluginRegistrationDialog final : public wxDialogWrapper
-{
-public:
-   // constructors and destructors
-   PluginRegistrationDialog(wxWindow *parent, EffectType type);
-
-private:
-   void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
-   void RegenerateEffectsList(int iShowWhat);
-   void SetState(int i, bool toggle, bool state = true);
-
-   static int wxCALLBACK SortCompare(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
-   int SortCompare(ItemData *item1, ItemData *item2);
-
-   void OnChangedVisibility(wxCommandEvent & evt);
-   void OnSort(wxListEvent & evt);
-   void DoSort( int col );
-   void OnListChar(wxKeyEvent & evt);
-   void OnOK(wxCommandEvent & evt);
-   void OnCancel(wxCommandEvent & evt);
-   void OnSelectAll(wxCommandEvent & evt);
-   void OnClearAll(wxCommandEvent & evt);
-   void OnEnable(wxCommandEvent & evt);
-   void OnDisable(wxCommandEvent & evt);
-
-private:
-   EffectType mType;
-   int mFilter;
-
-   wxArrayString mStates;
-   ItemDataMap mItems;
-
-   int mSortColumn;
-   int mSortDirection;
-
-   PluginPath mLongestPath;
-
-   wxListCtrl *mEffects;
-#if wxUSE_ACCESSIBILITY
-   CheckListAx *mAx;
-#endif
-
-   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
