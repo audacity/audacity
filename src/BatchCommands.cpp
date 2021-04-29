@@ -41,6 +41,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "SelectUtilities.h"
 #include "Shuttle.h"
 #include "Track.h"
+#include "UndoManager.h"
 
 #include "AllThemeResources.h"
 
@@ -728,6 +729,9 @@ bool MacroCommands::ApplyMacro(
 
       // Save the project state before making any changes.  It will be rolled
       // back if an error occurs.
+      // It also causes any calls to ModifyState (such as by simple
+      // view-changing commands) to append changes to this state, not to the
+      // previous state in history.  See Bug 2076
       if (proj) {
          ProjectHistory::Get(*proj).PushState(longDesc, shortDesc);
       }
@@ -736,8 +740,18 @@ bool MacroCommands::ApplyMacro(
    // Upon exit of the top level apply, roll back the state if an error occurs.
    auto cleanup2 = finally([&, macroReentryCount = MacroReentryCount] {
       if (macroReentryCount == 1 && !res && proj) {
-         // Macro failed or was cancelled; revert to the previous state
-         ProjectHistory::Get(*proj).RollbackState();
+         // Be sure that exceptions do not escape this destructor
+         GuardedCall([&]{
+            // Macro failed or was cancelled; revert to the previous state
+            auto &history = ProjectHistory::Get(*proj);
+            history.RollbackState();
+            // The added undo state is now vacuous.  Remove it (Bug 2759)
+            auto &undoManager = UndoManager::Get(*proj);
+            undoManager.Undo(
+               [&]( const UndoStackElem &elem ){
+                  history.PopState( elem.state ); } );
+            undoManager.AbandonRedo();
+         });
       }
    });
 
