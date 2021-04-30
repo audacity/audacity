@@ -24,15 +24,6 @@
 #ifndef __AUDACITY_H__
 #define __AUDACITY_H__
 
-// If building with GNU compiler, then must be 4.9 or later.
-// TODO: This would be much nicer as a standalone test in configure.ac
-#if !defined(__APPLE__) && !defined(__clang__) && \
-    defined __GNUC__ && ( __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9))
-
-    #error Audacity requires at least GCC 4.9
-#endif
-
-
 // We only do alpha builds, beta builds, and release versions.
 // Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
 // defined to 0.
