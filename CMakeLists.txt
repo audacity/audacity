@@ -5,6 +5,12 @@
 # generator expressions.
 cmake_minimum_required( VERSION 3.15 )
 
+# If building with GNU compiler, then must be 4.9 or later.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+    CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
+   message(FATAL_ERROR "Audacity requires at least GCC 4.9")
+endif ()
+
 # Don't allow in-source builds...no real reason, just
 # keeping those source trees nice and tidy.  :-)
 # (This can be removed if it becomes an issue.)
