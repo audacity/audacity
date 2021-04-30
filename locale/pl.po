@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-04-11 20:58+0000\n"
+"PO-Revision-Date: 2021-04-25 13:36+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -4024,7 +4024,7 @@ msgstr "%sZapisz projekt \"%s\" jako..."
 msgid ""
 "'Save Project' is for an Audacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
-msgstr "'Zapisz projekt' jest dla projektu Audacity, nie dla pliku dźwiękowego.\nDo pliku dźwiękowego, który zostanie otwarty w innych aplikacjach, użyj 'Eksport'.\n"
+msgstr "'Zapisz projekt' jest dla projektu Audacity, nie dla pliku dźwiękowego.\nDo pliku dźwiękowego, który zostanie otwarty w innych aplikacjach, użyj 'Eksportuj'.\n"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
