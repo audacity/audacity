@@ -1,6 +1,8 @@
 #include "CookiesList.h"
 
 #include <sstream>
+#include <cstring>
+#include <algorithm>
 
 #include "lib-string-utils/DateTimeConversions.h"
 

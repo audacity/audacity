@@ -3,6 +3,7 @@
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 #include <wx/fs_mem.h>
+#include <wx/button.h>
 
 #include "ShuttleGui.h"
 #include "widgets/HelpSystem.h"

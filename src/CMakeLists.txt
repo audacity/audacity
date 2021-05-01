@@ -1177,7 +1177,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( PLATFORM_VERSION_SUPPORTED )
       list( APPEND LDFLAGS
          PRIVATE
-            -Wl,-platform_version,macos,10.7,10.13
+            -Wl,-platform_version,macos,10.9,10.13
       )
    else()
       list( APPEND LDFLAGS
