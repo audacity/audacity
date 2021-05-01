@@ -901,15 +901,25 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
 AudacityProject *ProjectManager::OpenProject(
    AudacityProject *pProject, const FilePath &fileNameArg, bool addtohistory)
 {
+   bool success = false;
    AudacityProject *pNewProject = nullptr;
    if ( ! pProject )
       pProject = pNewProject = New();
    auto cleanup = finally( [&] {
-      if( pNewProject )
+      if ( pNewProject )
          GetProjectFrame( *pNewProject ).Close(true);
+      else if ( !success )
+         // Ensure that it happens here: don't wait for the application level
+         // exception handler, because the exception may be intercepted
+         ProjectHistory::Get(*pProject).RollbackState();
+      // Any exception now continues propagating
    } );
    ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
+
+   // The above didn't throw, so change what finally will do
+   success = true;
    pNewProject = nullptr;
+
    auto &projectFileIO = ProjectFileIO::Get( *pProject );
    if( projectFileIO.IsRecovered() ) {
       auto &window = ProjectWindow::Get( *pProject );
