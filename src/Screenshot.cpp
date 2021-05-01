@@ -38,6 +38,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/tglbtn.h>
 #include <wx/window.h>
 
+#include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"

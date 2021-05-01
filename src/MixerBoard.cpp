@@ -34,7 +34,7 @@
 
 #include "CommonCommandFlags.h"
 #include "KeyboardCapture.h"
-#include "Prefs.h" // for RTL_WORKAROUND
+#include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"

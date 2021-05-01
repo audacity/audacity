@@ -19,6 +19,33 @@
 #include "Prefs.h"
 #include "MemoryX.h"
 
+// Please try to support unlimited path length instead of using PLATFORM_MAX_PATH!
+// Define one constant for maximum path value, so we don't have to do
+// platform-specific conditionals everywhere we want to check it.
+#define PLATFORM_MAX_PATH 260 // Play it safe for default, with same value as Windows' MAX_PATH.
+
+#ifdef __WXMAC__
+#undef PLATFORM_MAX_PATH
+#define PLATFORM_MAX_PATH PATH_MAX
+#endif
+
+#ifdef __WXGTK__
+// Some systems do not restrict the path length and therefore PATH_MAX is undefined
+#ifdef PATH_MAX
+#undef PLATFORM_MAX_PATH
+#define PLATFORM_MAX_PATH PATH_MAX
+#endif
+#endif
+
+#ifdef __WXX11__
+// wxX11 should also get the platform-specific definition of PLATFORM_MAX_PATH, so do not declare here.
+#endif
+
+#ifdef __WXMSW__
+#undef PLATFORM_MAX_PATH
+#define PLATFORM_MAX_PATH MAX_PATH
+#endif
+
 class wxFileName;
 class wxFileNameWrapper;
 

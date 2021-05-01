@@ -89,38 +89,16 @@
 #endif
 
 
-// Increment this every time the prefs need to be reset
-// the first part (before the r) indicates the version the reset took place
-// the second part (after the r) indicates the number of times the prefs have been reset within the same version
-#define AUDACITY_PREFS_VERSION_STRING "1.1.1r1"
-
-// Don't change this unless the file format changes
-// in an irrevocable way
-#define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
-
 class wxWindow;
-
-// Please try to support unlimited path length instead of using PLATFORM_MAX_PATH!
-// Define one constant for maximum path value, so we don't have to do
-// platform-specific conditionals everywhere we want to check it.
-#define PLATFORM_MAX_PATH 260 // Play it safe for default, with same value as Windows' MAX_PATH.
 
 #ifdef __WXMAC__
 #include "configmac.h"
-#undef PLATFORM_MAX_PATH
-#define PLATFORM_MAX_PATH PATH_MAX
 #endif
 
 #ifdef __WXGTK__
 #ifndef __CONFIG_UNIX_INCLUDED
    #define __CONFIG_UNIX_INCLUDED
    #include "configunix.h"
-#endif
-
-// Some systems do not restrict the path length and therefore PATH_MAX is undefined
-#ifdef PATH_MAX
-#undef PLATFORM_MAX_PATH
-#define PLATFORM_MAX_PATH PATH_MAX
 #endif
 #endif
 
@@ -129,13 +107,10 @@ class wxWindow;
    #define __CONFIG_UNIX_INCLUDED
    #include "configunix.h"
 #endif
-// wxX11 should also get the platform-specific definition of PLATFORM_MAX_PATH, so do not declare here.
 #endif
 
 #ifdef __WXMSW__
 #include "configwin.h"
-#undef PLATFORM_MAX_PATH
-#define PLATFORM_MAX_PATH MAX_PATH
 #endif
 
 /* The dynamic library import and export for Microsoft Windows.
@@ -154,15 +129,6 @@ class wxWindow;
    #endif
 #endif //_WIN32 || (__CYGWIN__ && __GNUC__)
 
-// Put extra symbol information in the release build, for the purpose of gathering
-// profiling information (as from Windows Process Monitor), when there otherwise
-// isn't a need for AUDACITY_DLL_API.
-#ifdef IS_ALPHA
-   #define PROFILE_DLL_API AUDACITY_DLL_API
-#else
-   #define PROFILE_DLL_API
-#endif
-
 /* The GCC-elf implementation */
 #ifdef HAVE_VISIBILITY // this is provided by the configure script, is only
 // enabled for suitable GCC versions
@@ -178,16 +144,6 @@ class wxWindow;
    #endif
 #endif
 
-// These macros are used widely, so declared here.
-#define QUANTIZED_TIME(time, rate) (floor(((double)(time) * (rate)) + 0.5) / (rate))
-// dB - linear amplitude conversions
-#define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
-#define LINEAR_TO_DB(x) (20.0 * log10(x))
-
-#define MAX_AUDIO (1. - 1./(1<<15))
-#define JUST_BELOW_MAX_AUDIO (1.f - 1.f/(1<<14))
-
-
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete
 
@@ -196,16 +152,6 @@ class wxWindow;
 // You may use it in NEW code when the NEW expression is the constructor argument for a standard smart
 // pointer like std::unique_ptr or std::shared_ptr.
 #define safenew new
-
-// Right to left languages fail in many wx3 dialogs with missing buttons.
-// The workaround is to use LTR in those dialogs.
-#ifndef __WXMAC__
-#define RTL_WORKAROUND( pWnd ) \
-   if ( gPrefs->Read( "/GUI/RtlWorkaround", true) ) \
-       pWnd->SetLayoutDirection(wxLayout_LeftToRight); 
-#else
-   #define RTL_WORKAROUND( pWnd ) 
-#endif
 
 // Define/undefine _DEBUG based on the (CMake provided) NDEBUG symbol
 #if defined(NDEBUG)

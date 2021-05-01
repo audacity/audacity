@@ -650,6 +650,7 @@ private:
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
+#include "../prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ShuttleGui.h"
