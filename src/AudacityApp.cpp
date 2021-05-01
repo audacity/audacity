@@ -910,7 +910,9 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
             // PRL: Catch any exceptions, don't try this file again, continue to
             // other files.
             if (!SafeMRUOpen(name)) {
-               wxFAIL_MSG(wxT("MRUOpen failed"));
+               // Just log it.  Assertion failure is not appropriate on valid
+               // defensive path against bad file data.
+               wxLogMessage(wxT("MRUOpen failed"));
             }
          }
       }

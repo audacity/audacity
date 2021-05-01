@@ -879,7 +879,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    //
    // NOTE:  Between the above attach and setting the mode here, a normal DELETE
    //        mode journal will be used and will briefly appear in the filesystem.
-   if (!pConn->FastMode("outbound"))
+   if ( pConn->FastMode("outbound") != SQLITE_OK)
    {
       SetDBError(
          XO("Unable to switch to fast journaling mode")
