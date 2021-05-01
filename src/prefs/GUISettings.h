@@ -15,4 +15,14 @@ Paul Licameli
 #define ENV_DB_KEY (wxT("/GUI/EnvdBRange"))
 #define ENV_DB_RANGE 60
 
+// Right to left languages fail in many wx3 dialogs with missing buttons.
+// The workaround is to use LTR in those dialogs.
+#ifndef __WXMAC__
+#define RTL_WORKAROUND( pWnd ) \
+   if ( gPrefs->Read( "/GUI/RtlWorkaround", true) ) \
+       pWnd->SetLayoutDirection(wxLayout_LeftToRight);
+#else
+   #define RTL_WORKAROUND( pWnd )
+#endif
+
 #endif

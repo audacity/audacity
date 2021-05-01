@@ -36,6 +36,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "xml/XMLFileReader.h"
 
+// Don't change this unless the file format changes
+// in an irrevocable way
+#define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
+
 #undef NO_SHM
 #if !defined(__WXMSW__)
    #define NO_SHM

@@ -31,6 +31,11 @@
 
 #include "Audacity.h"
 
+// Increment this every time the prefs need to be reset
+// the first part (before the r) indicates the version the reset took place
+// the second part (after the r) indicates the number of times the prefs have been reset within the same version
+#define AUDACITY_PREFS_VERSION_STRING "1.1.1r1"
+
 #include "../include/audacity/ComponentInterface.h"
 #include "MemoryX.h" // for wxArrayStringEx
 #include "widgets/FileConfig.h"
