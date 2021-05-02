@@ -834,7 +834,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
          /* do the metadata for this file */
          // copy project metadata to start with
          setting.filetags = Tags::Get( *mProject );
-         setting.filetags.LoadDefaults();
+         //setting.filetags.LoadDefaults();
          if (exportSettings.size()) {
             setting.filetags = exportSettings.back().filetags;
          }
@@ -978,7 +978,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
          /* do the metadata for this file */
          // copy project metadata to start with
          setting.filetags = Tags::Get( *mProject );
-         setting.filetags.LoadDefaults();
+         //setting.filetags.LoadDefaults();
          if (exportSettings.size()) {
             setting.filetags = exportSettings.back().filetags;
          }
