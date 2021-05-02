@@ -75,9 +75,9 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
 	    Close Visual Studio.
 
     You can check this worked also by looking in C:\aud300\wxWidgets\lib\vc_dll
-    There should be dll files there with _'ud' in their name.    
-    The ud stands for 'unicode debug'.  If you only have files with 'u' then 
-    you only have release.
+    There should be dll files there with 'u_' in their name.
+    If you want to be able to debug, also build the "DLL Debug" configuration.
+    This should result in files with 'ud_' in their name.
 
 
 5. Audacity
@@ -100,7 +100,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
 	   In the Configurations window, click the green "+", then select x86-Release
 	   Set Configuration type: Release
 
-	   Verify Toolset: msvc_86
+	   Verify Toolset: msvc_x86
 	   Keep Build Root: ${projectDir}\out\build\${name} (default, you can 
      change it) (this corresponds to CMAKE_BINARY_DIR)
 
