@@ -76,7 +76,7 @@ http://wiki.audacityteam.org/wiki/Building_On_Windows
 
     You can check this worked also by looking in C:\aud300\wxWidgets\lib\vc_dll
     There should be dll files there with 'u_' in their name.
-    If you want to be able to debug, also build the "DLL Debug" configuration.
+    Optionally, if you want to be able to debug, also build the "DLL Debug" configuration.
     This should result in files with 'ud_' in their name.
 
 
