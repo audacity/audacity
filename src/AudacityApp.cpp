@@ -1108,6 +1108,9 @@ bool AudacityApp::OnInit()
    // AddHandler takes ownership
    wxFileSystem::AddHandler(safenew wxZipFSHandler);
 
+   // encouraged by wxwidgets
+   wxStandardPaths::Get().SetFileLayout(wxStandardPaths::FileLayout::FileLayout_XDG);
+
    //
    // Paths: set search path and temp dir path
    //
@@ -1249,7 +1252,7 @@ bool AudacityApp::OnInit()
 
    // Initialize preferences and language
    {
-      wxFileName configFileName(FileNames::DataDir(), wxT("audacity.cfg"));
+      wxFileName configFileName(FileNames::ConfigDir(), wxT("audacity.cfg"));
       auto appName = wxTheApp->GetAppName();
       InitPreferences( AudacityFileConfig::Create(
          appName, wxEmptyString,
