@@ -32,7 +32,7 @@ public:
 
     void setProxy (const std::string& proxy);
 private:
-    std::unique_ptr<IResponseFactory> mResponseFactory { nullptr };
+    std::unique_ptr<IResponseFactory> mResponseFactory;
 };
 
 }
