@@ -210,6 +210,12 @@ GPL-compatible license.  Specifically:
   wxWidgets: wxWindows license (based on LGPL)
     Cross-platform GUI library - must be downloaded and
     compiled separately.
+ 
+  libcurl: MIT/X like license
+    Cross-platform library for transferring data with URLs.
+
+  ThreadPool: zlib License
+    C++11 thread pool
 
 
 For more information, see the documentation inside each library's
