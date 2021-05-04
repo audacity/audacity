@@ -31,7 +31,7 @@ XO (
 "We <u>do not</u> collect any personal data \
 or sensitive information such as location or \
 file names or any content of your audio. \
-<a href=\"https://audacityteam.org\">Privacy policy</a>"
+<a href=\"https://www.audacityteam.org/contact/privacy-policy/\">Privacy policy</a>"
 );
 
 static const auto thirdParagraph =

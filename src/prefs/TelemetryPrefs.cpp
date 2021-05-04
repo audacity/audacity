@@ -82,7 +82,7 @@ void TelemetryPrefs::PopulateOrExchange(ShuttleGui & S)
                    safenew wxHyperlinkCtrl (
                        S.GetParent (), wxID_ANY, 
                        XO ("Analytics Privacy Policy").Translation(), 
-                       "https://audacityteam.org/"),
+                       "https://www.audacityteam.org/contact/privacy-policy/"),
                    wxALIGN_LEFT
                );
            }
