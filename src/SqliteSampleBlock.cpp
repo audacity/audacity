@@ -10,6 +10,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 
 #include <float.h>
 #include <sqlite3.h>
+#include <cstdio>
 
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
@@ -578,7 +579,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
       // That possibly happens on a very slow machine.  Possibly that's the
       // right trade off when a machine can't keep up?
       // ANSWER-ME: Do we always report an error when we should here?
-      Conn()->ThrowException( false );
+      Conn()->ThrowException("SqliteSampleBlock::GetBlob", rc, false);
    }
 
    // Retrieve returned data
@@ -653,7 +654,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      Conn()->ThrowException( false );
+      Conn()->ThrowException("SqliteSampleBlock::Load", rc, false);
    }
 
    // Retrieve returned data
@@ -712,7 +713,7 @@ void SqliteSampleBlock::Commit(Sizes sizes)
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      Conn()->ThrowException( true );
+      Conn()->ThrowException("SqliteSampleBlock::Commit", rc, true);
    }
 
    // Retrieve returned data
@@ -761,7 +762,7 @@ void SqliteSampleBlock::Delete()
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      Conn()->ThrowException( true );
+      Conn()->ThrowException("SqliteSampleBlock::Load", rc, true);
    }
 
    // Clear statement bindings and rewind statement

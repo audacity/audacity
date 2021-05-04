@@ -53,7 +53,9 @@ public:
 
    //! throw and show appropriate message box
    [[noreturn]] void ThrowException(
-      bool write //!< If true, a database update failed; if false, only a SELECT failed
+       const char* methodName,
+       int resultCode,
+       bool write //!< If true, a database update failed; if false, only a SELECT failed
    ) const;
 
    int SafeMode(const char *schema = "main");

@@ -22,6 +22,14 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include "Project.h"
 #include "FileException.h"
 #include "wxFileNameWrapper.h"
+#include "lib-telemetry/TelemetryManager.h"
+
+static void ReportDBError (const char* method, int code)
+{
+    char buffer[512] = {};
+    snprintf (buffer, sizeof (buffer), "SQLITE %s (%d): %s", method, code, sqlite3_errstr (code));
+    audacity::telemetry::ReportException (buffer);
+}
 
 // Configuration to provide "safe" connections
 static const char *SafeConfig =
@@ -95,6 +103,8 @@ void DBConnection::SetError(
    {
       mpErrors->mLog = logger->GetLog(10);
    }
+
+   ReportDBError ("SetError", errorCode);
 }
 
 void DBConnection::SetDBError(
@@ -127,6 +137,8 @@ void DBConnection::SetDBError(
    {
       mpErrors->mLog = logger->GetLog(10);
    }
+
+   ReportDBError ("SetDBError", errorCode);
 }
 
 int DBConnection::Open(const FilePath fileName)
@@ -304,8 +316,13 @@ bool DBConnection::Close()
    return true;
 }
 
-[[noreturn]] void DBConnection::ThrowException( bool write ) const
+[[noreturn]] void DBConnection::ThrowException (
+    const char* methodName,
+    int resultCode, 
+    bool write
+) const
 {
+   ReportDBError (methodName, resultCode);
    // Sqlite3 documentation says returned character string
    // does NOT require freeing by us.
    wxString dbName{ sqlite3_db_filename(mDB, "main") };
@@ -471,6 +488,8 @@ void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
                       fileName,
                       sqlite3_errcode(db),
                       sqlite3_errmsg(db));
+
+         ReportDBError ("CheckpointThread", rc);
 
          // Can't checkpoint -- maybe the device has too little space
          wxFileNameWrapper fName{ fileName };
