@@ -216,7 +216,7 @@ jobs:
                       --with-libjpeg=builtin \
                       --with-libpng=builtin \
                       --with-libtiff=builtin \
-                      --with-macosx-version-min="10.7" \
+                      --with-macosx-version-min="10.9" \
                       --with-regex=builtin \
                       --with-zlib=builtin \
                       --without-liblzma
