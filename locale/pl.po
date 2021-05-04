@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-04-25 13:36+0000\n"
+"PO-Revision-Date: 2021-05-04 08:46+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -1178,7 +1178,7 @@ msgstr "Błąd przy uruchamianiu dźwięku"
 
 #: src/AudioIO.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Wystąpił błąd inicjacji warstwy wej./wyj. MIDI.\n"
+msgstr "Wystąpił błąd uruchamiania warstwy wej./wyj. MIDI.\n"
 
 #: src/AudioIO.cpp
 msgid ""
@@ -2244,7 +2244,7 @@ msgstr "Gaussowski(a=4,5)"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
-msgstr "Obsługa FFmpeg nie został skompilowana"
+msgstr "Obsługa FFmpeg nie została skompilowana"
 
 #: src/FFmpeg.cpp
 msgid ""
@@ -2378,7 +2378,7 @@ msgstr "&Czytaj nieskompresowane pliki dźwiękowe z oryginalnej lokacji (szybsz
 
 #: src/FileFormats.cpp
 msgid "&Copy all audio into project (safest)"
-msgstr "&Kopiuj cały dźwięk do projektu (najbezpieczniej)"
+msgstr "&Kopiuj cały dźwięk do projektu (najbezpieczniejsze)"
 
 #: src/FileFormats.cpp
 msgid "Do &not copy any audio"
@@ -3159,7 +3159,7 @@ msgid ""
 "The module \"%s\" failed to initialize.\n"
 "\n"
 "It will not be loaded."
-msgstr "Nie można zainicjować modułu \"%s\".\n\nNie zostanie załadowany."
+msgstr "Inicjowanie modułu \"%s\" zakończone niepowodzeniem.\n\nNie zostanie załadowany."
 
 #: src/ModuleManager.cpp
 #, c-format
@@ -5002,7 +5002,7 @@ msgid ""
 "%s\n"
 "\n"
 "'%s' has been canceled due to the error(s) noted above."
-msgstr "%s\n\n'%s' został anulowany z powodu błędu(ów) wymienionego powyżej."
+msgstr "%s\n\n'%s' został anulowany z powodu błędu(ów) wymienionego(ych) powyżej."
 
 #: src/TimerRecordDialog.cpp
 #, c-format
@@ -6550,12 +6550,12 @@ msgstr "%3d dB"
 #: src/effects/Compressor.cpp src/effects/ScoreAlignDialog.cpp
 #, c-format
 msgid "%.2f secs"
-msgstr "%.2f sekund"
+msgstr "%.2f sek."
 
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "%.1f secs"
-msgstr "%.1f sekund"
+msgstr "%.1f sek."
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
@@ -6893,11 +6893,11 @@ msgstr "Wyniki"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Pass"
-msgstr "Kryteria sukcesu 1.4.7  WCAG 2.0: Zdane"
+msgstr "Kryteria sukcesu 1.4.7 WCAG 2.0: Zdane"
 
 #: src/effects/Contrast.cpp
 msgid "Success Criteria 1.4.7 of WCAG 2.0: Fail"
-msgstr "Kryteria sukcesu 1.4.7  WCAG 2.0: Niezdane"
+msgstr "Kryteria sukcesu 1.4.7 WCAG 2.0: Niezdane"
 
 #: src/effects/Contrast.cpp
 msgid "Data gathered"
@@ -7353,7 +7353,7 @@ msgstr "Próba zainicjowania następującego efektu zakończona niepowodzeniem:\
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
-msgstr "Nie udało się zainicjować efektu"
+msgstr "Inicjowanie efektu zakończone niepowodzeniem"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -7367,7 +7367,7 @@ msgstr "Próba zainicjowania następującego polecenia zakończona niepowodzenie
 
 #: src/effects/EffectManager.cpp
 msgid "Command failed to initialize"
-msgstr "Nie udało się zainicjować polecenia"
+msgstr "Inicjowanie polecenia zakończone niepowodzeniem"
 
 #: src/effects/EffectUI.cpp
 msgid "Effects Rack"
@@ -8045,7 +8045,7 @@ msgstr "Ustawia głośność jednej lub więcej ścieżek"
 
 #: src/effects/Loudness.cpp
 msgid "Normalizing Loudness...\n"
-msgstr "Normalizuj głośność...\n"
+msgstr "Normalizowanie głośności...\n"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 #, c-format
@@ -8415,7 +8415,7 @@ msgstr "Ustawia amplitudę szczytową jednej lub więcej ścieżek"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "Usuwanie offsetu DC i normalizacja...\n"
+msgstr "Usuwanie offsetu DC i normalizowanie...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset...\n"
@@ -8423,7 +8423,7 @@ msgstr "Usuwanie offsetu DC...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Normalizacja bez usuwania offsetu DC...\n"
+msgstr "Normalizowanie bez usuwania offsetu DC...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
@@ -8432,27 +8432,27 @@ msgstr "Nicnierobienie...\n"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr "Analizuję pierwszą ścieżkę z pary stereo: %s"
+msgstr "Analizowanie pierwszej ścieżki z pary stereo: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analizuję drugą ścieżkę z pary stereo: %s"
+msgstr "Analizowanie drugiej ścieżki z pary stereo: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr "Przetwarzam ścieżki stereo niezależnie: %s"
+msgstr "Przetwarzanie ścieżki stereo niezależnie: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing first track of stereo pair: %s"
-msgstr "Przetwarzam pierwszą ścieżkę z pary stereo: %s"
+msgstr "Przetwarzanie pierwszej ścieżki z pary stereo: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing second track of stereo pair: %s"
-msgstr "Przetwarzam drugą ścieżkę z pary stereo: %s"
+msgstr "Przetwarzanie drugiej ścieżki z pary stereo: %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
@@ -9940,11 +9940,11 @@ msgstr "Eksportuj"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Eksportuj zaznaczenie przy użyciu komendy z wiersza poleceń"
+msgstr "Eksportowanie zaznaczenia przy użyciu komendy z wiersza poleceń"
 
 #: src/export/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
-msgstr "Eksportuj dźwięk przy użyciu komendy z wiersza poleceń"
+msgstr "Eksportowanie dźwięku przy użyciu komendy z wiersza poleceń"
 
 #: src/export/ExportCL.cpp
 msgid "Command Output"
@@ -10084,7 +10084,7 @@ msgstr "Eksportowanie zaznaczonego dźwięku jako %s"
 #: src/export/ExportFFmpeg.cpp src/export/ExportPCM.cpp
 #, c-format
 msgid "Exporting the audio as %s"
-msgstr "Eksportuj dźwięk jako %s"
+msgstr "Eksportowanie dźwięku jako %s"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "Invalid sample rate"
@@ -10496,7 +10496,7 @@ msgid ""
 "-1 - automatic\n"
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
-msgstr "Poziom kompresji\nWymagany dla FLAC\n-1 - automatyczny\nmin. - 0 (szybkie odkodowanie, duży plik)\nmaks. - 10 (wolne odkodowanie, mały plik)"
+msgstr "Poziom kompresji\nWymagany dla FLAC\n-1 - automatyczny\nmin. - 0 (szybkie kodowanie, duży plik)\nmaks. - 10 (wolne kodowanie, mały plik)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Compression:"
@@ -10728,7 +10728,7 @@ msgstr "Eksportowanie zaznaczonych dźwięków jako FLAC"
 
 #: src/export/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
-msgstr "Eksportuj dźwięk jako FLAC"
+msgstr "Eksportowanie dźwięku jako FLAC"
 
 #: src/export/ExportMP2.cpp
 msgid "MP2 Files"
@@ -10750,7 +10750,7 @@ msgstr "Eksportowanie zaznaczonego dźwięku %ld kbps"
 #: src/export/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
-msgstr "Eksportuj dźwięk jako %ld kbps"
+msgstr "Eksportowanie dźwięku jako %ld kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
@@ -10945,15 +10945,15 @@ msgstr "Pliki MP3"
 
 #: src/export/ExportMP3.cpp
 msgid "Could not open MP3 encoding library!"
-msgstr "Nie można otworzyć biblioteki kodeka MP3!"
+msgstr "Nie można otworzyć biblioteki kodowania MP3!"
 
 #: src/export/ExportMP3.cpp
 msgid "Could not initialize MP3 encoding library!"
-msgstr "Nie można zainicjować biblioteki kodeka MP3!"
+msgstr "Nie można zainicjować biblioteki kodowania MP3!"
 
 #: src/export/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
-msgstr "Nieaktualna lub niewspierana biblioteka MP3!"
+msgstr "Nieaktualna lub niewspierana biblioteka kodowania MP3!"
 
 #: src/export/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
@@ -10967,7 +10967,7 @@ msgstr "Eksportowanie zaznaczonego dźwięku z presetem %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with %s preset"
-msgstr "Eksportuj dźwięk z presetem %s"
+msgstr "Eksportowanie dźwięku z presetem %s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10977,7 +10977,7 @@ msgstr "Eksportowanie zaznaczonego dźwięku z jakością VBR %s"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with VBR quality %s"
-msgstr "Eksportuj dźwięk z jakością VBR %s"
+msgstr "Eksportowanie dźwięku z jakością VBR %s"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -10987,7 +10987,7 @@ msgstr "Eksportowanie zaznaczonego dźwięku %d Kbps"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
-msgstr "Eksportuj dźwięk jako %d Kbps"
+msgstr "Eksportowanie dźwięku jako %d Kbps"
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11192,11 +11192,11 @@ msgstr "Nie można eksportować - problem z plikiem"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
-msgstr "Eksportuj zaznaczenie jako Ogg Vorbis"
+msgstr "Eksportowanie zaznaczenia jako Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
-msgstr "Eksportuj dźwięk jako Ogg Vorbis"
+msgstr "Eksportowanie dźwięku jako Ogg Vorbis"
 
 #: src/export/ExportPCM.cpp src/import/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
@@ -13640,7 +13640,7 @@ msgstr "Zaznacz co najmniej jedną ścieżkę dźwiękową i jedną ścieżkę M
 msgid ""
 "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
 "secs."
-msgstr "Wyrównanie ukończone: MIDI od %.2f do %.2f sekundy, dźwięk od %.2f do %.2f sekundy"
+msgstr "Wyrównanie ukończone: MIDI od %.2f do %.2f sek., dźwięk od %.2f do %.2f sek."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -13651,7 +13651,7 @@ msgstr "Zsynchronizuj MIDI z dźwiękiem"
 msgid ""
 "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
 "%.2f to %.2f secs."
-msgstr "Błąd wyrównania: wejście za krótkie: MIDI od %.2f do %.2f sekundy, dźwięk od %.2f do %.2f sekundy"
+msgstr "Błąd wyrównania: wejście za krótkie: MIDI od %.2f do %.2f sek., dźwięk od %.2f do %.2f sek."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
