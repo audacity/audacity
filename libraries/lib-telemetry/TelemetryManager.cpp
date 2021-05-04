@@ -277,7 +277,8 @@ void Terminate ()
 
     // TrackingService may block the thread for a short period
     // of time if required.
-    telemetryManager.UserTtrackingService->reportFinished();
+    if (telemetryManager.UserTtrackingService != nullptr)
+        telemetryManager.UserTtrackingService->reportFinished();
 
     telemetryManager.TelemetryEnabled = false;
     telemetryManager.TelemetryService.reset ();
