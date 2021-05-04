@@ -17,6 +17,9 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 
+#include "lib-telemetry/TelemetryManager.h"
+#include "lib-string-utils/CodeConversions.h"
+
 AudacityException::~AudacityException()
 {
 }
@@ -90,6 +93,8 @@ void MessageBoxException::DelayedHandlerAction()
                ErrorHelpUrl());
          }
       }
+
+      audacity::telemetry::ReportException (audacity::ToUTF8 (ErrorMessage ().Debug ()));
 
       moved = true;
    }
