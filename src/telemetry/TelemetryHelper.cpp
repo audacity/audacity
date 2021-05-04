@@ -32,11 +32,13 @@ TelemetryHelper::TelemetryHelper ()
     );
 
 #ifdef GOOGLE_UA_TRACKING_ID
-    telemetry::SetTelemetryService (telemetry::TelemetryService::GoogleAnalytics_UA, GOOGLE_UA_TRACKING_ID);
+    if (*(GOOGLE_UA_TRACKING_ID) != '\0')
+        telemetry::SetTelemetryService (telemetry::TelemetryService::GoogleAnalytics_UA, GOOGLE_UA_TRACKING_ID);
 #endif
 
 #ifdef METRICA_TRACKING_ID
-    telemetry::SetUserTrackingService (telemetry::UserTrackingService::YandexMetrica, METRICA_TRACKING_ID);
+    if (*(METRICA_TRACKING_ID) != '\0')
+        telemetry::SetUserTrackingService (telemetry::UserTrackingService::YandexMetrica, METRICA_TRACKING_ID);
 #endif
 }
 

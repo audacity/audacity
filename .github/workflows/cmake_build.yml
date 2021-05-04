@@ -27,6 +27,8 @@ env:
   # it has a bug in the install_name_tool.  So explicitly use 12.3
   # instead.
   DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
+  GOOGLE_UA_TRACKING_ID: ${{ secrets.GOOGLE_UA_TRACKING_ID }}
+  METRICA_TRACKING_ID: ${{ secrets.METRICA_TRACKING_ID }} 
 
 #
 # Define our job(s)
