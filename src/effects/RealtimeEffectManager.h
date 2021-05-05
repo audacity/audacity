@@ -45,9 +45,7 @@ public:
    void RealtimeAddProcessor(int group, unsigned chans, float rate);
    void RealtimeFinalize();
    void RealtimeSuspend();
-   void RealtimeSuspendOne( EffectProcessor &effect );
    void RealtimeResume() noexcept;
-   void RealtimeResumeOne( EffectProcessor &effect );
    Latency GetRealtimeLatency() const;
 
    //! Object whose lifetime encompasses one suspension of processing in one thread
