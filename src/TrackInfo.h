@@ -47,6 +47,7 @@ namespace TrackInfo
          kItemMinimize         = 1 << 8,
          kItemSyncLock         = 1 << 9,
          kItemStatusInfo2      = 1 << 10,
+         kItemEffects          = 1 << 11,
 
          kHighestBottomItem = kItemMinimize,
       };
