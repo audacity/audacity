@@ -917,26 +917,28 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    if (mNumPlaybackChannels > 0)
    {
-      auto & em = RealtimeEffectManager::Get();
-      // Setup for realtime playback at the rate of the realtime
-      // stream, not the rate of the track.
-      em.RealtimeInitialize(mRate);
-
-      // The following adds a NEW effect processor for each logical track and the
-      // group determination should mimic what is done in audacityAudioCallback()
-      // when calling RealtimeProcess().
-      int group = 0;
-      for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt;)
-      {
-         const WaveTrack *vt = mPlaybackTracks[i].get();
-
-         // TODO: more-than-two-channels
-         unsigned chanCnt = TrackList::Channels(vt).size();
-         i += chanCnt;
-
+      if (auto pOwningProject = mOwningProject.lock()) {
+         auto & em = RealtimeEffectManager::Get(*pOwningProject);
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         em.RealtimeAddProcessor(group++, std::min(2u, chanCnt), mRate);
+         em.RealtimeInitialize(mRate);
+
+         // The following adds a NEW effect processor for each logical track and the
+         // group determination should mimic what is done in audacityAudioCallback()
+         // when calling RealtimeProcess().
+         int group = 0;
+         for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt;)
+         {
+            const WaveTrack *vt = mPlaybackTracks[i].get();
+
+            // TODO: more-than-two-channels
+            unsigned chanCnt = TrackList::Channels(vt).size();
+            i += chanCnt;
+
+            // Setup for realtime playback at the rate of the realtime
+            // stream, not the rate of the track.
+            em.RealtimeAddProcessor(group++, std::min(2u, chanCnt), mRate);
+         }
       }
    }
 
@@ -1269,7 +1271,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
    if (mNumPlaybackChannels > 0)
    {
-      RealtimeEffectManager::Get().RealtimeFinalize();
+      if (auto pOwningProject = mOwningProject.lock())
+         RealtimeEffectManager::Get(*pOwningProject).RealtimeFinalize();
    }
 
    mPlaybackBuffers.reset();
@@ -1353,7 +1356,8 @@ void AudioIO::StopStream()
    // No longer need effects processing
    if (mNumPlaybackChannels > 0)
    {
-      RealtimeEffectManager::Get().RealtimeFinalize();
+      if (auto pOwningProject = mOwningProject.lock())
+         RealtimeEffectManager::Get(*pOwningProject).RealtimeFinalize();
    }
 
    //
@@ -1589,13 +1593,12 @@ void AudioIO::SetPaused(bool state)
 {
    if (state != mPaused)
    {
-      if (state)
-      {
-         RealtimeEffectManager::Get().RealtimeSuspend();
-      }
-      else
-      {
-         RealtimeEffectManager::Get().RealtimeResume();
+      if (auto pOwningProject = mOwningProject.lock()) {
+         auto &em = RealtimeEffectManager::Get(*pOwningProject);
+         if (state)
+            em.RealtimeSuspend();
+         else
+            em.RealtimeResume();
       }
    }
 
@@ -2394,7 +2397,8 @@ bool AudioIoCallback::FillOutputBuffers(
    // ------ End of MEMORY ALLOCATION ---------------
 
 {
-   RealtimeEffectManager::ProcessScope scope;
+   auto pProject = mOwningProject.lock();
+   RealtimeEffectManager::ProcessScope scope{ pProject.get() };
 
    bool selected = false;
    int group = 0;

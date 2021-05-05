@@ -14,17 +14,31 @@
 
 #include "EffectInterface.h"
 #include <memory>
+#include "Project.h"
 
 #include <atomic>
 #include <wx/time.h>
 
-RealtimeEffectManager & RealtimeEffectManager::Get()
+static const AttachedProjectObjects::RegisteredFactory manager
 {
-   static RealtimeEffectManager rem;
-   return rem;
+   [](AudacityProject &project)
+   {
+      return std::make_shared<RealtimeEffectManager>(project);
+   }
+};
+
+RealtimeEffectManager &RealtimeEffectManager::Get(AudacityProject &project)
+{
+   return project.AttachedObjects::Get<RealtimeEffectManager&>(manager);
 }
 
-RealtimeEffectManager::RealtimeEffectManager()
+const RealtimeEffectManager &RealtimeEffectManager::Get(const AudacityProject &project)
+{
+   return Get(const_cast<AudacityProject &>(project));
+}
+
+RealtimeEffectManager::RealtimeEffectManager(AudacityProject &project)
+   : mProject(project)
 {
 }
 
@@ -32,12 +46,12 @@ RealtimeEffectManager::~RealtimeEffectManager()
 {
 }
 
-bool RealtimeEffectManager::RealtimeIsActive()
+bool RealtimeEffectManager::RealtimeIsActive() const noexcept
 {
    return mStates.size() != 0;
 }
 
-bool RealtimeEffectManager::RealtimeIsSuspended()
+bool RealtimeEffectManager::RealtimeIsSuspended() const noexcept
 {
    return mSuspended;
 }
@@ -45,7 +59,7 @@ bool RealtimeEffectManager::RealtimeIsSuspended()
 void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
 {
    // Block RealtimeProcess()
-   SuspensionScope scope;
+   SuspensionScope scope{ &mProject };
 
    // Add to list of active effects
    mStates.emplace_back( std::make_unique< RealtimeEffectState >( effect ) );
@@ -68,7 +82,7 @@ void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
 void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
 {
    // Block RealtimeProcess()
-   SuspensionScope scope;
+   SuspensionScope scope{ &mProject };
 
    if (mActive)
    {
@@ -90,7 +104,7 @@ void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
 void RealtimeEffectManager::RealtimeInitialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
-   SuspensionScope scope;
+   SuspensionScope scope{ &mProject };
 
    // (Re)Set processor parameters
    mRealtimeChans.clear();

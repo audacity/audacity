@@ -720,7 +720,7 @@ void EffectUIHost::Resume()
       mEnableCb->SetValue(mEnabled);
       return;
    }
-   RealtimeEffectManager::Get().RealtimeResumeOne( mEffect );
+   RealtimeEffectManager::Get(*mProject).RealtimeResumeOne( mEffect );
 }
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
@@ -733,7 +733,7 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
    }
    else
    {
-      RealtimeEffectManager::Get().RealtimeSuspendOne( mEffect );
+      RealtimeEffectManager::Get(*mProject).RealtimeSuspendOne( mEffect );
       mNeedsResume = true;
    }
    
@@ -1160,7 +1160,7 @@ void EffectUIHost::InitializeRealtime()
 {
    if (mSupportsRealtime && !mInitialized)
    {
-      RealtimeEffectManager::Get().RealtimeAddEffect(mEffect);
+      RealtimeEffectManager::Get(*mProject).RealtimeAddEffect(mEffect);
       
       AudioIO::Get()->Subscribe([this](AudioIOEvent event){
          switch (event.type) {
@@ -1181,7 +1181,7 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized)
    {
-      RealtimeEffectManager::Get().RealtimeRemoveEffect(mEffect);
+      RealtimeEffectManager::Get(*mProject).RealtimeRemoveEffect(mEffect);
       
       mInitialized = false;
    }
