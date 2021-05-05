@@ -24,7 +24,7 @@ TelemetryHelper::TelemetryHelper ()
 {
     using namespace audacity;
 
-    if (!gPrefs->ReadBool (prefsKeyEnabled, false))
+    if (!gPrefs->ReadBool (prefsKeyDialogShown, false))
     {
         TelemetryDialog dlg (nullptr);
         const int code = dlg.ShowModal ();
