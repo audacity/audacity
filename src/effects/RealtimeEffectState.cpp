@@ -12,33 +12,61 @@
 
 #include "EffectInterface.h"
 
-RealtimeEffectState::RealtimeEffectState( EffectProcessor &effect )
-   : mEffect{ effect }
+RealtimeEffectState::RealtimeEffectState(const PluginID & id)
 {
+   SetID(id);
+}
+
+RealtimeEffectState::~RealtimeEffectState() = default;
+
+void RealtimeEffectState::SetID(const PluginID & id)
+{
+   bool empty = id.empty();
+   if (mID.empty() && !empty) {
+      mID = id;
+      GetEffect();
+   }
+   else
+      // Set mID to non-empty at most once
+      assert(empty);
+}
+
+EffectProcessor *RealtimeEffectState::GetEffect()
+{
+   if (!mEffect)
+      mEffect = EffectFactory::Call(mID);
+   return mEffect.get();
 }
 
 bool RealtimeEffectState::Suspend()
 {
-   auto result = mEffect.RealtimeSuspend();
-   if ( result ) {
-      mSuspendCount++;
-   }
-   return result;
+   ++mSuspendCount;
+   return mSuspendCount != 1 || (mEffect && mEffect->RealtimeSuspend());
 }
 
 bool RealtimeEffectState::Resume() noexcept
 {
-   auto result = mEffect.RealtimeResume();
-   if ( result ) {
-      mSuspendCount--;
-   }
-   return result;
+   assert(mSuspendCount > 0);
+   --mSuspendCount;
+   return mSuspendCount != 0 || (mEffect && mEffect->RealtimeResume());
+}
+
+bool RealtimeEffectState::Initialize(double rate)
+{
+   if (!mEffect)
+      return false;
+
+   mEffect->SetSampleRate(rate);
+   return mEffect->RealtimeInitialize();
 }
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
 bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
 {
+   if (!mEffect)
+      return false;
+
    auto ichans = chans;
    auto ochans = chans;
    auto gchans = chans;
@@ -53,8 +81,8 @@ bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
    // Remember the processor starting index
    mGroupProcessor.push_back(mCurrentProcessor);
 
-   const auto numAudioIn = mEffect.GetAudioInCount();
-   const auto numAudioOut = mEffect.GetAudioOutCount();
+   const auto numAudioIn = mEffect->GetAudioInCount();
+   const auto numAudioOut = mEffect->GetAudioOutCount();
 
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
@@ -93,13 +121,21 @@ bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
       }
 
       // Add a NEW processor
-      mEffect.RealtimeAddProcessor(gchans, rate);
+      mEffect->RealtimeAddProcessor(gchans, rate);
 
       // Bump to next processor
       mCurrentProcessor++;
    }
 
    return true;
+}
+
+bool RealtimeEffectState::ProcessStart()
+{
+   if (!mEffect)
+      return false;
+
+   return mEffect->RealtimeProcessStart();
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -110,7 +146,12 @@ size_t RealtimeEffectState::Process(int group,
                                     float **outbuf,
                                     size_t numSamples)
 {
-   //
+   if (!mEffect) {
+      for (size_t ii = 0; ii < chans; ++ii)
+         memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
+      return numSamples; // consider all samples to be trivially processed
+   }
+
    // The caller passes the number of channels to process and specifies
    // the number of input and output buffers.  There will always be the
    // same number of output buffers as there are input buffers.
@@ -119,8 +160,8 @@ size_t RealtimeEffectState::Process(int group,
    // so if the number of channels we're currently processing are different
    // than what the effect expects, then we use a few methods of satisfying
    // the effects requirements.
-   const auto numAudioIn = mEffect.GetAudioInCount();
-   const auto numAudioOut = mEffect.GetAudioOutCount();
+   const auto numAudioIn = mEffect->GetAudioInCount();
+   const auto numAudioOut = mEffect->GetAudioOutCount();
 
    float **clientIn = (float **) alloca(numAudioIn * sizeof(float *));
    float **clientOut = (float **) alloca(numAudioOut * sizeof(float *));
@@ -199,11 +240,11 @@ size_t RealtimeEffectState::Process(int group,
 
       // Finally call the plugin to process the block
       len = 0;
-      const auto blockSize = mEffect.GetBlockSize();
+      const auto blockSize = mEffect->GetBlockSize();
       for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
       {
          auto cnt = std::min(numSamples - block, blockSize);
-         len += mEffect.RealtimeProcess(processor, clientIn, clientOut, cnt);
+         len += mEffect->RealtimeProcess(processor, clientIn, clientOut, cnt);
 
          for (size_t i = 0 ; i < numAudioIn; i++)
          {
@@ -223,8 +264,23 @@ size_t RealtimeEffectState::Process(int group,
    return len;
 }
 
+bool RealtimeEffectState::ProcessEnd()
+{
+   if (!mEffect)
+      return false;
+
+   return mEffect->RealtimeProcessEnd();
+}
+
 bool RealtimeEffectState::IsActive() const noexcept
 {
    return mSuspendCount == 0;
 }
 
+bool RealtimeEffectState::Finalize()
+{
+   if (!mEffect)
+      return false;
+
+   return mEffect->RealtimeFinalize();
+}
