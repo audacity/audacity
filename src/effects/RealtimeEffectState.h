@@ -13,6 +13,7 @@
 
 #include <atomic>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 #include <cstddef>
 #include "GlobalVariable.h"
@@ -20,6 +21,7 @@
 #include "XMLTagHandler.h"
 
 class EffectProcessor;
+class Track;
 
 class RealtimeEffectState : public XMLTagHandler
 {
@@ -43,12 +45,11 @@ public:
 
    //! Main thread sets up for playback
    bool Initialize(double rate);
-   bool AddTrack(int group, unsigned chans, float rate);
+   bool AddTrack(Track *track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
    bool ProcessStart();
    //! Worker thread processes part of a batch of samples
-   size_t Process(int group,
-      unsigned chans, float **inbuf, float **outbuf, size_t numSamples);
+   size_t Process(Track *track, unsigned chans, float **inbuf,  float **outbuf, size_t numSamples);
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();
    bool IsActive() const noexcept;
@@ -67,8 +68,8 @@ private:
    wxString mParameters;  // Used only during deserialization
    std::unique_ptr<EffectProcessor> mEffect;
 
-   std::vector<int> mGroupProcessor;
    size_t mCurrentProcessor{ 0 };
+   std::unordered_map<Track *, size_t> mGroups;
 
    std::atomic<int> mSuspendCount{ 1 };    // Effects are initially suspended
 };

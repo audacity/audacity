@@ -16,6 +16,7 @@
 #include "EffectInterface.h"
 #include <memory>
 #include "Project.h"
+#include "Track.h"
 
 #include <atomic>
 #include <wx/time.h>
@@ -60,25 +61,30 @@ void RealtimeEffectManager::Initialize(double rate)
    // (Re)Set processor parameters
    mChans.clear();
    mRates.clear();
+   mGroupLeaders.clear();
 
    // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
    mActive = true;
 
-   // Tell each effect to get ready for action
+   // Tell each effect of the master list to get ready for action
    VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
       state.Initialize(rate);
    });
 }
 
-void RealtimeEffectManager::AddTrack(int group, unsigned chans, float rate)
+void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
 {
-   VisitGroup(nullptr, [&](RealtimeEffectState &state, bool){
-      state.AddTrack(group, chans, rate);
-   });
+   auto leader = *track->GetOwner()->FindLeader(track);
+   mGroupLeaders.push_back(leader);
+   mChans.insert({leader, chans});
+   mRates.insert({leader, rate});
 
-   mChans.push_back(chans);
-   mRates.push_back(rate);
+   VisitGroup(leader,
+      [&](RealtimeEffectState & state, bool) {
+         state.AddTrack(leader, chans, rate);
+      }
+   );
 }
 
 void RealtimeEffectManager::Finalize()
@@ -89,12 +95,10 @@ void RealtimeEffectManager::Finalize()
    // It is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 
-   // Tell each effect to clean up as well
-   VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
-      state.Finalize();
-   });
+   VisitAll([](auto &state, bool){ state.Finalize(); });
 
    // Reset processor parameters
+   mGroupLeaders.clear();
    mChans.clear();
    mRates.clear();
 
@@ -160,7 +164,9 @@ void RealtimeEffectManager::ProcessStart()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers, size_t numSamples)
+size_t RealtimeEffectManager::Process(Track *track,
+                                      float **buffers,
+                                      size_t numSamples)
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -170,11 +176,13 @@ size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers
    if (mSuspended)
       return numSamples;
 
+   auto chans = mChans[track];
+
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
    auto start = std::chrono::steady_clock::now();
 
-   // Allocate the in/out buffer arrays
+   // Allocate the in and out buffer arrays
    float **ibuf = (float **) alloca(chans * sizeof(float *));
    float **obuf = (float **) alloca(chans * sizeof(float *));
 
@@ -188,33 +196,28 @@ size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers
 
    // Now call each effect in the chain while swapping buffer pointers to feed the
    // output of one effect as the input to the next effect
+   // Tracks how many processors were called
    size_t called = 0;
-   VisitGroup(nullptr, [&](RealtimeEffectState &state, bool bypassed){
-      if (!bypassed) {
-         state.Process(group, chans, ibuf, obuf, numSamples);
+   VisitGroup(track,
+      [&](RealtimeEffectState &state, bool bypassed)
+      {
+         if (bypassed)
+            return;
+
+         state.Process(track, chans, ibuf, obuf, numSamples);
+         for (auto i = 0; i < chans; ++i)
+            std::swap(ibuf[i], obuf[i]);
          called++;
       }
-
-      for (unsigned int j = 0; j < chans; j++)
-      {
-         float *temp;
-         temp = ibuf[j];
-         ibuf[j] = obuf[j];
-         obuf[j] = temp;
-      }
-   });
+   );
 
    // Once we're done, we might wind up with the last effect storing its results
    // in the temporary buffers.  If that's the case, we need to copy it over to
    // the caller's buffers.  This happens when the number of effects processed
    // is odd.
    if (called & 1)
-   {
       for (unsigned int i = 0; i < chans; i++)
-      {
          memcpy(buffers[i], ibuf[i], numSamples * sizeof(float));
-      }
-   }
 
    // Remember the latency
    auto end = std::chrono::steady_clock::now();
@@ -245,8 +248,7 @@ void RealtimeEffectManager::ProcessEnd() noexcept
    }
 }
 
-void RealtimeEffectManager::VisitGroup(Track *leader,
-   std::function<void(RealtimeEffectState &state, bool bypassed)> func)
+void RealtimeEffectManager::VisitGroup(Track *leader, StateVisitor func)
 {
    // Call the function for each effect on the master list
    RealtimeEffectList::Get(mProject).Visit(func);
@@ -254,6 +256,16 @@ void RealtimeEffectManager::VisitGroup(Track *leader,
    // Call the function for each effect on the track list
    if (leader)
      RealtimeEffectList::Get(*leader).Visit(func);
+}
+
+void RealtimeEffectManager::VisitAll(StateVisitor func)
+{
+   // Call the function for each effect on the master list
+   RealtimeEffectList::Get(mProject).Visit(func);
+
+   // And all track lists
+   for (auto leader : mGroupLeaders)
+      RealtimeEffectList::Get(*leader).Visit(func);
 }
 
 auto RealtimeEffectManager::GetLatency() const -> Latency

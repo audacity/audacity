@@ -15,6 +15,7 @@
 #include <chrono>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 #include <vector>
 
 #include "ClientData.h"
@@ -39,8 +40,11 @@ public:
 
    // Realtime effect processing
    bool IsActive() const noexcept;
+   //! Main thread begins to define a set of tracks for playback
    void Initialize(double rate);
-   void AddTrack(int group, unsigned chans, float rate);
+   //! Main thread adds one track (passing the first of one or more channels)
+   void AddTrack(Track *track, unsigned chans, float rate);
+   //! Main thread cleans up after playback
    void Finalize();
    void Suspend();
    void Resume() noexcept;
@@ -104,12 +108,11 @@ public:
             Get(*mpProject).ProcessEnd();
       }
 
-      size_t Process( int group,
-         unsigned chans, float **buffers, size_t numSamples)
+      size_t Process(Track *track, float **buffers, size_t numSamples)
       {
          if (mpProject)
             return Get(*mpProject)
-               .Process(group, chans, buffers, numSamples);
+               .Process(track, buffers, numSamples);
          else
             return numSamples; // consider them trivially processed
       }
@@ -120,7 +123,7 @@ public:
 
 private:
    void ProcessStart();
-   size_t Process(int group, unsigned chans, float **buffers, size_t numSamples);
+   size_t Process(Track *track, float **buffers, size_t numSamples);
    void ProcessEnd() noexcept;
 
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
@@ -132,14 +135,20 @@ private:
    //! Visit the per-project states first, then states for leader if not null
    void VisitGroup(Track *leader, StateVisitor func);
 
+   //! Visit the per-project states first, then all tracks from AddTrack
+   /*! Tracks are visited in unspecified order */
+   void VisitAll(StateVisitor func);
+
    AudacityProject &mProject;
 
    std::mutex mLock;
    Latency mLatency{ 0 };
    std::atomic<bool> mSuspended{ true };
    std::atomic<bool> mActive{ false };
-   std::vector<unsigned> mChans;
-   std::vector<double> mRates;
+
+   std::vector<Track *> mGroupLeaders;
+   std::unordered_map<Track *, unsigned> mChans;
+   std::unordered_map<Track *, double> mRates;
 };
 
 #endif

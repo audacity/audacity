@@ -57,13 +57,15 @@ bool RealtimeEffectState::Initialize(double rate)
    if (!mEffect)
       return false;
 
+   mCurrentProcessor = 0;
+   mGroups.clear();
    mEffect->SetSampleRate(rate);
    return mEffect->RealtimeInitialize();
 }
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
-bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
+bool RealtimeEffectState::AddTrack(Track *track, unsigned chans, float rate)
 {
    if (!mEffect)
       return false;
@@ -72,15 +74,7 @@ bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
    auto ochans = chans;
    auto gchans = chans;
 
-   // Reset processor index
-   if (group == 0)
-   {
-      mCurrentProcessor = 0;
-      mGroupProcessor.clear();
-   }
-
-   // Remember the processor starting index
-   mGroupProcessor.push_back(mCurrentProcessor);
+   mGroups[track] = mCurrentProcessor;
 
    const auto numAudioIn = mEffect->GetAudioInCount();
    const auto numAudioOut = mEffect->GetAudioOutCount();
@@ -123,8 +117,6 @@ bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
 
       // Add a NEW processor
       mEffect->RealtimeAddProcessor(gchans, rate);
-
-      // Bump to next processor
       mCurrentProcessor++;
    }
 
@@ -141,7 +133,7 @@ bool RealtimeEffectState::ProcessStart()
 
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
-size_t RealtimeEffectState::Process(int group,
+size_t RealtimeEffectState::Process(Track *track,
                                     unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
@@ -174,7 +166,7 @@ size_t RealtimeEffectState::Process(int group,
    unsigned indx = 0;
    unsigned ondx = 0;
 
-   int processor = mGroupProcessor[group];
+   auto processor = mGroups[track];
 
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
@@ -257,8 +249,6 @@ size_t RealtimeEffectState::Process(int group,
             clientOut[i] += cnt;
          }
       }
-
-      // Bump to next processor
       processor++;
    }
 
@@ -280,6 +270,8 @@ bool RealtimeEffectState::IsActive() const noexcept
 
 bool RealtimeEffectState::Finalize()
 {
+   mGroups.clear();
+
    if (!mEffect)
       return false;
 
