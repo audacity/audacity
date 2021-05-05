@@ -145,9 +145,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # to enable.
    MODULE_PREFS
 
-   # Define to allow realtime processing in Audacity effects that have been converted.
-   REALTIME_AUDACITY_EFFECTS
-
    # Define to include the effects rack (such as it is).
    #EFFECTS_RACK
 
