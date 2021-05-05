@@ -58,7 +58,7 @@ class XML_API XMLWriter /* not final */ {
 
    // Escape a string, replacing certain characters with their
    // XML encoding, i.e. '<' becomes '&lt;'
-   wxString XMLEsc(const wxString & s);
+   static wxString XMLEsc(const wxString & s);
 
  protected:
 
