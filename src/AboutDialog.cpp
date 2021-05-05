@@ -90,9 +90,15 @@ void AboutDialog::CreateCreditsList()
    const auto developerFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, developer");
+   const auto developerAndSupprtFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, developer and support");
    const auto documentationAndSupportFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, documentation and support");
+   const auto qaDocumentationAndSupportFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, QA tester, documentation and support");
    const auto documentationAndSupportFrenchFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, documentation and support, French");
@@ -129,7 +135,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leland Lucius"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Peter Sampson"), roleTeamMember);
+   AddCredit(wxT("Peter Sampson"), qaDocumentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Bill Wharrie"), documentationAndSupportFormat, roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
