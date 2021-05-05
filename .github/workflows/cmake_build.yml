@@ -236,7 +236,7 @@ jobs:
         cmake -S . \
               -B build \
               -G "${{matrix.config.generator}}" \
-              -T buildsystem=1
+              -T buildsystem=1 \
               -D audacity_use_pch=no
 
         # Build Audacity
