@@ -145,9 +145,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # to enable.
    MODULE_PREFS
 
-   # Define to include the effects rack (such as it is).
-   #EFFECTS_RACK
-
    # Define to make the meters look like a row of LEDs
    #METER_LED_STYLE
 

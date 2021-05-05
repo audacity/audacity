@@ -59,47 +59,6 @@ RealtimeEffectManager::~RealtimeEffectManager()
 {
 }
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-void RealtimeEffectManager::RealtimeSetEffects(const EffectArray & effects)
-{
-   // Block RealtimeProcess()
-   RealtimeSuspend();
-
-   decltype( mStates ) newStates;
-   auto begin = mStates.begin(), end = mStates.end();
-   for ( auto pEffect : effects ) {
-      auto found = std::find_if( begin, end,
-         [=]( const decltype( mStates )::value_type &state ){
-            return state && &state->GetEffect() == pEffect;
-         }
-      );
-      if ( found == end ) {
-         // Tell New effect to get ready
-         pEffect->RealtimeInitialize();
-         newStates.emplace_back(
-            std::make_unique< RealtimeEffectState >( *pEffect ) );
-      }
-      else {
-         // Preserve state for effect that remains in the chain
-         newStates.emplace_back( std::move( *found ) );
-      }
-   }
-
-   // Remaining states that were not moved need to clean up
-   for ( auto &state : mStates ) {
-      if ( state )
-         state->GetEffect().RealtimeFinalize();
-   }
-
-   // Get rid of the old chain
-   // And install the NEW one
-   mStates.swap( newStates );
-
-   // Allow RealtimeProcess() to, well, process 
-   RealtimeResume();
-}
-#endif
-
 bool RealtimeEffectManager::RealtimeIsActive()
 {
    return mStates.size() != 0;
