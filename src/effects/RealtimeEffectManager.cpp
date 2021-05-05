@@ -56,51 +56,6 @@ bool RealtimeEffectManager::RealtimeIsSuspended() const noexcept
    return mSuspended;
 }
 
-void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
-{
-   // Block RealtimeProcess()
-   SuspensionScope scope{ &mProject };
-
-   // Add to list of active effects
-   mStates.emplace_back( std::make_unique< RealtimeEffectState >( effect ) );
-   auto &state = mStates.back();
-
-   // Initialize effect if realtime is already active
-   if (mActive)
-   {
-      // Initialize realtime processing
-      effect.RealtimeInitialize();
-
-      // Add the required processors
-      for (size_t i = 0, cnt = mRealtimeChans.size(); i < cnt; i++)
-      {
-         state->RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
-      }
-   }
-}
-
-void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
-{
-   // Block RealtimeProcess()
-   SuspensionScope scope{ &mProject };
-
-   if (mActive)
-   {
-      // Cleanup realtime processing
-      effect.RealtimeFinalize();
-   }
-      
-   // Remove from list of active effects
-   auto end = mStates.end();
-   auto found = std::find_if( mStates.begin(), end,
-      [&](const decltype(mStates)::value_type &state){
-         return &state->GetEffect() == &effect;
-      }
-   );
-   if (found != end)
-      mStates.erase(found);
-}
-
 void RealtimeEffectManager::RealtimeInitialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway

@@ -39,8 +39,6 @@ public:
    // Realtime effect processing
    bool RealtimeIsActive() const noexcept;
    bool RealtimeIsSuspended() const noexcept;
-   void RealtimeAddEffect(EffectProcessor &effect);
-   void RealtimeRemoveEffect(EffectProcessor &effect);
    void RealtimeInitialize(double rate);
    void RealtimeAddProcessor(int group, unsigned chans, float rate);
    void RealtimeFinalize();
