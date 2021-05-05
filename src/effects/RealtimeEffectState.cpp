@@ -229,3 +229,4 @@ bool RealtimeEffectState::IsRealtimeActive()
 {
    return mRealtimeSuspendCount == 0;
 }
+
