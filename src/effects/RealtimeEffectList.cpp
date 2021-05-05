@@ -7,6 +7,7 @@
  *********************************************************************/
 
 #include "RealtimeEffectList.h"
+#include "RealtimeEffectState.h"
 
 #include "Project.h"
 #include "Track.h"
@@ -53,4 +54,10 @@ RealtimeEffectList &RealtimeEffectList::Get(Track &track)
 const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
 {
    return Get(const_cast<Track &>(track));
+}
+
+void RealtimeEffectList::Visit(StateVisitor func)
+{
+   for (auto &state : mStates)
+      func(*state, !state->IsActive());
 }

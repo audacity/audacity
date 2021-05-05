@@ -10,6 +10,7 @@
 
 
 #include "RealtimeEffectManager.h"
+#include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
 #include "EffectInterface.h"
@@ -48,7 +49,7 @@ RealtimeEffectManager::~RealtimeEffectManager()
 
 bool RealtimeEffectManager::IsActive() const noexcept
 {
-   return mStates.size() != 0;
+   return mActive;
 }
 
 bool RealtimeEffectManager::IsSuspended() const noexcept
@@ -70,16 +71,17 @@ void RealtimeEffectManager::Initialize(double rate)
    mActive = true;
 
    // Tell each effect to get ready for action
-   for (auto &state : mStates) {
-      state->GetEffect().SetSampleRate(rate);
-      state->GetEffect().RealtimeInitialize();
-   }
+   VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
+      state.GetEffect().SetSampleRate(rate);
+      state.GetEffect().RealtimeInitialize();
+   });
 }
 
 void RealtimeEffectManager::AddTrack(int group, unsigned chans, float rate)
 {
-   for (auto &state : mStates)
-      state->AddTrack(group, chans, rate);
+   VisitGroup(nullptr, [&](RealtimeEffectState &state, bool){
+      state.AddTrack(group, chans, rate);
+   });
 
    mChans.push_back(chans);
    mRates.push_back(rate);
@@ -94,8 +96,9 @@ void RealtimeEffectManager::Finalize()
    mLatency = std::chrono::microseconds(0);
 
    // Tell each effect to clean up as well
-   for (auto &state : mStates)
-      state->GetEffect().RealtimeFinalize();
+   VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
+      state.GetEffect().RealtimeFinalize();
+   });
 
    // Reset processor parameters
    mChans.clear();
@@ -118,8 +121,9 @@ void RealtimeEffectManager::Suspend()
    mSuspended = true;
 
    // And make sure the effects don't either
-   for (auto &state : mStates)
-      state->Suspend();
+   VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
+      state.Suspend();
+   });
 }
 
 void RealtimeEffectManager::Resume() noexcept
@@ -132,8 +136,9 @@ void RealtimeEffectManager::Resume() noexcept
       return;
 
    // Tell the effects to get ready for more action
-   for (auto &state : mStates)
-      state->Resume();
+   VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
+      state.Resume();
+   });
 
    // And we should too
    mSuspended = false;
@@ -151,11 +156,10 @@ void RealtimeEffectManager::ProcessStart()
    // have been suspended.
    if (!mSuspended)
    {
-      for (auto &state : mStates)
-      {
-         if (state->IsActive())
-            state->GetEffect().RealtimeProcessStart();
-      }
+      VisitGroup(nullptr, [](RealtimeEffectState &state, bool bypassed){
+         if (!bypassed)
+            state.GetEffect().RealtimeProcessStart();
+      });
    }
 }
 
@@ -169,10 +173,8 @@ size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mSuspended || mStates.empty())
-   {
+   if (mSuspended)
       return numSamples;
-   }
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
@@ -193,11 +195,9 @@ size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers
    // Now call each effect in the chain while swapping buffer pointers to feed the
    // output of one effect as the input to the next effect
    size_t called = 0;
-   for (auto &state : mStates)
-   {
-      if (state->IsActive())
-      {
-         state->Process(group, chans, ibuf, obuf, numSamples);
+   VisitGroup(nullptr, [&](RealtimeEffectState &state, bool bypassed){
+      if (!bypassed) {
+         state.Process(group, chans, ibuf, obuf, numSamples);
          called++;
       }
 
@@ -208,7 +208,7 @@ size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers
          ibuf[j] = obuf[j];
          obuf[j] = temp;
       }
-   }
+   });
 
    // Once we're done, we might wind up with the last effect storing its results
    // in the temporary buffers.  If that's the case, we need to copy it over to
@@ -244,12 +244,22 @@ void RealtimeEffectManager::ProcessEnd() noexcept
    // have been suspended.
    if (!mSuspended)
    {
-      for (auto &state : mStates)
-      {
-         if (state->IsActive())
-            state->GetEffect().RealtimeProcessEnd();
-      }
+      VisitGroup(nullptr, [](RealtimeEffectState &state, bool bypassed){
+         if (!bypassed)
+            state.GetEffect().RealtimeProcessEnd();
+      });
    }
+}
+
+void RealtimeEffectManager::VisitGroup(Track *leader,
+   std::function<void(RealtimeEffectState &state, bool bypassed)> func)
+{
+   // Call the function for each effect on the master list
+   RealtimeEffectList::Get(mProject).Visit(func);
+
+   // Call the function for each effect on the track list
+   if (leader)
+     RealtimeEffectList::Get(*leader).Visit(func);
 }
 
 auto RealtimeEffectManager::GetLatency() const -> Latency
