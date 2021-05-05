@@ -15,3 +15,5 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    endif()
 endif()
 
+#propagate collected edges up to root CMakeLists.txt
+set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )

@@ -427,11 +427,34 @@ add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
 add_subdirectory( "images" )
 add_subdirectory( "locale" )
+add_subdirectory( "src" )
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
-add_subdirectory( "src" )
 add_subdirectory( "scripts" )
+
+# Generate config file, which is included by Audacity.h
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   configure_file( src/audacity_config.h.in src/private/configwin.h )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( HAVE_VISIBILITY 1 )
+   configure_file( src/audacity_config.h.in src/private/configmac.h )
+else()
+   set( HAVE_VISIBILITY 1 )
+   configure_file( src/audacity_config.h.in src/private/configunix.h )
+endif()
+
+# Generate a picture of module dependencies
+string( JOIN "\n" GRAPH_EDGES ${GRAPH_EDGES} )
+# Choose edge attributes making it easy to hover at either end of edge
+# and see a tooltip describing the edge, in svg image
+file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
+   graph [rankdir=LR] edge [dir=both,arrowtail=inv] \n"
+   "${GRAPH_EDGES}"
+   "\n}\n"
+)
+execute_process( COMMAND
+   dot -O -Tsvg "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" )
 
 # Uncomment what follows for symbol values.
 #[[
