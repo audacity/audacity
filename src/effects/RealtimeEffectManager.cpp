@@ -72,8 +72,7 @@ void RealtimeEffectManager::Initialize(double rate)
 
    // Tell each effect to get ready for action
    VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
-      state.GetEffect().SetSampleRate(rate);
-      state.GetEffect().RealtimeInitialize();
+      state.Initialize(rate);
    });
 }
 
@@ -97,7 +96,7 @@ void RealtimeEffectManager::Finalize()
 
    // Tell each effect to clean up as well
    VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
-      state.GetEffect().RealtimeFinalize();
+      state.Finalize();
    });
 
    // Reset processor parameters
@@ -158,7 +157,7 @@ void RealtimeEffectManager::ProcessStart()
    {
       VisitGroup(nullptr, [](RealtimeEffectState &state, bool bypassed){
          if (!bypassed)
-            state.GetEffect().RealtimeProcessStart();
+            state.ProcessStart();
       });
    }
 }
@@ -246,7 +245,7 @@ void RealtimeEffectManager::ProcessEnd() noexcept
    {
       VisitGroup(nullptr, [](RealtimeEffectState &state, bool bypassed){
          if (!bypassed)
-            state.GetEffect().RealtimeProcessEnd();
+            state.ProcessEnd();
       });
    }
 }
