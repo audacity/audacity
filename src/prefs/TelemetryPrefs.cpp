@@ -70,7 +70,7 @@ void TelemetryPrefs::PopulateOrExchange(ShuttleGui & S)
        {
            S.StartVerticalLay (0);
            {
-               S.TieCheckBox ({}, { wxT ("/Telemetry/Enabled"), true });
+               S.TieCheckBox ({}, { wxT ("/Telemetry/Enabled"), false });
            }
            S.EndVerticalLay ();
 
