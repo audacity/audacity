@@ -1,3 +1,20 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file NetworkManager.cpp
+ @brief Define a class for preforming HTTP requests.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class NetworkManager
+ @brief Class for preforming HTTP requests.
+
+ **********************************************************************/
+
 #include "NetworkManager.h"
 
 #include "IResponseFactory.h"

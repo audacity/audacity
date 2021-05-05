@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CommonHeaders.cpp
+ @brief Define a class, used to setup the common HTTP headers for the telemetry services.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "CommonHeaders.h"
 
 #include <cstdlib>

@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CookiesList.h
+ @brief Define HTTP cookies list class.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <string>

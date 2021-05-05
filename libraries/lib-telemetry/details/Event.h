@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file Event.h
+ @brief Declare a structure for generic telemetry event.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <string>

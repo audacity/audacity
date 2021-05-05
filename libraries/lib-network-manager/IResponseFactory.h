@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file IResponse.h
+ @brief Declare an interface for HTTP response factory.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <memory>

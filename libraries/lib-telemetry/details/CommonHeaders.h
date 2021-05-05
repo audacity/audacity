@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CommonHeaders.h
+ @brief Declare a class, used to setup the common HTTP headers for the telemetry services.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <string>

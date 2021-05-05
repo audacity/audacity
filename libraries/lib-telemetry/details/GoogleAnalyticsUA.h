@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file GoogleAnalyticsUA.h
+ @brief Declare a class for reporting telemetry events to Google Universal Analytics.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <string>

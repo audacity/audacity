@@ -1,3 +1,27 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file HeadersList.cpp
+ @brief Define HTTP headers list class.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class Header
+ @brief A string pair, representing HTTP header.
+
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class HeadersList
+ @brief A class, representing a list of HTTP headers.
+
+ **********************************************************************/
+
 #include "HeadersList.h"
 
 #include <algorithm>

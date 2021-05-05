@@ -1,3 +1,27 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CookiesList.cpp
+ @brief Define HTTP cookies list class.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class Cookie
+ @brief A struct, representing a Cookie object.
+
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class CookiesList
+ @brief A class, representing a list of HTTP cookies.
+
+ **********************************************************************/
+
 #include "CookiesList.h"
 
 #include <sstream>
@@ -130,7 +154,7 @@ const Cookie* CookiesList::getCookie (const std::string& name) const noexcept
 
 size_t CookiesList::getCookiesCount () const noexcept
 {
-    return size_t ();
+    return mCookies.size ();
 }
 
 std::string CookiesList::getCookiesString () const

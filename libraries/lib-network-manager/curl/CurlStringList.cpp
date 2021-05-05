@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CurlStringList.cpp
+ @brief Define a RAII wrapper for the curl_slist.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "CurlStringList.h"
 
 #include <curl/curl.h>

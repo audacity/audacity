@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file TelemetryManager.cpp
+ @brief Define an API for reporting telemetry events.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "TelemetryManager.h"
 
 #include "lib-string-utils/UrlEncode.h"

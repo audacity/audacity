@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file YandexMetricaUserTracking.h
+ @brief Declare a class for reporting session events to Yandex Metrica.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include "IUserTrackingService.h"

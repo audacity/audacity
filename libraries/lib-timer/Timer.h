@@ -1,22 +1,24 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file Timer.h
+ @brief Declare a toolkit and platform independent timer.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <functional>
 #include <chrono>
 #include <memory>
 
-#include <wx/timer.h>
-
 #include "TimerApi.h"
 
+class wxTimer;
 namespace audacity
 {
-
-enum class TimerType
-{
-    Precise,
-    Coarse
-};
-
 class TIMER_API Timer final
 {
 public:
@@ -24,6 +26,7 @@ public:
     using Duration = std::chrono::milliseconds;
 
     Timer () = default;
+    ~Timer ();
 
     Timer (const Timer&) = delete;
     Timer (Timer&&) = delete;
@@ -55,8 +58,6 @@ private:
     std::unique_ptr<wxTimer> mTimer;
 
     Callback mCallback;
-
-    TimerType mTimerType { TimerType::Precise };
 
     Duration mDuration {};
 

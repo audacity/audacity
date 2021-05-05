@@ -137,6 +137,9 @@ our web site at:
 
   https://www.audacityteam.org/download/source
 
+The Audacity source code is located in all the locations within the source tree 
+except for lib-src.
+
 Audacity is built upon other free libraries; some of these libraries may have
 come with Audacity in the lib-src directory.  Others you are expected to install
 first if you want Audacity to have certain capabilities.  Most of these libraries
@@ -215,7 +218,7 @@ GPL-compatible license.  Specifically:
     Cross-platform library for transferring data with URLs.
 
   ThreadPool: zlib License
-    C++11 thread pool
+    C++11 thread pool.
 
 
 For more information, see the documentation inside each library's

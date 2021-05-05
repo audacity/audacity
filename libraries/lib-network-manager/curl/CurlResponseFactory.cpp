@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CurlResponseFactory.cpp
+ @brief Define an implementation of IResponseFactory using libcurl.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "CurlResponseFactory.h"
 
 #include <algorithm>

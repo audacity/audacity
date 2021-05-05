@@ -1,3 +1,20 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file Uuid.cpp
+ @brief Define a class to generate and parse UUIDs
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class Uuid
+ @brief Platform independent class for generating and parsing UUIDs.
+
+ **********************************************************************/
+
 #include "Uuid.h"
 
 #include <algorithm>

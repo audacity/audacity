@@ -1,5 +1,14 @@
-#include "TelemetryHelper.h"
+/*!********************************************************************
 
+ Audacity: A Digital Audio Editor
+
+ @file TelemetryHelper.h
+ @brief Define a helper class, used for telemetry initialization.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+#include "TelemetryHelper.h"
 
 #include "TempDirectory.h"
 

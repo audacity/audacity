@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file TelemetryDialog.cpp
+ @brief Define a dialog for requesting user permissions for sending telentry events.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "TelemetryDialog.h"
 
 #include <wx/sstream.h>

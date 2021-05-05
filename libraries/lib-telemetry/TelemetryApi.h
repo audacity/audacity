@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file TelemetryApi.h
+ @brief Declare macros for the Telemetry library DLL API
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 /* The dynamic library import and export for Microsoft Windows.

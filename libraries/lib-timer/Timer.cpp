@@ -1,6 +1,25 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file Timer.cpp
+ @brief Define a toolkit and platform independent timer.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class Uuid
+ @brief Toolkit independent Timer class.
+
+ **********************************************************************/
+
 #include "Timer.h"
 
 #include <memory>
+
+#include <wx/timer.h>
 
 namespace audacity
 {
@@ -23,6 +42,11 @@ public:
 private:
     std::function<void ()> mCallback;
 };
+}
+
+Timer::~Timer ()
+{
+
 }
 
 void Timer::start ()

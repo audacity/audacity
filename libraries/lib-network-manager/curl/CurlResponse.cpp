@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CurlResponse.cpp
+ @brief Define an implementation of IResponse using libcurl.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "CurlResponse.h"
 
 #include <cassert>

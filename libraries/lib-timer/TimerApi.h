@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file TimerApi.h
+ @brief Declare macros for the Timer library DLL API
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 /* The dynamic library import and export for Microsoft Windows.

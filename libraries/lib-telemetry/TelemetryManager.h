@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file TelemetryManager.h
+ @brief Declare an API for reporting telemetry events.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include "TelemetryApi.h"

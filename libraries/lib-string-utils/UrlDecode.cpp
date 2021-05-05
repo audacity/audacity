@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file UrlDecode.cpp
+ @brief Define a function to decode an URL encode string.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "UrlDecode.h"
 
 #include "HexHelpers.h"

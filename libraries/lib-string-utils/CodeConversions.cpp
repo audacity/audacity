@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CodeConversions.cpp
+ @brief Define functions to preform UTF-8 to std::wstring conversions.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "CodeConversions.h"
 
 #include <locale>

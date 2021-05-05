@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file CurlResponse.h
+ @brief Declare an implementation of IResponse using libcurl.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <deque>

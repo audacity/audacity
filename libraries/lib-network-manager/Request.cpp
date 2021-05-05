@@ -1,3 +1,20 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file Request.cpp
+ @brief Define a class for constructing HTTP requests.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
+/*!********************************************************************
+
+ @class Request
+ @brief Class to construct the HTTP request.
+
+ **********************************************************************/
+
 #include "Request.h"
 
 #include <cctype>

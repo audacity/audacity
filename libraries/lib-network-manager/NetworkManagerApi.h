@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file NetworkManagerApi.h
+ @brief Declare macros for the Network Manager library DLL API
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 /* The dynamic library import and export for Microsoft Windows.

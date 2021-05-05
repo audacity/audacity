@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file IUserTrackingService.h
+ @brief Declare an interface for reporting session events.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 namespace audacity

@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file ITelemetryService.h
+ @brief Declare an interface for reporting telemetry events.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <deque>

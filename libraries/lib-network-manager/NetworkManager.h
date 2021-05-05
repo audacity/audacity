@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file NetworkManager.h
+ @brief Declare a class for preforming HTTP requests.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #pragma once
 
 #include <memory>

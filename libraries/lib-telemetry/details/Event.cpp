@@ -1,3 +1,13 @@
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file Event.cpp
+ @brief Define a structure for generic telemetry event.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include "Event.h"
 
 #include <wx/tokenzr.h>

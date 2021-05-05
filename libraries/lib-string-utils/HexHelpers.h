@@ -1,5 +1,15 @@
 #pragma once
 
+/*!********************************************************************
+
+ Audacity: A Digital Audio Editor
+
+ @file HexHelpers.h
+ @brief Define helper functions for hex-to-num conversion.
+
+ Dmitry Vedenko
+ **********************************************************************/
+
 #include <cstdint>
 #include <cassert>
 
