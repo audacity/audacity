@@ -93,7 +93,7 @@ int DataStreamSeek (DataStream* stream, curl_off_t offs, int origin) noexcept
         break;
     }
 
-    if (offset < 0 || stream->Size)
+    if (offset < 0 || offset >= stream->Size)
         return CURL_SEEKFUNC_FAIL;
 
     stream->Offset = offset;
