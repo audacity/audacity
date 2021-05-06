@@ -1114,6 +1114,9 @@ bool AudacityApp::OnInit()
    FilePaths audacityPathList;
 
 #ifdef __WXGTK__
+   // Make sure install prefix is set so wxStandardPath resolves paths properly
+   wxStandardPaths::Get().SetInstallPrefix(wxT(INSTALL_PREFIX));
+
    /* Search path (for plug-ins, translations etc) is (in this order):
       * The AUDACITY_PATH environment variable
       * The current directory
@@ -1153,6 +1156,8 @@ bool AudacityApp::OnInit()
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
       home, wxT(AUDACITY_NAME)),
       audacityPathList);
+   FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
+      audacityPathList);
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
       audacityPathList);
@@ -1163,6 +1168,8 @@ bool AudacityApp::OnInit()
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
       home),
       audacityPathList)
+   FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
+      audacityPathList);
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
