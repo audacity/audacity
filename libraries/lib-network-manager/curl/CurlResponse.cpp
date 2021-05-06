@@ -83,7 +83,7 @@ int DataStreamSeek (DataStream* stream, curl_off_t offs, int origin) noexcept
 {
     int64_t offset = offs;
 
-    switch (offset)
+    switch (origin)
     {
     case SEEK_CUR:
         offset += stream->Offset;
