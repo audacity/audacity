@@ -6,6 +6,11 @@
   <metadata_license>CC0-1.0</metadata_license>
   <name>Audacity</name>
   <summary>Record and edit audio files</summary>
+  <provides>
+    <binary>audacity</binary>
+    <mediatype>application/x-audacity-project</mediatype>
+    <mediatype>application/x-audacity-legacy-project</mediatype>
+  </provides>
   <description>
     <p>Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.</p>
     <p>You can use Audacity to:</p>
