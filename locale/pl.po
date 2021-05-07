@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-05-04 08:46+0000\n"
+"PO-Revision-Date: 2021-05-07 03:44+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -737,7 +737,7 @@ msgstr "Importowanie/eksportowanie FFmpeg"
 
 #: src/AboutDialog.cpp
 msgid "Import via GStreamer"
-msgstr "Importowanie przez GStreamer"
+msgstr "Importowanie przez GStreamera"
 
 #: src/AboutDialog.cpp
 msgid "Features"
@@ -912,7 +912,7 @@ msgstr "%s nie może zostać znalezione.\n\nZostało usunięte z listy ostatnich
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr "Inicjowanie Biblioteki SQLite zakończone niepowodzeniem. Audacity nie może kontynuować."
+msgstr "Inicjowanie biblioteki SQLite zakończone niepowodzeniem. Audacity nie może kontynuować."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -4520,7 +4520,7 @@ msgstr "Wysokie ścieżki"
 
 #: src/Screenshot.cpp
 msgid "Choose a location to save screenshot images"
-msgstr "Wybierz miejsce zapisywania obrazów zrzutów ekranów"
+msgstr "Wybierz miejsce zapisywania obrazów zrzutów ekranu"
 
 #: src/Screenshot.cpp
 msgid "Capture failed!"
@@ -5833,7 +5833,7 @@ msgstr "Zaznaczenie"
 
 #: src/commands/SelectCommand.cpp
 msgid "Selection End"
-msgstr "Koniec zaznaczenia:"
+msgstr "Koniec zaznaczenia"
 
 #: src/commands/SelectCommand.cpp
 msgid "Start Time:"
@@ -6447,7 +6447,7 @@ msgstr "Zmienia tempo zaznaczenia bez zmiany jego wysokości"
 
 #: src/effects/ChangeTempo.cpp
 msgid "High Quality Tempo Change"
-msgstr "Wysokiej jakości zmiana tempa"
+msgstr "Zmiana tempa wysokiej jakości"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo without Changing Pitch"
@@ -11611,7 +11611,7 @@ msgstr "Pliki FLAC"
 
 #: src/import/ImportGStreamer.cpp
 msgid "GStreamer-compatible files"
-msgstr "Pliki kompatybilne z GStreamer"
+msgstr "Pliki kompatybilne z GStreamerem"
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to add decoder to pipeline"
@@ -12189,7 +12189,7 @@ msgstr "Wytnij do schowka"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Skasowane %.2f sekund przy t=%.2f"
+msgstr "Skasowano %.2f sekund w t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -12218,7 +12218,7 @@ msgstr "Rozdziel wytnij"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "Rozdziel usunięte %.2f sekund przy t=%.2f"
+msgstr "Rozdzielono usunięto %.2f sekund w t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Split Delete"
@@ -12227,7 +12227,7 @@ msgstr "Rodziel usuń"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Silenced selected tracks for %.2f seconds at %.2f"
-msgstr "Wyciszono zaznaczone ścieżki o długości %.2f sekund od pozycji %.2f"
+msgstr "Wyciszono zaznaczone ścieżki o długości %.2f sekund w %.2f"
 
 #. i18n-hint: verb
 #: src/menus/EditMenus.cpp
@@ -12260,7 +12260,7 @@ msgstr "Rozdziel nowy"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
-msgstr "Połączone %.2f sekundy w t=%.2f"
+msgstr "Połączono %.2f sekund w t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Join"
@@ -12269,7 +12269,7 @@ msgstr "Połącz"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
-msgstr "Odłączono %.2f sekund przy t=%.2f"
+msgstr "Odłączono %.2f sekund w t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Detach"
@@ -12430,7 +12430,7 @@ msgstr "Nie można utworzyć katalogu '%s'. \nIstnieje już plik, który nie jes
 
 #: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
-msgstr "Eksportowanie zaznaczonego dźwięku"
+msgstr "Eksportuj zaznaczony dźwięk"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/menus/FileMenus.cpp
@@ -13573,7 +13573,7 @@ msgstr "Zsynchronizuj MIDI z dźwiękiem"
 
 #: src/menus/TrackMenus.cpp
 msgid "Synchronizing MIDI and Audio Tracks"
-msgstr "Synchronizowanie ścieżek MIDI i dźwiękowych"
+msgstr "Synchronizowanie MIDI i ścieżek dźwiękowych"
 
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted gain"
@@ -15785,7 +15785,7 @@ msgstr "Motyw"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Preferences for Theme"
-msgstr "Ustawienia tematu"
+msgstr "Ustawienia motywu"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -15802,7 +15802,7 @@ msgid ""
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
-msgstr "Ubieranie w motywy jest funkcją eksperymentalną.\n\nWypróbuj ją przez kliknięcie na \"Zapisz pamięć podręczną motywu\", a następnie znajdź i zmodyfikuj obrazy i kolory w\nImageCacheVxx.png, wykorzystując edytor obrazów, np. Gimp.\n\nKliknij \"Wczytaj pamięć podręczną motywu\", aby wczytać zmienione obrazy i kolory z powrotem do Audacity.\n\n(Na razie tylko pasek narzędzi transportu i kolory na ścieżce fali są zmieniane, nawet\nw przypadku, gdy plik obrazu pokazuje także inne ikony.)"
+msgstr "Ubieranie w motywy jest funkcją eksperymentalną.\n\nWypróbuj ją przez kliknięcie na \"Zapisz pamięć podręczną motywu\", a następnie znajdź i zmodyfikuj obrazy i kolory w\nImageCacheVxx.png, wykorzystując edytor obrazów, np. Gimpa.\n\nKliknij \"Wczytaj pamięć podręczną motywu\", aby wczytać zmienione obrazy i kolory z powrotem do Audacity.\n\n(Na razie tylko pasek narzędzi transportu i kolory na ścieżce fali są zmieniane, nawet\nw przypadku, gdy plik obrazu pokazuje także inne ikony.)"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
