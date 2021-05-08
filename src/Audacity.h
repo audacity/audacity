@@ -113,37 +113,6 @@ class wxWindow;
 #include "configwin.h"
 #endif
 
-/* The dynamic library import and export for Microsoft Windows.
- * Supported by Visual Studio and for GCC 4+ */
-#if defined _WIN32 || (defined __CYGWIN__ && defined __GNUC__)
-   #ifndef AUDACITY_DLL_API
-      #ifdef BUILDING_AUDACITY
-         #define AUDACITY_DLL_API __declspec(dllexport)
-      #else
-         #ifdef _DLL
-            #define AUDACITY_DLL_API __declspec(dllimport)
-         #else
-            #define AUDACITY_DLL_API
-         #endif
-      #endif
-   #endif
-#endif //_WIN32 || (__CYGWIN__ && __GNUC__)
-
-/* The GCC-elf implementation */
-#ifdef HAVE_VISIBILITY // this is provided by the configure script, is only
-// enabled for suitable GCC versions
-/* The incantation is a bit weird here because it uses ELF symbol stuff. If we
- * make a symbol "default" it makes it visible (for import or export). Making it
- * "hidden" means it is invisible outside the shared object. */
-   #ifndef AUDACITY_DLL_API
-      #ifdef BUILDING_AUDACITY
-         #define AUDACITY_DLL_API __attribute__((visibility("default")))
-      #else
-         #define AUDACITY_DLL_API __attribute__((visibility("default")))
-      #endif
-   #endif
-#endif
-
 // This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
 #define PROHIBITED = delete
 
