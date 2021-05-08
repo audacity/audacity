@@ -208,6 +208,19 @@ endmacro()
 function( audacity_append_common_compiler_options var )
    list( APPEND ${var}
       PRIVATE
+         # This renames a good use of this C++ keyword that we don't need
+	 # to review when hunting for leaks because of naked new and delete.
+	 -DPROHIBITED==delete
+
+         # Reviewed, certified, non-leaky uses of NEW that immediately entrust
+	 # their results to RAII objects.
+         # You may use it in NEW code when constructing a wxWindow subclass
+	 # with non-NULL parent window.
+         # You may use it in NEW code when the NEW expression is the
+	 # constructor argument for a standard smart
+         # pointer like std::unique_ptr or std::shared_ptr.
+         -Dsafenew=new
+
          $<$<CXX_COMPILER_ID:MSVC>:/permissive->
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
@@ -217,7 +230,11 @@ function( audacity_append_common_compiler_options var )
          -DWXINTL_NO_GETTEXT_MACRO
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
          $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
-   )
+
+         # Define/undefine _DEBUG
+	 # Yes, -U to /U too as needed for Windows:
+	 $<IF:$<CONFIG:Release>,-U_DEBUG,-D_DEBUG=1>
+   )   
    set( ${var} "${${var}}" PARENT_SCOPE )
 endfunction()
 

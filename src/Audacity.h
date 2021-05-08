@@ -113,20 +113,4 @@ class wxWindow;
 #include "configwin.h"
 #endif
 
-// This renames a good use of this C++ keyword that we don't need to review when hunting for leaks.
-#define PROHIBITED = delete
-
-// Reviewed, certified, non-leaky uses of NEW that immediately entrust their results to RAII objects.
-// You may use it in NEW code when constructing a wxWindow subclass with non-NULL parent window.
-// You may use it in NEW code when the NEW expression is the constructor argument for a standard smart
-// pointer like std::unique_ptr or std::shared_ptr.
-#define safenew new
-
-// Define/undefine _DEBUG based on the (CMake provided) NDEBUG symbol
-#if defined(NDEBUG)
-   #undef _DEBUG
-#else
-   #define _DEBUG 1
-#endif
-
 #endif // __AUDACITY_H__
