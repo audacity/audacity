@@ -15,6 +15,7 @@
 
 #include <wx/defs.h>
 class wxString;
+class wxWindow;
 class TranslatableString;
 
 // "Don't show this warning again"
