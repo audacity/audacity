@@ -14,6 +14,8 @@
 #include "Audacity.h"
 #include "audacity/Types.h"
 
+class wxWindow;
+
 namespace TempDirectory
 {
    wxString TempDir();

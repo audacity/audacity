@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_BENCHMARK__
 #define __AUDACITY_BENCHMARK__
 
+class wxWindow;
 class AudacityProject;
 
 void RunBenchmark( wxWindow *parent, AudacityProject &project );

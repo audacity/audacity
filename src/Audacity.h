@@ -88,7 +88,4 @@
                               AUDACITY_QUOTE( AUDACITY_MODLEVEL )
 #endif
 
-
-class wxWindow;
-
 #endif // __AUDACITY_H__
