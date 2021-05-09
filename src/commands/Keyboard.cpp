@@ -9,7 +9,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+
 #include "Keyboard.h"
 
 #include <wx/event.h>

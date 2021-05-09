@@ -15,7 +15,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ExportMultiple.h"
 
 #include <wx/defs.h>

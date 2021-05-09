@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_RESAMPLE_H__
 #define __AUDACITY_RESAMPLE_H__
 
-#include "Audacity.h"
+
 
 #include "SampleFormat.h"
 

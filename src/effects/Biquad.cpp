@@ -10,7 +10,7 @@ Max Maisel
 ***********************************************************************/
 
 #include "Biquad.h"
-#include "Audacity.h"
+
 #include <cmath>
 
 #define square(a) ((a)*(a))

@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Compressor.h"
 #include "LoadEffects.h"
 

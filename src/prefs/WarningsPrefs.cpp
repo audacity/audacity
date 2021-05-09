@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "WarningsPrefs.h"
 
 #include <wx/defs.h>

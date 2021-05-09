@@ -1,4 +1,4 @@
-#include "../Audacity.h" // for USE_* macros
+
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
 #include "../CommonCommandFlags.h"

@@ -16,7 +16,7 @@ undo memory so as to free up space.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "HistoryWindow.h"
 
 #include <wx/app.h>

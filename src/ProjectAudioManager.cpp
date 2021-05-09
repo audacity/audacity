@@ -8,7 +8,7 @@ Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "ProjectAudioManager.h"
 
 

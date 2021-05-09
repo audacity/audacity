@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_OVERLAY__
 #define __AUDACITY_OVERLAY__
 
-#include "../Audacity.h"
+
 
 #include <utility>
 

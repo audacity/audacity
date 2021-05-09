@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_KEYBOARD_CAPTURE__
 #define __AUDACITY_KEYBOARD_CAPTURE__
 
-#include "Audacity.h"
+
 
 #include <functional>
 #include <wx/event.h>

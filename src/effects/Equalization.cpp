@@ -52,7 +52,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "Equalization.h"
 #include "LoadEffects.h"
 

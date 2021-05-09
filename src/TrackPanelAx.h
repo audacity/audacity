@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
-#include "Audacity.h"
+
 
 #include <functional>
 #include <memory>

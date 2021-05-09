@@ -11,8 +11,10 @@
 #ifndef __AUDACITY_TEMP_DIRECTORY__
 #define __AUDACITY_TEMP_DIRECTORY__
 
-#include "Audacity.h"
+
 #include "audacity/Types.h"
+
+class wxWindow;
 
 namespace TempDirectory
 {

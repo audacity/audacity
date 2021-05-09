@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_TIME_TEXT_CTRL__
 #define __AUDACITY_TIME_TEXT_CTRL__
 
-#include "../Audacity.h"
+
 
 #include "../MemoryX.h"
 #include "../../include/audacity/ComponentInterface.h"

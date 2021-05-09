@@ -27,7 +27,7 @@ click from the menu into the actual function to be called.
 
 #include <wx/wx.h>
 #include "ModNullCallback.h"
-#include "Audacity.h"
+
 #include "ModuleManager.h"
 #include "ShuttleGui.h"
 #include "Project.h"

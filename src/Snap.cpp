@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Snap.h"
 
 #include <algorithm>

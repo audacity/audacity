@@ -14,7 +14,7 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+
 
 #if defined(USE_LV2)
 

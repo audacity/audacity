@@ -6,7 +6,7 @@
 
 */
 
-#include "Audacity.h"
+
 #include "UserException.h"
 
 UserException::~UserException()

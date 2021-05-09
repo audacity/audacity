@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "FileHistory.h"
 
 #include <wx/defs.h>

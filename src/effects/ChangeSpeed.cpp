@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ChangeSpeed.h"
 #include "LoadEffects.h"
 

@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Paulstretch.h"
 #include "LoadEffects.h"
 

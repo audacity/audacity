@@ -7,7 +7,7 @@
 
 */
 
-#include "Audacity.h"
+
 #include "FileException.h"
 #include "FileNames.h"
 

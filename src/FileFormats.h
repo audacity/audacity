@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_FILE_FORMATS__
 #define __AUDACITY_FILE_FORMATS__
 
-#include "Audacity.h" // for __UNIX__
+
 
 #include "audacity/Types.h"
 

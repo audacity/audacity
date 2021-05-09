@@ -6,7 +6,7 @@
  
  *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "CrashReport.h"
 
 #if defined(HAS_CRASH_REPORT)

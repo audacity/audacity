@@ -26,7 +26,7 @@ with changes in the SelectionBar.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "SelectionBar.h"
 
 #include "SelectionBarListener.h"

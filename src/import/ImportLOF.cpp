@@ -69,7 +69,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #include <wx/string.h>
 #include <wx/utils.h>

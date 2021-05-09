@@ -35,7 +35,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 
 
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "Import.h"
 
 #include "ImportPlugin.h"

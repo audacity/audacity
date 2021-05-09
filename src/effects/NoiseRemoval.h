@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_NOISE_REMOVAL__
 #define __AUDACITY_EFFECT_NOISE_REMOVAL__
 
-#include "../Audacity.h"
+
 
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)
 

@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "PrefsDialog.h"
 
 #include <wx/app.h>

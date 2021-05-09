@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "LabelDialog.h"
 
 #include <wx/button.h>

@@ -27,7 +27,7 @@ internally, not ints, allowing for (external) control of zooming.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "AttachableScrollBar.h"
 
 #include <wx/wxprec.h>

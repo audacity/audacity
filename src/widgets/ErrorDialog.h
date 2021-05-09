@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_ERRORDIALOG__
 #define __AUDACITY_ERRORDIALOG__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include <wx/msgdlg.h> // to inherit

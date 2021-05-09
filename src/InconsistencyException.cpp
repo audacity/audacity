@@ -7,7 +7,7 @@
 
 */
 
-#include "Audacity.h"
+
 #include "InconsistencyException.h"
 
 InconsistencyException::~InconsistencyException()

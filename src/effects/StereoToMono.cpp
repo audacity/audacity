@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "StereoToMono.h"
 #include "LoadEffects.h"
 

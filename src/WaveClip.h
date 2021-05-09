@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_WAVECLIP__
 #define __AUDACITY_WAVECLIP__
 
-#include "Audacity.h"
+
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"

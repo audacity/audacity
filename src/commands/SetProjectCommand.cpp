@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetProjectCommand.h"
 
 #include "LoadCommands.h"

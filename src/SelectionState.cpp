@@ -6,7 +6,7 @@
 
  **********************************************************************/
 
-#include "Audacity.h"
+
 #include "SelectionState.h"
 
 #include "ViewInfo.h"

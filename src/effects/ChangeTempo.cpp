@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_SOUNDTOUCH
+
 
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"

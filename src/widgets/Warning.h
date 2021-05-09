@@ -11,10 +11,11 @@
 #ifndef __AUDACITY_WARNING__
 #define __AUDACITY_WARNING__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 class wxString;
+class wxWindow;
 class TranslatableString;
 
 // "Don't show this warning again"

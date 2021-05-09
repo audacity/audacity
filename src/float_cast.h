@@ -35,7 +35,7 @@
 **		long int lrint  (double x) ;
 */
 
-#include "Audacity.h" // for HAVE_LRINT, HAVE_LRINTF
+
 
 /*	The presence of the required functions are detected during the configure
 **	process and the values HAVE_LRINT and HAVE_LRINTF are set accordingly in

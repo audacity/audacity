@@ -18,7 +18,7 @@ or "OFF" point
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "VoiceKey.h"
 
 #include <wx/string.h>

@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ExtImportPrefs.h"
 
 #include <wx/defs.h>
