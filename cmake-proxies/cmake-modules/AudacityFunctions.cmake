@@ -208,6 +208,12 @@ endmacro()
 function( audacity_append_common_compiler_options var )
    list( APPEND ${var}
       PRIVATE
+         # include the correct config file; give absolute path to it, so
+         # that this works whether in src, modules, libraries
+         $<$<PLATFORM_ID:Windows>:/FI${CMAKE_BINARY_DIR}/src/private/configwin.h>
+         $<$<PLATFORM_ID:Darwin>:-include ${CMAKE_BINARY_DIR}/src/private/configmac.h>
+         $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:-include ${CMAKE_BINARY_DIR}/src/private/configunix.h>
+
          # This renames a good use of this C++ keyword that we don't need
 	 # to review when hunting for leaks because of naked new and delete.
 	 -DPROHIBITED==delete
