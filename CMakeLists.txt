@@ -11,6 +11,33 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
    message(FATAL_ERROR "Audacity requires at least GCC 4.9")
 endif ()
 
+# We only do alpha builds, beta builds, and release versions.
+# Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
+# defined to 0.
+# Its value may be more than 0 for pre-release "Beta" builds that differ only
+# in the welcome screen, and hiding of some development menu commands, but
+# still link to the alpha manual online.
+
+# Set this value to 0 for alpha, 1 for beta, 2 for release builds
+set( AUDACITY_BUILD_LEVEL 0 )
+
+# The Audacity version
+# Increment as appropriate after release of a new version, and set back
+# AUDACITY_BUILD_LEVEL to 0
+set( AUDACITY_VERSION 3 )
+set( AUDACITY_RELEASE 0 )
+set( AUDACITY_REVISION 3 )
+set( AUDACITY_MODLEVEL 0 )
+
+string( TIMESTAMP __TDATE__ "%Y%m%d" )
+if( AUDACITY_BUILD_LEVEL EQUAL 0 )
+   set( AUDACITY_SUFFIX "-alpha-${__TDATE__}" )
+elseif(  AUDACITY_BUILD_LEVEL EQUAL 1 )
+   set( AUDACITY_SUFFIX "-beta-${__TDATE__}" )
+else()
+   set( AUDACITY_SUFFIX "" )
+endif()
+
 # Don't allow in-source builds...no real reason, just
 # keeping those source trees nice and tidy.  :-)
 # (This can be removed if it becomes an issue.)
@@ -385,35 +412,9 @@ else()
    set( AUDACITY_NAME "audacity" )
 endif()
 
-# Extract the Audacity version information
-file(
-   STRINGS
-      ${topdir}/src/Audacity.h output
-   REGEX
-      "^#define +AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL|BUILD_LEVEL) +"
-)
-
-# And store as variables
-foreach( line ${output} )
-   string( REGEX MATCHALL "[A-Za-z0-9_]+" line "${line}" )
-   list( GET line 1 name )
-   list( GET line 2 value )
-   set( ${name} ${value} )
-endforeach()
-
 # Create short and full version strings
 set( AUDACITY_DIST_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION} )
 set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}.${AUDACITY_MODLEVEL} )
-
-# Define the version suffix (duplicates what happens in src/Audacity.h)
-string( TIMESTAMP __TDATE__ "%Y%m%d" )
-if( AUDACITY_BUILD_LEVEL EQUAL 0 )
-   set( AUDACITY_SUFFIX "-alpha-${__TDATE__}" )
-elseif(  AUDACITY_BUILD_LEVEL EQUAL 1 )
-   set( AUDACITY_SUFFIX "-beta-${__TDATE__}" )
-else()
-   set( AUDACITY_SUFFIX "" )
-endif()
 
 # Python is used for the manual and (possibly) message catalogs
 find_package( Python3 )

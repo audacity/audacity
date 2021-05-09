@@ -214,6 +214,17 @@ function( audacity_append_common_compiler_options var )
          $<$<PLATFORM_ID:Darwin>:-include ${CMAKE_BINARY_DIR}/src/private/configmac.h>
          $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:-include ${CMAKE_BINARY_DIR}/src/private/configunix.h>
 
+         -DAUDACITY_VERSION=${AUDACITY_VERSION}
+         -DAUDACITY_RELEASE=${AUDACITY_RELEASE}
+         -DAUDACITY_REVISION=${AUDACITY_REVISION}
+         -DAUDACITY_MODLEVEL=${AUDACITY_MODLEVEL}
+
+         # Version string for visual display
+         -DAUDACITY_VERSION_STRING=L"${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}${AUDACITY_SUFFIX}"
+
+         # This value is used in the resource compiler for Windows
+         -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
+
          # This renames a good use of this C++ keyword that we don't need
 	 # to review when hunting for leaks because of naked new and delete.
 	 -DPROHIBITED==delete
@@ -241,6 +252,15 @@ function( audacity_append_common_compiler_options var )
 	 # Yes, -U to /U too as needed for Windows:
 	 $<IF:$<CONFIG:Release>,-U_DEBUG,-D_DEBUG=1>
    )   
+   # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
+   if( AUDACITY_BUILD_LEVEL EQUAL 0 )
+      list( APPEND ${var} -DIS_ALPHA -DUSE_ALPHA_MANUAL )
+   elseif( AUDACITY_BUILD_LEVEL EQUAL 1 )
+      list( APPEND ${var} -DIS_BETA -DUSE_ALPHA_MANUAL )
+   else()
+      list( APPEND ${var} -DIS_RELEASE )
+   endif()
+
    set( ${var} "${${var}}" PARENT_SCOPE )
 endfunction()
 
