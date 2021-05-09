@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Distortion.h"
 #include "LoadEffects.h"
 

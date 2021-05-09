@@ -17,7 +17,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "PitchName.h"
 
 #include <math.h>

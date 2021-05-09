@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "TracksPrefs.h"
 
 //#include <algorithm>

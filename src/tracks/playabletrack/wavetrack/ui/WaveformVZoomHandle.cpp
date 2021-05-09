@@ -8,7 +8,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
+
 #include "WaveformVZoomHandle.h"
 
 #include "WaveTrackVZoomHandle.h"

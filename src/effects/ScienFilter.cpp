@@ -32,7 +32,7 @@ a graph for EffectScienFilter.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ScienFilter.h"
 #include "LoadEffects.h"
 

@@ -8,7 +8,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
+
 #include "SpectrumView.h"
 
 #include "SpectrumVRulerControls.h"

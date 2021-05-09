@@ -29,7 +29,7 @@ flicker-free use.
 #ifndef __AUDACITY_WIDGETS_GRABBER__
 #define __AUDACITY_WIDGETS_GRABBER__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include <wx/statbmp.h> // to inherit

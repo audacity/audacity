@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "TrackPanelAx.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

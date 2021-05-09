@@ -13,7 +13,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+
 #include "RawAudioGuess.h"
 
 #include "../AudacityException.h"

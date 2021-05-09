@@ -17,7 +17,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #define wxLOG_COMPONENT "MacroCommands"
 
-#include "Audacity.h" // for USE_* macros
+
 #include "BatchCommands.h"
 
 #include <wx/defs.h>

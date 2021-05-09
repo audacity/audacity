@@ -43,7 +43,7 @@ is time to refresh some aspect of the screen.
 
 *//*****************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "TrackPanel.h"
 
 

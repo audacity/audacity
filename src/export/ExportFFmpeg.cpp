@@ -19,9 +19,9 @@ function.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
 
-#include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
+
+#include "../FFmpeg.h"
 
 #include <wx/choice.h>
 #include <wx/intl.h>

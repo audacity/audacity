@@ -27,7 +27,7 @@
 
 *//*****************************************************************/
 
-#include "Audacity.h"
+
 #include "CellularPanel.h"
 
 #include <wx/eventfilter.h>

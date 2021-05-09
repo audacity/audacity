@@ -8,7 +8,7 @@ Paul Licameli split from Prefs.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "AudacityFileConfig.h"
 
 #include "widgets/HelpSystem.h"

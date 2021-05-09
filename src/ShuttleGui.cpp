@@ -93,7 +93,7 @@ for registering for changes.
 *//******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "ShuttleGui.h"
 
 

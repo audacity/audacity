@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"

@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_WXTEXTCTRLWRAPPER__
 #define __AUDACITY_WXTEXTCTRLWRAPPER__
 
-#include "../Audacity.h"
+
 
 #include <wx/textctrl.h>
 

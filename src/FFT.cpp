@@ -39,7 +39,7 @@
     * 9: Gaussian(a=4.5)
 */
 
-#include "Audacity.h"
+
 #include "FFT.h"
 
 #include "Internat.h"

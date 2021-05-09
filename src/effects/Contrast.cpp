@@ -9,7 +9,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Contrast.h"
 
 #include "../CommonCommandFlags.h"

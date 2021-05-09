@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
-#include "../Audacity.h"
+
 
 #include <functional>
 #include <set>

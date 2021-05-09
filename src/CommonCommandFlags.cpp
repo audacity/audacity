@@ -8,7 +8,7 @@ Paul Licameli split from Menus.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "CommonCommandFlags.h"
 
 

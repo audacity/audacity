@@ -19,7 +19,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Echo.h"
 #include "LoadEffects.h"
 

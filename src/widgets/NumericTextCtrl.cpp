@@ -165,7 +165,7 @@ different formats.
 **********************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "NumericTextCtrl.h"
 
 #include "audacity/Types.h"

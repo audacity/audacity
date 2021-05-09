@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "DirectoriesPrefs.h"
 
 #include <math.h>

@@ -38,7 +38,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "NoiseRemoval.h"
 
 #if !defined(EXPERIMENTAL_NOISE_REDUCTION)

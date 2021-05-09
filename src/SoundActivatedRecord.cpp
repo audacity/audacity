@@ -18,7 +18,7 @@
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "SoundActivatedRecord.h"
 
 #include "ShuttleGui.h"

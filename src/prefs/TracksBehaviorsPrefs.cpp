@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "TracksBehaviorsPrefs.h"
 
 #include "../Prefs.h"

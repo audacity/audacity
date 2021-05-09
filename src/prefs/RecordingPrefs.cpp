@@ -18,7 +18,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "RecordingPrefs.h"
 
 #include <wx/defs.h>

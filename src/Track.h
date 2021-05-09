@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_TRACK__
 #define __AUDACITY_TRACK__
 
-#include "Audacity.h" // for USE_* macros
+
 
 
 

@@ -28,7 +28,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Sequence.h"
 
 #include <algorithm>

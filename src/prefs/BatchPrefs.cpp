@@ -14,7 +14,7 @@
 setting used in debugging batch (aka macros) processing.
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "BatchPrefs.h"
 
 #include <wx/defs.h>

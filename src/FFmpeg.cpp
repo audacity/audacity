@@ -17,7 +17,7 @@ License: GPL v2.  See License.txt.
 // Store function pointers here when including FFmpeg.h
 #define DEFINE_FFMPEG_POINTERS
 
-#include "Audacity.h"   // for config*.h // for USE_* macros
+
 #include "FFmpeg.h"
 
 #include "FileNames.h"

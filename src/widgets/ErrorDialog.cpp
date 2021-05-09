@@ -14,7 +14,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ErrorDialog.h"
 
 #include <wx/app.h>

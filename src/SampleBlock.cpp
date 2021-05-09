@@ -6,7 +6,7 @@ SampleBlock.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "InconsistencyException.h"
 #include "SampleBlock.h"
 #include "SampleFormat.h"

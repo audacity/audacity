@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_RECORDING_PREFS__
 #define __AUDACITY_RECORDING_PREFS__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 

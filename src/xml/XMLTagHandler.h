@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_XML_TAG_HANDLER__
 #define __AUDACITY_XML_TAG_HANDLER__
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #include <stdio.h>
 

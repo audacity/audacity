@@ -72,7 +72,6 @@ list( APPEND SOURCES
       AllThemeResources.cpp
       AllThemeResources.h
       AttachedVirtualFunction.h
-      Audacity.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>

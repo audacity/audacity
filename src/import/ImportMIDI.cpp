@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "ImportMIDI.h"
 
 #include <wx/defs.h>

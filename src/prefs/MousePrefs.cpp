@@ -32,7 +32,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "MousePrefs.h"
 
 #include <wx/defs.h>

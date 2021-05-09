@@ -24,7 +24,7 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
-#include "../../Audacity.h" // for USE_* macros
+
 #include "VSTEffect.h"
 
 #include "../../widgets/ProgressDialog.h"

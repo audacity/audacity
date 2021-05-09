@@ -22,7 +22,7 @@ channel.  This collection of functions fills that gap.
 *//*********************************************************************/
 
 
-#include "Audacity.h" // for USE_* macros
+
 #include "ImageManipulation.h"
 
 #include <wx/image.h>

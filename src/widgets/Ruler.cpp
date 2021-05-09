@@ -54,7 +54,7 @@ array of Ruler::Label.
 
 *//******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Ruler.h"
 
 #include <wx/dcclient.h>

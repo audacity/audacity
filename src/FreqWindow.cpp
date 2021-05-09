@@ -32,7 +32,7 @@ the mouse around.
 */
 
 
-#include "Audacity.h"
+
 #include "FreqWindow.h"
 
 #include <algorithm>

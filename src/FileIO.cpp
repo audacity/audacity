@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "FileIO.h"
 
 #include <wx/defs.h>
