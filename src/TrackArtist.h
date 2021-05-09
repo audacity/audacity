@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_TRACKARTIST__
 #define __AUDACITY_TRACKARTIST__
 
-#include "Audacity.h" // for USE_* macros
+
 
 
 #include <wx/brush.h> // member variable

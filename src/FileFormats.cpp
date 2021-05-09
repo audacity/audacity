@@ -15,7 +15,7 @@ information.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "FileFormats.h"
 
 #include <wx/arrstr.h>

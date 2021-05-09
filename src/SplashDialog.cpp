@@ -20,7 +20,7 @@ most commonly asked questions about Audacity.
 *//********************************************************************/
 
 
-#include "Audacity.h"
+
 #include "SplashDialog.h"
 
 

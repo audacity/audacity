@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_THEME__
 #define __AUDACITY_THEME__
 
-#include "Audacity.h"
+
 
 #include <vector>
 #include <wx/defs.h>

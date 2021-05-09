@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_READONLYTEXT__
 #define __AUDACITY_READONLYTEXT__
 
-#include "../Audacity.h"
+
 #include <wx/wx.h>
 
 

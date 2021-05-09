@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../Audacity.h"
+
 #include "TimeTrackControls.h"
 
 #include "../../../HitTestResult.h"

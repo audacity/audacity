@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for rint from configwin.h
+
 #include "Loudness.h"
 
 #include <math.h>

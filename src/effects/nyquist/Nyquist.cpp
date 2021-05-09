@@ -24,7 +24,7 @@ effects from this one class.
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+
 #include "Nyquist.h"
 
 #include <algorithm>

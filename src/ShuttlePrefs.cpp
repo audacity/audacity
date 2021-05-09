@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "ShuttlePrefs.h"
 
 #include <wx/defs.h>

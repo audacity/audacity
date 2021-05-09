@@ -11,7 +11,7 @@ Paul Licameli split from Menus.cpp
 #ifndef __AUDACITY_COMMON_COMMAND_FLAGS__
 #define __AUDACITY_COMMON_COMMAND_FLAGS__
 
-#include "Audacity.h"
+
 
 #include "commands/CommandFlag.h"
 

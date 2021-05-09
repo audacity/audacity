@@ -22,7 +22,7 @@ other settings.
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "DevicePrefs.h"
 
 #include "RecordingPrefs.h"

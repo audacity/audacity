@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetLabelCommand.h"
 
 #include "LoadCommands.h"

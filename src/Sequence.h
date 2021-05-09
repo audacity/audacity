@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SEQUENCE__
 #define __AUDACITY_SEQUENCE__
 
-#include "Audacity.h"
+
 #include <vector>
 #include <functional>
 

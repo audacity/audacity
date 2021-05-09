@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Noise.h"
 #include "LoadEffects.h"
 

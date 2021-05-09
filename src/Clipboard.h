@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_CLIPBOARD__
 #define __AUDACITY_CLIPBOARD__
 
-#include "Audacity.h"
+
 
 #include <memory>
 #include <wx/event.h> // to inherit wxEvtHandler

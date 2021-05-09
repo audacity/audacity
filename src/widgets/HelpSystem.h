@@ -21,7 +21,7 @@
 #ifndef __AUDACITY_HELPSYSTEM__
 #define __AUDACITY_HELPSYSTEM__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include "wxPanelWrapper.h" // to inherit

@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "DtmfGen.h"
 #include "LoadEffects.h"
 

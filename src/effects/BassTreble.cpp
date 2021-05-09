@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "BassTreble.h"
 #include "LoadEffects.h"
 

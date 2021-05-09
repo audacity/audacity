@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+
 
 #include <vector>
 struct XML_ParserStruct;

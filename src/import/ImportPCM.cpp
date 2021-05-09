@@ -19,7 +19,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #include "Import.h"
 #include "../Tags.h"

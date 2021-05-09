@@ -29,7 +29,7 @@ or ASlider.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ASlider.h"
 
 #include <math.h>

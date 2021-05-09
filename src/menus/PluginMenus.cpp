@@ -1,4 +1,4 @@
-#include "../Audacity.h"
+
 
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"

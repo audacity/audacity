@@ -11,7 +11,7 @@
 
 *//*********************************************************************/
 
-#include "../Audacity.h"
+
 #include "KeyView.h"
 
 #include <wx/setup.h> // for wxUSE_* macros

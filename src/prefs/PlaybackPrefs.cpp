@@ -18,7 +18,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "PlaybackPrefs.h"
 
 #include <wx/defs.h>

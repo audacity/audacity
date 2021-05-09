@@ -16,7 +16,7 @@ MP3 and FFmpeg encoding libraries.
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "LibraryPrefs.h"
 
 #include <wx/defs.h>

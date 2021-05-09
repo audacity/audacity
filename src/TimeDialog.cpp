@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "TimeDialog.h"
 
 #include <wx/defs.h>

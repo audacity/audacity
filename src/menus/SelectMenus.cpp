@@ -1,4 +1,4 @@
-#include "../Audacity.h"
+
 
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"

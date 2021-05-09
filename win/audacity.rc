@@ -1,5 +1,3 @@
-#include "Audacity.h"
-
 #ifdef EXPERIMENTAL_DA
 AudacityLogo ICON "darkaudacity.ico"
 #else

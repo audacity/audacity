@@ -1,4 +1,4 @@
-#include "../Audacity.h" // for USE_* macros
+
 
 #include "../CommonCommandFlags.h"
 #include "../FileNames.h"

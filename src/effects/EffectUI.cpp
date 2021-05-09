@@ -11,7 +11,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+
 #include "EffectUI.h"
 
 #include "Effect.h"

@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "OpenSaveCommands.h"
 
 #include "LoadCommands.h"

@@ -13,7 +13,7 @@
 // Much of this is imitative of EditToolBar.  Should there be a common base
 // class?
 
-#include "../Audacity.h"
+
 #include "ScrubbingToolBar.h"
 #include "ToolManager.h"
 

@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_EFFECT_TIMESCALE__
 #define __AUDACITY_EFFECT_TIMESCALE__
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #if USE_SBSMS
 

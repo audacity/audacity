@@ -18,7 +18,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Wahwah.h"
 #include "LoadEffects.h"
 

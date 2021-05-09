@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Effect.h"
 #include "TimeWarper.h"
 

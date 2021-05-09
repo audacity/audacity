@@ -75,7 +75,7 @@ CommandManager.  It holds the callback for one command.
 
 *//******************************************************************/
 
-#include "../Audacity.h"
+
 
 #include "CommandManager.h"
 

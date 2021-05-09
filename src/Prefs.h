@@ -29,7 +29,7 @@
 #ifndef __AUDACITY_PREFS__
 #define __AUDACITY_PREFS__
 
-#include "Audacity.h"
+
 
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place

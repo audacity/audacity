@@ -24,7 +24,7 @@ in which buttons can be placed.
 
 *//**********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "ToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

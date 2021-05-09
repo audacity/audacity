@@ -26,7 +26,7 @@ On failure the old version is put back in place.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Legacy.h"
 
 #include <stdio.h>

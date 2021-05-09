@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "MessageCommand.h"
 
 #include "LoadCommands.h"

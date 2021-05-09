@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "ImportExportPrefs.h"
 
 #include <wx/defs.h>

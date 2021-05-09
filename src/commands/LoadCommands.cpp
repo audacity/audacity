@@ -13,7 +13,7 @@
 modelled on BuiltinEffectsModule
 *****************************************************************************/
 
-#include "../Audacity.h"
+
 #include "LoadCommands.h"
 #include "AudacityCommand.h"
 

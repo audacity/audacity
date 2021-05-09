@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CommandSignature.h"
 
 CommandSignature::~CommandSignature()

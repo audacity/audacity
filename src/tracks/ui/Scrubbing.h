@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
-#include "../../Audacity.h"
+
 
 #include <vector>
 #include <wx/longlong.h>

@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "TranscriptionToolBar.h"
 #include "ToolManager.h"
 

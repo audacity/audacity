@@ -20,7 +20,7 @@ around to NEW positions.
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+
 #include "Grabber.h"
 
 #include <wx/defs.h>

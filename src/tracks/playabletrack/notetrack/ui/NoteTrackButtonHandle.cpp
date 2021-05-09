@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h" // for USE_* macros
+
 
 #ifdef USE_MIDI
 #include "NoteTrackButtonHandle.h"

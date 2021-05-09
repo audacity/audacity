@@ -6,7 +6,7 @@
 //
 //
 
-#include "../Audacity.h"
+
 #include "OverlayPanel.h"
 
 #include "Overlay.h"

@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../Audacity.h"
+
 #include "LabelTextHandle.h"
 
 #include "LabelTrackView.h"

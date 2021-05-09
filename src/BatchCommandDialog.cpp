@@ -18,7 +18,7 @@ selected command.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "BatchCommandDialog.h"
 
 #ifdef __WXMSW__

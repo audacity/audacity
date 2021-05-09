@@ -1,7 +1,7 @@
 #ifndef __realfftf_h
 #define __realfftf_h
 
-#include "Audacity.h"
+
 
 
 

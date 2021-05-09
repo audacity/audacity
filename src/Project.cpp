@@ -9,7 +9,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Project.h"
 
 #include "KeyboardCapture.h"

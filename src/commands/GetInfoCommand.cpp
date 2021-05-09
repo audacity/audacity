@@ -20,7 +20,7 @@ This class now lists
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "GetInfoCommand.h"
 
 #include "LoadCommands.h"

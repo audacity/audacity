@@ -17,7 +17,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "GUIPrefs.h"
 
 #include <wx/app.h>

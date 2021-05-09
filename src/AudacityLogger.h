@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_LOGGER__
 #define __AUDACITY_LOGGER__
 
-#include "Audacity.h"
+
 
 
 

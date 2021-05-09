@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "DragCommand.h"
 
 #include "LoadCommands.h"

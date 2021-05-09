@@ -14,7 +14,7 @@
 #ifndef SHUTTLE_GUI
 #define SHUTTLE_GUI
 
-#include "Audacity.h"
+
 #include "audacity/Types.h"
 
 #include <vector>

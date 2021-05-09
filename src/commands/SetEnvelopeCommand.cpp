@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetEnvelopeCommand.h"
 
 #include "LoadCommands.h"
