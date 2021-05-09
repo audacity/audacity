@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-05-07 03:44+0000\n"
+"PO-Revision-Date: 2021-05-09 14:34+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -361,11 +361,11 @@ msgstr "Idź do następnego S-wyrażenia"
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
 #: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
 msgid "Start"
-msgstr "Rozpocznij"
+msgstr "Uruchom"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Start script"
-msgstr "Rozpocznij skrypt"
+msgstr "Uruchom skrypt"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/EffectUI.cpp
 #: src/toolbars/ControlToolBar.cpp src/widgets/ProgressDialog.cpp
@@ -2718,20 +2718,20 @@ msgstr "To są nasze metody wsparcia:"
 msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, "
 "[[https://manual.audacityteam.org/quick_help.html|view online]]"
-msgstr "[[help:Quick_Help|Quick Help]] - jeśli nie jest zainstalowana lokalnie, [[https://manual.audacityteam.org/quick_help.html|zobacz online]]"
+msgstr "[[help:Quick_Help|Szybka pomoc]] - jeśli nie jest zainstalowana lokalnie, [[https://manual.audacityteam.org/quick_help.html|zobacz online]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
 msgid ""
 " [[help:Main_Page|Manual]] - if not installed locally, "
 "[[https://manual.audacityteam.org/|view online]]"
-msgstr "[[help:Main_Page|Manual]] - jeśli nie jest zainstalowana lokalnie, [[https://manual.audacityteam.org/|zobacz online]]"
+msgstr "[[help:Main_Page|Podręcznik]] - jeśli nie jest zainstalowany lokalnie, [[https://manual.audacityteam.org/|zobacz online]]"
 
 #: src/HelpText.cpp
 msgid ""
 " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
 "online."
-msgstr " [[https://forum.audacityteam.org/|Forum]] - zadaj swoje pytanie bezpośrednio w Internecie"
+msgstr "[[https://forum.audacityteam.org/|Forum]] - zadaj swoje pytanie bezpośrednio w Internecie"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2901,7 +2901,7 @@ msgstr "Czas początku"
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/TimerRecordDialog.cpp
 msgid "End Time"
-msgstr "Czas zakończenia"
+msgstr "Czas końca"
 
 #. i18n-hint: (noun) of a label
 #: src/LabelDialog.cpp src/toolbars/SpectralSelectionBar.cpp
@@ -5841,7 +5841,7 @@ msgstr "Czas początku:"
 
 #: src/commands/SelectCommand.cpp
 msgid "End Time:"
-msgstr "Czas zakończenia:"
+msgstr "Czas końca:"
 
 #: src/commands/SelectCommand.cpp
 msgid "Select Frequencies"
@@ -6881,7 +6881,7 @@ msgstr "Czas początku = %2d godzina(y), %2d minuta(y), %.2f sekundy."
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "Time ended = %2d hour(s), %2d minute(s), %.2f seconds."
-msgstr "Czas zakończenia = %2d godzina(y), %2d minuta(y), %.2f sekundy."
+msgstr "Czas końca = %2d godzina(y), %2d minuta(y), %.2f sekundy."
 
 #: src/effects/Contrast.cpp
 msgid "Background"
@@ -13795,7 +13795,7 @@ msgstr "S&ortuj ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Start Time"
-msgstr "Według czasu &rozpoczęcia"
+msgstr "Według czasu &początku"
 
 #: src/menus/TrackMenus.cpp
 msgid "By &Name"
@@ -14329,7 +14329,7 @@ msgstr "Ustawienia katalogów"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Default directories"
-msgstr "Domyślne katalogi"
+msgstr "Katalogi domyślne"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid ""
@@ -15089,7 +15089,7 @@ msgstr "  'Niepowodzenie' oznacza, że Audacity sądzi, że moduł jest uszkodzo
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'New' means no choice has been made yet."
-msgstr "'Nowy' oznacza wybór, który nie został jeszcze wykonany."
+msgstr "  'Nowy' oznacza wybór, który nie został jeszcze wykonany."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
@@ -17224,7 +17224,7 @@ msgstr "Kliknij i przeciągnij, aby przesunąć środek zaznaczonej częstotliwo
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr " Kliknij i przeciągnij, aby określić przepustowość pasma częstotliwości."
+msgstr "Kliknij i przeciągnij, aby określić przepustowość pasma częstotliwości."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -17957,7 +17957,7 @@ msgstr "Pusta wartość"
 
 #: src/widgets/valnum.cpp
 msgid "Malformed number"
-msgstr "Nieprawidłowy liczba"
+msgstr "Nieprawidłowa liczba"
 
 #: src/widgets/valnum.cpp
 #, c-format
@@ -18486,7 +18486,7 @@ msgstr "Utwórz nową etykietę na podstawie"
 
 #: plug-ins/equalabel.ny
 msgid "Number & Interval"
-msgstr "Numer i interwał"
+msgstr "Liczba i interwał"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
