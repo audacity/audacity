@@ -91,26 +91,4 @@
 
 class wxWindow;
 
-#ifdef __WXMAC__
-#include "configmac.h"
-#endif
-
-#ifdef __WXGTK__
-#ifndef __CONFIG_UNIX_INCLUDED
-   #define __CONFIG_UNIX_INCLUDED
-   #include "configunix.h"
-#endif
-#endif
-
-#ifdef __WXX11__
-#ifndef __CONFIG_UNIX_INCLUDED
-   #define __CONFIG_UNIX_INCLUDED
-   #include "configunix.h"
-#endif
-#endif
-
-#ifdef __WXMSW__
-#include "configwin.h"
-#endif
-
 #endif // __AUDACITY_H__
