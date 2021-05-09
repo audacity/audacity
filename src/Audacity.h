@@ -74,18 +74,9 @@
                                 wxT( AUDACITY_QUOTE( AUDACITY_REVISION ) ) \
                                 AUDACITY_SUFFIX
 
-// DA: x on end of version string.
-#ifdef EXPERIMENTAL_DA
-// Version string for file info (under Windows)
-#define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
-                              AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
-                              AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
-                              AUDACITY_QUOTE( AUDACITY_MODLEVEL ) " x"
-#else
 #define AUDACITY_FILE_VERSION AUDACITY_QUOTE( AUDACITY_VERSION ) "," \
                               AUDACITY_QUOTE( AUDACITY_RELEASE ) "," \
                               AUDACITY_QUOTE( AUDACITY_REVISION ) "," \
                               AUDACITY_QUOTE( AUDACITY_MODLEVEL )
-#endif
 
 #endif // __AUDACITY_H__
