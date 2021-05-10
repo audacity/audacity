@@ -23,13 +23,13 @@ class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
 
-class SpectrogramSettings : public PrefsListener
+class AUDACITY_DLL_API SpectrogramSettings : public PrefsListener
 {
    friend class SpectrumPrefs;
 public:
 
    // Singleton for settings that are not per-track
-   class Globals
+   class AUDACITY_DLL_API Globals
    {
    public:
       static Globals &Get();

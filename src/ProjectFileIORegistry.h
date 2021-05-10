@@ -24,7 +24,7 @@ using TagHandlerFactory =
    std::function< XMLTagHandler *( AudacityProject & ) >;
 
 // Typically statically constructed
-struct Entry{
+struct AUDACITY_DLL_API Entry{
    Entry( const wxString &tag, const TagHandlerFactory &factory );
 };
 

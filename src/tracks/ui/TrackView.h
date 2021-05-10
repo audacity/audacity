@@ -19,7 +19,7 @@ class TrackList;
 class TrackVRulerControls;
 class TrackPanelResizerCell;
 
-class TrackView /* not final */ : public CommonTrackCell
+class AUDACITY_DLL_API TrackView /* not final */ : public CommonTrackCell
    , public std::enable_shared_from_this<TrackView>
 {
    TrackView( const TrackView& ) = delete;

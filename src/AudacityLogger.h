@@ -26,11 +26,13 @@
 class wxFrame;
 class wxTextCtrl;
 
-class AudacityLogger final : public wxEvtHandler,
+class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
                              public wxLog,
                              public PrefsListener
 {
  public:
+
+   ~AudacityLogger() override;
  
    // Get the singleton instance or null
    static AudacityLogger *Get();

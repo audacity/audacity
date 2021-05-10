@@ -79,6 +79,8 @@ AudacityLogger::AudacityLogger()
    mUpdated = false;
 }
 
+AudacityLogger::~AudacityLogger()  = default;
+
 void AudacityLogger::Flush()
 {
    if (mUpdated && mFrame && mFrame->IsShown()) {

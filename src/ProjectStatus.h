@@ -34,7 +34,7 @@ enum StatusBarField : int {
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
-class ProjectStatus final
+class AUDACITY_DLL_API ProjectStatus final
    : public ClientData::Base
    , public PrefsListener
 {
@@ -57,7 +57,7 @@ public:
    using StatusWidthFunctions = std::vector< StatusWidthFunction >;
 
    // Typically a static instance of this struct is used.
-   struct RegisteredStatusWidthFunction
+   struct AUDACITY_DLL_API RegisteredStatusWidthFunction
    {
       explicit
       RegisteredStatusWidthFunction( const StatusWidthFunction &function );

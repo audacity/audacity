@@ -19,12 +19,14 @@ class wxWindow;
 class TranslatableString;
 
 // "Don't show this warning again"
- const TranslatableString &DefaultWarningFooter();
+AUDACITY_DLL_API
+const TranslatableString &DefaultWarningFooter();
 
 /// Displays a warning dialog with a check box.  If the user checks
 /// the box, the internalDialogName is noted in the
 /// preferences.  The internalDialogName is never seen by
 /// the user; it should be unique to each message.
+AUDACITY_DLL_API
 int ShowWarningDialog(wxWindow *parent,
                       const wxString &internalDialogName,
                       const TranslatableString &message,

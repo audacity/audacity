@@ -23,8 +23,10 @@ namespace WaveTrackVZoomHandle
    // See RefreshCode.h for bit flags:
    using Result = unsigned;
 
+   AUDACITY_DLL_API
    HitTestPreview HitPreview(const wxMouseState &state);
 
+   AUDACITY_DLL_API
    bool IsDragZooming(int zoomStart, int zoomEnd);
 
    using DoZoomFunction = void (*)( AudacityProject *pProject,
@@ -33,27 +35,31 @@ namespace WaveTrackVZoomHandle
        const wxRect &rect, int zoomStart, int zoomEnd,
        bool fixedMousePoint);
 
+   AUDACITY_DLL_API
    Result DoDrag(
       const TrackPanelMouseEvent &event, AudacityProject *pProject,
       int zoomStart, int &zoomEnd );
 
+   AUDACITY_DLL_API
    Result DoRelease(
       const TrackPanelMouseEvent &event, AudacityProject *pProject,
       wxWindow *pParent, WaveTrack *pTrack, const wxRect &mRect,
       DoZoomFunction doZoom, PopupMenuTable &table,
       int zoomStart, int zoomEnd );
 
+   AUDACITY_DLL_API
    void DoDraw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass, int zoomStart, int zoomEnd );
 
+   AUDACITY_DLL_API
    wxRect DoDrawingArea(
       const wxRect &rect, const wxRect &panelRect, unsigned iPass );
 };
 
 #include "../../../../widgets/PopupMenuTable.h" // to inherit
 
-class WaveTrackVRulerMenuTable
+class AUDACITY_DLL_API WaveTrackVRulerMenuTable
    : public PopupMenuTable
    , private PrefsListener
 {

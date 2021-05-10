@@ -213,7 +213,7 @@ protected:
 };
 
 // A predicate class
-struct IsVisibleTrack
+struct AUDACITY_DLL_API IsVisibleTrack
 {
    IsVisibleTrack(AudacityProject *project);
 
