@@ -47,6 +47,11 @@ used throughout Audacity into this one place.
 #include <windows.h>
 #endif
 
+#if defined(__WXGTK__)
+static wxString gOldUnixDataDir;
+#endif
+
+static wxString gConfigDir;
 static wxString gDataDir;
 
 const FileNames::FileType
@@ -226,8 +231,48 @@ wxString FileNames::LowerCaseAppNameInPath( const wxString & dirIn){
    return dir;
 }
 
+FilePath FileNames::ConfigDir()
+{
+#if defined(__WXGTK__)
+   if (gOldUnixDataDir.empty())
+      gOldUnixDataDir = wxFileName::GetHomeDir() + wxT("/.audacity-data");
+#endif
+
+   if (gConfigDir.empty())
+   {
+      wxFileName exePath(PlatformCompatibility::GetExecutablePath());
+#if defined(__WXMAC__)
+      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      // just remove the MacOSX part.
+      exePath.RemoveLastDir();
+#endif
+      wxFileName portablePrefsPath(exePath.GetPath(), wxT("Portable Settings"));
+      if (::wxDirExists(portablePrefsPath.GetFullPath()))
+      {
+         // Use "Portable Settings" folder
+         gConfigDir = portablePrefsPath.GetFullPath();
+#if defined(__WXGTK__)
+      } else if (::wxDirExists(gOldUnixDataDir))
+      {
+         // Use old user data dir folder
+         gConfigDir = gOldUnixDataDir;
+#endif
+      } else {
+         // Use OS-provided user data dir folder
+         wxString configDir(wxStandardPaths::Get().GetUserConfigDir() + wxT("/audacity"));
+         gConfigDir = FileNames::MkDir(configDir);
+      }
+   }
+
+   return gConfigDir;
+}
+
 FilePath FileNames::DataDir()
 {
+#if defined(__WXGTK__)
+   if (gOldUnixDataDir.empty())
+      gOldUnixDataDir = wxFileName::GetHomeDir() + wxT("/.audacity-data");
+#endif
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
    //       between wxStandardPaths and wxConfig under Linux.  The latter
    //       creates a normal file as "$HOME/.audacity", while the former
@@ -251,12 +296,25 @@ FilePath FileNames::DataDir()
       {
          // Use "Portable Settings" folder
          gDataDir = portablePrefsPath.GetFullPath();
+#if defined(__WXGTK__)
+      } else if (::wxDirExists(gOldUnixDataDir))
+      {
+         // Use old user data dir folder
+         gDataDir = gOldUnixDataDir;
+      } else
+      {
+         wxString dataDir;
+         // see if XDG_DATA_HOME is defined. if it is, use its value. if it isn't, use the default
+         // XDG-specified value
+         if ( !wxGetEnv(wxS("XDG_DATA_HOME"), &dataDir) || dataDir.empty() )
+            dataDir = wxFileName::GetHomeDir() + wxT("/.local/share");
+
+         dataDir = dataDir + wxT("/audacity");
+#else
       } else
       {
          // Use OS-provided user data dir folder
          wxString dataDir( LowerCaseAppNameInPath( wxStandardPaths::Get().GetUserDataDir() ));
-#if defined( __WXGTK__ )
-         dataDir = dataDir + wxT("-data");
 #endif
          gDataDir = FileNames::MkDir(dataDir);
       }
@@ -317,12 +375,12 @@ FilePath FileNames::PlugInDir()
 
 FilePath FileNames::PluginRegistry()
 {
-   return wxFileName( DataDir(), wxT("pluginregistry.cfg") ).GetFullPath();
+   return wxFileName( ConfigDir(), wxT("pluginregistry.cfg") ).GetFullPath();
 }
 
 FilePath FileNames::PluginSettings()
 {
-   return wxFileName( DataDir(), wxT("pluginsettings.cfg") ).GetFullPath();
+   return wxFileName( ConfigDir(), wxT("pluginsettings.cfg") ).GetFullPath();
 }
 
 FilePath FileNames::BaseDir()
