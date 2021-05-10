@@ -784,10 +784,4 @@ using VendorSymbol = ComponentInterfaceSymbol;
 
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
-// LLL FIXME: Until a complete API is devised, we have to use
-//            AUDACITY_DLL_API when defining API classes.  This
-//            it ugly, but a part of the game.  Remove it when
-//            the API is complete.
-
-
 #endif // __AUDACITY_TYPES_H__

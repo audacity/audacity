@@ -34,11 +34,6 @@ class wxCheckBox;
  * The symptoms are that INT64_C is not a valid type, which tends to break
  * somewhere down in the implementations using this file */
 
-/* In order to be able to compile this file when ffmpeg is not available we
- * need access to the value of USE_FFMPEG, which means config*.h needs to come
- * in before this file. The suggest way to achieve this is by including
- * Audacity.h */
-
 #if defined(USE_FFMPEG)
 extern "C" {
    // Include errno.h before the ffmpeg includes since they depend on
