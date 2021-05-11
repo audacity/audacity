@@ -11,7 +11,7 @@ Paul Licameli split from AudioIO.cpp
 
 #include "AudioIOBase.h"
 
-
+#include <portaudio.h>
 
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
