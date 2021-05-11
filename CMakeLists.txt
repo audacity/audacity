@@ -270,6 +270,12 @@ if( HAVE_LIBM )
    list( APPEND CMAKE_REQUIRED_LIBRARIES -lm )
 endif()
 
+# mingw fails to find math library (used in system libraries), force it here
+if( MINGW )
+    set( LIB_m m )
+    MARK_AS_ADVANCED( FORCE LIB_m )
+endif()
+
 check_library_exists( atomic __atomic_fetch_add_4 "" HAVE_LIBATOMIC )
 if( HAVE_LIBATOMIC )
   list( APPEND CMAKE_REQUIRED_LIBRARIES -latomic )

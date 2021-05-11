@@ -1064,6 +1064,11 @@ list( APPEND LIBRARIES
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
 )
 
+# mingw needs these too
+if( MINGW )
+    list( APPEND LIBRARIES PUBLIC z pthread)
+endif()
+
 set( BUILDING_AUDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
 set( PKGLIBDIR "${_PKGLIBDIR}" )
