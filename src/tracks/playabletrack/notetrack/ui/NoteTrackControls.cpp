@@ -186,6 +186,7 @@ void SliderDrawFunction
    Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
 void VelocitySliderDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
@@ -202,6 +203,7 @@ void VelocitySliderDrawFunction
       &NoteTrackControls::VelocitySlider, dc, rect, pTrack,
       pParent, captured, hit);
 }
+#endif
 
 void MidiControlsDrawFunction
 ( TrackPanelDrawingContext &context,
@@ -225,8 +227,10 @@ static const struct NoteTrackTCPLines
    insert( end(), {
       { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
         MidiControlsDrawFunction },
+#ifdef EXPERIMENTAL_MIDI_OUT
       { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         VelocitySliderDrawFunction },
+#endif
    } );
 } } noteTrackTCPLines;
 
@@ -312,8 +316,6 @@ void NoteTrackControls::ReCreateVelocitySlider( wxEvent &evt )
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
    gVelocityCaptured->SetDefaultValue(0.0);
-#else
-   pParent;
 #endif
 }
 
