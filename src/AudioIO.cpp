@@ -2448,7 +2448,7 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
-#ifdef USE_MIDI
+#if defined(EXPERIMENTAL_MIDI_OUT) && defined(USE_MIDI)
    mMidiPlaybackTracks.clear();
 #endif
 
