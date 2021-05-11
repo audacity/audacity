@@ -29,7 +29,7 @@ or ASlider.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ASlider.h"
 
 #include <math.h>
@@ -68,7 +68,7 @@ or ASlider.
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
-class ASliderAx final : public WindowAccessible
+class AUDACITY_DLL_API ASliderAx final : public WindowAccessible
 {
 public:
    ASliderAx(wxWindow * window);

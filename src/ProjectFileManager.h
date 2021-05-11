@@ -28,7 +28,7 @@ class XMLTagHandler;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using TrackHolders = std::vector< WaveTrackArray >;
 
-class ProjectFileManager final
+class AUDACITY_DLL_API ProjectFileManager final
    : public ClientData::Base
 {
 public:

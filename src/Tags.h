@@ -29,7 +29,7 @@
 #ifndef __AUDACITY_TAGS__
 #define __AUDACITY_TAGS__
 
-#include "Audacity.h"
+
 
 #include "xml/XMLTagHandler.h"
 

@@ -30,7 +30,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ToolsToolBar.h"
 #include "ToolManager.h"
 

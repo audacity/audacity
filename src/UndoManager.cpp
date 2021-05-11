@@ -20,7 +20,7 @@ UndoManager
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "UndoManager.h"
 
 #include <wx/hashset.h>

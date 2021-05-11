@@ -21,7 +21,7 @@
 #ifndef __AUDACITY_HELPSYSTEM__
 #define __AUDACITY_HELPSYSTEM__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include "wxPanelWrapper.h" // to inherit
@@ -35,7 +35,7 @@ class AudacityProject;
  * the online copy of the Audacity manual is stored, so that it can be 
  * changed if required
  */
-class HelpSystem
+class AUDACITY_DLL_API HelpSystem
 {
 public:
    /// Displays cuttable information in a text ctrl, with an OK button.
@@ -115,7 +115,7 @@ class ShuttleGui;
 
 #include "HtmlWindow.h" // to inherit
 
-void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
+AUDACITY_DLL_API void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
 
 
 /// \brief An HtmlWindow that handles linked clicked - usually the

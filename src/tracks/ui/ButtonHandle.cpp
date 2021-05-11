@@ -8,7 +8,7 @@ Paul Licameli
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 #include "ButtonHandle.h"
 
 #include "../../HitTestResult.h"

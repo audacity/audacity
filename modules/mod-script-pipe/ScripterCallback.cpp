@@ -15,7 +15,6 @@
 
 #include <wx/wx.h>
 #include "ScripterCallback.h"
-#include "../../src/Audacity.h"
 
 /*
 There are several functions that can be used in a GUI module.

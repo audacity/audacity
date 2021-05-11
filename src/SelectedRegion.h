@@ -25,7 +25,7 @@
 #ifndef __AUDACITY_SELECTEDREGION__
 #define __AUDACITY_SELECTEDREGION__
 
-#include "Audacity.h"
+
 
 
 

@@ -28,7 +28,7 @@ Provides:
 
 *//********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ThemePrefs.h"
 
 #include <wx/app.h>

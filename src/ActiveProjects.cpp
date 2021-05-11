@@ -11,7 +11,7 @@
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "ActiveProjects.h"
 #include "Prefs.h"
 

@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Printing.h"
 
 #include <wx/defs.h>

@@ -8,7 +8,7 @@
 
  **********************************************************************/
 
-#include "../../../../Audacity.h"
+
 #include "NoteTrackSliderHandles.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT

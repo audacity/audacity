@@ -15,7 +15,7 @@ of languages for Audacity.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "LangChoice.h"
 
 #include <wx/defs.h>

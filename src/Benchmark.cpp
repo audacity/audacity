@@ -15,7 +15,7 @@ of sample block storage.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Benchmark.h"
 
 #include <wx/app.h>

@@ -15,7 +15,7 @@ It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
 
-#include "Audacity.h" // This should always be included first; for USE_* macros and __UNIX__
+
 #include "AudacityApp.h"
 
 
@@ -1696,7 +1696,7 @@ bool AudacityApp::InitTempDir()
    // The permissions don't always seem to be set on
    // some platforms.  Hopefully this fixes it...
    #ifdef __UNIX__
-   chmod(OSFILENAME(temp), 0755);
+   chmod(OSFILENAME(temp), 0700);
    #endif
 
    TempDirectory::ResetTempDir();

@@ -10,7 +10,7 @@ Paul Licameli split from TrackInfo.cpp
 
 #include "PlayableTrackControls.h"
 
-#include "../../../Audacity.h"
+
 
 #include "PlayableTrackButtonHandles.h"
 #include "../../../AColor.h"

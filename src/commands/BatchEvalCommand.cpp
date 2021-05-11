@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "BatchEvalCommand.h"
 
 #include "CommandContext.h"

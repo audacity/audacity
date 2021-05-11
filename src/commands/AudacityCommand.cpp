@@ -19,7 +19,7 @@ ShuttleGui.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "AudacityCommand.h"
 
 #include "CommandContext.h"

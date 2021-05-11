@@ -17,7 +17,7 @@
 
 #include "audacity/Types.h"
 
-void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
+AUDACITY_DLL_API void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
 template <typename Base>
 class AUDACITY_DLL_API wxTabTraversalWrapper : public Base

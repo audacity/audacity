@@ -24,7 +24,7 @@
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ToolManager.h"
 
 #include "../commands/CommandContext.h"

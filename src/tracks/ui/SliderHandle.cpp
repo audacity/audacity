@@ -8,7 +8,7 @@ Paul Licameli
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 #include "SliderHandle.h"
 
 #include "../../widgets/ASlider.h"

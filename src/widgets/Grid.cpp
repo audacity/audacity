@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Grid.h"
 
 #include <wx/setup.h> // for wxUSE_* macros

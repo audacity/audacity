@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "QualityPrefs.h"
 
 #include <wx/choice.h>

@@ -18,7 +18,7 @@ frequency changes smoothly during the tone.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ToneGen.h"
 #include "LoadEffects.h"
 

@@ -16,7 +16,7 @@
 
 *******************************************************************/
 
-#include "../Audacity.h"
+
 #include "AutoDuck.h"
 #include "LoadEffects.h"
 

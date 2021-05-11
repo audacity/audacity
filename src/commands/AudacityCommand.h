@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_COMMAND__
 #define __AUDACITY_COMMAND__
 
-#include "../Audacity.h"
+
 
 #include <set>
 

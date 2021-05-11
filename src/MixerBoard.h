@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 
 
 #ifndef __AUDACITY_MIXER_BOARD__

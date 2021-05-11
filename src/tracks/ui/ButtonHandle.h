@@ -22,7 +22,7 @@ class TranslatableString;
 
 /// \brief A UIHandle for a TrackPanel button, such as the Mute and Solo 
 /// buttons.
-class ButtonHandle /* not final */ : public UIHandle
+class AUDACITY_DLL_API ButtonHandle /* not final */ : public UIHandle
 {
    ButtonHandle(const ButtonHandle&) = delete;
 

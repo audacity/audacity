@@ -33,7 +33,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetTrackInfoCommand.h"
 
 #include "LoadCommands.h"

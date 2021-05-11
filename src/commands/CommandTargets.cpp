@@ -21,7 +21,7 @@ capture the more lengthy output from some commands.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CommandTargets.h"
 
 #include <wx/app.h>

@@ -15,6 +15,24 @@ Paul Licameli split from Import.cpp
 #include "../widgets/ProgressDialog.h"
 #include "../prefs/QualityPrefs.h"
 
+ImportPlugin::ImportPlugin(FileExtensions supportedExtensions):
+   mExtensions( std::move( supportedExtensions ) )
+{
+}
+
+ImportPlugin::~ImportPlugin() = default;
+
+FileExtensions ImportPlugin::GetSupportedExtensions()
+{
+   return mExtensions;
+}
+
+bool ImportPlugin::SupportsExtension(const FileExtension &extension)
+{
+   // Case-insensitive check if extension is supported
+   return mExtensions.Index(extension, false) != wxNOT_FOUND;
+}
+
 ImportFileHandle::ImportFileHandle(const FilePath & filename)
 :  mFilename(filename)
 {

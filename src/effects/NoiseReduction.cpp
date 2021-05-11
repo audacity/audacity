@@ -36,7 +36,7 @@
 *//****************************************************************//**
 */
 
-#include "../Audacity.h"
+
 #include "NoiseReduction.h"
 
 #include "LoadEffects.h"

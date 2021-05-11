@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_SAMPLE_FORMAT__
 #define __AUDACITY_SAMPLE_FORMAT__
 
-#include "Audacity.h"
+
 
 #include "MemoryX.h"
 #include <wx/defs.h>
@@ -44,7 +44,7 @@ typedef enum {
 #define SAMPLE_SIZE_DISK(SampleFormat) (((SampleFormat) == int24Sample) ? \
    size_t{ 3 } : SAMPLE_SIZE(SampleFormat) )
 
-TranslatableString GetSampleFormatStr(sampleFormat format);
+AUDACITY_DLL_API TranslatableString GetSampleFormatStr(sampleFormat format);
 
 //
 // Allocating/Freeing Samples
@@ -124,21 +124,25 @@ private:
 // Copying, Converting and Clearing Samples
 //
 
+AUDACITY_DLL_API
 void      CopySamples(constSamplePtr src, sampleFormat srcFormat,
                       samplePtr dst, sampleFormat dstFormat,
                       unsigned int len, bool highQuality=true,
                       unsigned int srcStride=1,
                       unsigned int dstStride=1);
 
+AUDACITY_DLL_API
 void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
                       samplePtr dst, sampleFormat dstFormat,
                       unsigned int len,
                       unsigned int srcStride=1,
                       unsigned int dstStride=1);
 
+AUDACITY_DLL_API
 void      ClearSamples(samplePtr buffer, sampleFormat format,
                        size_t start, size_t len);
 
+AUDACITY_DLL_API
 void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);
 
@@ -147,6 +151,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 // are set in preferences.
 //
 
+AUDACITY_DLL_API
 void      InitDitherers();
 
 // These are so commonly done for processing samples in floating point form in memory,

@@ -21,7 +21,7 @@ struct NormalizedKeyStringTag;
 // Case insensitive comparisons
 using NormalizedKeyStringBase = TaggedIdentifier<NormalizedKeyStringTag, false>;
 
-struct NormalizedKeyString : NormalizedKeyStringBase
+struct AUDACITY_DLL_API NormalizedKeyString : NormalizedKeyStringBase
 {
    NormalizedKeyString() = default;
    explicit NormalizedKeyString( const wxString &key );
@@ -35,6 +35,7 @@ namespace std
       : hash< NormalizedKeyStringBase > {};
 }
 
+AUDACITY_DLL_API
 NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & keyEvent);
 
 #endif

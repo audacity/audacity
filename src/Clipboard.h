@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_CLIPBOARD__
 #define __AUDACITY_CLIPBOARD__
 
-#include "Audacity.h"
+
 
 #include <memory>
 #include <wx/event.h> // to inherit wxEvtHandler
@@ -23,7 +23,7 @@ class TrackList;
 wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
                           EVT_CLIPBOARD_CHANGE, wxCommandEvent );
 
-class Clipboard final
+class AUDACITY_DLL_API Clipboard final
    : public wxEvtHandler
 {
 public:

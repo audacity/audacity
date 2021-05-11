@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SpectrumPrefs.h"
 
 #include <wx/choice.h>

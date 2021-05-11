@@ -17,7 +17,7 @@
 /**************************************************************************//**
 \brief Shuttle that retrieves a JSON format definition of a command's parameters.
 ********************************************************************************/
-class ShuttleGetDefinition final
+class AUDACITY_DLL_API ShuttleGetDefinition final
    : public ShuttleParams, public CommandMessageTargetDecorator
 {
 public:

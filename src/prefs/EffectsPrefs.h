@@ -38,5 +38,5 @@ class EffectsPrefs final : public PrefsPanel
    void Populate();
 };
 
-extern ChoiceSetting EffectsGroupBy;
+AUDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
 #endif

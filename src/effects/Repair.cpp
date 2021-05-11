@@ -21,7 +21,7 @@ the audio, rather than actually finding the clicks.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "Repair.h"
 
 #include <math.h>

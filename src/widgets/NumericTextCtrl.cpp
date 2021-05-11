@@ -165,7 +165,7 @@ different formats.
 **********************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "NumericTextCtrl.h"
 
 #include "audacity/Types.h"
@@ -937,6 +937,8 @@ void NumericConverter::PrintDebugInfo()
 
    wxPrintf("\n");
 }
+
+NumericConverter::NumericConverter(const NumericConverter&) = default;
 
 NumericConverter::~NumericConverter()
 {

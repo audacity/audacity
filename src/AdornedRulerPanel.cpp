@@ -18,7 +18,7 @@
 
 *//******************************************************************/
 
-#include "Audacity.h"
+
 #include "AdornedRulerPanel.h"
 
 

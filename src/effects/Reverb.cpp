@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Reverb.h"
 #include "LoadEffects.h"
 

@@ -19,7 +19,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#include "../Audacity.h"
+
 #include "valnum.h"
 
 // For compilers that support precompilation, includes "wx.h".

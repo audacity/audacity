@@ -30,7 +30,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "Tags.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

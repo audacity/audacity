@@ -20,7 +20,7 @@ messaging from a command back to its invoker.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CommandContext.h"
 
 #include <map>

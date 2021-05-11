@@ -13,7 +13,7 @@ Paul Licameli split from Meter.h
 
 #include "wxPanelWrapper.h"
 
-class MeterPanelBase /* not final */
+class AUDACITY_DLL_API MeterPanelBase /* not final */
    : public wxPanelWrapper
 {
 public:

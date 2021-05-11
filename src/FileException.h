@@ -14,7 +14,8 @@
 #include <wx/filename.h> // wxFileName member variable
 
 //! Thrown for failure of file or database operations in deeply nested places
-class FileException /* not final */ : public MessageBoxException
+class AUDACITY_DLL_API FileException /* not final */
+   : public MessageBoxException
 {
 public:
    //! Identifies file operation that failed

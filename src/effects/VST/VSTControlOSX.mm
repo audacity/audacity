@@ -21,7 +21,7 @@
       
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 #include "VSTControlOSX.h"
 
 #include "../../MemoryX.h"

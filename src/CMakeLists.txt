@@ -72,7 +72,6 @@ list( APPEND SOURCES
       AllThemeResources.cpp
       AllThemeResources.h
       AttachedVirtualFunction.h
-      Audacity.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -1292,6 +1291,11 @@ source_group(
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.cxx
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
 )
+
+# Define AUDACITY_DLL_API
+import_symbol_define( import_symbol AUDACITY_DLL )
+export_symbol_define( export_symbol AUDACITY_DLL )
+list( APPEND DEFINES PRIVATE "${export_symbol}" INTERFACE "${import_symbol}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )

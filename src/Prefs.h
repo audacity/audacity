@@ -29,7 +29,12 @@
 #ifndef __AUDACITY_PREFS__
 #define __AUDACITY_PREFS__
 
-#include "Audacity.h"
+
+
+// Increment this every time the prefs need to be reset
+// the first part (before the r) indicates the version the reset took place
+// the second part (after the r) indicates the number of times the prefs have been reset within the same version
+#define AUDACITY_PREFS_VERSION_STRING "1.1.1r1"
 
 #include "../include/audacity/ComponentInterface.h"
 #include "MemoryX.h" // for wxArrayStringEx
@@ -53,7 +58,7 @@ extern ByColumns_t ByColumns;
 /// A table of EnumValueSymbol that you can access by "row" with
 /// operator [] but also allowing access to the "columns" of internal or
 /// translated strings, and also allowing convenient column-wise construction
-class EnumValueSymbols : public std::vector< EnumValueSymbol >
+class AUDACITY_DLL_API EnumValueSymbols : public std::vector< EnumValueSymbol >
 {
 public:
    EnumValueSymbols() = default;
@@ -81,7 +86,7 @@ private:
 
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
-class ChoiceSetting
+class AUDACITY_DLL_API ChoiceSetting
 {
 public:
    ChoiceSetting(
@@ -131,7 +136,7 @@ protected:
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class EnumSettingBase : public ChoiceSetting
+class AUDACITY_DLL_API EnumSettingBase : public ChoiceSetting
 {
 public:
    EnumSettingBase(
@@ -204,7 +209,8 @@ public:
 
 // An event emitted by the application when the Preference dialog commits
 // changes
-wxDECLARE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+   EVT_PREFS_UPDATE, wxCommandEvent);
 
 // Invoke UpdatePrefs() when Preference dialog commits changes.
 class AUDACITY_DLL_API PrefsListener
@@ -231,13 +237,14 @@ private:
 /// Return the config file key associated with a warning dialog identified
 /// by internalDialogName.  When the box is checked, the value at the key
 /// becomes false.
+AUDACITY_DLL_API
 wxString WarningDialogKey(const wxString &internalDialogName);
 
 /*
  Meant to be statically constructed.  A callback to repopulate configuration
  files after a reset.
  */
-struct PreferenceInitializer {
+struct AUDACITY_DLL_API PreferenceInitializer {
    PreferenceInitializer();
    virtual ~PreferenceInitializer();
    virtual void operator () () = 0;

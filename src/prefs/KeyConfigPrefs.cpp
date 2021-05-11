@@ -19,7 +19,7 @@ KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
 
-#include "../Audacity.h"
+
 
 #include "KeyConfigPrefs.h"
 

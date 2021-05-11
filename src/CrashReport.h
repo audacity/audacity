@@ -14,7 +14,7 @@
 
 #undef HAS_CRASH_REPORT
 
-#include "Audacity.h"
+
 
 
 #if defined(EXPERIMENTAL_CRASH_REPORT)
@@ -26,6 +26,7 @@
 
    namespace CrashReport
    {
+      AUDACITY_DLL_API
       void Generate(wxDebugReport::Context ctx);
    }
 #endif

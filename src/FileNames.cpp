@@ -20,7 +20,7 @@ used throughout Audacity into this one place.
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "FileNames.h"
 
 

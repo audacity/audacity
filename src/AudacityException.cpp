@@ -9,7 +9,7 @@
 
 ***********************************************************************/
 
-#include "Audacity.h"
+
 #include "AudacityException.h"
 
 #include <wx/atomic.h>

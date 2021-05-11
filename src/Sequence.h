@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_SEQUENCE__
 #define __AUDACITY_SEQUENCE__
 
+
 #include <vector>
 #include <functional>
 
@@ -47,6 +48,15 @@ class SeqBlock {
 };
 class BlockArray : public std::vector<SeqBlock> {};
 using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
+
+// Put extra symbol information in the release build, for the purpose of gathering
+// profiling information (as from Windows Process Monitor), when there otherwise
+// isn't a need for AUDACITY_DLL_API.
+#ifdef IS_ALPHA
+   #define PROFILE_DLL_API AUDACITY_DLL_API
+#else
+   #define PROFILE_DLL_API
+#endif
 
 class PROFILE_DLL_API Sequence final : public XMLTagHandler{
  public:

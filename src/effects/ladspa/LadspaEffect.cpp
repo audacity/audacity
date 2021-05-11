@@ -22,7 +22,7 @@ effects from this one class.
 *//*******************************************************************/
 
 
-#include "../../Audacity.h"
+
 #include "LadspaEffect.h"       // This class's header file
 
 #include <float.h>

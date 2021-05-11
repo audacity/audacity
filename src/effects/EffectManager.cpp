@@ -18,7 +18,7 @@ effects.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "EffectManager.h"
 
 #include "Effect.h"

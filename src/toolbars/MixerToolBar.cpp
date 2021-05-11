@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "MixerToolBar.h"
 
 #include "ToolManager.h"

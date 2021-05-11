@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_ERRORDIALOG__
 #define __AUDACITY_ERRORDIALOG__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include <wx/msgdlg.h> // to inherit
@@ -46,6 +46,7 @@ private:
 };
 
 /// Displays an error dialog with a button that offers help
+AUDACITY_DLL_API
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
@@ -67,7 +68,8 @@ void ShowModelessErrorDialog(wxWindow *parent,
 \class AudacityTextEntryDialog
 \brief Wrap wxTextEntryDialog so that caption IS translatable.
 ********************************************************************************/
-class AudacityTextEntryDialog : public wxTabTraversalWrapper< wxTextEntryDialog >
+class AUDACITY_DLL_API AudacityTextEntryDialog
+   : public wxTabTraversalWrapper< wxTextEntryDialog >
 {
 public:
     AudacityTextEntryDialog(

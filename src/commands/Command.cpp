@@ -75,7 +75,7 @@ classes derived from it.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Command.h"
 
 #include <map>

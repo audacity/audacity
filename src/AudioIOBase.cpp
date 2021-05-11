@@ -8,7 +8,7 @@ Paul Licameli split from AudioIO.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "AudioIOBase.h"
 
 

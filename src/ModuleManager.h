@@ -75,7 +75,7 @@ typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 using PluginIDs = wxArrayString;
 
-class ModuleManager final
+class AUDACITY_DLL_API ModuleManager final
 {
 public:
 
@@ -107,6 +107,8 @@ private:
    // I'm a singleton class
    ModuleManager();
    ~ModuleManager();
+   ModuleManager(const ModuleManager&) PROHIBITED;
+   ModuleManager &operator=(const ModuleManager&) PROHIBITED;
 
    void InitializeBuiltins();
    ModuleInterface *LoadModule(const PluginPath & path);

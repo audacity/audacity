@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "BatchProcessDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
