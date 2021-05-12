@@ -205,15 +205,18 @@ macro( check_for_platform_version )
 endmacro()
 
 # To be used to compile all C++ in the application and modules
-function( audacity_append_common_compiler_options var )
+function( audacity_append_common_compiler_options var use_pch )
+   if( NOT use_pch )
+      list( APPEND ${var}
+         PRIVATE
+            # include the correct config file; give absolute path to it, so
+            # that this works whether in src, modules, libraries
+            $<$<PLATFORM_ID:Windows>:/FI${CMAKE_BINARY_DIR}/src/private/configwin.h>
+            $<$<PLATFORM_ID:Darwin>:-include ${CMAKE_BINARY_DIR}/src/private/configmac.h>
+            $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:-include ${CMAKE_BINARY_DIR}/src/private/configunix.h>
+      )
+   endif()
    list( APPEND ${var}
-      PRIVATE
-         # include the correct config file; give absolute path to it, so
-         # that this works whether in src, modules, libraries
-         $<$<PLATFORM_ID:Windows>:/FI${CMAKE_BINARY_DIR}/src/private/configwin.h>
-         $<$<PLATFORM_ID:Darwin>:-include ${CMAKE_BINARY_DIR}/src/private/configmac.h>
-         $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:-include ${CMAKE_BINARY_DIR}/src/private/configunix.h>
-
          -DAUDACITY_VERSION=${AUDACITY_VERSION}
          -DAUDACITY_RELEASE=${AUDACITY_RELEASE}
          -DAUDACITY_REVISION=${AUDACITY_REVISION}
@@ -346,7 +349,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    # Compute compilation options.
    # Perhaps a another function argument in future to customize this too.
    set( OPTIONS )
-   audacity_append_common_compiler_options( OPTIONS )
+   audacity_append_common_compiler_options( OPTIONS NO )
 
    organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
    target_sources( ${TARGET} PRIVATE ${SOURCES} )
