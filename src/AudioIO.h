@@ -23,10 +23,6 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
-#ifdef USE_MIDI
-
-// TODO: Put the relative paths into automake.
-
 #ifdef EXPERIMENTAL_MIDI_OUT
 typedef void PmStream;
 typedef int32_t PmTimestamp;
@@ -40,8 +36,6 @@ using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #endif // EXPERIMENTAL_MIDI_OUT
-
-#endif // USE_MIDI
 
 #include <wx/event.h> // to declare custom event types
 
