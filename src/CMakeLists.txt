@@ -1319,7 +1319,7 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    if( ${_OPT}use_pch )
       message( STATUS "Using precompiled headers" )
       target_precompile_headers( ${TARGET} PRIVATE
-         $<$<PLATFORM_ID:Windows>:{CMAKE_BINARY_DIR}/src/private/configwin.h>
+         $<$<PLATFORM_ID:Windows>:${CMAKE_BINARY_DIR}/src/private/configwin.h>
          $<$<PLATFORM_ID:Darwin>:${CMAKE_BINARY_DIR}/src/private/configmac.h>
          $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:${CMAKE_BINARY_DIR}/src/private/configunix.h>
          AudacityHeaders.h
