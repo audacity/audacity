@@ -1022,7 +1022,18 @@ list( APPEND DEFINES
       >
 )
 
-audacity_append_common_compiler_options( OPTIONS )
+# If we have cmake 3.16 or higher, we can use precompiled headers, but
+# only use them if ccache is not available and the user hasn't disabled
+# it.
+if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
+   cmd_option(
+      ${_OPT}use_pch
+      "Use precompiled headers [yes, no]"
+      YES
+   )
+endif()
+
+audacity_append_common_compiler_options( OPTIONS "${${_OPT}use_pch}" )
 
 list( APPEND LDFLAGS
    PRIVATE
@@ -1304,19 +1315,15 @@ target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} ${LIBRARIES} )
 
-# If was have cmake 3.16 or higher, we can use precompiled headers, but
-# only use them if ccache is not available and the user hasn't disabled
-# it.
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
-   cmd_option(
-      ${_OPT}use_pch
-      "Use precompiled headers [yes, no]"
-      YES
-   )
-
    if( ${_OPT}use_pch )
       message( STATUS "Using precompiled headers" )
-      target_precompile_headers( ${TARGET} PRIVATE AudacityHeaders.h )
+      target_precompile_headers( ${TARGET} PRIVATE
+         $<$<PLATFORM_ID:Windows>:{CMAKE_BINARY_DIR}/src/private/configwin.h>
+         $<$<PLATFORM_ID:Darwin>:${CMAKE_BINARY_DIR}/src/private/configmac.h>
+         $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:${CMAKE_BINARY_DIR}/src/private/configunix.h>
+         AudacityHeaders.h
+      )
    else()
       message( STATUS "Not using precompiled headers" )
    endif()
