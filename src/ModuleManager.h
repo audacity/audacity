@@ -130,9 +130,9 @@ private:
 };
 
 // ----------------------------------------------------------------------------
-// The module entry point prototype
+// The module entry point prototype (a factory of ModuleInterface objects)
 // ----------------------------------------------------------------------------
-using ModuleMain = ModuleInterface *(*)(const wxString *path);
+using ModuleMain = ModuleInterface *(*)();
 
 AUDACITY_DLL_API
 void RegisterProvider(ModuleMain rtn);

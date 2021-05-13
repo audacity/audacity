@@ -140,7 +140,7 @@ public:
 // be declared static so as not to interfere with other modules during link.
 // ----------------------------------------------------------------------------
 #define DECLARE_MODULE_ENTRY(name)                    \
-static ModuleInterface * name(const wxString *path)
+static ModuleInterface * name()
 
 // ----------------------------------------------------------------------------
 // This will create a class and instance that will register the module entry

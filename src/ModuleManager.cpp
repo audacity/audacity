@@ -458,7 +458,7 @@ void ModuleManager::InitializeBuiltins()
    for (auto moduleMain : builtinModuleList())
    {
       ModuleInterfaceHandle module {
-         moduleMain(nullptr), ModuleInterfaceDeleter{}
+         moduleMain(), ModuleInterfaceDeleter{}
       };
 
       if (module && module->Initialize())

@@ -143,7 +143,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VSTEffectsModule(path);
+   return safenew VSTEffectsModule();
 }
 
 // ============================================================================
@@ -306,17 +306,12 @@ public:
 // VSTEffectsModule
 //
 // ============================================================================
-VSTEffectsModule::VSTEffectsModule(const wxString *path)
+VSTEffectsModule::VSTEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 VSTEffectsModule::~VSTEffectsModule()
 {
-   mPath = wxEmptyString;
 }
 
 // ============================================================================
@@ -325,7 +320,7 @@ VSTEffectsModule::~VSTEffectsModule()
 
 PluginPath VSTEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()

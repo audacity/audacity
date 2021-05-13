@@ -38,7 +38,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew VampEffectsModule(path);
+   return safenew VampEffectsModule();
 }
 
 // ============================================================================
@@ -52,12 +52,8 @@ DECLARE_BUILTIN_MODULE(VampsEffectBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-VampEffectsModule::VampEffectsModule(const wxString *path)
+VampEffectsModule::VampEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 VampEffectsModule::~VampEffectsModule()
@@ -70,7 +66,7 @@ VampEffectsModule::~VampEffectsModule()
 
 PluginPath VampEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol VampEffectsModule::GetSymbol()

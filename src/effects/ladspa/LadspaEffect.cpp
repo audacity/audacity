@@ -85,7 +85,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LadspaEffectsModule(path);
+   return safenew LadspaEffectsModule();
 }
 
 // ============================================================================
@@ -99,12 +99,8 @@ DECLARE_BUILTIN_MODULE(LadspaBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-LadspaEffectsModule::LadspaEffectsModule(const wxString *path)
+LadspaEffectsModule::LadspaEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 LadspaEffectsModule::~LadspaEffectsModule()
@@ -117,7 +113,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 
 PluginPath LadspaEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()

@@ -54,7 +54,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew BuiltinEffectsModule(path);
+   return safenew BuiltinEffectsModule();
 }
 
 // ============================================================================
@@ -68,17 +68,12 @@ DECLARE_BUILTIN_MODULE(BuiltinsEffectBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-BuiltinEffectsModule::BuiltinEffectsModule(const wxString *path)
+BuiltinEffectsModule::BuiltinEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 BuiltinEffectsModule::~BuiltinEffectsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -87,7 +82,7 @@ BuiltinEffectsModule::~BuiltinEffectsModule()
 
 PluginPath BuiltinEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol()

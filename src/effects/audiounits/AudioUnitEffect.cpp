@@ -233,7 +233,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew AudioUnitEffectsModule(path);
+   return safenew AudioUnitEffectsModule();
 }
 
 // ============================================================================
@@ -247,17 +247,12 @@ DECLARE_BUILTIN_MODULE(AudioUnitEffectsBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AudioUnitEffectsModule::AudioUnitEffectsModule(const wxString *path)
+AudioUnitEffectsModule::AudioUnitEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 AudioUnitEffectsModule::~AudioUnitEffectsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -266,7 +261,7 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 
 PluginPath AudioUnitEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()

@@ -60,7 +60,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LV2EffectsModule(path);
+   return safenew LV2EffectsModule();
 }
 
 // ============================================================================
@@ -77,12 +77,8 @@ using UriHash = std::unordered_map<wxString, LilvNode*>;
 
 LilvWorld *gWorld = NULL;
 
-LV2EffectsModule::LV2EffectsModule(const wxString *path)
+LV2EffectsModule::LV2EffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 LV2EffectsModule::~LV2EffectsModule()
@@ -95,7 +91,7 @@ LV2EffectsModule::~LV2EffectsModule()
 
 PluginPath LV2EffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol LV2EffectsModule::GetSymbol()

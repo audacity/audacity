@@ -67,7 +67,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew NyquistEffectsModule(path);
+   return safenew NyquistEffectsModule();
 }
 
 // ============================================================================
@@ -81,17 +81,12 @@ DECLARE_BUILTIN_MODULE(NyquistsEffectBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-NyquistEffectsModule::NyquistEffectsModule(const wxString *path)
+NyquistEffectsModule::NyquistEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 NyquistEffectsModule::~NyquistEffectsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -100,7 +95,7 @@ NyquistEffectsModule::~NyquistEffectsModule()
 
 PluginPath NyquistEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
