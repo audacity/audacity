@@ -485,13 +485,6 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
    if (pInterface)
    {
       pInterface->Terminate();
-
-      auto &libs = ModuleManager::Get().mLibs;
-
-      auto iter = libs.find(pInterface);
-      if (iter != libs.end())
-         libs.erase(iter); // This causes unloading in ~wxDynamicLibrary
-
       std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
    }
 }

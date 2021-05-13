@@ -120,10 +120,6 @@ private:
    // ComponentInterface objects for each path:
    ModuleMap mDynModules;
 
-   // Dynamically loaded libraries, each one a factory that makes one of the
-   // (non-built-in) providers:
-   LibraryMap mLibs;
-
    // Other libraries that receive notifications of events described by
    // ModuleDispatchTypes:
    std::vector<std::unique_ptr<Module>> mModules;
