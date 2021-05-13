@@ -232,7 +232,7 @@ ModuleManager::~ModuleManager()
 }
 
 // static 
-void ModuleManager::Initialize(CommandHandler &cmdHandler)
+void ModuleManager::Initialize()
 {
    const auto &audacityPathList = FileNames::AudacityPathList();
    FilePaths pathList;

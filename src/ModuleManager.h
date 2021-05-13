@@ -20,7 +20,6 @@
 
 class wxArrayString;
 class wxDynamicLibrary;
-class CommandHandler;
 class ComponentInterface;
 class ModuleInterface;
 
@@ -85,7 +84,7 @@ public:
 
    static ModuleManager & Get();
 
-   void Initialize(CommandHandler & cmdHandler);
+   void Initialize();
    int Dispatch(ModuleDispatchTypes type);
 
    // PluginManager use

@@ -1334,7 +1334,7 @@ bool AudacityApp::InitPart2()
    PluginManager::Get().Initialize();
 
    // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Get().Initialize(*mCmdHandler);
+   ModuleManager::Get().Initialize();
 
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
