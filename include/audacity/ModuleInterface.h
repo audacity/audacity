@@ -142,11 +142,6 @@ public:
 #define MODULE_ENTRY AudacityModule
 
 // ----------------------------------------------------------------------------
-// The module entry point prototype
-// ----------------------------------------------------------------------------
-typedef ModuleInterface *(*ModuleMain)(const wxString *path);
-
-// ----------------------------------------------------------------------------
 // If BUILDING_AUDACITY is defined during the current build, it is assumed
 // that the module wishes to be embedded in the Audacity executable.
 // ----------------------------------------------------------------------------
@@ -170,7 +165,6 @@ static ModuleInterface * name(const wxString *path)
 // method must be supplied explicitly.
 // ----------------------------------------------------------------------------
 #define DECLARE_BUILTIN_MODULE_BASE(name)             \
-extern void RegisterBuiltinModule(ModuleMain rtn);    \
 class name                                            \
 {                                                     \
 public:                                               \

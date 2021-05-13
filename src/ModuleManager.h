@@ -130,4 +130,12 @@ private:
    std::vector<std::unique_ptr<Module>> mModules;
 };
 
+// ----------------------------------------------------------------------------
+// The module entry point prototype
+// ----------------------------------------------------------------------------
+using ModuleMain = ModuleInterface *(*)(const wxString *path);
+
+AUDACITY_DLL_API
+void RegisterBuiltinModule(ModuleMain rtn);
+
 #endif /* __AUDACITY_MODULEMANAGER_H__ */

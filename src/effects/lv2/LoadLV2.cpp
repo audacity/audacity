@@ -23,6 +23,7 @@ Functions that find and load all LV2 plugins on the system.
 #endif
 
 #include "LoadLV2.h"
+#include "../../ModuleManager.h"
 
 #include <cstdio>
 #include <cstdlib>

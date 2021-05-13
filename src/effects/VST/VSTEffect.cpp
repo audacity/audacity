@@ -26,6 +26,7 @@
 
 
 #include "VSTEffect.h"
+#include "../../ModuleManager.h"
 
 #include "../../widgets/ProgressDialog.h"
 

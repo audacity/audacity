@@ -17,6 +17,7 @@
 #include "../Prefs.h"
 
 #include "Effect.h"
+#include "ModuleManager.h"
 
 static bool sInitialized = false;
 

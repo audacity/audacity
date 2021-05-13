@@ -18,6 +18,7 @@
 
 #include "../../FileNames.h"
 #include "../../PluginManager.h"
+#include "../../ModuleManager.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
