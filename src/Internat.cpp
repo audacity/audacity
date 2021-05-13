@@ -334,7 +334,10 @@ TranslatableString &TranslatableString::Strip( unsigned codes ) &
          default: {
             bool debug = request == Request::DebugFormat;
             auto result =
-               TranslatableString::DoSubstitute( prevFormatter, str, debug );
+               TranslatableString::DoSubstitute(
+                  prevFormatter,
+                  str, TranslatableString::DoGetContext( prevFormatter ),
+                  debug );
             if ( codes & MenuCodes )
                result = wxStripMenuCodes( result );
             if ( codes & Ellipses ) {
@@ -357,13 +360,13 @@ wxString TranslatableString::DoGetContext( const Formatter &formatter )
    return formatter ? formatter( {}, Request::Context ) : wxString{};
 }
 
-wxString TranslatableString::DoSubstitute(
-   const Formatter &formatter, const wxString &format, bool debug )
+wxString TranslatableString::DoSubstitute( const Formatter &formatter,
+   const wxString &format, const wxString &context, bool debug )
 {
    return formatter
       ? formatter( format, debug ? Request::DebugFormat : Request::Format )
       : // come here for most translatable strings, which have no formatting
-         ( debug ? format : wxGetTranslation( format ) );
+         ( debug ? format : wxGetTranslation( format, wxString{}, context ) );
 }
 
 wxString TranslatableString::DoChooseFormat(
@@ -404,7 +407,9 @@ TranslatableString &TranslatableString::Join(
          default: {
             bool debug = request == Request::DebugFormat;
             return
-               TranslatableString::DoSubstitute( prevFormatter, str, debug )
+               TranslatableString::DoSubstitute( prevFormatter,
+                  str, TranslatableString::DoGetContext( prevFormatter ),
+                  debug )
                   + separator
                   + arg.DoFormat( debug );
          }
