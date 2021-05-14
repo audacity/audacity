@@ -1075,7 +1075,7 @@ bool ProjectAudioManager::DoPlayStopSelect( bool click, bool shift )
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
 
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||

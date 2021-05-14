@@ -224,15 +224,8 @@ public:
    bool bScrollBeyondZero;
    bool bAdjustSelectionEdges;
 
-   // During timer update, grab the volatile stream time just once, so that
-   // various other drawing code can use the exact same value.
-   double mRecentStreamTime;
-
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
    bool ReadXMLAttribute(const wxChar *attr, const wxChar *value);
-
-   // Receive track panel timer notifications
-   void OnTimer(wxCommandEvent &event);
 
 private:
    int mHeight{ 0 };

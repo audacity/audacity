@@ -362,7 +362,7 @@ void TimeToolBar::OnIdle(wxIdleEvent &evt)
 
    auto &projectAudioIO = ProjectAudioIO::Get(mProject);
    if (projectAudioIO.IsAudioActive()) {
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       audioTime = gAudioIO->GetStreamTime();
    }
    else {

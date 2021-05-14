@@ -15,7 +15,10 @@ Paul Licameli split from AudacityProject.h
 #include <wx/weakref.h>
 
 class AudacityProject;
-class MeterPanelBase;
+
+// Windows build needs complete type for parameter of wxWeakRef
+// class MeterPanelBase;
+#include "widgets/MeterPanelBase.h"
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters

@@ -51,7 +51,7 @@ with changes in the SelectionBar.
 #include <wx/statline.h>
 
 
-#include "../AudioIOBase.h"
+#include "../AudioIO.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
@@ -599,7 +599,7 @@ void SelectionBar::OnIdle( wxIdleEvent &evt )
 
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    if ( projectAudioIO.IsAudioActive() ){
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       audioTime = gAudioIO->GetStreamTime();
    }
    else {
