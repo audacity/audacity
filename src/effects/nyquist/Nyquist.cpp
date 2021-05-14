@@ -57,6 +57,7 @@ effects from this one class.
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
+#include "../../PluginManager.h"
 #include "../../Project.h"
 #include "../../ProjectSettings.h"
 #include "../../ShuttleGetDefinition.h"
@@ -164,7 +165,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
-      mName = XO("Nyquist Prompt");
+      mName = NYQUIST_PROMPT_NAME;
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
@@ -209,7 +210,7 @@ PluginPath NyquistEffect::GetPath()
 ComponentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return XO("Nyquist Prompt");
+      return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
 
    return mName;
 }

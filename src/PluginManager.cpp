@@ -1973,7 +1973,7 @@ void PluginManager::Load()
          // These particular config edits were originally written to fix Bug 1914.
          if (regver <= "1.0") {
             // Nyquist prompt is a built-in that has moved to the tools menu.
-            if (effectSymbol == "Nyquist Prompt") {
+            if (effectSymbol == NYQUIST_PROMPT_ID) {
                registry.Write(KEY_EFFECTTYPE, "Tool");
             // Old version of SDE was in Analyze menu.  Now it is in Tools.
             // We don't want both the old and the new.

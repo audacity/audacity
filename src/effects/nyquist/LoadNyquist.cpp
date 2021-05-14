@@ -17,6 +17,7 @@
 #include "Nyquist.h"
 
 #include "../../FileNames.h"
+#include "../../PluginManager.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
