@@ -21,7 +21,7 @@
 static bool sInitialized = false;
 
 struct BuiltinEffectsModule::Entry {
-   wxString name;
+   ComponentInterfaceSymbol name;
    BuiltinEffectsModule::Factory factory;
    bool excluded;
 
@@ -37,7 +37,7 @@ void BuiltinEffectsModule::DoRegistration(
    const ComponentInterfaceSymbol &name, const Factory &factory, bool excluded )
 {
    wxASSERT( !sInitialized );
-   Entry::Registry().emplace_back( Entry{ name.Internal(), factory, excluded } );
+   Entry::Registry().emplace_back( Entry{ name, factory, excluded } );
 }
 
 // ============================================================================
@@ -117,7 +117,7 @@ TranslatableString BuiltinEffectsModule::GetDescription()
 bool BuiltinEffectsModule::Initialize()
 {
    for ( const auto &entry : Entry::Registry() ) {
-      auto path = wxString(BUILTIN_EFFECT_PREFIX) + entry.name;
+      auto path = wxString(BUILTIN_EFFECT_PREFIX) + entry.name.Internal();
       mEffects[ path ] = &entry;
    }
    sInitialized = true;
@@ -148,11 +148,11 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    TranslatableString ignoredErrMsg;
    for (const auto &pair : mEffects)
    {
-      if ( pair.second->excluded )
-         continue;
       const auto &path = pair.first;
-      if (!pm.IsPluginRegistered(path))
+      if (!pm.IsPluginRegistered(path, &pair.second->name.Msgid()))
       {
+         if ( pair.second->excluded )
+            continue;
          // No checking of error ?
          DiscoverPluginsAtPath(path, ignoredErrMsg,
             PluginManagerInterface::DefaultRegistrationCallback);

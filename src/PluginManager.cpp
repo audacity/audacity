@@ -1435,12 +1435,17 @@ RegistryPath PluginManager::GetPluginEnabledSetting(
    }
 }
 
-bool PluginManager::IsPluginRegistered(const PluginPath &path)
+bool PluginManager::IsPluginRegistered(
+   const PluginPath &path, const TranslatableString *pName)
 {
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
-      if (iter->second.GetPath() == path)
+      auto &descriptor = iter->second;
+      if (descriptor.GetPath() == path)
       {
+         if (pName)
+            descriptor.SetSymbol(
+               { descriptor.GetSymbol().Internal(), *pName });
          return true;
       }
    }
@@ -2116,6 +2121,10 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
       // effects.
       if (!pRegistry->Read(KEY_SYMBOL, &strVal))
          continue;
+
+      // Related to Bug2778: config file only remembered an internal name,
+      // so this symbol may not contain the correct TranslatableString.
+      // See calls to IsPluginRegistered which can correct that.
       plug.SetSymbol(strVal);
 
       // Get the version and bypass group if not found
@@ -2315,6 +2324,8 @@ void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
       pRegistry->SetPath(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
       pRegistry->Write(KEY_PATH, plug.GetPath());
+
+      // See comments with the corresponding load-time call to SetSymbol().
       pRegistry->Write(KEY_SYMBOL, plug.GetSymbol().Internal());
 
       // PRL:  Writing KEY_NAME which is no longer read, but older Audacity

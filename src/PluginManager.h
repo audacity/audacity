@@ -177,7 +177,8 @@ public:
 
    // PluginManagerInterface implementation
 
-   bool IsPluginRegistered(const PluginPath &path) override;
+   bool IsPluginRegistered(
+      const PluginPath &path, const TranslatableString *pSymbol) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
