@@ -17,6 +17,7 @@
 #include "Nyquist.h"
 
 #include "../../FileNames.h"
+#include "../../PluginManager.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
@@ -183,7 +184,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
-   if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
+   auto name = NYQUIST_PROMPT_NAME;
+   if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID, &name))
    {
       // No checking of error ?
       DiscoverPluginsAtPath(NYQUIST_PROMPT_ID, ignoredErrMsg,
@@ -196,6 +198,19 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
       for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
+         /*
+           TODO: Currently the names of Nyquist plug-ins cannot have
+          context specific translations or internal names different from
+          the visible English names.
+   
+          This makes it unnecessary to pass a second argument to
+          IsPluginRegistered for correction of the registry (as is needed
+          in the case of built-in effects).
+
+          If it does become necessary in the future, we will need to open the
+          .ny files to access their $name lines so that this argument could
+          be supplied.
+          */
          if (!pm.IsPluginRegistered(files[j]))
          {
             // No checking of error ?

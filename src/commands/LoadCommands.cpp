@@ -24,7 +24,7 @@ bool sInitialized = false;
 }
 
 struct BuiltinCommandsModule::Entry {
-   wxString name;
+   ComponentInterfaceSymbol name;
    Factory factory;
 
    using Entries = std::vector< Entry >;
@@ -39,7 +39,7 @@ void BuiltinCommandsModule::DoRegistration(
    const ComponentInterfaceSymbol &name, const Factory &factory )
 {
    wxASSERT( !sInitialized );
-   Entry::Registry().emplace_back( Entry{ name.Internal(), factory } );
+   Entry::Registry().emplace_back( Entry{ name, factory } );
 }
 
 // ============================================================================
@@ -119,7 +119,8 @@ TranslatableString BuiltinCommandsModule::GetDescription()
 bool BuiltinCommandsModule::Initialize()
 {
    for ( const auto &entry : Entry::Registry() ) {
-      auto path = wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + entry.name;
+      auto path = wxString(BUILTIN_GENERIC_COMMAND_PREFIX)
+         + entry.name.Internal();
       mCommands[ path ] = &entry;
    }
    sInitialized = true;
@@ -150,7 +151,7 @@ bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    for (const auto &pair : mCommands)
    {
       const auto &path = pair.first;
-      if (!pm.IsPluginRegistered(path))
+      if (!pm.IsPluginRegistered(path, &pair.second->name.Msgid()))
       {
          // No checking of error ?
          // Uses Generic Registration, not Default.
