@@ -28,8 +28,8 @@
 #include "RingBuffer.h"
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
-   : mFormat{ format }
-   , mBufferSize{ std::max<size_t>(size, 64) }
+   : mBufferSize{ std::max<size_t>(size, 64) }
+   , mFormat{ format }
    , mBuffer{ mBufferSize, mFormat }
 {
 }

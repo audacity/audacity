@@ -155,7 +155,7 @@ static const AudacityProject::AttachedObjects::RegisteredFactory key{
       project.Bind(EVT_TRACK_PANEL_TIMER,
          &ViewInfo::OnTimer,
          result.get());
-      return std::move( result );
+      return result;
    }
 };
 

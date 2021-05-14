@@ -229,9 +229,9 @@ private:
    wxString mBuffer;
 public:
    ResponseTarget()
-      : mBuffer(wxEmptyString),
-        mSemaphore(0, 1)
-   { 
+      : mSemaphore(0, 1),
+        mBuffer(wxEmptyString)
+   {
       // Cater for handling long responses quickly.
       mBuffer.Alloc(40000);
    }
