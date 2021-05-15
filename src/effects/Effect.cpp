@@ -33,6 +33,7 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
+#include "../prefs/QualitySettings.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
@@ -112,9 +113,8 @@ Effect::Effect()
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
-   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-                &mProjectRate,
-                44100);
+   // (Which is called to compute the default-default value.)  (Bug 2280)
+   mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
 
    mIsBatch = false;
 }

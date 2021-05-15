@@ -466,7 +466,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "WaveTrack.h"
 
 #include "effects/RealtimeEffectManager.h"
-#include "prefs/QualityPrefs.h"
+#include "prefs/QualitySettings.h"
 #include "prefs/RecordingPrefs.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
@@ -1445,7 +1445,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
       return;
 
    bool success;
-   auto captureFormat = QualityPrefs::SampleFormatChoice();
+   auto captureFormat = QualitySettings::SampleFormatChoice();
    auto captureChannels = AudioIORecordChannels.Read();
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
    int playbackChannels = 0;

@@ -36,7 +36,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "prefs/QualityPrefs.h"
+#include "prefs/QualitySettings.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
@@ -1052,7 +1052,7 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    auto &project = mProject;
 
    // Obtain the current settings
-   auto oCaptureFormat = QualityPrefs::SampleFormatChoice();
+   auto oCaptureFormat = QualitySettings::SampleFormatChoice();
    if (lCaptureChannels == 0)
       lCaptureChannels = AudioIORecordChannels.Read();
 
