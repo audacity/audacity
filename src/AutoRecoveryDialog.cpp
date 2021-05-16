@@ -36,7 +36,7 @@ enum {
 class AutoRecoveryDialog final : public wxDialogWrapper
 {
 public:
-   AutoRecoveryDialog(AudacityProject *proj);
+   explicit AutoRecoveryDialog(AudacityProject *proj);
 
    bool HasRecoverables() const;
    FilePaths GetRecoverables();
@@ -417,7 +417,7 @@ void AutoRecoveryDialog::OnListKeyDown(wxKeyEvent &evt)
 ////////////////////////////////////////////////////////////////////////////
 
 static bool RecoverAllProjects(const FilePaths &files,
-                               AudacityProject **pproj)
+                               AudacityProject *&pproj)
 {
    // Open a project window for each auto save file
    wxString filename;
@@ -425,12 +425,9 @@ static bool RecoverAllProjects(const FilePaths &files,
    for (auto &file: files)
    {
       AudacityProject *proj = nullptr;
-      if (*pproj)
-      {
-         // Reuse existing project window
-         proj = *pproj;
-         *pproj = NULL;
-      }
+      // Reuse any existing project window, which will be the empty project
+      // created at application startup
+      std::swap(proj, pproj);
 
       // Open project.
       if (ProjectManager::OpenProject(proj, file, false) == nullptr)
@@ -449,7 +446,7 @@ static void DiscardAllProjects(const FilePaths &files)
       ProjectFileManager::DiscardAutosave(file);
 }
 
-bool ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj, bool *didRecoverAnything)
+bool ShowAutoRecoveryDialogIfNeeded(AudacityProject *&pproj, bool *didRecoverAnything)
 {
    if (didRecoverAnything)
    {
@@ -472,7 +469,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj, bool *didRecoverAny
    // This must be done before "dlg" is declared.
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-   AutoRecoveryDialog dialog(*pproj);
+   AutoRecoveryDialog dialog(pproj);
 
    if (dialog.HasRecoverables())
    {

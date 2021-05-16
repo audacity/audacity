@@ -868,9 +868,7 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       Importer::SetLastOpenType({});
    } );
 
-   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
-      const wxString &fileName = selectedFiles[ff];
-
+   for (const auto &fileName : selectedFiles) {
       // Make sure it isn't already open.
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
@@ -912,7 +910,7 @@ AudacityProject *ProjectManager::OpenProject(
          // Ensure that it happens here: don't wait for the application level
          // exception handler, because the exception may be intercepted
          ProjectHistory::Get(*pProject).RollbackState();
-      // Any exception now continues propagating
+         // Any exception now continues propagating
    } );
    ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
 

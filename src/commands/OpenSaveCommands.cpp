@@ -59,6 +59,7 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    auto oldFileName = projectFileIO.GetFileName();
    if(mFileName.empty())
    {
+      // This path queries the user for files to open
       auto project = &context.project;
       ProjectManager::OpenFiles(project);
    }

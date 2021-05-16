@@ -1487,7 +1487,8 @@ bool AudacityApp::InitPart2()
       // Auto-recovery
       //
       bool didRecoverAnything = false;
-      if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
+      // This call may reassign project (passed by reference)
+      if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
       {
          QuitAudacity(true);
       }
@@ -1495,7 +1496,7 @@ bool AudacityApp::InitPart2()
       //
       // Remainder of command line parsing, but only if we didn't recover
       //
-      if (!didRecoverAnything)
+      if (project && !didRecoverAnything)
       {
          if (parser->Found(wxT("t")))
          {
