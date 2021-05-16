@@ -3364,7 +3364,7 @@ msgstr "Да"
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
 #: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: src/ModuleManager.cpp
 msgid "Audacity Module Loader"
