@@ -14,7 +14,6 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for rint from configwin.h
 #include "Compressor2.h"
 
 #include <math.h>
