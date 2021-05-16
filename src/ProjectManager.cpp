@@ -838,17 +838,15 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
 // PRL: I preserve this handler function for an event that was never sent, but
 // I don't know the intention.
-
 void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 {
-   auto &project = mProject;
-   auto &window = GetProjectFrame( project );
    const wxString &cmd = event.GetString();
-
-   if (!cmd.empty())
-      ProjectFileManager::Get( mProject ).OpenFile(cmd);
-
-   window.RequestUserAttention();
+   if (!cmd.empty()) {
+      if (auto project = ProjectFileManager::Get( mProject ).OpenFile(cmd)) {
+         auto &window = GetProjectFrame( *project );
+         window.RequestUserAttention();
+      }
+   }
 }
 
 // static method, can be called outside of a project

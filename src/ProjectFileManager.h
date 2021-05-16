@@ -43,16 +43,6 @@ public:
    ProjectFileManager &operator=( const ProjectFileManager & ) PROHIBITED;
    ~ProjectFileManager();
 
-   struct ReadProjectResults
-   {
-      bool parseSuccess;
-      bool trackError;
-      const TranslatableString errorString;
-      wxString helpUrl;
-   };
-   ReadProjectResults ReadProjectFile(
-      const FilePath &fileName, bool discardAutosave = false );
-
    bool OpenProject();
    void CloseProject();
    bool OpenNewProject();
@@ -91,7 +81,14 @@ public:
 
    static bool IsAlreadyOpen(const FilePath &projPathName);
 
-   void OpenFile(const FilePath &fileName, bool addtohistory = true);
+   /*!
+    Opens files of many kinds.  In case of import (sound, MIDI, or .aup), the undo history is pushed.
+    @param fileName the name and contents are examined to decide a type and open appropriately
+    @param addtohistory whether to add .aup3 files to the MRU list (but always done for imports)
+    @return if something was successfully opened, the project containing it; else null
+    */
+   AudacityProject *OpenFile(
+      const FilePath &fileName, bool addtohistory = true);
 
    bool Import(const FilePath &fileName,
                bool addToHistory = true);
@@ -105,6 +102,24 @@ public:
    void SetMenuClose(bool value) { mMenuClose = value; }
 
 private:
+   /*!
+    @param fileName a path assumed to exist and contain an .aup3 project
+    @param addtohistory whether to add the file to the MRU list
+    @return if something was successfully opened, the project containing it; else null
+    */
+   AudacityProject *OpenProjectFile(
+      const FilePath &fileName, bool addtohistory);
+
+   struct ReadProjectResults
+   {
+      bool parseSuccess;
+      bool trackError;
+      const TranslatableString errorString;
+      wxString helpUrl;
+   };
+   ReadProjectResults ReadProjectFile(
+      const FilePath &fileName, bool discardAutosave = false );
+
    bool DoSave(const FilePath & fileName, bool fromSaveAs);
 
    AudacityProject &mProject;
