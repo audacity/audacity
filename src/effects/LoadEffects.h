@@ -29,7 +29,7 @@ class Effect;
 class AUDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
 {
 public:
-   BuiltinEffectsModule(const wxString *path);
+   BuiltinEffectsModule();
    virtual ~BuiltinEffectsModule();
 
    using Factory = std::function< std::unique_ptr<Effect> () >;
@@ -81,8 +81,6 @@ private:
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory,
       bool excluded );
-
-   PluginPath mPath;
 
    struct Entry;
    using EffectHash = std::unordered_map< wxString, const Entry* > ;

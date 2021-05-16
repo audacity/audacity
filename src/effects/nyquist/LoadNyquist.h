@@ -21,7 +21,7 @@
 class NyquistEffectsModule final : public ModuleInterface
 {
 public:
-   NyquistEffectsModule(const wxString *path);
+   NyquistEffectsModule();
    virtual ~NyquistEffectsModule();
 
    // ComponentInterface implementation
@@ -53,9 +53,4 @@ public:
 
    ComponentInterface *CreateInstance(const PluginPath & path) override;
    void DeleteInstance(ComponentInterface *instance) override;
-
-   // NyquistEffectModule implementation
-
-private:
-   PluginPath mPath;
 };

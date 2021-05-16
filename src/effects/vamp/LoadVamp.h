@@ -29,7 +29,7 @@
 class VampEffectsModule final : public ModuleInterface
 {
 public:
-   VampEffectsModule(const wxString *path);
+   VampEffectsModule();
    virtual ~VampEffectsModule();
 
    // ComponentInterface implementation
@@ -67,9 +67,6 @@ private:
    std::unique_ptr<Vamp::Plugin> FindPlugin(const PluginPath & wpath,
                             int & output,
                             bool & hasParameters);
-
-private:
-   PluginPath mPath;
 };
 
 #endif

@@ -179,8 +179,11 @@ list( APPEND SOURCES
       Mix.h
       MixerBoard.cpp
       MixerBoard.h
+      ModuleConstants.h
       ModuleManager.cpp
       ModuleManager.h
+      ModuleSettings.cpp
+      ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
       NumberScale.h

@@ -16,6 +16,7 @@ modelled on BuiltinEffectsModule
 
 #include "LoadCommands.h"
 #include "AudacityCommand.h"
+#include "ModuleManager.h"
 
 #include "../Prefs.h"
 
@@ -55,7 +56,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew BuiltinCommandsModule(path);
+   return safenew BuiltinCommandsModule();
 }
 
 // ============================================================================
@@ -69,17 +70,12 @@ DECLARE_BUILTIN_MODULE(BuiltinsCommandBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-BuiltinCommandsModule::BuiltinCommandsModule(const wxString *path)
+BuiltinCommandsModule::BuiltinCommandsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 BuiltinCommandsModule::~BuiltinCommandsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -88,7 +84,7 @@ BuiltinCommandsModule::~BuiltinCommandsModule()
 
 PluginPath BuiltinCommandsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
