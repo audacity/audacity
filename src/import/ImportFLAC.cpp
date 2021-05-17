@@ -245,9 +245,15 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 
       auto iter = mFile->mChannels.begin();
       for (unsigned int chn=0; chn<mFile->mNumChannels; ++iter, ++chn) {
-         if (frame->header.bits_per_sample == 16) {
-            for (unsigned int s=0; s<frame->header.blocksize; s++) {
-               tmp[s]=buffer[chn][s];
+         if (frame->header.bits_per_sample <= 16) {
+            if (frame->header.bits_per_sample == 8) {
+               for (unsigned int s = 0; s < frame->header.blocksize; s++) {
+                  tmp[s] = buffer[chn][s] << 8;
+               }
+            } else /* if (frame->header.bits_per_sample == 16) */ {
+               for (unsigned int s = 0; s < frame->header.blocksize; s++) {
+                  tmp[s] = buffer[chn][s];
+               }
             }
 
             iter->get()->Append((samplePtr)tmp.get(),
