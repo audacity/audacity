@@ -5,6 +5,12 @@ cmd_option( ${_OPT}lib_preference
             STRINGS "system" "local"
 )
 
+# Special mode, that will force dependencies to the packages provided by system unless they were set to local explicitly.
+cmd_option( ${_OPT}obey_system_dependencies
+            "Use system packages to satisfy dependencies"
+            Off
+)
+
 # Required libraries
 #
 #       directory          option      symbol      req   chk   version

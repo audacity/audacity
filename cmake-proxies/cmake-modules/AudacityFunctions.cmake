@@ -574,6 +574,7 @@ function( addlib dir name symbol required check )
    if( ${use} STREQUAL "system" )
       # Look them up
       pkg_check_modules( PKG_${TARGET} ${packages} )
+
       if( PKG_${TARGET}_FOUND )
          message( STATUS "Using '${name}' system library" )
 
@@ -586,6 +587,8 @@ function( addlib dir name symbol required check )
          # And add it to our target
          target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
          target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
+      elseif( ${_OPT}obey_system_dependencies )
+         message( FATAL_ERROR "Failed to find the system package ${name}" )
       else()
          set( ${use} "local" )
          set_property( CACHE ${use} PROPERTY VALUE "local" )
