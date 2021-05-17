@@ -10,11 +10,10 @@ Paul Licameli
 
 #include "ViewInfo.h"
 
-#include "Experimental.h"
+
 
 #include <algorithm>
 
-#include "AudioIOBase.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "xml/XMLWriter.h"
@@ -150,12 +149,7 @@ void NotifyingSelectedRegion::Notify( bool delayed )
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {
-      auto result =
-         std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());
-      project.Bind(EVT_TRACK_PANEL_TIMER,
-         &ViewInfo::OnTimer,
-         result.get());
-      return std::move( result );
+      return std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());
    }
 };
 
@@ -180,7 +174,6 @@ ViewInfo::ViewInfo(double start, double screenDuration, double pixelsPerSecond)
    , scrollStep(16)
    , bUpdateTrackIndicator(true)
    , bScrollBeyondZero(false)
-   , mRecentStreamTime(-1.0)
 {
    UpdatePrefs();
 }
@@ -246,15 +239,6 @@ bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
    }
 
    return false;
-}
-
-void ViewInfo::OnTimer(wxCommandEvent &event)
-{
-   auto gAudioIO = AudioIOBase::Get();
-   mRecentStreamTime = gAudioIO->GetStreamTime();
-   event.Skip();
-   // Propagate the message to other listeners bound to this
-   this->ProcessEvent( event );
 }
 
 int ViewInfo::UpdateScrollPrefsID()

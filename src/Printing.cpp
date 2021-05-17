@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Printing.h"
 
 #include <wx/defs.h>
@@ -26,7 +26,7 @@
 #include "AColor.h"
 #include "TrackArtist.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
+#include "Track.h"
 #include "widgets/Ruler.h"
 #include "widgets/AudacityMessageBox.h"
 

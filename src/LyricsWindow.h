@@ -14,10 +14,14 @@
 
 #include <wx/frame.h> // to inherit
 
+#include "Prefs.h"
+
 class AudacityProject;
 class LyricsPanel;
 
-class LyricsWindow final : public wxFrame {
+class LyricsWindow final : public wxFrame,
+                           public PrefsListener
+{
 
  public:
    LyricsWindow(AudacityProject* parent);
@@ -30,6 +34,11 @@ class LyricsWindow final : public wxFrame {
    void OnStyle_BouncingBall(wxCommandEvent &evt);
    void OnStyle_Highlight(wxCommandEvent &evt);
    void OnTimer(wxCommandEvent &event);
+
+   void SetWindowTitle();
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
    AudacityProject *mProject;
    LyricsPanel *mLyricsPanel;

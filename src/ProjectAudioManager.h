@@ -14,7 +14,6 @@ Paul Licameli split from ProjectManager.h
 #include <memory>
 #include <vector>
 
-#include "AudioIO.h"
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
 
@@ -39,7 +38,7 @@ struct TransportTracks;
 
 enum StatusBarField : int;
 
-class ProjectAudioManager final
+class AUDACITY_DLL_API ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
    , public std::enable_shared_from_this< ProjectAudioManager >
@@ -141,6 +140,8 @@ private:
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
+   void OnCheckpointFailure(wxCommandEvent &evt);
+
    AudacityProject &mProject;
 
    std::shared_ptr<TrackList> mCutPreviewTracks;
@@ -162,7 +163,9 @@ private:
          const AudacityProject &project, StatusBarField field);
 };
 
+AUDACITY_DLL_API
 AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
+AUDACITY_DLL_API
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected
@@ -172,11 +175,12 @@ struct PropertiesOfSelected
    int numberOfSelected{ 0 };
 };
 
+AUDACITY_DLL_API
 PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject &proj);
 
 #include "commands/CommandFlag.h"
 
-extern const ReservedCommandFlag
+extern AUDACITY_DLL_API const ReservedCommandFlag
    &CanStopAudioStreamFlag();
 
 #endif

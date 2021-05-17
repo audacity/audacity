@@ -1,8 +1,5 @@
-#include "../Audacity.h" // for USE_* macros
-#include "../Experimental.h"
 
-#include "../BatchCommands.h"
-#include "../Clipboard.h"
+
 #include "../CommonCommandFlags.h"
 #include "../FileNames.h"
 #include "../LabelTrack.h"
@@ -22,12 +19,14 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../export/ExportMP3.h"
 #include "../export/ExportMultiple.h"
 #include "../import/Import.h"
 #include "../import/ImportMIDI.h"
 #include "../import/ImportRaw.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
+#include "../widgets/wxPanelWrapper.h"
 
 #ifdef USE_MIDI
 #include "../import/ImportMIDI.h"
@@ -37,7 +36,8 @@
 
 // private helper classes and functions
 namespace {
-void DoExport( AudacityProject &project, const FileExtension & Format )
+
+void DoExport(AudacityProject &project, const FileExtension &format)
 {
    auto &tracks = TrackList::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -46,65 +46,119 @@ void DoExport( AudacityProject &project, const FileExtension & Format )
 
    double t0 = 0.0;
    double t1 = tracks.GetEndTime();
+   wxString projectName = project.GetProjectName();
 
    // Prompt for file name and/or extension?
-   bool bPromptingRequired =
-      (project.mBatchMode == 0) || projectFileIO.GetFileName().empty() ||
-      Format.empty();
-   wxString filename;
+   bool bPromptingRequired = !project.mBatchMode ||
+                             projectName.empty() ||
+                             format.empty();
 
-   if (!bPromptingRequired) {
-
-      // We're in batch mode, and we have an mFileName and Format.
-      wxString extension = Format;
-      extension.MakeLower();
-
-      filename =
-         MacroCommands::BuildCleanFileName(projectFileIO.GetFileName(), extension);
-
-      // Bug 1854, No warning of file overwrite
-      // (when export is called from Macros).
-      int counter = 0;
-      bPromptingRequired = wxFileExists(filename);
-
-      // We'll try alternative names to avoid overwriting.
-      while ( bPromptingRequired && counter < 100 ) {
-         counter++;
-         wxString number;
-         number.Printf("%03i", counter);
-         // So now the name has a number in it too.
-         filename = MacroCommands::BuildCleanFileName(
-            projectFileIO.GetFileName() + number, extension);
-         bPromptingRequired = wxFileExists(filename);
-      }
-      // If we've run out of alternative names, we will fall back to prompting
-      // - even if in a macro.
-   }
-
-
-   if (bPromptingRequired)
-   {
+   bool success = false;
+   if (bPromptingRequired) {
       // Do export with prompting.
-      e.SetDefaultFormat(Format);
-      e.Process(false, t0, t1);
+      e.SetDefaultFormat(format);
+      success = e.Process(false, t0, t1);
    }
-   else
-   {
-      FileHistory::Global().Append(filename);
+   else {
+      // We either use a configured output path,
+      // or we use the default documents folder - just as for exports.
+      FilePath pathName = FileNames::FindDefaultPath(FileNames::Operation::MacrosOut);
+/*
+      // If we've gotten to this point, we are in batch mode, have a file format,
+      // and the project has either been saved or a file has been imported. So, we
+      // want to use the project's path if it has been saved, otherwise use the
+      // initial import path.
+      FilePath pathName = !projectFileIO.IsTemporary() ?
+                           wxPathOnly(projectFileIO.GetFileName()) :
+                           project.GetInitialImportPath();
+*/
+      wxFileName fileName(pathName, projectName, format.Lower());
+
+      // Append the "macro-output" directory to the path
+      const wxString macroDir( "macro-output" );
+      if (fileName.GetDirs().back() != macroDir) {
+         fileName.AppendDir(macroDir);
+      }
+
+      wxString justName = fileName.GetName();
+      wxString extension = fileName.GetExt();
+      FilePath fullPath = fileName.GetFullPath();
+
+      if (wxFileName::FileExists(fileName.GetPath())) {
+         AudacityMessageBox(
+            XO("Cannot create directory '%s'. \n"
+               "File already exists that is not a directory"),
+            Verbatim(fullPath));
+         return;
+      }
+      fileName.Mkdir(0777, wxPATH_MKDIR_FULL); // make sure it exists
+
+      int nChannels = (tracks.Any() - &Track::IsLeader ).empty() ? 1 : 2;
+
       // We're in batch mode, the file does not exist already.
       // We really can proceed without prompting.
-      int nChannels = MacroCommands::IsMono( &project ) ? 1 : 2;
-      e.Process(
+      success = e.Process(
          nChannels,  // numChannels,
-         Format,     // type, 
-         filename,   // filename,
+         format,     // type, 
+         fullPath,   // full path,
          false,      // selectedOnly, 
          t0,         // t0
          t1          // t1
       );
    }
 
+   if (success && !project.mBatchMode) {
+      FileHistory::Global().Append(e.GetAutoExportFileName().GetFullPath());
+   }
 }
+
+void DoImport(const CommandContext &context, bool isRaw)
+{
+   auto &project = context.project;
+   auto &trackFactory = WaveTrackFactory::Get( project );
+   auto &window = ProjectWindow::Get( project );
+
+   auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
+   if (selectedFiles.size() == 0) {
+      Importer::SetLastOpenType({});
+      return;
+   }
+
+   // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
+   // to false.  Should it also be set to true on other paths that reach
+   // AudacityProject::Import ?
+   gPrefs->Write(wxT("/NewImportingSession"), true);
+
+   selectedFiles.Sort(FileNames::CompareNoCase);
+
+   auto cleanup = finally( [&] {
+
+      Importer::SetLastOpenType({});
+      window.ZoomAfterImport(nullptr);
+      window.HandleResize(); // Adjust scrollers for NEW track sizes.
+   } );
+
+   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
+      wxString fileName = selectedFiles[ff];
+
+      FileNames::UpdateDefaultPath(FileNames::Operation::Import, ::wxPathOnly(fileName));
+
+      if (isRaw) {
+         TrackHolders newTracks;
+
+         ::ImportRaw(project, &window, fileName, &trackFactory, newTracks);
+
+         if (newTracks.size() > 0) {
+            ProjectFileManager::Get( project )
+               .AddImportedTracks(fileName, std::move(newTracks));
+         }
+      }
+      else {
+         ProjectFileManager::Get( project ).Import(fileName);
+      }
+   }
+}
+
 }
 
 // Menu handler functions
@@ -145,53 +199,7 @@ void OnClose(const CommandContext &context )
 
 void OnCompact(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto &undoManager = UndoManager::Get(project);
-   auto &projectFileIO = ProjectFileIO::Get(project);
-
-   auto before = wxFileName(projectFileIO.GetFileName()).GetSize() +
-                 wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
-
-   int id = AudacityMessageBox(
-      XO("Compacting this project will free up disk space by removing unused bytes within the file.\n\n"
-         "There is %s of free disk space and this project is currently using %s.\n\n"
-         "NOTE: If you proceed, the current Undo History and clipboard contents will be discarded.\n\n"
-         "Do you want to continue?")
-      .Format(Internat::FormatSize(projectFileIO.GetFreeDiskSpace()),
-              Internat::FormatSize(before.GetValue())),
-      XO("Compact Project"),
-      wxYES_NO);
-
-   if (id == wxNO)
-   {
-      return;
-   }
-
-   ProjectHistory::Get(project)
-      .PushState(XO("Compacted project file"), XO("Compact"), UndoPush::CONSOLIDATE);
-
-   auto numStates = undoManager.GetNumStates();
-   undoManager.RemoveStates(numStates - 1);
-
-   auto &clipboard = Clipboard::Get();
-   clipboard.Clear();
-
-   auto currentTracks = TrackList::Create( nullptr );
-   auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Any())
-   {
-      currentTracks->Add(t->Duplicate());
-   }
-
-   projectFileIO.Compact(currentTracks, true);
-
-   auto after = wxFileName(projectFileIO.GetFileName()).GetSize() +
-                wxFileName(projectFileIO.GetFileName() + wxT("-wal")).GetSize();
-
-   AudacityMessageBox(
-      XO("Compacting freed %s of disk space.")
-      .Format(Internat::FormatSize((before - after).GetValue())),
-      XO("Compact Project"));
+   ProjectFileManager::Get(context.project).Compact();
 }
 
 void OnSave(const CommandContext &context )
@@ -410,42 +418,13 @@ void OnExportMIDI(const CommandContext &context)
 
 void OnImport(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto &window = ProjectWindow::Get( project );
-
-   auto selectedFiles = ProjectFileManager::ShowOpenDialog(FileNames::Operation::Import);
-   if (selectedFiles.size() == 0) {
-      Importer::SetLastOpenType({});
-      return;
-   }
-
-   // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
-   // to false.  Should it also be set to true on other paths that reach
-   // AudacityProject::Import ?
-   gPrefs->Write(wxT("/NewImportingSession"), true);
-
-   selectedFiles.Sort(FileNames::CompareNoCase);
-
-   auto cleanup = finally( [&] {
-      Importer::SetLastOpenType({});
-      window.HandleResize(); // Adjust scrollers for NEW track sizes.
-   } );
-
-   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
-      wxString fileName = selectedFiles[ff];
-
-      FileNames::UpdateDefaultPath(FileNames::Operation::Import, ::wxPathOnly(fileName));
-
-      ProjectFileManager::Get( project ).Import(fileName);
-   }
-
-   window.ZoomAfterImport(nullptr);
+   DoImport(context, false);
 }
 
 void OnImportLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -469,7 +448,7 @@ void OnImportLabels(const CommandContext &context)
          return;
       }
 
-      auto newTrack = trackFactory.NewLabelTrack();
+      auto newTrack = std::make_shared<LabelTrack>();
       wxString sTrackName;
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
@@ -518,33 +497,7 @@ void OnImportMIDI(const CommandContext &context)
 
 void OnImportRaw(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto &trackFactory = TrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   wxString fileName =
-       FileNames::SelectFile(FileNames::Operation::Open,
-         XO("Select any uncompressed audio file"),
-         wxEmptyString,     // Path
-         wxT(""),       // Name
-         wxT(""),       // Extension
-         { FileNames::AllFiles },
-         wxRESIZE_BORDER,        // Flags
-         &window);    // Parent
-
-   if (fileName.empty())
-      return;
-
-   TrackHolders newTracks;
-
-   ::ImportRaw(&window, fileName, &trackFactory, newTracks);
-
-   if (newTracks.size() <= 0)
-      return;
-
-   ProjectFileManager::Get( project )
-      .AddImportedTracks(fileName, std::move(newTracks));
-   window.HandleResize(); // Adjust scrollers for NEW track sizes.
+   DoImport(context, true);
 }
 
 void OnPageSetup(const CommandContext &context)
@@ -568,6 +521,11 @@ void OnExit(const CommandContext &WXUNUSED(context) )
    // Simulate the application Exit menu item
    wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
    wxTheApp->AddPendingEvent( evt );
+}
+
+void OnExportFLAC(const CommandContext &context)
+{
+   DoExport(context.project, "FLAC");
 }
 
 }; // struct Handler
@@ -660,10 +618,15 @@ BaseItemSharedPtr FileMenu()
                AudioIONotBusyFlag() ),
             Command( wxT("SaveCopy"), XXO("&Backup Project..."), FN(OnSaveCopy),
                AudioIONotBusyFlag() )
-         ),
+         )//,
 
-         Command( wxT("Compact"), XXO("Co&mpact Project"), FN(OnCompact),
-            AudioIONotBusyFlag() )
+         // Bug 2600: Compact has interactions with undo/history that are bound
+         // to confuse some users.  We don't see a way to recover useful amounts 
+         // of space and not confuse users using undo.
+         // As additional space used by aup3 is 50% or so, perfectly valid
+         // approach to this P1 bug is to not provide the 'Compact' menu item.
+         //Command( wxT("Compact"), XXO("Co&mpact Project"), FN(OnCompact),
+         //   AudioIONotBusyFlag(), wxT("Shift+A") )
       ),
 
       Section( "Import-Export",
@@ -684,8 +647,7 @@ BaseItemSharedPtr FileMenu()
             // Enable Export Selection commands only when there's a selection.
             Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."),
                FN(OnExportSelection),
-               AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
-               Options{}.UseStrictFlags() ),
+               AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag() ),
 
             Command( wxT("ExportLabels"), XXO("Export &Labels..."),
                FN(OnExportLabels),
@@ -739,6 +701,36 @@ AttachedItem sAttachment1{
    wxT(""),
    Shared( FileMenu() )
 };
+
+BaseItemSharedPtr HiddenFileMenu()
+{
+   static BaseItemSharedPtr menu
+   {
+      (
+         FinderScope{ findCommandHandler },
+         ConditionalItems( wxT("HiddenFileItems"),
+            []()
+            {
+               // Ensures that these items never appear in a menu, but
+               // are still available to scripting
+               return false;
+            },
+            Menu( wxT("HiddenFileMenu"), XXO("Hidden File Menu"),
+               Command( wxT("ExportFLAC"), XXO("Export as FLAC"),
+                  FN(OnExportFLAC),
+                  AudioIONotBusyFlag() )
+            )
+         )
+      )
+   };
+   return menu;
+}
+
+AttachedItem sAttachment2{
+   wxT(""),
+   Shared( HiddenFileMenu() )
+};
+
 }
 
 #undef FN

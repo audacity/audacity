@@ -20,12 +20,13 @@
 #include "userio.h"
 #include "record.h"
 
-private boolean next_event_time();
-private void write_event();
+private boolean next_event_time(event_type event, time_type *next_time);
+private void write_event(seq_type seq, event_type event, FILE *f,
+                         boolean abs_flag);
 private void write_velocity(FILE *f, int velocity);
-private void write_voice();
+private void write_voice(FILE *f, int voice);
 private void write_rest(FILE *f, event_type ev, boolean abs_flag);
-private void write_time();
+private void write_time(FILE *f, event_type event, boolean abs_flag);
 
 private boolean clock_started;
 private long clock_half_tick;
@@ -46,9 +47,7 @@ private int last_voice = seq_dflt_voice;
 /*
  * NOTE: clock events are ignored (unless this is the first clock event)
  */
-private boolean next_event_time(event, next_time)
-  event_type event;
-  time_type *next_time;
+private boolean next_event_time(event_type event, time_type *next_time)
 {
     while (event) {
         if (vc_ctrl(event->nvoice) == ESC_CTRL &&
@@ -101,11 +100,8 @@ private char ctrl_letter[] = "?KMOXYZ";
 
 /* write_event -- write a single event to a file */
 /**/
-private void write_event(seq, event, f, abs_flag)
-  seq_type seq;
-  event_type event;
-  FILE *f;
-  boolean abs_flag;
+private void write_event(seq_type seq, event_type event, FILE *f,
+                         boolean abs_flag)
 {
     int voice = vc_voice(event->nvoice);
 
@@ -231,10 +227,7 @@ private void write_rest(FILE *f, event_type ev, boolean abs_flag)
 
 /* write_time -- write the final field on the line with N or T command */
 /**/
-private void write_time(f, event, abs_flag)
-  FILE *f;
-  event_type event;
-  boolean abs_flag;
+private void write_time(FILE *f, event_type event, boolean abs_flag)
 {
     time_type next_time;
 
@@ -271,9 +264,7 @@ private void write_velocity(FILE *f, int velocity)
 
 /* write_voice -- write the voice field */
 /**/
-private void write_voice(f, voice)
-  FILE *f;
-  int voice;
+private void write_voice(FILE *f, int voice)
 {
     if (last_voice != voice) {
         last_voice = voice;

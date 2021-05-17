@@ -23,10 +23,8 @@ other settings.
 
 *//********************************************************************/
 
-#include "../Audacity.h"
-#include "MidiIOPrefs.h"
 
-#include "../Experimental.h"
+#include "MidiIOPrefs.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -126,6 +124,11 @@ void MidiIOPrefs::GetNamesAndLabels() {
          }
       }
    }
+
+   if (nDevices == 0) {
+      mHostNames.push_back(XO("No MIDI interfaces"));
+      mHostLabels.push_back(wxT("No MIDI interfaces"));
+   }
 }
 
 void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
@@ -198,12 +201,6 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    if (index >= 0 && index < (int)mHostNames.size())
       itemAtIndex = mHostLabels[index];
    int nDevices = Pm_CountDevices();
-
-   if (nDevices == 0) {
-      mHost->Clear();
-      mHost->Append(_("No MIDI interfaces"), (void *) NULL);
-      mHost->SetSelection(0);
-   }
 
    mPlay->Clear();
 #ifdef EXPERIMENTAL_MIDI_IN

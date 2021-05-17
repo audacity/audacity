@@ -13,6 +13,7 @@ SampleBlock.h
 
 #include <functional>
 #include <memory>
+#include <unordered_set>
 
 class AudacityProject;
 class ProjectFileIO;
@@ -58,8 +59,10 @@ public:
 
    virtual size_t GetSampleCount() const = 0;
 
+   //! Non-throwing, should fill with zeroes on failure
    virtual bool
       GetSummary256(float *dest, size_t frameoffset, size_t numframes) = 0;
+   //! Non-throwing, should fill with zeroes on failure
    virtual bool
       GetSummary64k(float *dest, size_t frameoffset, size_t numframes) = 0;
 
@@ -114,10 +117,7 @@ public:
    virtual ~SampleBlockFactory();
 
    // Returns a non-null pointer or else throws an exception
-   SampleBlockPtr Get(SampleBlockID sbid);
-
-   // Returns a non-null pointer or else throws an exception
-   SampleBlockPtr Create(samplePtr src,
+   SampleBlockPtr Create(constSamplePtr src,
       size_t numsamples,
       sampleFormat srcformat);
 
@@ -131,14 +131,21 @@ public:
       sampleFormat srcformat,
       const wxChar **attrs);
 
+   using SampleBlockIDs = std::unordered_set<SampleBlockID>;
+   /*! @return ids of all sample blocks created by this factory and still extant */
+   virtual SampleBlockIDs GetActiveBlockIDs() = 0;
+
+   //! Type of function that is informed when a block is about to be deleted
+   using BlockDeletionCallback = std::function< void(const SampleBlock&) >;
+
+   //! Install a callback, returning the previously installed callback
+   virtual BlockDeletionCallback SetBlockDeletionCallback(
+      BlockDeletionCallback callback ) = 0;
+
 protected:
    // The override should throw more informative exceptions on error than the
    // default InconsistencyException thrown by Create
-   virtual SampleBlockPtr DoGet(SampleBlockID sbid) = 0;
-
-   // The override should throw more informative exceptions on error than the
-   // default InconsistencyException thrown by Create
-   virtual SampleBlockPtr DoCreate(samplePtr src,
+   virtual SampleBlockPtr DoCreate(constSamplePtr src,
       size_t numsamples,
       sampleFormat srcformat) = 0;
 

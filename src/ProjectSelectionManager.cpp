@@ -10,7 +10,7 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "ProjectSelectionManager.h"
 
-#include "Experimental.h"
+
 
 #include "Project.h"
 #include "ProjectHistory.h"
@@ -91,13 +91,13 @@ double ProjectSelectionManager::AS_GetRate()
    return settings.GetRate();
 }
 
-// Typically this came from the SelectionToolbar and does not need to 
-// be communicated back to it.
 void ProjectSelectionManager::AS_SetRate(double rate)
 {
    auto &project = mProject;
    auto &settings = ProjectSettings::Get( project );
    settings.SetRate( rate );
+
+   SelectionBar::Get( project ).SetRate(rate);
 }
 
 int ProjectSelectionManager::AS_GetSnapTo()

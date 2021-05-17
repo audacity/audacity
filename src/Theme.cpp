@@ -59,10 +59,10 @@ can't be.
 
 *//*****************************************************************/
 
-#include "Audacity.h"
+
 #include "Theme.h"
 
-#include "Experimental.h"
+
 
 #include <wx/wxprec.h>
 #include <wx/dcclient.h>
@@ -583,14 +583,14 @@ int SourceOutputStream::OpenFile(const FilePath & Filename)
    {
 // DA: Naming of output sourcery
 #ifdef EXPERIMENTAL_DA
-      File.Write( wxT("//   DarkThemeAsCeeCode.h\r\n") );
+      File.Write( wxT("///   @file DarkThemeAsCeeCode.h\r\n") );
 #else
-      File.Write( wxT("//   ThemeAsCeeCode.h\r\n") );
+      File.Write( wxT("///   @file ThemeAsCeeCode.h\r\n") );
 #endif
-      File.Write( wxT("//\r\n") );
-      File.Write( wxT("//   This file was Auto-Generated.\r\n") );
-      File.Write( wxT("//   It is included by Theme.cpp.\r\n") );
-      File.Write( wxT("//   Only check this into Git if you've read and understood the guidelines!\r\n\r\n   ") );
+      File.Write( wxT("///   @brief This file was Auto-Generated.\r\n") );
+      File.Write( wxT("///\r\n") );
+      File.Write( wxT("///   It is included by Theme.cpp.\r\n") );
+      File.Write( wxT("///   Only check this into Git if you've read and understood the guidelines!\r\n\r\n   ") );
    }
    return bOk;
 }

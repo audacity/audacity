@@ -30,10 +30,8 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
-#include "EditToolBar.h"
 
-#include "../Experimental.h"
+#include "EditToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>

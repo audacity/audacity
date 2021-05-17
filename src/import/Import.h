@@ -25,7 +25,7 @@ class wxArrayString;
 class wxListBox;
 class AudacityProject;
 class Tags;
-class TrackFactory;
+class WaveTrackFactory;
 class Track;
 class ImportPlugin;
 class ImportFileHandle;
@@ -77,12 +77,12 @@ class ExtImportItem
   wxArrayString mime_types;
 };
 
-class Importer {
+class AUDACITY_DLL_API Importer {
 public:
 
    // Objects of this type are statically constructed in files implementing
    // subclasses of ImportPlugin
-   struct RegisteredImportPlugin{
+   struct AUDACITY_DLL_API RegisteredImportPlugin{
       RegisteredImportPlugin(
          const Identifier &id, // an internal string naming the plug-in
          std::unique_ptr<ImportPlugin>,
@@ -97,6 +97,9 @@ public:
 
    Importer();
    ~Importer();
+
+   Importer( const Importer& ) PROHIBITED;
+   Importer &operator=( Importer& ) PROHIBITED;
 
    /**
     * Return instance reference
@@ -156,7 +159,7 @@ public:
     * Returns a pointer to internal items array.
     * External objects are allowed to change the array contents.
     */
-   ExtImportItems &GetImportItems() { return mExtImportItems; };
+   ExtImportItems &GetImportItems() { return mExtImportItems; }
 
    /**
     * Allocates NEW ExtImportItem, fills it with default data
@@ -167,7 +170,7 @@ public:
    // if false, the import failed and errorMessage will be set.
    bool Import( AudacityProject &project,
               const FilePath &fName,
-              TrackFactory *trackFactory,
+              WaveTrackFactory *trackFactory,
               TrackHolders &tracks,
               Tags *tags,
               TranslatableString &errorMessage);

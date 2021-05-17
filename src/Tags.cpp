@@ -30,7 +30,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "Tags.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -266,6 +266,13 @@ Tags::~Tags()
 std::shared_ptr<Tags> Tags::Duplicate() const
 {
    return std::make_shared<Tags>(*this);
+}
+
+void Tags::Merge( const Tags &other )
+{
+   for ( auto &pair : other.mMap ) {
+      SetTag( pair.first, pair.second );
+   }
 }
 
 Tags & Tags::operator=(const Tags & src)
@@ -551,7 +558,7 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          wxString value = *attrs++;
 
          if (!XMLValueChecker::IsGoodString(attr) ||
-             !XMLValueChecker::IsGoodString(value)) {
+             !XMLValueChecker::IsGoodLongString(value)) {
             break;
          }
 
@@ -895,7 +902,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
             names, std::mem_fn( &TranslatableString::Translation ) );
 
          // Build the initial (empty) grid
-         mGrid->CreateGrid(0, 2);
+         mGrid->CreateGrid(0, 2, wxGrid::wxGridSelectRows);
          mGrid->SetRowLabelSize(0);
          mGrid->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
          mGrid->SetColLabelValue(0, _("Tag"));
@@ -1245,23 +1252,25 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
       return;
    }
 
-   // Remember title and track in case they're read only
-   wxString title = mLocal.GetTag(TAG_TITLE);
-   wxString track = mLocal.GetTag(TAG_TRACK);
-
-   // Clear current contents
-   mLocal.Clear();
-
    // Load the metadata
+   decltype(mLocal) temp;
    XMLFileReader reader;
-   if (!reader.Parse(&mLocal, fn)) {
+   if (!reader.Parse(&temp, fn)) {
       // Inform user of load failure
       AudacityMessageBox(
          reader.GetErrorStr(),
          XO("Error Loading Metadata"),
          wxOK | wxCENTRE,
          this);
+      return;
    }
+
+   // Remember title and track in case they're read only
+   wxString title = mLocal.GetTag(TAG_TITLE);
+   wxString track = mLocal.GetTag(TAG_TRACK);
+
+   // Replace existing tags with loaded ones
+   mLocal = temp;
 
    // Restore title
    if (!mEditTitle) {
@@ -1410,6 +1419,12 @@ void TagsEditorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
       mGrid->HideCellEditControl();
+#if defined(__WXMAC__)
+      // The cell editors do not capture the ENTER key, so it invokes
+      // the default button ("Ok") when it should just close the
+      // editor. So, cancel the "Ok" action.
+      return;
+#endif
    }
 
    if (!Validate() || !TransferDataFromWindow()) {

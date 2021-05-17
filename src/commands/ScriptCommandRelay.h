@@ -16,7 +16,7 @@
 #ifndef __SCRIPT_COMMAND_RELAY__
 #define __SCRIPT_COMMAND_RELAY__
 
-#include "../Audacity.h"
+
 
 #include "../MemoryX.h"
 
@@ -25,7 +25,7 @@ class wxString;
 typedef int(*tpExecScriptServerFunc)(wxString * pIn, wxString * pOut);
 typedef int(*tpRegScriptServerFunc)(tpExecScriptServerFunc pFn);
 
-class ScriptCommandRelay
+class AUDACITY_DLL_API ScriptCommandRelay
 {
 public:
    static void StartScriptServer(tpRegScriptServerFunc scriptFn);

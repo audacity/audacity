@@ -52,9 +52,9 @@ void fromarraystream__fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
 
         if (susp->src == NULL) {
@@ -96,25 +96,25 @@ out:	    togo = 0;	/* indicate termination */
         }
         togo = min(togo, susp->length - susp->index);
 
-	n = togo;
-	index_reg = susp->index;
-	samples_reg = susp->samples;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        index_reg = susp->index;
+        samples_reg = susp->samples;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             *out_ptr_reg++ = samples_reg[index_reg++];
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->index = index_reg;
-	out_ptr += togo;
-	cnt += togo;
+        susp->index = index_reg;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* fromarraystream__fetch */
 

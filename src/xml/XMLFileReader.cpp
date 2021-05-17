@@ -135,8 +135,9 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
 bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
                                 const wxString &xmldata)
 {
-   const char *buffer = xmldata.mb_str().data();
-   int len = xmldata.mbc_str().length();
+   auto utf8 = xmldata.ToUTF8();
+   const char *buffer = utf8.data();
+   int len = utf8.length();
 
    mBaseHandler = baseHandler;
 
@@ -155,6 +156,8 @@ bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
          mLibraryErrorStr,
          (long unsigned int)XML_GetCurrentLineNumber(mParser)
       );
+
+      wxLogMessage(wxT("ParseString error: %s\n===begin===%s\n===end==="), mErrorStr.Debug(), buffer);
 
       return false;
    }

@@ -15,7 +15,7 @@ information.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "FileFormats.h"
 
 #include <wx/arrstr.h>
@@ -223,6 +223,17 @@ int sf_subtype_bytes_per_sample(unsigned int format){
    // might be different to 2, but this is good enough for 
    // WAV and AIFF file size error trapping.
    return 2;
+}
+
+sampleFormat sf_subtype_to_effective_format(unsigned int format)
+{
+   unsigned int subtype = format & SF_FORMAT_SUBMASK;
+   if (subtype == SF_FORMAT_PCM_24)
+      return int24Sample;
+   else if (sf_subtype_more_than_16_bits(format))
+      return widestSampleFormat;
+   else
+      return int16Sample;
 }
 
 

@@ -6,6 +6,7 @@ bn বাংলা
 bs Bosanski
 ca Català
 ca_ES@valencia Valencià
+co Corsu
 cs Čeština
 cy Cymraeg
 da Dansk
@@ -33,6 +34,7 @@ km ខេមរភាសា
 ko 한국어
 lt Lietuvių
 mk Македонски
+mr मराठी
 my မြန်မာစာ
 nb Norsk
 nl Nederlands

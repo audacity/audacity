@@ -21,7 +21,7 @@ capture the more lengthy output from some commands.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CommandTargets.h"
 
 #include <wx/app.h>
@@ -375,7 +375,7 @@ bool LongMessageDialog::Init()
 
    Layout();
    Fit();
-   SetMinSize(wxSize(600,700));
+   SetMinSize(wxSize(600,350));
    Center();
    return true;
 }

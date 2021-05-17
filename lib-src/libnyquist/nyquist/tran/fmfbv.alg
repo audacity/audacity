@@ -10,7 +10,7 @@
          ("double" "sin_y" "0.0")
          ("double" "phase" "0.0")
 	 ("double" "ph_incr" "hz * SINE_TABLE_LEN / sr;
-    index->scale *= SINE_TABLE_LEN / PI2
+    index->scale *= SINE_TABLE_LEN / (sample_type) PI2
 "))
   (INNER-LOOP "phase += ph_incr;
             if (phase > SINE_TABLE_LEN) phase -= SINE_TABLE_LEN;
@@ -22,7 +22,7 @@
             while (yy < 0) yy += SINE_TABLE_LEN;
             sin_y = sine_table[(int) yy]; /* truncation gets valid index */
             /* sin_y is now a signal ready for table lookup */
-            output =  sin_y")
+            output =  (sample_type) sin_y")
   (CONSTANT "ph_incr")
   (SAMPLE-RATE "sr")
   (SUPPORT-HEADER "#include \"sine.h\" /* sine_table and SINE_TABLE_LEN */

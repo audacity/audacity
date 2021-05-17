@@ -191,7 +191,7 @@ def monobook_fix_html(doc, page_url):
     if config.made_by:
         doc = doc.replace('<html xmlns=', MADE_BY_COMMENT + '\n<html xmlns=')
 
-    # Obselete substitutions.
+    # Obsolete substitutions.
     # doc = remove_tag(doc, '<div class="portlet" id="p-editors">', '</div>', '<div')
     #James also remove the page/discussion/source/history/ div.
     doc = remove_tag(doc, '<li id="ca-', '</li>', '<li')
@@ -485,7 +485,7 @@ def find_unused_filename(filename, exists=os.path.exists):
     """
     Return 'file' if 'file' doesn't exist, otherwise 'file1', 'file2', etc.
 
-    Existance is determined by the callable exists(), which takes
+    Existence is determined by the callable exists(), which takes
     a filename and returns a boolean.
     """
     if not exists(filename):
@@ -946,6 +946,7 @@ def parse_html(doc, url, filename):
     newdoc = newdoc.replace('\\n','\n')
     newdoc = newdoc.replace('\\t', '\t')
     newdoc = newdoc.replace('\\\'', '\'')
+    newdoc = newdoc.replace('\\\\', '\\')
     newdoc = newdoc.replace('\\xe2\\x80\\x99','\'')
     newdoc = newdoc.replace('\\xe2\\x80\\x90', '-')
     newdoc = newdoc.strip('b')
@@ -1006,7 +1007,7 @@ def run(out=sys.stdout):
         complete.add(nurl)
         filename = url_to_filename(url)
 
-        #this is needed for the first path as it doesn't know if it is a redirect or not in the begining
+        #this is needed for the first path as it doesn't know if it is a redirect or not in the beginning
         #at this point all the content of redir_cache is relative to the start path
         if start:
             start = False

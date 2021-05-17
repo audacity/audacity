@@ -21,15 +21,15 @@ typedef struct symb_descr {
     int size;     /* for array bounds checking */
     union {
     int *intptr;
-    int (*routine)();
+    seq_cmd_fn routine;
     } ptr;
 } symb_descr_node;
 
-int hash_lookup(char *s);
+intptr_t hash_lookup(char *s);
 void defvar(char *name, int *addr);
 void defvec(char *name, int *addr, int size);
-typedef int (*defun_type)();
-void defun(char *name, defun_type addr);
+/* former defun_type replaced by seq_cmd_fn */
+void defun(char *name, seq_cmd_fn addr);
 
 #define HASHTYPE symb_descr_node
 #include "hash.h"

@@ -119,7 +119,7 @@ class ImporterClientInterface
 public:
    virtual ~ImporterClientInterface() {};
 
-   // Provides a pointer to the assocated host for this importer.
+   // Provides a pointer to the associated host for this importer.
    virtual void SetHost(ImporterHostInterface *host) = 0;
 
    // Open the given file, returning true if it is a recognized
@@ -143,7 +143,7 @@ public:
    virtual void SetStreamUsage(int streamID, bool use) = 0;
 
    // do the actual import, creating whatever tracks are necessary with
-   // the TrackFactory and calling the progress callback every iteration
+   // the WaveTrackFactory and calling the progress callback every iteration
    // through the importing loop
    virtual bool Import() = 0;
 };

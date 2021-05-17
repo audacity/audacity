@@ -11,14 +11,21 @@ Paul Licameli split from Menus.cpp
 #ifndef __AUDACITY_COMMON_COMMAND_FLAGS__
 #define __AUDACITY_COMMON_COMMAND_FLAGS__
 
-#include "Audacity.h"
+
 
 #include "commands/CommandFlag.h"
 
-bool TracksSelectedPred( const AudacityProject &project );
+AUDACITY_DLL_API
+bool EditableTracksSelectedPred( const AudacityProject &project );
+
+AUDACITY_DLL_API
 bool AudioIOBusyPred( const AudacityProject &project );
+
+AUDACITY_DLL_API
 bool TimeSelectedPred( const AudacityProject &project );
-extern const CommandFlagOptions &cutCopyOptions();
+
+AUDACITY_DLL_API
+const CommandFlagOptions &cutCopyOptions();
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    &AudioIONotBusyFlag(),
@@ -27,7 +34,7 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
    &TimeSelectedFlag(), // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
    &WaveTracksSelectedFlag(),
    &TracksExistFlag(),
-   &TracksSelectedFlag(),
+   &EditableTracksSelectedFlag(),
    &AnyTracksSelectedFlag(),
    &TrackPanelHasFocus();  //lll
 
@@ -38,7 +45,6 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
 extern AUDACITY_DLL_API const ReservedCommandFlag
    &LabelTracksExistFlag(),
    &UnsavedChangesFlag(),
-   &HasLastEffectFlag(),
    &UndoAvailableFlag(),
    &RedoAvailableFlag(),
    &ZoomInAvailableFlag(),

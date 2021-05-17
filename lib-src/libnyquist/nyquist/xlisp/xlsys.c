@@ -49,8 +49,8 @@ extern LVAL k_verbose,k_print;
 extern LVAL s_true;
 
 /* external routines */
-extern FILE *osaopen();
-extern LVAL exttype();
+extern FILE *osaopen(const char *name, const char *mode);
+extern LVAL exttype(LVAL x);
 
 /* xget_env - get the value of an environment variable */
 LVAL xget_env(void)
@@ -147,7 +147,7 @@ LVAL xbaktrace(void)
 
     if (moreargs()) {
         num = xlgafixnum();
-        n = getfixnum(num);
+        n = (int) getfixnum(num);
     }
     else
         n = -1;
@@ -157,7 +157,7 @@ LVAL xbaktrace(void)
 }
 
 /* xquit - get out of read/eval/print loop */
-LVAL xquit()
+LVAL xquit(void)
 {
     xllastarg();
     xl_main_loop = FALSE;
@@ -224,7 +224,7 @@ LVAL xaddrs(void)
 #endif /* PEEK_AND_POKE */
 
 /* xprofile - turn profiling on and off */
-LVAL xprofile()
+LVAL xprofile(void)
 {
     LVAL flag, result;
 
@@ -246,7 +246,7 @@ FILE *debug_input_fp = NULL;
 FILE *to_input_buffer = NULL;
 FILE *read_by_xlisp = NULL;
 
-LVAL xstartrecordio()
+LVAL xstartrecordio(void)
 {
     to_input_buffer = NULL;
     if (ok_to_open("to-input-buffer.txt", "w"))
@@ -261,7 +261,7 @@ LVAL xstartrecordio()
 }
 
 
-LVAL xstoprecordio()
+LVAL xstoprecordio(void)
 {
 	if (to_input_buffer) fclose(to_input_buffer);
 	if (read_by_xlisp) fclose(read_by_xlisp);
@@ -275,6 +275,6 @@ LVAL xstoprecordio()
 /* xgetruntime - get current run_time */
 LVAL xgetruntime(void)
 {
-    /* return the value at that address */
+    /* return the value of run_time variable as integer */
     return cvfixnum((FIXTYPE) run_time);
 }

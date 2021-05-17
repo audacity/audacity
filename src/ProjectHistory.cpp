@@ -16,7 +16,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Track.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectHistoryKey {
    []( AudacityProject &project ) {
@@ -80,7 +79,10 @@ namespace {
    {
       if ( !projectFileIO.AutoSave() )
          throw SimpleMessageBoxException{
-            XO("Automatic database backup failed.") };
+            XO("Automatic database backup failed."),
+            XO("Warning"),
+            "Error:_Disk_full_or_not_writable"
+         };
    }
 }
 
@@ -170,6 +172,6 @@ void ProjectHistory::SetStateTo(unsigned int n, bool doAutosave)
    auto &undoManager = UndoManager::Get( project );
 
    undoManager.SetStateTo(n,
-      [this, doAutosave]( const UndoState &state ){
-         PopState(state, doAutosave); } );
+      [this, doAutosave]( const UndoStackElem &elem ){
+         PopState(elem.state, doAutosave); } );
 }

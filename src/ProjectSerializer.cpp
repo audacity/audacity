@@ -13,7 +13,7 @@
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "ProjectSerializer.h"
 
 #include <algorithm>
@@ -39,7 +39,7 @@
 //    name dictionary   dictionary of all names used in the document
 //    data fields       the "encoded" XML document
 //
-// If a subtree is added, it will be preceeded with FT_Push to tell the decoder
+// If a subtree is added, it will be preceded with FT_Push to tell the decoder
 // to preserve the active dictionary.  The decoder will then restore the
 // dictionary when an FT_Pop is encountered.  Nesting is unlimited.
 //
@@ -74,7 +74,7 @@ enum FieldTypes
 // Static so that the dict can be reused each time.
 //
 // If entries get added later, like when an envelope node (for example)
-// is writen and then the envelope is later removed, the dict will still
+// is written and then the envelope is later removed, the dict will still
 // contain the envelope name, but that's not a problem.
 
 NameMap ProjectSerializer::mNames;
@@ -206,9 +206,9 @@ ProjectSerializer::ProjectSerializer(size_t allocSize)
    std::call_once(flag, []{
       // Just once per run, store header information in the unique static
       // dictionary that will be written into each project that is saved.
-      // Store the size of "wxChar" so we can convert during recovery in
-      // case the file is used on a system with a different character size.
-      char size = sizeof(wxChar);
+      // Store the size of "wxStringCharType" so we can convert during recovery
+      // in case the file is used on a system with a different character size.
+      char size = sizeof(wxStringCharType);
       mDict.AppendByte(FT_CharSize);
       mDict.AppendData(&size, 1);
    });
@@ -242,7 +242,7 @@ void ProjectSerializer::WriteAttr(const wxString & name, const wxString & value)
    mBuffer.AppendByte(FT_String);
    WriteName(name);
 
-   const Length len = value.length() * sizeof(wxChar);
+   const Length len = value.length() * sizeof(wxStringCharType);
    WriteLength( mBuffer, len );
    mBuffer.AppendData(value.wx_str(), len);
 }
@@ -309,7 +309,7 @@ void ProjectSerializer::WriteData(const wxString & value)
 {
    mBuffer.AppendByte(FT_Data);
 
-   Length len = value.length() * sizeof(wxChar);
+   Length len = value.length() * sizeof(wxStringCharType);
    WriteLength( mBuffer, len );
    mBuffer.AppendData(value.wx_str(), len);
 }
@@ -317,7 +317,7 @@ void ProjectSerializer::WriteData(const wxString & value)
 void ProjectSerializer::Write(const wxString & value)
 {
    mBuffer.AppendByte(FT_Raw);
-   Length len = value.length() * sizeof(wxChar);
+   Length len = value.length() * sizeof(wxStringCharType);
    WriteLength( mBuffer, len );
    mBuffer.AppendData(value.wx_str(), len);
 }
@@ -334,7 +334,7 @@ void ProjectSerializer::WriteSubTree(const ProjectSerializer & value)
 
 void ProjectSerializer::WriteName(const wxString & name)
 {
-   wxASSERT(name.length() * sizeof(wxChar) <= SHRT_MAX);
+   wxASSERT(name.length() * sizeof(wxStringCharType) <= SHRT_MAX);
    UShort id;
 
    auto nameiter = mNames.find(name);
@@ -346,7 +346,7 @@ void ProjectSerializer::WriteName(const wxString & name)
    {
       // mNames is static.  This appends each name to static mDict only once
       // in each run.
-      UShort len = name.length() * sizeof(wxChar);
+      UShort len = name.length() * sizeof(wxStringCharType);
 
       id = mNames.size();
       mNames[name] = id;
@@ -383,7 +383,7 @@ bool ProjectSerializer::DictChanged() const
 }
 
 // See ProjectFileIO::LoadProject() for explanation of the blockids arg
-wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &blockids)
+wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
@@ -549,16 +549,6 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer, BlockIDs &block
             {
                id = ReadUShort( in );
                long long val = ReadLongLong( in );
-
-               // Look for and save the "blockid" values to support orphan
-               // block checking. This should be removed once serialization
-               // and related blocks become part of the same transaction.
-               const wxString &name = Lookup(id);
-               if (name.IsSameAs(wxT("blockid")))
-               {
-                  blockids.insert(val);
-               }
-
                out.WriteAttr(Lookup(id), val);
             }
             break;

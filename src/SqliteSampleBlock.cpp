@@ -12,10 +12,13 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include <sqlite3.h>
 
 #include "DBConnection.h"
+#include "ProjectFileIO.h"
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
 
 #include "SampleBlock.h" // to inherit
+
+class SqliteSampleBlockFactory;
 
 ///\brief Implementation of @ref SampleBlock using Sqlite database
 class SqliteSampleBlock final : public SampleBlock
@@ -23,16 +26,17 @@ class SqliteSampleBlock final : public SampleBlock
 public:
 
    explicit SqliteSampleBlock(
-      const std::shared_ptr<ConnectionPtr> &ppConnection);
+      const std::shared_ptr<SqliteSampleBlockFactory> &pFactory);
    ~SqliteSampleBlock() override;
 
    void CloseLock() override;
 
-   void SetSamples(samplePtr src, size_t numsamples, sampleFormat srcformat);
+   void SetSamples(
+      constSamplePtr src, size_t numsamples, sampleFormat srcformat);
 
-   void SetSilent(size_t numsamples, sampleFormat srcformat);
-
-   void Commit();
+   //! Numbers of bytes needed for 256 and for 64k summaries
+   using Sizes = std::pair< size_t, size_t >;
+   void Commit(Sizes sizes);
 
    void Delete();
 
@@ -61,32 +65,31 @@ public:
    void SaveXML(XMLWriter &xmlFile) override;
 
 private:
+   bool IsSilent() const { return mBlockID <= 0; }
    void Load(SampleBlockID sbid);
    bool GetSummary(float *dest,
                    size_t frameoffset,
                    size_t numframes,
-                   sqlite3_stmt *stmt,
-                   size_t srcbytes);
+                   DBConnection::StatementID id,
+                   const char *sql);
    size_t GetBlob(void *dest,
                   sampleFormat destformat,
                   sqlite3_stmt *stmt,
                   sampleFormat srcformat,
                   size_t srcoffset,
                   size_t srcbytes);
-   void CalcSummary();
+
+   enum {
+      fields = 3, /* min, max, rms */
+      bytesPerFrame = fields * sizeof(float),
+   };
+   Sizes SetSizes( size_t numsamples, sampleFormat srcformat );
+   void CalcSummary(Sizes sizes);
 
 private:
-   DBConnection *Conn() const
-   {
-      auto &pConnection = mppConnection->mpConnection;
-      if (!pConnection) {
-         throw SimpleMessageBoxException
-         {
-            XO("Failed to open the project's database")
-         };
-      }
-      return pConnection.get();
-   }
+   //! This must never be called for silent blocks
+   /*! @post return value is not null */
+   DBConnection *Conn() const;
    sqlite3 *DB() const
    {
       return Conn()->DB();
@@ -94,13 +97,11 @@ private:
 
    friend SqliteSampleBlockFactory;
 
-   const std::shared_ptr<ConnectionPtr> mppConnection;
-   bool mValid;
-   bool mDirty;
-   bool mSilent;
+   const std::shared_ptr<SqliteSampleBlockFactory> mpFactory;
+   bool mValid{ false };
    bool mLocked = false;
 
-   SampleBlockID mBlockID;
+   SampleBlockID mBlockID{ 0 };
 
    ArrayOf<char> mSamples;
    size_t mSampleBytes;
@@ -108,9 +109,7 @@ private:
    sampleFormat mSampleFormat;
 
    ArrayOf<char> mSummary256;
-   size_t mSummary256Bytes;
    ArrayOf<char> mSummary64k;
-   size_t mSummary64kBytes;
    double mSumMin;
    double mSumMax;
    double mSumRms;
@@ -120,17 +119,25 @@ private:
 #endif
 };
 
+// Silent blocks use nonpositive id values to encode a length
+// and don't occupy any rows in the database; share blocks for repeatedly
+// used length values
+static std::map< SampleBlockID, std::shared_ptr<SqliteSampleBlock> >
+   sSilentBlocks;
+
 ///\brief Implementation of @ref SampleBlockFactory using Sqlite database
-class SqliteSampleBlockFactory final : public SampleBlockFactory
+class SqliteSampleBlockFactory final
+   : public SampleBlockFactory
+   , public std::enable_shared_from_this<SqliteSampleBlockFactory>
 {
 public:
    explicit SqliteSampleBlockFactory( AudacityProject &project );
 
    ~SqliteSampleBlockFactory() override;
 
-   SampleBlockPtr DoGet(SampleBlockID sbid) override;
+   SampleBlockIDs GetActiveBlockIDs() override;
 
-   SampleBlockPtr DoCreate(samplePtr src,
+   SampleBlockPtr DoCreate(constSamplePtr src,
       size_t numsamples,
       sampleFormat srcformat) override;
 
@@ -142,8 +149,23 @@ public:
       sampleFormat srcformat,
       const wxChar **attrs) override;
 
+   BlockDeletionCallback SetBlockDeletionCallback(
+      BlockDeletionCallback callback ) override;
+
 private:
+   friend SqliteSampleBlock;
+
    const std::shared_ptr<ConnectionPtr> mppConnection;
+
+   // Track all blocks that this factory has created, but don't control
+   // their lifetimes (so use weak_ptr)
+   // (Must also use weak pointers because the blocks have shared pointers
+   // to the factory and we can't have a leaky cycle of shared pointers)
+   using AllBlocksMap =
+      std::map< SampleBlockID, std::weak_ptr< SqliteSampleBlock > >;
+   AllBlocksMap mAllBlocks;
+
+   BlockDeletionCallback mCallback;
 };
 
 SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
@@ -155,27 +177,52 @@ SqliteSampleBlockFactory::SqliteSampleBlockFactory( AudacityProject &project )
 SqliteSampleBlockFactory::~SqliteSampleBlockFactory() = default;
 
 SampleBlockPtr SqliteSampleBlockFactory::DoCreate(
-   samplePtr src, size_t numsamples, sampleFormat srcformat )
+   constSamplePtr src, size_t numsamples, sampleFormat srcformat )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
+   auto sb = std::make_shared<SqliteSampleBlock>(shared_from_this());
    sb->SetSamples(src, numsamples, srcformat);
+   // block id has now been assigned
+   mAllBlocks[ sb->GetBlockID() ] = sb;
    return sb;
 }
 
-SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
-   size_t numsamples, sampleFormat srcformat )
+auto SqliteSampleBlockFactory::GetActiveBlockIDs() -> SampleBlockIDs
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
-   sb->SetSilent(numsamples, srcformat);
-   return sb;
+   SampleBlockIDs result;
+   for (auto end = mAllBlocks.end(), it = mAllBlocks.begin(); it != end;) {
+      if (it->second.expired())
+         // Tighten up the map
+         it = mAllBlocks.erase(it);
+      else {
+         result.insert( it->first );
+         ++it;
+      }
+   }
+   return result;
+}
+
+SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
+   size_t numsamples, sampleFormat )
+{
+   auto id = -static_cast< SampleBlockID >(numsamples);
+   auto &result = sSilentBlocks[ id ];
+   if ( !result ) {
+      result = std::make_shared<SqliteSampleBlock>(nullptr);
+      result->mBlockID = id;
+
+      // Ignore the supplied sample format
+      result->SetSizes(numsamples, floatSample);
+      result->mValid = true;
+   }
+
+   return result;
 }
 
 
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const wxChar **attrs )
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
-   sb->mSampleFormat = srcformat;
+   std::shared_ptr<SampleBlock> sb;
 
    int found = 0;
 
@@ -194,72 +241,60 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
       double dblValue;
       long long nValue;
 
-      if (XMLValueChecker::IsGoodInt(strValue) && strValue.ToLongLong(&nValue) && (nValue >= 0))
+      if (wxStrcmp(attr, wxT("blockid")) == 0 &&
+         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLongLong(&nValue))
       {
-         if (wxStrcmp(attr, wxT("blockid")) == 0)
-         {
-            // This may throw
-            sb->Load((SampleBlockID) nValue);
-            found++;
+         if (nValue <= 0) {
+            sb = DoCreateSilent( -nValue, floatSample );
          }
-         else if (wxStrcmp(attr, wxT("samplecount")) == 0)
-         {
-            sb->mSampleCount = nValue;
-            sb->mSampleBytes = sb->mSampleCount * SAMPLE_SIZE(sb->mSampleFormat);
-            found++;
+         else {
+            // First see if this block id was previously loaded
+            auto &wb = mAllBlocks[ nValue ];
+            auto pb = wb.lock();
+            if (pb)
+               // Reuse the block
+               sb = pb;
+            else {
+               // First sight of this id
+               auto ssb =
+                  std::make_shared<SqliteSampleBlock>(shared_from_this());
+               wb = ssb;
+               sb = ssb;
+               ssb->mSampleFormat = srcformat;
+               // This may throw database errors
+               // It initializes the rest of the fields
+               ssb->Load((SampleBlockID) nValue);
+            }
          }
-      }
-      else if (XMLValueChecker::IsGoodString(strValue) && Internat::CompatibleToDouble(strValue, &dblValue))
-      {
-         if (wxStricmp(attr, wxT("min")) == 0)
-         {
-            sb->mSumMin = dblValue;
-            found++;
-         }
-         else if (wxStricmp(attr, wxT("max")) == 0)
-         {
-            sb->mSumMax = dblValue;
-            found++;
-         }
-         else if ((wxStricmp(attr, wxT("rms")) == 0) && (dblValue >= 0.0))
-         {
-            sb->mSumRms = dblValue;
-            found++;
-         }
+         found++;
       }
    }
 
-   // Were all attributes found?
-   if (found != 5)
+  // Were all attributes found?
+   if (found != 1)
    {
       return nullptr;
    }
-   
+
    return sb;
 }
 
-SampleBlockPtr SqliteSampleBlockFactory::DoGet( SampleBlockID sbid )
+auto SqliteSampleBlockFactory::SetBlockDeletionCallback(
+   BlockDeletionCallback callback ) -> BlockDeletionCallback
 {
-   auto sb = std::make_shared<SqliteSampleBlock>(mppConnection);
-   sb->Load(sbid);
-   return sb;
+   auto result = mCallback;
+   mCallback = std::move( callback );
+   return result;
 }
 
 SqliteSampleBlock::SqliteSampleBlock(
-   const std::shared_ptr<ConnectionPtr> &ppConnection)
-:  mppConnection(ppConnection)
+   const std::shared_ptr<SqliteSampleBlockFactory> &pFactory)
+:  mpFactory(pFactory)
 {
-   mValid = false;
-   mSilent = false;
-
-   mBlockID = 0;
-
    mSampleFormat = floatSample;
    mSampleBytes = 0;
    mSampleCount = 0;
 
-   mSummary256Bytes = 0;
-   mSummary64kBytes = 0;
    mSumMin = 0.0;
    mSumMax = 0.0;
    mSumRms = 0.0;
@@ -267,16 +302,51 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
-   // See ProjectFileIO::Bypass() for a description of mIO.mBypass
-   if (!mLocked && !Conn()->ShouldBypass())
-   {
-      // In case Delete throws, don't let an exception escape a destructor,
-      // but we can still enqueue the delayed handler so that an error message
-      // is presented to the user.
-      // The failure in this case may be a less harmful waste of space in the
-      // database, which should not cause aborting of the attempted edit.
-      GuardedCall( [this]{ Delete(); } );
+   if (mpFactory) {
+      auto &callback = mpFactory->mCallback;
+      if (callback)
+         GuardedCall( [&]{ callback( *this ); } );
    }
+
+   if (IsSilent()) {
+      // The block object was constructed but failed to Load() or Commit().
+      // Or it's a silent block with no row in the database.
+      // Just let the stack unwind.  Don't violate the assertion in
+      // Delete(), which may do odd recursive things in debug builds when it
+      // yields to the UI to put up a dialog, but then dispatches timer
+      // events that try again to finish recording.
+      return;
+   }
+
+   // See ProjectFileIO::Bypass() for a description of mIO.mBypass
+   GuardedCall( [this]{
+      if (!mLocked && !Conn()->ShouldBypass())
+      {
+         // In case Delete throws, don't let an exception escape a destructor,
+         // but we can still enqueue the delayed handler so that an error message
+         // is presented to the user.
+         // The failure in this case may be a less harmful waste of space in the
+         // database, which should not cause aborting of the attempted edit.
+         Delete();
+      }
+   } );
+}
+
+DBConnection *SqliteSampleBlock::Conn() const
+{
+   if (!mpFactory)
+      return nullptr;
+
+   auto &pConnection = mpFactory->mppConnection->mpConnection;
+   if (!pConnection) {
+      throw SimpleMessageBoxException
+      {
+         XO("Connection to project file is null"),
+         XO("Warning"),
+         "Error:_Disk_full_or_not_writable"
+      };
+   }
+   return pConnection.get();
 }
 
 void SqliteSampleBlock::CloseLock()
@@ -304,6 +374,12 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                                      size_t sampleoffset,
                                      size_t numsamples)
 {
+   if (IsSilent()) {
+      auto size = SAMPLE_SIZE(destformat);
+      memset(dest, 0, numsamples * size);
+      return numsamples;
+   }
+
    // Prepare and cache statement...automatically finalized at DB close
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSamples,
       "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
@@ -316,71 +392,64 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
                   numsamples * SAMPLE_SIZE(mSampleFormat)) / SAMPLE_SIZE(mSampleFormat);
 }
 
-void SqliteSampleBlock::SetSamples(samplePtr src,
+void SqliteSampleBlock::SetSamples(constSamplePtr src,
                                    size_t numsamples,
                                    sampleFormat srcformat)
 {
-   mSampleFormat = srcformat;
-   mSampleCount = numsamples;
-   mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
+   auto sizes = SetSizes(numsamples, srcformat);
    mSamples.reinit(mSampleBytes);
    memcpy(mSamples.get(), src, mSampleBytes);
 
-   CalcSummary();
+   CalcSummary( sizes );
 
-   Commit();
-}
-
-void SqliteSampleBlock::SetSilent(size_t numsamples, sampleFormat srcformat)
-{
-   mSampleFormat = srcformat;
-
-   mSampleCount = numsamples;
-   mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
-   mSamples.reinit(mSampleBytes);
-   memset(mSamples.get(), 0, mSampleBytes);
-
-   CalcSummary();
-
-   mSilent = true;
-
-   Commit();
+   Commit( sizes );
 }
 
 bool SqliteSampleBlock::GetSummary256(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSummary256,
+   return GetSummary(dest, frameoffset, numframes, DBConnection::GetSummary256,
       "SELECT summary256 FROM sampleblocks WHERE blockid = ?1;");
-
-   return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary64k(float *dest,
                                       size_t frameoffset,
                                       size_t numframes)
 {
-   // Prepare and cache statement...automatically finalized at DB close
-   sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::GetSummary64k,
+   return GetSummary(dest, frameoffset, numframes, DBConnection::GetSummary64k,
       "SELECT summary64k FROM sampleblocks WHERE blockid = ?1;");
-
-   return GetSummary(dest, frameoffset, numframes, stmt, mSummary256Bytes);
 }
 
 bool SqliteSampleBlock::GetSummary(float *dest,
                                    size_t frameoffset,
                                    size_t numframes,
-                                   sqlite3_stmt *stmt,
-                                   size_t srcbytes)
+                                   DBConnection::StatementID id,
+                                   const char *sql)
 {
-   return GetBlob(dest,
-                  floatSample,
-                  stmt,
-                  floatSample,
-                  frameoffset * 3 * SAMPLE_SIZE(floatSample),
-                  numframes * 3 * SAMPLE_SIZE(floatSample)) / 3 / SAMPLE_SIZE(floatSample);
+   // Non-throwing, it returns true for success
+   bool silent = IsSilent();
+   if (!silent) {
+      // Not a silent block
+      try {
+         // Prepare and cache statement...automatically finalized at DB close
+         auto stmt = Conn()->Prepare(id, sql);
+         // Note GetBlob returns a size_t, not a bool
+         // REVIEW: An error in GetBlob() will throw an exception.
+         GetBlob(dest,
+                     floatSample,
+                     stmt,
+                     floatSample,
+                     frameoffset * fields * SAMPLE_SIZE(floatSample),
+                     numframes * fields * SAMPLE_SIZE(floatSample));
+         return true;
+      }
+      catch ( const AudacityException & ) {
+      }
+   }
+   memset(dest, 0, 3 * numframes * sizeof( float ));
+   // Return true for success only if we didn't catch
+   return silent;
 }
 
 double SqliteSampleBlock::GetSumMin() const
@@ -405,11 +474,14 @@ double SqliteSampleBlock::GetSumRms() const
 /// @param len   The number of samples to include in the region
 MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
 {
+   if (IsSilent())
+      return {};
+
    float min = FLT_MAX;
    float max = -FLT_MAX;
    float sumsq = 0;
 
-   if (!mValid && mBlockID)
+   if (!mValid)
    {
       Load(mBlockID);
    }
@@ -454,8 +526,10 @@ MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS() const
 
 size_t SqliteSampleBlock::GetSpaceUsage() const
 {
-   // Not an exact number, but close enough
-   return mSummary256Bytes + mSummary64kBytes + mSampleBytes;
+   if (IsSilent())
+      return 0;
+   else
+      return ProjectFileIO::GetDiskUsage(*Conn(), mBlockID);
 }
 
 size_t SqliteSampleBlock::GetBlob(void *dest,
@@ -467,9 +541,9 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 {
    auto db = DB();
 
-   wxASSERT(mBlockID > 0);
+   wxASSERT(!IsSilent());
 
-   if (!mValid && mBlockID)
+   if (!mValid)
    {
       Load(mBlockID);
    }
@@ -477,7 +551,7 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    int rc;
    size_t minbytes = 0;
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
@@ -497,7 +571,14 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to retrieve project data") };
+      // Actually this can lead to 'Could not read from file' error message
+      // but it can also lead to no error message at all and a flat line, 
+      // depending on where GetBlob is called from.
+      // The latter can happen when repainting the screen.
+      // That possibly happens on a very slow machine.  Possibly that's the
+      // right trade off when a machine can't keep up?
+      // ANSWER-ME: Do we always report an error when we should here?
+      Conn()->ThrowException( false );
    }
 
    // Retrieve returned data
@@ -540,8 +621,6 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    wxASSERT(sbid > 0);
 
    mValid = false;
-   mSummary256Bytes = 0;
-   mSummary64kBytes = 0;
    mSampleCount = 0;
    mSampleBytes = 0;
    mSumMin = FLT_MAX;
@@ -551,10 +630,10 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    // Prepare and cache statement...automatically finalized at DB close
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::LoadSampleBlock,
       "SELECT sampleformat, summin, summax, sumrms,"
-      "       length('summary256'), length('summary64k'), length('samples')"
+      "       length(samples)"
       "  FROM sampleblocks WHERE blockid = ?1;");
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, sbid))
@@ -574,7 +653,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to retrieve sample block") };
+      Conn()->ThrowException( false );
    }
 
    // Retrieve returned data
@@ -583,9 +662,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mSumMin = sqlite3_column_double(stmt, 1);
    mSumMax = sqlite3_column_double(stmt, 2);
    mSumRms = sqlite3_column_double(stmt, 3);
-   mSummary256Bytes = sqlite3_column_int(stmt, 4);
-   mSummary64kBytes = sqlite3_column_int(stmt, 5);
-   mSampleBytes = sqlite3_column_int(stmt, 6);
+   mSampleBytes = sqlite3_column_int(stmt, 4);
    mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
 
    // Clear statement bindings and rewind statement
@@ -595,8 +672,11 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    mValid = true;
 }
 
-void SqliteSampleBlock::Commit()
+void SqliteSampleBlock::Commit(Sizes sizes)
 {
+   const auto mSummary256Bytes = sizes.first;
+   const auto mSummary64kBytes = sizes.second;
+
    auto db = DB();
    int rc;
 
@@ -606,7 +686,7 @@ void SqliteSampleBlock::Commit()
       "                          summary256, summary64k, samples)"
       "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int(stmt, 1, mSampleFormat) ||
@@ -632,7 +712,7 @@ void SqliteSampleBlock::Commit()
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to add sample block") };
+      Conn()->ThrowException( true );
    }
 
    // Retrieve returned data
@@ -655,13 +735,13 @@ void SqliteSampleBlock::Delete()
    auto db = DB();
    int rc;
 
-   wxASSERT(mBlockID > 0);
+   wxASSERT(!IsSilent());
 
    // Prepare and cache statement...automatically finalized at DB close
    sqlite3_stmt *stmt = Conn()->Prepare(DBConnection::DeleteSampleBlock,
       "DELETE FROM sampleblocks WHERE blockid = ?1;");
 
-   // Bind statement paraemters
+   // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
@@ -681,7 +761,7 @@ void SqliteSampleBlock::Delete()
 
       // Just showing the user a simple message, not the library error too
       // which isn't internationalized
-      throw SimpleMessageBoxException{ XO("Failed to delete sample block") };
+      Conn()->ThrowException( true );
    }
 
    // Clear statement bindings and rewind statement
@@ -692,12 +772,18 @@ void SqliteSampleBlock::Delete()
 void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
 {
    xmlFile.WriteAttr(wxT("blockid"), mBlockID);
-   xmlFile.WriteAttr(wxT("samplecount"), mSampleCount);
-   xmlFile.WriteAttr(wxT("len256"), mSummary256Bytes);
-   xmlFile.WriteAttr(wxT("len64k"), mSummary64kBytes);
-   xmlFile.WriteAttr(wxT("min"), mSumMin);
-   xmlFile.WriteAttr(wxT("max"), mSumMax);
-   xmlFile.WriteAttr(wxT("rms"), mSumRms);
+}
+
+auto SqliteSampleBlock::SetSizes(
+   size_t numsamples, sampleFormat srcformat ) -> Sizes
+{
+   mSampleFormat = srcformat;
+   mSampleCount = numsamples;
+   mSampleBytes = mSampleCount * SAMPLE_SIZE(mSampleFormat);
+
+   int frames64k = (mSampleCount + 65535) / 65536;
+   int frames256 = frames64k * 256;
+   return { frames256 * bytesPerFrame, frames64k * bytesPerFrame };
 }
 
 /// Calculates summary block data describing this sample data.
@@ -705,11 +791,11 @@ void SqliteSampleBlock::SaveXML(XMLWriter &xmlFile)
 /// This method also has the side effect of setting the mSumMin,
 /// mSumMax, and mSumRms members of this class.
 ///
-/// @param buffer A buffer containing the sample data to be analyzed
-/// @param len    The length of the sample data
-/// @param format The format of the sample data.
-void SqliteSampleBlock::CalcSummary()
+void SqliteSampleBlock::CalcSummary(Sizes sizes)
 {
+   const auto mSummary256Bytes = sizes.first;
+   const auto mSummary64kBytes = sizes.second;
+
    Floats samplebuffer;
    float *samples;
 
@@ -727,15 +813,7 @@ void SqliteSampleBlock::CalcSummary()
                   mSampleCount);
       samples = samplebuffer.get();
    }
-
-   int fields = 3; /* min, max, rms */
-   int bytesPerFrame = fields * sizeof(float);
-   int frames64k = (mSampleCount + 65535) / 65536;
-   int frames256 = frames64k * 256;
    
-   mSummary256Bytes = frames256 * bytesPerFrame;
-   mSummary64kBytes = frames64k * bytesPerFrame;
-
    mSummary256.reinit(mSummary256Bytes);
    mSummary64k.reinit(mSummary64kBytes);
 
@@ -782,20 +860,21 @@ void SqliteSampleBlock::CalcSummary()
 
       totalSquares += sumsq;
 
-      summary256[i * 3] = min;
-      summary256[i * 3 + 1] = max;
+      summary256[i * fields] = min;
+      summary256[i * fields + 1] = max;
       // The rms is correct, but this may be for less than 256 samples in last loop.
-      summary256[i * 3 + 2] = (float) sqrt(sumsq / jcount);
+      summary256[i * fields + 2] = (float) sqrt(sumsq / jcount);
    }
 
-   for (int i = sumLen; i < frames256; ++i)
+   for (int i = sumLen, frames256 = mSummary256Bytes / bytesPerFrame;
+        i < frames256; ++i)
    {
       // filling in the remaining bits with non-harming/contributing values
       // rms values are not "non-harming", so keep count of them:
       summaries--;
-      summary256[i * 3] = FLT_MAX;        // min
-      summary256[i * 3 + 1] = -FLT_MAX;   // max
-      summary256[i * 3 + 2] = 0.0f;       // rms
+      summary256[i * fields] = FLT_MAX;        // min
+      summary256[i * fields + 1] = -FLT_MAX;   // max
+      summary256[i * fields + 2] = 0.0f;       // rms
    }
 
    // Calculate now while we can do it accurately
@@ -832,18 +911,19 @@ void SqliteSampleBlock::CalcSummary()
       double denom = (i < sumLen - 1) ? 256.0 : summaries - fraction;
       float rms = (float) sqrt(sumsq / denom);
 
-      summary64k[i * 3] = min;
-      summary64k[i * 3 + 1] = max;
-      summary64k[i * 3 + 2] = rms;
+      summary64k[i * fields] = min;
+      summary64k[i * fields + 1] = max;
+      summary64k[i * fields + 2] = rms;
    }
 
-   for (int i = sumLen; i < frames64k; ++i)
+   for (int i = sumLen, frames64k = mSummary64kBytes / bytesPerFrame;
+        i < frames64k; ++i)
    {
       wxASSERT_MSG(false, wxT("Out of data for mSummaryInfo"));   // Do we ever get here?
 
-      summary64k[i * 3] = 0.0f;     // probably should be FLT_MAX, need a test case
-      summary64k[i * 3 + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
-      summary64k[i * 3 + 2] = 0.0f; // just padding
+      summary64k[i * fields] = 0.0f;     // probably should be FLT_MAX, need a test case
+      summary64k[i * fields + 1] = 0.0f; // probably should be -FLT_MAX, need a test case
+      summary64k[i * fields + 2] = 0.0f; // just padding
    }
 
    // Recalc block-level summary (mRMS already calculated)
@@ -852,14 +932,14 @@ void SqliteSampleBlock::CalcSummary()
 
    for (int i = 1; i < sumLen; ++i)
    {
-      if (summary64k[i * 3] < min)
+      if (summary64k[i * fields] < min)
       {
-         min = summary64k[i * 3];
+         min = summary64k[i * fields];
       }
 
-      if (summary64k[i * 3 + 1] > max)
+      if (summary64k[i * fields + 1] > max)
       {
-         max = summary64k[i * 3 + 1];
+         max = summary64k[i * fields + 1];
       }
    }
 
@@ -868,10 +948,16 @@ void SqliteSampleBlock::CalcSummary()
 }
 
 // Inject our database implementation at startup
-static struct Injector { Injector() {
-   // Do this some time before the first project is created
-   (void) SampleBlockFactory::RegisterFactoryFactory(
-      []( AudacityProject &project ){
-         return std::make_shared<SqliteSampleBlockFactory>( project ); }
-   );
-} } injector;
+static struct Injector
+{
+   Injector()
+   {
+      // Do this some time before the first project is created
+      (void) SampleBlockFactory::RegisterFactoryFactory(
+         []( AudacityProject &project )
+         {
+            return std::make_shared<SqliteSampleBlockFactory>( project );
+         }
+      );
+   }
+} injector;

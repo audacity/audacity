@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "ImportMIDI.h"
 
 #include <wx/defs.h>
@@ -26,6 +26,7 @@
 
 #include "../NoteTrack.h"
 #include "../Project.h"
+#include "../ProjectFileIO.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
@@ -35,8 +36,10 @@
 // Given an existing project, try to import into it, return true on success
 bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
 {
+   auto &projectFileIO = ProjectFileIO::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto newTrack = TrackFactory::Get( project ).NewNoteTrack();
+   auto newTrack =  std::make_shared<NoteTrack>();
+   bool initiallyEmpty = tracks.empty();
    
    if (::ImportMIDI(fileName, newTrack.get())) {
       
@@ -44,6 +47,16 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
       auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
       
+      // Fix the bug 2109.
+      // In case the project had soloed tracks before importing,
+      // the newly imported track is muted.
+      const bool projectHasSolo =
+         !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
+#ifdef EXPERIMENTAL_MIDI_OUT
+      if (projectHasSolo)
+         pTrack->SetMute(true);
+#endif
+
       ProjectHistory::Get( project )
          .PushState(
             XO("Imported MIDI from '%s'").Format( fileName ),
@@ -52,6 +65,15 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
       
       ProjectWindow::Get( project ).ZoomAfterImport(pTrack);
       FileHistory::Global().Append(fileName);
+
+      // If the project was clean and temporary (not permanently saved), then set
+      // the filename to the just imported path.
+      if (initiallyEmpty && projectFileIO.IsTemporary()) {
+         wxFileName fn(fileName);
+         project.SetProjectName(fn.GetName());
+         project.SetInitialImportPath(fn.GetPath());
+         projectFileIO.SetProjectTitle();
+      }
       return true;
    }
    else

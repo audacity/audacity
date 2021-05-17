@@ -13,9 +13,10 @@
 modelled on BuiltinEffectsModule
 *****************************************************************************/
 
-#include "../Audacity.h"
+
 #include "LoadCommands.h"
 #include "AudacityCommand.h"
+#include "ModuleManager.h"
 
 #include "../Prefs.h"
 
@@ -24,7 +25,7 @@ bool sInitialized = false;
 }
 
 struct BuiltinCommandsModule::Entry {
-   wxString name;
+   ComponentInterfaceSymbol name;
    Factory factory;
 
    using Entries = std::vector< Entry >;
@@ -39,7 +40,7 @@ void BuiltinCommandsModule::DoRegistration(
    const ComponentInterfaceSymbol &name, const Factory &factory )
 {
    wxASSERT( !sInitialized );
-   Entry::Registry().emplace_back( Entry{ name.Internal(), factory } );
+   Entry::Registry().emplace_back( Entry{ name, factory } );
 }
 
 // ============================================================================
@@ -55,7 +56,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew BuiltinCommandsModule(path);
+   return safenew BuiltinCommandsModule();
 }
 
 // ============================================================================
@@ -69,17 +70,12 @@ DECLARE_BUILTIN_MODULE(BuiltinsCommandBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-BuiltinCommandsModule::BuiltinCommandsModule(const wxString *path)
+BuiltinCommandsModule::BuiltinCommandsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 BuiltinCommandsModule::~BuiltinCommandsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -88,7 +84,7 @@ BuiltinCommandsModule::~BuiltinCommandsModule()
 
 PluginPath BuiltinCommandsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
@@ -119,7 +115,8 @@ TranslatableString BuiltinCommandsModule::GetDescription()
 bool BuiltinCommandsModule::Initialize()
 {
    for ( const auto &entry : Entry::Registry() ) {
-      auto path = wxString(BUILTIN_GENERIC_COMMAND_PREFIX) + entry.name;
+      auto path = wxString(BUILTIN_GENERIC_COMMAND_PREFIX)
+         + entry.name.Internal();
       mCommands[ path ] = &entry;
    }
    sInitialized = true;
@@ -150,7 +147,7 @@ bool BuiltinCommandsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    for (const auto &pair : mCommands)
    {
       const auto &path = pair.first;
-      if (!pm.IsPluginRegistered(path))
+      if (!pm.IsPluginRegistered(path, &pair.second->name.Msgid()))
       {
          // No checking of error ?
          // Uses Generic Registration, not Default.

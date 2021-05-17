@@ -51,7 +51,7 @@
     (:/ "/" /)
     (:% "%" rem)
     (:^ "^" expt)
-    (:= "=" sal-equal)   ; equality and assigment
+    (:= "=" sal-equal)   ; equality and assignment
     (:!= "!=" not-sal-equal)
     (:< "<" <)
     (:> ">" >)
@@ -62,9 +62,9 @@
     (:-= "-=" -=) ; assignment increment-and-store
     (:*= "*=" *=) ; assignment multiply-and-store
     (:/= "/=" /=) ; assignment multiply-and-store
-    (:&= "&=" &=) ; assigment list collecting
-    (:@= "@=" @=) ; assigment list prepending
-    (:^= "^=" ^=) ; assigment list appending
+    (:&= "&=" &=) ; assignment list collecting
+    (:@= "@=" @=) ; assignment list prepending
+    (:^= "^=" ^=) ; assignment list appending
     (:! "!" not)
     (:& "&" and)
     (:\| "|" or)
@@ -102,7 +102,7 @@
                          (:WHEN "when") (:UNLESS "unless") (:SET "set")
                          (:= "=") (:+= "+=") (:*= "*=") (:&= "&=") (:@= "@=")
                          (:^= "^=") (:<= "<=") (:>= ">=") (:PRINT "print")
-                         (:LOOP "loop")
+                         (:LOOP "loop") (:SEQV "seqv") (:SEQREPV "seqrepv")
                          (:RUN "run") (:REPEAT "repeat") (:FOR "for")
                          (:FROM "from") (:IN "in") (:BELOW "below") (:TO "to")
                          (:ABOVE "above") (:DOWNTO "downto") (:BY "by")
@@ -110,8 +110,10 @@
                          (:FINALLY "finally") (:RETURN "return")
                          (:WAIT "wait") (:BEGIN "begin") (:WITH "with")
                          (:END "end") (:VARIABLE "variable")
-                         (:FUNCTION "function") (:PROCESS "process")
-                         (:CHDIR "chdir") (:DEFINE "define") (:LOAD "load")
+                         (:FUNCTION "function")
+                         ; not in nyquist: (:PROCESS "process")
+                         (:CHDIR "chdir")
+                         (:DEFINE "define") (:LOAD "load")
                          (:PLAY "play") (:PLOT "plot")
                          (:EXEC "exec") (:exit "exit") (:DISPLAY "display")
                          (:~ "~") (:~~ "~~") (:@ ":@") (:@@ ":@@")))
@@ -209,7 +211,7 @@
     (setf line-no (pos-to-line beg source))
     ; (display "pperror" beg end (sal-error-start x))
       
-    ;; print the error. include the specfic line of input containing
+    ;; print the error. include the specific line of input containing
     ;; the error as well as a line below it marking the error position
     ;; with an arrow: ^
     (let* ((pos (- (sal-error-start x) beg))
@@ -482,7 +484,7 @@
             (setq end (search-delim input delimit start len))
             (if (equal start end)                ; have a delimiter
                (cond ((char= char +semic+)
-                      ;; comment skips to next line and trys again...
+                      ;; comment skips to next line and try again...
                       (while (and (< start len)
                                   (char/= (char input start) #\newline))
                         (incf start))
@@ -772,7 +774,7 @@
                 ;; class token has <> removed!
                 (if tok (progn (set-token-type tok ':class)
                                tok)
-                    (errexit "Not a class identifer" pos)))
+                    (errexit "Not a class identifier" pos)))
               (errexit "Not a class identifer" pos)))
         nil)))
 
@@ -1013,7 +1015,7 @@
 ;; with embedded operator symbols, e.g. x+y results in a warning
 ;; that this is an odd variable name. But if the symbol is declared
 ;; as a local, a parameter, a function name, or a global variable,
-;; then the warning is supressed.
+;; then the warning is suppressed.
 ;;
 (defun token-is (type &optional (suspicious-id-warn t))
   (let ((token-type
@@ -1114,7 +1116,7 @@
 ;;   SAL returns nil from begin-end statement lists
 ;;
 (defun returnize (stmt)
-  (let (rev)
+  (let (rev expr)
     (setf rev (reverse stmt))
     (setf expr (car rev)) ; last expression in list
     (cond ((and (consp expr) (eq (car expr) 'sal-return-from))
@@ -1172,7 +1174,7 @@
   ;; kargs is a flag indicating previous parameter was a keyword (all
   ;;   the following parameters must then also be keyword parameters)
   ;; returns: (<keyword> <default>) or (nil <identifier>)
-  ;;   where <keyword> is a keyward parameter name (nil if not a keyword parm)
+  ;;   where <keyword> is a keyword parameter name (nil if not a keyword parm)
   ;;         <default> is an expression for the default value
   ;;         <identifier> is the parameter name (if not a keyword parm)
   (let (key default-value id)
@@ -1448,7 +1450,7 @@
             ((eq op '^=) (setq expr `(nconc ,vref (append ,expr nil))))
             ((eq op '<=) (setq expr `(min ,vref ,expr)))
             ((eq op '>=) (setq expr `(max ,vref ,expr)))
-            (t (errexit (format nil "unknown assigment operator ~A" op))))
+            (t (errexit (format nil "unknown assignment operator ~A" op))))
       (push (list 'setf vref expr) rslt))
     (setf rslt (add-line-info-to-stmts rslt set-token))
     (if (> (length rslt) 1)
@@ -1672,7 +1674,7 @@
 ;; to do term-1 followed by indexing operations
 ;;
 (defun parse-term-1 ()
-  (let (sexpr id)
+  (let (sexpr id vars loopvar n)
     (cond ((token-is '(:- :!))
            (list (token-lisp (parse-token)) (parse-term)))
           ((token-is :lp)
@@ -1701,8 +1703,48 @@
                       (errexit "right paren not found"))
                   sexpr)
                  (t id)))
+          ((token-is '(:seqv :seqrepv))
+           (setf id (intern (string-upcase (token-string (parse-token)))))
+           (display "parse-term-1" id)
+           (setf vars (parse-idlist))
+           (if (not (token-is :lp))
+               (errexit "expected list of behaviors"))
+           (parse-token)
+           (setf sexpr (parse-pargs nil))
+           ;; if this is seqrepv, move the first 2 parameters (loop var and
+           ;; count expression) in front of the var list
+           (cond ((eq id 'SEQREPV)
+                  (setf loopvar (pop sexpr))
+                  (if (not (and loopvar (symbolp loopvar)))
+                      (errexit "expected identifier as first \"parameter\""))
+                  (setf n (pop sexpr))
+                  (if (null n)
+                      (errexit "expected repetition count as second parameter"))
+                  (setf vars (cons id (cons n vars)))))
+           (setf sexpr (cons id (cons vars sexpr)))
+           (if (token-is :rp)
+               (parse-token)
+               (errexit "right paren not found"))
+           sexpr)
           (t
            (errexit "expression not found")))))
+
+
+(defun parse-idlist ()
+  ; similar to parse-parms, but simpler because no keywords and default vals
+  (let (parms parm kargs expecting)
+    (if (token-is :lp) (parse-token) ;; eat the left paren
+        (errexit "expected left parenthesis"))
+    (setf expecting (not (token-is :rp)))
+    (while expecting
+      (if (token-is :id)
+          (push (token-lisp (parse-token)) parms)
+          (errexit "expected variable name"))
+      (if (token-is :co) (parse-token)
+          (setf expecting nil)))
+    (if (token-is :rp) (parse-token)
+        (errexit "expected right parenthesis"))
+    (reverse parms)))
 
 
 (defun parse-term ()
@@ -1752,7 +1794,7 @@
        (loop ; look for one or more [keyword] sexpr
          ; optional keyword test
          (setf keyword nil)
-         ;(display "pargs" (car *sal-tokens*))
+         ; (display "pargs" (car *sal-tokens*))
          (if (token-is :key)
              (setf keyword (token-lisp (parse-token))))
          ; (display "parse-pargs" keyword)

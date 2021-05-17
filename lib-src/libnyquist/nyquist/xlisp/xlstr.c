@@ -365,7 +365,7 @@ LVAL xstring(void)
         buf[1] = '\0';
         return (cvstring(buf));
     case FIXNUM:
-        buf[0] = getfixnum(arg);
+        buf[0] = (char)getfixnum(arg);
         buf[1] = '\0';
         return (cvstring(buf));
     default:
@@ -461,7 +461,7 @@ LVAL xcodechar(void)
 {
     LVAL arg;
     int ch;
-    arg = xlgafixnum(); ch = getfixnum(arg);
+    arg = xlgafixnum(); ch = (int) getfixnum(arg);
     xllastarg();
     return (ch >= 0 && ch <= 127 ? cvchar(ch) : NIL);
 }
@@ -491,7 +491,7 @@ LVAL xdigitchar(void)
 {
     LVAL arg;
     int n;
-    arg = xlgafixnum(); n = getfixnum(arg);
+    arg = xlgafixnum(); n = (int) getfixnum(arg);
     xllastarg();
     return (n >= 0 && n <= 9 ? cvchar(n + '0') : NIL);
 }

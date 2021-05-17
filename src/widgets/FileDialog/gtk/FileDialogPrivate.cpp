@@ -632,6 +632,27 @@ void FileDialog::GTKFolderChanged()
 
 void FileDialog::GTKFilterChanged()
 {
+   wxFileName filename;
+
+#if defined(__WXGTK3__)
+    filename.SetFullName(wxString::FromUTF8(gtk_file_chooser_get_current_name(GTK_FILE_CHOOSER(m_widget))));
+#else
+    GtkWidget *entry = find_widget(m_widget, "GtkFileChooserEntry", 0);
+    if (entry)
+    {
+        filename.SetFullName(wxString::FromUTF8(gtk_entry_get_text(GTK_ENTRY(entry))));
+    }
+#endif
+
+   if (filename.HasName())
+   {
+      wxString ext = m_fc.GetCurrentWildCard().AfterLast(wxT('.')).Lower();
+      if (!ext.empty() && ext != wxT("*") && ext != filename.GetExt())
+      {
+         SetFileExtension(ext);
+      }
+   }
+
     wxFileCtrlEvent event(wxEVT_FILECTRL_FILTERCHANGED, this, GetId());
 
     event.SetFilterIndex(GetFilterIndex());

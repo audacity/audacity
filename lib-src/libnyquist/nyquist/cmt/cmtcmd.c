@@ -6,8 +6,12 @@
 #include "exec/types.h"
 #include "exec/exec.h"
 #endif
-#include "cmtcmd.h"
 #include "cext.h"
+#include "midifns.h"
+#include "timebase.h"
+#include "moxc.h"
+#include "seq.h"
+#include "cmtcmd.h"
 #include "userio.h"
 #include "string.h"
 
@@ -19,32 +23,26 @@
 
 #include "hashrout.h"
 
-void defvar(name, addr)
-  char *name;
-  int *addr;
+void defvar(char *name, int *addr)
+
 {
-    int i = hash_lookup(name);
+    intptr_t i = hash_lookup(name);
     HASHENTRY(i).symb_type = var_symb_type;
     HASHENTRY(i).ptr.intptr = addr;
 }
 
 
-void defun(name, addr)
-  char *name;
-  int (*addr)();
+void defun(char *name, seq_cmd_fn addr)
 {
-    int i = hash_lookup(name);
+    intptr_t i = hash_lookup(name);
     HASHENTRY(i).symb_type = fn_symb_type;
     HASHENTRY(i).ptr.routine = addr;
 }
 
 
-void defvec(name, addr, size)
-  char *name;
-  int *addr;
-  int size;
+void defvec(char *name, int *addr, int size)
 {
-    int i = hash_lookup(name);
+    intptr_t i = hash_lookup(name);
     HASHENTRY(i).symb_type = vec_symb_type;
     HASHENTRY(i).size = size;
     HASHENTRY(i).ptr.intptr = addr;

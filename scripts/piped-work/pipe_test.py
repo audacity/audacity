@@ -57,10 +57,11 @@ def get_response():
     """Return the command response."""
     result = ''
     line = ''
-    while line != '\n':
+    while True:
         result += line
         line = FROMFILE.readline()
-        #print(" I read line:["+line+"]")
+        if line == '\n' and len(result) > 0:
+            break
     return result
 
 def do_command(command):

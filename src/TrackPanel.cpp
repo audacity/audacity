@@ -43,10 +43,10 @@ is time to refresh some aspect of the screen.
 
 *//*****************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "TrackPanel.h"
 
-#include "Experimental.h"
+
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -333,7 +333,7 @@ TrackPanel::~TrackPanel()
 void TrackPanel::UpdatePrefs()
 {
    // All vertical rulers must be recalculated since the minimum and maximum
-   // frequences may have been changed.
+   // frequencies may have been changed.
    UpdateVRulers();
 
    Refresh();
@@ -1069,7 +1069,7 @@ void DrawTrackName(
    // Tracks more than kTranslucentHeight will have maximum translucency for shields.
    const int kOpaqueHeight = 44;
    const int kTranslucentHeight = 124;
-   int h = rect.GetHeight();
+   int h = TrackView::Get( *t ).GetHeight();
    // f codes the opacity as a number between 0.0 and 1.0
    float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
    // kOpaque is the shield's alpha for tracks that are not tall

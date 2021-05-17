@@ -6,6 +6,7 @@
  */
 
 /* define size_t: */
+#include <limits.h>
 #ifdef UNIX
 #include "sys/types.h"
 #endif  
@@ -53,7 +54,7 @@ static void sound_xlsave(FILE *fp, void *s);
 static unsigned char *sound_xlrestore(FILE *);
 
 void sound_print_array(LVAL sa, long n);
-void sound_print_sound(sound_type s, long n);
+void sound_print_sound(LVAL s_as_lval, long n);
 void sample_block_unref(sample_block_type sam);
 
 #ifdef SNAPSHOTS
@@ -65,10 +66,13 @@ int nosc_enabled = false;
 #endif
 
 /* m is in bytes */
-long snd_set_max_audio_mem(long m)
+int64_t snd_set_max_audio_mem(int64_t m)
 {
-    long r = max_sample_blocks;
-    max_sample_blocks = m / (max_sample_block_len * sizeof(float));
+    int64_t r = max_sample_blocks;
+	// avoid overflow since max_sample_blocks is long
+	int64_t msb = m / (max_sample_block_len * sizeof(float));
+	if (msb > LONG_MAX) msb = LONG_MAX;
+    max_sample_blocks = (long) msb;
     return r * max_sample_block_len * sizeof(float);
 }
 
@@ -76,7 +80,7 @@ long snd_set_max_audio_mem(long m)
 double sound_latency = 0.3; /* default value */
 /* these are used so get times for *AUDIO-MARKERS* */
 double sound_srate = 44100.0;
-long sound_frames = 0;
+int64_t sound_frames = 0;
 
 double snd_set_latency(double latency)
 {
@@ -86,7 +90,7 @@ double snd_set_latency(double latency)
 }
 
 
-long check_terminate_cnt(long tc)
+int64_t check_terminate_cnt(int64_t tc)
 {
     if (tc < 0) {
         xlfail("duration is less than 0 samples");
@@ -150,7 +154,7 @@ snd_list_type gcbug_snd_list = 0;
 long blocks_to_watch_len = 0;
 sample_block_type blocks_to_watch[blocks_to_watch_max];
 
-void block_watch(long sample_block)
+void block_watch(int64_t sample_block)
 {
     if (blocks_to_watch_len >= blocks_to_watch_max) {
         stdputstr("block_watch - no more space to save pointers\n");
@@ -174,13 +178,14 @@ void block_watch(long sample_block)
 
 void fetch_zeros(snd_susp_type susp, snd_list_type snd_list)
 {
-    int len = MIN(susp->log_stop_cnt - susp->current,
-                   max_sample_block_len);
+    int64_t len = MIN(susp->log_stop_cnt - susp->current,
+                      max_sample_block_len);
 /*    nyquist_printf("fetch_zeros, lsc %d current %d len %d\n", 
             susp->log_stop_cnt, susp->current, len); */
     if (len < 0) {
         char error[80];
-        sprintf(error, "fetch_zeros susp %p (%s) len %d", susp, susp->name, len);
+        sprintf(error, "fetch_zeros susp %p (%s) len %" PRId64,
+                susp, susp->name, len);
         xlabort(error);
     }
     if (len == 0) { /* we've reached the logical stop time */
@@ -188,7 +193,7 @@ void fetch_zeros(snd_susp_type susp, snd_list_type snd_list)
                susp->name, susp->log_stop_cnt); */
         snd_list_terminate(snd_list);
     } else {
-        snd_list->block_len = len;
+        snd_list->block_len = (short) len;
         susp->current += len;
     }
 }
@@ -199,7 +204,7 @@ void fetch_zeros(snd_susp_type susp, snd_list_type snd_list)
  * NOTE: intended to be called from lisp.  Lisp can then call block_watch
  * to keep an eye on the block.
  */
-long sound_nth_block(sound_type snd, long n)
+int64_t sound_nth_block(sound_type snd, long n)
 {
     long i;
     snd_list_type snd_list = snd->list;
@@ -211,7 +216,7 @@ long sound_nth_block(sound_type snd, long n)
         if (!snd_list->block) return 0;
         snd_list = snd_list->u.next;
     }
-    if (snd_list->block) return (long) snd_list->block;
+    if (snd_list->block) return (int64_t) snd_list->block;
     else return 0;
 }
 
@@ -279,7 +284,7 @@ sound_type sound_create(
 {
     sound_type sound;
     falloc_sound(sound, "sound_create");
-    if (((long) sound) & 3) errputstr("sound not word aligned\n");
+    if (((intptr_t) sound) & 3) errputstr("sound not word aligned\n");
     last_sound = sound; /* debug */
     if (t0 < 0) xlfail("attempt to create a sound with negative starting time");
     /* nyquist_printf("sound_create %p gets %g\n", sound, t0); */
@@ -333,7 +338,7 @@ sound_type sound_create(
  */
 void sound_prepend_zeros(sound_type snd, time_type t0)
 {
-    long n;
+    int64_t n;
 
     /* first, see if we're already prepending some zeros */
     if (snd->get_next != SND_get_zeros) {
@@ -348,7 +353,7 @@ void sound_prepend_zeros(sound_type snd, time_type t0)
         snd->get_next = SND_get_zeros;
     }
 
-    n = (long) (((snd->true_t0 - t0) * snd->sr) + 0.5); /* how many samples to prepend */
+    n = ROUNDBIG((snd->true_t0 - t0) * snd->sr); /* how many samples to prepend */
 
     /* add to prepend_cnt so first sample will correspond to new t0 */
     snd->prepend_cnt += n;
@@ -406,9 +411,9 @@ sound_type sound_copy(sound_type snd)
 /**/
 table_type sound_to_table(sound_type s)
 {
-    long len = snd_length(s, max_table_len);
+    long len = (long) snd_length(s, max_table_len);
     long tx = 0;        /* table index */
-    long blocklen;
+    int blocklen;
     register double scale_factor = s->scale;
     sound_type original_s = s;
     table_type table; /* the new table */
@@ -501,12 +506,11 @@ void snd_list_ref(snd_list_type list)
 }
 
 
-void snd_list_terminate(snd_list)
-  snd_list_type snd_list;
+void snd_list_terminate(snd_list_type snd_list)
 {
     snd_susp_type susp = snd_list->u.next->u.susp;
-    long lsc = susp->log_stop_cnt;
-    long current = susp->current;
+    int64_t lsc = susp->log_stop_cnt;
+    int64_t current = susp->current;
     /* unreference the empty sample block that was allocated: */
     sample_block_unref(snd_list->block);
     /* use zero_block instead */
@@ -541,7 +545,6 @@ void snd_list_unref(snd_list_type list)
             break; // the rest of the list is shared, nothing more to free
         }
 
-        next = NULL;
         // list nodes either point to a block of samples or this is the 
         // last list node (list->block == NULL) which points to a suspension
         // lists can also terminate at the zero_block, which is an infinite
@@ -661,9 +664,9 @@ void snd_sort_2(sound_type *s1_ptr, sound_type *s2_ptr, rate_type sr)
 double snd_sref(sound_type s, time_type t)
 {
     double exact_cnt;      /* how many fractional samples to scan */
-    int cnt;               /* how many samples to flush */
+    int64_t cnt;               /* how many samples to flush */
     sample_block_type sampblock = NULL;
-    long blocklen;
+    int blocklen;
     sample_type x1, x2;    /* interpolate between these samples */
 
         /* changed true_t0 to just t0 based on comment that true_t0 is only
@@ -673,7 +676,7 @@ double snd_sref(sound_type s, time_type t)
     if (exact_cnt < 0.0) return 0.0;
 
     s = sound_copy(s);     /* don't modify s, create new reader */
-    cnt = (long) exact_cnt;       /* rounds down */
+    cnt = (int64_t) exact_cnt;       /* rounds down */
     exact_cnt -= cnt;      /* remember fractional remainder */
 
     /* now flush cnt samples */
@@ -707,7 +710,7 @@ double snd_sref_inverse(sound_type s, double val)
     double exact_cnt;      /* how many fractional samples to scan */
     int i;
     sample_block_type sampblock;
-    long blocklen;
+    int blocklen;
     sample_type x1, x2;    /* interpolate between these samples */
 
     if (val < 0) {
@@ -767,6 +770,14 @@ double snd_sref_inverse(sound_type s, double val)
 time_type snd_stop_time(sound_type s)
 {
     if (s->stop == MAX_STOP) return MAX_STOP_TIME;
+    /* I think placing the stop time 0.5 samples later than the last
+       is to avoid rounding errors somewhere. Sounds are supposed
+       to be open-ended on the right, and I would guess s->stop
+       should be one greater than the actual number of samples.
+       Therefore, it seems that 0.5 should be 0.0 so that 
+       converting back to sample count will round to s->stop.
+       I'm not changing this because it has been this way for
+       a long time and Nyquist seems to get it right. -RBD */
     else return s->t0 + (s->stop + 0.5) / s->sr;
 }
 
@@ -805,7 +816,7 @@ sound_type snd_xform(sound_type snd,
                       time_type stop_time,
                       promoted_sample_type scale)
 {
-    long start_cnt, stop_cnt; /* clipping samples (sample 0 at new t0) */
+    int64_t start_cnt, stop_cnt; /* clipping samples (sample 0 at new t0) */
 
     /* start_cnt should reflect max of where the sound starts (t0)
      * and the new start_time.
@@ -814,7 +825,7 @@ sound_type snd_xform(sound_type snd,
         start_cnt = 0;
     } else {
         double new_start_cnt = ((start_time - time) * sr) + 0.5;
-        start_cnt = ((new_start_cnt > 0) ? (long) new_start_cnt : 0);
+        start_cnt = ((new_start_cnt > 0) ? (int64_t) new_start_cnt : 0);
     }
     /* if (start_cnt < -(snd->current)) start_cnt = -(snd->current); */
 
@@ -826,7 +837,7 @@ sound_type snd_xform(sound_type snd,
     } else {
         double new_stop_cnt = ((stop_time - time) * sr) + 0.5;
         if (new_stop_cnt < MAX_STOP) {
-            stop_cnt = (long) new_stop_cnt;
+            stop_cnt = (int64_t) new_stop_cnt;
         } else {
             errputstr("Warning: stop count overflow in snd_xform\n");
             stop_cnt = MAX_STOP;
@@ -847,9 +858,8 @@ sound_type snd_xform(sound_type snd,
          */
         ffree_snd_list(snd->list, "snd_xform");
         snd->list = zero_snd_list;
-        nyquist_printf("snd_xform: (stop_time < t0 or start >= stop) "
-                       "-> zero sound = %p\n", snd);
-        
+        /* nyquist_printf("snd_xform: (stop_time < t0 or start >= stop) "
+                       "-> zero sound = %p\n", snd); */
     } else {
         snd = sound_copy(snd);
         snd->t0 = time;
@@ -883,9 +893,9 @@ sound_type snd_xform(sound_type snd,
  * non-real-time operation) and installs SND_get_next to return
  * blocks normally from then on.
  */
-sample_block_type SND_flush(sound_type snd, long * cnt)
+sample_block_type SND_flush(sound_type snd, int *cnt)
 {
-    long mycnt;
+    int mycnt;
     sample_block_type block = SND_get_first(snd, &mycnt);
     /* changed from < to <= because we want to read at least the first sample */
     while (snd->current <= 0) {
@@ -896,11 +906,11 @@ sample_block_type SND_flush(sound_type snd, long * cnt)
      * is in the right place, we can do a minimal fixup and return:
      */
     if (snd->current == snd->list->block_len) {
-        *cnt = snd->current; /* == snd->list->block_len */
+        *cnt = (int) snd->current; /* == snd->list->block_len */
         /* snd->get_next = SND_get_next; -- done by SND_get_first */
         return block;
     } else /* snd->current < snd->list->block_len */ {
-        long i;
+        int64_t i;
         sample_block_values_type from_ptr;
         /* we have to return a partial block */
         /* NOTE: if we had been smart, we would have had SND_get_next
@@ -919,7 +929,7 @@ sample_block_type SND_flush(sound_type snd, long * cnt)
         }
         snd_list_unref(snd->list);
         snd->list = snd_list;
-        *cnt = snd->current;
+        *cnt = (int) snd->current;
         return snd_list->block;
     }
 }
@@ -932,13 +942,13 @@ sample_block_type SND_flush(sound_type snd, long * cnt)
  * the normal (original) get_next function.
  *
  */
-sample_block_type SND_get_zeros(sound_type snd, long * cnt)
+sample_block_type SND_get_zeros(sound_type snd, int *cnt)
 {
-    int len = MIN(snd->prepend_cnt, max_sample_block_len);
+    int64_t len = MIN(snd->prepend_cnt, max_sample_block_len);
     /* stdputstr("SND_get_zeros: "); */
     if (len < 0) {
         char error[80];
-        sprintf(error, "SND_get_zeros snd %p len %d", snd, len);
+        sprintf(error, "SND_get_zeros snd %p len %" PRId64, snd, len);
         xlabort(error);
     }
     if (len == 0) { /* we've finished prepending zeros */
@@ -946,7 +956,7 @@ sample_block_type SND_get_zeros(sound_type snd, long * cnt)
         /* stdputstr("done, calling sound_get_next\n"); fflush(stdout); */
         return sound_get_next(snd, cnt);
     } else {
-        *cnt = len;
+        *cnt = (int) len;
         snd->current += len;
         snd->prepend_cnt -= len;
 /*        nyquist_printf("returning internal_zero_block@%p\n", internal_zero_block);
@@ -1056,14 +1066,15 @@ sample_block_type SND_get_zeros(sound_type snd, long * cnt)
 *  generated.
 ****************************************************************************/
 
-void add_s1_s2_nn_fetch(); /* for debugging */
+/* for debugging */
+void add_s1_s2_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list);
 
 /* SND_get_first -- the standard fn to get a block, after returning 
  *    the first block, plug in SND_get_next for successive blocks
  */
-sample_block_type SND_get_first(sound_type snd, long * cnt)
+sample_block_type SND_get_first(sound_type snd, int *cnt)
 {
-    register snd_list_type snd_list = snd->list;
+    snd_list_type snd_list = snd->list;
     /*
      * If there is not a block of samples, we need to generate one.
      */
@@ -1099,7 +1110,21 @@ sample_block_type SND_get_first(sound_type snd, long * cnt)
             /* block boundary: replace with zero sound */
             snd->list = zero_snd_list;
             snd_list_unref(snd_list);
-        } else {
+        // the idea here is that we have reached snd->stop, which
+        // means the next samples have to be zero, but we are reading
+        // from the middle of a block of samples. Maybe, for example,
+        // snd was constructed by snd_xform that imposed a new stop
+        // time. Since we haven't read the next sample, we can take
+        // care of this by just creating a new snd_list with a shorter
+        // block_len to take whatever samples we need before stop, then
+        // link ot zero_snd_list so that subsequent samples are zero.
+        // However, if we actually start reading zeros from zero_snd_list,
+        // the test above for > snd->stop will bring us back here. We
+        // ignore these cases just below by testing if the current list
+        // is the zero_snd_list. If so, we're just reading zeros, we're
+        // past the stop time, and we can just keep reading zeros, so
+        // do nothing.
+        } else if (snd->list != zero_snd_list) {
             /* not a block boundary: build new list */
             snd->list = snd_list_create((snd_susp_type) zero_snd_list);
             snd->list->block_len = (short) (snd->stop - snd->current);
@@ -1111,6 +1136,7 @@ sample_block_type SND_get_first(sound_type snd, long * cnt)
     }
 
     *cnt = snd_list->block_len;
+    assert(snd_list->block_len >= 0);
     /* this should never happen */
     if (*cnt == 0) {
         stdputstr("SND_get_first returned 0 samples\n");
@@ -1130,9 +1156,9 @@ sample_block_type SND_get_first(sound_type snd, long * cnt)
 }
 
 
-sample_block_type SND_get_next(sound_type snd, long * cnt)
+sample_block_type SND_get_next(sound_type snd, int *cnt)
 {
-    register snd_list_type snd_list = snd->list;
+    snd_list_type snd_list = snd->list;
     /*
      * SND_get_next is installed by SND_get_first, so we know
      * when we are called that we are done with the current block
@@ -1191,10 +1217,10 @@ sample_block_type make_zero_block(void)
  * should be the MAX of logical stop times of arguments, so this routine 
  * would not be used.
  */
-void min_cnt(long *cnt_ptr, sound_type sound, snd_susp_type susp, long cnt)
+void min_cnt(int64_t *cnt_ptr, sound_type sound, snd_susp_type susp, long cnt)
 {
-    long c = (long) ((((sound->current - cnt) / sound->sr + sound->t0) - susp->t0) *
-      susp->sr + 0.5);
+    int64_t c = ROUNDBIG((((sound->current - cnt) / sound->sr + sound->t0) - susp->t0) *
+      susp->sr);
     /* if *cnt_ptr is uninitialized, just plug in c, otherwise compute min */
     if ((*cnt_ptr == UNKNOWN) || (*cnt_ptr > c)) {
 /*        nyquist_printf("min_cnt %p: new count is %d\n", susp, c);*/
@@ -1276,7 +1302,7 @@ void set_logical_stop_time(sound_type sound, time_type when)
                   |                                |
                   t0                               when
      */
-    long n = (long) ((when - sound->t0) * sound->sr + 0.5);
+    int64_t n = ROUNDBIG((when - sound->t0) * sound->sr);
     if (n < 0) {
         xlcerror("retain the current logical stop", 
                  "logical stop sample count is negative", NIL);
@@ -1288,9 +1314,10 @@ void set_logical_stop_time(sound_type sound, time_type when)
 
 
 
-/* for debugging */
+/* for debugging
 sound_type printing_this_sound = NULL;
 void ((**watch_me)()) = NULL;
+
 
 void set_watch(where)
   void ((**where)());
@@ -1300,84 +1327,128 @@ void set_watch(where)
         nyquist_printf("set_watch: watch_me = %p\n", watch_me);
     }
 }
-
+*/
 
 /*
  * additional routines
  */
+
+/* snd_list_len - for debugging: how many sample blocks held? */
+long snd_list_len(void *inst)
+{
+    int i = 0;
+    sound_type snd = (sound_type) inst;
+    snd_list_type list = snd->list;
+    while (list->block && list->block != zero_block && list->block_len != 0) {
+        i++;
+        list = list->u.next;
+    }
+    return i;
+}
+
+
+/* sound_print - implement SND-PRINT, based on sound_save in sndwritepa.c */
+/**/
 void sound_print(snd_expr, n)
   LVAL snd_expr;
   long n;
 {
     LVAL result;
 
-    xlsave1(result);
     result = xleval(snd_expr);
+    /* BE CAREFUL - DO NOT ALLOW GC TO RUN WHILE RESULT IS UNPROTECTED */
     if (vectorp(result)) {
         /* make sure all elements are of type a_sound */
         long i = getsize(result);
         while (i > 0) {
             i--;
             if (!exttypep(getelement(result, i), a_sound)) {
-                xlerror("sound_print: array has non-sound element",
-                         result);
+                xlerror("SND-PRINT: array has non-sound element",
+                        result);
             }
         }
         sound_print_array(result, n);
-    } else if (exttypep(result, a_sound)) {
-        sound_print_sound(getsound(result), n);
+    } else if (soundp(result)) {
+        sound_print_sound(result, n);
     } else {
+        xlprot1(result);
         xlerror("sound_print: expression did not return a sound",
                  result);
+        xlpop();
     }
-    xlpop();
 }
 
 
-void sound_print_sound(sound_type s, long n)
+/* sound_print_sound - implements SND-PRINT for mono signal */
+/**/
+void sound_print_sound(LVAL s_as_lval, long n)
 {
     int ntotal = 0;
-    long blocklen;
+    sound_type s;
+    int blocklen;
     sample_block_type sampblock;
 
-    /* for debugging */
-    printing_this_sound = s;
+    /* for debugging 
+    printing_this_sound = s; 
+    */
 
-    nyquist_printf("sound_print: start at time %g\n", s->t0);
+    xlprot1(s_as_lval);
+    s = sound_copy(getsound(s_as_lval));
+    s_as_lval = cvsound(s); /* destroys our reference to original */
+
+    nyquist_printf("SND-PRINT: start at time %g\n", s->t0);
 
     while (ntotal < n) {
-        if (s->logical_stop_cnt != UNKNOWN)
-            nyquist_printf("LST=%d ", (int)s->logical_stop_cnt);
+        if (s->logical_stop_cnt != UNKNOWN) {
+            nyquist_printf("logical stop time (in samples): %d ", 
+                           (int)s->logical_stop_cnt);
+        }
         sound_print_tree(s);
         sampblock = sound_get_next(s, &blocklen);
         if (sampblock == zero_block || blocklen == 0) {
             break;
         }
-        print_sample_block_type("sound_print", sampblock,
+        print_sample_block_type("SND-PRINT", sampblock,
                                 MIN(blocklen, n - ntotal));
         ntotal += blocklen;
     }
     nyquist_printf("total samples: %d\n", ntotal);
+    xlpop();
 }
 
 
 void sound_print_array(LVAL sa, long n)
 {
-    long blocklen;
-    long i, len;
+    int blocklen;
+    long i, chans;
+    LVAL sa_copy;
     long upper = 0;
     sample_block_type sampblock;
     time_type t0, tmax;
 
-    len = getsize(sa);
-    if (len == 0) {
-        stdputstr("sound_print: 0 channels!\n");
+    chans = getsize(sa);
+    if (chans == 0) {
+        stdputstr("SND-PRINT: 0 channels!\n");
         return;
     }
 
+    xlprot1(sa);
+    sa_copy = newvector(chans);
+    xlprot1(sa_copy);
+
+    /* To be non-destructive, copy sounds from sa to sa_copy. */
+    for (i = 0; i < chans; i++) {
+        sound_type s = getsound(getelement(sa, i));
+        setelement(sa_copy, i, cvsound(sound_copy(s)));
+    }
+    /* If sa and sounds in sa are not accessible, we do not want to retain
+     * them because they will accumulate the computed samples.
+     */
+    sa = sa_copy; /* destroy original reference to (maybe) allow GC */
+
     /* take care of prepending zeros if necessary */
     t0 = tmax = (getsound(getelement(sa, 0)))->t0;
-    for (i = 1; i < len; i++) {
+    for (i = 1; i < chans; i++) {
         sound_type s = getsound(getelement(sa, i));
         t0 = MIN(s->t0, t0);
         tmax = MAX(s->t0, tmax);
@@ -1386,7 +1457,7 @@ void sound_print_array(LVAL sa, long n)
     /* if necessary, prepend zeros */
     if (t0 != tmax) {
         stdputstr("prepending zeros to channels: ");
-        for (i = 0; i < len; i++) {
+        for (i = 0; i < chans; i++) {
             sound_type s = getsound(getelement(sa, i));
             if (t0 < s->t0) {
                 nyquist_printf(" %d ", (int)i);
@@ -1396,31 +1467,32 @@ void sound_print_array(LVAL sa, long n)
         stdputstr("\n");
     }
 
-    nyquist_printf("sound_print: start at time %g\n", t0);
+    nyquist_printf("SND-PRINT: start at time %g\n", t0);
 
     while (upper < n) {
         int i;
         boolean done = true;
-        for (i = 0; i < len; i++) {
+        for (i = 0; i < chans; i++) {
             sound_type s = getsound(getelement(sa, i));
-            long current = -1;  /* always get first block */
+            int64_t current = -1;  /* always get first block */
             while (current < upper) {
                 sampblock = sound_get_next(s, &blocklen);
                 if (sampblock != zero_block && blocklen != 0) {
-                      done = false;
+                    done = false;
                 }
                 current = s->current - blocklen;
                 nyquist_printf("chan %d current %d:\n", i, (int)current);
-                 print_sample_block_type("sound_print", sampblock,
-                                        MIN(blocklen, n - current));
+                 print_sample_block_type("SND-PRINT", sampblock,
+                                         (int) MIN(blocklen, n - current));
                 current = s->current;
-                upper = MAX(upper, current);
+                upper = (long) MAX(upper, current);
             }
         }
         if (done) break;
     }
     nyquist_printf("total: %d samples x %d channels\n",
-                   (int)upper, (int)len);
+                   (int)upper, (int)chans);
+    xlpopn(2); // sa and sa_copy
 }
 
 
@@ -1433,17 +1505,16 @@ void sound_print_array(LVAL sa, long n)
  * an expression that evaluates to the sound we want.  The
  * expression is eval'd, the result copied (in case the
  * expression was a sound or a global variable and we really
- * want to preserve the sound), and then a GC is run to 
+ * want to preserve the sound), and then GC will
  * get rid of the original if there really are no other 
- * references.  Finally, the copy is used to play the
- * sounds.
+ * references.
  */
 
-void sound_play(snd_expr)
+int64_t sound_play(snd_expr)
   LVAL snd_expr;
 {
-    int ntotal;
-    long blocklen;
+    int64_t ntotal;
+    int blocklen;
     sample_block_type sampblock;
     LVAL result;
     sound_type s;
@@ -1451,24 +1522,21 @@ void sound_play(snd_expr)
     xlsave1(result);
     result = xleval(snd_expr);
     if (!exttypep(result, a_sound)) {
-        xlerror("sound_play: expression did not return a sound",
+        xlerror("SND-PLAY: expression did not return a sound",
                  result);
     }
 
     ntotal = 0;
-    s = getsound(result);
-    xlpop();
-    /* if snd_expr was simply a symbol, then s now points to
+    /* if snd_expr was simply a symbol, then result now points to
         a shared sound_node.  If we read samples from it, then
         the sound bound to the symbol will be destroyed, so
         copy it first.  If snd_expr was a real expression that
         computed a new value, then the next garbage collection
-        will reclaim the sound_node.  We need to explicitly 
-        free the copy since the garbage collector cannot find
-        it.
+        will reclaim the sound_node.
     */
-    s = sound_copy(s);
-    gc();
+    s = sound_copy(getsound(result));
+    result = cvsound(s);
+
     while (1) {
 #ifdef OSC
         if (nosc_enabled) nosc_poll();
@@ -1480,8 +1548,9 @@ void sound_play(snd_expr)
         /* print_sample_block_type("sound_play", sampblock, blocklen); */
         ntotal += blocklen;
     }
-    nyquist_printf("total samples: %d\n", ntotal);
-    sound_unref(s);
+    nyquist_printf("total samples: %" PRId64 "\n", ntotal);
+    xlpop();
+    return ntotal;
 }
 
 
@@ -1549,7 +1618,6 @@ void sound_print_tree_1(snd, n)
                            (int)snd_list->u.susp->log_stop_cnt,
                            snd_list->u.susp->sr,
                            snd_list->u.susp->t0, snd_list);
-/*            stdputstr("HI THERE AGAIN\n");*/
             susp_print_tree(snd_list->u.susp, n + 4);
             return;
         }
@@ -1662,8 +1730,8 @@ void sound_xlmark(void *a_sound)
            stdputstr("local variable or parameter that is being passed to\n");
            stdputstr("SEQ or SEQREP. The garbage collector assumes that\n");
            stdputstr("sounds are not recursive or circular, and follows\n");
-           stdputstr("sounds to their end. After following a more nodes,\n");
-           stdputstr("than can exist, I'm pretty sure that there is a\n");
+           stdputstr("sounds to their end. After following 1M nodes,\n");
+           stdputstr("I'm pretty sure that there is a\n");
            stdputstr("cycle here, but since this is a bug, I cannot promise\n");
            stdputstr("to recover. Prepare to crash. If you cannot locate\n");
            stdputstr("the cause of this, contact the author -RBD.\n");
@@ -1697,8 +1765,7 @@ void sound_symbols()
 /* The SOUND Type: */
 
 
-boolean soundp(s)
-LVAL s;
+boolean soundp(LVAL s)
 {
    return (exttypep(s, a_sound));
 }
@@ -1725,8 +1792,7 @@ sound_type sound_zero(time_type t0,rate_type sr)
 }
 
 
-LVAL cvsound(s)
-sound_type s;
+LVAL cvsound(sound_type s)
 {
 /*   nyquist_printf("cvsound(%p)\n", s);*/
    return (cvextern(sound_desc, (unsigned char *) s));

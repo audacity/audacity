@@ -44,22 +44,3 @@ const FilePath &PlatformCompatibility::GetExecutablePath()
    return path;
 }
 
-FilePath PlatformCompatibility::ConvertSlashInFileName(const FilePath &filePath)
-{
-#ifdef __WXMAC__
-   wxString path = filePath;
-   wxString filename;
-   wxString newPath = filePath;
-   // int pathLen = 1;
-   while (!wxDirExists(wxPathOnly(newPath)) && ! path.empty()) {
-      path = newPath.BeforeLast('/');
-      filename = newPath.AfterLast('/');
-      newPath = path;
-      newPath += ':';
-      newPath += filename;
-   }
-   return newPath;
-#else
-   return filePath;
-#endif
-}

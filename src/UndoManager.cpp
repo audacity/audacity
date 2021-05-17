@@ -20,49 +20,34 @@ UndoManager
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "UndoManager.h"
 
 #include <wx/hashset.h>
 
 #include "Clipboard.h"
+#include "DBConnection.h"
 #include "Diags.h"
 #include "Project.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"          // temp
-#include "NoteTrack.h"  // for Sonify* function declarations
+//#include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
 #include "Tags.h"
+#include "widgets/ProgressDialog.h"
 
 
 #include <unordered_set>
 
 wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_RENAMED, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
 wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UNDO_PURGE, wxCommandEvent);
 
 using SampleBlockID = long long;
-
-struct UndoStackElem {
-
-   UndoStackElem(std::shared_ptr<TrackList> &&tracks_,
-      const TranslatableString &description_,
-      const TranslatableString &shortDescription_,
-      const SelectedRegion &selectedRegion_,
-      const std::shared_ptr<Tags> &tags_)
-      : state(std::move(tracks_), tags_, selectedRegion_)
-      , description(description_)
-      , shortDescription(shortDescription_)
-   {
-   }
-
-   UndoState state;
-   TranslatableString description;
-   TranslatableString shortDescription;
-};
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    [](AudacityProject &project)
@@ -88,7 +73,7 @@ UndoManager::UndoManager( AudacityProject &project )
 
 UndoManager::~UndoManager()
 {
-   ClearStates();
+   wxASSERT( stack.empty() );
 }
 
 namespace {
@@ -175,23 +160,99 @@ void UndoManager::SetLongDescription(
 
 void UndoManager::RemoveStateAt(int n)
 {
-   stack.erase(stack.begin() + n);
+   // Remove the state from the array first, and destroy it at function exit.
+   // Because in case of callbacks from destruction of Sample blocks, there
+   // might be a yield to GUI and other events might inspect the undo stack
+   // (such as history window update).  Don't expose an inconsistent stack
+   // state.
+   auto iter = stack.begin() + n;
+   auto state = std::move(*iter);
+   stack.erase(iter);
 }
 
 
-void UndoManager::RemoveStates(int num)
+//! Just to find a denominator for a progress indicator.
+/*! This estimate procedure should in fact be exact */
+size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
 {
-   for (int i = 0; i < num; i++) {
-      RemoveStateAt(0);
+   if (begin == end)
+      return 0;
 
-      current -= 1;
-      saved -= 1;
+   // Collect ids that survive
+   SampleBlockIDSet wontDelete;
+   auto f = [&](const auto &p){
+      InspectBlocks(*p->state.tracks, {}, &wontDelete);
+   };
+   auto first = stack.begin(), last = stack.end();
+   std::for_each( first, first + begin, f );
+   std::for_each( first + end, last, f );
+   if (saved >= 0)
+      std::for_each( first + saved, first + saved + 1, f );
+   InspectBlocks(TrackList::Get(mProject), {}, &wontDelete);
+
+   // Collect ids that won't survive (and are not negative pseudo ids)
+   SampleBlockIDSet seen, mayDelete;
+   std::for_each( first + begin, first + end, [&](const auto &p){
+      auto &tracks = *p->state.tracks;
+      InspectBlocks(tracks, [&]( const SampleBlock &block ){
+         auto id = block.GetBlockID();
+         if ( id > 0 && !wontDelete.count( id ) )
+            mayDelete.insert( id );
+      },
+      &seen);
+   } );
+   return mayDelete.size();
+}
+
+void UndoManager::RemoveStates(size_t begin, size_t end)
+{
+   // Install a callback function that updates a progress indicator
+   unsigned long long nToDelete = EstimateRemovedBlocks(begin, end),
+      nDeleted = 0;
+   ProgressDialog dialog{ XO("Progress"), XO("Discarding undo/redo history"),
+      pdlgHideStopButton | pdlgHideCancelButton
+   };
+   auto callback = [&](const SampleBlock &){
+      dialog.Update(++nDeleted, nToDelete);
+   };
+   auto &trackFactory = WaveTrackFactory::Get( mProject );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+   auto prevCallback =
+      pSampleBlockFactory->SetBlockDeletionCallback(callback);
+   auto cleanup = finally([&]{ pSampleBlockFactory->SetBlockDeletionCallback( prevCallback ); });
+
+   // Wrap the whole in a savepoint for better performance
+   Optional<TransactionScope> pTrans;
+   auto pConnection = ConnectionPtr::Get(mProject).mpConnection.get();
+   if (pConnection)
+      pTrans.emplace(*pConnection, "DiscardingUndoStates");
+
+   for (size_t ii = begin; ii < end; ++ii) {
+      RemoveStateAt(begin);
+
+      if (current > begin)
+        --current;
+      if (saved > static_cast<int>(begin))
+        --saved;
    }
+
+   // Success, commit the savepoint
+   if (pTrans)
+      pTrans->Commit();
+   
+   if (begin != end)
+      // wxWidgets will own the event object
+      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PURGE } );
+
+   // Check sanity
+   wxASSERT_MSG(
+      nDeleted == 0 || // maybe bypassing all deletions
+      nDeleted == nToDelete, "Block count was misestimated");
 }
 
 void UndoManager::ClearStates()
 {
-   RemoveStates(stack.size());
+   RemoveStates(0, stack.size());
    current = -1;
    saved = -1;
 }
@@ -224,7 +285,7 @@ void UndoManager::ModifyState(const TrackList * l,
       return;
    }
 
-   SonifyBeginModifyState();
+//   SonifyBeginModifyState();
    // Delete current -- not necessary, but let's reclaim space early
    stack[current]->state.tracks.reset();
 
@@ -242,10 +303,24 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.tags = tags;
 
    stack[current]->state.selectedRegion = selectedRegion;
-   SonifyEndModifyState();
+//   SonifyEndModifyState();
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );
+}
+
+void UndoManager::RenameState( int state,
+   const TranslatableString &longDescription,
+   const TranslatableString &shortDescription)
+{
+   if (state >= 0 && state < stack.size() ) {
+      auto &theState = *stack[state];
+      theState.description = longDescription;
+      theState.shortDescription = shortDescription;
+
+      // wxWidgets will own the event object
+      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RENAMED } );
+   }
 }
 
 void UndoManager::PushState(const TrackList * l,
@@ -255,8 +330,6 @@ void UndoManager::PushState(const TrackList * l,
                             const TranslatableString &shortDescription,
                             UndoPush flags)
 {
-   unsigned int i;
-
    if ( (flags & UndoPush::CONSOLIDATE) != UndoPush::NONE &&
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
@@ -280,10 +353,7 @@ void UndoManager::PushState(const TrackList * l,
 
    mayConsolidate = true;
 
-   i = current + 1;
-   while (i < stack.size()) {
-      RemoveStateAt(i);
-   }
+   AbandonRedo();
 
    // Assume tags was duplicated before any changes.
    // Just save a NEW shared_ptr to it.
@@ -295,14 +365,18 @@ void UndoManager::PushState(const TrackList * l,
 
    current++;
 
-   if (saved >= current) {
-      saved = -1;
-   }
-
    lastAction = longDescription;
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PUSHED } );
+}
+
+void UndoManager::AbandonRedo()
+{
+   if (saved > current) {
+      saved = -1;
+   }
+   RemoveStates( current + 1, stack.size() );
 }
 
 void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
@@ -314,7 +388,7 @@ void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
    lastAction = {};
    mayConsolidate = false;
 
-   consumer( stack[current]->state );
+   consumer( *stack[current] );
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
@@ -329,7 +403,7 @@ void UndoManager::Undo(const Consumer &consumer)
    lastAction = {};
    mayConsolidate = false;
 
-   consumer( stack[current]->state );
+   consumer( *stack[current] );
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
@@ -357,10 +431,37 @@ void UndoManager::Redo(const Consumer &consumer)
    lastAction = {};
    mayConsolidate = false;
 
-   consumer( stack[current]->state );
+   consumer( *stack[current] );
 
    // wxWidgets will own the event object
    mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
+}
+
+void UndoManager::VisitStates( const Consumer &consumer, bool newestFirst )
+{
+   auto fn = [&]( decltype(stack[0]) &ptr ){ consumer( *ptr ); };
+   if (newestFirst)
+      std::for_each(stack.rbegin(), stack.rend(), fn);
+   else
+      std::for_each(stack.begin(), stack.end(), fn);
+}
+
+void UndoManager::VisitStates(
+   const Consumer &consumer, size_t begin, size_t end )
+{
+   auto size = stack.size();
+   if (begin < end) {
+      end = std::min(end, size);
+      for (auto ii = begin; ii < end; ++ii)
+         consumer(*stack[ii]);
+   }
+   else {
+      if (size == 0)
+         return;
+      begin = std::min(begin, size - 1);
+      for (auto ii = begin; ii > end; --ii)
+         consumer(*stack[ii]);
+   }
 }
 
 bool UndoManager::UnsavedChanges() const
@@ -371,6 +472,11 @@ bool UndoManager::UnsavedChanges() const
 void UndoManager::StateSaved()
 {
    saved = current;
+}
+
+int UndoManager::GetSavedState() const
+{
+   return saved;
 }
 
 // currently unused

@@ -8,18 +8,18 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h" // for USE_* macros
+
 
 #ifdef USE_MIDI
 #include "NoteTrackButtonHandle.h"
 
+#include "../../../../HitTestResult.h"
 #include "NoteTrackControls.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
-#include "../../../../TrackPanel.h"
 
 NoteTrackButtonHandle::NoteTrackButtonHandle
 ( const std::shared_ptr<NoteTrack> &pTrack,

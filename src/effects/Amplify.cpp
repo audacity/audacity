@@ -18,7 +18,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Amplify.h"
 #include "LoadEffects.h"
 

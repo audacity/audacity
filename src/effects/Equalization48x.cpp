@@ -13,10 +13,8 @@
 
 *//****************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
-#include "Equalization48x.h"
 
-#include "../Experimental.h"
+#include "Equalization48x.h"
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "../Project.h"
@@ -28,7 +26,6 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
-#include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/string.h>
 
@@ -207,7 +204,7 @@ bool EffectEqualization48x::AllocateBuffersWorkers(int nThreads)
    // this will remove the disparity in data at the intersections of the runs
 
    // The nice magic allocation
-   // megabyte - 3 windows - 4 overlaping buffers - filter 
+   // megabyte - 3 windows - 4 overlapping buffers - filter 
    // 2^20 = 1,048,576 - 3 * 2^14 (16,384) - ((4 * 20) - 3) * 12,384 - 4000 
    // 1,048,576 - 49,152 - 953,568 - 4000 = 41,856 (leftover)
 
@@ -965,7 +962,7 @@ bool EffectEqualization48x::ProcessOne1x4xThreaded(int count, WaveTrack * t,
             currentSample-=mBlockSize+(mFilterSize>>1);
             mBufferInfo[currentIndex].mBufferStatus=BufferReady; // free for grabbin
             bigBlocksRead++;
-         } else mBufferInfo[currentIndex].mBufferStatus=BufferEmpty; // this is completely unecessary
+         } else mBufferInfo[currentIndex].mBufferStatus=BufferEmpty; // this is completely unnecessary
          currentIndex=(currentIndex+1)%mWorkerDataCount;
       } 
    }
@@ -1261,7 +1258,7 @@ bool EffectEqualization48x::ProcessOne8xThreaded(int count, WaveTrack * t,
             currentSample-=mBlockSize+(mFilterSize>>1);
             mBufferInfo[currentIndex].mBufferStatus=BufferReady; // free for grabbin
             bigBlocksRead++;
-         } else mBufferInfo[currentIndex].mBufferStatus=BufferEmpty; // this is completely unecessary
+         } else mBufferInfo[currentIndex].mBufferStatus=BufferEmpty; // this is completely unnecessary
          currentIndex=(currentIndex+1)%mWorkerDataCount;
       } 
    }

@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ClickRemoval.h"
 #include "LoadEffects.h"
 

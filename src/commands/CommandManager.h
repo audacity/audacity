@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
-#include "../Experimental.h"
-
 #include "audacity/Types.h"
 
 #include "../ClientData.h"
@@ -96,7 +94,7 @@ class AUDACITY_DLL_API CommandManager final
    using CheckFn = std::function< bool(AudacityProject&) >;
 
    // For specifying unusual arguments in AddItem
-   struct Options
+   struct AUDACITY_DLL_API Options
    {
       Options() {}
       // Allow implicit construction from an accelerator string, which is
@@ -209,6 +207,9 @@ class AUDACITY_DLL_API CommandManager final
    // Lyrics and MixerTrackCluster classes use it.
    bool FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit = false);
    bool HandleMenuID(AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled);
+   void RegisterLastAnalyzer(const CommandContext& context);
+   void RegisterLastTool(const CommandContext& context);
+   void DoRepeatProcess(const CommandContext& context, int);
 
    enum TextualCommandResult {
       CommandFailure,
@@ -272,7 +273,7 @@ class AUDACITY_DLL_API CommandManager final
        // parenthesized, after the translated name.
        const ComponentInterfaceSymbol commands[], size_t nCommands) const;
 
-   // Sorted list of the shortcut keys to be exluded from the standard defaults
+   // Sorted list of the shortcut keys to be excluded from the standard defaults
    static const std::vector<NormalizedKeyString> &ExcludedList();
 
 private:
@@ -356,6 +357,8 @@ private:
    bool mbSeparatorAllowed; // false at the start of a menu and immediately after a separator.
 
    TranslatableString mCurrentMenuName;
+   TranslatableString mNiceName;
+   int mLastProcessId;
    std::unique_ptr<wxMenu> uCurrentMenu;
    wxMenu *mCurrentMenu {};
 
@@ -363,7 +366,7 @@ private:
    std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
 
-struct MenuVisitor : Registry::Visitor
+struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
    // final overrides
    void BeginGroup( Registry::GroupItem &item, const Path &path ) final;
@@ -394,17 +397,18 @@ namespace MenuTable {
    using namespace Registry;
 
    // These are found by dynamic_cast
-   struct MenuSection {
+   struct AUDACITY_DLL_API MenuSection {
       virtual ~MenuSection();
    };
-   struct WholeMenu {
+   struct AUDACITY_DLL_API WholeMenu {
       WholeMenu( bool extend = false ) : extension{ extend }  {}
       virtual ~WholeMenu();
       bool extension;
    };
 
    // Describes a main menu in the toolbar, or a sub-menu
-   struct MenuItem final : ConcreteGroupItem< false, ToolbarMenuVisitor >
+   struct AUDACITY_DLL_API MenuItem final
+      : ConcreteGroupItem< false, ToolbarMenuVisitor >
       , WholeMenu {
       // Construction from an internal name and a previously built-up
       // vector of pointers
@@ -457,7 +461,7 @@ namespace MenuTable {
    // This is used before a sequence of many calls to Command() and
    // CommandGroup(), so that the finder argument need not be specified
    // in each call.
-   class FinderScope : ValueRestorer< CommandHandlerFinder >
+   class AUDACITY_DLL_API FinderScope : ValueRestorer< CommandHandlerFinder >
    {
       static CommandHandlerFinder sFinder;
 
@@ -471,7 +475,7 @@ namespace MenuTable {
    };
 
    // Describes one command in a menu
-   struct CommandItem final : SingleItem {
+   struct AUDACITY_DLL_API CommandItem final : SingleItem {
       CommandItem(const CommandID &name_,
                const TranslatableString &label_in_,
                CommandFunctorPointer callback_,
@@ -505,7 +509,7 @@ namespace MenuTable {
    // Describes several successive commands in a menu that are closely related
    // and dispatch to one common callback, which will be passed a number
    // in the CommandContext identifying the command
-   struct CommandGroupItem final : SingleItem {
+   struct AUDACITY_DLL_API CommandGroupItem final : SingleItem {
       CommandGroupItem(const Identifier &name_,
                std::vector< ComponentInterfaceSymbol > items_,
                CommandFunctorPointer callback_,
@@ -680,7 +684,7 @@ namespace MenuTable {
    // Typically you make a static object of this type in the .cpp file that
    // also defines the added menu actions.
    // pItem can be specified by an expression using the inline functions above.
-   struct AttachedItem final
+   struct AUDACITY_DLL_API AttachedItem final
    {
       AttachedItem( const Placement &placement, BaseItemPtr pItem );
 

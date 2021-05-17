@@ -16,7 +16,7 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
-#include "Audacity.h" // for USE_* macros
+
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 
@@ -37,11 +37,6 @@ class wxCheckBox;
  *
  * The symptoms are that INT64_C is not a valid type, which tends to break
  * somewhere down in the implementations using this file */
-
-/* In order to be able to compile this file when ffmpeg is not available we
- * need access to the value of USE_FFMPEG, which means config*.h needs to come
- * in before this file. The suggest way to achieve this is by including
- * Audacity.h */
 
 #if defined(USE_FFMPEG)
 extern "C" {
@@ -247,7 +242,7 @@ public:
    {
       return {
          /* i18n-hint: do not translate avformat.  Preserve the computer gibberish.*/
-         { XO("Only avformat.dll"), { wxT("avformat.dll") } },
+         { XO("Only avformat.dll"), { GetLibAVFormatName() } },
          FileNames::DynamicLibraries,
          FileNames::AllFiles
       };
@@ -929,7 +924,7 @@ private:
    }
 };
 
-// utilites for RAII:
+// utilities for RAII:
 
 // Deleter adaptor for functions like av_free that take a pointer
 

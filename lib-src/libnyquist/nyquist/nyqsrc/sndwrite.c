@@ -375,7 +375,7 @@ cvtfn_type find_cvt_to_fn(snd_type snd, char *buf)
 sample_type sound_save_sound(LVAL s_as_lval, long n, snd_type snd,
                              char *buf, long *ntotal, snd_type player)
 {
-    long blocklen;
+    int blocklen;
     long buflen;
     sound_type s;
     long debug_unit;    /* print messages at intervals of this many samples */
@@ -634,7 +634,7 @@ D       nyquist_printf("save scale factor %d = %g\n", (int)i, state[i].scale);
      * would be a bug.)
      */
     free(state);
-    xlpop();
+    xlpopn(2);
     return max_sample;
 }
 

@@ -14,10 +14,10 @@ void allpoles_free(snd_susp_type a_susp);
 
 typedef struct allpoles_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type x_snd;
-    long x_snd_cnt;
+    int x_snd_cnt;
     sample_block_values_type x_snd_ptr;
 
     long ak_len;
@@ -52,47 +52,47 @@ void allpoles_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past the x_snd input sample block: */
-	susp_check_term_log_samples(x_snd, x_snd_ptr, x_snd_cnt);
-	togo = min(togo, susp->x_snd_cnt);
+        /* don't run past the x_snd input sample block: */
+        susp_check_term_log_samples(x_snd, x_snd_ptr, x_snd_cnt);
+        togo = min(togo, susp->x_snd_cnt);
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
 
-	/* don't run past logical stop time */
-	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
-	    /* break if to_stop == 0 (we're at the logical stop)
-	     * AND cnt > 0 (we're not at the beginning of the
-	     * output block).
-	     */
-	    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
-	    if (to_stop < togo) {
-		if (to_stop == 0) {
-		    if (cnt) {
-			togo = 0;
-			break;
-		    } else /* keep togo as is: since cnt == 0, we
-		            * can set the logical stop flag on this
-		            * output block
-		            */
-			susp->logically_stopped = true;
-		} else /* limit togo so we can start a new
-		        * block at the LST
-		        */
-		    togo = to_stop;
-	    }
-	}
+        /* don't run past logical stop time */
+        if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+            int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+            /* break if to_stop == 0 (we're at the logical stop)
+             * AND cnt > 0 (we're not at the beginning of the
+             * output block).
+             */
+            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */
+            if (to_stop < togo) {
+                if (to_stop == 0) {
+                    if (cnt) {
+                        togo = 0;
+                        break;
+                    } else /* keep togo as is: since cnt == 0, we
+                            * can set the logical stop flag on this
+                            * output block
+                            */
+                        susp->logically_stopped = true;
+                } else /* limit togo so we can start a new
+                        * block at the LST
+                        */
+                    togo = (int) to_stop;
+            }
+        }
 
 
       if (susp->ak_array == NULL) {
@@ -120,15 +120,15 @@ void allpoles_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
             }
 
-	n = togo;
-	ak_len_reg = susp->ak_len;
-	gain_reg = susp->gain;
-	ak_coefs_reg = susp->ak_coefs;
-	zk_buf_reg = susp->zk_buf;
-	index_reg = susp->index;
-	x_snd_ptr_reg = susp->x_snd_ptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        ak_len_reg = susp->ak_len;
+        gain_reg = susp->gain;
+        ak_coefs_reg = susp->ak_coefs;
+        zk_buf_reg = susp->zk_buf;
+        index_reg = susp->index;
+        x_snd_ptr_reg = susp->x_snd_ptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             double z0; long xi; long xj;            z0 = (x_snd_scale_reg * *x_snd_ptr_reg++)*gain_reg;
             for (xi=0; xi < ak_len_reg ; xi++) {
                 xj = index_reg + xi; if (xj >= ak_len_reg) xj -= ak_len_reg;
@@ -137,46 +137,46 @@ void allpoles_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             zk_buf_reg[index_reg] = z0;
             index_reg++; if (index_reg == ak_len_reg) index_reg = 0;
             *out_ptr_reg++ = (sample_type) z0;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->zk_buf = zk_buf_reg;
-	susp->index = index_reg;
-	/* using x_snd_ptr_reg is a bad idea on RS/6000: */
-	susp->x_snd_ptr += togo;
-	out_ptr += togo;
-	susp_took(x_snd_cnt, togo);
-	cnt += togo;
+        susp->zk_buf = zk_buf_reg;
+        susp->index = index_reg;
+        /* using x_snd_ptr_reg is a bad idea on RS/6000: */
+        susp->x_snd_ptr += togo;
+        out_ptr += togo;
+        susp_took(x_snd_cnt, togo);
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
     /* test for logical stop */
     if (susp->logically_stopped) {
-	snd_list->logically_stopped = true;
+        snd_list->logically_stopped = true;
     } else if (susp->susp.log_stop_cnt == susp->susp.current) {
-	susp->logically_stopped = true;
+        susp->logically_stopped = true;
     }
 } /* allpoles_s_fetch */
 
 
 void allpoles_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
-    {
+{
     allpoles_susp_type susp = (allpoles_susp_type) a_susp;
     time_type final_time = susp->susp.t0;
-    long n;
+    int n;
 
     /* fetch samples from x_snd up to final_time for this block of zeros */
     while ((ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr)) >=
-	   susp->x_snd->current)
-	susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
+           susp->x_snd->current)
+        susp_get_samples(x_snd, x_snd_ptr, x_snd_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
-    n = ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr -
+    n = (int) ROUNDBIG((final_time - susp->x_snd->t0) * susp->x_snd->sr -
          (susp->x_snd->current - susp->x_snd_cnt));
     susp->x_snd_ptr += n;
     susp_took(x_snd_cnt, n);

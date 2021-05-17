@@ -30,10 +30,8 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
-#include "ControlToolBar.h"
 
-#include "../Experimental.h"
+#include "ControlToolBar.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -583,8 +581,8 @@ void ControlToolBar::PlayDefault()
    ProjectAudioManager::Get( mProject ).PlayCurrentRegion(looped, cutPreview);
 }
 
+/*! @excsafety{Strong} -- For state of current project's tracks */
 void ControlToolBar::OnRecord(wxCommandEvent &evt)
-// STRONG-GUARANTEE (for state of current project's tracks)
 {
    // TODO: It would be neater if Menu items and Toolbar buttons used the same code for
    // enabling/disabling, and all fell into the same action routines.
@@ -603,6 +601,9 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 void ControlToolBar::OnIdle(wxIdleEvent & event)
 {
    event.Skip();
+
+   if (!wxTheApp->IsActive())
+      return;
 
    auto &projectAudioManager = ProjectAudioManager::Get( mProject );
    if ( projectAudioManager.Paused() )

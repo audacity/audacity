@@ -28,7 +28,7 @@
  * 28Apr03  dm  changes for portability and fix compiler warnings
  */
 
-void pvshell_free();
+void pvshell_free(snd_susp_type a_susp);
 
 
 typedef struct pvshell_susp_struct {

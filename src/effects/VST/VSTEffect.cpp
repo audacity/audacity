@@ -24,8 +24,9 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
-#include "../../Audacity.h" // for USE_* macros
+
 #include "VSTEffect.h"
+#include "../../ModuleManager.h"
 
 #include "../../widgets/ProgressDialog.h"
 
@@ -52,7 +53,6 @@
 #include <wx/busyinfo.h>
 #include <wx/button.h>
 #include <wx/combobox.h>
-#include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/imaglist.h>
@@ -143,7 +143,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VSTEffectsModule(path);
+   return safenew VSTEffectsModule();
 }
 
 // ============================================================================
@@ -306,17 +306,12 @@ public:
 // VSTEffectsModule
 //
 // ============================================================================
-VSTEffectsModule::VSTEffectsModule(const wxString *path)
+VSTEffectsModule::VSTEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 VSTEffectsModule::~VSTEffectsModule()
 {
-   mPath = wxEmptyString;
 }
 
 // ============================================================================
@@ -325,7 +320,7 @@ VSTEffectsModule::~VSTEffectsModule()
 
 PluginPath VSTEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
@@ -403,7 +398,7 @@ PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
    wxString vstpath = wxString::FromUTF8(getenv("VST_PATH"));
    if (!vstpath.empty())
    {
-      wxStringTokenizer tok(vstpath);
+      wxStringTokenizer tok(vstpath, wxPATH_SEP);
       while (tok.HasMoreTokens())
       {
          pathList.push_back(tok.GetNextToken());
@@ -1864,10 +1859,10 @@ void VSTEffect::ExportPresets()
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
    // upon returning from the FileNames::SelectFile().
-   path = FileNames::SelectFile(FileNames::Operation::_None,
+   path = FileNames::SelectFile(FileNames::Operation::Presets,
       XO("Save VST Preset As:"),
-      FileNames::DataDir(),
       wxEmptyString,
+      wxT("preset"),
       wxT("xml"),
       {
         { XO("Standard VST bank file"), { wxT("fxb") }, true },
@@ -1921,10 +1916,10 @@ void VSTEffect::ImportPresets()
    wxString path;
 
    // Ask the user for the real name
-   path = FileNames::SelectFile(FileNames::Operation::_None,
+   path = FileNames::SelectFile(FileNames::Operation::Presets,
       XO("Load VST Preset:"),
-      FileNames::DataDir(),
       wxEmptyString,
+      wxT("preset"),
       wxT("xml"),
       { {
          XO("VST preset files"),

@@ -13,7 +13,7 @@
 #if !(_MSC_VER >= 1800 || __cplusplus >= 201402L)
 /* replicate the very useful C++14 make_unique for those build environments
 that don't implement it yet.
-typical useage:
+typical usage:
 auto p = std::make_unique<Myclass>(ctorArg1, ctorArg2, ... ctorArgN);
 p->DoSomething();
 auto q = std::make_unique<Myclass[]>(count);
@@ -713,5 +713,13 @@ public:
       return result;
    }
 };
+
+// These macros are used widely, so declared here.
+#define QUANTIZED_TIME(time, rate) (floor(((double)(time) * (rate)) + 0.5) / (rate))
+// dB - linear amplitude conversions
+#define DB_TO_LINEAR(x) (pow(10.0, (x) / 20.0))
+#define LINEAR_TO_DB(x) (20.0 * log10(x))
+
+#define MAX_AUDIO (1. - 1./(1<<15))
 
 #endif // __AUDACITY_MEMORY_X_H__

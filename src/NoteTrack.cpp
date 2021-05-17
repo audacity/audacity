@@ -14,10 +14,10 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h" // for USE_* macros
+
 #include "NoteTrack.h"
 
-#include "Experimental.h"
+
 
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
@@ -112,19 +112,13 @@ SONFNS(AutoSave)
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add(trackFactory.NewNoteTrack());
+      auto result = tracks.Add( std::make_shared<NoteTrack>());
       TrackView::Get( *result );
       TrackControls::Get( *result );
       return result;
    }
 };
-
-NoteTrack::Holder TrackFactory::NewNoteTrack()
-{
-   return std::make_shared<NoteTrack>();
-}
 
 NoteTrack::NoteTrack()
    : NoteTrackBase()
@@ -641,6 +635,7 @@ void NoteTrack::InsertSilence(double t, double len)
    // AddToDuration( len );
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
 void NoteTrack::SetVelocity(float velocity)
 {
    if (mVelocity != velocity) {
@@ -648,6 +643,7 @@ void NoteTrack::SetVelocity(float velocity)
       Notify();
    }
 }
+#endif
 
 // Call this function to manipulate the underlying sequence data. This is
 // NOT the function that handles horizontal dragging.
@@ -687,6 +683,27 @@ QuantizedTimeAndBeat NoteTrack::NearestBeatTime( double time ) const
    seq_time = seq.nearest_beat_time(seq_time, &beat);
    // add the offset back in to get "actual" audacity track time
    return { seq_time + GetOffset(), beat };
+}
+
+Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
+{
+   auto pNewTrack = std::make_shared<NoteTrack>();
+   pNewTrack->Paste(0.0, this);
+   return pNewTrack;
+}
+
+auto NoteTrack::GetIntervals() const -> ConstIntervals
+{
+   ConstIntervals results;
+   results.emplace_back( GetStartTime(), GetEndTime() );
+   return results;
+}
+
+auto NoteTrack::GetIntervals() -> Intervals
+{
+   Intervals results;
+   results.emplace_back( GetStartTime(), GetEndTime() );
+   return results;
 }
 
 void NoteTrack::AddToDuration( double delta )

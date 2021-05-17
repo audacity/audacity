@@ -23,6 +23,10 @@ env:
   WXURL: https://github.com/audacity/wxWidgets
   WXREF: audacity-fixes-3.1.3
   WXWIN: ${{ github.workspace }}/wxwin
+  # As of 2021/01/01, github is using Xcode 12.2 as the default and
+  # it has a bug in the install_name_tool.  So explicitly use 12.3
+  # instead.
+  DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
 
 #
 # Define our job(s)
@@ -82,16 +86,16 @@ jobs:
         wxhash="wx_${wxhash}_${RUNNER_OS}_${{matrix.config.platform}}"
 
         # Export the commit hash to further steps
-        echo "::set-env name=WXHASH::${wxhash}"
+        echo "WXHASH=${wxhash}" >> ${GITHUB_ENV}
 
         # Get the short hash
         shorthash=$(git show -s --format='%h')
 
         # Export the short hash for the upload step
-        echo "::set-env name=SHORTHASH::${shorthash}"
+        echo "SHORTHASH=${shorthash}" >> ${GITHUB_ENV}
 
         # Export the destination directory name
-        echo "::set-env name=DEST::${{matrix.config.name}}_${shorthash}"
+        echo "DEST=${{matrix.config.name}}_${shorthash}" >> ${GITHUB_ENV}
 
     # =========================================================================
     # SHARED: Create and/or retrieve wxWidgets cached build
@@ -101,7 +105,7 @@ jobs:
       uses: actions/cache@v1
       with:
         # Increment the number at the end to force recreation of the cache
-        key: ${{ env.WXHASH }}.8
+        key: ${{ env.WXHASH }}.2
         path: ${{ env.WXWIN }}
 
     # =========================================================================
@@ -119,7 +123,7 @@ jobs:
           # Clone the wxWidgets repo
           git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
 
-          # Use cmake since it defines the MSVC enviornment for us
+          # Use cmake since it defines the MSVC environment for us
           cmake -S "wxroot" \
                 -B "wxroot" \
                 -G "${{matrix.config.generator}}" \
@@ -297,19 +301,14 @@ jobs:
         # Create the lib directory
         mkdir -p ${DEST}/lib
 
-        # Copy over wxWidgets libs
-        ldd ${DEST}/bin/audacity
-        for lib in $(ldd ${DEST}/bin/audacity | awk '/libwx/{print $3}')
-        do
-           echo ${lib}
-           ldd ${lib} | awk '/libwx/{print $3}'
-        done | sort -u | xargs cp -n -H -t ${DEST}/lib
-
         # Create wrapper script
         cat >"${DEST}/audacity" <<"EOF"
         #!/bin/sh
-        export LD_LIBRARY_PATH="${0%/*}/lib:${LD_LIBRARY_PATH}"
+        lib="${0%/*}/lib/audacity"
+        export LD_LIBRARY_PATH="${lib}:${LD_LIBRARY_PATH}"
+        export AUDACITY_MODULES_PATH="${lib}/modules"
         "${0%/*}/bin/audacity"
+
         EOF
         chmod +x "${DEST}/audacity"
 

@@ -9,12 +9,15 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Project.h"
 
 #include "KeyboardCapture.h"
+#include "TempDirectory.h"
+#include "./widgets/ErrorDialog.h"
 
 #include <wx/display.h>
+#include <wx/filename.h>
 #include <wx/frame.h>
 
 wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
@@ -122,6 +125,25 @@ AudacityProject::AudacityProject()
    AttachedObjects::BuildAll();
    // But not for the attached windows.  They get built only on demand, such as
    // from menu items.
+
+   // Make sure there is plenty of space for Sqlite files
+   wxLongLong freeSpace = 0;
+
+   auto path = TempDirectory::TempDir();
+   if (wxGetDiskSpace(path, NULL, &freeSpace)) {
+      if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
+         auto volume = FileNames::AbbreviatePath( path );
+         /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
+         ShowErrorDialog(nullptr, 
+            XO("Warning"),
+            XO("There is very little free disk space left on %s\n"
+               "Please select a bigger temporary directory location in\n"
+               "Directories Preferences.").Format( volume ),
+            "Error:_Disk_full_or_not_writable"
+            );
+      }
+   }
+
 }
 
 AudacityProject::~AudacityProject()
@@ -146,6 +168,19 @@ const wxString &AudacityProject::GetProjectName() const
 void AudacityProject::SetProjectName(const wxString &name)
 {
    mName = name;
+}
+
+FilePath AudacityProject::GetInitialImportPath() const
+{
+   return mInitialImportPath;
+}
+
+void AudacityProject::SetInitialImportPath(const FilePath &path)
+{
+   if (mInitialImportPath.empty())
+   {
+      mInitialImportPath = path;
+   }
 }
 
 AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )

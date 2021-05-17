@@ -9,8 +9,6 @@
 
 ***********************************************************************/
 
-#include "../Experimental.h"
-
 #ifndef __AUDACITY_EFFECT_EQUALIZATION__
 #define __AUDACITY_EFFECT_EQUALIZATION__
 #define NUMBER_OF_BANDS 31

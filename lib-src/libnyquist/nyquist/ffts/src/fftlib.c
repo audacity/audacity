@@ -3,6 +3,8 @@ lower level fft stuff including routines called in fftext.c and fft2d.c
 *******************************************************************/
 /* inline declarations modified by RBD for C99 compiler */
 
+
+#include <stdint.h>
 #include "fftlib.h"
 #include <math.h>
 #define	MCACHE	(11-(sizeof(float)/8))	// fft's with M bigger than this bust primary cache
@@ -107,7 +109,7 @@ posB = posA + 2;
 posBi = posB + 1;
 
 iolimit = ioptr + Nrems2;
-for (; ioptr < iolimit; ioptr += POW2(M/2+1)){
+for (; ioptr < iolimit; ioptr += (int64_t) POW2(M/2+1)){
 	for (Colstart = Nroot_1; Colstart >= 0; Colstart--){
 		iCol = Nroot_1;
 		p0r = ioptr+ Nroot_1_ColInc + BRLow[Colstart]*4;
@@ -420,7 +422,7 @@ float 	*p0r, *p1r, *p2r, *p3r;
 
 float f0r, f0i, f1r, f1i, f2r, f2i, f3r, f3i;
 float f4r, f4i, f5r, f5i, f6r, f6i, f7r, f7i;
-const float Two = 2.0;
+/* UNUSED: const float Two = 2.0; */
 
 pinc = NDiffU * 2;		// 2 floats per complex
 pnext =  pinc * 4;
@@ -528,7 +530,7 @@ unsigned long 	SameUCnt;
 float	*pstrt;
 float 	*p0r, *p1r, *p2r, *p3r;
 
-float w1r = 1.0/MYROOT2; /* cos(pi/4)	*/
+float w1r = 1.0F/MYROOT2; /* cos(pi/4)	*/
 float f0r, f0i, f1r, f1i, f2r, f2i, f3r, f3i;
 float f4r, f4i, f5r, f5i, f6r, f6i, f7r, f7i;
 float t1r, t1i;
@@ -981,7 +983,7 @@ for (; StageCnt > 0 ; StageCnt--){
 		w1r =  *u1r;
 		w1i =  *u1i;
 
-		if (DiffUCnt <= NDiffU/2)
+		if ((long) DiffUCnt <= NDiffU/2)
 			w0r = -w0r;
 
 		t0r = f0r - f4r * w2r - f4i * w2i;
@@ -1171,7 +1173,7 @@ posB = posA + 2;
 posBi = posB + 1;
 
 iolimit = ioptr + Nrems2;
-for (; ioptr < iolimit; ioptr += POW2(M/2+1)){
+for (; ioptr < iolimit; ioptr += (int64_t) POW2(M/2+1)){
 	for (Colstart = Nroot_1; Colstart >= 0; Colstart--){
 		iCol = Nroot_1;
 		p0r = ioptr+ Nroot_1_ColInc + BRLow[Colstart]*4;
@@ -1352,7 +1354,7 @@ ioptr[7] = scale*f3i;
 //inline void ifft8pt(float *ioptr, float scale);
 static inline void ifft8pt(float *ioptr, float scale){
 /***   RADIX 8 ifft	***/
-float w0r = 1.0/MYROOT2; /* cos(pi/4)	*/
+float w0r = 1.0F/MYROOT2; /* cos(pi/4)	*/
 float f0r, f0i, f1r, f1i, f2r, f2i, f3r, f3i;
 float f4r, f4i, f5r, f5i, f6r, f6i, f7r, f7i;
 float t0r, t0i, t1r, t1i;
@@ -1484,7 +1486,7 @@ float 	*p0r, *p1r, *p2r, *p3r;
 
 float f0r, f0i, f1r, f1i, f2r, f2i, f3r, f3i;
 float f4r, f4i, f5r, f5i, f6r, f6i, f7r, f7i;
-const float Two = 2.0;
+/* UNUSED: const float Two = 2.0; */
 
 pinc = NDiffU * 2;		// 2 floats per complex
 pnext =  pinc * 4;
@@ -1592,7 +1594,7 @@ unsigned long 	SameUCnt;
 float	*pstrt;
 float 	*p0r, *p1r, *p2r, *p3r;
 
-float w1r = 1.0/MYROOT2; /* cos(pi/4)	*/
+float w1r = 1.0F/MYROOT2; /* cos(pi/4)	*/
 float f0r, f0i, f1r, f1i, f2r, f2i, f3r, f3i;
 float f4r, f4i, f5r, f5i, f6r, f6i, f7r, f7i;
 float t1r, t1i;
@@ -2048,7 +2050,7 @@ for (; StageCnt > 0 ; StageCnt--){
 		w1r =  *u1r;
 		w1i =  *u1i;
 
-		if (DiffUCnt <= NDiffU/2)
+		if ((long) DiffUCnt <= NDiffU/2)
 			w0r = -w0r;
 
 		t0r = f0r - f4r * w2r + f4i * w2i;
@@ -2501,9 +2503,9 @@ posi = pos + 1;
 p0r = ioptr;
 p1r = ioptr + pos/2;
 
-u0r = Utbl + POW2(M-3);
+u0r = Utbl + (int) POW2(M-3);
 
-w0r =  *u0r,
+w0r =  *u0r;
 
 f0r = *(p0r);
 f0i = *(p0r + 1);
@@ -2541,7 +2543,7 @@ f5i = *(p1r + posi);
 u0r = Utbl + 1;
 u0i = Utbl + (POW2(M-2)-1);
 
-w0r =  *u0r,
+w0r =  *u0r;
 w0i =  *u0i;
 	
 p0r = (ioptr + 2);
@@ -2992,9 +2994,9 @@ posi = pos + 1;
 p0r = ioptr;
 p1r = ioptr + pos/2;
 
-u0r = Utbl + POW2(M-3);
+u0r = Utbl + (int) POW2(M-3);
 
-w0r =  *u0r,
+w0r =  *u0r;
 
 f0r = *(p0r);
 f0i = *(p0r + 1);
@@ -3032,7 +3034,7 @@ f5i = *(p1r + posi);
 u0r = Utbl + 1;
 u0i = Utbl + (POW2(M-2)-1);
 
-w0r =  *u0r,
+w0r =  *u0r;
 w0i =  *u0i;
 	
 p0r = (ioptr + 2);

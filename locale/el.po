@@ -5,10 +5,10 @@
 # Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2014-2020.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 2.4.2\n"
+"Project-Id-Version: audacity 3.0.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2020-06-09 10:48+0100\n"
-"PO-Revision-Date: 2020-06-12 10:14+0300\n"
+"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"PO-Revision-Date: 2021-04-01 11:52+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -148,9 +148,11 @@ msgid "Script was not saved."
 msgstr "Η δέσμη ενεργειών δεν αποθηκεύτηκε."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
-#: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportMultiple.cpp
-#: src/import/ImportPCM.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
+#: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
+#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
+#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
+#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Προειδοποίηση"
 
@@ -601,10 +603,10 @@ msgstr "Ιστότοπος %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2018 %s Team."
+msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr ""
-"Τα πνευματικά δικαιώματα του λογισμικού %s %s 1999-2018 ανήκουν στην ομάδα "
-"%s."
+"τα πνευματικά δικαιώματα %s του λογισμικού %s ανήκουν στην ομάδα %s "
+"1999-2021."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -612,7 +614,6 @@ msgstr ""
 msgid "The name %s is a registered trademark of Dominic Mazzoni."
 msgstr "Το όνομα %s είναι καταχωρισμένο εμπορικό σήμα του Dominic Mazzoni."
 
-#. i18n-hint: Information about when audacity was compiled
 #: src/AboutDialog.cpp
 msgid "Build Information"
 msgstr "Πληροφορίες έκδοσης"
@@ -625,6 +626,68 @@ msgstr "Ενεργοποιημένο"
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
+
+#. i18n-hint: Information about when audacity was compiled follows
+#: src/AboutDialog.cpp
+msgid "The Build"
+msgstr "Η δόμηση"
+
+#: src/AboutDialog.cpp
+msgid "Program build date:"
+msgstr "Ημερομηνία δημιουργίας του προγράμματος:"
+
+#: src/AboutDialog.cpp
+msgid "Commit Id:"
+msgstr "Αναγνωριστικό υποβολής:"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Debug build (debug level %d)"
+msgstr "Δομή αποσφαλμάτωσης (επίπεδο αποσφαλμάτωσης %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "Release build (debug level %d)"
+msgstr "Δομή έκδοσης (επίπεδο αποσφαλμάτωσης %d)"
+
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, 64 bits"
+msgstr "%s, 64 bits"
+
+#: src/AboutDialog.cpp
+msgid "Build type:"
+msgstr "Τύπος δόμησης:"
+
+#: src/AboutDialog.cpp
+msgid "Compiler:"
+msgstr "Μεταγλωττιστής:"
+
+#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#: src/AboutDialog.cpp
+msgid "Installation Prefix:"
+msgstr "Πρόθεμα εγκατάστασης:"
+
+#: src/AboutDialog.cpp
+msgid "Settings folder:"
+msgstr "Φάκελος ρυθμίσεων:"
+
+#. i18n-hint: Libraries that are essential to audacity
+#: src/AboutDialog.cpp
+msgid "Core Libraries"
+msgstr "Βιβλιοθήκες πυρήνα"
+
+#: src/AboutDialog.cpp
+msgid "Cross-platform GUI library"
+msgstr "Διαλειτουργική βιβλιοθήκη GUI"
+
+#: src/AboutDialog.cpp
+msgid "Audio playback and recording"
+msgstr "Αναπαραγωγή ήχου και εγγραφή"
+
+#: src/AboutDialog.cpp
+msgid "Sample rate conversion"
+msgstr "Μετατροπή ρυθμού δειγματοληψίας"
 
 #: src/AboutDialog.cpp
 msgid "File Format Support"
@@ -667,23 +730,6 @@ msgstr "Εισαγωγή/Εξαγωγή FFmpeg"
 msgid "Import via GStreamer"
 msgstr "Εισαγωγή μέσω GStreamer"
 
-#. i18n-hint: Libraries that are essential to audacity
-#: src/AboutDialog.cpp
-msgid "Core Libraries"
-msgstr "Βιβλιοθήκες πυρήνα"
-
-#: src/AboutDialog.cpp
-msgid "Sample rate conversion"
-msgstr "Μετατροπή ρυθμού δειγματοληψίας"
-
-#: src/AboutDialog.cpp
-msgid "Audio playback and recording"
-msgstr "Αναπαραγωγή ήχου και εγγραφή"
-
-#: src/AboutDialog.cpp
-msgid "Cross-platform GUI library"
-msgstr "Διαλειτουργική βιβλιοθήκη GUI"
-
 #: src/AboutDialog.cpp
 msgid "Features"
 msgstr "Χαρακτηριστικά"
@@ -709,46 +755,6 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "Υποστήριξη ακραίας αλλαγής τόνου και ρυθμού (τέμπο)"
 
 #: src/AboutDialog.cpp
-msgid "Program build date:"
-msgstr "Ημερομηνία δημιουργίας του προγράμματος:"
-
-#: src/AboutDialog.cpp
-msgid "Commit Id:"
-msgstr "Αναγνωριστικό υποβολής:"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Debug build (debug level %d)"
-msgstr "Δομή αποσφαλμάτωσης (επίπεδο αποσφαλμάτωσης %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "Release build (debug level %d)"
-msgstr "Δομή έκδοσης (επίπεδο αποσφαλμάτωσης %d)"
-
-#: src/AboutDialog.cpp
-#, c-format
-msgid "%s, 64 bits"
-msgstr "%s, 64 bits"
-
-#: src/AboutDialog.cpp
-msgid "Build type:"
-msgstr "Τύπος δόμησης:"
-
-#: src/AboutDialog.cpp
-msgid "Compiler:"
-msgstr "Μεταγλωττιστής:"
-
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
-#: src/AboutDialog.cpp
-msgid "Installation Prefix:"
-msgstr "Πρόθεμα εγκατάστασης:"
-
-#: src/AboutDialog.cpp
-msgid "Settings folder:"
-msgstr "Φάκελος ρυθμίσεων:"
-
-#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "Άδεια GPL"
 
@@ -760,6 +766,8 @@ msgstr "Οι ενέργειες της λωρίδας χρόνου απενερ�
 msgid "Click and drag to adjust, double-click to reset"
 msgstr "Πατήστε και σύρετε για να ρυθμίσετε, διπλοπατήστε για επαναφορά"
 
+#. i18n-hint: This text is a tooltip on the icon (of a pin) representing
+#. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
 msgid "Record/Play head"
 msgstr "Κεφαλή ηχογράφησης/αναπαραγωγής"
@@ -860,8 +868,7 @@ msgstr ""
 "Αδύνατο το κλείδωμα περιοχής πέρα από\n"
 "το τέλος του έργου."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/AutoRecoveryDialog.cpp
-#: src/ProjectAudioManager.cpp src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
 #: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
 #: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
@@ -910,39 +917,14 @@ msgstr ""
 "Έχει αφαιρεθεί από τον κατάλογο των πρόσφατων αρχείων."
 
 #: src/AudacityApp.cpp
-#, c-format
-msgid ""
-"One or more external audio files could not be found.\n"
-"It is possible they were moved, deleted, or the drive they were on was "
-"unmounted.\n"
-"Silence is being substituted for the affected audio.\n"
-"The first detected missing file is:\n"
-"%s\n"
-"There may be additional missing files.\n"
-"Choose Help > Diagnostics > Check Dependencies to view a list of locations "
-"of the missing files."
+msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
-"Ένα ή περισσότερα εξωτερικά αρχεία ήχου δεν μπόρεσαν να βρεθούν.\n"
-"Μπορεί να μετακινήθηκαν, να διαγράφτηκαν, ή να αποπροσαρτήθηκε ο οδηγός στον "
-"οποίον βρίσκονταν.\n"
-"Η σιγή αντικαθίσταται για τον επηρεαζόμενο ήχο.\n"
-"Το πρώτο αρχείο που ανιχνεύτηκε ότι λείπει είναι:\n"
-"%s\n"
-"Μπορεί να υπάρχουν πρόσθετα αρχεία που λείπουν.\n"
-"Επιλέξτε Αρχείο > Διαγνωστικά > Έλεγχος εξαρτήσεων για να προβάλετε έναν "
-"κατάλογο των θέσεων των αρχείων που λείπουν."
-
-#: src/AudacityApp.cpp
-msgid "Files Missing"
-msgstr "Λείπουν αρχεία"
+"Η βιβλιοθήκη του SQLite απέτυχε να ξεκινήσει. Το Audacity δεν μπορεί να "
+"συνεχίσει."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Το μέγεθος του μπλοκ πρέπει να είναι μεταξύ 256 έως 100000000\n"
-
-#: src/AudacityApp.cpp
-msgid "File decoded successfully\n"
-msgstr "Το αρχείο αποκωδικοποιήθηκε με επιτυχία\n"
 
 #: src/AudacityApp.cpp
 msgid "Audacity is starting up..."
@@ -1049,23 +1031,78 @@ msgid "Audacity is already running"
 msgstr "Το Audacity είναι είδη σε λειτουργία"
 
 #: src/AudacityApp.cpp
-msgid "An unrecoverable error has occurred during startup"
-msgstr "Κατά την εκκίνηση συνέβη ανεπανόρθωτο σφάλμα"
+msgid ""
+"Unable to acquire semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+"Αδυναμία λήψης σηματοφόρων.\n"
+"\n"
+"Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
+"και μπορεί να χρειαστεί επανεκκίνηση."
 
 #: src/AudacityApp.cpp
 msgid "Audacity Startup Failure"
 msgstr "Αποτυχία εκκίνησης Audacity"
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to create semaphores.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+"Αδυναμία δημιουργίας σηματοφόρων.\n"
+"\n"
+"Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
+"και μπορεί να χρειαστεί επανεκκίνηση."
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire lock semaphore.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+"Αδυναμία λήψης σηματοφόρου κλειδώματος.\n"
+"\n"
+"Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
+"και μπορεί να απαιτηθεί επανεκκίνηση."
+
+#: src/AudacityApp.cpp
+msgid ""
+"Unable to acquire server semaphore.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+"Αδυναμία λήψης σηματοφόρου διακομιστή.\n"
+"\n"
+"Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
+"και μπορεί να χρειαστεί επανεκκίνηση."
+
+#: src/AudacityApp.cpp
+msgid ""
+"The Audacity IPC server failed to initialize.\n"
+"\n"
+"This is likely due to a resource shortage\n"
+"and a reboot may be required."
+msgstr ""
+"Ο διακομιστής IPC Audacity απέτυχε να αρχικοποιηθεί.\n"
+"\n"
+"Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
+"και μπορεί να απαιτηθεί επανεκκίνηση."
+
+#: src/AudacityApp.cpp
+msgid "An unrecoverable error has occurred during startup"
+msgstr "Κατά την εκκίνηση συνέβη ανεπανόρθωτο σφάλμα"
 
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
 #: src/AudacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "ορισμός μέγιστου μεγέθους μπλοκ δίσκου σε ψηφιολέξεις (bytes)"
-
-#. i18n-hint: This decodes an autosave file
-#: src/AudacityApp.cpp
-msgid "decode an autosave file"
-msgstr "αποκωδικοποίηση αρχείου αυτόματης αποθήκευσης"
 
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
@@ -1090,12 +1127,12 @@ msgstr "όνομα αρχείου ήχου ή έργου"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity project (.AUP) files are not currently \n"
+"Audacity project (.aup3) files are not currently \n"
 "associated with Audacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Τα αρχεία έργου του Audacity (.AUP) δεν είναι για την ώρα \n"
+"Τα αρχεία έργου του Audacity (.aup3) δεν είναι τώρα \n"
 "συσχετισμένα με το Audacity. \n"
 "\n"
 "Να συσχετισθούν, έτσι ώστε να ανοίγουν διπλοπατώντας;"
@@ -1108,6 +1145,54 @@ msgstr "Αρχεία έργου Audacity"
 #: src/widgets/AudacityMessageBox.cpp
 msgid "Message"
 msgstr "Μήνυμα"
+
+#: src/AudacityFileConfig.cpp
+msgid "Audacity Configuration Error"
+msgstr "Σφάλμα διαμόρφωσης του Audacity"
+
+#: src/AudacityFileConfig.cpp
+#, c-format
+msgid ""
+"The following configuration file could not be accessed:\n"
+"\n"
+"\t%s\n"
+"\n"
+"This could be caused by many reasons, but the most likely are that the disk "
+"is full or you do not have write permissions to the file. More information "
+"can be obtained by clicking the help button below.\n"
+"\n"
+"You can attempt to correct the issue and then click \"Retry\" to continue.\n"
+"\n"
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
+"state which will be recovered the next time you open it."
+msgstr ""
+"Το παρακάτω αρχείο ρυθμίσεων δεν μπόρεσε να προσπελαστεί:\n"
+"\n"
+"\t%s\n"
+"\n"
+"Αυτό μπορεί να οφείλεται σε πολλά αίτια, αλλά το πιο πιθανό είναι ότι ο "
+"δίσκος είναι πλήρης, ή δεν έχει δικαιώματα εγγραφής στο αρχείο. Περισσότερες "
+"πληροφορίες μπορούν να ληφθούν πατώντας το πλήκτρο βοήθειας παρακάτω.\n"
+"\n"
+"Μπορείτε να προσπαθήσετε να διορθώσετε το πρόβλημα και να πατήσετε έπειτα "
+"\"Επανάληψη\" για να συνεχίσετε.\n"
+"\n"
+"Εάν επιλέξετε \"Έξοδος από το Audacity\", το έργο σας μπορεί να αφεθεί σε "
+"αναποθήκευτη κατάσταση που θα ανακτηθεί την επόμενη φορά που θα το ανοίξετε."
+
+#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
+#: src/widgets/MultiDialog.cpp
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+msgid "&Quit Audacity"
+msgstr "Έ&ξοδος από το Audacity"
+
+#: src/AudacityFileConfig.cpp
+msgid "&Retry"
+msgstr "Ε&πανάληψη"
 
 #: src/AudacityLogger.cpp
 msgid "Audacity Log"
@@ -1425,35 +1510,32 @@ msgstr "Επιλεγμένη συσκευή αναπαραγωγής MIDI: %d - 
 msgid "No MIDI playback device found for '%s'.\n"
 msgstr "Δεν βρέθηκε συσκευή αναπαραγωγής MIDI για το '%s'.\n"
 
-#: src/AutoRecovery.cpp
-msgid ""
-"This recovery file was saved by Audacity 2.3.0 or before.\n"
-"You need to run that version of Audacity to recover the project."
-msgstr ""
-"Αυτό το αρχείο ανάκτησης αποθηκεύτηκε από το Audacity 2.3.0 ή πριν.\n"
-"Θα χρειαστεί να εκτελέσετε αυτήν την έκδοση του Audacity για να ανακτήσετε "
-"το έργο."
-
-#: src/AutoRecovery.cpp
-msgid "Error Decoding File"
-msgstr "Σφάλμα αποκωδικοποίησης του αρχείου"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "Αυτόματη ανάκτηση δεδομένων κατάρρευσης"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"Some projects were not saved properly the last time Audacity was run.\n"
-"Fortunately, the following projects can be automatically recovered:"
+"The following projects were not saved properly the last time Audacity was "
+"run and can be automatically recovered.\n"
+"\n"
+"After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Κάποιες έργα δεν αποθηκεύτηκαν σωστά την τελευταία φορά λειτουργίας του "
-"Audacity.\n"
-"Ευτυχώς, τα ακόλουθα έργα μπορούν να ανακτηθούν:"
+"Τα παρακάτω έργα δεν αποθηκεύτηκαν σωστά την τελευταία φορά λειτουργίας του "
+"Audacity και μπορούν να ανακτηθούν αυτόματα.\n"
+"\n"
+"Μετά την ανάκτηση, αποθηκεύστε τα έργα για να διασφαλίσετε ότι οι αλλαγές "
+"γράφτηκαν στον δίσκο."
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Recoverable projects"
-msgstr "Ανακτήσιμα έργα"
+msgid "Recoverable &projects"
+msgstr "Ανακτήσιμα έ&ργα"
+
+#. i18n-hint: (verb).  It instruct the user to select items.
+#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
+#: src/prefs/MousePrefs.cpp
+msgid "Select"
+msgstr "Επιλογή"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
 #: src/AutoRecoveryDialog.cpp src/PluginManager.cpp src/TrackInfo.cpp
@@ -1461,40 +1543,30 @@ msgid "Name"
 msgstr "Όνομα"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "After recovery, save the project to save the changes to disk."
-msgstr ""
-"Μετά την ανάκτηση, αποθηκεύστε το έργο για να αποθηκεύσετε τις αλλαγές στον "
-"δίσκο."
+msgid "&Discard Selected"
+msgstr "Απόρρι&ψη επιλεγμένου"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Quit Audacity"
-msgstr "Έξοδος από το Audacity"
+msgid "&Recover Selected"
+msgstr "Α&νάκτηση επιλεγμένου"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Discard Projects"
-msgstr "Απόρριψη έργων"
+msgid "&Skip"
+msgstr "&Παράλειψη"
 
 #: src/AutoRecoveryDialog.cpp
-msgid "Recover Projects"
-msgstr "Ανάκτηση έργων"
+msgid "No projects selected"
+msgstr "Δεν επιλέχτηκαν έργα"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"Are you sure you want to discard all recoverable projects?\n"
+"Are you sure you want to discard the selected projects?\n"
 "\n"
-"Choosing \"Yes\" discards all recoverable projects immediately."
+"Choosing \"Yes\" permanently deletes the selected projects immediately."
 msgstr ""
-"Είσατε σίγουροι ότι θέλετε να απορρίψετε όλα τα ανακτήσιμα έργα;\n"
+"Είσαστε σίγουροι ότι θέλετε να απορρίψετε τα επιλεγμένα έργα;\n"
 "\n"
-"Επιλέγοντας \"Ναι\" απορρίπτονται αμέσως όλα τα ανακτήσιμα έργα."
-
-#: src/AutoRecoveryDialog.cpp
-msgid "Confirm Discard Projects"
-msgstr "Επιβεβαίωση απόρριψης έργων"
-
-#: src/AutoRecoveryDialog.cpp src/TimerRecordDialog.cpp
-msgid "Could not enumerate files in auto save directory."
-msgstr "Αδύνατη η απαρίθμηση αρχείων στον κατάλογο αυτόματης αποθήκευσης."
+"Επιλέγοντας \"Ναι\" διαγράφονται μόνιμα και αμέσως τα επιλεγμένα έργα."
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -1525,40 +1597,6 @@ msgid "Choose command"
 msgstr "Επιλογή εντολής"
 
 #: src/BatchCommands.cpp
-msgid "No Action"
-msgstr "Καμία ενέργεια"
-
-#. i18n-hint: before is adverb; MP3 names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as MP3 56k before"
-msgstr "Εξαγωγή ως MP3 56k πριν"
-
-#. i18n-hint: after is adverb; MP3 names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as MP3 56k after"
-msgstr "Εξαγωγή ως MP3 56k μετά"
-
-#. i18n-hint: FLAC names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as FLAC"
-msgstr "Εξαγωγή ως FLAC"
-
-#. i18n-hint: MP3 names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as MP3"
-msgstr "Εξαγωγή ως MP3"
-
-#. i18n-hint: Ogg names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as Ogg"
-msgstr "Εξαγωγή ως OGG"
-
-#. i18n-hint: WAV names an audio file format
-#: src/BatchCommands.cpp
-msgid "Export as WAV"
-msgstr "Εξαγωγή ως WAV"
-
-#: src/BatchCommands.cpp
 msgid "MP3 Conversion"
 msgstr "Μετατροπή MP3"
 
@@ -1567,12 +1605,17 @@ msgid "Fade Ends"
 msgstr "Τέλη ομαλής μετάβσης"
 
 #: src/BatchCommands.cpp
-msgid "Select to Ends"
-msgstr "Επιλογή άκρων"
+msgid "Import Macro"
+msgstr "Εισαγωγή μακροεντολής"
 
 #: src/BatchCommands.cpp
-msgid "Special Command"
-msgstr "Ειδική εντολή"
+#, c-format
+msgid "Macro %s already exists. Would you like to replace it?"
+msgstr "Η μακροεντολή %s υπάρχει ήδη. Θέλετε να την αντικαταστήσετε;"
+
+#: src/BatchCommands.cpp
+msgid "Export Macro"
+msgstr "Εξαγωγή μακροεντολής"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1591,40 +1634,11 @@ msgstr "(%s)"
 msgid "Menu Command (No Parameters)"
 msgstr "Εντολή μενού (χωρίς παραμέτρους)"
 
-#: src/BatchCommands.cpp
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Export recording to %s\n"
-"/%s/%s.%s"
-msgstr ""
-"Εξαγωγή ηχογράφησης στο %s\n"
-"/%s/%s%s"
-
-#: src/BatchCommands.cpp
-msgid "Export recording"
-msgstr "Εξαγωγή ηχογράφησης"
-
-#: src/BatchCommands.cpp
-#, c-format
-msgid ""
-"Cannot create directory '%s'. \n"
-"File already exists that is not a directory"
-msgstr ""
-"Αδυναμία δημιουργίας καταλόγου '%s'. \n"
-"Το αρχείο που ήδη υπάρχει δεν είναι κατάλογος"
-
-#: src/BatchCommands.cpp
-msgid "Ogg Vorbis support is not included in this build of Audacity"
-msgstr "Αυτή η έκδοση του Audacity δεν υποστηρίζει Ogg Vorbis"
-
-#: src/BatchCommands.cpp
-msgid "FLAC support is not included in this build of Audacity"
-msgstr "Αυτή η έκδοση του Audacity δεν υποστηρίζει FLAC"
-
-#: src/BatchCommands.cpp
-#, c-format
-msgid "Command %s not implemented yet"
-msgstr "Η εντολή %s δεν έχει υλοποιηθεί ακόμα"
+msgid "\"%s\" requires one or more tracks to be selected."
+msgstr "το \"%s\" απαιτεί την επιλογή ενός ή περισσότερων κομματιών."
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -1674,6 +1688,10 @@ msgstr "Εφαρμογή %s"
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
 msgstr "Παλέτα μακροεντολών"
+
+#: src/BatchProcessDialog.cpp
+msgid "Manage Macros"
+msgstr "Διαχείριση μακροεντολών"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
@@ -1798,6 +1816,11 @@ msgstr "Μετακίνηση &Πάνω"
 msgid "Move &Down"
 msgstr "Μετακίνηση &Κάτω"
 
+#: src/BatchProcessDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/HelpMenus.cpp
+msgid "&Save"
+msgstr "Απο&θήκευση"
+
 #. i18n-hint: The Shrink button makes the dialog smaller, with less in it
 #: src/BatchProcessDialog.cpp
 msgid "Shrin&k"
@@ -1840,10 +1863,6 @@ msgstr "Το όνομα δεν μπορεί να περιέχει '%c' και '%
 #, c-format
 msgid "Are you sure you want to delete %s?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε το %s;"
-
-#: src/BatchProcessDialog.cpp
-msgid "Manage Macros"
-msgstr "Διαχείριση μακροεντολών"
 
 #. i18n-hint: Benchmark means a software speed test
 #: src/Benchmark.cpp
@@ -1911,9 +1930,9 @@ msgstr "Το μέγεθος δεδομένων δοκιμής πρέπει να 
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Using %ld chunks of %ld samples each, for a total of %.1f MB.\n"
+msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
 msgstr ""
-"Χρήση %ld τμημάτων από %ld δείγματα το καθένα, για ένα σύνολο %.1f MB.\n"
+"Χρήση %lld τμημάτων από %lld δείγματα το καθένα, για ένα σύνολο %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
@@ -1921,8 +1940,8 @@ msgstr "Προετοιμασία...\n"
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Expected len %ld, track len %lld.\n"
-msgstr "Αναμενόταν μήκος %ld, μήκος κομματιού %lld.\n"
+msgid "Expected len %lld, track len %lld.\n"
+msgstr "Αναμενόταν μήκος %lld, μήκος κομματιού %lld.\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1931,8 +1950,8 @@ msgstr "Εκτέλεση %d επεξεργασιών...\n"
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Cut: %ld - %ld \n"
-msgstr "Αποκοπή: %ld - %ld \n"
+msgid "Cut: %lld - %lld \n"
+msgstr "Αποκοπή: %lld - %lld \n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1941,13 +1960,13 @@ msgstr "Δοκιμή %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Cut (%ld, %ld) failed.\n"
-msgstr "Η αποκοπή (%ld, %ld) απέτυχε.\n"
+msgid "Cut (%lld, %lld) failed.\n"
+msgstr "Η αποκοπή (%lld, %lld) απέτυχε.\n"
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Paste: %ld\n"
-msgstr "Επικόλληση: %ld\n"
+msgid "Paste: %lld\n"
+msgstr "Επικόλληση: %lld\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -1982,8 +2001,8 @@ msgstr "Εκτέλεση ελέγχου ορθότητας...\n"
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Bad: chunk %ld sample %ld\n"
-msgstr "Λάθος: τμήμα %ld δείγμα %ld\n"
+msgid "Bad: chunk %lld sample %lld\n"
+msgstr "Λάθος: τμήμα %lld δείγμα %lld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
@@ -1991,8 +2010,8 @@ msgstr "Επιτυχής έλεγχος ορθότητας!\n"
 
 #: src/Benchmark.cpp
 #, c-format
-msgid "Errors in %d/%ld chunks\n"
-msgstr "Σφάλματα σε %d/%ld τμήματα\n"
+msgid "Errors in %d/%lld chunks\n"
+msgstr "Σφάλματα σε %d/%lld τμήματα\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -2011,10 +2030,10 @@ msgstr "Χρόνος για έλεγχο όλων των δεδομένων (2):
 #: src/Benchmark.cpp
 #, c-format
 msgid ""
-"At 44100 Hz, 16-bits per sample, the estimated number of\n"
+"At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
 msgstr ""
-"Στα 44100 Hz, 16 δυαδικά ανά δείγμα, ο εκτιμώμενος αριθμός των\n"
+"Στα 44100 Hz, %d bytes ανά δείγμα, ο εκτιμώμενος αριθμός των\n"
 " ταυτόχρονων κομματιών που μπορούν να παιχτούν μονομιάς: %.1f\n"
 
 #: src/Benchmark.cpp
@@ -2106,19 +2125,71 @@ msgstr ""
 "Πρέπει πρώτα να επιλέξετε κάποιον ήχο για να εκτελέσετε αυτήν\n"
 "την ενέργεια. (Η επιλογή άλλων ειδών κομματιού δεν θα δουλέψει.)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid "\"%s\" requires one or more tracks to be selected."
-msgstr "το \"%s\" απαιτεί την επιλογή ενός ή περισσότερων κομματιών."
+#: src/CrashReport.cpp
+msgid "Audacity Support Data"
+msgstr "Δεδομένα υποστήριξης του Audacity"
+
+#: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
+msgid "This may take several seconds"
+msgstr "Αυτό μπορεί να διαρκέσει αρκετά δευτερόλεπτα"
 
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr "Η αναφορά δημιουργήθηκε στο:"
 
-#: src/CrashReport.cpp
-msgid "Audacity Support Data"
-msgstr "Δεδομένα υποστήριξης του Audacity"
+#: src/DBConnection.cpp
+msgid "Checkpointing project"
+msgstr "Σημείο ελέγχου του έργου"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Checkpointing %s"
+msgstr "Σημείο ελέγχου %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Could not write to %s.\n"
+msgstr "Αδυναμία εγγραφής στο %s.\n"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid ""
+"Disk is full.\n"
+"%s\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"Ο δίσκος είναι γεμάτος.\n"
+"%s\n"
+"Για συμβουλές σχετικά με την απελευθέρωση χώρου, πατήστε στο πλήκτρο "
+"βοήθειας."
+
+#: src/DBConnection.cpp
+#, c-format
+msgid ""
+"Failed to create savepoint:\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία δημιουργίας σημείου αποθήκευσης:\n"
+"\n"
+"%s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid ""
+"Failed to release savepoint:\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία απελευθέρωσης σημείου αποθήκευσης:\n"
+"\n"
+"%s"
+
+#: src/DBConnection.cpp
+msgid "Database error.  Sorry, but we don't have more details."
+msgstr ""
+"Σφάλμα βάσης δεδομένων.  Λυπούμαστε, αλλά δεν έχουμε περισσότερες "
+"λεπτομέρειες."
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -2236,22 +2307,6 @@ msgstr ""
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is currently self-contained; it does not depend on any external "
-"audio files. \n"
-"\n"
-"If you change the project to a state that has external dependencies on "
-"imported files, it will no longer be self-contained. If you then Save "
-"without copying those files in, you may lose data."
-msgstr ""
-"Το έργο σας είναι προς το παρόν αυτόνομο· δεν εξαρτάται από οποιαδήποτε "
-"εξωτερικά αρχεία ήχου. \n"
-"\n"
-"Αν αλλάξετε το έργο σε μια κατάσταση που έχει εξωτερικές εξαρτήσεις σε "
-"εισαγόμενα αρχεία, δεν θα είναι πια αυτόνομο. Αν αποθηκεύσετε έπειτα χωρίς "
-"να αντιγράψετε τα αρχεία, μπορείτε να χάσετε δεδομένα."
-
-#: src/Dependencies.cpp
-msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
 "\n"
@@ -2270,84 +2325,6 @@ msgstr ""
 #: src/Dependencies.cpp
 msgid "Dependency Check"
 msgstr "Έλεγχος εξαρτήσεων"
-
-#. i18n-hint: This title appears on a dialog that indicates the progress
-#. in doing something.
-#: src/DirManager.cpp src/ProjectFSCK.cpp
-msgid "Progress"
-msgstr "Πρόοδος"
-
-#: src/DirManager.cpp
-msgid ""
-"There is very little free disk space left on this volume.\n"
-"Please select another temporary directory in Preferences."
-msgstr ""
-"Υπάρχει πολύ λίγος ελεύθερος χώρος που απέμεινε στον δίσκο σε αυτόν τον "
-"τόμο.\n"
-"Παρακαλούμε επιλέξτε ένα άλλο προσωρινό κατάλογο στις προτιμήσεις."
-
-#: src/DirManager.cpp
-msgid "Cleaning project temporary files"
-msgstr "Καθαρισμός προσωρινών αρχείων έργου"
-
-#: src/DirManager.cpp
-msgid "Cleaning up temporary files"
-msgstr "Καθαρισμός προσωρινών αρχείων"
-
-#: src/DirManager.cpp
-msgid "Cleaning up after failed save"
-msgstr "Καθαρισμός μετά από αποτυχημένη αποθήκευση"
-
-#: src/DirManager.cpp
-msgid "Saving project data files"
-msgstr "Αποθήκευση αρχείων δεδομένων του έργου"
-
-#: src/DirManager.cpp
-msgid "Cleaning up cache directories"
-msgstr "Καθαρισμός φακέλων μικροαποθήκευσης (cache)"
-
-#  i18n-hint: This is the pattern for filenames that are created
-#  when a file needs to be backed up to a different name.  For
-#  example, mysong would become mysong-old1, mysong-old2, etc.
-#. i18n-hint: This is the pattern for filenames that are created
-#. * when a file needs to be backed up to a different name.  For
-#. * example, mysong would become mysong-old1, mysong-old2, etc.
-#. * 'old' is part of a filename used when a file is renamed.
-#. * e.g. Try to go from "mysong.wav" to "mysong-old1.wav".
-#: src/DirManager.cpp
-#, c-format
-msgid "%s-old%d"
-msgstr "%s-παλιό%d"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Renamed file: %s\n"
-msgstr "Μετονομασμένο αρχείο: %s\n"
-
-#: src/DirManager.cpp
-#, c-format
-msgid "Changed block %s to new alias name\n"
-msgstr "Άλλαξε η ομάδα %s σε νέο όνομα ψευδωνύμου\n"
-
-#: src/DirManager.cpp src/ProjectFSCK.cpp
-msgid "Inspecting project file data"
-msgstr "Επιθεώρηση δεδομένων αρχείου έργου"
-
-#: src/DirManager.cpp
-msgid "Caching audio"
-msgstr "Προσωρινή αποθήκευση ήχου"
-
-#: src/DirManager.cpp
-msgid "Caching audio into memory"
-msgstr "Προσωρινή αποθήκευση του ήχου στην μνήμη"
-
-#: src/DirManager.cpp
-msgid "Saving recorded audio"
-msgstr "Αποθήκευση ηχογραφημένου ήχου"
-
-#: src/DirManager.cpp
-msgid "Saving recorded audio to disk"
-msgstr "Αποθήκευση ηχογραφημένου ήχου στον δίσκο"
 
 #: src/Dither.cpp src/commands/ScreenshotCommand.cpp
 #: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
@@ -2533,19 +2510,21 @@ msgstr "Το Audacity απέτυχε να διαβάσει από αρχείο �
 
 #: src/FileException.cpp
 #, c-format
-msgid ""
-"Audacity failed to write to a file.\n"
-"Perhaps %s is not writable or the disk is full."
-msgstr ""
-"Το Audacity απέτυχε να γράψει σε αρχείο.\n"
-"Ίσως το %s δεν είναι εγγράψιμο ή ο δίσκος είναι γεμάτος.."
-
-#: src/FileException.cpp
-#, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
 "Το Audacity έγραψε με επιτυχία ένα αρχείο στο %s, αλλά απέτυχε να το "
 "μετονομάσει ως %s."
+
+#: src/FileException.cpp
+#, c-format
+msgid ""
+"Audacity failed to write to a file.\n"
+"Perhaps %s is not writable or the disk is full.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"Το Audacity απέτυχε να γράψει σε αρχείο.\n"
+"Ίσως το %s δεν είναι εγγράψιμο ή ο δίσκος είναι γεμάτος.\n"
+"Για συμβουλές απελευθέρωσης χώρου, πατήστε το πλήκτρο βοήθειας."
 
 #  i18n-hint: You do not need to translate "LOF"
 #: src/FileException.h
@@ -2587,8 +2566,8 @@ msgstr "Όλα τα αρχεία"
 #. i18n-hint an Audacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
-msgid "Audacity projects"
-msgstr "Έργα Audacity"
+msgid "AUP3 project files"
+msgstr "Αρχεία έργου AUP3"
 
 #: src/FileNames.cpp
 msgid "Dynamically Linked Libraries"
@@ -2627,6 +2606,10 @@ msgstr ""
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "Ορίστε ένα νέο όνομα αρχείου:"
+
+#: src/FreqWindow.cpp
+msgid "Frequency Analysis"
+msgstr "Ανάλυση συχνότητας"
 
 #: src/FreqWindow.cpp src/prefs/SpectrumPrefs.h
 msgid "Spectrum"
@@ -2811,10 +2794,6 @@ msgid "Lag (seconds)\tFrequency (Hz)\tLevel"
 msgstr "Καθυστέρηση (δευτ.)\tΣυχνότητα (Hz)\tΕπίπεδο"
 
 #: src/FreqWindow.cpp
-msgid "Frequency Analysis"
-msgstr "Ανάλυση συχνότητας"
-
-#: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
 msgstr "Ανάλυση φάσματος..."
 
@@ -2926,9 +2905,9 @@ msgid ""
 "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
 "audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-" [[help:Quick_Help|Quick Help (Γρήγορη Βοήθεια)]] - εάν δεν είναι "
-"εγκατεστημένη τοπικά, [[http://manual.audacityteam.org/quick_help.html|view "
-"online (Διαδικτυακή προβολή)]]"
+"[[Βοήθεια:Γρήγορη_Βοήθεια|Γρήγορη Βοήθεια]] - εάν δεν είναι εγκατεστημένη "
+"τοπικά, [[http://manual.audacityteam.org/quick_help.html|view online "
+"(Διαδικτυακή προβολή)]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
@@ -3022,8 +3001,8 @@ msgid "Action"
 msgstr "Δράση"
 
 #: src/HistoryWindow.cpp
-msgid "Reclaimable Space"
-msgstr "Ανακτήσιμος χώρος"
+msgid "Used Space"
+msgstr "Χρησιμοποιούμενος χώρος"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
@@ -3043,16 +3022,21 @@ msgid "&Discard"
 msgstr "Από&ρριψη"
 
 #: src/HistoryWindow.cpp
-msgid "Clipboard space used"
-msgstr "Χρησιμοποιούμενος χώρος προχείρου"
+msgid "Clip&board space used"
+msgstr "Χρησιμοποιούμενος χώρος προ&χείρου"
 
 #: src/HistoryWindow.cpp
-msgid "Discard"
-msgstr "Απόρριψη"
+msgid "D&iscard"
+msgstr "Απόρρι&ψη"
 
-#: src/HistoryWindow.cpp src/export/ExportCL.cpp
-msgid "&OK"
-msgstr "&Εντάξει"
+#: src/HistoryWindow.cpp
+msgid "&Compact"
+msgstr "&Συμπύκνωση"
+
+#: src/HistoryWindow.cpp src/ProjectFileManager.cpp
+#, c-format
+msgid "Compacting actually freed %s of disk space."
+msgstr "Η συμπύκνωση απελευθέρωσε %s του χώρου του δίσκου."
 
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
@@ -3282,6 +3266,7 @@ msgstr ""
 msgid "Disallowed"
 msgstr "Δεν επιτρέπεται"
 
+#. i18n-hint: noun, means a track, made by mixing other tracks
 #: src/Mix.cpp
 msgid "Mix"
 msgstr "Μίξη"
@@ -3293,6 +3278,11 @@ msgstr "Μείξη και απόδοση"
 #: src/Mix.cpp
 msgid "Mixing and rendering tracks"
 msgstr "Μίξη κομματιών"
+
+#: src/MixerBoard.cpp
+#, c-format
+msgid "Audacity Mixer Board%s"
+msgstr "Πίνακας μείκτη %s του Audacity"
 
 #  i18n-hint: Title of the Gain slider, used to adjust the volume
 #. i18n-hint: title of the Gain slider, used to adjust the volume
@@ -3354,11 +3344,6 @@ msgstr "Μετακινήθηκε ο ολισθητής ταχύτητας"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved pan slider"
 msgstr "Μετακινήθηκε ο ολισθητής μετακίνησης"
-
-#: src/MixerBoard.cpp
-#, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Πίνακας μείκτη %s του Audacity"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer Board..."
@@ -3433,7 +3418,7 @@ msgid "Yes"
 msgstr "Ναι"
 
 #: src/ModuleManager.cpp src/TimerRecordDialog.cpp plug-ins/delay.ny
-#: plug-ins/equalabel.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/equalabel.ny plug-ins/limiter.ny
 msgid "No"
 msgstr "Όχι"
 
@@ -3717,13 +3702,6 @@ msgstr[1] "Να ενεργοποιηθούν αυτά τα πρόσθετα;\n"
 msgid "Enable new plug-ins"
 msgstr "Ενεργοποίηση νέων προσθέτων"
 
-#: src/Prefs.cpp
-#, c-format
-msgid "Audacity cannot start because the settings file at %s is not writable."
-msgstr ""
-"Το Audacity δεν μπορεί να ξεκινήσει, επειδή το αρχείο ρυθμίσεων στο %s δεν "
-"είναι εγγράψιμο."
-
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Παρουσιάστηκε κάποιο πρόβλημα κατά την εκτύπωση."
@@ -3731,6 +3709,17 @@ msgstr "Παρουσιάστηκε κάποιο πρόβλημα κατά την
 #: src/Printing.cpp
 msgid "Print"
 msgstr "Εκτύπωση"
+
+#: src/Project.cpp
+#, c-format
+msgid ""
+"There is very little free disk space left on %s\n"
+"Please select a bigger temporary directory location in\n"
+"Directories Preferences."
+msgstr ""
+"Υπάρχει πολύ λίγος ελεύθερος χώρος που απέμεινε στο %s.\n"
+"Παρακαλούμε επιλέξτε μια μεγαλύτερη θέση προσωρινού καταλόγου στις\n"
+"Προτιμήσεις καταλόγων."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3750,7 +3739,7 @@ msgstr ""
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr ""
 "Όλα τα επιλεγμένα κομμάτια για ηχογράφηση πρέπει να έχουν τον ίδιο ρυθμό "
-"δειγματοληψίας."
+"δειγματοληψίας"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
@@ -3770,6 +3759,14 @@ msgstr ""
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
 msgstr "Επιλέχτηκαν πολύ λίγα συμβατά κομμάτια"
+
+#: src/ProjectAudioManager.cpp
+msgid "Recorded Audio"
+msgstr "Ηχογράφηση"
+
+#: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
+msgid "Record"
+msgstr "Ηχογράφηση"
 
 #. i18n-hint:  A name given to a track, appearing as its menu button.
 #. The translation should be short or else it will not display well.
@@ -3798,14 +3795,6 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Απενεργοποίηση ανίχνευσης διακοπών"
 
-#: src/ProjectAudioManager.cpp
-msgid "Recorded Audio"
-msgstr "Ηχογράφηση"
-
-#: src/ProjectAudioManager.cpp src/toolbars/ControlToolBar.cpp
-msgid "Record"
-msgstr "Ηχογράφηση"
-
 #. i18n-hint: The audacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
@@ -3832,6 +3821,10 @@ msgstr ""
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
 msgstr "Προειδοποίηση - Προβλήματα ανάγνωσης ετικετών ακολουθίας"
+
+#: src/ProjectFSCK.cpp
+msgid "Inspecting project file data"
+msgstr "Επιθεώρηση δεδομένων αρχείου έργου"
 
 #: src/ProjectFSCK.cpp
 #, c-format
@@ -3973,6 +3966,13 @@ msgstr "Διαγραφή ορφανών αρχείων (μόνιμα και αμ
 msgid "Warning - Orphan Block File(s)"
 msgstr "Προειδοποίηση - Ορφανά αρχεία ομάδας"
 
+#. i18n-hint: This title appears on a dialog that indicates the progress
+#. in doing something.
+#: src/ProjectFSCK.cpp src/ProjectFileIO.cpp src/UndoManager.cpp
+#: src/menus/TransportMenus.cpp
+msgid "Progress"
+msgstr "Πρόοδος"
+
 #: src/ProjectFSCK.cpp
 msgid "Cleaning up unused directories in project data"
 msgstr "Καθαρισμός αχρησιμοποίητων καταλόγων στα δεδομένα του έργου"
@@ -4002,6 +4002,227 @@ msgstr "<χωρίς όνομα>"
 msgid "[Project %02i] "
 msgstr "[Έργο %02i] "
 
+#: src/ProjectFileIO.cpp
+msgid "Failed to open the project's database"
+msgstr "Αποτυχία ανοίγματος της βάσης δεδομένων του έργου"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to open database file:\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία ανοίγματος του αρχείου της βάσης δεδομένων:\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
+msgid "Failed to discard connection"
+msgstr "Αποτυχία απόρριψης της σύνδεσης"
+
+#: src/ProjectFileIO.cpp
+msgid "Failed to restore connection"
+msgstr "Αποτυχία επαναφοράς της σύνδεσης"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to execute a project file command:\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία εκτέλεσης της εντολής του αρχείου έργου:\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Unable to prepare project file command:\n"
+"\n"
+"%s"
+msgstr ""
+"Αδύνατη η προετοιμασία της εντολής του αρχείου έργου:\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to retrieve data from the project file.\n"
+"The following command failed:\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία ανάκτησης δεδομένων από το αρχείο του έργου.\n"
+"Η παρακάτω εντολή απέτυχε:\n"
+"\n"
+"%s"
+
+#. i18n-hint: An error message.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is in a read only directory\n"
+"(Unable to create the required temporary files)"
+msgstr ""
+"Το έργο είναι σε κατάλογο μόνο για ανάγνωση\n"
+"(Αδυναμία δημιουργίας των απαιτούμενων προσωρινών αρχείων)"
+
+#: src/ProjectFileIO.cpp
+msgid "This is not an Audacity project file"
+msgstr "Αυτό δεν είναι αρχείο έργου του Audacity"
+
+#: src/ProjectFileIO.cpp
+msgid ""
+"This project was created with a newer version of Audacity:\n"
+"\n"
+"You will need to upgrade to process it"
+msgstr ""
+"Αυτό το έργο δημιουργήθηκε με νεότερη έκδοση του Audacity:\n"
+"\n"
+"Θα χρειαστείτε να το αναβαθμίσετε για να το επεξεργαστείτε"
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to initialize the project file"
+msgstr "Αδύνατη η αρχικοποίηση του αρχείου έργου"
+
+#. i18n-hint: An error message.  Don't translate inset or blockids.
+#: src/ProjectFileIO.cpp
+msgid "Unable to add 'inset' function (can't verify blockids)"
+msgstr ""
+"Αδυναμία προσθήκης της λειτουργίας 'εισαγωγή' (αδυναμία επιβεβαίωσης "
+"αναγνωριστικών μπλοκ (blockids))"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is read only\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Το έργο είναι μόνο για ανάγνωση\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is locked\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Το έργο είναι κλειδωμένο\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is busy\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Το έργο είναι απασχολημένο\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Project is corrupt\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Το έργο είναι αλλοιωμένο\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Some permissions issue\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Πρόβλημα με κάποιες άδειες\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"A disk I/O error\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Σφάλμα εισόδου/εξόδου δίσκου\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid ""
+"Not authorized\n"
+"(Unable to work with the blockfiles)"
+msgstr ""
+"Χωρίς εξουσιοδότηση\n"
+"(Αδυναμία εργασίας με τα αρχεία μπλοκ)"
+
+#. i18n-hint: An error message.  Don't translate blockfiles.
+#: src/ProjectFileIO.cpp
+msgid "Unable to work with the blockfiles"
+msgstr "Αδύνατη η εργασία με τα αρχεία μπλοκ"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid "Total orphan blocks deleted %d"
+msgstr "Διαγράφτηκαν %d συνολικά ορφανά μπλοκ"
+
+#: src/ProjectFileIO.cpp
+msgid "Failed to rollback transaction during import"
+msgstr "Αποτυχία επαναφοράς της εργασίας κατά την εισαγωγή"
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to attach destination database"
+msgstr "Αδύνατη η προσάρτηση της βάσης δεδομένων προορισμού"
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to switch to fast journaling mode"
+msgstr "Αδυναμία αλλαγής σε κατάσταση γρήγορης καταχώρησης"
+
+#: src/ProjectFileIO.cpp
+msgid "Failed to bind SQL parameter"
+msgstr "Αποτυχία σύνδεσης παραμέτρου SQL"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Failed to update the project file.\n"
+"The following command failed:\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία ενημέρωσης του αρχείου του έργου.\n"
+"Η παρακάτω εντολή απέτυχε:\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
+msgid "Destination project could not be detached"
+msgstr "Το έργο προορισμού δεν μπόρεσε να αποσπαστεί"
+
+#: src/ProjectFileIO.cpp
+msgid "Copying Project"
+msgstr "Αντιγραφή έργου"
+
+#: src/ProjectFileIO.cpp
+msgid "Error Writing to File"
+msgstr "Σφάλμα κατά την εγγραφή στο αρχείο"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Audacity failed to write file %s.\n"
+"Perhaps disk is full or not writable.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"Το Audacity απέτυχε να γράψει το αρχείο %s.\n"
+"Ίσως ο δίσκος είναι γεμάτος ή μη εγγράψιμος.\n"
+"Για συμβουλές απελευθέρωσης χώρου, πατήστε το πλήκτρο βοήθειας."
+
+#: src/ProjectFileIO.cpp
+msgid "Compacting project"
+msgstr "Συμπύκνωση έργου"
+
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
 #, c-format
@@ -4012,52 +4233,6 @@ msgstr "[Έργο %02i] Audacity \"%s\""
 #: src/ProjectFileIO.cpp
 msgid "(Recovered)"
 msgstr "(Ανακτημένο)"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid ""
-"This file was saved by Audacity version %s. The format has changed. \n"
-"\n"
-"Audacity can try to open and save this file, but saving it in this \n"
-"version will then prevent any 1.2 or earlier version opening it. \n"
-"\n"
-"Audacity might corrupt the file in opening it, so you should back it up "
-"first. \n"
-"\n"
-"Open this file now?"
-msgstr ""
-"Αυτό το αρχείο αποθηκεύτηκε από την έκδοση %s του Audacity. Η μορφή έχει "
-"αλλάξει. \n"
-"\n"
-"Το Audacity μπορεί να δοκιμάσει να ανοίξει και να αποθηκεύσει αυτό το \n"
-"αρχείο, αλλά αποθηκεύοντας το σε αυτήν την έκδοση θα αποτρέψει τότε "
-"οποιαδήποτε έκδοση 1.2 ή προγενέστερη να το ανοίξει.\n"
-"\n"
-"Το Audacity μπορεί να αλλοιώσει το αρχείο ανοίγοντας το, έτσι θα πρέπει να "
-"το αντιγράψετε πρώτα. \n"
-"\n"
-"Να ανοιχθεί αυτό το αρχείο τώρα;"
-
-#: src/ProjectFileIO.cpp
-msgid "1.0 or earlier"
-msgstr "1.0 ή προηγούμενες"
-
-#: src/ProjectFileIO.cpp
-msgid "Warning - Opening Old Project File"
-msgstr "Προειδοποίηση - Άνοιγμα ενός παλαιού αρχείου έργου"
-
-#: src/ProjectFileIO.cpp
-msgid "<unrecognized version -- possibly corrupt project file>"
-msgstr "<μη αναγνωρίσιμη έκδοση -- πιθανόν αλλοιωμένο αρχείο έργου>"
-
-#: src/ProjectFileIO.cpp
-#, c-format
-msgid "Couldn't find the project data folder: \"%s\""
-msgstr "Αδύνατη η εύρεση του φακέλου των δεδομένων έργου: \"%s\""
-
-#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
-msgid "Error Opening Project"
-msgstr "Σφάλμα κατά το άνοιγμα έργου"
 
 #. i18n-hint: %s will be replaced by the version number.
 #: src/ProjectFileIO.cpp
@@ -4076,18 +4251,101 @@ msgid "Can't open project file"
 msgstr "Αδύνατο το άνοιγμα του αρχείου έργου"
 
 #: src/ProjectFileIO.cpp
-#, c-format
-msgid "Could not create autosave file: %s"
-msgstr "Αδυναμία δημιουργίας αρχείου αυτόματης αποθήκευσης: %s"
+msgid "Failed to remove the autosave information from the project file."
+msgstr ""
+"Αποτυχία αφαίρεσης των πληροφοριών αυτόματης αποθήκευσης από το αρχείο του "
+"έργου."
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to decode project document"
+msgstr "Αδύνατη η αποκωδικοποίηση του εγγράφου έργου"
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to parse project information."
+msgstr "Αδύνατη η ανάλυση των πληροφοριών του έργου."
+
+#: src/ProjectFileIO.cpp
+msgid ""
+"The project's database failed to reopen, possibly because of limited space "
+"on the storage device."
+msgstr ""
+"Αποτυχία ξανανοίγματος της βάσης δεδομένων του έργου, πιθανόν λόγω "
+"περιορισμένου χώρου στη συσκευή αποθήκευσης."
+
+#: src/ProjectFileIO.cpp
+msgid "Saving project"
+msgstr "Αποθήκευση του έργου"
+
+#: src/ProjectFileIO.cpp src/ProjectFileManager.cpp
+msgid "Error Saving Project"
+msgstr "Σφάλμα κατά την αποθήκευση του έργου"
+
+#: src/ProjectFileIO.cpp
+msgid "Syncing"
+msgstr "Συγχρονισμός"
 
 #: src/ProjectFileIO.cpp
 #, c-format
-msgid "Could not remove old autosave file: %s"
-msgstr "Αδυναμία αφαίρεσης του παλιού αυτόματα αποθηκευμένου αρχείου: %s"
+msgid ""
+"The project failed to open, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+"Αποτυχία ανοίγματος του έργου, πιθανόν λόγω περιορισμένου χώρου\n"
+"στη συσκευή αποθήκευσης.\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"Unable to remove autosave information, possibly due to limited space\n"
+"on the storage device.\n"
+"\n"
+"%s"
+msgstr ""
+"Αδυναμία αφαίρεσης πληροφοριών αυτόματης αποθήκευσης, πιθανόν λόγω "
+"περιορισμένου χώρου\n"
+"στη συσκευή αποθήκευσης.\n"
+"\n"
+"%s"
+
+#: src/ProjectFileIO.cpp
+msgid "Backing up project"
+msgstr "Δημιουργία αντιγράφου ασφαλείας του έργου"
 
 #: src/ProjectFileManager.cpp
-msgid "Error decoding file"
-msgstr "Σφάλμα κατά την αποκωδικοποίηση του αρχείου"
+msgid ""
+"This project was not saved properly the last time Audacity ran.\n"
+"\n"
+"It has been recovered to the last snapshot."
+msgstr ""
+"Αυτό το έργο δεν αποθηκεύτηκε σωστά την τελευταία φορά που έτρεξε το "
+"Audacity.\n"
+"\n"
+"Έχει ανακτηθεί στο τελευταίο στιγμιότυπο."
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"This project was not saved properly the last time Audacity ran.\n"
+"\n"
+"It has been recovered to the last snapshot, but you must save it\n"
+"to preserve its contents."
+msgstr ""
+"Αυτό το έργο δεν αποθηκεύτηκε σωστά την τελευταία φορά που έτρεξε το "
+"Audacity.\n"
+"\n"
+"Έχει ανακτηθεί στο τελευταίο στιγμιότυπο, αλλά πρέπει να το αποθηκεύσετε\n"
+"για να διατηρήσετε τα περιεχόμενά του."
+
+#: src/ProjectFileManager.cpp
+msgid "Project Recovered"
+msgstr "Το έργο ανακτήθηκε"
+
+#: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "Projects cannot be saved to FAT drives."
+msgstr "Τα έργα δεν μπορούν να αποθηκευτούν σε οδηγούς FAT."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4114,40 +4372,27 @@ msgid "Warning - Empty Project"
 msgstr "Προειδοποίηση - Κενό έργο"
 
 #: src/ProjectFileManager.cpp
-#, c-format
+msgid "Insufficient Disk Space"
+msgstr "Ανεπαρκής χώρος στον δίσκο"
+
+#: src/ProjectFileManager.cpp
 msgid ""
-"Audacity failed to write file %s.\n"
-"Perhaps disk is full or not writable."
+"The project size exceeds the available free space on the target disk.\n"
+"\n"
+"Please select a different disk with more free space."
 msgstr ""
-"Το Audacity απέτυχε να γράψει το αρχείο %s.\n"
-"Ίσως ο δίσκος είναι γεμάτος ή μη εγγράψιμος."
+"Το μέγεθος του έργου υπερβαίνει τον διαθέσιμο ελεύθερο χώρο στον δίσκο "
+"προορισμού.\n"
+"\n"
+"Παρακαλούμε, επιλέξτε έναν διαφορετικό δίσκο με περισσότερο ελεύθερο χώρο."
 
 #: src/ProjectFileManager.cpp
-msgid "Error Writing to File"
-msgstr "Σφάλμα κατά την εγγραφή στο αρχείο"
-
-#: src/ProjectFileManager.cpp
-#, c-format
 msgid ""
-"Could not save project. Perhaps %s \n"
-"is not writable or the disk is full."
+"The project exceeds the maximum size of 4GB when writing to a FAT32 "
+"formatted filesystem."
 msgstr ""
-"Αδύνατη η αποθήκευση του έργου. Ίσως το %s \n"
-"δεν είναι εγγράψιμο ή ο δίσκος είναι γεμάτος."
-
-#: src/ProjectFileManager.cpp
-msgid "Error Saving Project"
-msgstr "Σφάλμα κατά την αποθήκευση του έργου"
-
-#: src/ProjectFileManager.cpp
-#, c-format
-msgid ""
-"Could not save project. Path not found. Try creating \n"
-"directory \"%s\" before saving project with this name."
-msgstr ""
-"Αδύνατη η αποθήκευση του έργου. Δεν βρέθηκε η διαδρομή. Δοκιμάστε να "
-"δημιουργήσετε\n"
-"έναν κατάλογο \"%s\" πριν να αποθηκεύσετε το έργο με αυτό το όνομα."
+"Το έργο υπερβαίνει το μέγιστο μέγεθος των 4GB όταν γράφεται σε σύστημα "
+"αρχείων μορφοποιημένων σε FAT32."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4166,56 +4411,6 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 #, c-format
-msgid "%sSave Lossless Copy of Project \"%s\" As..."
-msgstr "%sΑποθήκευση μη απωλεστικού αντιγράφου του έργου \"%s\" ως..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-"file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-"\n"
-"Lossless copies of project are a good way to backup your project, \n"
-"with no loss of quality, but the projects are large.\n"
-msgstr ""
-"Το 'Αποθήκευση μη απωλεστικού αντιγράφου έργου' είναι για ένα έργο Audacity, "
-"όχι για αρχείο ήχου.\n"
-"Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
-"'Εξαγωγή'.\n"
-"\n"
-"Τα μη απωλεστικά αντίγραφα έργου είναι ένας καλός τρόπος για να αντιγράψετε "
-"το έργο σας, \n"
-"χωρίς απώλεια ποιότητας, αλλά τα έργα είναι μεγάλα.\n"
-"\n"
-
-#: src/ProjectFileManager.cpp
-#, c-format
-msgid "%sSave Compressed Copy of Project \"%s\" As..."
-msgstr "%sΑποθήκευση συμπιεσμένου αντιγράφου έργου \"%s\" ως..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Compressed Copy of Project' is for an Audacity project, not an audio "
-"file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-"\n"
-"Compressed project files are a good way to transmit your project online, \n"
-"but they have some loss of fidelity.\n"
-msgstr ""
-"Το 'Αποθήκευση συμπιεσμένου έργου' είναι για ένα έργο Audacity, όχι για "
-"αρχείο ήχου.\n"
-"Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
-"'Εξαγωγή'.\n"
-"\n"
-"Τα συμπιεσμένα αρχεία έργου είναι ένας καλός τρόπος για να διαδώσετε το έργο "
-"σας\n"
-"διαδικτυακά, αλλά έχουν κάποια απώλεια στην πιστότητα.\n"
-"\n"
-"Για να ανοίξετε ένα συμπιεσμένο έργο παίρνει περισσότερο από ό,τι συνήθως,\n"
-"επειδή εισάγει κάθε συμπιεσμένο κομμάτι.\n"
-
-#: src/ProjectFileManager.cpp
-#, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "%sΑποθήκευση έργου \"%s\" ως..."
 
@@ -4227,6 +4422,45 @@ msgstr ""
 "Το 'Αποθήκευση έργου' είναι για έργο του Audacity, όχι για αρχείο ήχου.\n"
 "Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
 "'Εξαγωγή'.\n"
+
+#. i18n-hint: In each case, %s is the name
+#. of the file being overwritten.
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid ""
+"   Do you want to overwrite the project:\n"
+"\"%s\"?\n"
+"\n"
+"   If you select \"Yes\" the project\n"
+"\"%s\"\n"
+"   will be irreversibly overwritten."
+msgstr ""
+"   Θέλετε να αντικαταστήσετε το έργο:\n"
+"\"%s\"?\n"
+"\n"
+"   Εάν επιλέξετε \"Ναι\" το έργο\n"
+"\"%s\"\n"
+"   θα αντικατασταθεί αμετάκλητα."
+
+#. i18n-hint: Heading: A warning that a project is about to be overwritten.
+#: src/ProjectFileManager.cpp
+msgid "Overwrite Project Warning"
+msgstr "Αντικατάσταση προειδοποίησης έργου"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"The project was not saved because the selected project is open in another "
+"window.\n"
+"Please try again and select an original name."
+msgstr ""
+"Το έργο δεν αποθηκεύτηκε, επειδή το επιλεγμένο έργο είναι ανοικτό σε άλλο "
+"παράθυρο.\n"
+"Παρακαλούμε, δοκιμάστε ξανά και επιλέξτε ένα πρωτότυπο όνομα."
+
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid "%sSave Copy of Project \"%s\" As..."
+msgstr "%sΑποθήκευση αντιγράφου του έργου \"%s\" ως..."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4241,40 +4475,6 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "Σφάλμα κατά την αποθήκευση αντιγράφου του έργου"
 
-#. i18n-hint: In each case, %s is the name
-#. of the file being overwritten.
-#: src/ProjectFileManager.cpp
-#, c-format
-msgid ""
-"Do you want to overwrite the project:\n"
-"\"%s\"?\n"
-"\n"
-"If you select \"Yes\" the project\n"
-"\"%s\"\n"
-"will be irreversibly overwritten."
-msgstr ""
-"Θέλετε να αντικαταστήσετε το έργο:\n"
-"\"%s\"?\n"
-"\n"
-"Εάν επιλέξετε \"Ναι\" το έργο\n"
-"\"%s\"\n"
-"θα αντικατασταθεί αμετάκλητα."
-
-#. i18n-hint: Heading: A warning that a project is about to be overwritten.
-#: src/ProjectFileManager.cpp
-msgid "Overwrite Project Warning"
-msgstr "Αντικατάσταση προειδοποίησης έργου"
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"The project will not saved because the selected project is open in another "
-"window.\n"
-"Please try again and select an original name."
-msgstr ""
-"Το έργο δεν θα αποθηκευτεί επειδή το επιλεγμένο έργο είναι ανοικτό σε άλλο "
-"παράθυρο.\n"
-"Παρακαλούμε δοκιμάστε ξανά και επιλέξτε ένα πρωτότυπο όνομα."
-
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Επέλεξε ένα ή περισσότερα αρχεία"
@@ -4283,6 +4483,18 @@ msgstr "Επέλεξε ένα ή περισσότερα αρχεία"
 #, c-format
 msgid "%s is already open in another window."
 msgstr "%s έχει ήδη ανοιχτεί σε άλλο παράθυρο."
+
+#: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
+msgid "Error Opening Project"
+msgstr "Σφάλμα κατά το άνοιγμα έργου"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+"Το έργο βρίσκεται σε μορφοποιημένο δίσκο FAT.\n"
+"Αντιγράψτε τον σε άλλο δίσκο για να το ανοίξετε."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4322,24 +4534,12 @@ msgid "Error Opening File or Project"
 msgstr "Σφάλμα κατά το άνοιγμα αρχείου ή έργου"
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"Audacity was unable to convert an Audacity 1.0 project to the new project "
-"format."
-msgstr ""
-"Το Audacity δεν μπόρεσε να μετατρέψει το έργο Audacity 1.0 στη νέα μορφή "
-"έργου."
-
-#: src/ProjectFileManager.cpp
 msgid "Project was recovered"
 msgstr "Το έργο ανακτήθηκε"
 
 #: src/ProjectFileManager.cpp
 msgid "Recover"
 msgstr "Ανάκτηση"
-
-#: src/ProjectFileManager.cpp
-msgid "Could not remove old auto save file"
-msgstr "Αδύνατη η απομάκρυνση παλιού αρχείου αυτόματης αποθύκευσης"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -4351,12 +4551,62 @@ msgid "Import"
 msgstr "Εισαγωγή"
 
 #: src/ProjectFileManager.cpp
+msgid "Failed to import project"
+msgstr "Αποτυχία εισαγωγής του έργου"
+
+#: src/ProjectFileManager.cpp
 msgid "Error Importing"
 msgstr "Σφάλμα στην εισαγωγή"
+
+#: src/ProjectFileManager.cpp
+msgid "Cannot import AUP3 format.  Use File > Open instead"
+msgstr ""
+"Αδύνατη η εισαγωγή μορφής AUP3. Αντί για αυτό χρησιμοποιήστε Αρχείο > Άνοιγμα"
+
+#: src/ProjectFileManager.cpp
+msgid "Compact Project"
+msgstr "Συμπύκνωση του έργου"
+
+#: src/ProjectFileManager.cpp
+#, c-format
+msgid ""
+"Compacting this project will free up disk space by removing unused bytes "
+"within the file.\n"
+"\n"
+"There is %s of free disk space and this project is currently using %s.\n"
+"\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be "
+"discarded and you will recover approximately %s of disk space.\n"
+"\n"
+"Do you want to continue?"
+msgstr ""
+"Η συμπύκνωση αυτού του έργου θα απελευθερώσει χώρο στον δίσκο αφαιρώντας μη "
+"χρησιμοποιούμενα bytes μέσα στο αρχείο.\n"
+"\n"
+"Υπάρχει %s ελεύθερου χώρου στον δίσκο και αυτό το έργο χρησιμοποιεί τώρα "
+"%s.\n"
+"\n"
+"Εάν συνεχίσετε, το τρέχον ιστορικό αναιρέσεων/ακύρωσης αναιρέσεων και τα "
+"περιεχόμενα του προχείρου θα απορριφθούν και θα ανακτήσετε περίπου %s χώρο "
+"δίσκου.\n"
+"\n"
+"Θέλετε να συνεχίσετε;"
+
+#: src/ProjectFileManager.cpp
+msgid "Compacted project file"
+msgstr "Συμπυκνωμένο αρχείου έργου"
+
+#: src/ProjectFileManager.cpp
+msgid "Compact"
+msgstr "Συμπύκνωση"
 
 #: src/ProjectHistory.cpp
 msgid "Created new project"
 msgstr "Δημιουργήθηκε νέο έργο"
+
+#: src/ProjectHistory.cpp
+msgid "Automatic database backup failed."
+msgstr "Αποτυχία αυτόματου αντιγράφου ασφαλείας της βάσης δεδομένων."
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4395,27 +4645,6 @@ msgid "Disk space remaining for recording: %s"
 msgstr "Χώρος δίσκου που απομένει για ηχογράφηση: %s"
 
 #: src/ProjectManager.cpp
-msgid "On-demand import and waveform calculation complete."
-msgstr "Εισαγωγή όταν ζητηθεί και πλήρης υπολογισμός της κυματομορφής."
-
-#: src/ProjectManager.cpp
-#, c-format
-msgid ""
-"Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f"
-"%% complete."
-msgstr ""
-"Ολοκληρώθηκαν οι εισαγωγές. Εκτέλεση του %d  όταν ζητηθούν υπολογισμοί "
-"κυματομορφής. Ολοκληρώθηκε γενικά %2.0f%%."
-
-#: src/ProjectManager.cpp
-#, c-format
-msgid ""
-"Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
-msgstr ""
-"Ολοκληρώθηκε η εισαγωγή. Εκτέλεση υπολογισμού της κυματομορφής κατ' "
-"απαίτηση. Ολοκληρώθηκε %2.0f%%."
-
-#: src/ProjectManager.cpp
 msgid "Less than 1 minute"
 msgstr "Λιγότερο από 1 λεπτό"
 
@@ -4438,6 +4667,15 @@ msgstr[1] "%d λεπτά"
 #, c-format
 msgid "%s and %s."
 msgstr "%s και %s."
+
+#: src/ProjectSerializer.cpp
+msgid ""
+"This recovery file was saved by Audacity 2.3.0 or before.\n"
+"You need to run that version of Audacity to recover the project."
+msgstr ""
+"Αυτό το αρχείο ανάκτησης αποθηκεύτηκε από το Audacity 2.3.0 ή πριν.\n"
+"Θα χρειαστεί να εκτελέσετε αυτήν την έκδοση του Audacity για να ανακτήσετε "
+"το έργο."
 
 #. i18n-hint: This is an experimental feature where the main panel in
 #. Audacity is put on a notebook tab, and this is the name on that tab.
@@ -4725,6 +4963,10 @@ msgstr "Επιλέξτε μια θέση για να αποθηκεύσετε τ
 msgid "Capture failed!"
 msgstr "Αποτυχία σύλληψης!"
 
+#: src/Screenshot.cpp src/commands/CommandTargets.cpp
+msgid "Long Message"
+msgstr "Μεγάλο μήνυμα"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4738,11 +4980,6 @@ msgstr ""
 #: src/Sequence.cpp
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Προειδοποίηση - Περικόπτεται το υπερμεγέθες αρχείο μπλοκ"
-
-#: src/ShuttleGui.cpp src/commands/HelpCommand.cpp src/effects/Equalization.cpp
-#: src/menus/HelpMenus.cpp src/widgets/MultiDialog.cpp
-msgid "Help"
-msgstr "Βοήθεια"
 
 #: src/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
@@ -4787,6 +5024,10 @@ msgstr "Καλωσήρθατε στο Audacity!"
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Να μην εμφανιστεί ξανά κατά την εκκίνηση"
+
+#: src/SqliteSampleBlock.cpp
+msgid "Connection to project file is null"
+msgstr "Η σύνδεση στο αρχείο του έργου είναι μηδενική"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -4903,6 +5144,29 @@ msgstr "Αποθήκευση μεταδεδομένων ως:"
 #: src/Tags.cpp
 msgid "Error Saving Tags File"
 msgstr "Σφάλμα κατά την αποθήκευση αρχείου ετικετών"
+
+#: src/TempDirectory.cpp
+msgid "Unsuitable"
+msgstr "Ακατάλληλο"
+
+#: src/TempDirectory.cpp
+msgid ""
+"The temporary files directory is on a FAT formatted drive.\n"
+"Resetting to default location."
+msgstr ""
+"Ο κατάλογος προσωρινών αρχείων είναι σε δίσκο μορφοποιημένο με FAT.\n"
+"Επαναφορά στην προεπιλεγμένη θέση."
+
+#: src/TempDirectory.cpp
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"For tips on suitable drives, click the help button."
+msgstr ""
+"%s\n"
+"\n"
+"Για συμβουλές κατάλληλων δίσκων, πατήστε το πλήκτρο της βοήθειας."
 
 #: src/Theme.cpp
 #, c-format
@@ -5385,10 +5649,6 @@ msgstr "Ηχογράφηση με χρονοδιακόπτη στο Audacity - �
 msgid "Stereo, 999999Hz"
 msgstr "Στερεοφωνικό, 999999Hz"
 
-#: src/TrackInfo.cpp src/commands/SelectCommand.cpp src/prefs/MousePrefs.cpp
-msgid "Select"
-msgstr "Επιλογή"
-
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -5512,6 +5772,10 @@ msgstr "Μετακίνηση κομματιού προς τα επάνω"
 msgid "Move Track Down"
 msgstr "Μετακίνηση κομματιού προς τα κάτω"
 
+#: src/UndoManager.cpp
+msgid "Discarding undo/redo history"
+msgstr "Απόρριψη του ιστορικού αναιρέσεων/ακυρώσεων αναιρέσεων"
+
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
 #. backwards by words.  So 'key' is being used in the sense of an index.
@@ -5619,6 +5883,14 @@ msgstr "Άκυρη τιμή για την παράμετρο '%s': πρέπει 
 msgid "Command"
 msgstr "Εντολή"
 
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: src/commands/CommandManager.cpp src/effects/EffectUI.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Επανάληψη %s"
+
 #: src/commands/CommandManager.cpp
 #, c-format
 msgid ""
@@ -5641,10 +5913,6 @@ msgstr ""
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
 msgstr "Οι συντομεύσεις έχουν αφαιρεθεί"
-
-#: src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Μεγάλο μήνυμα"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -5799,13 +6067,25 @@ msgstr "Τύποι:"
 msgid "Gets track values as JSON."
 msgstr "Παίρνει τιμές κομματιού ως JSON."
 
+#: src/commands/HelpCommand.cpp
+msgid "Comment"
+msgstr "Σχόλιο"
+
 #: src/commands/HelpCommand.cpp src/export/ExportCL.cpp
 msgid "Command:"
 msgstr "Εντολή:"
 
+#: src/commands/HelpCommand.cpp
+msgid "_"
+msgstr "_"
+
 #: src/commands/HelpCommand.h
 msgid "Gives help on a command."
 msgstr "Βοηθά σε εντολή."
+
+#: src/commands/HelpCommand.h
+msgid "For comments in a macro."
+msgstr "Για σχόλια σε μακροεντολή."
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -5871,8 +6151,16 @@ msgid "Save Project2"
 msgstr "Αποθήκευση έργου2"
 
 #: src/commands/OpenSaveCommands.cpp
-msgid "Compress"
-msgstr "Συμπίεση"
+msgid "Save Copy"
+msgstr "Αποθήκευση αντιγράφου"
+
+#: src/commands/OpenSaveCommands.cpp
+msgid "Save Log"
+msgstr "Αποθήκευση ημερολογίου"
+
+#: src/commands/OpenSaveCommands.cpp
+msgid "Clear Log"
+msgstr "Καθαρισμός ημερολογίου"
 
 #: src/commands/OpenSaveCommands.h
 msgid "Opens a project."
@@ -5881,6 +6169,18 @@ msgstr "Άνοιγμα έργου."
 #: src/commands/OpenSaveCommands.h
 msgid "Saves a project."
 msgstr "Αποθήκευση έργου."
+
+#: src/commands/OpenSaveCommands.h
+msgid "Saves a copy of current project."
+msgstr "Αποθηκεύει ένα αντίγραφο του τρέχοντος έργου."
+
+#: src/commands/OpenSaveCommands.h
+msgid "Saves the log contents."
+msgstr "Αποθηκεύει τα περιεχόμενα του ημερολογίου."
+
+#: src/commands/OpenSaveCommands.h
+msgid "Clears the log contents."
+msgstr "Καθαρίζει τα περιεχόμενα του ημερολογίου."
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference"
@@ -7820,12 +8120,9 @@ msgstr "Διακοπή &αναπαραγωγής"
 msgid "Play"
 msgstr "Αναπαραγωγή"
 
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Επανάληψη %s"
+#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+msgid "Nyquist Prompt"
+msgstr "Προτροπή Nyquist"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -8215,7 +8512,7 @@ msgstr "Οι καμπύλες που εξήχθησαν"
 
 #: src/effects/Equalization.cpp
 msgid "No curves exported"
-msgstr "Δεν εξήχθη καμία καμπύλη."
+msgstr "Δεν εξήχθη καμία καμπύλη"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -8349,10 +8646,6 @@ msgstr "Ανεξάρτητη κανονικοποίηση &στερεοφωνι�
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
 msgstr "Α&ντιμετώπιση μονοφωνικού ως διπλού μονοφωνικού (συνιστάται)"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-msgid "Waiting for waveform to finish computing..."
-msgstr "Αναμονή ώστε η κυματομορφή να τελειώσει τον υπολογισμό..."
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "(Maximum 0dB)"
@@ -9246,6 +9539,18 @@ msgstr "Από στερεοφωνικό σε μονοφωνικό"
 msgid "Converts stereo tracks to mono"
 msgstr "Μετατροπή στερεοφωνικών κομματιών σε μονοφωνικό"
 
+#: src/effects/StereoToMono.cpp
+msgid "Resampling left channel"
+msgstr "Επαναδειγματοληψία αριστερού καναλιού"
+
+#: src/effects/StereoToMono.cpp
+msgid "Resampling right channel"
+msgstr "Επαναδειγματοληψία δεξιού καναλιού"
+
+#: src/effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr "Ανάμειξη σε μονοφωνικό"
+
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
 msgstr "Επιμήκυνση ολίσθησης"
@@ -9805,7 +10110,7 @@ msgstr ""
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 #, c-format
 msgid "%s:"
-msgstr "%s"
+msgstr "%s:"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "Effect Output"
@@ -9894,10 +10199,6 @@ msgstr "Παρέχει υποστήριξη στα εφέ Nyquist για το Au
 msgid "Applying Nyquist Effect..."
 msgstr "Εφαρμογή εφέ Nyquist..."
 
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Προτροπή Nyquist"
-
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
@@ -9973,7 +10274,7 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "nyx_error returned from %s.\n"
-msgstr "Επιστροφή nyx_error από το %s.\n"
+msgstr "επιστροφή nyx_error από το %s.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "plug-in"
@@ -10072,16 +10373,8 @@ msgid "Enter Nyquist Command: "
 msgstr "Εισαγωγή εντολής Nyquist: "
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid "&Use legacy (version 3) syntax."
-msgstr "&Χρήση της παλιάς σύνταξης (έκδοση 3)."
-
-#: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
 msgstr "&Φόρτωση"
-
-#: src/effects/nyquist/Nyquist.cpp src/menus/HelpMenus.cpp
-msgid "&Save"
-msgstr "Απο&θήκευση"
 
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
@@ -10198,12 +10491,6 @@ msgstr "Όλοι οι επιλεγμένοι ήχοι βρίσκονται σε 
 msgid "All audio is muted."
 msgstr "Όλοι οι ήχοι βρίσκονται σε σιγή."
 
-#: src/export/Export.cpp src/export/ExportCL.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportFLAC.cpp src/export/ExportMP2.cpp src/export/ExportMP3.cpp
-#: src/export/ExportOGG.cpp src/export/ExportPCM.cpp
-msgid "Unable to export"
-msgstr "Αδύνατη η εξαγωγή"
-
 #: src/export/Export.cpp
 #, c-format
 msgid "Are you sure you want to export the file as \"%s\"?\n"
@@ -10231,23 +10518,6 @@ msgid "Sorry, pathnames longer than 256 characters not supported."
 msgstr ""
 "Λυπούμαστε, δεν υποστηρίζονται ονόματα διαδρομής με περισσότερους από 256 "
 "χαρακτήρες."
-
-#: src/export/Export.cpp
-msgid ""
-"You are attempting to overwrite an aliased file that is missing.\n"
-"The file cannot be written because the path is needed to restore the "
-"original audio to the project.\n"
-"Choose Help > Diagnostics > Check Dependencies to view the locations of all "
-"missing files.\n"
-"If you still wish to export, please choose a different filename or folder."
-msgstr ""
-"Προσπαθείτε να αντικαταστήσετε ένα αρχείο με ψευδώνυμο που λείπει.\n"
-"Το αρχείο δεν μπορεί να γραφτεί επειδή απαιτείται η διαδρομή για να "
-"επαναφέρει τον πρωτότυπο ήχο στο έργο.\n"
-"Επιλέξτε Βοήθεια > Διαγνωστικά > Έλεγχος εξαρτήσεων για να προβάλετε τις "
-"τοποθεσίες όλων των αρχείων που λείπουν.\n"
-"Εάν θέλετε ακόμα να εξάγετε, παρακαλούμε επιλέξτε ένα διαφορετικό όνομα "
-"αρχείου ή φακέλου."
 
 #: src/export/Export.cpp
 #, c-format
@@ -10306,6 +10576,15 @@ msgstr "Κανάλια εξόδου: %2d"
 msgid "Mixer Panel"
 msgstr "Πάνελ μείκτη"
 
+#: src/export/Export.cpp
+#, c-format
+msgid ""
+"Unable to export.\n"
+"Error %s"
+msgstr ""
+"Αδύνατη η εξαγωγή.\n"
+"Σφάλμα %s"
+
 #: src/export/ExportCL.cpp
 msgid "Show output"
 msgstr "Εμφάνιση εξόδου"
@@ -10358,6 +10637,10 @@ msgstr "Εξαγωγή του ήχου χρησιμοποιώντας κωδικ
 #: src/export/ExportCL.cpp
 msgid "Command Output"
 msgstr "Έξοδος εντολής"
+
+#: src/export/ExportCL.cpp
+msgid "&OK"
+msgstr "&Εντάξει"
 
 #: src/export/ExportCL.cpp
 msgid "You've specified a file name without an extension. Are you sure?"
@@ -10495,10 +10778,6 @@ msgstr "FFmpeg : ΣΦΑΛΜΑ - το nAudioFrameSizeOut είναι υπερβο�
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't encode audio frame."
 msgstr "FFmpeg : ΣΦΑΛΜΑ - Αδυναμία κωδικοποίησης πλαισίου ήχου."
-
-#: src/export/ExportFFmpeg.cpp
-msgid "FFmpeg : ERROR - Failed to write audio frame to file."
-msgstr "FFmpeg : ΣΦΑΛΜΑ - Αποτυχία εγγραφής πλαισίου ήχου στο αρχείο."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11664,23 +11943,32 @@ msgstr "Να συνεχιστεί η εξαγωγή των υπόλοιπων α
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid ""
-"Label or track \"%s\" is not a legal file name. You cannot use any of: %s\n"
-"Use..."
+"Label or track \"%s\" is not a legal file name.\n"
+"You cannot use any of these characters:\n"
+"\n"
+"%s\n"
+"\n"
+"Suggested replacement:"
 msgstr ""
-"Η ετικέτα ή το κομμάτι \"%s\" δεν είναι επιτρεπτό όνομα αρχείου. Δεν "
-"μπορείτε να χρησιμοποιήσετε οποιοδήποτε από τα: %s\n"
-"Χρησιμοποιήστε..."
+"Η ετικέτα ή το κομμάτι \"%s\" δεν είναι επιτρεπτό όνομα αρχείου.\n"
+"Δεν μπορείτε να χρησιμοποιήσετε οποιονδήποτε από αυτούς τους χαρακτήρες:\n"
+"\n"
+"%s\n"
+"\n"
+"Προτεινόμενη αντικατάσταση:"
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
 #, c-format
 msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
-"Use..."
+"\n"
+"Suggested replacement:"
 msgstr ""
 "Η ετικέτα ή το κομμάτι \"%s\" δεν είναι επιτρεπτό όνομα αρχείου. Δεν "
 "μπορείτε να χρησιμοποιήσετε το \"%s\".\n"
-"Χρησιμοποιήστε..."
+"\n"
+"Προτεινόμενη αντικατάσταση:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
@@ -11692,7 +11980,7 @@ msgstr "Αρχεία Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - rate or quality problem"
-msgstr "Αδυναμία εξαγωγής - πρόβλημα ρυθμού ή ποιότητας "
+msgstr "Αδυναμία εξαγωγής - πρόβλημα ρυθμού ή ποιότητας"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with metadata"
@@ -11810,6 +12098,17 @@ msgstr ""
 "Το Audacity δεν μπορεί να ανοίξει αυτόν τον τύπο αρχείου για\n"
 "αναπαραγωγή, αλλά μπορείτε να το επεξεργαστείτε πατώντας Αρχείο > Εισαγωγή > "
 "MIDI."
+
+#: src/import/Import.cpp
+#, c-format
+msgid ""
+"\"%s\" \n"
+"is a not an audio file. \n"
+"Audacity cannot open this type of file."
+msgstr ""
+"Το \"%s\" \n"
+"δεν είναι αρχείο ήχου. \n"
+"Το Audacity δεν μπορεί να ανοίξει αυτόν τον τύπο αρχείου."
 
 #: src/import/Import.cpp
 msgid "Select stream(s) to import"
@@ -11990,17 +12289,6 @@ msgstr ""
 "Το Audacity δεν μπορεί προς το παρόν να ανοίξει αυτόν τον τύπο αρχείου\n"
 "Πρέπει να εξάγετε τον ήχο σε μια υποστηριζόμενη μορφή ήχου, όπως WAV ή AIFF."
 
-#. i18n-hint: %s will be the filename
-#: src/import/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" is an Audacity Project file. \n"
-"Use the 'File > Open' command to open Audacity Projects."
-msgstr ""
-"Το \"%s\" είναι ένα αρχείο έργου του Audacity.\n"
-"Χρησιμοποιήστε την εντολή 'Αρχείο > Άνοιγμα' για να ανοίξετε τα έργα του "
-"Audacity."
-
 #: src/import/Import.cpp
 #, c-format
 msgid "File \"%s\" not found."
@@ -12011,12 +12299,21 @@ msgstr "Δεν βρέθηκε το αρχείο \"%s\"."
 #, c-format
 msgid ""
 "Audacity did not recognize the type of the file '%s'.\n"
-"Try installing FFmpeg. For uncompressed files, also try File > Import > Raw "
-"Data."
+"\n"
+"%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
 "Το Audacity δεν αναγνώρισε τον τύπο του αρχείου '%s'.\n"
-"Δοκιμάστε να εγκαταστήσετε το FFmpeg. Για ασυμπίεστα αρχεία, δοκιμάστε "
-"επίσης Αρχείο > Εισαγωγή > Ακατέργαστα δεδομένα."
+"\n"
+"%sΓια ασυμπίεστα αρχεία, δοκιμάστε επίσης Αρχείο > Εισαγωγή > Ακατέργαστα "
+"δεδομένα."
+
+#: src/import/Import.cpp
+msgid ""
+"Try installing FFmpeg.\n"
+"\n"
+msgstr ""
+"Προσπαθήστε να εγκαταστήσετε το FFmpeg.\n"
+"\n"
 
 #: src/import/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -12036,6 +12333,186 @@ msgstr ""
 "Οι εισαγωγείς που υποτίθεται ότι υποστηρίζουν τέτοια αρχεία είναι:\n"
 "%s,\n"
 "αλλά κανένα τους δεν κατάλαβε αυτή τη μορφή του αρχείου."
+
+#: src/import/ImportAUP.cpp
+msgid "AUP project files (*.aup)"
+msgstr "Αρχεία έργου AUP (*.aup)"
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Couldn't import the project:\n"
+"\n"
+"%s"
+msgstr ""
+"Αδυναμία εισαγωγής του έργου:\n"
+"\n"
+"%s"
+
+#: src/import/ImportAUP.cpp
+msgid "Import Project"
+msgstr "Εισαγωγή έργου"
+
+#: src/import/ImportAUP.cpp
+msgid ""
+"This project was saved by Audacity version 1.0 or earlier. The format has\n"
+"changed and this version of Audacity is unable to import the project.\n"
+"\n"
+"Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
+"you may import it with this version of Audacity."
+msgstr ""
+"Αυτό το έργο αποθηκεύτηκε με την έκδοση 1.0 του Audacity ή παλιότερη. Η "
+"μορφή έχει\n"
+"αλλάξει και αυτή η έκδοση του Audacity δεν μπορεί να εισάγει το έργο.\n"
+"\n"
+"Χρησιμοποιήστε μια έκδοση του Audacity πριν την v3.0.0 για να αναβαθμίσετε "
+"το έργο και έπειτα\n"
+"μπορείτε να το εισάγετε με αυτήν την έκδοση του Audacity."
+
+#: src/import/ImportAUP.cpp
+msgid "Internal error in importer...tag not recognized"
+msgstr "Εσωτερικό σφάλμα στον εισαγωγέα...η ετικέτα δεν αναγνωρίστηκε"
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Invalid project '%s' attribute."
+msgstr "Άκυρο γνώρισμα του έργου '%s'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'vpos' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'vpos'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'h' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'h'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'zoom' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'zoom'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'sel0' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'sel0'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'sel1' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'sel1'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'selLow' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'selLow'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid project 'selHigh' attribute."
+msgstr "Άκυρο γνώρισμα του έργου 'selHigh'."
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Couldn't find the project data folder: \"%s\""
+msgstr "Αδύνατη η εύρεση του φακέλου των δεδομένων έργου: \"%s\""
+
+#: src/import/ImportAUP.cpp
+msgid ""
+"MIDI tracks found in project file, but this build of Audacity does not "
+"include MIDI support, bypassing track."
+msgstr ""
+"Τα κομμάτια MIDI βρέθηκαν σε αρχείο έργου, αλλά αυτή η έκδοση του Audacity "
+"δεν περιλαμβάνει υποστήριξη MIDI, παράκαμψη του κομματιού."
+
+#: src/import/ImportAUP.cpp
+msgid "Project Import"
+msgstr "Εισαγωγή έργου"
+
+#: src/import/ImportAUP.cpp
+msgid ""
+"The active project already has a time track and one was encountered in the "
+"project being imported, bypassing imported time track."
+msgstr ""
+"Το ενεργό έργο έχει ήδη κομμάτι χρόνου και εμφανίστηκε ένα στο εισαγόμενο "
+"έργο, παράκαμψη του εισαγόμενου κομματιού χρόνου."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid sequence 'maxsamples' attribute."
+msgstr "Άκυρη αλληλουχία γνωρίσματος 'maxsamples'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid sequence 'sampleformat' attribute."
+msgstr "Άκυρο γνώρισμα της ακολουθίας 'sampleformat'."
+
+#: src/import/ImportAUP.cpp
+msgid "Invalid sequence 'numsamples' attribute."
+msgstr "Άκυρη αλληλουχία γνωρίσματος 'numsamples'."
+
+#: src/import/ImportAUP.cpp
+msgid "Unable to parse the waveblock 'start' attribute"
+msgstr ""
+"Αδυναμία ανάλυσης του γνωρίσματος 'start' του μπλοκ κύματος (waveblock)"
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Missing project file %s\n"
+"\n"
+"Inserting silence instead."
+msgstr ""
+"Λείπει το αρχείο έργου %s\n"
+"\n"
+"Στη θέση του εισάγεται σιγή."
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid simpleblockfile 'len' attribute."
+msgstr "Λείπει ή είναι άκυρο το γνώρισμα 'len' απλού αρχείου μπλοκ."
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid silentblockfile 'len' attribute."
+msgstr ""
+"Λείπει ή είναι άκυρο το γνώρισμα 'len' του αρχείου μπλοκ σιγής "
+"(silentblockfile)."
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Missing alias file %s\n"
+"\n"
+"Inserting silence instead."
+msgstr ""
+"Λείπει το αρχείο ψευδωνύμου %s\n"
+"\n"
+"Στη θέση του εισάγεται σιγή."
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
+msgstr "Λείπει ή είναι άκυρο το γνώρισμα 'aliasstart' του pcmaliasblockfile."
+
+#: src/import/ImportAUP.cpp
+msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
+msgstr "Λείπει ή είναι άκυρο το γνώρισμα 'aliaslen' του pcmaliasblockfile."
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid ""
+"Error while processing %s\n"
+"\n"
+"Inserting silence."
+msgstr ""
+"Σφάλμα κατά την επεξεργασία του %s\n"
+"\n"
+"Εισαγωγή σιγής."
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Failed to open %s"
+msgstr "Αποτυχία ανοίγματος του %s"
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Failed to seek to position %lld in %s"
+msgstr "Αποτυχία αναζήτησης της θέσης του %lld στο %s"
+
+#: src/import/ImportAUP.cpp
+#, c-format
+msgid "Unable to read %lld samples from %s"
+msgstr "Αδύνατη η ανάγνωση %lld δειγμάτων από %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -12153,15 +12630,16 @@ msgid "MP3 files"
 msgstr "Αρχεία MP3"
 
 #: src/import/ImportMP3.cpp
-#, c-format
 msgid ""
-"MP3 Decoding Failed:\n"
+"Import failed\n"
 "\n"
-"%s"
+"This is likely caused by a malformed MP3.\n"
+"\n"
 msgstr ""
-"Αποτυχία αποκωδικοποίησης MP3:\n"
+"Αποτυχία εισαγωγής\n"
 "\n"
-"%s"
+"Αυτό μπορεί να προκλήθηκε από αλλοιωμένο MP3.\n"
+"\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -12373,70 +12851,6 @@ msgstr "8 bit DPCM"
 msgid "Vorbis"
 msgstr "Vorbis"
 
-#: src/import/ImportPCM.cpp
-msgid ""
-"When importing uncompressed audio files you can either copy them into the "
-"project, or read them directly from their current location (without "
-"copying).\n"
-"\n"
-msgstr ""
-"Κατά την εισαγωγή ασυμπίεστων αρχείων ήχου μπορείτε είτε να τα αντιγράψετε "
-"στο έργο, ή να τα διαβάσετε απευθείας από την τρέχουσα θέση (χωρίς "
-"αντιγραφή).\n"
-"\n"
-
-#: src/import/ImportPCM.cpp
-msgid ""
-"Your current preference is set to copy in.\n"
-"\n"
-msgstr ""
-"Η τρέχουσα προτίμησή σας ορίστηκε σε αντιγραφή.\n"
-"\n"
-
-#: src/import/ImportPCM.cpp
-msgid ""
-"Your current preference is set to read directly.\n"
-"\n"
-msgstr ""
-"Η τρέχουσα προτίμησή σας ορίστηκε σε απευθείας ανάγνωση.\n"
-"\n"
-
-#: src/import/ImportPCM.cpp
-msgid ""
-"Reading the files directly allows you to play or edit them almost "
-"immediately. This is less safe than copying in, because you must retain the "
-"files with their original names in their original locations.\n"
-"Help > Diagnostics > Check Dependencies will show the original names and "
-"locations of any files that you are reading directly.\n"
-"\n"
-"How do you want to import the current file(s)?"
-msgstr ""
-"Η άμεση ανάγνωση των αρχείων σας επιτρέπει να τα παίξετε ή να τα "
-"επεξεργαστείτε σχεδόν αμέσως. Αυτό είναι λιγότερο ασφαλές από την αντιγραφή, "
-"επειδή θα πρέπει να διατηρήσετε τα αρχεία με τα αρχικά τους ονόματα στις "
-"αρχικές τους θέσεις.\n"
-"Το Βοήθεια > Διαγνωστικά > Έλεγχος εξαρτήσεων θα εμφανίσει τα αρχικά ονόματα "
-"και θέσεις οποιωνδήποτε αρχείων διαβάζετε άμεσα.\n"
-"\n"
-"Πώς θέλετε να εισάγετε τα τρέχοντα αρχεία;"
-
-#: src/import/ImportPCM.cpp
-msgid "Choose an import method"
-msgstr "Επιλέξτε μια μέθοδο εισαγωγής"
-
-#: src/import/ImportPCM.cpp
-msgid "Make a &copy of the files before editing (safer)"
-msgstr "Κάντε ένα αντί&γραφο των αρχείων πριν την επεξεργασία (πιο ασφαλές)"
-
-#: src/import/ImportPCM.cpp
-msgid "Read the files &directly from the original (faster)"
-msgstr "Διαβάστε τα αρχεία ά&μεσα από το αρχικό (πιο γρήγορο)"
-
-#: src/import/ImportPCM.cpp
-msgid "Don't &warn again and always use my choice above"
-msgstr ""
-"Να μην ξαναειδοποιηθώ και να χρησιμοποιείται πάντα η παραπάνω επιλογή μου"
-
 #: src/import/ImportPlugin.cpp src/import/ImportRaw.cpp
 #, c-format
 msgid "Importing %s"
@@ -12470,7 +12884,7 @@ msgstr "Αδύνατη η ανάκτηση περιγραφής ροής"
 msgid "Unable to get fill buffer"
 msgstr "Αδύνατη η λήψη ενδιάμεσης μνήμης πλήρωσης"
 
-#. i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.
+#. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
 msgid "Import Raw"
 msgstr "Εισαγωγή ανεπεξέργαστων δεδομένων (Raw)"
@@ -12555,8 +12969,8 @@ msgid "&Import"
 msgstr "Εισαγωγή"
 
 #: src/import/RawAudioGuess.cpp
-msgid "Bad data size"
-msgstr "Εσφαλμένο μέγεθος δεδομένων"
+msgid "Bad data size. Could not import audio"
+msgstr "Κακό μέγεθος δεδομένων. Αδυναμία εισαγωγής ήχου"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12683,12 +13097,12 @@ msgid "Cursor to Next Clip Boundary"
 msgstr "Ο δρομέας στο επόμενο όριο αποσπάσματος"
 
 #: src/menus/ClipMenus.cpp
-msgid "Clip L&eft"
-msgstr "Απόσπασμα αρ&ιστερά"
+msgid "Time Shift &Left"
+msgstr "Χρονική μετατόπιση α&ριστερά"
 
 #: src/menus/ClipMenus.cpp
-msgid "Clip Rig&ht"
-msgstr "Απόσπασμα δ&εξιά"
+msgid "Time Shift &Right"
+msgstr "Χρονική μετατόπιση &δεξιά"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -12949,6 +13363,15 @@ msgid "&Full Screen (on/off)"
 msgstr "&Πλήρης οθόνη (ναι/όχι)"
 
 #: src/menus/FileMenus.cpp
+#, c-format
+msgid ""
+"Cannot create directory '%s'. \n"
+"File already exists that is not a directory"
+msgstr ""
+"Αδυναμία δημιουργίας καταλόγου '%s'. \n"
+"Το αρχείο που ήδη υπάρχει δεν είναι κατάλογος"
+
+#: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
 msgstr "Εξαγωγή επιλεγμένου ήχου"
 
@@ -13019,10 +13442,6 @@ msgid "Allegro files"
 msgstr "Αρχεία Allegro"
 
 #: src/menus/FileMenus.cpp
-msgid "Select any uncompressed audio file"
-msgstr "Επιλέξτε αρχείο ασυμπίεστου ήχου"
-
-#: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Επικίνδυνη επαναφορά..."
 
@@ -13045,12 +13464,8 @@ msgid "Save Project &As..."
 msgstr "&Αποθήκευση έργου ως..."
 
 #: src/menus/FileMenus.cpp
-msgid "Save Lossless Copy of Project..."
-msgstr "Αποθήκευση μη απωλεστικού αντιγράφου του έργου..."
-
-#: src/menus/FileMenus.cpp
-msgid "&Save Compressed Copy of Project..."
-msgstr "Απο&θήκευση συμπιεσμένου αντιγράφου του έργου..."
+msgid "&Backup Project..."
+msgstr "Α&ντίγραφο ασφαλείας έργου..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -13117,6 +13532,14 @@ msgstr "&Εκτύπωση..."
 #: src/menus/FileMenus.cpp
 msgid "E&xit"
 msgstr "Έ&ξοδος"
+
+#: src/menus/FileMenus.cpp
+msgid "Hidden File Menu"
+msgstr "Κρυμμένο μενού αρχείου"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "Εξαγωγή ως FLAC"
 
 #: src/menus/HelpMenus.cpp
 #, c-format
@@ -13215,10 +13638,6 @@ msgstr "Εμφάνιση &ημερολογίου..."
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "&Δημιουργία δεδομένων υποστήριξης..."
-
-#: src/menus/HelpMenus.cpp
-msgid "Chec&k Dependencies..."
-msgstr "Έ&λεγχος εξαρτήσεων..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Menu Tree..."
@@ -13488,6 +13907,11 @@ msgstr "Άγνωστο"
 
 #: src/menus/PluginMenus.cpp
 #, c-format
+msgid "&Repeat %s"
+msgstr "Επανάλη&ψη του %s"
+
+#: src/menus/PluginMenus.cpp
+#, c-format
 msgid "Plug-in %d to %d"
 msgstr "Πρόσθετο %d σε %d"
 
@@ -13498,6 +13922,10 @@ msgstr "&Δημιουργία"
 #: src/menus/PluginMenus.cpp
 msgid "Add / Remove Plug-ins..."
 msgstr "Προσθήκη / Αφαίρεση προσθέτων..."
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Generator"
+msgstr "Επανάληψη τελευταίας γεννήτριας"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -13511,9 +13939,17 @@ msgstr "Επανάληψη τελευταίου εφέ"
 msgid "&Analyze"
 msgstr "Ανά&λυση"
 
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Analyzer"
+msgstr "Επανάληψη τελευταίου αναλυτή"
+
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
 msgstr "Ε&ργαλεία"
+
+#: src/menus/PluginMenus.cpp
+msgid "Repeat Last Tool"
+msgstr "Επανάληψη τελευταίου εργαλείου"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
@@ -14383,6 +14819,20 @@ msgstr "Μετακίνηση εστιασμένου κομματιού στην 
 msgid "Move Focused Track to &Bottom"
 msgstr "Μετακίνηση εστιασμένου κομματιού στον πυ&θμένα"
 
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused.
+#: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
+msgid "Playing"
+msgstr "Αναπαράγεται"
+
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. is playing or recording or stopped, and whether it is paused.
+#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
+#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+msgid "Recording"
+msgstr "Ηχογράφηση"
+
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
 msgstr "χωρίς κομμάτι ετικέτας"
@@ -14615,11 +15065,11 @@ msgid "&Decrease Playback Speed"
 msgstr "Μεί&ωση ταχύτητας αναπαραγωγής"
 
 #: src/menus/TransportMenus.cpp
-msgid "Move to &Previous Label"
+msgid "Move to Pre&vious Label"
 msgstr "Μετακίνηση στην προ&ηγούμενη ετικέτα"
 
 #: src/menus/TransportMenus.cpp
-msgid "Move to &Next Label"
+msgid "Move to Ne&xt Label"
 msgstr "Μετακίνηση στην επό&μενη ετικέτα"
 
 #: src/menus/ViewMenus.cpp
@@ -14790,14 +15240,6 @@ msgstr "Αναπαραγωγή"
 msgid "&Device:"
 msgstr "&Συσκευή:"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h
-#: src/toolbars/ControlToolBar.cpp
-msgid "Recording"
-msgstr "Ηχογράφηση"
-
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "Συ&σκευή:"
@@ -14839,7 +15281,7 @@ msgstr "1 (Μονό)"
 msgid "2 (Stereo)"
 msgstr "2 (Στέρεο)"
 
-#. i18n-hint:  Directories, also called folders, in computer file systems
+#. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
 msgid "Directories"
 msgstr "Φάκελοι"
@@ -14847,6 +15289,52 @@ msgstr "Φάκελοι"
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Preferences for Directories"
 msgstr "Προτιμήσεις καταλόγων"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Default directories"
+msgstr "Προεπιλεγμένοι κατάλογοι"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid ""
+"Leave a field empty to go to the last directory used for that operation.\n"
+"Fill in a field to always go to that directory for that operation."
+msgstr ""
+"Αφήστε ένα κενό πεδίο να πάει με τον τελευταίο χρησιμοποιούμενο κατάλογο για "
+"αυτήν την λειτουργία.\n"
+"Συμπληρώστε ένα πεδίο που να πηγαίνει πάντα με αυτόν τον κατάλογο για αυτήν "
+"τη λειτουργία."
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "O&pen:"
+msgstr "Ά&νοιγμα:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "Ανα&ζήτηση..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "S&ave:"
+msgstr "Απο&θήκευση:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "B&rowse..."
+msgstr "Αναζή&τηση..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Import:"
+msgstr "Ε&ισαγωγή:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Br&owse..."
+msgstr "Α&ναζήτηση..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Export:"
+msgstr "Ε&ξαγωγή:"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Bro&wse..."
+msgstr "Αναζήτ&ηση..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -14857,34 +15345,20 @@ msgid "&Location:"
 msgstr "&Τοποθεσία:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space:"
-msgstr "Ελεύθερος χώρος:"
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Ο κατάλογος των προσωρινών αρχείων δεν μπορεί να είναι σε δίσκο FAT."
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "C&hoose..."
-msgstr "Επιλέξτε..."
+msgid "Brow&se..."
+msgstr "Αν&αζήτηση..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Audio cache"
-msgstr "Μικροαποθήκευση (cache) ακουστικού σήματος"
+msgid "&Free Space:"
+msgstr "Ε&λεύθερος χώρος:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Play and/or record using &RAM (useful for slow drives)"
-msgstr ""
-"Αναπαραγωγή και/ή εγγραφή χρησιμοποιώντας &RAM (χρήσιμο για αργούς οδηγούς)"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Mi&nimum Free Memory (MB):"
-msgstr "Ε&λάχιστη ελεύθερη μνήμη (MB):"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"If the available system memory falls below this value, audio will no longer\n"
-"be cached in memory and will be written to disk."
-msgstr ""
-"Αν η διαθέσιμη μνήμη του συστήματος πέσει κάτω από αυτήν την τιμή, ο ήχος "
-"δεν θα\n"
-"αποθηκεύεται πια στην κρυφή μνήμη και θα γράφεται στον δίσκο."
+msgid "Free Space"
+msgstr "Ελεύθερος χώρος"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -14893,6 +15367,10 @@ msgstr "Επιλέξτε την τοποθεσία του προσωρινού �
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
 msgstr "μη διαθέσιμο - η παραπάνω θέση δεν υπάρχει"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location"
+msgstr "Επιλέξτε θέση"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15205,6 +15683,10 @@ msgid "Use mostly Left-to-Right layouts in RTL languages"
 msgstr "Χρήση κυρίως διατάξεων αριστερά-προς-τα-δεξιά σε γλώσσες RTL"
 
 #: src/prefs/GUIPrefs.cpp
+msgid "Never use comma as decimal point"
+msgstr "Να μην χρησιμοποιείται ποτέ το κόμμα ως υποδιαστολή"
+
+#: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
 msgstr "Εμφάνιση συμβουλών λωρίδας χρόνου"
 
@@ -15242,16 +15724,20 @@ msgid "&Use Advanced Mixing Options"
 msgstr "&Χρησιμοποιήστε προχωρημένες επιλογές μίξης"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "S&tandard"
+msgstr "&Τυπικό"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Ε&κτεταμένο (με περιοχές συχνοτήτων)"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
 msgstr "&Δευτερόλεπτα"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Beats"
 msgstr "&Κτύποι (Beats)"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "When importing audio files"
-msgstr "Κατά την εισαγωγή αρχείων ακουστικού σήματος"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
@@ -15265,6 +15751,10 @@ msgstr "Να εμ&φανίζεται ο επεξεργαστής ετικετώ�
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ignore blank space at the beginning"
 msgstr "Παράβλε&ψη κενού διαστήματος στην αρχή"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Exported Label Style:"
+msgstr "Εξαγόμενη τεχνοτροπία ετικέτας:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -15519,10 +16009,6 @@ msgid "Dow&nload"
 msgstr "Λή&ψη"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "Allow &background on-demand loading"
-msgstr "Να επιτρέπεται η φόρτωση όταν ζητηθεί του π&αρασκηνίου"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -15547,6 +16033,10 @@ msgstr "Συσκευές MIDI"
 msgid "Preferences for MidiIO"
 msgstr "Προτιμήσεις εισόδου-εξόδου Midi"
 
+#: src/prefs/MidiIOPrefs.cpp
+msgid "No MIDI interfaces"
+msgstr "Χωρίς διεπαφές MIDI"
+
 #. i18n-hint Software interface to MIDI
 #: src/prefs/MidiIOPrefs.cpp
 msgctxt "MIDI"
@@ -15560,10 +16050,6 @@ msgstr "Χρήση: PortMidi"
 #: src/prefs/MidiIOPrefs.cpp
 msgid "MIDI Synth L&atency (ms):"
 msgstr "&Λανθάνων χρόνος συνθέτη MIDI (ms):"
-
-#: src/prefs/MidiIOPrefs.cpp
-msgid "No MIDI interfaces"
-msgstr "Χωρίς διεπαφές MIDI"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "The MIDI Synthesizer Latency must be an integer"
@@ -15906,19 +16392,6 @@ msgstr "Κατηγορία"
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences:"
 msgstr "Προτιμήσεις:"
-
-#. i18n-hint: (noun) i.e Audacity projects.
-#: src/prefs/ProjectsPrefs.cpp src/prefs/ProjectsPrefs.h
-msgid "Projects"
-msgstr "Έργα"
-
-#: src/prefs/ProjectsPrefs.cpp
-msgid "Preferences for Projects"
-msgstr "Προτιμήσεις έργων"
-
-#: src/prefs/ProjectsPrefs.cpp
-msgid "When saving a project that depends on other audio files"
-msgstr "Όταν αποθηκεύεται ένα έργο που εξαρτάται από άλλα αρχεία ήχου"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "16-bit"
@@ -16608,10 +17081,6 @@ msgid "Saving &empty project"
 msgstr "Αποθήκευση &κενού έργου"
 
 #: src/prefs/WarningsPrefs.cpp
-msgid "&Low disk space at launch or new project"
-msgstr "&Λίγος χώρος δίσκου κατά την έναρξη ή σε νέο έργο"
-
-#: src/prefs/WarningsPrefs.cpp
 msgid "Mixing down to &mono during export"
 msgstr "Ανάμειξη σε &μονοφωνικό κατά τη διάρκεια της εξαγωγής"
 
@@ -16629,10 +17098,6 @@ msgstr ""
 msgid "Missing file &name extension during export"
 msgstr "Λείπει η επέκταση αρχείου &ονόματος κατά την εξαγωγή"
 
-#: src/prefs/WarningsPrefs.cpp
-msgid "&Importing uncompressed audio files"
-msgstr "&Εισαγωγή μη συμπιεσμένων αρχείων ακουστικού σήματος"
-
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
@@ -16645,12 +17110,6 @@ msgstr "Προτιμήσεις κυματομορφών"
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range:"
 msgstr "&Περιοχή dB κυματομορφής:"
-
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/toolbars/ControlToolBar.cpp
-msgid "Playing"
-msgstr "Αναπαράγεται"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
@@ -17243,6 +17702,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
 msgid "Right-click for menu."
 msgstr "Δεξιό πάτημα για μενού."
 
@@ -17362,6 +17822,20 @@ msgstr "Ρυθμίσεις &φασματογραφήματος..."
 msgid "&Format"
 msgstr "&Μορφή"
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "Changing sample format"
+msgstr "Αλλαγή μορφής δείγματος"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, c-format
+msgid "Processing...   0%%"
+msgstr "Επεξεργασία...   0%%"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, c-format
+msgid "Processing...   %i%%"
+msgstr "Επεξεργασία...   %i%%"
+
 #. i18n-hint: The strings name a track and a format
 #. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -17445,6 +17919,7 @@ msgid "Set Rate"
 msgstr "Ορισμός ρυθμού δειγματοληψίας"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
 msgid "&Multi-view"
 msgstr "&Πολλαπλή προβολή"
 
@@ -17823,6 +18298,10 @@ msgid "Click and drag to move a track in time"
 msgstr "Πατήστε και σύρετε για να μετακινήσετε ένα κομμάτι στο χρόνο"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
+msgid "Could not shift between tracks"
+msgstr "Αδυναμία μετακίνησης μεταξύ κομματιών"
+
+#: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
 msgstr "Μετακινήθηκαν αποσπάσματα σε άλλο κομμάτι"
 
@@ -18154,11 +18633,13 @@ msgstr "ωω:λλ:δδ + εκατοστά"
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
 #. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
-#. * (the hundredths are shown as decimal seconds) . Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale
+#. * (the hundredths are shown as decimal seconds). Don't change the numbers
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.0100 s"
-msgstr "0100 ω 060 λ 060.0100 δ"
+msgid "0100 h 060 m 060>0100 s"
+msgstr "0100 ω 060 λ 060>0100 δ"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and milliseconds (1/1000 second)
@@ -18170,10 +18651,12 @@ msgstr "ώρες:λεπτά:δευτ. + χιλιοδευτερόλεπτα"
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
-#. * unless there aren't 60 minutes in an hour in your locale
+#. * unless there aren't 60 minutes in an hour in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060.01000 s"
-msgstr "0100 ώρες 060 λεπτά 060.01000 δευτ"
+msgid "0100 h 060 m 060>01000 s"
+msgstr "0100 ώρες 060 λεπτά 060>01000 δευτ"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -18185,10 +18668,12 @@ msgstr "ώρες:λεπτά:δευτ. + δείγματα"
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.# samples"
-msgstr "0100 h 060 m 060 s+.# δείγματα"
+msgid "0100 h 060 m 060 s+># samples"
+msgstr "0100 h 060 m 060 s+># δείγματα"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -18216,10 +18701,12 @@ msgstr "ώρες:λεπτά:δευτ + καρέ φιλμ (24 fps)"
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
-#. * unless there aren't 60 seconds in a minute in your locale
+#. * unless there aren't 60 seconds in a minute in your locale.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.24 frames"
-msgstr "0100 ώρες 060 λεπτά 060 ώρες+.24 καρέ"
+msgid "0100 h 060 m 060 s+>24 frames"
+msgstr "0100 ώρες 060 λεπτά 060 ώρες+>24 καρέ"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
@@ -18246,9 +18733,11 @@ msgstr "ώρες:λεπτά:δευτ + NTSC παράλειψη καρέ"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.30 frames|N"
-msgstr "0100 ώρες 060 λεπτά 060 δευτ+.30 καρέ|N"
+msgid "0100 h 060 m 060 s+>30 frames|N"
+msgstr "0100 ώρες 060 λεπτά 060 δευτ+>30 καρέ|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
@@ -18262,9 +18751,11 @@ msgstr "ώρες:λεπτά:δευτ + NTSC χωρίς παράλειψη καρ
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.030 frames| .999000999"
-msgstr "0100 ώρες 060 λεπτά 060 δευτ+.030 καρέ| .999000999"
+msgid "0100 h 060 m 060 s+>030 frames| .999000999"
+msgstr "0100 ώρες 060 λεπτά 060 δευτ+>030 καρέ| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
@@ -18291,9 +18782,11 @@ msgstr "ώρες:λεπτά:δευτ + PAL καρέ (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.25 frames"
-msgstr "0100 ώρες 060 λεπτά 060 δευτ+.25 καρέ"
+msgid "0100 h 060 m 060 s+>25 frames"
+msgstr "0100 ώρες 060 λεπτά 060 δευτ+>25 καρέ"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
 #. * TV frame rate (used for European TV)
@@ -18319,9 +18812,11 @@ msgstr "ώρες:λεπτά:δευτ + CDDA καρέ (75 fps)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100 h 060 m 060 s+.75 frames"
-msgstr "0100 ώρες 060 λεπτά 060 δευτ+.75 καρέ"
+msgid "0100 h 060 m 060 s+>75 frames"
+msgstr "0100 ώρες 060 λεπτά 060 δευτ+>75 καρέ"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
@@ -18339,9 +18834,11 @@ msgstr "01000,01000 καρέ|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "0100000.0100 Hz"
-msgstr "0100000,0100 Hz"
+msgid "010,01000>0100 Hz"
+msgstr "010,01000>0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
@@ -18354,9 +18851,11 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "01000.01000 kHz|0.001"
-msgstr "01000,01000 kHz|0,001"
+msgid "01000>01000 kHz|0.001"
+msgstr "01000<01000 kHz|0,001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
@@ -18370,9 +18869,11 @@ msgstr "οκτάβες"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "100.01000 octaves|1.442695041"
-msgstr "100,01000 οκτάβες|1,442695041"
+msgid "100>01000 octaves|1.442695041"
+msgstr "100<01000 οκτάβες|1,442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -18388,9 +18889,11 @@ msgstr "ημιτόνια + εκατοστά"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
+#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "1000 semitones .0100 cents|17.312340491"
-msgstr "1000 ημιτόνια ,0100 εκατοστά|17,312340491"
+msgid "1000 semitones >0100 cents|17.312340491"
+msgstr "1000 ημιτόνια <0100 εκατοστά|17,312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
@@ -18406,8 +18909,8 @@ msgstr "δεκάδες"
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
-msgid "10.01000 decades|0.434294482"
-msgstr "10,01000 δεκάδες|0,434294482"
+msgid "10>01000 decades|0.434294482"
+msgstr "10<01000 δεκάδες|0,434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -18545,113 +19048,9 @@ msgstr "Σφάλμα: %s στη γραμμή %lu"
 msgid "Could not load file: \"%s\""
 msgstr "Αδύνατη η φόρτωση του αρχείου: \"%s\""
 
-#: plug-ins/SilenceMarker.ny
-msgid "Silence Finder"
-msgstr "Εύρεση σιγής"
-
-#: plug-ins/SilenceMarker.ny plug-ins/StudioFadeOut.ny
-#: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-#: plug-ins/tremolo.ny
-msgid "Steve Daulton"
-msgstr "Steve Daulton"
-
-#: plug-ins/SilenceMarker.ny plug-ins/SoundFinder.ny
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
-#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocoder.ny
-msgid "Released under terms of the GNU General Public License version 2"
-msgstr "Εκδόθηκε με τους όρους της Γενικής Δημόσιας Άδειας GNU, έκδοσης 2"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Treat audio below this level as silence (dB)"
-msgstr "Να αντιμετωπίζεται ο ήχος κάτω από αυτό το επίπεδο ως σιγή (dB)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Minimum duration of silence (seconds)"
-msgstr "Ελάχιστη διάρκεια σιγής (δευτερόλεπτα)"
-
-#: plug-ins/SilenceMarker.ny
-msgid "Label placement (seconds before silence ends)"
-msgstr "Τοποθέτηση ετικέτας (δευτερόλεπτα πριν τον τερματισμό της σιγής)"
-
-#. i18n-hint: Abbreviation of "Silence".
-#: plug-ins/SilenceMarker.ny
-msgid "S"
-msgstr "S"
-
-#. i18n-hint: hours minutes and seconds. Do not translate "~a".
-#: plug-ins/SilenceMarker.ny
-#, lisp-format
-msgid "~ah ~am ~as"
-msgstr "~ah ~am ~as"
-
-#: plug-ins/SilenceMarker.ny
-msgid ""
-"No silences found.\n"
-"Try reducing the silence level and\n"
-"the minimum silence duration."
-msgstr ""
-"Δεν βρέθηκε σίγαση.\n"
-"Δοκιμάστε να μειώσετε το επίπεδο σίγασης και\n"
-"την ελάχιστη διάρκεια σίγασης."
-
-#: plug-ins/SoundFinder.ny
-msgid "Sound Finder"
-msgstr "Εύρεση ήχου"
-
-#: plug-ins/SoundFinder.ny
-msgid "Finding sound..."
-msgstr "Εύρεση ήχου..."
-
-#: plug-ins/SoundFinder.ny
-msgid "Jeremy R. Brown"
-msgstr "Jeremy R. Brown"
-
-#: plug-ins/SoundFinder.ny
-msgid "Treat audio below this level as silence [ -dB]"
-msgstr "Να αντιμετωπίζεται ο ήχος κάτω από αυτό το επίπεδο ως σιγή [ -dB]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Minimum duration of silence between sounds [seconds]"
-msgstr "Ελάχιστη διάρκεια της σιγής μεταξύ ήχων [δευτερόλεπτα]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label starting point [seconds before sound starts]"
-msgstr "Σημείο έναρξης ετικέτας [δευτερόλεπτα πριν την έναρξη του ήχου]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Label ending point [seconds after sound ends]"
-msgstr "Σημείο λήξης ετικέτας [δευτερόλεπτα μετά τον τερματισμό του ήχου]"
-
-#: plug-ins/SoundFinder.ny
-msgid "Add a label at the end of the track? [No=0, Yes=1]"
-msgstr "Προσθήκη ετικέτας στο τέλος του κομματιού; [Ναι=0, Όχι=1]"
-
-#: plug-ins/SoundFinder.ny
-#, lisp-format
-msgid ""
-"No sounds found. Try reducing the silence~%level and minimum silence "
-"duration."
-msgstr ""
-"Δεν βρέθηκαν ήχοι. Δοκιμάστε να μειώσετε τη σιγή ~%επίπεδο και "
-"ελαχιστοποιήστε τη διάρκεια της σιγής."
-
-#: plug-ins/SoundFinder.ny
-msgid "[End]"
-msgstr "[Τέλος]"
+#: src/xml/XMLFileReader.cpp
+msgid "Could not parse XML"
+msgstr "Αδυναμία ανάλυσης του XML"
 
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
@@ -18666,6 +19065,20 @@ msgstr "Φιλτράρισμα..."
 #: plug-ins/SpectralEditShelves.ny
 msgid "Paul Licameli"
 msgstr "Paul Licameli"
+
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
+#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
+#: plug-ins/vocoder.ny
+msgid "Released under terms of the GNU General Public License version 2"
+msgstr "Εκδόθηκε με τους όρους της Γενικής Δημόσιας Άδειας GNU, έκδοσης 2"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18761,6 +19174,15 @@ msgstr "Σταδιακή εξασθένιση στούντιο"
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 msgid "Applying Fade..."
 msgstr "Εφαρμογή σταδιακής μεταβολής..."
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
+#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
+msgid "Steve Daulton"
+msgstr "Steve Daulton"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -18894,11 +19316,11 @@ msgstr "~aΟι τιμές ποσοστού δεν μπορούν να είναι
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
-"                                 \t-6 dB halves the amplitude."
+"                                 -6 dB halves the amplitude."
 msgstr ""
 "τιμές ~adB δεν μπορεί να είναι μεγαλύτερες από +100 dB.~%~%~\n"
 "                                 Υπόδειξη: 6 dB διπλασιάζουν το πλάτος~%~\n"
-"                                 \t-6 dB υποδιπλασιάζουν το πλάτος."
+"                                 -6 dB υποδιπλασιάζουν το πλάτος."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -19151,7 +19573,8 @@ msgstr "Διάρκεια της περιοχής ετικέτας (δευτερ�
 msgid "Adjust label interval to fit length"
 msgstr "Ρυθμίστε την απόσταση ετικέτας για να προσαρμοστεί στο μήκος"
 
-#: plug-ins/equalabel.ny
+#. i18n-hint: Do not translate '##1'
+#: plug-ins/equalabel.ny plug-ins/label-sounds.ny
 msgid "Label text"
 msgstr "Κείμενο ετικέτας"
 
@@ -19285,6 +19708,113 @@ msgstr ""
 "                   Ο ρυθμός δειγματοληψίας του κομματιού είναι ~a Hz~%~\n"
 "                   Η συχνότητα πρέπει να είναι μικρότερη από ~a Hz."
 
+#. i18n-hint: Name of effect that labels sounds
+#: plug-ins/label-sounds.ny
+msgid "Label Sounds"
+msgstr "Label Sounds (Ετικέτες ήχων)"
+
+#: plug-ins/label-sounds.ny plug-ins/noisegate.ny
+msgid ""
+"Released under terms of the GNU General Public License version 2 or later."
+msgstr ""
+"Εκδόθηκε με τους όρους της Γενικής Δημόσιας Άδειας GNU, έκδοσης 2 ή "
+"μεταγενέστερης."
+
+#: plug-ins/label-sounds.ny
+msgid "Threshold level (dB)"
+msgstr "Επίπεδο κατωφλίου (dB)"
+
+#: plug-ins/label-sounds.ny
+msgid "Threshold measurement"
+msgstr "Μέτρηση κατωφλίου"
+
+#: plug-ins/label-sounds.ny
+msgid "Peak level"
+msgstr "Επίπεδο κορυφής"
+
+#: plug-ins/label-sounds.ny
+msgid "Average level"
+msgstr "Επίπεδο μέσου όρου"
+
+#: plug-ins/label-sounds.ny
+msgid "RMS level"
+msgstr "Επίπεδο RMS"
+
+#: plug-ins/label-sounds.ny
+msgid "Minimum silence duration"
+msgstr "Ελάχιστη διάρκεια σίγασης"
+
+#: plug-ins/label-sounds.ny
+msgid "Minimum label interval"
+msgstr "Ελάχιστο διάστημα ετικέτας"
+
+#: plug-ins/label-sounds.ny
+msgid "Label type"
+msgstr "Τύπος ετικέτας"
+
+#: plug-ins/label-sounds.ny
+msgid "Point before sound"
+msgstr "Σημείο πριν τον ήχο"
+
+#: plug-ins/label-sounds.ny
+msgid "Point after sound"
+msgstr "Σημείο μετά τον ήχο"
+
+#: plug-ins/label-sounds.ny
+msgid "Region around sounds"
+msgstr "Περιοχή γύρω από ήχους"
+
+#: plug-ins/label-sounds.ny
+msgid "Region between sounds"
+msgstr "Περιοχή μεταξύ ήχων"
+
+#: plug-ins/label-sounds.ny
+msgid "Maximum leading silence"
+msgstr "Μέγιστη σιγή αρχής"
+
+#: plug-ins/label-sounds.ny
+msgid "Maximum trailing silence"
+msgstr "Μέγιστη σιγή τέλους"
+
+#: plug-ins/label-sounds.ny
+msgid "Sound ##1"
+msgstr "Ήχος ##1"
+
+#. i18n-hint: hours minutes and seconds. Do not translate "~a".
+#: plug-ins/label-sounds.ny
+#, lisp-format
+msgid "~ah ~am ~as"
+msgstr "~ah ~am ~as"
+
+#: plug-ins/label-sounds.ny
+msgid "Too many silences detected.nOnly the first 10000 labels added."
+msgstr ""
+"Ανιχνεύτηκαν υπερβολικές σιγές. Προστέθηκαν μόνο οι πρώτες 10000 ετικέτες."
+
+#. i18n-hint: '~a' will be replaced by a time duration
+#: plug-ins/label-sounds.ny
+#, lisp-format
+msgid "Error.~%Selection must be less than ~a."
+msgstr "Σφάλμα. Η ~%επιλογή πρέπει να είναι μεγαλύτερη από ~a."
+
+#: plug-ins/label-sounds.ny
+#, lisp-format
+msgid ""
+"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
+"duration'."
+msgstr ""
+"Δεν βρέθηκαν ήχοι. ~%Δοκιμάστε να μειώσετε το 'Κατώφλι' ή μειώστε την "
+"'Ελάχιστη διάρκεια του ήχου'."
+
+#: plug-ins/label-sounds.ny
+#, lisp-format
+msgid ""
+"Labelling regions between sounds requires~%at least two sounds.~%Only one "
+"sound detected."
+msgstr ""
+"Η ονομασία περιοχών μεταξύ ήχων απαιτεί ~%τουλάχιστον δύο ήχους. Ανιχνεύθηκε "
+"~%μόνο ένας ήχος."
+
 #: plug-ins/limiter.ny
 msgid "Limiter"
 msgstr "Όριο"
@@ -19334,7 +19864,7 @@ msgstr ""
 msgid "Limit to (dB)"
 msgstr "Όριο μέχρι (dB)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Κράτημα (ms)"
 
@@ -19355,10 +19885,6 @@ msgid "Noise Gate"
 msgstr "Θύρα θορύβου"
 
 #: plug-ins/noisegate.ny
-msgid "Gating audio..."
-msgstr "Διοχέτευση ήχου..."
-
-#: plug-ins/noisegate.ny
 msgid "Select Function"
 msgstr "Επιλέξτε λειτουργία"
 
@@ -19367,7 +19893,7 @@ msgid "Gate"
 msgstr "Θύρα"
 
 #: plug-ins/noisegate.ny
-msgid "Analyse Noise Level"
+msgid "Analyze Noise Level"
 msgstr "Ανάλυση επιπέδου θορύβου"
 
 #: plug-ins/noisegate.ny
@@ -19383,16 +19909,8 @@ msgid "Don't Link Stereo"
 msgstr "Να μην συνδεθεί στερεοφωνικά"
 
 #: plug-ins/noisegate.ny
-msgid "Apply Low-Cut filter"
-msgstr "Εφαρμογή υψιπερατού φίλτρου"
-
-#: plug-ins/noisegate.ny
-msgid "10Hz 6dB/octave"
-msgstr "10Hz 6dB/οκτάβα"
-
-#: plug-ins/noisegate.ny
-msgid "20Hz 6dB/octave"
-msgstr "20Hz 6dB/οκτάβα"
+msgid "Gate threshold (dB)"
+msgstr "Κατώφλι θύρας (dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Gate frequencies above (kHz)"
@@ -19403,12 +19921,12 @@ msgid "Level reduction (dB)"
 msgstr "Μείωση επιπέδου (dB)"
 
 #: plug-ins/noisegate.ny
-msgid "Gate threshold (dB)"
-msgstr "Κατώφλι θύρας (dB)"
+msgid "Attack (ms)"
+msgstr "Έναρξη (ms)"
 
 #: plug-ins/noisegate.ny
-msgid "Attack/Decay (ms)"
-msgstr "Έναρξη/Εξασθένιση (ms)"
+msgid "Decay (ms)"
+msgstr "Εξασθένιση (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19426,10 +19944,23 @@ msgstr ""
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
-"~%Insufficient audio selected.\n"
+"Error.\n"
+"Selection too long.\n"
+"Maximum length is ~a."
+msgstr ""
+"Σφάλμα.\n"
+"Υπερβολικά μεγάλη επιλογή.\n"
+"Το μέγιστο μήκος είναι ~a."
+
+#: plug-ins/noisegate.ny
+#, lisp-format
+msgid ""
+"Error.\n"
+"Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
 msgstr ""
-"~%Ανεπαρκής επιλεγμένος ήχος.\n"
+"Σφάλμα.\n"
+"Ανεπαρκής επιλεγμένος ήχος.\n"
 "Κάντε την επιλογή πιο μεγάλη κατά ~a ms."
 
 #: plug-ins/noisegate.ny
@@ -19440,6 +19971,12 @@ msgid ""
 msgstr ""
 "Κορυφή βασισμένη στα πρώτα ~a δευτερόλεπτα ~a dB~%\n"
 "Προτεινόμενη ρύθμιση κατωφλίου ~a dB."
+
+#. i18n-hint: hours and minutes. Do not translate "~a".
+#: plug-ins/noisegate.ny
+#, lisp-format
+msgid "~ah ~am"
+msgstr "~ah ~am"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
@@ -20352,6 +20889,521 @@ msgstr "Συχνότητα βελονών ραντάρ (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
+#, fuzzy
+#~ msgid "Failed to copy tags"
+#~ msgstr "Απέτυχε η απομάκρυνση του %s"
+
+#~ msgid "Select any uncompressed audio file"
+#~ msgstr "Επιλέξτε αρχείο ασυμπίεστου ήχου"
+
+#~ msgid ""
+#~ "One or more external audio files could not be found.\n"
+#~ "It is possible they were moved, deleted, or the drive they were on was "
+#~ "unmounted.\n"
+#~ "Silence is being substituted for the affected audio.\n"
+#~ "The first detected missing file is:\n"
+#~ "%s\n"
+#~ "There may be additional missing files.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
+#~ "locations of the missing files."
+#~ msgstr ""
+#~ "Ένα ή περισσότερα εξωτερικά αρχεία ήχου δεν μπόρεσαν να βρεθούν.\n"
+#~ "Μπορεί να μετακινήθηκαν, να διαγράφτηκαν, ή να αποπροσαρτήθηκε ο οδηγός "
+#~ "στον οποίον βρίσκονταν.\n"
+#~ "Η σιγή αντικαθίσταται για τον επηρεαζόμενο ήχο.\n"
+#~ "Το πρώτο αρχείο που ανιχνεύτηκε ότι λείπει είναι:\n"
+#~ "%s\n"
+#~ "Μπορεί να υπάρχουν πρόσθετα αρχεία που λείπουν.\n"
+#~ "Επιλέξτε Αρχείο > Διαγνωστικά > Έλεγχος εξαρτήσεων για να προβάλετε έναν "
+#~ "κατάλογο των θέσεων των αρχείων που λείπουν."
+
+#~ msgid "Files Missing"
+#~ msgstr "Λείπουν αρχεία"
+
+#~ msgid "File decoded successfully\n"
+#~ msgstr "Το αρχείο αποκωδικοποιήθηκε με επιτυχία\n"
+
+#~ msgid "decode an autosave file"
+#~ msgstr "αποκωδικοποίηση αρχείου αυτόματης αποθήκευσης"
+
+#~ msgid "Error Decoding File"
+#~ msgstr "Σφάλμα αποκωδικοποίησης του αρχείου"
+
+#~ msgid "After recovery, save the project to save the changes to disk."
+#~ msgstr ""
+#~ "Μετά την ανάκτηση, αποθηκεύστε το έργο για να αποθηκεύσετε τις αλλαγές "
+#~ "στον δίσκο."
+
+#~ msgid "Discard Projects"
+#~ msgstr "Απόρριψη έργων"
+
+#~ msgid "Recover Projects"
+#~ msgstr "Ανάκτηση έργων"
+
+#~ msgid "Confirm Discard Projects"
+#~ msgstr "Επιβεβαίωση απόρριψης έργων"
+
+#~ msgid "Could not enumerate files in auto save directory."
+#~ msgstr "Αδύνατη η απαρίθμηση αρχείων στον κατάλογο αυτόματης αποθήκευσης."
+
+#~ msgid "No Action"
+#~ msgstr "Καμία ενέργεια"
+
+#~ msgid "Export as MP3 56k before"
+#~ msgstr "Εξαγωγή ως MP3 56k πριν"
+
+#~ msgid "Export as MP3 56k after"
+#~ msgstr "Εξαγωγή ως MP3 56k μετά"
+
+#~ msgid "Export as MP3"
+#~ msgstr "Εξαγωγή ως MP3"
+
+#~ msgid "Export as Ogg"
+#~ msgstr "Εξαγωγή ως OGG"
+
+#~ msgid "Export as WAV"
+#~ msgstr "Εξαγωγή ως WAV"
+
+#~ msgid "Select to Ends"
+#~ msgstr "Επιλογή άκρων"
+
+#~ msgid "Special Command"
+#~ msgstr "Ειδική εντολή"
+
+#~ msgid ""
+#~ "Export recording to %s\n"
+#~ "/%s/%s.%s"
+#~ msgstr ""
+#~ "Εξαγωγή ηχογράφησης στο %s\n"
+#~ "/%s/%s%s"
+
+#~ msgid "Export recording"
+#~ msgstr "Εξαγωγή ηχογράφησης"
+
+#~ msgid "Ogg Vorbis support is not included in this build of Audacity"
+#~ msgstr "Αυτή η έκδοση του Audacity δεν υποστηρίζει Ogg Vorbis"
+
+#~ msgid "FLAC support is not included in this build of Audacity"
+#~ msgstr "Αυτή η έκδοση του Audacity δεν υποστηρίζει FLAC"
+
+#~ msgid "Command %s not implemented yet"
+#~ msgstr "Η εντολή %s δεν έχει υλοποιηθεί ακόμα"
+
+#~ msgid ""
+#~ "Your project is currently self-contained; it does not depend on any "
+#~ "external audio files. \n"
+#~ "\n"
+#~ "If you change the project to a state that has external dependencies on "
+#~ "imported files, it will no longer be self-contained. If you then Save "
+#~ "without copying those files in, you may lose data."
+#~ msgstr ""
+#~ "Το έργο σας είναι προς το παρόν αυτόνομο· δεν εξαρτάται από οποιαδήποτε "
+#~ "εξωτερικά αρχεία ήχου. \n"
+#~ "\n"
+#~ "Αν αλλάξετε το έργο σε μια κατάσταση που έχει εξωτερικές εξαρτήσεις σε "
+#~ "εισαγόμενα αρχεία, δεν θα είναι πια αυτόνομο. Αν αποθηκεύσετε έπειτα "
+#~ "χωρίς να αντιγράψετε τα αρχεία, μπορείτε να χάσετε δεδομένα."
+
+#~ msgid "Cleaning project temporary files"
+#~ msgstr "Καθαρισμός προσωρινών αρχείων έργου"
+
+#~ msgid "Cleaning up temporary files"
+#~ msgstr "Καθαρισμός προσωρινών αρχείων"
+
+#~ msgid "Cleaning up after failed save"
+#~ msgstr "Καθαρισμός μετά από αποτυχημένη αποθήκευση"
+
+#~ msgid "Cleaning up cache directories"
+#~ msgstr "Καθαρισμός φακέλων μικροαποθήκευσης (cache)"
+
+#  i18n-hint: This is the pattern for filenames that are created
+#  when a file needs to be backed up to a different name.  For
+#  example, mysong would become mysong-old1, mysong-old2, etc.
+#~ msgid "%s-old%d"
+#~ msgstr "%s-παλιό%d"
+
+#~ msgid "Renamed file: %s\n"
+#~ msgstr "Μετονομασμένο αρχείο: %s\n"
+
+#~ msgid "Changed block %s to new alias name\n"
+#~ msgstr "Άλλαξε η ομάδα %s σε νέο όνομα ψευδωνύμου\n"
+
+#~ msgid "Caching audio"
+#~ msgstr "Προσωρινή αποθήκευση ήχου"
+
+#~ msgid "Caching audio into memory"
+#~ msgstr "Προσωρινή αποθήκευση του ήχου στην μνήμη"
+
+#~ msgid "Saving recorded audio"
+#~ msgstr "Αποθήκευση ηχογραφημένου ήχου"
+
+#~ msgid "Saving recorded audio to disk"
+#~ msgstr "Αποθήκευση ηχογραφημένου ήχου στον δίσκο"
+
+#~ msgid "Audacity projects"
+#~ msgstr "Έργα Audacity"
+
+#~ msgid "Reclaimable Space"
+#~ msgstr "Ανακτήσιμος χώρος"
+
+#~ msgid ""
+#~ "Audacity cannot start because the settings file at %s is not writable."
+#~ msgstr ""
+#~ "Το Audacity δεν μπορεί να ξεκινήσει, επειδή το αρχείο ρυθμίσεων στο %s "
+#~ "δεν είναι εγγράψιμο."
+
+#~ msgid ""
+#~ "This file was saved by Audacity version %s. The format has changed. \n"
+#~ "\n"
+#~ "Audacity can try to open and save this file, but saving it in this \n"
+#~ "version will then prevent any 1.2 or earlier version opening it. \n"
+#~ "\n"
+#~ "Audacity might corrupt the file in opening it, so you should back it up "
+#~ "first. \n"
+#~ "\n"
+#~ "Open this file now?"
+#~ msgstr ""
+#~ "Αυτό το αρχείο αποθηκεύτηκε από την έκδοση %s του Audacity. Η μορφή έχει "
+#~ "αλλάξει. \n"
+#~ "\n"
+#~ "Το Audacity μπορεί να δοκιμάσει να ανοίξει και να αποθηκεύσει αυτό το \n"
+#~ "αρχείο, αλλά αποθηκεύοντας το σε αυτήν την έκδοση θα αποτρέψει τότε "
+#~ "οποιαδήποτε έκδοση 1.2 ή προγενέστερη να το ανοίξει.\n"
+#~ "\n"
+#~ "Το Audacity μπορεί να αλλοιώσει το αρχείο ανοίγοντας το, έτσι θα πρέπει "
+#~ "να το αντιγράψετε πρώτα. \n"
+#~ "\n"
+#~ "Να ανοιχθεί αυτό το αρχείο τώρα;"
+
+#~ msgid "1.0 or earlier"
+#~ msgstr "1.0 ή προηγούμενες"
+
+#~ msgid "Warning - Opening Old Project File"
+#~ msgstr "Προειδοποίηση - Άνοιγμα ενός παλαιού αρχείου έργου"
+
+#~ msgid "<unrecognized version -- possibly corrupt project file>"
+#~ msgstr "<μη αναγνωρίσιμη έκδοση -- πιθανόν αλλοιωμένο αρχείο έργου>"
+
+#~ msgid "Could not create autosave file: %s"
+#~ msgstr "Αδυναμία δημιουργίας αρχείου αυτόματης αποθήκευσης: %s"
+
+#~ msgid "Could not remove old autosave file: %s"
+#~ msgstr "Αδυναμία αφαίρεσης του παλιού αυτόματα αποθηκευμένου αρχείου: %s"
+
+#~ msgid "Error decoding file"
+#~ msgstr "Σφάλμα κατά την αποκωδικοποίηση του αρχείου"
+
+#~ msgid ""
+#~ "Could not save project. Perhaps %s \n"
+#~ "is not writable or the disk is full."
+#~ msgstr ""
+#~ "Αδύνατη η αποθήκευση του έργου. Ίσως το %s \n"
+#~ "δεν είναι εγγράψιμο ή ο δίσκος είναι γεμάτος."
+
+#~ msgid ""
+#~ "Could not save project. Path not found. Try creating \n"
+#~ "directory \"%s\" before saving project with this name."
+#~ msgstr ""
+#~ "Αδύνατη η αποθήκευση του έργου. Δεν βρέθηκε η διαδρομή. Δοκιμάστε να "
+#~ "δημιουργήσετε\n"
+#~ "έναν κατάλογο \"%s\" πριν να αποθηκεύσετε το έργο με αυτό το όνομα."
+
+#~ msgid ""
+#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
+#~ "file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ "\n"
+#~ "Lossless copies of project are a good way to backup your project, \n"
+#~ "with no loss of quality, but the projects are large.\n"
+#~ msgstr ""
+#~ "Το 'Αποθήκευση μη απωλεστικού αντιγράφου έργου' είναι για ένα έργο "
+#~ "Audacity, όχι για αρχείο ήχου.\n"
+#~ "Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
+#~ "'Εξαγωγή'.\n"
+#~ "\n"
+#~ "Τα μη απωλεστικά αντίγραφα έργου είναι ένας καλός τρόπος για να "
+#~ "αντιγράψετε το έργο σας, \n"
+#~ "χωρίς απώλεια ποιότητας, αλλά τα έργα είναι μεγάλα.\n"
+#~ "\n"
+
+#~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
+#~ msgstr "%sΑποθήκευση συμπιεσμένου αντιγράφου έργου \"%s\" ως..."
+
+#~ msgid ""
+#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
+#~ "audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ "\n"
+#~ "Compressed project files are a good way to transmit your project "
+#~ "online, \n"
+#~ "but they have some loss of fidelity.\n"
+#~ msgstr ""
+#~ "Το 'Αποθήκευση συμπιεσμένου έργου' είναι για ένα έργο Audacity, όχι για "
+#~ "αρχείο ήχου.\n"
+#~ "Για αρχείο ήχου που θα ανοίξει σε άλλες εφαρμογές, χρησιμοποιήστε "
+#~ "'Εξαγωγή'.\n"
+#~ "\n"
+#~ "Τα συμπιεσμένα αρχεία έργου είναι ένας καλός τρόπος για να διαδώσετε το "
+#~ "έργο σας\n"
+#~ "διαδικτυακά, αλλά έχουν κάποια απώλεια στην πιστότητα.\n"
+#~ "\n"
+#~ "Για να ανοίξετε ένα συμπιεσμένο έργο παίρνει περισσότερο από ό,τι "
+#~ "συνήθως,\n"
+#~ "επειδή εισάγει κάθε συμπιεσμένο κομμάτι.\n"
+
+#~ msgid ""
+#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
+#~ "format."
+#~ msgstr ""
+#~ "Το Audacity δεν μπόρεσε να μετατρέψει το έργο Audacity 1.0 στη νέα μορφή "
+#~ "έργου."
+
+#~ msgid "Could not remove old auto save file"
+#~ msgstr "Αδύνατη η απομάκρυνση παλιού αρχείου αυτόματης αποθύκευσης"
+
+#~ msgid "On-demand import and waveform calculation complete."
+#~ msgstr "Εισαγωγή όταν ζητηθεί και πλήρης υπολογισμός της κυματομορφής."
+
+#~ msgid ""
+#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
+#~ "%2.0f%% complete."
+#~ msgstr ""
+#~ "Ολοκληρώθηκαν οι εισαγωγές. Εκτέλεση του %d  όταν ζητηθούν υπολογισμοί "
+#~ "κυματομορφής. Ολοκληρώθηκε γενικά %2.0f%%."
+
+#~ msgid ""
+#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
+#~ "complete."
+#~ msgstr ""
+#~ "Ολοκληρώθηκε η εισαγωγή. Εκτέλεση υπολογισμού της κυματομορφής κατ' "
+#~ "απαίτηση. Ολοκληρώθηκε %2.0f%%."
+
+#~ msgid "Compress"
+#~ msgstr "Συμπίεση"
+
+#~ msgid "Waiting for waveform to finish computing..."
+#~ msgstr "Αναμονή ώστε η κυματομορφή να τελειώσει τον υπολογισμό..."
+
+#~ msgid "&Use legacy (version 3) syntax."
+#~ msgstr "&Χρήση της παλιάς σύνταξης (έκδοση 3)."
+
+#~ msgid ""
+#~ "You are attempting to overwrite an aliased file that is missing.\n"
+#~ "The file cannot be written because the path is needed to restore the "
+#~ "original audio to the project.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of "
+#~ "all missing files.\n"
+#~ "If you still wish to export, please choose a different filename or folder."
+#~ msgstr ""
+#~ "Προσπαθείτε να αντικαταστήσετε ένα αρχείο με ψευδώνυμο που λείπει.\n"
+#~ "Το αρχείο δεν μπορεί να γραφτεί επειδή απαιτείται η διαδρομή για να "
+#~ "επαναφέρει τον πρωτότυπο ήχο στο έργο.\n"
+#~ "Επιλέξτε Βοήθεια > Διαγνωστικά > Έλεγχος εξαρτήσεων για να προβάλετε τις "
+#~ "τοποθεσίες όλων των αρχείων που λείπουν.\n"
+#~ "Εάν θέλετε ακόμα να εξάγετε, παρακαλούμε επιλέξτε ένα διαφορετικό όνομα "
+#~ "αρχείου ή φακέλου."
+
+#~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
+#~ msgstr "FFmpeg : ΣΦΑΛΜΑ - Αποτυχία εγγραφής πλαισίου ήχου στο αρχείο."
+
+#~ msgid ""
+#~ "\"%s\" is an Audacity Project file. \n"
+#~ "Use the 'File > Open' command to open Audacity Projects."
+#~ msgstr ""
+#~ "Το \"%s\" είναι ένα αρχείο έργου του Audacity.\n"
+#~ "Χρησιμοποιήστε την εντολή 'Αρχείο > Άνοιγμα' για να ανοίξετε τα έργα του "
+#~ "Audacity."
+
+#~ msgid ""
+#~ "MP3 Decoding Failed:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Αποτυχία αποκωδικοποίησης MP3:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "When importing uncompressed audio files you can either copy them into the "
+#~ "project, or read them directly from their current location (without "
+#~ "copying).\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Κατά την εισαγωγή ασυμπίεστων αρχείων ήχου μπορείτε είτε να τα "
+#~ "αντιγράψετε στο έργο, ή να τα διαβάσετε απευθείας από την τρέχουσα θέση "
+#~ "(χωρίς αντιγραφή).\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Your current preference is set to copy in.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Η τρέχουσα προτίμησή σας ορίστηκε σε αντιγραφή.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Your current preference is set to read directly.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Η τρέχουσα προτίμησή σας ορίστηκε σε απευθείας ανάγνωση.\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Reading the files directly allows you to play or edit them almost "
+#~ "immediately. This is less safe than copying in, because you must retain "
+#~ "the files with their original names in their original locations.\n"
+#~ "Help > Diagnostics > Check Dependencies will show the original names and "
+#~ "locations of any files that you are reading directly.\n"
+#~ "\n"
+#~ "How do you want to import the current file(s)?"
+#~ msgstr ""
+#~ "Η άμεση ανάγνωση των αρχείων σας επιτρέπει να τα παίξετε ή να τα "
+#~ "επεξεργαστείτε σχεδόν αμέσως. Αυτό είναι λιγότερο ασφαλές από την "
+#~ "αντιγραφή, επειδή θα πρέπει να διατηρήσετε τα αρχεία με τα αρχικά τους "
+#~ "ονόματα στις αρχικές τους θέσεις.\n"
+#~ "Το Βοήθεια > Διαγνωστικά > Έλεγχος εξαρτήσεων θα εμφανίσει τα αρχικά "
+#~ "ονόματα και θέσεις οποιωνδήποτε αρχείων διαβάζετε άμεσα.\n"
+#~ "\n"
+#~ "Πώς θέλετε να εισάγετε τα τρέχοντα αρχεία;"
+
+#~ msgid "Choose an import method"
+#~ msgstr "Επιλέξτε μια μέθοδο εισαγωγής"
+
+#~ msgid "Make a &copy of the files before editing (safer)"
+#~ msgstr "Κάντε ένα αντί&γραφο των αρχείων πριν την επεξεργασία (πιο ασφαλές)"
+
+#~ msgid "Read the files &directly from the original (faster)"
+#~ msgstr "Διαβάστε τα αρχεία ά&μεσα από το αρχικό (πιο γρήγορο)"
+
+#~ msgid "Don't &warn again and always use my choice above"
+#~ msgstr ""
+#~ "Να μην ξαναειδοποιηθώ και να χρησιμοποιείται πάντα η παραπάνω επιλογή μου"
+
+#~ msgid "Bad data size"
+#~ msgstr "Εσφαλμένο μέγεθος δεδομένων"
+
+#~ msgid "Clip L&eft"
+#~ msgstr "Απόσπασμα αρ&ιστερά"
+
+#~ msgid "Clip Rig&ht"
+#~ msgstr "Απόσπασμα δ&εξιά"
+
+#~ msgid "Save Lossless Copy of Project..."
+#~ msgstr "Αποθήκευση μη απωλεστικού αντιγράφου του έργου..."
+
+#~ msgid "&Save Compressed Copy of Project..."
+#~ msgstr "Απο&θήκευση συμπιεσμένου αντιγράφου του έργου..."
+
+#~ msgid "Chec&k Dependencies..."
+#~ msgstr "Έ&λεγχος εξαρτήσεων..."
+
+#~ msgid "C&hoose..."
+#~ msgstr "Επιλέξτε..."
+
+#~ msgid "Audio cache"
+#~ msgstr "Μικροαποθήκευση (cache) ακουστικού σήματος"
+
+#~ msgid "Play and/or record using &RAM (useful for slow drives)"
+#~ msgstr ""
+#~ "Αναπαραγωγή και/ή εγγραφή χρησιμοποιώντας &RAM (χρήσιμο για αργούς "
+#~ "οδηγούς)"
+
+#~ msgid "Mi&nimum Free Memory (MB):"
+#~ msgstr "Ε&λάχιστη ελεύθερη μνήμη (MB):"
+
+#~ msgid ""
+#~ "If the available system memory falls below this value, audio will no "
+#~ "longer\n"
+#~ "be cached in memory and will be written to disk."
+#~ msgstr ""
+#~ "Αν η διαθέσιμη μνήμη του συστήματος πέσει κάτω από αυτήν την τιμή, ο ήχος "
+#~ "δεν θα\n"
+#~ "αποθηκεύεται πια στην κρυφή μνήμη και θα γράφεται στον δίσκο."
+
+#~ msgid "When importing audio files"
+#~ msgstr "Κατά την εισαγωγή αρχείων ακουστικού σήματος"
+
+#~ msgid "Allow &background on-demand loading"
+#~ msgstr "Να επιτρέπεται η φόρτωση όταν ζητηθεί του π&αρασκηνίου"
+
+#~ msgid "Projects"
+#~ msgstr "Έργα"
+
+#~ msgid "Preferences for Projects"
+#~ msgstr "Προτιμήσεις έργων"
+
+#~ msgid "When saving a project that depends on other audio files"
+#~ msgstr "Όταν αποθηκεύεται ένα έργο που εξαρτάται από άλλα αρχεία ήχου"
+
+#~ msgid "&Low disk space at launch or new project"
+#~ msgstr "&Λίγος χώρος δίσκου κατά την έναρξη ή σε νέο έργο"
+
+#~ msgid "&Importing uncompressed audio files"
+#~ msgstr "&Εισαγωγή μη συμπιεσμένων αρχείων ακουστικού σήματος"
+
+#~ msgid "Silence Finder"
+#~ msgstr "Εύρεση σιγής"
+
+#~ msgid "Treat audio below this level as silence (dB)"
+#~ msgstr "Να αντιμετωπίζεται ο ήχος κάτω από αυτό το επίπεδο ως σιγή (dB)"
+
+#~ msgid "Minimum duration of silence (seconds)"
+#~ msgstr "Ελάχιστη διάρκεια σιγής (δευτερόλεπτα)"
+
+#~ msgid "Label placement (seconds before silence ends)"
+#~ msgstr "Τοποθέτηση ετικέτας (δευτερόλεπτα πριν τον τερματισμό της σιγής)"
+
+#~ msgid "S"
+#~ msgstr "S"
+
+#~ msgid ""
+#~ "No silences found.\n"
+#~ "Try reducing the silence level and\n"
+#~ "the minimum silence duration."
+#~ msgstr ""
+#~ "Δεν βρέθηκε σίγαση.\n"
+#~ "Δοκιμάστε να μειώσετε το επίπεδο σίγασης και\n"
+#~ "την ελάχιστη διάρκεια σίγασης."
+
+#~ msgid "Sound Finder"
+#~ msgstr "Εύρεση ήχου"
+
+#~ msgid "Finding sound..."
+#~ msgstr "Εύρεση ήχου..."
+
+#~ msgid "Jeremy R. Brown"
+#~ msgstr "Jeremy R. Brown"
+
+#~ msgid "Treat audio below this level as silence [ -dB]"
+#~ msgstr "Να αντιμετωπίζεται ο ήχος κάτω από αυτό το επίπεδο ως σιγή [ -dB]"
+
+#~ msgid "Minimum duration of silence between sounds [seconds]"
+#~ msgstr "Ελάχιστη διάρκεια της σιγής μεταξύ ήχων [δευτερόλεπτα]"
+
+#~ msgid "Label starting point [seconds before sound starts]"
+#~ msgstr "Σημείο έναρξης ετικέτας [δευτερόλεπτα πριν την έναρξη του ήχου]"
+
+#~ msgid "Label ending point [seconds after sound ends]"
+#~ msgstr "Σημείο λήξης ετικέτας [δευτερόλεπτα μετά τον τερματισμό του ήχου]"
+
+#~ msgid "Add a label at the end of the track? [No=0, Yes=1]"
+#~ msgstr "Προσθήκη ετικέτας στο τέλος του κομματιού; [Ναι=0, Όχι=1]"
+
+#~ msgid "[End]"
+#~ msgstr "[Τέλος]"
+
+#~ msgid "Gating audio..."
+#~ msgstr "Διοχέτευση ήχου..."
+
+#~ msgid "Apply Low-Cut filter"
+#~ msgstr "Εφαρμογή υψιπερατού φίλτρου"
+
+#~ msgid "10Hz 6dB/octave"
+#~ msgstr "10Hz 6dB/οκτάβα"
+
+#~ msgid "20Hz 6dB/octave"
+#~ msgstr "20Hz 6dB/οκτάβα"
+
 #~ msgid "File dialog failed with error code %0lx."
 #~ msgstr "Ο διάλογος αρχείου απέτυχε με σφάλμα κώδικα %0lx."
 
@@ -20370,9 +21422,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgstr ""
 #~ "<p><br>&nbsp; &nbsp; Το λογισμικό <b>Audacity<sup>&reg;</sup></b> "
 #~ "υπόκειται σε πνευματικά δικαιώματα·1999-2017 Ομάδα Audacity.<br>"
-
-#~ msgid "Debug build"
-#~ msgstr "Αποσφαλμάτωση δόμησης"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "Αποτυχία δημιουργίας καταλόγου στο DirManager::MakeBlockFilePath."
@@ -20403,9 +21452,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid "Missing data block file: '%s'"
 #~ msgstr "Λείπει το αρχείο ομάδας δεδομένων: '%s'"
-
-#~ msgid "Orphan block file: '%s'"
-#~ msgstr "Ορφανό αρχείο ομάδας: '%s'"
 
 #~ msgid "KB"
 #~ msgstr "KB"
@@ -20811,9 +21857,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid "&Waveform (dB)"
 #~ msgstr "&Κυματομορφή (dB)"
-
-#~ msgid "Finding silence..."
-#~ msgstr "Εύρεση σιγής..."
 
 #~ msgid "Alex S. Brown"
 #~ msgstr "Alex S. Brown"
@@ -21262,9 +22305,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgstr ""
 #~ "Η ηχογράφηση με χρονοδιακόπτη ολοκληρώθηκε.\n"
 #~ "\n"
-
-#~ msgid "Saved "
-#~ msgstr "Αποθηκεύτηκε"
 
 #~ msgid "Skip &Foreward"
 #~ msgstr "Μεταπήδηση &μπροστά"
@@ -22256,9 +23296,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgid "Change Tempo..."
 #~ msgstr "Αλλαγή τέμπο..."
 
-#~ msgid "Changing Tempo"
-#~ msgstr "Αλλαγή του τέμπο"
-
 #~ msgid "Click Removal..."
 #~ msgstr "Απομάκρυνση των κλικ..."
 
@@ -22833,9 +23870,6 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 
 #~ msgid "Scientific Filter"
 #~ msgstr "Επιστημονικό φίλτρο"
-
-#~ msgid "Min silence duration:"
-#~ msgstr "Ελάχιστη διάρκεια σίγασης:"
 
 #~ msgid "Max silence duration:"
 #~ msgstr "Μέγιστη διάρκεια σίγασης:"

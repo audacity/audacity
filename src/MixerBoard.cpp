@@ -9,10 +9,10 @@
 
 **********************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "MixerBoard.h"
 
-#include "Experimental.h"
+
 
 #include <cfloat>
 #include <math.h>
@@ -21,7 +21,6 @@
 
 #include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/icon.h>
 #include <wx/settings.h> // for wxSystemSettings::GetColour and wxSystemSettings::GetMetric
 
@@ -35,11 +34,12 @@
 
 #include "CommonCommandFlags.h"
 #include "KeyboardCapture.h"
-#include "Prefs.h" // for RTL_WORKAROUND
+#include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
+#include "ProjectFileIO.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "SelectUtilities.h"
@@ -61,6 +61,8 @@
 #endif
 
 #include "commands/CommandManager.h"
+
+#define AudacityMixerBoardTitle XO("Audacity Mixer Board%s")
 
 // class MixerTrackSlider
 
@@ -1351,7 +1353,7 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
    //    audacityAudioCallback where it calls gAudioIO->mOutputMeter->UpdateDisplay().
    if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       UpdateMeters(
          gAudioIO->GetStreamTime(),
          (ProjectAudioManager::Get( *mProject ).GetLastPlayMode()
@@ -1406,20 +1408,19 @@ const wxSize kDefaultSize =
    wxSize(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
-: wxFrame( &GetProjectFrame( *parent ), -1,
-          wxString::Format(_("Audacity Mixer Board%s"),
-                           ((parent->GetProjectName().empty()) ?
-                              wxT("") :
-                              wxString::Format(wxT(" - %s"),
-                                             parent->GetProjectName()))),
+:  wxFrame( &GetProjectFrame( *parent ), -1, {},
             wxDefaultPosition, kDefaultSize,
-            //vvv Bug in wxFRAME_FLOAT_ON_PARENT:
-            // If both the project frame and MixerBoardFrame are minimized and you restore MixerBoardFrame,
-            // you can't restore project frame until you close MixerBoardFrame, but then project frame and
-            // MixerBoardFrame are restored but MixerBoardFrame is unresponsive because it thinks it's not shown.
-            //    wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
-            wxDEFAULT_FRAME_STYLE)
+            wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
+   , mProject(parent)
 {
+   SetWindowTitle();
+   auto titleChanged = [&](wxCommandEvent &evt)
+   {
+      SetWindowTitle();
+      evt.Skip();
+   };
+   wxTheApp->Bind( EVT_PROJECT_TITLE_CHANGE, titleChanged );
+
    mMixerBoard = safenew MixerBoard(parent, this, wxDefaultPosition, kDefaultSize);
 
    this->SetSizeHints(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
@@ -1493,6 +1494,18 @@ void MixerBoardFrame::Recreate( AudacityProject *pProject )
    mMixerBoard->SetSize( siz );
 
    this->SetSize( siz2 );
+   SetWindowTitle();
+}
+
+void MixerBoardFrame::SetWindowTitle()
+{
+   wxString name = mProject->GetProjectName();
+   if (!name.empty())
+   {
+      name.Prepend(wxT(" - "));
+   }
+
+   SetTitle(AudacityMixerBoardTitle.Format(name).Translation());
 }
 
 // Remaining code hooks this add-on into the application

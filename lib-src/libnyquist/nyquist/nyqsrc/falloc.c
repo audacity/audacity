@@ -45,8 +45,7 @@ int npools = 0;
 CQUE *pools = NULL;
 #endif
 
-void sound_already_free_test(s)
-  sound_type s;
+void sound_already_free_test(sound_type s)
 {
     sound_type sp;
     for (sp = (sound_type) sound_free; sp; sp = (sound_type) ((CQUE *) sp)->qnext) {
@@ -235,7 +234,8 @@ void falloc_gc()
       tlist = tsave;
 
       /* Maintain stats */
-      sample_block_total -= (tsiz / round_size(sizeof(sample_block_node)));
+      sample_block_total -= (int)
+              (tsiz / round_size(sizeof(sample_block_node)));
       npools--;
 
       /* If this is the active pool, then reset current pointers */

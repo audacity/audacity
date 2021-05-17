@@ -29,7 +29,7 @@ a draggable point type.
 
 #include "Envelope.h"
 
-#include "Experimental.h"
+
 
 #include <math.h>
 
@@ -371,8 +371,8 @@ void Envelope::Insert(double when, double value)
    mEnv.push_back( EnvPoint{ when, value });
 }
 
+/*! @excsafety{No-fail} */
 void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
-// NOFAIL-GUARANTEE
 {
    if ( t1 <= t0 )
       return;
@@ -459,8 +459,8 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 // envelope point applies to the first sample, but the t=tracklen
 // envelope point applies one-past the last actual sample.
 // t0 should be in the domain of this; if not, it is trimmed.
+/*! @excsafety{No-fail} */
 void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
-// NOFAIL-GUARANTEE
 {
    const bool wasEmpty = (this->mEnv.size() == 0);
    auto otherSize = e->mEnv.size();
@@ -542,9 +542,9 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
    ConsistencyCheck();
 }
 
+/*! @excsafety{No-fail} */
 void Envelope::RemoveUnneededPoints
    ( size_t startAt, bool rightward, bool testNeighbors )
-// NOFAIL-GUARANTEE
 {
    // startAt is the index of a recently inserted point which might make no
    // difference in envelope evaluation, or else might cause nearby points to
@@ -608,9 +608,9 @@ void Envelope::RemoveUnneededPoints
    }
 }
 
+/*! @excsafety{No-fail} */
 std::pair< int, int > Envelope::ExpandRegion
    ( double t0, double tlen, double *pLeftVal, double *pRightVal )
-// NOFAIL-GUARANTEE
 {
    // t0 is relative time
 
@@ -659,8 +659,8 @@ std::pair< int, int > Envelope::ExpandRegion
    return { 1 + range.first, index };
 }
 
+/*! @excsafety{No-fail} */
 void Envelope::InsertSpace( double t0, double tlen )
-// NOFAIL-GUARANTEE
 {
    auto range = ExpandRegion( t0 - mOffset, tlen, nullptr, nullptr );
 
@@ -780,14 +780,14 @@ std::pair<int, int> Envelope::EqualRange( double when, double sampleDur ) const
 
 // Control
 
+/*! @excsafety{No-fail} */
 void Envelope::SetOffset(double newOffset)
-// NOFAIL-GUARANTEE
 {
    mOffset = newOffset;
 }
 
+/*! @excsafety{No-fail} */
 void Envelope::SetTrackLen( double trackLen, double sampleDur )
-// NOFAIL-GUARANTEE
 {
    // Preserve the left-side limit at trackLen.
    auto range = EqualRange( trackLen, sampleDur );
@@ -807,8 +807,8 @@ void Envelope::SetTrackLen( double trackLen, double sampleDur )
       AddPointAtEnd( mTrackLen, value );
 }
 
+/*! @excsafety{No-fail} */
 void Envelope::RescaleTimes( double newLength )
-// NOFAIL-GUARANTEE
 {
    if ( mTrackLen == 0 ) {
       for ( auto &point : mEnv )

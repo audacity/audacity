@@ -17,19 +17,18 @@
 \brief Used only by WaveTrack, a special way to hold location that
 can accommodate merged regions.
 
-*//****************************************************************//**
+*//****************************************************************/
 
-\class TrackFactory
-\brief Used to create a WaveTrack, or a LabelTrack..  Implementation
-of the functions of this class are dispersed through the different
-Track classes.
-
-*//*******************************************************************/
+/*!
+@class WaveTrackFactory
+@brief Used to create or clone a WaveTrack, with appropriate context
+from the project that will own the track.
+*/
 
 
 #include "WaveTrack.h"
 
-#include "Experimental.h"
+
 
 #include "WaveClip.h"
 
@@ -45,7 +44,6 @@ Track classes.
 
 #include "Envelope.h"
 #include "Sequence.h"
-#include "Spectrum.h"
 
 #include "ProjectFileIORegistry.h"
 #include "ProjectSettings.h"
@@ -69,7 +67,7 @@ using std::max;
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "wavetrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = TrackFactory::Get( project );
+      auto &trackFactory = WaveTrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
       auto result = tracks.Add(trackFactory.NewWaveTrack());
       TrackView::Get( *result );
@@ -78,13 +76,13 @@ static ProjectFileIORegistry::Entry registerFactory{
    }
 };
 
-WaveTrack::Holder TrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
+WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
    return std::static_pointer_cast<WaveTrack>( orig.Duplicate() );
 }
 
 
-WaveTrack::Holder TrackFactory::NewWaveTrack(sampleFormat format, double rate)
+WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
    if (format == (sampleFormat)0)
       format = QualityPrefs::SampleFormatChoice();
@@ -210,13 +208,13 @@ double WaveTrack::GetOffset() const
    return GetStartTime();
 }
 
+/*! @excsafety{No-fail} */
 void WaveTrack::SetOffset(double o)
-// NOFAIL-GUARANTEE
 {
    double delta = o - GetOffset();
 
    for (const auto &clip : mClips)
-      // assume NOFAIL-GUARANTEE
+      // assume No-fail-guarantee
       clip->SetOffset(clip->GetOffset() + delta);
 
    mOffset = o;
@@ -324,6 +322,36 @@ int WaveTrack::ZeroLevelYCoordinate(wxRect rect) const
       (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }
 
+template< typename Container >
+static Container MakeIntervals(const std::vector<WaveClipHolder> &clips)
+{
+   Container result;
+   for (const auto &clip: clips) {
+      result.emplace_back( clip->GetStartTime(), clip->GetEndTime(),
+         std::make_unique<WaveTrack::IntervalData>( clip ) );
+   }
+   return result;
+}
+
+Track::Holder WaveTrack::PasteInto( AudacityProject &project ) const
+{
+   auto &trackFactory = WaveTrackFactory::Get( project );
+   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+   auto pNewTrack = EmptyCopy( pSampleBlockFactory );
+   pNewTrack->Paste(0.0, this);
+   return pNewTrack;
+}
+
+auto WaveTrack::GetIntervals() const -> ConstIntervals
+{
+   return MakeIntervals<ConstIntervals>( mClips );
+}
+
+auto WaveTrack::GetIntervals() -> Intervals
+{
+   return MakeIntervals<Intervals>( mClips );
+}
+
 Track::Holder WaveTrack::Clone() const
 {
    return std::make_shared<WaveTrack>( *this );
@@ -405,23 +433,33 @@ void WaveTrack::SetOldChannelGain(int channel, float gain)
 
 
 
+/*! @excsafety{Strong} */
 void WaveTrack::SetWaveColorIndex(int colorIndex)
-// STRONG-GUARANTEE
 {
    for (const auto &clip : mClips)
       clip->SetColourIndex( colorIndex );
    mWaveColorIndex = colorIndex;
 }
 
-
-void WaveTrack::ConvertToSampleFormat(sampleFormat format)
-// WEAK-GUARANTEE
-// might complete on only some clips
+sampleCount WaveTrack::GetNumSamples() const
 {
-   for (const auto &clip : mClips)
-      clip->ConvertToSampleFormat(format);
+   sampleCount result{ 0 };
+
+   for (const auto& clip : mClips)
+      result += clip->GetNumSamples();
+
+   return result;
+}
+
+/*! @excsafety{Weak} -- Might complete on only some clips */
+void WaveTrack::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
+{
+   for (const auto& clip : mClips)
+      clip->ConvertToSampleFormat(format, progressReport);
    mFormat = format;
 }
+
 
 bool WaveTrack::IsEmpty(double t0, double t1) const
 {
@@ -457,8 +495,8 @@ Track::Holder WaveTrack::Cut(double t0, double t1)
    return tmp;
 }
 
+/*! @excsafety{Strong} */
 Track::Holder WaveTrack::SplitCut(double t0, double t1)
-// STRONG-GUARANTEE
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -490,8 +528,8 @@ Track::Holder WaveTrack::CutAndAddCutLine(double t0, double t1)
 
 //Trim trims within a clip, rather than trimming everything.
 //If a bound is outside a clip, it trims everything.
+/*! @excsafety{Weak} */
 void WaveTrack::Trim (double t0, double t1)
-// WEAK-GUARANTEE
 {
    bool inside0 = false;
    bool inside1 = false;
@@ -612,14 +650,14 @@ Track::Holder WaveTrack::CopyNonconst(double t0, double t1)
    return Copy(t0, t1);
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
-// STRONG-GUARANTEE
 {
    HandleClear(t0, t1, false, false);
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
-// STRONG-GUARANTEE
 {
    HandleClear(t0, t1, true, false);
 }
@@ -674,22 +712,13 @@ void WaveTrack::UseSpectralPrefs( bool bUse )
 
 const WaveformSettings &WaveTrack::GetWaveformSettings() const
 {
-   if (mpWaveformSettings)
-      return *mpWaveformSettings;
-   else
-      return WaveformSettings::defaults();
+   // Create on demand
+   return const_cast<WaveTrack*>(this)->GetWaveformSettings();
 }
 
 WaveformSettings &WaveTrack::GetWaveformSettings()
 {
-   if (mpWaveformSettings)
-      return *mpWaveformSettings;
-   else
-      return WaveformSettings::defaults();
-}
-
-WaveformSettings &WaveTrack::GetIndependentWaveformSettings()
-{
+   // Create on demand
    if (!mpWaveformSettings)
       mpWaveformSettings = std::make_unique<WaveformSettings>(WaveformSettings::defaults());
    return *mpWaveformSettings;
@@ -716,6 +745,8 @@ void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSetting
 // be pasted with visible split lines.  Normally, effects do not
 // want these extra lines, so they may be merged out.
 //
+/*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException.
+But some of its cutline clips may have been destroyed. */
 void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               double t1, // End of time to clear
                               const Track *src, // What to paste
@@ -723,19 +754,17 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               bool merge, // Whether to remove 'extra' splits
                               const TimeWarper *effectWarper // How does time change
                               )
-// WEAK-GUARANTEE
-// this WaveTrack remains destructible in case of AudacityException.
-// But some of its cutline clips may have been destroyed.
 {
    double dur = std::min(t1 - t0, src->GetEndTime());
 
    // If duration is 0, then it's just a plain paste
    if (dur == 0.0) {
-      // use WEAK-GUARANTEE
+      // use Weak-guarantee
       Paste(t0, src);
       return;
    }
 
+   std::vector<EnvPoint> envPoints;
    std::vector<double> splits;
    WaveClipHolders cuts;
 
@@ -783,6 +812,12 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
          else
             ++it;
       }
+
+      // Save the envelope points
+      const auto &env = *clip->GetEnvelope();
+      for (size_t i = 0, numPoints = env.GetNumberOfPoints(); i < numPoints; ++i) {
+         envPoints.push_back(env[i]);
+      }
    }
 
    const auto tolerance = 2.0 / GetRate();
@@ -790,7 +825,6 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    // Now, clear the selection
    HandleClear(t0, t1, false, false);
    {
-
       // And paste in the NEW data
       Paste(t0, src);
       {
@@ -831,7 +865,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                if (prev) {
                   // It must be that clip is what was pasted and it begins where
                   // prev ends.
-                  // use WEAK-GUARANTEE
+                  // use Weak-guarantee
                   MergeClips(GetClipIndex(prev), GetClipIndex(clip));
                   break;
                }
@@ -878,11 +912,18 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
             }
          }
       }
+
+      // Restore the envelope points
+      for (auto point : envPoints) {
+         auto t = warper->Warp(point.GetT());
+         if (auto clip = GetClipAtTime(t))
+            clip->GetEnvelope()->Insert(t, point.GetVal());
+      }
    }
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::SplitDelete(double t0, double t1)
-// STRONG-GUARANTEE
 {
    bool addCutLines = false;
    bool split = true;
@@ -937,17 +978,25 @@ std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
       return {};
 }
 
-void WaveTrack::AddClip(std::shared_ptr<WaveClip> &&clip)
+bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 {
+   if (clip->GetSequence()->GetFactory() != this->mpFactory)
+      return false;
+
    // Uncomment the following line after we correct the problem of zero-length clips
    //if (CanInsertClip(clip))
-      mClips.push_back(std::move(clip)); // transfer ownership
+      mClips.push_back(clip); // transfer ownership
+
+   return true;
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::HandleClear(double t0, double t1,
                             bool addCutLines, bool split)
-// STRONG-GUARANTEE
 {
+   // For debugging, use an ASSERT so that we stop
+   // closer to the problem.
+   wxASSERT( t1 >= t0 );
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -1055,7 +1104,7 @@ void WaveTrack::HandleClear(double t0, double t1,
    }
 
    // Only now, change the contents of this track
-   // use NOFAIL-GUARANTEE for the rest
+   // use No-fail-guarantee for the rest
 
    for (const auto &clip : mClips)
    {
@@ -1121,8 +1170,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
    }
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track *src)
-// WEAK-GUARANTEE
 {
    bool editClipCanMove = GetEditClipsCanMove();
 
@@ -1143,7 +1192,7 @@ void WaveTrack::Paste(double t0, const Track *src)
       //
       // - If multiple clips should be pasted, or a single clip that does not fill
       // the duration of the pasted track, these are always pasted as single
-      // clips, and the current clip is splitted, when necessary. This may seem
+      // clips, and the current clip is split, when necessary. This may seem
       // strange at first, but it probably is better than trying to auto-merge
       // anything. The user can still merge the clips by hand (which should be a
       // simple command reachable by a hotkey or single mouse click).
@@ -1232,10 +1281,12 @@ void WaveTrack::Paste(double t0, const Track *src)
                   if (clip->GetStartTime() > insideClip->GetStartTime() &&
                       insideClip->GetEndTime() + insertDuration >
                                                          clip->GetStartTime())
-                     // STRONG-GUARANTEE in case of this path
+                     // Strong-guarantee in case of this path
                      // not that it matters.
                      throw SimpleMessageBoxException{
-                        XO("There is not enough room available to paste the selection")
+                        XO("There is not enough room available to paste the selection"),
+                        XO("Warning"),
+                        "Error:_Insufficient_space_in_track"
                      };
                }
             }
@@ -1252,10 +1303,12 @@ void WaveTrack::Paste(double t0, const Track *src)
       //wxPrintf("paste: multi clip mode!\n");
 
       if (!editClipCanMove && !IsEmpty(t0, t0+insertDuration-1.0/mRate))
-         // STRONG-GUARANTEE in case of this path
+         // Strong-guarantee in case of this path
          // not that it matters.
          throw SimpleMessageBoxException{
-            XO("There is not enough room available to paste the selection")
+            XO("There is not enough room available to paste the selection"),
+            XO("Warning"),
+            "Error:_Insufficient_space_in_track"
          };
 
       for (const auto &clip : other->mClips)
@@ -1313,8 +1366,8 @@ void WaveTrack::Silence(double t0, double t1)
    }
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::InsertSilence(double t, double len)
-// STRONG-GUARANTEE
 {
    // Nothing to do, if length is zero.
    // Fixes Bug 1626
@@ -1328,7 +1381,7 @@ void WaveTrack::InsertSilence(double t, double len)
       // Special case if there is no clip yet
       auto clip = std::make_unique<WaveClip>(mpFactory, mFormat, mRate, this->GetWaveColorIndex());
       clip->InsertSilence(0, len);
-      // use NOFAIL-GUARANTEE
+      // use No-fail-guarantee
       mClips.push_back( std::move( clip ) );
       return;
    }
@@ -1338,11 +1391,11 @@ void WaveTrack::InsertSilence(double t, double len)
       const auto it = std::find_if( mClips.begin(), end,
          [&](const WaveClipHolder &clip) { return clip->WithinClip(t); } );
 
-      // use STRONG-GUARANTEE
+      // use Strong-guarantee
       if (it != end)
          it->get()->InsertSilence(t, len);
 
-      // use NOFAIL-GUARANTEE
+      // use No-fail-guarantee
       for (const auto &clip : mClips)
       {
          if (clip->BeforeClip(t))
@@ -1353,8 +1406,8 @@ void WaveTrack::InsertSilence(double t, double len)
 
 //Performs the opposite of Join
 //Analyses selected region for possible Joined clips and disjoins them
+/*! @excsafety{Weak} */
 void WaveTrack::Disjoin(double t0, double t1)
-// WEAK-GUARANTEE
 {
    auto minSamples = TimeToLongSamples( WAVETRACK_MERGE_POINT_TOLERANCE );
    const size_t maxAtOnce = 1048576;
@@ -1431,8 +1484,8 @@ void WaveTrack::Disjoin(double t0, double t1)
    }
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Join(double t0, double t1)
-// WEAK-GUARANTEE
 {
    // Merge all WaveClips overlapping selection into one
 
@@ -1485,11 +1538,11 @@ void WaveTrack::Join(double t0, double t1)
    }
 }
 
-bool WaveTrack::Append(samplePtr buffer, sampleFormat format,
+/*! @excsafety{Partial}
+-- Some prefix (maybe none) of the buffer is appended,
+and no content already flushed to disk is lost. */
+bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
                        size_t len, unsigned int stride /* = 1 */)
-// PARTIAL-GUARANTEE in case of exceptions:
-// Some prefix (maybe none) of the buffer is appended, and no content already
-// flushed to disk is lost.
 {
    return RightmostOrNewClip()->Append(buffer, format, len, stride);
 }
@@ -1550,11 +1603,12 @@ size_t WaveTrack::GetIdealBlockSize()
    return NewestOrNewClip()->GetSequence()->GetIdealBlockSize();
 }
 
+/*! @excsafety{Mixed} */
+/*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
+/*! @excsafety{Partial}
+-- Some initial portion (maybe none) of the append buffer of the rightmost
+clip gets appended; no previously saved contents are lost. */
 void WaveTrack::Flush()
-// NOFAIL-GUARANTEE that the rightmost clip will be in a flushed state.
-// PARTIAL-GUARANTEE in case of exceptions:
-// Some initial portion (maybe none) of the append buffer of the rightmost
-// clip gets appended; no previously saved contents are lost.
 {
    // After appending, presumably.  Do this to the clip that gets appended.
    RightmostOrNewClip()->Flush();
@@ -1619,6 +1673,11 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                   strValue.ToLong(&nValue))
             // Don't use SetWaveColorIndex as it sets the clips too.
             mWaveColorIndex  = nValue;
+         else if (!wxStrcmp(attr, wxT("sampleformat")) &&
+                  XMLValueChecker::IsGoodInt(strValue) &&
+                  strValue.ToLong(&nValue) &&
+                  XMLValueChecker::IsValidSampleFormat(nValue))
+            mFormat = static_cast<sampleFormat>(nValue);
       } // while
       return true;
    }
@@ -1681,6 +1740,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("gain"), (double)mGain);
    xmlFile.WriteAttr(wxT("pan"), (double)mPan);
    xmlFile.WriteAttr(wxT("colorindex"), mWaveColorIndex );
+   xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(mFormat) );
 
    for (const auto &clip : mClips)
    {
@@ -1917,9 +1977,9 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
    return result;
 }
 
-void WaveTrack::Set(samplePtr buffer, sampleFormat format,
+/*! @excsafety{Weak} */
+void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
                     sampleCount start, size_t len)
-// WEAK-GUARANTEE
 {
    for (const auto &clip: mClips)
    {
@@ -1951,7 +2011,7 @@ void WaveTrack::Set(samplePtr buffer, sampleFormat format,
          }
 
          clip->SetSamples(
-               (samplePtr)(((char*)buffer) +
+               (constSamplePtr)(((const char*)buffer) +
                            startDelta.as_size_t() *
                            SAMPLE_SIZE(format)),
                           format, inclipDelta, samplesToCopy.as_size_t() );
@@ -2026,19 +2086,6 @@ void WaveTrack::GetEnvelopeValues(double *buffer, size_t bufferLen,
    }
 }
 
-WaveClip* WaveTrack::GetClipAtX(int xcoord)
-{
-   for (const auto &clip: mClips)
-   {
-      wxRect r;
-      clip->GetDisplayRect(&r);
-      if (xcoord >= r.x && xcoord < r.x+r.width)
-         return clip.get();
-   }
-
-   return NULL;
-}
-
 WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
 {
    for (const auto &clip: mClips)
@@ -2076,18 +2123,18 @@ WaveClip* WaveTrack::GetClipAtTime(double time)
    return p != clips.rend() ? *p : nullptr;
 }
 
-Envelope* WaveTrack::GetEnvelopeAtX(int xcoord)
+Envelope* WaveTrack::GetEnvelopeAtTime(double time)
 {
-   WaveClip* clip = GetClipAtX(xcoord);
+   WaveClip* clip = GetClipAtTime(time);
    if (clip)
       return clip->GetEnvelope();
    else
       return NULL;
 }
 
-Sequence* WaveTrack::GetSequenceAtX(int xcoord)
+Sequence* WaveTrack::GetSequenceAtTime(double time)
 {
-   WaveClip* clip = GetClipAtX(xcoord);
+   WaveClip* clip = GetClipAtTime(time);
    if (clip)
       return clip->GetSequence();
    else
@@ -2111,8 +2158,8 @@ WaveClip* WaveTrack::NewestOrNewClip()
       return mClips.back().get();
 }
 
+/*! @excsafety{No-fail} */
 WaveClip* WaveTrack::RightmostOrNewClip()
-// NOFAIL-GUARANTEE
 {
    if (mClips.empty()) {
       WaveClip *clip = CreateClip();
@@ -2160,32 +2207,43 @@ int WaveTrack::GetNumClips() const
    return mClips.size();
 }
 
-bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
-                              double *allowedAmount /* = NULL */)
+bool WaveTrack::CanOffsetClips(
+   const std::vector<WaveClip*> &clips,
+   double amount,
+   double *allowedAmount /* = NULL */)
 {
    if (allowedAmount)
       *allowedAmount = amount;
 
-   for (const auto &c: mClips)
-   {
-      if (c.get() != clip && c->GetStartTime() < clip->GetEndTime()+amount &&
-                       c->GetEndTime() > clip->GetStartTime()+amount)
-      {
-         if (!allowedAmount)
-            return false; // clips overlap
+   const auto &moving = [&](WaveClip *clip){
+      // linear search might be improved, but expecting few moving clips
+      // compared with the fixed clips
+      return clips.end() != std::find( clips.begin(), clips.end(), clip );
+   };
 
-         if (amount > 0)
+   for (const auto &c: mClips) {
+      if ( moving( c.get() ) )
+         continue;
+      for (const auto clip : clips) {
+         if (c->GetStartTime() < clip->GetEndTime() + amount &&
+            c->GetEndTime() > clip->GetStartTime() + amount)
          {
-            if (c->GetStartTime()-clip->GetEndTime() < *allowedAmount)
-               *allowedAmount = c->GetStartTime()-clip->GetEndTime();
-            if (*allowedAmount < 0)
-               *allowedAmount = 0;
-         } else
-         {
-            if (c->GetEndTime()-clip->GetStartTime() > *allowedAmount)
-               *allowedAmount = c->GetEndTime()-clip->GetStartTime();
-            if (*allowedAmount > 0)
-               *allowedAmount = 0;
+            if (!allowedAmount)
+               return false; // clips overlap
+
+            if (amount > 0)
+            {
+               if (c->GetStartTime()-clip->GetEndTime() < *allowedAmount)
+                  *allowedAmount = c->GetStartTime()-clip->GetEndTime();
+               if (*allowedAmount < 0)
+                  *allowedAmount = 0;
+            } else
+            {
+               if (c->GetEndTime()-clip->GetStartTime() > *allowedAmount)
+                  *allowedAmount = c->GetEndTime()-clip->GetStartTime();
+               if (*allowedAmount > 0)
+                  *allowedAmount = 0;
+            }
          }
       }
    }
@@ -2197,7 +2255,7 @@ bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
 
       // Check if the NEW calculated amount would not violate
       // any other constraint
-      if (!CanOffsetClip(clip, *allowedAmount, NULL)) {
+      if (!CanOffsetClips(clips, *allowedAmount, nullptr)) {
          *allowedAmount = 0; // play safe and don't allow anything
          return false;
       }
@@ -2207,7 +2265,8 @@ bool WaveTrack::CanOffsetClip(WaveClip* clip, double amount,
       return true;
 }
 
-bool WaveTrack::CanInsertClip(WaveClip* clip,  double &slideBy, double &tolerance)
+bool WaveTrack::CanInsertClip(
+   WaveClip* clip,  double &slideBy, double &tolerance) const
 {
    for (const auto &c : mClips)
    {
@@ -2240,16 +2299,16 @@ bool WaveTrack::CanInsertClip(WaveClip* clip,  double &slideBy, double &toleranc
    return true;
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::Split( double t0, double t1 )
-// WEAK-GUARANTEE
 {
    SplitAt( t0 );
    if( t0 != t1 )
       SplitAt( t1 );
 }
 
+/*! @excsafety{Weak} */
 void WaveTrack::SplitAt(double t)
-// WEAK-GUARANTEE
 {
    for (const auto &c : mClips)
    {
@@ -2338,9 +2397,9 @@ void WaveTrack::UpdateLocationsCache() const
 }
 
 // Expand cut line (that is, re-insert audio, then DELETE audio saved in cut line)
+/*! @excsafety{Strong} */
 void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                               double* cutlineEnd)
-// STRONG-GUARANTEE
 {
    bool editClipCanMove = GetEditClipsCanMove();
 
@@ -2361,16 +2420,18 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
          {
             if (clip2->GetStartTime() > clip->GetStartTime() &&
                 clip->GetEndTime() + end - start > clip2->GetStartTime())
-               // STRONG-GUARANTEE in case of this path
+               // Strong-guarantee in case of this path
                throw SimpleMessageBoxException{
-                  XO("There is not enough room available to expand the cut line")
+                  XO("There is not enough room available to expand the cut line"),
+                  XO("Warning"),
+                  "Error:_Insufficient_space_in_track"
                };
           }
       }
 
       clip->ExpandCutLine(cutLinePosition);
 
-      // STRONG-GUARANTEE provided that the following gives NOFAIL-GUARANTEE
+      // Strong-guarantee provided that the following gives No-fail-guarantee
 
       if (cutlineStart)
          *cutlineStart = start;
@@ -2398,8 +2459,8 @@ bool WaveTrack::RemoveCutLine(double cutLinePosition)
    return false;
 }
 
+/*! @excsafety{Strong} */
 void WaveTrack::MergeClips(int clipidx1, int clipidx2)
-// STRONG-GUARANTEE
 {
    WaveClip* clip1 = GetClipByIndex(clipidx1);
    WaveClip* clip2 = GetClipByIndex(clipidx2);
@@ -2408,18 +2469,18 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
       return; // Don't throw, just do nothing.
 
    // Append data from second clip to first clip
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    clip1->Paste(clip1->GetEndTime(), clip2);
    
-   // use NOFAIL-GUARANTEE for the rest
+   // use No-fail-guarantee for the rest
    // Delete second clip
    auto it = FindClip(mClips, clip2);
    mClips.erase(it);
 }
 
+/*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
+*/
 void WaveTrack::Resample(int rate, ProgressDialog *progress)
-// WEAK-GUARANTEE
-// Partial completion may leave clips at differing sample rates!
 {
    for (const auto &clip : mClips)
       clip->Resample(rate, progress);
@@ -2711,4 +2772,38 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
 {
    VisitBlocks(
       const_cast<TrackList &>(tracks), std::move( inspector ), pIDs );
+}
+
+#include "Project.h"
+#include "SampleBlock.h"
+static auto TrackFactoryFactory = []( AudacityProject &project ) {
+   return std::make_shared< WaveTrackFactory >(
+      ProjectSettings::Get( project ),
+      SampleBlockFactory::New( project ) );
+};
+
+static const AudacityProject::AttachedObjects::RegisteredFactory key2{
+   TrackFactoryFactory
+};
+
+WaveTrackFactory &WaveTrackFactory::Get( AudacityProject &project )
+{
+   return project.AttachedObjects::Get< WaveTrackFactory >( key2 );
+}
+
+const WaveTrackFactory &WaveTrackFactory::Get( const AudacityProject &project )
+{
+   return Get( const_cast< AudacityProject & >( project ) );
+}
+
+WaveTrackFactory &WaveTrackFactory::Reset( AudacityProject &project )
+{
+   auto result = TrackFactoryFactory( project );
+   project.AttachedObjects::Assign( key2, result );
+   return *result;
+}
+
+void WaveTrackFactory::Destroy( AudacityProject &project )
+{
+   project.AttachedObjects::Assign( key2, nullptr );
 }

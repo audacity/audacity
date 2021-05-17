@@ -29,6 +29,36 @@ public:
        const AudacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
+
+   static const int kRangeMin {10};
+   static const int kRangeMax {1000};
+};
+
+#include "../../../widgets/PopupMenuTable.h"
+
+class TimeTrackMenuTable : public PopupMenuTable
+{
+   TimeTrackMenuTable()
+      : PopupMenuTable{ "TimeTrack" }
+   {}
+
+   DECLARE_POPUP_MENU(TimeTrackMenuTable);
+
+public:
+   static TimeTrackMenuTable &Instance();
+
+protected:
+   void InitUserData(void *pUserData) override;
+
+private:
+   void DestroyMenu() override;
+
+   CommonTrackControls::InitMenuData *mpData{};
+
+   void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
+   void OnTimeTrackLin(wxCommandEvent & /*event*/);
+   void OnTimeTrackLog(wxCommandEvent & /*event*/);
+   void OnTimeTrackLogInt(wxCommandEvent & /*event*/);
 };
 
 #endif

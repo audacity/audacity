@@ -18,8 +18,6 @@
 #ifndef __AUDACITY_DEVICEMANAGER__
 #define __AUDACITY_DEVICEMANAGER__
 
-#include "Experimental.h"
-
 #include <chrono>
 #include <vector>
 
@@ -45,9 +43,10 @@ typedef struct DeviceSourceMap {
    wxString hostString;
 } DeviceSourceMap;
 
+AUDACITY_DLL_API
 wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
-class DeviceManager final
+class AUDACITY_DLL_API DeviceManager final
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
 :  public DeviceChangeHandler

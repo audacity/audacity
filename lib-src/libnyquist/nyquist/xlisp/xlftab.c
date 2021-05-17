@@ -15,87 +15,6 @@ HISTORY
 #include <string.h> /* for memcpy */
 #include "switches.h"
 #include "xlisp.h"
-#ifndef NO_PROTOTYPES_IN_XLISP_H
-/* external functions */
-extern LVAL
-    xbisubr(void),xbifsubr(void),
-    rmhash(void),rmquote(void),rmdquote(void),rmbquote(void),rmcomma(void),
-    clnew(void),clisnew(void),clanswer(void),
-    obisnew(void),obclass(void),obshow(void),obisa(void),
-    rmlpar(void),rmrpar(void),rmsemi(void),
-    xeval(void),xapply(void),xfuncall(void),xquote(void),xfunction(void),xbquote(void),
-    xlambda(void),xset(void),xsetq(void),xsetf(void),xdefun(void),xdefmacro(void),
-    xgensym(void),xmakesymbol(void),xintern(void),
-    xsymname(void),xsymvalue(void),xsymplist(void),
-    xget(void),xputprop(void),xremprop(void),
-    xhash(void),xmkarray(void),xaref(void),
-    xcar(void),xcdr(void),
-    xcaar(void),xcadr(void),xcdar(void),xcddr(void),
-    xcaaar(void),xcaadr(void),xcadar(void),xcaddr(void),
-    xcdaar(void),xcdadr(void),xcddar(void),xcdddr(void),
-    xcaaaar(void),xcaaadr(void),xcaadar(void),xcaaddr(void),
-    xcadaar(void),xcadadr(void),xcaddar(void),xcadddr(void),
-    xcdaaar(void),xcdaadr(void),xcdadar(void),xcdaddr(void),
-    xcddaar(void),xcddadr(void),xcdddar(void),xcddddr(void),
-    xcons(void),xlist(void),xappend(void),xreverse(void),xlast(void),xnth(void),xnthcdr(void),
-    xmember(void),xassoc(void),xsubst(void),xsublis(void),xlength(void),xsort(void),
-    xremove(void),xremif(void),xremifnot(void),
-    xmapc(void),xmapcar(void),xmapl(void),xmaplist(void),
-    xrplca(void),xrplcd(void),xnconc(void),
-    xdelete(void),xdelif(void),xdelifnot(void),
-    xatom(void),xsymbolp(void),xnumberp(void),xboundp(void),xnull(void),xlistp(void),xendp(void),xconsp(void),
-    xeq(void),xeql(void),xequal(void),
-    xcond(void),xcase(void),xand(void),x_or(void),xlet(void),xletstar(void),xif(void),
-    xprog(void),xprogstar(void),xprog1(void),xprog2(void),xprogn(void),xgo(void),xreturn(void),
-    xcatch(void),xthrow(void),
-    xerror(void),xcerror(void),xbreak(void),
-    xcleanup(void),xtoplevel(void),xcontinue(void),xerrset(void),
-    xbaktrace(void),xevalhook(void),
-    xdo(void),xdostar(void),xdolist(void),xdotimes(void),
-    xminusp(void),xzerop(void),xplusp(void),xevenp(void),xoddp(void),
-    xfix(void),xfloat(void),
-    xgcd(void),xadd(void),xsub(void),xmul(void),xdiv(void),xrem(void),xmin(void),xmax(void),xabs(void),
-    xadd1(void),xsub1(void),xlogand(void),xlogior(void),xlogxor(void),xlognot(void),
-    xsin(void),xcos(void),xtan(void),xatan(void),xexpt(void),xexp(void),xsqrt(void),xrand(void), xrealrand(void),
-    xlss(void),xleq(void),xequ(void),xneq(void),xgeq(void),xgtr(void),
-    xstrcat(void),xsubseq(void),xstring(void),xchar(void),
-    xread(void),xprint(void),xprin1(void),xprinc(void),xterpri(void),
-    xflatsize(void),xflatc(void),
-    xopen(void),xbopen(void),xclose(void),xrdchar(void),xpkchar(void),xwrchar(void),xreadline(void),
-    xrdint(void),xwrint(void),xrdfloat(void),xwrfloat(void),
-    xget_env(void), xload(void),xtranscript(void),
-    xtype(void),xquit(void),xexit(void),xpeek(void),xpoke(void),xaddrs(void),
-    xvector(void),xblock(void),xrtnfrom(void),xtagbody(void),
-    xpsetq(void),xflet(void),xlabels(void),xmacrolet(void),xunwindprotect(void),xpp(void),
-    xstrlss(void),xstrleq(void),xstreql(void),xstrneq(void),xstrgeq(void),xstrgtr(void),
-    xstrilss(void),xstrileq(void),xstrieql(void),xstrineq(void),xstrigeq(void),xstrigtr(void),
-    xupcase(void),xdowncase(void),xnupcase(void),xndowncase(void),
-    xtrim(void),xlefttrim(void),xrighttrim(void),
-    xuppercasep(void),xlowercasep(void),xbothcasep(void),xdigitp(void),xalphanumericp(void),
-    xcharcode(void),xcodechar(void),xchupcase(void),xchdowncase(void),xdigitchar(void),
-    xchrlss(void),xchrleq(void),xchreql(void),xchrneq(void),xchrgeq(void),xchrgtr(void),
-    xchrilss(void),xchrileq(void),xchrieql(void),xchrineq(void),xchrigeq(void),xchrigtr(void),
-    xintegerp(void),xfloatp(void),xstringp(void),xarrayp(void),xstreamp(void),xobjectp(void),
-    xwhen(void),xunless(void),xloop(void),
-    xsymfunction(void),xfboundp(void),xsend(void),xsendsuper(void),
-    xprogv(void),xrdbyte(void),xwrbyte(void),xformat(void),
-    xcharp(void),xcharint(void),xintchar(void),
-    xmkstrinput(void),xmkstroutput(void),xgetstroutput(void),xgetlstoutput(void),
-    xgetlambda(void),xmacroexpand(void),x1macroexpand(void),
-    xinfo(void),					//Added by Ning Hu	Apr.2001
-    xsetdir(void),					//Added by Ning Hu	May.2001
-    xbigendianp(void),
-    xtrace(void),xuntrace(void),xprofile(void),xstrsearch(void), xsetupconsole(void),
-    xechoenabled(void),xslider_read(void),
-    xget_user(void), // added by RBD, Jul 2007
-    xfind_in_xlisp_path(void); // added by RBD, Jan 2008
-#endif
-
-/* functions specific to xldmem.c */
-LVAL xgc(void),xexpand(void),xalloc(void),xmem(void);
-#ifdef SAVERESTORE
-LVAL xsave(void),xrestore(void);
-#endif
 
 /* include system dependant definitions */
 #include "osdefs.h"
@@ -489,7 +408,7 @@ FUNDEF init_funtab[] = {
 {       "GET-ENV",                      S, xget_env             }, /* 308 */
 {       "GET-RUN-TIME",                 S, xgetruntime          }, /* 309 */
 {	"RANDOM-SEED",			S, xsrand		}, /* 310 */
-
+{       "GET-REAL-TIME",                S, xgetrealtime         }, /* 311 */
 #ifdef MACINTOSH
 #include "macptrs.h"
 #endif

@@ -15,7 +15,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #ifdef USE_LIBVORBIS
 
@@ -249,7 +249,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    //    3. The bitstream codebook.
    //
    // After we create those our responsibility is complete, libvorbis will
-   // take care of any other ogg bistream constraints (again, according
+   // take care of any other ogg bitstream constraints (again, according
    // to the example encoder source)
    ogg_packet bitstream_header;
    ogg_packet comment_header;
@@ -279,7 +279,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
       auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          numChannels, SAMPLES_PER_RUN, false,
-         rate, floatSample, true, mixerSpec);
+         rate, floatSample, mixerSpec);
 
       InitProgress( pDialog, fName,
          selectionOnly
@@ -338,7 +338,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
                   if ( outFile.Write(page.header, page.header_len).GetLastError() ||
                        outFile.Write(page.body, page.body_len).GetLastError()) {
                      // TODO: more precise message
-                     AudacityMessageBox( XO("Unable to export") );
+                     ShowDiskFullExportErrorDialog(fName);
                      return ProgressResult::Cancelled;
                   }
 
@@ -352,7 +352,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
          if (err) {
             updateResult = ProgressResult::Cancelled;
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("OGG:355");
             break;
          }
 
@@ -363,7 +363,7 @@ ProgressResult ExportOGG::Export(AudacityProject *project,
    if ( !outFile.Close() ) {
       updateResult = ProgressResult::Cancelled;
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("OGG:366");
    }
 
    return updateResult;

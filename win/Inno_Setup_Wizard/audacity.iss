@@ -196,11 +196,12 @@ Type: files; Name: "{app}\Plug-Ins\clicktrack.ny"
 ; Leaving this one commented out example of the old way.
 ; Root: HKCR; Subkey: ".AUP"; ValueType: string; ValueData: "Audacity.Project"; Flags: createvalueifdoesntexist uninsdeletekey; Tasks: associate_aup
 Root: HKCR; Subkey: ".AUP"; ValueType: string; ValueData: "Audacity.Project"; Flags: createvalueifdoesntexist uninsdeletekey;
+Root: HKCR; Subkey: ".AUP3"; ValueType: string; ValueData: "Audacity.Project"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\OpenWithList\audacity.exe"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project"; ValueType: string; ValueData: "Audacity Project File"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\shell"; ValueType: string; ValueData: ""; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\shell\open"; Flags: createvalueifdoesntexist uninsdeletekey;
-Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; ValueData: """{app}\audacity.exe"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey;
+Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; ValueData: """{app}\audacity.exe"" ""%1"""; Flags: uninsdeletekey;
 
 ;The following would allow a following 'help' installer to know where to put the 'help' files.
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
@@ -252,7 +253,7 @@ Name: "bn"; MessagesFile: "{#Get('Bengali.islu')}"
 Name: "bs"; MessagesFile: "{#Get('Bosnian.isl')}"
 Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
 Name: "ca_ES0valencia"; MessagesFile: "{#Get('Valencian.isl')}"
-;Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
+Name: "co"; MessagesFile: "compiler:Languages\Corsican.isl"
 Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "cy"; MessagesFile: "{#Dummy('Welsh', '0452')}"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
@@ -331,7 +332,7 @@ bn.ResetPrefs=Reset Preferences
 bs.ResetPrefs=Reset Preferences
 ca.ResetPrefs=Voleu restablir les preferències?
 ca_ES0valencia.ResetPrefs=Reset Preferences
-;co.ResetPrefs=Reset Preferences
+co.ResetPrefs=Reinizià e preferenze ?
 cs.ResetPrefs=Vynulovat nastavení?
 cy.ResetPrefs=Reset Preferences
 da.ResetPrefs=Gendan indstillinger?

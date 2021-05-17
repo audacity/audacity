@@ -14,7 +14,7 @@ void pluck_free(snd_susp_type a_susp);
 
 typedef struct pluck_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
 
     double stretch;
     double cons;
@@ -105,7 +105,7 @@ void pluck_initialize(sample_type *shiftreg, sample_type *array,
            values to +1 or -1. The following does the same
            thing with much less code:
          */
-        *array = (krand() & 2) - 1;
+        *array = (sample_type) ((krand() & 2) - 1);
         suma += *array; /* compute sum for the average */
     }
     avea = suma / len;
@@ -141,31 +141,31 @@ void pluck__fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
-	/* don't run past terminate time */
-	if (susp->terminate_cnt != UNKNOWN &&
-	    susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
-	    if (togo < 0) togo = 0;  /* avoids rounding errros */
-	    if (togo == 0) break;
-	}
+        /* don't run past terminate time */
+        if (susp->terminate_cnt != UNKNOWN &&
+            susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
+            if (togo < 0) togo = 0;  /* avoids rounding errros */
+            if (togo == 0) break;
+        }
 
-	n = togo;
-	stretch_reg = susp->stretch;
-	cons_reg = susp->cons;
-	loss_reg = susp->loss;
-	x2_reg = susp->x2;
-	x3_reg = susp->x3;
-	i1_reg = susp->i1;
-	i2_reg = susp->i2;
-	i3_reg = susp->i3;
-	i4_reg = susp->i4;
-	endptr_reg = susp->endptr;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        stretch_reg = susp->stretch;
+        cons_reg = susp->cons;
+        loss_reg = susp->loss;
+        x2_reg = susp->x2;
+        x3_reg = susp->x3;
+        i1_reg = susp->i1;
+        i2_reg = susp->i2;
+        i3_reg = susp->i3;
+        i4_reg = susp->i4;
+        endptr_reg = susp->endptr;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             sample_type sum = (sample_type)
                 ((*i1_reg++ * x2_reg) + (*i2_reg++ * x3_reg) + 
                  (*i3_reg++ * stretch_reg) - (*i4_reg++ * cons_reg));
@@ -180,22 +180,22 @@ void pluck__fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
             /* deliver sample */
             *out_ptr_reg++ = sum;
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	susp->i1 = i1_reg;
-	susp->i2 = i2_reg;
-	susp->i3 = i3_reg;
-	susp->i4 = i4_reg;
-	out_ptr += togo;
-	cnt += togo;
+        susp->i1 = i1_reg;
+        susp->i2 = i2_reg;
+        susp->i3 = i3_reg;
+        susp->i4 = i4_reg;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* pluck__fetch */
 

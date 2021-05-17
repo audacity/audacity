@@ -7,6 +7,7 @@ list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/compat.c
       ${TARGET_ROOT}/crc.c
+      ${TARGET_ROOT}/debug.c
       ${TARGET_ROOT}/field.c
       ${TARGET_ROOT}/file.c
       ${TARGET_ROOT}/frame.c

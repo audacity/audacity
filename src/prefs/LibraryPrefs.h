@@ -18,6 +18,8 @@
 #include "PrefsPanel.h"
 
 class wxStaticText;
+class wxTextCtrl;
+class ReadOnlyText;
 class ShuttleGui;
 
 #define LIBRARY_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Library") }
@@ -44,8 +46,8 @@ class LibraryPrefs final : public PrefsPanel
    void OnFFmpegFindButton(wxCommandEvent & e);
    void OnFFmpegDownButton(wxCommandEvent & e);
 
-   wxStaticText *mMP3Version;
-   wxStaticText *mFFmpegVersion;
+   ReadOnlyText *mMP3Version;
+   ReadOnlyText *mFFmpegVersion;
 
    DECLARE_EVENT_TABLE()
 };

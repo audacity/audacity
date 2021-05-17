@@ -46,7 +46,7 @@ boolean compute_lvl(pwl_susp_type susp)
 /*
  * returns true if it is time to terminate
  */
-boolean compute_incr(pwl_susp_type susp, long *n, long cur)
+boolean compute_incr(pwl_susp_type susp, int64_t *n, int64_t cur)
 {
     double target;
     while (*n == 0) {
@@ -74,19 +74,19 @@ boolean compute_incr(pwl_susp_type susp, long *n, long cur)
         ("LVAL" "bpt_ptr" "lis")
         ("double" "incr" "0.0")
         ("double" "lvl" "0.0; 
-         { long temp = 0; compute_incr(susp, &temp, 0); }"))
+    { int64_t temp = 0; compute_incr(susp, &temp, 0); }"))
   
   (OUTER-LOOP "
         if (susp->bpt_ptr == NULL) {
 out:	    togo = 0;	/* indicate termination */
             break;	/* we're done */
         }
-        { long cur = susp->susp.current + cnt;
-          long nn = getfixnum(car(susp->bpt_ptr)) - cur;
+        { int64_t cur = susp->susp.current + cnt;
+          int64_t nn = getfixnum(car(susp->bpt_ptr)) - cur;
           if (nn == 0) {
               if (compute_lvl(susp) || compute_incr(susp, &nn, cur)) goto out;
           }
-          togo = min(nn, togo);
+          togo = (int) min(nn, togo);
         }
 ")
   (INNER-LOOP "output = (sample_type) lvl; lvl += incr")

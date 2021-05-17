@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 #include "PlayIndicatorOverlay.h"
 
 #include "../../AColor.h"
@@ -174,13 +174,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
       }
    }
    else {
-      // Calculate the horizontal position of the indicator
-      const double playPos = viewInfo.mRecentStreamTime;
-
       auto &window = ProjectWindow::Get( *mProject );
+      auto &scroller = window.GetPlaybackScroller();
+      // Calculate the horizontal position of the indicator
+      const double playPos = scroller.GetRecentStreamTime();
+
       using Mode = ProjectWindow::PlaybackScroller::Mode;
-      const Mode mode =
-         window.GetPlaybackScroller().GetMode();
+      const Mode mode = scroller.GetMode();
       const bool pinned = ( mode == Mode::Pinned || mode == Mode::Right );
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
@@ -192,6 +192,7 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          viewInfo.GetScreenEndTime() + tolerance);
 
       auto gAudioIO = AudioIO::Get();
+      const auto &scrubber = Scrubber::Get( *mProject );
 
       // BG: Scroll screen if option is set
       if( viewInfo.bUpdateTrackIndicator &&
@@ -201,7 +202,13 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
          auto mode = ProjectAudioManager::Get( *mProject ).GetLastPlayMode();
          if (!pinned &&
              mode != PlayMode::oneSecondPlay &&
-             !gAudioIO->IsPaused())
+             !gAudioIO->IsPaused() &&
+             // Bug 2656 allow scrolling when paused in 
+             // scrubbing/play-at-speed.
+             // ONLY do this additional test if scrubbing/play-at-speed
+             // is active.
+             (!scrubber.IsScrubbing() || !scrubber.IsPaused())
+            )
          {
             auto newPos = playPos;
             if (playPos < viewInfo.h) {

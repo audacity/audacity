@@ -28,9 +28,10 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "Export.h"
 
+#include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
 #include <wx/file.h>
 #include <wx/filectrl.h>
@@ -50,7 +51,7 @@
 
 #include "../widgets/FileDialog/FileDialog.h"
 
-#include "../FileFormats.h"
+#include "../src/AllThemeResources.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
@@ -60,16 +61,17 @@
 #include "../ProjectWindow.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../TimeTrack.h"
+#include "../Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"
 #include "../AColor.h"
-#include "../Dependencies.h"
 #include "../FileNames.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ProgressDialog.h"
+#include "../widgets/ErrorDialog.h"
+#include "../wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
@@ -222,7 +224,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
-         bool highQuality, MixerSpec *mixerSpec)
+         MixerSpec *mixerSpec)
 {
    WaveTrackConstArray inputTracks;
 
@@ -234,17 +236,15 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
    for (auto pTrack: range)
       inputTracks.push_back(
          pTrack->SharedPointer< const WaveTrack >() );
-   const auto timeTrack = *tracks.Any<const TimeTrack>().begin();
-   auto envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
                   // Throw, to stop exporting, if read fails:
                   true,
-                  Mixer::WarpOptions(envelope),
+                  Mixer::WarpOptions{tracks},
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,
-                  highQuality, mixerSpec);
+                  true, mixerSpec);
 }
 
 void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
@@ -466,6 +466,14 @@ bool Exporter::Process(bool selectedOnly, double t0, double t1)
    // Get rid of mixerspec
    mMixerSpec.reset();
 
+   if (success) {
+      if (mFormatName.empty()) {
+         gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
+      }
+
+      FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
+   }
+
    return success;
 }
 
@@ -564,10 +572,9 @@ bool Exporter::ExamineTracks()
          message = XO("All selected audio is muted.");
       else
          message = XO("All audio is muted.");
-      AudacityMessageBox(
-         message,
-         XO("Unable to export"),
-         wxOK | wxICON_INFORMATION);
+      ShowExportErrorDialog(
+         ":576",
+         message);
       return false;
    }
 
@@ -774,11 +781,6 @@ bool Exporter::GetFilename()
 //
 bool Exporter::CheckFilename()
 {
-   if( mFormatName.empty() )
-      gPrefs->Write(wxT("/Export/Format"), mPlugins[mFormat]->GetFormat(mSubFormat));
-
-   FileNames::UpdateDefaultPath(FileNames::Operation::Export, mFilename.GetPath());
-
    //
    // To be even safer, return a temporary file name based
    // on this one...
@@ -831,7 +833,7 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
    // Clean up ... should never happen
    mMixerSpec.reset();
 
-   // Detemine if exported file will be stereo or mono or multichannel,
+   // Determine if exported file will be stereo or mono or multichannel,
    // and if mixing will occur.
 
    auto downMix = ImportExportPrefs::ExportDownMixSetting.ReadEnum();
@@ -924,6 +926,8 @@ bool Exporter::ExportTracks()
             ::wxRemoveFile(mActualName.GetFullPath());
             ::wxRenameFile(mFilename.GetFullPath(), mActualName.GetFullPath());
          }
+         // Restore filename
+         mFilename = mActualName;
       }
       else {
          if ( ! success )
@@ -963,38 +967,35 @@ void Exporter::CreateUserPane(wxWindow *parent)
 {
    ShuttleGui S(parent, eIsCreating);
 
-   S.StartVerticalLay();
+   S.StartStatic(XO("Format Options"), 1);
    {
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.StartStatic(XO("Format Options"), 1);
+         mBook = S.Position(wxEXPAND).StartSimplebook();
          {
-            mBook = S.Position(wxEXPAND)
-               .StartSimplebook();
-
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
                   // Name of simple book page is not displayed
                   S.StartNotebookPage( {} );
-                  pPlugin->OptionsCreate(S, j);
+                  {
+                     pPlugin->OptionsCreate(S, j);
+                  }
                   S.EndNotebookPage();
                }
             }
-
-            S.EndSimplebook();
          }
-         S.EndStatic();
+         S.EndSimplebook();
+
+         auto b = safenew wxBitmapButton(S.GetParent(), wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
+         b->SetToolTip( XO("Help").Translation() );
+         b->SetLabel(XO("Help").Translation());       // for screen readers
+         S.Position(wxALIGN_BOTTOM | wxRIGHT | wxBOTTOM).AddWindow(b);
       }
       S.EndHorizontalLay();
    }
-   S.StartHorizontalLay(wxALIGN_RIGHT, 0);
-   {
-      S.AddStandardButtons(eHelpButton);
-   }
-   S.EndHorizontalLay();
-   S.EndVerticalLay();
+   S.EndStatic();
 
    return;
 }
@@ -1289,7 +1290,7 @@ double ExportMixerPanel::Distance( wxPoint &a, wxPoint &b )
    return sqrt( pow( a.x - b.x, 2.0 ) + pow( a.y - b.y, 2.0 ) );
 }
 
-//checks if p is on the line connecting la, lb with tolerence
+//checks if p is on the line connecting la, lb with tolerance
 bool ExportMixerPanel::IsOnLine( wxPoint p, wxPoint la, wxPoint lb )
 {
    return Distance( p, la ) + Distance( p, lb ) - Distance( la, lb ) < 0.1;
@@ -1495,4 +1496,43 @@ void ExportMixerDialog::OnMixerPanelHelp(wxCommandEvent & WXUNUSED(event))
 {
    HelpSystem::ShowHelp(this, wxT("Advanced_Mixing_Options"), true);
 }
+
+
+TranslatableString AudacityExportCaptionStr()
+{
+   return XO("Warning");
+}
+TranslatableString AudacityExportMessageStr()
+{
+   return XO("Unable to export.\nError %s");
+}
+
+
+// This creates a generic export error dialog
+// Untranslated ErrorCodes like "MP3:1882" are used since we don't yet have
+// a good user facing error message.  They allow us to 
+// distinguish where the error occurred, and we can update the landing
+// page as we learn more about when (if ever) these errors actually happen.
+// The number happens to at one time have been a line number, but all
+// we need from them is that they be distinct.
+void ShowExportErrorDialog(wxString ErrorCode,
+   TranslatableString message,
+   const TranslatableString& caption)
+{
+   ShowErrorDialog(nullptr,
+                  caption,
+                  message.Format( ErrorCode ),
+                  "Error:_Unable_to_export" // URL.
+                  );
+}
+
+void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)
+{
+   ShowErrorDialog(nullptr,
+      XO("Warning"),
+      FileException::WriteFailureMessage(fileName),
+      "Error:_Disk_full_or_not_writable"
+   );
+}
+
 

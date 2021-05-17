@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_PROJECT__
 #define __AUDACITY_PROJECT__
 
-#include "Audacity.h"
+
 
 #include "ClientData.h" // to inherit
 
@@ -27,14 +27,14 @@ class AudacityProject;
 
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 // For use by ProjectManager only:
-extern void SetActiveProject(AudacityProject * project);
+AUDACITY_DLL_API void SetActiveProject(AudacityProject * project);
 
 /// \brief an object of class AllProjects acts like a standard library
 /// container, but refers to a global array of open projects.  So you can
 /// iterate easily over shared pointers to them with range-for :
 /// for (auto pProject : AllProjects{}) { ... }
 /// The pointers are never null.
-class AllProjects
+class AUDACITY_DLL_API AllProjects
 {
    // Use shared_ptr to projects, because elsewhere we need weak_ptr
    using AProjectHolder = std::shared_ptr< AudacityProject >;
@@ -81,12 +81,12 @@ private:
 
 // Container of various objects associated with the project, which is
 // responsible for destroying them
-using AttachedObjects = ClientData::Site<
+using AttachedProjectObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
 // Container of pointers to various windows associated with the project, which
 // is not responsible for destroying them -- wxWidgets handles that instead
-using AttachedWindows = ClientData::Site<
+using AttachedProjectWindows = ClientData::Site<
    AudacityProject, wxWindow, ClientData::SkipCopying, ClientData::BarePtr
 >;
 
@@ -106,13 +106,13 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 /// the cooperating attached objects.
 class AUDACITY_DLL_API AudacityProject final
    : public wxEvtHandler
-   , public AttachedObjects
-   , public AttachedWindows
+   , public AttachedProjectObjects
+   , public AttachedProjectWindows
    , public std::enable_shared_from_this<AudacityProject>
 {
  public:
-   using AttachedObjects = ::AttachedObjects;
-   using AttachedWindows = ::AttachedWindows;
+   using AttachedObjects = ::AttachedProjectObjects;
+   using AttachedWindows = ::AttachedProjectWindows;
 
    AudacityProject();
    virtual ~AudacityProject();
@@ -138,13 +138,20 @@ class AUDACITY_DLL_API AudacityProject final
    const wxString &GetProjectName() const;
    void SetProjectName(const wxString &name);
 
- private:
+   // Used exclusively in batch mode, this allows commands to remember
+   // and use the initial import path
+   FilePath GetInitialImportPath() const;
+   void SetInitialImportPath(const FilePath &path);
+
+private:
 
    // The project's name
    wxString mName;
 
    static int mProjectCounter;// global counter.
    int mProjectNo; // count when this project was created.
+
+   FilePath mInitialImportPath;
 
  public:
    bool mbBusyImporting{ false }; // used to fix bug 584

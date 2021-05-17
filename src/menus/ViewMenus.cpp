@@ -1,5 +1,4 @@
-#include "../Audacity.h"
-#include "../Experimental.h"
+
 
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
@@ -334,6 +333,23 @@ void OnShowClipping(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
+void OnShowNameOverlay(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &commandManager = CommandManager::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+
+   bool checked = !gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), 0L);
+   gPrefs->Write(wxT("/GUI/ShowTrackNameInWaveform"), checked);
+   gPrefs->Flush();
+   commandManager.Check(wxT("ShowTrackNameInWaveform"), checked);
+
+   wxTheApp->AddPendingEvent(wxCommandEvent{
+      EVT_PREFS_UPDATE, ShowTrackNameInWaveformPrefsID() });
+
+   trackPanel.Refresh(false);
+}
+
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 void OnShowEffectsRack(const CommandContext &context )
 {
@@ -442,6 +458,9 @@ BaseItemSharedPtr ViewMenu()
          Command( wxT("ShowExtraMenus"), XXO("&Extra Menus (on/off)"),
             FN(OnShowExtraMenus), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
+         Command( wxT("ShowTrackNameInWaveform"), XXO("Track &Name (on/off)"),
+            FN(OnShowNameOverlay), AlwaysEnabledFlag,
+            Options{}.CheckTest( wxT("/GUI/ShowTrackNameInWaveform"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
             FN(OnShowClipping), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )

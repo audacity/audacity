@@ -21,7 +21,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Mix.h"
 
 #include <math.h>
@@ -40,7 +40,7 @@
 #include "widgets/ProgressDialog.h"
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
+void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
                   double rate, sampleFormat format,
                   double startTime, double endTime,
                   WaveTrack::Holder &uLeft, WaveTrack::Holder &uRight)
@@ -48,7 +48,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    uLeft.reset(), uRight.reset();
 
    // This function was formerly known as "Quick Mix".
-   bool mono = false;   /* flag if output can be mono without loosing anything*/
+   bool mono = false;   /* flag if output can be mono without losing anything*/
    bool oneinput = false;  /* flag set to true if there is only one input track
                               (mono or stereo) */
 
@@ -114,6 +114,7 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    if (oneinput)
       mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
    else
+      /* i18n-hint: noun, means a track, made by mixing other tracks */
       mixLeft->SetName(_("Mix"));
    mixLeft->SetOffset(mixStartTime);
 
@@ -143,11 +144,10 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
       endTime = mixEndTime;
    }
 
-   auto timeTrack = *tracks->Any<TimeTrack>().begin();
    Mixer mixer(waveArray,
       // Throw to abort mix-and-render if read fails:
       true,
-      Mixer::WarpOptions(timeTrack ? timeTrack->GetEnvelope() : nullptr),
+      Mixer::WarpOptions{*tracks},
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
 
@@ -204,6 +204,17 @@ void MixAndRender(TrackList *tracks, TrackFactory *trackFactory,
    }
 }
 
+Mixer::WarpOptions::WarpOptions(const TrackList &list)
+: minSpeed(0.0), maxSpeed(0.0)
+{
+   auto timeTrack = *(list.Any<const TimeTrack>().begin());
+   envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
+}
+
+Mixer::WarpOptions::WarpOptions(const BoundedEnvelope *e)
+    : envelope(e), minSpeed(0.0), maxSpeed(0.0)
+ {}
+
 Mixer::WarpOptions::WarpOptions(double min, double max)
    : minSpeed(min), maxSpeed(max)
 {
@@ -230,8 +241,10 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
              double startTime, double stopTime,
              unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
              double outRate, sampleFormat outFormat,
-             bool highQuality, MixerSpec *mixerSpec)
+             bool highQuality, MixerSpec *mixerSpec, bool applyTrackGains)
    : mNumInputTracks { inputTracks.size() }
+
+   , mApplyTrackGains{ applyTrackGains }
 
    // This is the number of samples grabbed in one go from a track
    // and placed in a queue, when mixing with resampling.
@@ -241,6 +254,9 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
 
    , mNumChannels{ numOutChannels }
    , mGains{ mNumChannels }
+
+   , mFormat{ outFormat }
+   , mRate{ outRate }
 
    , mMayThrow{ mayThrow }
 {
@@ -260,10 +276,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    mTime = startTime;
    mBufferSize = outBufferSize;
    mInterleaved = outInterleaved;
-   mRate = outRate;
    mSpeed = 1.0;
-   mFormat = outFormat;
-   mApplyTrackGains = true;
    if( mixerSpec && mixerSpec->GetNumChannels() == mNumChannels &&
          mixerSpec->GetNumTracks() == mNumInputTracks )
       mMixerSpec = mixerSpec;
@@ -285,7 +298,8 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
       mBuffer[c].Allocate(mInterleavedBufferSize, mFormat);
       mTemp[c].Allocate(mInterleavedBufferSize, floatSample);
    }
-   mFloatBuffer = Floats{ mInterleavedBufferSize };
+   // PRL:  Bug2536: see other comments below
+   mFloatBuffer = Floats{ mInterleavedBufferSize + 1 };
 
    // But cut the queue into blocks of this finer size
    // for variable rate resampling.  Each block is resampled at some
@@ -338,11 +352,6 @@ void Mixer::MakeResamplers()
 {
    for (size_t i = 0; i < mNumInputTracks; i++)
       mResample[i] = std::make_unique<Resample>(mHighQuality, mMinFactor[i], mMaxFactor[i]);
-}
-
-void Mixer::ApplyTrackGains(bool apply)
-{
-   mApplyTrackGains = apply;
 }
 
 void Mixer::Clear()
@@ -511,11 +520,18 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
       }
 
       auto results = pResample->Process(factor,
-                                      &queue[*queueStart],
-                                      thisProcessLen,
-                                      last,
-                                      &mFloatBuffer[out],
-                                      mMaxOut - out);
+         &queue[*queueStart],
+         thisProcessLen,
+         last,
+         // PRL:  Bug2536: crash in soxr happened on Mac, sometimes, when
+         // mMaxOut - out == 1 and &mFloatBuffer[out + 1] was an unmapped
+         // address, because soxr, strangely, fetched an 8-byte (misaligned!)
+         // value from &mFloatBuffer[out], but did nothing with it anyway,
+         // in soxr_output_no_callback.
+         // Now we make the bug go away by allocating a little more space in
+         // the buffer than we need.
+         &mFloatBuffer[out],
+         mMaxOut - out);
 
       const auto input_used = results.first;
       *queueStart += input_used;

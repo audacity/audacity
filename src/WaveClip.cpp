@@ -21,10 +21,9 @@
 
 #include "WaveClip.h"
 
-#include "Experimental.h"
+
 
 #include <math.h>
-#include <functional>
 #include <vector>
 #include <wx/log.h>
 
@@ -211,8 +210,8 @@ WaveClip::~WaveClip()
 {
 }
 
+/*! @excsafety{No-fail} */
 void WaveClip::SetOffset(double offset)
-// NOFAIL-GUARANTEE
 {
     mOffset = offset;
     mEnvelope->SetOffset(mOffset);
@@ -224,14 +223,14 @@ bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
    return mSequence->Get(buffer, format, start, len, mayThrow);
 }
 
-void WaveClip::SetSamples(samplePtr buffer, sampleFormat format,
+/*! @excsafety{Strong} */
+void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len)
-// STRONG-GUARANTEE
 {
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    mSequence->SetSamples(buffer, format, start, len);
 
-   // use NOFAIL-GUARANTEE
+   // use No-fail-guarantee
    MarkChanged();
 }
 
@@ -1159,21 +1158,23 @@ float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
    return mSequence->GetRMS(s0, s1-s0, mayThrow);
 }
 
-void WaveClip::ConvertToSampleFormat(sampleFormat format)
+void WaveClip::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
 {
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get converted as needed when they are expanded.
 
-   auto bChanged = mSequence->ConvertToSampleFormat(format);
+   auto bChanged = mSequence->ConvertToSampleFormat(format, progressReport);
    if (bChanged)
       MarkChanged();
 }
 
+/*! @excsafety{No-fail} */
 void WaveClip::UpdateEnvelopeTrackLen()
-// NOFAIL-GUARANTEE
 {
-   mEnvelope->SetTrackLen
-      ((mSequence->GetNumSamples().as_double()) / mRate, 1.0 / GetRate());
+   auto len = (mSequence->GetNumSamples().as_double()) / mRate;
+   if (len != mEnvelope->GetTrackLen())
+      mEnvelope->SetTrackLen(len, 1.0 / GetRate());
 }
 
 void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
@@ -1186,27 +1187,24 @@ void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
       *s0 = sampleCount( floor(((t0 - mOffset) * mRate) + 0.5) );
 }
 
-void WaveClip::ClearDisplayRect() const
+/*! @excsafety{Strong} */
+std::shared_ptr<SampleBlock> WaveClip::AppendNewBlock(
+   samplePtr buffer, sampleFormat format, size_t len)
 {
-   mDisplayRect.x = mDisplayRect.y = -1;
-   mDisplayRect.width = mDisplayRect.height = -1;
+   return mSequence->AppendNewBlock( buffer, format, len );
 }
 
-void WaveClip::SetDisplayRect(const wxRect& r) const
+/*! @excsafety{Strong} */
+void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
 {
-   mDisplayRect = r;
+   mSequence->AppendSharedBlock( pBlock );
 }
 
-void WaveClip::GetDisplayRect(wxRect* r)
-{
-   *r = mDisplayRect;
-}
-
-bool WaveClip::Append(samplePtr buffer, sampleFormat format,
-                      size_t len, unsigned int stride /* = 1 */)
-// PARTIAL-GUARANTEE in case of exceptions:
-// Some prefix (maybe none) of the buffer is appended, and no content already
-// flushed to disk is lost.
+/*! @excsafety{Partial}
+ -- Some prefix (maybe none) of the buffer is appended,
+and no content already flushed to disk is lost. */
+bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
+                      size_t len, unsigned int stride)
 {
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
    bool result = false;
@@ -1219,7 +1217,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       mAppendBuffer.Allocate(maxBlockSize, seqFormat);
 
    auto cleanup = finally( [&] {
-      // use NOFAIL-GUARANTEE
+      // use No-fail-guarantee
       UpdateEnvelopeTrackLen();
       MarkChanged();
    } );
@@ -1227,11 +1225,11 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    for(;;) {
       if (mAppendBufferLen >= blockSize) {
          // flush some previously appended contents
-         // use STRONG-GUARANTEE
+         // use Strong-guarantee
          mSequence->Append(mAppendBuffer.ptr(), seqFormat, blockSize);
          result = true;
 
-         // use NOFAIL-GUARANTEE for rest of this "if"
+         // use No-fail-guarantee for rest of this "if"
          memmove(mAppendBuffer.ptr(),
                  mAppendBuffer.ptr() + blockSize * SAMPLE_SIZE(seqFormat),
                  (mAppendBufferLen - blockSize) * SAMPLE_SIZE(seqFormat));
@@ -1242,7 +1240,7 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
       if (len == 0)
          break;
 
-      // use NOFAIL-GUARANTEE for rest of this "for"
+      // use No-fail-guarantee for rest of this "for"
       wxASSERT(mAppendBufferLen <= maxBlockSize);
       auto toCopy = std::min(len, maxBlockSize - mAppendBufferLen);
 
@@ -1261,11 +1259,12 @@ bool WaveClip::Append(samplePtr buffer, sampleFormat format,
    return result;
 }
 
+/*! @excsafety{Mixed} */
+/*! @excsafety{No-fail} -- The clip will be in a flushed state. */
+/*! @excsafety{Partial}
+-- Some initial portion (maybe none) of the append buffer of the
+clip gets appended; no previously flushed contents are lost. */
 void WaveClip::Flush()
-// NOFAIL-GUARANTEE that the clip will be in a flushed state.
-// PARTIAL-GUARANTEE in case of exceptions:
-// Some initial portion (maybe none) of the append buffer of the
-// clip gets appended; no previously flushed contents are lost.
 {
    //wxLogDebug(wxT("WaveClip::Flush"));
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
@@ -1277,7 +1276,7 @@ void WaveClip::Flush()
          // Blow away the append buffer even in case of failure.  May lose some
          // data but don't leave the track in an un-flushed state.
 
-         // Use NOFAIL-GUARANTEE of these steps.
+         // Use No-fail-guarantee of these steps.
          mAppendBufferLen = 0;
          UpdateEnvelopeTrackLen();
          MarkChanged();
@@ -1366,8 +1365,8 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("waveclip"));
 }
 
+/*! @excsafety{Strong} */
 void WaveClip::Paste(double t0, const WaveClip* other)
-// STRONG-GUARANTEE
 {
    const bool clipNeedsResampling = other->mRate != mRate;
    const bool clipNeedsNewFormat =
@@ -1409,10 +1408,10 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    sampleCount s0;
    TimeToSamplesClip(t0, &s0);
 
-   // Assume STRONG-GUARANTEE from Sequence::Paste
+   // Assume Strong-guarantee from Sequence::Paste
    mSequence->Paste(s0, pastedClip->mSequence.get());
 
-   // Assume NOFAIL-GUARANTEE in the remaining
+   // Assume No-fail-guarantee in the remaining
    MarkChanged();
    auto sampleTime = 1.0 / GetRate();
    mEnvelope->PasteEnvelope
@@ -1423,17 +1422,17 @@ void WaveClip::Paste(double t0, const WaveClip* other)
       mCutLines.push_back(std::move(holder));
 }
 
+/*! @excsafety{Strong} */
 void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
-// STRONG-GUARANTEE
 {
    sampleCount s0;
    TimeToSamplesClip(t, &s0);
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    GetSequence()->InsertSilence(s0, slen);
 
-   // use NOFAIL-GUARANTEE
+   // use No-fail-guarantee
    OffsetCutLines(t, len);
 
    const auto sampleTime = 1.0 / GetRate();
@@ -1456,25 +1455,25 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    MarkChanged();
 }
 
+/*! @excsafety{Strong} */
 void WaveClip::AppendSilence( double len, double envelopeValue )
-// STRONG-GUARANTEE
 {
    auto t = GetEndTime();
    InsertSilence( t, len, &envelopeValue );
 }
 
+/*! @excsafety{Strong} */
 void WaveClip::Clear(double t0, double t1)
-// STRONG-GUARANTEE
 {
    sampleCount s0, s1;
 
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    GetSequence()->Delete(s0, s1-s0);
 
-   // use NOFAIL-GUARANTEE in the remaining
+   // use No-fail-guarantee in the remaining
 
    // msmeyer
    //
@@ -1524,10 +1523,10 @@ void WaveClip::Clear(double t0, double t1)
    MarkChanged();
 }
 
+/*! @excsafety{Weak}
+-- This WaveClip remains destructible in case of AudacityException.
+But some cutlines may be deleted */
 void WaveClip::ClearAndAddCutLine(double t0, double t1)
-// WEAK-GUARANTEE
-// this WaveClip remains destructible in case of AudacityException.
-// But some cutlines may be deleted
 {
    if (t0 > GetEndTime() || t1 < GetStartTime())
       return; // time out of bounds
@@ -1565,7 +1564,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    TimeToSamplesClip(t0, &s0);
    TimeToSamplesClip(t1, &s1);
 
-   // use WEAK-GUARANTEE
+   // use Weak-guarantee
    GetSequence()->Delete(s0, s1-s0);
 
    // Collapse envelope
@@ -1598,8 +1597,8 @@ bool WaveClip::FindCutLine(double cutLinePosition,
    return false;
 }
 
+/*! @excsafety{Strong} */
 void WaveClip::ExpandCutLine(double cutLinePosition)
-// STRONG-GUARANTEE
 {
    auto end = mCutLines.end();
    auto it = std::find_if( mCutLines.begin(), end,
@@ -1609,7 +1608,7 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
 
    if ( it != end ) {
       auto cutline = it->get();
-      // assume STRONG-GUARANTEE from Paste
+      // assume Strong-guarantee from Paste
 
       // Envelope::Paste takes offset into account, WaveClip::Paste doesn't!
       // Do this to get the right result:
@@ -1646,8 +1645,8 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
    return false;
 }
 
+/*! @excsafety{No-fail} */
 void WaveClip::OffsetCutLines(double t0, double len)
-// NOFAIL-GUARANTEE
 {
    for (const auto &cutLine : mCutLines)
    {
@@ -1671,8 +1670,8 @@ void WaveClip::SetRate(int rate)
    MarkChanged();
 }
 
+/*! @excsafety{Strong} */
 void WaveClip::Resample(int rate, ProgressDialog *progress)
-// STRONG-GUARANTEE
 {
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get resampled as needed when they are expanded.
@@ -1740,11 +1739,13 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
 
    if (error)
       throw SimpleMessageBoxException{
-         XO("Resampling failed.")
+         XO("Resampling failed."),
+         XO("Warning"),
+         "Error:_Resampling"
       };
    else
    {
-      // Use NOFAIL-GUARANTEE in these steps
+      // Use No-fail-guarantee in these steps
 
       // Invalidate wave display cache
       mWaveCache = std::make_unique<WaveCache>();

@@ -16,10 +16,8 @@ It \TODO: description
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
-#include "ScoreAlignDialog.h"
 
-#include "../Experimental.h"
+#include "ScoreAlignDialog.h"
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 
@@ -35,7 +33,6 @@ It \TODO: description
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/image.h>
-#include <wx/dcmemory.h>
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>

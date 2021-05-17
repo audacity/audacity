@@ -253,6 +253,7 @@ functions assume durations are always positive.")))
 (load "dspprims.lsp" :verbose NIL)
 (load "fileio.lsp" :verbose NIL)
 
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; OSCILATORS
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -266,6 +267,7 @@ functions assume durations are always positive.")))
     (error "In BUILD-HARMONIC, harmonic number should be less than half the table size"
     (list n table-size)))
   (snd-sine 0 n table-size 1))
+
 
 (setf *SINE-TABLE* (list (build-harmonic 1 2048)
              (hz-to-step 1.0)
@@ -666,7 +668,7 @@ loop
     (ny:error "SAMPLER" 2 '((SOUND) "modulation") modulation))
   (ny:assert-sample "SAMPLER" 3 "table" sample)
   (ny:typecheck (not (integerp npoints))
-    (ny:error "BUZZ" 3 '((INTEGER) "npoints") npoints))
+    (ny:error "SAMPLER" 3 '((INTEGER) "npoints") npoints))
   (let ((samp (car sample))
         (samp-pitch (cadr sample))
         (samp-loop-start (caddr sample))
@@ -920,8 +922,8 @@ loop
      (let* ((len (length x))
         (result (make-array len)))
         (dotimes (i len)
-        (setf (aref result i) 
-              (snd-exp (snd-scale ln10over20 (aref x i)))))
+          (setf (aref result i) 
+                (snd-exp (snd-scale ln10over20 (aref x i)))))
         result))
     (t
      (snd-exp (snd-scale ln10over20 x)))))
@@ -936,8 +938,8 @@ loop
      (let* ((len (length x))
         (result (make-array len)))
         (dotimes (i len)
-        (setf (aref result i) 
-              (snd-scale (/ 1.0 ln10over20) (snd-log (aref x i)))))
+          (setf (aref result i) 
+                (snd-scale (/ 1.0 ln10over20) (snd-log (aref x i)))))
         result))
     (t
      (snd-scale (/ 1.0 ln10over20) (snd-log x)))))
@@ -1034,7 +1036,7 @@ loop
            (setf start (- start offset))
            (setf stop (- stop offset))))
     (snd-xform sound (snd-srate sound) start-time start stop 1.0)))
-     
+
 
 (defun local-to-global (local-time)
   (ny:typecheck (not (numberp local-time))
@@ -1063,6 +1065,7 @@ loop
                 (ny:error "LOUD-ABS" 1 number-anon ld))
            (list ld))
      ,s))
+
 
 ;(defun must-be-sound (x)
 ; (cond ((soundp x) x)
@@ -1304,8 +1307,8 @@ loop
      (let* ((len (length sound))
         (result (make-array len)))
         (dotimes (i len)
-        (setf (aref result i)
-              (cue-sound (aref sound i))))
+          (setf (aref result i)
+                (cue-sound (aref sound i))))
         result))
     (t
      (cue-sound sound))))
@@ -1426,7 +1429,7 @@ loop
 ;;
 ;; Time transformation: the envelope is not warped; the start time and
 ;; stop times are warped to global time.  Then the value of *SUSTAIN* at
-;; the begining of the envelope is used to determing absolute duration.
+;; the beginning of the envelope is used to determing absolute duration.
 ;; Since PWL is ultimately called to create the envelope, we must use
 ;; ABS-ENV to prevent any further transforms inside PWL.  We use
 ;; (AT global-start ...) inside ABS-ENV so that the final result has 
@@ -1458,36 +1461,80 @@ loop
       duration)))
 
 
+(defun to-mono (sound)
+  (ny:typecheck (not (or (soundp sound) (multichannel-soundp sound)))
+    (ny:error "TO-MONO" 1 '((SOUND) NIL) sound t))
+  (let ((s sound))
+    (cond ((arrayp sound)
+           (setf s (aref sound 0))  ;; ANY channel opens the gate
+            (dotimes (i (1- (length sound)))
+             (setf s (nyq:add-2-sounds s (aref sound (1+ i)))))))
+    s))
+
+
 (defun gate (sound lookahead risetime falltime floor threshold 
              &optional (source "GATE"))
-    (ny:typecheck (not (soundp sound))
-      (ny:error "GATE" 1 '((SOUND) "sound") sound))
-    (ny:typecheck (not (numberp lookahead))
-      (ny:error "GATE" 2 '((NUMBER) "lookahead") lookahead))
-    (ny:typecheck (not (numberp risetime))
-      (ny:error "GATE" 3 '((NUMBER) "risetime") risetime))
-    (ny:typecheck (not (numberp falltime))
-      (ny:error "GATE" 4 '((NUMBER) "falltime") falltime))
-    (ny:typecheck (not (numberp floor))
-      (ny:error "GATE" 5 '((NUMBER) "floor") floor))
-    (ny:typecheck (not (numberp threshold))
-      (ny:error "GATE" 6 '((NUMBER) "threshold") threshold))
-    (cond ((< lookahead risetime)
-           (format t "WARNING: lookahead must be greater than risetime in ~A function; setting lookahead to ~A.\n" source risetime)
-           (setf lookahead risetime)))
-    (cond ((< risetime 0)
-           (format t "WARNING: risetime must be greater than zero in ~A function; setting risetime to 0.0.\n" source)
-           (setf risetime 0.0)))
-    (cond ((< falltime 0)
-           (format t "WARNING: falltime must be greater than zero in ~A function; setting falltime to 0.0.\n" source)
-           (setf falltime 0.0)))
-    (cond ((< floor 0)
-           (format t "WARNING: floor must be greater than zero in ~A function; setting floor to 0.0.\n" source)
-           (setf floor 0.0)))
-    (let ((s (snd-gate (seq (cue sound) (abs-env (s-rest lookahead)))
-                       lookahead risetime falltime floor threshold)))
-      (snd-xform s (snd-srate s) (snd-t0 sound)
-                 (+ (snd-t0 sound) lookahead) MAX-STOP-TIME 1.0)))
+  ;(ny:typecheck (not (soundp sound))
+  (ny:typecheck (not (or (soundp sound) (multichannel-soundp sound)))
+    (ny:error source 1 '((SOUND) "sound") sound t))
+  (ny:typecheck (not (numberp lookahead))
+    (ny:error source 2 '((NUMBER) "lookahead") lookahead))
+  (ny:typecheck (not (numberp risetime))
+    (ny:error source 3 '((NUMBER) "risetime") risetime))
+  (ny:typecheck (not (numberp falltime))
+    (ny:error source 4 '((NUMBER) "falltime") falltime))
+  (ny:typecheck (not (numberp floor))
+    (ny:error source 5 '((NUMBER) "floor") floor))
+  (ny:typecheck (not (numberp threshold))
+    (ny:error source 6 '((NUMBER) "threshold") threshold))
+  (cond ((< lookahead risetime)
+         (format t "WARNING: lookahead (~A) ~A (~A) in ~A ~A ~A.\n"
+                 lookahead "must be greater than risetime" risetime
+                 source "function; setting lookahead to" risetime)
+         (setf lookahead risetime)))
+  (cond ((< risetime 0)
+         (format t "WARNING: risetime (~A) ~A ~A ~A\n" risetime
+                 "must be greater than zero in" source
+                 "function; setting risetime to 0.01.")
+         (setf risetime 0.01)))
+  (cond ((< falltime 0)
+         (format t "WARNING: ~A ~A function; setting falltime to 0.01.\n"
+                 "falltime must be greater than zero in" source)
+         (setf falltime 0.01)))
+  (cond ((< floor 0.001)
+         (format t "WARNING: ~A ~A function; setting floor to 0.001.\n"
+                 "floor must be greater than zero in" source)
+         (setf floor 0.001)))
+  (let (s) ;; s becomes sound after collapsing to one channel
+    (cond ((arrayp sound)           ;; use s-max over all channels so that
+           (setf s (aref sound 0))  ;; ANY channel opens the gate
+           (dotimes (i (1- (length sound)))
+             (setf s (s-max s (aref sound (1+ i))))))
+          (t (setf s sound)))
+    (setf s (snd-gate (seq (cue s)
+                           (stretch-abs 1.0 (s-rest lookahead)))
+                      lookahead risetime falltime floor threshold))
+    ;; snd-gate delays everything by lookahead, so this will slide the sound
+    ;; earlier by lookahead and delete the first lookahead samples
+    (prog1 (snd-xform s (snd-srate s) (snd-t0 s)
+                      (+ (snd-t0 s) lookahead) MAX-STOP-TIME 1.0)
+           ;; This is *really* tricky. Normally, we would return now and
+           ;; the GC would free s and sound which are local variables. The
+           ;; only references to the sounds once stored in s and sound are
+           ;; lazy unit generators that will free samples almost as soon as
+           ;; they are computed, so no samples will accumulate. But wait! The
+           ;; 2nd SEQ expression with S-REST can reference s and sound because
+           ;; (due to macro magic) a closure is constructed to hold them until
+           ;; the 2nd SEQ expression is evaluted. It's almost as though s and
+           ;; sound are back to being global variables. Since the closure does
+           ;; not actually use either s or sound, we can clear them (we are
+           ;; still in the same environment as the closures packed inside SEQ,
+           ;; so s and sound here are still the same variables as the ones in
+           ;; the closure. Note that the other uses of s and sound already made
+           ;; copies of the sounds, and s and sound are merely references to
+           ;; them -- setting to nil will not alter the immutable lazy sound
+           ;; we are returning. Whew!
+           (setf s nil) (setf sound nil))))
 
 
 ;; (osc-note step &optional duration env sust volume sound)
@@ -2024,7 +2071,7 @@ loop
 (defmacro simrep (pair sound)
   `(let (_snds)
      (dotimes ,pair (push ,sound _snds))
-     (sim-list _snds "SIMREP")))
+       (sim-list _snds "SIMREP")))
 
 (defun sim (&rest snds)
   (sim-list snds "SIM or SUM (or + in SAL)"))
@@ -2213,7 +2260,8 @@ loop
 
 ;; The new (Nyquist 3.15) version:
 (defun multichan-expand-new (src fn types &rest args)
-  (let (len newlen result prev typ (index 0) nonsnd) ; len is a flag as well as a count
+  (let (chan len newlen result prev typ (index 0) nonsnd)
+    ; len is a flag as well as a count
     (dolist (a args)
       (setf typ (car types) types (cdr types))
       ;; we only report argument position when there is more than one.
@@ -2298,7 +2346,7 @@ loop
 
 ;; SELECT-IMPLEMENTATION-1-2 -- 1 sound arg, 2 selectors
 ;;
-;; choose implemenation according to args 2 and 3. In this implementation,
+;; choose implementation according to args 2 and 3. In this implementation,
 ;; since we have two arguments to test for types, we return from prog
 ;; if we find good types. That way, we can fall through the decision tree
 ;; and all paths lead to one call to ERROR if good types are not found.

@@ -8,7 +8,7 @@
 ;;           | errors
 ;; 13-Jan-92 | [1.2] <jmn> reformatted and recommented
 ;;************
-
+
 ;;****************
 ;; depended-on-in-inner-loop - test if variables updated in inner loop
 ;;****************
@@ -26,8 +26,8 @@
 
 ;;****************
 ;; fixup-depends-prime - write code to update depend variables
-;; 	this code is only run the first time the suspension
-;;	is invoked
+;;      this code is only run the first time the suspension
+;;      is invoked
 ;;****************
 (defun fixup-depends-prime (alg stream name indent var-name)
   (let ((depends (get-slot alg 'depends)))
@@ -47,15 +47,15 @@
 
 ;;****************
 ;; fixup-depends-prime-decls - write declarations for temp depend variables
-;; 	this code is only run the first time the suspension
-;;	is invoked
+;;      this code is only run the first time the suspension
+;;      is invoked
 ;;****************
 (defun fixup-depends-prime-decls (alg stream name)
   (let ((depends (get-slot alg 'depends)))
     (dolist (dep depends)
       (cond ((equal name (cadr dep))
              (cond ((eq (cadddr dep) 'TEMP)
-                    (format stream "\t    ~A ~A;~%" (car (cddddr dep))
+                    (format stream "            ~A ~A;~%" (car (cddddr dep))
                                    (car dep)))))))))
 
 (print 'fixup-depends-prime-decls)
@@ -63,8 +63,8 @@
 
 ;;****************
 ;; fixup-substitutions-prime - substitute susp-><var> for <var> for each 
-;;	state variable in code, also substitute var-name for name
-;;	(this is the depended-on value)
+;;      state variable in code, also substitute var-name for name
+;;      (this is the depended-on value)
 ;;****************
 (defun fixup-substitutions-prime (alg code name var-name)
   (dolist (state (get-slot alg 'state))
@@ -100,9 +100,9 @@
 
 ;;****************
 ;; fixup-depends - write code to declare and update depend variables
-;; 	this is called at declaration time (the point where 
-;;	declarations should be output), but also generates code
-;; 	to be output after the depended-on variable is updated
+;;      this is called at declaration time (the point where 
+;;      declarations should be output), but also generates code
+;;      to be output after the depended-on variable is updated
 ;;****************
 (defun fixup-depends (alg stream name)
   (format stream "/* fixup-depends ~A */~%" name)
@@ -112,16 +112,16 @@
     (dolist (dep depends)
       (cond ((equal name (cadr dep))
              (cond ((eq (cadddr dep) 'TEMP)
-                    (format stream "\t\t~A ~A; ~%" (car (cddddr dep))
-                                (car dep))
+                    (format stream
+                     "                ~A ~A; ~%" (car (cddddr dep)) (car dep))
                     (setf fixup-code
-                          (format nil "~A\t\t~A = ~A;~%"
+                          (format nil "~A                ~A = ~A;~%"
                                   fixup-code (car dep) 
                                   (fixup-substitutions alg
-                                   (caddr dep) name var-name))))
+                                    (caddr dep) name var-name))))
                    (t
                     (setf fixup-code
-                          (format nil "~A\t\t~A_reg = ~A;~%"
+                          (format nil "~A                ~A_reg = ~A;~%"
                                   fixup-code (car dep)
                                   (fixup-substitutions alg
                                    (caddr dep) name var-name))))))))
@@ -132,8 +132,8 @@
 
 ;;****************
 ;; fixup-substitutions - substitute <var>_reg for <var> for each 
-;;	state variable in code, also substitute var-name for name
-;;	(this is the depended-on value)
+;;      state variable in code, also substitute var-name for name
+;;      (this is the depended-on value)
 ;;****************
 (defun fixup-substitutions (alg code name var-name)
   (dolist (state (get-slot alg 'state))
@@ -212,7 +212,7 @@
 ;(defun write-depend-decls (alg stream)
 ;  (dolist (dep (get-slot alg 'depends))
 ;    (cond ((eq (cadddr dep) 'TEMP)
-;	   (format stream "\t~A ~A; ~%" (car (cddddr dep)) (car dep))))))
+;          (format stream "        ~A ~A; ~%" (car (cddddr dep)) (car dep))))))
 ;--------
 
 (defun write-depend-decls (alg stream interp sound-names step-function)
@@ -248,7 +248,7 @@
   ; yes, at least sometimes, so we're leaving it in
   ; "atonev.alg" is a good test case to prove you can't comment this out
   (write-depend-decls alg stream interp sound-names step-function)
-  (format stream "\tsusp->started = true;~%")
+  (format stream "        susp->started = true;~%")
 
   ;------------------------------
   ; for each method
@@ -264,32 +264,34 @@
              ;                                          NAME_cnt);
              ; <fixup depends variables> (if a step function)
              ;--------------------
-             (format stream "\t~A(~A, ~A_ptr, ~A_cnt);~%"
+             (format stream "        ~A(~A, ~A_ptr, ~A_cnt);~%"
               (susp-check-fn name alg) name name name)
              (cond ((member (name-to-symbol name) internal-scaling)
                     (format stream
-                     "\tsusp->~A_x1_sample = (susp->~A_cnt--, *(susp->~A_ptr));~%"
+                     "        susp->~A_cnt--;~%        ~
+                              susp->~A_x1_sample = *(susp->~A_ptr);~%"
                      name name name))
                    (t
                     (format stream 
-                     "\tsusp->~A_x1_sample = susp_fetch_sample(~A, ~A_ptr, ~A_cnt);~%"
+                     "        susp->~A_x1_sample = ~
+                              susp_fetch_sample(~A, ~A_ptr, ~A_cnt);~%"
                     name name name name)))
              (setf is-step (member (name-to-symbol name) step-function))
              (cond (is-step
-                    (fixup-depends-prime alg stream name "\t"
+                    (fixup-depends-prime alg stream name "        "
                         (strcat "susp->" name "_x1_sample")))))
             ((eq method 'RAMP)
              ;--------------------
              ; susp->NAME_pHaSe = 1.0;
              ;--------------------
-             (format stream "\tsusp->~A_pHaSe = ~A;~%" name "1.0")))))
+             (format stream "        susp->~A_pHaSe = ~A;~%" name "1.0")))))
 
   ;--------------------
   ; *WATCH*
   ;       show_samples(2,susp->NAME_x2,0);
   ;--------------------
 ; (if *WATCH*
-;   (format stream "\tshow_samples(2,~A_x2,0);~%" name))
+;   (format stream "        show_samples(2,~A_x2,0);~%" name))
 
   ;--------------------
   ; }
@@ -303,20 +305,20 @@
 ;; show-samples-option
 ;;
 ;; Inputs:
-;;	stream: output stream for file
-;;	name: token to use for forming name
+;;      stream: output stream for file
+;;      name: token to use for forming name
 ;; Effect:
-;;	Writes sampling clause
+;;      Writes sampling clause
 ;;************
 (defun show-samples-option (stream name)
     ;----------------------------
-    ;	else
-    ;	   { /* just show NAME */
-    ;	    show_samples(1,NAME,NAME_ptr - NAME->samples); 
-    ;	   } /* just show NAME */
+    ;   else
+    ;      { /* just show NAME */
+    ;       show_samples(1,NAME,NAME_ptr - NAME->samples); 
+    ;      } /* just show NAME */
     ;----------------------------
-;  (format stream "\t    show_samples(1, ~A, 0);~%\t} else {~%" name)
-;  (format stream "\t    show_samples(1, ~A, ~A_ptr - ~A->samples);~%~%"
+;  (format stream "            show_samples(1, ~A, 0);~%        } else {~%" name)
+;  (format stream "            show_samples(1, ~A, ~A_ptr - ~A->samples);~%~%"
 ;          name name name)
 )
 
@@ -349,7 +351,7 @@
     ;     void NAME_<encoding>_fetch(a_susp, snd_list)
     ;   register pwl_susp_type a_susp;
     ;        snd_list_type snd_list;
-    ;	     {
+    ;        {
     ; ANSI:
     ;     void NAME_<encoding>_fetch(snd_susp_type a_susp,
     ;                                snd_list_type snd_list)
@@ -423,7 +425,7 @@
           (cond ((and (equal name (cadr dep))
                       (or (member method '(NONE SCALE))
                           interpolate-samples))
-                 (setf loop-prefix (format nil "~A\t    ~A = ~A;~%"
+                 (setf loop-prefix (format nil "~A            ~A = ~A;~%"
                                     loop-prefix (car dep) (caddr dep))))))))
 
     ;; computation of JOINT-DEPENDENCY, if applicable
@@ -434,7 +436,7 @@
                                         step-function)
              (dolist (stmt (cdr dep))
                 (setf joint-depend (strcat joint-depend 
-                                        "\t    " stmt "\n"))))))
+                                        "            " stmt "\n"))))))
 
     ; this computes some additional declarations
     (compute-inner-loop alg (strcat loop-prefix joint-depend
@@ -482,7 +484,7 @@
                        (format stream
                         "    ~A_x2_sample = *(susp->~A_ptr);~%" name name))
                       (t
-                	  (format stream
+                          (format stream
                         "    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
                         name name name))))
                ((eq method 'INTERP)
@@ -513,18 +515,18 @@
     ;----------------------------
     ;    while (cnt < max_sample_block_len)  { /* outer loop */
     ;      /* first compute how many samples to generate in inner loop: */
-    ;	   /* don't overflow the output sample block: */
+    ;      /* don't overflow the output sample block: */
     ;      togo = max_sample_block_len - cnt;
     ;----------------------------
     
     (format stream 
             "~%    while (cnt < max_sample_block_len) { /* outer loop */~%")
     (format stream 
-     "\t/* first compute how many samples to generate in inner loop: */~%")
+     "        /* first compute how many samples to generate in inner loop: */~%")
     (format stream
-     "\t/* don't overflow the output sample block: */~%")
+     "        /* don't overflow the output sample block: */~%")
     (format stream
-     "\ttogo = max_sample_block_len - cnt;~%~%")
+     "        togo = max_sample_block_len - cnt;~%~%")
 
     ;; this loop gets ready to execute the INNER-LOOP
     (dotimes (n (length interp))
@@ -542,12 +544,12 @@
                ;    togo = min(togo, susp->NAME_cnt);
                ;-----------------
                (format stream
-                "\t/* don't run past the ~A input sample block: */~%" name)
+                "        /* don't run past the ~A input sample block: */~%" name)
                (display "don't run past the ..." name (susp-check-fn name alg))
                (format stream
-                "\t~A(~A, ~A_ptr, ~A_cnt);~%"
+                "        ~A(~A, ~A_ptr, ~A_cnt);~%"
                 (susp-check-fn name alg) name name name)
-               (format stream "\ttogo = min(togo, susp->~A_cnt);~%~%" name))
+               (format stream "        togo = min(togo, susp->~A_cnt);~%~%" name))
               ((eq method 'INTERP))
               ((and interpolate-samples (eq method 'RAMP))
                 ;-----------------
@@ -564,46 +566,56 @@
                 ;     NAME_x2_sample = susp_current_sample(NAME, NAME_ptr);
                 ; }
                 ; /* NAME_n gets number of samples before phase exceeds 1.0: */
-                ; susp->NAME_n = 0.5 + (long) ((1.0 - susp->NAME_pHaSe) * susp->output_per_NAME);
-                ; togo = min(togo, susp->NAME_n);
+                ; susp->NAME_n = 0.5 + (int64_t) ((1.0 - susp->NAME_pHaSe) * susp->output_per_NAME);
+                ; togo = (int) min(togo, susp->NAME_n);
                 ; NAME_DeLtA = (sample_type) ((NAME_x2_sample - susp->NAME_x1_sample) *  susp->NAME_pHaSe_iNcR);
                 ; NAME_val = (sample_type) (susp->NAME_x1_sample * (1.0 - susp->NAME_pHaSe) +
                 ;      NAME_x2_sample * susp->NAME_pHaSe);
                 ;-----------------
                 (format stream
-                 "\t/* grab next ~A_x2_sample when phase goes past 1.0; */~%" name)
+                 "        /* grab next ~A_x2_sample when phase goes past ~
+                 1.0; */~%" name)
                 (format stream
-                 "\t/* we use ~A_n (computed below) to avoid roundoff errors: */~%" name)
-                (format stream "\tif (susp->~A_n <= 0) {~%" name)
-                (format stream "\t    susp->~A_x1_sample = ~A_x2_sample;~%"
-                               name name)
-                (format stream "\t    susp->~A_ptr++;~%" name);
-                (format stream "\t    susp_took(~A_cnt, 1);~%" name);
-                (format stream "\t    susp->~A_pHaSe -= 1.0;~%" name);
-                (format stream "\t    ~A(~A, ~A_ptr, ~A_cnt);~%"
+                 "        /* we use ~A_n (computed below) to avoid roundoff ~
+                 errors: */~%" name)
+                (format stream "        if (susp->~A_n <= 0) {~%" name)
+                (format stream "            susp->~A_x1_sample = ~
+                 ~A_x2_sample;~%" name name)
+                (format stream "            susp->~A_ptr++;~%" name);
+                (format stream "            susp_took(~A_cnt, 1);~%" name);
+                (format stream "            susp->~A_pHaSe -= 1.0;~%" name);
+                (format stream "            ~A(~A, ~A_ptr, ~A_cnt);~%"
                  (susp-check-fn name alg) name name name)
                 (cond ((member (name-to-symbol name) internal-scaling)
                        (format stream
-                        "\t    ~A_x2_sample = *(susp->~A_ptr);~%" name name))
+                               "            ~A_x2_sample = *(susp->~A_ptr);~%"
+                               name name))
                       (t
                        (format stream 
-                        "\t    ~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
+                        "            ~A_x2_sample = ~
+                        susp_current_sample(~A, ~A_ptr);~%"
                         name name name)))
                 (format stream
-                 "\t    /* ~A_n gets number of samples before phase exceeds 1.0: */~%"
+                 "            /* ~A_n gets number of samples before phase ~
+                                 exceeds 1.0: */~%"
                         name)
                 (format stream 
-                        "\t    susp->~A_n = (long) ((1.0 - susp->~A_pHaSe) *~%"
+                        "            susp->~A_n = (int64_t) ~
+                                     ((1.0 - susp->~A_pHaSe) *~%"
                         name name)
-                (format stream "\t\t\t\t\tsusp->output_per_~A);~%\t}~%" name)
-                (format stream "\ttogo = min(togo, susp->~A_n);~%" name)
-                (format stream "\t~A_DeLtA = (sample_type) ((~A_x2_sample - susp->~A_x1_sample) * susp->~A_pHaSe_iNcR);~%" 
+                (format stream "                                        ~
+                        susp->output_per_~A);~%        }~%" name)
+                (format stream "        togo = (int) min(togo, susp->~A_n);~%"
+                        name)
+                (format stream "        ~A_DeLtA = (sample_type) ~
+                ((~A_x2_sample - susp->~A_x1_sample) * susp->~A_pHaSe_iNcR);~%" 
                         name name name name)
                 (format stream 
-                 "\t~A_val = (sample_type) (susp->~A_x1_sample * (1.0 - susp->~A_pHaSe) +~%"
-                 name name name)
-                (format stream "\t\t ~A_x2_sample * susp->~A_pHaSe);~%~%"
-                         name name))
+                 "        ~A_val = (sample_type) ~
+                 (susp->~A_x1_sample * (1.0 - susp->~A_pHaSe) +~%"
+                        name name name)
+                (format stream "                 ~A_x2_sample * ~
+                        susp->~A_pHaSe);~%~%" name name))
               ((eq method 'RAMP)
                 ;-----------------
                 ; SLOW STEP FUNCTION
@@ -614,44 +626,50 @@
                 ;     <fixup depends declarations>
                 ;     susp_check_log_samples(NAME, NAME_ptr, NAME_cnt);
                 ;     susp->NAME_x1_sample = susp_fetch_sample(NAME, NAME_ptr,
-                ; 					       NAME_cnt);
+                ;                                              NAME_cnt);
                 ;     susp->NAME_pHaSe -= 1.0;
                 ;     /* NAME_n gets number of samples before phase 
                 ;        exceeds 1.0: */
-                ;     susp->NAME_n = (long) ((1.0 - susp->NAME_pHaSe) *
+                ;     susp->NAME_n = (int64_t) ((1.0 - susp->NAME_pHaSe) *
                 ;                    susp->output_per_NAME);
                 ;     <fixup depends variables>
                 ; }
-                ; togo = min(togo, susp->NAME_n);
+                ; togo = (int) min(togo, susp->NAME_n);
                 ; NAME_val = susp->NAME_x1_sample; 
                 ;-----------------
                 (format stream
-                 "\t/* grab next ~A_x1_sample when phase goes past 1.0; */~%"
-                 name)
+                 "        /* grab next ~A_x1_sample when phase goes ~
+                             past 1.0; */~%"
+                        name)
                 (format stream
-                "\t/* use ~A_n (computed below) to avoid roundoff errors: */~%"
-                 name)
-                (format stream "\tif (susp->~A_n <= 0) {~%" name)
+                "        /* use ~A_n (computed below) to avoid roundoff ~
+                            errors: */~%"
+                        name)
+                (format stream "        if (susp->~A_n <= 0) {~%" name)
                 (fixup-depends-prime-decls alg stream name)
-                (format stream "\t    ~A(~A, ~A_ptr, ~A_cnt);~%"
+                (format stream "            ~A(~A, ~A_ptr, ~A_cnt);~%"
                  (susp-check-fn name alg) name name name)
                 (format stream 
-          "\t    susp->~A_x1_sample = susp_fetch_sample(~A, ~A_ptr, ~A_cnt);~%"
-                 name name name name)
-                (format stream "\t    susp->~A_pHaSe -= 1.0;~%" name);
+                 "            susp->~A_x1_sample = ~
+                              susp_fetch_sample(~A, ~A_ptr, ~A_cnt);~%"
+                        name name name name)
+                (format stream "            susp->~A_pHaSe -= 1.0;~%" name);
                 (format stream
-          "\t    /* ~A_n gets number of samples before phase exceeds 1.0: */~%"
+                 "            /* ~A_n gets number of samples before phase ~
+                                 exceeds 1.0: */~%" name)
+                (format stream 
+                 "            susp->~A_n = (int64_t) ((1.0 - ~
+                                 susp->~A_pHaSe) *~%"
+                        name name)
+                (format stream "                                        ~
+                        susp->output_per_~A);~%" name)
+                (fixup-depends-prime alg stream name "            "
+                        (strcat "susp->" name "_x1_sample"))
+                (format stream "        }~%" name)
+                (format stream "        togo = (int) min(togo, susp->~A_n);~%"
                         name)
                 (format stream 
-                 "\t    susp->~A_n = (long) ((1.0 - susp->~A_pHaSe) *~%"
-                        name name)
-                (format stream "\t\t\t\t\tsusp->output_per_~A);~%" name)
-                (fixup-depends-prime alg stream name "\t    "
-                        (strcat "susp->" name "_x1_sample"))
-                (format stream "\t}~%" name)
-                (format stream "\ttogo = min(togo, susp->~A_n);~%" name)
-                (format stream 
-                 "\t~A_val = susp->~A_x1_sample;~%" name name) ))))
+                 "        ~A_val = susp->~A_x1_sample;~%" name name) ))))
     
     ;---------------
     ; see if there are joint-dependencies that should be output now
@@ -664,7 +682,7 @@
                                              step-function))
              (dolist (stmt (cdr dep))
                 (setf joint-depend (strcat joint-depend 
-                                        "\t" stmt "\n"))))))
+                                        "        " stmt "\n"))))))
     (display "joint-depend before fixup" joint-depend)
     (setf joint-depend (fixup-substitutions-for-depends alg joint-depend))
     (if joint-depend (format stream joint-depend))
@@ -674,79 +692,83 @@
     ; if the teminate time is a MIN of some signals or AT some expression
     ; (i.e. specified at all) see if we're coming to the terminate cnt:
     ;
-    ;	/* don't run past terminate time */
-    ;	if (susp->terminate_cnt != UNKNOWN && 
-    ;		susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-   ;	    togo = susp->terminate_cnt - (susp->susp.current + cnt);
+    ;   /* don't run past terminate time */
+    ;   if (susp->terminate_cnt != UNKNOWN && 
+    ;           susp->terminate_cnt <= susp->susp.current + cnt + togo) {
+   ;        togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
     ;       if (togo < 0) togo = 0; // avoids rounding errors
     ;       if (togo == 0) break;
-    ;	}
+    ;   }
     ;----------------
     (cond ((terminate-check-needed terminate alg)
            (print-strings '(
-     "\t/* don't run past terminate time */\n"
-     "\tif (susp->terminate_cnt != UNKNOWN &&\n"
-     "\t    susp->terminate_cnt <= susp->susp.current + cnt + togo) {\n"
-     "\t    togo = susp->terminate_cnt - (susp->susp.current + cnt);\n"
-     "\t    if (togo < 0) togo = 0;  /* avoids rounding errros */\n"
-     "\t    if (togo == 0) break;\n"
-     "\t}\n\n") stream)))
+     "        /* don't run past terminate time */\n"
+     "        if (susp->terminate_cnt != UNKNOWN &&\n"
+     "            susp->terminate_cnt <= susp->susp.current + cnt + togo) {\n"
+     "            togo = (int) (susp->terminate_cnt - "
+     "(susp->susp.current + cnt));\n"
+     "            if (togo < 0) togo = 0;  /* avoids rounding errros */\n"
+     "            if (togo == 0) break;\n"
+     "        }\n\n") stream)))
 
     ;----------------
     ; if the logical-stop attribute is MIN of some signals or AT some expression
     ; see if we're coming to the logical stop:
     ;
     ;   /* don't run past logical stop time */
-    ;	if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-    ;	    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+    ;   if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
+    ;       int64_t to_stop = susp->susp.log_stop_cnt -
+    ;                         (susp->susp.current + cnt);
     ;           /* break if to_stop == 0 (we're at the logical stop)
-    ;	     * AND cnt > 0 (we're not at the beginning of the
-    ;	     * output block).
-    ;	     */
+    ;        * AND cnt > 0 (we're not at the beginning of the
+    ;        * output block).
+    ;        */
     ;       if (to_stop < 0) to_stop = 0; // avoids rounding errors
-    ;	    if (to_stop < togo) {
-    ;		if (to_stop == 0) {
-    ;		    if (cnt) {
-    ;			togo = 0;
-    ;			break;
-    ;		    } else /* keep togo as is: since cnt == 0, we
-    ;			    * can set the logical stop flag on this
-    ;			    * output block
-    ;			    */
-    ;			susp->logically_stopped = true;
-    ;		} else /* limit togo so we can start a new
-    ;			* block at the LST
-    ;			*/
-    ;		    togo = to_stop;
-    ;   	      }	    
-    ;	}
+    ;       if (to_stop < togo) {
+    ;           if (to_stop == 0) {
+    ;               if (cnt) {
+    ;                   togo = 0;
+    ;                   break;
+    ;               } else /* keep togo as is: since cnt == 0, we
+    ;                       * can set the logical stop flag on this
+    ;                       * output block
+    ;                       */
+    ;                   susp->logically_stopped = true;
+    ;           } else /* limit togo so we can start a new
+    ;                   * block at the LST
+    ;                   */
+    ;               togo = (int) to_stop;
+    ;                 }     
+    ;   }
     ;----------------
     (cond (logical-stop
            (print-strings '(
-     "\n\t/* don't run past logical stop time */\n"
-     "\tif (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {\n"
-     "\t    int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);\n"
-     "\t    /* break if to_stop == 0 (we're at the logical stop)\n"
-     "\t     * AND cnt > 0 (we're not at the beginning of the\n"
-     "\t     * output block).\n"
-     "\t     */\n"
-     "\t    if (to_stop < 0) to_stop = 0; /* avoids rounding errors */\n"
-     "\t    if (to_stop < togo) {\n"
-     "\t\tif (to_stop == 0) {\n"
-     "\t\t    if (cnt) {\n"
-     "\t\t\ttogo = 0;\n"
-     "\t\t\tbreak;\n"
-     "\t\t    } else /* keep togo as is: since cnt == 0, we\n"
-     "\t\t            * can set the logical stop flag on this\n"
-     "\t\t            * output block\n"
-     "\t\t            */\n"
-     "\t\t\tsusp->logically_stopped = true;\n"
-     "\t\t} else /* limit togo so we can start a new\n"
-     "\t\t        * block at the LST\n"
-     "\t\t        */\n"
-     "\t\t    togo = to_stop;\n"
-     "\t    }\n"
-     "\t}\n\n")
+     "\n        /* don't run past logical stop time */\n"
+     "        if (!susp->logically_stopped && "
+     "susp->susp.log_stop_cnt != UNKNOWN) {\n"
+     "            int64_t to_stop = susp->susp.log_stop_cnt - "
+     "(susp->susp.current + cnt);\n"
+     "            /* break if to_stop == 0 (we're at the logical stop)\n"
+     "             * AND cnt > 0 (we're not at the beginning of the\n"
+     "             * output block).\n"
+     "             */\n"
+     "            if (to_stop < 0) to_stop = 0; /* avoids rounding errors */\n"
+     "            if (to_stop < togo) {\n"
+     "                if (to_stop == 0) {\n"
+     "                    if (cnt) {\n"
+     "                        togo = 0;\n"
+     "                        break;\n"
+     "                    } else /* keep togo as is: since cnt == 0, we\n"
+     "                            * can set the logical stop flag on this\n"
+     "                            * output block\n"
+     "                            */\n"
+     "                        susp->logically_stopped = true;\n"
+     "                } else /* limit togo so we can start a new\n"
+     "                        * block at the LST\n"
+     "                        */\n"
+     "                    togo = (int) to_stop;\n"
+     "            }\n"
+     "        }\n\n")
                           stream)))
 
     (cond (outer-loop
@@ -758,11 +780,11 @@
     ; *WATCH*: printf("ALG %x starting inner loop, n %d\n", susp, n);
     ;----------------------------
 
-    (format stream "\tn = togo;~%")
+    (format stream "        n = togo;~%")
     (if *watch* 
       (format stream
-              "\tprintf(\"~A %x starting inner loop, n %d\\n\", susp, n);~%"
-              name))
+              "        printf(\"~A %x starting inner loop, n %d\\n\", ~
+              susp, n);~%" name))
 
     (dotimes (n (length interp))
        (let ((name (nth n sound-names))
@@ -778,9 +800,9 @@
                 ((and (eq method 'INTERP) (eq n 0))
                 ;-----------------
                 ; INTERP (first arg only)
-;		;	susp->NAME_cnt -= togo;
+;               ;       susp->NAME_cnt -= togo;
                 ;-----------------
-;	  	 (format stream "\tsusp->~A_cnt -= togo;~%" name)
+;                (format stream "        susp->~A_cnt -= togo;~%" name)
                  ))))
 
     (print-strings (get-slot alg 'register-init) stream)
@@ -789,7 +811,7 @@
     ;----------------------------
 
     (format stream
-            "\tif (n) do { /* the inner sample computation loop */~%")
+            "        if (n) do { /* the inner sample computation loop */~%")
 
     ;;----------------------------
     ;; write local declarations supplied by user
@@ -812,7 +834,7 @@
                (dolist (dep depends)
                 (cond ((and (equal (cadr dep) name)
                             (eq (cadddr dep) 'TEMP))
-                       (format stream "\t    ~A ~A;~%" (car (cddddr dep)) 
+                       (format stream "            ~A ~A;~%" (car (cddddr dep)) 
                                       (car dep)))))))))
 
     ;; this loop writes code that runs in the INNER-LOOP and checks to see
@@ -839,64 +861,73 @@
                 ; }
                 ; <maintenance of depends variables>
                 ;-----------------
-                (format stream "\t    if (~A_pHaSe_ReG >= 1.0) {~%" name)
-                (format stream "\t\t~A_x1_sample_reg = ~A_x2_sample;~%"
-                                name name)
-                (format stream "\t\t/* pick up next sample as ~A_x2_sample: */~%" name)
-                (format stream "\t\tsusp->~A_ptr++;~%" name)
-                (format stream "\t\tsusp_took(~A_cnt, 1);~%" name)
-                (format stream "\t\t~A_pHaSe_ReG -= 1.0;~%" name)
-                (format stream "\t\t~A_break(~A, ~A_ptr, ~A_cnt, ~A_x2_sample);~%"
+                (format stream "            if (~A_pHaSe_ReG >= 1.0) {~%" name)
+                (format stream "                ~A_x1_sample_reg = ~
+                        ~A_x2_sample;~%" name name)
+                (format stream "                /* pick up next sample ~
+                        as ~A_x2_sample: */~%" name)
+                (format stream "                susp->~A_ptr++;~%" name)
+                (format stream "                susp_took(~A_cnt, 1);~%" name)
+                (format stream "                ~A_pHaSe_ReG -= 1.0;~%" name)
+                (format stream "                ~A_break(~A, ~A_ptr, ~A_cnt, ~
+                        ~A_x2_sample);~%"
                         (susp-check-fn name alg) name name name name)
-;                (format stream "\t\t~A_x2_sample = susp_current_sample(~A, ~A_ptr);~%"
+;                (format stream "                ~A_x2_sample = ~
+;                        susp_current_sample(~A, ~A_ptr);~%"
 ;                        name name name)
 
                 ;     show_samples(2, susp->NAME_x2, susp->NAME_x2_ptr -
-                ;			NAME_x2->block->samples);
+                ;                       NAME_x2->block->samples);
                 ;-----------------
 
-;		(if *WATCH* 
-;		    (format stream "\t\tshow_samples(2,susp->~A_x2,susp->~A_x2_ptr - susp->~A_x2->block->samples);~%"
-;		    		name name name)
+;               (if *WATCH* 
+;                   (format stream "                ~
+;                           show_samples(2,susp->~A_x2,susp->~A_x2_ptr - ~
+;                                        susp->~A_x2->block->samples);~%"
+;                           name name name)
 ;                )
                 ;-----------------
                 ;      }
                 ;-----------------
-                (format stream "\t    }~%")
+                (format stream "            }~%")
               )
               ((eq method 'INTERP)
                 ;-----------------
                 ; STEP FUNCTION:
                 ;
                 ;    if (susp->NAME_pHaSe >= 1.0)  { 
-                ; 	<optional depends/fixup declarations>
+                ;       <optional depends/fixup declarations>
                 ;       /* pick up next sample as NAME_x1_sample */
                 ;       susp->NAME_ptr++;
                 ;        susp_took(NAME_cnt, 1);
                 ;        susp->NAME_pHaSe -= 1.0;
                 ;       susp_check_XX_samples_break(NAME, NAME_ptr, NAME_cnt, NAME_x1_sample);
                 ;        NAME_x1_sample_reg = susp_current_sample(NAME, NAME_ptr);
-                ; 	<optional depends/fixup code>
+                ;       <optional depends/fixup code>
                 ; }
                 ;-----------------
-                (format stream "\t    if (~A_pHaSe_ReG >= 1.0) {~%" name)
+                (format stream "            if (~A_pHaSe_ReG >= 1.0) {~%" name)
                 (fixup-depends alg stream name)
-                (format stream "\t\t/* pick up next sample as ~A_x1_sample: */~%" name)
-                (format stream "\t\tsusp->~A_ptr++;~%" name)
-                (format stream "\t\tsusp_took(~A_cnt, 1);~%" name)
-                (format stream "\t\t~A_pHaSe_ReG -= 1.0;~%" name)
-                (format stream "\t\t~A_break(~A, ~A_ptr, ~A_cnt, ~A_x1_sample_reg);~%"
+                (format stream "                /* pick up next sample as ~
+                        ~A_x1_sample: */~%" name)
+                (format stream "                susp->~A_ptr++;~%" name)
+                (format stream "                susp_took(~A_cnt, 1);~%" name)
+                (format stream "                ~A_pHaSe_ReG -= 1.0;~%" name)
+                (format stream "                ~A_break(~A, ~A_ptr, ~A_cnt, ~
+                        ~A_x1_sample_reg);~%"
                         (susp-check-fn name alg) name name name name)
-                (format stream "\t\t~A_x1_sample_reg = susp_current_sample(~A, ~A_ptr);~%"
+                (format stream "                ~A_x1_sample_reg = ~
+                        susp_current_sample(~A, ~A_ptr);~%"
                         name name name)
 
                 ;     show_samples(2, susp->NAME_x2, susp->NAME_x2_ptr -
-                ;			NAME_x2->block->samples);
+                ;                       NAME_x2->block->samples);
                 ;-----------------
 
-;		(if *WATCH* 
-;		    (format stream "\t\tshow_samples(2,susp->~A_x2,susp->~A_x2_ptr - susp->~A_x2->block->samples);~%"
-;		    		name name name)
+;               (if *WATCH* 
+;                   (format stream "                ~
+;                    show_samples(2,susp->~A_x2,susp->~A_x2_ptr - ~
+;                    susp->~A_x2->block->samples);~%" name name name)
 ;                )
                 (let ((fixup-code (get-slot alg 'fixup-code)))
                   (if fixup-code (format stream fixup-code)))
@@ -904,7 +935,7 @@
                 ;-----------------
                 ;      }
                 ;-----------------
-                (format stream "\t    }~%")))))
+                (format stream "            }~%")))))
 
     (write-inner-loop alg stream)
     (print-strings (get-slot alg 'register-cleanup) stream)
@@ -922,18 +953,18 @@
                ; NONE:
                ;    susp_took(NAME_cnt, togo - n);
                ;-----------------
-               (format stream "\tsusp_took(~A_cnt, togo);~%" name))
+               (format stream "        susp_took(~A_cnt, togo);~%" name))
               ((eq method 'INTERP))
               ((eq method 'RAMP)
                 ;-----------------
                 ; RAMP:
-                ;	susp->NAME_pHaSe += togo * susp->NAME_pHaSe_iNcR;
-                ;	susp->NAME_n -= togo; 
+                ;       susp->NAME_pHaSe += togo * susp->NAME_pHaSe_iNcR;
+                ;       susp->NAME_n -= togo; 
                 ;-----------------
                 (format stream
-                 "\tsusp->~A_pHaSe += togo * susp->~A_pHaSe_iNcR;~%"
+                 "        susp->~A_pHaSe += togo * susp->~A_pHaSe_iNcR;~%"
                  name name)
-                (format stream "\tsusp->~A_n -= togo;~%" name)
+                (format stream "        susp->~A_n -= togo;~%" name)
                ))))
     ;-----------------------------
     ;     cnt += togo;
@@ -942,7 +973,7 @@
     ; snd_list->block_len = cnt;
     ;-----------------------------
 
-    (format stream "~A~%~A~%~%" "\tcnt += togo;"
+    (format stream "~A~%~A~%~%" "        cnt += togo;"
                    "    } /* outer loop */")
     ;-----------------------------
     ; if terminate is not NONE (infinite), check for it as follows:
@@ -959,14 +990,16 @@
            (print-strings '(
              "    /* test for termination */\n"
              "    if (togo == 0 && cnt == 0) {\n"
-             "\tsnd_list_terminate(snd_list);\n")
+             "        snd_list_terminate(snd_list);\n")
             stream)
            (if *watch*
-             (format stream "\tprintf(\"~A %x terminated.\\n\", susp);~%" name))
+               (format stream
+                       "        printf(\"~A %x terminated.\\n\", susp);~%"
+                       name))
            (print-strings '(
              "    } else {\n"
-             "\tsnd_list->block_len = cnt;\n"
-             "\tsusp->susp.current += cnt;\n"
+             "        snd_list->block_len = cnt;\n"
+             "        susp->susp.current += cnt;\n"
              "    }\n") stream))
           (t
     ;----------------
@@ -991,9 +1024,9 @@
            (print-strings '(
     "    /* test for logical stop */\n"
     "    if (susp->logically_stopped) {\n"
-    "\tsnd_list->logically_stopped = true;\n"
+    "        snd_list->logically_stopped = true;\n"
     "    } else if (susp->susp.log_stop_cnt == susp->susp.current) {\n"
-    "\tsusp->logically_stopped = true;\n"
+    "        susp->logically_stopped = true;\n"
     "    }\n") stream)))
 
      ;----------------

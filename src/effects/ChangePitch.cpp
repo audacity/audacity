@@ -15,7 +15,7 @@ the pitch without changing the tempo.
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_SOUNDTOUCH
+
 
 #if USE_SOUNDTOUCH
 #include "ChangePitch.h"
@@ -207,7 +207,6 @@ bool EffectChangePitch::LoadFactoryDefaults()
 
 bool EffectChangePitch::Init()
 {
-   mSoundTouch.reset();
    return true;
 }
 
@@ -230,9 +229,11 @@ bool EffectChangePitch::Process()
       // ensure that m_dSemitonesChange is set.
       Calc_SemitonesChange_fromPercentChange();
 
-      mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
+      auto initer = [&](soundtouch::SoundTouch *soundtouch)
+      {
+         soundtouch->setPitchSemiTones((float)(m_dSemitonesChange));
+      };
       IdentityTimeWarper warper;
-      mSoundTouch->setPitchSemiTones((float)(m_dSemitonesChange));
 #ifdef USE_MIDI
       // Pitch shifting note tracks is currently only supported by SoundTouchEffect
       // and non-real-time-preview effects require an audio track selection.
@@ -246,7 +247,7 @@ bool EffectChangePitch::Process()
       // eliminate the next line:
       mSemitones = m_dSemitonesChange;
 #endif
-      return EffectSoundTouch::ProcessWithTimeWarper(warper);
+      return EffectSoundTouch::ProcessWithTimeWarper(initer, warper, true);
    }
 }
 

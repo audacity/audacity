@@ -3,7 +3,7 @@
 boolean seq_next(seq_type seq);	/* LISP: (SEQ-NEXT SEQ) */
 void seq_get(seq_type seq, long *eventtype, long *time, long *line, long *chan, 
     long *value1, long *value2, long *dur);
-    /* LISP: (SEQ-GET SEQ FIXNUM^ FIXNUM^ FIXNUM^ FIXNUM^ FIXNUM^ FIXNUM^ FIXNUM^) */
+    /* LISP: (SEQ-GET SEQ LONG^ LONG^ LONG^ LONG^ LONG^ LONG^ LONG^) */
 /* LISP-SRC:
     (setfn seq-tag first)
     (setfn seq-time second)

@@ -23,7 +23,7 @@ around to NEW positions.
 #ifndef __AUDACITY_WIDGETS_HtmlWindow__
 #define __AUDACITY_WIDGETS_HtmlWindow__
 
-#include "../Audacity.h"
+
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>

@@ -32,7 +32,7 @@ the mouse around.
 */
 
 
-#include "Audacity.h"
+
 #include "FreqWindow.h"
 
 #include <algorithm>
@@ -74,7 +74,6 @@ the mouse around.
 #include "Project.h"
 #include "ProjectWindow.h"
 #include "Theme.h"
-#include "WaveClip.h"
 #include "ViewInfo.h"
 #include "AllThemeResources.h"
 
@@ -89,6 +88,8 @@ the mouse around.
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 #endif
+
+#define FrequencyAnalysisTitle XO("Frequency Analysis")
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);
 
@@ -198,6 +199,27 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    mRate = 0;
    mDataLen = 0;
 
+   gPrefs->Read(wxT("/FrequencyPlotDialog/DrawGrid"), &mDrawGrid, true);
+   gPrefs->Read(wxT("/FrequencyPlotDialog/SizeChoice"), &mSize, 3);
+
+   int alg;
+   gPrefs->Read(wxT("/FrequencyPlotDialog/AlgChoice"), &alg, 0);
+   mAlg = static_cast<SpectrumAnalyst::Algorithm>(alg);
+
+   gPrefs->Read(wxT("/FrequencyPlotDialog/FuncChoice"), &mFunc, 3);
+   gPrefs->Read(wxT("/FrequencyPlotDialog/AxisChoice"), &mAxis, 1);
+
+   Populate();
+}
+
+FrequencyPlotDialog::~FrequencyPlotDialog()
+{
+}
+
+void FrequencyPlotDialog::Populate()
+{
+   SetTitle(FrequencyAnalysisTitle);
+
    TranslatableStrings algChoices{
       XO("Spectrum") ,
       XO("Standard Autocorrelation") ,
@@ -241,20 +263,11 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    mArrowCursor = std::make_unique<wxCursor>(wxCURSOR_ARROW);
    mCrossCursor = std::make_unique<wxCursor>(wxCURSOR_CROSS);
 
-   gPrefs->Read(wxT("/FrequencyPlotDialog/DrawGrid"), &mDrawGrid, true);
-
    long size;
-   gPrefs->Read(wxT("/FrequencyPlotDialog/SizeChoice"), &mSize, 3);
    // reinterpret one of the verbatim strings above as a number
    sizeChoices[mSize].MSGID().GET().ToLong(&size);
    mWindowSize = size;
 
-   int alg;
-   gPrefs->Read(wxT("/FrequencyPlotDialog/AlgChoice"), &alg, 0);
-   mAlg = static_cast<SpectrumAnalyst::Algorithm>(alg);
-
-   gPrefs->Read(wxT("/FrequencyPlotDialog/FuncChoice"), &mFunc, 3);
-   gPrefs->Read(wxT("/FrequencyPlotDialog/AxisChoice"), &mAxis, 1);
    gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
    if(dBRange < 90.)
       dBRange = 90.;
@@ -531,10 +544,6 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
    // ourselves, but we'll leave that for a future date.
 //   gtk_widget_set_can_focus(mPanScroller->m_widget, true);
 #endif
-}
-
-FrequencyPlotDialog::~FrequencyPlotDialog()
-{
 }
 
 void FrequencyPlotDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
@@ -1107,6 +1116,49 @@ void FrequencyPlotDialog::OnRecalc(wxCommandEvent & WXUNUSED(event))
    Recalc();
 }
 
+void FrequencyPlotDialog::UpdatePrefs()
+{
+   bool shown = IsShown();
+   if (shown) {
+      Show(false);
+   }
+
+   auto zoomSlider = mZoomSlider->GetValue();
+   auto drawGrid = mGridOnOff->GetValue();
+   auto sizeChoice = mSizeChoice->GetStringSelection();
+   auto algChoice = mAlgChoice->GetSelection();
+   auto funcChoice = mFuncChoice->GetSelection();
+   auto axisChoice = mAxisChoice->GetSelection();
+
+   SetSizer(nullptr);
+   DestroyChildren();
+
+   Populate();
+
+   mZoomSlider->SetValue(zoomSlider);
+
+   mDrawGrid = drawGrid;
+   mGridOnOff->SetValue(drawGrid);
+
+   long windowSize = 0;
+   sizeChoice.ToLong(&windowSize);
+   mWindowSize = windowSize;
+   mSizeChoice->SetStringSelection(sizeChoice);
+
+   mAlg = static_cast<SpectrumAnalyst::Algorithm>(algChoice);
+   mAlgChoice->SetSelection(algChoice);
+
+   mFunc = funcChoice;
+   mFuncChoice->SetSelection(funcChoice);
+
+   mAxis = axisChoice;
+   mAxisChoice->SetSelection(axisChoice);
+
+   if (shown) {
+      Show(true);
+   }
+}
+
 BEGIN_EVENT_TABLE(FreqPlot, wxWindow)
    EVT_ERASE_BACKGROUND(FreqPlot::OnErase)
    EVT_PAINT(FreqPlot::OnPaint)
@@ -1150,7 +1202,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew FrequencyPlotDialog(
-         &window, -1, parent, XO("Frequency Analysis"),
+         &window, -1, parent, FrequencyAnalysisTitle,
          wxPoint{ 150, 150 }
       );
    }
@@ -1161,6 +1213,7 @@ struct Handler : CommandHandlerObject {
    void OnPlotSpectrum(const CommandContext &context)
    {
       auto &project = context.project;
+      CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Plot Spectrum as Last Analyzer
       auto freqWindow =
          &project.AttachedWindows::Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 

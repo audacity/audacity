@@ -20,8 +20,7 @@ class SoloButtonHandle;
 class NoteTrackButtonHandle;
 class VelocitySliderHandle;
 
-#include "../../../../Audacity.h"
-#include "../../../../Experimental.h"
+
 
 using NoteTrackControlsBase =
 #ifdef EXPERIMENTAL_MIDI_OUT

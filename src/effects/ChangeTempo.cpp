@@ -15,13 +15,12 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_SOUNDTOUCH
+
 
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"
 
 #if USE_SBSMS
-#include "../../../lib-src/header-substitutes/sbsms.h"
 #include <wx/valgen.h>
 #endif
 
@@ -191,8 +190,6 @@ bool EffectChangeTempo::Init()
    m_FromLength = mT1 - mT0;
    m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
 
-   mSoundTouch.reset();
-
    return true;
 }
 
@@ -212,12 +209,14 @@ bool EffectChangeTempo::Process()
    else
 #endif
    {
-      mSoundTouch = std::make_unique<soundtouch::SoundTouch>();
-      mSoundTouch->setTempoChange(m_PercentChange);
+      auto initer = [&](soundtouch::SoundTouch *soundtouch)
+      {
+         soundtouch->setTempoChange(m_PercentChange);
+      };
       double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
       RegionTimeWarper warper{ mT0, mT1,
          std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed )  };
-      success = EffectSoundTouch::ProcessWithTimeWarper(warper);
+      success = EffectSoundTouch::ProcessWithTimeWarper(initer, warper, false);
    }
 
    if(success)

@@ -142,7 +142,7 @@
         (ny:error "ALPASS" 4 '((POSITIVE) "min-hz") min-hz))
       (setf max-delay (/ (float min-hz)))
       ; make sure delay is between 0 and max-delay
-      ; use clip function, which is symetric, with an offset
+      ; use clip function, which is symmetric, with an offset
       (setf delay (snd-offset (clip (snd-offset delay (* max-delay -0.5))
                                     (* max-delay 0.5))
                               (* max-delay 0.5)))
@@ -202,6 +202,14 @@
 (defun nyq:abs (s)
   (if (soundp s) (snd-abs s) (abs s)))
 
+;; S-AVG -- moving average or peak computation
+;;
+(defun s-avg (s blocksize stepsize operation)
+  (multichan-expand "S-AVG" #'snd-avg
+    '(((SOUND) nil) ((INTEGER) "blocksize") ((INTEGER) "stepsize")
+      ((INTEGER) "operation"))
+    s blocksize stepsize operation))
+
 ;; S-SQRT -- square root of a sound
 ;;
 (defun s-sqrt (s)
@@ -245,22 +253,19 @@
 
 
 (defun noise-gate (snd &optional (lookahead 0.5) (risetime 0.02) (falltime 0.5)
-                                                 (floor 0.01) (threshold 0.01))
-  (ny:typecheck (not (soundp snd))
-    (ny:error "NOISE-GATE" 1 '((SOUND) "snd") snd))
-  (ny:typecheck (not (numberp lookahead))
-    (ny:error "NOISE-GATE" 2 '((NUMBER) "lookahead") lookahead))
-  (ny:typecheck (not (numberp risetime))
-    (ny:error "NOISE-GATE" 3 '((NUMBER) "risetime") risetime))
-  (ny:typecheck (not (numberp falltime))
-    (ny:error "NOISE-GATE" 4 '((NUMBER) "falltime") falltime))
-  (ny:typecheck (not (numberp floor))
-    (ny:error "NOISE-GATE" 5 '((NUMBER) "floor") floor))
-  (ny:typecheck (not (numberp threshold))
-    (ny:error "NOISE-GATE" 6 '((NUMBER) "threshold") threshold))
-  (let ((rms (lp (mult snd snd) (/ *control-srate* 10.0))))
-    (setf threshold (* threshold threshold))
-    (mult snd (gate rms floor risetime falltime lookahead threshold "NOISE-GATE"))))
+                       (floor 0.01) (threshold 0.01) &key (rms nil) (link t))
+  (let ((sense (if rms (rms snd 100.0 nil "NOISE-GATE") (s-abs snd))))
+    (cond (link
+           (mult snd (gate sense lookahead risetime falltime floor
+                           threshold "NOISE-GATE")))
+          (t
+           (mult snd (multichan-expand "NOISE-GATE" #'gate
+                      '(((SOUND) "sound") ((NUMBER) "lookahead")
+                        ((NUMBER) "risetime") ((NUMBER) "falltime")
+                        ((NUMBER) "floor") ((NUMBER) "threshold")
+                        ((STRING) "source"))
+                      sense lookahead risetime falltime
+                      floor threshold "NOISE-GATE"))))))
 
 
 ;; QUANTIZE -- quantize a sound
@@ -286,18 +291,26 @@
 
 ;; RMS -- compute the RMS of a sound
 ;;
-(defun rms (s &optional (rate 100.0) window-size)
+(defun rms (s &optional (rate 100.0) window-size (source "RMS"))
+  (multichan-expand "RMS" #'ny:rms
+    '(((SOUND) nil) ((POSITIVE) "rate") ((POSITIVE-OR-NULL) "window-size")
+      ((STRING) "source"))
+    s rate window-size source))
+
+
+;; NY:RMS -- single channel RMS
+;;
+(defun ny:rms (s &optional (rate 100.0) window-size source)
   (let (rslt step-size)
-    (ny:typecheck (not (soundp s))
-      (ny:error "RMS" 1 number-anon s))
+    (ny:typecheck (not (or (soundp s) (multichannel-soundp s)))
+      (ny:error source 1 '((SOUND) NIL) s t))
     (ny:typecheck (not (numberp rate))
-      (ny:error "RMS" 2 '((NUMBER) "rate") rate))
+      (ny:error source 2 '((NUMBER) "rate") rate))
     (setf step-size (round (/ (snd-srate s) rate)))
     (cond ((null window-size)
            (setf window-size step-size))
           ((not (integerp window-size))
-           (error "In RMS, 2nd argument (window-size) must be an integer"
-                  window-size)))
+           (ny:error source 3 '((INTEGER) "window-size" window-size))))
     (setf s (prod s s))
     (setf result (snd-avg s window-size step-size OP-AVERAGE))
     ;; compute square root of average

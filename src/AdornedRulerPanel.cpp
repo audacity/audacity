@@ -18,10 +18,10 @@
 
 *//******************************************************************/
 
-#include "Audacity.h"
+
 #include "AdornedRulerPanel.h"
 
-#include "Experimental.h"
+
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/tooltip.h>
@@ -629,6 +629,8 @@ protected:
       return {
          XO( "Click and drag to adjust, double-click to reset" ),
          &cursor,
+         /* i18n-hint: This text is a tooltip on the icon (of a pin) representing 
+         the temporal position in the audio.  */
          XO( "Record/Play head" )
       };
    }
@@ -947,8 +949,12 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &AdornedRulerPanel::OnThemeChange, this);
 
+   // Bind event that updates the play region
    mViewInfo->selectedRegion.Bind(EVT_SELECTED_REGION_CHANGE,
       &AdornedRulerPanel::OnSelectionChange, this);
+
+   // And call it once to initialize it
+   DoSelectionChange( mViewInfo->selectedRegion );
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
@@ -1900,7 +1906,8 @@ void AdornedRulerPanel::HandleSnapping()
    if (handle) {
       auto &pSnapManager = handle->mSnapManager;
       if (! pSnapManager)
-         pSnapManager = std::make_unique<SnapManager>(mTracks, mViewInfo);
+         pSnapManager =
+            std::make_unique<SnapManager>(*mProject, *mTracks, *mViewInfo);
       
       auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
       mQuickPlayPos = results.outTime;

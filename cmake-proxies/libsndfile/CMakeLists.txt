@@ -113,6 +113,7 @@ list( APPEND DEFINES
 list( APPEND OPTIONS
    PRIVATE
       $<$<C_COMPILER_ID:MSVC>:/wd4996>
+      $<$<C_COMPILER_ID:AppleClang>:-Wno-implicit-function-declaration>
 )
 
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" )

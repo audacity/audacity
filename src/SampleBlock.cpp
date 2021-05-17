@@ -6,7 +6,7 @@ SampleBlock.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "InconsistencyException.h"
 #include "SampleBlock.h"
 #include "SampleFormat.h"
@@ -38,15 +38,7 @@ SampleBlockFactoryPtr SampleBlockFactory::New( AudacityProject &project )
 
 SampleBlockFactory::~SampleBlockFactory() = default;
 
-SampleBlockPtr SampleBlockFactory::Get(SampleBlockID sbid)
-{
-   auto result = DoGet(sbid);
-   if (!result)
-      THROW_INCONSISTENCY_EXCEPTION;
-   return result;
-}
-
-SampleBlockPtr SampleBlockFactory::Create(samplePtr src,
+SampleBlockPtr SampleBlockFactory::Create(constSamplePtr src,
    size_t numsamples,
    sampleFormat srcformat)
 {

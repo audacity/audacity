@@ -13,7 +13,8 @@
 
 #include "../MemoryX.h"
 
-class TrackFactory;
+class AudacityProject;
+class WaveTrackFactory;
 class WaveTrack;
 class wxString;
 class wxWindow;
@@ -26,7 +27,7 @@ using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 using TrackHolders = std::vector< NewChannelGroup >;
 
 
-void ImportRaw(wxWindow *parent, const wxString &fileName,
-   TrackFactory *trackFactory, TrackHolders &outTracks);
+void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
+   WaveTrackFactory *trackFactory, TrackHolders &outTracks);
 
 #endif

@@ -36,10 +36,8 @@
 *//****************************************************************//**
 */
 
-#include "../Audacity.h"
-#include "NoiseReduction.h"
 
-#include "../Experimental.h"
+#include "NoiseReduction.h"
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
@@ -268,13 +266,13 @@ public:
    ~Worker();
 
    bool Process(EffectNoiseReduction &effect,
-                Statistics &statistics, TrackFactory &factory,
+                Statistics &statistics, WaveTrackFactory &factory,
                 TrackList &tracks, double mT0, double mT1);
 
 private:
    bool ProcessOne(EffectNoiseReduction &effect,
                    Statistics &statistics,
-                   TrackFactory &factory,
+                   WaveTrackFactory &factory,
                    int count, WaveTrack *track,
                    sampleCount start, sampleCount len);
 
@@ -669,7 +667,7 @@ EffectNoiseReduction::Worker::~Worker()
 }
 
 bool EffectNoiseReduction::Worker::Process
-(EffectNoiseReduction &effect, Statistics &statistics, TrackFactory &factory,
+(EffectNoiseReduction &effect, Statistics &statistics, WaveTrackFactory &factory,
  TrackList &tracks, double inT0, double inT1)
 {
    int count = 0;
@@ -1307,7 +1305,7 @@ void EffectNoiseReduction::Worker::ReduceNoise
 }
 
 bool EffectNoiseReduction::Worker::ProcessOne
-(EffectNoiseReduction &effect,  Statistics &statistics, TrackFactory &factory,
+(EffectNoiseReduction &effect,  Statistics &statistics, WaveTrackFactory &factory,
  int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
    if (track == NULL)

@@ -58,7 +58,7 @@ class TipWindow;
 // which uses this class, is below.
 //
 
-class LWSlider
+class AUDACITY_DLL_API LWSlider
 {
    friend class ASlider;
    friend class ASliderAx;
@@ -136,14 +136,16 @@ class LWSlider
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
    void Refresh();
+   void Redraw();
 
    bool ShowDialog();
    bool ShowDialog(wxPoint pos);
 
    void SetEnabled(bool enabled);
-   bool GetEnabled();
+   bool GetEnabled() const;
 
-   static void DeleteSharedTipPanel();
+   float GetMinValue() const;
+   float GetMaxValue() const;
 
    void SetParent(wxWindow *parent) { mParent = parent; }
    void SendUpdate(float newValue);
@@ -228,7 +230,7 @@ class LWSlider
    bool mEnabled;
 };
 
-class ASlider /* not final */ : public wxPanel
+class AUDACITY_DLL_API ASlider /* not final */ : public wxPanel
 {
    friend class ASliderAx;
 
@@ -268,6 +270,8 @@ class ASlider /* not final */ : public wxPanel
    bool AcceptsFocusFromKeyboard() const override { return true; }
 
    void SetFocusFromKbd() override;
+
+   bool SetBackgroundColour(const wxColour& colour) override;
 
    void GetScroll(float & line, float & page);
    void SetScroll(float line, float page);
@@ -353,6 +357,7 @@ class SliderDialog final : public wxDialogWrapper
    wxTextCtrl * mTextCtrl;
    int mStyle;
    LWSlider * mpOrigin;
+   float mValue;
 
  public:
    DECLARE_EVENT_TABLE()

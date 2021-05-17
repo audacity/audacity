@@ -14,17 +14,13 @@
 #ifndef __AUDACITY_APP__
 #define __AUDACITY_APP__
 
-#include "Audacity.h"
+
 #include "audacity/Types.h"
 
-#include "Experimental.h"
+
 
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
-
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h> // for wxDebugReport::Context
-#endif
 
 #include "MemoryX.h"
 
@@ -43,6 +39,7 @@ class AudacityApp final : public wxApp {
    AudacityApp();
    ~AudacityApp();
    bool OnInit(void) override;
+   bool InitPart2();
    int OnExit(void) override;
    void OnFatalException() override;
    bool OnExceptionInMainLoop() override;
@@ -91,6 +88,7 @@ class AudacityApp final : public wxApp {
 #ifdef __WXMAC__
 
    void MacActivateApp();
+   void MacFinishLaunching();
 
 #endif
 

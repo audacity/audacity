@@ -12,9 +12,7 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
-#include "../Audacity.h"
 
-#include "../Experimental.h"
 
 #include <functional>
 #include <set>
@@ -50,7 +48,7 @@ class SelectedRegion;
 class EffectUIHost;
 class Track;
 class TrackList;
-class TrackFactory;
+class WaveTrackFactory;
 class WaveTrack;
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
@@ -59,7 +57,6 @@ class WaveTrack;
  name into another alphabet.  */
 #define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
 
-#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 // TODO:  Apr-06-2015
@@ -244,6 +241,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Fully qualified local help file name
    virtual wxString HelpPage();
 
+   virtual void SetUIFlags(unsigned flags);
+   virtual unsigned TestUIFlags(unsigned mask);
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
 
@@ -257,7 +256,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Audacity's standard UI.
    // Create a user interface only if the supplied function is not null.
    /* not virtual */ bool DoEffect( double projectRate, TrackList *list,
-      TrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       // Prompt the user for input only if these arguments are both not null.
       wxWindow *pParent = nullptr,
       const EffectDialogFactory &dialogFactory = {} );
@@ -376,7 +375,7 @@ protected:
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.
-   class AddedAnalysisTrack {
+   class AUDACITY_DLL_API AddedAnalysisTrack {
       friend Effect;
       AddedAnalysisTrack(Effect *pEffect, const wxString &name);
       AddedAnalysisTrack(const AddedAnalysisTrack&) PROHIBITED;
@@ -406,7 +405,7 @@ protected:
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to modify label tracks.
-   class ModifiedAnalysisTrack {
+   class AUDACITY_DLL_API ModifiedAnalysisTrack {
       friend Effect;
       ModifiedAnalysisTrack
          (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name);
@@ -458,7 +457,7 @@ protected:
                                // be created with this rate...
    double         mSampleRate;
    wxWeakRef<NotifyingSelectedRegion> mpSelectedRegion{};
-   TrackFactory   *mFactory;
+   WaveTrackFactory   *mFactory;
    const TrackList *inputTracks() const { return mTracks; }
    const AudacityProject *FindProject() const;
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
@@ -476,6 +475,7 @@ protected:
    wxDialog       *mUIDialog;
    wxWindow       *mUIParent;
    int            mUIResultID;
+   unsigned       mUIFlags;
 
    sampleCount    mSampleCnt;
 

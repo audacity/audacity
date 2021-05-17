@@ -43,8 +43,8 @@ split points in the input.
 \class GeometricOutputRateTimeWarper
 \brief TimeScale - rate varies geometrically with output
 
-\class StepTimeWarper
-\brief Like identity but with a jump
+\class PasteTimeWarper
+\brief Unit slope but with either a jump (pasting more) or a flat interval (pasting less)
 
 \class RegionTimeWarper
 \brief No change before the specified region; during the region, warp according
@@ -58,20 +58,20 @@ of the warped region.
 
 #include "../MemoryX.h"
 
-class TimeWarper /* not final */
+class AUDACITY_DLL_API TimeWarper /* not final */
 {
 public:
    virtual ~TimeWarper();
    virtual double Warp(double originalTime) const = 0;
 };
 
-class IdentityTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API IdentityTimeWarper final : public TimeWarper
 {
 public:
    double Warp(double originalTime) const override;
 };
 
-class ShiftTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API ShiftTimeWarper final : public TimeWarper
 {
 private:
    std::unique_ptr<TimeWarper> mWarper;
@@ -83,7 +83,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class LinearTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API LinearTimeWarper final : public TimeWarper
 {
 private:
    double mScale;
@@ -97,7 +97,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class LinearInputRateTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API LinearInputRateTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mRateWarper;
@@ -110,7 +110,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class LinearOutputRateTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API LinearOutputRateTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -125,7 +125,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class LinearInputStretchTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API LinearInputStretchTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -138,7 +138,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class LinearOutputStretchTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API LinearOutputStretchTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -151,7 +151,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class GeometricInputTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API GeometricInputTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -164,7 +164,7 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class GeometricOutputTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API GeometricOutputTimeWarper final : public TimeWarper
 {
 private:
    LinearTimeWarper mTimeWarper;
@@ -177,19 +177,18 @@ public:
    double Warp(double originalTime) const override;
 };
 
-class StepTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API PasteTimeWarper final : public TimeWarper
 {
 private:
-   double mTStep;
-   double mOffset;
+   const double mOldT1, mNewT1;
 public:
-   StepTimeWarper(double tStep, double offset);
+   PasteTimeWarper(double oldT1, double newT1);
    double Warp(double originalTime) const override;
 };
 
 
 // Note: this assumes that tStart is a fixed point of warper->warp()
-class RegionTimeWarper final : public TimeWarper
+class AUDACITY_DLL_API RegionTimeWarper final : public TimeWarper
 {
 private:
    std::unique_ptr<TimeWarper> mWarper;

@@ -14,15 +14,17 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ImportExportCommands.h"
 
 #include "LoadCommands.h"
 #include "../ProjectFileManager.h"
 #include "../ViewInfo.h"
 #include "../export/Export.h"
+#include "../SelectUtilities.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
+#include "../Track.h"
 #include "../wxFileNameWrapper.h"
 #include "CommandContext.h"
 
@@ -47,8 +49,18 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool ImportCommand::Apply(const CommandContext & context){
-   return ProjectFileManager::Get( context.project ).Import(mFileName);
+bool ImportCommand::Apply(const CommandContext & context)
+{
+   bool wasEmpty = TrackList::Get( context.project ).Any().empty();
+   bool success = ProjectFileManager::Get( context.project )
+      .Import(mFileName, false);
+
+   if (success && wasEmpty)
+   {
+      SelectUtilities::SelectAllIfNone( context.project );
+   }
+
+   return success;
 }
 
 

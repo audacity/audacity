@@ -35,7 +35,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 
 
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "Import.h"
 
 #include "ImportPlugin.h"
@@ -49,6 +49,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include <wx/listbox.h>
 #include <wx/log.h>
 #include <wx/sizer.h>         //for wxBoxSizer
+#include "../FFmpeg.h"
 #include "../FileNames.h"
 #include "../ShuttleGui.h"
 #include "../Project.h"
@@ -455,7 +456,7 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 // returns number of tracks imported
 bool Importer::Import( AudacityProject &project,
                      const FilePath &fName,
-                     TrackFactory *trackFactory,
+                     WaveTrackFactory *trackFactory,
                      TrackHolders &tracks,
                      Tags *tags,
                      TranslatableString &errorMessage)
@@ -475,6 +476,14 @@ bool Importer::Import( AudacityProject &project,
       return false;
    }
 #endif
+
+   // Bug #2647: Peter has a Word 2000 .doc file that is recognized and imported by FFmpeg.
+   if (wxFileName(fName).GetExt() == wxT("doc")) {
+      errorMessage =
+         XO("\"%s\" \nis a not an audio file. \nAudacity cannot open this type of file.")
+         .Format( fName );
+      return false;
+   }
 
    using ImportPluginPtrs = std::vector< ImportPlugin* >;
 
@@ -569,16 +578,6 @@ bool Importer::Import( AudacityProject &project,
    }
 
    // Add all plugins that support the extension
-
-   // Here we rely on the fact that the first plugin in sImportPluginList() is libsndfile.
-   // We want to save this for later insertion ahead of libmad, if libmad supports the extension.
-   // The order of plugins in sImportPluginList() is determined by the Importer constructor alone and
-   // is not changed by user selection overrides or any other mechanism, but we include an assert
-   // in case subsequent code revisions to the constructor should break this assumption that
-   // libsndfile is first.
-   ImportPlugin *libsndfilePlugin = *sImportPluginList().begin();
-   wxASSERT(libsndfilePlugin->GetPluginStringID() == wxT("libsndfile"));
-
    for (const auto &plugin : sImportPluginList())
    {
       // Make sure its not already in the list
@@ -593,10 +592,7 @@ bool Importer::Import( AudacityProject &project,
       }
    }
 
-   // Add remaining plugins, except for libmad, which should not be used as a fallback for anything.
-   // Otherwise, if FFmpeg (libav) has not been installed, libmad will still be there near the
-   // end of the preference list importPlugins, where it will claim success importing FFmpeg file
-   // formats unsuitable for it, and produce distorted results.
+   // Add remaining plugins
    for (const auto &plugin : sImportPluginList())
    {
       // Make sure its not already in the list
@@ -805,8 +801,13 @@ bool Importer::Import( AudacityProject &project,
       // we were not able to recognize the file type
       errorMessage = XO(
 /* i18n-hint: %s will be the filename */
-"Audacity did not recognize the type of the file '%s'.\nTry installing FFmpeg. For uncompressed files, also try File > Import > Raw Data.")
-         .Format( fName );
+"Audacity did not recognize the type of the file '%s'.\n\n%sFor uncompressed files, also try File > Import > Raw Data.")
+         .Format( fName,
+#if defined(USE_FFMPEG)
+                  !FFmpegLibsInst()
+                  ? XO("Try installing FFmpeg.\n\n") :
+#endif
+                  Verbatim("") );
    }
    else
    {

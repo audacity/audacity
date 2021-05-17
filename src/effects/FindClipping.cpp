@@ -19,7 +19,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "FindClipping.h"
 #include "LoadEffects.h"
 

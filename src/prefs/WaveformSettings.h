@@ -12,15 +12,16 @@ Paul Licameli
 #define __AUDACITY_WAVEFORM_SETTINGS__
 
 #include "../Internat.h" // for TranslatableStrings
+#include "../Prefs.h"
 
 class EnumValueSymbols;
 
-class WaveformSettings
+class AUDACITY_DLL_API WaveformSettings : public PrefsListener
 {
 public:
 
    // Singleton for settings that are not per-track
-   class Globals
+   class AUDACITY_DLL_API Globals
    {
    public:
       static Globals &Get();
@@ -46,6 +47,8 @@ public:
    void LoadPrefs();
    void SavePrefs();
    void Update();
+
+   void UpdatePrefs() override;
 
    void ConvertToEnumeratedDBRange();
    void ConvertToActualDBRange();

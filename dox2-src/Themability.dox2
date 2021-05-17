@@ -166,8 +166,8 @@ The current algorithm for determining which image to use is:
   - ELSE use the built in ' ThemeAsCeeCode.h ' defaults.
 
 This is handled in function \ref ThemeBase::LoadThemeAtStartUp().  Once the 
-deprecated XPMs have been removed, we wil switch over to using the built 
-in 'ThemeAsCeeCode.h' defualts where we currently use the XPM defaults.
+deprecated XPMs have been removed, we will switch over to using the built 
+in 'ThemeAsCeeCode.h' defaults where we currently use the XPM defaults.
 
 
 
@@ -202,7 +202,7 @@ the program like so:
 
 This reserves a 64 x 64 pixel bitmap.  You can now refer to it from within the 
 program using bmpSomeNewImage.  If you add images on to the end of the list 
-you will generally have the least problems with compatability of versions.  
+you will generally have the least problems with compatibility of versions.  
 If you are adding many images, the most efficient packing of images occurs 
 when the images are added in tallest-first order since Audacity starts a new
 row whenever the height increases.

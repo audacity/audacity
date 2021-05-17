@@ -44,26 +44,11 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <type_traits>
 #include <vector>
 #include <wx/debug.h> // for wxASSERT
 #include <wx/string.h> // type used in inline function and member variable
-#include <wx/version.h> // for wxCHECK_VERSION
-
-#if !wxCHECK_VERSION(3, 1, 0)
-// For using std::unordered_map on wxString
-namespace std
-{
-   template<> struct hash< wxString > {
-      size_t operator () (const wxString &str) const // noexcept
-      {
-         auto stdstr = str.ToStdWstring(); // no allocations, a cheap fetch
-         using Hasher = hash< decltype(stdstr) >;
-         return Hasher{}( stdstr );
-      }
-   };
-}
-#endif
 
 // ----------------------------------------------------------------------------
 // TODO:  I'd imagine this header may be replaced by other public headers. But,
@@ -210,7 +195,7 @@ public:
 // to one of the operators on Identifiers defined above, but always case
 // sensitive.
 
-// Comparison operators for two TaggedIdentifers, below, require the same tags
+// Comparison operators for two TaggedIdentifiers, below, require the same tags
 // and case sensitivity.
 template< typename Tag1, typename Tag2, bool b1, bool b2 >
 inline bool operator == (
@@ -303,7 +288,7 @@ using CommandIDs = std::vector<CommandID>;
 // The msgid should be used only in unusual cases and the translation more often
 //
 // Implicit conversions to and from wxString are intentionally disabled
-class TranslatableString {
+class AUDACITY_DLL_API TranslatableString {
    enum class Request;
    template< size_t N > struct PluralTemp;
 
@@ -389,7 +374,10 @@ public:
             default: {
                bool debug = request == Request::DebugFormat;
                return wxString::Format(
-                  TranslatableString::DoSubstitute( prevFormatter, str, debug ),
+                  TranslatableString::DoSubstitute(
+                     prevFormatter,
+                     str, TranslatableString::DoGetContext( prevFormatter ),
+                     debug ),
                   TranslatableString::TranslateArgument( args, debug )...
                );
             }
@@ -415,8 +403,11 @@ public:
          switch ( request ) {
             case Request::Context:
                return context;
+            case Request::DebugFormat:
+               return DoSubstitute( {}, str, context, true );
+            case Request::Format:
             default:
-               return str;
+               return DoSubstitute( {}, str, context, false );
          }
       };
       return *this;
@@ -493,9 +484,11 @@ private:
 
    static wxString DoGetContext( const Formatter &formatter );
    static wxString DoSubstitute(
-      const Formatter &formatter, const wxString &format, bool debug );
+      const Formatter &formatter,
+      const wxString &format, const wxString &context, bool debug );
    wxString DoFormat( bool debug ) const
-   {  return DoSubstitute( mFormatter, mMsgid, debug ); }
+   {  return DoSubstitute(
+      mFormatter, mMsgid, DoGetContext(mFormatter), debug ); }
 
    static wxString DoChooseFormat(
       const Formatter &formatter,
@@ -723,9 +716,15 @@ inline size_t limitSampleBufferSize( size_t bufferSize, sampleCount limit )
 // ----------------------------------------------------------------------------
 enum sampleFormat : unsigned
 {
+   //! The increasing sequence of these enum values must correspond to the increasing data type width
+   //! These values persist in saved project files, so must not be changed in later program versions
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
-   floatSample = 0x0004000F
+   floatSample = 0x0004000F,
+
+   //! Two synonyms for previous values that might change if more values were added
+   narrowestSampleFormat = int16Sample,
+   widestSampleFormat = floatSample,
 };
 
 // ----------------------------------------------------------------------------
@@ -793,67 +792,5 @@ using NumericFormatSymbol = EnumValueSymbol;
 using VendorSymbol = ComponentInterfaceSymbol;
 
 using EffectFamilySymbol = ComponentInterfaceSymbol;
-
-// LLL FIXME: Until a complete API is devised, we have to use
-//            AUDACITY_DLL_API when defining API classes.  This
-//            it ugly, but a part of the game.  Remove it when
-//            the API is complete.
-
-
-#if !defined(AUDACITY_DLL_API)
-   // This was copied from "Audacity.h" so these headers wouldn't have
-   // to include it.
-
-   /* Magic for dynamic library import and export. This is unfortunately
-    * compiler-specific because there isn't a standard way to do it. Currently it
-    * works with the Visual Studio compiler for windows, and for GCC 4+. Anything
-    * else gets all symbols made public, which gets messy */
-   /* The Visual Studio implementation */
-   #ifdef _MSC_VER
-      #ifndef AUDACITY_DLL_API
-         #ifdef BUILDING_AUDACITY
-            #define AUDACITY_DLL_API _declspec(dllexport)
-         #else
-            #ifdef _DLL
-               #define AUDACITY_DLL_API _declspec(dllimport)
-            #else
-               #define AUDACITY_DLL_API
-            #endif
-         #endif
-      #endif
-   #endif //_MSC_VER
-
-   /* The GCC-elf implementation */
-   #ifdef HAVE_VISIBILITY // this is provided by the configure script, is only
-   // enabled for suitable GCC versions
-   /* The incantation is a bit weird here because it uses ELF symbol stuff. If we
-    * make a symbol "default" it makes it visible (for import or export). Making it
-    * "hidden" means it is invisible outside the shared object. */
-      #ifndef AUDACITY_DLL_API
-         #ifdef BUILDING_AUDACITY
-            #define AUDACITY_DLL_API __attribute__((visibility("default")))
-         #else
-            #define AUDACITY_DLL_API __attribute__((visibility("default")))
-         #endif
-      #endif
-   #endif
-
-   /* The GCC-win32 implementation */
-   // bizzarely, GCC-for-win32 supports Visual Studio style symbol visibility, so
-   // we use that if building on Cygwin
-   #if defined __CYGWIN__ && defined __GNUC__
-      #ifndef AUDACITY_DLL_API
-         #ifdef BUILDING_AUDACITY
-            #define AUDACITY_DLL_API _declspec(dllexport)
-         #else
-            #ifdef _DLL
-               #define AUDACITY_DLL_API _declspec(dllimport)
-            #else
-               #define AUDACITY_DLL_API
-            #endif
-         #endif
-      #endif
-   #endif
-#endif
 
 #endif // __AUDACITY_TYPES_H__

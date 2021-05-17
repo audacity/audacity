@@ -19,7 +19,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "SimpleMono.h"
 
 #include "../WaveTrack.h"

@@ -20,15 +20,12 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"    // needed before FFmpeg.h // for USE_* macros
 
-#include "../Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
 #include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
-#include "../WaveClip.h"
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/window.h>
@@ -112,6 +109,7 @@ static const auto exts = {
    wxT("nsv"),
    wxT("nuv"),
    wxT("ogg"),
+   wxT("opus"),
    wxT("psxstr"),
    wxT("pva"),
    wxT("redir"),
@@ -199,7 +197,7 @@ public:
 
    ///! Imports audio
    ///\return import status (see Import.cpp)
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
       Tags *tags) override;
 
    ///! Reads next audio frame
@@ -226,7 +224,7 @@ public:
    ///\ tags - Audacity tags object
    ///\ tag - name of tag to set
    ///\ name - name of metadata item to retrieve
-   void GetMetadata(Tags *tags, const wxChar *tag, const char *name);
+   void GetMetadata(Tags &tags, const wxChar *tag, const char *name);
 
    ///! Called by Import.cpp
    ///\return number of readable streams in the file
@@ -466,7 +464,7 @@ auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
               TrackHolders &outTracks,
               Tags *tags)
 {
@@ -516,7 +514,7 @@ ProgressResult FFmpegImportFileHandle::Import(TrackFactory *trackFactory,
       sc->m_initialchannels = sc->m_stream->codec->channels;
       stream.resize(sc->m_stream->codec->channels);
       for (auto &channel : stream)
-         channel = trackFactory->NewWaveTrack(sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
+         channel = NewWaveTrack(*trackFactory, sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
    }
 
    // Handles the start_time by creating silence. This may or may not be correct.
@@ -730,26 +728,44 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
 
 void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
 {
-   tags->Clear();
+   Tags temp;
 
-   GetMetadata(tags, TAG_TITLE, "title");
-   GetMetadata(tags, TAG_ARTIST, "author");
-//   GetMetadata(tags, TAG_COPYRIGHT, "copyright");
-   GetMetadata(tags, TAG_COMMENTS, "comment");
-   GetMetadata(tags, TAG_ALBUM, "album");
-   GetMetadata(tags, TAG_YEAR, "year");
-   GetMetadata(tags, TAG_TRACK, "track");
-   GetMetadata(tags, TAG_GENRE, "genre");
+   GetMetadata(temp, TAG_TITLE, "title");
+   GetMetadata(temp, TAG_COMMENTS, "comment");
+   GetMetadata(temp, TAG_ALBUM, "album");
+   GetMetadata(temp, TAG_TRACK, "track");
+   GetMetadata(temp, TAG_GENRE, "genre");
+
+   if (wxString(mFormatContext->iformat->name).Contains("m4a"))
+   {
+      GetMetadata(temp, TAG_ARTIST, "artist");
+      GetMetadata(temp, TAG_YEAR, "date");
+   }
+   else if (wxString(mFormatContext->iformat->name).Contains("asf")) /* wma */
+   {
+      GetMetadata(temp, TAG_ARTIST, "artist");
+      GetMetadata(temp, TAG_YEAR, "year");
+   }
+   else
+   {
+      GetMetadata(temp, TAG_ARTIST, "author");
+      GetMetadata(temp, TAG_YEAR, "year");
+   }
+
+   if (!temp.IsEmpty())
+   {
+      *tags = temp;
+   }
 }
 
-void FFmpegImportFileHandle::GetMetadata(Tags *tags, const wxChar *tag, const char *name)
+void FFmpegImportFileHandle::GetMetadata(Tags &tags, const wxChar *tag, const char *name)
 {
    AVDictionaryEntry *meta;
 
    meta = av_dict_get(mFormatContext->metadata, name, NULL, AV_DICT_IGNORE_SUFFIX);
    if (meta)
    {
-      tags->SetTag(tag, wxString::FromUTF8(meta->value));
+      tags.SetTag(tag, wxString::FromUTF8(meta->value));
    }
 }
 

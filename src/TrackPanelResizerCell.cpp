@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "TrackPanelResizerCell.h"
 
 #include "AColor.h"
@@ -20,8 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "HitTestResult.h"
 #include "ViewInfo.h"
 #include "widgets/OverlayPanel.h"
-
-#include "tracks/ui/TrackView.h"
 
 #include <wx/dc.h>
 #include <wx/mousestate.h>

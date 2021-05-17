@@ -13,10 +13,8 @@ Paul Licameli
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
-#include "SpectrogramSettings.h"
 
-#include "../Experimental.h"
+#include "SpectrogramSettings.h"
 
 #include "../NumberScale.h"
 
@@ -46,7 +44,7 @@ void SpectrogramSettings::Globals::LoadPrefs()
 {
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
    spectralSelection
-      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 0L) != 0);
+      = (gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), 1L) != 0);
 #endif
 }
 
@@ -255,7 +253,7 @@ void SpectrogramSettings::LoadPrefs()
    zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
 #endif
 
-   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHanning);
+   gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
 
    isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
 
@@ -325,6 +323,103 @@ void SpectrogramSettings::SavePrefs()
    gPrefs->Write(wxT("/Spectrum/FindNotesN"), numberOfMaxima);
    gPrefs->Write(wxT("/Spectrum/FindNotesQuantize"), findNotesQuantize);
 #endif //EXPERIMENTAL_FIND_NOTES
+}
+
+// This is a temporary hack until SpectrogramSettings gets fully integrated
+void SpectrogramSettings::UpdatePrefs()
+{
+   if (minFreq == defaults().minFreq) {
+      gPrefs->Read(wxT("/Spectrum/MinFreq"), &minFreq, 0L);
+   }
+
+   if (maxFreq == defaults().maxFreq) {
+      gPrefs->Read(wxT("/Spectrum/MaxFreq"), &maxFreq, 8000L);
+   }
+
+   if (range == defaults().range) {
+      gPrefs->Read(wxT("/Spectrum/Range"), &range, 80L);
+   }
+
+   if (gain == defaults().gain) {
+      gPrefs->Read(wxT("/Spectrum/Gain"), &gain, 20L);
+   }
+
+   if (frequencyGain == defaults().frequencyGain) {
+      gPrefs->Read(wxT("/Spectrum/FrequencyGain"), &frequencyGain, 0L);
+   }
+
+   if (windowSize == defaults().windowSize) {
+      gPrefs->Read(wxT("/Spectrum/FFTSize"), &windowSize, 1024);
+   }
+
+#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   if (zeroPaddingFactor == defaults().zeroPaddingFactor) {
+      gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), &zeroPaddingFactor, 1);
+   }
+#endif
+
+   if (windowType == defaults().windowType) {
+      gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
+   }
+
+   if (isGrayscale == defaults().isGrayscale) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/Grayscale"), &temp, 0L);
+      isGrayscale = (temp != 0);
+   }
+
+   if (scaleType == defaults().scaleType) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/ScaleType"), &temp, 0L);
+      scaleType = ScaleType(temp);
+   }
+
+#ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
+   if (spectralSelection == defaults().spectralSelection) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/EnableSpectralSelection"), &temp, 1L);
+      spectralSelection = (temp != 0);
+   }
+#endif
+
+   if (algorithm == defaults().algorithm) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/Algorithm"), &temp, 0L);
+      algorithm = Algorithm(temp);
+   }
+
+#ifdef EXPERIMENTAL_FFT_Y_GRID
+   if (fftYGrid == defaults().fftYGrid) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/FFTYGrid"), &temp, 0L);
+      fftYGrid = (temp != 0);
+   }
+#endif //EXPERIMENTAL_FFT_Y_GRID
+
+#ifdef EXPERIMENTAL_FIND_NOTES
+   if (fftFindNotes == defaults().fftFindNotes) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/FFTFindNotes"), &temp, 0L);
+      fftFindNotes = (temp != 0);
+   }
+
+   if (findNotesMinA == defaults().findNotesMinA) {
+      gPrefs->Read(wxT("/Spectrum/FindNotesMinA"), &findNotesMinA, -30.0);
+   }
+
+   if (numberOfMaxima == defaults().numberOfMaxima) {
+      numberOfMaxima = gPrefs->Read(wxT("/Spectrum/FindNotesN"), &numberOfMaxima, 5L);
+   }
+
+   if (findNotesQuantize == defaults().findNotesQuantize) {
+      int temp;
+      gPrefs->Read(wxT("/Spectrum/FindNotesQuantize"), &temp, 0L);
+      findNotesQuantize = (temp != 0);
+   }
+#endif //EXPERIMENTAL_FIND_NOTES
+
+   // Enforce legal values
+   Validate(true);
 }
 
 void SpectrogramSettings::InvalidateCaches()
@@ -407,8 +502,9 @@ void SpectrogramSettings::CacheWindows() const
    if (hFFT == NULL || window == NULL) {
 
       double scale;
-      const auto fftLen = WindowSize() * ZeroPaddingFactor();
-      const auto padding = (WindowSize() * (zeroPaddingFactor - 1)) / 2;
+      auto factor = ZeroPaddingFactor();
+      const auto fftLen = WindowSize() * factor;
+      const auto padding = (WindowSize() * (factor - 1)) / 2;
 
       hFFT = GetFFT(fftLen);
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);

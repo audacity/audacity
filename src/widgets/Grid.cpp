@@ -13,13 +13,14 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Grid.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/defs.h>
 #include <wx/choice.h>
+#include <wx/clipbrd.h>
 #include <wx/dc.h>
 #include <wx/grid.h>
 #include <wx/intl.h>
@@ -467,6 +468,7 @@ BEGIN_EVENT_TABLE(Grid, wxGrid)
    EVT_SET_FOCUS(Grid::OnSetFocus)
    EVT_KEY_DOWN(Grid::OnKeyDown)
    EVT_GRID_SELECT_CELL(Grid::OnSelectCell)
+   EVT_GRID_EDITOR_SHOWN(Grid::OnEditorShown)
 END_EVENT_TABLE()
 
 Grid::Grid(wxWindow *parent,
@@ -498,6 +500,11 @@ Grid::Grid(wxWindow *parent,
    RegisterDataType(GRID_VALUE_CHOICE,
                     safenew wxGridCellStringRenderer,
                     safenew ChoiceEditor);
+
+   // Bug #2803:
+   // Ensure selection doesn't show up.
+   SetSelectionForeground(GetDefaultCellTextColour());
+   SetSelectionBackground(GetDefaultCellBackgroundColour());
 }
 
 Grid::~Grid()
@@ -525,14 +532,68 @@ void Grid::OnSelectCell(wxGridEvent &event)
 {
    event.Skip();
 
+   MakeCellVisible(event.GetRow(), event.GetCol());
+
 #if wxUSE_ACCESSIBILITY
    mAx->SetCurrentCell(event.GetRow(), event.GetCol());
 #endif
 }
 
+void Grid::OnEditorShown(wxGridEvent &event)
+{
+   event.Skip();
+
+   // Bug #2803 (comment 7):
+   // Select row whenever an editor is displayed
+   SelectRow(GetGridCursorRow());
+}
+
 void Grid::OnKeyDown(wxKeyEvent &event)
 {
-   switch (event.GetKeyCode())
+   auto keyCode = event.GetKeyCode();
+   int crow = GetGridCursorRow();
+   int ccol = GetGridCursorCol();
+
+   if (event.CmdDown() && crow != wxGridNoCellCoords.GetRow() && ccol != wxGridNoCellCoords.GetCol())
+   {
+      wxClipboardLocker cb;
+
+      switch (keyCode)
+      {
+         case 'C': // Copy
+         {
+            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+            wxClipboard::Get()->SetData(data);
+            return;
+         }
+         break;
+
+         case 'X': // Cut
+         {
+            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+            wxClipboard::Get()->SetData(data);
+            SetCellValue(crow, ccol, "" );
+            return;
+         }
+         break;
+
+         case 'V': // Paste
+         {
+            if (wxClipboard::Get()->IsSupported(wxDF_UNICODETEXT))
+            {
+               wxTextDataObject data;
+               if (wxClipboard::Get()->GetData(data))
+               {
+                  SetCellValue(crow, ccol, data.GetText());
+                  return;
+               }
+            }
+         }
+         break;
+      }
+   }
+
+   switch (keyCode)
    {
       case WXK_LEFT:
       case WXK_RIGHT:
@@ -872,6 +933,7 @@ wxAccStatus GridAx::GetLocation(wxRect & rect, int elementId)
 
    if (GetRowCol(elementId, row, col)) {
       rect = mGrid->CellToRect(row, col);
+      rect.SetPosition(mGrid->CalcScrolledPosition(rect.GetPosition()));
       rect.SetPosition(mGrid->GetGridWindow()->ClientToScreen(rect.GetPosition()));
    }
    else {

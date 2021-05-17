@@ -18,7 +18,7 @@ or "OFF" point
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "VoiceKey.h"
 
 #include <wx/string.h>
@@ -381,7 +381,7 @@ sampleCount VoiceKey::OnBackward (
 }
 
 
-//Move froward from the start to find an OFF region.
+//Move forward from the start to find an OFF region.
 sampleCount VoiceKey::OffForward (
    const WaveTrack & t, sampleCount start, sampleCount len)
 {

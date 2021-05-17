@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "StereoToMono.h"
 #include "LoadEffects.h"
 
@@ -21,8 +21,8 @@
 
 #include "../Mix.h"
 #include "../Project.h"
-#include "../TimeTrack.h"
 #include "../WaveTrack.h"
+#include "../widgets/ProgressDialog.h"
 
 const ComponentInterfaceSymbol EffectStereoToMono::Symbol
 { XO("Stereo To Mono") };
@@ -94,7 +94,24 @@ bool EffectStereoToMono::Process()
       if (channels.size() > 1)
       {
          auto right = *channels.rbegin();
-         if (left->GetRate() == right->GetRate())
+         auto leftRate = left->GetRate();
+         auto rightRate = right->GetRate();
+
+         if (leftRate != rightRate)
+         {
+            if (leftRate != mProjectRate)
+            {
+               mProgress->SetMessage(XO("Resampling left channel"));
+               left->Resample(mProjectRate, mProgress);
+               leftRate = mProjectRate;
+            }
+            if (rightRate != mProjectRate)
+            {
+               mProgress->SetMessage(XO("Resampling right channel"));
+               right->Resample(mProjectRate, mProgress);
+               rightRate = mProjectRate;
+            }
+         }
          {
             auto start = wxMin(left->TimeToLongSamples(left->GetStartTime()),
                                right->TimeToLongSamples(right->GetStartTime()));
@@ -112,6 +129,8 @@ bool EffectStereoToMono::Process()
    sampleCount curTime = 0;
    bool refreshIter = false;
 
+   mProgress->SetMessage(XO("Mixing down to mono"));
+
    trackRange = mOutputTracks->SelectedLeaders< WaveTrack >();
    while (trackRange.first != trackRange.second)
    {
@@ -121,17 +140,14 @@ bool EffectStereoToMono::Process()
       {
          auto right = *channels.rbegin();
 
-         if (left->GetRate() == right->GetRate())
+         bGoodResult = ProcessOne(curTime, totalTime, left, right);
+         if (!bGoodResult)
          {
-            bGoodResult = ProcessOne(curTime, totalTime, left, right);
-            if (!bGoodResult)
-            {
-               break;
-            }
-
-            // The right channel has been deleted, so we must restart from the beginning
-            refreshIter = true;
+            break;
          }
+
+         // The right channel has been deleted, so we must restart from the beginning
+         refreshIter = true;
       }
 
       if (refreshIter)
@@ -162,17 +178,16 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    tracks.push_back(left->SharedPointer< const WaveTrack >());
    tracks.push_back(right->SharedPointer< const WaveTrack >());
 
-   auto timeTrack = *(inputTracks()->Any<const TimeTrack>().begin());
-
    Mixer mixer(tracks,
                true,                // Throw to abort mix-and-render if read fails:
-               Mixer::WarpOptions(timeTrack ? timeTrack->GetEnvelope() : nullptr),
+               Mixer::WarpOptions{*inputTracks()},
                start,
                end,
                1,
                idealBlockLen,
                false,               // Not interleaved
-               mProjectRate,
+               left->GetRate(),     // Process() checks that left and right
+                                    // rates are the same
                floatSample);
 
    auto outTrack = left->EmptyCopy();

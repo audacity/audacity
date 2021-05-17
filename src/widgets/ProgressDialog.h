@@ -18,7 +18,7 @@
 #ifndef __AUDACITY_WIDGETS_PROGRESSDIALOG__
 #define __AUDACITY_WIDGETS_PROGRESSDIALOG__
 
-#include "../Audacity.h"
+
 
 #include <vector>
 #include <wx/defs.h>

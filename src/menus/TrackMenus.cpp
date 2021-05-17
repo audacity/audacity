@@ -1,5 +1,4 @@
-#include "../Audacity.h"
-#include "../Experimental.h"
+
 
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -51,7 +50,7 @@ void DoMixAndRender
 {
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto rate = settings.GetRate();
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get( project );
@@ -607,7 +606,7 @@ void OnNewWaveTrack(const CommandContext &context)
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
@@ -631,7 +630,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualityPrefs::SampleFormatChoice();
@@ -658,10 +657,10 @@ void OnNewLabelTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto t = tracks.Add( trackFactory.NewLabelTrack() );
+   auto t = tracks.Add( std::make_shared<LabelTrack>() );
 
    SelectUtilities::SelectNone( project );
 
@@ -678,7 +677,7 @@ void OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &trackFactory = TrackFactory::Get( project );
+   auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    if ( *tracks.Any<TimeTrack>().begin() ) {
@@ -688,7 +687,7 @@ void OnNewTimeTrack(const CommandContext &context)
       return;
    }
 
-   auto t = tracks.AddToHead( trackFactory.NewTimeTrack() );
+   auto t = tracks.AddToHead( std::make_shared<TimeTrack>(&viewInfo) );
 
    SelectUtilities::SelectNone( project );
 
@@ -962,7 +961,7 @@ void OnScoreAlign(const CommandContext &context)
    }
 
    // Creating the dialog also stores dialog into gScoreAlignDialog so
-   // that it can be delted by CloseScoreAlignDialog() either here or
+   // that it can be deleted by CloseScoreAlignDialog() either here or
    // if the program is quit by the user while the dialog is up.
    ScoreAlignParams params;
 
@@ -997,9 +996,7 @@ void OnScoreAlign(const CommandContext &context)
       Mixer mix(
          waveTracks,              // const WaveTrackConstArray &inputTracks
          false, // mayThrow -- is this right?
-         Mixer::WarpOptions{
-            *tracks->Any<const TimeTrack >().begin()
-         }, // const WarpOptions &warpOptions
+         Mixer::WarpOptions{ *tracks },
          0.0,                     // double startTime
          endTime,                 // double stopTime
          2,                       // int numOutChannels
@@ -1358,9 +1355,9 @@ BaseItemSharedPtr TracksMenu()
             Command( wxT("UnmuteAllTracks"), XXO("&Unmute All Tracks"),
                FN(OnUnmuteAllTracks), TracksExistFlag(), wxT("Ctrl+Shift+U") ),
             Command( wxT("MuteTracks"), XXO("Mut&e Tracks"),
-               FN(OnMuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+U") ),
+               FN(OnMuteSelectedTracks), EditableTracksSelectedFlag(), wxT("Ctrl+Alt+U") ),
             Command( wxT("UnmuteTracks"), XXO("U&nmute Tracks"),
-               FN(OnUnmuteSelectedTracks), TracksSelectedFlag(), wxT("Ctrl+Alt+Shift+U") )
+               FN(OnUnmuteSelectedTracks), EditableTracksSelectedFlag(), wxT("Ctrl+Alt+Shift+U") )
          ),
 
          Menu( wxT("Pan"), XXO("&Pan"),
@@ -1369,13 +1366,13 @@ BaseItemSharedPtr TracksMenu()
             // in the project could very easily be lost unless we
             // require the tracks to be selected.
             Command( wxT("PanLeft"), XXO("&Left"), FN(OnPanLeft),
-               TracksSelectedFlag(),
+               EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Left") ) ),
             Command( wxT("PanRight"), XXO("&Right"), FN(OnPanRight),
-               TracksSelectedFlag(),
+               EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Right") ) ),
             Command( wxT("PanCenter"), XXO("&Center"), FN(OnPanCenter),
-               TracksSelectedFlag(),
+               EditableTracksSelectedFlag(),
                Options{}.LongName( XO("Pan Center") ) )
          )
       ),
@@ -1389,14 +1386,14 @@ BaseItemSharedPtr TracksMenu()
                      { wxT("EndToEnd"),     XXO("&Align End to End") },
                      { wxT("Together"),     XXO("Align &Together") },
                   },
-                  FN(OnAlignNoSync), AudioIONotBusyFlag() | TracksSelectedFlag())
+                  FN(OnAlignNoSync), AudioIONotBusyFlag() | EditableTracksSelectedFlag())
             ),
 
             Section( "",
                // Alignment commands using selection or zero
                CommandGroup(wxT("Align"),
                   alignLabels(),
-                  FN(OnAlign), AudioIONotBusyFlag() | TracksSelectedFlag())
+                  FN(OnAlign), AudioIONotBusyFlag() | EditableTracksSelectedFlag())
             ),
 
             Section( "",
@@ -1413,7 +1410,7 @@ BaseItemSharedPtr TracksMenu()
          // Do we need this sub-menu at all?
          Menu( wxT("MoveSelectionAndTracks"), XO("Move Sele&ction and Tracks"), {
             CommandGroup(wxT("AlignMove"), alignLabels(),
-               FN(OnAlignMoveSel), AudioIONotBusyFlag() | TracksSelectedFlag()),
+               FN(OnAlignMoveSel), AudioIONotBusyFlag() | EditableTracksSelectedFlag()),
          } ),
    #endif
 

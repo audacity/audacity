@@ -63,14 +63,14 @@ samples).  When downsampling, the filter is stretched by 1/factor
 
 */
 
-void resample_free();
+void resample_free(snd_susp_type a_susp);
 
 typedef struct resample_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s;
-    long s_cnt;
+    int s_cnt;
     sample_block_values_type s_ptr;
     float *X;
     long Xsize;
@@ -118,7 +118,7 @@ static int SrcUp(float X[], float Y[], double factor, double *Time,
         *Y++ = (float) v;
         *Time += dt;		/* Move to next sample by time increment */
     }
-    return (Y - Ystart);        /* Return the number of output samples */
+    return (int) (Y - Ystart);        /* Return the number of output samples */
 }
 
 
@@ -152,7 +152,7 @@ static int SrcUD(float X[], float Y[], double factor, double *Time,
         *Y++ = (float) v;
         *Time += dt;		/* Move to next sample by time increment */
     }
-    return (Y - Ystart);        /* Return the number of output samples */
+    return (int) (Y - Ystart);        /* Return the number of output samples */
 }
 
 
@@ -199,13 +199,13 @@ samples need to be shifted from the end of X to the beginning.
 
     while (susp->Xp < susp->Xsize) { /* outer loop */
         /* read samples from susp->s into X */
-        togo = susp->Xsize - susp->Xp;
+        togo = (int) (susp->Xsize - susp->Xp);
         /* don't run past the s input sample block. If termination or
          * logical stop info become available, translate to susp->terminate_cnt
          * and susp->log_stop_cnt.
          */
         susp_check_term_log_samples(s, s_ptr, s_cnt);
-        togo = MIN(togo, susp->s_cnt);
+        togo = (int) MIN(togo, susp->s_cnt);
         
         memcpy(susp->X + susp->Xp, susp->s_ptr, togo * sizeof(sample_type));
         susp->s_ptr += togo;
@@ -221,15 +221,15 @@ samples need to be shifted from the end of X to the beginning.
     togo = max_sample_block_len;
     if (susp->terminate_cnt != UNKNOWN &&
         susp->terminate_cnt <= susp->susp.current + max_sample_block_len) {
-        togo = susp->terminate_cnt - susp->susp.current;
+        togo = (int) (susp->terminate_cnt - susp->susp.current);
     }
     if (!susp->logically_stopped &&
         susp->susp.log_stop_cnt != UNKNOWN) {
-        int to_stop = susp->susp.log_stop_cnt - susp->susp.current;
+        int64_t to_stop = susp->susp.log_stop_cnt - susp->susp.current;
         assert(to_stop >= 0);
         if (to_stop < togo) {
             if (to_stop == 0) susp->logically_stopped = true;
-            else togo = to_stop;
+            else togo = (int) to_stop;
         }
     }
     if (togo == 0) {

@@ -56,7 +56,7 @@ III. WINDOW DECOR:
 	B: Open a new Audacity project with a .wav file as a
 				command line argument.
 
-			B1. Title bar should initally say "Audacity".
+			B1. Title bar should initially say "Audacity".
 				After file is imported, title should change to
 				the filename (with extension).
 

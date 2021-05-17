@@ -8,7 +8,7 @@
 
   Provides Macros for recording bad events and performance monitoring.
   These macros have such low cost that they can be used in release code.
-  They will take miniscule processing time after the first ten times.
+  They will take minuscule processing time after the first ten times.
 
 **********************************************************************/
 

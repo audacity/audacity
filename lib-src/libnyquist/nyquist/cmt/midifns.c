@@ -331,10 +331,10 @@ private ulong ticksAtStart = 0L;
 *
 ****************************************************************************/
 
-private void fixup();
-private void midi_init();
-extern boolean check_ascii(); /*userio.c*/
-private void musicterm();
+private void fixup(void);
+private void midi_init(void);
+extern boolean check_ascii(void); /*userio.c*/
+private void musicterm(void);
 
 
 /****************************************************************************
@@ -347,7 +347,7 @@ private void musicterm();
 
 #define ALL_NOTES_OFF 0x7B /*DMH: from macmidi.c*/
 
-void alloff()
+void alloff(void)
 {
     int c;
 
@@ -371,8 +371,7 @@ void alloff()
 ***************************************************************/
 
 #ifdef UNIX_ITC
-void eventwait(timeout)
-  long timeout;
+void eventwait(long timeout)
 {
     struct timeval unix_timeout;
     struct timeval *waitspec = NULL;
@@ -422,8 +421,7 @@ void eventwait(timeout)
 }
 #else
 #ifdef BUFFERED_SYNCHRONOUS_INPUT
-void eventwait(timeout)
-  long timeout;
+void eventwait(long timeout)
 {
     struct timeval unix_timeout;
     struct timeval *waitspec = NULL;
@@ -433,10 +431,11 @@ void eventwait(timeout)
     timeout -= gettime();   /* convert to millisecond delay */
     unix_timeout.tv_sec = timeout / 1000;
     /* remainder become microsecs: */
-    unix_timeout.tv_usec = (timeout - (unix_timeout.tv_sec * 1000)) * 1000;
+    unix_timeout.tv_usec = (int)
+            (timeout - (unix_timeout.tv_sec * 1000)) * 1000;
     waitspec = &unix_timeout;
     getrlimit(RLIMIT_NOFILE, &file_limit);
-    select(file_limit.rlim_max+1, 0, 0, 0, waitspec);
+    select((int) (file_limit.rlim_max+1), 0, 0, 0, waitspec);
     } else {
     int c = getc(stdin);
     ungetc(c, stdin);
@@ -444,8 +443,7 @@ void eventwait(timeout)
     return;
 }
 #else
-void eventwait(timeout)
-  long timeout;
+void eventwait(long timeout)
 {
     struct timeval unix_timeout;
     struct timeval *waitspec = NULL;
@@ -473,8 +471,7 @@ void eventwait(timeout)
 #else
 #ifndef UNIX /* since I couldn't use an else above, have to check UNIX here */
 #ifdef WINDOWS
-void eventwait(timeout)
-  long timeout;
+void eventwait(long timeout)
 {
     if (timeout >= 0) {
     gprintf(TRANS, "eventwait: not implemented\n");
@@ -528,7 +525,7 @@ void exclusive(boolean onflag)
 *    Print error message and call musicinit
 ****************************************************************************/
 
-private void fixup()
+private void fixup(void)
 {
     gprintf(ERROR, "You forgot to call musicinit.  I'll do it for you.\n");
     musicinit();
@@ -730,7 +727,7 @@ private void setup_sysex(MDevent *event, u_char *buffer)
    sysex_n = event->msglen;
 }
 
-private void flush_sysex()
+private void flush_sysex(void)
 {
   mdFree(sysex_p);
   sysex_p = 0;
@@ -740,7 +737,7 @@ private void flush_sysex()
 
 #ifdef MACINTOSH_OR_DOS
 #ifndef WINDOWS
-public boolean check_midi()
+public boolean check_midi(void)
 {
     if (buffhead == bufftail) return FALSE;
     else return TRUE;
@@ -808,7 +805,7 @@ short getkey(boolean waitflag)
 *    fakes it
 ****************************************************************************/
 
-ulong gettime()         /*DMH: ulong is from mpu->midifns conversion, for Mac*/
+ulong gettime(void)         /*DMH: ulong is from mpu->midifns conversion, for Mac*/
 {
 #if HAS_GETTIMEOFDAY
     struct timeval timeval;
@@ -864,8 +861,7 @@ ulong gettime()         /*DMH: ulong is from mpu->midifns conversion, for Mac*/
 *    Waits until the amount of time specified has lapsed
 ****************************************************************************/
 
-void l_rest(time)
-long time;
+void l_rest(long time)
 {
     if (!initialized) fixup();
     l_restuntil(time + gettime());    
@@ -879,8 +875,7 @@ long time;
 *    Waits until the specified time has been reached (absolute time)
 ****************************************************************************/
 
-void l_restuntil(time)
-long time;
+void l_restuntil(long time)
 {
 #ifdef MACINTOSH
     ulong now = gettime();  
@@ -1598,7 +1593,7 @@ void musicinit()
 *     Miscellaneous cleanup of things done by musicinit.
 ****************************************************************************/
 
-private void musicterm()
+private void musicterm(void)
 {
     if (musictrace) gprintf(TRANS, "musicterm()\n");
     initialized = FALSE;
@@ -1778,7 +1773,7 @@ private int atox(char *t)
 #endif  /* def DOS */
 
 
-private void midi_init()
+private void midi_init(void)
 {
 #ifdef UNIX_IRIX_MIDIFNS
 #define PBUFLEN 4

@@ -29,62 +29,28 @@
 #ifndef __AUDACITY_PREFS__
 #define __AUDACITY_PREFS__
 
-#include "Audacity.h"
+
+
+// Increment this every time the prefs need to be reset
+// the first part (before the r) indicates the version the reset took place
+// the second part (after the r) indicates the number of times the prefs have been reset within the same version
+#define AUDACITY_PREFS_VERSION_STRING "1.1.1r1"
 
 #include "../include/audacity/ComponentInterface.h"
 #include "MemoryX.h" // for wxArrayStringEx
+#include "widgets/FileConfig.h"
 
 #include <memory>
-#include <wx/fileconf.h>  // to inherit wxFileConfig
 #include <wx/event.h> // to declare custom event types
 
 class wxFileName;
 
-void InitPreferences( const wxFileName &configFileName );
-bool CheckWritablePreferences();
-TranslatableString UnwritablePreferencesErrorMessage( const wxFileName &configFileName );
+void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
 void FinishPreferences();
 
-class AudacityPrefs;
-
-
-extern AUDACITY_DLL_API AudacityPrefs *gPrefs;
+extern AUDACITY_DLL_API FileConfig *gPrefs;
 extern int gMenusDirty;
 
-
-/// \brief Our own specialisation of wxFileConfig.  It is essentially a renaming,
-/// though it does provide one new access function.  Most of the prefs work
-/// is actually done by the InitPreferences() function.
-class  AUDACITY_DLL_API AudacityPrefs : public wxFileConfig 
-{
-public:
-   AudacityPrefs(const wxString& appName = {},
-               const wxString& vendorName = {},
-               const wxString& localFilename = {},
-               const wxString& globalFilename = {},
-               long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE,
-               const wxMBConv& conv = wxConvAuto());
-
-   // Set and Get values of the version major/minor/micro keys in audacity.cfg when Audacity first opens
-   void SetVersionKeysInit( int major, int minor, int micro)
-   {
-      mVersionMajorKeyInit = major;
-      mVersionMinorKeyInit = minor;
-      mVersionMicroKeyInit = micro;
-   }
-   void GetVersionKeysInit( int& major, int& minor, int& micro) const
-   {
-      major = mVersionMajorKeyInit;
-      minor = mVersionMinorKeyInit;
-      micro = mVersionMicroKeyInit;
-   }
-
-   // values of the version major/minor/micro keys in audacity.cfg
-   // when Audacity first opens
-   int mVersionMajorKeyInit{};
-   int mVersionMinorKeyInit{};
-   int mVersionMicroKeyInit{};
-};
 
 struct ByColumns_t{};
 extern ByColumns_t ByColumns;
@@ -92,7 +58,7 @@ extern ByColumns_t ByColumns;
 /// A table of EnumValueSymbol that you can access by "row" with
 /// operator [] but also allowing access to the "columns" of internal or
 /// translated strings, and also allowing convenient column-wise construction
-class EnumValueSymbols : public std::vector< EnumValueSymbol >
+class AUDACITY_DLL_API EnumValueSymbols : public std::vector< EnumValueSymbol >
 {
 public:
    EnumValueSymbols() = default;
@@ -120,7 +86,7 @@ private:
 
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
-class ChoiceSetting
+class AUDACITY_DLL_API ChoiceSetting
 {
 public:
    ChoiceSetting(
@@ -170,7 +136,7 @@ protected:
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class EnumSettingBase : public ChoiceSetting
+class AUDACITY_DLL_API EnumSettingBase : public ChoiceSetting
 {
 public:
    EnumSettingBase(
@@ -243,7 +209,8 @@ public:
 
 // An event emitted by the application when the Preference dialog commits
 // changes
-wxDECLARE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+   EVT_PREFS_UPDATE, wxCommandEvent);
 
 // Invoke UpdatePrefs() when Preference dialog commits changes.
 class AUDACITY_DLL_API PrefsListener
@@ -270,13 +237,14 @@ private:
 /// Return the config file key associated with a warning dialog identified
 /// by internalDialogName.  When the box is checked, the value at the key
 /// becomes false.
+AUDACITY_DLL_API
 wxString WarningDialogKey(const wxString &internalDialogName);
 
 /*
  Meant to be statically constructed.  A callback to repopulate configuration
  files after a reset.
  */
-struct PreferenceInitializer {
+struct AUDACITY_DLL_API PreferenceInitializer {
    PreferenceInitializer();
    virtual ~PreferenceInitializer();
    virtual void operator () () = 0;

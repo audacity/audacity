@@ -15,16 +15,18 @@
  */
 
 
-void avg_free();
+void avg_free(snd_susp_type a_susp);
 
-typedef sample_type (*process_block_type)(/* struct avg_susp_struct *susp */);
+struct avg_susp_struct;
+
+typedef sample_type (*process_block_type)(struct avg_susp_struct *susp);
 
 typedef struct avg_susp_struct {
     snd_susp_node susp;
-    long terminate_cnt;
+    int64_t terminate_cnt;
     boolean logically_stopped;
     sound_type s;
-    long s_cnt;
+    int s_cnt;
     sample_block_values_type s_ptr;
     /* blocksize is how many input samples to process for an output sample */
     long blocksize;
@@ -77,7 +79,7 @@ void avg_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
     avg_susp_type susp = (avg_susp_type) a_susp;
     int cnt = 0; /* how many samples computed */
-    int togo = 0;
+    int64_t togo = 0;
     int n;
     sample_block_type out;
     register sample_block_values_type out_ptr;
@@ -109,7 +111,7 @@ void avg_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 
     /* don't run past logical stop time */
     if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN) {
-        int to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
+        int64_t to_stop = susp->susp.log_stop_cnt - (susp->susp.current + cnt);
         /* break if to_stop == 0 (we're at the logical stop)
          * AND cnt > 0 (we're not at the beginning of the
          * output block).
@@ -131,7 +133,7 @@ void avg_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         }
     }
 
-    n = togo;
+    n = (int) togo;
     s_ptr_reg = susp->s_ptr;
     fillptr_reg = susp->fillptr;
     if (n) do { /* the inner sample computation loop */
@@ -146,7 +148,7 @@ void avg_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
     /* using s_ptr_reg is a bad idea on RS/6000: */
     susp->s_ptr += togo;
     susp->fillptr = fillptr_reg;
-    susp_took(s_cnt, togo);
+    susp_took(s_cnt, (int) togo);
     } /* outer loop */
 
     /* test for termination */
@@ -168,23 +170,23 @@ void avg_s_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 void avg_toss_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
     avg_susp_type susp = (avg_susp_type) a_susp;
-    long final_count = MIN(susp->susp.current + max_sample_block_len,
-               susp->susp.toss_cnt);
+    int64_t final_count = MIN(susp->susp.current + max_sample_block_len,
+                              susp->susp.toss_cnt);
     time_type final_time = susp->susp.t0 + final_count / susp->susp.sr;
-    long n;
+    int64_t n;
 
     /* fetch samples from s up to final_time for this block of zeros */
-    while (((long) ((final_time - susp->s->t0) * susp->s->sr + 0.5)) >=
-       susp->s->current)
-    susp_get_samples(s, s_ptr, s_cnt);
+    while ((ROUNDBIG((final_time - susp->s->t0) * susp->s->sr)) >=
+           susp->s->current)
+        susp_get_samples(s, s_ptr, s_cnt);
     /* convert to normal processing when we hit final_count */
     /* we want each signal positioned at final_time */
     if (final_count == susp->susp.toss_cnt) {
-    n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
-         (susp->s->current - susp->s_cnt));
-    susp->s_ptr += n;
-    susp_took(s_cnt, n);
-    susp->susp.fetch = susp->susp.keep_fetch;
+        n = ROUNDBIG((final_time - susp->s->t0) * susp->s->sr -
+                     (susp->s->current - susp->s_cnt));
+        susp->s_ptr += n;
+        susp_took(s_cnt, (int) n);
+        susp->susp.fetch = susp->susp.keep_fetch;
     }
     snd_list->block_len = (short) (final_count - susp->susp.current);
     susp->susp.current = final_count;

@@ -15,7 +15,6 @@
 #include "audacity/Types.h"
 
 class AudacityProject;
-class AudacityApp;
 class wxEvent;
 class CommandOutputTargets;
 using CommandParameter = CommandID;
@@ -55,6 +54,5 @@ public:
    const wxEvent *pEvt;
    int index;
    CommandParameter parameter;
-   AudacityApp *GetApp() const;
 };
 #endif

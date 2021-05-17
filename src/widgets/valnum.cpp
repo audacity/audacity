@@ -19,7 +19,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#include "../Audacity.h"
+
 #include "valnum.h"
 
 // For compilers that support precompilation, includes "wx.h".
@@ -225,8 +225,8 @@ void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
    }
 
    wxClipboardLocker cb;
-//    if (!wxClipboard::Get()->IsSupported(wxDataFormat(wxDF_TEXT)))
-   if (!wxClipboard::Get()->IsSupported(wxDF_TEXT))
+//    if (!wxClipboard::Get()->IsSupported(wxDataFormat(wxDF_UNICODETEXT)))
+   if (!wxClipboard::Get()->IsSupported(wxDF_UNICODETEXT))
    {
       return;
    }

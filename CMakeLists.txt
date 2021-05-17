@@ -5,6 +5,39 @@
 # generator expressions.
 cmake_minimum_required( VERSION 3.15 )
 
+# If building with GNU compiler, then must be 4.9 or later.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+    CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
+   message(FATAL_ERROR "Audacity requires at least GCC 4.9")
+endif ()
+
+# We only do alpha builds, beta builds, and release versions.
+# Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
+# defined to 0.
+# Its value may be more than 0 for pre-release "Beta" builds that differ only
+# in the welcome screen, and hiding of some development menu commands, but
+# still link to the alpha manual online.
+
+# Set this value to 0 for alpha, 1 for beta, 2 for release builds
+set( AUDACITY_BUILD_LEVEL 0 )
+
+# The Audacity version
+# Increment as appropriate after release of a new version, and set back
+# AUDACITY_BUILD_LEVEL to 0
+set( AUDACITY_VERSION 3 )
+set( AUDACITY_RELEASE 0 )
+set( AUDACITY_REVISION 3 )
+set( AUDACITY_MODLEVEL 0 )
+
+string( TIMESTAMP __TDATE__ "%Y%m%d" )
+if( AUDACITY_BUILD_LEVEL EQUAL 0 )
+   set( AUDACITY_SUFFIX "-alpha-${__TDATE__}" )
+elseif(  AUDACITY_BUILD_LEVEL EQUAL 1 )
+   set( AUDACITY_SUFFIX "-beta-${__TDATE__}" )
+else()
+   set( AUDACITY_SUFFIX "" )
+endif()
+
 # Don't allow in-source builds...no real reason, just
 # keeping those source trees nice and tidy.  :-)
 # (This can be removed if it becomes an issue.)
@@ -252,32 +285,29 @@ set( CMAKE_LINK_INTERFACE_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} )
 test_big_endian( WORDS_BIGENDIAN )
 
 # Check for compiler flags
+set( MMX_FLAG "" CACHE INTERNAL "" )
+set( SSE_FLAG "" CACHE INTERNAL "" )
 if( CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang|GNU" )
    check_cxx_compiler_flag( "-mmmx" HAVE_MMX )
-   if( HAVE_MMX )
+   if( HAVE_MMX AND NOT IS_64BIT )
       set( MMX_FLAG "-mmmx" CACHE INTERNAL "" )
    endif()
 
    check_cxx_compiler_flag( "-msse" HAVE_SSE )
-   if( HAVE_SSE )
+   if( HAVE_SSE AND NOT IS_64BIT )
       set( SSE_FLAG "-msse" CACHE INTERNAL "" )
    endif()
 
    check_cxx_compiler_flag( "-msse2" HAVE_SSE2 )
-   if( HAVE_SSE2 )
+   if( HAVE_SSE2 AND NOT IS_64BIT )
       set( SSE_FLAG "-msse2" CACHE INTERNAL "" )
    endif()
 elseif( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
    set( HAVE_MMX ON )
    set( HAVE_SSE ON )
    set( HAVE_SSE2 ON )
-   set( MMX_FLAG "" )
-   if( IS_64BIT )
-      set( SSE_FLAG "" )
-      set( SSE2_FLAG "" )
-   else()
-      set( SSE_FLAG "/arch:SSE" )
-      set( SSE2_FLAG "/arch:SSE2" )
+   if( NOT IS_64BIT )
+      set( SSE_FLAG "/arch:SSE2" )
    endif()
 endif()
 
@@ -382,35 +412,9 @@ else()
    set( AUDACITY_NAME "audacity" )
 endif()
 
-# Extract the Audacity version information
-file(
-   STRINGS
-      ${topdir}/src/Audacity.h output
-   REGEX
-      "^#define +AUDACITY_(VERSION|RELEASE|REVISION|MODLEVEL|BUILD_LEVEL) +"
-)
-
-# And store as variables
-foreach( line ${output} )
-   string( REGEX MATCHALL "[A-Za-z0-9_]+" line "${line}" )
-   list( GET line 1 name )
-   list( GET line 2 value )
-   set( ${name} ${value} )
-endforeach()
-
 # Create short and full version strings
 set( AUDACITY_DIST_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION} )
 set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}.${AUDACITY_MODLEVEL} )
-
-# Define the version suffix (duplicates what happens in src/Audacity.h)
-string( TIMESTAMP __TDATE__ "%Y%m%d" )
-if( AUDACITY_BUILD_LEVEL EQUAL 0 )
-   set( AUDACITY_SUFFIX "-alpha-${__TDATE__}" )
-elseif(  AUDACITY_BUILD_LEVEL EQUAL 1 )
-   set( AUDACITY_SUFFIX "-beta-${__TDATE__}" )
-else()
-   set( AUDACITY_SUFFIX "" )
-endif()
 
 # Python is used for the manual and (possibly) message catalogs
 find_package( Python3 )
@@ -421,16 +425,43 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    file( TO_NATIVE_PATH "${pkgdir}/tools/python.exe" PYTHON )
 endif()
 
+# define EXPERIMENTAL flags
+# Do this before consistency checks for added third-party libraries
+include( "src/Experimental.cmake" )
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 add_subdirectory( "help" )
 add_subdirectory( "images" )
 add_subdirectory( "locale" )
+add_subdirectory( "src" )
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
-add_subdirectory( "src" )
 add_subdirectory( "scripts" )
+
+# Generate config file
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   configure_file( src/audacity_config.h.in src/private/configwin.h )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( HAVE_VISIBILITY 1 )
+   configure_file( src/audacity_config.h.in src/private/configmac.h )
+else()
+   set( HAVE_VISIBILITY 1 )
+   configure_file( src/audacity_config.h.in src/private/configunix.h )
+endif()
+
+# Generate a picture of module dependencies
+string( JOIN "\n" GRAPH_EDGES ${GRAPH_EDGES} )
+# Choose edge attributes making it easy to hover at either end of edge
+# and see a tooltip describing the edge, in svg image
+file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
+   graph [rankdir=LR] edge [dir=both,arrowtail=inv] \n"
+   "${GRAPH_EDGES}"
+   "\n}\n"
+)
+execute_process( COMMAND
+   dot -O -Tsvg "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" )
 
 # Uncomment what follows for symbol values.
 #[[

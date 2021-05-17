@@ -21,15 +21,18 @@ and sample size to help you importing data of an unknown format.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ImportRaw.h"
 
+#include "ImportPlugin.h"
+
+#include "../AudioIOBase.h"
 #include "../FileFormats.h"
 #include "../Prefs.h"
+#include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../UserException.h"
 #include "../WaveTrack.h"
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
 #include <cmath>
@@ -41,6 +44,7 @@ and sample size to help you importing data of an unknown format.
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -81,7 +85,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxChoice   *mChannelChoice;
    wxTextCtrl *mOffsetText;
    wxTextCtrl *mPercentText;
-   wxTextCtrl *mRateText;
+   wxComboBox *mRateText;
 
    int         mNumEncodings;
    ArrayOf<int> mEncodingSubtype;
@@ -92,12 +96,11 @@ class ImportRawDialog final : public wxDialogWrapper {
 // This function leaves outTracks empty as an indication of error,
 // but may also throw FileException to make use of the application's
 // user visible error reporting.
-void ImportRaw(wxWindow *parent, const wxString &fileName,
-              TrackFactory *trackFactory, TrackHolders &outTracks)
+void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
+              WaveTrackFactory *trackFactory, TrackHolders &outTracks)
 {
    outTracks.clear();
    int encoding = 0; // Guess Format
-   sampleFormat format;
    sf_count_t offset = 0;
    double rate = 44100.0;
    double percent = 100.0;
@@ -127,6 +130,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
          numChannels = 1;
          offset = 0;
       }
+
+      rate = ProjectSettings::Get( project ).GetRate();
 
       numChannels = std::max(1u, numChannels);
       ImportRawDialog dlog(parent, encoding, numChannels, (int)offset, rate);
@@ -188,11 +193,8 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
       // the quality of the original file.
       //
 
-      format = QualityPrefs::SampleFormatChoice();
-
-      if (format != floatSample &&
-          sf_subtype_more_than_16_bits(encoding))
-         format = floatSample;
+      auto format = ImportFileHandle::ChooseFormat(
+         sf_subtype_to_effective_format(encoding));
 
       results.resize(1);
       auto &channels = results[0];
@@ -218,7 +220,7 @@ void ImportRaw(wxWindow *parent, const wxString &fileName,
 
       auto msg = XO("Importing %s").Format( wxFileName::FileName(fileName).GetFullName() );
 
-      /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be tanslated.*/
+      /* i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.*/
       ProgressDialog progress(XO("Import Raw"), msg);
 
       size_t block;
@@ -418,10 +420,16 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent,
          S.AddUnits(XO("%"));
 
          // Rate text
+         wxArrayStringEx rates;
+         for (int i = 0; i < AudioIOBase::NumStandardRates; i++) {
+            rates.Add(
+               wxString::Format(wxT("%d"), AudioIOBase::StandardRates[i]));
+         }
+
          /* i18n-hint: (noun)*/
-         mRateText = S.AddTextBox(XXO("Sample rate:"),
-                                  wxString::Format(wxT("%d"), (int)mRate),
-                                  12);
+         mRateText = S.AddCombo(XXO("Sample rate:"),
+                                wxString::Format(wxT("%d"), (int)mRate),
+                                rates);
          /* i18n-hint: This is the abbreviation for "Hertz", or
             cycles per second. */
          S.AddUnits(XO("Hz"));

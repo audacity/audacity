@@ -8,33 +8,30 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
-#include "TimeShiftHandle.h"
 
-#include "../../Experimental.h"
+#include "TimeShiftHandle.h"
 
 #include "TrackView.h"
 #include "../../AColor.h"
 #include "../../HitTestResult.h"
-#include "../../NoteTrack.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
+#include "../../Snap.h"
+#include "../../Track.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UndoManager.h"
-#include "../../WaveClip.h"
 #include "../../ViewInfo.h"
-#include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
 TimeShiftHandle::TimeShiftHandle
 ( const std::shared_ptr<Track> &pTrack, bool gripHit )
-   : mCapturedTrack{ pTrack }
-   , mGripHit{ gripHit }
+   : mGripHit{ gripHit }
 {
+   mClipMoveState.mCapturedTrack = pTrack;
 }
 
 void TimeShiftHandle::Enter(bool, AudacityProject *)
@@ -102,252 +99,356 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
-namespace
+void ClipMoveState::DoHorizontalOffset( double offset )
 {
-   // Adds a track's clips to state.capturedClipArray within a specified time
-   void AddClipsToCaptured
-      ( ClipMoveState &state, Track *t, double t0, double t1 )
-   {
-      bool exclude = true; // to exclude a whole track.
-      auto &clips = state.capturedClipArray;
-      t->TypeSwitch(
-         [&](WaveTrack *wt) {
-            exclude = false;
-            for(const auto &clip: wt->GetClips())
-               if ( ! clip->IsClipStartAfterClip(t0) && ! clip->BeforeClip(t1) &&
-                  // Avoid getting clips that were already captured
-                    ! std::any_of( clips.begin(), clips.end(),
-                       [&](const TrackClip &c) { return c.clip == clip.get(); } ) )
-                  clips.emplace_back( t, clip.get() );
-         },
-#ifdef USE_MIDI
-         [&](NoteTrack *, const Track::Fallthrough &fallthrough){
-            // do not add NoteTrack if the data is outside of time bounds
-            if (t->GetEndTime() < t0 || t->GetStartTime() > t1)
-               return;
-            else
-               fallthrough();
-         },
-#endif
-         [&](Track *t) {
-            // This handles label tracks rather heavy-handedly --
-            // it would be nice to
-            // treat individual labels like clips
-
-            // Avoid adding a track twice
-            if( !std::any_of( clips.begin(), clips.end(),
-               [&](const TrackClip &c) { return c.track == t; } ) ) {
-               clips.emplace_back( t, nullptr );
-            }
-         }
-      );
-      if (exclude)
-         state.trackExclusions.push_back(t);
+   if ( !shifters.empty() ) {
+      for ( auto &pair : shifters )
+         pair.second->DoHorizontalOffset( offset );
    }
-
-   // Helper for the above, adds a track's clips to capturedClipArray (eliminates
-   // duplication of this logic)
-   void AddClipsToCaptured
-      ( ClipMoveState &state, const ViewInfo &viewInfo,
-        Track *t, bool withinSelection )
-   {
-      if (withinSelection)
-         AddClipsToCaptured( state, t, viewInfo.selectedRegion.t0(),
-                            viewInfo.selectedRegion.t1() );
-      else
-         AddClipsToCaptured( state, t, t->GetStartTime(), t->GetEndTime() );
-   }
-
-   WaveTrack *NthChannel(WaveTrack &leader, int nn)
-   {
-      if (nn < 0)
-         return nullptr;
-      return *TrackList::Channels( &leader ).begin().advance(nn);
-   }
-
-   int ChannelPosition(const Track *pChannel)
-   {
-      return static_cast<int>(
-         TrackList::Channels( pChannel )
-            .EndingAfter( pChannel ).size()
-      ) - 1;
-   }
-
-   // Don't count right channels.
-   WaveTrack *NthAudioTrack(TrackList &list, int nn)
-   {
-      if (nn >= 0) {
-         for ( auto pTrack : list.Leaders< WaveTrack >() )
-            if (nn -- == 0)
-               return pTrack;
-      }
-
-      return NULL;
-   }
-
-   // Don't count right channels.
-   int TrackPosition(TrackList &list, const Track *pFindTrack)
-   {
-      pFindTrack = *list.FindLeader(pFindTrack);
-      int nn = 0;
-      for ( auto pTrack : list.Leaders< const WaveTrack >() ) {
-         if (pTrack == pFindTrack)
-            return nn;
-         ++nn;
-      }
-      return -1;
-   }
-
-   WaveClip *FindClipAtTime(WaveTrack *pTrack, double time)
-   {
-      if (pTrack) {
-         // WaveClip::GetClipAtX doesn't work unless the clip is on the screen and can return bad info otherwise
-         // instead calculate the time manually
-         double rate = pTrack->GetRate();
-         auto s0 = (sampleCount)(time * rate + 0.5);
-
-         if (s0 >= 0)
-            return pTrack->GetClipAtSample(s0);
-      }
-
-      return 0;
-   }
-
-   void DoOffset( ClipMoveState &state, Track *pTrack, double offset,
-                  WaveClip *pExcludedClip = nullptr )
-   {
-      auto &clips = state.capturedClipArray;
-      if ( !clips.empty() ) {
-         for (auto &clip : clips) {
-            if (clip.clip) {
-               if (clip.clip != pExcludedClip)
-                  clip.clip->Offset( offset );
-            }
-            else
-               clip.track->Offset( offset );
-         }
-      }
-      else if ( pTrack )
-         // Was a shift-click
-         for (auto channel : TrackList::Channels( pTrack ))
-            channel->Offset( offset );
-   }
-}
-
-void TimeShiftHandle::CreateListOfCapturedClips
-   ( ClipMoveState &state, const ViewInfo &viewInfo, Track &capturedTrack,
-     TrackList &trackList, bool syncLocked, double clickTime )
-{
-// The captured clip is the focus, but we need to create a list
-   // of all clips that have to move, also...
-
-   state.capturedClipArray.clear();
-
-   // First, if click was in selection, capture selected clips; otherwise
-   // just the clicked-on clip
-   if ( state.capturedClipIsSelection )
-      for (auto t : trackList.Selected())
-         AddClipsToCaptured( state, viewInfo, t, true );
    else {
-      state.capturedClipArray.push_back
-         (TrackClip( &capturedTrack, state.capturedClip ));
+      for (auto channel : TrackList::Channels( mCapturedTrack.get() ))
+         channel->Offset( offset );
+   }
+}
 
-      if (state.capturedClip) {
-         // Check for other channels
-         auto wt = static_cast<WaveTrack*>(&capturedTrack);
-         for ( auto channel : TrackList::Channels( wt ).Excluding( wt ) )
-            if (WaveClip *const clip = FindClipAtTime(channel, clickTime))
-               state.capturedClipArray.push_back(TrackClip(channel, clip));
+TrackShifter::TrackShifter() = default;
+
+TrackShifter::~TrackShifter() = default;
+
+void TrackShifter::UnfixIntervals(
+   std::function< bool( const TrackInterval& ) > pred )
+{
+   for ( auto iter = mFixed.begin(); iter != mFixed.end(); ) {
+      if ( pred( *iter) ) {
+         mMoving.push_back( std::move( *iter ) );
+         iter = mFixed.erase( iter );
+         mAllFixed = false;
       }
+      else
+         ++iter;
+   }
+}
+
+void TrackShifter::UnfixAll()
+{
+   std::move( mFixed.begin(), mFixed.end(), std::back_inserter(mMoving) );
+   mFixed = Intervals{};
+   mAllFixed = false;
+}
+
+void TrackShifter::SelectInterval( const TrackInterval & )
+{
+   UnfixAll();
+}
+
+void TrackShifter::CommonSelectInterval(const TrackInterval &interval)
+{
+   UnfixIntervals( [&](auto &myInterval){
+      return !(interval.End() < myInterval.Start() ||
+               myInterval.End() < interval.Start());
+   });
+}
+
+double TrackShifter::HintOffsetLarger(double desiredOffset)
+{
+   return desiredOffset;
+}
+
+double TrackShifter::QuantizeOffset(double desiredOffset)
+{
+   return desiredOffset;
+}
+
+double TrackShifter::AdjustOffsetSmaller(double desiredOffset)
+{
+   return desiredOffset;
+}
+
+bool TrackShifter::MayMigrateTo(Track &)
+{
+   return false;
+}
+
+bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
+{
+   auto &track = GetTrack();
+
+   // Both tracks need to be owned to decide this
+   auto pMyList = track.GetOwner().get();
+   auto pOtherList = otherTrack.GetOwner().get();
+   if (pMyList && pOtherList) {
+
+      // Can migrate to another track of the same kind...
+      if ( otherTrack.SameKindAs( track ) ) {
+
+         // ... with the same number of channels ...
+         auto myChannels = TrackList::Channels( &track );
+         auto otherChannels = TrackList::Channels( &otherTrack );
+         if (myChannels.size() == otherChannels.size()) {
+            
+            // ... and where this track and the other have corresponding
+            // positions
+            return myChannels.size() == 1 ||
+               std::distance(myChannels.first, pMyList->Find(&track)) ==
+               std::distance(otherChannels.first, pOtherList->Find(&otherTrack));
+
+         }
+
+      }
+
+   }
+   return false;
+}
+
+auto TrackShifter::Detach() -> Intervals
+{
+   return {};
+}
+
+bool TrackShifter::AdjustFit(
+   const Track &, const Intervals&, double &, double)
+{
+   return false;
+}
+
+bool TrackShifter::Attach( Intervals )
+{
+   return true;
+}
+
+bool TrackShifter::FinishMigration()
+{
+   return true;
+}
+
+void TrackShifter::DoHorizontalOffset( double offset )
+{
+   if (!AllFixed())
+      GetTrack().Offset( offset );
+}
+
+double TrackShifter::AdjustT0(double t0) const
+{
+   return t0;
+}
+
+void TrackShifter::InitIntervals()
+{
+   mMoving.clear();
+   mFixed = GetTrack().GetIntervals();
+}
+
+CoarseTrackShifter::CoarseTrackShifter( Track &track )
+   : mpTrack{ track.SharedPointer() }
+{
+   InitIntervals();
+}
+
+CoarseTrackShifter::~CoarseTrackShifter() = default;
+
+auto CoarseTrackShifter::HitTest(
+   double, const ViewInfo&, HitTestParams* ) -> HitTestResult
+{
+   return HitTestResult::Track;
+}
+
+bool CoarseTrackShifter::SyncLocks()
+{
+   return false;
+}
+
+template<> auto MakeTrackShifter::Implementation() -> Function {
+   return [](Track &track, AudacityProject&) {
+      return std::make_unique<CoarseTrackShifter>(track);
+   };
+}
+static MakeTrackShifter registerMakeTrackShifter;
+
+void ClipMoveState::Init(
+   AudacityProject &project,
+   Track &capturedTrack,
+   TrackShifter::HitTestResult hitTestResult,
+   std::unique_ptr<TrackShifter> pHit,
+   double clickTime,
+   const ViewInfo &viewInfo,
+   TrackList &trackList, bool syncLocked )
+{
+   shifters.clear();
+
+   auto &state = *this;
+   state.mCapturedTrack = capturedTrack.SharedPointer();
+
+   switch (hitTestResult) {
+      case TrackShifter::HitTestResult::Miss:
+         wxASSERT(false);
+         pHit.reset();
+         break;
+      case TrackShifter::HitTestResult::Track:
+         pHit.reset();
+         break;
+      case TrackShifter::HitTestResult::Intervals:
+         break;
+      case TrackShifter::HitTestResult::Selection:
+         state.movingSelection = true;
+         break;
+      default:
+         break;
    }
 
-   // Now, if sync-lock is enabled, capture any clip that's linked to a
-   // captured clip.
+   if (!pHit)
+      return;
+
+   state.shifters[&capturedTrack] = std::move( pHit );
+
+   // Collect TrackShifters for the rest of the tracks
+   for ( auto track : trackList.Any() ) {
+      auto &pShifter = state.shifters[track];
+      if (!pShifter)
+         pShifter = MakeTrackShifter::Call( *track, project );
+   }
+
+   if ( state.movingSelection ) {
+      // All selected tracks may move some intervals
+      const TrackInterval interval{
+         viewInfo.selectedRegion.t0(),
+         viewInfo.selectedRegion.t1()
+      };
+      for ( const auto &pair : state.shifters ) {
+         auto &shifter = *pair.second;
+         auto &track = shifter.GetTrack();
+         if (&track == &capturedTrack)
+            // Don't change the choice of intervals made by HitTest
+            continue;
+         if ( track.IsSelected() )
+            shifter.SelectInterval( interval );
+      }
+   }
+   else {
+      // Move intervals only of the chosen channel group
+      for ( auto channel : TrackList::Channels( &capturedTrack ) ) {
+         auto &shifter = *state.shifters[channel];
+         if ( channel != &capturedTrack )
+            shifter.SelectInterval(TrackInterval{clickTime, clickTime});
+      }
+   }
+   
+   // Sync lock propagation of unfixing of intervals
    if ( syncLocked ) {
-      // AWD: capturedClipArray expands as the loop runs, so newly-added
-      // clips are considered (the effect is like recursion and terminates
-      // because AddClipsToCaptured doesn't add duplicate clips); to remove
-      // this behavior just store the array size beforehand.
-      for (unsigned int i = 0; i < state.capturedClipArray.size(); ++i) {
-         auto trackClip = state.capturedClipArray[i];
-         {
-            // Capture based on tracks that have clips -- that means we
-            // don't capture based on links to label tracks for now (until
-            // we can treat individual labels as clips)
-            if ( trackClip.clip ) {
-               // Iterate over sync-lock group tracks.
-               for (auto t : TrackList::SyncLockGroup( trackClip.track ))
-                  AddClipsToCaptured(state, t,
-                        trackClip.clip->GetStartTime(),
-                        trackClip.clip->GetEndTime() );
+      bool change = true;
+      while( change ) {
+         change = false;
+
+         // Iterate over all unfixed intervals in all tracks
+         // that do propagation and are in sync lock groups ...
+         for ( auto &pair : state.shifters ) {
+            auto &shifter = *pair.second.get();
+            if (!shifter.SyncLocks())
+               continue;
+            auto &track = shifter.GetTrack();
+            auto group = TrackList::SyncLockGroup(&track);
+            if ( group.size() <= 1 )
+               continue;
+
+            auto &intervals = shifter.MovingIntervals();
+            for (auto &interval : intervals) {
+
+               // ...and tell all other tracks in the sync lock group
+               // to select that interval...
+               for ( auto pTrack2 : group ) {
+                  if (pTrack2 == &track)
+                     continue;
+                  
+                  auto &shifter2 = *shifters[pTrack2];
+                  auto size = shifter2.MovingIntervals().size();
+                  shifter2.SelectInterval( interval );
+                  change = change ||
+                     (shifter2.SyncLocks() &&
+                      size != shifter2.MovingIntervals().size());
+               }
+
             }
          }
-#ifdef USE_MIDI
-         {
-            // Capture additional clips from NoteTracks
-            trackClip.track->TypeSwitch( [&](NoteTrack *nt) {
-               // Iterate over sync-lock group tracks.
-               for (auto t : TrackList::SyncLockGroup(nt))
-                  AddClipsToCaptured
-                     ( state, t, nt->GetStartTime(), nt->GetEndTime() );
-            });
-         }
-#endif
+
+         // ... and repeat if any other interval became unfixed in a
+         // shifter that propagates
       }
    }
 }
 
-void TimeShiftHandle::DoSlideHorizontal
-   ( ClipMoveState &state, TrackList &trackList, Track &capturedTrack )
+const TrackInterval *ClipMoveState::CapturedInterval() const
 {
+   auto pTrack = mCapturedTrack.get();
+   if ( pTrack ) {
+      auto iter = shifters.find( pTrack );
+      if ( iter != shifters.end() ) {
+         auto &pShifter = iter->second;
+         if ( pShifter ) {
+            auto &intervals = pShifter->MovingIntervals();
+            if ( !intervals.empty() )
+               return &intervals[0];
+         }
+      }
+   }
+   return nullptr;
+}
+
+double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
+{
+   auto &state = *this;
+   auto &capturedTrack = *state.mCapturedTrack;
+
    // Given a signed slide distance, move clips, but subject to constraint of
    // non-overlapping with other clips, so the distance may be adjusted toward
    // zero.
-   if ( state.capturedClipArray.size() )
-   {
-      double allowed;
-      double initialAllowed;
-      double safeBigDistance = 1000 + 2.0 * ( trackList.GetEndTime() -
-                                              trackList.GetStartTime() );
-
+   if ( !state.shifters.empty() ) {
+      double initialAllowed = 0;
       do { // loop to compute allowed, does not actually move anything yet
-         initialAllowed = state.hSlideAmount;
+         initialAllowed = desiredSlideAmount;
 
-         for ( auto &trackClip : state.capturedClipArray ) {
-            if (const auto clip = trackClip.clip) {
-               // only audio clips are used to compute allowed
-               const auto track = static_cast<WaveTrack *>( trackClip.track );
-
-               // Move all other selected clips totally out of the way
-               // temporarily because they're all moving together and
-               // we want to find out if OTHER clips are in the way,
-               // not one of the moving ones
-               DoOffset( state, nullptr, -safeBigDistance, clip );
-               auto cleanup = finally( [&]
-                  { DoOffset( state, nullptr, safeBigDistance, clip ); } );
-
-               if ( track->CanOffsetClip(clip, state.hSlideAmount, &allowed) ) {
-                  if ( state.hSlideAmount != allowed ) {
-                     state.hSlideAmount = allowed;
-                     state.snapLeft = state.snapRight = -1; // see bug 1067
-                  }
+         for (auto &pair : shifters) {
+            auto newAmount = pair.second->AdjustOffsetSmaller( desiredSlideAmount );
+            if ( desiredSlideAmount != newAmount ) {
+               if ( newAmount * desiredSlideAmount < 0 ||
+                    fabs(newAmount) > fabs(desiredSlideAmount) ) {
+                  wxASSERT( false ); // AdjustOffsetSmaller didn't honor postcondition!
+                  newAmount = 0; // Be sure the loop progresses to termination!
                }
-               else {
-                  state.hSlideAmount = 0.0;
-                  state.snapLeft = state.snapRight = -1; // see bug 1067
-               }
+               desiredSlideAmount = newAmount;
+               state.snapLeft = state.snapRight = -1; // see bug 1067
             }
+            if (newAmount == 0)
+               break;
          }
-      } while ( state.hSlideAmount != initialAllowed );
-
-      // finally, here is where clips are moved
-      if ( state.hSlideAmount != 0.0 )
-         DoOffset( state, nullptr, state.hSlideAmount );
+      } while ( desiredSlideAmount != initialAllowed );
    }
-   else
-      // For Shift key down, or
-      // For non wavetracks, specifically label tracks ...
-      DoOffset( state, &capturedTrack, state.hSlideAmount );
+
+   // Whether moving intervals or a whole track,
+   // finally, here is where clips are moved
+   if ( desiredSlideAmount != 0.0 )
+      state.DoHorizontalOffset( desiredSlideAmount );
+
+   return (state.hSlideAmount = desiredSlideAmount);
+}
+
+namespace {
+SnapPointArray FindCandidates(
+   const TrackList &tracks, const ClipMoveState::ShifterMap &shifters )
+{
+   // Compare with the other function FindCandidates in Snap
+   // Make the snap manager more selective than it would be if just constructed
+   // from the track list
+   SnapPointArray candidates;
+   for ( const auto &pair : shifters ) {
+      auto &shifter = pair.second;
+      auto &track = shifter->GetTrack();
+      for (const auto &interval : shifter->FixedIntervals() ) {
+         candidates.emplace_back( interval.Start(), &track );
+         if ( interval.Start() != interval.End() )
+            candidates.emplace_back( interval.End(), &track );
+      }
+   }
+   return candidates;
+}
 }
 
 UIHandle::Result TimeShiftHandle::Click
@@ -377,54 +478,49 @@ UIHandle::Result TimeShiftHandle::Click
 
    const double clickTime =
       viewInfo.PositionToTime(event.m_x, rect.x);
-   mClipMoveState.capturedClipIsSelection =
-      (pTrack->GetSelected() &&
-       clickTime >= viewInfo.selectedRegion.t0() &&
-       clickTime < viewInfo.selectedRegion.t1());
 
-   mClipMoveState.capturedClip = NULL;
-   mClipMoveState.capturedClipArray.clear();
+   auto pShifter = MakeTrackShifter::Call( *pTrack, *pProject );
 
-   bool ok = true;
-   bool captureClips = false;
+   auto hitTestResult = TrackShifter::HitTestResult::Track;
+   if (!event.ShiftDown()) {
+      TrackShifter::HitTestParams params{
+         rect, event.m_x, event.m_y
+      };
+      hitTestResult = pShifter->HitTest( clickTime, viewInfo, &params );
+      switch( hitTestResult ) {
+      case TrackShifter::HitTestResult::Miss:
+         return Cancelled;
+      default:
+         break;
+      }
+   }
+   else {
+      // just do shifting of one whole track
+   }
 
-   if (!event.ShiftDown())
-      pTrack->TypeSwitch(
-         [&](WaveTrack *wt) {
-            if (nullptr ==
-               (mClipMoveState.capturedClip = wt->GetClipAtX(event.m_x)))
-               ok = false;
-            else
-               captureClips = true;
-#ifdef USE_MIDI
-         },
-         [&](NoteTrack *) {
-            captureClips = true;
-#endif
-         }
-      );
+   mClipMoveState.Init( *pProject, *pTrack,
+      hitTestResult,
+      std::move( pShifter ),
+      clickTime,
 
-   if ( ! ok )
-      return Cancelled;
-   else if ( captureClips )
-      CreateListOfCapturedClips(
-         mClipMoveState, viewInfo, *pTrack, trackList,
-         ProjectSettings::Get( *pProject ).IsSyncLocked(), clickTime );
+      viewInfo, trackList,
+      ProjectSettings::Get( *pProject ).IsSyncLocked() );
 
    mSlideUpDownOnly = event.CmdDown() && !multiToolModeActive;
    mRect = rect;
    mClipMoveState.mMouseClickX = event.m_x;
-   mSnapManager = std::make_shared<SnapManager>(&trackList,
-                                  &viewInfo,
-                                  &mClipMoveState.capturedClipArray,
-                                  &mClipMoveState.trackExclusions,
-                                  true); // don't snap to time
+   mSnapManager =
+   std::make_shared<SnapManager>(*trackList.GetOwner(),
+       FindCandidates( trackList, mClipMoveState.shifters ),
+       viewInfo,
+       true, // don't snap to time
+       kPixelTolerance);
    mClipMoveState.snapLeft = -1;
    mClipMoveState.snapRight = -1;
-   mSnapPreferRightEdge =
-      mClipMoveState.capturedClip &&
-      (fabs(clickTime - mClipMoveState.capturedClip->GetEndTime()) <
-       fabs(clickTime - mClipMoveState.capturedClip->GetStartTime()));
+   auto pInterval = mClipMoveState.CapturedInterval();
+   mSnapPreferRightEdge = pInterval &&
+      (fabs(clickTime - pInterval->End()) <
+       fabs(clickTime - pInterval->Start()));
 
    return RefreshNone;
 }
@@ -435,8 +531,9 @@ namespace {
       SnapManager *pSnapManager,
       bool slideUpDownOnly, bool snapPreferRightEdge,
       ClipMoveState &state,
-      Track &capturedTrack, Track &track )
+      Track &track )
    {
+      auto &capturedTrack = *state.mCapturedTrack;
       if (slideUpDownOnly)
          return 0.0;
       else {
@@ -445,19 +542,16 @@ namespace {
             viewInfo.PositionToTime(state.mMouseClickX);
          double clipLeft = 0, clipRight = 0;
 
-         track.TypeSwitch( [&](WaveTrack *mtw){
-            const double rate = mtw->GetRate();
-            // set it to a sample point
-            desiredSlideAmount = rint(desiredSlideAmount * rate) / rate;
-         });
+         if (!state.shifters.empty())
+            desiredSlideAmount =
+               state.shifters[ &track ]->QuantizeOffset( desiredSlideAmount );
 
          // Adjust desiredSlideAmount using SnapManager
          if (pSnapManager) {
-            if (state.capturedClip) {
-               clipLeft = state.capturedClip->GetStartTime()
-                  + desiredSlideAmount;
-               clipRight = state.capturedClip->GetEndTime()
-                  + desiredSlideAmount;
+            auto pInterval = state.CapturedInterval();
+            if (pInterval) {
+               clipLeft = pInterval->Start() + desiredSlideAmount;
+               clipRight = pInterval->End() + desiredSlideAmount;
             }
             else {
                clipLeft = capturedTrack.GetStartTime() + desiredSlideAmount;
@@ -500,63 +594,96 @@ namespace {
       }
    }
 
+   using Correspondence = std::unordered_map< Track*, Track* >;
+
    bool FindCorrespondence(
-      TrackList &trackList, Track &track, Track &capturedTrack,
+      Correspondence &correspondence,
+      TrackList &trackList, Track &capturedTrack, Track &track,
       ClipMoveState &state)
    {
-      const int diff =
-         TrackPosition(trackList, &track) -
-         TrackPosition(trackList, &capturedTrack);
-      for ( auto &trackClip : state.capturedClipArray ) {
-         if (trackClip.clip) {
-            // Move all clips up or down by an equal count of audio tracks.
-            // Can only move between tracks with equal numbers of channels,
-            // and among corresponding channels.
+      // Accumulate new pairs for the correspondence, and merge them
+      // into the given correspondence only on success
+      Correspondence newPairs;
 
-            Track *const pSrcTrack = trackClip.track;
-            auto pDstTrack = NthAudioTrack(trackList,
-               diff + TrackPosition(trackList, pSrcTrack));
-            if (!pDstTrack)
+      auto sameType = [&]( auto pTrack ){
+         return capturedTrack.SameKindAs( *pTrack );
+      };
+      if (!sameType(&track))
+         return false;
+   
+      // All tracks of the same kind as the captured track
+      auto range = trackList.Any() + sameType;
+
+      // Find how far this track would shift down among those (signed)
+      const auto myPosition =
+         std::distance( range.first, trackList.Find( &capturedTrack ) );
+      const auto otherPosition =
+         std::distance( range.first, trackList.Find( &track ) );
+      auto diff = otherPosition - myPosition;
+
+      // Point to destination track
+      auto iter = range.first.advance( diff > 0 ? diff : 0 );
+
+      for (auto pTrack : range) {
+         auto &pShifter = state.shifters[pTrack];
+         if ( !pShifter->MovingIntervals().empty() ) {
+            // One of the interesting tracks
+
+            auto pOther = *iter;
+            if ( diff < 0 || !pOther )
+               // No corresponding track
                return false;
 
-            if (TrackList::Channels(pSrcTrack).size() !=
-                TrackList::Channels(pDstTrack).size())
+            if ( !pShifter->MayMigrateTo(*pOther) )
+               // Rejected for other reason
                return false;
 
-            auto pDstChannel = NthChannel(
-               *pDstTrack, ChannelPosition(pSrcTrack));
-
-            if (!pDstChannel) {
-               wxASSERT(false);
+            if ( correspondence.count(pTrack) )
+               // Don't overwrite the given correspondence
                return false;
-            }
 
-           trackClip.dstTrack = pDstChannel;
+            newPairs[ pTrack ] = pOther;
          }
+
+         if ( diff < 0 )
+            ++diff; // Still consuming initial tracks
+         else
+            ++iter; // Safe to increment TrackIter even at end of range
       }
+
+      // Success
+      if (correspondence.empty())
+         correspondence.swap(newPairs);
+      else
+         std::copy( newPairs.begin(), newPairs.end(),
+            std::inserter( correspondence, correspondence.end() ) );
       return true;
    }
 
+   using DetachedIntervals =
+      std::unordered_map<Track*, TrackShifter::Intervals>;
+
    bool CheckFit(
-      const ViewInfo &viewInfo, wxCoord xx, ClipMoveState &state,
+      ClipMoveState &state, const Correspondence &correspondence,
+      const DetachedIntervals &intervals,
       double tolerance, double &desiredSlideAmount )
    {
-      (void)xx;// Compiler food
-      (void)viewInfo;// Compiler food
       bool ok = true;
       double firstTolerance = tolerance;
-
+      
       // The desiredSlideAmount may change and the tolerance may get used up.
       for ( unsigned iPass = 0; iPass < 2 && ok; ++iPass ) {
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip) {
-               ok = trackClip.dstTrack->CanInsertClip(
-                  pSrcClip, desiredSlideAmount, tolerance );
-               if( !ok  )
-                  break;
-            }
+         for ( auto &pair : state.shifters ) {
+            auto *pSrcTrack = pair.first;
+            auto iter = correspondence.find( pSrcTrack );
+            if ( iter != correspondence.end() )
+               if( auto *pOtherTrack = iter->second )
+                  if ( !(ok = pair.second->AdjustFit(
+                     *pOtherTrack, intervals.at(pSrcTrack),
+                     desiredSlideAmount /*in,out*/, tolerance)) )
+                     break;
          }
+
          // If it fits ok, desiredSlideAmount could have been updated to get
          // the clip to fit.
          // Check again, in the new position, this time with zero tolerance.
@@ -569,54 +696,89 @@ namespace {
       return ok;
    }
 
+   [[noreturn]] void MigrationFailure() {
+      // Tracks may be in an inconsistent state; throw to the application
+      // handler which restores consistency from undo history
+      throw SimpleMessageBoxException{
+         XO("Could not shift between tracks")};
+   }
+
    struct TemporaryClipRemover {
       TemporaryClipRemover( ClipMoveState &clipMoveState )
          : state( clipMoveState )
       {
          // Pluck the moving clips out of their tracks
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip)
-               trackClip.holder =
-                  // Assume track is wave because it has a clip
-                  static_cast<WaveTrack*>(trackClip.track)->
-                     RemoveAndReturnClip(pSrcClip);
-         }
+         for (auto &pair : state.shifters)
+            detached[pair.first] = pair.second->Detach();
       }
 
-      void Fail()
+      void Reinsert(
+         std::unordered_map< Track*, Track* > *pCorrespondence )
       {
-         // Cause destructor to put all clips back where they came from
-         for ( auto &trackClip : state.capturedClipArray )
-            trackClip.dstTrack = static_cast<WaveTrack*>(trackClip.track);
-      }
-
-      ~TemporaryClipRemover()
-      {
-         // Complete (or roll back) the vertical move.
-         // Put moving clips into their destination tracks
-         // which become the source tracks when we move again
-         for ( auto &trackClip : state.capturedClipArray ) {
-            WaveClip *const pSrcClip = trackClip.clip;
-            if (pSrcClip) {
-               const auto dstTrack = trackClip.dstTrack;
-               dstTrack->AddClip(std::move(trackClip.holder));
-               trackClip.track = dstTrack;
-            }
+         for (auto &pair : detached) {
+            auto pTrack = pair.first;
+            if (pCorrespondence && pCorrespondence->count(pTrack))
+               pTrack = (*pCorrespondence)[pTrack];
+            auto &pShifter = state.shifters[pTrack];
+            if (!pShifter->Attach( std::move( pair.second ) ))
+               MigrationFailure();
          }
       }
 
       ClipMoveState &state;
+      DetachedIntervals detached;
    };
 }
 
 bool TimeShiftHandle::DoSlideVertical
 ( ViewInfo &viewInfo, wxCoord xx,
-  ClipMoveState &state, TrackList &trackList, Track &capturedTrack,
+  ClipMoveState &state, TrackList &trackList,
   Track &dstTrack, double &desiredSlideAmount )
 {
-   if (!FindCorrespondence( trackList, dstTrack, capturedTrack, state))
+   Correspondence correspondence;
+
+   // See if captured track corresponds to another
+   auto &capturedTrack = *state.mCapturedTrack;
+   if (!FindCorrespondence(
+      correspondence, trackList, capturedTrack, dstTrack, state ))
       return false;
+
+   // Try to extend the correpondence
+   auto tryExtend = [&](bool forward){
+      auto begin = trackList.begin(), end = trackList.end();
+      auto pCaptured = trackList.Find( &capturedTrack );
+      auto pDst = trackList.Find( &dstTrack );
+      // Scan for more correspondences
+      while ( true ) {
+         // Remember that TrackIter wraps circularly to the end iterator when
+         // decrementing it
+
+         // First move to a track with moving intervals and
+         // without a correspondent
+         do
+            forward ? ++pCaptured : --pCaptured;
+         while ( pCaptured != end &&
+            ( correspondence.count(*pCaptured) || state.shifters[*pCaptured]->MovingIntervals().empty() ) );
+         if ( pCaptured == end )
+            break;
+
+         // Change the choice of possible correspondent track too
+         do
+            forward ? ++pDst : --pDst;
+         while ( pDst != end && correspondence.count(*pDst) );
+         if ( pDst == end )
+            break;
+
+         // Make correspondence if we can
+         if (!FindCorrespondence(
+            correspondence, trackList, **pCaptured, **pDst, state ))
+            break;
+      }
+   };
+   // Try extension, backward first, then forward
+   // (anticipating the case of dragging a label that is under a clip)
+   tryExtend(false);
+   tryExtend(true);
 
    // Having passed that test, remove clips temporarily from their
    // tracks, so moving clips don't interfere with each other
@@ -630,42 +792,18 @@ bool TimeShiftHandle::DoSlideVertical
    // i.e. one pixel tolerance at current zoom.
    double tolerance =
       viewInfo.PositionToTime(xx + 1) - viewInfo.PositionToTime(xx);
-   bool ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
+   bool ok = CheckFit( state, correspondence, remover.detached,
+      tolerance, desiredSlideAmount /*in,out*/ );
 
    if (!ok) {
       // Failure, even with using tolerance.
-      remover.Fail();
-
-      // Failure -- we'll put clips back where they were
-      // ok will next indicate if a horizontal slide is OK.
-      tolerance = 0.0;
-      desiredSlideAmount = slide;
-      ok = CheckFit( viewInfo, xx, state, tolerance, desiredSlideAmount );
-      for ( auto &trackClip : state.capturedClipArray)  {
-         WaveClip *const pSrcClip = trackClip.clip;
-         if (pSrcClip){
-            
-            // Attempt to move to a new track did not work.
-            // Put the clip back appropriately shifted!
-            if( ok)
-               trackClip.holder->Offset(slide);
-         }
-      }
-      // Make the offset permanent; start from a "clean slate"
-      if( ok ) {
-         state.mMouseClickX = xx;
-         if (state.capturedClipIsSelection) {
-            // Slide the selection, too
-            viewInfo.selectedRegion.move( slide );
-         }
-         state.hSlideAmount = 0;
-      }
-
+      remover.Reinsert( nullptr );
       return false;
    }
 
    // Make the offset permanent; start from a "clean slate"
    state.mMouseClickX = xx;
+   remover.Reinsert( &correspondence );
    return true;
 }
 
@@ -695,7 +833,7 @@ UIHandle::Result TimeShiftHandle::Drag
       // within the bounds of the tracks area.
       if (event.m_x >= mRect.GetX() &&
          event.m_x < mRect.GetX() + mRect.GetWidth())
-          track = mCapturedTrack.get();
+          track = mClipMoveState.mCapturedTrack.get();
    }
 
    // May need a shared_ptr to reassign mCapturedTrack below
@@ -706,16 +844,15 @@ UIHandle::Result TimeShiftHandle::Drag
 
    auto &trackList = TrackList::Get( *pProject );
 
-   // GM: DoSlide now implementing snap-to
+   // GM: slide now implementing snap-to
    // samples functionality based on sample rate.
 
    // Start by undoing the current slide amount; everything
    // happens relative to the original horizontal position of
    // each clip...
-   DoOffset(
-      mClipMoveState, mCapturedTrack.get(), -mClipMoveState.hSlideAmount );
+   mClipMoveState.DoHorizontalOffset( -mClipMoveState.hSlideAmount );
 
-   if ( mClipMoveState.capturedClipIsSelection ) {
+   if ( mClipMoveState.movingSelection ) {
       // Slide the selection, too
       viewInfo.selectedRegion.move( -mClipMoveState.hSlideAmount );
    }
@@ -724,44 +861,31 @@ UIHandle::Result TimeShiftHandle::Drag
    double desiredSlideAmount =
       FindDesiredSlideAmount( viewInfo, mRect.x, event, mSnapManager.get(),
          mSlideUpDownOnly, mSnapPreferRightEdge, mClipMoveState,
-         *mCapturedTrack, *pTrack );
+         *pTrack );
 
    // Scroll during vertical drag.
-   // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
-   bool slidVertically = false;
-
    // If the mouse is over a track that isn't the captured track,
    // decide which tracks the captured clips should go to.
-   bool fail = (
-      mClipMoveState.capturedClip &&
-       pTrack != mCapturedTrack
+   // EnsureVisible(pTrack); //vvv Gale says this has problems on Linux, per bug 393 thread. Revert for 2.0.2.
+   bool slidVertically = (
+       pTrack != mClipMoveState.mCapturedTrack
        /* && !mCapturedClipIsSelection*/
-      && pTrack->TypeSwitch<bool>( [&] (WaveTrack *) {
-            if ( DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
-                     trackList, *mCapturedTrack, *pTrack, desiredSlideAmount ) ) {
-               mCapturedTrack = pTrack;
-               mDidSlideVertically = true;
-            }
-            else
-               return true;
-
-            // Not done yet, check for horizontal movement.
-            slidVertically = true;
-            return false;
-        })
-   );
+      && DoSlideVertical( viewInfo, event.m_x, mClipMoveState,
+                  trackList, *pTrack, desiredSlideAmount ) );
+   if (slidVertically)
+   {
+      mClipMoveState.mCapturedTrack = pTrack;
+      mDidSlideVertically = true;
+   }
    
-   if (fail)
-      return RefreshAll;
-
    if (desiredSlideAmount == 0.0)
       return RefreshAll;
 
-   mClipMoveState.hSlideAmount = desiredSlideAmount;
+   // Note that mouse dragging doesn't use TrackShifter::HintOffsetLarger()
 
-   DoSlideHorizontal( mClipMoveState, trackList, *mCapturedTrack );
+   mClipMoveState.DoSlideHorizontal( desiredSlideAmount );
 
-   if (mClipMoveState.capturedClipIsSelection) {
+   if (mClipMoveState.movingSelection) {
       // Slide the selection, too
       viewInfo.selectedRegion.move( mClipMoveState.hSlideAmount );
    }
@@ -802,26 +926,11 @@ UIHandle::Result TimeShiftHandle::Release
 
    if ( !mDidSlideVertically && mClipMoveState.hSlideAmount == 0 )
       return result;
-   
-   for ( auto &trackClip : mClipMoveState.capturedClipArray )
-   {
-      WaveClip* pWaveClip = trackClip.clip;
-      // Note that per AddClipsToCaptured(Track *t, double t0, double t1),
-      // in the non-WaveTrack case, the code adds a NULL clip to capturedClipArray,
-      // so we have to check for that any time we're going to deref it.
-      // Previous code did not check it here, and that caused bug 367 crash.
-      if (pWaveClip &&
-         trackClip.track != trackClip.origTrack)
-      {
-         // Now that user has dropped the clip into a different track,
-         // make sure the sample rate matches the destination track.
-         // Assume the clip was dropped in a wave track
-         pWaveClip->Resample
-            (static_cast<WaveTrack*>(trackClip.track)->GetRate());
-         pWaveClip->MarkChanged();
-      }
-   }
 
+   for ( auto &pair : mClipMoveState.shifters )
+      if ( !pair.second->FinishMigration() )
+         MigrationFailure();
+   
    TranslatableString msg;
    bool consolidate;
    if (mDidSlideVertically) {

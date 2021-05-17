@@ -208,7 +208,7 @@ private:
 class LadspaEffectsModule final : public ModuleInterface
 {
 public:
-   LadspaEffectsModule(const wxString *path);
+   LadspaEffectsModule();
    virtual ~LadspaEffectsModule();
 
    // ComponentInterface implementation
@@ -243,8 +243,5 @@ public:
    // LadspaEffectModule implementation
 
    FilePaths GetSearchPaths();
-
-private:
-   wxString mPath;
 };
 

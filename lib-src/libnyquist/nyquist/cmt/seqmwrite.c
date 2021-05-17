@@ -43,20 +43,21 @@ extern time_type clock_ticksize;  /* millisec per tick shifted 16 bits */
 extern boolean clock_running;     /* TRUE if clock is running */
 extern boolean use_midi_clock;
 
-private void smfw_bend();
+private void smfw_bend(seq_type seq, int voice, int value);
 private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice, 
                                 int pitch);
-private void smfw_ctrl();
-private void smfw_deltatime();
-private void smfw_dotrack();
-private void smfw_exclusive();
+private void smfw_ctrl(seq_type seq, int voice, int ctrl_name, int value);
+private void smfw_deltatime(void);
+private void smfw_dotrack(seq_type seq);
+private void smfw_exclusive(int length, unsigned char *msg);
 private void smfw_noteoff(call_args_type args);
-private void smfw_noteon();
+private void smfw_noteon(seq_type seq, int voice, int pitch, int vel);
 private void smfw_process_event(call_args_type args);
 private void smfw_ramp_event(call_args_type args);
-private void smfw_send_macro();
+private void smfw_send_macro(unsigned char *ptr, int voice, short parameter[],
+                             int parm_num, int value);
 private void smfw_touch(seq_type seq, int voice, int value);
-private void writevarlen();
+private void writevarlen(long value);
 
 
 /* smfw_bend -- write a pitch bend to a midi file */
@@ -97,8 +98,8 @@ private void smfw_cause_noteoff(seq_type seq, time_type delay, int voice,
 
 private void smfw_clock_event(call_args_type args)
 {
-    time_type old_ticksize = (time_type)(args->arg[0]);
-    time_type new_ticksize = (time_type)(args->arg[1]);
+    time_type old_ticksize = (time_type) ((intptr_t) args->arg[0]);
+    time_type new_ticksize = (time_type)((intptr_t) args->arg[1]);
     time_type temp_ticksize = new_ticksize;
     new_ticksize = scale(new_ticksize, 375L, 1024L);
 /* (new_ticksize >> 16) * 24000 ms/clock becomes us/midiquarter */
@@ -362,7 +363,7 @@ private void smfw_process_event(call_args_type args)
                     break;
                   case ESC_CTRL:
                     switch (event->value) {
-                        time_type this_event;
+                            
                       /* called routine will write to midifile in execution: */
                       case CALL_VALUE: 
                         sequence = seq;
@@ -388,7 +389,7 @@ private void smfw_process_event(call_args_type args)
                                 /* set new ticksize: */
                                 last_tick_size = clock_ticksize; 
                             } else { /*not on tempo track*/
-                                this_event = ((virttime - last_clock_event) *
+                                long this_event = ((virttime - last_clock_event) *
                                         ((2500L << 16) / last_tick_size)) / 100;
                                 if (debug) gprintf(TRANS,
                                     "track != 0: Lastev: %ld Thisev: %ld NewLast: %ld\n",
@@ -519,14 +520,10 @@ private void smfw_ramp_event(call_args_type args)
 
 /* smfw_send_macro -- write msg to midi file from a seq "macro" event */
 /**/
-private void smfw_send_macro(ptr, voice, parameter, parm_num, value)
-  register unsigned char *ptr;
-  int voice;
-  short parameter[];
-  int parm_num;
-  int value;
+private void smfw_send_macro(unsigned char *ptr, int voice, short parameter[],
+                             int parm_num, int value)
 {
-    register unsigned char code, *loc;
+    unsigned char code, *loc;
     while ((code = *ptr++)) {
         loc = ptr + *ptr;
         ptr++;
@@ -682,9 +679,8 @@ void seq_write_smf(seq, outfile)
 
 /* writevarlen -- write a variable length integer to midi file */
 /**/
-private void writevarlen(value)
-  register long value;
-{       
+private void writevarlen(long value)
+{
     register ulong buffer;
 
     if (debug) gprintf(TRANS, "variable length quantity...");

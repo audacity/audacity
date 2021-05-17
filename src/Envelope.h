@@ -68,7 +68,7 @@ private:
 typedef std::vector<EnvPoint> EnvArray;
 struct TrackPanelDrawingContext;
 
-class Envelope /* not final */ : public XMLTagHandler {
+class AUDACITY_DLL_API Envelope /* not final */ : public XMLTagHandler {
 public:
    // Envelope can define a piecewise linear function, or piecewise exponential.
    Envelope(bool exponential, double minValue, double maxValue, double defaultValue);
@@ -249,7 +249,7 @@ private:
 
    // TODO: mTrackEpsilon based on assumption of 200KHz.  Needs review if/when
    // we support higher sample rates.
-   /** \brief The shortest distance appart that points on an envelope can be
+   /** \brief The shortest distance apart that points on an envelope can be
     * before being considered the same point */
    double mTrackEpsilon { 1.0 / 200000.0 };
    bool mDB;

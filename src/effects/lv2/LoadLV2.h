@@ -163,7 +163,7 @@
 class LV2EffectsModule final : public ModuleInterface
 {
 public:
-   LV2EffectsModule(const wxString *path);
+   LV2EffectsModule();
    virtual ~LV2EffectsModule();
 
    // ComponentInterface implementation
@@ -199,9 +199,6 @@ public:
 
 private:
    const LilvPlugin *GetPlugin(const PluginPath & path);
-
-private:
-   PluginPath mPath;
 };
 
 extern LilvWorld *gWorld;

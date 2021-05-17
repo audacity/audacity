@@ -15,7 +15,7 @@ of sample block storage.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Benchmark.h"
 
 #include <wx/app.h>
@@ -372,11 +372,10 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    HoldPrint(true);
 
-   ZoomInfo zoomInfo(0.0, ZoomInfo::GetDefaultZoom());
    const auto t =
-      TrackFactory{ mSettings,
-                    SampleBlockFactory::New( mProject ),
-                    &zoomInfo }.NewWaveTrack(SampleFormat);
+      WaveTrackFactory{ mSettings,
+                    SampleBlockFactory::New( mProject )  }
+         .NewWaveTrack(SampleFormat);
 
    t->SetRate(1);
 

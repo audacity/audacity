@@ -29,7 +29,7 @@
 #ifndef __AUDACITY_TAGS__
 #define __AUDACITY_TAGS__
 
-#include "Audacity.h"
+
 
 #include "xml/XMLTagHandler.h"
 
@@ -87,6 +87,8 @@ class AUDACITY_DLL_API Tags final
    virtual ~Tags();
 
    std::shared_ptr<Tags> Duplicate() const;
+
+   void Merge( const Tags &other );
 
    Tags & operator= (const Tags & src );
 

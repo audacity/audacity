@@ -8,10 +8,8 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "SpectrumView.h"
 
-#include "../../../../Experimental.h"
+#include "SpectrumView.h"
 
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
@@ -62,7 +60,7 @@ void SpectrumView::DoSetMinimized( bool minimized )
 #ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
-   if( bHalfWave )
+   if( bHalfWave && minimized)
    {
       // It is all right to set the top of scale to a huge number,
       // not knowing the track rate here -- because when retrieving the
@@ -209,10 +207,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
    const double &leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
-
-   // If we get to this point, the clip is actually visible on the
-   // screen, so remember the display rectangle.
-   clip->SetDisplayRect(hiddenMid);
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
@@ -641,12 +635,17 @@ void SpectrumView::Draw(
 {
    if ( iPass == TrackArtist::PassTracks ) {
       auto &dc = context.dc;
+      // Update cache for locations, e.g. cutlines and merge points
+      // Bug2588: do this for both channels, even if one is not drawn, so that
+      // cut-line editing (which depends on the locations cache) works properly.
+      // If both channels are visible, we will duplicate this effort, but that
+      // matters little.
+      for( auto channel:
+          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
+         channel->UpdateLocationsCache();
+
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());
-
-      for (const auto &clip : wt->GetClips()) {
-         clip->ClearDisplayRect();
-      }
 
       const auto artist = TrackArtist::Get( context );
       

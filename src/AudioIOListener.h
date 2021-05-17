@@ -13,7 +13,11 @@
 #ifndef __AUDACITY_AUDIO_IO_LISTENER__
 #define __AUDACITY_AUDIO_IO_LISTENER__
 
-#include "Audacity.h"
+
+
+class WaveTrack;
+using WaveTrackArray =
+   std::vector < std::shared_ptr < WaveTrack > >;
 
 class AUDACITY_DLL_API AudioIOListener /* not final */ {
 public:

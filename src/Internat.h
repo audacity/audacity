@@ -12,11 +12,10 @@
 #ifndef __AUDACITY_INTERNAT__
 #define __AUDACITY_INTERNAT__
 
-#include "Audacity.h"
+
 
 #include <wx/longlong.h>
 
-#ifndef IN_RC
 #include "audacity/Types.h"
 
 class wxArrayString;
@@ -102,9 +101,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define XPC(sing, plur, n, c) \
    TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
 
-#endif
-
-class Internat
+class AUDACITY_DLL_API Internat
 {
 public:
    /** \brief Initialize internationalisation support. Call this once at
@@ -116,6 +113,7 @@ public:
     * Normally, this is a decimal point ('.'), but e.g. Germany uses a
     * comma (',').*/
    static wxChar GetDecimalSeparator();
+   static void SetCeeNumberFormat();
 
    /** \brief Convert a string to a number.
     *
@@ -163,9 +161,9 @@ private:
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
 
 class ComponentInterfaceSymbol;
-TranslatableStrings Msgids(
+AUDACITY_DLL_API TranslatableStrings Msgids(
    const EnumValueSymbol strings[], size_t nStrings);
-TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
+AUDACITY_DLL_API TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
 
 // Whether disambiguationg contexts are supported
 // If not, then the program builds and runs, but strings in the catalog with

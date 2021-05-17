@@ -38,10 +38,8 @@
 
 *//******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
-#include "Meter.h"
 
-#include "../Experimental.h"
+#include "Meter.h"
 
 #include <algorithm>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -50,7 +48,6 @@
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>
-#include <wx/dcmemory.h>
 #include <wx/frame.h>
 #include <wx/image.h>
 #include <wx/intl.h>
@@ -533,6 +530,22 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       wxColor yellow(255, 255, 0);
       wxColor red(255, 0, 0);
    
+      // Bug #2473 - (Sort of) Hack to make text on meters more
+      // visible with darker backgrounds. It would be better to have
+      // different colors entirely and as part of the theme.
+      if (GetBackgroundColour().GetLuminance() < 0.25)
+      {
+         green = wxColor(117-100, 215-100, 112-100);
+         yellow = wxColor(255-100, 255-100, 0);
+         red = wxColor(255-100, 0, 0);
+      }
+      else if (GetBackgroundColour().GetLuminance() < 0.50)
+      {
+         green = wxColor(117-50, 215-50, 112-50);
+         yellow = wxColor(255-50, 255-50, 0);
+         red = wxColor(255-50, 0, 0);
+      }
+
       // Draw the meter bars at maximum levels
       for (unsigned int i = 0; i < mNumBars; i++)
       {
@@ -1918,7 +1931,7 @@ void MeterPanel::OnAudioIOStatus(wxCommandEvent &evt)
 }
 
 // SaveState() and RestoreState() exist solely for purpose of recreating toolbars
-// They should really be quering the project for current audio I/O state, but there
+// They should really be querying the project for current audio I/O state, but there
 // isn't a clear way of doing that just yet.  (It should NOT query AudioIO.)
 auto MeterPanel::SaveState() -> State
 {

@@ -48,7 +48,7 @@ the previous value so re-reading will not re-trigger.)
 #include "cext.h"
 #include "assert.h"
 
-#define TRIGGERDBG 1
+#define TRIGGERDBG 0
 #define D if (TRIGGERDBG) 
 
 /* Note: this structure is identical to an add_susp structure up
@@ -61,15 +61,15 @@ typedef struct trigger_susp_struct {
     snd_susp_node               susp;
     boolean                     started;
     int                         terminate_bits;
-    long                        terminate_cnt;
+    int64_t                     terminate_cnt;
     int                         logical_stop_bits;
     boolean                     logically_stopped;
     sound_type                  s1;
-    long                        s1_cnt;
+    int                         s1_cnt;
     sample_block_type           s1_bptr;        /* block pointer */
     sample_block_values_type    s1_ptr;
     sound_type                  s2;
-    long                        s2_cnt;
+    int                         s2_cnt;
     sample_block_type           s2_bptr;        /* block pointer */
     sample_block_values_type    s2_ptr;
 
@@ -81,7 +81,7 @@ typedef struct trigger_susp_struct {
 
 
 void trigger_fetch(snd_susp_type, snd_list_type);
-void trigger_free();
+void trigger_free(snd_susp_type a_susp);
 
 extern LVAL s_stdout;
 
@@ -122,7 +122,7 @@ void trigger_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         /* don't run past terminate time */
         if (susp->terminate_cnt != UNKNOWN &&
             susp->terminate_cnt <= susp->susp.current + cnt + togo) {
-            togo = susp->terminate_cnt - (susp->susp.current + cnt);
+            togo = (int) (susp->terminate_cnt - (susp->susp.current + cnt));
             if (togo == 0) break;
         }
 
@@ -135,7 +135,7 @@ void trigger_fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 trigger_susp_type new_trigger;
                 sound_type new_trigger_snd;
                 LVAL result;
-                long delay; /* sample delay to s2 */
+                int64_t delay; /* sample delay to s2 */
                 time_type now;
 
                 susp->previous = s; /* don't retrigger */
@@ -275,9 +275,7 @@ void trigger_print_tree(snd_susp_type a_susp, int n)
 
 
 
-sound_type snd_make_trigger(s1, closure)
-  sound_type s1;
-  LVAL closure;
+sound_type snd_make_trigger(sound_type s1, LVAL closure)
 {
     register trigger_susp_type susp;
     /* t0 specified as input parameter */
@@ -321,9 +319,7 @@ sound_type snd_make_trigger(s1, closure)
 }
 
 
-sound_type snd_trigger(s1, closure)
-  sound_type s1;
-  LVAL closure;
+sound_type snd_trigger(sound_type s1, LVAL closure)
 {
     sound_type s1_copy;
     s1_copy = sound_copy(s1);

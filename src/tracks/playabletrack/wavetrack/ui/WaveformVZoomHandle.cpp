@@ -8,12 +8,10 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
+
 #include "WaveformVZoomHandle.h"
 
 #include "WaveTrackVZoomHandle.h"
-
-#include "../../../../Experimental.h"
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NumberScale.h"
@@ -329,7 +327,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
 
    if (wt->GetWaveformSettings().scaleType != newScaleType) {
       for (auto channel : TrackList::Channels(wt)) {
-         channel->GetIndependentWaveformSettings().scaleType = newScaleType;
+         channel->GetWaveformSettings().scaleType = newScaleType;
       }
 
       AudacityProject *const project = &mpData->project;

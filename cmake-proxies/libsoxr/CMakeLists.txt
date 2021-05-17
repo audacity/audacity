@@ -11,7 +11,6 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/src/cr32.c
       ${TARGET_ROOT}/src/cr32s.c
       ${TARGET_ROOT}/src/cr64.c
-#      ${TARGET_ROOT}/src/cr64s.c
       ${TARGET_ROOT}/src/data-io.c
       ${TARGET_ROOT}/src/dbesi0.c
       ${TARGET_ROOT}/src/fft4g.c
@@ -19,10 +18,8 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/src/fft4g64.c
       ${TARGET_ROOT}/src/filter.c
       ${TARGET_ROOT}/src/pffft32s.c
-#      ${TARGET_ROOT}/src/pffft64s.c
       ${TARGET_ROOT}/src/soxr.c
       ${TARGET_ROOT}/src/util32s.c
-#      ${TARGET_ROOT}/src/util64s.c
       ${TARGET_ROOT}/src/vr32.c
 )
 
@@ -72,7 +69,8 @@ set( WITH_VR32 YES )
 find_package( SIMD32 )
 if( SIMD32_FOUND )
    set( WITH_CR32S YES )
-   string( STRIP ${SIMD32_C_FLAGS} SIMD32_C_FLAGS )
+   string( STRIP "${SIMD32_C_FLAGS}" SIMD32_C_FLAGS )
+   string( REPLACE " " ";" SIMD32_C_FLAGS "${SIMD32_C_FLAGS}" )
    list( APPEND OPTIONS ${SIMD32_C_FLAGS} )
 endif()
 

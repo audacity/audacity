@@ -8,7 +8,7 @@ We welcome feedback on Audacity, suggestions for new or improved features,
 and bug reports. Please visit 
 https://forum.audacityteam.org/viewforum.php?f=25 .
 
-Audacity is copyright (c) 1999-2019 by Audacity Team. This copyright 
+Audacity is copyright (c) 1999-2021 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
 except as otherwise noted (mostly in the lib-src subdirectories). 
 "Audacity" is a registered trademark of Dominic Mazzoni. 
@@ -29,12 +29,12 @@ pull request on https://github.com/audacity/audacity/pulls . It's usually
 best to discuss functional code changes with us first on audacity-devel: 
 https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
 
-Version 2.4.2
+Version 3.0.3
 
 Contents of this README:
 
 1.  Licensing
-2.  Changes since version 2.4.1
+2.  Changes since version 3.0.2
 3.  Known Issues at Release
 4.  Source Code, Libraries and Additional Copyright Information
 
@@ -64,41 +64,68 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 --------------------------------------------------------------------------------
 
-2. Changes since version 2.4.1: 
+2. Changes since version 3.0.0: 
 
 
 Improvements
 
- * Audacity is now built with (our version of) the wx3.1.3 library.
-   Previously we used wx3.1.1.
- * We added a command 'Reset Configuration' to reset to default 
-   settings.
- * MP3 Audio is now exported without padding.
+ * More information to help Audacity developers is now provided 
+   with most error reports.
+ * Manage Macros dialog is now clearer about how to save and
+   close the dialog, thanks to changes in buttons.
+ * In MP3 export we removed a legacy option for a slower encoding
+   that is no better than the faster one.
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.2
 
 
 Bug Fixes
 
- Over 30 bugs in 2.4.1 fixed, including:
-
- * 2442 - Windows: Crash when importing (or editing) to a disk 
-   with insufficient disk space available
- * 2471 - Mix Stereo down to Mono fails if space at start of track.
- * 2439 - Mix and Render to New Track selects left channel of new
-   stereo track
+ Over 30 bugs in 3.0.0 fixed, including:
 
 
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2
+ * 2676 - Export: Incorrect handling over 0 dB
+ * 2692 - Mac: VI users get trapped in radio buttons of Keyboard Preferences
+ * 2694 - Coloring of tracks in Mixer Board are awry
+ * 2696 - Metadata Editor: changed size is not remembered/restored on next use
+ * 2697 - Linux: AUP3 projects use incorrect char size on "differently"
+          configured wxWidgets
+ * 2698 - Noise Gate fails silently if "hold" is non-zero
+ * 2699 - Windows: Cannot edit labels with emoji in them correctly
+ * 2701 - Progress dialog interferes with scripting
+ * 2703 - Mac: EGAT preview dialog is hidden behind the EGAT dialog
+ * 2704 - Mac: Stop button in EGATs with Preview does nor stop the preview
+ * 2706 - Win: Vocal Reduction and Isolation most options fail
+ * 2707 - Opened projects not being removed from "audacity.cfg"
+ * 2708 - Nyquist effects fail silently with One hour plus stereo
+ * 2709 - Mac: Missing sub-menu check marks in French
+ * 2710 - Compressor with audio before T=0 crashes Audacity
+ * 2714 - (Japanese & Korean) "Unable to parse project information"
+ * 2716 - Cleared "Recent Files" are restored on next launch
+ * 2718 - Failed to execute a project file command (on server)
+ * 2720 - Cannot open project that's in a read only folder - error message vague
+ * 2722 - Noise Gate fails on a one hour stereo selection
+
+See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2
 
 
 -------------------------------------------------------------------------------
 
 
-3. Some Known Issues in 2.4.2:
+3. Some Known Issues in 3.0.2:
 
-For best workarounds and other known issues in 2.4.2, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_2.4.2/Issues 
+We have two significant bugs we would like help in tracking down:
+
+1) Audacity may occasionally report "Failed to open the project 
+   database".  We don't think this is causing people to lose data.
+2) Audacity may offer to 'recover' a project at start up, when
+   there is nothing to recover.
+
+If there are repeatable steps to make these bugs happen, this
+could help us track down what is causing them.
+
+For best workarounds and other known issues in 3.0.2, please see:
+  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2/Issues 
 
 
 -------------------------------------------------------------------------------
@@ -194,7 +221,7 @@ Additional copyright information:
 
 Nyquist
 
-Copyright (c) 2000-2002, by Roger B. Dannenberg
+Copyright (c) 2000-2021, by Roger B. Dannenberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

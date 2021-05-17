@@ -191,7 +191,9 @@
 /* NYQUIST tells some CMT code that we're really in
  * XLISP and NYQUIST
  */
+#ifndef NYQUIST
 #define NYQUIST 1
+#endif
 
 /* If SAFE_NYQUIST is defined, Nyquist will prevent:
  * - writes anywhere except in the directory tree

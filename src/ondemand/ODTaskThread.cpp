@@ -11,7 +11,7 @@
 ******************************************************************//**
 
 \class ODTaskThread
-\brief A thread that executes a part of the task specfied by an ODTask.
+\brief A thread that executes a part of the task specified by an ODTask.
 
 *//*******************************************************************/
 

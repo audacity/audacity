@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CommandHandler.h"
 
 #include <wx/event.h>

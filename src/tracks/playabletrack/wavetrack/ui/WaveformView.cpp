@@ -8,10 +8,8 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "WaveformView.h"
 
-#include "../../../../Experimental.h"
+#include "WaveformView.h"
 
 #include "WaveformVRulerControls.h"
 #include "WaveTrackView.h"
@@ -84,7 +82,10 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
                // Unconditional hits appropriate to the tool
                // If tools toolbar were eliminated, we would eliminate these
             case ToolCodes::envelopeTool: {
-               auto envelope = pTrack->GetEnvelopeAtX( st.state.m_x );
+               auto &viewInfo = ViewInfo::Get(*pProject);
+               auto time =
+                  viewInfo.PositionToTime(st.state.m_x, st.rect.GetX());
+               auto envelope = pTrack->GetEnvelopeAtTime(time);
                result = EnvelopeHandle::HitAnywhere(
                   view.mEnvelopeHandle, envelope, false);
                break;
@@ -712,10 +713,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    int iColorIndex = clip->GetColourIndex();
    artist->SetColours( iColorIndex );
 
-   // If we get to this point, the clip is actually visible on the
-   // screen, so remember the display rectangle.
-   clip->SetDisplayRect(hiddenMid);
-
    // The bounds (controlled by vertical zooming; -1.0...1.0
    // by default)
    float zoomMin, zoomMax;
@@ -793,7 +790,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
 
    // TODO Add a comment to say what this loop does.
-   // Possily make it into a subroutine.
+   // Possibly make it into a subroutine.
    for (unsigned ii = 0; ii < nPortions; ++ii) {
       WavePortion &portion = portions[ii];
       const bool showIndividualSamples = portion.averageZoom > threshold1;
@@ -1009,12 +1006,17 @@ void WaveformView::Draw(
 {
    if ( iPass == TrackArtist::PassTracks ) {
       auto &dc = context.dc;
+      // Update cache for locations, e.g. cutlines and merge points
+      // Bug2588: do this for both channels, even if one is not drawn, so that
+      // cut-line editing (which depends on the locations cache) works properly.
+      // If both channels are visible, we will duplicate this effort, but that
+      // matters little.
+      for( auto channel:
+          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
+         channel->UpdateLocationsCache();
+
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());
-
-      for (const auto &clip : wt->GetClips()) {
-         clip->ClearDisplayRect();
-      }
 
       const auto artist = TrackArtist::Get( context );
       const auto hasSolo = artist->hasSolo;

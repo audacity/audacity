@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "TruncSilence.h"
 #include "LoadEffects.h"
 

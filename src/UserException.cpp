@@ -1,12 +1,12 @@
-//
-//  UserException.cpp
-//  
-//
-//  Created by Paul Licameli on 11/27/16.
-//
-//
+/*!
+  @file UserException.cpp
+  @brief implements UserException
 
-#include "Audacity.h"
+  Created by Paul Licameli on 11/27/16.
+
+*/
+
+
 #include "UserException.h"
 
 UserException::~UserException()

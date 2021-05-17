@@ -1,0 +1,39 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  Dependencies.dox2
+
+
+********************************************************************//**
+
+\page Dependencies Dependencies in Audacity
+
+\section DependenciesIntro Introduction
+
+A script that runs nightly maps out the dependencies between source
+files in the Audacity code base.  We aim for this graph to be 
+relatively untangled, separation of concerns, so that classes can 
+be understood better on their own, without having to read many other
+source files.
+
+This presentation of the dependencies, and indeed the actual network
+of the dependencies are works in progress.  We aim to improve both.
+
+\htmlonly
+<image src="graph.dot.svg" style="width:100%"></image>
+<hr>
+<image src="graph.dot.svg"></image>
+\endhtmlonly
+
+
+<hr>
+
+\section AnotherSection More stuff here....
+
+\attention A point worth noting is...
+
+<hr>
+
+
+*//********************************************************************/

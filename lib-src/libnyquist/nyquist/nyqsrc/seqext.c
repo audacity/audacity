@@ -31,12 +31,11 @@ LVAL s_seq;
 
 xtype_desc seq_desc;
 
-static void xlseq_print();
+static void xlseq_print(LVAL fptr, void *sequence);
 
-void nop() {}
+void nop(void) {}
 
-boolean seqp(s)
-  LVAL s;
+boolean seqp(LVAL s)
 {
     return exttypep(s, s_seq);
 }

@@ -21,6 +21,7 @@
 #include "audacity/PluginInterface.h"
 
 class wxArrayString;
+class FileConfig;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -40,7 +41,7 @@ typedef enum
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
-class PluginDescriptor
+class AUDACITY_DLL_API PluginDescriptor
 {
 public:
    PluginDescriptor();
@@ -167,7 +168,7 @@ typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
-class PluginManager final : public PluginManagerInterface
+class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
 {
 public:
 
@@ -176,7 +177,8 @@ public:
 
    // PluginManagerInterface implementation
 
-   bool IsPluginRegistered(const PluginPath &path) override;
+   bool IsPluginRegistered(
+      const PluginPath &path, const TranslatableString *pSymbol) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
@@ -270,13 +272,13 @@ private:
    ~PluginManager();
 
    void Load();
-   void LoadGroup(wxFileConfig *pRegistry, PluginType type);
+   void LoadGroup(FileConfig *pRegistry, PluginType type);
    void Save();
-   void SaveGroup(wxFileConfig *pRegistry, PluginType type);
+   void SaveGroup(FileConfig *pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
 
-   wxFileConfig *GetSettings();
+   FileConfig *GetSettings();
 
    bool HasGroup(const RegistryPath & group);
    bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
@@ -312,7 +314,7 @@ private:
 
    bool IsDirty();
    void SetDirty(bool dirty = true);
-   std::unique_ptr<wxFileConfig> mSettings;
+   std::unique_ptr<FileConfig> mSettings;
 
    bool mDirty;
    int mCurrentIndex;
@@ -322,5 +324,12 @@ private:
 
    friend class PluginRegistrationDialog;
 };
+
+// Defining these special names in the low-level PluginManager.h
+// is unfortunate
+// Internal name should be stable across versions
+#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
+// User-visible name might change in later versions
+#define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */

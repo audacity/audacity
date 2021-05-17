@@ -25,7 +25,7 @@ public:
     static DitherType FastDitherChoice();
     static DitherType BestDitherChoice();
 
-    static EnumSetting< DitherType > FastSetting, BestSetting;
+    static AUDACITY_DLL_API EnumSetting< DitherType > FastSetting, BestSetting;
 
     /// Default constructor
     Dither();
@@ -38,7 +38,7 @@ public:
     /// and hints to the formats of the samples. Even if the sample formats
     /// are the same, samples are clipped, if necessary.
     void Apply(DitherType ditherType,
-               const samplePtr source, sampleFormat sourceFormat,
+               constSamplePtr source, sampleFormat sourceFormat,
                samplePtr dest, sampleFormat destFormat,
                unsigned int len,
                unsigned int sourceStride = 1,

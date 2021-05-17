@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#include "Audacity.h" // for USE_* macros
-#include "Experimental.h"
+
+
 
 #ifndef __AUDACITY_MIXER_BOARD__
 #define __AUDACITY_MIXER_BOARD__
@@ -279,6 +279,9 @@ private:
    void OnSize(wxSizeEvent &evt);
    void OnKeyEvent(wxKeyEvent &evt);
 
+   void SetWindowTitle();
+
+   AudacityProject *mProject;
 public:
    MixerBoard* mMixerBoard;
 

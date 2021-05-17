@@ -1,4 +1,6 @@
 ; init.lsp -- default Nyquist startup file
+
+(setf *breakenable* t)
 (load "nyinit.lsp" :verbose nil)
 
 ; add your customizations here:
@@ -45,15 +47,6 @@
   ;;; If 'string' is not a valid LISP expression, the behaviour is undefined.
   (eval (read (make-string-input-stream string))))
 
-(defun escape-backslash (in-string)
-  ;;; Escape backslashes
-  (let (ch (out-string ""))
-    (dotimes (i (length in-string) out-string)
-      (setf ch (subseq in-string i (1+ i)))
-      (if (string= ch "\\")
-          (string-append out-string "\\\\")
-          (string-append out-string ch)))))
-
 (defmacro quote-string (string)
   ;;; Prepend a single quote to a string
   `(setf ,string (format nil "\'~a" ,string)))
@@ -75,7 +68,13 @@
     (if (not (last info))
         (error (format nil "(aud-get-info ~a) failed.~%" str)))
     (let* ((info-string (first info))
-           (sanitized (escape-backslash info-string)))
+           (sanitized ""))
+      ;; Escape backslashes
+      (dotimes (i (length info-string))
+        (setf ch (subseq info-string i (1+ i)))
+        (if (string= ch "\\")
+            (string-append sanitized "\\\\")
+            (string-append sanitized ch)))
       (eval-string (quote-string sanitized)))))
 
 

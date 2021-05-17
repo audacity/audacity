@@ -19,7 +19,7 @@
 /* Define to 1 if using `alloca.c'. */
 #cmakedefine C_ALLOCA 1
 
-/* alot of debug output */
+/* a lot of debug output */
 #cmakedefine DEBUG 1
 
 /* allow to compute a more accurate replaygain value */
@@ -286,7 +286,7 @@
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #cmakedefine TIME_WITH_SYS_TIME 1
 
-/* faster log implementation with less but enough precission */
+/* faster log implementation with less but enough precision */
 #cmakedefine USE_FAST_LOG 1
 
 /* Enable extensions on AIX 3, Interix.  */

@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "WaveTrackControls.h"
 
-#include "../../../../Experimental.h"
+#include "WaveTrackControls.h"
 
 #include "../../ui/PlayableTrackButtonHandles.h"
 #include "WaveTrackSliderHandles.h"
@@ -34,6 +32,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/ThemePrefs.h"
 #include "../../../../widgets/AudacityMessageBox.h"
+#include "widgets/ProgressDialog.h"
+#include "UserException.h"
+#include "audacity/Types.h"
 
 #include <wx/combobox.h>
 #include <wx/frame.h>
@@ -252,9 +253,37 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    AudacityProject *const project = &mpData->project;
 
-   for (auto channel : TrackList::Channels(pTrack))
-      channel->ConvertToSampleFormat(newFormat);
+   ProgressDialog progress{ XO("Changing sample format"),
+                            XO("Processing...   0%%"),
+                            pdlgHideStopButton };
 
+   sampleCount totalSamples{ 0 };
+   for (const auto& channel : TrackList::Channels(pTrack))
+      totalSamples += channel->GetNumSamples();
+   sampleCount processedSamples{ 0 };
+
+   // Below is the lambda function that is passed along the call chain to
+   // the Sequence::ConvertToSampleFormat. This callback function is used
+   // to report the conversion progress and update the progress dialog.
+   auto progressUpdate = [&progress, &totalSamples, &processedSamples]
+   (size_t newlyProcessedCount)->void
+   {
+      processedSamples += newlyProcessedCount;
+      double d_processed = processedSamples.as_double();
+      double d_total = totalSamples.as_double();
+      int percentage{ static_cast<int>((d_processed / d_total) * 100) };
+
+      auto progressStatus = progress.Update(d_processed, d_total,
+         XO("Processing...   %i%%").Format(percentage));
+
+      if (progressStatus != ProgressResult::Success)
+         throw UserException{};
+   };
+
+   for (auto channel : TrackList::Channels(pTrack))
+      channel->ConvertToSampleFormat(
+         newFormat, progressUpdate);
+         
    ProjectHistory::Get( *project )
    /* i18n-hint: The strings name a track and a format */
       .PushState(XO("Changed '%s' to %s")
@@ -735,7 +764,6 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
          !(displays.size() == 1 && displays[0].id == id);
       if (wrongType) {
          for (auto channel : TrackList::Channels(pTrack)) {
-            channel->SetLastScaleType();
             WaveTrackView::Get( *channel )
                .SetDisplay( WaveTrackView::Display{ id } );
          }

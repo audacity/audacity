@@ -31,9 +31,9 @@ void siosc_table_init(siosc_susp_type susp)
 
 /* siosc_table_update -- outer loop processing, get next table */
 /**/
-long siosc_table_update(siosc_susp_type susp, long cur)
+int64_t siosc_table_update(siosc_susp_type susp, int64_t cur)
 {
-    long n;
+    int64_t n;
 
     /* swap ampramps: */
     susp->ampramp_a = 1.0;
@@ -67,8 +67,7 @@ long siosc_table_update(siosc_susp_type susp, long cur)
         susp->lis = cdr(susp->lis);
     } else { /* use only table a */
         susp->ampslope = 0.0;
-        susp->next_breakpoint = 0x7FFFFFFF;
-        n = 0x7FFFFFFF;
+        susp->next_breakpoint = n = 0x7FFFFFFFFFFFFFFF;
     }
     return n;
 }
@@ -83,7 +82,7 @@ long siosc_table_update(siosc_susp_type susp, long cur)
        ("double" "table_sr" "0.0")
        ("double" "phase" "0.0")
        ("LVAL" "lis" "lis")
-       ("long" "next_breakpoint" "0")
+       ("int64_t" "next_breakpoint" "0")
        ("double" "ampramp_a" "1.0")
        ("double" "ampramp_b" "0.0")
        ("double" "ampslope" "0.0;
@@ -104,11 +103,11 @@ long siosc_table_update(siosc_susp_type susp, long cur)
 ;  "lis" points to the next time to be used, or NULL
 
 (OUTER-LOOP "
-        { long cur = susp->susp.current + cnt;
-            n = susp->next_breakpoint - cur;
-            if (n == 0) n = siosc_table_update(susp, cur);
+        { int64_t cur = susp->susp.current + cnt;
+          int64_t n64 = susp->next_breakpoint - cur;
+          if (n64 == 0) n64 = siosc_table_update(susp, cur);
+          if (n64 < togo) togo = (int) n64;
         }
-        togo = min(n, togo);
 ")
 
 (INNER-LOOP "table_index = (long) phase;

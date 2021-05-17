@@ -1,12 +1,13 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  ImportAUP.cpp
+  @file ImportAUP.cpp
+  @brief Upgrading project file formats from before version 3
 
 *//****************************************************************//**
 
-\class AUPmportFileHandle
+\class AUPImportFileHandle
 \brief An ImportFileHandle for AUP files (pre-AUP3)
 
 *//****************************************************************//**
@@ -16,7 +17,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #include "Import.h"
 #include "ImportPlugin.h"
@@ -31,11 +32,11 @@
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectFileIORegistry.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"
+#include "../Sequence.h"
 #include "../Tags.h"
 #include "../TimeTrack.h"
 #include "../ViewInfo.h"
@@ -46,6 +47,7 @@
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ProgressDialog.h"
 #include "../xml/XMLFileReader.h"
+#include "../wxFileNameWrapper.h"
 
 #include <map>
 
@@ -91,7 +93,7 @@ public:
 
    ByteCount GetFileUncompressedBytes() override;
 
-   ProgressResult Import(TrackFactory *trackFactory,
+   ProgressResult Import(WaveTrackFactory *trackFactory,
                          TrackHolders &outTracks,
                          Tags *tags) override;
 
@@ -132,15 +134,22 @@ private:
    bool HandleSimpleBlockFile(XMLTagHandler *&handle);
    bool HandleSilentBlockFile(XMLTagHandler *&handle);
    bool HandlePCMAliasBlockFile(XMLTagHandler *&handle);
+   bool HandleImport(XMLTagHandler *&handle);
 
+   // Called in first pass to collect information about blocks
    void AddFile(sampleCount len,
-                const FilePath &filename = wxEmptyString,
+                sampleFormat format,
+                const FilePath &blockFilename = wxEmptyString,
+                const FilePath &audioFilename = wxEmptyString,
                 sampleCount origin = 0,
                 int channel = 0);
 
+   // These two use the collected file information in a second pass
    bool AddSilence(sampleCount len);
-   bool AddSamples(const FilePath &filename,
+   bool AddSamples(const FilePath &blockFilename,
+                   const FilePath &audioFilename,
                    sampleCount len,
+                   sampleFormat format,
                    sampleCount origin = 0,
                    int channel = 0);
 
@@ -178,8 +187,10 @@ private:
    {
       WaveTrack *track;
       WaveClip *clip;
-      FilePath path;
+      FilePath blockFile;
+      FilePath audioFile;
       sampleCount len;
+      sampleFormat format;
       sampleCount origin;
       int channel;
    } fileinfo;
@@ -187,7 +198,6 @@ private:
    sampleCount mTotalSamples;
 
    sampleFormat mFormat;
-   unsigned long mSampleRate;
    unsigned long mNumChannels;
 
    stack mHandlers;
@@ -196,12 +206,13 @@ private:
    const wxChar **mAttrs;
 
    wxFileName mProjDir;
-   using BlockFileMap = std::map<wxString, FilePath>;
+   using BlockFileMap =
+      std::map<wxString, std::pair<FilePath, std::shared_ptr<SampleBlock>>>;
    BlockFileMap mFileMap;
 
-   ListOfTracks mTracks;
    WaveTrack *mWaveTrack;
    WaveClip *mClip;
+   std::vector<WaveClip *> mClips;
 
    ProgressResult mUpdateResult;
    TranslatableString mErrorMsg;
@@ -267,7 +278,7 @@ auto AUPImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
+ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFactory),
                                            TrackHolders &WXUNUSED(outTracks),
                                            Tags *tags)
 {
@@ -276,6 +287,17 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
    auto &viewInfo = ViewInfo::Get(mProject);
    auto &settings = ProjectSettings::Get(mProject);
    auto &selman = ProjectSelectionManager::Get(mProject);
+
+   auto oldNumTracks = tracks.size();
+   auto cleanup = finally([this, &tracks, oldNumTracks]{
+      if (mUpdateResult != ProgressResult::Success) {
+         // Revoke additions of tracks
+         while (oldNumTracks < tracks.size()) {
+            Track *lastTrack = *tracks.Any().rbegin();
+            tracks.Remove(lastTrack);
+         }
+      }
+   });
 
    bool isDirty = history.GetDirty() || !tracks.empty();
 
@@ -292,8 +314,6 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
    bool success = xmlFile.Parse(this, mFilename);
    if (!success)
    {
-      mTracks.clear();
-
       AudacityMessageBox(
          XO("Couldn't import the project:\n\n%s").Format(xmlFile.GetErrorStr()),
          XO("Import Project"),
@@ -305,6 +325,7 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
 
    if (!mErrorMsg.empty())
    {
+      // Error or warning
       AudacityMessageBox(
          mErrorMsg,
          XO("Import Project"),
@@ -313,9 +334,13 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
 
       if (mUpdateResult == ProgressResult::Failed)
       {
+         // Error
          return ProgressResult::Failed;
       }
    }
+
+   // If mUpdateResult had been changed, we would have returned already
+   wxASSERT( mUpdateResult == ProgressResult::Success );
 
    sampleCount processed = 0;
    for (auto fi : mFiles)
@@ -329,33 +354,23 @@ ProgressResult AUPImportFileHandle::Import(TrackFactory *WXUNUSED(trackFactory),
       mClip = fi.clip;
       mWaveTrack = fi.track;
 
-      if (fi.path.empty())
+      if (fi.blockFile.empty())
       {
          AddSilence(fi.len);
       }
       else
       {
-         AddSamples(fi.path, fi.len, fi.origin, fi.channel);
+         AddSamples(fi.blockFile, fi.audioFile,
+                    fi.len, fi.format, fi.origin, fi.channel);
       }
 
       processed += fi.len;
    }
-         
-   if (mUpdateResult == ProgressResult::Failed || mUpdateResult == ProgressResult::Cancelled)
-   {
-      mTracks.clear();
 
-      return mUpdateResult;
-   }
+   for (auto pClip : mClips)
+      pClip->UpdateEnvelopeTrackLen();
 
-   // Copy the tracks we just created into the project.
-   for (auto &track : mTracks)
-   {
-      tracks.Add(track);
-   }
-
-   // Don't need our local track list anymore
-   mTracks.clear();
+   wxASSERT( mUpdateResult == ProgressResult::Success );
 
    // If the active project is "dirty", then bypass the below updates as we don't
    // want to going changing things the user may have already set up.
@@ -505,17 +520,14 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
 
    if (wxStrcmp(tag, wxT("waveclip")) == 0)
    {
-      mClip = static_cast<WaveClip *>(node.handler);
-      mClip->HandleXMLEndTag(tag);
-   }
-   else
-   {
-      if (node.handler)
-      {
-         node.handler->HandleXMLEndTag(tag);
-      }
+      mClip = nullptr;
    }
 
+   if (node.handler)
+   {
+      node.handler->HandleXMLEndTag(tag);
+   }
+   
    mHandlers.pop_back();
 
    if (mHandlers.size())
@@ -605,6 +617,10 @@ bool AUPImportFileHandle::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    {
       success = HandlePCMAliasBlockFile(handler);
    }
+   else if (mCurrentTag.IsSameAs(wxT("import")))
+   {
+      success = HandleImport(handler);
+   }
 
    if (!success || (handler && !handler->HandleXMLTag(tag, attrs)))
    {
@@ -657,7 +673,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       }
       else if (!wxStrcmp(attr, wxT("h")))
       {
-         if (!Internat::CompatibleToDouble(value, &dValue) || (dValue < 0.0))
+         if (!Internat::CompatibleToDouble(value, &dValue))
          {
             return SetError(XO("Invalid project 'h' attribute."));
          }
@@ -726,7 +742,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          requiredTags++;
 
          mProjDir = mFilename;
-         wxString altname = mProjDir.GetName() + wxT("-data");
+         wxString altname = mProjDir.GetName() + wxT("_data");
          mProjDir.SetFullName(wxEmptyString);
 
          wxString projName = value;
@@ -738,12 +754,13 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
             mProjDir.AppendDir(projName);
             if (!mProjDir.DirExists())
             {
+               mProjDir.RemoveLastDir();
                projName.clear();
             }
          }
 
          // If that fails then try to use the filename of the .aup as the base directory
-         // This is because unzipped projects e.g. those that get transfered between mac-pc
+         // This is because unzipped projects e.g. those that get transferred between mac-pc
          // may have encoding issues and end up expanding the wrong filenames for certain
          // international characters (such as capital 'A' with an umlaut.)
          if (projName.empty())
@@ -760,7 +777,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          if (projName.empty())
          {
             AudacityMessageBox(
-               XO("Couldn't find the project data folder: \"%s\"").Format(*value),
+               XO("Couldn't find the project data folder: \"%s\"").Format(value),
                XO("Error Opening Project"),
                wxOK | wxCENTRE,
                &window);
@@ -774,10 +791,9 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
                                          &files,
                                          "*.*");
 
-         for (size_t i = 0; i < cnt; ++i)
+         for (const auto &fn : files)
          {
-            FilePath fn = files[i];
-            mFileMap[wxFileNameFromPath(fn)] = fn;
+            mFileMap[wxFileNameFromPath(fn)] = {fn, {}};
          }
       }
       else if (!wxStrcmp(attr, wxT("rate")))
@@ -829,10 +845,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 {
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewLabelTrack());
-
-   handler = mTracks.back().get();
+   handler = TrackList::Get(mProject).Add(std::make_shared<LabelTrack>());
 
    return true;
 }
@@ -840,10 +853,7 @@ bool AUPImportFileHandle::HandleLabelTrack(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleNoteTrack(XMLTagHandler *&handler)
 {
 #if defined(USE_MIDI)
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewNoteTrack());
-
-   handler = mTracks.back().get();
+   handler = TrackList::Get(mProject).Add(std::make_shared<NoteTrack>());
 
    return true;
 #else
@@ -874,22 +884,18 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
       return true;
    }
 
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewTimeTrack());
-
-   handler = mTracks.back().get();
+   auto &viewInfo = ViewInfo::Get( mProject );
+   handler =
+      TrackList::Get(mProject).Add(std::make_shared<TimeTrack>(&viewInfo));
 
    return true;
 }
 
 bool AUPImportFileHandle::HandleWaveTrack(XMLTagHandler *&handler)
 {
-   auto &trackFactory = TrackFactory::Get(mProject);
-   mTracks.push_back(trackFactory.NewWaveTrack());
-
-   handler = mTracks.back().get();
-
-   mWaveTrack = static_cast<WaveTrack *>(handler);
+   auto &trackFactory = WaveTrackFactory::Get(mProject);
+   handler = mWaveTrack =
+      TrackList::Get(mProject).Add(trackFactory.NewWaveTrack());
 
    // No active clip.  In early versions of Audacity, there was a single
    // implied clip so we'll create a clip when the first "sequence" is
@@ -1028,6 +1034,7 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
    }
 
    mClip = static_cast<WaveClip *>(handler);
+   mClips.push_back(mClip);
 
    return true;
 }
@@ -1089,6 +1096,15 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 
    WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
 
+   // Earlier versions of Audacity had a single implied waveclip, so for
+   // these versions, we get or create the only clip in the track.
+   if (mParentTag.IsSameAs(wxT("wavetrack")))
+   {
+      XMLTagHandler *dummy;
+      HandleWaveClip(dummy);
+      waveclip = mClip;
+   }
+
    while(*mAttrs)
    {
       const wxChar *attr = *mAttrs++;
@@ -1129,6 +1145,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
          }
 
          mFormat = (sampleFormat) fValue;
+         waveclip->GetSequence()->ConvertToSampleFormat( mFormat );
       }
       else if (!wxStrcmp(attr, wxT("numsamples")))
       {
@@ -1201,7 +1218,7 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
          {
             if (mFileMap.find(strValue) != mFileMap.end())
             {
-               filename = mFileMap[strValue];
+               filename = mFileMap[strValue].first;
             }
             else
             {
@@ -1223,7 +1240,7 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len, filename);
+   AddFile(len, mFormat, filename, filename);
 
    return true;
 }
@@ -1248,7 +1265,7 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 
       if (!wxStrcmp(attr, wxT("len")))
       {
-         if (!XMLValueChecker::IsGoodInt64(value) || !strValue.ToLongLong(&nValue) | !(nValue > 0))
+         if (!XMLValueChecker::IsGoodInt64(value) || !strValue.ToLongLong(&nValue) || !(nValue > 0))
          {
             return SetError(XO("Missing or invalid silentblockfile 'len' attribute."));
          }
@@ -1259,13 +1276,14 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len);
+   AddFile(len, mFormat);
 
    return true;
 }
 
 bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
 {
+   wxString summaryFilename;
    wxFileName filename;
    sampleCount start = 0;
    sampleCount len = 0;
@@ -1304,6 +1322,10 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
                .Format(strValue));
          }
       }
+      else if (!wxStricmp(attr, wxT("summaryfile")))
+      {
+         summaryFilename = strValue;
+      }
       else if (!wxStricmp(attr, wxT("aliasstart")))
       {
          if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
@@ -1336,28 +1358,105 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
 
    // Do not set the handler - already handled
 
-   AddFile(len, filename.GetFullPath(), start, channel);
+   if (filename.IsOk())
+      AddFile(len, mFormat,
+              summaryFilename, filename.GetFullPath(),
+              start, channel);
+   else
+      AddFile(len, mFormat); // will add silence instead
 
    return true;
+}
 
-   if (!filename.IsOk())
+bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
+{
+   // Adapted from ImportXMLTagHandler::HandleXMLTag as in version 2.4.2
+   if (!mAttrs || !(*mAttrs) || wxStrcmp(*mAttrs++, wxT("filename")))
+       return false;
+
+   wxString strAttr = *mAttrs;
+   if (!XMLValueChecker::IsGoodPathName(strAttr))
    {
-      return AddSilence(len);
+      // Maybe strAttr is just a fileName, not the full path. Try the project data directory.
+      wxFileNameWrapper fileName0{ mFilename };
+      fileName0.SetExt({});
+      wxFileNameWrapper fileName{
+         fileName0.GetFullPath() + wxT("_data"), strAttr };
+      if (XMLValueChecker::IsGoodFileName(strAttr, fileName.GetPath(wxPATH_GET_VOLUME)))
+         strAttr = fileName.GetFullPath();
+      else
+      {
+         wxLogWarning(wxT("Could not import file: %s"), strAttr);
+         return false;
+      }
    }
 
-   return AddSamples(filename.GetFullPath(), len, start, channel);
+   auto &tracks = TrackList::Get(mProject);
+   auto oldNumTracks = tracks.size();
+   Track *pLast = nullptr;
+   if (oldNumTracks > 0)
+      pLast = *tracks.Any().rbegin();
+
+   // Guard this call so that C++ exceptions don't propagate through
+   // the expat library
+   GuardedCall(
+      [&] {
+         ProjectFileManager::Get( mProject ).Import(strAttr, false); },
+      [&] (AudacityException*) {}
+   );
+
+   if (oldNumTracks == tracks.size())
+      return false;
+
+   // Handle other attributes, now that we have the tracks.
+   // Apply them to all new wave tracks.
+   ++mAttrs;
+   const wxChar** pAttr;
+   bool bSuccess = true;
+
+   auto range = tracks.Any();
+   if (pLast) {
+      range = range.StartingWith(pLast);
+      ++range.first;
+   }
+   for (auto pTrack: range.Filter<WaveTrack>())
+   {
+      // Most of the "import" tag attributes are the same as for "wavetrack" tags,
+      // so apply them via WaveTrack::HandleXMLTag().
+      bSuccess = pTrack->HandleXMLTag(wxT("wavetrack"), mAttrs);
+
+      // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
+      // so handle it here.
+      double dblValue;
+      pAttr = mAttrs;
+      while (*pAttr)
+      {
+         const wxChar *attr = *pAttr++;
+         const wxChar *value = *pAttr++;
+         const wxString strValue = value;
+         if (!wxStrcmp(attr, wxT("offset")) &&
+               XMLValueChecker::IsGoodString(strValue) &&
+               Internat::CompatibleToDouble(strValue, &dblValue))
+            pTrack->SetOffset(dblValue);
+      }
+   }
+   return bSuccess;
 }
 
 void AUPImportFileHandle::AddFile(sampleCount len,
-                                  const FilePath &filename /* = wxEmptyString */,
+                                  sampleFormat format,
+                                  const FilePath &blockFilename /* = wxEmptyString */,
+                                  const FilePath &audioFilename /* = wxEmptyString */,
                                   sampleCount origin /* = 0 */,
                                   int channel /* = 0 */)
 {
    fileinfo fi = {};
    fi.track = mWaveTrack;
    fi.clip = mClip;
-   fi.path = filename;
+   fi.blockFile = blockFilename;
+   fi.audioFile = audioFilename;
    fi.len = len;
+   fi.format = format,
    fi.origin = origin,
    fi.channel = channel;
 
@@ -1384,11 +1483,21 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
 
 // All errors that occur here will simply insert silence and allow the
 // import to continue.
-bool AUPImportFileHandle::AddSamples(const FilePath &filename,
+bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
+                                     const FilePath &audioFilename,
                                      sampleCount len,
+                                     sampleFormat format,
                                      sampleCount origin /* = 0 */,
                                      int channel /* = 0 */)
 {
+   auto pClip = mClip ? mClip : mWaveTrack->RightmostOrNewClip();
+   auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
+   if (pBlock) {
+      // Replicate the sharing of blocks
+      pClip->AppendSharedBlock( pBlock );
+      return true;
+   }
+
    // Third party library has its own type alias, check it before
    // adding origin + size_t
    static_assert(sizeof(sampleCount::type) <= sizeof(sf_count_t),
@@ -1405,20 +1514,24 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    {
       if (!success)
       {
-         SetWarning(XO("Error while processing %s\n\nInserting silence.").Format(filename));
+         SetWarning(XO("Error while processing %s\n\nInserting silence.").Format(audioFilename));
 
-         AddSilence(len);
+         // If we are unwinding for an exception, don't do another
+         // potentially throwing operation
+         if (!std::uncaught_exception())
+            // If this does throw, let that propagate, don't guard the call
+            AddSilence(len);
       }
 
       if (sf)
       {
-         sf_close(sf);
+         SFCall<int>(sf_close, sf);
       }
    });
 
-   if (!f.Open(filename))
+   if (!f.Open(audioFilename))
    {
-      SetWarning(XO("Failed to open %s").Format(filename));
+      SetWarning(XO("Failed to open %s").Format(audioFilename));
 
       return true;
    }
@@ -1426,26 +1539,25 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    // Even though there is an sf_open() that takes a filename, use the one that
    // takes a file descriptor since wxWidgets can open a file with a Unicode name and
    // libsndfile can't (under Windows).
-   sf = sf_open_fd(f.fd(), SFM_READ, &info, FALSE);
+   sf = SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_READ, &info, FALSE);
    if (!sf)
    {
-      SetWarning(XO("Failed to open %s").Format(filename));
+      SetWarning(XO("Failed to open %s").Format(audioFilename));
 
       return true;
    }
 
    if (origin > 0)
    {
-      if (sf_seek(sf, origin.as_long_long(), SEEK_SET) < 0)
+      if (SFCall<sf_count_t>(sf_seek, sf, origin.as_long_long(), SEEK_SET) < 0)
       {
          SetWarning(XO("Failed to seek to position %lld in %s")
-            .Format(origin.as_long_long(), filename));
+            .Format(origin.as_long_long(), audioFilename));
 
          return true;
       }
    }
 
-   sampleFormat format = mFormat;
    sf_count_t cnt = len.as_size_t();
    int channels = info.channels;
 
@@ -1461,15 +1573,15 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    {
       // If both the src and dest formats are integer formats,
       // read integers directly from the file, conversions not needed
-      framesRead = sf_readf_short(sf, (short *) bufptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf, (short *) bufptr, cnt);
    }
    else if (channels == 1 && format == int24Sample && sf_subtype_is_integer(info.format))
    {
-      framesRead = sf_readf_int(sf, (int *) bufptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_int, sf, (int *) bufptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
-            .Format(cnt, filename));
+            .Format(cnt, audioFilename));
 
          return true;
       }
@@ -1492,11 +1604,11 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       SampleBuffer temp(cnt * channels, int16Sample);
       short *tmpptr = (short *) temp.ptr();
 
-      framesRead = sf_readf_short(sf, tmpptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_short, sf, tmpptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
-            .Format(cnt, filename));
+            .Format(cnt, audioFilename));
 
          return true;
       }
@@ -1514,11 +1626,11 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
       SampleBuffer tmpbuf(cnt * channels, floatSample);
       float *tmpptr = (float *) tmpbuf.ptr();
 
-      framesRead = sf_readf_float(sf, tmpptr, cnt);
+      framesRead = SFCall<sf_count_t>(sf_readf_float, sf, tmpptr, cnt);
       if (framesRead != cnt)
       {
          SetWarning(XO("Unable to read %lld samples from %s")
-            .Format(cnt, filename));
+            .Format(cnt, audioFilename));
 
          return true;
       }
@@ -1535,15 +1647,9 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
    wxASSERT(mClip || mWaveTrack);
 
    // Add the samples to the clip/track
-   if (mClip)
+   if (pClip)
    {
-      mClip->Append(bufptr, format, cnt);
-      mClip->Flush();
-   }
-   else if (mWaveTrack)
-   {
-      mWaveTrack->Append(bufptr, format, cnt);
-      mWaveTrack->Flush();
+      pBlock = pClip->AppendNewBlock(bufptr, format, cnt);
    }
 
    // Let the finally block know everything is good
@@ -1554,13 +1660,14 @@ bool AUPImportFileHandle::AddSamples(const FilePath &filename,
 
 bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 {
-   wxLogError(msg.Translation());
+   wxLogError(msg.Debug());
 
-   if (mErrorMsg.empty())
+   if (mErrorMsg.empty() || mUpdateResult == ProgressResult::Success)
    {
       mErrorMsg = msg;
    }
 
+   // The only place where mUpdateResult is set during XML handling callbacks
    mUpdateResult = ProgressResult::Failed;
 
    return false;
@@ -1568,7 +1675,7 @@ bool AUPImportFileHandle::SetError(const TranslatableString &msg)
 
 bool AUPImportFileHandle::SetWarning(const TranslatableString &msg)
 {
-   wxLogWarning(msg.Translation());
+   wxLogWarning(msg.Debug());
 
    if (mErrorMsg.empty())
    {

@@ -16,7 +16,7 @@
 #ifndef __APPCOMMANDEVENT__
 #define __APPCOMMANDEVENT__
 
-#include "../Audacity.h"
+
 
 #include <wx/event.h> // to declare custom event types
 #include "../MemoryX.h"

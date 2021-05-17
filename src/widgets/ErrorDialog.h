@@ -12,13 +12,14 @@
 #ifndef __AUDACITY_ERRORDIALOG__
 #define __AUDACITY_ERRORDIALOG__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include <wx/msgdlg.h> // to inherit
 #include "wxPanelWrapper.h" // to inherit
 
 class AudacityProject;
+class wxCollapsiblePaneEvent;
 
 class ErrorDialog /* not final */ : public wxDialogWrapper
 {
@@ -28,6 +29,7 @@ public:
       const TranslatableString & dlogTitle,
       const TranslatableString & message,
       const wxString & helpPage,
+      const wxString & log,
       const bool Close = true, const bool modal = true);
 
    virtual ~ErrorDialog(){}
@@ -37,24 +39,28 @@ private:
    bool dClose;
    bool dModal;
 
+   void OnPane( wxCollapsiblePaneEvent &event );
    void OnOk( wxCommandEvent &event );
    void OnHelp( wxCommandEvent &event );
    DECLARE_EVENT_TABLE()
 };
 
 /// Displays an error dialog with a button that offers help
+AUDACITY_DLL_API
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
                      const wxString &helpPage,
-                     bool Close = true);
+                     bool Close = true,
+                     const wxString &log = {});
 
 /// Displays a modeless error dialog with a button that offers help
 void ShowModelessErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
                      const wxString &helpPage,
-                     bool Close = true);
+                     bool Close = true,
+                     const wxString &log = {});
 
 #include <wx/textdlg.h> // to inherit
 
@@ -62,7 +68,8 @@ void ShowModelessErrorDialog(wxWindow *parent,
 \class AudacityTextEntryDialog
 \brief Wrap wxTextEntryDialog so that caption IS translatable.
 ********************************************************************************/
-class AudacityTextEntryDialog : public wxTabTraversalWrapper< wxTextEntryDialog >
+class AUDACITY_DLL_API AudacityTextEntryDialog
+   : public wxTabTraversalWrapper< wxTextEntryDialog >
 {
 public:
     AudacityTextEntryDialog(

@@ -15,11 +15,9 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for rint from configwin.h
+
 #include "Normalize.h"
 #include "LoadEffects.h"
-
-#include "../Experimental.h"
 
 #include <math.h>
 

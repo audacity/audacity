@@ -68,7 +68,7 @@ $control preset (_ "Handy Presets (override controls)") choice (("None" (_ "None
       ((or (> x 100)(> y 100))
         (throw 'err (format nil (_ "~adB values cannot be more than +100 dB.~%~%~
                                  Hint: 6 dB doubles the amplitude~%~
-                                 	-6 dB halves the amplitude.") err))))))
+                                 -6 dB halves the amplitude.") err))))))
 
 ;;; Select and apply fade
 (defun fade (sig type curve g0 g1)

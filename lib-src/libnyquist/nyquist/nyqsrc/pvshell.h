@@ -28,16 +28,16 @@ struct pvshell_struct;
 
 typedef long (*h_fn_type)(struct pvshell_struct *susp, 
                           sample_block_values_type out, long *n,
-                          long sample_count);
+                          int64_t sample_count);
 typedef void (*pvs_free_fn_type)(struct pvshell_struct *susp);
 
 typedef struct pvshell_struct {
     sound_type f;
-    long f_cnt;
+    int f_cnt;
     sample_block_values_type f_ptr;
 
     sound_type g;
-    long g_cnt;
+    int g_cnt;
     sample_block_values_type g_ptr;
 
     long flags; /* for terminated and logically stopped flags */

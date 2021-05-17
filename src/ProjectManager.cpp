@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectManager.h"
 
-#include "Experimental.h"
+
 
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
@@ -82,6 +82,8 @@ ProjectManager::ProjectManager( AudacityProject &project )
    window.Bind( wxEVT_CLOSE_WINDOW, &ProjectManager::OnCloseWindow, this );
    mProject.Bind(EVT_PROJECT_STATUS_UPDATE,
       &ProjectManager::OnStatusChange, this);
+   project.Bind( EVT_RECONNECTION_FAILURE,
+      &ProjectManager::OnReconnectionFailure, this );
 }
 
 ProjectManager::~ProjectManager() = default;
@@ -348,6 +350,10 @@ private:
 
 #endif
 
+#ifdef EXPERIMENTAL_NOTEBOOK
+   extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebook  * pNotebook );
+#endif
+
 void InitProjectWindow( ProjectWindow &window )
 {
    auto &project = window.GetProject();
@@ -535,17 +541,19 @@ AudacityProject *ProjectManager::New()
    auto &window = ProjectWindow::Get( *p );
    InitProjectWindow( window );
 
+   // wxGTK3 seems to need to require creating the window using default position
+   // and then manually positioning it.
+   window.SetPosition(wndRect.GetPosition());
+
    auto &projectFileManager = ProjectFileManager::Get( *p );
-   projectFileManager.OpenProject();
+
+   // This may report an error.
+   projectFileManager.OpenNewProject();
 
    MenuManager::Get( project ).CreateMenusAndCommands( project );
    
    projectHistory.InitialState();
    projectManager.RestartTimer();
-   
-   // wxGTK3 seems to need to require creating the window using default position
-   // and then manually positioning it.
-   window.SetPosition(wndRect.GetPosition());
    
    if(bMaximized) {
       window.Maximize(true);
@@ -587,6 +595,14 @@ AudacityProject *ProjectManager::New()
    window.Show(true);
    
    return p;
+}
+
+void ProjectManager::OnReconnectionFailure(wxCommandEvent & event)
+{
+   event.Skip();
+   wxTheApp->CallAfter([this]{
+      ProjectWindow::Get(mProject).Close(true);
+   });
 }
 
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
@@ -733,15 +749,13 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // SetMenuBar(NULL);
 
    // Compact the project.
-   projectFileManager.CompactProject();
+   projectFileManager.CompactProjectOnClose();
 
    // Set (or not) the bypass flag to indicate that deletes that would happen during
    // the UndoManager::ClearStates() below are not necessary.
    projectFileIO.SetBypass();
 
    {
-      AutoCommitTransaction trans(projectFileIO, "Shutdown");
-
       // This can reduce reference counts of sample blocks in the project's
       // tracks.
       UndoManager::Get( project ).ClearStates();
@@ -749,9 +763,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       // Delete all the tracks to free up memory
       tracks.Clear();
    }
-
-   // We're all done with the project file, so close it now
-   projectFileManager.CloseProject();
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
@@ -763,14 +774,18 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // Check validity of mTrackPanel per bug 584 Comment 1.
    // Deeper fix is in the Import code, but this failsafes against crash.
    TrackPanel::Destroy( project );
-
    // Finalize the tool manager before the children since it needs
    // to save the state of the toolbars.
    ToolManager::Get( project ).Destroy();
 
    window.DestroyChildren();
 
-   TrackFactory::Destroy( project );
+   // Close project only now, because TrackPanel might have been holding
+   // some shared_ptr to WaveTracks keeping SampleBlocks alive.
+   // We're all done with the project file, so close it now
+   projectFileManager.CloseProject();
+
+   WaveTrackFactory::Destroy( project );
 
    // Remove self from the global array, but defer destruction of self
    auto pSelf = AllProjects{}.Remove( project );
@@ -886,22 +901,32 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
 AudacityProject *ProjectManager::OpenProject(
    AudacityProject *pProject, const FilePath &fileNameArg, bool addtohistory)
 {
+   bool success = false;
    AudacityProject *pNewProject = nullptr;
    if ( ! pProject )
       pProject = pNewProject = New();
    auto cleanup = finally( [&] {
-      if( pNewProject )
+      if ( pNewProject )
          GetProjectFrame( *pNewProject ).Close(true);
+      else if ( !success )
+         // Ensure that it happens here: don't wait for the application level
+         // exception handler, because the exception may be intercepted
+         ProjectHistory::Get(*pProject).RollbackState();
+      // Any exception now continues propagating
    } );
    ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
+
+   // The above didn't throw, so change what finally will do
+   success = true;
    pNewProject = nullptr;
+
    auto &projectFileIO = ProjectFileIO::Get( *pProject );
    if( projectFileIO.IsRecovered() ) {
       auto &window = ProjectWindow::Get( *pProject );
       window.Zoom( window.GetZoomOfToFit() );
       // "Project was recovered" replaces "Create new project" in Undo History.
       auto &undoManager = UndoManager::Get( *pProject );
-      undoManager.RemoveStates(1);
+      undoManager.RemoveStates(0, 1);
    }
 
    return pProject;
@@ -918,13 +943,14 @@ void ProjectManager::ResetProjectToEmpty() {
    SelectUtilities::DoSelectAll( project );
    TrackUtilities::DoRemoveTracks( project );
 
-   TrackFactory::Reset( project );
-
-   projectFileManager.Reset();
+   WaveTrackFactory::Reset( project );
 
    projectHistory.SetDirty( false );
    auto &undoManager = UndoManager::Get( project );
    undoManager.ClearStates();
+
+   projectFileManager.CloseProject();
+   projectFileManager.OpenProject();
 }
 
 void ProjectManager::RestartTimer()

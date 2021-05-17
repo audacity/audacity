@@ -1,7 +1,7 @@
 Instructions for building on macOS using CMake.
 
 Building on macOS has been made much simpler with the Audacity 2.4.0
-release. Still, read this document throughly before starting.
+release. Still, read this document thoroughly before starting.
 
 1) Get and install the latest Xcode version available your macOS version:
 
@@ -46,9 +46,12 @@ release. Still, read this document throughly before starting.
 
       /usr/local/x86_64/bin/wx-config --version
 
-6) Now that you have wxWidgets installed, edit your .bash_profile and add:
+6) Now that you have wxWidgets installed, edit your ~/.bash_profile or
+   ~/.zprofile and add:
 
       export WX_CONFIG=/usr/local/x86_64/bin/wx-config
+
+   Log out and back in again (or reboot) for this to take effect.
 
 7) Download the CMake 3.16.4 DMG from:
 

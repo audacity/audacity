@@ -379,7 +379,7 @@ int c;
 }
 
 static void
-metaevent(type)
+metaevent(int type)
 {
         int leng = msgleng();
         char *m = msg();
@@ -509,7 +509,7 @@ readvarinum()
 }
 
 static long
-to32bit(c1,c2,c3,c4)
+to32bit(int c1, int c2, int c3, int c4)
 {
         long value = 0L;
 
@@ -521,8 +521,7 @@ to32bit(c1,c2,c3,c4)
 }
 
 static int
-to16bit(c1,c2)
-int c1, c2;
+to16bit(int c1, int c2)
 {
         return ((c1 & 0xff ) << 8) + (c2 & 0xff);
 }

@@ -28,7 +28,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -41,7 +41,6 @@
 #include "Import.h"
 #include "../Prefs.h"
 #include "../Tags.h"
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
 
@@ -67,7 +66,7 @@ static Importer::RegisteredUnusableImportPlugin registered{
 #include <wx/utils.h>
 #include <wx/intl.h>
 /* ffile.h must be included AFTER at least one other wx header that includes
- * wx/setup.h, otherwise #ifdefs erronously collapse it to nothing. This is
+ * wx/setup.h, otherwise #ifdefs erroneously collapse it to nothing. This is
  * a bug in wxWidgets (ffile.h should itself include wx/setup.h), and it
  * was a bitch to track down. */
 #include <wx/ffile.h>
@@ -107,8 +106,6 @@ public:
       mVorbisFile(std::move(vorbisFile))
       , mStreamUsage{ static_cast<size_t>(mVorbisFile->links) }
    {
-      mFormat = QualityPrefs::SampleFormatChoice();
-
       for (int i = 0; i < mVorbisFile->links; i++)
       {
          auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
@@ -126,7 +123,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override
@@ -158,8 +155,6 @@ private:
    ArrayOf<int> mStreamUsage;
    TranslatableStrings mStreamInfo;
    std::list<NewChannelGroup> mChannels;
-
-   sampleFormat   mFormat;
 };
 
 
@@ -231,7 +226,7 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 }
 
 ProgressResult OggImportFileHandle::Import(
-   TrackFactory *trackFactory, TrackHolders &outTracks,
+   WaveTrackFactory *trackFactory, TrackHolders &outTracks,
    Tags *tags)
 {
    outTracks.clear();
@@ -262,7 +257,8 @@ ProgressResult OggImportFileHandle::Import(
       link.resize(vi->channels);
 
       for (auto &channel : link)
-         channel = trackFactory->NewWaveTrack(mFormat, vi->rate);
+         // The format agrees with what is always passed to Append() below
+         channel = NewWaveTrack(*trackFactory, int16Sample, vi->rate);
    }
 
    /* The number of bytes to get from the codec in each run */

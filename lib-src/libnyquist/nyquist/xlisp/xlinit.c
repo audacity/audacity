@@ -44,7 +44,7 @@ extern LVAL s_search_path;
 extern FUNDEF *funtab;
 
 /* forward declarations */
-FORWARD LOCAL void initwks();
+FORWARD LOCAL void initwks(void);
 
 
 /* xlinit - xlisp initialization routine */

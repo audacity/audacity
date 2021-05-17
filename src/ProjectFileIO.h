@@ -24,8 +24,8 @@ struct sqlite3_stmt;
 struct sqlite3_value;
 
 class AudacityProject;
-class AutoCommitTransaction;
 class DBConnection;
+struct DBConnectionErrors;
 class ProjectSerializer;
 class SqliteSampleBlock;
 class TrackList;
@@ -38,9 +38,21 @@ using SampleBlockID = long long;
 
 using Connection = std::unique_ptr<DBConnection>;
 
+using BlockIDs = std::unordered_set<SampleBlockID>;
+
+// An event processed by the project in the main thread after a checkpoint
+// failure was detected in a worker thread
+wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+                          EVT_CHECKPOINT_FAILURE, wxCommandEvent );
+
+// An event processed by the project in the main thread after failure to
+// reconnect to the database, after temporary close and attempted file movement
+wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+                          EVT_RECONNECTION_FAILURE, wxCommandEvent );
+
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
-class ProjectFileIO final
+class AUDACITY_DLL_API ProjectFileIO final
    : public ClientData::Base
    , public XMLTagHandler
    , private PrefsListener
@@ -73,26 +85,47 @@ public:
    bool IsTemporary() const;
    bool IsRecovered() const;
 
-   void Reset();
-
    bool AutoSave(bool recording = false);
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
    bool OpenProject();
    bool CloseProject();
+   bool ReopenProject();
 
-   bool ImportProject(const FilePath &fileName);
-   bool LoadProject(const FilePath &fileName);
-   bool SaveProject(const FilePath &fileName, const std::shared_ptr<TrackList> &lastSaved);
+   bool LoadProject(const FilePath &fileName, bool ignoreAutosave);
+   bool UpdateSaved(const TrackList *tracks = nullptr);
+   bool SaveProject(const FilePath &fileName, const TrackList *lastSaved);
    bool SaveCopy(const FilePath& fileName);
 
-   wxLongLong GetFreeDiskSpace();
+   wxLongLong GetFreeDiskSpace() const;
 
+   // Returns the bytes used for the given sample block
+   int64_t GetBlockUsage(SampleBlockID blockid);
+
+   // Returns the bytes used for all blocks owned by the given track list
+   int64_t GetCurrentUsage(
+         const std::vector<const TrackList*> &trackLists) const;
+
+   // Return the bytes used by all sample blocks in the project file, whether
+   // they are attached to the active tracks or held by the Undo manager.
+   int64_t GetTotalUsage();
+
+   // Return the bytes used for the given block using the connection to a
+   // specific database. This is the workhorse for the above 3 methods.
+   static int64_t GetDiskUsage(DBConnection &conn, SampleBlockID blockid);
+
+   // Displays an error dialog with a button that offers help
+   void ShowError(wxWindow *parent,
+                  const TranslatableString &dlogTitle,
+                  const TranslatableString &message,
+                  const wxString &helpPage);
    const TranslatableString &GetLastError() const;
    const TranslatableString &GetLibraryError() const;
+   int GetLastErrorCode() const;
+   const wxString &GetLastLog() const;
 
    // Provides a means to bypass "DELETE"s at shutdown if the database
-   // is just going to be deleted anyway.  This prevents a noticable
+   // is just going to be deleted anyway.  This prevents a noticeable
    // delay caused by SampleBlocks being deleted when the Sequences that
    // own them are deleted.
    //
@@ -105,8 +138,43 @@ public:
    //    ProjectManager::OnCloseWindow()
    void SetBypass();
 
+private:
+   //! Strings like -wal that may be appended to main project name to get other files created by
+   //! the database system
+   static const std::vector<wxString> &AuxiliaryFileSuffixes();
+
+   //! Generate a name for short-lived backup project files from an existing project
+   static FilePath SafetyFileName(const FilePath &src);
+
+   //! Rename a file or put up appropriate warning message.
+   /*! Failure might happen when renaming onto another device, doing copy of contents */
+   bool RenameOrWarn(const FilePath &src, const FilePath &dst);
+
+   bool MoveProject(const FilePath &src, const FilePath &dst);
+
+public:
+   //! Remove any files associated with a project at given path; return true if successful
+   static bool RemoveProject(const FilePath &filename);
+
+   // Object manages the temporary backing-up of project paths while
+   // trying to overwrite with new contents, and restoration in case of failure
+   class BackupProject {
+   public:
+      //! Rename project file at path, and any auxiliary files, to backup path names
+      BackupProject( ProjectFileIO &projectFileIO, const FilePath &path );
+      //! Returns false if the renaming in the constructor failed
+      bool IsOk() { return !mPath.empty(); }
+      //! if `!IsOk()` do nothing; else remove backup files
+      void Discard();
+      //! if `!IsOk()` do nothing; else if `Discard()` was not called, undo the renaming
+      ~BackupProject();
+   private:
+      FilePath mPath, mSafety;
+   };
+
    // Remove all unused space within a project file
-   void Compact(const std::shared_ptr<TrackList> &tracks, bool force = false);
+   void Compact(
+      const std::vector<const TrackList *> &tracks, bool force = false);
 
    // The last compact check did actually compact the project file if true
    bool WasCompacted();
@@ -114,17 +182,29 @@ public:
    // The last compact check found unused blocks in the project file
    bool HadUnused();
 
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
+   // In one SQL command, delete sample blocks with ids in the given set, or
+   // (when complement is true), with ids not in the given set.
+   bool DeleteBlocks(const BlockIDs &blockids, bool complement);
 
    // Type of function that is given the fields of one row and returns
    // 0 for success or non-zero to stop the query
    using ExecCB = std::function<int(int cols, char **vals, char **names)>;
 
+   //! Return true if a connection is now open
+   bool HasConnection() const;
+
+   //! Return a reference to a connection, creating it as needed on demand; throw on failure
+   DBConnection &GetConnection();
+
+   //! Return a strings representation of the active project XML doc
+   wxString GenerateDoc();
+
 private:
+   void OnCheckpointFailure();
+
    void WriteXMLHeader(XMLWriter &xmlFile) const;
-   void WriteXML(XMLWriter &xmlFile, bool recording = false, const std::shared_ptr<TrackList> &tracks = nullptr) /* not override */;
+   void WriteXML(XMLWriter &xmlFile, bool recording = false,
+      const TrackList *tracks = nullptr) /* not override */;
 
    // XMLTagHandler callback methods
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -168,32 +248,43 @@ private:
    bool WriteDoc(const char *table, const ProjectSerializer &autosave, const char *schema = "main");
 
    // Application defined function to verify blockid exists is in set of blockids
-   using BlockIDs = std::unordered_set<SampleBlockID>;
    static void InSet(sqlite3_context *context, int argc, sqlite3_value **argv);
 
-public:
-   // In one SQL command, delete sample blocks with ids in the given set, or
-   // (when complement is true), with ids not in the given set.
-   bool DeleteBlocks(const BlockIDs &blockids, bool complement);
-
-private:
    // Return a database connection if successful, which caller must close
    bool CopyTo(const FilePath &destpath,
-               const TranslatableString &msg,
-               bool isTemporary,
-               bool prune = false,
-               const std::shared_ptr<TrackList> &tracks = nullptr);
+      const TranslatableString &msg,
+      bool isTemporary,
+      bool prune = false,
+      const std::vector<const TrackList *> &tracks = {} /*!<
+         First track list (or if none, then the project's track list) are tracks to write into document blob;
+         That list, plus any others, contain tracks whose sample blocks must be kept
+      */
+   );
 
-   void SetError(const TranslatableString & msg);
-   void SetDBError(const TranslatableString & msg);
+   //! Just set stored errors
+   void SetError(const TranslatableString & msg,
+       const TranslatableString& libraryError = {},
+       int errorCode = {});
 
-   bool ShouldCompact(const std::shared_ptr<TrackList> &tracks);
+   //! Set stored errors and write to log; and default libraryError to what database library reports
+   void SetDBError(const TranslatableString & msg,
+       const TranslatableString& libraryError = {},
+       int errorCode = -1);
+
+   bool ShouldCompact(const std::vector<const TrackList *> &tracks);
+
+   // Gets values from SQLite B-tree structures
+   static unsigned int get2(const unsigned char *ptr);
+   static unsigned int get4(const unsigned char *ptr);
+   static int get_varint(const unsigned char *ptr, int64_t *out);
 
 private:
    Connection &CurrConn();
 
    // non-static data members
    AudacityProject &mProject;
+
+   std::shared_ptr<DBConnectionErrors> mpErrors;
 
    // The project's file path
    FilePath mFileName;
@@ -216,25 +307,6 @@ private:
    Connection mPrevConn;
    FilePath mPrevFileName;
    bool mPrevTemporary;
-
-   TranslatableString mLastError;
-   TranslatableString mLibraryError;
-};
-
-// Make a savepoint (a transaction, possibly nested) with the given name;
-// An exception is thrown from the constructor if the transaction cannot open.
-class AutoCommitTransaction
-{
-public:
-   AutoCommitTransaction(ProjectFileIO &projectFileIO, const char *name);
-   ~AutoCommitTransaction();
-
-   bool Rollback();
-
-private:
-   ProjectFileIO &mIO;
-   bool mInTrans;
-   wxString mName;
 };
 
 class wxTopLevelWindow;
@@ -253,5 +325,19 @@ public:
 // in its title
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
+
+//! Makes a temporary project that doesn't display on the screen
+class AUDACITY_DLL_API InvisibleTemporaryProject
+{
+public:
+   InvisibleTemporaryProject();
+   ~InvisibleTemporaryProject();
+   AudacityProject &Project()
+   {
+      return *mpProject;
+   }
+private:
+   std::shared_ptr<AudacityProject> mpProject;
+};
 
 #endif

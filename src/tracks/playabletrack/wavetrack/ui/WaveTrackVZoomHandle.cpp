@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "WaveTrackVZoomHandle.h"
 
-#include "../../../../Experimental.h"
+#include "WaveTrackVZoomHandle.h"
 
 #include "../../../ui/TrackVRulerControls.h"
 

@@ -36,7 +36,7 @@ constexpr int MAX_NUM_ROWS =80;
 
 class wxKeyEvent;
 
-class LabelTrackView final : public CommonTrackView
+class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
 {
    LabelTrackView( const LabelTrackView& ) = delete;
    LabelTrackView &operator=( const LabelTrackView& ) = delete;
@@ -123,10 +123,29 @@ public:
 private:
    static wxBitmap & GetGlyph( int i);
 
+   struct Index
+   {
+      Index();
+      Index(int index);
+      operator int() const;
+      Index &operator =(int index);
+      Index &operator ++();
+      Index &operator --();
+
+      bool IsModified() const;
+      void SetModified(bool modified);
+
+   private:
+      int mIndex;
+      bool mModified;
+   };
+
 public:
    struct Flags {
-      int mInitialCursorPos, mCurrentCursorPos, mSelIndex;
+      int mInitialCursorPos, mCurrentCursorPos;
+      Index mSelIndex{-1};
       bool mDrawCursor;
+      wxString mUndoLabel;
    };
 
    void ResetFlags();
@@ -134,7 +153,7 @@ public:
    {
       return {
          mInitialCursorPos, mCurrentCursorPos, mSelIndex,
-         mDrawCursor
+         mDrawCursor, mUndoLabel
       };
    }
    void RestoreFlags( const Flags& flags );
@@ -168,8 +187,10 @@ public:
 private:
    void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
 
-   mutable int mSelIndex{-1};  /// Keeps track of the currently selected label
-   
+   mutable Index mSelIndex{-1};  /// Keeps track of the currently selected label
+
+   mutable wxString mUndoLabel;
+
    static int mIconHeight;
    static int mIconWidth;
    static int mTextHeight;
@@ -178,13 +199,13 @@ private:
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
    static int mFontHeight;
-   int mCurrentCursorPos;                      /// current cursor position
-   int mInitialCursorPos;                      /// initial cursor position
+   mutable int mCurrentCursorPos;                  /// current cursor position
+   mutable int mInitialCursorPos;                  /// initial cursor position
 
-   bool mDrawCursor;                           /// flag to tell if drawing the
-                                                  /// cursor or not
+   mutable bool mDrawCursor;                       /// flag to tell if drawing the
+                                                   /// cursor or not
    int mRestoreFocus{-2};                          /// Restore focus to this track
-                                                  /// when done editing
+                                                   /// when done editing
 
    void ComputeTextPosition(const wxRect & r, int index) const;
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
@@ -231,6 +252,9 @@ private:
    std::weak_ptr<LabelTextHandle> mTextHandle;
 
    static wxFont msFont;
+
+   // Bug #2571: See explanation in ShowContextMenu()
+   int mEditIndex;
 };
 
 #endif

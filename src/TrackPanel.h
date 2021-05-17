@@ -11,8 +11,8 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
-#include "Audacity.h" // for USE_* macros
-#include "Experimental.h"
+
+
 
 #include <vector>
 
@@ -31,7 +31,6 @@
 
 class wxRect;
 
-class LabelTrack;
 class SpectrumAnalyst;
 class Track;
 class TrackList;
@@ -44,10 +43,6 @@ class AdornedRulerPanel;
 class LWSlider;
 
 class TrackPanelAx;
-
-class NoteTrack;
-class WaveTrack;
-class WaveClip;
 
 // Declared elsewhere, to reduce compilation dependencies
 class TrackPanelListener;
@@ -218,7 +213,7 @@ protected:
 };
 
 // A predicate class
-struct IsVisibleTrack
+struct AUDACITY_DLL_API IsVisibleTrack
 {
    IsVisibleTrack(AudacityProject *project);
 

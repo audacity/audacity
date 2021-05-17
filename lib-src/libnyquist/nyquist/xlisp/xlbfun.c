@@ -318,7 +318,7 @@ LVAL xgensym(void)
                 gsprefix[STRMAX] = '\0';
                 break;
         case FIXNUM:
-                gsnumber = getfixnum(x);
+                gsnumber = (int) getfixnum(x);
                 break;
         default:
                 xlerror("bad argument type",x);
@@ -545,8 +545,6 @@ LVAL xvector(void)
     return (val);
 }
 
-/* allow xerror, xcleanup, xtoplevel, and xcontinue to return nothing */
-/* #pragma warning(disable: 4035)*/
 
 /* xerror - special form 'error' */
 LVAL xerror(void)
@@ -598,6 +596,8 @@ LVAL xbreak(void)
     return (NIL);
 }
 
+#pragma warning(disable: 4716 4068) // return type and unknown pragma
+#pragma clang diagnostic ignored "-Wreturn-type"
 /* xcleanup - special form 'clean-up' */
 LVAL xcleanup(void)
 {

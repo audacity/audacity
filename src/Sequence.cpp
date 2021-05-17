@@ -28,7 +28,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Sequence.h"
 
 #include <algorithm>
@@ -132,8 +132,9 @@ namespace {
    }
 }
 
-bool Sequence::ConvertToSampleFormat(sampleFormat format)
-// STRONG-GUARANTEE
+/*! @excsafety{Strong} */
+bool Sequence::ConvertToSampleFormat(sampleFormat format,
+   const std::function<void(size_t)> & progressReport)
 {
    if (format == mSampleFormat)
       // no change
@@ -199,6 +200,9 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format)
          const auto blockstart = oldSeqBlock.start;
          Blockify(*mpFactory, mMaxSamples, mSampleFormat,
                   newBlockArray, blockstart, bufferNew.ptr(), len);
+
+         if (progressReport)
+            progressReport(len);
       }
    }
 
@@ -467,8 +471,8 @@ namespace {
    }
 }
 
+/*! @excsafety{Strong} */
 void Sequence::Paste(sampleCount s, const Sequence *src)
-// STRONG-GUARANTEE
 {
    if ((s < 0) || (s > mNumSamples))
    {
@@ -568,10 +572,10 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
          largerBlockLen.as_size_t(),
          mSampleFormat);
 
-      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // Don't make a duplicate array.  We can still give Strong-guarantee
       // if we modify only one block in place.
 
-      // use NOFAIL-GUARANTEE in remaining steps
+      // use No-fail-guarantee in remaining steps
       for (unsigned int i = b + 1; i < numBlocks; i++)
          mBlock[i].start += addedLen;
 
@@ -668,14 +672,14 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       (newBlock, mNumSamples + addedLen, wxT("Paste branch three"));
 }
 
+/*! @excsafety{Strong} */
 void Sequence::SetSilence(sampleCount s0, sampleCount len)
-// STRONG-GUARANTEE
 {
    SetSamples(NULL, mSampleFormat, s0, len);
 }
 
+/*! @excsafety{Strong} */
 void Sequence::InsertSilence(sampleCount s0, sampleCount len)
-// STRONG-GUARANTEE
 {
    auto &factory = *mpFactory;
 
@@ -720,7 +724,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
 
    sTrack.mNumSamples = pos;
 
-   // use STRONG-GUARANTEE
+   // use Strong-guarantee
    Paste(s0, &sTrack);
 }
 
@@ -1104,9 +1108,9 @@ bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
 }
 
 // Pass NULL to set silence
-void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
+/*! @excsafety{Strong} */
+void Sequence::SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len)
-// STRONG-GUARANTEE
 {
    auto &factory = *mpFactory;
 
@@ -1161,7 +1165,7 @@ void Sequence::SetSamples(samplePtr buffer, sampleFormat format,
       ensureSampleBufferSize(scratch, mSampleFormat, tempSize, fileLength,
                              &temp);
 
-      samplePtr useBuffer = buffer;
+      auto useBuffer = buffer;
       if (buffer && format != mSampleFormat)
       {
          // To do: remove the extra movement.
@@ -1470,11 +1474,51 @@ size_t Sequence::GetIdealAppendLen() const
       return max - lastBlockLen;
 }
 
-void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
-// STRONG-GUARANTEE
+/*! @excsafety{Strong} */
+SeqBlock::SampleBlockPtr Sequence::AppendNewBlock(
+   constSamplePtr buffer, sampleFormat format, size_t len)
 {
+   return DoAppend( buffer, format, len, false );
+}
+
+/*! @excsafety{Strong} */
+void Sequence::AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock)
+{
+   auto len = pBlock->GetSampleCount();
+
+   // Quick check to make sure that it doesn't overflow
+   if (Overflows(mNumSamples.as_double() + ((double)len)))
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   BlockArray newBlock;
+   newBlock.emplace_back( pBlock, mNumSamples );
+   auto newNumSamples = mNumSamples + len;
+
+   AppendBlocksIfConsistent(newBlock, false,
+                            newNumSamples, wxT("Append"));
+
+// JKC: During generate we use Append again and again.
+// If generating a long sequence this test would give O(n^2)
+// performance - not good!
+#ifdef VERY_SLOW_CHECKING
+   ConsistencyCheck(wxT("Append"));
+#endif
+}
+
+/*! @excsafety{Strong} */
+void Sequence::Append(constSamplePtr buffer, sampleFormat format, size_t len)
+{
+   DoAppend(buffer, format, len, true);
+}
+
+/*! @excsafety{Strong} */
+SeqBlock::SampleBlockPtr Sequence::DoAppend(
+   constSamplePtr buffer, sampleFormat format, size_t len, bool coalesce)
+{
+   SeqBlock::SampleBlockPtr result;
+
    if (len == 0)
-      return;
+      return result;
 
    auto &factory = *mpFactory;
 
@@ -1492,7 +1536,8 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
    size_t bufferSize = mMaxSamples;
    SampleBuffer buffer2(bufferSize, mSampleFormat);
    bool replaceLast = false;
-   if (numBlocks > 0 &&
+   if (coalesce &&
+       numBlocks > 0 &&
        (length =
         (pLastBlock = &mBlock.back())->sb->GetSampleCount()) < mMinSamples) {
       // Enlarge a sub-minimum block at the end
@@ -1529,6 +1574,10 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
       SampleBlockPtr pBlock;
       if (format == mSampleFormat) {
          pBlock = factory.Create(buffer, addedLen, mSampleFormat);
+         // It's expected that when not requesting coalescence, the
+         // data should fit in one block
+         wxASSERT( coalesce || !result );
+         result = pBlock;
       }
       else {
          CopySamples(buffer, format, buffer2.ptr(), mSampleFormat, addedLen);
@@ -1551,11 +1600,14 @@ void Sequence::Append(samplePtr buffer, sampleFormat format, size_t len)
 #ifdef VERY_SLOW_CHECKING
    ConsistencyCheck(wxT("Append"));
 #endif
+
+   return result;
 }
 
 void Sequence::Blockify(SampleBlockFactory &factory,
                         size_t mMaxSamples, sampleFormat mSampleFormat,
-                        BlockArray &list, sampleCount start, samplePtr buffer, size_t len)
+                        BlockArray &list, sampleCount start,
+                        constSamplePtr buffer, size_t len)
 {
    if (len <= 0)
       return;
@@ -1569,7 +1621,7 @@ void Sequence::Blockify(SampleBlockFactory &factory,
       const auto offset = i * len / num;
       b.start = start + offset;
       int newLen = ((i + 1) * len / num) - offset;
-      samplePtr bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
+      auto bufStart = buffer + (offset * SAMPLE_SIZE(mSampleFormat));
 
       b.sb = factory.Create(bufStart, newLen, mSampleFormat);
 
@@ -1577,8 +1629,8 @@ void Sequence::Blockify(SampleBlockFactory &factory,
    }
 }
 
+/*! @excsafety{Strong} */
 void Sequence::Delete(sampleCount start, sampleCount len)
-// STRONG-GUARANTEE
 {
    if (len == 0)
       return;
@@ -1631,10 +1683,10 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
       b.sb = factory.Create(scratch.ptr(), newLen, mSampleFormat);
 
-      // Don't make a duplicate array.  We can still give STRONG-GUARANTEE
+      // Don't make a duplicate array.  We can still give Strong-guarantee
       // if we modify only one block in place.
 
-      // use NOFAIL-GUARANTEE in remaining steps
+      // use No-fail-guarantee in remaining steps
 
       for (unsigned int j = b0 + 1; j < numBlocks; j++)
          mBlock[j].start -= len;
@@ -1814,7 +1866,7 @@ void Sequence::CommitChangesIfConsistent
    ConsistencyCheck( newBlock, mMaxSamples, 0, numSamples, whereStr ); // may throw
 
    // now commit
-   // use NOFAIL-GUARANTEE
+   // use No-fail-guarantee
 
    mBlock.swap(newBlock);
    mNumSamples = numSamples;
@@ -1857,7 +1909,7 @@ void Sequence::AppendBlocksIfConsistent
    ConsistencyCheck( mBlock, mMaxSamples, prevSize, numSamples, whereStr ); // may throw
 
    // now commit
-   // use NOFAIL-GUARANTEE
+   // use No-fail-guarantee
 
    mNumSamples = numSamples;
    consistent = true;

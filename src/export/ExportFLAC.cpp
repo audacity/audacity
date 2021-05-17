@@ -18,7 +18,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #ifdef USE_LIBFLAC
 
@@ -280,7 +280,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // See note in GetMetadata() about a bug in libflac++ 1.1.2
    if (success && !GetMetadata(project, metadata)) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FLAC:283");
       return ProgressResult::Cancelled;
    }
 
@@ -333,7 +333,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
 
    if (!success) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FLAC:336");
       return ProgressResult::Cancelled;
    }
 
@@ -374,7 +374,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    auto mixer = CreateMixer(tracks, selectionOnly,
                             t0, t1,
                             numChannels, SAMPLES_PER_RUN, false,
-                            rate, format, true, mixerSpec);
+                            rate, format, mixerSpec);
 
    ArraysOf<FLAC__int32> tmpsmplbuf{ numChannels, SAMPLES_PER_RUN, true };
 
@@ -407,7 +407,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                reinterpret_cast<FLAC__int32**>( tmpsmplbuf.get() ),
                samplesThisRun) ) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowDiskFullExportErrorDialog(fName);
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -460,12 +460,26 @@ bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
       if (n == TAG_YEAR) {
          n = wxT("DATE");
       }
+      else if (n == TAG_COMMENTS) {
+         // Some apps like Foobar use COMMENT and some like Windows use DESCRIPTION,
+         // so add both to try and make everyone happy.
+         n = wxT("COMMENT");
+         FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
+                                                    v.mb_str(wxConvUTF8));
+         if (! ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
+                                                              entry.get_entry(),
+                                                              true) ) {
+            return false;
+         }
+         n = wxT("DESCRIPTION");
+      }
       FLAC::Metadata::VorbisComment::Entry entry(n.mb_str(wxConvUTF8),
                                                  v.mb_str(wxConvUTF8));
       if (! ::FLAC__metadata_object_vorbiscomment_append_comment(mMetadata.get(),
                                                            entry.get_entry(),
-                                                           true) )
+                                                           true) ) {
          return false;
+      }
    }
 
    return true;

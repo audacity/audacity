@@ -54,7 +54,6 @@ extern LVAL s_true;
 
 extern LVAL RSLT_sym;
 
-
 #include "sndfile.h"
 
 #include "sound.h"
@@ -63,8 +62,8 @@ extern LVAL RSLT_sym;
 /**/
 LVAL xlc_snd_set_max_audio_mem(void)
 {
-    long arg1 = getfixnum(xlgafixnum());
-    long result;
+    int64_t arg1 = getfixnum(xlgafixnum());
+    int64_t result;
 
     xllastarg();
     result = snd_set_max_audio_mem(arg1);
@@ -239,7 +238,7 @@ LVAL xlc_snd_xform(void)
 /**/
 LVAL xlc_block_watch(void)
 {
-    long arg1 = getfixnum(xlgafixnum());
+    int64_t arg1 = getfixnum(xlgafixnum());
 
     xllastarg();
     block_watch(arg1);
@@ -252,8 +251,8 @@ LVAL xlc_block_watch(void)
 LVAL xlc_sound_nth_block(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
-    long result;
+    long arg2 = (long) getfixnum(xlgafixnum());
+    int64_t result;
 
     xllastarg();
     result = sound_nth_block(arg1, arg2);
@@ -279,7 +278,7 @@ LVAL xlc_snd_copy(void)
 LVAL xlc_snd_print(void)
 {
     LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
+    long arg2 = (long) getfixnum(xlgafixnum());
 
     xllastarg();
     sound_print(arg1, arg2);
@@ -292,10 +291,11 @@ LVAL xlc_snd_print(void)
 LVAL xlc_snd_play(void)
 {
     LVAL arg1 = xlgetarg();
+    int64_t result;
 
     xllastarg();
-    sound_play(arg1);
-    return NIL;
+    result = sound_play(arg1);
+    return cvfixnum(result);
 }
 
 
@@ -386,9 +386,9 @@ LVAL xlc_snd_add(void)
 LVAL xlc_snd_avg(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
-    long arg3 = getfixnum(xlgafixnum());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg2 = (long) getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -452,8 +452,8 @@ LVAL xlc_snd_down(void)
 LVAL xlc_snd_fft(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
-    long arg3 = getfixnum(xlgafixnum());
+    long arg2 = (long) getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
     LVAL arg4 = xlgetarg();
     LVAL result;
 
@@ -487,7 +487,7 @@ LVAL xlc_snd_inverse(void)
 LVAL xlc_snd_lpanal(void)
 {
     LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
+    long arg2 = (long) getfixnum(xlgafixnum());
     LVAL result;
 
     xllastarg();
@@ -498,7 +498,7 @@ LVAL xlc_snd_lpanal(void)
 
 #include "multiseq.h"
 
-/* xlc_snd_multiseq -- interface to C routine snd_make_multiseq */
+/* xlc_snd_multiseq -- interface to C routine snd_multiseq */
 /**/
 LVAL xlc_snd_multiseq(void)
 {
@@ -507,7 +507,7 @@ LVAL xlc_snd_multiseq(void)
     LVAL result;
 
     xllastarg();
-    result = snd_make_multiseq(arg1, arg2);
+    result = snd_multiseq(arg1, arg2);
     return (result);
 }
 
@@ -522,9 +522,9 @@ LVAL xlc_snd_phasevocoder(void)
 {
     sound_type arg1 = getsound(xlgasound());
     sound_type arg2 = getsound(xlgasound());
-    long arg3 = getfixnum(xlgafixnum());
-    long arg4 = getfixnum(xlgafixnum());
-    long arg5 = getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
+    long arg5 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -588,7 +588,7 @@ LVAL xlc_snd_from_array(void)
 LVAL xlc_snd_samples(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
+    int64_t arg2 = getfixnum(xlgafixnum());
     LVAL result;
 
     xllastarg();
@@ -602,8 +602,8 @@ LVAL xlc_snd_samples(void)
 LVAL xlc_snd_length(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
-    long result;
+    int64_t arg2 = getfixnum(xlgafixnum());
+    int64_t result;
 
     xllastarg();
     result = snd_length(arg1, arg2);
@@ -642,8 +642,8 @@ LVAL xlc_snd_fetch(void)
 LVAL xlc_snd_fetch_array(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
-    long arg3 = getfixnum(xlgafixnum());
+    long arg2 = (long) getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
     LVAL result;
 
     xllastarg();
@@ -661,7 +661,7 @@ LVAL xlc_snd_fetch_array(void)
 LVAL xlc_snd_max(void)
 {
     LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
+    int64_t arg2 = getfixnum(xlgafixnum());
     double result;
 
     xllastarg();
@@ -679,20 +679,19 @@ LVAL xlc_snd_read(void)
     unsigned char * arg1 = getstring(xlgastring());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
-    long arg5 = getfixnum(xlgafixnum());
-    long arg6 = getfixnum(xlgafixnum());
-    long arg7 = getfixnum(xlgafixnum());
-    long arg8 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
+    long arg5 = (long) getfixnum(xlgafixnum());
+    long arg6 = (long) getfixnum(xlgafixnum());
+    long arg7 = (long) getfixnum(xlgafixnum());
+    long arg8 = (long) getfixnum(xlgafixnum());
     double arg9 = testarg2(xlgaanynum());
     double arg10 = testarg2(xlgaanynum());
-    long arg11 = 0;
-    long arg12 = 0;
+    long arg11 = (long) 0;
     LVAL result;
 
     xllastarg();
     xlprot1(result);
-    result = snd_make_read(arg1, arg2, arg3, &arg4, &arg5, &arg6, &arg7, &arg8, &arg9, &arg10, &arg11, &arg12);
+    result = snd_make_read(arg1, arg2, arg3, &arg4, &arg5, &arg6, &arg7, &arg8, &arg9, &arg10, &arg11);
     {	LVAL *next = &getvalue(RSLT_sym);
 	*next = cons(NIL, NIL);
 	car(*next) = cvfixnum(arg4);	next = &cdr(*next);
@@ -709,9 +708,7 @@ LVAL xlc_snd_read(void)
 	*next = cons(NIL, NIL);
 	car(*next) = cvflonum(arg10);	next = &cdr(*next);
 	*next = cons(NIL, NIL);
-	car(*next) = cvfixnum(arg11);	next = &cdr(*next);
-	*next = cons(NIL, NIL);
-	car(*next) = cvfixnum(arg12);
+	car(*next) = cvfixnum(arg11);
     }
     xlpop();
     return (result);
@@ -740,7 +737,7 @@ LVAL xlc_snd_seq(void)
 /**/
 LVAL xlc_snd_slider(void)
 {
-    long arg1 = getfixnum(xlgafixnum());
+    long arg1 = (long) getfixnum(xlgafixnum());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
@@ -792,7 +789,7 @@ LVAL xlc_snd_yin(void)
     sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     LVAL result;
 
     xllastarg();
@@ -933,7 +930,7 @@ LVAL xlc_snd_areson(void)
     sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -951,7 +948,7 @@ LVAL xlc_snd_aresoncv(void)
     sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
     sound_type arg3 = getsound(xlgasound());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -969,7 +966,7 @@ LVAL xlc_snd_aresonvc(void)
     sound_type arg1 = getsound(xlgasound());
     sound_type arg2 = getsound(xlgasound());
     double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -987,7 +984,7 @@ LVAL xlc_snd_aresonvv(void)
     sound_type arg1 = getsound(xlgasound());
     sound_type arg2 = getsound(xlgasound());
     sound_type arg3 = getsound(xlgasound());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1056,7 +1053,7 @@ LVAL xlc_snd_biquad(void)
 /**/
 LVAL xlc_snd_buzz(void)
 {
-    long arg1 = getfixnum(xlgafixnum());
+    long arg1 = (long) getfixnum(xlgafixnum());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
@@ -1288,7 +1285,7 @@ LVAL xlc_snd_follow(void)
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
-    long arg5 = getfixnum(xlgafixnum());
+    long arg5 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1360,7 +1357,7 @@ LVAL xlc_snd_ifft(void)
     double arg1 = testarg2(xlgaanynum());
     double arg2 = testarg2(xlgaanynum());
     LVAL arg3 = xlgetarg();
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     LVAL arg5 = xlgetarg();
     sound_type result;
 
@@ -1378,7 +1375,7 @@ LVAL xlc_snd_bandedwg(void)
 {
     double arg1 = testarg2(xlgaanynum());
     sound_type arg2 = getsound(xlgasound());
-    long arg3 = getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
     double arg4 = testarg2(xlgaanynum());
     sound_type result;
 
@@ -1565,7 +1562,7 @@ LVAL xlc_snd_modalbar(void)
 {
     double arg1 = testarg2(xlgaanynum());
     double arg2 = testarg2(xlgaanynum());
-    long arg3 = getfixnum(xlgafixnum());
+    long arg3 = (long) getfixnum(xlgafixnum());
     double arg4 = testarg2(xlgaanynum());
     double arg5 = testarg2(xlgaanynum());
     sound_type result;
@@ -1846,7 +1843,7 @@ LVAL xlc_snd_pwl(void)
 LVAL xlc_snd_quantize(void)
 {
     sound_type arg1 = getsound(xlgasound());
-    long arg2 = getfixnum(xlgafixnum());
+    long arg2 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1879,7 +1876,7 @@ LVAL xlc_snd_reson(void)
     sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1897,7 +1894,7 @@ LVAL xlc_snd_resoncv(void)
     sound_type arg1 = getsound(xlgasound());
     double arg2 = testarg2(xlgaanynum());
     sound_type arg3 = getsound(xlgasound());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1915,7 +1912,7 @@ LVAL xlc_snd_resonvc(void)
     sound_type arg1 = getsound(xlgasound());
     sound_type arg2 = getsound(xlgasound());
     double arg3 = testarg2(xlgaanynum());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1933,7 +1930,7 @@ LVAL xlc_snd_resonvv(void)
     sound_type arg1 = getsound(xlgasound());
     sound_type arg2 = getsound(xlgasound());
     sound_type arg3 = getsound(xlgasound());
-    long arg4 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -1955,7 +1952,7 @@ LVAL xlc_snd_sampler(void)
     double arg5 = testarg2(xlgaanynum());
     double arg6 = testarg2(xlgaanynum());
     sound_type arg7 = getsound(xlgasound());
-    long arg8 = getfixnum(xlgafixnum());
+    long arg8 = (long) getfixnum(xlgafixnum());
     sound_type result;
 
     xllastarg();
@@ -2187,7 +2184,7 @@ LVAL xlc_snd_stkpitshift(void)
 /**/
 LVAL xlc_snd_stkrev(void)
 {
-    long arg1 = getfixnum(xlgafixnum());
+    long arg1 = (long) getfixnum(xlgafixnum());
     sound_type arg2 = getsound(xlgasound());
     double arg3 = testarg2(xlgaanynum());
     double arg4 = testarg2(xlgaanynum());
@@ -2227,20 +2224,21 @@ LVAL xlc_snd_stkchorus(void)
 LVAL xlc_snd_save(void)
 {
     LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
+    int64_t arg2 = getfixnum(xlgafixnum());
     unsigned char * arg3 = getstring(xlgastring());
-    long arg4 = getfixnum(xlgafixnum());
-    long arg5 = getfixnum(xlgafixnum());
-    long arg6 = getfixnum(xlgafixnum());
-    long arg7 = getfixnum(xlgafixnum());
+    long arg4 = (long) getfixnum(xlgafixnum());
+    long arg5 = (long) getfixnum(xlgafixnum());
+    long arg6 = (long) getfixnum(xlgafixnum());
+    long arg7 = (long) getfixnum(xlgafixnum());
     double arg8 = 0.0;
-    long arg9 = 0;
+    long arg9 = (long) 0;
     double arg10 = 0.0;
     LVAL arg11 = xlgetarg();
+    int64_t arg12 = getfixnum(xlgafixnum());
     double result;
 
     xllastarg();
-    result = sound_save(arg1, arg2, arg3, arg4, arg5, arg6, arg7, &arg8, &arg9, &arg10, arg11);
+    result = sound_save(arg1, arg2, arg3, arg4, arg5, arg6, arg7, &arg8, &arg9, &arg10, arg11, arg12);
     {	LVAL *next = &getvalue(RSLT_sym);
 	*next = cons(NIL, NIL);
 	car(*next) = cvflonum(arg8);	next = &cdr(*next);
@@ -2258,21 +2256,18 @@ LVAL xlc_snd_save(void)
 LVAL xlc_snd_overwrite(void)
 {
     LVAL arg1 = xlgetarg();
-    long arg2 = getfixnum(xlgafixnum());
+    int64_t arg2 = getfixnum(xlgafixnum());
     unsigned char * arg3 = getstring(xlgastring());
     double arg4 = testarg2(xlgaanynum());
-    long arg5 = getfixnum(xlgafixnum());
-    long arg6 = getfixnum(xlgafixnum());
-    long arg7 = getfixnum(xlgafixnum());
-    long arg8 = getfixnum(xlgafixnum());
-    double arg9 = 0.0;
+    double arg5 = 0.0;
+    int64_t arg6 = getfixnum(xlgafixnum());
     double result;
 
     xllastarg();
-    result = sound_overwrite(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, &arg9);
+    result = sound_overwrite(arg1, arg2, arg3, arg4, &arg5, arg6);
     {	LVAL *next = &getvalue(RSLT_sym);
 	*next = cons(NIL, NIL);
-	car(*next) = cvflonum(arg9);
+	car(*next) = cvflonum(arg5);
     }
     return cvflonum(result);
 }

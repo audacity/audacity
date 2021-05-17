@@ -9,6 +9,9 @@
 
 **********************************************************************/
 
+#ifndef __AUDACITY_LOAD_COMMANDS__
+#define __AUDACITY_LOAD_COMMANDS__
+
 #include "audacity/ModuleInterface.h"
 
 #include <functional>
@@ -24,10 +27,10 @@ class AudacityCommand;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class BuiltinCommandsModule final : public ModuleInterface
+class AUDACITY_DLL_API BuiltinCommandsModule final : public ModuleInterface
 {
 public:
-   BuiltinCommandsModule(const wxString *path);
+   BuiltinCommandsModule();
    virtual ~BuiltinCommandsModule();
 
    using Factory = std::function< std::unique_ptr<AudacityCommand> () >;
@@ -80,8 +83,8 @@ private:
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory );
 
-   wxString mPath;
-
    using CommandHash = std::unordered_map< wxString, const Entry* > ;
    CommandHash mCommands;
 };
+
+#endif

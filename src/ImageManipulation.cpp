@@ -22,7 +22,7 @@ channel.  This collection of functions fills that gap.
 *//*********************************************************************/
 
 
-#include "Audacity.h" // for USE_* macros
+
 #include "ImageManipulation.h"
 
 #include <wx/image.h>
@@ -99,7 +99,7 @@ std::unique_ptr<wxImage> ChangeImageColour(wxImage * srcImage,
 
 /// Takes a background image, foreground image, and mask
 /// (i.e. the alpha channel for the foreground), and
-/// returns an NEW image where the foreground has been
+/// returns a NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground,
@@ -165,7 +165,7 @@ std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground
 
 /// Takes a background image, foreground image, and mask
 /// (i.e. the alpha channel for the foreground), and
-/// returns an NEW image where the foreground has been
+/// returns a NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
 std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,
@@ -214,7 +214,7 @@ std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,
    memcpy(dst, bg, bgWidth * bgHeight * 3);
 
    // If background image has tranparency, then we want to blend with the 
-   // current backgorund colour.
+   // current background colour.
    if( imgBack.HasAlpha() ){
       unsigned char *pAlpha = imgBack.GetAlpha();
       wxColour c = theTheme.Colour( clrMedium  );

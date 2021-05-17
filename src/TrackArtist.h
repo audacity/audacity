@@ -18,8 +18,8 @@
 #ifndef __AUDACITY_TRACKARTIST__
 #define __AUDACITY_TRACKARTIST__
 
-#include "Audacity.h" // for USE_* macros
-#include "Experimental.h"
+
+
 
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variables
@@ -39,15 +39,18 @@ class ZoomInfo;
 namespace TrackArt {
 
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
+   AUDACITY_DLL_API
    void DrawSyncLockTiles(
       TrackPanelDrawingContext &context, const wxRect &rect );
 
    // Helper: draws background with selection rect
+   AUDACITY_DLL_API
    void DrawBackgroundWithSelection(TrackPanelDrawingContext &context,
          const wxRect &rect, const Track *track,
          const wxBrush &selBrush, const wxBrush &unselBrush,
          bool useSelection = true);
 
+   AUDACITY_DLL_API
    void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,
                                        const wxRect & rect );
 }
@@ -137,11 +140,11 @@ public:
    bool hasSolo{ false };
 };
 
-extern int GetWaveYPos(float value, float min, float max,
+extern AUDACITY_DLL_API int GetWaveYPos(float value, float min, float max,
                        int height, bool dB, bool outer, float dBr,
                        bool clip);
 extern float FromDB(float value, double dBRange);
-extern float ValueOfPixel(int yy, int height, bool offset,
+extern AUDACITY_DLL_API float ValueOfPixel(int yy, int height, bool offset,
                           bool dB, double dBRange, float zoomMin, float zoomMax);
 
 #endif                          // define __AUDACITY_TRACKARTIST__

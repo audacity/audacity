@@ -22,7 +22,7 @@
   This means that reading in a wav file and writing it out again
   ('round tripping'), via floats, is lossless; -32768 equates to -1.0f
   and 32767 equates to +1.0f - (a little bit).
-  It also means (unfortunatly) that writing out +1.0f leads to
+  It also means (unfortunately) that writing out +1.0f leads to
   clipping by 1 LSB.  This creates some distortion, but I (MJS) have
   not been able to measure it, it's so small.  Zero is preserved.
 
@@ -99,7 +99,7 @@ void ReverseSamples(samplePtr dst, sampleFormat format,
    }
 }
 
-void CopySamples(samplePtr src, sampleFormat srcFormat,
+void CopySamples(constSamplePtr src, sampleFormat srcFormat,
                  samplePtr dst, sampleFormat dstFormat,
                  unsigned int len,
                  bool highQuality, /* = true */

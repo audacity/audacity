@@ -7,7 +7,7 @@
 ;; The answer is you can use the evalhook facility. The evalhook function
 ;; will evaluate an expression using an environment given to it as an
 ;; argument. But then the problem is "how do you get the current
-;; environment?" Well the getenv macro, below obtains the environent by
+;; environment?" Well the getenv macro, below obtains the environment by
 ;; using an *evalhook* form.
 ;;
 ;; The following two macros do the job. Insteading of executing (eval <expr>)

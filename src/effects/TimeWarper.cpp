@@ -15,7 +15,7 @@ Geometric TimeWarper classes
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "TimeWarper.h"
 
 #include <wx/string.h>
@@ -138,11 +138,14 @@ GeometricOutputTimeWarper::GeometricOutputTimeWarper(double tStart, double tEnd,
    wxASSERT(tStart < tEnd);
 }
 
-StepTimeWarper::StepTimeWarper(double tStep, double offset)
-: mTStep(tStep), mOffset(offset)
+PasteTimeWarper::PasteTimeWarper(double oldT1, double newT1)
+: mOldT1{ oldT1 }, mNewT1{ newT1 }
 { }
 
-double StepTimeWarper::Warp(double originalTime) const
+double PasteTimeWarper::Warp(double originalTime) const
 {
-   return originalTime + ((originalTime > mTStep) ? mOffset : 0.0);
+   if (originalTime < mOldT1)
+      return std::min(originalTime, mNewT1);
+   else
+      return originalTime + mNewT1 - mOldT1;
 }

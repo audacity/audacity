@@ -139,7 +139,7 @@ protected:
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
          double outRate, sampleFormat outFormat,
-         bool highQuality = true, MixerSpec *mixerSpec = NULL);
+         MixerSpec *mixerSpec);
 
    // Create or recycle a dialog.
    static void InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
@@ -158,7 +158,8 @@ using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 //----------------------------------------------------------------------------
 
 // For a file suffix change from the options.
-wxDECLARE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+   AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
 class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
 {
@@ -172,7 +173,7 @@ public:
    // Register factories, not plugin objects themselves, which allows them
    // to have some fresh state variables each time export begins again
    // and to compute translated strings for the current locale
-   struct RegisteredExportPlugin{
+   struct AUDACITY_DLL_API RegisteredExportPlugin{
       RegisteredExportPlugin(
          const Identifier &id, // an internal string naming the plug-in
          const ExportPluginFactory&,
@@ -321,4 +322,18 @@ private:
 private:
    DECLARE_EVENT_TABLE()
 };
+
+AUDACITY_DLL_API TranslatableString AudacityExportCaptionStr();
+AUDACITY_DLL_API TranslatableString AudacityExportMessageStr();
+
+/// We have many Export errors that are essentially anonymous
+/// and are distinguished only by an error code number.
+/// Rather than repeat the code, we have it just once.
+AUDACITY_DLL_API void ShowExportErrorDialog(wxString ErrorCode,
+   TranslatableString message = AudacityExportMessageStr(),
+   const TranslatableString& caption = AudacityExportCaptionStr());
+
+AUDACITY_DLL_API
+void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName);
+
 #endif

@@ -116,40 +116,40 @@ extern int abort_flag;
 /****************************************************************************
 * Routines local to this module:
 ****************************************************************************/
-private void            do_a_rest();
-private time_type       doabsdur();
-private int             doabspitch();
-private void            doclock();
-private void            docomment();
-private void            doctrl();
-private void            dodef();
-private time_type       dodur();
-private void            doerror();
-private int             doloud();
-void            domacro();
-private void            donextdur();
-private int             dopitch();
-private void            doprogram();
-private void            dorate();
-private void            doset();
-private void            dospecial();
-private time_type       dosymdur();
-private void            dotempo();
-private void            dotime();
-private void            dovoice();
-private void            fferror();
-private void            init();
-private int             issymbol();
-private void            marker();
-private void            parseend();
-private void            parsefield();
-private boolean         parsenote();
-private boolean         parseparm();
-private int             scan();
-private int             scan1();
-private long            scanint();
-private void            scansymb();
-private long            scansgnint();
+private void            do_a_rest(void);
+private time_type       doabsdur(void);
+private int             doabspitch(void);
+private void            doclock(void);
+private void            docomment(void);
+private void            doctrl(int n);
+private void            dodef(void);
+private time_type       dodur(void);
+private void            doerror(void);
+private int             doloud(void);
+void                    domacro(void);
+private void            donextdur(void);
+private int             dopitch(void);
+private void            doprogram(void);
+private void            dorate(void);
+private void            doset(boolean vecflag);
+private void            dospecial(void);
+private time_type       dosymdur(void);
+private void            dotempo(void);
+private void            dotime(void);
+private void            dovoice(void);
+private void            fferror(char *s);
+private void            init(void);
+private int             issymbol(void);
+private void            marker(int count);
+private void            parseend(void);
+private void            parsefield(void);
+private boolean         parsenote(void);
+private boolean         parseparm(long *valptr);
+private int             scan(void);
+private int             scan1(char *start);
+private long            scanint(void);
+private void            scansymb(char *);
+private long            scansgnint(void);
 
 /****************************************************************************
 * data structures for parser lookup tables
@@ -313,10 +313,7 @@ private seq_type the_score;  /* this is the score we are parsing */
  *      where the parameter should be substituted
  * and length is the number of data bytes
  */
-boolean def_append(def, nparms, data)
-  unsigned char def[];
-  int nparms;
-  int data;
+boolean def_append(unsigned char def[], int nparms, int data)
 {
     int base = (nparms << 1) + 1;       /* this byte is the length */
     /* first parameter has to be able to reference last byte: */
@@ -329,8 +326,7 @@ boolean def_append(def, nparms, data)
 }
 
 
-def_type def_lookup(symbol)
-  char *symbol;
+def_type def_lookup(char *symbol)
 {
     def_type defn = seq_dictionary(the_score);
     while (defn) {
@@ -343,10 +339,7 @@ def_type def_lookup(symbol)
 }
 
 
-void def_parm(def, nparms, code)
-  unsigned char def[];
-  int nparms;
-  int code;
+void def_parm(unsigned char def[], int nparms, int code)
 {
     int i, j;
     /* in order to insert a 2-byte parameter descriptor, the offsets from
@@ -373,7 +366,7 @@ void def_parm(def, nparms, code)
 * Effect: parses a rest (R) command
 ****************************************************************************/
 
-private void do_a_rest()
+private void do_a_rest(void)
 {
     if (token[fieldx])
         fferror("Nothing expected after rest");
@@ -385,7 +378,7 @@ private void do_a_rest()
 * Effect: parses an absolute dur (U) command
 ****************************************************************************/
 
-private time_type doabsdur()
+private time_type doabsdur(void)
 {
     time_type result=1000L;
     register char c;
@@ -405,7 +398,7 @@ private time_type doabsdur()
 * Effect: parses an absolute pitch (P) command
 ****************************************************************************/
 
-private int doabspitch()
+private int doabspitch(void)
 {
     int result = 60;
     int startx = fieldx;
@@ -441,7 +434,7 @@ private int doabspitch()
   is applied to the final computed duration after all
   other scaling is applied.
  */
-private void doartic()
+private void doartic(void)
 {
     if (isdigit(token[fieldx])) {
         artic = (int) scanint();
@@ -453,7 +446,7 @@ private void doartic()
 
 /* docall -- parse a call in the form !CALL fn(p1,p2,p3) */
 /**/
-private void docall()
+private void docall(void)
 {
     boolean error_flag = TRUE;
     ndurp = FALSE;
@@ -538,9 +531,9 @@ private void docall()
  *     ticksize = (beattime / 24) = ((60sec/tempo)/24) =
  *      ((60000ms/tempo)/24) = (60000/24)/tempo = 2500/tempo
  */
-private void doclock()
+private void doclock(void)
 {
-    int oldticksize = ticksize;
+    long oldticksize = ticksize;
     ticksize = (2500L << 16) / tempo;
     insert_clock(the_score, seqround(thetime) - (oldticksize >> 17),
                  lineno, ticksize);
@@ -552,7 +545,7 @@ private void doclock()
 * Effect: parses a comment (*) command
 ****************************************************************************/
 
-private void docomment()
+private void docomment(void)
 {
     line[linex] = '\n'; /* force end of line to skip comment line */
     line[linex+1] = EOS;
@@ -565,8 +558,7 @@ private void docomment()
 * Effect: parses a control (K, M, O, X, or Y) command
 ****************************************************************************/
 
-private void doctrl(n)
-int n;
+private void doctrl(int n)
 {
     ctrlval[n] = (int) scanint();
     if (token[fieldx]) {
@@ -578,7 +570,7 @@ int n;
 }
 
 
-private void dodef()
+private void dodef(void)
 {
     /* maximum def size is 256 + 9 parms * 2 + 2 = 276 */
     unsigned char def[280];
@@ -667,7 +659,7 @@ private void dodef()
 *
 * Returns: duration in "precise" units
 ****************************************************************************/
-private time_type dodur()
+private time_type dodur(void)
 {
     time_type result = 0L;
     symbolic_dur_flag = TRUE;
@@ -689,7 +681,7 @@ private time_type dodur()
 * Effect: parse an unrecognized field by reporting an error
 ****************************************************************************/
 
-private void doerror()
+private void doerror(void)
 {
     fieldx = 0;
     fferror("Bad field");
@@ -700,8 +692,9 @@ private void doerror()
 * Effect: parse a loudness (L) command
 ****************************************************************************/
 
-private int doloud()
+private int doloud(void)
 {
+    size_t ii;
     int i, j;
     int result;
     int oldfieldx = fieldx;
@@ -732,13 +725,13 @@ private int doloud()
     }
     scansymb(symbol);
     newfieldx = fieldx;
-    if ((i = strlen(symbol)) > 3 ) {    /* maximum is 3, e.g. "ppp" */
+    if ((ii = strlen(symbol)) > 3 ) {    /* maximum is 3, e.g. "ppp" */
         fieldx = oldfieldx;
         fferror("Loudness field too long");
         fieldx = newfieldx;
         return 100;
     }
-    symbol[i + 1] = '\0';   /* pad short symbols with 0    */
+    symbol[ii + 1] = '\0';   /* pad short symbols with 0    */
                             /* e.g. "p\0" -> "p\0\0"    */
     for (i = 0; i <= 7; i++) {    /* loop through possibilities    */
         for (j = 0; j <= 2; j++) {    /* test 3 characters    */
@@ -756,7 +749,7 @@ private int doloud()
 }
 
 
-void domacro()
+void domacro(void)
 {
     int control_num;
     int value;
@@ -827,7 +820,7 @@ void domacro()
 *    The form N<digits> is parsed directly with scanint().
 ****************************************************************************/
 
-private void donextdur()
+private void donextdur(void)
 {
     ndurp = TRUE;    /* flag that N was given */
     if (isdigit(token[fieldx])) {
@@ -846,7 +839,7 @@ private void donextdur()
 * Effect: parses a pitch command
 ****************************************************************************/
 
-private int dopitch()
+private int dopitch(void)
 {
     int p, octave=0;
     int octflag = FALSE;    /* set if octave is specified */
@@ -893,7 +886,7 @@ private int dopitch()
 * Effect: parses a program change (Z) command
 ****************************************************************************/
 
-private void doprogram()
+private void doprogram(void)
 {
     register int program = (int) scanint();
     ctrlflag[PROGRAM_CTRL] = ctrlflag[0] = TRUE;
@@ -912,7 +905,7 @@ private void doprogram()
 }
 
 
-private void doramp()
+private void doramp(void)
 {
     int values[2];
     time_type stepsize = 100L;  /* default 10 per second */
@@ -1008,7 +1001,7 @@ private void doramp()
 * Effect: parses a !rate command
 ****************************************************************************/
 
-private void dorate()
+private void dorate(void)
 {
     linex += scan();
     if (!token[0])
@@ -1031,8 +1024,7 @@ private void dorate()
 }
 
 
-private void doset(vec_flag)
-  boolean vec_flag;
+private void doset(boolean vec_flag)
 {
     ndurp = FALSE;
     linex += scan();
@@ -1079,7 +1071,7 @@ private void doset(vec_flag)
                       default:
                         fieldx++;
                         if (i < numargs) {
-                            value[i++] = seqround(dodur());
+                            value[i++] = (int) seqround(dodur());
                         } else fferror(too_many_error);
                         break;
                     }
@@ -1110,7 +1102,7 @@ private void doset(vec_flag)
 * Effect: parses special (those starting with "!") commands
 ****************************************************************************/
 
-private void dospecial()
+private void dospecial(void)
 {
     switch (issymbol()) {
       case sym_tempo: 
@@ -1160,7 +1152,7 @@ private void dospecial()
 * Effect: parses a duration (^, %, S, I, Q, H, or W) command
 ****************************************************************************/
 
-private time_type dosymdur()
+private time_type dosymdur(void)
 {
     int i, dotcnt = 0;
     long dotfactor;
@@ -1213,7 +1205,7 @@ private time_type dosymdur()
 * Effect: parses a !tempo command
 ****************************************************************************/
 
-private void dotempo()
+private void dotempo(void)
 {
     linex += scan();
     if (!token[0])
@@ -1243,7 +1235,7 @@ private void dotempo()
 * Implementation: see implementation of donextdur()
 ****************************************************************************/
 
-private void dotime()
+private void dotime(void)
 {
     if (isdigit(token[fieldx])) {
         thetime = precise(scanint());
@@ -1262,7 +1254,7 @@ private void dotime()
 * Effect: parse a voice (V) command (the voice is the MIDI channel)
 ****************************************************************************/
 
-private void dovoice()
+private void dovoice(void)
 {
     if (isdigit(token[fieldx])) {
         voice = (int) scanint();
@@ -1296,11 +1288,10 @@ private void dovoice()
 *    carat will point to the first character in the field.
 ****************************************************************************/
 
-private void fferror(s)
-  char *s;
+private void fferror(char *s)
 {
     gprintf(ERROR, "%3d | %s", lineno, line);
-    marker(linex-strlen(token)+fieldx+1+6);
+    marker((int) (linex - strlen(token) + fieldx + 1 + 6));
     gprintf(ERROR, "Error: %s.\n", s);
 }
 
@@ -1310,7 +1301,7 @@ private void fferror(s)
 *    initializes the state variables
 ****************************************************************************/
 
-private void init()
+private void init(void)
 {
     int i;
 
@@ -1354,7 +1345,7 @@ private void init()
 *    with note-ons.
 ****************************************************************************/
 
-private boolean ins_a_note()
+private boolean ins_a_note(void)
 {
     long the_dur = (trunc(dur) * artic + 50) / 100;
     int the_pitch = pitch;
@@ -1377,7 +1368,7 @@ private boolean ins_a_note()
 *    insert one control change for each ctrlflag[i] that is TRUE
 ****************************************************************************/
 
-private boolean ins_ctrls()
+private boolean ins_ctrls(void)
 {
     int i;
     event_type ctrl;
@@ -1400,7 +1391,7 @@ private boolean ins_ctrls()
 * Assumes: token[1] has the symbol to look up (token[0] == '!')
 ****************************************************************************/
 
-private int issymbol()
+private int issymbol(void)
 {
     int i, symb_num;
     char *sym;
@@ -1426,8 +1417,7 @@ private int issymbol()
 *    prints a carat (^) at the position specified on file stderr
 ****************************************************************************/
 
-private void marker(count)
-int count;
+private void marker(int count)
 {
     int i;
     char s[128];
@@ -1444,7 +1434,7 @@ int count;
 *
 ****************************************************************/
 
-private void parseend()
+private void parseend(void)
 {
     boolean done = FALSE;
     while (!done) {
@@ -1477,7 +1467,7 @@ private void parseend()
 *
 ****************************************************************************/
 
-private void parsefield()
+private void parsefield(void)
 {
     fieldx = 1;
     switch (token[0]) {
@@ -1566,7 +1556,7 @@ private void parsefield()
 *    line contains a string to be parsed
 ****************************************************************************/
 
-private boolean parsenote()
+private boolean parsenote(void)
 {
     boolean out_of_memory = FALSE;
     int i;
@@ -1629,8 +1619,7 @@ private boolean parsenote()
 }
 
 
-private boolean parseparm(valptr)
-  long *valptr;
+private boolean parseparm(long *valptr)
 {
     register char c = token[fieldx];
     if (isdigit(c) || c == '-') {
@@ -1717,7 +1706,7 @@ public time_type scale(x, n, d)
 *    scanning stops on delimiter: one of space, tab, newline, semicolon
 ****************************************************************************/
 
-private int scan()
+private int scan(void)
 {
     char *start = line + linex;
     register char c;
@@ -1755,8 +1744,7 @@ private int scan()
 *    copies one char from start into token, converting to upper case
 ****************************************************************************/
 
-private int scan1(start)
-char *start;
+private int scan1(char *start)
 {
     int i = 0;
 
@@ -1780,7 +1768,7 @@ char *start;
 *    fieldx is incremented to end of the integer
 ****************************************************************************/
 
-private long scanint()
+private long scanint(void)
 {
     long i = 0;
     char c;
@@ -1793,7 +1781,7 @@ private long scanint()
     return i;
 }
 
-private long scansgnint()
+private long scansgnint(void)
 {
     if (token[fieldx] == '-') {
         fieldx++;
@@ -1809,8 +1797,7 @@ private long scansgnint()
 
 /* scansymb -- scan a symbol from the token */
 /**/
-private void scansymb(str)
-  char *str;
+private void scansymb(char *str)
 {
     char c;
     while ((c = token[fieldx])) {

@@ -627,64 +627,55 @@ void DoCursorClipBoundary
 }
 
 // This function returns the amount moved.  Possibly 0.0.
-double DoClipMove
-   ( ViewInfo &viewInfo, Track *track,
+double DoClipMove( AudacityProject &project, Track *track,
      TrackList &trackList, bool syncLocked, bool right )
 {
+   auto &viewInfo = ViewInfo::Get(project);
    auto &selectedRegion = viewInfo.selectedRegion;
 
-   // just dealing with clips in wave tracks for the moment. Note tracks??
-   if (track) return track->TypeSwitch<double>( [&]( WaveTrack *wt ) {
+   if (track) {
       ClipMoveState state;
 
       auto t0 = selectedRegion.t0();
 
+      std::unique_ptr<TrackShifter> uShifter;
+
       // Find the first channel that has a clip at time t0
-      for (auto channel : TrackList::Channels(wt) ) {
-         if( nullptr != (state.capturedClip = channel->GetClipAtTime( t0 )) ) {
-            wt = channel;
+      auto hitTestResult = TrackShifter::HitTestResult::Track;
+      for (auto channel : TrackList::Channels(track) ) {
+         uShifter = MakeTrackShifter::Call( *track, project );
+         if ( (hitTestResult = uShifter->HitTest( t0, viewInfo )) ==
+             TrackShifter::HitTestResult::Miss )
+            uShifter.reset();
+         else
             break;
-         }
       }
 
-      if (state.capturedClip == nullptr)
+      if (!uShifter)
          return 0.0;
-
-      state.capturedClipIsSelection =
-         track->GetSelected() && !selectedRegion.isPoint();
-      state.trackExclusions.clear();
-
-      TimeShiftHandle::CreateListOfCapturedClips(
-         state, viewInfo, *track, trackList, syncLocked, t0 );
-
+      auto pShifter = uShifter.get();
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
-      auto desiredSlideAmount = desiredT0 - t0;
+      auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
-      // set it to a sample point, and minimum of 1 sample point
-      if (!right)
-         desiredSlideAmount *= -1;
-      double nSamples = rint(wt->GetRate() * desiredSlideAmount);
-      nSamples = std::max(nSamples, 1.0);
-      desiredSlideAmount = nSamples / wt->GetRate();
-      if (!right)
-         desiredSlideAmount *= -1;
+      state.Init( project, *track, hitTestResult, std::move( uShifter ),
+         t0, viewInfo, trackList, syncLocked );
 
-      state.hSlideAmount = desiredSlideAmount;
-      TimeShiftHandle::DoSlideHorizontal( state, trackList, *track );
+      auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );
 
-      // update t0 and t1. There is the possibility that the updated
-      // t0 may no longer be within the clip due to rounding errors,
-      // so t0 is adjusted so that it is.
-      double newT0 = t0 + state.hSlideAmount;
-      if (newT0 < state.capturedClip->GetStartTime())
-         newT0 = state.capturedClip->GetStartTime();
-      if (newT0 > state.capturedClip->GetEndTime())
-         newT0 = state.capturedClip->GetEndTime();
+      double newT0 = t0 + hSlideAmount;
+      if (hitTestResult != TrackShifter::HitTestResult::Track) {
+         // If necessary, correct for rounding errors. For example,
+         // for a wavetrack, ensure that t0 is still in the clip
+         // which it was within before the move.
+         // (pShifter is still undestroyed in the ClipMoveState.)
+         newT0 = pShifter->AdjustT0(newT0);
+      }
+
       double diff = selectedRegion.duration();
       selectedRegion.setTimes(newT0, newT0 + diff);
 
-      return state.hSlideAmount;
-   } );
+      return hSlideAmount;
+   };
    return 0.0;
 }
 
@@ -706,7 +697,7 @@ void DoClipLeftOrRight
    auto &tracks = TrackList::Get( project );
    auto isSyncLocked = settings.IsSyncLocked();
 
-   auto amount = DoClipMove( viewInfo, trackFocus.Get(),
+   auto amount = DoClipMove( project, trackFocus.Get(),
         tracks, isSyncLocked, right );
 
    window.ScrollIntoView(selectedRegion.t0());
@@ -880,23 +871,23 @@ AttachedItem sAttachment2{
    Shared( ClipCursorItems() )
 };
 
-BaseItemSharedPtr ExtraClipCursorItems()
+BaseItemSharedPtr ExtraTimeShiftItems()
 {
    using Options = CommandManager::Options;
    static BaseItemSharedPtr items{
    ( FinderScope{ findCommandHandler },
-   Items( wxT("Clip"),
-      Command( wxT("ClipLeft"), XXO("Clip L&eft"), FN(OnClipLeft),
+   Items( wxT("TimeShift"),
+      Command( wxT("ClipLeft"), XXO("Time Shift &Left"), FN(OnClipLeft),
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() ),
-      Command( wxT("ClipRight"), XXO("Clip Rig&ht"), FN(OnClipRight),
+      Command( wxT("ClipRight"), XXO("Time Shift &Right"), FN(OnClipRight),
          TracksExistFlag() | TrackPanelHasFocus(), Options{}.WantKeyUp() )
    ) ) };
    return items;
 }
 
 AttachedItem sAttachment3{
-  { wxT("Optional/Extra/Part2/Cursor"), { OrderingHint::End, {} } },
-  Shared( ExtraClipCursorItems() )
+  { wxT("Optional/Extra/Part1/Edit"), { OrderingHint::End, {} } },
+  Shared( ExtraTimeShiftItems() )
 };
 
 }

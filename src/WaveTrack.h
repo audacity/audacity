@@ -14,6 +14,7 @@
 #include "Track.h"
 
 #include <vector>
+#include <functional>
 #include <wx/longlong.h>
 
 #include "WaveTrackLocation.h"
@@ -21,6 +22,8 @@
 class ProgressDialog;
 
 class SampleBlockFactory;
+using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
+
 class SpectrogramSettings;
 class WaveformSettings;
 class TimeWarper;
@@ -82,7 +85,7 @@ private:
 
    Track::Holder Clone() const override;
 
-   friend class TrackFactory;
+   friend class WaveTrackFactory;
 
  public:
 
@@ -140,8 +143,11 @@ private:
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 
+   sampleCount GetNumSamples() const;
+
    sampleFormat GetSampleFormat() const { return mFormat; }
-   void ConvertToSampleFormat(sampleFormat format);
+   void ConvertToSampleFormat(sampleFormat format,
+      const std::function<void(size_t)> & progressReport = {});
 
    const SpectrogramSettings &GetSpectrogramSettings() const;
    SpectrogramSettings &GetSpectrogramSettings();
@@ -150,7 +156,6 @@ private:
 
    const WaveformSettings &GetWaveformSettings() const;
    WaveformSettings &GetWaveformSettings();
-   WaveformSettings &GetIndependentWaveformSettings();
    void SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSettings);
    void UseSpectralPrefs( bool bUse=true );
    //
@@ -223,7 +228,7 @@ private:
     *
     * @return true if at least one complete block was created
     */
-   bool Append(samplePtr buffer, sampleFormat format,
+   bool Append(constSamplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1);
    /// Flush must be called after last Append
    void Flush();
@@ -234,7 +239,7 @@ private:
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,
-   /// because there are alot of places (e.g. effects) using this interface.
+   /// because there are a lot of places (e.g. effects) using this interface.
    /// This interface makes much sense for modifying samples, but note that
    /// it is not time-accurate, because the "offset" is a double value and
    /// therefore can lie inbetween samples. But as long as you use the
@@ -249,7 +254,7 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const;
-   void Set(samplePtr buffer, sampleFormat format,
+   void Set(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
    // Fetch envelope values corresponding to uniformly separated sample times
@@ -266,12 +271,11 @@ private:
    //
    // MM: We now have more than one sequence and envelope per track, so
    // instead of GetSequence() and GetEnvelope() we have the following
-   // function which give the sequence and envelope which is under the
-   // given X coordinate of the mouse pointer.
+   // function which give the sequence and envelope which contains the given
+   // time.
    //
-   WaveClip* GetClipAtX(int xcoord);
-   Sequence* GetSequenceAtX(int xcoord);
-   Envelope* GetEnvelopeAtX(int xcoord);
+   Sequence* GetSequenceAtTime(double time);
+   Envelope* GetEnvelopeAtTime(double time);
 
    WaveClip* GetClipAtSample(sampleCount sample);
    WaveClip* GetClipAtTime(double time);
@@ -323,7 +327,7 @@ private:
     * @return The number of samples from the start of the track which lie before the given time.
     */
    sampleCount TimeToLongSamples(double t0) const;
-   /** @brief Convert correctly between an number of samples and an (absolute) time in seconds.
+   /** @brief Convert correctly between a number of samples and an (absolute) time in seconds.
     *
     * @param pos The time number of samples from the start of the track to convert.
     * @return The time in seconds.
@@ -459,23 +463,28 @@ private:
    WaveClipPointers SortedClipArray();
    WaveClipConstPointers SortedClipArray() const;
 
-   // Before calling 'Offset' on a clip, use this function to see if the
-   // offsetting is allowed with respect to the other clips in this track.
-   // This function can optionally return the amount that is allowed for offsetting
-   // in this direction maximally.
-   bool CanOffsetClip(WaveClip* clip, double amount, double *allowedAmount=NULL);
+   //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
+   /*!
+   @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
+    */
+   bool CanOffsetClips(
+      const std::vector<WaveClip*> &clips, //!< not necessarily in this track
+      double amount, //!< signed
+      double *allowedAmount = nullptr /*!<
+         [out] if null, test exact amount only; else, largest (in magnitude) possible offset with same sign */
+   );
 
    // Before moving a clip into a track (or inserting a clip), use this
    // function to see if the times are valid (i.e. don't overlap with
    // existing clips).
-   bool CanInsertClip(WaveClip* clip, double &slideBy, double &tolerance);
+   bool CanInsertClip(WaveClip* clip, double &slideBy, double &tolerance) const;
 
    // Remove the clip from the track and return a SMART pointer to it.
    // You assume responsibility for its memory!
    std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
-   // Append a clip to the track
-   void AddClip(std::shared_ptr<WaveClip> &&clip); // Call using std::move
+   //! Append a clip to the track; which must have the same block factory as this track; return success
+   bool AddClip(const std::shared_ptr<WaveClip> &clip);
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
@@ -516,6 +525,22 @@ private:
    // the wave should be drawn, if display minimum and maximum map to the
    // bottom and top.  Maybe that is out of bounds.
    int ZeroLevelYCoordinate(wxRect rect) const;
+
+   class IntervalData final : public Track::IntervalData {
+   public:
+      explicit IntervalData( const std::shared_ptr<WaveClip> &pClip )
+      : pClip{ pClip }
+      {}
+      std::shared_ptr<const WaveClip> GetClip() const { return pClip; }
+      std::shared_ptr<WaveClip> &GetClip() { return pClip; }
+   private:
+      std::shared_ptr<WaveClip> pClip;
+   };
+
+   Track::Holder PasteInto( AudacityProject & ) const override;
+
+   ConstIntervals GetIntervals() const override;
+   Intervals GetIntervals() override;
 
  protected:
    //
@@ -571,7 +596,7 @@ private:
 // the contents of the WaveTrack are known not to change.  It can replace
 // repeated calls to WaveTrack::Get() (each of which opens and closes at least
 // one block file).
-class WaveTrackCache {
+class AUDACITY_DLL_API WaveTrackCache {
 public:
    WaveTrackCache()
       : mBufferSize(0)
@@ -644,5 +669,36 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 // Non-mutating version of the above
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
+
+class AUDACITY_DLL_API WaveTrackFactory final
+   : public ClientData::Base
+{
+ public:
+   static WaveTrackFactory &Get( AudacityProject &project );
+   static const WaveTrackFactory &Get( const AudacityProject &project );
+   static WaveTrackFactory &Reset( AudacityProject &project );
+   static void Destroy( AudacityProject &project );
+
+   WaveTrackFactory( const ProjectSettings &settings,
+      const SampleBlockFactoryPtr &pFactory)
+      : mSettings{ settings }
+      , mpFactory(pFactory)
+   {
+   }
+   WaveTrackFactory( const WaveTrackFactory & ) PROHIBITED;
+   WaveTrackFactory &operator=( const WaveTrackFactory & ) PROHIBITED;
+
+   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
+   { return mpFactory; }
+
+ private:
+   const ProjectSettings &mSettings;
+   SampleBlockFactoryPtr mpFactory;
+ public:
+   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
+   std::shared_ptr<WaveTrack> NewWaveTrack(
+      sampleFormat format = (sampleFormat)0,
+      double rate = 0);
+};
 
 #endif // __AUDACITY_WAVETRACK__

@@ -60,13 +60,14 @@ void read__fetch(snd_susp_type a_susp, snd_list_type snd_list)
     out_ptr = out->samples;
     snd_list->block = out;
 
-    in_count = sf_readf_float(susp->sndfile, out_ptr, max_sample_block_len);
+    in_count = (long) sf_readf_float(susp->sndfile, out_ptr,
+                                     max_sample_block_len);
 
     n = in_count;
 
     /* don't read too many */
     if (n > (susp->cnt - susp->susp.current)) {
-        n = susp->cnt - susp->susp.current;
+        n = (long) (susp->cnt - susp->susp.current);
     }
 
     snd_list->block_len = (short) n;
@@ -110,8 +111,7 @@ LVAL snd_make_read(
   long *swap,           /* swap bytes */
   double *srate,	/* srate: sample rate */
   double *dur,		/* duration (in seconds) to read */
-  long *flags,		/* which parameters have been set */
-  long *byte_offset)	/* byte offset in file of first sample */
+  long *flags)		/* which parameters have been set */
 {
     register read_susp_type susp;
     /* srate specified as input parameter */
@@ -175,8 +175,8 @@ LVAL snd_make_read(
 
     if (!susp->sndfile) {
         char error[240];
-        snprintf(error, 240, "SND-READ: Cannot open file '%s' because of %s", filename,
-                sf_strerror(susp->sndfile));
+        snprintf(error, 240, "SND-READ: Cannot open file '%s' because of %s",
+                 filename, sf_strerror(susp->sndfile));
         xlfail(error);
     }
     if (susp->sf_info.channels < 1) {
@@ -191,7 +191,7 @@ LVAL snd_make_read(
         *srate = susp->sf_info.samplerate;
     }
     /* compute dur */
-    frames = sf_seek(susp->sndfile, 0, SEEK_END);
+    frames = susp->sf_info.frames;
     actual_dur = ((double) frames) / *srate;
     if (offset < 0) offset = 0;
     /* round offset to an integer frame count */
@@ -205,7 +205,6 @@ LVAL snd_make_read(
     if (actual_dur < *dur) *dur = actual_dur;
 
     sf_seek(susp->sndfile, frames, SEEK_SET); /* return to read loc in file */
-
     /* initialize susp state */
     susp->susp.sr = *srate;
     susp->susp.t0 = t0;
@@ -215,16 +214,16 @@ LVAL snd_make_read(
     susp->susp.log_stop_cnt = UNKNOWN;
     /* watch for overflow */
     if (*dur * *srate + 0.5 > (unsigned long) 0xFFFFFFFF) {
-        susp->cnt = 0x7FFFFFFF;
+        susp->cnt = 0x7FFFFFFFFFFFFFFF;
     } else {
         susp->cnt = ROUNDBIG((*dur) * *srate);
     }
 
     switch (susp->sf_info.format & SF_FORMAT_TYPEMASK) {
-    case SF_FORMAT_WAV: *format = SND_HEAD_WAVE; break;
     case SF_FORMAT_AIFF: *format = SND_HEAD_AIFF; break;
+    case SF_FORMAT_IRCAM: *format = SND_HEAD_IRCAM; break;
     case SF_FORMAT_AU: *format = SND_HEAD_NEXT; break;
-    case SF_FORMAT_RAW: *format = SND_HEAD_RAW; break;
+    case SF_FORMAT_WAV: *format = SND_HEAD_WAVE; break;
     case SF_FORMAT_PAF: *format = SND_HEAD_PAF; break;
     case SF_FORMAT_SVX: *format = SND_HEAD_SVX; break;
     case SF_FORMAT_NIST: *format = SND_HEAD_NIST; break;
@@ -237,11 +236,12 @@ LVAL snd_make_read(
     case SF_FORMAT_HTK: *mode = SND_HEAD_HTK; break;
     case SF_FORMAT_SDS: *mode = SND_HEAD_SDS; break;
     case SF_FORMAT_AVR: *mode = SND_HEAD_AVR; break;
-    case SF_FORMAT_WAVEX: *format = SND_HEAD_WAVE; break;
     case SF_FORMAT_SD2: *format = SND_HEAD_SD2; break;
     case SF_FORMAT_FLAC: *format = SND_HEAD_FLAC; break;
     case SF_FORMAT_CAF: *format = SND_HEAD_CAF; break;
+    case SF_FORMAT_RAW: *format = SND_HEAD_RAW; break;
     case SF_FORMAT_OGG: *format = SND_HEAD_OGG; break;
+    case SF_FORMAT_WAVEX: *format = SND_HEAD_WAVEX; break;
     default: *format = SND_HEAD_NONE; break;
     }
     *channels = susp->sf_info.channels;

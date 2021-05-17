@@ -19,7 +19,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #include "Import.h"
 #include "../Tags.h"
@@ -36,10 +36,8 @@
 
 #include "sndfile.h"
 
-#include "../WaveClip.h"
 #include "../ShuttleGui.h"
 
-#include "../prefs/QualityPrefs.h"
 #include "../widgets/ProgressDialog.h"
 
 #ifndef SNDFILE_1
@@ -93,7 +91,7 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   ProgressResult Import(TrackFactory *trackFactory, TrackHolders &outTracks,
+   ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
               Tags *tags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -203,11 +201,8 @@ PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
    // the quality of the original file.
    //
 
-   mFormat = QualityPrefs::SampleFormatChoice();
-
-   if (mFormat != floatSample &&
-       sf_subtype_more_than_16_bits(mInfo.format))
-      mFormat = floatSample;
+   mFormat =
+      ChooseFormat(sf_subtype_to_effective_format(mInfo.format));
 }
 
 TranslatableString PCMImportFileHandle::GetFileDescription()
@@ -290,7 +285,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 
-ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
+ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
                                 TrackHolders &outTracks,
                                 Tags *tags)
 {
@@ -306,7 +301,7 @@ ProgressResult PCMImportFileHandle::Import(TrackFactory *trackFactory,
       // iter not used outside this scope.
       auto iter = channels.begin();
       for (int c = 0; c < mInfo.channels; ++iter, ++c)
-         *iter = trackFactory->NewWaveTrack(mFormat, mInfo.samplerate);
+         *iter = NewWaveTrack(*trackFactory, mFormat, mInfo.samplerate);
    }
 
    auto fileTotalFrames =

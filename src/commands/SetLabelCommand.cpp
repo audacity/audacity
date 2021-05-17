@@ -16,13 +16,14 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetLabelCommand.h"
 
 #include "LoadCommands.h"
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
+#include "../ProjectHistory.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
@@ -123,5 +124,9 @@ bool SetLabelCommand::Apply(const CommandContext & context)
    }
 
    labelTrack->SortLabels();
+
+   ProjectHistory::Get(context.project).PushState(
+      XO("Edited Label"), XO("Label"));
+
    return true;
 }

@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../Audacity.h"
-#include "Scrubbing.h"
 
-#include "../../Experimental.h"
+#include "Scrubbing.h"
 
 #include <functional>
 
@@ -35,9 +33,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <algorithm>
 
-#include <wx/app.h>
-#include <wx/dc.h>
-#include <wx/dcclient.h>
 #include <wx/menu.h>
 
 // Yet another experimental scrub would drag the track under a
@@ -417,6 +412,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
             mOptions.isPlayingAtSpeed = false;
             mOptions.isKeyboardScrubbing = false;
+            mOptions.initSpeed = 0;
             mOptions.minSpeed = 0.0;
 #ifdef USE_TRANSCRIPTION_TOOLBAR
             if (!mAlwaysSeeking) {
@@ -1143,7 +1139,7 @@ void Scrubber::DoKeyboardScrub(bool backwards, bool keyUp)
    if (keyUp) {
       auto &scrubber = Scrubber::Get(project);
       if (scrubber.IsKeyboardScrubbing() && scrubber.IsBackwards() == backwards) {
-         auto gAudioIO = AudioIOBase::Get();
+         auto gAudioIO = AudioIO::Get();
          auto time = gAudioIO->GetStreamTime();
          auto &viewInfo = ViewInfo::Get(project);
          auto &selection = viewInfo.selectedRegion;

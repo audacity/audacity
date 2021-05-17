@@ -22,7 +22,7 @@ effects from this one class.
 *//*******************************************************************/
 
 
-#include "../../Audacity.h"
+
 #include "LadspaEffect.h"       // This class's header file
 
 #include <float.h>
@@ -39,7 +39,6 @@ effects from this one class.
 #include <wx/wxprec.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/dcbuffer.h>
 #include <wx/dcclient.h>
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -59,6 +58,7 @@ effects from this one class.
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
+#include "../../ModuleManager.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../../widgets/WindowAccessible.h"
@@ -85,7 +85,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LadspaEffectsModule(path);
+   return safenew LadspaEffectsModule();
 }
 
 // ============================================================================
@@ -99,12 +99,8 @@ DECLARE_BUILTIN_MODULE(LadspaBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-LadspaEffectsModule::LadspaEffectsModule(const wxString *path)
+LadspaEffectsModule::LadspaEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 LadspaEffectsModule::~LadspaEffectsModule()
@@ -117,7 +113,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 
 PluginPath LadspaEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
@@ -364,7 +360,7 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
    pathVar = wxString::FromUTF8(getenv("LADSPA_PATH"));
    if (!pathVar.empty())
    {
-      wxStringTokenizer tok(pathVar);
+      wxStringTokenizer tok(pathVar, wxPATH_SEP);
       while (tok.HasMoreTokens())
       {
          pathList.push_back(tok.GetNextToken());

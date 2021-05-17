@@ -17,7 +17,7 @@
 
 class WaveTrack;
 
-class EffectTwoPassSimpleMono /* not final */ : public Effect
+class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
 {
 public:
    // Effect implementation
@@ -75,8 +75,11 @@ protected:
    int    mPass;
    bool   mSecondPassDisabled;
 
+   std::shared_ptr<TrackList> mWorkTracks;
+   std::shared_ptr<TrackList> *mTrackLists[2];
+
 private:
-   bool ProcessOne(WaveTrack * t,
+   bool ProcessOne(WaveTrack * t, WaveTrack * outTrack,
                    sampleCount start, sampleCount end);
    bool ProcessPass() override;
 };

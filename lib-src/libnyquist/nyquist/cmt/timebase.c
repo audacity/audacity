@@ -21,7 +21,7 @@
 timebase_type timebase_queue = NULL;    /* waiting to run timebase queue */
 call_type callfree = NULL;      /* free list */
 
-private void fatal();
+private void fatal(const char *msg);
 
 
 /****************************************************************************
@@ -124,9 +124,9 @@ void callshow(call)
     call_type call;
 {
     int i;
-    gprintf(TRANS,"address:  %lx\n", (ulong)call);
+    gprintf(TRANS,"address:  %p\n", call);
     gprintf(TRANS,"time:     %ld\n", call->u.e.time);
-    gprintf(TRANS,"routine:  %lx\n", (ulong)call->u.e.routine);
+    gprintf(TRANS,"routine:  %p\n", call->u.e.routine);
     gprintf(TRANS,"parameters:");
     for (i = 0; i < MAX_CALL_ARGS; i++) {
         gprintf(TRANS, " %p", call->u.e.p.arg[i]);
@@ -141,8 +141,7 @@ void callshow(call)
 * Effect: print message and exit program
 ***************************************************************/
 
-private void fatal(msg)
-  char *msg;
+private void fatal(const char *msg)
 {
     gprintf(FATAL, msg);
     EXIT(1);

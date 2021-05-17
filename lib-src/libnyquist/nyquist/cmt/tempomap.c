@@ -13,7 +13,7 @@
 #include "seq.h"
 #include "tempomap.h"
 
-static time_type elapsed_time();
+static time_type elapsed_time(long tempo, long beat);
 
 /* tempomap_create -- create a tempomap */
 /**/
@@ -116,9 +116,7 @@ time_type tempomap_lookup(tempomap, beat)
 /*
  * the time returned is in units of 4us.
  */
-static time_type elapsed_time(tempo, beat)
-  long tempo;
-  long beat;
+static time_type elapsed_time(long tempo, long beat)
 {
     return (time_type)((tempo * beat) >> 2);
 }

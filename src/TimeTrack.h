@@ -21,11 +21,11 @@ class Ruler;
 class ZoomInfo;
 struct TrackPanelDrawingContext;
 
-class TimeTrack final : public Track {
+class AUDACITY_DLL_API TimeTrack final : public Track {
 
  public:
 
-   TimeTrack(const ZoomInfo *zoomInfo);
+   explicit TimeTrack(const ZoomInfo *zoomInfo);
    /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *
     * Calls TimeTrack::Init() to copy the track metadata, then does a bunch of manipulations on the
@@ -39,6 +39,10 @@ class TimeTrack final : public Track {
 
    virtual ~TimeTrack();
 
+
+   bool SupportsBasicEditing() const override;
+
+   Holder PasteInto( AudacityProject & ) const override;
 
    Holder Cut( double t0, double t1 ) override;
    Holder Copy( double t0, double t1, bool forClipboard ) const override;
@@ -91,6 +95,8 @@ class TimeTrack final : public Track {
    Ruler &GetRuler() const { return *mRuler; }
 
  private:
+   void CleanState();
+
    // Identifying the type of track
    TrackKind GetKind() const override { return TrackKind::Time; }
 
@@ -111,8 +117,6 @@ class TimeTrack final : public Track {
 
 private:
    Track::Holder Clone() const override;
-
-   friend class TrackFactory;
 };
 
 

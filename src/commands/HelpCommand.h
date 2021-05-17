@@ -43,5 +43,25 @@ public:
    wxString mCommandName;
 };
 
+class CommentCommand : public AudacityCommand
+{
+public:
+   static const ComponentInterfaceSymbol Symbol;
+   int mFormat;
+
+   // ComponentInterface overrides
+   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   TranslatableString GetDescription() override {return XO("For comments in a macro.");};
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Apply(const CommandContext & context) override {
+      return true;
+   };
+   // AudacityCommand overrides
+   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#comment");};
+public:
+   wxString mComment;
+};
+
 
 #endif /* End of include guard: __HELPCOMMAND__ */

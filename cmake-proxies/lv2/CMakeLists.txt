@@ -139,6 +139,7 @@ set( HAVE_SRATOM 1 )
 macro( bld name packages define sources )
    set( libs )
    set( missing )
+   set( lib "${SUIL_MODULE_PREFIX}${name}" )
    foreach( pkg ${packages} )
       if( NOT "${${pkg}_FOUND}" )
          set( missing ON )
@@ -157,19 +158,19 @@ macro( bld name packages define sources )
             ${define}
       )
 
-      add_library( ${name} MODULE "${sources}" )
-      add_dependencies( ${TARGET} ${name} )
+      add_library( ${lib} MODULE "${sources}" )
+      add_dependencies( ${TARGET} ${lib} )
 
-      set_target_properties( ${name}
+      set_target_properties( ${lib}
          PROPERTIES
             LIBRARY_OUTPUT_DIRECTORY "${_DEST}/${_PKGLIB}"
             PREFIX ""
       )
 
       organize_source( "${TARGET_ROOT}" "" "${sources}" )
-      target_compile_definitions( ${name} PRIVATE SUIL_SHARED ${DEFINES} )
-      target_include_directories( ${name} PRIVATE ${INCLUDES} )
-      target_link_libraries( ${name} PRIVATE ${libs} )
+      target_compile_definitions( ${lib} PRIVATE SUIL_SHARED ${DEFINES} )
+      target_include_directories( ${lib} PRIVATE ${INCLUDES} )
+      target_link_libraries( ${lib} PRIVATE ${libs} )
    endif()
 endmacro()
 

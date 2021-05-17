@@ -11,11 +11,11 @@ LRN
 #if !defined(__EXPORT_FFMPEG_DIALOGS_H__)
 #define __EXPORT_FFMPEG_DIALOGS_H__
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+
 
 #if defined(USE_FFMPEG)
 
-#include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
+#include "../FFmpeg.h"
 
 #include "../xml/XMLFileReader.h"
 #include "../FileNames.h"
@@ -63,7 +63,7 @@ struct ExposedFormat
 /// Describes format-codec compatibility
 struct CompatibilityEntry
 {
-   const wxChar *fmt; //!< format, recognizeable by guess_format()
+   const wxChar *fmt; //!< format, recognizable by guess_format()
    AVCodecID codec;   //!< codec ID
 };
 

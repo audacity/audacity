@@ -47,20 +47,20 @@ void fromobject__fetch(snd_susp_type a_susp, snd_list_type snd_list)
     snd_list->block = out;
 
     while (cnt < max_sample_block_len) { /* outer loop */
-	/* first compute how many samples to generate in inner loop: */
-	/* don't overflow the output sample block: */
-	togo = max_sample_block_len - cnt;
+        /* first compute how many samples to generate in inner loop: */
+        /* don't overflow the output sample block: */
+        togo = max_sample_block_len - cnt;
 
         if (susp->done) {
             togo = 0; /* indicate termination */
             break;    /* we're done */
         }
 
-	n = togo;
-	done_reg = susp->done;
-	src_reg = susp->src;
-	out_ptr_reg = out_ptr;
-	if (n) do { /* the inner sample computation loop */
+        n = togo;
+        done_reg = susp->done;
+        src_reg = susp->src;
+        out_ptr_reg = out_ptr;
+        if (n) do { /* the inner sample computation loop */
             LVAL rslt = xleval(cons(s_send, cons(src_reg,
                                                  consa(s_next))));
             if (floatp(rslt)) {
@@ -70,20 +70,20 @@ void fromobject__fetch(snd_susp_type a_susp, snd_list_type snd_list)
                 /* adjust togo to what it should have been */
                 break;
             };
-	} while (--n); /* inner loop */
+        } while (--n); /* inner loop */
 
-	togo -= n;
-	susp->done = done_reg;
-	out_ptr += togo;
-	cnt += togo;
+        togo -= n;
+        susp->done = done_reg;
+        out_ptr += togo;
+        cnt += togo;
     } /* outer loop */
 
     /* test for termination */
     if (togo == 0 && cnt == 0) {
-	snd_list_terminate(snd_list);
+        snd_list_terminate(snd_list);
     } else {
-	snd_list->block_len = cnt;
-	susp->susp.current += cnt;
+        snd_list->block_len = cnt;
+        susp->susp.current += cnt;
     }
 } /* fromobject__fetch */
 

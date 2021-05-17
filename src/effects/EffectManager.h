@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
 
-#include "../Experimental.h"
-
 #include <memory>
 #include <vector>
 
@@ -27,7 +25,6 @@ class CommandContext;
 class CommandMessageTarget;
 class ComponentInterfaceSymbol;
 class Effect;
-class TrackFactory;
 class TrackList;
 class SelectedRegion;
 class wxString;
@@ -55,9 +52,13 @@ public:
       // Flag used to disable prompting for configuration parameteres.
       kConfigured = 0x01,
       // Flag used to disable saving the state after processing.
-      kSkipState  = 0x02,
+      kSkipState = 0x02,
       // Flag used to disable "Repeat Last Effect"
       kDontRepeatLast = 0x04,
+      // Flag used to disable "Select All during Repeat Generator Effect"
+      kRepeatGen = 0x08,
+      // Flag used for repeating Nyquist Prompt
+      kRepeatNyquistPrompt = 0x10,
    };
 
    /** Get the singleton instance of the EffectManager. Probably not safe

@@ -29,18 +29,14 @@ or ASlider.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
-#include "ASlider.h"
 
-#include "../Experimental.h"
+#include "ASlider.h"
 
 #include <math.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/dcbuffer.h>
-#include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/frame.h>
 #include <wx/graphics.h>
 #include <wx/image.h>
@@ -65,13 +61,14 @@ or ASlider.
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
+#include "valnum.h"
 
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
-class ASliderAx final : public WindowAccessible
+class AUDACITY_DLL_API ASliderAx final : public WindowAccessible
 {
 public:
    ASliderAx(wxWindow * window);
@@ -277,13 +274,41 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
 {
    SetName();
    mpOrigin = pSource;
+   mValue = mpOrigin->Get(false);
+
+   auto prec = 2;
+   auto trailing = NumValidatorStyle::TWO_TRAILING_ZEROES;
+   if (style == DB_SLIDER)
+   {
+      prec = 1;
+      trailing = NumValidatorStyle::ONE_TRAILING_ZERO;
+   }
+
    ShuttleGui S(this, eIsCreating);
 
    S.StartVerticalLay();
    {
-      mTextCtrl = S.Validator<wxTextValidator>(wxFILTER_NUMERIC)
-         .AddTextBox( {}, wxEmptyString, 15);
-
+      if (style == PAN_SLIDER)
+      {
+         mTextCtrl = S
+            .Validator<IntegerValidator<float>>(
+               &mValue, NumValidatorStyle::DEFAULT, -100.0, 100.0)
+            .AddTextBox({}, wxEmptyString, 15);
+      }
+      else if (style == VEL_SLIDER)
+      {
+         mTextCtrl = S
+            .Validator<IntegerValidator<float>>(
+               &mValue, NumValidatorStyle::DEFAULT, -50.0, 50.0)
+            .AddTextBox({}, wxEmptyString, 15);
+      }
+      else
+      {
+         mTextCtrl = S
+            .Validator<FloatingPointValidator<float>>(
+               prec, &mValue, trailing, mpOrigin->GetMinValue(), mpOrigin->GetMaxValue())
+            .AddTextBox({}, wxEmptyString, 15);
+      }
       mSlider = safenew ASlider(S.GetParent(),
                             wxID_ANY,
                             title,
@@ -310,7 +335,10 @@ SliderDialog::~SliderDialog()
 bool SliderDialog::TransferDataToWindow()
 {
    float value = mSlider->Get(false);
-   mTextCtrl->SetValue(wxString::Format(wxT("%g"), value));
+   mValue = mStyle == PAN_SLIDER
+      ? value * 100.0
+      : value;
+   mTextCtrl->GetValidator()->TransferToWindow();
    mTextCtrl->SetSelection(-1, -1);
    if (mpOrigin) {
       mpOrigin->Set(value);
@@ -322,18 +350,13 @@ bool SliderDialog::TransferDataToWindow()
 
 bool SliderDialog::TransferDataFromWindow()
 {
-   // Bug #2458
-   //
-   // If the user clears the text control, the ToDouble below will NOT set "value"
-   // since it checks the length of the incoming string and bypasses setting it if
-   // it's empty. So initialize "value" for good measure and check the return value
-   // of ToDouble for success before using "value".
-   double value = 0.0;
-
-   if (mTextCtrl->GetValue().ToDouble(&value))
+   if (mTextCtrl->GetValidator()->TransferFromWindow())
    {
+      float value = mValue;
       if (mStyle == DB_SLIDER)
          value = DB_TO_LINEAR(value);
+      else if (mStyle == PAN_SLIDER)
+         value /= 100.0;
       mSlider->Set(value);
       if (mpOrigin) {
          mpOrigin->Set(value);
@@ -352,7 +375,10 @@ void SliderDialog::OnSlider(wxCommandEvent & event)
 
 void SliderDialog::OnTextChange(wxCommandEvent & event)
 {
-   TransferDataFromWindow();
+   if (mTextCtrl->GetValidator()->TransferFromWindow())
+   {
+      TransferDataFromWindow();
+   }
    event.Skip(false);
 }
 
@@ -797,6 +823,8 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
       double upp;
       if (mOrientation == wxHORIZONTAL)
       {
+         // Bug #2446 - A bit of a hack, but it should suffice.
+         divs = (mWidth - 1) / 10;
          upp = divs / (double)(mWidthX-1);
       }
       else
@@ -1319,6 +1347,14 @@ void LWSlider::SendUpdate( float newValue )
 
    Refresh();
 
+   // Update the project's status bar as well
+   if (mTipPanel) {
+      auto tip = GetTip(mCurrentValue);
+      auto pProject = FindProjectFromWindow( mParent );
+      if (pProject)
+         ProjectStatus::Get( *pProject ).Set( tip );
+   }
+
    wxCommandEvent e( wxEVT_COMMAND_SLIDER_UPDATED, mID );
    int intValue = (int)( ( mCurrentValue - mMinValue ) * 1000.0f /
                          ( mMaxValue - mMinValue ) );
@@ -1494,7 +1530,16 @@ void LWSlider::Refresh()
       mParent->Refresh(false);
 }
 
-bool LWSlider::GetEnabled()
+void LWSlider::Redraw()
+{
+   mBitmap.reset();
+   mThumbBitmap.reset();
+   mThumbBitmapHilited.reset();
+
+   Refresh();
+}
+
+bool LWSlider::GetEnabled() const
 {
    return mEnabled;
 }
@@ -1507,6 +1552,16 @@ void LWSlider::SetEnabled(bool enabled)
    mThumbBitmapHilited.reset();
 
    Refresh();
+}
+
+float LWSlider::GetMinValue() const
+{
+   return mMinValue;
+}
+
+float LWSlider::GetMaxValue() const
+{
+   return mMaxValue;
 }
 
 //
@@ -1566,6 +1621,18 @@ ASlider::~ASlider()
 {
    if(HasCapture())
       ReleaseMouse();
+}
+
+bool ASlider::SetBackgroundColour(const wxColour& colour)
+{
+   auto res = wxPanel::SetBackgroundColour(colour);
+
+   if (res && mLWSlider)
+   {
+      mLWSlider->Redraw();
+   }
+
+   return res;
 }
 
 void ASlider::OnSlider(wxCommandEvent &event)

@@ -25,10 +25,10 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Menus.h"
 
-#include "Experimental.h"
+
 
 #include <wx/frame.h>
 
@@ -48,6 +48,13 @@
 
 MenuCreator::MenuCreator()
 {
+   mLastAnalyzerRegistration = repeattypenone;
+   mLastToolRegistration = repeattypenone;
+   
+   mRepeatGeneratorFlags = 0;
+   mRepeatEffectFlags = 0;
+   mRepeatAnalyzerFlags = 0;
+   mRepeatToolFlags = 0;
 }
 
 MenuCreator::~MenuCreator()
@@ -76,6 +83,7 @@ MenuManager::MenuManager( AudacityProject &project )
    mProject.Bind( EVT_UNDO_OR_REDO, &MenuManager::OnUndoRedo, this );
    mProject.Bind( EVT_UNDO_RESET, &MenuManager::OnUndoRedo, this );
    mProject.Bind( EVT_UNDO_PUSHED, &MenuManager::OnUndoRedo, this );
+   mProject.Bind( EVT_UNDO_RENAMED, &MenuManager::OnUndoRedo, this );
 }
 
 MenuManager::~MenuManager()

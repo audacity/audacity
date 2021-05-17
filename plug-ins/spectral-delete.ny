@@ -65,7 +65,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 (defmacro validate-low-hz (hz fmin fmax)
   ;; Discard if out of valid range.
   ;; Do NOT coerce into range if too high - if multiple tracks with
-  ;; different sample rates, that could cause very unepected results.
+  ;; different sample rates, that could cause very unexpected results.
   `(if (or (not ,hz) (< ,hz fmin) (> ,hz fmax))
        (setf ,hz nil)))
 
@@ -125,7 +125,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
       (setf f1 (/ f1 *sound-srate*)))
     ;(format t "Low: ~a    High: ~a" (if f0 (* f0 *sound-srate*) nil) (if f1 (* f1 *sound-srate*) nil))
     (if (not (or f0 f1))
-        ""  ;may occur if multiple tracks with diferent sample rates
+        ""  ;may occur if multiple tracks with different sample rates
         (sim
           (mult env
               (if f0 (dofilter f0 lp-width 0) 0))

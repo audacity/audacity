@@ -13,11 +13,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "FileHistory.h"
 
 #include <wx/defs.h>
-#include <wx/fileconf.h>
 #include <wx/menu.h>
 
 #include "../Internat.h"
@@ -115,8 +114,11 @@ void FileHistory::UseMenu(wxMenu *menu)
 void FileHistory::Load(wxConfigBase & config, const wxString & group)
 {
    mHistory.clear();
+   mGroup = group.empty()
+      ? wxT("RecentFiles")
+      : group;
 
-   config.SetPath(group);
+   config.SetPath(mGroup);
 
    wxString file;
    long ndx;
@@ -131,11 +133,11 @@ void FileHistory::Load(wxConfigBase & config, const wxString & group)
    NotifyMenus();
 }
 
-void FileHistory::Save(wxConfigBase & config, const wxString & group)
+void FileHistory::Save(wxConfigBase & config)
 {
    config.SetPath(wxT(""));
-   config.DeleteGroup(group);
-   config.SetPath(group);
+   config.DeleteGroup(mGroup);
+   config.SetPath(mGroup);
 
    // Stored in reverse order
    int n = mHistory.size() - 1;
@@ -144,6 +146,8 @@ void FileHistory::Save(wxConfigBase & config, const wxString & group)
    }
 
    config.SetPath(wxT(""));
+
+   config.Flush();
 }
 
 void FileHistory::NotifyMenus()
@@ -152,6 +156,7 @@ void FileHistory::NotifyMenus()
    for (auto pMenu : mMenus)
       if (pMenu)
          NotifyMenu(pMenu);
+   Save(*gPrefs);
 }
 
 void FileHistory::NotifyMenu(wxMenu *menu)

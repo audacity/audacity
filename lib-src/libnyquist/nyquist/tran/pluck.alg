@@ -93,7 +93,7 @@ void pluck_initialize(sample_type *shiftreg, sample_type *array,
            values to +1 or -1. The following does the same
            thing with much less code:
          */
-        *array = (krand() & 2) - 1;
+        *array = (sample_type) ((krand() & 2) - 1);
         suma += *array; /* compute sum for the average */
     }
     avea = suma / len;

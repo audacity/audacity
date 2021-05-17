@@ -61,19 +61,19 @@
     if (s > threshold) { \
         if (s > max_sample) { \
             max_sample = s; \
-            threshold = min(1.0, s); \
+            threshold = min(1.0F, s); \
         } \
         if (s > 1.0) { \
-            s = (sample_type) (fmod(s + 1.0, 2.0) - 1.0); \
+            s = (sample_type) (fmodf(s + 1.0F, 2.0F) - 1.0F); \
             (x) = s; \
         } \
     } else if (s < -threshold) { \
         if (s < -max_sample) { \
             max_sample = -s; \
-            threshold = min(1.0, -s); \
+            threshold = min(1.0F, -s); \
         } \
         if (s < -1.0) { \
-            s = (sample_type) -(fmod(-s + 1.0, 2.0) - 1.0); \
+            s = (sample_type) -(fmodf(-s + 1.0F, 2.0F) - 1.0F); \
             (x) = s; \
         } \
     }
@@ -114,18 +114,22 @@ void portaudio_exit()
 }
 
 
-sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
-                             SNDFILE *snd_file, float *buf, long *ntotal);
+// sound_save_sound - implements s-save for mono sounds
+sample_type sound_save_sound(LVAL s_as_lval, int64_t n, SF_INFO *sf_info,
+                             SNDFILE *snd_file, float *buf, int64_t *ntotal,
+                             int64_t progress);
 
-sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
-                             SNDFILE *snd_file, float *buf, long *ntotal);
+// sound_save_array - implements s-save for multi-channel sounds
+sample_type sound_save_array(LVAL sa, int64_t n, SF_INFO *sf_info,
+                             SNDFILE *snd_file, float *buf, int64_t *ntotal,
+                             int64_t progress);
 
 unsigned char st_linear_to_ulaw(int sample);/* jlh not used anywhere */
 
 
 typedef struct {
     sound_type sound;
-    long cnt;
+    int cnt;
     sample_block_values_type ptr;
     double scale;
     int terminated;
@@ -176,7 +180,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
     pref = getvalue(pref);
     if (pref == s_unbound) pref = NULL;
     if (stringp(pref)) pref_string = getstring(pref);
-    else if (fixp(pref)) pref_num = getfixnum(pref);
+    else if (fixp(pref)) pref_num = (int) getfixnum(pref);
 
     if (!portaudio_initialized) {
         if (portaudio_error(Pa_Initialize(), 
@@ -250,7 +254,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
 
 /* finish_audio -- flush the remaining samples, then close */
 /**/
-void finish_audio()
+void finish_audio(void)
 {
     /* portaudio_error(Pa_StopStream(audio_stream), "could not stop stream"); */
     /* write Latency frames of audio to make sure all samples are played */
@@ -292,7 +296,6 @@ long lookup_format(long format, long mode, long bits, long swap)
     case SND_HEAD_SD2: sf_format = SF_FORMAT_SD2; break;
     case SND_HEAD_FLAC: sf_format = SF_FORMAT_FLAC; break;
     case SND_HEAD_CAF: sf_format = SF_FORMAT_CAF; break;
-    case SND_HEAD_OGG: sf_format = SF_FORMAT_OGG; mode = SND_MODE_VORBIS; break; /* ZEYU */
     case SND_HEAD_RAW:
         sf_format = SF_FORMAT_RAW; 
 #ifdef XL_BIG_ENDIAN
@@ -302,6 +305,8 @@ long lookup_format(long format, long mode, long bits, long swap)
         sf_format |= (swap ? SF_ENDIAN_BIG : SF_ENDIAN_LITTLE);
 #endif        
         break;
+    case SND_HEAD_OGG: sf_format = SF_FORMAT_OGG; mode = SND_MODE_VORBIS; break;
+    case SND_HEAD_WAVEX: sf_format = SF_FORMAT_WAVEX; break;
     default: 
         sf_format = SF_FORMAT_WAV; 
         nyquist_printf("s-save: unrecognized format, using SND_HEAD_WAVE\n");
@@ -362,22 +367,15 @@ long lookup_format(long format, long mode, long bits, long swap)
 }
 
 
-double sound_save(
-  LVAL snd_expr,
-  long n,
-  unsigned char *filename,
-  long format,
-  long mode,
-  long bits,
-  long swap,
-  double *sr,
-  long *nchans,
-  double *duration,
-  LVAL play)
+// sound_save - implements s-save. As files are written, the sample count
+//    is printed at intervals of progress. Typically every 10s of sound.
+double sound_save(LVAL snd_expr, int64_t n, unsigned char *filename,
+                  long format, long mode, long bits, long swap, double *sr,
+                  long *nchans, double *duration, LVAL play, int64_t progress)
 {
     LVAL result;
     float *buf = NULL;
-    long ntotal;
+    int64_t ntotal;
     double max_sample;
     SNDFILE *sndfile = NULL;
     SF_INFO sf_info;
@@ -388,7 +386,9 @@ double sound_save(
     memset(&sf_info, 0, sizeof(sf_info));
     sf_info.format = lookup_format(format, mode, bits, swap);
 
+    // printf("in sound_save: calling xleval on %p\n", snd_expr);
     result = xleval(snd_expr);
+    // printf("in sound_save: got result of xleval %p\n", result);
     /* BE CAREFUL - DO NOT ALLOW GC TO RUN WHILE RESULT IS UNPROTECTED */
     if (vectorp(result)) {
         /* make sure all elements are of type a_sound */
@@ -397,7 +397,7 @@ double sound_save(
         while (i > 0) {
             i--;
             if (!exttypep(getelement(result, i), a_sound)) {
-                xlerror("sound_save: array has non-sound element",
+                xlerror("S-SAVE: array has non-sound element",
                          result);
             }
         }
@@ -426,7 +426,7 @@ double sound_save(
         }
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
-                                      buf, &ntotal);
+                                      buf, &ntotal, progress);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
         if (play != NIL) finish_audio();
@@ -459,13 +459,15 @@ double sound_save(
         }
 
         max_sample = sound_save_sound(result, n, &sf_info, sndfile,
-                                      buf, &ntotal);
+                                      buf, &ntotal, progress);
         *duration = ntotal / *sr;
         if (sndfile) sf_close(sndfile);
         if (play != NIL) finish_audio();
     } else {
+        xlprot1(result);
         xlerror("sound_save: expression did not return a sound",
                  result);
+        xlpop();
         max_sample = 0.0;
     }
     if (buf) free(buf);
@@ -475,13 +477,12 @@ double sound_save(
 
 /* open_for_write -- helper function for sound_overwrite */
 /*
- * if the format is RAW, then fill in sf_info according to 
- * sound sample rate and channels. Otherwise, open the file
- * and see if the sample rate and channele match.
+ * open the file and prepare to read it if it matches the expected
+ * sample rate and number of channels
  */
 SNDFILE *open_for_write(unsigned char *filename, long direction,
-                        long format, SF_INFO *sf_info, int channels,
-                        long srate, double offset, float **buf)
+                        SF_INFO *sf_info, int channels, int srate,
+                        double offset, float **buf)
 /* channels and srate are based on the sound we're writing to the file */
 {
     SNDFILE *sndfile;
@@ -489,18 +490,13 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
     char error[140];   // error messages are formatted here
     sf_count_t rslt;   // frame count returned from sf_seek
 
-    if (format == SND_HEAD_RAW) {
-        sf_info->channels = channels;
-        sf_info->samplerate = srate;
-    } else {
-        sf_info->format = 0;
-    }
     sndfile = NULL;
     if (ok_to_open((char *) filename, "w"))
         sndfile = sf_open((const char *) filename, direction, sf_info);
 
     if (!sndfile) {
-        snprintf(error, sizeof(error), "snd_overwrite: cannot open file %s", filename);
+        snprintf(error, sizeof(error), "snd_overwrite: cannot open file %s",
+                 filename);
         xlabort(error);
     }
     /* use proper scale factor: 8000 vs 7FFF */
@@ -515,7 +511,7 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
         xlabort(error);
     }
     if (sf_info->channels != channels) {
-        snprintf(error, sizeof(error), "%s%d%s%d%s", 
+        snprintf(error, sizeof(error), "%s%d%s%d%s",
                 "snd_overwrite: number of channels in sound (",
                 channels,
                 ") does not match\n    number of channels in file (",
@@ -523,19 +519,17 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
         sf_close(sndfile);
         xlabort(error);
     }
-
     if (sf_info->samplerate != srate) {
-        snprintf(error, sizeof(error), "%s%ld%s%d%s",
+        snprintf(error, sizeof(error), "%s%d%s%d%s",
                 "snd_overwrite: sample rate in sound (",
                 srate,
                 ") does not match\n    sample rate in file (",
                 sf_info->samplerate,
-                ")"); 
+                ")");
         sf_close(sndfile);
         xlabort(error);
     }
-        
-    if ((*buf = (float *) malloc(max_sample_block_len * channels *
+    if ((*buf = (float *) malloc(max_sample_block_len * sf_info->channels *
                                  sizeof(float))) == NULL) {
         xlabort("snd_overwrite: couldn't allocate memory");
     }
@@ -543,21 +537,13 @@ SNDFILE *open_for_write(unsigned char *filename, long direction,
 }
 
 
-double sound_overwrite(
-  LVAL snd_expr,
-  long n,
-  unsigned char *filename,
-  double offset_secs,
-  long format,
-  long mode,
-  long bits,
-  long swap,
-  double *duration)
+double sound_overwrite(LVAL snd_expr, int64_t n, unsigned char *filename,
+                       double offset_secs, double *duration, int64_t progress)
 {
     LVAL result;       // the SOUND to be evaluated
     SF_INFO sf_info;   // info about the sound file
     double max_sample; // return value
-    long ntotal;       // how many samples were overwritten
+    int64_t ntotal;       // how many samples were overwritten
     /*
     long flags;
     */
@@ -573,7 +559,6 @@ double sound_overwrite(
         fclose(file);
     }
     memset(&sf_info, 0, sizeof(sf_info));
-    sf_info.format = lookup_format(format, mode, bits, swap);
     result = xleval(snd_expr);
     /* BE CAREFUL - DO NOT ALLOW GC TO RUN WHILE RESULT IS UNPROTECTED */
     if (vectorp(result)) {
@@ -589,23 +574,23 @@ double sound_overwrite(
                          result);
             }
         }
-        sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, channels,
+        sndfile = open_for_write(filename, SFM_RDWR, &sf_info, channels,
                                  ROUND32(getsound(getelement(result, 0))->sr),
                                  offset_secs, &buf);
 
         max_sample = sound_save_array(result, n, &sf_info, sndfile, 
-                                      buf, &ntotal);
+                                      buf, &ntotal, progress);
         *duration = ntotal / (double) sf_info.samplerate;
         free(buf);
         sf_close(sndfile);
     } else if (exttypep(result, a_sound)) {
         SNDFILE *sndfile;  // opened sound file 
         float *buf; // buffer for samples read in from sound file
-        sndfile = open_for_write(filename, SFM_RDWR, format, &sf_info, 1, 
+        sndfile = open_for_write(filename, SFM_RDWR, &sf_info, 1,
                                  ROUND32(getsound(result)->sr), 
                                  offset_secs, &buf);
         max_sample = sound_save_sound(result, n, &sf_info, sndfile, buf, 
-                                      &ntotal);
+                                      &ntotal, progress);
         *duration = ntotal / (double) sf_info.samplerate;
         free(buf);
         sf_close(sndfile);
@@ -625,15 +610,16 @@ int is_pcm(SF_INFO *sf_info)
 }
 
 
-sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info, 
-        SNDFILE *sndfile, float *buf, long *ntotal)
+sample_type sound_save_sound(LVAL s_as_lval, int64_t n, SF_INFO *sf_info,
+                             SNDFILE *sndfile, float *buf, int64_t *ntotal,
+                             int64_t progress)
 {
-    long blocklen;
+    int blocklen;
     sound_type s;
     int i;
     sample_type *samps;
-    long debug_unit;    /* print messages at intervals of this many samples */
-    long debug_count;   /* next point at which to print a message */
+    int64_t debug_unit;  /* print messages at intervals of this many samples */
+    int64_t debug_count; /* next point at which to print a message */
     sample_type max_sample = 0.0F;
     sample_type threshold = 0.0F;
     double sound_srate;
@@ -659,8 +645,11 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
     /* for debugging */
 /*    printing_this_sound = s;*/
 
-
-    debug_unit = debug_count = (long) max(sf_info->samplerate, 10000.0);
+    if (progress < 10000) {
+        progress = 10000;
+    }
+    debug_unit = debug_count =
+            (int64_t) max(10 * sf_info->samplerate, progress);
 
     sound_frames = 0;
     sound_srate = sf_info->samplerate;
@@ -681,7 +670,7 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
         if (sampblock == zero_block || blocklen == 0) {
             break;
         }
-        togo = min(blocklen, n);
+        togo = (int) min(blocklen, n);
         if (s->scale != 1) { /* copy/scale samples into buf */
             for (i = 0; i < togo; i++) {
                 buf[i] = s->scale * sampblock->samples[i];
@@ -713,7 +702,7 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
         n -= togo;
         *ntotal += togo;
         if (*ntotal > debug_count) {
-            gprintf(TRANS, " %ld ", *ntotal);
+            gprintf(TRANS, " %" PRId64 " ", *ntotal);
             fflush(stdout);
             debug_count += debug_unit;
         }
@@ -725,16 +714,17 @@ sample_type sound_save_sound(LVAL s_as_lval, long n, SF_INFO *sf_info,
 }
 
 
-sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info, 
-        SNDFILE *sndfile, float *buf, long *ntotal)
+sample_type sound_save_array(LVAL sa, int64_t n, SF_INFO *sf_info,
+                             SNDFILE *sndfile, float *buf, int64_t *ntotal,
+                             int64_t progress)
 {
     long i, chans;
     float *float_bufp;
     sound_state_type state;
     double start_time = HUGE_VAL;
     LVAL sa_copy;
-    long debug_unit;    /* print messages at intervals of this many samples */
-    long debug_count;   /* next point at which to print a message */
+    int64_t debug_unit;    /* print messages at intervals of this many samples */
+    int64_t debug_count;   /* next point at which to print a message */
     sample_type max_sample = 0.0F;
     sample_type threshold = 0.0F;
     double sound_srate;
@@ -764,6 +754,7 @@ sample_type sound_save_array(LVAL sa, long n, SF_INFO *sf_info,
         free(buf);
         sf_close(sndfile);
     }
+    // printf("DEBUG: xlstack on entry to sound_save_array: %p\n", xlstack);
     xlprot1(sa);
     sa_copy = newvector(chans);
     xlprot1(sa_copy);
@@ -795,7 +786,11 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
             sound_prepend_zeros(state[i].sound, start_time);
     }
 
-    debug_unit = debug_count = (long) max(sf_info->samplerate, 10000.0);
+    if (progress < 10000) {
+        progress = 10000;
+    }
+    debug_unit = debug_count =
+            (int64_t) max(10 * sf_info->samplerate, progress);
 
     sound_frames = 0;
     sound_srate = sf_info->samplerate;
@@ -809,7 +804,7 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
            loop if all sounds have terminated
          */
         int terminated = true;
-        int togo = n;
+        int64_t togo = n; /* because of this, togo must be int64_t here */
         int j;
 
         oscheck();
@@ -817,14 +812,16 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
         for (i = 0; i < chans; i++) {
             if (state[i].cnt == 0) {
                 if (sndwrite_trace) {
-                    nyquist_printf("CALLING SOUND_GET_NEXT ON CHANNEL %ld (%p)\n",
-				   i, state[i].sound); /* jlh 64 bit issue */
-                    sound_print_tree(state[i].sound);
+                    nyquist_printf("CALLING SOUND_GET_NEXT ON "
+                            "CHANNEL %ld (%p)\n",
+				            i, state[i].sound); /* jlh 64 bit issue */
+                            sound_print_tree(state[i].sound);
                 }
                 state[i].ptr = sound_get_next(state[i].sound,
                                    &(state[i].cnt))->samples;
                 if (sndwrite_trace) {
-                    nyquist_printf("RETURNED FROM CALL TO SOUND_GET_NEXT ON CHANNEL %ld\n", i);
+                    nyquist_printf("RETURNED FROM CALL TO SOUND_GET_NEXT "
+                                   "ON CHANNEL %ld\n", i);
                 }
                 if (state[i].ptr == zero_block->samples) {
                     state[i].terminated = true;
@@ -833,6 +830,8 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
             if (!state[i].terminated) terminated = false;
             togo = min(togo, state[i].cnt);
         }
+        /* note that now, togo is well within range of int because it is the
+           min of state[i].cnt */
 
         if (terminated) break;
 
@@ -857,7 +856,8 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
         /* Here we have interleaved floats. Before converting to the sound
            file format, call PortAudio to play them. */
         if (audio_stream) {
-            PaError err = Pa_WriteStream(audio_stream, buf, togo);
+            PaError err = Pa_WriteStream(audio_stream, buf,
+                                         (unsigned long) togo);
             if (err) {
                 printf("Pa_WriteStream error %d\n", err);
             }
@@ -867,7 +867,7 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
 
         n -= togo;
         for (i = 0; i < chans; i++) {
-            state[i].cnt -= togo;
+            state[i].cnt -= (int) togo;
         }
         *ntotal += togo;
         if (*ntotal > debug_count) {
@@ -885,7 +885,7 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
      * would be a bug.)
      */
     free(state);
-    xlpop();
+    xlpopn(2);
     return max_sample;
 }
 

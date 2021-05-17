@@ -18,11 +18,9 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Wahwah.h"
 #include "LoadEffects.h"
-
-#include "../Experimental.h"
 
 #include <math.h>
 

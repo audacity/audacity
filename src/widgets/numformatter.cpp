@@ -15,7 +15,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#include "../Audacity.h"
+
 #include "numformatter.h"
 
 // For compilers that support precompilation, includes "wx.h".

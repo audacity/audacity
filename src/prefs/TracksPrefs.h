@@ -24,7 +24,7 @@ class ShuttleGui;
 
 #define TRACKS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tracks") }
 
-class TracksPrefs final : public PrefsPanel
+class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
 {
  public:
    TracksPrefs(wxWindow * parent, wxWindowID winid);

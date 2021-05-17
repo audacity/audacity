@@ -20,10 +20,10 @@ used throughout Audacity into this one place.
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "FileNames.h"
 
-#include "Experimental.h"
+
 
 #include "MemoryX.h"
 
@@ -196,15 +196,6 @@ wxString FileNames::MkDir(const wxString &Str)
    return Str;
 }
 
-/// Returns the directory used for temp files.
-/// \todo put a counter in here to see if it gets used a lot.
-/// if it does, then maybe we should cache the path name
-/// each time.
-wxString FileNames::TempDir()
-{
-   return FileNames::MkDir(gPrefs->Read(PreferenceKey(Operation::Temp, PathType::_None), wxT("")));
-}
-
 // originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.
 void FileNames::MakeNameUnique(FilePaths &otherNames,
    wxFileName &newName)
@@ -352,7 +343,7 @@ FilePath FileNames::BaseDir()
    baseDir = PlatformCompatibility::GetExecutablePath();
 #else
    // Linux goes into /*prefix*/share/audacity/
-   baseDir = FileNames::LowerCaseAppNameInPath(wxStandardPaths::Get().GetDataDir());
+   baseDir = FileNames::LowerCaseAppNameInPath(wxStandardPaths::Get().GetPluginsDir());
 #endif
 
    return baseDir.GetPath();
@@ -525,6 +516,8 @@ wxString FileNames::PreferenceKey(FileNames::Operation op, FileNames::PathType t
          key = wxT("/Directories/Import"); break;
       case FileNames::Operation::Export:
          key = wxT("/Directories/Export"); break;
+      case FileNames::Operation::MacrosOut:
+         key = wxT("/Directories/MacrosOut"); break;
       case FileNames::Operation::_None:
       default:
          break;
@@ -603,50 +596,6 @@ FileNames::SelectFile(Operation op,
             FormatWildcard( fileTypes ),
             flags, parent, wxDefaultCoord, wxDefaultCoord);
    });
-}
-
-/** \brief Default temp directory */
-static FilePath sDefaultTempDir;
-
-const FilePath &FileNames::DefaultTempDir()
-{
-   return sDefaultTempDir;
-}
-
-void FileNames::SetDefaultTempDir( const FilePath &tempDir )
-{
-   sDefaultTempDir = tempDir;
-}
-
-// We now disallow temp directory name that puts it where cleaner apps will
-// try to clean out the files.  
-bool FileNames::IsTempDirectoryNameOK( const FilePath & Name )
-{
-   if( Name.empty() )
-      return false;
-
-   wxFileName tmpFile;
-   tmpFile.AssignTempFileName(wxT("nn"));
-   // use Long Path to expand out any abbreviated long substrings.
-   wxString BadPath = tmpFile.GetLongPath();
-   ::wxRemoveFile(tmpFile.GetFullPath());
-
-#ifdef __WXMAC__
-   // This test is to fix bug 1220 on a 1.x to 2.x to 2.1.3 upgrade.
-   // It is less permissive than we could be as it stops a path
-   // with this string ANYWHERE within it rather than excluding just
-   // the paths that the earlier Audacities used to create.
-   if( Name.Contains( "/tmp/") )
-      return false;
-   BadPath = BadPath.BeforeLast( '/' ) + "/";
-   wxFileName cmpFile( Name );
-   wxString NameCanonical = cmpFile.GetLongPath( ) + "/";
-#else
-   BadPath = BadPath.BeforeLast( '\\' ) + "\\";
-   wxFileName cmpFile( Name );
-   wxString NameCanonical = cmpFile.GetLongPath( ) + "\\";
-#endif
-   return !(NameCanonical.StartsWith( BadPath ));
 }
 
 bool FileNames::IsMidi(const FilePath &fName)
@@ -793,10 +742,75 @@ wxString FileNames::UnsavedProjectExtension()
    return wxT("aup3unsaved");
 }
 
-wxString FileNames::UnsavedProjectFileName()
+// How to detect whether the file system of a path is FAT
+// No apparent way to do it with wxWidgets
+#if defined(__DARWIN__)
+#include <sys/mount.h>
+bool FileNames::IsOnFATFileSystem(const FilePath &path)
 {
-   wxFileName fn(TempDir(),
-                 CreateUniqueName(wxT("New Project"), UnsavedProjectExtension()));
-
-   return fn.GetFullPath();
+   struct statfs fs;
+   if (statfs(wxPathOnly(path).c_str(), &fs))
+      // Error from statfs
+      return false;
+   return 0 == strcmp(fs.f_fstypename, "msdos");
 }
+#elif defined(__linux__)
+#include <sys/statfs.h>
+#include "/usr/include/linux/magic.h"
+bool FileNames::IsOnFATFileSystem(const FilePath &path)
+{
+   struct statfs fs;
+   if (statfs(wxPathOnly(path).c_str(), &fs))
+      // Error from statfs
+      return false;
+   return fs.f_type == MSDOS_SUPER_MAGIC;
+}
+#elif defined(_WIN32)
+#include <fileapi.h>
+bool FileNames::IsOnFATFileSystem(const FilePath &path)
+{
+   wxFileNameWrapper fileName{path};
+   if (!fileName.HasVolume())
+      return false;
+   auto volume = AbbreviatePath(fileName) + wxT("\\");
+   DWORD volumeFlags;
+   wxChar volumeType[64];
+   if (!::GetVolumeInformationW(
+      volume.wc_str(), NULL, 0, NULL, NULL,
+      &volumeFlags,
+      volumeType,
+      WXSIZEOF(volumeType)))
+      return false;
+   wxString type(volumeType);
+   if (type == wxT("FAT") || type == wxT("FAT32"))
+      return true;
+   return false;
+}
+#else
+bool FileNames::IsOnFATFileSystem(const FilePath &path)
+{
+   return false;
+}
+#endif
+
+wxString FileNames::AbbreviatePath( const wxFileName &fileName )
+{
+   wxString target;
+#ifdef __WXMSW__
+
+   // Drive letter plus colon
+   target = fileName.GetVolume() + wxT(":");
+
+#else
+
+   // Shorten the path, arbitrarily to 3 components
+   auto path = fileName;
+   path.SetFullName(wxString{});
+   while(path.GetDirCount() > 3)
+      path.RemoveLastDir();
+   target = path.GetFullPath();
+
+#endif
+   return target;
+}
+

@@ -16,12 +16,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "GetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../NoteTrack.h"
-#include "../WaveTrack.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"

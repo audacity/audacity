@@ -11,7 +11,9 @@
 #ifndef __AUDACITY_SEQUENCE__
 #define __AUDACITY_SEQUENCE__
 
+
 #include <vector>
+#include <functional>
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
@@ -47,6 +49,15 @@ class SeqBlock {
 class BlockArray : public std::vector<SeqBlock> {};
 using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
 
+// Put extra symbol information in the release build, for the purpose of gathering
+// profiling information (as from Windows Process Monitor), when there otherwise
+// isn't a need for AUDACITY_DLL_API.
+#ifdef IS_ALPHA
+   #define PROFILE_DLL_API AUDACITY_DLL_API
+#else
+   #define PROFILE_DLL_API
+#endif
+
 class PROFILE_DLL_API Sequence final : public XMLTagHandler{
  public:
 
@@ -81,7 +92,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    // Note that len is not size_t, because nullptr may be passed for buffer, in
    // which case, silence is inserted, possibly a large amount.
-   void SetSamples(samplePtr buffer, sampleFormat format,
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, sampleCount len);
 
    // where is input, assumed to be nondecreasing, and its size is len + 1.
@@ -102,7 +113,13 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   void Append(samplePtr buffer, sampleFormat format, size_t len);
+   void Append(constSamplePtr buffer, sampleFormat format, size_t len);
+
+   //! Append data, not coalescing blocks, returning a pointer to the new block.
+   SeqBlock::SampleBlockPtr AppendNewBlock(
+      constSamplePtr buffer, sampleFormat format, size_t len);
+   //! Append a complete block, not coalescing
+   void AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock);
    void Delete(sampleCount start, sampleCount len);
 
    void SetSilence(sampleCount s0, sampleCount len);
@@ -135,7 +152,8 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    sampleFormat GetSampleFormat() const;
 
    // Return true iff there is a change
-   bool ConvertToSampleFormat(sampleFormat format);
+   bool ConvertToSampleFormat(sampleFormat format, 
+      const std::function<void(size_t)> & progressReport = {});
 
    //
    // Retrieving summary info
@@ -196,6 +214,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
+   SeqBlock::SampleBlockPtr DoAppend(
+      constSamplePtr buffer, sampleFormat format, size_t len, bool coalesce);
+
    static void AppendBlock(SampleBlockFactory *pFactory, sampleFormat format,
                            BlockArray &blocks,
                            sampleCount &numSamples,
@@ -216,7 +237,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
                         sampleFormat format,
                         BlockArray &list,
                         sampleCount start,
-                        samplePtr buffer,
+                        constSamplePtr buffer,
                         size_t len);
 
    bool Get(int b,

@@ -28,7 +28,6 @@ typedef struct partial_susp_struct {
 #endif
 
 extern sound_type watch_table_sound;
-extern int table_ptr_check_enable;
 
 void print_sound_type(sound_type s);
 void print_sample_block_type(char *label, 
@@ -40,7 +39,6 @@ void watch_snd_list(snd_list_type s);
 void dbg_mem_allocated(void *p, char *who);
 void dbg_mem_freed(void *p, char *who);
 void dbg_mem_print(char *msg, void *p);
-void table_ptr_check();
 /* #define TRACESNDGC */
 
 #define DEBUG_H

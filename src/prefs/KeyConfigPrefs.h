@@ -72,6 +72,7 @@ private:
    void OnHotkeyKeyDown(wxKeyEvent & e);
    void OnHotkeyChar(wxEvent & e);
    void OnHotkeyKillFocus(wxEvent & e);
+   void OnHotkeyContext(wxEvent & e);
 
    void OnFilterTimer(wxTimerEvent & e);
    void OnFilterKeyDown(wxKeyEvent & e);

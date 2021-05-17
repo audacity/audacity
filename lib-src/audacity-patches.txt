@@ -49,7 +49,7 @@ Upstream version: 0.15.1 (beta)
 libnyquist
 ----------
 Digital Audio scripting language, with our own library interface added to it
-Version in Audacity SVN: r288 (r3.15+)
+Version in Audacity SVN: r331 (r3.16+)
 NOTE: Patch files no longer being created. Use git history instead.
 
 libogg
@@ -152,28 +152,16 @@ by the Audacity project with some help from portaudio development.
 
 sbsms
 -----
-http://sbsms.sourceforge.net/
+https://github.com/claytonotey/libsbsms
 An audio stretching library for changing pitch or tempo without changing the
 other. Alternative to SoundTouch, better on large changes but slower.
-Version in Audacity SVN: 2.0.2
-Patches:
-Misc fixes to configure.in/Makefile.am for autoconf macros and libtool. More
-files added to m4/ directory by libtoolizing commited to Audacity SVN.
-AM_MAINTAINER_MODE has been added to configure.ac to disable autotools rebuilds
-by default
-dont-mangle-cflags.patch	patch to stop sed-ing the CXXFLAGS and achieve the
-same ends by better means, replacing a hacked version from Gentoo. Patch
-linked to from upstream tracker at
-https://sourceforge.net/tracker/index.php?func=detail&aid=2561247&group_id=177794&atid=882654
-because attachements there don't seem to work.
-autotools.patch: Fix all autotools warnings.
-autotools-fix-make-dist.patch: Correct file lists to make dist target work.
-sbsms-srcdir.patch: Adds srcdir handling
+Version in Audacity GIT: 2.2.0
+Upstream Version: 2.2.0
 
 soundtouch
 ----------
 http://www.surina.net/soundtouch/
-Independant Pitch and Tempo changing library.
+Independent Pitch and Tempo changing library.
 Version in Audacity SVN: 1.7.1
 Patches: autotools.patch: Fix all autotools warnings.
 AM_MAINTAINER_MODE([disable]) has been added to configure.ac to disable autotools rebuilds.
@@ -230,7 +218,7 @@ separately in the next argument, with the final one being the path to inside
 the directory with the new source in it.
 
 3. Answer the questions as posed by the script (it is interactive). The tag
-should be correct as you specfied it in the command. Several temporary SVN
+should be correct as you specified it in the command. Several temporary SVN
 checkouts will be created (in /tmp) and merges done. Deleted and Added files
 will be printed (with a pause after each screen). If some of these should
 actually be renames (that is, a delete and an addition go together), then

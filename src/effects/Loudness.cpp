@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for rint from configwin.h
+
 #include "Loudness.h"
 
 #include <math.h>
@@ -95,7 +95,7 @@ TranslatableString EffectLoudness::GetDescription()
 
 wxString EffectLoudness::ManualPage()
 {
-   return wxT("Loudness");
+   return wxT("Loudness_Normalization");
 }
 
 // EffectDefinitionInterface implementation

@@ -16,6 +16,7 @@ Paul Licameli
 #include <vector>
 #include <wx/event.h> // to declare custom event type
 #include "ClientData.h" // to inherit
+#include "Prefs.h"
 
 class AudacityProject;
 class wxWindow;
@@ -33,8 +34,9 @@ enum StatusBarField : int {
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
-class ProjectStatus final
+class AUDACITY_DLL_API ProjectStatus final
    : public ClientData::Base
+   , public PrefsListener
 {
 public:
    static ProjectStatus &Get( AudacityProject &project );
@@ -55,7 +57,7 @@ public:
    using StatusWidthFunctions = std::vector< StatusWidthFunction >;
 
    // Typically a static instance of this struct is used.
-   struct RegisteredStatusWidthFunction
+   struct AUDACITY_DLL_API RegisteredStatusWidthFunction
    {
       explicit
       RegisteredStatusWidthFunction( const StatusWidthFunction &function );
@@ -66,6 +68,9 @@ public:
    const TranslatableString &Get( StatusBarField field = mainStatusBarField ) const;
    void Set(const TranslatableString &msg,
       StatusBarField field = mainStatusBarField);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
 private:
    AudacityProject &mProject;

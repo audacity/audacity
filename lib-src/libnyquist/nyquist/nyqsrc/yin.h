@@ -2,5 +2,5 @@
 
 
 LVAL snd_yin(sound_type s, double low_step, double high_step, long stepsize);
-/* LISP: (SND-YIN SOUND ANYNUM ANYNUM FIXNUM) */
+/* LISP: (SND-YIN SOUND ANYNUM ANYNUM LONG) */
 

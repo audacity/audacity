@@ -24,147 +24,185 @@
 ; when the seq is first evaluated, so that the environment can be used
 ; later.  Finally, it is also necessary to save the current transformation
 ; environment until later.
+;
+; The SEQ implementation passes an environment through closures that
+; are constructed to evaluate expressions. SEQREP is similar, but
+; the loop variable must be incremented and tested.
+;
+; Other considerations are that SEQ can handle multi-channel sounds, but
+; we don't know to call the snd_multiseq primitive until the first
+; SEQ expression is evaluated. Also, there's no real "NIL" for the end
+; of a sequence, so we need serveral special cases: (1) The sequences
+; is empty at the top level, so return silence, (2) There is one
+; expression, so just evaluate it, (3) there are 2 expressions, so 
+; return the first followed by the second, (4) there are more than
+; 2 expressions, so return the first followed by what is effectively
+; a SEQ consisting of the remaining expressions.
+
 
 ;; SEQ-EXPR-EXPAND - helper function, expands expression to push/pop entry 
 ;;    on *sal-call-stack* to help debug calls into SAL from lazy evaluation
 ;;    of SAL code by SEQ
-(defun seq-expr-expand (expr)
+(defun seq-expr-expand (expr source)
   (if *sal-call-stack*
-    (list 'prog2 (list 'sal-trace-enter (list 'quote (list "Expression in SEQ:" expr)))
-                 expr
-                 '(sal-trace-exit))
+    `(prog2 (sal-trace-enter '(,(strcat "Expression in " source ":") ,expr))
+            ,expr ;; here is where the seq behavior is evaluated
+            (sal-trace-exit))
     expr))
 
 
-(defmacro seq (&rest list)
-  (cond ((null list)
-         (snd-zero (warp-time *WARP*) *sound-srate*))
-        ((null (cdr list))
-         (car list))
-        ((null (cddr list))
-         ;; SEQ with 2 behaviors
-         `(let* ((first%sound ,(seq-expr-expand (car list)))
-                (s%rate (get-srates first%sound)))
-            (cond ((arrayp first%sound)
-                   (snd-multiseq (prog1 first%sound (setf first%sound nil))
-                     #'(lambda (t0)
-                        (with%environment ',(nyq:the-environment)
-                            (at-abs t0
-                                (force-srates s%rate ,(seq-expr-expand (cadr list))))))))
-                  (t
-                   ; allow gc of first%sound:
-                   (snd-seq (prog1 first%sound (setf first%sound nil))
-                     #'(lambda (t0)
-                        (with%environment ',(nyq:the-environment)
-                            (at-abs t0
-                                (force-srate s%rate ,(seq-expr-expand (cadr list)))))))))))
+(defun with%environment (env expr)
+  ;; (progv (var1 ...) (val1 ...) expression-list)
+  `(progv ',*environment-variables* ,env ,expr))
+;(trace with%environment seq-expr-expand)
 
-        (t ;; SEQ with more than 2 behaviors
-         `(let* ((nyq%environment (nyq:the-environment))
-                 (first%sound ,(car list))
+(defmacro eval-seq-behavior (beh source)
+  ;(tracemacro 'eval-seq-behavior (list beh source)
+  (seq-expr-expand (with%environment 'nyq%environment
+                      `(at-abs t0
+                               (force-srates s%rate ,beh))) source));)
+
+;; Previous implementations grabbed the environment and passed it from
+;; closure to closure so that each behavior in the sequence could be
+;; evaluated in the saved environment using an evalhook trick. This
+;; version precomputes closures, which avoids using evalhook to get or
+;; use the environment. It's still tricky, because each behavior has
+;; to pass to snd-seq a closure that computes the remaining behavior
+;; sequence. To do this, I use a recursive macro to run down the
+;; behavior sequence, then as the recursion unwinds, construct nested
+;; closures that all capture the current environment. We end up with a
+;; closure we can apply to the current time to get a sound to return.
+;;
+(defmacro seq (&rest behlist)
+  ;; if we have no behaviors, return zero
+  (cond ((null behlist)
+         '(snd-zero (local-to-global 0) *sound-srate*))
+        (t  ; we have behaviors. Must evaluate one to see if it is multichan:
+         `(let* ((first%sound ,(seq-expr-expand (car behlist) "SEQ"))
                  (s%rate (get-srates first%sound))
-                 (seq%environment (getenv)))
-            (cond ((arrayp first%sound)
-                   (snd-multiseq (prog1 first%sound (setf first%sound nil))
-                     #'(lambda (t0)
-                        (multiseq-iterate ,(cdr list)))))
-                  (t 
-                   ; allow gc of first%sound:
-                   (snd-seq (prog1 first%sound (setf first%sound nil))
-                     #'(lambda (t0)
-                        (seq-iterate ,(cdr list))))))))))
-
-(defun envdepth (e) (length (car e)))
-
-(defmacro myosd (pitch)
-  `(let () (format t "myosc env depth is ~A~%" 
-                   (envdepth (getenv))) (osc ,pitch)))
-
-(defmacro seq-iterate (behavior-list)
-  (cond ((null (cdr behavior-list))
-         ;; last expression in list
-         `(eval-seq-behavior ,(seq-expr-expand (car behavior-list))))
-        (t ;; more expressions after this one
-         `(snd-seq (eval-seq-behavior ,(seq-expr-expand (car behavior-list)))
-                   (evalhook '#'(lambda (t0) 
-                                  ; (format t "lambda depth ~A~%" (envdepth (getenv)))
-                                  (seq-iterate ,(cdr behavior-list)))
-                             nil nil seq%environment)))))
-
-(defmacro multiseq-iterate (behavior-list)
-  (cond ((null (cdr behavior-list))
-         `(eval-multiseq-behavior ,(seq-expr-expand (car behavior-list))))
-        (t
-         `(snd-multiseq (eval-multiseq-behavior ,(seq-expr-expand (car behavior-list)))
-                   (evalhook '#'(lambda (t0) 
-                                  (multiseq-iterate ,(cdr behavior-list)))
-                             nil nil seq%environment)))))
-
-(defmacro eval-seq-behavior (beh)
-  `(with%environment nyq%environment 
-                     (at-abs t0
-                             (force-srate s%rate ,beh))))
-
-(defmacro eval-multiseq-behavior (beh)
-  `(with%environment nyq%environment 
-                     (at-abs t0
-                             (force-srates s%rate ,beh))))
-
-(defmacro with%environment (env &rest expr)
-  `(progv ',*environment-variables* ,env ,@expr))
+                 (nyq%environment (nyq:the-environment)))
+            ; if there's just one behavior, we have it and we're done:
+            ,(progn (setf behlist (cdr behlist))
+                    (if (null behlist) 'first%sound
+                        ; otherwise, start the recursive construction:
+                        `(if (arrayp first%sound)
+                             (seq2-deferred snd-multiseq ,behlist)
+                             (seq2-deferred snd-seq ,behlist))))))))
 
 
+;; seq2-deferred uses seq2 and seq3 to construct nested closures for
+;; snd-seq. It is deferred so that we can first (in seq) determine whether
+;; this is a single- or multi-channel sound before recursively constructing
+;; the closures, since we only want to do it for either snd-seq or
+;; snd-multiseq, but not both. It simply calls seq2 to begin the expansion.
+;;
+(defmacro seq2-deferred (seq-prim behlist)
+  (seq2 seq-prim behlist))
 
-(defmacro seqrep (pair sound)
-  `(let ((,(car pair) 0)
-         (loop%count ,(cadr pair))
+
+#|
+;; for debugging, you can replace references to snd-seq with this
+(defun snd-seq-trace (asound aclosure)
+  (princ "Evaluating SND-SEQ-TRACE instead of SND-SEQ...\n")
+  (format t "  Sound argument is ~A\n" asound)
+  (princ "  Closure argument is:\n")
+  (pprint (get-lambda-expression aclosure))
+  (princ "  Calling SND-SEQ ...\n")
+  (let ((s (snd-seq asound aclosure)))
+    (format t "  SND-SEQ returned ~A\n" s)
+    s))
+
+;; also for debugging, you can uncomment some tracemacro wrappers from
+;; macro definitions. This function prints what the macro expands to
+;; along with name and args (which you add by hand to the call):
+(defun tracemacro (name args expr)
+  (format t "Entered ~A with args:\n" name)
+  (pprint args)
+  (format t "Returned from ~A with expression:\n" name)
+  (pprint expr)
+  expr)
+|#
+
+  
+;; we have at least 2 behaviors so we need the top level call to be
+;; a call to snd-multiseq or snd-seq. This macro constructs the call
+;; and uses recursion with seq3 to construct the remaining closures.
+;;
+(defun seq2 (seq-prim behlist)
+  `(,seq-prim first%sound
+              (prog1 ,(seq3 seq-prim behlist)  ; <- passed to seq-prim
+                     ;; we need to remove first%sound from the closure
+                     ;; to avoid accumulating samples due to an unnecessary
+                     ;; reference:
+                     (setf first%sound nil))))
+
+;; construct a closure that evaluates to a sequence of behaviors.
+;; behlist has at least one behavior in it.
+;;
+(defun seq3 (seq-prim behlist)
+  `(lambda (t0)
+     (setf first%sound (eval-seq-behavior ,(car behlist) "SEQ"))
+     ,(progn (setf behlist (cdr behlist))
+             (if (null behlist) 'first%sound
+                 (seq2 seq-prim behlist)))))
+
+
+; we have to use the real loop variable name since it could be
+; referred to by the sound expression, so we avoid name collisions
+; by using % in all the macro variable names
+;
+(defmacro seqrep (loop-control snd-expr)
+  ;(tracemacro "SEQREP" (list loop-control snd-expr)
+  `(let ((,(car loop-control) 0)
+         (loop%count ,(cadr loop-control))
          (nyq%environment (nyq:the-environment))
-         seqrep%closure first%sound s%rate)
+         s%rate seqrep%closure)
      ; note: s%rate will tell whether we want a single or multichannel
      ; sound, and what the sample rates should be.
      (cond ((not (integerp loop%count))
             (error "bad argument type" loop%count))
-           (t
-            (setf seqrep%closure #'(lambda (t0)
-;             (display "SEQREP" loop%count ,(car pair))
-              (cond ((< ,(car pair) loop%count)
-                     (setf first%sound 
-                           (with%environment nyq%environment
-                                             (at-abs t0 ,sound)))
-                     ; (display "seqrep" s%rate nyq%environment ,(car pair)
-                     ;          loop%count)
-                     (if s%rate
-                       (setf first%sound (force-srates s%rate first%sound))
-                       (setf s%rate (get-srates first%sound)))
-                     (setf ,(car pair) (1+ ,(car pair)))
-                     ; note the following test is AFTER the counter increment
-                     (cond ((= ,(car pair) loop%count)
-;                            (display "seqrep: computed the last sound at"
-;                               ,(car pair) loop%count
-;                               (local-to-global 0))
-                            first%sound) ;last sound
-                           ((arrayp s%rate)
-;                            (display "seqrep: calling snd-multiseq at"
-;                             ,(car pair) loop%count (local-to-global 0) 
-;                             (snd-t0 (aref first%sound 0)))
-                            (snd-multiseq (prog1 first%sound
-                                                 (setf first%sound nil))
-                                          seqrep%closure))
-                           (t
-;                            (display "seqrep: calling snd-seq at"
-;                             ,(car pair) loop%count (local-to-global 0) 
-;                             (snd-t0 first%sound))
-                            (snd-seq (prog1 first%sound
-                                            (setf first%sound nil))
-                                     seqrep%closure))))
-                    (t (snd-zero (warp-time *WARP*) *sound-srate*)))))
-            (funcall seqrep%closure (local-to-global 0))))))
+           ((< loop%count 1)
+            (snd-zero (local-to-global 0) *sound-srate*))
+           ((= loop%count 1)
+            ,snd-expr)
+           (t ; more than 1 iterations
+            (setf loop%count (1- loop%count))
+            (setf first%sound ,snd-expr)
+            (setf s%rate (get-srates first%sound))
+            (setf nyq%environment (nyq:the-environment))
+            (if (arrayp first%sound)
+                (seqrep2 snd-multiseq ,loop-control ,snd-expr)
+                (seqrep2 snd-seq ,loop-control ,snd-expr))))));)
 
 
+(defmacro seqrep2 (seq-prim loop-control snd-expr)
+  ;(tracemacro "SEQREP2" (list seq-prim loop-control snd-expr)
+  `(progn (setf seqrep%closure
+                (lambda (t0) ,(seqrep-iterate seq-prim loop-control snd-expr)))
+          (,seq-prim (prog1 first%sound (setf first%sound nil))
+                     seqrep%closure)));)
+
+
+(defun seqrep-iterate (seq-prim loop-control snd-expr)
+  (setf snd-expr `(eval-seq-behavior ,snd-expr "SEQREP"))
+  `(progn
+     (setf ,(car loop-control) (1+ ,(car loop-control))) ; incr. loop counter
+     (if (>= ,(car loop-control) loop%count) ; last iteration 
+         ,snd-expr
+         (,seq-prim ,snd-expr seqrep%closure))))
+
+
+;; TRIGGER - sums instances of beh which are launched when input becomes
+;;     positive (> 0). New in 2021: input is resampled to *sound-srate*.
+;;     As before, beh sample rates must match, so now they must also be
+;;     *sound-srate*. This implementation uses eval-seq-behavior to create
+;;     a more helpful stack trace for SAL.
 (defmacro trigger (input beh)
-  `(let ((nyq%environment (nyq:the-environment)))
-     (snd-trigger ,input #'(lambda (t0) (with%environment nyq%environment
-                                                (at-abs t0 ,beh))))))
+  `(let* ((nyq%environment (nyq:the-environment))
+          (s%rate *sound-srate*))
+     (snd-trigger (force-srate *sound-srate* ,input)
+                  #'(lambda (t0) (eval-seq-behavior ,beh "TRIGGER")))))
+
 
 ;; EVENT-EXPRESSION -- the sound of the event
 ;;

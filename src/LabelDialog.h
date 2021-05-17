@@ -23,7 +23,6 @@ class AudacityProject;
 class ChoiceEditor;
 class Grid;
 class NumericEditor;
-class TrackFactory;
 class TrackList;
 class RowData;
 class EmptyLabelRenderer;
@@ -39,7 +38,6 @@ class LabelDialog final : public wxDialogWrapper
 
    LabelDialog(wxWindow *parent,
                AudacityProject &project,
-               TrackFactory &factory,
                TrackList *tracks,
 
                // if NULL edit all tracks, else this one only:
@@ -104,7 +102,6 @@ class LabelDialog final : public wxDialogWrapper
 
    RowDataArray mData;
 
-   TrackFactory &mFactory;
    TrackList *mTracks;
    LabelTrack *mSelectedTrack {};
    int mIndex { -1 };

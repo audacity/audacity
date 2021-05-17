@@ -9,11 +9,13 @@
 **********************************************************************/
 
 /* system includes */
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include <math.h>
+#include <stdbool.h>
 
 #ifndef WIN32
 #include <unistd.h>
@@ -59,6 +61,7 @@ extern LVAL fnodes;
 /* nyquist externs */
 extern LVAL a_sound;
 extern snd_list_type zero_snd_list;
+extern FILE *tfp;  /* transcript file pointer */
 
 /* globals */
 LOCAL nyx_os_callback     nyx_os_cb = NULL;
@@ -74,7 +77,7 @@ LOCAL XLCONTEXT           nyx_cntxt;
 LOCAL int                 nyx_first_time = 1;
 LOCAL LVAL                nyx_obarray;
 LOCAL FLOTYPE             nyx_warp_stretch;
-LOCAL long                nyx_input_length = 0;
+LOCAL int64_t             nyx_input_length = 0;
 LOCAL char               *nyx_audio_name = NULL;
 
 /* Suspension node */
@@ -82,7 +85,7 @@ typedef struct nyx_susp_struct {
    snd_susp_node       susp;        // Must be first
    nyx_audio_callback  callback;
    void               *userdata;
-   long                len;
+   int64_t             len;
    int                 channel;
 } nyx_susp_node, *nyx_susp_type;
 
@@ -542,7 +545,7 @@ LOCAL void nyx_susp_fetch(nyx_susp_type susp, snd_list_type snd_list)
 {
    sample_block_type         out;
    sample_block_values_type  out_ptr;
-   long                      n;
+   int64_t                   n;
    int                       err;
 
    falloc_sample_block(out, "nyx_susp_fetch");
@@ -613,7 +616,7 @@ void nyx_set_audio_name(const char *name)
    nyx_audio_name = strdup(name);
 }
 
-void nyx_set_audio_params(double rate, long len)
+void nyx_set_audio_params(double rate, int64_t len)
 {
    LVAL flo;
    LVAL con;
@@ -651,7 +654,7 @@ void nyx_set_audio_params(double rate, long len)
 void nyx_set_input_audio(nyx_audio_callback callback,
                          void *userdata,
                          int num_channels,
-                         long len, double rate)
+                         int64_t len, double rate)
 {
    LVAL val;
    int ch;
@@ -860,9 +863,20 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    while (nyx_expr_pos < nyx_expr_len) {
       expr = NULL;
 
+      // Simulate the prompt
+      if (tfp) {
+         ostputc('>');
+         ostputc(' ');
+      }
+
       // Read an expression
       if (!xlread(getvalue(s_stdin), &expr, FALSE)) {
          break;
+      }
+
+      // Simulate the prompt
+      if (tfp) {
+         ostputc('\n');
       }
 
       #if 0
@@ -873,6 +887,11 @@ nyx_rval nyx_eval_expression(const char *expr_string)
 
       // Evaluate the expression
       nyx_result = xleval(expr);
+
+      // Print it
+      if (tfp) {
+         stdprint(nyx_result);
+      }
    }
 
    // This will unwind the xlisp context and restore internals to a point just
@@ -899,6 +918,7 @@ nyx_rval nyx_eval_expression(const char *expr_string)
    xmem();
 #endif
 
+   printf("nyx_eval_expression returns %d\n", nyx_get_type(nyx_result));
    return nyx_get_type(nyx_result);
 }
 
@@ -919,12 +939,20 @@ int nyx_get_audio_num_channels()
    return 1;
 }
 
+// see sndwritepa.c for similar computation. This is a bit simpler
+// because we are not writing interleaved samples.
+typedef struct {
+   int cnt;  // how many samples are in the current sample block
+   sample_block_values_type samps;  // the next sample
+   bool terminated;  // has the sound reached termination?
+} sound_state_node, *sound_state_type;
+
+
 int nyx_get_audio(nyx_audio_callback callback, void *userdata)
 {
-   float *buffer = NULL;
-   sound_type *snds = NULL;
-   long *totals = NULL;
-   long *lens = NULL;
+   sound_state_type states;  // tracks progress reading multiple channels
+   float *buffer = NULL;     // samples to push to callback
+   int64_t total = 0;        // total frames computed (samples per channel)
    sound_type snd;
    int result = 0;
    int num_channels;
@@ -936,6 +964,7 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
    // cached in registers to be lost.
    volatile int success = FALSE;
 
+   printf("nyx_get_audio type %d\n", nyx_get_type(nyx_result));
    if (nyx_get_type(nyx_result) != nyx_audio) {
       return FALSE;
    }
@@ -952,19 +981,14 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       goto finish;
    }
 
-   snds = (sound_type *) malloc(num_channels * sizeof(sound_type));
-   if (snds == NULL) {
+   states = (sound_state_type) malloc(num_channels * sizeof(sound_state_node));
+   if (states == NULL) {
       goto finish;
    }
-
-   totals = (long *) malloc(num_channels * sizeof(long));
-   if (totals == NULL) {
-      goto finish;
-   }
-
-   lens = (long *) malloc(num_channels * sizeof(long));
-   if (lens == NULL) {
-      goto finish;
+   for (ch = 0; ch < num_channels; ch++) {
+       states[ch].cnt = 0;       // force initial fetch
+       states[ch].samps = NULL;  // unnecessary initialization
+       states[ch].terminated = false;
    }
 
    // Setup a new context
@@ -978,62 +1002,112 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       goto finish;
    }
 
+   // if LEN is set, we will return LEN samples per channel. If LEN is
+   // unbound, we will compute samples until every channel has terminated
+   // that the samples per channel will match the last termination time,
+   // i.e. it could result in a partial block at the end.
    if (nyx_input_length == 0) {
       LVAL val = getvalue(xlenter("LEN"));
       if (val != s_unbound) {
          if (ntype(val) == FLONUM) {
-            nyx_input_length = (long) getflonum(val);
+            nyx_input_length = (int64_t) getflonum(val);
          }
          else if (ntype(val) == FIXNUM) {
-            nyx_input_length = (long) getfixnum(val);
+            nyx_input_length = (int64_t) getfixnum(val);
          }
       }
    }
 
-   for (ch = 0; ch < num_channels; ch++) {
-      if (num_channels == 1) {
-         snd = getsound(nyx_result);
-      }
-      else {
-         snd = getsound(getelement(nyx_result, ch));
-      }
-      snds[ch] = snd;
-      totals[ch] = 0;
-      lens[ch] = nyx_input_length;
+   // at this point, input sounds which were referenced by symbol S
+   // (or nyx_get_audio_name()) could be referenced by nyx_result, but
+   // S is now bound to NIL. nyx_result is a protected (garbage
+   // collected) LVAL bound to a sound or array of sounds, so we must
+   // either unbind nyx_result or read it destructively. We need the
+   // GC to know about sounds as we read them, so we might as well
+   // read nyx_result destructively. However, reading destructively
+   // will fail if nyx_result is (VECTOR S S) or has two references to
+   // the same sound. Therefore, we will replace each channel of
+   // nyx_result (except the first) with a copy. This may make
+   // needless copies, but if so, the GC will free the originals.
+   // Note: sound copies are just "readers" of the same underlying
+   // list of samples (snd_list_nodes) and lazy sample computation
+   // structure, so here, a sound copy is just one extra object of
+   // type sound_node.
+   // To unify single and multi-channel sounds, we'll create an array
+   // of one element for single-channel sounds.
+
+   if (num_channels == 1) {
+      LVAL array = newvector(1);
+      setelement(array, 0, nyx_result);
+      nyx_result = array;
    }
+   for (ch = 0; ch < num_channels; ch++) {
+      if (ch > 0) {  // no need to copy first channel
+         setelement(nyx_result, ch, 
+                    cvsound(sound_copy(getsound(getelement(nyx_result, ch)))));
+      }
+   }
+
+   // This is the "pump" that pulls samples from Nyquist and pushes samples
+   // out by calling the callback function. Every block boundary is a potential
+   // sound termination point, so we pull, scale, and write sample up to the
+   // next block boundary in any channel.
+   // First, we look at all channels to determine how many samples we have to
+   // compute in togo (how many "to go"). Then, we push togo samples from each
+   // channel to the callback, keeping all the channels in lock step.
 
    while (result == 0) {
-      for (ch =0 ; ch < num_channels; ch++) {
+      bool terminated = true;
+      // how many samples to compute before calling callback:
+      int64_t togo = max_sample_block_len;
+      if (nyx_input_length > 0 && total + togo > nyx_input_length) {
+         togo = nyx_input_length - total;
+      }
+      for (ch = 0; ch < num_channels; ch++) {
+         sound_state_type state = &states[ch];
+         sound_type snd = getsound(getelement(nyx_result, ch));
          sample_block_type block;
-         long cnt;
+         int cnt;
          int i;
-
-         snd = snds[ch];
-
-         cnt = 0;
-         block = sound_get_next(snd, &cnt);
-         if (block == zero_block || cnt == 0) {
-            success = TRUE;
-            result = -1;
-            break;
+          if (state->cnt == 0) {
+            state->samps = sound_get_next(snd, &state->cnt)->samples;
+            if (state->samps == zero_block->samples) {
+               state->terminated = true;
+               // Note: samps is a valid pointer to at least cnt zeros
+               // so we can process this channel as if it still has samples.
+            }
          }
+         terminated &= state->terminated; // only terminated if ALL terminate
+         if (state->cnt < togo) togo = state->cnt;
+         // now togo is the minimum of: how much room is left in buffer and 
+         //     how many samples are available in samps
+      }
+      if (terminated || togo == 0) {
+         success = TRUE;
+         result = -1;
+         break;  // no more samples in any channel
+      }
 
+      for (ch = 0; ch < num_channels; ch++) {
+         sound_state_type state = &states[ch];
+         sound_type snd = getsound(getelement(nyx_result, ch));
          // Copy and scale the samples
-         for (i = 0; i < cnt; i++) {
-            buffer[i] = block->samples[i] * snd->scale;
+         for (int i = 0; i < togo; i++) {
+            buffer[i] = *(state->samps++) * (float) snd->scale;
          }
-
-         result = callback((float *)buffer, ch,
-                           totals[ch], cnt, lens[ch] ? lens[ch] : cnt, userdata);
-
+         state->cnt -= togo;
+         // TODO: What happens here when we don't know the total length,
+         // i.e. nyx_input_length == 0? Should we pass total+togo instead?
+         result = callback(buffer, ch, total, togo, nyx_input_length, userdata);
          if (result != 0) {
             result = -1;
             break;
          }
-
-         totals[ch] += cnt;
       }
+      total += togo;
    }
+
+   nyx_result = NULL;  // unreference sound array so GC can free it
 
    // This will unwind the xlisp context and restore internals to a point just
    // before we issued our xlbegin() above.  This is important since the internal
@@ -1050,16 +1124,8 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       free(buffer);
    }
 
-   if (lens) {
-      free(lens);
-   }
-
-   if (totals) {
-      free(totals);
-   }
-
-   if (snds) {
-      free(snds);
+   if (states) {
+      free(states);
    }
 
    gc();
@@ -1202,12 +1268,18 @@ int ostgetc()
 {
    if (nyx_expr_pos < nyx_expr_len) {
       fflush(stdout);
+      if (tfp && nyx_expr_string[nyx_expr_pos] != '\n') {
+         ostputc(nyx_expr_string[nyx_expr_pos]);
+      }
       return (nyx_expr_string[nyx_expr_pos++]);
    }
    else if (nyx_expr_pos == nyx_expr_len) {
       /* Add whitespace at the end so that the parser
          knows that this is the end of the expression */
       nyx_expr_pos++;
+      if (tfp) {
+         ostputc('\n');
+      }
       return '\n';
    }
 
@@ -1228,11 +1300,6 @@ void osfinish(void)
 void oserror(const char *msg)
 {
    errputstr(msg);
-}
-
-long osrand(long n)
-{
-   return (((int) rand()) % n);
 }
 
 /* cd ..
@@ -1296,6 +1363,9 @@ void ostputc(int ch)
 
    if (nyx_output_cb) {
       nyx_output_cb(ch, nyx_output_ud);
+      if (tfp) {
+         putc(ch, tfp);
+      }
    }
    else {
       putchar((char) ch);
@@ -1572,6 +1642,32 @@ void get_xlisp_path(char *p, long p_max)
 
    strncpy(p, paths, p_max);
    p[p_max-1] = 0;
+}
+
+/* xgetrealtime - get current time in seconds */
+LVAL xgetrealtime()
+{
+    static const uint64_t EPOCH = ((uint64_t)116444736000000000ULL);
+    SYSTEMTIME system_time;
+    FILETIME file_time;
+    uint64_t time;
+    GetSystemTime(&system_time);
+    SystemTimeToFileTime(&system_time, &file_time);
+    time = (uint64_t) file_time.dwLowDateTime;
+    time += ((uint64_t) file_time.dwHighDateTime) << 32;
+    time -= EPOCH;
+    time /= 10000000L;
+    return cvflonum((double) time + system_time.wMilliseconds * 0.001);
+}
+#else
+#include <sys/time.h>
+
+/* xgetrealtime - get current time in seconds */
+LVAL xgetrealtime(void)
+{
+    struct timeval te;
+    gettimeofday(&te, NULL); // get current time
+    return cvflonum((double) te.tv_sec + (te.tv_usec * 1e-6));
 }
 #endif
 

@@ -430,7 +430,10 @@ void pv_initialize(Phase_vocoder x)
         pv->pos_buffer_rear = pv->pos_buffer;
     }
     // make sure tables are constructed before we start real-time processing
-    int fft_error_sign = fftInit(pv->log2_fft); // target fftInit
+#ifndef NDEBUG
+    int fft_error_sign =
+#endif
+        fftInit(pv->log2_fft); // target fftInit
     assert(!fft_error_sign);
 
     pv->phase = PV_START;
@@ -550,7 +553,8 @@ int pv_get_input_count(Phase_vocoder x)
     return need;
 }
 
-
+#pragma warning(disable: 4715 4068) // return type and unknown pragma
+#pragma clang diagnostic ignored "-Wreturn-type"
 double pv_get_effective_pos(Phase_vocoder x)
 {
     PV *pv = (PV*)x;
@@ -594,9 +598,8 @@ double pv_get_effective_pos(Phase_vocoder x)
         assert(pv->first_time);
         assert(pv->output_total == 0);
         return -(pv->ratio * pv->fftsize / 2.0);
-    } else { // I can't think of any other case.
-        assert(FALSE);
-    }
+    } // I can't think of any other case.
+    assert(FALSE);
 }
 
 
@@ -972,15 +975,16 @@ float *pv_get_output(Phase_vocoder x)
 {
     PV *pv = (PV *)x;
     assert(pv->phase == PV_GOT_INPUT);
-    
+#ifndef NDEBUG
     long blocksize = pv->blocksize;
+    float *out_next = pv->out_next;
+#endif
     int fftsize = pv->fftsize;
     int frames_to_compute = pv->frames_to_compute;
     int syn_hopsize = pv->syn_hopsize;
     float *ana_win = pv->ana_win;
     float ratio = pv->ratio;
     float *input_head = pv->input_head;
-    float *out_next = pv->out_next;
     float *ana_frame = pv->ana_frame;
     float *ana_center;
     

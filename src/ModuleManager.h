@@ -20,28 +20,16 @@
 
 class wxArrayString;
 class wxDynamicLibrary;
-class CommandHandler;
 class ComponentInterface;
 class ModuleInterface;
-
-wxWindow *  MakeHijackPanel();
 
 //
 // Module Manager
 //
 // wxPluginManager would be MUCH better, but it's an "undocumented" framework.
 //
-#define ModuleDispatchName "ModuleDispatch"
 
-typedef enum
-{
-   ModuleInitialize,
-   ModuleTerminate,
-   AppInitialized,
-   AppQuiting,
-   ProjectInitialized,
-   ProjectClosing
-} ModuleDispatchTypes;
+#include "ModuleConstants.h"
 
 typedef int (*fnModuleDispatch)(ModuleDispatchTypes type);
 
@@ -51,14 +39,16 @@ public:
    Module(const FilePath & name);
    virtual ~Module();
 
-   bool Load();
+   void ShowLoadFailureError(const wxString &Error);
+   bool Load(wxString &deferredErrorMessage);
    void Unload();
    bool HasDispatch() { return mDispatch != NULL; };
    int Dispatch(ModuleDispatchTypes type);
    void * GetSymbol(const wxString &name);
+   const FilePath &GetName() const { return mName; }
 
 private:
-   FilePath mName;
+   const FilePath mName;
    std::unique_ptr<wxDynamicLibrary> mLib;
    fnModuleDispatch mDispatch;
 };
@@ -75,7 +65,7 @@ typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 using PluginIDs = wxArrayString;
 
-class ModuleManager final
+class AUDACITY_DLL_API ModuleManager final
 {
 public:
 
@@ -84,8 +74,16 @@ public:
    // -------------------------------------------------------------------------
 
    static ModuleManager & Get();
+   
+private:
+   static void FindModules(FilePaths &files);
+   using DelayedErrors =
+      std::vector< std::pair< std::unique_ptr<Module>, wxString > >;
+   static void TryLoadModules(
+      const FilePaths &files, FilePaths &decided, DelayedErrors &errors);
 
-   void Initialize(CommandHandler & cmdHandler);
+public:
+   void Initialize();
    int Dispatch(ModuleDispatchTypes type);
 
    // PluginManager use
@@ -107,9 +105,10 @@ private:
    // I'm a singleton class
    ModuleManager();
    ~ModuleManager();
+   ModuleManager(const ModuleManager&) PROHIBITED;
+   ModuleManager &operator=(const ModuleManager&) PROHIBITED;
 
    void InitializeBuiltins();
-   ModuleInterface *LoadModule(const PluginPath & path);
 
 private:
    friend ModuleInterfaceDeleter;
@@ -121,13 +120,24 @@ private:
    // ComponentInterface objects for each path:
    ModuleMap mDynModules;
 
-   // Dynamically loaded libraries, each one a factory that makes one of the
-   // (non-built-in) providers:
-   LibraryMap mLibs;
-
    // Other libraries that receive notifications of events described by
    // ModuleDispatchTypes:
    std::vector<std::unique_ptr<Module>> mModules;
 };
+
+// ----------------------------------------------------------------------------
+// The module entry point prototype (a factory of ModuleInterface objects)
+// ----------------------------------------------------------------------------
+using ModuleMain = ModuleInterface *(*)();
+
+AUDACITY_DLL_API
+void RegisterProvider(ModuleMain rtn);
+AUDACITY_DLL_API
+void UnregisterProvider(ModuleMain rtn);
+
+// Guarantee the registry exists before any registrations, so it will
+// be destroyed only after the un-registrations
+static struct Init{
+   Init() { RegisterProvider(nullptr); } } sInitBuiltinModules;
 
 #endif /* __AUDACITY_MODULEMANAGER_H__ */

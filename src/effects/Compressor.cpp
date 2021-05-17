@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Compressor.h"
 #include "LoadEffects.h"
 
@@ -33,7 +33,6 @@
 #include <wx/brush.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/intl.h>
 #include <wx/slider.h>
 #include <wx/stattext.h>

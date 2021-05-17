@@ -4,6 +4,7 @@
  */
 
 #include <stdlib.h>
+#include "switches.h"
 #if defined(UNIX) || defined(__APPLE__) || defined(__CYGWIN__)
 #include <unistd.h>
 #endif
@@ -92,7 +93,7 @@ void find_full_path(const char *filename, char *fullname)
 	goto error;
     }
     /* see if we need a separator (probably) */
-    int len = strlen(fullname);
+    int len = (int) strlen(fullname);
     if (!file_sep(fullname[len - 1])) {
 	fullname[len++] = '/';
 	if (len >= STRMAX) goto error; 

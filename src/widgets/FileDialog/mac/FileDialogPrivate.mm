@@ -367,6 +367,19 @@ void FileDialog::SetupExtraControls(WXWindow nativeWindow)
     {
         wxBoxSizer *verticalSizer = new wxBoxSizer( wxVERTICAL );
 
+        // FINALLY FOUND IT! Creating the panel with "this" as the parent causes
+        // an exception and stack trace to be printed to stderr:
+        //
+        //   2021-02-17 13:52:14.550 Audacity[69217:891282] warning: <NSRemoteView: 0x7f92f4e67410 com.apple.appkit.xpc.openAndSavePanelService ((null)) NSSavePanelService> ignoring attempt to mutate its subviews (
+        //      0   ViewBridge                          0x00007fff6596685d -[NSRemoteView _announceSubviewMutationDisallowed] + 29
+        //      1   libwx_osx_cocoau_debug_core-3.1.3.0 0x0000000111c3abf1 _ZN17wxWidgetCocoaImpl5EmbedEP12wxWidgetImpl + 177
+        //
+        // It's because wxPanel tries to embed the wxPanel into the NSSavePanel and
+        // that's not allowed. Everything still works fine, so it can be ignored.
+        // But, if you want to dig into it further, changing the "this" parent to
+        // GetParent() gets rid of the exception. However, events from the extra
+        // controls in the accessory view do not get handled correctly.
+
         m_filterPanel = new wxPanel( this, wxID_ANY );
         accView = m_filterPanel->GetHandle();
 
@@ -509,41 +522,36 @@ int FileDialog::ShowModal()
         SetupExtraControls(sPanel);
 
         // PRL:
-        // Hack for bug 1300:  intercept key down events, implement a
-        // Command+V handler, but it's a bit crude.  It always pastes
-        // the entire text field, ignoring the insertion cursor, and ignoring
-        // which control really has the focus.
+        // Hack for bugs 1300/1579: Intercept key down events, implementing
+        // copy/cut/paste, by invoking appropriate selectors. This is done
+        // because we do not use the wxWidgets IDs for the menu equivalents.
         id handler;
-        if (wxTheClipboard->IsSupported(wxDF_TEXT)) {
+        if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT)) {
            handler = [
               NSEvent addLocalMonitorForEventsMatchingMask:NSKeyDownMask
               handler:^NSEvent *(NSEvent *event)
               {
+                 auto app = [NSApplication sharedApplication];
                  if ([event modifierFlags] & NSCommandKeyMask)
                  {
                     auto chars = [event charactersIgnoringModifiers];
-                    auto character = [chars characterAtIndex:0];
-                    if (character == 'v')
+                    if ([chars isEqualToString:@"a"])
                     {
-                       if (wxTheClipboard->Open()) {
-                          wxTextDataObject data;
-                          wxTheClipboard->GetData(data);
-                          wxTheClipboard->Close();
-                          wxString text = data.GetText();
-                          auto rawText = text.utf8_str();
-                          auto length = text.Length();
-                          NSString *myString = [[NSString alloc]
-                             initWithBytes:rawText.data()
-                              length: rawText.length()
-                              encoding: NSUTF8StringEncoding
-                          ];
-                          [sPanel setNameFieldStringValue:myString];
-                          [myString release];
-                          return nil;
-                       }
+                          [app sendAction:@selector(selectAll:) to:nil from:nil];
+                    }
+                    else if ([chars isEqualToString:@"c"])
+                    {
+                          [app sendAction:@selector(copy:) to:nil from:nil];
+                    }
+                    else if ([chars isEqualToString:@"x"])
+                    {
+                          [app sendAction:@selector(cut:) to:nil from:nil];
+                    }
+                    else if ([chars isEqualToString:@"v"])
+                    {
+                          [app sendAction:@selector(paste:) to:nil from:nil];
                     }
                  }
-
                  return event;
               }
            ];
@@ -552,7 +560,7 @@ int FileDialog::ShowModal()
         // makes things more convenient:
         [sPanel setCanCreateDirectories:YES];
         [sPanel setMessage:cf.AsNSString()];
-        // if we should be able to descend into pacakges we must somehow
+        // if we should be able to descend into packages we must somehow
         // be able to pass this in
         [sPanel setTreatsFilePackagesAsDirectories:NO];
         [sPanel setCanSelectHiddenExtension:YES];
@@ -581,7 +589,7 @@ int FileDialog::ShowModal()
         [sPanel setNameFieldStringValue:file.AsNSString()];
         returnCode = [sPanel runModal];
         ModalFinishedCallback(sPanel, returnCode);
-        if (wxTheClipboard->IsSupported(wxDF_TEXT))
+        if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT))
            [NSEvent removeMonitor:handler];
     }
     else

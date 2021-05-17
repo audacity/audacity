@@ -25,7 +25,7 @@ struct AudioIOStartStreamOptions;
 ///\brief Object associated with a project for high-level management of the
 /// project's lifetime, including creation, destruction, opening from file,
 /// importing, pushing undo states, and reverting to saved states
-class ProjectManager final
+class AUDACITY_DLL_API ProjectManager final
    : public wxEvtHandler
    , public ClientData::Base
 {
@@ -65,6 +65,7 @@ public:
    void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
 private:
+   void OnReconnectionFailure(wxCommandEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
    void OnOpenAudioFile(wxCommandEvent & event);

@@ -13,19 +13,16 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-#include "Audacity.h" // for USE_* macros
+
 
 #include "AudioIOBase.h" // to inherit
+#include "PlaybackSchedule.h" // member variable
 
-#include "Experimental.h"
+
 
 #include <memory>
 #include <utility>
 #include <wx/atomic.h> // member variable
-
-#ifdef USE_MIDI
-
-// TODO: Put the relative paths into automake.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 typedef void PmStream;
@@ -40,8 +37,6 @@ using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #endif // EXPERIMENTAL_MIDI_OUT
-
-#endif // USE_MIDI
 
 #include <wx/event.h> // to declare custom event types
 
@@ -249,6 +244,42 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
+#ifdef EXPERIMENTAL_MIDI_OUT
+   void PrepareMidiIterator(bool send = true, double offset = 0);
+   bool StartPortMidiStream();
+
+   // Compute nondecreasing real time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime();
+
+   void OutputEvent();
+   void FillMidiBuffers();
+   void GetNextEvent();
+   double PauseTime();
+   void AllNotesOff(bool looping = false);
+
+   /** \brief Compute the current PortMidi timestamp time.
+    *
+    * This is used by PortMidi to synchronize midi time to audio samples
+    */
+   PmTimestamp MidiTime();
+
+   // Note: audio code solves the problem of soloing/muting tracks by scanning
+   // all playback tracks on every call to the audio buffer fill routine.
+   // We do the same for Midi, but it seems wasteful for at least two
+   // threads to be frequently polling to update status. This could be
+   // eliminated (also with a reduction in code I think) by updating mHasSolo
+   // each time a solo button is activated or deactivated. For now, I'm
+   // going to do this polling in the FillMidiBuffer routine to localize
+   // changes for midi to the midi code, but I'm declaring the variable
+   // here so possibly in the future, Audio code can use it too. -RBD
+ private:
+   bool  mHasSolo; // is any playback solo button pressed?
+ public:
+   bool SetHasSolo(bool hasSolo);
+   bool GetHasSolo() { return mHasSolo; }
+#endif
+
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
@@ -272,11 +303,13 @@ public:
    void ComputeMidiTimings(
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer);
-   void CheckSoundActivatedRecordingLevel(const void *inputBuffer);
+   void CheckSoundActivatedRecordingLevel(
+      float *inputSamples,
+      unsigned long framesPerBuffer
+   );
    void AddToOutputChannel( unsigned int chan,
       float * outputMeterFloats,
       float * outputFloats,
-      float * tempFloats,
       float * tempBuf,
       bool drop,
       unsigned long len,
@@ -284,8 +317,7 @@ public:
       );
    bool FillOutputBuffers(
       void *outputBuffer,
-      unsigned long framesPerBuffer,
-      float * tempFloats, float *outputMeterFloats
+      unsigned long framesPerBuffer, float *outputMeterFloats
    );
    void FillInputBuffers(
       const void *inputBuffer, 
@@ -303,8 +335,7 @@ public:
       float *outputMeterFloats
    );
    void SendVuInputMeterData(
-      float *tempFloats,
-      const void *inputBuffer,
+      float *inputSamples,
       unsigned long framesPerBuffer
    );
    void SendVuOutputMeterData(
@@ -336,9 +367,6 @@ public:
    long             mSynthLatency; // ms
 
    // These fields are used to synchronize MIDI with audio:
-
-   /// PortAudio's clock time
-   volatile double  mAudioCallbackClockTime;
 
    /// Number of frames output, including pauses
    volatile long    mNumFrames;
@@ -549,6 +577,7 @@ protected:
       double Consumer( size_t nSamples, double rate );
    } mTimeQueue;
 
+   PlaybackSchedule mPlaybackSchedule;
 };
 
 class AUDACITY_DLL_API AudioIO final
@@ -614,29 +643,6 @@ public:
 
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
    AudacityProject *GetOwningProject() const { return mOwningProject; }
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   /** \brief Compute the current PortMidi timestamp time.
-    *
-    * This is used by PortMidi to synchronize midi time to audio samples
-    */
-   PmTimestamp MidiTime();
-
-   // Note: audio code solves the problem of soloing/muting tracks by scanning
-   // all playback tracks on every call to the audio buffer fill routine.
-   // We do the same for Midi, but it seems wasteful for at least two
-   // threads to be frequently polling to update status. This could be
-   // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm
-   // going to do this polling in the FillMidiBuffer routine to localize
-   // changes for midi to the midi code, but I'm declaring the variable
-   // here so possibly in the future, Audio code can use it too. -RBD
- private:
-   bool  mHasSolo; // is any playback solo button pressed?
- public:
-   bool SetHasSolo(bool hasSolo);
-   bool GetHasSolo() { return mHasSolo; }
-#endif
 
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
@@ -711,6 +717,14 @@ public:
    * and playing is true if one or more channels are being played. */
    double GetBestRate(bool capturing, bool playing, double sampleRate);
 
+   /** \brief During playback, the track time most recently played
+    *
+    * When playing looped, this will start from t0 again,
+    * too. So the returned time should be always between
+    * t0 and t1
+    */
+   double GetStreamTime();
+
    friend class AudioThread;
 #ifdef EXPERIMENTAL_MIDI_OUT
    friend class MidiThread;
@@ -743,21 +757,6 @@ private:
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
    void FillBuffers();
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void PrepareMidiIterator(bool send = true, double offset = 0);
-   bool StartPortMidiStream();
-
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime();
-
-   void OutputEvent();
-   void FillMidiBuffers();
-   void GetNextEvent();
-   double PauseTime();
-   void AllNotesOff(bool looping = false);
-#endif
 
    /** \brief Get the number of audio samples free in all of the playback
    * buffers.

@@ -21,12 +21,8 @@
 #ifndef __AUDACITY_SPECTRUM_PREFS__
 #define __AUDACITY_SPECTRUM_PREFS__
 
-#include "../Experimental.h"
-
 #include <vector>
 #include <wx/defs.h>
-
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 #include "PrefsPanel.h"
 #include "SpectrogramSettings.h"

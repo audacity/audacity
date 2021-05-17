@@ -978,7 +978,7 @@ LVAL xdotimes(void)
     /* get the control list (sym list result-expr) */
     clist = xlgalist();
     sym = match(SYMBOL,&clist);
-    cnt = evmatch(FIXNUM,&clist); n = getfixnum(cnt);
+    cnt = evmatch(FIXNUM,&clist); n = (int) getfixnum(cnt);
     argv = xlargv;
     argc = xlargc;
 

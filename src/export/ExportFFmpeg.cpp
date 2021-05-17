@@ -19,9 +19,9 @@ function.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
 
-#include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
+
+#include "../FFmpeg.h"
 
 #include <wx/choice.h>
 #include <wx/intl.h>
@@ -33,12 +33,12 @@ function.
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
 
-#include "../FileFormats.h"
 #include "../Mix.h"
 #include "../ProjectSettings.h"
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
 
@@ -822,7 +822,7 @@ bool ExportFFmpeg::Finalize()
          {
             wxLogDebug(wxT("FFmpeg : Reading from Audio FIFO failed, aborting"));
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("FFmpeg:825");
             return false;
          }
       }
@@ -834,7 +834,7 @@ bool ExportFFmpeg::Finalize()
 
       if (encodeResult < 0) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("FFmpeg:837");
          return false;
       }
       else if (encodeResult == 0)
@@ -865,7 +865,7 @@ bool ExportFFmpeg::Finalize()
    // Write any file trailers.
    if (av_write_trailer(mEncFormatCtx.get()) != 0) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:868");
       return false;
    }
 
@@ -891,6 +891,7 @@ void ExportFFmpeg::FreeResources()
    av_log_set_callback(av_log_default_callback);
 }
 
+// All paths in this that fail must report their error to the user.
 bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 {
    int nBytesToWrite = 0;
@@ -900,14 +901,18 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 
    nBytesToWrite = frameSize;
    pRawSamples  = (uint8_t*)pFrame;
-   if (av_fifo_realloc2(mEncAudioFifo.get(), av_fifo_size(mEncAudioFifo.get()) + frameSize) < 0)
+   if (av_fifo_realloc2(mEncAudioFifo.get(), av_fifo_size(mEncAudioFifo.get()) + frameSize) < 0) {
+      ShowExportErrorDialog("FFmpeg:905");
       return false;
+   }
 
    // Put the raw audio samples into the FIFO.
    ret = av_fifo_generic_write(mEncAudioFifo.get(), pRawSamples, nBytesToWrite,NULL);
 
-   if(ret != nBytesToWrite)
+   if (ret != nBytesToWrite) {
+      ShowExportErrorDialog("FFmpeg:913");
       return false;
+   }
 
    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz) {
       AudacityMessageBox(
@@ -953,11 +958,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
       // Write the encoded audio frame to the output file.
       if ((ret = av_interleaved_write_frame(mEncFormatCtx.get(), &pkt)) < 0)
       {
-         AudacityMessageBox(
-            XO("FFmpeg : ERROR - Failed to write audio frame to file."),
-            XO("FFmpeg Error"),
-            wxOK|wxCENTER|wxICON_EXCLAMATION
-         );
+         ShowDiskFullExportErrorDialog(mName);
          return false;
       }
    }
@@ -993,7 +994,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    if (mSubFormat >= FMT_LAST) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:996");
       return ProgressResult::Cancelled;
    }
 
@@ -1005,7 +1006,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    if (!ret) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:1008");
       return ProgressResult::Cancelled;
    }
 
@@ -1014,7 +1015,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    auto mixer = CreateMixer(tracks, selectionOnly,
       t0, t1,
       channels, pcmBufferSize, true,
-      mSampleRate, int16Sample, true, mixerSpec);
+      mSampleRate, int16Sample, mixerSpec);
 
    auto updateResult = ProgressResult::Success;
    {
@@ -1036,9 +1037,8 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
          if (!EncodeAudioFrame(
             pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
-            // TODO: more precise message, and fix redundancy with messages
-            // already given on some of the failure paths of the above call
-            AudacityMessageBox( XO("Unable to export") );
+            // All errors should already have been reported.
+            //ShowDiskFullExportErrorDialog(mName);
             updateResult = ProgressResult::Cancelled;
             break;
          }
@@ -1053,7 +1053,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
 
    if ( mUfileCloser.close() != 0 ) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("FFmpeg:1056");
       return ProgressResult::Cancelled;
    }
 
@@ -1079,13 +1079,23 @@ bool ExportFFmpeg::AddTags(const Tags *tags)
       return false;
    }
 
-   SetMetadata(tags, "author", TAG_ARTIST);
    SetMetadata(tags, "album", TAG_ALBUM);
    SetMetadata(tags, "comment", TAG_COMMENTS);
    SetMetadata(tags, "genre", TAG_GENRE);
    SetMetadata(tags, "title", TAG_TITLE);
-   SetMetadata(tags, "year", TAG_YEAR);
    SetMetadata(tags, "track", TAG_TRACK);
+
+   // Bug 2564: Add m4a tags
+   if (mEncFormatDesc->audio_codec == AV_CODEC_ID_AAC)
+   {
+      SetMetadata(tags, "artist", TAG_ARTIST);
+      SetMetadata(tags, "date", TAG_YEAR);
+   }
+   else
+   {
+      SetMetadata(tags, "author", TAG_ARTIST);
+      SetMetadata(tags, "year", TAG_YEAR);
+   }
 
    return true;
 }

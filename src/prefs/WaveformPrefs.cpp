@@ -13,7 +13,7 @@ Paul Licameli
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "WaveformPrefs.h"
 
 #include "GUIPrefs.h"
@@ -171,7 +171,7 @@ bool WaveformPrefs::Commit()
             channel->SetWaveformSettings({});
          else {
             WaveformSettings &settings =
-               channel->GetIndependentWaveformSettings();
+               channel->GetWaveformSettings();
             settings = mTempSettings;
          }
       }

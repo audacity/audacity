@@ -405,14 +405,12 @@ LVAL xremove(void)
 /* xremif - built-in function 'remove-if' */
 LVAL xremif(void)
 {
-    LVAL remif();
     return (remif(TRUE));
 }
 
 /* xremifnot - built-in function 'remove-if-not' */
 LVAL xremifnot(void)
 {
-    LVAL remif();
     return (remif(FALSE));
 }
 
@@ -760,14 +758,12 @@ LVAL xdelete(void)
 /* xdelif - built-in function 'delete-if' */
 LVAL xdelif(void)
 {
-    LVAL delif();
     return (delif(TRUE));
 }
 
 /* xdelifnot - built-in function 'delete-if-not' */
 LVAL xdelifnot(void)
 {
-    LVAL delif();
     return (delif(FALSE));
 }
 
@@ -822,7 +818,6 @@ LOCAL LVAL delif(int tresult)
 /* xsort - built-in function 'sort' */
 LVAL xsort(void)
 {
-    LVAL sortlist();
     LVAL list,fcn;
 
     /* protect some pointers */
@@ -856,7 +851,6 @@ LVAL xsort(void)
 /* sortlist - sort a list using quicksort */
 LOCAL LVAL sortlist(LVAL list, LVAL fcn)
 {
-    LVAL gluelists();
     LVAL smaller,pivot,larger;
     
     /* protect some pointers */

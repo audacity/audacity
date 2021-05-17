@@ -302,7 +302,7 @@ v4sf exp_ps(v4sf x) {
   emm0 = _mm_cvttps_epi32(fx);
   tmp  = _mm_cvtepi32_ps(emm0);
 #endif
-  /* if greater, substract 1 */
+  /* if greater, subtract 1 */
   v4sf mask = _mm_cmpgt_ps(tmp, fx);    
   mask = _mm_and_ps(mask, one);
   fx = _mm_sub_ps(tmp, mask);
@@ -364,7 +364,7 @@ _PS_CONST(coscof_p2,  4.166664568298827E-002);
 _PS_CONST(cephes_FOPI, 1.27323954473516); // 4 / M_PI
 
 
-/* evaluation of 4 sines at onces, using only SSE1+MMX intrinsics so
+/* evaluation of 4 sines at once, using only SSE1+MMX intrinsics so
    it runs also on old athlons XPs and the pentium III of your grand
    mother.
 

@@ -31,10 +31,10 @@
 #include "midifile.h"
 #include "tempomap.h"
 
-int filegetc();
-void initfuncs();
-void prtime();
-void snding_free();
+int filegetc(void);
+void initfuncs(void);
+void prtime(void);
+void snding_free(void);
 
 typedef struct snding_struct {
     struct snding_struct *next;

@@ -79,7 +79,7 @@ in the selection bar of Audacity.
 
     3758.5 seconds, "*:060:060 and .24 frames" -> "1:02:38 and 12 frames"
 
-  Note that the decimal '.' is associated with the delimeter, not
+  Note that the decimal '.' is associated with the delimiter, not
   with the 24.
 
   Additionally, the special character '#' can be used in place of a number
@@ -124,7 +124,7 @@ in the selection bar of Audacity.
   - Any non-numeric characters before the first field are treated
     as a prefix, and will be displayed to the left of the first field.
   - A delimiter ending in '.' is treated specially.  All fields after
-    this delimeter are fractional fields, after the decimal point.
+    this delimiter are fractional fields, after the decimal point.
   - The '|' character is treated as a special delimiter.  The number
     to the right of this character (which is allowed to contain a
     decimal point) is treated as a scaling factor.  The number is
@@ -165,7 +165,7 @@ different formats.
 **********************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "NumericTextCtrl.h"
 
 #include "audacity/Types.h"
@@ -182,7 +182,6 @@ different formats.
 
 #include <wx/wx.h>
 #include <wx/dcbuffer.h>
-#include <wx/dcmemory.h>
 #include <wx/font.h>
 #include <wx/intl.h>
 #include <wx/menu.h>
@@ -407,9 +406,11 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and hundredths of a second. Change the 'h' to the abbreviation for hours,
     * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
-    * (the hundredths are shown as decimal seconds) . Don't change the numbers
-    * unless there aren't 60 minutes in an hour in your locale */
-   XO("0100 h 060 m 060.0100 s")
+    * (the hundredths are shown as decimal seconds). Don't change the numbers
+    * unless there aren't 60 minutes in an hour in your locale.
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060>0100 s")
    },
 
    {
@@ -420,8 +421,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes and 's' to the abbreviation for seconds (the
     * milliseconds are shown as decimal seconds) . Don't change the numbers
-    * unless there aren't 60 minutes in an hour in your locale */
-   XO("0100 h 060 m 060.01000 s")
+    * unless there aren't 60 minutes in an hour in your locale.
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060>01000 s")
    },
 
    {
@@ -432,8 +435,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
     * abbreviation for minutes, 's' to the abbreviation for seconds and
     * translate samples . Don't change the numbers
-    * unless there aren't 60 seconds in a minute in your locale */
-   XO("0100 h 060 m 060 s+.# samples")
+    * unless there aren't 60 seconds in a minute in your locale.
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060 s+># samples")
    },
 
    {
@@ -457,8 +462,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * and frames at 24 frames per second. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames' . Don't change the numbers
-    * unless there aren't 60 seconds in a minute in your locale */
-   XO("0100 h 060 m 060 s+.24 frames")
+    * unless there aren't 60 seconds in a minute in your locale.
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060 s+>24 frames")
    },
 
    {
@@ -480,8 +487,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-    * for seconds and translate 'frames'. Leave the |N alone, it's important! */
-   XO("0100 h 060 m 060 s+.30 frames|N")
+    * for seconds and translate 'frames'. Leave the |N alone, it's important!
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060 s+>30 frames|N")
    },
 
    {
@@ -493,8 +502,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
     * and frames with NTSC drop frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
     * for seconds and translate 'frames'. Leave the | .999000999 alone,
-    * the whole things really is slightly off-speed! */
-   XO("0100 h 060 m 060 s+.030 frames| .999000999")
+    * the whole things really is slightly off-speed!
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060 s+>030 frames| .999000999")
    },
 
    {
@@ -516,8 +527,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with PAL TV frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-    * for seconds and translate 'frames'. Nice simple time code! */
-   XO("0100 h 060 m 060 s+.25 frames")
+    * for seconds and translate 'frames'. Nice simple time code!
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060 s+>25 frames")
    },
 
    {
@@ -538,8 +551,10 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
    /* i18n-hint: Format string for displaying time in hours, minutes, seconds
     * and frames with CD Audio frames. Change the 'h' to the abbreviation
     * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-    * for seconds and translate 'frames'. */
-   XO("0100 h 060 m 060 s+.75 frames")
+    * for seconds and translate 'frames'.
+    * The decimal separator is specified using '<' if your language uses a ',' or
+    * to '>' if your language uses a '.'. */
+   XO("0100 h 060 m 060 s+>75 frames")
    },
 
    {
@@ -564,8 +579,10 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
       { XO("Hz") },
       {
          /* i18n-hint: Format string for displaying frequency in hertz. Change
-         * the decimal point for your locale. Don't change the numbers. */
-         XO("0100000.0100 Hz")
+         * the decimal point for your locale. Don't change the numbers.
+         * The decimal separator is specified using '<' if your language uses a ',' or
+         * to '>' if your language uses a '.'. */
+         XO("010,01000>0100 Hz")
          , XO("centihertz")
       }
    },
@@ -575,8 +592,10 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
       { XO("kHz") },
       {
          /* i18n-hint: Format string for displaying frequency in kilohertz. Change
-         * the decimal point for your locale. Don't change the numbers. */
-         XO("01000.01000 kHz|0.001")
+         * the decimal point for your locale. Don't change the numbers.
+         * The decimal separator is specified using '<' if your language uses a ',' or
+         * to '>' if your language uses a '.'. */
+         XO("01000>01000 kHz|0.001")
          , XO("hertz")
       }
    },
@@ -592,9 +611,11 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
     * in octaves */
    { XO("octaves") },
    {
-   /* i18n-hint: Format string for displaying log of frequency in octaves.
-    * Change the decimal points for your locale. Don't change the numbers. */
-      XO("100.01000 octaves|1.442695041"),    // Scale factor is 1 / ln (2)
+      /* i18n-hint: Format string for displaying log of frequency in octaves.
+       * Change the decimal points for your locale. Don't change the numbers.
+       * The decimal separator is specified using '<' if your language uses a ',' or
+       * to '>' if your language uses a '.'. */
+      XO("100>01000 octaves|1.442695041"),    // Scale factor is 1 / ln (2)
       /* i18n-hint: an octave is a doubling of frequency */
       XO("thousandths of octaves")
    }
@@ -607,8 +628,10 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
       /* i18n-hint: Format string for displaying log of frequency in semitones
        * and cents.
-       * Change the decimal points for your locale. Don't change the numbers. */
-      XO("1000 semitones .0100 cents|17.312340491"),   // Scale factor is 12 / ln (2)
+       * Change the decimal points for your locale. Don't change the numbers.
+       * The decimal separator is specified using '<' if your language uses a ',' or
+       * to '>' if your language uses a '.'. */
+      XO("1000 semitones >0100 cents|17.312340491"),   // Scale factor is 12 / ln (2)
       /* i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave) */
       XO("hundredths of cents")
    }
@@ -621,7 +644,7 @@ static const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
       /* i18n-hint: Format string for displaying log of frequency in decades.
        * Change the decimal points for your locale. Don't change the numbers. */
-      XO("10.01000 decades|0.434294482"),   // Scale factor is 1 / ln (10)
+      XO("10>01000 decades|0.434294482"),   // Scale factor is 1 / ln (10)
       /* i18n-hint: a decade is a tenfold increase of frequency */
       XO("thousandths of decades")
    }
@@ -744,60 +767,6 @@ void NumericConverter::ParseFormatString(
    wxString delimStr;
    unsigned int i;
 
-   // Bug 2241 concerns ',' and '.' when translated.
-   // Here's a thorny example from French, 
-   // where in translation one of the ',' is to be used
-   // as a separator and the other as a decimal point.
-   //
-   // msgid "01000,01000 frames|29.97002997"  <- Original English
-   // msgstr "01000,01000 images|29,97002997"  <- Translated
-
-   // Some other examples:
-   //
-   // msgid "0100000.0100 Hz"
-   // msgstr "0100000,0100 Hz"
-
-   // msgid "01000.01000 kHz|0.001"
-   // msgstr "01000,01000 kHz|0.001"
-
-   // In the French translation '.' is not always translated
-   // to ','.
-   //
-   // msgid "0100 h 060 m 060.0100 s"
-   // msgstr "0100 h 060 m 060.0100 s"
-
-   // The comma fix code below is specifically for bug 2241.
-   // It is a fixup, not a proper full fix.
-
-   // A correct fix would require changing all the format 
-   // strings to make it explicit when ',' is a thousands separator 
-   // and when ',' is a decimal separator
-   // A slightly better fix than now would derive bCommaIsDecimalPoint 
-   // from the untranslated strings, true if and only if the
-   // untranslated string is free of commas.
-   // Within this function we only see the translated format strings,
-   // so that is what we use.
-
-   // Normally bCommaIsDecimalPoint will be false and code will work
-   // 'as before'.
-   bool bCommaIsDecimalPoint = false;
-   // We look in the translated string for "Hz" as that is in the
-   // two problematic translated strings.
-   if (format.Contains("Hz"))
-      bCommaIsDecimalPoint = true;
-   // None of the format strings with 060 in them have a comma in them too.
-   if (format.Contains("060"))
-      bCommaIsDecimalPoint = true;
-   // 0.4342 is in the 'decades' format string.
-   if (format.Contains("4342"))
-      bCommaIsDecimalPoint = true;
-   // 1.4426 is in the 'octaves' format string
-   if (format.Contains("4426"))
-      bCommaIsDecimalPoint = true;
-   // 17.3123 is in 'semitones' format string
-   if (format.Contains("3123"))
-      bCommaIsDecimalPoint = true;
-
    mNtscDrop = false;
    for(i=0; i<format.length(); i++) {
       bool handleDelim = false;
@@ -878,18 +847,13 @@ void NumericConverter::ParseFormatString(
       if (handleDelim) {
          bool goToFrac = false;
 
-         if (!inFrac && delimStr[delimStr.length()-1]=='.') {
-            goToFrac = true;
-            if (delimStr.length() > 1)
-               delimStr = delimStr.BeforeLast('.');
-         }
-         // Bug 2241 - Also handle ',' as decimal point
-         // for languages like French and German.
-         // Translators may or may not have translated the '.'.
-         else if (bCommaIsDecimalPoint && !inFrac && delimStr[delimStr.length()-1]==',') {
-            goToFrac = true;
-            if (delimStr.length() > 1)
-               delimStr = delimStr.BeforeLast(',');
+         if (!inFrac) {
+            wxChar delim = delimStr[delimStr.length()-1];
+            if (delim=='<' || delim=='>') {
+               goToFrac = true;
+               if (delimStr.length() > 1)
+                  delimStr = delimStr.BeforeLast(delim);
+            }
          }
 
          if (inFrac) {
@@ -906,6 +870,8 @@ void NumericConverter::ParseFormatString(
             if (numWholeFields == 0)
                mPrefix = delimStr;
             else {
+               delimStr.Replace(wxT("<"), wxT(","));
+               delimStr.Replace(wxT(">"), wxT("."));
                mFields[numWholeFields-1].label = delimStr;
             }
          }
@@ -971,6 +937,8 @@ void NumericConverter::PrintDebugInfo()
 
    wxPrintf("\n");
 }
+
+NumericConverter::NumericConverter(const NumericConverter&) = default;
 
 NumericConverter::~NumericConverter()
 {
@@ -1053,7 +1021,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    }
 
    for(i = 0; i < mFields.size(); i++) {
-      int value = -1;
+      long long value = -1;
 
       if (mFields[i].frac) {
          // JKC: This old code looks bogus to me.
@@ -1061,7 +1029,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
          //value = (int)(t_frac * mFields[i].base + 0.5);  // +0.5 as rounding required
          // I did the rounding earlier.
          if (t_frac >= 0)
-            value = (int)(t_frac * mFields[i].base);
+            value = t_frac * mFields[i].base;
          // JKC: TODO: Find out what the range is supposed to do.
          // It looks bogus too.
          //if (mFields[i].range > 0)
@@ -1069,9 +1037,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
       }
       else {
          if (t_int >= 0) {
-            // UNSAFE_SAMPLE_COUNT_TRUNCATION
-            // truncation danger!
-            value = (t_int.as_long_long() / mFields[i].base);
+            value = t_int.as_long_long() / mFields[i].base;
             if (mFields[i].range > 0)
                value = value % mFields[i].range;
          }
@@ -1083,7 +1049,7 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
             field += wxT("-");
       }
       else
-         field = wxString::Format(mFields[i].formatStr, value);
+         field = wxString::Format(mFields[i].formatStr, (int) value);
       mValueString += field;
       mValueString += mFields[i].label;
    }

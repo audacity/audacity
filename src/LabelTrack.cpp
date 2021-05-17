@@ -28,13 +28,13 @@ for drawing different aspects of the label and its text box.
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for HAVE_GTK
+
 #include "LabelTrack.h"
 
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackControls.h"
 
-#include "Experimental.h"
+
 
 #include <stdio.h>
 #include <algorithm>
@@ -45,6 +45,7 @@ for drawing different aspects of the label and its text box.
 
 #include "Prefs.h"
 #include "ProjectFileIORegistry.h"
+#include "prefs/ImportExportPrefs.h"
 
 #include "effects/TimeWarper.h"
 #include "widgets/AudacityMessageBox.h"
@@ -57,19 +58,13 @@ wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "labeltrack" ),
    []( AudacityProject &project ){
-      auto &trackFactory = TrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add(trackFactory.NewLabelTrack());
+      auto result = tracks.Add(std::make_shared<LabelTrack>());
       TrackView::Get( *result );
       TrackControls::Get( *result );
       return result;
    }
 };
-
-LabelTrack::Holder TrackFactory::NewLabelTrack()
-{
-   return std::make_shared<LabelTrack>();
-}
 
 LabelTrack::LabelTrack():
    Track(),
@@ -88,6 +83,50 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
       LabelStruct l { original.selectedRegion, original.title };
       mLabels.push_back(l);
    }
+}
+
+Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
+{
+   auto pNewTrack = std::make_shared<LabelTrack>();
+   pNewTrack->Paste(0.0, this);
+   return pNewTrack;
+}
+
+template<typename IntervalType>
+static IntervalType DoMakeInterval(const LabelStruct &label, size_t index)
+{
+   return {
+      label.getT0(), label.getT1(),
+      std::make_unique<LabelTrack::IntervalData>( index ) };
+}
+
+auto LabelTrack::MakeInterval( size_t index ) const -> ConstInterval
+{
+   return DoMakeInterval<ConstInterval>(mLabels[index], index);
+}
+
+auto LabelTrack::MakeInterval( size_t index ) -> Interval
+{
+   return DoMakeInterval<Interval>(mLabels[index], index);
+}
+
+template< typename Container, typename LabelTrack >
+static Container DoMakeIntervals(LabelTrack &track)
+{
+   Container result;
+   for (size_t ii = 0, nn = track.GetNumLabels(); ii < nn; ++ii)
+      result.emplace_back( track.MakeInterval( ii ) );
+   return result;
+}
+
+auto LabelTrack::GetIntervals() const -> ConstIntervals
+{
+   return DoMakeIntervals<ConstIntervals>(*this);
+}
+
+auto LabelTrack::GetIntervals() -> Intervals
+{
+   return DoMakeIntervals<Intervals>(*this);
 }
 
 void LabelTrack::SetLabel( size_t iLabel, const LabelStruct &newLabel )
@@ -412,8 +451,9 @@ void LabelStruct::Export(wxTextFile &file) const
    // Do we need more lines?
    auto f0 = selectedRegion.f0();
    auto f1 = selectedRegion.f1();
-   if (f0 == SelectedRegion::UndefinedFrequency &&
-       f1 == SelectedRegion::UndefinedFrequency)
+   if ((f0 == SelectedRegion::UndefinedFrequency &&
+      f1 == SelectedRegion::UndefinedFrequency) ||
+      ImportExportPrefs::LabelStyleSetting.ReadEnum())
       return;
 
    // Write a \ character at the start of a second line,

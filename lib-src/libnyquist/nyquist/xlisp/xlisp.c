@@ -51,7 +51,7 @@ extern char buf[];
 extern FILE *tfp;
 
 /* external routines */
-extern FILE *osaopen();
+extern FILE *osaopen(const char *name, const char *mode);
 
 #ifdef USE_RANDOM
 
@@ -86,7 +86,7 @@ long xlrand (long range) {
 }
 
 long xlsrand(long seed) {
-    srand(seed);
+    srand((unsigned int) seed);
     return seed;
 }
 

@@ -75,9 +75,7 @@ CommandManager.  It holds the callback for one command.
 
 *//******************************************************************/
 
-#include "../Audacity.h"
 
-#include "../Experimental.h"
 
 #include "CommandManager.h"
 
@@ -235,6 +233,7 @@ CommandManager::CommandManager():
 {
    mbSeparatorAllowed = false;
    SetMaxList();
+   mLastProcessId = 0;
 }
 
 ///
@@ -321,7 +320,7 @@ void CommandManager::SetMaxList()
    // KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 
    // TODO: At a later date get rid of the maxList entirely and
-   // instead use flags in the menu entrys to indicate whether the default
+   // instead use flags in the menu entries to indicate whether the default
    // shortcut is standard or full.
 
    mMaxListOnly.clear();
@@ -548,7 +547,7 @@ void CommandManager::AddItem(AudacityProject &project,
                              const Options &options)
 {
    if (options.global) {
-      wxASSERT( flags == AlwaysEnabledFlag );
+      //wxASSERT( flags == AlwaysEnabledFlag );
       AddGlobalCommand(
          name, label_in, finder, callback, options );
       return;
@@ -716,6 +715,8 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->parameter = parameter;
 
 #if defined(__WXMAC__)
+      // See bug #2642 for some history as to why these items 
+      // on Mac have their IDs set explicitly and not others.
       if (name == wxT("Preferences"))
          entry->id = wxID_PREFERENCES;
       else if (name == wxT("Exit"))
@@ -1175,6 +1176,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    return false;
 }
 
+
 /// HandleCommandEntry() takes a CommandListEntry and executes it
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
@@ -1202,14 +1204,53 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
       // Otherwise we may get other handlers having a go at obeying the command.
       if (!allowed)
          return true;
+      mNiceName = NiceName;
+   }
+   else {
+      mNiceName = XO("");
    }
 
    const CommandContext context{ project, evt, entry->index, entry->parameter };
    auto &handler = entry->finder(project);
    (handler.*(entry->callback))(context);
-
+   mLastProcessId = 0;
    return true;
 }
+
+// Called by Contrast and Plot Spectrum Plug-ins to mark them as Last Analzers.
+// Note that Repeat data has previously been collected
+void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
+   if (mLastProcessId != 0) {
+      auto& menuManager = MenuManager::Get(context.project);
+      menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypeunique;
+      menuManager.mLastAnalyzerRegisteredId = mLastProcessId;
+      auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
+      Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
+   }
+   return;
+}
+
+// Called by Selected Tools to mark them as Last Tools.
+// Note that Repeat data has previously been collected
+void CommandManager::RegisterLastTool(const CommandContext& context) {
+   if (mLastProcessId != 0) {
+      auto& menuManager = MenuManager::Get(context.project);
+      menuManager.mLastToolRegistration = MenuCreator::repeattypeunique;
+      menuManager.mLastToolRegisteredId = mLastProcessId;
+      auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
+      Modify(wxT("RepeatLastTool"), lastEffectDesc);
+   }
+   return;
+}
+
+// Used to invoke Repeat Last Analyzer Process for built-in, non-nyquist plug-ins.
+void CommandManager::DoRepeatProcess(const CommandContext& context, int id) {
+   mLastProcessId = 0;  //Don't Process this as repeat
+   CommandListEntry* entry = mCommandNumericIDHash[id];
+   auto& handler = entry->finder(context.project);
+   (handler.*(entry->callback))(context);
+}
+
 
 ///Call this when a menu event is received.
 ///If it matches a command, it will call the appropriate
@@ -1219,6 +1260,7 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 bool CommandManager::HandleMenuID(
    AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled)
 {
+   mLastProcessId = id;
    CommandListEntry *entry = mCommandNumericIDHash[id];
 
    auto hook = sMenuHook();
@@ -1561,7 +1603,7 @@ void CommandManager::CheckDups()
 // to test for this case.
 // Note that if a user is using the full set of default shortcuts, and one
 // of these is changed, then if /GUI/Shortcuts/FullDefaults is not set in audacity.cfg,
-// because the defaults appear as user assigned shorcuts in audacity.cfg,
+// because the defaults appear as user assigned shortcuts in audacity.cfg,
 // the previous default overrides the changed default, and no duplicate can
 // be introduced.
 void CommandManager::RemoveDuplicateShortcuts()

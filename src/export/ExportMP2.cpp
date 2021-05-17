@@ -32,7 +32,7 @@
 
 */
 
-#include "../Audacity.h"// for USE_* macros
+
 
 #ifdef USE_LIBTWOLAME
 
@@ -289,7 +289,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (id3len && !endOfFile) {
       if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+         ShowExportErrorDialog("MP2:292");
          return ProgressResult::Cancelled;
       }
    }
@@ -308,7 +308,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
       auto mixer = CreateMixer(tracks, selectionOnly,
          t0, t1,
          stereo ? 2 : 1, pcmBufferSize, true,
-         rate, int16Sample, true, mixerSpec);
+         rate, int16Sample, mixerSpec);
 
       InitProgress( pDialog, fName,
          selectionOnly
@@ -335,14 +335,14 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
          if (mp2BufferNumBytes < 0) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowExportErrorDialog("MP2:339");
             updateResult = ProgressResult::Cancelled;
             break;
          }
 
          if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
             // TODO: more precise message
-            AudacityMessageBox( XO("Unable to export") );
+            ShowDiskFullExportErrorDialog(fName);
             return ProgressResult::Cancelled;
          }
 
@@ -358,7 +358,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (mp2BufferNumBytes > 0)
       if ( outFile.Write(mp2Buffer.get(), mp2BufferNumBytes).GetLastError() ) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+         ShowExportErrorDialog("MP2:362");
          return ProgressResult::Cancelled;
       }
 
@@ -367,13 +367,13 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
    if (id3len && endOfFile)
       if ( outFile.Write(id3buffer.get(), id3len).GetLastError() ) {
          // TODO: more precise message
-         AudacityMessageBox( XO("Unable to export") );
+         ShowExportErrorDialog("MP2:371");
          return ProgressResult::Cancelled;
       }
 
    if ( !outFile.Close() ) {
       // TODO: more precise message
-      AudacityMessageBox( XO("Unable to export") );
+      ShowExportErrorDialog("MP2:377");
       return ProgressResult::Cancelled;
    }
 

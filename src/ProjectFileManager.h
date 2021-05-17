@@ -24,17 +24,19 @@ class Track;
 class TrackList;
 class WaveTrack;
 class XMLTagHandler;
-namespace ProjectFileIORegistry{ struct Entry; }
 
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using TrackHolders = std::vector< WaveTrackArray >;
 
-class ProjectFileManager final
+class AUDACITY_DLL_API ProjectFileManager final
    : public ClientData::Base
 {
 public:
    static ProjectFileManager &Get( AudacityProject &project );
    static const ProjectFileManager &Get( const AudacityProject &project );
+
+   // Open and close a file, invisibly, removing its Autosave blob
+   static void DiscardAutosave(const FilePath &filename);
 
    explicit ProjectFileManager( AudacityProject &project );
    ProjectFileManager( const ProjectFileManager & ) PROHIBITED;
@@ -48,21 +50,21 @@ public:
       const TranslatableString errorString;
       wxString helpUrl;
    };
-   ReadProjectResults ReadProjectFile( const FilePath &fileName );
+   ReadProjectResults ReadProjectFile(
+      const FilePath &fileName, bool discardAutosave = false );
 
    bool OpenProject();
    void CloseProject();
+   bool OpenNewProject();
 
-   void CompactProject();
+   void CompactProjectOnClose();
 
    bool Save();
-   bool SaveAs();
+   bool SaveAs(bool allowOverwrite = false);
    bool SaveAs(const FilePath &newFileName, bool addToHistory = true);
    // strProjectPathName is full path for aup except extension
    bool SaveFromTimerRecording( wxFileName fnFile );
    bool SaveCopy(const FilePath &fileName = wxT(""));
-
-   void Reset();
 
    /** @brief Show an open dialogue for opening audio files, and possibly other
     * sorts of files.
@@ -91,12 +93,12 @@ public:
 
    void OpenFile(const FilePath &fileName, bool addtohistory = true);
 
-   // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
-   bool Import(const FilePath &fileName, WaveTrackArray *pTrackArray = NULL);
+   bool Import(const FilePath &fileName,
+               bool addToHistory = true);
 
-   // Takes array of unique pointers; returns array of shared
-   std::vector< std::shared_ptr<Track> >
-   AddImportedTracks(const FilePath &fileName,
+   void Compact();
+
+   void AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
    bool GetMenuClose() const { return mMenuClose; }

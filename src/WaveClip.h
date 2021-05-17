@@ -12,20 +12,20 @@
 #ifndef __AUDACITY_WAVECLIP__
 #define __AUDACITY_WAVECLIP__
 
-#include "Audacity.h"
+
 
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
 
-#include "RealFFTf.h"
-
 #include <wx/longlong.h>
 
 #include <vector>
+#include <functional>
 
 class BlockArray;
 class Envelope;
 class ProgressDialog;
+class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
@@ -34,7 +34,7 @@ class WaveCache;
 class WaveTrackCache;
 class wxFileNameWrapper;
 
-class SpecCache {
+class AUDACITY_DLL_API SpecCache {
 public:
 
    // Make invalid cache
@@ -197,7 +197,8 @@ public:
 
    virtual ~WaveClip();
 
-   void ConvertToSampleFormat(sampleFormat format);
+   void ConvertToSampleFormat(sampleFormat format,
+      const std::function<void(size_t)> & progressReport = {});
 
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
@@ -216,7 +217,8 @@ public:
    int GetColourIndex( ) const { return mColourIndex;};
    void SetOffset(double offset);
    double GetOffset() const { return mOffset; }
-   void Offset(double delta) // NOFAIL-GUARANTEE
+   /*! @excsafety{No-fail} */
+   void Offset(double delta)
       { SetOffset(GetOffset() + delta); }
    double GetStartTime() const;
    double GetEndTime() const;
@@ -234,7 +236,7 @@ public:
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
-   void SetSamples(samplePtr buffer, sampleFormat format,
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
@@ -251,7 +253,8 @@ public:
    /** WaveTrack calls this whenever data in the wave clip changes. It is
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
-   void MarkChanged() // NOFAIL-GUARANTEE
+   /*! @excsafety{No-fail} */
+   void MarkChanged()
       { mDirty++; }
 
    /** Getting high-level data for screen display and clipping
@@ -267,26 +270,27 @@ public:
       double t0, double t1, bool mayThrow = true) const;
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
 
-   // Set/clear/get rectangle that this WaveClip fills on screen. This is
-   // called by TrackArtist while actually drawing the tracks and clips.
-   void ClearDisplayRect() const;
-   void SetDisplayRect(const wxRect& r) const;
-   void GetDisplayRect(wxRect* r);
-
    /** Whenever you do an operation to the sequence that will change the number
     * of samples (that is, the length of the clip), you will want to call this
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   std::shared_ptr<SampleBlock> AppendNewBlock(
+      samplePtr buffer, sampleFormat format, size_t len);
+
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
+
    /// You must call Flush after the last Append
    /// @return true if at least one complete block was created
-   bool Append(samplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1);
+   bool Append(constSamplePtr buffer, sampleFormat format,
+               size_t len, unsigned int stride);
    /// Flush must be called after last Append
    void Flush();
 
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
-   /// operation (but without putting the cutted audio to the clipboard)
+   /// operation (but without putting the cut audio to the clipboard)
    void Clear(double t0, double t1);
 
    /// Clear, and add cut line that starts at t0 and contains everything until t1.
@@ -354,8 +358,6 @@ public:
    mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
 
 protected:
-   mutable wxRect mDisplayRect {};
-
    double mOffset { 0 };
    int mRate;
    int mDirty { 0 };

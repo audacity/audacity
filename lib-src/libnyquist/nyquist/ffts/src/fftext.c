@@ -8,6 +8,7 @@
 	fftInit every time you call ffts. For example you could have someting like:
 	#define FFT(a,n) if(!fftInit(roundtol(LOG2(n)))) ffts(a,roundtol(LOG2(n)),1);else printf("fft error\n");
 *******************************************************************/
+#include <stdint.h>
 #include <stdlib.h>
 #include "fftlib.h"
 #include "matlib.h"
@@ -39,7 +40,8 @@ if ((M >= 0) && (M < 8*sizeof(long))){
 		}
 		if (M > 1){
 			if (BRLowArray[M/2] == 0){	// init bit reversed table for cmplx fft
-				BRLowArray[M/2] = (short *) malloc( POW2(M/2-1)*sizeof(short) );
+				// coercion avoids compiler warning about 32-bit shift:
+				BRLowArray[M/2] = (short *) malloc( (int64_t) POW2(M/2-1)*sizeof(short) );
 				if (BRLowArray[M/2] == 0)
 					theError = 2;
 				else{
@@ -49,7 +51,8 @@ if ((M >= 0) && (M < 8*sizeof(long))){
 		}
 		if (M > 2){
 			if (BRLowArray[(M-1)/2] == 0){	// init bit reversed table for real fft
-				BRLowArray[(M-1)/2] = (short *) malloc( POW2((M-1)/2-1)*sizeof(short) );
+				// coercion avoids compiler warning about 32-bit shift:
+				BRLowArray[(M-1)/2] = (short *) malloc( (int64_t) POW2((M-1)/2-1)*sizeof(short) );
 				if (BRLowArray[(M-1)/2] == 0)
 					theError = 2;
 				else{

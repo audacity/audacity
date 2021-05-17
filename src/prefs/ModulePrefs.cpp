@@ -11,14 +11,14 @@
 \class ModulePrefs
 \brief A PrefsPanel to enable/disable certain modules.  'Modules' are 
 dynamically linked libraries that modify Audacity.  They are plug-ins 
-with names like mnod-script-pipe that add NEW features.
+with names like mod-script-pipe that add NEW features.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ModulePrefs.h"
 
-#include "Experimental.h"
+
 
 #include <wx/defs.h>
 #include <wx/filename.h>
@@ -26,6 +26,7 @@ with names like mnod-script-pipe that add NEW features.
 #include "../ShuttleGui.h"
 
 #include "../Prefs.h"
+#include "../ModuleSettings.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -159,70 +160,8 @@ bool ModulePrefs::Commit()
    PopulateOrExchange(S);
    int i;
    for(i=0;i<(int)mPaths.size();i++)
-      SetModuleStatus( mPaths[i], mStatuses[i] );
+      ModuleSettings::SetModuleStatus( mPaths[i], mStatuses[i] );
    return true;
-}
-
-
-// static function that tells us about a module.
-int ModulePrefs::GetModuleStatus(const FilePath &fname)
-{
-   // Default status is NEW module, and we will ask once.
-   int iStatus = kModuleNew;
-
-   wxFileName FileName( fname );
-   wxString ShortName = FileName.GetName().Lower();
-
-   wxString PathPref = wxString( wxT("/ModulePath/") ) + ShortName;
-   wxString StatusPref = wxString( wxT("/Module/") ) + ShortName;
-   wxString DateTimePref = wxString( wxT("/ModuleDateTime/") ) + ShortName;
-
-   wxString ModulePath = gPrefs->Read( PathPref, wxEmptyString );
-   if( ModulePath.IsSameAs( fname ) )
-   {
-      gPrefs->Read( StatusPref, &iStatus, kModuleNew );
-
-      wxDateTime DateTime = FileName.GetModificationTime();
-      wxDateTime OldDateTime;
-      OldDateTime.ParseISOCombined( gPrefs->Read( DateTimePref, wxEmptyString ) );
-
-      // Some platforms return milliseconds, some do not...level the playing field
-      DateTime.SetMillisecond( 0 );
-      OldDateTime.SetMillisecond( 0 );
-
-      // fix up a bad status or reset for newer module
-      if( iStatus > kModuleNew || !OldDateTime.IsEqualTo( DateTime ) )
-      {
-         iStatus=kModuleNew;
-      }
-   }
-   else
-   {
-      // Remove previously saved since it's no longer valid
-      gPrefs->DeleteEntry( PathPref );
-      gPrefs->DeleteEntry( StatusPref );
-      gPrefs->DeleteEntry( DateTimePref );
-   }
-
-   return iStatus;
-}
-
-void ModulePrefs::SetModuleStatus(const FilePath &fname, int iStatus)
-{
-   wxFileName FileName( fname );
-   wxDateTime DateTime = FileName.GetModificationTime();
-   wxString ShortName = FileName.GetName().Lower();
-
-   wxString PrefName = wxString( wxT("/Module/") ) + ShortName;
-   gPrefs->Write( PrefName, iStatus );
-
-   PrefName = wxString( wxT("/ModulePath/") ) + ShortName;
-   gPrefs->Write( PrefName, fname );
-
-   PrefName = wxString( wxT("/ModuleDateTime/") ) + ShortName;
-   gPrefs->Write( PrefName, DateTime.FormatISOCombined() );
-
-   gPrefs->Flush();
 }
 
 #ifdef EXPERIMENTAL_MODULE_PREFS

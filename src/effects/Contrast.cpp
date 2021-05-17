@@ -9,7 +9,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Contrast.h"
 
 #include "../CommonCommandFlags.h"
@@ -672,6 +672,7 @@ struct Handler : CommandHandlerObject {
    void OnContrast(const CommandContext &context)
    {
       auto &project = context.project;
+      CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Contrast as Last Analyzer
       auto contrastDialog =
          &project.AttachedWindows::Get< ContrastDialog >( sContrastDialogKey );
 

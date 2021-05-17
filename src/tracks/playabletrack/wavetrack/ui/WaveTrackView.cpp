@@ -10,9 +10,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackView.h"
 
-#include "CutlineHandle.h"
+#include <unordered_set>
 
-#include "../../../../Experimental.h"
+#include "CutlineHandle.h"
 
 #include <numeric>
 #include <wx/dc.h>
@@ -726,9 +726,6 @@ void WaveTrackSubView::DrawBoldBoundaries(
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
 
-   // Update cache for locations, e.g. cutlines and merge points
-   track->UpdateLocationsCache();
-
    const auto &zoomInfo = *artist->pZoomInfo;
 
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -1273,16 +1270,13 @@ void WaveTrackView::BuildSubViews() const
          
          auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
-         
-         // Force creation always:
-         WaveformSettings &settings = static_cast< WaveTrack* >( pTrack.get() )
-            ->GetIndependentWaveformSettings();
+         bool multi = (display == WaveTrackViewConstants::MultiView);
+         if ( multi ) {
+            pThis->SetMultiView( true );
+            display = WaveTrackSubViewType::Default();
+         }
 
-         // Set the default scale type to linear or log, even if we are showing
-         // spectrogram
-         settings.scaleType = TracksPrefs::WaveformScaleChoice();
-
-         pThis->DoSetDisplay( display );
+         pThis->DoSetDisplay( display, !multi );
       }
    }
 }

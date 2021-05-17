@@ -26,76 +26,81 @@
 
 ;; Hint: this algorithm constructs the 2^n variations by substituting
 ;; (or not) 'n' for 's' whereever s'es occur.  The search is cut off
-;; however, when an altered string is found in the encoding-list, which
-;; tells what cases are handled directly.
+;; however, when an altered string is found in the encoding-list,
+;; which tells what cases are handled directly.
 ;;
-;; Wow, returning to the description above after several months, I couldn't make 
-;; heads or tails of it, and I wrote it!  Here's another perhaps better, description:
+;; Wow, returning to the description above after several months, I
+;; couldn't make heads or tails of it, and I wrote it!  Here's another
+;; perhaps better, description:
 ;; 
-;; We generated various _fetch routines that differ in their assumptions about how to
-;; access signal arguments.  There are (now) 4 variations: NONE, SCALE, INTERP, and
-;; RAMP.  All 4^N combinations of these are generated initially, but many combinations
-;; are deleted before any code is generated.  Reasons for removing a combination include
-;; the use of symetry, linearity, and simply the promise that input arguments will be
-;; interpolated externally.  In most of these cases, combinations are removed because
-;; they cannot occur in practice.  But in others, combinations are removed because they
-;; should be handled by different code.  For example, an input signal matching the output 
-;; sample rate and with a scale factor of 1 is normally handled by NONE style 
-;; "interpolation".  Note: "interpolation" is used throughout this code, but a better term
-;; would be "access method," because no interpolation is involved in the NONE and
-;; SCALE variants. The inner loop access code for NONE style is something like "*s++".  
-;; However, an input signal suitable for NONE style interpolation can also be handled
-;; by SCALE style interpolation (which looks something like "(*s++ * s_scale)", i.e.
-;; an extra multiplication is required.  If the attribute INTERNAL-SCALING is used,
-;; then the scale factor does not actually appear at the access point because it has been
-;; factored into a filter coefficient or some other factor, saving the multiply.  
-;; Alternatively, the ALWAYS-SCALE attribute can specify that there is little to be
-;; gained by saving a multiply.  In these cases, we want to handle NONE style signals
-;; with SCALE style interpolation.  Let's run through these possibilities again and
-;; describe how they are handled:
+;; We generated various _fetch routines that differ in their
+;; assumptions about how to access signal arguments.  There are (now)
+;; 4 variations: NONE, SCALE, INTERP, and RAMP.  All 4^N combinations
+;; of these are generated initially, but many combinations are deleted
+;; before any code is generated.  Reasons for removing a combination
+;; include the use of symetry, linearity, and simply the promise that
+;; input arguments will be interpolated externally.  In most of these
+;; cases, combinations are removed because they cannot occur in
+;; practice.  But in others, combinations are removed because they
+;; should be handled by different code.  For example, an input signal
+;; matching the output sample rate and with a scale factor of 1 is
+;; normally handled by NONE style "interpolation".  Note:
+;; "interpolation" is used throughout this code, but a better term
+;; would be "access method," because no interpolation is involved in
+;; the NONE and SCALE variants. The inner loop access code for NONE
+;; style is something like "*s++".  However, an input signal suitable
+;; for NONE style interpolation can also be handled by SCALE style
+;; interpolation (which looks something like "(*s++ * s_scale)", i.e.
+;; an extra multiplication is required.  If the attribute
+;; INTERNAL-SCALING is used, then the scale factor does not actually
+;; appear at the access point because it has been factored into a
+;; filter coefficient or some other factor, saving the multiply.
+;; Alternatively, the ALWAYS-SCALE attribute can specify that there is
+;; little to be gained by saving a multiply.  In these cases, we want
+;; to handle NONE style signals with SCALE style interpolation.  Let's
+;; run through these possibilities again and describe how they are
+;; handled:
 ;;
-;; ALWAYS-SCALE: here we delete the NONE variant(s) and only generate fetch
-;; routines that have scaling code in them.  When we get an actual parameter with
-;; a scale factor of 1 (implying NONE interpolation), we handle it with the SCALE
-;; fetch routine.
+;; ALWAYS-SCALE: here we delete the NONE variant(s) and only generate
+;; fetch routines that have scaling code in them.  When we get an
+;; actual parameter with a scale factor of 1 (implying NONE
+;; interpolation), we handle it with the SCALE fetch routine.
 ;; INTERNAL-SCALING: here we generate NONE fetch routines because the
-;; scale factor is taken care of elsewhere in the code, e.g. in a filter coefficient.
-;; LINEAR: here, the scale factor of the actual argument becomes a scale factor
-;; on the output (part of the data structure), deferring multiplies until later.  We
-;; then modify the argument scale factor to 1, and NONE style interpolation applies.
-;; There is no need to generate SCALE style routines, because there will never be
-;; any need for them.
+;; scale factor is taken care of elsewhere in the code, e.g. in a
+;; filter coefficient.  LINEAR: here, the scale factor of the actual
+;; argument becomes a scale factor on the output (part of the data
+;; structure), deferring multiplies until later.  We then modify the
+;; argument scale factor to 1, and NONE style interpolation applies.
+;; There is no need to generate SCALE style routines, because there
+;; will never be any need for them.
 ;;
 ;; For a given signal parameter, these 3 cases are mutually exclusive.
 ;;
-;; Looking at these three cases, we see that sometimes there will be SCALE style
-;; routines handling NONE arguments, sometimes NONE style routines handling
-;; SCALE arguments, and sometimes NONE style routines because there will
-;; never be a need for SCALE.  
-;; This code is going to generate labels so that other fetch routines 
-;; handle the "missing" ones.
-;; To do this, we generate extra labels in the case
-;; statement that selects the fetch routine (interpolation is in the inner loop in the
-;; fetch routine.  For example, we might generate this code:
-;; ...
-;;  case INTERP_nn:
-;;  case INTERP_sn:
-;;  case INTERP_ns:
-;;  case INTERP_ss: susp->susp.fetch = tonev_ss_fetch; break;
-;; ...
-;; Here, a single fetch routine (tonev_ss_fetch) handles all variations of NONE and
-;; SCALE (n and s) types of the two signal arguments.  The basic rule is: if you did not
-;; generate a fetch routine for the NONE case, then handle it with the SCALE case, and
-;; if you did not generate a fetch routine for the SCALE case, handle it with the NONE
-;; case.
+;; Looking at these three cases, we see that sometimes there will be
+;; SCALE style routines handling NONE arguments, sometimes NONE style
+;; routines handling SCALE arguments, and sometimes NONE style
+;; routines because there will never be a need for SCALE.  This code
+;; is going to generate labels so that other fetch routines handle the
+;; "missing" ones.  To do this, we generate extra labels in the case
+;; statement that selects the fetch routine (interpolation is in the
+;; inner loop in the fetch routine.  For example, we might generate
+;; this code: ...  case INTERP_nn: case INTERP_sn: case INTERP_ns:
+;; case INTERP_ss: susp->susp.fetch = tonev_ss_fetch; break; ...
+;; Here, a single fetch routine (tonev_ss_fetch) handles all
+;; variations of NONE and SCALE (n and s) types of the two signal
+;; arguments.  The basic rule is: if you did not generate a fetch
+;; routine for the NONE case, then handle it with the SCALE case, and
+;; if you did not generate a fetch routine for the SCALE case, handle
+;; it with the NONE case.
 ;; 
-;; The algorithm uses the list interpolation-rationale, which lists for each sound
-;; parameter one of {NIL, LINEAR, ALWAYS-SCALE, INTERNAL-SCALING}.
-;; Using this list, the code enumerates all the possible cases that might be handled
-;; by the current fetch routine (represented by the "encoding" parameter).  
-;; This is a recursive algorithm because, if there are n SCALE type parameters, then
-;; there are 2^N possible variations to enumerate.  (E.g. look at the 4 variations in
-;; the code example above.)
+;; The algorithm uses the list interpolation-rationale, which lists
+;; for each sound parameter one of {NIL, LINEAR, ALWAYS-SCALE,
+;; INTERNAL-SCALING}.  Using this list, the code enumerates all the
+;; possible cases that might be handled by the current fetch routine
+;; (represented by the "encoding" parameter).  This is a recursive
+;; algorithm because, if there are n SCALE type parameters, then there
+;; are 2^N possible variations to enumerate.  (E.g. look at the 4
+;; variations in the code example above.)
 ;;
 ;;
 (defun check-for-no-interpolation-1 (encoding index 
@@ -184,13 +189,13 @@
 
 
 ;;************
-;;				  write-mark
+;; write-mark
 ;;
 ;; Inputs:
-;;	alg - algorithm description
-;;	stream - stream on which to write .c file
+;;      alg - algorithm description
+;;      stream - stream on which to write .c file
 ;; Effect:
-;;	writes NAME_mark(...)
+;;      writes NAME_mark(...)
 ;;************
 
 (defun write-mark (alg stream)
@@ -306,13 +311,13 @@
 
 
 ;;************
-;;				  write-make
+;; write-make
 ;;
 ;; Inputs:
-;;	alg - algorithm description
-;;	stream - stream on which to write .c file
+;;      alg - algorithm description
+;;      stream - stream on which to write .c file
 ;; Effect:
-;;	writes NAME_free(...), NAME_print_tree,  and snd_make_NAME(...)
+;;      writes NAME_free(...), NAME_print_tree,  and snd_make_NAME(...)
 ;;************
 
 (defun write-make (alg stream)
@@ -445,12 +450,12 @@
     ;--------------------
     ;     sample_type scale_factor = 1.0F;
     ;  time_type t0_min; -- but only if there are sound args, implied by non-null sound-names
-    ;  long lsc;  
+    ;  int64_t lsc;  
     ;--------------------
     (format stream "    sample_type scale_factor = 1.0F;~%")
     (if sound-names (format stream "    time_type t0_min = t0;~%"))
     (if (lsc-needed-p alg)
-        (format stream "    long lsc;~%"))
+        (format stream "    int64_t lsc;~%"))
 
     ; now do canonical ordering of commutable sounds
     ;
@@ -690,9 +695,9 @@
     ;    /* how many samples to toss before t0: */
     ;    susp->susp.toss_cnt = (long) ((t0 - t0_min) * sr + <DELAY>.5);
     ;    if (susp->susp.toss_cnt > 0) {
-    ;	susp->susp.keep_fetch = susp->susp.fetch;
-    ;	susp->susp.fetch = NAME_toss_fetch;
-    ;	t0 = t0_min; -- DELETED 3MAY99 by RBD
+    ;   susp->susp.keep_fetch = susp->susp.fetch;
+    ;   susp->susp.fetch = NAME_toss_fetch;
+    ;   t0 = t0_min; -- DELETED 3MAY99 by RBD
     ;    }
     ;----------------
     (cond (sound-names
@@ -704,7 +709,7 @@
            (format stream "    if (susp->susp.toss_cnt > 0) {\n")
            (format stream "        susp->susp.keep_fetch = susp->susp.fetch;\n")
            (format stream "        susp->susp.fetch = ~A_toss_fetch;~%" name)
-;	   (format stream "        t0 = t0_min;~%    }\n\n")))
+;          (format stream "        t0 = t0_min;~%    }\n\n")))
            (format stream "    }\n\n")))
 
     ;--------------------
@@ -750,13 +755,13 @@
     ;--------------------
     ; ramped or interpolated:
     ;
-    ;	susp->started = false;
+    ;   susp->started = false;
     ;--------------------
     (cond ((any-ramp-or-interp-in interpolation-list)
            (format stream "    susp->started = false;~%")))
 
     ;--------------------
-    ;	susp->susp.current = 0;
+    ;   susp->susp.current = 0;
     ;--------------------
     (format stream "    susp->susp.current = 0;~%")
 
@@ -769,13 +774,13 @@
 
     (dotimes (n (length (get alg 'sound-args)))
       (let ((interpolation (union-of-nth interpolation-list n)))
-        (setf arg (nth n sound-names))	; get name of signal
+        (setf arg (nth n sound-names))  ; get name of signal
         (format stream "    susp->~A = ~A;~%" arg arg)
         (format stream "    susp->~A_cnt = 0;~%" arg)
         ;-----------------------------------------------
         ; Interpolation: 
         ;
-        ;	  susp-> <arg>_pHaSe = 0.0;               
+        ;         susp-> <arg>_pHaSe = 0.0;               
         ;         susp-> <arg>_pHaSe_iNcR = <arg> ->sr    
         ;-----------------------------------------------
         (cond ((member 'INTERP interpolation)
@@ -820,15 +825,15 @@
 ;; write-ansi-prototype-list -- with comma separator, open and close parens
 ;;
 ;; Inputs:
-;;	stream - output stream
-;;	prefix - arg prefix, perhaps ""
-;;	args - argument type/name pairs of the form
-;;		( (type1 name1) (type2 name2) ... )
+;;      stream - output stream
+;;      prefix - arg prefix, perhaps ""
+;;      args - argument type/name pairs of the form
+;;              ( (type1 name1) (type2 name2) ... )
 ;; Effect:
-;;	if *ANSI* is set T, writes ANSI-style parameter list of the form
-;;		type name, ...
-;;	if *ANSI* is set NIL, writes antique-style parameter list of the form
-;;		()
+;;      if *ANSI* is set T, writes ANSI-style parameter list of the form
+;;              type name, ...
+;;      if *ANSI* is set NIL, writes antique-style parameter list of the form
+;;              ()
 ;;************
 
 (defun write-ansi-prototype-list (stream prefix args)
@@ -838,7 +843,7 @@
        (dolist (parm args)
           ;--------------------
           ; for each parameter
-          ;	<comma>type <prefix><parm>
+          ;     <comma>type <prefix><parm>
           ;--------------------
           (format stream "~A~A ~A~A" comma (car parm) prefix (cadr parm))
           (setf comma ", "))
@@ -846,18 +851,18 @@
     (format stream ")")))
 
 ;;************
-;;			   write-ansi-parameter-list
+;; write-ansi-parameter-list
 ;;
 ;; Inputs:
-;;	stream - output stream
-;;	prefix - arg prefix, perhaps ""
-;;	args - argument type/name pairs of the form
-;;		( (type1 name1) (type2 name2) ... )
+;;      stream - output stream
+;;      prefix - arg prefix, perhaps ""
+;;      args - argument type/name pairs of the form
+;;              ( (type1 name1) (type2 name2) ... )
 ;; Effect:
-;;	if *ANSI* is set T, writes ANSI-style parameter list of the form
-;;		(type name, ...)
-;;	if *ANSI* is set NIL, writes antique-style parameter list of the form
-;;		(name, ...)
+;;      if *ANSI* is set T, writes ANSI-style parameter list of the form
+;;              (type name, ...)
+;;      if *ANSI* is set NIL, writes antique-style parameter list of the form
+;;              (name, ...)
 ;; Note:
 ;;  to get a space between types and arguments, a space is prepended to prefix if
 ;; this is an *ANSI* arg list.
@@ -877,16 +882,16 @@
     (format stream ")")))
 
 ;;************
-;;			       write-sample-rate
+;; write-sample-rate
 ;; Effect:
-;; 	declare sr and compute the sample rate for the new signal
+;;      declare sr and compute the sample rate for the new signal
 ;; Notes:
-;;	If sr is an input parameter, it is not declared
-;;	If (SAMPLE-RATE expr) is specified, declare sr to be initialized
-;;	   to the expr
-;;	If (SAMPLE-RATE (MAX s1 s2 ...)), sr is initialized to the max.
-;;	Otherwise, sr is initialized to the max of the sample rates of
-;;	all the sound-type arguments	
+;;      If sr is an input parameter, it is not declared
+;;      If (SAMPLE-RATE expr) is specified, declare sr to be initialized
+;;         to the expr
+;;      If (SAMPLE-RATE (MAX s1 s2 ...)), sr is initialized to the max.
+;;      Otherwise, sr is initialized to the max of the sample rates of
+;;      all the sound-type arguments    
 ;;************
 
 (defun write-sample-rate (stream sr sound-names arguments)
@@ -920,7 +925,7 @@
             ;---------------------
             ;   rate_type sr = max( <arg[0]> ->sr, <arg[i]> ->sr);
             ;---------------------
-           (format stream "    rate_type sr = ")	; jmn
+           (format stream "    rate_type sr = ")        ; jmn
            (write-redux-of-names stream "max" sound-names "->sr")
            (format stream ";~%")
           )
@@ -940,14 +945,14 @@
 
 
 ;;************
-;;			       write-start-time
+;; write-start-time
 ;; Effect:
-;; 	declare sr and compute the start time for the new signal
+;;      declare sr and compute the start time for the new signal
 ;; Notes:
-;;	If t0 is an input parameter, it is not declared
-;;	If (START (AT expr)) is specified, declare t0 to be initialized
-;;	   to the expr
-;;	Otherwise, t0 is initialized to 0
+;;      If t0 is an input parameter, it is not declared
+;;      If (START (AT expr)) is specified, declare t0 to be initialized
+;;         to the expr
+;;      Otherwise, t0 is initialized to 0
 ;;************
 
 (defun write-start-time (stream start arguments)

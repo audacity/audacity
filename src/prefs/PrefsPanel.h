@@ -46,7 +46,8 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 class AudacityProject;
 class ShuttleGui;
 
-class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
+class AUDACITY_DLL_API PrefsPanel /* not final */
+   : public wxPanelWrapper, ComponentInterface
 {
  public:
     // An array of PrefsNode specifies the tree of pages in pre-order traversal.
@@ -79,7 +80,7 @@ class PrefsPanel /* not final */ : public wxPanelWrapper, ComponentInterface
 
    // Typically you make a static object of this type in the .cpp file that
    // also implements the PrefsPanel subclass.
-   struct Registration final
+   struct AUDACITY_DLL_API Registration final
    {
       Registration( const wxString &name, const Factory &factory,
          bool expanded = true,

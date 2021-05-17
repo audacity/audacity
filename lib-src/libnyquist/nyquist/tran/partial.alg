@@ -9,7 +9,7 @@
        ("long" "ph_incr" "ROUND32((hz * SINE_TABLE_LEN) * (1 << SINE_TABLE_SHIFT) / sr)"))
 (TERMINATE (MIN env))
 (LOGICAL-STOP (MIN env))
-(INNER-LOOP "output = sine_table[phase >> SINE_TABLE_SHIFT] * env;
+(INNER-LOOP "output = sine_table[phase >> SINE_TABLE_SHIFT] * (sample_type) env;
             phase += ph_incr;
             phase &= SINE_TABLE_MASK;")
 (MAINTAIN ("phase" 

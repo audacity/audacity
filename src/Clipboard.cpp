@@ -18,6 +18,14 @@ Clipboard::Clipboard()
 
 Clipboard::~Clipboard() = default;
 
+void Clipboard::Swap( Clipboard &other )
+{
+   std::swap( mTracks, other.mTracks );
+   std::swap( mProject, other.mProject );
+   std::swap( mT0, other.mT0 );
+   std::swap( mT1, other.mT1 );
+}
+
 Clipboard &Clipboard::Get()
 {
    static Clipboard instance;

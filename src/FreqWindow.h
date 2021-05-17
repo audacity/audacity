@@ -14,6 +14,7 @@
 #include <vector>
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit
+#include "Prefs.h"
 #include "SampleFormat.h"
 #include "SpectrumAnalyst.h"
 #include "widgets/wxPanelWrapper.h" // to inherit
@@ -52,7 +53,8 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-class FrequencyPlotDialog final : public wxDialogWrapper
+class FrequencyPlotDialog final : public wxDialogWrapper,
+                                  public PrefsListener
 {
 public:
    FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
@@ -63,6 +65,8 @@ public:
    bool Show( bool show = true ) override;
 
 private:
+   void Populate();
+
    void GetAudio();
 
    void PlotMouseEvent(wxMouseEvent & event);
@@ -87,6 +91,9 @@ private:
    void Recalc();
    void DrawPlot();
    void DrawBackground(wxMemoryDC & dc);
+
+   // PrefsListener implementation
+   void UpdatePrefs() override;
 
  private:
    bool mDrawGrid;

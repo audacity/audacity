@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ChangeSpeed.h"
 #include "LoadEffects.h"
 
@@ -32,6 +32,7 @@
 #include "../widgets/valnum.h"
 
 #include "TimeWarper.h"
+#include "../WaveClip.h"
 #include "../WaveTrack.h"
 
 enum
@@ -551,9 +552,46 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
    double newLength = outputTrack->GetEndTime();
    if (bResult)
    {
+      // Silenced samples will be inserted in gaps between clips, so capture where these
+      // gaps are for later deletion
+      std::vector<std::pair<double, double>> gaps;
+      double last = mCurT0;
+      auto clips = track->SortedClipArray();
+      auto front = clips.front();
+      auto back = clips.back();
+      for (auto &clip : clips) {
+         auto st = clip->GetStartTime();
+         auto et = clip->GetEndTime();
+
+         if (st >= mCurT0 || et < mCurT1) {
+            if (mCurT0 < st && clip == front) {
+               gaps.push_back(std::make_pair(mCurT0, st));
+            }
+            else if (last < st && mCurT0 <= last ) {
+               gaps.push_back(std::make_pair(last, st));
+            }
+
+            if (et < mCurT1 && clip == back) {
+               gaps.push_back(std::make_pair(et, mCurT1));
+            }
+         }
+         last = et;
+      }
+
       LinearTimeWarper warper { mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
-      track->ClearAndPaste(
-         mCurT0, mCurT1, outputTrack.get(), false, true, &warper);
+
+      // Take the output track and insert it in place of the original sample data
+      track->ClearAndPaste(mCurT0, mCurT1, outputTrack.get(), true, true, &warper);
+
+      // Finally, recreate the gaps
+      for (auto gap : gaps) {
+         auto st = track->LongSamplesToTime(track->TimeToLongSamples(gap.first));
+         auto et = track->LongSamplesToTime(track->TimeToLongSamples(gap.second));
+         if (st >= mCurT0 && et <= mCurT1 && st != et)
+         {
+            track->SplitDelete(warper.Warp(st), warper.Warp(et));
+         }
+      }
    }
 
    if (newLength > mMaxNewLength)

@@ -1,8 +1,9 @@
-/**********************************************************************
+/*!********************************************************************
 
 Audacity: A Digital Audio Editor
 
-DBConection.h
+@file DBConnection.h
+@brief Declare DBConnection, which maintains database connection and associated status and background thread
 
 Paul Licameli -- split from ProjectFileIO.h
 
@@ -13,6 +14,7 @@ Paul Licameli -- split from ProjectFileIO.h
 
 #include <atomic>
 #include <condition_variable>
+#include <functional>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -25,18 +27,37 @@ struct sqlite3_stmt;
 class wxString;
 class AudacityProject;
 
+struct DBConnectionErrors
+{
+   TranslatableString mLastError;
+   TranslatableString mLibraryError;
+   int mErrorCode { 0 };
+   wxString mLog;
+};
+
 class DBConnection
 {
 public:
-   explicit
-   DBConnection(const std::weak_ptr<AudacityProject> &pProject);
+   // Type of function invoked in the main thread after detection of
+   // checkpoint failure, which might have been in a worker thread
+   using CheckpointFailureCallback = std::function<void()>;
+
+   DBConnection(
+      const std::weak_ptr<AudacityProject> &pProject,
+      const std::shared_ptr<DBConnectionErrors> &pErrors,
+      CheckpointFailureCallback callback);
    ~DBConnection();
 
-   bool Open(const char *fileName);
+   int Open(const FilePath fileName);
    bool Close();
 
-   bool SafeMode(const char *schema = "main");
-   bool FastMode(const char *schema = "main");
+   //! throw and show appropriate message box
+   [[noreturn]] void ThrowException(
+      bool write //!< If true, a database update failed; if false, only a SELECT failed
+   ) const;
+
+   int SafeMode(const char *schema = "main");
+   int FastMode(const char *schema = "main");
 
    bool Assign(sqlite3 *handle);
    sqlite3 *Detach();
@@ -53,23 +74,38 @@ public:
       GetSummary64k,
       LoadSampleBlock,
       InsertSampleBlock,
-      DeleteSampleBlock
+      DeleteSampleBlock,
+      GetRootPage,
+      GetDBPage
    };
-   sqlite3_stmt *GetStatement(enum StatementID id);
    sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
 
    void SetBypass( bool bypass );
    bool ShouldBypass();
 
-private:
-   bool ModeConfig(sqlite3 *db, const char *schema, const char *config);
+   //! Just set stored errors
+   void SetError(
+      const TranslatableString &msg,
+      const TranslatableString &libraryError = {}, 
+      int errorCode = {});
 
-   void CheckpointThread();
+   //! Set stored errors and write to log; and default libraryError to what database library reports
+   void SetDBError(
+      const TranslatableString &msg,
+      const TranslatableString& libraryError = {},
+      int errorCode = -1);
+
+private:
+   int OpenStepByStep(const FilePath fileName);
+   int ModeConfig(sqlite3 *db, const char *schema, const char *config);
+
+   void CheckpointThread(sqlite3 *db, const FilePath &fileName);
    static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
 
 private:
    std::weak_ptr<AudacityProject> mpProject;
    sqlite3 *mDB;
+   sqlite3 *mCheckpointDB;
 
    std::thread mCheckpointThread;
    std::condition_variable mCheckpointCondition;
@@ -78,10 +114,39 @@ private:
    std::atomic_bool mCheckpointPending{ false };
    std::atomic_bool mCheckpointActive{ false };
 
-   std::map<enum StatementID, sqlite3_stmt *> mStatements;
+   std::mutex mStatementMutex;
+   using StatementIndex = std::pair<enum StatementID, std::thread::id>;
+   std::map<StatementIndex, sqlite3_stmt *> mStatements;
+
+   std::shared_ptr<DBConnectionErrors> mpErrors;
+   CheckpointFailureCallback mCallback;
 
    // Bypass transactions if database will be deleted after close
    bool mBypass;
+};
+
+//! RAII for a database transaction, possibly nested
+/*! Make a savepoint (a transaction, possibly nested) with the given name;
+    roll it back at destruction time, unless an explicit Commit() happened first.
+    Commit() must not be called again after one successful call.
+    An exception is thrown from the constructor if the transaction cannot open.
+ */
+class AUDACITY_DLL_API TransactionScope
+{
+public:
+   TransactionScope(DBConnection &connection, const char *name);
+   ~TransactionScope();
+
+   bool Commit();
+
+private:
+   bool TransactionStart(const wxString &name);
+   bool TransactionCommit(const wxString &name);
+   bool TransactionRollback(const wxString &name);
+
+   DBConnection &mConnection;
+   bool mInTrans;
+   wxString mName;
 };
 
 using Connection = std::unique_ptr<DBConnection>;

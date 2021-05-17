@@ -12,13 +12,17 @@ Paul Licameli split from AudacityProject.h
 #define __PROJECT_AUDIO_IO__
 
 #include "ClientData.h" // to inherit
+#include <wx/weakref.h>
 
 class AudacityProject;
-class MeterPanelBase;
+
+// Windows build needs complete type for parameter of wxWeakRef
+// class MeterPanelBase;
+#include "widgets/MeterPanelBase.h"
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
-class ProjectAudioIO final
+class AUDACITY_DLL_API ProjectAudioIO final
    : public ClientData::Base
 {
 public:
@@ -43,8 +47,8 @@ private:
    AudacityProject &mProject;
 
    // Project owned meters
-   MeterPanelBase *mPlaybackMeter{};
-   MeterPanelBase *mCaptureMeter{};
+   wxWeakRef<MeterPanelBase> mPlaybackMeter{};
+   wxWeakRef<MeterPanelBase> mCaptureMeter{};
 
    int  mAudioIOToken{ -1 };
 };

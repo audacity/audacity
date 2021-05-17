@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ExtImportPrefs.h"
 
 #include <wx/defs.h>
@@ -92,6 +92,9 @@ wxString ExtImportPrefs::HelpPageName()
 /// Creates the dialog and its contents.
 void ExtImportPrefs::Populate()
 {
+   // Ensure Importer has current items
+   Importer::Get().ReadImportItems();
+
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
    // Use 'eIsCreatingFromPrefs' so that the GUI is
@@ -212,6 +215,8 @@ bool ExtImportPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
+
+   Importer::Get().WriteImportItems();
 
    return true;
 }
@@ -642,8 +647,11 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
    if (msgres != wxYES)
       return;
 
-   RuleTable->DeleteRows (last_selected);
+   PluginList->DeleteAllItems();
    items.erase (items.begin() + last_selected);
+   DoOnRuleTableSelect (last_selected);
+   // This will change last_selected
+   RuleTable->DeleteRows (last_selected);
    RuleTable->AutoSizeColumns ();
    if (last_selected >= RuleTable->GetNumberRows ())
       last_selected = RuleTable->GetNumberRows () - 1;

@@ -18,10 +18,10 @@ effects, generators, analysis-effects, commands.  It also has functions
 for shared and private configs - which need to move out.
 *****************************************************************************/
 
-#include "Audacity.h"
+
 #include "PluginManager.h"
 
-#include "Experimental.h"
+
 
 #include <algorithm>
 
@@ -42,6 +42,7 @@ for shared and private configs - which need to move out.
 #include "audacity/EffectInterface.h"
 #include "audacity/ModuleInterface.h"
 
+#include "AudacityFileConfig.h"
 #include "FileNames.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
@@ -855,11 +856,7 @@ int PluginRegistrationDialog::SortCompare(ItemData *item1, ItemData *item2)
       return 0;
    }
 
-#if defined(__WXMAC__)   
-   return str2->Cmp(*str1) * mSortDirection;
-#else
-   return str1->Cmp(*str2) * mSortDirection;
-#endif
+   return str2->CmpNoCase(*str1) * mSortDirection;
 }
 
 void PluginRegistrationDialog::OnChangedVisibility(wxCommandEvent & evt)
@@ -1438,12 +1435,17 @@ RegistryPath PluginManager::GetPluginEnabledSetting(
    }
 }
 
-bool PluginManager::IsPluginRegistered(const PluginPath &path)
+bool PluginManager::IsPluginRegistered(
+   const PluginPath &path, const TranslatableString *pName)
 {
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
    {
-      if (iter->second.GetPath() == path)
+      auto &descriptor = iter->second;
+      if (descriptor.GetPath() == path)
       {
+         if (pName)
+            descriptor.SetSymbol(
+               { descriptor.GetSymbol().Internal(), *pName });
          return true;
       }
    }
@@ -1776,6 +1778,9 @@ void PluginManager::Initialize()
    // Always load the registry first
    Load();
 
+   // And force load of setting to verify it's accessible
+   GetSettings();
+
    // Then look for providers (they may autoregister plugins)
    ModuleManager::Get().DiscoverProviders();
 
@@ -1929,7 +1934,9 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   auto pRegistry = AudacityFileConfig::Create(
+      {}, {}, FileNames::PluginRegistry());
+   auto &registry = *pRegistry;
 
    // If this group doesn't exist then we have something that's not a registry.
    // We should probably warn the user, but it's pretty unlikely that this will happen.
@@ -1971,7 +1978,7 @@ void PluginManager::Load()
          // These particular config edits were originally written to fix Bug 1914.
          if (regver <= "1.0") {
             // Nyquist prompt is a built-in that has moved to the tools menu.
-            if (effectSymbol == "Nyquist Prompt") {
+            if (effectSymbol == NYQUIST_PROMPT_ID) {
                registry.Write(KEY_EFFECTTYPE, "Tool");
             // Old version of SDE was in Analyze menu.  Now it is in Tools.
             // We don't want both the old and the new.
@@ -2008,7 +2015,7 @@ void PluginManager::Load()
    return;
 }
 
-void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
+void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 {
 #ifdef __WXMAC__
    // Bug 1590: On Mac, we should purge the registry of Nyquist plug-ins
@@ -2114,6 +2121,10 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
       // effects.
       if (!pRegistry->Read(KEY_SYMBOL, &strVal))
          continue;
+
+      // Related to Bug2778: config file only remembered an internal name,
+      // so this symbol may not contain the correct TranslatableString.
+      // See calls to IsPluginRegistered which can correct that.
       plug.SetSymbol(strVal);
 
       // Get the version and bypass group if not found
@@ -2270,7 +2281,9 @@ void PluginManager::LoadGroup(wxFileConfig *pRegistry, PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   wxFileConfig registry(wxEmptyString, wxEmptyString, FileNames::PluginRegistry());
+   auto pRegistry = AudacityFileConfig::Create(
+      {}, {}, FileNames::PluginRegistry());
+   auto &registry = *pRegistry;
 
    // Clear it out
    registry.DeleteAll();
@@ -2296,7 +2309,7 @@ void PluginManager::Save()
    registry.Flush();
 }
 
-void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
+void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
 {
    wxString group = GetPluginTypeString(type);
    for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
@@ -2311,6 +2324,8 @@ void PluginManager::SaveGroup(wxFileConfig *pRegistry, PluginType type)
       pRegistry->SetPath(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
 
       pRegistry->Write(KEY_PATH, plug.GetPath());
+
+      // See comments with the corresponding load-time call to SetSymbol().
       pRegistry->Write(KEY_SYMBOL, plug.GetSymbol().Internal());
 
       // PRL:  Writing KEY_NAME which is no longer read, but older Audacity
@@ -2773,11 +2788,12 @@ PluginDescriptor & PluginManager::CreatePlugin(const PluginID & id,
    return plug;
 }
 
-wxFileConfig *PluginManager::GetSettings()
+FileConfig *PluginManager::GetSettings()
 {
    if (!mSettings)
    {
-      mSettings = std::make_unique<wxFileConfig>(wxEmptyString, wxEmptyString, FileNames::PluginSettings());
+      mSettings =
+         AudacityFileConfig::Create({}, {}, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))
@@ -2805,7 +2821,7 @@ wxFileConfig *PluginManager::GetSettings()
 
 bool PluginManager::HasGroup(const RegistryPath & group)
 {
-   wxFileConfig *settings = GetSettings();
+   auto settings = GetSettings();
 
    bool res = settings->HasGroup(group);
    if (res)
