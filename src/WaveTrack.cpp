@@ -51,7 +51,7 @@ from the project that will own the track.
 #include "Prefs.h"
 
 #include "effects/TimeWarper.h"
-#include "prefs/QualityPrefs.h"
+#include "prefs/QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
 #include "prefs/TracksBehaviorsPrefs.h"
@@ -85,7 +85,7 @@ WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
    if (format == (sampleFormat)0)
-      format = QualityPrefs::SampleFormatChoice();
+      format = QualitySettings::SampleFormatChoice();
    if (rate == 0)
       rate = mSettings.GetRate();
    return std::make_shared<WaveTrack> ( mpFactory, format, rate );

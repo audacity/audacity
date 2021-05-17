@@ -191,6 +191,8 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
    return true;
 }
 
+#include "../Prefs.h"
+
 namespace {
 
 /**************************************************************************//**
@@ -204,10 +206,10 @@ public:
 
    wxCheckBox * TieCheckBox(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting) override;
+      const BoolSetting &Setting) override;
    wxCheckBox * TieCheckBoxOnRight(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting) override;
+      const BoolSetting &Setting) override;
 
    wxChoice *TieChoice(
       const TranslatableString &Prompt,
@@ -215,30 +217,30 @@ public:
 
    wxChoice * TieNumberAsChoice(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
 
    wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
-      const SettingSpec< wxString > &Setting,
+      const StringSetting &Setting,
       const int nChars) override;
    wxTextCtrl * TieIntegerTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int nChars) override;
    wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< double > &Setting,
+      const DoubleSetting &Setting,
       const int nChars) override;
    wxSlider * TieSlider(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min = 0) override;
    wxSpinCtrl * TieSpinCtrl(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min) override;
 };
@@ -256,7 +258,7 @@ ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
    const TranslatableString &Prompt,
-   const SettingSpec< bool > &Setting)
+   const BoolSetting &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
@@ -269,7 +271,7 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    const TranslatableString &Prompt,
-   const SettingSpec< bool > &Setting)
+   const BoolSetting &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
@@ -301,7 +303,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
 
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices, int iNoMatchSelector)
 {
@@ -320,7 +322,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
 
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const TranslatableString &Prompt,
-   const SettingSpec< wxString > &Setting,
+   const StringSetting &Setting,
    const int nChars)
 {
    StartStruct();
@@ -334,7 +336,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
 
 wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int nChars)
 {
    StartStruct();
@@ -348,7 +350,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
 
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< double > &Setting,
+   const DoubleSetting &Setting,
    const int nChars)
 {
    StartStruct();
@@ -362,7 +364,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
 
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
    const TranslatableString & Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int max,
    const int min) 
 {
@@ -377,7 +379,7 @@ wxSlider * ShuttleGuiGetDefinition::TieSlider(
 
 wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int max,
    const int min) 
 {

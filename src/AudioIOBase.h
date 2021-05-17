@@ -338,3 +338,14 @@ protected:
 };
 
 #endif
+
+#include "Prefs.h"
+
+extern AUDACITY_DLL_API StringSetting AudioIOHost;
+extern AUDACITY_DLL_API DoubleSetting AudioIOLatencyCorrection;
+extern AUDACITY_DLL_API DoubleSetting AudioIOLatencyDuration;
+extern AUDACITY_DLL_API StringSetting AudioIOPlaybackDevice;
+extern AUDACITY_DLL_API IntSetting    AudioIORecordChannels;
+extern AUDACITY_DLL_API StringSetting AudioIORecordingDevice;
+extern AUDACITY_DLL_API StringSetting AudioIORecordingSource;
+extern AUDACITY_DLL_API IntSetting    AudioIORecordingSourceIndex;

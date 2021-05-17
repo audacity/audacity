@@ -22,6 +22,7 @@
 #include "MemoryX.h"
 #include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
+#include "Prefs.h"
 #include "WrappedType.h"
 
 class ChoiceSetting;
@@ -102,20 +103,6 @@ public:
 using wxStaticBoxWrapper = wxStaticBox;
 using wxSliderWrapper = wxSlider;
 #endif
-
-template< typename T > class SettingSpec {
-public:
-   SettingSpec( const RegistryPath &path, const T &defaultValue = {} )
-      : mPath{ path }, mDefaultValue{ defaultValue }
-   {}
-
-   const RegistryPath &GetPath() const { return mPath; }
-   const T &GetDefault() const { return mDefaultValue; }
-
-private:
-   RegistryPath mPath;
-   T mDefaultValue;
-};
 
 namespace DialogDefinition {
 
@@ -450,10 +437,10 @@ public:
 // so it doesn't need an argument that is writeable.
    virtual wxCheckBox * TieCheckBox(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting);
+      const BoolSetting &Setting);
    virtual wxCheckBox * TieCheckBoxOnRight(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting);
+      const BoolSetting &Setting);
 
    virtual wxChoice *TieChoice(
       const TranslatableString &Prompt,
@@ -466,31 +453,31 @@ public:
    // emitting scripting information about Preferences.
    virtual wxChoice * TieNumberAsChoice(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices = nullptr,
       int iNoMatchSelector = 0 );
 
    virtual wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
-      const SettingSpec< wxString > &Setting,
+      const StringSetting &Setting,
       const int nChars);
    virtual wxTextCtrl * TieIntegerTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< double > &Setting,
+      const DoubleSetting &Setting,
       const int nChars);
    virtual wxSlider * TieSlider(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min = 0);
    virtual wxSpinCtrl * TieSpinCtrl(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min);
 //-- End of variants.

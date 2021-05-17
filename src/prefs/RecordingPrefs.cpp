@@ -20,6 +20,7 @@
 
 
 #include "RecordingPrefs.h"
+#include "AudioIOBase.h"
 
 #include <wx/defs.h>
 #include <wx/textctrl.h>
@@ -269,11 +270,8 @@ bool RecordingPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
-   double latencyDuration = DEFAULT_LATENCY_DURATION;
-   gPrefs->Read(wxT("/AudioIO/LatencyDuration"), &latencyDuration);
-   if (latencyDuration < 0) {
-      gPrefs->Write(wxT("/AudioIO/LatencyDuration"), DEFAULT_LATENCY_DURATION);
-   }
+   if (AudioIOLatencyDuration.Read() < 0)
+      AudioIOLatencyDuration.Reset();
 
    #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       double targetpeak, deltapeak;

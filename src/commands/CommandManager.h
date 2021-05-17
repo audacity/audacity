@@ -35,6 +35,8 @@ class wxMenu;
 class wxMenuBar;
 using CommandParameter = CommandID;
 
+class BoolSetting;
+
 struct MenuBarListEntry;
 struct SubMenuListEntry;
 struct CommandListEntry;
@@ -139,6 +141,11 @@ class AUDACITY_DLL_API CommandManager final
          checker = MakeCheckFn( key, defaultValue );
          return std::move(*this);
       }
+      // Take a BoolSetting
+      Options &&CheckTest ( const BoolSetting &setting ) && {
+         checker = MakeCheckFn( setting );
+         return std::move(*this);
+      }
 
       const wxChar *accel{ wxT("") };
       CheckFn checker; // default value means it's not a check item
@@ -155,6 +162,8 @@ class AUDACITY_DLL_API CommandManager final
    private:
       static CheckFn
          MakeCheckFn( const wxString key, bool defaultValue );
+      static CheckFn
+         MakeCheckFn( const BoolSetting &setting );
    };
 
    void AddItemList(const CommandID & name,
