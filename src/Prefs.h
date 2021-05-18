@@ -120,10 +120,17 @@ public:
       return mDefaultValue;
    }
 
-   //! overload of Read returning a success flag
-   /*! The cache is unchanged if that is false */
+   //! overload of Read returning a boolean that is true if the value was previously defined  */
    bool Read( T *pVar ) const
    {
+      return ReadWithDefault( pVar, GetDefault() );
+   }
+
+   //! overload of ReadWithDefault returning a boolean that is true if the value was previously defined  */
+   bool ReadWithDefault( T *pVar, const T& defaultValue ) const
+   {
+      if ( pVar )
+         *pVar = defaultValue;
       if ( pVar && this->mValid ) {
          *pVar = this->mCurrentValue;
          return true;

@@ -68,8 +68,10 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
 }
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 {
-   int intRate;
-   if ( !QualitySettings::DefaultSampleRate.Read( &intRate ) ) {
+   int intRate = 0;
+   bool wasDefined = QualitySettings::DefaultSampleRate.Read( &intRate );
+   mRate = intRate;
+   if ( !wasDefined ) {
       // The default given above can vary with host/devices. So unless there is
       // an entry for the default sample rate in audacity.cfg, Audacity can open
       // with a rate which is different from the rate with which it closed.
@@ -77,8 +79,6 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
       QualitySettings::DefaultSampleRate.Write( mRate );
       gPrefs->Flush();
    }
-   else
-      mRate = intRate;
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
 
    bool multiToolActive = false;
