@@ -160,7 +160,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
                     snd-list)
               (incf label-count)
               (when (= label-count max-labels)
-                (format t (_ "Too many silences detected.\nOnly the first 10000 labels added."))
+                (format t (_ "Too many silences detected.~%Only the first 10000 labels added."))
                 (return-from find-sounds snd-list))
               (setf snd-count 0)) ;Pushed to list, so reset sound sample counter.
             (when (> snd-count 0) ;Sound is shorter than snd-dur, so keep counting.

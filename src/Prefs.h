@@ -36,6 +36,8 @@
 // the second part (after the r) indicates the number of times the prefs have been reset within the same version
 #define AUDACITY_PREFS_VERSION_STRING "1.1.1r1"
 
+#include <functional>
+
 #include "../include/audacity/ComponentInterface.h"
 #include "MemoryX.h" // for wxArrayStringEx
 #include "widgets/FileConfig.h"
@@ -54,6 +56,175 @@ extern int gMenusDirty;
 
 struct ByColumns_t{};
 extern ByColumns_t ByColumns;
+
+//! Base class for settings objects.  It holds a configuration key path.
+/* The constructors are non-explicit for convenience */
+class AUDACITY_DLL_API SettingBase
+{
+public:
+   SettingBase( const char *path ) : mPath{ path } {}
+   SettingBase( const wxChar *path ) : mPath{ path } {}
+   SettingBase( const wxString &path ) : mPath{ path } {}
+
+   wxConfigBase *GetConfig() const;
+
+   const wxString &GetPath() const { return mPath; }
+
+   //! Delete the key if present, and return true iff it was.
+   bool Delete();
+
+protected:
+   SettingBase( const SettingBase& ) = default;
+   const RegistryPath mPath;
+};
+
+//! Class template adds an in-memory cache of a value to SettingBase.
+template< typename T >
+class CachingSettingBase : public SettingBase
+{
+public:
+   explicit CachingSettingBase( const SettingBase &path )
+      : SettingBase{ path } {}
+protected:
+   CachingSettingBase( const CachingSettingBase & ) = default;
+   mutable T mCurrentValue{};
+   mutable bool mValid{false};
+};
+
+//! Class template adds default value, read, and write methods to CachingSetingBase
+template< typename T >
+class Setting : public CachingSettingBase< T >
+{
+public:
+   using CachingSettingBase< T >::CachingSettingBase;
+
+   using DefaultValueFunction = std::function< T() >;
+
+   //! Usual overload supplies a default value
+   Setting( const SettingBase &path, const T &defaultValue )
+      : CachingSettingBase< T >{ path }
+      , mDefaultValue{ defaultValue }
+   {}
+
+   //! This overload causes recomputation of the default each time it is needed
+   Setting( const SettingBase &path, DefaultValueFunction function )
+      : CachingSettingBase< T >{ path }
+      , mFunction{ function }
+   {}
+   
+
+   const T& GetDefault() const
+   {
+      if ( mFunction )
+         mDefaultValue = mFunction();
+      return mDefaultValue;
+   }
+
+   //! overload of Read returning a boolean that is true if the value was previously defined  */
+   bool Read( T *pVar ) const
+   {
+      return ReadWithDefault( pVar, GetDefault() );
+   }
+
+   //! overload of ReadWithDefault returning a boolean that is true if the value was previously defined  */
+   bool ReadWithDefault( T *pVar, const T& defaultValue ) const
+   {
+      if ( pVar )
+         *pVar = defaultValue;
+      if ( pVar && this->mValid ) {
+         *pVar = this->mCurrentValue;
+         return true;
+      }
+      const auto config = this->GetConfig();
+      if ( pVar && config ) {
+         if ((this->mValid = config->Read( this->mPath, &this->mCurrentValue )))
+            *pVar = this->mCurrentValue;
+         return this->mValid;
+      }
+      return (this->mValid = false);
+   }
+
+   //! overload of Read, always returning a value
+   /*! The value is the default stored in this in case the key is known to be absent from the config;
+    but it returns type T's default value if there was failure to read the config */
+   T Read() const
+   {
+      return ReadWithDefault( GetDefault() );
+   }
+
+   //! new direct use is discouraged but it may be needed in legacy code
+   /*! Use the given default in case the preference is not defined, which may not be the
+    default-default stored in this object. */
+   T ReadWithDefault( const T &defaultValue ) const
+   {
+      const auto config = this->GetConfig();
+      return config
+         ? ( this->mValid = true, this->mCurrentValue =
+               config->ReadObject( this->mPath, defaultValue ) )
+         : T{};
+   }
+
+   //! Write value to config and return true if successful
+   bool Write( const T &value )
+   {
+      const auto config = this->GetConfig();
+      if ( config ) {
+         this->mCurrentValue = value;
+         return DoWrite();
+      }
+      return false;
+   }
+
+   //! Reset to the default value
+   bool Reset()
+   {
+      return Write( GetDefault() );
+   }
+
+protected:
+   //! Write cached value to config and return true if successful
+   /*! (But the config object is not flushed) */
+   bool DoWrite( )
+   {
+      const auto config = this->GetConfig();
+      return this->mValid =
+         config ? config->Write( this->mPath, this->mCurrentValue ) : false;
+   }
+
+   mutable T mDefaultValue{};
+   const DefaultValueFunction mFunction;
+};
+
+//! This specialization of Setting for bool adds a Toggle method to negate the saved value
+class BoolSetting final : public Setting< bool >
+{
+public:
+   using Setting::Setting;
+
+   //! Write the negation of the previous value, and then return the current value.
+   bool Toggle();
+};
+
+//! Specialization of Setting for int
+class IntSetting final : public Setting< int >
+{
+public:
+   using Setting::Setting;
+};
+
+//! Specialization of Setting for double
+class DoubleSetting final : public Setting< double >
+{
+public:
+   using Setting::Setting;
+};
+
+//! Specialization of Setting for strings
+class StringSetting final : public Setting< wxString >
+{
+public:
+   using Setting::Setting;
+};
 
 /// A table of EnumValueSymbol that you can access by "row" with
 /// operator [] but also allowing access to the "columns" of internal or
@@ -90,11 +261,11 @@ class AUDACITY_DLL_API ChoiceSetting
 {
 public:
    ChoiceSetting(
-      const wxString &key,
+      const SettingBase &key,
       EnumValueSymbols symbols,
       long defaultSymbol = -1
    )
-      : mKey{ key }
+      : mKey{ key.GetPath() }
 
       , mSymbols{ std::move( symbols ) }
 
@@ -140,7 +311,7 @@ class AUDACITY_DLL_API EnumSettingBase : public ChoiceSetting
 {
 public:
    EnumSettingBase(
-      const wxString &key,
+      const SettingBase &key,
       EnumValueSymbols symbols,
       long defaultSymbol,
 
@@ -175,7 +346,7 @@ class EnumSetting : public EnumSettingBase
 public:
 
    EnumSetting(
-      const wxString &key,
+      const SettingBase &key,
       EnumValueSymbols symbols,
       long defaultSymbol,
 

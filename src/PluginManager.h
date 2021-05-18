@@ -177,7 +177,8 @@ public:
 
    // PluginManagerInterface implementation
 
-   bool IsPluginRegistered(const PluginPath &path) override;
+   bool IsPluginRegistered(
+      const PluginPath &path, const TranslatableString *pSymbol) override;
 
    const PluginID & RegisterPlugin(ModuleInterface *module) override;
    const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
@@ -323,5 +324,12 @@ private:
 
    friend class PluginRegistrationDialog;
 };
+
+// Defining these special names in the low-level PluginManager.h
+// is unfortunate
+// Internal name should be stable across versions
+#define NYQUIST_PROMPT_ID wxT("Nyquist Prompt")
+// User-visible name might change in later versions
+#define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */

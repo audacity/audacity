@@ -1330,11 +1330,11 @@ bool AudacityApp::InitPart2()
    // Initialize the CommandHandler
    InitCommandHandler();
 
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Get().Initialize();
+
    // Initialize the PluginManager
    PluginManager::Get().Initialize();
-
-   // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Get().Initialize(*mCmdHandler);
 
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
@@ -1456,15 +1456,6 @@ bool AudacityApp::InitPart2()
    // seemed to arrive with wx3.
    {
       project = ProjectManager::New();
-      wxWindow * pWnd = MakeHijackPanel();
-      if (pWnd)
-      {
-         auto &window = GetProjectFrame( *project );
-         window.Show(false);
-         pWnd->SetParent( &window );
-         SetTopWindow(pWnd);
-         pWnd->Show(true);
-      }
    }
 
    if( ProjectSettings::Get( *project ).GetShowSplashScreen() ){

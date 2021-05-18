@@ -75,11 +75,17 @@ public:
          mMode = mode;
       }
 
+      double GetRecentStreamTime() const { return mRecentStreamTime; }
+
    private:
       void OnTimer(wxCommandEvent &event);
 
       AudacityProject *mProject;
       Mode mMode { Mode::Off };
+
+      // During timer update, grab the volatile stream time just once, so that
+      // various other drawing code can use the exact same value.
+      double mRecentStreamTime{ -1.0 };
    };
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
 

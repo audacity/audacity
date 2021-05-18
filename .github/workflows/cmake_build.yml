@@ -301,19 +301,14 @@ jobs:
         # Create the lib directory
         mkdir -p ${DEST}/lib
 
-        # Copy over wxWidgets libs
-        ldd ${DEST}/bin/audacity
-        for lib in $(ldd ${DEST}/bin/audacity | awk '/libwx/{print $3}')
-        do
-           echo ${lib}
-           ldd ${lib} | awk '/libwx/{print $3}'
-        done | sort -u | xargs cp -n -H -t ${DEST}/lib
-
         # Create wrapper script
         cat >"${DEST}/audacity" <<"EOF"
         #!/bin/sh
-        export LD_LIBRARY_PATH="${0%/*}/lib:${LD_LIBRARY_PATH}"
+        lib="${0%/*}/lib/audacity"
+        export LD_LIBRARY_PATH="${lib}:${LD_LIBRARY_PATH}"
+        export AUDACITY_MODULES_PATH="${lib}/modules"
         "${0%/*}/bin/audacity"
+
         EOF
         chmod +x "${DEST}/audacity"
 

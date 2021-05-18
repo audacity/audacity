@@ -403,7 +403,7 @@ private:
 class VSTEffectsModule final : public ModuleInterface
 {
 public:
-   VSTEffectsModule(const wxString *path);
+   VSTEffectsModule();
    virtual ~VSTEffectsModule();
 
    // ComponentInterface implementation
@@ -438,9 +438,6 @@ public:
    // VSTEffectModule implementation
 
    static void Check(const wxChar *path);
-
-private:
-   PluginPath mPath;
 };
 
 #endif // USE_VST

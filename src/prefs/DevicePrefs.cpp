@@ -24,6 +24,7 @@ other settings.
 
 
 #include "DevicePrefs.h"
+#include "AudioIOBase.h"
 
 #include "RecordingPrefs.h"
 
@@ -84,10 +85,10 @@ void DevicePrefs::Populate()
    GetNamesAndLabels();
 
    // Get current setting for devices
-   mPlayDevice = gPrefs->Read(wxT("/AudioIO/PlaybackDevice"), wxT(""));
-   mRecordDevice = gPrefs->Read(wxT("/AudioIO/RecordingDevice"), wxT(""));
-   mRecordSource = gPrefs->Read(wxT("/AudioIO/RecordingSource"), wxT(""));
-   mRecordChannels = gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2L);
+   mPlayDevice = AudioIOPlaybackDevice.Read();
+   mRecordDevice = AudioIORecordingDevice.Read();
+   mRecordSource = AudioIORecordingSource.Read();
+   mRecordChannels = AudioIORecordChannels.Read();
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -137,7 +138,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          S.Id(HostID);
          mHost = S.TieChoice( XXO("&Host:"),
             {
-               wxT("/AudioIO/Host"),
+               AudioIOHost,
                { ByColumns, mHostNames, mHostLabels }
             }
          );
@@ -190,17 +191,14 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
          w = S
             .NameSuffix(XO("milliseconds"))
             .TieNumericTextBox(XXO("&Buffer length:"),
-                                 {wxT("/AudioIO/LatencyDuration"),
-                                  DEFAULT_LATENCY_DURATION},
+                                 AudioIOLatencyDuration,
                                  9);
          S.AddUnits(XO("milliseconds"));
 
          w = S
             .NameSuffix(XO("milliseconds"))
             .TieNumericTextBox(XXO("&Latency compensation:"),
-                                 {wxT("/AudioIO/LatencyCorrection"),
-                                  DEFAULT_LATENCY_CORRECTION},
-                                 9);
+               AudioIOLatencyCorrection, 9);
          S.AddUnits(XO("milliseconds"));
       }
       S.EndThreeColumn();
@@ -396,28 +394,21 @@ bool DevicePrefs::Commit()
       map = (DeviceSourceMap *) mPlay->GetClientData(
             mPlay->GetSelection());
    }
-   if (map) {
-      gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), map->deviceString);
-   }
+   if (map)
+      AudioIOPlaybackDevice.Write(map->deviceString);
 
    map = NULL;
    if (mRecord->GetCount() > 0) {
       map = (DeviceSourceMap *) mRecord->GetClientData(mRecord->GetSelection());
    }
    if (map) {
-      gPrefs->Write(wxT("/AudioIO/RecordingDevice"),
-                    map->deviceString);
-      gPrefs->Write(wxT("/AudioIO/RecordingSourceIndex"),
-                    map->sourceIndex);
-      if (map->totalSources >= 1) {
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"),
-                       map->sourceString);
-      } else {
-         gPrefs->Write(wxT("/AudioIO/RecordingSource"),
-                       wxT(""));
-      }
-      gPrefs->Write(wxT("/AudioIO/RecordChannels"),
-                    mChannels->GetSelection() + 1);
+      AudioIORecordingDevice.Write(map->deviceString);
+      AudioIORecordingSourceIndex.Write(map->sourceIndex);
+      if (map->totalSources >= 1)
+         AudioIORecordingSource.Write(map->sourceString);
+      else
+         AudioIORecordingSource.Reset();
+      AudioIORecordChannels.Write(mChannels->GetSelection() + 1);
    }
 
    return true;

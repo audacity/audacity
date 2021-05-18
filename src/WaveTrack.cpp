@@ -51,7 +51,7 @@ from the project that will own the track.
 #include "Prefs.h"
 
 #include "effects/TimeWarper.h"
-#include "prefs/QualityPrefs.h"
+#include "prefs/QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
 #include "prefs/TracksBehaviorsPrefs.h"
@@ -85,7 +85,7 @@ WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
    if (format == (sampleFormat)0)
-      format = QualityPrefs::SampleFormatChoice();
+      format = QualitySettings::SampleFormatChoice();
    if (rate == 0)
       rate = mSettings.GetRate();
    return std::make_shared<WaveTrack> ( mpFactory, format, rate );
@@ -994,6 +994,9 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 void WaveTrack::HandleClear(double t0, double t1,
                             bool addCutLines, bool split)
 {
+   // For debugging, use an ASSERT so that we stop
+   // closer to the problem.
+   wxASSERT( t1 >= t0 );
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 

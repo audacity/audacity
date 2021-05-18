@@ -232,7 +232,7 @@ private:
 class AudioUnitEffectsModule final : public ModuleInterface
 {
 public:
-   AudioUnitEffectsModule(const wxString *path);
+   AudioUnitEffectsModule();
    virtual ~AudioUnitEffectsModule();
 
    // ComponentInterface implementation
@@ -271,9 +271,6 @@ public:
 
    wxString FromOSType(OSType type);
    OSType ToOSType(const wxString & type);
-
-private:
-   wxString mPath;
 };
 
 #endif

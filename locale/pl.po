@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-05-09 14:34+0000\n"
+"PO-Revision-Date: 2021-05-18 20:52+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -17897,7 +17897,7 @@ msgstr "%s (%s)"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Elapsed Time:"
-msgstr "Czas zakończenia:"
+msgstr "Miniony czas:"
 
 #: src/widgets/ProgressDialog.cpp
 msgid "Remaining Time:"
@@ -18741,7 +18741,7 @@ msgstr "Nie znaleziono dźwięków.~%Spróbuj obniżyć 'Próg' lub zredukuj 'Mi
 msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
-msgstr "Oznaczanie obszarów między dźwiękami wymaga~%at co najmniej dwóch dźwięków.~%Wykryto tylko jeden dźwięk."
+msgstr "Oznaczanie obszarów między dźwiękami wymaga~%a co najmniej dwóch dźwięków.~%Wykryto tylko jeden dźwięk."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"

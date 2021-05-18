@@ -586,6 +586,12 @@ auto CommandManager::Options::MakeCheckFn(
    return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
 
+auto CommandManager::Options::MakeCheckFn(
+   const BoolSetting &setting ) -> CheckFn
+{
+   return MakeCheckFn( setting.GetPath(), setting.GetDefault() );
+}
+
 ///
 /// Add a list of menu items to the current menu.  When the user selects any
 /// one of these, the given functor will be called

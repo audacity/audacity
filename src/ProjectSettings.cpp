@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AudioIOBase.h"
 #include "Project.h"
+#include "prefs/QualitySettings.h"
 #include "widgets/NumericTextCtrl.h"
 #include "prefs/TracksBehaviorsPrefs.h"
 
@@ -67,13 +68,15 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
 }
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 {
-   if (!gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate,
-         AudioIOBase::GetOptimalSupportedSampleRate())) {
+   int intRate = 0;
+   bool wasDefined = QualitySettings::DefaultSampleRate.Read( &intRate );
+   mRate = intRate;
+   if ( !wasDefined ) {
       // The default given above can vary with host/devices. So unless there is
       // an entry for the default sample rate in audacity.cfg, Audacity can open
       // with a rate which is different from the rate with which it closed.
       // See bug 1879.
-      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mRate);
+      QualitySettings::DefaultSampleRate.Write( mRate );
       gPrefs->Flush();
    }
    gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
@@ -110,8 +113,7 @@ void ProjectSettings::UpdatePrefs()
    // The DefaultProjectSample rate is the rate for new projects.
    // Do not change this project's rate, unless there are no tracks.
    if( TrackList::Get( *this ).size() == 0){
-      gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"), &mRate,
-         AudioIOBase::GetOptimalSupportedSampleRate());
+      mRate = QualityDefaultSampleRate.Read();
       // If necessary, we change this rate in the selection toolbar too.
       auto bar = SelectionBar::Get( *this );
       bar.SetRate( mRate );

@@ -21,15 +21,6 @@
 class wxArrayString;
 class ShuttleGui;
 
-enum {
-   kModuleDisabled = 0,
-   kModuleEnabled = 1,
-   kModuleAsk = 2,     // Will ask, each time, when audacity starts.
-   kModuleFailed = 3,  // Audacity thinks this is a bad module.
-   kModuleNew = 4      // Audacity will ask once, and remember the answer.
-};
-
-
 #define MODULE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Module") }
 
 class ModulePrefs final : public PrefsPanel
@@ -43,9 +34,6 @@ class ModulePrefs final : public PrefsPanel
    bool Commit() override;
    wxString HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
-
-   static int GetModuleStatus( const FilePath &fname );
-   static void SetModuleStatus( const FilePath &fname, int iStatus );
 
  private:
    void GetAllModuleStatuses();

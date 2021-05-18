@@ -432,7 +432,7 @@ void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *wa
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
-   double last = 0.0;
+   double last = mCurT0;
    auto clips = orig->SortedClipArray();
    auto front = clips.front();
    auto back = clips.back();
@@ -444,11 +444,12 @@ void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *wa
          if (mCurT0 < st && clip == front) {
             gaps.push_back(std::make_pair(mCurT0, st));
          }
-         if (mCurT1 > et && clip == back) {
-            gaps.push_back(std::make_pair(et, mCurT1));
-         }
-         if (last >= mCurT0) {
+         else if (last < st && mCurT0 <= last ) {
             gaps.push_back(std::make_pair(last, st));
+         }
+
+         if (et < mCurT1 && clip == back) {
+            gaps.push_back(std::make_pair(et, mCurT1));
          }
       }
       last = et;

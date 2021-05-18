@@ -57,6 +57,7 @@ effects from this one class.
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
+#include "../../PluginManager.h"
 #include "../../Project.h"
 #include "../../ProjectSettings.h"
 #include "../../ShuttleGetDefinition.h"
@@ -164,7 +165,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
-      mName = XO("Nyquist Prompt");
+      mName = NYQUIST_PROMPT_NAME;
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
@@ -209,7 +210,7 @@ PluginPath NyquistEffect::GetPath()
 ComponentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return XO("Nyquist Prompt");
+      return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
 
    return mName;
 }
@@ -1793,6 +1794,7 @@ TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowPare
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
       // Sorry, no context strings, yet
+      // (See also comments in NyquistEffectsModule::AutoRegisterPlugins)
       return TranslatableString{ unquoted, {} };
    }
    else if (allowParens &&
@@ -2051,6 +2053,9 @@ bool NyquistEffect::Parse(
    }
 
    if (len >= 2 && tokens[0] == wxT("name")) {
+      // Names do not yet support context strings for translations, or
+      // internal names distinct from visible English names.
+      // (See also comments in NyquistEffectsModule::AutoRegisterPlugins)
       auto name = UnQuote(tokens[1]);
       // Strip ... from name if it's present, perhaps in third party plug-ins
       // Menu system puts ... back if there are any controls

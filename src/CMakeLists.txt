@@ -179,8 +179,11 @@ list( APPEND SOURCES
       Mix.h
       MixerBoard.cpp
       MixerBoard.h
+      ModuleConstants.h
       ModuleManager.cpp
       ModuleManager.h
+      ModuleSettings.cpp
+      ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
       NumberScale.h
@@ -188,6 +191,8 @@ list( APPEND SOURCES
       PitchName.h
       PlatformCompatibility.cpp
       PlatformCompatibility.h
+      PlaybackSchedule.cpp
+      PlaybackSchedule.h
       PluginManager.cpp
       PluginManager.h
       Prefs.cpp
@@ -713,6 +718,8 @@ list( APPEND SOURCES
       prefs/PrefsPanel.h
       prefs/QualityPrefs.cpp
       prefs/QualityPrefs.h
+      prefs/QualitySettings.cpp
+      prefs/QualitySettings.h
       prefs/RecordingPrefs.cpp
       prefs/RecordingPrefs.h
       prefs/SpectrogramSettings.cpp
@@ -1314,6 +1321,7 @@ target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} ${LIBRARIES} )
+target_link_libraries( ${TARGET} PUBLIC ${AUDACITY_LIBRARIES} )
 
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    if( ${_OPT}use_pch )

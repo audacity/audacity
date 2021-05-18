@@ -44,6 +44,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 #include <type_traits>
 #include <vector>
 #include <wx/debug.h> // for wxASSERT

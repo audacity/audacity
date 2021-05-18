@@ -389,8 +389,7 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
 {
    auto p = &proj;
-   size_t recordingChannels =
-      std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+   size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
    bool strictRules = (recordingChannels <= 2);
 
    // Iterate over all wave tracks, or over selected wave tracks only.
@@ -665,7 +664,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          auto &trackList = TrackList::Get( *p );
          auto numTracks = trackList.Leaders< const WaveTrack >().size();
 
-         auto recordingChannels = std::max(1L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+         auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 
          gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
@@ -1075,7 +1074,7 @@ bool ProjectAudioManager::DoPlayStopSelect( bool click, bool shift )
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
 
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||
