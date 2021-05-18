@@ -192,8 +192,7 @@ bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
    if (mUseSBSMS)
    {
       double pitchRatio = 1.0 + m_dPercentChange / 100.0;
-      EffectSBSMS proxy;
-      proxy.mProxyEffectName = XO("High Quality Pitch Change");
+      EffectSBSMS proxy{ XO("High Quality Pitch Change") };
       proxy.setParameters(1.0, pitchRatio);
       //! Already processing; don't make a dialog
       return Delegate(proxy, settings);

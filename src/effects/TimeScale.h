@@ -22,6 +22,8 @@ class wxSlider;
 class wxTextCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectTimeScale final : public EffectSBSMS
 {
 public:
@@ -116,6 +118,8 @@ static constexpr EffectParameter PitchPercentStart{ &EffectTimeScale::m_PitchPer
 static constexpr EffectParameter PitchPercentEnd{ &EffectTimeScale::m_PitchPercentChangeEnd,
    L"PitchPercentChangeEnd",   0.0,  -50.0,   100.0, 1  };
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_TIMESCALE
 
