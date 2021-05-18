@@ -1149,6 +1149,8 @@ bool AudacityApp::OnInit()
 
    wxString progPath = wxPathOnly(argv[0]);
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
+   // Add the path to modules:
+   FileNames::AddUniquePathToPathList(progPath + L"/lib/audacity", audacityPathList);
 
    FileNames::AddUniquePathToPathList(FileNames::DataDir(), audacityPathList);
 
