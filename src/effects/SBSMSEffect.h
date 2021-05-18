@@ -29,6 +29,10 @@ class TimeWarper;
 class EffectSBSMS /* not final */ : public StatefulEffect
 {
 public:
+   EffectSBSMS() = default;
+   explicit EffectSBSMS(TranslatableString proxyEffectName)
+      : mProxyEffectName{ std::move(proxyEffectName) }
+   {}
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
@@ -38,7 +42,8 @@ public:
    static double getRate(double rateStart, double rateEnd, SlideType slideType, double t);
 
 protected:
-   TranslatableString mProxyEffectName { XO("SBSMS Time / Pitch Stretch") };
+   const TranslatableString mProxyEffectName {
+      XO("SBSMS Time / Pitch Stretch") };
    // This supplies the abstract virtual function, but in fact this symbol
    // does not get used:  this class is either a temporary helper, or else
    // GetSymbol() is overridden further in derived classes.
@@ -60,9 +65,6 @@ private:
    SlideType pitchSlideType;
    int mCurTrackNum;
    float mTotalStretch;
-
-   friend class EffectChangeTempo;
-   friend class EffectChangePitch;
 };
 
 #endif

@@ -25,6 +25,8 @@ class NumericTextCtrl;
 class ShuttleGui;
 class WaveChannel;
 
+namespace {
+
 class EffectChangeSpeed final : public StatefulEffect
 {
 public:
@@ -128,5 +130,7 @@ private:
 static constexpr EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
    L"Percentage",    0.0,  -99.0,   4900.0,  1  };
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__

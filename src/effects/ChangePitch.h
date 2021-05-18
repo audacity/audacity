@@ -36,6 +36,8 @@ class wxTextCtrl;
 class wxSpinCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectChangePitch final : public EffectSoundTouch
 {
 public:
@@ -155,6 +157,8 @@ static constexpr EffectParameter Percentage{ &EffectChangePitch::m_dPercentChang
 static constexpr EffectParameter UseSBSMS{ &EffectChangePitch::mUseSBSMS,
    L"SBSMS",     false, false,   true,    1  };
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGEPITCH__
 

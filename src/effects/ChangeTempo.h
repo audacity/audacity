@@ -30,6 +30,8 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
@@ -113,6 +115,8 @@ static constexpr EffectParameter Percentage{ &EffectChangeTempo::m_PercentChange
 static constexpr EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
    L"SBSMS",     false, false,   true,    1  };
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGETEMPO__
 
