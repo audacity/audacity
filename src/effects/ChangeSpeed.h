@@ -21,6 +21,8 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectChangeSpeed final : public Effect
 {
 public:
@@ -115,5 +117,7 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__

@@ -28,6 +28,8 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectChangeTempo final : public EffectSoundTouch
 {
 public:
@@ -104,6 +106,8 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGETEMPO__
 

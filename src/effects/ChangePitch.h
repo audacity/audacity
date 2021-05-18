@@ -34,6 +34,8 @@ class wxTextCtrl;
 class wxSpinCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectChangePitch final : public EffectSoundTouch
 {
 public:
@@ -148,6 +150,8 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGEPITCH__
 

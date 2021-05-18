@@ -201,8 +201,7 @@ bool EffectChangeTempo::Process()
    if (mUseSBSMS)
    {
       double tempoRatio = 1.0 + m_PercentChange / 100.0;
-      EffectSBSMS proxy;
-      proxy.mProxyEffectName = XO("High Quality Tempo Change");
+      EffectSBSMS proxy{ XO("High Quality Tempo Change") };
       proxy.setParameters(tempoRatio, 1.0);
       success = Delegate(proxy, *mUIParent, nullptr);
    }
