@@ -815,7 +815,8 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
 
          if (proj && !ProjectManager::SafeToOpenProjectInto(*proj))
             proj = nullptr;
-         ( void ) ProjectManager::OpenProject( proj, fullPathStr );
+         ( void ) ProjectManager::OpenProject( proj, fullPathStr,
+               true /* addtohistory */, false /* reuseNonemptyProject */ );
       }
       else {
          // File doesn't exist - remove file from history

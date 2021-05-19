@@ -873,7 +873,8 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
 
       if (proj && !SafeToOpenProjectInto(*proj))
          proj = nullptr;
-      proj = OpenProject( proj, fileName );
+      proj = OpenProject( proj, fileName,
+         true /* addtohistory */, false /* reuseNonemptyProject */ );
    }
 }
 
@@ -901,7 +902,8 @@ bool ProjectManager::SafeToOpenProjectInto(AudacityProject &proj)
 }
 
 AudacityProject *ProjectManager::OpenProject(
-   AudacityProject *pProject, const FilePath &fileNameArg, bool addtohistory)
+   AudacityProject *pProject, const FilePath &fileNameArg,
+   bool addtohistory, bool)
 {
    bool success = false;
    AudacityProject *pNewProject = nullptr;

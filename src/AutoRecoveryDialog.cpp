@@ -430,7 +430,7 @@ static bool RecoverAllProjects(const FilePaths &files,
       std::swap(proj, pproj);
 
       // Open project.
-      if (ProjectManager::OpenProject(proj, file, false) == nullptr)
+      if (ProjectManager::OpenProject(proj, file, false, true) == nullptr)
       {
          return false;
       }

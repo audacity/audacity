@@ -48,12 +48,18 @@ public:
    //! False when it is unsafe to overwrite proj with contents of an .aup3 file
    static bool SafeToOpenProjectInto(AudacityProject &proj);
 
-   // Return the given project if that is not NULL, else create a project.
-   // Then open the given project path.
-   // But if an exception escapes this function, create no NEW project.
+   //! Open a file into an AudacityProject, returning the project, or nullptr for failure
+   /*!
+    If an exception escapes this function, no projects are created.
+    @param pProject if not null, a project that may be reused
+    @param fileNameArg path to the file to open; not always an Audacity project file, may be an import
+    @param addtohistory whether to add .aup3 files to the MRU list (but always done for imports)
+    @param reuseNonemptyProject if true, may reuse the given project when nonempty,
+       but only if importing (not for a project file)
+    */
    static AudacityProject *OpenProject(
       AudacityProject *pProject,
-      const FilePath &fileNameArg, bool addtohistory = true);
+      const FilePath &fileNameArg, bool addtohistory, bool reuseNonemptyProject);
 
    void ResetProjectToEmpty();
 
