@@ -842,9 +842,12 @@ void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 {
    const wxString &cmd = event.GetString();
    if (!cmd.empty()) {
-      if (auto project = ProjectFileManager::Get( mProject ).OpenFile(cmd)) {
+      ProjectChooser chooser{ &mProject, true };
+      if (auto project = ProjectFileManager::OpenFile(
+            std::ref(chooser), cmd)) {
          auto &window = GetProjectFrame( *project );
          window.RequestUserAttention();
+         chooser.Commit();
       }
    }
 }
@@ -871,8 +874,6 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      if (proj && !SafeToOpenProjectInto(*proj))
-         proj = nullptr;
       proj = OpenProject( proj, fileName,
          true /* addtohistory */, false /* reuseNonemptyProject */ );
    }
@@ -901,39 +902,60 @@ bool ProjectManager::SafeToOpenProjectInto(AudacityProject &proj)
    return true;
 }
 
-AudacityProject *ProjectManager::OpenProject(
-   AudacityProject *pProject, const FilePath &fileNameArg,
-   bool addtohistory, bool)
+ProjectManager::ProjectChooser::~ProjectChooser()
 {
-   bool success = false;
-   AudacityProject *pNewProject = nullptr;
-   if ( ! pProject )
-      pProject = pNewProject = New();
-   auto cleanup = finally( [&] {
-      if ( pNewProject )
-         GetProjectFrame( *pNewProject ).Close(true);
-      else if ( !success )
+   if (mpUsedProject) {
+      if (mpUsedProject == mpGivenProject) {
          // Ensure that it happens here: don't wait for the application level
          // exception handler, because the exception may be intercepted
-         ProjectHistory::Get(*pProject).RollbackState();
+         ProjectHistory::Get(*mpGivenProject).RollbackState();
          // Any exception now continues propagating
-   } );
-   ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
-
-   // The above didn't throw, so change what finally will do
-   success = true;
-   pNewProject = nullptr;
-
-   auto &projectFileIO = ProjectFileIO::Get( *pProject );
-   if( projectFileIO.IsRecovered() ) {
-      auto &window = ProjectWindow::Get( *pProject );
-      window.Zoom( window.GetZoomOfToFit() );
-      // "Project was recovered" replaces "Create new project" in Undo History.
-      auto &undoManager = UndoManager::Get( *pProject );
-      undoManager.RemoveStates(0, 1);
+      }
+      else
+         GetProjectFrame( *mpUsedProject ).Close(true);
    }
+}
 
-   return pProject;
+AudacityProject &
+ProjectManager::ProjectChooser::operator() ( bool openingProjectFile )
+{
+   if (mpGivenProject) {
+      // Always check before opening a project file (for safety);
+      // May check even when opening other files
+      // (to preserve old behavior; as with the File > Open command specifying
+      // multiple files of whatever types, so that each gets its own window)
+      bool checkReuse = (openingProjectFile || !mReuseNonemptyProject);
+      if (!checkReuse || SafeToOpenProjectInto(*mpGivenProject))
+         return *(mpUsedProject = mpGivenProject);
+   }
+   return *(mpUsedProject = New());
+}
+
+void ProjectManager::ProjectChooser::Commit()
+{
+   mpUsedProject = nullptr;
+}
+
+AudacityProject *ProjectManager::OpenProject(
+   AudacityProject *pGivenProject, const FilePath &fileNameArg,
+   bool addtohistory, bool reuseNonemptyProject)
+{
+   ProjectManager::ProjectChooser chooser{ pGivenProject, reuseNonemptyProject };
+   if (auto pProject = ProjectFileManager::OpenFile(
+      std::ref(chooser), fileNameArg, addtohistory )) {
+      chooser.Commit();
+
+      auto &projectFileIO = ProjectFileIO::Get( *pProject );
+      if( projectFileIO.IsRecovered() ) {
+         auto &window = ProjectWindow::Get( *pProject );
+         window.Zoom( window.GetZoomOfToFit() );
+         // "Project was recovered" replaces "Create new project" in Undo History.
+         auto &undoManager = UndoManager::Get( *pProject );
+         undoManager.RemoveStates(0, 1);
+      }
+      return pProject;
+   }
+   return nullptr;
 }
 
 // This is done to empty out the tracks, but without creating a new project.

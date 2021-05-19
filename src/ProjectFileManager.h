@@ -11,6 +11,7 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_FILE_MANAGER__
 #define __AUDACITY_PROJECT_FILE_MANAGER__
 
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -81,13 +82,17 @@ public:
 
    static bool IsAlreadyOpen(const FilePath &projPathName);
 
+   //! A function that returns a project to use for opening a file; argument is true if opening a project file
+   using ProjectChooserFn = std::function<AudacityProject&(bool)>;
+
    /*!
     Opens files of many kinds.  In case of import (sound, MIDI, or .aup), the undo history is pushed.
+    @param chooser told whether opening a project file; decides which project to open into
     @param fileName the name and contents are examined to decide a type and open appropriately
     @param addtohistory whether to add .aup3 files to the MRU list (but always done for imports)
     @return if something was successfully opened, the project containing it; else null
     */
-   AudacityProject *OpenFile(
+   static AudacityProject *OpenFile( const ProjectChooserFn &chooser,
       const FilePath &fileName, bool addtohistory = true);
 
    bool Import(const FilePath &fileName,

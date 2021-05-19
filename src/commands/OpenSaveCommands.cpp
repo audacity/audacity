@@ -65,8 +65,10 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    }
    else
    {
-      ProjectFileManager::Get( context.project )
-         .OpenFile(mFileName, mbAddToHistory);
+      ProjectManager::ProjectChooser chooser{ &context.project, true };
+      if(ProjectFileManager::OpenFile(
+         std::ref(chooser), mFileName, mbAddToHistory))
+         chooser.Commit();
    }
    const auto &newFileName = projectFileIO.GetFileName();
 
