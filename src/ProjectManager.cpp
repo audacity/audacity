@@ -871,27 +871,33 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      // DMM: If the project is dirty, that means it's been touched at
-      // all, and it's not safe to open a NEW project directly in its
-      // place.  Only if the project is brand-NEW clean and the user
-      // hasn't done any action at all is it safe for Open to take place
-      // inside the current project.
-      //
-      // If you try to Open a NEW project inside the current window when
-      // there are no tracks, but there's an Undo history, etc, then
-      // bad things can happen, including data files moving to the NEW
-      // project directory, etc.
-      if ( proj && (
-         ProjectHistory::Get( *proj ).GetDirty() ||
-         !TrackList::Get( *proj ).empty()
-      ) )
+      if (proj && !SafeToOpenProjectInto(*proj))
          proj = nullptr;
-
-      // This project is clean; it's never been touched.  Therefore
-      // all relevant member variables are in their initial state,
-      // and it's okay to open a NEW project inside this window.
       proj = OpenProject( proj, fileName );
    }
+}
+
+bool ProjectManager::SafeToOpenProjectInto(AudacityProject &proj)
+{
+   // DMM: If the project is dirty, that means it's been touched at
+   // all, and it's not safe to open a fresh project directly in its
+   // place.  Only if the project is brandnew clean and the user
+   // hasn't done any action at all is it safe for Open to take place
+   // inside the current project.
+   //
+   // If you try to Open a fresh project inside the current window when
+   // there are no tracks, but there's an Undo history, etc, then
+   // bad things can happen, including orphan blocks, or tracks
+   // referring to non-existent blocks
+   if (
+      ProjectHistory::Get( proj ).GetDirty() ||
+      !TrackList::Get( proj ).empty()
+   )
+      return false;
+   // This project is clean; it's never been touched.  Therefore
+   // all relevant member variables are in their initial state,
+   // and it's okay to open a NEW project inside its window.
+   return true;
 }
 
 AudacityProject *ProjectManager::OpenProject(

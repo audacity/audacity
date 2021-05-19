@@ -45,6 +45,9 @@ public:
    // reason remains in this class, not in ProjectFileManager
    static void OpenFiles(AudacityProject *proj);
 
+   //! False when it is unsafe to overwrite proj with contents of an .aup3 file
+   static bool SafeToOpenProjectInto(AudacityProject &proj);
+
    // Return the given project if that is not NULL, else create a project.
    // Then open the given project path.
    // But if an exception escapes this function, create no NEW project.
