@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-05-18 20:52+0000\n"
+"PO-Revision-Date: 2021-05-20 02:44+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -6515,7 +6515,7 @@ msgstr "Algorytm nie działa na tym dźwięku. Nic nie zostało zmienione."
 #: src/effects/ClickRemoval.cpp
 #, c-format
 msgid "Selection must be larger than %d samples."
-msgstr "Wybór musi być większy niż %d sampli."
+msgstr "Zaznaczenie musi być większe niż %d sampli."
 
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
@@ -8498,7 +8498,7 @@ msgid ""
 "\n"
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr "Zaznaczony dźwięk jest za krótki, aby wyświetlić podgląd.\n\nSpróbuj zwiększyć zaznaczony dźwięk do co najmniej %.1f sekund\nlub zredukować 'Rozdzielczość czasu' do mniej niż %.1f sekund."
+msgstr "Zaznaczony dźwięk jest za krótki, aby wyświetlić podgląd.\n\nSpróbuj zwiększyć zaznaczony dźwięk do przynajmniej %.1f sekund\nlub zredukować 'Rozdzielczość czasu' do mniej niż %.1f sekund."
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
 #. effect.
@@ -8520,7 +8520,7 @@ msgid ""
 "\n"
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr "'Rozdzielczość czasu' jest za długa dla zaznaczenia.\n\nSpróbuj zwiększyć zaznaczony dźwięk do co najmniej %.1f sekund\nlub zredukować 'Rozdzielczość czasu' do mniej niż %.1f sekund."
+msgstr "'Rozdzielczość czasu' jest za długa dla zaznaczenia.\n\nSpróbuj zwiększyć zaznaczony dźwięk do przynajmniej %.1f sekund\nlub zredukować 'Rozdzielczość czasu' do mniej niż %.1f sekund."
 
 #: src/effects/Phaser.cpp
 msgid "Phaser"
@@ -9597,7 +9597,7 @@ msgid ""
 "Selection too long for Nyquist code.\n"
 "Maximum allowed selection is %ld samples\n"
 "(about %.1f hours at 44100 Hz sample rate)."
-msgstr "Zaznaczenie jest za długie dla kodu Nyquista.\nMaksymalny dopuszczalny wybór wynosi %ld sampli\n(około %.1f godziny na 44100 Hz częstotliwości próbkowania)."
+msgstr "Zaznaczenie jest za długie dla kodu Nyquista.\nMaksymalne dopuszczalne zaznaczenie wynosi %ld sampli\n(około %.1f godziny na 44100 Hz częstotliwości próbkowania)."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
@@ -13633,7 +13633,7 @@ msgstr "Zmień próbkowanie ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "Zaznacz co najmniej jedną ścieżkę dźwiękową i jedną ścieżkę MIDI."
+msgstr "Zaznacz przynajmniej jedną ścieżkę dźwiękową i jedną ścieżkę MIDI."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -13923,7 +13923,7 @@ msgstr "Zaznacz ścieżkę stereo lub dwie ścieżki mono."
 #: src/menus/TransportMenus.cpp
 #, c-format
 msgid "Please select at least %d channels."
-msgstr "Zaznacz co najmniej %d kanały."
+msgstr "Zaznacz przynajmniej %d kanały."
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select a time within a clip."
@@ -14700,7 +14700,7 @@ msgstr "&Daj sygnał dźwiękowy po ukończeniu czynności"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Re&tain labels if selection snaps to a label"
-msgstr "&Zachowaj etykiety, jeśli wybór jest przyciągany do etykiety"
+msgstr "&Zachowaj etykiety, jeśli zaznaczenie jest przyciągane do etykiety"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Audacity theme"
@@ -15601,7 +15601,7 @@ msgstr "Maksymalna częstotliwość musi wynosić 100 Hz lub więcej"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Minimum frequency must be at least 0 Hz"
-msgstr "Minimalna częstotliwość musi wynosić co najmniej 0 Hz"
+msgstr "Minimalna częstotliwość musi wynosić przynajmniej 0 Hz"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Minimum frequency must be less than maximum frequency"
@@ -15609,7 +15609,7 @@ msgstr "Minimalna częstotliwość musi być mniejsza niż maksymalna częstotli
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The range must be at least 1 dB"
-msgstr "Zakres musi wynosić co najmniej 1 dB"
+msgstr "Zakres musi wynosić przynajmniej 1 dB"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The frequency gain cannot be negative"
@@ -18136,7 +18136,7 @@ msgstr "Steve Daulton"
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Wybór jest za krótki. ~%Musi być większy niż 2 sample."
+msgstr "Zaznaczenie jest za krótkie.~%Musi być większe niż 2 sample."
 
 #: plug-ins/adjustable-fade.ny
 msgid "Adjustable Fade"
@@ -18633,7 +18633,7 @@ msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 msgid "Frequency must be at least 0.1 Hz."
-msgstr "Częstotliwość musi wynosić co najmniej 0.1 Hz."
+msgstr "Częstotliwość musi wynosić przynajmniej 0.1 Hz."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, lisp-format
@@ -18741,7 +18741,7 @@ msgstr "Nie znaleziono dźwięków.~%Spróbuj obniżyć 'Próg' lub zredukuj 'Mi
 msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
-msgstr "Oznaczanie obszarów między dźwiękami wymaga~%a co najmniej dwóch dźwięków.~%Wykryto tylko jeden dźwięk."
+msgstr "Oznaczanie obszarów między dźwiękami wymaga~%a przynajmniej dwóch dźwięków.~%Wykryto tylko jeden dźwięk."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -18876,7 +18876,7 @@ msgid ""
 "Error.\n"
 "Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
-msgstr "Błąd.\nZaznaczono niewystarczającą długość dźwięku.\nDokonaj wyboru dłuższego niż ~a ms."
+msgstr "Błąd.\nZaznaczono niewystarczającą długość dźwięku.\nZaznacz więcej niż ~a ms."
 
 #: plug-ins/noisegate.ny
 #, lisp-format

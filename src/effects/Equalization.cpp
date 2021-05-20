@@ -1163,7 +1163,14 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    else{
       mPanel->Show( true );
       szrV->Show(szr1, true);
-      mUIParent->SetMinSize(mUIParent->GetBestSize());
+      // This sizing calculation is hacky.
+      // Rather than set the true minimum size we set a size we would 
+      // like to have.
+      // This makes the default size of the dialog good, but has the 
+      // downside that the user can't adjust the dialog smaller.
+      wxSize sz = szrV->GetMinSize();
+      sz += wxSize( 400, 100);
+      szrV->SetMinSize(sz);
    }
    ForceRecalc();
 

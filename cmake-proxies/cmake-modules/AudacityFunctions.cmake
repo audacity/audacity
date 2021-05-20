@@ -330,9 +330,17 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    set( DEFINES )
    list( APPEND DEFINES ${ADDITIONAL_DEFINES} )
 
+   # send the file to the proper place in the build tree, by setting the
+   # appropriate property for the platform
+   if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+      set( DIRECTORY_PROPERTY RUNTIME_OUTPUT_DIRECTORY )
+   else ()
+      set( DIRECTORY_PROPERTY LIBRARY_OUTPUT_DIRECTORY )
+   endif ()
+
    if (LIBTYPE STREQUAL "MODULE")
       set( SHAPE "box" )
-      set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_MODDIR}" )
+      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_MODDIR}" )
       set_target_properties( ${TARGET}
          PROPERTIES
             PREFIX ""
@@ -340,7 +348,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
    else()
       set( SHAPE "octagon" )
-      set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_EXEDIR}" )
+      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_EXEDIR}" )
       set_target_properties( ${TARGET}
          PROPERTIES
             PREFIX ""
