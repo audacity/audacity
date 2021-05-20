@@ -868,7 +868,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
    // Attach the destination database 
    wxString sql;
-   sql.Printf("ATTACH DATABASE '%s' AS outbound;", destpath.ToUTF8());
+   wxString dbName = destpath;
+   // Bug 2793: Quotes in name need escaping for sqlite3.
+   dbName.Replace( "'", "''");
+   sql.Printf("ATTACH DATABASE '%s' AS outbound;", dbName.ToUTF8());
 
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
