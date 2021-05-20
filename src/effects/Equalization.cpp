@@ -1169,7 +1169,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       // This makes the default size of the dialog good, but has the 
       // downside that the user can't adjust the dialog smaller.
       wxSize sz = szrV->GetMinSize();
-      sz += wxSize( 400, 0);
+      sz += wxSize( 400, 100);
       szrV->SetMinSize(sz);
    }
    ForceRecalc();
