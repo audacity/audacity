@@ -25,7 +25,7 @@ used throughout Audacity into this one place.
 
 
 
-#include "MemoryX.h"
+#include <memory>
 
 #include <wx/app.h>
 #include <wx/defs.h>

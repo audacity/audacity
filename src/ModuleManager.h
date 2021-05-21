@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include "MemoryX.h"
+#include <memory>
 #include <map>
 #include <vector>
 

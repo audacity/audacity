@@ -30,6 +30,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/filename.h>
 
 #include "FileNames.h"
+#include "MemoryX.h"
 #include "PluginManager.h"
 
 #include "audacity/PluginInterface.h"

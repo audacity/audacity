@@ -14,6 +14,7 @@ Paul Licameli
 #include "../../UIHandle.h"
 
 class wxMouseEvent;
+class wxMouseState;
 class LWSlider;
 class Track;
 class TranslatableString;

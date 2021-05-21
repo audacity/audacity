@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_FILEIO__
 #define __AUDACITY_FILEIO__
 
-#include "MemoryX.h"
+#include <memory>
 
 class wxInputStream;
 class wxOutputStream;

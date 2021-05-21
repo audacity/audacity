@@ -61,6 +61,7 @@
 
 #include "Internat.h"
 #include "MemoryX.h"
+#include <memory>
 
 std::unique_ptr<FileConfig> ugPrefs {};
 

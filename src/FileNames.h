@@ -17,7 +17,7 @@
 #include <wx/string.h> // function return value
 #include "Identifier.h"
 #include "Prefs.h"
-#include "MemoryX.h"
+#include <memory>
 
 // Please try to support unlimited path length instead of using PLATFORM_MAX_PATH!
 // Define one constant for maximum path value, so we don't have to do

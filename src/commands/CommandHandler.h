@@ -16,7 +16,7 @@
 #ifndef __COMMANDHANDLER__
 #define __COMMANDHANDLER__
 
-#include "../MemoryX.h"
+#include <memory>
 class AudacityApp;
 class AudacityProject;
 class AppCommandEvent;
