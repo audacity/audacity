@@ -27,7 +27,6 @@ list( APPEND SOURCES
 list( APPEND INCLUDES
    PRIVATE
       ${_PRVDIR}
-      $<$<PLATFORM_ID:Windows>:$ENV{WXWIN}/src/zlib>
    PUBLIC
       ${TARGET_ROOT}
 )
@@ -39,7 +38,7 @@ list( APPEND OPTIONS
 
 list( APPEND LIBRARIES
    PRIVATE
-     wxWidgets
+     
 )
 
 configure_file( config.h.in private/config.h )

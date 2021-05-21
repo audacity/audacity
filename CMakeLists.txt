@@ -97,7 +97,18 @@ if( APPLE )
 endif()
 
 # Add our module path
-set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
+# CMAKE_BINARY_DIR is required for Conan to work
+set( AUDACITY_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules")
+set( CMAKE_MODULE_PATH 
+   ${AUDACITY_MODULE_PATH}
+   ${CMAKE_BINARY_DIR}
+   ${CMAKE_MODULE_PATH} 
+)
+
+set( CMAKE_PREFIX_PATH
+   ${CMAKE_BINARY_DIR}
+   ${CMAKE_PREFIX_PATH}
+)
 
 # This "is a good thing" but greatly increases link time on Linux
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION ON )
@@ -116,6 +127,9 @@ if( CCACHE_PROGRAM )
    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
 endif()
 
+# Define option() prefix
+set( _OPT "audacity_" )
+
 # Our very own project
 project( Audacity )
 
@@ -125,7 +139,7 @@ include( AudacityFunctions )
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
-            "local"
+            "system"
             STRINGS "system" "local"
 )
 
@@ -214,9 +228,6 @@ if( GIT_FOUND )
 endif()
 message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )
 message( STATUS )
-
-# Define option() prefix
-set( _OPT "audacity_" )
 
 # Organize subdirectories/targets into folders for the IDEs
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
@@ -437,6 +448,7 @@ find_package( Python3 )
 if( Python3_FOUND )
    set( PYTHON "${Python3_EXECUTABLE}" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   # This is an odd case now, as Conan requires Python as well
    nuget_package( pkgdir "python3" "3.7.7" )
    file( TO_NATIVE_PATH "${pkgdir}/tools/python.exe" PYTHON )
 endif()
@@ -447,6 +459,10 @@ include( "src/Experimental.cmake" )
 
 # Add our children
 add_subdirectory( "cmake-proxies" )
+
+# Conan uses find_package and does not set GLOBAL flag
+resolve_conan_dependencies()
+
 add_subdirectory( "help" )
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )

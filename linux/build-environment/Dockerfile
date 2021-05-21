@@ -56,6 +56,8 @@ RUN apt-get install -y \
     libssl-dev \
     libcurl4-openssl-dev
 
+RUN apt-get install -y libpng-dev
+
 WORKDIR /audacity
 
 COPY ["build_audacity.sh", "/audacity/"]
