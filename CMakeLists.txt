@@ -78,13 +78,14 @@ cmake_policy( SET CMP0075 NEW )
 
 # Definitions that must happen before the project() command
 if( APPLE )
-
+   set( MIN_MACOS_VERSION 10.9 )
+   set( TARGET_MACOS_VERSION 10.13 )
    # Generate schema files
    set( CMAKE_XCODE_GENERATE_SCHEME ON )
 
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
-   set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )
+   set( CMAKE_OSX_DEPLOYMENT_TARGET ${MIN_MACOS_VERSION} CACHE INTERNAL "" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
    set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
 
@@ -120,6 +121,21 @@ project( Audacity )
 
 # Load our functions/macros
 include( AudacityFunctions )
+
+# Allow user to globally set the library preference
+cmd_option( ${_OPT}lib_preference
+            "Library preference [system (if available), local]"
+            "local"
+            STRINGS "system" "local"
+)
+
+# Special mode, that will force dependencies to the packages provided by system unless they were set to local explicitly.
+cmd_option( ${_OPT}obey_system_dependencies
+            "Use system packages to satisfy dependencies"
+            Off
+)
+
+include( AudacityDependencies )
 
 # Pull all the modules we'll need
 include( CheckCXXCompilerFlag )
