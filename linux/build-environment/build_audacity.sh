@@ -12,6 +12,7 @@ mkdir -p build
 cd build
 
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release \
+    -Daudacity_lib_preference=system \
     -Daudacity_obey_system_dependencies=On \
     -Daudacity_use_wxwidgets=local \
     -Daudacity_use_expat=system \
