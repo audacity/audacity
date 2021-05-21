@@ -38,6 +38,12 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release \
     -Daudacity_use_twolame=system \
     ../audacity
 
+exit_status=$?
+
+if [ $exit_status -ne 0 ]; then
+    exit $exit_status
+fi
+
 make -j`nproc`
 
 cd bin/Release

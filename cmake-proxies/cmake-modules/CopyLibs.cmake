@@ -7,7 +7,7 @@
 # DST    destination directory
 #
 message( "==================================================================" )
-message( "Copying wxWidgets libraries:" )
+message( "Copying shared libraries:" )
 message( "==================================================================" )
 
 # list command no longer ignores empty elements.
@@ -39,48 +39,57 @@ function( gather_libs src )
       execute( output cmd /k dumpbin /dependents ${src} )
 
       foreach( line ${output} )
-         if( line MATCHES "^ *wx.*\\.dll" )
-            set( lib ${WXWIN}/${line} )
+         set( lib ${WXWIN}/${line} )
 
+         if( EXISTS "${lib}" )
             list( APPEND libs ${lib} )
 
             gather_libs( ${lib} )
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
+      message(STATUS "Checking ${src} for libraries...")
+      
       execute( output otool -L ${src} )
 
-      get_filename_component( libname "${src}" NAME )
-
-      if( libname MATCHES ".*dylib" )
-         string( PREPEND libname "${DST}/" )
-      else()
-         set( libname "${src}" )
-      endif()
-
+      set( libname "${src}" )
+      
       foreach( line ${output} )
-         if( line MATCHES "^.*libwx.*\\.dylib " )
+         if( line MATCHES "^.*\\.dylib " )
             string( REGEX REPLACE "dylib .*" "dylib" line "${line}" )
-            if( NOT line STREQUAL "${src}" AND NOT line MATCHES "@executable" )
-               set( lib ${line} )
+            set( lib "${WXWIN}/${line}" )
+
+            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}")
+               message(STATUS "\tProcessing ${lib}...")
 
                list( APPEND libs ${lib} )
 
                get_filename_component( refname "${lib}" NAME )
-               list( APPEND postcmds "sh -c 'install_name_tool -change ${lib} @executable_path/../Frameworks/${refname} ${libname}'" )
+               
+               message(STATUS "\t\tAdding ${refname} to ${src}")
+
+               list( APPEND postcmds "sh -c 'install_name_tool -change ${refname} @executable_path/../Frameworks/${refname} ${src}'" )
 
                gather_libs( ${lib} )
             endif()
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" )
+      message(STATUS "Executing LD_LIBRARY_PATH='${WXWIN}' ldd ${src}")
+
       execute( output sh -c "LD_LIBRARY_PATH='${WXWIN}' ldd ${src}" )
 
       get_filename_component( libname "${src}" NAME )
 
       foreach( line ${output} )
-         if( line MATCHES ".*libwx.*" )
-            string( REGEX REPLACE ".* => (.*) \\(.*$" "\\1" line "${line}" )
+         message (STATUS "\tChecking ${line}...")
+
+         string( REGEX REPLACE "(.*) => .* \\(.*$" "\\1" line "${line}" )
+
+         set(line "${WXWIN}/${line}")
+         
+         if (EXISTS "${line}")
+            message (STATUS "\tAdding ${line}...")
 
             set( lib ${line} )
 
@@ -88,6 +97,7 @@ function( gather_libs src )
 
             gather_libs( ${lib} )
          endif()
+
       endforeach()
    endif()
 
@@ -97,9 +107,7 @@ endfunction()
 
 gather_libs( "${SRC}" )
 
-list( REMOVE_DUPLICATES libs )
-
-file( INSTALL ${libs} DESTINATION ${DST} FOLLOW_SYMLINK_CHAIN )
+list( REMOVE_DUPLICATES postcmds )
 
 foreach( cmd ${postcmds} )
    execute_process(
@@ -109,3 +117,5 @@ foreach( cmd ${postcmds} )
    )
 endforeach()
 
+list( REMOVE_DUPLICATES libs )
+file( INSTALL ${libs} DESTINATION ${DST} FOLLOW_SYMLINK_CHAIN )
