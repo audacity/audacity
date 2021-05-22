@@ -47,10 +47,11 @@ but little else.
 
 
 
+#include <memory>
 #include "audacity/Types.h"
 #include "../Identifier.h"
 #include "../Internat.h"
-#include "../MemoryX.h"
+#include "../wxArrayStringEx.h"
 
 class AudacityProject;
 class ProgressDialog;

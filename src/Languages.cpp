@@ -32,7 +32,8 @@
 
 
 #include "Languages.h"
-#include "MemoryX.h"
+#include <memory>
+#include "wxArrayStringEx.h"
 
 #include "Internat.h"
 
@@ -41,6 +42,7 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/textfile.h>
+#include <wx/utils.h> // for wxSetEnv
 
 #include <clocale>
 #include <unordered_map>
