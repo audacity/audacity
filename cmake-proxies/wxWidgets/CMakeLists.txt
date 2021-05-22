@@ -1,5 +1,6 @@
 
 add_library( ${TARGET} INTERFACE )
+add_library( wxBase INTERFACE )
 add_library( ${symbol} ALIAS ${TARGET} )
 
 def_vars()
@@ -248,11 +249,39 @@ if( NOT ours )
    )
 endif()
 
-target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
-target_compile_definitions( ${TARGET} INTERFACE ${DEFINES} )
-target_compile_options( ${TARGET} INTERFACE ${COPTS} )
-target_link_directories( ${TARGET} INTERFACE ${LINKDIRS} )
-target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
+foreach( target "${TARGET}" wxBase )
+   target_include_directories( ${target} INTERFACE ${INCLUDES} )
+   target_compile_definitions( ${target} INTERFACE ${DEFINES} )
+   target_compile_options( ${target} INTERFACE ${COPTS} )
+   target_link_directories( ${target} INTERFACE ${LINKDIRS} )
+   target_link_libraries( ${target} INTERFACE ${LIBRARIES} )
+endforeach()
+
+# wxBase exposes only the GUI-less subset of full wxWidgets
+# Also prohibit use of some other headers by pre-defining their include guards
+# wxUSE_GUI=0 doesn't exclude all of wxCore dependency, and the application
+# object and event loops are in wxBase, but we want to exclude their use too
+target_compile_definitions( wxBase INTERFACE
+   "wxUSE_GUI=0"
+ 
+   # Don't use app.h
+   _WX_APP_H_BASE_
+
+   # Don't use evtloop.h
+   _WX_EVTLOOP_H_
+
+   # Don't use image.h
+   _WX_IMAGE_H
+
+   # Don't use colour.h
+   _WX_COLOUR_H_BASE_
+
+   # Don't use brush.h
+   _WX_BRUSH_H_BASE_
+
+   # Don't use pen.h
+   _WX_PEN_H_BASE_
+)
 
 install( TARGETS ${TARGET} DESTINATION ${_LIBDIR} )
 

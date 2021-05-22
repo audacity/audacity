@@ -339,7 +339,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif ()
 
    if (LIBTYPE STREQUAL "MODULE")
-      set( SHAPE "box" )
+      set( ATTRIBUTES "shape=box" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_MODDIR}" )
       set_target_properties( ${TARGET}
          PROPERTIES
@@ -347,13 +347,17 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             FOLDER "modules" # for IDE organization
       )
    else()
-      set( SHAPE "octagon" )
+      set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_EXEDIR}" )
       set_target_properties( ${TARGET}
          PROPERTIES
             PREFIX ""
             FOLDER "libraries" # for IDE organization
       )
+   endif()
+
+   if( "wxBase" IN_LIST IMPORT_TARGETS )
+      string( APPEND ATTRIBUTES " style=filled" )
    endif()
 
    export_symbol_define( export_symbol "${TARGET}" )
@@ -420,7 +424,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif()
 
    # collect dependency information
-   list( APPEND GRAPH_EDGES "\"${TARGET}\" [shape=${SHAPE}]" )
+   list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
    if (NOT LIBTYPE STREQUAL "MODULE")
       list( APPEND GRAPH_EDGES "\"Audacity\" -> \"${TARGET}\"" )
    endif ()
