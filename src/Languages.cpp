@@ -32,40 +32,40 @@
 
 
 #include "Languages.h"
+#include "audacity/Types.h"
 #include "MemoryX.h"
 
 #include "Internat.h"
 
 #include <wx/defs.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/textfile.h>
-
-#include "FileNames.h"
 
 #include <unordered_map>
 
 using LangHash = std::unordered_map<wxString, TranslatableString>;
 using ReverseLangHash = std::unordered_map<TranslatableString, wxString>;
 
-static bool TranslationExists(const FilePaths &audacityPathList, wxString code)
+static void FindFilesInPathList(const wxString & pattern,
+   const FilePaths & pathList, FilePaths & results)
+{
+   wxFileName ff;
+   for (const auto &path : pathList) {
+      ff = path + wxFILE_SEP_PATH + pattern;
+      wxDir::GetAllFiles(ff.GetPath(), &results, ff.GetFullName(), wxDIR_FILES);
+   }
+}
+
+static bool TranslationExists(const FilePaths &pathList, wxString code)
 {
    FilePaths results;
-   FileNames::FindFilesInPathList(wxString::Format(wxT("%s/audacity.mo"),
-                                                   code),
-                                  audacityPathList,
-                                  results);
+   FindFilesInPathList(code + L"/audacity.mo", pathList, results);
 #if defined(__WXMAC__)
-   FileNames::FindFilesInPathList(wxString::Format(wxT("%s.lproj/audacity.mo"),
-                                                   code),
-                                  audacityPathList,
-                                  results);
+   FindFilesInPathList(code + L".lproj/audacity.mo", pathList, results);
 #endif
-
-   FileNames::FindFilesInPathList(wxString::Format(wxT("%s/LC_MESSAGES/audacity.mo"),
-                                                   code),
-                                  audacityPathList,
-                                  results);
-
+   FindFilesInPathList(code + L"/LC_MESSAGES/audacity.mo", pathList, results);
    return (results.size() > 0);
 }
 
@@ -74,12 +74,14 @@ static bool TranslationExists(const FilePaths &audacityPathList, wxString code)
 #include <wx/osx/core/cfstring.h>
 #endif
 
-wxString GetSystemLanguageCode()
+namespace Languages {
+
+wxString GetSystemLanguageCode(const FilePaths &pathList)
 {
    wxArrayString langCodes;
    TranslatableStrings langNames;
 
-   GetLanguages(langCodes, langNames);
+   GetLanguages(pathList, langCodes, langNames);
 
    int sysLang = wxLocale::GetSystemLanguage();
 
@@ -128,7 +130,7 @@ wxString GetSystemLanguageCode()
    return wxT("en");
 }
 
-void GetLanguages(
+void GetLanguages( FilePaths pathList,
    wxArrayString &langCodes, TranslatableStrings &langNames)
 {
    static const char *const utf8Names[] = {
@@ -209,13 +211,15 @@ void GetLanguages(
       return localLanguageName;
    }();
 
-   auto audacityPathList = FileNames::AudacityPathList();
-
 #if defined(__WXGTK__)
-   FileNames::AddUniquePathToPathList(
-      wxString::Format(wxT("%s/share/locale"),
-         wxT(INSTALL_PREFIX)),
-      audacityPathList);
+   {
+      wxFileName pathNorm{ wxString{INSTALL_PREFIX} + L"/share/locale" };
+      pathNorm.Normalize();
+      const wxString newPath{ pathNorm.GetFullPath() };
+      if (pathList.end() ==
+          std::find(pathList.begin(), pathList.end(), newPath))
+         pathList.push_back(newPath);
+   }
 #endif
 
    // For each language in our list we look for a corresponding entry in
@@ -257,14 +261,14 @@ void GetLanguages(
          name = found->second;
       }
 
-      if (TranslationExists(audacityPathList, fullCode)) {
+      if (TranslationExists(pathList, fullCode)) {
          code = fullCode;
       }
 
       if (!tempHash[code].empty())
          continue;
 
-      if (TranslationExists(audacityPathList, code) || code==wxT("en")) {
+      if (TranslationExists(pathList, code) || code==wxT("en")) {
          tempCodes.push_back(code);
          tempNames.push_back(name);
          tempHash[code] = name;
@@ -281,7 +285,7 @@ void GetLanguages(
       wxString code;
       code = wxT("en-simple");
       auto name = XO("Simplified");
-      if (TranslationExists(audacityPathList, code) ) {
+      if (TranslationExists(pathList, code) ) {
          tempCodes.push_back(code);
          tempNames.push_back(name);
          tempHash[code] = name;
@@ -308,4 +312,6 @@ void GetLanguages(
       langNames.push_back(tempNames[j]);
       langCodes.push_back(reverseHash[tempNames[j]]);
    }
+}
+
 }

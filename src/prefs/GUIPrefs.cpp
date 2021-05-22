@@ -102,7 +102,8 @@ void GUIPrefs::GetRangeChoices(
 void GUIPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
-   GetLanguages(mLangCodes, mLangNames);
+   Languages::GetLanguages(
+      FileNames::AudacityPathList(), mLangCodes, mLangNames);
 
    GetRangeChoices(&mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
 
@@ -261,7 +262,8 @@ wxString GUIPrefs::InitLang( wxString langCode )
    // Use the system default language if one wasn't specified or if the user selected System.
    if (langCode.empty())
    {
-      langCode = GetSystemLanguageCode();
+      langCode =
+         Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
    }
 
    // Initialize the language
@@ -297,7 +299,7 @@ wxString GUIPrefs::SetLang( const wxString & lang )
    }
    if (!info)
    {
-      result = GetSystemLanguageCode();
+      result = Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
       info = wxLocale::FindLanguageInfo(result);
       if (!info)
          return result;

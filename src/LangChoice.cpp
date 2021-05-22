@@ -75,9 +75,10 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
    wxDialogWrapper(parent, id, title)
 {
    SetName();
-   GetLanguages(mLangCodes, mLangNames);
-   int lang =
-      make_iterator_range( mLangCodes ).index( GetSystemLanguageCode() );
+   const auto &paths = FileNames::AudacityPathList();
+   Languages::GetLanguages(paths, mLangCodes, mLangNames);
+   int lang = make_iterator_range( mLangCodes )
+      .index( Languages::GetSystemLanguageCode(paths) );
 
    ShuttleGui S(this, eIsCreating);
 
@@ -105,7 +106,8 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    int ndx = mChoice->GetSelection();
    mLang = mLangCodes[ndx];
 
-   wxString slang = GetSystemLanguageCode();
+   auto slang =
+      Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
    int sndx = make_iterator_range( mLangCodes ).index( slang );
    wxString sname;
 
