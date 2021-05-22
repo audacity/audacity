@@ -156,6 +156,8 @@ list( APPEND SOURCES
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h
+      Identifier.cpp
+      Identifier.h
       ImageManipulation.cpp
       ImageManipulation.h
       InconsistencyException.cpp
