@@ -421,6 +421,7 @@ static bool RecoverAllProjects(const FilePaths &files,
 {
    // Open a project window for each auto save file
    wxString filename;
+   bool result = true;
 
    for (auto &file: files)
    {
@@ -432,11 +433,11 @@ static bool RecoverAllProjects(const FilePaths &files,
       // Open project.
       if (ProjectManager::OpenProject(proj, file, false, true) == nullptr)
       {
-         return false;
+         result = false;
       }
    }
 
-   return true;
+   return result;
 }
 
 static void DiscardAllProjects(const FilePaths &files)
