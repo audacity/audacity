@@ -254,22 +254,6 @@ bool GUIPrefs::Commit()
    return true;
 }
 
-wxString GUIPrefs::InitLang( wxString langCode )
-{
-   if ( langCode.empty() )
-      langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
-
-   // Use the system default language if one wasn't specified or if the user selected System.
-   if (langCode.empty())
-   {
-      langCode =
-         Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
-   }
-
-   // Initialize the language
-   return SetLang(langCode);
-}
-
 static std::unique_ptr<wxLocale> sLocale;
 static wxString sLocaleName;
 

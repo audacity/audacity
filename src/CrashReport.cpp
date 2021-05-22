@@ -60,8 +60,8 @@ void Generate(wxDebugReport::Context ctx)
          if (ctx == wxDebugReport::Context_Current)
          {
             auto saveLang = GUIPrefs::GetLangShort();
-            GUIPrefs::InitLang( wxT("en") );
-            auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
+            GUIPrefs::SetLang( wxT("en") );
+            auto cleanup = finally( [&]{ GUIPrefs::SetLang( saveLang ); } );
       
             auto gAudioIO = AudioIOBase::Get();
             rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));

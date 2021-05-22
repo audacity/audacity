@@ -195,7 +195,7 @@ void PopulatePreferences()
       auto &ini = *pIni;
 
       wxString lang;
-      if (ini.Read(wxT("/FromInno/Language"), &lang))
+      if (ini.Read(wxT("/FromInno/Language"), &lang) && !lang.empty())
       {
          // Only change "langCode" if the language was actually specified in the ini file.
          langCode = lang;
@@ -217,7 +217,12 @@ void PopulatePreferences()
       }
    }
 
-   langCode = GUIPrefs::InitLang( langCode );
+   // Use the system default language if one wasn't specified or if the user selected System.
+   if (langCode.empty())
+      langCode =
+         Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
+
+   langCode = GUIPrefs::SetLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
