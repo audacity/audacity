@@ -33,14 +33,15 @@ if test "${AUDACITY_ONLY_POT:-}" = 'y'; then
 fi
 echo ";; Updating the .po files - Updating Project-Id-Version"
 for i in *.po; do
-    sed -i '/^"Project-Id-Version:/c\"Project-Id-Version: audacity 3.0.3\\n"' $i
+    sed -e '/^"Project-Id-Version:/c\
+    "Project-Id-Version: audacity 3.0.3\\n"' $i > TEMP; mv TEMP $i
 done
 echo ";; Updating the .po files"
 sed 's/.*/echo "msgmerge --lang=& &.po audacity.pot -o &.po";\
 msgmerge --lang=& &.po audacity.pot -o &.po;/g' LINGUAS | bash
 echo ";; Removing '#~|' (which confuse Windows version of msgcat)"
 for i in *.po; do
-    sed -i '/^#~|/d' $i
+    sed '/^#~|/d' $i > TEMP; mv TEMP $i
 done
 echo ""
 echo ";;Translation updated"
