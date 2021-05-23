@@ -50,7 +50,7 @@
 #include <wx/debug.h> // for wxASSERT
 #include <wx/string.h> // type used in inline function and member variable
 
-#include "../../../src/TranslatableString.h"
+#include "Internat.h"
 
 // ----------------------------------------------------------------------------
 // TODO:  I'd imagine this header may be replaced by other public headers. But,

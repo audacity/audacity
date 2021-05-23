@@ -12,11 +12,10 @@
 #ifndef __AUDACITY_INTERNAT__
 #define __AUDACITY_INTERNAT__
 
-
-
+#include <vector>
 #include <wx/longlong.h>
 
-#include "audacity/Types.h"
+#include "TranslatableString.h"
 
 class wxArrayString;
 class wxArrayStringEx;

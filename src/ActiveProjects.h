@@ -12,8 +12,6 @@
 
 #include "Identifier.h"
 
-#include <wx/string.h>
-
 namespace ActiveProjects
 {
    FilePaths GetAll();
