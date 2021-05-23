@@ -15,7 +15,7 @@
 #define SHUTTLE_GUI
 
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include <vector>
 #include <wx/slider.h> // to inherit

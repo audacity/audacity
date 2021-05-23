@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include "../ClientData.h"
 #include "CommandFunctors.h"
@@ -26,8 +26,6 @@
 #include <vector>
 
 #include "../xml/XMLTagHandler.h"
-
-#include "audacity/Types.h"
 
 #include <unordered_map>
 

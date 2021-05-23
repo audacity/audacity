@@ -15,7 +15,7 @@
 
 #include "../Internat.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 AUDACITY_DLL_API void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 

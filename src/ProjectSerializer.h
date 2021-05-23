@@ -17,7 +17,7 @@
 
 #include <unordered_set>
 #include <unordered_map>
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 // From SampleBlock.h
 using SampleBlockID = long long;

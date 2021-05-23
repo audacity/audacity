@@ -43,7 +43,7 @@
 #define __AUDACITY_MODULEINTERFACE_H__
 
 #include <functional>
-#include "audacity/Types.h"
+#include "Identifier.h"
 #include "audacity/ComponentInterface.h"
 #include "audacity/PluginInterface.h"
 

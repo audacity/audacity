@@ -32,7 +32,7 @@
 
 
 #include "Languages.h"
-#include "audacity/Types.h"
+#include "Identifier.h"
 #include "MemoryX.h"
 
 #include "Internat.h"
