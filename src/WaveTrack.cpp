@@ -2594,8 +2594,8 @@ const float *WaveTrackCache::GetFloats(
          if (start0 >= 0) {
             const auto len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
-            if (!mPTrack->Get(
-                  samplePtr(mBuffers[0].data.get()), floatSample, start0, len0,
+            if (!mPTrack->GetFloats(
+                  mBuffers[0].data.get(), start0, len0,
                   fillZero, mayThrow))
                return nullptr;
             mBuffers[0].start = start0;
@@ -2622,7 +2622,7 @@ const float *WaveTrackCache::GetFloats(
             if (start1 == end0) {
                const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
-               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1, fillZero, mayThrow))
+               if (!mPTrack->GetFloats(mBuffers[1].data.get(), start1, len1, fillZero, mayThrow))
                   return nullptr;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
@@ -2632,7 +2632,7 @@ const float *WaveTrackCache::GetFloats(
       }
       wxASSERT(mNValidBuffers < 2 || mBuffers[0].end() == mBuffers[1].start);
 
-      samplePtr buffer = 0;
+      samplePtr buffer = nullptr; // will point into mOverlapBuffer
       auto remaining = len;
 
       // Possibly get an initial portion that is uncached
@@ -2647,8 +2647,10 @@ const float *WaveTrackCache::GetFloats(
          mOverlapBuffer.Resize(len, format);
          // initLen is not more than len:
          auto sinitLen = initLen.as_size_t();
-         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen,
-                           fillZero, mayThrow))
+         if (!mPTrack->GetFloats(
+            // See comment below about casting
+            reinterpret_cast<float *>(mOverlapBuffer.ptr()),
+            start, sinitLen, fillZero, mayThrow))
             return nullptr;
          wxASSERT( sinitLen <= remaining );
          remaining -= sinitLen;
@@ -2675,7 +2677,7 @@ const float *WaveTrackCache::GetFloats(
          else if (leni > 0) {
             // leni is nonnegative, therefore start falls within mBuffers[ii]
             // But we can't satisfy all from one buffer, so copy
-            if (buffer == 0) {
+            if (!buffer) {
                mOverlapBuffer.Resize(len, format);
                buffer = mOverlapBuffer.ptr();
             }
@@ -2693,11 +2695,13 @@ const float *WaveTrackCache::GetFloats(
       if (remaining > 0) {
          // Very big request!
          // Fall back to direct fetch
-         if (buffer == 0) {
+         if (!buffer) {
             mOverlapBuffer.Resize(len, format);
             buffer = mOverlapBuffer.ptr();
          }
-         if (!mPTrack->Get(buffer, format, start, remaining, fillZero, mayThrow))
+         // See comment below about casting
+         if (!mPTrack->GetFloats( reinterpret_cast<float*>(buffer),
+            start, remaining, fillZero, mayThrow))
             return 0;
       }
 

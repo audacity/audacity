@@ -321,7 +321,7 @@ bool EffectAutoDuck::Process()
       {
          const auto len = limitSampleBufferSize( kBufSize, end - pos );
          
-         mControlTrack->Get((samplePtr)buf.get(), floatSample, pos, len);
+         mControlTrack->GetFloats(buf.get(), pos, len);
 
          for (auto i = pos; i < pos + len; i++)
          {
@@ -559,7 +559,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
    {
       const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-      t->Get((samplePtr)buf.get(), floatSample, pos, len);
+      t->GetFloats(buf.get(), pos, len);
 
       for (auto i = pos; i < pos + len; i++)
       {

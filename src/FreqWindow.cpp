@@ -602,7 +602,7 @@ void FrequencyPlotDialog::GetAudio()
             mDataLen = dataLen.as_size_t();
          mData = Floats{ mDataLen };
          // Don't allow throw for bad reads
-         track->Get((samplePtr)mData.get(), floatSample, start, mDataLen,
+         track->GetFloats(mData.get(), start, mDataLen,
                     fillZero, false);
       }
       else {
@@ -617,7 +617,7 @@ void FrequencyPlotDialog::GetAudio()
          auto start = track->TimeToLongSamples(selectedRegion.t0());
          Floats buffer2{ mDataLen };
          // Again, stop exceptions
-         track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen,
+         track->GetFloats(buffer2.get(), start, mDataLen,
                     fillZero, false);
          for (size_t i = 0; i < mDataLen; i++)
             mData[i] += buffer2[i];

@@ -1330,7 +1330,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
    {
       auto block = limitSampleBufferSize( idealBlockLen, len );
 
-      t->Get((samplePtr)buffer.get(), floatSample, s, block);
+      t->GetFloats(buffer.get(), s, block);
 
       for(size_t i = 0; i < block; i += L)   //go through block in lumps of length L
       {

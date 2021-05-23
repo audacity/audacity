@@ -2449,8 +2449,8 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
 
       mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
       try {
-         mCurTrack[ch]->Get(
-            mCurBuffer[ch].ptr(), floatSample,
+         mCurTrack[ch]->GetFloats(
+            reinterpret_cast<float*>(mCurBuffer[ch].ptr()),
             mCurBufferStart[ch], mCurBufferLen[ch]);
       }
       catch ( ... ) {

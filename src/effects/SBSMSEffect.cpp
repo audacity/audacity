@@ -99,10 +99,10 @@ long resampleCB(void *cb_data, SBSMSFrame *data)
    // does not seem to let us report error codes, so use this roundabout to
    // stop the effect early.
    try {
-      r->leftTrack->Get(
-         (samplePtr)(r->leftBuffer.get()), floatSample, r->offset, blockSize);
-      r->rightTrack->Get(
-         (samplePtr)(r->rightBuffer.get()), floatSample, r->offset, blockSize);
+      r->leftTrack->GetFloats(
+         (r->leftBuffer.get()), r->offset, blockSize);
+      r->rightTrack->GetFloats(
+         (r->rightBuffer.get()), r->offset, blockSize);
    }
    catch ( ... ) {
       // Save the exception object for re-throw when out of the library

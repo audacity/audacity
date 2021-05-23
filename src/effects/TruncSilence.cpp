@@ -568,8 +568,8 @@ bool EffectTruncSilence::DoRemoval
             auto t1 = wt->TimeToLongSamples(cutStart) - blendFrames / 2;
             auto t2 = wt->TimeToLongSamples(cutEnd) - blendFrames / 2;
 
-            wt->Get((samplePtr)buf1.get(), floatSample, t1, blendFrames);
-            wt->Get((samplePtr)buf2.get(), floatSample, t2, blendFrames);
+            wt->GetFloats(buf1.get(), t1, blendFrames);
+            wt->GetFloats(buf2.get(), t2, blendFrames);
 
             for (decltype(blendFrames) i = 0; i < blendFrames; ++i)
             {
@@ -689,7 +689,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
       auto count = limitSampleBufferSize( blockLen, end - *index );
 
       // Fill buffer
-      wt->Get((samplePtr)(buffer.get()), floatSample, *index, count);
+      wt->GetFloats((buffer.get()), *index, count);
 
       // Look for silenceList in current block
       for (decltype(count) i = 0; i < count; ++i) {

@@ -246,6 +246,31 @@ private:
    /// same value for "start" in both calls to "Set" and "Get" it is
    /// guaranteed that the same samples are affected.
    ///
+
+   //! Retrieve samples from a track in floating-point format, regardless of the storage format
+   /*!
+    @param buffer receives the samples
+    @param start starting sample, relative to absolute time zero (not to the track's offset value)
+    @param len how many samples to get.  buffer is assumed sufficiently large
+    @param fill how to assign values for sample positions between clips
+    @param mayThrow if false, fill buffer with zeros when there is failure to retrieve samples; else throw
+    @param[out] pNumWithinClips Report how many samples were copied from within clips, rather
+       than filled according to fillFormat; but these were not necessarily one contiguous range.
+    */
+   bool GetFloats(float *buffer, sampleCount start, size_t len,
+      fillFormat fill = fillZero, bool mayThrow = true,
+      sampleCount * pNumWithinClips = nullptr) const
+   {
+      //! Cast the pointer to pass it to Get() which handles multiple destination formats
+      return Get(reinterpret_cast<samplePtr>(buffer),
+         floatSample, start, len, fill, mayThrow, pNumWithinClips);
+   }
+
+   //! Retrieve samples from a track in a specified format
+   /*!
+    @copydetails WaveTrack::GetFloats()
+    @param format sample format of the destination buffer
+    */
    bool Get(samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       fillFormat fill = fillZero,
@@ -254,6 +279,7 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const;
+
    void Set(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
