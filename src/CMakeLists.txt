@@ -326,6 +326,8 @@ list( APPEND SOURCES
       TrackPanelResizerCell.h
       TrackUtilities.cpp
       TrackUtilities.h
+      TranslatableString.cpp
+      TranslatableString.h
       UIHandle.cpp
       UIHandle.h
       UndoManager.cpp
