@@ -44,14 +44,6 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
    // Returns the language actually used which is not lang if lang cannot be found.
    static wxString SetLang( const wxString & lang );
 
-   // Returns the last language code that was set
-   static wxString GetLang();
-   // Returns the last language code that was set
-   // Unlike GetLang, gives en rather than en_GB or en_US for result.
-   static wxString GetLangShort();
-
-   static wxString GetLocaleName();
-
  private:
    void Populate();
 

@@ -43,6 +43,7 @@
 #include <wx/intl.h>
 #include <wx/textfile.h>
 
+#include <clocale>
 #include <unordered_map>
 
 using LangHash = std::unordered_map<wxString, TranslatableString>;
@@ -314,4 +315,93 @@ void GetLanguages( FilePaths pathList,
    }
 }
 
+static std::unique_ptr<wxLocale> sLocale;
+static wxString sLocaleName;
+
+wxString SetLang( const FilePaths &pathList, const wxString & lang )
+{
+   wxString result = lang;
+
+   sLocale.reset();
+
+#if defined(__WXMAC__)
+   // This should be reviewed again during the wx3 conversion.
+
+   // On OSX, if the LANG environment variable isn't set when
+   // using a language like Japanese, an assertion will trigger
+   // because conversion to Japanese from "?" doesn't return a
+   // valid length, so make OSX happy by defining/overriding
+   // the LANG environment variable with U.S. English for now.
+   wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
+#endif
+
+   const wxLanguageInfo *info = NULL;
+   if (!lang.empty() && lang != wxT("System")) {
+      // Try to find the given language
+      info = wxLocale::FindLanguageInfo(lang);
+   }
+   if (!info)
+   {
+      // Not given a language or can't find it; substitute the system language
+      result = Languages::GetSystemLanguageCode(pathList);
+      info = wxLocale::FindLanguageInfo(result);
+      if (!info)
+         // Return the substituted system language, but we can't complete setup
+         // Should we try to do something better?
+         return result;
+   }
+   sLocale = std::make_unique<wxLocale>(info->Language);
+
+   for( const auto &path : pathList )
+      sLocale->AddCatalogLookupPathPrefix( path );
+
+   // LL:  Must add the wxWidgets catalog manually since the search
+   //      paths were not set up when mLocale was created.  The
+   //      catalogs are search in LIFO order, so add wxstd first.
+   sLocale->AddCatalog(wxT("wxstd"));
+
+   // Must match TranslationExists() in Languages.cpp
+   sLocale->AddCatalog("audacity");
+
+   // Initialize internationalisation (number formats etc.)
+   //
+   // This must go _after_ creating the wxLocale instance because
+   // creating the wxLocale instance sets the application-wide locale.
+
+   Internat::Init();
+
+   using future1 = decltype(
+      // The file of unused strings is part of the source tree scanned by
+      // xgettext when compiling the catalog template audacity.pot.
+      // Including it here doesn't change that but does make the C++ compiler
+      // check for correct syntax, but also generate no object code for them.
+#include "UnusedStrings.h"
+      0
+   );
+
+   sLocaleName = wxSetlocale(LC_ALL, NULL);
+
+   return result;
+}
+
+wxString GetLocaleName()
+{
+   return sLocaleName;
+}
+
+wxString GetLang()
+{
+   if (sLocale)
+      return sLocale->GetSysName();
+   else
+      return {};
+}
+
+wxString GetLangShort()
+{
+   if (sLocale)
+      return sLocale->GetName();
+   else
+      return {};
+}
 }
