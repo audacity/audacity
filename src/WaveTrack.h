@@ -592,10 +592,9 @@ private:
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 };
 
-// This is meant to be a short-lived object, during whose lifetime,
-// the contents of the WaveTrack are known not to change.  It can replace
-// repeated calls to WaveTrack::Get() (each of which opens and closes at least
-// one block file).
+//! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
+/*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).
+ */
 class AUDACITY_DLL_API WaveTrackCache {
 public:
    WaveTrackCache()
@@ -617,12 +616,11 @@ public:
    const std::shared_ptr<const WaveTrack>& GetTrack() const { return mPTrack; }
    void SetTrack(const std::shared_ptr<const WaveTrack> &pTrack);
 
-   // Uses fillZero always
-   // Returns null on failure
-   // Returned pointer may be invalidated if Get is called again
-   // Do not DELETE[] the pointer
-   constSamplePtr Get(
-      sampleFormat format, sampleCount start, size_t len, bool mayThrow);
+   //! Retrieve samples as floats from the track or from the memory cache
+   /*! Uses fillZero always
+    @return null on failure; this object owns the memory; may be invalidated if GetFloats() is called again
+   */
+   const float *GetFloats(sampleCount start, size_t len, bool mayThrow);
 
 private:
    void Free();

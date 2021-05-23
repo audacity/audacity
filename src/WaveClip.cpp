@@ -707,8 +707,8 @@ bool SpecCache::CalculateOneSpectrum
          }
 
          if (myLen > 0) {
-            useBuffer = (float*)(waveTrackCache.Get(
-               floatSample, sampleCount(
+            useBuffer = (float*)(waveTrackCache.GetFloats(
+               sampleCount(
                   floor(0.5 + from.as_double() + offset * rate)
                ),
                myLen,

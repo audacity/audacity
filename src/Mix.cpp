@@ -460,7 +460,8 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          // Nothing to do if past end of play interval
          if (getLen > 0) {
             if (backwards) {
-               auto results = cache.Get(floatSample, *pos - (getLen - 1), getLen, mMayThrow);
+               auto results =
+                  cache.GetFloats(*pos - (getLen - 1), getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
@@ -472,7 +473,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos -= getLen;
             }
             else {
-               auto results = cache.Get(floatSample, *pos, getLen, mMayThrow);
+               auto results = cache.GetFloats(*pos, getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
@@ -589,7 +590,7 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
    );
 
    if (backwards) {
-      auto results = cache.Get(floatSample, *pos - (slen - 1), slen, mMayThrow);
+      auto results = cache.GetFloats(*pos - (slen - 1), slen, mMayThrow);
       if (results)
          memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
       else
@@ -602,7 +603,7 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
       *pos -= slen;
    }
    else {
-      auto results = cache.Get(floatSample, *pos, slen, mMayThrow);
+      auto results = cache.GetFloats(*pos, slen, mMayThrow);
       if (results)
          memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
       else

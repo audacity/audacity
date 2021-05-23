@@ -2542,9 +2542,10 @@ void WaveTrackCache::SetTrack(const std::shared_ptr<const WaveTrack> &pTrack)
    }
 }
 
-constSamplePtr WaveTrackCache::Get(sampleFormat format,
+const float *WaveTrackCache::GetFloats(
    sampleCount start, size_t len, bool mayThrow)
 {
+   constexpr auto format = floatSample;
    if (format == floatSample && len > 0) {
       const auto end = start + len;
 
@@ -2596,7 +2597,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             if (!mPTrack->Get(
                   samplePtr(mBuffers[0].data.get()), floatSample, start0, len0,
                   fillZero, mayThrow))
-               return 0;
+               return nullptr;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;
             if (!fillSecond &&
@@ -2622,7 +2623,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
                const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
                if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1, fillZero, mayThrow))
-                  return 0;
+                  return nullptr;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
                mNValidBuffers = 2;
@@ -2648,7 +2649,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          auto sinitLen = initLen.as_size_t();
          if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen,
                            fillZero, mayThrow))
-            return 0;
+            return nullptr;
          wxASSERT( sinitLen <= remaining );
          remaining -= sinitLen;
          start += initLen;
@@ -2669,7 +2670,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             // All is contiguous already.  We can completely avoid copying
             // leni is nonnegative, therefore start falls within mBuffers[ii],
             // so starti is bounded between 0 and buffer length
-            return samplePtr(mBuffers[ii].data.get() + starti.as_size_t() );
+            return mBuffers[ii].data.get() + starti.as_size_t() ;
          }
          else if (leni > 0) {
             // leni is nonnegative, therefore start falls within mBuffers[ii]
@@ -2700,15 +2701,21 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             return 0;
       }
 
-      return mOverlapBuffer.ptr();
+      // Overlap buffer was meant for the more general support of sample formats
+      // besides float, which explains the cast
+      return reinterpret_cast<const float*>(mOverlapBuffer.ptr());
    }
-
-   // Cache works only for float format.
-   mOverlapBuffer.Resize(len, format);
-   if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
-      return mOverlapBuffer.ptr();
-   else
-      return 0;
+   else {
+#if 0
+      // Cache works only for float format.
+      mOverlapBuffer.Resize(len, format);
+      if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
+         return mOverlapBuffer.ptr();
+#else
+      // No longer handling other than float format.  Therefore len is 0.
+#endif
+      return nullptr;
+   }
 }
 
 void WaveTrackCache::Free()
