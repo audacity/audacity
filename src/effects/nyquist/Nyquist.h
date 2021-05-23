@@ -267,7 +267,8 @@ private:
    double            mProgressTot;
    double            mScale;
 
-   SampleBuffer      mCurBuffer[2];
+   using Buffer = std::unique_ptr<float[]>;
+   Buffer            mCurBuffer[2];
    sampleCount       mCurBufferStart[2];
    size_t            mCurBufferLen[2];
 
