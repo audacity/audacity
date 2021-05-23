@@ -48,6 +48,7 @@ but little else.
 
 
 #include "audacity/Types.h"
+#include "../Identifier.h"
 #include "../Internat.h"
 #include "../MemoryX.h"
 

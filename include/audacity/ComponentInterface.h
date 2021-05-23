@@ -42,6 +42,7 @@
 #ifndef __AUDACITY_COMPONENT_INTERFACE_H__
 #define __AUDACITY_COMPONENT_INTERFACE_H__
 
+#include "Identifier.h"
 #include "audacity/Types.h"
 #include <wx/string.h> // member variables
 

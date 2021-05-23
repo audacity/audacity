@@ -9,9 +9,15 @@
  **********************************************************************/
 
 #include "TranslatableString.h"
+#include "Identifier.h"
 #include <wx/translation.h>
 
 const wxChar *const TranslatableString::NullContextName = wxT("*");
+
+Identifier TranslatableString::MSGID() const
+{
+   return Identifier{ mMsgid };
+}
 
 const TranslatableString::Formatter
 TranslatableString::NullContextFormatter {

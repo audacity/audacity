@@ -14,7 +14,8 @@
 class wxArrayString;
 class wxString;
 
-#include "audacity/Types.h"
+#include "Identifier.h"
+#include "Internat.h"
 
 namespace Languages {
 

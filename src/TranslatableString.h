@@ -11,7 +11,11 @@
 #ifndef __AUDACITY_TRANSLATABLE_STRING__
 #define __AUDACITY_TRANSLATABLE_STRING__
 
-#include "../../../src/Identifier.h"
+#include <stddef.h> // for size_t
+#include <functional>
+#include <wx/string.h>
+
+class Identifier;
 
 #include <vector>
 
@@ -70,7 +74,7 @@ public:
    //! MSGID is the English lookup key in the catalog, not necessarily for user's eyes if locale is some other.
    /*! The MSGID might not be all the information TranslatableString holds.
       This is a deliberately ugly-looking function name.  Use with caution. */
-   Identifier MSGID() const { return Identifier{ mMsgid }; }
+   Identifier MSGID() const;
 
    wxString Translation() const { return DoFormat( false ); }
 
