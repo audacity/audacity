@@ -28,7 +28,7 @@
 #include "Languages.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
-#include "prefs/GUIPrefs.h"
+#include "prefs/GUISettings.h"
 #include "widgets/AudacityTextEntryDialog.h"
 
 namespace CrashReport {
@@ -61,8 +61,8 @@ void Generate(wxDebugReport::Context ctx)
          if (ctx == wxDebugReport::Context_Current)
          {
             auto saveLang = Languages::GetLangShort();
-            GUIPrefs::SetLang( wxT("en") );
-            auto cleanup = finally( [&]{ GUIPrefs::SetLang( saveLang ); } );
+            GUISettings::SetLang( wxT("en") );
+            auto cleanup = finally( [&]{ GUISettings::SetLang( saveLang ); } );
       
             auto gAudioIO = AudioIOBase::Get();
             for (const auto &diagnostics : gAudioIO->GetAllDeviceInfo())
