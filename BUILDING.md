@@ -4,7 +4,7 @@
 
 * **python3** >= 3.9.1
 * **conan** >= 1.32.0
-* **cmake** >= 1.36
+* **cmake** >= 3.20.2
 * A working C++ 14 compiler
 
 ### Conan
