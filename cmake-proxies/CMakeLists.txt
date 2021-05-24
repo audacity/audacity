@@ -18,14 +18,17 @@ add_conan_lib(
       expat:shared=True
 )
 
-set(wx_zlib "zlib")
-set(wx_png "libpng")
+set( wx_zlib "zlib" )
+set( wx_png "libpng" )
+set( id3tag_zlib "conan" )
 
-if (${_OPT}use_zlib STREQUAL "system")
-   set(wx_zlib "sys")
+if ( ${_OPT}use_zlib STREQUAL "system" )
+   set( wx_zlib "sys" )
    # To prevent linking conflicts - we need to use system libpng as well.
    # wxWdigets will attempt to resolve it using find_package
-   set(wx_png "sys")
+   set( wx_png "sys" )
+
+   set( id3tag_zlib "system" )
 endif()
 
 set(wx_expat "expat")
@@ -75,6 +78,8 @@ add_conan_lib(
    libid3tag/0.15.2b@audacity/stable
    OPTION_NAME id3tag
    PGK_CONFIG "id3tag >= 0.15.1b"
+   CONAN_OPTIONS
+      libid3tag:zlib=${id3tag_zlib}
 )
 
 add_conan_lib(
