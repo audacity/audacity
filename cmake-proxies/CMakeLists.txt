@@ -72,17 +72,15 @@ add_conan_lib(
 
 add_conan_lib(
    libid3tag
-   libid3tag/0.15.1b
+   libid3tag/0.15.2b@audacity/stable
    OPTION_NAME id3tag
-   HAS_ONLY_DEBUG_RELEASE
    PGK_CONFIG "id3tag >= 0.15.1b"
 )
 
 add_conan_lib(
    libmad
-   libmad/0.15.1b
+   libmad/0.15.2b@audacity/stable
    OPTION_NAME mad
-   HAS_ONLY_DEBUG_RELEASE
    PGK_CONFIG "mad >= 0.15.1b"
 )
 
