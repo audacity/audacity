@@ -92,3 +92,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
     pkg_check_modules( GTK REQUIRED IMPORTED_TARGET GLOBAL ${gtk} )
     pkg_check_modules( GLIB REQUIRED IMPORTED_TARGET GLOBAL ${glib} )
 endif()
+
+set_target_properties(wxwidgets::base PROPERTIES IMPORTED_GLOBAL On)
+add_library( wxBase ALIAS wxwidgets::base )
