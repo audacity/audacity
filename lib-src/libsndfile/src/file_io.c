@@ -627,10 +627,20 @@ psf_fclose (SF_PRIVATE *psf)
 		return 0 ;
 		} ;
 
-	if ((retval = psf_close_handle (psf->file.handle)) == -1)
+	if (psf->file.filedes != -1)
+	{
+		retval = close(psf->file.filedes);
+	}
+	else
+	{
+		retval = psf_close_handle(psf->file.handle);
+	}
+	
+	if (retval == -1)
 		psf_log_syserr (psf, GetLastError ()) ;
 
 	psf->file.handle = NULL ;
+	psf->file.filedes = -1;
 
 	return retval ;
 } /* psf_fclose */
@@ -874,10 +884,13 @@ psf_set_file (SF_PRIVATE *psf, int fd)
 {	HANDLE handle ;
 	intptr_t osfhandle ;
 
+	// https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/get-osfhandle?view=msvc-160
+	// To close a file whose operating system (OS) file handle is obtained by _get_osfhandle, call _close on the file descriptor fd. Never call CloseHandle on the return value of this function.
 	osfhandle = _get_osfhandle (fd) ;
 	handle = (HANDLE) osfhandle ;
 
 	psf->file.handle = handle ;
+	psf->file.filedes = fd;
 } /* psf_set_file */
 
 /* USE_WINDOWS_API */ int
