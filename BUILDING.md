@@ -53,7 +53,7 @@ On Debian or Ubuntu, you can install everything required using the following com
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential cmake git python3-pip
 $ sudo pip3 install conan
-$ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev
+$ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev uuid-dev
 ```
 
 ## Building on Windows
@@ -153,86 +153,25 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 
 ### CMake options
 
-You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`).
-
-The most notable options are:
-
-| Name                              | Type   | Default    | Description                                                     |
-| :-------------------------------- | :----- | :--------- | :-------------------------------------------------------------- |
-| CMAKE_BUILD_TYPE                  | STRING | Debug      | Type of the build: Debug, Release, RelWithDebInfo, MinSizeRel   |
-| CMAKE_INSTALL_PREFIX              | PATH   | /usr/local | Install path prefix, prepended onto install directories.        |
-| audacity_lib_preference           | STRING | local      | Library preference [system (if available), local]               |
-| audacity_obey_system_dependencies | BOOL   | Off        | Use only system packages to satisfy dependencies                |
-| audacity_use_expat                | STRING | system     | Use expat library [system (if available), local, off]           |
-| audacity_use_ffmpeg               | STRING | loaded     | Use ffmpeg library [loaded, linked, off]                        |
-| audacity_use_flac                 | STRING | local      | Use flac library [system (if available), local, off]            |
-| audacity_use_id3tag               | STRING | local      | Use id3tag library [system (if available), local, off]          |
-| audacity_use_ladspa               | BOOL   | ON         | Use LADSPA plug-in support [on, off]                            |
-| audacity_use_libmad               | STRING | local      | Use libmad library [system (if available), local, off]          |
-| audacity_use_libmp3lame           | STRING | local      | Use libmp3lame library [system (if available), local, off]      |
-| audacity_use_lv2                  | STRING | local      | Use lv2 library [system (if available), local, off]             |
-| audacity_use_mad                  | STRING | local      | Use mad library [system (if available), local, off]             |
-| audacity_use_midi                 | STRING | local      | Use midi library [system (if available), local, off]            |
-| audacity_use_nyquist              | STRING | local      | Use nyquist library [local, off]                                |
-| audacity_use_ogg                  | STRING | local      | Use ogg library [system (if available), local, off]             |
-| audacity_use_pa_alsa              | BOOL   | YES        | Use the portaudio ALSA interface if available                   |
-| audacity_use_pa_jack              | STRING | linked     | Use the JACK audio interface if available [loaded, linked, off] |
-| audacity_use_pa_oss               | BOOL   | YES        | Use the OSS audio interface if available                        |
-| audacity_use_pch                  | BOOL   | YES        | Use precompiled headers [yes, no]                               |
-| audacity_use_portaudio            | STRING | local      | Use portaudio library [local]                                   |
-| audacity_use_portmixer            | STRING | local      | Use portmixer library [local, off]                              |
-| audacity_use_portsmf              | STRING | local      | Use portsmf library [system (if available), local, off]         |
-| audacity_use_sbsms                | STRING | local      | Use sbsms library [system (if available), local, off]           |
-| audacity_use_sndfile              | STRING | local      | Use sndfile library [system (if available), local]              |
-| audacity_use_soundtouch           | STRING | local      | Use soundtouch library [system (if available), local, off]      |
-| audacity_use_soxr                 | STRING | local      | Use soxr library [system (if available), local]                 |
-| audacity_use_sqlite               | STRING | local      | Use sqlite library [system (if available), local]               |
-| audacity_use_twolame              | STRING | local      | Use twolame library [system (if available), local, off]         |
-| audacity_use_vamp                 | STRING | local      | Use vamp library [system (if available), local, off]            |
-| audacity_use_vorbis               | STRING | local      | Use vorbis library [system (if available), local, off]          |
-| audacity_use_vst                  | BOOL   | ON         | Use VST2 plug-in support [on, off]                              |
-| audacity_use_wxwidgets            | STRING | local      | Use wxwidgets library [system (if available), local, off]       |
-| audacity_use_zlib                 | STRING | system     | Use zlib library [system (if available), local, off]            |
-
+You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include the documentation about each option. For convienience, [here is a list](CMAKE_OPTIONS.md) of the most notable options.
 
 ### Building using system libraries
 
-On Linux, it is possible to build Audacity using (almost) only the libraries provided by the package manager. We require the following version of the packages to be installed:
+On Linux, it is possible to build Audacity using (almost) only the libraries provided by the package manager. Please, see the list of the required libraries [here](linux/required_libraries.md).
 
-| Name              | Version       | Ubuntu 20.04 package                         |
-| :---------------- | :------------ | :------------------------------------------- |
-| wxWidgets         | >= 3.1.3      | **N/A**                                      |
-| expat             | >= 2.2.9      | libexpat1-dev                                |
-| libmp3lame        | >= 3.100      | libmp3lame-dev                               |
-| libsndfile        | >= 1.0.28     | libsndfile-dev                               |
-| libsoxr           | >= 0.1.3      | libsoxr-dev                                  |
-| ~~portaudio-v19~~ | ~~>= 19.6.0~~ | ~~portaudio19-dev~~                          |
-| sqlite3           | >= 3.31.1     | libsqlite3-dev                               |
-| libcurl           | >= 7.68.0     | libcurl-dev                                  |
-| ffmpeg            | >= 4.2.4      | libavcodec-dev libavformat-dev libavutil-dev |
-| libid3tag         | >= 0.15.1b    | libid3tag0-dev                               |
-| libmad            | >= 0.15.1b    | libmad0-dev                                  |
-| vamp-host-sdk     | >= 2.9.0      | N/A                                          |
-| libogg            | >= 1.3.4      | libogg-dev                                   |
-| libvorbis         | >= 1.3.6      | libvorbis-dev                                |
-| libflac           | >= 1.3.3      | libflac-dev libflac++-dev                    |
-| lilv              | >= 0.24.6     | liblilv-dev                                  |
-| lv2               | >= 1.16.0     | lv2-dev                                      |
-| serd              | >= 0.30.2     | libserd-dev                                  |
-| sord              | >= 0.16.4     | libsord-dev                                  |
-| sratom            | >= 0.6.4      | libsratom-dev                                |
-| suil              | >= 0.10.6     | libsuil-dev                                  |
-| portmidi          | >= 217        | libportmidi-dev                              |
-| portsmf           | >= 0.1        | libportsmf-dev                               |
-| libsbsms          | >= 2.0.2      | libsbsms-dev                                 |
-| soundtouch        | >= 2.1.2      | libsoundtouch-dev                            |
-| twolame           | >= 0.4.0      | libtwolame-dev                               |
-| zlib              | >= 1.2.11     | libzlib1g-dev                                |
+```
+$ mkdir build && cd build
+$ cmake -G "Unix Makefiles" \
+        -Daudacity_use_ffmpeg=loaded \
+        -Daudacity_lib_preference=system \
+        -Daudacity_obey_system_dependencies=On \
+         ../audacity
+```
 
 There are a few cases when the local library build is preferred:
 
 1. **wxWidgets**: While Audacity on **Linux** uses vanilla version of wxWidgets, we **require** that version **3.1.3** is used. This version is not available in most of the distributives.
-2. **portaudio-v19**: Audacity currently uses some private APIs, so using system portaudio is not yet possible.
+2. **portaudio-v19**: Audacity currently uses [some private APIs](https://github.com/audacity/audacity/issues/871), so using system portaudio is not yet possible.
 3. **vamp-host-sdk**: Development packages are not available in Ubuntu 20.04.
 4. **libnyquist**, **portmixer**: Libraries is not available in Ubuntu 20.04.
 5. **sqlite3**, **libsmbs**: Libraries are very outdated in Ubuntu 20.04.
