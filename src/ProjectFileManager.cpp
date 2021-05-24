@@ -775,7 +775,7 @@ bool ProjectFileManager::OpenNewProject()
       ShowErrorDialog(
          nullptr,
          XO("Can't open new empty project"),
-         XO("Error opening a new empty project"), 
+         XO("Error opening a new empty project.\nPerhaps Audacity's Temporary files directory is write protected."),
          "FAQ:Errors_opening_a_new_empty_project",
          true, 
          projectFileIO.GetLastLog());
