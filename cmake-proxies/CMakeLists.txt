@@ -111,8 +111,7 @@ add_conan_lib(
    OPTION_NAME curl
    PKG_CONFIG "libcurl >= 7.68.0"
    INTERFACE_NAME CURL::libcurl
-   FIND_PACKAGE_OPTIONS 
-      COMPONENTS HTTP HTTPS SSL
+   FIND_PACKAGE_OPTIONS
    CONAN_OPTIONS
       libcurl:with_ssl=${curl_ssl}
       libcurl:shared=True
