@@ -356,12 +356,13 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
    endif()
 
-   if( "wxBase" IN_LIST IMPORT_TARGETS )
+   if( "wxBase" IN_LIST IMPORT_TARGETS OR "wxwidgets::base" IN_LIST IMPORT_TARGETS )
       string( APPEND ATTRIBUTES " style=filled" )
    endif()
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
+
    list( APPEND DEFINES
       PRIVATE "${export_symbol}"
       INTERFACE "${import_symbol}"
@@ -374,9 +375,11 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # compute LIBRARIES
    set( LIBRARIES )
+   
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
+   
    list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
 
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
