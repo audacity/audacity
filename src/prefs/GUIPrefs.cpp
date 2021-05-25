@@ -329,9 +329,14 @@ wxString GUIPrefs::SetLang( const wxString & lang )
       Internat::SetCeeNumberFormat();
 #endif
 
-   // Unused strings that we want to be translated, even though
-   // we're not using them yet...
-   using future1 = decltype( XO("Master Gain Control") );
+   using future1 = decltype(
+      // The file of unused strings is part of the source tree scanned by
+      // xgettext when compiling the catalog template audacity.pot.
+      // Including it here doesn't change that but does make the C++ compiler
+      // check for correct syntax, but also generate no object code for them.
+#include "UnusedStrings.h"
+      0
+   );
 
 #ifdef __WXMAC__
       wxApp::s_macHelpMenuTitleName = _("&Help");

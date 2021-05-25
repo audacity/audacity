@@ -328,6 +328,7 @@ list( APPEND SOURCES
       UIHandle.h
       UndoManager.cpp
       UndoManager.h
+      UnusedStrings.h
       UserException.cpp
       UserException.h
       ViewInfo.cpp
