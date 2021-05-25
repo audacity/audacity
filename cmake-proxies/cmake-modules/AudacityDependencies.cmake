@@ -199,10 +199,10 @@ function ( _conan_install build_type )
         GENERATORS cmake_find_package_multi
         BUILD_REQUIRES ${CONAN_BUILD_REQUIRES}
         ${CONAN_CONFIG_OPTIONS}
-        IMPORTS "bin, *.dll -> ./bin/shared/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dll -> ./bin/shared/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dylib -> ./lib/shared/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.so* -> ./lib/shared/${build_type} @ keep_path=False"
+        IMPORTS "bin, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+        IMPORTS "lib, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+        IMPORTS "lib, *.dylib -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+        IMPORTS "lib, *.so* -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
         OPTIONS ${CONAN_PACKAGE_OPTIONS}
     )
 

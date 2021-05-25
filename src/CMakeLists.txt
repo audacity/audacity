@@ -1130,10 +1130,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
 
    # Copy over the wxWidgets DLLs
 
-   # Convert the paths to native
-   file( TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/bin/shared" libdir )
-   file( TO_NATIVE_PATH "${_EXEDIR}" exedir )
-
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
@@ -1141,7 +1137,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
                           -D DST="${_EXEDIR}"
-                          -D WXWIN="${libdir}/$<CONFIG>/"
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
@@ -1226,7 +1222,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
                           -D DST="${_PKGLIB}"
-                          -D WXWIN="${CMAKE_BINARY_DIR}/lib/shared/$<CONFIG>"
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
@@ -1292,7 +1288,7 @@ else()
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
                           -D DST="${_DEST}/${_PKGLIB}"
-                          -D WXWIN="${CMAKE_BINARY_DIR}/lib/shared/$<CONFIG>"
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )

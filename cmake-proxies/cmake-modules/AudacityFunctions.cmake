@@ -348,7 +348,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
    else()
       set( ATTRIBUTES "shape=octagon" )
-      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_EXEDIR}" )
+      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
       set_target_properties( ${TARGET}
          PROPERTIES
             PREFIX ""
@@ -379,7 +379,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
-   
+
    list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
 
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )

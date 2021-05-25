@@ -45,6 +45,8 @@ function( gather_libs src )
             list( APPEND libs ${lib} )
 
             gather_libs( ${lib} )
+         elseif ( EXISTS "${DST}/${line}" )
+            gather_libs( "${DST}/${line}" )
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
@@ -57,7 +59,11 @@ function( gather_libs src )
       foreach( line ${output} )
          if( line MATCHES "^.*\\.dylib " )
             string( REGEX REPLACE "dylib .*" "dylib" line "${line}" )
-            set( lib "${WXWIN}/${line}" )
+
+            get_filename_component( dylib_name "${line}" NAME)
+
+            message(STATUS "Checking out ${line}")
+            set( lib "${WXWIN}/${dylib_name}" )
 
             if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}")
                message(STATUS "\tProcessing ${lib}...")
@@ -68,7 +74,7 @@ function( gather_libs src )
                
                message(STATUS "\t\tAdding ${refname} to ${src}")
 
-               list( APPEND postcmds "sh -c 'install_name_tool -change ${refname} @executable_path/../Frameworks/${refname} ${src}'" )
+               list( APPEND postcmds "sh -c 'install_name_tool -change ${line} @executable_path/../Frameworks/${refname} ${src}'" )
 
                gather_libs( ${lib} )
             endif()
@@ -82,9 +88,9 @@ function( gather_libs src )
       get_filename_component( libname "${src}" NAME )
 
       foreach( line ${output} )
-         message (STATUS "\tChecking ${line}...")
-
          string( REGEX REPLACE "(.*) => .* \\(.*$" "\\1" line "${line}" )
+
+         message (STATUS "\tChecking ${line}...")
 
          set(line "${WXWIN}/${line}")
          
