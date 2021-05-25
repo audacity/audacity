@@ -139,7 +139,7 @@ include( AudacityFunctions )
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
-            "system"
+            "local"
             STRINGS "system" "local"
 )
 
