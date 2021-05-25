@@ -838,17 +838,18 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
 // PRL: I preserve this handler function for an event that was never sent, but
 // I don't know the intention.
-
 void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 {
-   auto &project = mProject;
-   auto &window = GetProjectFrame( project );
    const wxString &cmd = event.GetString();
-
-   if (!cmd.empty())
-      ProjectFileManager::Get( mProject ).OpenFile(cmd);
-
-   window.RequestUserAttention();
+   if (!cmd.empty()) {
+      ProjectChooser chooser{ &mProject, true };
+      if (auto project = ProjectFileManager::OpenFile(
+            std::ref(chooser), cmd)) {
+         auto &window = GetProjectFrame( *project );
+         window.RequestUserAttention();
+         chooser.Commit();
+      }
+   }
 }
 
 // static method, can be called outside of a project
@@ -868,68 +869,93 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       Importer::SetLastOpenType({});
    } );
 
-   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
-      const wxString &fileName = selectedFiles[ff];
-
+   for (const auto &fileName : selectedFiles) {
       // Make sure it isn't already open.
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      // DMM: If the project is dirty, that means it's been touched at
-      // all, and it's not safe to open a NEW project directly in its
-      // place.  Only if the project is brand-NEW clean and the user
-      // hasn't done any action at all is it safe for Open to take place
-      // inside the current project.
-      //
-      // If you try to Open a NEW project inside the current window when
-      // there are no tracks, but there's an Undo history, etc, then
-      // bad things can happen, including data files moving to the NEW
-      // project directory, etc.
-      if ( proj && (
-         ProjectHistory::Get( *proj ).GetDirty() ||
-         !TrackList::Get( *proj ).empty()
-      ) )
-         proj = nullptr;
-
-      // This project is clean; it's never been touched.  Therefore
-      // all relevant member variables are in their initial state,
-      // and it's okay to open a NEW project inside this window.
-      proj = OpenProject( proj, fileName );
+      proj = OpenProject( proj, fileName,
+         true /* addtohistory */, false /* reuseNonemptyProject */ );
    }
 }
 
-AudacityProject *ProjectManager::OpenProject(
-   AudacityProject *pProject, const FilePath &fileNameArg, bool addtohistory)
+bool ProjectManager::SafeToOpenProjectInto(AudacityProject &proj)
 {
-   bool success = false;
-   AudacityProject *pNewProject = nullptr;
-   if ( ! pProject )
-      pProject = pNewProject = New();
-   auto cleanup = finally( [&] {
-      if ( pNewProject )
-         GetProjectFrame( *pNewProject ).Close(true);
-      else if ( !success )
+   // DMM: If the project is dirty, that means it's been touched at
+   // all, and it's not safe to open a fresh project directly in its
+   // place.  Only if the project is brandnew clean and the user
+   // hasn't done any action at all is it safe for Open to take place
+   // inside the current project.
+   //
+   // If you try to Open a fresh project inside the current window when
+   // there are no tracks, but there's an Undo history, etc, then
+   // bad things can happen, including orphan blocks, or tracks
+   // referring to non-existent blocks
+   if (
+      ProjectHistory::Get( proj ).GetDirty() ||
+      !TrackList::Get( proj ).empty()
+   )
+      return false;
+   // This project is clean; it's never been touched.  Therefore
+   // all relevant member variables are in their initial state,
+   // and it's okay to open a NEW project inside its window.
+   return true;
+}
+
+ProjectManager::ProjectChooser::~ProjectChooser()
+{
+   if (mpUsedProject) {
+      if (mpUsedProject == mpGivenProject) {
          // Ensure that it happens here: don't wait for the application level
          // exception handler, because the exception may be intercepted
-         ProjectHistory::Get(*pProject).RollbackState();
-      // Any exception now continues propagating
-   } );
-   ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
-
-   // The above didn't throw, so change what finally will do
-   success = true;
-   pNewProject = nullptr;
-
-   auto &projectFileIO = ProjectFileIO::Get( *pProject );
-   if( projectFileIO.IsRecovered() ) {
-      auto &window = ProjectWindow::Get( *pProject );
-      window.Zoom( window.GetZoomOfToFit() );
-      // "Project was recovered" replaces "Create new project" in Undo History.
-      auto &undoManager = UndoManager::Get( *pProject );
-      undoManager.RemoveStates(0, 1);
+         ProjectHistory::Get(*mpGivenProject).RollbackState();
+         // Any exception now continues propagating
+      }
+      else
+         GetProjectFrame( *mpUsedProject ).Close(true);
    }
+}
 
-   return pProject;
+AudacityProject &
+ProjectManager::ProjectChooser::operator() ( bool openingProjectFile )
+{
+   if (mpGivenProject) {
+      // Always check before opening a project file (for safety);
+      // May check even when opening other files
+      // (to preserve old behavior; as with the File > Open command specifying
+      // multiple files of whatever types, so that each gets its own window)
+      bool checkReuse = (openingProjectFile || !mReuseNonemptyProject);
+      if (!checkReuse || SafeToOpenProjectInto(*mpGivenProject))
+         return *(mpUsedProject = mpGivenProject);
+   }
+   return *(mpUsedProject = New());
+}
+
+void ProjectManager::ProjectChooser::Commit()
+{
+   mpUsedProject = nullptr;
+}
+
+AudacityProject *ProjectManager::OpenProject(
+   AudacityProject *pGivenProject, const FilePath &fileNameArg,
+   bool addtohistory, bool reuseNonemptyProject)
+{
+   ProjectManager::ProjectChooser chooser{ pGivenProject, reuseNonemptyProject };
+   if (auto pProject = ProjectFileManager::OpenFile(
+      std::ref(chooser), fileNameArg, addtohistory )) {
+      chooser.Commit();
+
+      auto &projectFileIO = ProjectFileIO::Get( *pProject );
+      if( projectFileIO.IsRecovered() ) {
+         auto &window = ProjectWindow::Get( *pProject );
+         window.Zoom( window.GetZoomOfToFit() );
+         // "Project was recovered" replaces "Create new project" in Undo History.
+         auto &undoManager = UndoManager::Get( *pProject );
+         undoManager.RemoveStates(0, 1);
+      }
+      return pProject;
+   }
+   return nullptr;
 }
 
 // This is done to empty out the tracks, but without creating a new project.

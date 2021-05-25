@@ -862,17 +862,9 @@ bool ProjectFileManager::IsAlreadyOpen(const FilePath &projPathName)
    return false;
 }
 
-// FIXME:? TRAP_ERR This should return a result that is checked.
-//    See comment in AudacityApp::MRUOpen().
-void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory)
+AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
+   const FilePath &fileNameArg, bool addtohistory)
 {
-   auto &project = mProject;
-   auto &history = ProjectHistory::Get( project );
-   auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &tracks = TrackList::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
    // On Win32, we may be given a short (DOS-compatible) file name on rare
    // occasions (e.g. stuff like "C:\PROGRA~1\AUDACI~1\PROJEC~1.AUP"). We
    // convert these to long file name first.
@@ -882,7 +874,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
                                       XO("Project resides on FAT formatted drive.\n"
                                          "Copy it to another drive to open it.")))
    {
-      return;
+      return nullptr;
    }
 
    // Make sure it isn't already open.
@@ -893,7 +885,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
    //    This was reported in http://bugzilla.audacityteam.org/show_bug.cgi?id=137#c17,
    //    but is not really part of that bug. Anyway, prevent it!
    if (IsAlreadyOpen(fileName))
-      return;
+      return nullptr;
 
    // Data loss may occur if users mistakenly try to open ".aup3.bak" files
    // left over from an unsuccessful save or by previous versions of Audacity.
@@ -905,8 +897,8 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
 "You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Audacity project file instead."),
          XO("Warning - Backup File Detected"),
          wxOK | wxCENTRE,
-         &window);
-      return;
+         nullptr);
+      return nullptr;
    }
 
    if (!::wxFileExists(fileName)) {
@@ -914,10 +906,11 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          XO("Could not open file: %s").Format( fileName ),
          XO("Error Opening File"),
          wxOK | wxCENTRE,
-         &window);
-      return;
+         nullptr);
+      return nullptr;
    }
 
+   // Following block covers cases other than a project file:
    {
       wxFFile ff(fileName, wxT("rb"));
 
@@ -934,8 +927,8 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
             XO("Could not open file: %s").Format( fileName ),
             XO("Error opening file"),
             wxOK | wxCENTRE,
-            &window);
-         return;
+            nullptr);
+         return nullptr;
       }
 
       char buf[7];
@@ -945,40 +938,60 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
             XO("File may be invalid or corrupted: \n%s").Format( fileName ),
             XO("Error Opening File or Project"),
             wxOK | wxCENTRE,
-            &window);
-         return;
+            nullptr);
+         return nullptr;
       }
 
       if (wxStrncmp(buf, "SQLite", 6) != 0)
       {
+         // Not a database
 #ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
          // Is it a plug-in?
-         if (PluginManager::Get().DropFile(fileName))
-         {
+         if (PluginManager::Get().DropFile(fileName)) {
             MenuCreator::RebuildAllMenuBars();
+            // Plug-in installation happened, not really opening of a file,
+            // so return null
+            return nullptr;
          }
-         else
 #endif
 #ifdef USE_MIDI
-         if (FileNames::IsMidi(fileName))
-         {
-            DoImportMIDI(project, fileName);
+         if (FileNames::IsMidi(fileName)) {
+            auto &project = chooser(false);
+            // If this succeeds, indo history is incremented, and it also does
+            // ZoomAfterImport:
+            if(DoImportMIDI(project, fileName))
+               return &project;
+            return nullptr;
          }
-         else
 #endif
-         {
-            Import(fileName);
+         auto &project = chooser(false);
+         // Undo history is incremented inside this:
+         if (Get(project).Import(fileName)) {
+            // Undo history is incremented inside this:
+            // Bug 2743: Don't zoom with lof.
+            if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
+               ProjectWindow::Get(project).ZoomAfterImport(nullptr);
+            return &project;
          }
-         // Bug 2743: Don't zoom with lof.
-         if (!fileName.AfterLast('.').IsSameAs(wxT("lof"), false))
-            window.ZoomAfterImport(nullptr);
-
-         return;
+         return nullptr;
       }
    }
 
+   auto &project = chooser(true);
+   return Get(project).OpenProjectFile(fileName, addtohistory);
+}
+
+AudacityProject *ProjectFileManager::OpenProjectFile(
+   const FilePath &fileName, bool addtohistory)
+{
+   auto &project = mProject;
+   auto &history = ProjectHistory::Get( project );
+   auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+   auto &projectFileIO = ProjectFileIO::Get( project );
+   auto &window = ProjectWindow::Get( project );
+
    auto results = ReadProjectFile( fileName );
- 
    const bool bParseSuccess = results.parseSuccess;
    const auto &errorStr = results.errorString;
    const bool err = results.trackError;
@@ -1020,6 +1033,7 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          // PushState calls AutoSave(), so no longer need to do so here.
          history.PushState(XO("Project was recovered"), XO("Recover"));
       }
+      return &project;
    }
    else {
       // Vaughan, 2011-10-30:
@@ -1044,6 +1058,8 @@ void ProjectFileManager::OpenFile(const FilePath &fileNameArg, bool addtohistory
          XO("Error Opening Project"),
          errorStr,
          results.helpUrl);
+
+      return nullptr;
    }
 }
 
@@ -1292,7 +1308,7 @@ bool ProjectFileManager::Import(
 
       history.PushState(XO("Imported '%s'").Format( fileName ), XO("Import"));
 
-      return false;
+      return true;
    }
 
    // PRL: Undo history is incremented inside this:

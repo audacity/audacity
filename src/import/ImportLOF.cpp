@@ -410,7 +410,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
           * audio file. TODO: Some sort of message here? */
 
 #endif // USE_MIDI
-         mProject = ProjectManager::OpenProject( mProject, targetfile );
+         mProject = ProjectManager::OpenProject( mProject, targetfile,
+            true /* addtohistory */, true /* reuseNonemptyProject */ );
 
       // Set tok to right after filename
       temptok2.SetString(targettoken);

@@ -813,25 +813,8 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
             return false;
 
-         // DMM: If the project is dirty, that means it's been touched at
-         // all, and it's not safe to open a NEW project directly in its
-         // place.  Only if the project is brand-NEW clean and the user
-         // hasn't done any action at all is it safe for Open to take place
-         // inside the current project.
-         //
-         // If you try to Open a NEW project inside the current window when
-         // there are no tracks, but there's an Undo history, etc, then
-         // bad things can happen, including data files moving to the NEW
-         // project directory, etc.
-         if (proj && (
-            ProjectHistory::Get( *proj ).GetDirty() ||
-            !TrackList::Get( *proj ).empty()
-         ) )
-            proj = nullptr;
-         // This project is clean; it's never been touched.  Therefore
-         // all relevant member variables are in their initial state,
-         // and it's okay to open a NEW project inside this window.
-         ( void ) ProjectManager::OpenProject( proj, fullPathStr );
+         ( void ) ProjectManager::OpenProject( proj, fullPathStr,
+               true /* addtohistory */, false /* reuseNonemptyProject */ );
       }
       else {
          // File doesn't exist - remove file from history
@@ -1487,7 +1470,8 @@ bool AudacityApp::InitPart2()
       // Auto-recovery
       //
       bool didRecoverAnything = false;
-      if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
+      // This call may reassign project (passed by reference)
+      if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
       {
          QuitAudacity(true);
       }
@@ -1495,7 +1479,7 @@ bool AudacityApp::InitPart2()
       //
       // Remainder of command line parsing, but only if we didn't recover
       //
-      if (!didRecoverAnything)
+      if (project && !didRecoverAnything)
       {
          if (parser->Found(wxT("t")))
          {
