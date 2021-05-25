@@ -4,6 +4,7 @@
 # that it depends on
 set( LIBRARIES
    "lib-string-utils"
+   "lib-network-manager"
 )
 
 foreach( LIBRARY ${LIBRARIES} )
