@@ -37,5 +37,7 @@ set ( LIBRARIES PRIVATE
     wxwidgets::base
 )
 
+set ( DEFINES INTERFACE "HAS_NETWORKING" )
 
-audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "" "" )
+
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

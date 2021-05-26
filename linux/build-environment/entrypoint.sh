@@ -38,6 +38,7 @@ cmake_options=(
     -Daudacity_use_sbsms=local # We prefer using the latest version of sbsms
     -Daudacity_use_soundtouch=system
     -Daudacity_use_twolame=system
+    -Daudacity_has_networking=yes 
     -Daudacity_use_curl=system
 )
 

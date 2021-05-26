@@ -4,8 +4,11 @@
 # that it depends on
 set( LIBRARIES
    "lib-string-utils"
-   "lib-network-manager"
 )
+
+if ( ${_OPT}has_networking )
+   list( APPEND LIBRARIES "lib-network-manager")
+endif()
 
 foreach( LIBRARY ${LIBRARIES} )
    add_subdirectory( "${LIBRARY}" )
