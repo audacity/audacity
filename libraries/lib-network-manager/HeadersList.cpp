@@ -25,6 +25,7 @@
 #include "HeadersList.h"
 
 #include <algorithm>
+#include <cctype>
 
 namespace audacity
 {

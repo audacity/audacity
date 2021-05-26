@@ -12,6 +12,7 @@
 
 #include <cassert>
 #include <map>
+#include <algorithm>
 
 namespace audacity
 {
