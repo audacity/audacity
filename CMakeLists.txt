@@ -149,6 +149,10 @@ cmd_option( ${_OPT}obey_system_dependencies
             Off
 )
 
+cmd_option( ${_OPT}has_networking 
+   "Build networking features into Audacity"
+   Off)
+
 include( AudacityDependencies )
 
 # Pull all the modules we'll need

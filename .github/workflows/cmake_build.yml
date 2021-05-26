@@ -112,7 +112,8 @@ jobs:
               -B build \
               -G "${{matrix.config.generator}}" \
               -A ${{matrix.config.platform}} \
-              -D audacity_use_pch=no
+              -D audacity_use_pch=no \
+              -D audacity_has_networking=yes 
 
         # Build Audacity
         cmake --build build --config Release --verbose
@@ -150,7 +151,8 @@ jobs:
               -B build \
               -T buildsystem=1 \
               -G "${{matrix.config.generator}}" \
-              -D audacity_use_pch=no
+              -D audacity_use_pch=no \
+              -D audacity_has_networking=yes 
 
         # Build Audacity
         cmake --build build --config Release
@@ -189,7 +191,8 @@ jobs:
         cmake -S . \
               -B build \
               -G "${{matrix.config.generator}}" \
-              -D audacity_use_pch=no
+              -D audacity_use_pch=no \
+              -D audacity_has_networking=yes 
 
         # Build Audacity
         cmake --build build --config Release
