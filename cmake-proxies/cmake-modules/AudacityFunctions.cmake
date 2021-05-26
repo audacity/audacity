@@ -353,6 +353,8 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
          PROPERTIES
             PREFIX ""
             FOLDER "libraries" # for IDE organization
+            INSTALL_NAME_DIR ""
+            BUILD_WITH_INSTALL_NAME_DIR YES
       )
    endif()
 
