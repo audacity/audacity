@@ -11,7 +11,7 @@ add_conan_lib(
 
 add_conan_lib(
    expat
-   expat/2.2.9
+   expat/2.2.9@audacity/stable
    REQUIRED
    PKG_CONFIG "expat >= 2.1.0"
    CONAN_OPTIONS 
