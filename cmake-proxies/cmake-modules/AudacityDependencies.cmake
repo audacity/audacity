@@ -22,7 +22,7 @@ set( CONAN_RESOLVE_LIST )
 #   SYMBOL WXWIDGET
 #   REQUIRED 
 #   ALWAYS_ALLOW_CONAN_FALLBACK
-#   PGK_CONFIG "wxwidgets >= 3.1.3"
+#   PKG_CONFIG "wxwidgets >= 3.1.3"
 #   FIND_PACKAGE_OPTIONS COMPONENTS adv base core html qa xml
 #   INTERFACE_NAME wxwidgets::wxwidgets
 #   HAS_ONLY_DEBUG_RELEASE
@@ -57,7 +57,7 @@ function (add_conan_lib package conan_package_name )
         elseif ( opt STREQUAL "CONAN_OPTIONS" )
             set( list_mode on )
             set( current_var "conan_package_options" )
-        elseif ( opt STREQUAL "PGK_CONFIG" )
+        elseif ( opt STREQUAL "PKG_CONFIG" )
             set( list_mode on )
             set( current_var "pkg_config_options" )
         elseif ( opt STREQUAL "OPTION_NAME" )
@@ -199,10 +199,10 @@ function ( _conan_install build_type )
         GENERATORS cmake_find_package_multi
         BUILD_REQUIRES ${CONAN_BUILD_REQUIRES}
         ${CONAN_CONFIG_OPTIONS}
-        IMPORTS "bin, *.dll -> ./bin/shared/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dll -> ./bin/shared/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dylib -> ./lib/shared/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.so* -> ./lib/shared/${build_type} @ keep_path=False"
+        IMPORTS "bin, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+        IMPORTS "lib, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+        IMPORTS "lib, *.dylib -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+        IMPORTS "lib, *.so* -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
         OPTIONS ${CONAN_PACKAGE_OPTIONS}
     )
 

@@ -2,7 +2,7 @@ add_conan_lib(
    ZLIB
    zlib/1.2.11
    REQUIRED
-   PGK_CONFIG "zlib >= 1.2.11"
+   PKG_CONFIG "zlib >= 1.2.11"
    INTERFACE_NAME ZLIB::ZLIB
    OPTION_NAME zlib
    CONAN_OPTIONS 
@@ -13,7 +13,7 @@ add_conan_lib(
    expat
    expat/2.2.9
    REQUIRED
-   PGK_CONFIG "expat >= 2.1.0"
+   PKG_CONFIG "expat >= 2.1.0"
    CONAN_OPTIONS 
       expat:shared=True
 )
@@ -70,14 +70,14 @@ add_conan_lib(
    libmp3lame/3.100
    REQUIRED
    INTERFACE_NAME libmp3lame::libmp3lame
-   PGK_CONFIG "lame >= 3.100"
+   PKG_CONFIG "lame >= 3.100"
 )
 
 add_conan_lib(
    libid3tag
    libid3tag/0.15.2b@audacity/stable
    OPTION_NAME id3tag
-   PGK_CONFIG "id3tag >= 0.15.1b"
+   PKG_CONFIG "id3tag >= 0.15.1b"
    CONAN_OPTIONS
       libid3tag:zlib=${id3tag_zlib}
 )
@@ -86,7 +86,35 @@ add_conan_lib(
    libmad
    libmad/0.15.2b@audacity/stable
    OPTION_NAME mad
-   PGK_CONFIG "mad >= 0.15.1b"
+   PKG_CONFIG "mad >= 0.15.1b"
+)
+
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( curl_ssl "darwinssl" )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set( curl_ssl "schannel")
+else()
+   set ( curl_ssl "openssl" )
+endif ()
+
+add_conan_lib(
+   ThreadPool
+   threadpool/20140926
+   REQUIRED
+   ALWAYS_ALLOW_CONAN_FALLBACK
+)
+
+add_conan_lib(
+   CURL
+   libcurl/7.75.0
+   REQUIRED
+   OPTION_NAME curl
+   PKG_CONFIG "libcurl >= 7.68.0"
+   INTERFACE_NAME CURL::libcurl
+   FIND_PACKAGE_OPTIONS
+   CONAN_OPTIONS
+      libcurl:with_ssl=${curl_ssl}
+      libcurl:shared=True
 )
 
 set_conan_vars_to_parent()
