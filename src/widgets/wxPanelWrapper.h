@@ -13,9 +13,9 @@
 #include <wx/panel.h> // to inherit
 #include <wx/dialog.h> // to inherit
 
-#include "../Internat.h"
+#include "Internat.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 AUDACITY_DLL_API void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 

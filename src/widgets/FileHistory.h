@@ -16,8 +16,8 @@
 #include <wx/defs.h>
 #include <wx/weakref.h> // member variable
 
-#include "audacity/Types.h"
-#include "../MemoryX.h"
+#include "Identifier.h"
+#include "wxArrayStringEx.h"
 
 class wxConfigBase;
 class wxMenu;

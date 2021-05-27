@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxArrayString;
 class wxDynamicLibrary;

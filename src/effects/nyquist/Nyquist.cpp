@@ -54,6 +54,7 @@ effects from this one class.
 #include "../EffectManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
+#include "Languages.h"
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
@@ -700,7 +701,9 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-      lang = (lang.empty())? GUIPrefs::SetLang(lang) : lang;
+      lang = (lang.empty())
+         ? Languages::GetSystemLanguageCode(FileNames::AudacityPathList())
+         : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());

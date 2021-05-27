@@ -160,8 +160,6 @@ list( APPEND SOURCES
       ImageManipulation.h
       InconsistencyException.cpp
       InconsistencyException.h
-      Internat.cpp
-      Internat.h
       InterpolateAudio.cpp
       InterpolateAudio.h
       KeyboardCapture.cpp
@@ -172,8 +170,6 @@ list( APPEND SOURCES
       LabelTrack.h
       LangChoice.cpp
       LangChoice.h
-      Languages.cpp
-      Languages.h
       Legacy.cpp
       Legacy.h
       LightThemeAsCeeCode.h
@@ -328,7 +324,6 @@ list( APPEND SOURCES
       UIHandle.h
       UndoManager.cpp
       UndoManager.h
-      UnusedStrings.h
       UserException.cpp
       UserException.h
       ViewInfo.cpp

@@ -16,7 +16,7 @@
 #include <wx/defs.h>
 #include <wx/fileconf.h>
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class FileConfig : public wxConfigBase
 {

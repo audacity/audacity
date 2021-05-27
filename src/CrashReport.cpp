@@ -24,6 +24,7 @@
 #include "AudioIOBase.h"
 #include "FileNames.h"
 #include "Internat.h"
+#include "Languages.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "prefs/GUIPrefs.h"
@@ -59,9 +60,9 @@ void Generate(wxDebugReport::Context ctx)
    
          if (ctx == wxDebugReport::Context_Current)
          {
-            auto saveLang = GUIPrefs::GetLangShort();
-            GUIPrefs::InitLang( wxT("en") );
-            auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
+            auto saveLang = Languages::GetLangShort();
+            GUIPrefs::SetLang( wxT("en") );
+            auto cleanup = finally( [&]{ GUIPrefs::SetLang( saveLang ); } );
       
             auto gAudioIO = AudioIOBase::Get();
             rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));

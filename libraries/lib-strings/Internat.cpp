@@ -22,17 +22,12 @@ and on Mac OS X for the filesystem.
 
 #include "Internat.h"
 
-
-#include "MemoryX.h"
-
 #include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
 
 #include <locale.h>
 #include <math.h> // for pow()
-
-#include "../include/audacity/ComponentInterface.h"
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.
@@ -47,7 +42,7 @@ wxArrayString Internat::exclude;
 // This function allows us to replace Audacity by DarkAudacity without peppering 
 // the source code with changes.  We split out this step, the customisation, as 
 // it is used on its own (without translation) in the wxTS macro.
-AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str2)
+STRINGS_API const wxString& GetCustomSubstitution(const wxString& str2)
 {
    // If contains 'DarkAudacity, already converted.
    if( str2.Contains( "DarkAudacity" ))
@@ -65,7 +60,7 @@ AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str2)
    return wxTranslations::GetUntranslatedString(str3);
 }
 #else 
-AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str1)
+STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1)
 {
    return str1 ;
 }
@@ -73,7 +68,7 @@ AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str1)
 
 // In any translated string, we can replace the name 'Audacity' by 'DarkAudacity'
 // without requiring translators to see extra strings for the two versions.
-AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1)
+STRINGS_API const wxString& GetCustomTranslation(const wxString& str1)
 {
    const wxString& str2 = wxGetTranslation( str1 );
    return GetCustomSubstitution( str2 );
@@ -263,159 +258,3 @@ bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
 
    return result;
 }
-
-TranslatableStrings Msgids(
-   const EnumValueSymbol strings[], size_t nStrings)
-{
-   return transform_range<TranslatableStrings>(
-      strings, strings + nStrings,
-      std::mem_fn( &EnumValueSymbol::Msgid )
-   );
-}
-
-TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings )
-{
-   return Msgids( strings.data(), strings.size() );
-}
-
-// Find a better place for this?
-#include "audacity/Types.h"
-Identifier::Identifier(
-                       std::initializer_list<Identifier> components, wxChar separator )
-{
-   if( components.size() < 2 )
-   {
-      wxASSERT( false );
-      return;
-   }
-   auto iter = components.begin(), end = components.end();
-   value = (*iter++).value;
-   while (iter != end)
-      value += separator + (*iter++).value;
-}
-
-std::vector< Identifier > Identifier::split( wxChar separator ) const
-{
-   auto strings = ::wxSplit( value, separator );
-   return { strings.begin(), strings.end() };
-}
-
-const wxChar *const TranslatableString::NullContextName = wxT("*");
-
-const TranslatableString::Formatter
-TranslatableString::NullContextFormatter {
-   [](const wxString & str, TranslatableString::Request request) -> wxString {
-      switch ( request ) {
-         case Request::Context:
-            return NullContextName;
-         case Request::Format:
-         case Request::DebugFormat:
-         default:
-            return str;
-      }
-   }
-};
-
-bool TranslatableString::IsVerbatim() const
-{
-   return DoGetContext( mFormatter ) == NullContextName;
-}
-
-TranslatableString &TranslatableString::Strip( unsigned codes ) &
-{
-   auto prevFormatter = mFormatter;
-   mFormatter = [prevFormatter, codes]
-   ( const wxString & str, TranslatableString::Request request ) -> wxString {
-      switch ( request ) {
-         case Request::Context:
-            return TranslatableString::DoGetContext( prevFormatter );
-         case Request::Format:
-         case Request::DebugFormat:
-         default: {
-            bool debug = request == Request::DebugFormat;
-            auto result =
-               TranslatableString::DoSubstitute(
-                  prevFormatter,
-                  str, TranslatableString::DoGetContext( prevFormatter ),
-                  debug );
-            if ( codes & MenuCodes )
-               result = wxStripMenuCodes( result );
-            if ( codes & Ellipses ) {
-               if (result.EndsWith(wxT("...")))
-                  result = result.Left( result.length() - 3 );
-               // Also check for the single-character Unicode ellipsis
-               else if (result.EndsWith(wxT("\u2026")))
-                  result = result.Left( result.length() - 1 );
-            }
-            return result;
-         }
-      }
-   };
-   
-   return *this;
-}
-
-wxString TranslatableString::DoGetContext( const Formatter &formatter )
-{
-   return formatter ? formatter( {}, Request::Context ) : wxString{};
-}
-
-wxString TranslatableString::DoSubstitute( const Formatter &formatter,
-   const wxString &format, const wxString &context, bool debug )
-{
-   return formatter
-      ? formatter( format, debug ? Request::DebugFormat : Request::Format )
-      : // come here for most translatable strings, which have no formatting
-         ( debug ? format : wxGetTranslation( format, wxString{}, context ) );
-}
-
-wxString TranslatableString::DoChooseFormat(
-   const Formatter &formatter,
-   const wxString &singular, const wxString &plural, unsigned nn, bool debug )
-{
-   // come here for translatable strings that choose among forms by number;
-   // if not debugging, then two keys are passed to an overload of
-   // wxGetTranslation, and also a number.
-   // Some languages might choose among more or fewer than two forms
-   // (e.g. Arabic has duals and Russian has complicated declension rules)
-   wxString context;
-   return ( debug || NullContextName == (context = DoGetContext(formatter)) )
-      ? ( nn == 1 ? singular : plural )
-      : wxGetTranslation(
-            singular, plural, nn
-#if HAS_I18N_CONTEXTS
-            , wxString{} // domain
-            , context
-#endif
-         );
-}
-
-TranslatableString &TranslatableString::Join(
-   const TranslatableString arg, const wxString &separator ) &
-{
-   auto prevFormatter = mFormatter;
-   mFormatter =
-   [prevFormatter,
-    arg /* = std::move( arg ) */,
-    separator](const wxString &str, Request request)
-      -> wxString {
-      switch ( request ) {
-         case Request::Context:
-            return TranslatableString::DoGetContext( prevFormatter );
-         case Request::Format:
-         case Request::DebugFormat:
-         default: {
-            bool debug = request == Request::DebugFormat;
-            return
-               TranslatableString::DoSubstitute( prevFormatter,
-                  str, TranslatableString::DoGetContext( prevFormatter ),
-                  debug )
-                  + separator
-                  + arg.DoFormat( debug );
-         }
-      }
-   };
-   return *this;
-}
-
-const TranslatableString TranslatableString::Inaudible{ wxT("\a") };

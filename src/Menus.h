@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_MENUS__
 #define __AUDACITY_MENUS__
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include <wx/string.h> // member variable
 #include "Prefs.h"

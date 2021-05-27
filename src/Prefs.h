@@ -39,7 +39,7 @@
 #include <functional>
 
 #include "../include/audacity/ComponentInterface.h"
-#include "MemoryX.h" // for wxArrayStringEx
+#include "wxArrayStringEx.h"
 #include "widgets/FileConfig.h"
 
 #include <memory>

@@ -151,7 +151,7 @@ extern "C" {
 #include "ShuttleGui.h"
 #include "Prefs.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxDynamicLibrary;
 

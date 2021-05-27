@@ -22,7 +22,7 @@
 
 #include <stdio.h>
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include "XMLWriter.h"
 class AUDACITY_DLL_API XMLValueChecker

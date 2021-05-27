@@ -23,7 +23,7 @@
 #include <wx/simplebook.h>
 #include <wx/valgen.h>
 
-#include "../Internat.h"
+#include "Internat.h"
 #include "../Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"

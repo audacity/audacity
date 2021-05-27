@@ -14,6 +14,7 @@
 
 
 #include "audacity/Types.h"
+#include "Identifier.h"
 
 //#include <mutex>
 #include "MemoryX.h"

@@ -12,17 +12,16 @@
 #ifndef __AUDACITY_INTERNAT__
 #define __AUDACITY_INTERNAT__
 
-
-
+#include <vector>
 #include <wx/longlong.h>
 
-#include "audacity/Types.h"
+#include "TranslatableString.h"
 
 class wxArrayString;
 class wxArrayStringEx;
 
-extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
-extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& str1 );
+extern STRINGS_API const wxString& GetCustomTranslation(const wxString& str1 );
+extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
 
 // Marks string for substitution only.
 #define _TS( s ) GetCustomSubstitution( s )
@@ -101,7 +100,7 @@ extern AUDACITY_DLL_API const wxString& GetCustomSubstitution(const wxString& st
 #define XPC(sing, plur, n, c) \
    TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
 
-class AUDACITY_DLL_API Internat
+class STRINGS_API Internat
 {
 public:
    /** \brief Initialize internationalisation support. Call this once at
@@ -159,11 +158,6 @@ private:
 // Convert C strings to wxString
 #define UTF8CTOWX(X) wxString((X), wxConvUTF8)
 #define LAT1CTOWX(X) wxString((X), wxConvISO8859_1)
-
-class ComponentInterfaceSymbol;
-AUDACITY_DLL_API TranslatableStrings Msgids(
-   const EnumValueSymbol strings[], size_t nStrings);
-AUDACITY_DLL_API TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
 
 // Whether disambiguationg contexts are supported
 // If not, then the program builds and runs, but strings in the catalog with
