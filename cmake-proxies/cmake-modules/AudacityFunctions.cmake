@@ -408,6 +408,22 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
    endif()
 
+   if( NOT REAL_LIBTYPE STREQUAL "MODULE" )
+      if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+         set( REQUIRED_LOCATION "${_EXEDIR}" )
+      elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")
+         set( REQUIRED_LOCATION "${_PKGLIB}" )
+      else()
+         set( REQUIRED_LOCATION "${_DEST}/${_PKGLIB}" )
+      endif()
+
+      add_custom_command(TARGET ${TARGET} POST_BUILD
+         COMMAND ${CMAKE_COMMAND} -E copy 
+            "$<TARGET_FILE:${TARGET}>" 
+            "${REQUIRED_LOCATION}/$<TARGET_FILE_NAME:${TARGET}>"
+      )
+   endif()
+
    # define an additional interface library target
    set(INTERFACE_TARGET "${TARGET}-interface")
    if (NOT REAL_LIBTYPE STREQUAL "MODULE")
