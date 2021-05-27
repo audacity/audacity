@@ -4,7 +4,7 @@
 
 * **python3** >= 3.5
 * **conan** >= 1.32.0
-* **cmake** >= 3.16.3
+* **cmake** >= 3.16
 * A working C++ 14 compiler
 
 ### Conan
@@ -129,6 +129,7 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
    $ mkdir build && cd build
    $ cmake -G "Unix Makefiles" -Daudacity_use_ffmpeg=loaded ../audacity
    ```
+   By default, Debug build will be configured. To change that, pass `-DCMAKE_BUILD_TYPE=Release` to CMake.
 
 3. Build Audacity:
    ```
@@ -138,7 +139,7 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 4. Testing the build:
    Adding a "Portable Settings" folder allows Audacity to ignore the settings of any existing Audacity installation.
    ```
-   $ cd bin/Release
+   $ cd bin/Debug
    $ mkdir "Portable Settings"
    $ ./audacity
    ```
