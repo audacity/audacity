@@ -31,7 +31,7 @@ On Windows, please use the [prebuilt binaries](https://cmake.org/download/).
 
 On macOS, the easiest way to install CMake is `brew install cmake`.
 
-On Linux, `cmake` is usually available from the system package manager. The latest CMake version is available from Snap: `sudo snap instal cmake --classic`.
+On Linux, `cmake` is usually available from the system package manager.
 
 ### Windows
 
