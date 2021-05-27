@@ -29,6 +29,7 @@ effects from this one class.
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 #include <locale.h>
 
@@ -1390,12 +1391,12 @@ bool NyquistEffect::ProcessOne()
 
    // Put the fetch buffers in a clean initial state
    for (size_t i = 0; i < mCurNumChannels; i++)
-      mCurBuffer[i].Free();
+      mCurBuffer[i].reset();
 
    // Guarantee release of memory when done
    auto cleanup = finally( [&] {
       for (size_t i = 0; i < mCurNumChannels; i++)
-         mCurBuffer[i].Free();
+         mCurBuffer[i].reset();
    } );
 
    // Evaluate the expression, which may invoke the get callback, but often does
@@ -1563,7 +1564,7 @@ bool NyquistEffect::ProcessOne()
 
       // Clean the initial buffer states again for the get callbacks
       // -- is this really needed?
-      mCurBuffer[i].Free();
+      mCurBuffer[i].reset();
    }
 
    // Now fully evaluate the sound
@@ -2426,15 +2427,15 @@ int NyquistEffect::StaticGetCallback(float *buffer, int channel,
 int NyquistEffect::GetCallback(float *buffer, int ch,
                                int64_t start, int64_t len, int64_t WXUNUSED(totlen))
 {
-   if (mCurBuffer[ch].ptr()) {
+   if (mCurBuffer[ch]) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
           (mCurStart[ch] + start)+len >
           mCurBufferStart[ch]+mCurBufferLen[ch]) {
-         mCurBuffer[ch].Free();
+         mCurBuffer[ch].reset();
       }
    }
 
-   if (!mCurBuffer[ch].ptr()) {
+   if (!mCurBuffer[ch]) {
       mCurBufferStart[ch] = (mCurStart[ch] + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
@@ -2446,10 +2447,11 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
          limitSampleBufferSize( mCurBufferLen[ch],
                                 mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
-      mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
+      // C++20
+      // mCurBuffer[ch] = std::make_unique_for_overwrite(mCurBufferLen[ch]);
+      mCurBuffer[ch] = Buffer{ safenew float[ mCurBufferLen[ch] ] };
       try {
-         mCurTrack[ch]->Get(
-            mCurBuffer[ch].ptr(), floatSample,
+         mCurTrack[ch]->GetFloats( mCurBuffer[ch].get(),
             mCurBufferStart[ch], mCurBufferLen[ch]);
       }
       catch ( ... ) {
@@ -2462,9 +2464,8 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
    // We have guaranteed above that this is nonnegative and bounded by
    // mCurBufferLen[ch]:
    auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
-   CopySamples(mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample), floatSample,
-               (samplePtr)buffer, floatSample,
-               len);
+   const void *src = &mCurBuffer[ch][offset];
+   std::memcpy(buffer, src, len * sizeof(float));
 
    if (ch == 0) {
       double progress = mScale *

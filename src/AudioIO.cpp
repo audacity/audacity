@@ -3622,11 +3622,9 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
 {
    for (unsigned int i=0; i < inputChannels; i++) {
       samplePtr inputPtr = ((samplePtr)inputBuffer) + (i * SAMPLE_SIZE(inputFormat));
-      samplePtr outputPtr = ((samplePtr)outputBuffer) + (i * SAMPLE_SIZE(floatSample));
 
-      CopySamples(inputPtr, inputFormat,
-                  (samplePtr)outputPtr, floatSample,
-                  len, true, inputChannels, 2);
+      SamplesToFloats(inputPtr, inputFormat,
+         outputBuffer + i, len, inputChannels, 2);
    }
 
    // One mono input channel goes to both output channels...
@@ -4411,9 +4409,8 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
          inputSamples = (float *) inputBuffer;
       }
       else {
-         CopySamples((samplePtr)inputBuffer, mCaptureFormat,
-                     (samplePtr)tempFloats, floatSample,
-                     framesPerBuffer * numCaptureChannels);
+         SamplesToFloats(reinterpret_cast<constSamplePtr>(inputBuffer),
+            mCaptureFormat, tempFloats, framesPerBuffer * numCaptureChannels);
          inputSamples = tempFloats;
       }
 

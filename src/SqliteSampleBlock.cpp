@@ -593,6 +593,42 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
       srcoffset += 0;
    }
 
+   /*
+    Will dithering happen in CopySamples?  Answering this as of 3.0.3 by
+    examining all uses.
+    
+    As this function is called from GetSummary, no, because destination format
+    is float.
+
+    There is only one other call to this function, in DoGetSamples.  At one
+    call to that function, in DoGetMinMaxRMS, again format is float always.
+    
+    There is only one other call to DoGetSamples, in SampleBlock::GetSamples().
+    In one call to that function, in WaveformView.cpp, again format is float.
+
+    That leaves two calls in Sequence.cpp.  One of those can be proved to be
+    used only in copy and paste operations, always supplying the same sample
+    format as the samples were stored in, therefore no dither.
+
+    That leaves uses of Sequence::Read().  There are uses of Read() in internal
+    operations also easily shown to use only the saved format, and
+    GetWaveDisplay() always reads as float.
+
+    The remaining use of Sequence::Read() is in Sequence::Get().  That is used
+    by WaveClip::Resample(), always fetching float.  It is also used in
+    WaveClip::GetSamples().
+
+    There is only one use of that function not always fetching float, in
+    WaveTrack::Get().
+
+    It can be shown that the only paths to WaveTrack::Get() not specifying
+    floatSample are in Benchmark, which is only a diagnostic test, and there
+    the sample format is the same as what the track was constructed with.
+
+    Therefore, no dithering even there!
+    */
+   wxASSERT(destformat == floatSample || destformat == srcformat);
+
    CopySamples(src + srcoffset,
                srcformat,
                (samplePtr) dest,
@@ -806,11 +842,8 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
    else
    {
       samplebuffer.reinit((unsigned) mSampleCount);
-      CopySamples(mSamples.get(),
-                  mSampleFormat,
-                  (samplePtr) samplebuffer.get(),
-                  floatSample,
-                  mSampleCount);
+      SamplesToFloats(mSamples.get(), mSampleFormat,
+         samplebuffer.get(), mSampleCount);
       samples = samplebuffer.get();
    }
    
