@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-* **python3** >= 3.9.1
+* **python3** >= 3.5
 * **conan** >= 1.32.0
-* **cmake** >= 3.20.2
+* **cmake** >= 3.17.1
 * A working C++ 14 compiler
 
 ### Conan
