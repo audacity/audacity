@@ -2,6 +2,8 @@
 set( TARGET Audacity )
 set( TARGET_ROOT ${topdir}/src )
 
+include (CheckFunctionExists)
+
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
 # Allow modules to link against the Audacity executable
@@ -1314,6 +1316,12 @@ source_group(
 import_symbol_define( import_symbol AUDACITY_DLL )
 export_symbol_define( export_symbol AUDACITY_DLL )
 list( APPEND DEFINES PRIVATE "${export_symbol}" INTERFACE "${import_symbol}" )
+
+# see AudioIO.cpp
+check_function_exists(clock_gettime HAVE_CLOCK_GETTIME)
+if(HAVE_CLOCK_GETTIME)
+   list( APPEND DEFINES HAVE_CLOCK_GETTIME )
+endif()
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
