@@ -10,9 +10,7 @@
 #define __AUDACITY_ACTIVE_PROJECTS__
 
 
-#include "audacity/Types.h"
-
-#include <wx/string.h>
+#include "Identifier.h"
 
 namespace ActiveProjects
 {

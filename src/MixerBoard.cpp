@@ -610,8 +610,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    Floats tempFloatsArray{ nFrames };
    decltype(tempFloatsArray) meterFloatsArray;
    // Don't throw on read error in this drawing update routine
-   bool bSuccess = pTrack->Get((samplePtr)tempFloatsArray.get(),
-      floatSample, startSample, nFrames, fillZero, false);
+   bool bSuccess = pTrack->GetFloats(tempFloatsArray.get(),
+      startSample, nFrames, fillZero, false);
    if (bSuccess)
    {
       // We always pass a stereo sample array to the meter, as it shows 2 channels.
@@ -625,8 +625,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 
       if (GetRight())
          // Again, don't throw
-         bSuccess = GetRight()->Get((samplePtr)tempFloatsArray.get(),
-            floatSample, startSample, nFrames, fillZero, false);
+         bSuccess = GetRight()->GetFloats(tempFloatsArray.get(),
+            startSample, nFrames, fillZero, false);
 
       if (bSuccess)
          // Interleave right channel, or duplicate same signal for "right" channel in mono case.

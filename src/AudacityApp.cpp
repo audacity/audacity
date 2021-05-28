@@ -112,6 +112,10 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
 
+#ifdef HAS_NETWORKING
+#include "NetworkManager.h"
+#endif
+
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 #include "prefs/KeyConfigPrefs.h"
 #endif
@@ -191,7 +195,7 @@ void PopulatePreferences()
       auto &ini = *pIni;
 
       wxString lang;
-      if (ini.Read(wxT("/FromInno/Language"), &lang))
+      if (ini.Read(wxT("/FromInno/Language"), &lang) && !lang.empty())
       {
          // Only change "langCode" if the language was actually specified in the ini file.
          langCode = lang;
@@ -213,7 +217,12 @@ void PopulatePreferences()
       }
    }
 
-   langCode = GUIPrefs::InitLang( langCode );
+   // Use the system default language if one wasn't specified or if the user selected System.
+   if (langCode.empty())
+      langCode =
+         Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
+
+   langCode = GUIPrefs::SetLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
@@ -813,25 +822,8 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
             return false;
 
-         // DMM: If the project is dirty, that means it's been touched at
-         // all, and it's not safe to open a NEW project directly in its
-         // place.  Only if the project is brand-NEW clean and the user
-         // hasn't done any action at all is it safe for Open to take place
-         // inside the current project.
-         //
-         // If you try to Open a NEW project inside the current window when
-         // there are no tracks, but there's an Undo history, etc, then
-         // bad things can happen, including data files moving to the NEW
-         // project directory, etc.
-         if (proj && (
-            ProjectHistory::Get( *proj ).GetDirty() ||
-            !TrackList::Get( *proj ).empty()
-         ) )
-            proj = nullptr;
-         // This project is clean; it's never been touched.  Therefore
-         // all relevant member variables are in their initial state,
-         // and it's okay to open a NEW project inside this window.
-         ( void ) ProjectManager::OpenProject( proj, fullPathStr );
+         ( void ) ProjectManager::OpenProject( proj, fullPathStr,
+               true /* addtohistory */, false /* reuseNonemptyProject */ );
       }
       else {
          // File doesn't exist - remove file from history
@@ -1487,7 +1479,8 @@ bool AudacityApp::InitPart2()
       // Auto-recovery
       //
       bool didRecoverAnything = false;
-      if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
+      // This call may reassign project (passed by reference)
+      if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
       {
          QuitAudacity(true);
       }
@@ -1495,7 +1488,7 @@ bool AudacityApp::InitPart2()
       //
       // Remainder of command line parsing, but only if we didn't recover
       //
-      if (!didRecoverAnything)
+      if (project && !didRecoverAnything)
       {
          if (parser->Found(wxT("t")))
          {
@@ -1563,7 +1556,7 @@ bool AudacityApp::InitPart2()
 
    Bind(wxEVT_MENU_CLOSE, [=](wxMenuEvent &event)
    {
-      wxSetlocale(LC_NUMERIC, GUIPrefs::GetLocaleName());
+      wxSetlocale(LC_NUMERIC, Languages::GetLocaleName());
       event.Skip();
    });
 #endif
@@ -2215,6 +2208,10 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
+
+#ifdef HAS_NETWORKING
+   audacity::network_manager::NetworkManager::GetInstance().Terminate();
+#endif
 
    return 0;
 }

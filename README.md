@@ -18,4 +18,7 @@
 
 For end users, the latest Windows and macOS release version of Audacity is available from the [Audacity website](https://www.audacityteam.org/download/).
 Help with using Audacity is available from the [Audacity Forum](https://forum.audacityteam.org/).
-Information for developers is available from the [Audacity Wiki](https://wiki.audacityteam.org/wiki/For_Developers).
+
+Build instructions are available [here](BUILDING.md).
+
+More information for developers is available from the [Audacity Wiki](https://wiki.audacityteam.org/wiki/For_Developers).

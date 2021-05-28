@@ -18,7 +18,7 @@
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class SampleBlock;
 class SampleBlockFactory;

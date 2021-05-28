@@ -12,8 +12,8 @@
 #define __AUDACITY_TEMP_DIRECTORY__
 
 
-#include "audacity/Types.h"
-
+#include "Identifier.h"
+class TranslatableString;
 class wxWindow;
 
 namespace TempDirectory

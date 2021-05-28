@@ -12,7 +12,7 @@
 #define _IMPORT_
 
 #include "ImportForwards.h"
-#include "audacity/Types.h"
+#include "Identifier.h"
 #include <vector>
 #include <wx/tokenzr.h> // for enum wxStringTokenizerMode
 

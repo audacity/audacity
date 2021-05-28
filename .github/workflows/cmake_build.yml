@@ -27,7 +27,8 @@ env:
   # it has a bug in the install_name_tool.  So explicitly use 12.3
   # instead.
   DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
-
+  CONAN_USER_HOME: "${{ github.workspace }}/conan-home/"
+  CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-home/short"
 #
 # Define our job(s)
 #
@@ -69,45 +70,31 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     #  with:
-    #    ref: master
-
+    #    ref: master   
     # =========================================================================
-    # SHARED: Retrieve git hashes and set up for cache
+    # SHARED: Checkout source
     # =========================================================================
-    - name: Setup cache
+    - name: Calculate short hash
       shell: bash
       run: |
         set -x
-
-        # Get latest wxWidgets commit hash
-        wxhash=$(git ls-remote "${WXURL}" "${WXREF}" | awk 'NR==1 {print $1}')
-
-        # Build the cache key
-        wxhash="wx_${wxhash}_${RUNNER_OS}_${{matrix.config.platform}}"
-
-        # Export the commit hash to further steps
-        echo "WXHASH=${wxhash}" >> ${GITHUB_ENV}
-
         # Get the short hash
         shorthash=$(git show -s --format='%h')
-
         # Export the short hash for the upload step
         echo "SHORTHASH=${shorthash}" >> ${GITHUB_ENV}
-
         # Export the destination directory name
         echo "DEST=${{matrix.config.name}}_${shorthash}" >> ${GITHUB_ENV}
 
-    # =========================================================================
-    # SHARED: Create and/or retrieve wxWidgets cached build
-    # =========================================================================
-    - name: Populate cache
-      id: cache
-      uses: actions/cache@v1
+    - name: GitHub Action Cache for .conan
+      id: github-cache-conan
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-conan-modules
       with:
-        # Increment the number at the end to force recreation of the cache
-        key: ${{ env.WXHASH }}.2
-        path: ${{ env.WXWIN }}
-
+        path: ${{ env.CONAN_USER_HOME }}
+        key: host-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
+        restore-keys: |
+          host-${{ matrix.config.name }}-
     # =========================================================================
     # WINDOWS: Build (for all versions of Windows)
     # =========================================================================
@@ -116,49 +103,17 @@ jobs:
       shell: bash
       run: |
         set -x
-
-        # Build wxWidgets if needed
-        if [ ! -e "${WXWIN}" ]
-        then
-          # Clone the wxWidgets repo
-          git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
-
-          # Use cmake since it defines the MSVC environment for us
-          cmake -S "wxroot" \
-                -B "wxroot" \
-                -G "${{matrix.config.generator}}" \
-                -A "${{matrix.config.platform}}"
-
-          # Build
-          cmake --build "wxroot" --config Release --verbose
-
-          # Install to the cached path
-          cmake --install "wxroot" --config Release --prefix "${WXWIN}"
-
-          # On Windows, we need zlib for libid3tag
-          mkdir -p "${WXWIN}/src"
-          cp -a "wxroot/lib" "${WXWIN}/"
-          cp -a "wxroot/src/zlib" "${WXWIN}/src"
-        fi
-
-        # Convert to CMake path
-        export WXWIN="${WXWIN//\\//}"
+        pip install conan
+        conan --version
 
         # Configure Audacity
         #
-        # The wxWidgets_USE_REL_AND_DBG is needed because,
-        # on Github, we only build the Release version of
-        # wxWidgets and the FindwxWidgets CMake module
-        # defaults to looking for both.  If either of them
-        # isn't found, then it doesn't provided the required
-        # library information.  This is only a concern for
-        # Windows.
         cmake -S . \
               -B build \
               -G "${{matrix.config.generator}}" \
               -A ${{matrix.config.platform}} \
-              -D wxWidgets_USE_REL_AND_DBG=no \
-              -D audacity_use_pch=no
+              -D audacity_use_pch=no \
+              -D audacity_has_networking=yes 
 
         # Build Audacity
         cmake --build build --config Release --verbose
@@ -188,53 +143,16 @@ jobs:
         brew install gettext
         brew link --force gettext
 
-        # Build wxWidgets if needed
-        if [ ! -e "${WXWIN}" ]
-        then
-          # Clone the wxWidgets repo
-          git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
-
-          # Make sure our flags are included
-          export CXX="g++ -std=c++1z -stdlib=libc++"
-          export LD="g++ -std=c++1z -stdlib=libc++"
-
-          # The cmake build produces an incorrect wx-config script, so use
-          # the plain old configure/make
-          cd wxroot
-          ./configure --prefix=/usr/local \
-                      --enable-debug=no \
-                      --enable-macosx-arch="x86_64" \
-                      --enable-shared=yes \
-                      --enable-unicode=yes \
-                      --enable-universal_binary=no \
-                      --enable-webkit=no \
-                      --enable-webviewwebkit=no \
-                      --with-expat=builtin \
-                      --with-flavour="release" \
-                      --with-libjpeg=builtin \
-                      --with-libpng=builtin \
-                      --with-libtiff=builtin \
-                      --with-macosx-version-min="10.7" \
-                      --with-regex=builtin \
-                      --with-zlib=builtin \
-                      --without-liblzma
-
-          # Build and install to cached path
-          make -j $(sysctl -n hw.ncpu) install DESTDIR="${WXWIN}"
-          cd ..
-
-          # Clean up
-          unset CXX LD
-        fi
-
-        # "Install" wxWidgets
-        sudo cp -a "${WXWIN}"/usr/* /usr
+        brew install conan
+        conan --version
 
         # Configure Audacity
         cmake -S . \
               -B build \
+              -T buildsystem=1 \
               -G "${{matrix.config.generator}}" \
-              -D audacity_use_pch=no
+              -D audacity_use_pch=no \
+              -D audacity_has_networking=yes 
 
         # Build Audacity
         cmake --build build --config Release
@@ -261,36 +179,20 @@ jobs:
 
         # Install required packages
         sudo apt-get update -y
-        sudo apt-get install -y libgtk2.0-dev libasound2-dev gettext
+        sudo apt-get install -y libgtk2.0-dev libasound2-dev gettext python3-pip
         sudo apt-get remove -y ccache
 
-        # Build wxWidgets if needed
-        if [ ! -e "${WXWIN}" ]
-        then
-          # Clone the wxWidgets repo
-          git clone --depth 1 --recurse-submodules -b "${WXREF}" "${WXURL}" "wxroot"
+        pip3 install wheel setuptools
+        pip3 install conan
 
-          # Install additional required package
-          sudo apt-get install -y autoconf automake
-
-          # The cmake build produces an incorrect wx-config script, so use
-          # the plain old configure
-          cd wxroot
-          ./configure --with-gtk
-
-          # Build and install to cached path
-          make -j $(nproc) install DESTDIR="${WXWIN}"
-          cd ..
-        fi
-
-        # "Install" wxWidgets
-        sudo cp -a "${WXWIN}"/* /
+        conan --version
 
         # Configure Audacity
         cmake -S . \
               -B build \
               -G "${{matrix.config.generator}}" \
-              -D audacity_use_pch=no
+              -D audacity_use_pch=no \
+              -D audacity_has_networking=yes 
 
         # Build Audacity
         cmake --build build --config Release

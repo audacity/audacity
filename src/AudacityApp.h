@@ -15,7 +15,7 @@
 #define __AUDACITY_APP__
 
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 
 

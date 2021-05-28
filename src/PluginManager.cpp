@@ -1944,6 +1944,7 @@ void PluginManager::Load()
    {
       // Must start over
       registry.DeleteAll();
+      registry.Flush();
       return;
    }
 

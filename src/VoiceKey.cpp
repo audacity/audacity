@@ -149,7 +149,7 @@ sampleCount VoiceKey::OnForward (
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SignalWindowSizeInt samples, and choose the first that trips the key.
          Floats buffer{ remaining };
-         t.Get((samplePtr)buffer.get(), floatSample,
+         t.GetFloats(buffer.get(),
                lastsubthresholdsample, remaining);
 
 
@@ -299,7 +299,7 @@ sampleCount VoiceKey::OnBackward (
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first mSilentWindowSizeInt samples, and choose the first that trips the key.
          Floats buffer{ remaining };
-         t.Get((samplePtr)buffer.get(), floatSample,
+         t.GetFloats(buffer.get(),
                lastsubthresholdsample - remaining, remaining);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -442,7 +442,7 @@ sampleCount VoiceKey::OffForward (
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
          Floats buffer{ remaining };
-         t.Get((samplePtr)buffer.get(), floatSample,
+         t.GetFloats(buffer.get(),
                lastsubthresholdsample, remaining);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -579,7 +579,7 @@ sampleCount VoiceKey::OffBackward (
          //To speed things up, create a local buffer to store things in, to avoid the costly t.Get();
          //Only go through the first SilentWindowSizeInt samples, and choose the first that trips the key.
          Floats buffer{ remaining };
-         t.Get((samplePtr)buffer.get(), floatSample,
+         t.GetFloats(buffer.get(),
                lastsubthresholdsample - remaining, remaining);
 
          //Initialize these trend markers atrend and ztrend.  They keep track of the
@@ -870,7 +870,7 @@ double VoiceKey::TestEnergy (
          //Figure out how much to grab
          auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
-         t.Get((samplePtr)buffer.get(), floatSample, s,block);                      //grab the block;
+         t.GetFloats(buffer.get(), s,block);                      //grab the block;
 
          //Now, go through the block and calculate energy
          for(decltype(block) i = 0; i< block; i++)
@@ -913,7 +913,7 @@ double VoiceKey::TestSignChanges(
       //Figure out how much to grab
       auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
-      t.Get((samplePtr)buffer.get(), floatSample, s, block);                      //grab the block;
+      t.GetFloats(buffer.get(), s, block);                      //grab the block;
 
       if  (len == originalLen)
          {
@@ -970,7 +970,7 @@ double VoiceKey::TestDirectionChanges(
       //Figure out how much to grab
       auto block = limitSampleBufferSize ( t.GetBestBlockSize(s), len );
 
-      t.Get((samplePtr)buffer.get(), floatSample, s, block);                      //grab the block;
+      t.GetFloats(buffer.get(), s, block);                      //grab the block;
 
       if  (len == originalLen) {
          //The first time through, set stuff up special.

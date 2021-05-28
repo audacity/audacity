@@ -22,10 +22,9 @@
 
 #include <wx/app.h>
 #include <wx/defs.h>
-#include <locale>
 
 #include "../FileNames.h"
-#include "../Languages.h"
+#include "Languages.h"
 #include "../Theme.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -102,7 +101,8 @@ void GUIPrefs::GetRangeChoices(
 void GUIPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
-   GetLanguages(mLangCodes, mLangNames);
+   Languages::GetLanguages(
+      FileNames::AudacityPathList(), mLangCodes, mLangNames);
 
    GetRangeChoices(&mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
 
@@ -240,7 +240,7 @@ bool GUIPrefs::Commit()
    wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
    wxString usedLang = SetLang(lang);
    // Bug 1523: Previously didn't check no-language (=System Language)
-   if (!(lang.empty()) && (lang != usedLang)) {
+   if (!(lang.empty() || lang == L"System") && (lang != usedLang)) {
       // lang was not usable and is not system language.  We got overridden.
       gPrefs->Write(wxT("/Locale/Language"), usedLang);
       gPrefs->Flush();
@@ -253,74 +253,12 @@ bool GUIPrefs::Commit()
    return true;
 }
 
-wxString GUIPrefs::InitLang( wxString langCode )
-{
-   if ( langCode.empty() )
-      langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
-
-   // Use the system default language if one wasn't specified or if the user selected System.
-   if (langCode.empty())
-   {
-      langCode = GetSystemLanguageCode();
-   }
-
-   // Initialize the language
-   return SetLang(langCode);
-}
-
-static std::unique_ptr<wxLocale> sLocale;
-static wxString sLocaleName;
-
 wxString GUIPrefs::SetLang( const wxString & lang )
 {
-   wxString result = lang;
-
-   sLocale.reset();
-
-#if defined(__WXMAC__)
-   // This should be reviewed again during the wx3 conversion.
-
-   // On OSX, if the LANG environment variable isn't set when
-   // using a language like Japanese, an assertion will trigger
-   // because conversion to Japanese from "?" doesn't return a
-   // valid length, so make OSX happy by defining/overriding
-   // the LANG environment variable with U.S. English for now.
-   wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
-#endif
-
-   const wxLanguageInfo *info = NULL;
-   if (!lang.empty() && lang != wxT("System")) {
-      info = wxLocale::FindLanguageInfo(lang);
-      if (!info)
-         ::AudacityMessageBox(
-            XO("Language \"%s\" is unknown").Format( lang ) );
-   }
-   if (!info)
-   {
-      result = GetSystemLanguageCode();
-      info = wxLocale::FindLanguageInfo(result);
-      if (!info)
-         return result;
-   }
-   sLocale = std::make_unique<wxLocale>(info->Language);
-
-   for( const auto &path : FileNames::AudacityPathList() )
-      sLocale->AddCatalogLookupPathPrefix( path );
-
-   // LL:  Must add the wxWidgets catalog manually since the search
-   //      paths were not set up when mLocale was created.  The
-   //      catalogs are search in LIFO order, so add wxstd first.
-   sLocale->AddCatalog(wxT("wxstd"));
-
-   // Must match TranslationExists() in Languages.cpp
-   sLocale->AddCatalog("audacity");
-
-   // Initialize internationalisation (number formats etc.)
-   //
-   // This must go _after_ creating the wxLocale instance because
-   // creating the wxLocale instance sets the application-wide locale.
-
-   Internat::Init();
+   auto result = Languages::SetLang(FileNames::AudacityPathList(), lang);
+   if (!(lang.empty() || lang == L"System") && result != lang)
+      ::AudacityMessageBox(
+         XO("Language \"%s\" is unknown").Format( lang ) );
 
 #ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
    bool forceCeeNumbers;
@@ -329,38 +267,11 @@ wxString GUIPrefs::SetLang( const wxString & lang )
       Internat::SetCeeNumberFormat();
 #endif
 
-   // Unused strings that we want to be translated, even though
-   // we're not using them yet...
-   using future1 = decltype( XO("Master Gain Control") );
-
 #ifdef __WXMAC__
       wxApp::s_macHelpMenuTitleName = _("&Help");
 #endif
 
-   sLocaleName = wxSetlocale(LC_ALL, NULL);
-
    return result;
-}
-
-wxString GUIPrefs::GetLocaleName()
-{
-   return sLocaleName;
-}
-
-wxString GUIPrefs::GetLang()
-{
-   if (sLocale)
-      return sLocale->GetSysName();
-   else
-      return {};
-}
-
-wxString GUIPrefs::GetLangShort()
-{
-   if (sLocale)
-      return sLocale->GetName();
-   else
-      return {};
 }
 
 int ShowClippingPrefsID()

@@ -339,7 +339,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif ()
 
    if (LIBTYPE STREQUAL "MODULE")
-      set( SHAPE "box" )
+      set( ATTRIBUTES "shape=box" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_MODDIR}" )
       set_target_properties( ${TARGET}
          PROPERTIES
@@ -347,17 +347,24 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             FOLDER "modules" # for IDE organization
       )
    else()
-      set( SHAPE "octagon" )
-      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_EXEDIR}" )
+      set( ATTRIBUTES "shape=octagon" )
+      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
       set_target_properties( ${TARGET}
          PROPERTIES
             PREFIX ""
             FOLDER "libraries" # for IDE organization
+            INSTALL_NAME_DIR ""
+            BUILD_WITH_INSTALL_NAME_DIR YES
       )
+   endif()
+
+   if( "wxBase" IN_LIST IMPORT_TARGETS OR "wxwidgets::base" IN_LIST IMPORT_TARGETS )
+      string( APPEND ATTRIBUTES " style=filled" )
    endif()
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
+
    list( APPEND DEFINES
       PRIVATE "${export_symbol}"
       INTERFACE "${import_symbol}"
@@ -370,9 +377,11 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # compute LIBRARIES
    set( LIBRARIES )
+   
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
+
    list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
 
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
@@ -399,6 +408,22 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
    endif()
 
+   if( NOT REAL_LIBTYPE STREQUAL "MODULE" )
+      if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+         set( REQUIRED_LOCATION "${_EXEDIR}" )
+      elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")
+         set( REQUIRED_LOCATION "${_PKGLIB}" )
+      else()
+         set( REQUIRED_LOCATION "${_DEST}/${_PKGLIB}" )
+      endif()
+
+      add_custom_command(TARGET ${TARGET} POST_BUILD
+         COMMAND ${CMAKE_COMMAND} -E copy 
+            "$<TARGET_FILE:${TARGET}>" 
+            "${REQUIRED_LOCATION}/$<TARGET_FILE_NAME:${TARGET}>"
+      )
+   endif()
+
    # define an additional interface library target
    set(INTERFACE_TARGET "${TARGET}-interface")
    if (NOT REAL_LIBTYPE STREQUAL "MODULE")
@@ -420,7 +445,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    endif()
 
    # collect dependency information
-   list( APPEND GRAPH_EDGES "\"${TARGET}\" [shape=${SHAPE}]" )
+   list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
    if (NOT LIBTYPE STREQUAL "MODULE")
       list( APPEND GRAPH_EDGES "\"Audacity\" -> \"${TARGET}\"" )
    endif ()
@@ -570,6 +595,7 @@ function( addlib dir name symbol required check )
    if( ${use} STREQUAL "system" )
       # Look them up
       pkg_check_modules( PKG_${TARGET} ${packages} )
+
       if( PKG_${TARGET}_FOUND )
          message( STATUS "Using '${name}' system library" )
 
@@ -582,6 +608,8 @@ function( addlib dir name symbol required check )
          # And add it to our target
          target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
          target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
+      elseif( ${_OPT}obey_system_dependencies )
+         message( FATAL_ERROR "Failed to find the system package ${name}" )
       else()
          set( ${use} "local" )
          set_property( CACHE ${use} PROPERTY VALUE "local" )

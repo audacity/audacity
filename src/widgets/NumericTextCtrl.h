@@ -24,7 +24,7 @@
 #include <wx/defs.h>
 #include <wx/control.h> // to inherit
 
-#include "../Internat.h"
+#include "Internat.h"
 
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and

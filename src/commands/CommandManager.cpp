@@ -1213,7 +1213,7 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
       mNiceName = NiceName;
    }
    else {
-      mNiceName = XO("");
+      mNiceName = {};
    }
 
    const CommandContext context{ project, evt, entry->index, entry->parameter };

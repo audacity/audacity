@@ -34,7 +34,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 #include "UserException.h"
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include <wx/combobox.h>
 #include <wx/frame.h>

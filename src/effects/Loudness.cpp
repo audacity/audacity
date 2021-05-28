@@ -23,7 +23,7 @@
 #include <wx/simplebook.h>
 #include <wx/valgen.h>
 
-#include "../Internat.h"
+#include "Internat.h"
 #include "../Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"
@@ -515,7 +515,7 @@ void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
    int idx = 0;
    for(auto channel : range)
    {
-      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len );
+      channel->GetFloats(mTrackBuffer[idx].get(), pos, len );
       ++idx;
    }
    mTrackBufferLen = len;

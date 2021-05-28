@@ -12,7 +12,7 @@
 #define __AUDACITY_COMMAND_CONTEXT__
 
 #include <memory>
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class AudacityProject;
 class wxEvent;

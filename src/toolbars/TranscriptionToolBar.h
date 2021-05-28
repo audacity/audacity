@@ -17,7 +17,7 @@
 
 #include <wx/brush.h> // member variable
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxChoice;
 class wxCommandEvent;

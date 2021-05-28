@@ -1637,10 +1637,10 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) inBuffer[0].get(), floatSample, inPos, inputBufferCnt);
+            left->GetFloats(inBuffer[0].get(), inPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) inBuffer[1].get(), floatSample, inPos, inputBufferCnt);
+               right->GetFloats(inBuffer[1].get(), inPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions

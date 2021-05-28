@@ -10,7 +10,7 @@
 
 #include "ProjectFileIORegistry.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 #include <unordered_map>
 #include <wx/string.h>
 

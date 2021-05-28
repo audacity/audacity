@@ -21,12 +21,13 @@ if( GIT_FOUND )
    add_custom_target(
       version
       COMMAND
-         ${CMAKE_COMMAND} -D GIT=${GIT_EXECUTABLE}
-                          -D _PRVDIR=${_PRVDIR}
-                          -P ${CMAKE_MODULE_PATH}/Version.cmake
+         ${CMAKE_COMMAND} -D GIT="${GIT_EXECUTABLE}"
+                          -D "_PRVDIR=${_PRVDIR}"
+                          -P "${AUDACITY_MODULE_PATH}/Version.cmake"
       WORKING_DIRECTORY
          ${topdir}
    )
+
    add_dependencies( ${TARGET} version )
 endif()
 
@@ -38,6 +39,17 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       ON
    )
    set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
+endif()
+
+# Detect, which version of FileDialog to use for
+# We always assume that GTK is used on platforms other than Windows and macOS,
+# as there is no other implementation avalaible now
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( wxIS_MAC on )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set ( wxIS_WIN on )
+else()
+   set ( wxIS_GTK on)
 endif()
 
 # Handle Ladspa option
@@ -148,8 +160,6 @@ list( APPEND SOURCES
       ImageManipulation.h
       InconsistencyException.cpp
       InconsistencyException.h
-      Internat.cpp
-      Internat.h
       InterpolateAudio.cpp
       InterpolateAudio.h
       KeyboardCapture.cpp
@@ -160,8 +170,6 @@ list( APPEND SOURCES
       LabelTrack.h
       LangChoice.cpp
       LangChoice.h
-      Languages.cpp
-      Languages.h
       Legacy.cpp
       Legacy.h
       LightThemeAsCeeCode.h
@@ -1054,17 +1062,18 @@ list( APPEND LDFLAGS
 list( APPEND LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
-      wxWidgets
-      expat
-      lame
+      ZLIB::ZLIB
+      wxwidgets::wxwidgets
+      expat::expat
+      libmp3lame::libmp3lame
       libsndfile
       libsoxr
       portaudio-v19
       sqlite
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
-      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
+      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
-      $<$<BOOL:${USE_LIBMAD}>:libmad>
+      $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBOGG}>:libogg>
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
@@ -1115,16 +1124,6 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    )
 
    # Copy over the wxWidgets DLLs
-   if( ${_OPT}use_wxwidgets STREQUAL "system" )
-      set( wxlibs "$ENV{WXWIN}" )
-   else()
-      set( wxlibs "${CMAKE_BINARY_DIR}" )
-   endif()
-
-   # Convert the paths to native
-   file( TO_NATIVE_PATH "${_INTDIR}/dlls" dlls )
-   file( TO_NATIVE_PATH "${wxWidgets_LIB_DIR}" libdir )
-   file( TO_NATIVE_PATH "${_EXEDIR}" exedir )
 
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
@@ -1133,8 +1132,8 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
                           -D DST="${_EXEDIR}"
-                          -D WXWIN="${libdir}"
-                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
+                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1155,7 +1154,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( PLATFORM_VERSION_SUPPORTED )
       list( APPEND LDFLAGS
          PRIVATE
-            -Wl,-platform_version,macos,10.7,10.13
+            -Wl,-platform_version,macos,${MIN_MACOS_VERSION},${TARGET_MACOS_VERSION}
       )
    else()
       list( APPEND LDFLAGS
@@ -1218,7 +1217,8 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
                           -D DST="${_PKGLIB}"
-                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1283,8 +1283,8 @@ else()
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
                           -D DST="${_DEST}/${_PKGLIB}"
-                          -D WXWIN="${WXWIN}"
-                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 endif()

@@ -40,7 +40,7 @@
 
 #include <memory>
 #include <unordered_map>
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxArrayString;
 class wxComboBox;

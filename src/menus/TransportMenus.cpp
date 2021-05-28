@@ -593,7 +593,7 @@ void OnPunchAndRoll(const CommandContext &context)
       if (getLen > 0) {
          float *const samples = data.data();
          const sampleCount pos = wt->TimeToLongSamples(t1);
-         wt->Get((samplePtr)samples, floatSample, pos, getLen);
+         wt->GetFloats(samples, pos, getLen);
       }
       crossfadeData.push_back(std::move(data));
    }
