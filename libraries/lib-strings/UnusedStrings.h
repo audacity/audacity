@@ -78,3 +78,21 @@ XP("Got down one time", "Got down %d times", 0),
 XPC("Got down one time", "Got down %d times", 0, "pillows"),
 
 // //////////////////////////////////////////////// End examples
+
+
+// Crash & error report window
+
+XO("Problem Report for Audacity"),
+XO("Click “Send” to submit the report to Audacity. This information is collected anonymously."),
+XO("Problem details"),
+XO("Comments"),
+XO("“Send”"),
+XO("Don’t send"),
+
+// Spectrogram color scheme preferences
+
+XO("Scheme"),
+XO("Color (new)"),
+XO("Color (from theme)"),
+XO("Grayscale"),
+XO("Inverse grayscale"),
