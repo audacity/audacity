@@ -136,6 +136,12 @@ project( Audacity )
 # Load our functions/macros
 include( AudacityFunctions )
 
+# Allow using Conan prebuilt binaries
+cmd_option( ${_OPT}conan_allow_prebuilt_binaries
+            "Allow using Conan prebuilt binaries"
+            On
+)
+
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
