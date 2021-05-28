@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-05-20 02:44+0000\n"
+"PO-Revision-Date: 2021-05-28 17:34+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -1435,7 +1435,7 @@ msgstr "Następujące projekty nie zostały poprawnie zapisane przy ostatnim uru
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Recoverable &projects"
-msgstr "Projekty możliwe do odzyskania"
+msgstr "&Projekty możliwe do odzyskania"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
@@ -12189,7 +12189,7 @@ msgstr "Wytnij do schowka"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "Skasowano %.2f sekund w t=%.2f"
+msgstr "Usunięto %.2f sekund w t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
