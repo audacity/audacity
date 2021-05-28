@@ -1002,22 +1002,6 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       goto finish;
    }
 
-   // if LEN is set, we will return LEN samples per channel. If LEN is
-   // unbound, we will compute samples until every channel has terminated
-   // that the samples per channel will match the last termination time,
-   // i.e. it could result in a partial block at the end.
-   if (nyx_input_length == 0) {
-      LVAL val = getvalue(xlenter("LEN"));
-      if (val != s_unbound) {
-         if (ntype(val) == FLONUM) {
-            nyx_input_length = (int64_t) getflonum(val);
-         }
-         else if (ntype(val) == FIXNUM) {
-            nyx_input_length = (int64_t) getfixnum(val);
-         }
-      }
-   }
-
    // at this point, input sounds which were referenced by symbol S
    // (or nyx_get_audio_name()) could be referenced by nyx_result, but
    // S is now bound to NIL. nyx_result is a protected (garbage
@@ -1060,9 +1044,6 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       bool terminated = true;
       // how many samples to compute before calling callback:
       int64_t togo = max_sample_block_len;
-      if (nyx_input_length > 0 && total + togo > nyx_input_length) {
-         togo = nyx_input_length - total;
-      }
       for (ch = 0; ch < num_channels; ch++) {
          sound_state_type state = &states[ch];
          sound_type snd = getsound(getelement(nyx_result, ch));
