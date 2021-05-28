@@ -156,6 +156,17 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 
 You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include the documentation about each option. For convienience, [here is a list](CMAKE_OPTIONS.md) of the most notable options.
 
+### Disabling pre-built binaries downloads for Conan
+
+It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass 
+`-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configration.
+
+After the configuration, in order to reduce the space used by Conan cache, please run:
+```
+$ conan remove "*" -s -b -f
+```
+It will reduce the disk space usage by 10-20 times.
+
 ### Building using system libraries
 
 On Linux, it is possible to build Audacity using (almost) only the libraries provided by the package manager. Please, see the list of the required libraries [here](linux/required_libraries.md).
