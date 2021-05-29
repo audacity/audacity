@@ -5,7 +5,10 @@ Resolves: *(direct link to the issue)*
 <!-- Use "x" to fill the checkboxes below like [x] -->
 
 - [ ] I signed [CLA](https://www.audacityteam.org/cla/)
-- [ ] I made sure the code compiles on my machine
-- [ ] I made sure there are no unnecessary changes in the code
-- [ ] I made sure the title of the PR reflects the core meaning of the issue you are solving
-- [ ] I made sure the commit message(s) contain a description and answer the question "Why do those changes fix that particular issue?" or "Why are those changes really necessary as improvements?"
+- [ ] The title of the pull request describes an issue it addresses
+- [ ] If changes are extensive, then there is a sequence of easily reviewable commits
+- [ ] Each commit's message describes its purpose and effects
+- [ ] There are no behavior changes unnecessary for the stated purpose of the PR
+
+Recommended:
+- [ ] Each commit compiles and runs on my machine without known undesirable changes of behavior
