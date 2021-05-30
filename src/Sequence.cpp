@@ -42,6 +42,7 @@
 #include <wx/log.h>
 
 #include "BasicUI.h"
+#include "Dither.h"
 #include "SampleBlock.h"
 #include "InconsistencyException.h"
 
@@ -143,11 +144,14 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
 
    if (mBlock.size() == 0)
    {
-      mSampleFormats = {format, format};
+      // Effective format can be made narrowest when there is no content
+      mSampleFormats = { narrowestSampleFormat, format };
       return true;
    }
 
-   SampleFormats newFormats{ format, format };
+   // Decide the new pair of formats.  If becoming narrower than the effective,
+   // this will change the effective.
+   SampleFormats newFormats{ mSampleFormats.Effective(), format };
 
    const auto oldFormats = mSampleFormats;
    mSampleFormats = newFormats;
@@ -185,11 +189,20 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
          const auto &oldBlockFile = oldSeqBlock.sb;
          const auto len = oldBlockFile->GetSampleCount();
          ensureSampleBufferSize(bufferOld, oldFormats.Stored(), oldSize, len);
+
+         // Dither won't happen here, reading back the same as-saved format
          Read(bufferOld.ptr(), oldFormats.Stored(), oldSeqBlock, 0, len, true);
 
          ensureSampleBufferSize(bufferNew, format, newSize, len);
+
          CopySamples(
-            bufferOld.ptr(), oldFormats.Stored(), bufferNew.ptr(), format, len);
+            bufferOld.ptr(), oldFormats.Stored(), bufferNew.ptr(), format, len,
+            // Do not dither to reformat samples if format is at least as wide
+            // as the old effective (though format might be narrower than the
+            // old stored).
+            format < oldFormats.Effective()
+               ? gHighQualityDither
+               : DitherType::none );
 
          // Note this fix for http://bugzilla.audacityteam.org/show_bug.cgi?id=451,
          // using Blockify, allows (len < mMinSamples).
