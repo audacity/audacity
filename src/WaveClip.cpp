@@ -45,7 +45,8 @@ WaveClip::WaveClip(const SampleBlockFactoryPtr &factory,
 {
    mRate = rate;
    mColourIndex = colourIndex;
-   mSequence = std::make_unique<Sequence>(factory, format);
+   mSequence = std::make_unique<Sequence>( factory,
+      SampleFormats{format, format});
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
 }
@@ -757,7 +758,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 
    // This sequence is appended to below
    auto newSequence = std::make_unique<Sequence>(
-      mSequence->GetFactory(), mSequence->GetSampleFormats().Stored());
+      mSequence->GetFactory(), mSequence->GetSampleFormats());
 
    /**
     * We want to keep going as long as we have something to feed the resampler

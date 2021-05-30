@@ -75,7 +75,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Constructor / Destructor / Duplicator
    //
 
-   Sequence(const SampleBlockFactoryPtr &pFactory, sampleFormat format);
+   Sequence(const SampleBlockFactoryPtr &pFactory, SampleFormats formats);
 
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 

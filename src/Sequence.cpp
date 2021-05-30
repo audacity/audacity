@@ -50,9 +50,9 @@ size_t Sequence::sMaxDiskBlockSize = 1048576;
 
 // Sequence methods
 Sequence::Sequence(
-   const SampleBlockFactoryPtr &pFactory, sampleFormat format)
+   const SampleBlockFactoryPtr &pFactory, SampleFormats formats)
 :  mpFactory(pFactory),
-   mSampleFormats{ format, format },
+   mSampleFormats{ formats },
    mMinSamples(sMaxDiskBlockSize / SAMPLE_SIZE(mSampleFormats.Stored()) / 2),
    mMaxSamples(mMinSamples * 2)
 {
@@ -391,7 +391,7 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
    sampleCount s0, sampleCount s1) const
 {
    // Make a new Sequence object for the specified factory:
-   auto dest = std::make_unique<Sequence>(pFactory, mSampleFormats.Stored());
+   auto dest = std::make_unique<Sequence>(pFactory, mSampleFormats);
    if (s0 >= s1 || s0 >= mNumSamples || s1 < 0) {
       return dest;
    }
@@ -716,7 +716,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
    // Create a NEW track containing as much silence as we
    // need to insert, and then call Paste to do the insertion.
 
-   Sequence sTrack(mpFactory, mSampleFormats.Stored());
+   Sequence sTrack{ mpFactory, mSampleFormats };
 
    auto idealSamples = GetIdealBlockSize();
 
