@@ -542,6 +542,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
 
       CommitChangesIfConsistent
          (newBlock, samples, wxT("Paste branch one"));
+      mSampleFormats.UpdateEffective(src->mSampleFormats.Effective());
       return;
    }
 
@@ -590,6 +591,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       // This consistency check won't throw, it asserts.
       // Proof that we kept consistency is not hard.
       ConsistencyCheck(wxT("Paste branch two"), false);
+      mSampleFormats.UpdateEffective(src->mSampleFormats.Effective());
       return;
    }
 
@@ -676,6 +678,8 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
 
    CommitChangesIfConsistent
       (newBlock, mNumSamples + addedLen, wxT("Paste branch three"));
+
+   mSampleFormats.UpdateEffective(src->mSampleFormats.Effective());
 }
 
 /*! @excsafety{Strong} */

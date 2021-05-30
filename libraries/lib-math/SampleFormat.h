@@ -88,6 +88,17 @@ public:
    sampleFormat Effective() const { return m_Effective; }
    sampleFormat Stored() const { return m_Stored; }
 
+   //! Update the effective format, for insertion of more samples into the sequence
+   /*! `GetEffective()` will not necessarily equal the given value, because the invariant will be preserved,
+    and also `GetEffective()` will never become narrower than before:  if any material in the sequence had
+    a wider format, assume that the whole sequence still requires dithering to lesser formats than that.
+    */
+   void UpdateEffective(sampleFormat effective)
+   {
+      if (effective > m_Effective)
+         m_Effective = std::min(effective, m_Stored);
+   }
+
 private:
    sampleFormat m_Effective;
    sampleFormat m_Stored;
