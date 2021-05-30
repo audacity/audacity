@@ -835,6 +835,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
    /* handle sequence tag and its attributes */
    if (tag == "sequence")
    {
+      sampleFormat effective = floatSample, stored = floatSample;
       for (auto pair : attrs)
       {
          auto attr = pair.first;
@@ -873,8 +874,19 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                mErrorOpening = true;
                return false;
             }
-            auto format = static_cast<sampleFormat>(fValue);
-            mSampleFormats = SampleFormats{ format, format };
+            stored = static_cast<sampleFormat>( fValue );
+         }
+         else if (attr == "effectivesampleformat")
+         {
+            // This attribute is a sample format, normal int
+            long fValue;
+
+            if (!value.TryGet(fValue) || !IsValidSampleFormat(fValue))
+            {
+               mErrorOpening = true;
+               return false;
+            }
+            effective = static_cast<sampleFormat>( fValue );
          }
          else if (attr == "numsamples")
          {
@@ -887,6 +899,15 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             mNumSamples = nValue;
          }
       } // for
+
+      // Set at least the stored format as it was saved
+      mSampleFormats = SampleFormats{ effective, stored };
+
+      // Check whether the invariant of SampleFormats changed the value
+      if (mSampleFormats.Effective() != effective) {
+         mErrorOpening = true;
+         return false;
+      }
 
       return true;
    }
@@ -957,6 +978,9 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("maxsamples"), mMaxSamples);
    xmlFile.WriteAttr(wxT("sampleformat"),
       static_cast<size_t>( mSampleFormats.Stored() ) );
+   // This attribute was added in 3.0.3:
+   xmlFile.WriteAttr( wxT("effectivesampleformat"),
+      static_cast<size_t>( mSampleFormats.Effective() ));
    xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
