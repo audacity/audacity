@@ -19,14 +19,22 @@ add_conan_lib(
 )
 
 set( wx_zlib "zlib" )
+
 set( wx_png "libpng" )
+set( wx_jpeg "libjpeg-turbo")
+set( wx_tiff "off" )
+
 set( id3tag_zlib "conan" )
 
 if ( ${_OPT}use_zlib STREQUAL "system" )
    set( wx_zlib "sys" )
    # To prevent linking conflicts - we need to use system libpng as well.
    # wxWdigets will attempt to resolve it using find_package
+   find_required_package( PNG "libpng-dev" )
    set( wx_png "sys" )
+   # And, for consistency
+   find_required_package( JPEG "libjpeg-turbo8-dev" )
+   set( wx_jpeg "sys" )
 
    set( id3tag_zlib "system" )
 endif()
@@ -51,7 +59,8 @@ add_conan_lib(
       wxwidgets:expat=${wx_expat}
       wxwidgets:compatibility=3.0
       wxwidgets:png=${wx_png}
-      wxwidgets:tiff=off
+      wxwidgets:jpeg=${wx_jpeg}
+      wxwidgets:tiff=${wx_tiff}
       wxwidgets:secretstore=False
       wxwidgets:opengl=False
       wxwidgets:propgrid=False
@@ -63,6 +72,9 @@ add_conan_lib(
       wxwidgets:html_help=False
       wxwidgets:fs_inet=False
       wxwidgets:protocol=False
+      # Building with SIMD requires a huge number of build dependencies
+      # Probably this will be enabled in the future
+      libjpeg-turbo:SIMD=False 
 )
 
 add_conan_lib(

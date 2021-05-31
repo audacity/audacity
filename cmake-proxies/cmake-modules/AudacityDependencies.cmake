@@ -211,9 +211,14 @@ function ( _conan_install build_type )
     conan_cmake_autodetect(settings BUILD_TYPE ${build_type})
 
     if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+        # TODO: Read the target CPU architecture from the CMake option
         # We have no AppleSilicon support yet
         list( APPEND settings "arch=x86_64" )
-        list (APPEND settings "os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+        list( APPEND settings "os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}" )
+        # This line is required to workaround the conan bug #8025
+        # https://github.com/conan-io/conan/issues/8025
+        # Without it, libjpeg-turbo will fail to cross-compile on AppleSilicon macs 
+        list( APPEND settings ENV "CONAN_CMAKE_SYSTEM_PROCESSOR=x86_64")
     endif()
 
     if (build_type MATCHES "MinSizeRel|RelWithDebInfo")
@@ -266,4 +271,16 @@ macro( resolve_conan_dependencies )
     foreach(f ${dependency_helpers})
         include(${f})
     endforeach()
+endmacro()
+
+macro ( find_required_package package_name system_package_name )
+    find_package ( ${package_name} QUIET ${ARGN} )
+
+    if ( NOT ${package_name}_FOUND )
+        if (CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
+            message( FATAL_ERROR "Error: ${package_name} is required")
+        else()
+            message( FATAL_ERROR "Error: ${package_name} is required.\nPlease install it with using command like:\n\t\$ sudo apt install ${system_package_name}" )
+        endif()
+    endif()
 endmacro()

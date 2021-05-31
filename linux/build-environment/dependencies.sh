@@ -50,6 +50,7 @@ apt_packages_full_deps=(
     libssl-dev
     libcurl4-openssl-dev
     libpng-dev
+    libjpeg-turbo8-dev
 )
 
 apt-get install -y --no-install-recommends \
