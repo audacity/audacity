@@ -146,6 +146,7 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    using namespace BasicUI;
    auto updateResult = ProgressResult::Success;
    {
+      auto effectiveFormat = mixer.EffectiveFormat();
       auto pProgress = MakeProgress(XO("Mix and Render"),
          XO("Mixing and rendering tracks"));
 
@@ -157,13 +158,13 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
          if (mono) {
             auto buffer = mixer.GetBuffer();
-            mixLeft->Append(buffer, format, blockLen);
+            mixLeft->Append(buffer, format, blockLen, 1, effectiveFormat);
          }
          else {
             auto buffer = mixer.GetBuffer(0);
-            mixLeft->Append(buffer, format, blockLen);
+            mixLeft->Append(buffer, format, blockLen, 1, effectiveFormat);
             buffer = mixer.GetBuffer(1);
-            mixRight->Append(buffer, format, blockLen);
+            mixRight->Append(buffer, format, blockLen, 1, effectiveFormat);
          }
 
          updateResult = pProgress->Poll(

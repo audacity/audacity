@@ -19,11 +19,13 @@
 #include <cassert>
 
 WaveTrackSink::WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
-   sampleCount start, bool isGenerator, bool isProcessor
+   sampleCount start, bool isGenerator, bool isProcessor,
+   sampleFormat effectiveFormat
 )  : mLeft{ left }, mpRight{ pRight }
    , mGenLeft{ isGenerator ? left.EmptyCopy() : nullptr }
    , mGenRight{ pRight && isGenerator ? pRight->EmptyCopy() : nullptr }
    , mIsProcessor{ isProcessor }
+   , mEffectiveFormat{ effectiveFormat }
    , mOutPos{ start }
 {
 }
@@ -63,10 +65,10 @@ void WaveTrackSink::DoConsume(Buffers &data)
       // Some data still unwritten
       if (mIsProcessor) {
          mLeft.Set(data.GetReadPosition(0),
-            floatSample, mOutPos, inputBufferCnt);
+            floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
          if (mpRight)
             mpRight->Set(data.GetReadPosition(1),
-               floatSample, mOutPos, inputBufferCnt);
+               floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
       }
       else if (mGenLeft) {
          mGenLeft->Append(data.GetReadPosition(0),

@@ -108,6 +108,7 @@ public:
 private:
    SFFile                mFile;
    const SF_INFO         mInfo;
+   sampleFormat          mEffectiveFormat;
    sampleFormat          mFormat;
 };
 
@@ -201,8 +202,10 @@ PCMImportFileHandle::PCMImportFileHandle(const FilePath &name,
    // the quality of the original file.
    //
 
-   mFormat =
-      ChooseFormat(sf_subtype_to_effective_format(mInfo.format));
+   // Effective format
+   mEffectiveFormat = sf_subtype_to_effective_format(mInfo.format);
+   // But maybe different storage format
+   mFormat = ChooseFormat(mEffectiveFormat);
 }
 
 TranslatableString PCMImportFileHandle::GetFileDescription()
@@ -366,7 +369,10 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
                         ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               iter->get()->Append(buffer.ptr(), (mFormat == int16Sample)?int16Sample:floatSample, block);
+               iter->get()->Append(
+                  buffer.ptr(),
+                  (mFormat == int16Sample) ? int16Sample : floatSample,
+                  block, 1, mEffectiveFormat);
             }
             framescompleted += block;
          }

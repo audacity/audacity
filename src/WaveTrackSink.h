@@ -17,6 +17,7 @@
 
 #include "AudioGraphSink.h" // to inherit
 #include "SampleCount.h"
+#include "SampleFormat.h"
 #include <memory>
 
 class WaveTrack;
@@ -24,7 +25,9 @@ class WaveTrack;
 class WaveTrackSink final : public AudioGraph::Sink {
 public:
    WaveTrackSink(WaveTrack &left, WaveTrack *pRight,
-      sampleCount start, bool isGenerator, bool isProcessor);
+      sampleCount start, bool isGenerator, bool isProcessor,
+      //! This argument affects processors only, not generators
+      sampleFormat effectiveFormat);
    ~WaveTrackSink() override;
 
    //! Accepts buffers only if there is at least one channel
@@ -49,6 +52,7 @@ private:
    WaveTrack *const mpRight;
    const std::shared_ptr<WaveTrack> mGenLeft, mGenRight;
    const bool mIsProcessor;
+   const sampleFormat mEffectiveFormat;
 
    sampleCount mOutPos;
 };
