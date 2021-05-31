@@ -246,7 +246,9 @@ private:
     *
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1) override;
+      size_t len, unsigned int stride = 1,
+      sampleFormat effectiveFormat = widestSampleFormat) override;
+
    void Flush() override;
 
    ///
@@ -269,7 +271,14 @@ private:
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const override;
    void Set(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len);
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
 
    sampleFormat WidestEffectiveFormat() const override;
 

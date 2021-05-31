@@ -1775,7 +1775,7 @@ void WaveTrack::Join(double t0, double t1)
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
 bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
-                       size_t len, unsigned int stride /* = 1 */)
+   size_t len, unsigned int stride, sampleFormat)
 {
    return RightmostOrNewClip()->Append(buffer, format, len, stride);
 }
@@ -2204,7 +2204,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
 
 /*! @excsafety{Weak} */
 void WaveTrack::Set(constSamplePtr buffer, sampleFormat format,
-                    sampleCount start, size_t len)
+   sampleCount start, size_t len, sampleFormat)
 {
    for (const auto &clip: mClips)
    {
