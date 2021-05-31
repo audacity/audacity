@@ -194,13 +194,17 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    auto outTrack = left->EmptyCopy();
    outTrack->ConvertToSampleFormat(floatSample);
 
+   const auto effectiveFormat = mixer.EffectiveFormat();
    while (auto blockLen = mixer.Process()) {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
       {
          ((float *)buffer)[i] /= 2.0;
       }
-      outTrack->Append(buffer, floatSample, blockLen);
+      // If mixing channels that both had only 16 bit effective format
+      // (for example), and no gains or envelopes, then the result can also
+      // remember a narrow effective format
+      outTrack->Append(buffer, floatSample, blockLen, 1, effectiveFormat);
 
       curTime += blockLen;
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))
