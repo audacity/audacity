@@ -940,3 +940,8 @@ void EffectTruncSilence::OnControlChange(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 }
+
+bool EffectTruncSilence::NeedsDither() const
+{
+   return false;
+}

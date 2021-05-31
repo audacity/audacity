@@ -48,6 +48,8 @@ public:
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
+   bool NeedsDither() const override;
+
 private:
    // EffectRepeat implementation
 
@@ -68,4 +70,3 @@ static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
 };
 
 #endif
-

@@ -49,6 +49,8 @@ public:
 
       unsigned GetAudioInCount() const override;
       unsigned GetAudioOutCount() const override;
+
+      bool NeedsDither() const override;
       
    protected:
       StatefulEffectBase &mEffect;
@@ -146,6 +148,11 @@ public:
     @copydoc StateEffectBase::Instance::GetLatency()
     */
    virtual sampleCount GetLatency() const;
+
+   /*!
+    @copydoc StateEffectBase::Instance::NeedsDither()
+    */
+   virtual bool NeedsDither() const;
 
 private:
 

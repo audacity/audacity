@@ -152,3 +152,8 @@ bool EffectRepair::ProcessOne(int count, WaveTrack * track,
               start + repairStart, repairLen);
    return !TrackProgress(count, 1.0); // TrackProgress returns true on Cancel.
 }
+
+bool EffectRepair::NeedsDither() const
+{
+   return false;
+}

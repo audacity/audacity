@@ -73,6 +73,8 @@ public:
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
+   bool NeedsDither() const override;
+
 private:
    // EffectTruncSilence implementation
 

@@ -81,3 +81,8 @@ size_t EffectInvert::ProcessBlock(EffectSettings &,
 
    return blockLen;
 }
+
+bool EffectInvert::NeedsDither() const
+{
+   return false;
+}
