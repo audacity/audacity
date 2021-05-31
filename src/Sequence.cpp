@@ -1707,7 +1707,8 @@ size_t Sequence::GetMaxDiskBlockSize()
    return sMaxDiskBlockSize;
 }
 
-bool Sequence::IsValidSampleFormat(const int nValue)
+bool Sequence::IsValidSampleFormat(const int iValue)
 {
+   auto nValue = static_cast<sampleFormat>(iValue);
    return (nValue == int16Sample) || (nValue == int24Sample) || (nValue == floatSample);
 }

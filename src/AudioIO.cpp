@@ -503,7 +503,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // July 2016 (Carsten and Uwe)
    // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using 
    // userData.
-   int captureFormat_saved = captureFormat;
+   auto captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
    // since we need float values anyway to apply the gain.

@@ -25,10 +25,9 @@ extern MATH_API DitherType gLowQualityDither, gHighQualityDither;
 // ----------------------------------------------------------------------------
 // Supported sample formats
 // ----------------------------------------------------------------------------
-enum sampleFormat : unsigned
-{
-   //! The increasing sequence of these enum values must correspond to the increasing data type width
-   //! These values persist in saved project files, so must not be changed in later program versions
+//! The ordering of these values with operator < agrees with the order of increasing bit width
+/*! These values persist in saved project files, so must not be changed in later program versions */
+enum class sampleFormat : unsigned {
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
    floatSample = 0x0004000F,
@@ -38,10 +37,17 @@ enum sampleFormat : unsigned
    widestSampleFormat = floatSample,
 };
 
+// C++20 using enum sampleFormat;
+constexpr sampleFormat int16Sample = sampleFormat::int16Sample;
+constexpr sampleFormat int24Sample = sampleFormat::int24Sample;
+constexpr sampleFormat floatSample = sampleFormat::floatSample;
+constexpr sampleFormat narrowestSampleFormat = sampleFormat::narrowestSampleFormat;
+constexpr sampleFormat widestSampleFormat = sampleFormat::widestSampleFormat;
+
 // ----------------------------------------------------------------------------
 // Provide the number of bytes a specific sample will take
 // ----------------------------------------------------------------------------
-#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
+#define SAMPLE_SIZE(SampleFormat) (static_cast<unsigned>(SampleFormat) >> 16)
 
 // ----------------------------------------------------------------------------
 // Generic pointer to sample data
