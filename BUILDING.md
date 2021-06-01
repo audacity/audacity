@@ -97,7 +97,7 @@ Generally, steps 1-5 are only needed the first-time you configure. Then, after y
 2. Configure Audacity using CMake:
    ```
    $ mkdir build && cd build
-   $ cmake -GXCode -T buildsystem=1 ../audacity
+   $ cmake -GXcode -T buildsystem=1 ../audacity
    ```
 
 3. Open Audacity XCode project:
