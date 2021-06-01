@@ -133,7 +133,7 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 
 3. Build Audacity:
    ```
-   $ make -j'nproc`
+   $ make -j`nproc`
    ```
 
 4. Testing the build:
