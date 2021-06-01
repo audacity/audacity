@@ -135,7 +135,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leland Lucius"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Peter Sampson"), qaDocumentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Bill Wharrie"), documentationAndSupportFormat, roleTeamMember);
 
@@ -161,6 +160,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Shane Mueller"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Tony Oetzmann"), documentationAndSupportFormat, roleEmeritusTeam);
    AddCredit(wxT("Alexandre Prokoudine"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Peter Sampson"), qaDocumentationAndSupportFormat, roleEmeritusTeam);
    AddCredit(wxT("Martyn Shaw"), developerFormat, roleEmeritusTeam);
 
    // Contributors
@@ -496,7 +496,7 @@ visit our %s.")
 
       << wxT("&nbsp; &nbsp; ")
       /* i18n-hint Audacity's name substitutes for %s */
-      << XO("The name %s is a registered trademark of Dominic Mazzoni.")
+      << XO("The name %s is a registered trademark.")
          .Format( Verbatim("<b>%s</b>").Format( ProgramName ) )
       << wxT("<br><br>")
 #endif
