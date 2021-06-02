@@ -12,7 +12,7 @@ Paul Licameli
 #define __AUDACITY_UI_HANDLE__
 
 #include <utility>
-#include "MemoryX.h"
+#include <memory>
 #include "TrackPanelDrawable.h" // to inherit
 
 class wxDC;
@@ -25,8 +25,6 @@ struct HitTestPreview;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
-
-#include "MemoryX.h"
 
 /// \brief Short-lived drawing and event-handling object associated with a TrackPanelCell
 // A TrackPanelCell reports a handle object of some subclass, in response to a

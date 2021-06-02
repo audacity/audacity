@@ -17,7 +17,7 @@
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
-#include "MemoryX.h"
+#include <memory>
 
 #if defined(__WXMSW__) || defined(__WXMAC__) || defined(HAVE_LIBUDEV_H)
 #define HAVE_DEVICE_CHANGE

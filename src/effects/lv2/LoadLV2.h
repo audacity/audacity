@@ -12,7 +12,7 @@
 #ifndef LV2EFFECTSMODULE_H
 #define LV2EFFECTSMODULE_H
 
-#include "../../MemoryX.h"
+#include <memory>
 
 #include "lilv/lilv.h"
 

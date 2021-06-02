@@ -2,6 +2,7 @@
 #define __AUDACITY_MEMORY_X_H__
 
 // C++ standard header <memory> with a few extensions
+#include <iterator>
 #include <memory>
 #include <cstdlib> // Needed for free.
 #ifndef safenew
@@ -9,64 +10,6 @@
 #endif
 
 #include <functional>
-
-#if !(_MSC_VER >= 1800 || __cplusplus >= 201402L)
-/* replicate the very useful C++14 make_unique for those build environments
-that don't implement it yet.
-typical usage:
-auto p = std::make_unique<Myclass>(ctorArg1, ctorArg2, ... ctorArgN);
-p->DoSomething();
-auto q = std::make_unique<Myclass[]>(count);
-q[0].DoSomethingElse();
-
-The first hides naked NEW and DELETE from the source code.
-The second hides NEW[] and DELETE[].  Both of course ensure destruction if
-you don't use something like std::move(p) or q.release().  Both expressions require
-that you identify the type only once, which is brief and less error prone.
-
-(Whereas this omission of [] might invite a runtime error:
-std::unique_ptr<Myclass> q { safenew Myclass[count] }; )
-
-Some C++11 tricks needed here are (1) variadic argument lists and
-(2) making the compile-time dispatch work correctly.  You can't have
-a partially specialized template function, but you get the effect of that
-by other metaprogramming means.
-*/
-
-namespace std {
-   // For overloading resolution
-   template <typename X> struct __make_unique_result {
-      using scalar_case = unique_ptr<X>;
-   };
-
-   // Partial specialization of the struct for array case
-   template <typename X> struct __make_unique_result<X[]> {
-      using array_case = unique_ptr<X[]>;
-      using element = X;
-   };
-
-   // Now the scalar version of unique_ptr
-   template<typename X, typename... Args> inline
-      typename __make_unique_result<X>::scalar_case
-      make_unique(Args&&... args)
-   {
-      return typename __make_unique_result<X>::scalar_case
-      { safenew X(forward<Args>(args)...) };
-   }
-
-   // Now the array version of unique_ptr
-   // The compile-time dispatch trick is that the non-existence
-   // of the scalar_case type makes the above overload
-   // unavailable when the template parameter is explicit
-   template<typename X> inline
-      typename __make_unique_result<X>::array_case
-      make_unique(size_t count)
-   {
-      return typename __make_unique_result<X>::array_case
-      { safenew typename __make_unique_result<X>::element[count] };
-   }
-}
-#endif
 
 /*
  * ArrayOf<X>
@@ -195,17 +138,6 @@ public:
   with *, ->, reset(), or in if()
  */
 
-// Placement-NEW is used below, and that does not cooperate with the DEBUG_NEW for Visual Studio
-#ifdef _DEBUG
-#ifdef _MSC_VER
-#undef new
-
-// wx/any.h also uses Placement-NEW so include it before redefining "new" at comment:
-//    "Restore definition of debug new"
-#include <wx/any.h>
-#endif
-#endif
-
 template<typename X>
 class Optional {
 public:
@@ -322,15 +254,6 @@ private:
    X* pp{ nullptr };
 };
 
-// Restore definition of debug new
-#ifdef _DEBUG
-#ifdef _MSC_VER
-#undef THIS_FILE
-static const char THIS_FILE[] = __FILE__;
-#define new new(_NORMAL_BLOCK, THIS_FILE, __LINE__)
-#endif
-#endif
-
 /**
   A deleter for pointers obtained with malloc
  */
@@ -387,7 +310,6 @@ Final_action<F> finally (F f)
    return Final_action<F>(f);
 }
 
-#include <wx/utils.h> // for wxMin, wxMax
 #include <algorithm>
 
 /**

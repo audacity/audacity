@@ -77,6 +77,7 @@ can't be.
 #include "Prefs.h"
 #include "ImageManipulation.h"
 #include "Internat.h"
+#include "MemoryX.h"
 #include "widgets/AudacityMessageBox.h"
 
 // JKC: First get the MAC specific images.

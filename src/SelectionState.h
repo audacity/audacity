@@ -14,7 +14,7 @@ class Track;
 class TrackList;
 class ViewInfo;
 #include "ClientData.h"
-#include "MemoryX.h"
+#include <memory>
 #include <vector>
 
 // State relating to the set of selected tracks

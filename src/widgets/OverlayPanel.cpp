@@ -10,6 +10,7 @@
 #include "OverlayPanel.h"
 
 #include "Overlay.h"
+#include "MemoryX.h"
 #include <algorithm>
 #include <wx/dcclient.h>
 

@@ -5,6 +5,7 @@
 set( LIBRARIES
    "lib-string-utils"
    lib-strings
+   lib-utility
 )
 
 if ( ${_OPT}has_networking )

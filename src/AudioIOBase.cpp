@@ -17,6 +17,7 @@ Paul Licameli split from AudioIO.cpp
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 
+#include "MemoryX.h"
 #include "Prefs.h"
 #include "widgets/MeterPanelBase.h"
 

@@ -22,7 +22,7 @@
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
 
-#include "MemoryX.h"
+#include <memory>
 
 class wxSingleInstanceChecker;
 class wxSocketEvent;

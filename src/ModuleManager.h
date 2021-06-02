@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include "MemoryX.h"
+#include <memory>
 #include <map>
 #include <vector>
 
@@ -23,6 +23,7 @@ class wxArrayString;
 class wxDynamicLibrary;
 class ComponentInterface;
 class ModuleInterface;
+class wxWindow;
 
 //
 // Module Manager

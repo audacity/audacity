@@ -13,7 +13,7 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
-#include "../MemoryX.h"
+#include <memory>
 
 #include <wx/thread.h> // to inherit
 #include <audacity/Types.h>
