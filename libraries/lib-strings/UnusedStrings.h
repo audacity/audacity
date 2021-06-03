@@ -78,15 +78,17 @@ Some example strings are also given first, to document the syntax.
 //XPC("Got down one time", "Got down %d times", 0, "pillows"),
 
 // About keyboard shortcuts:
-// Some strings, such as button labels or drop-down menu items, should include
-// '&' characters.  These will appear underlined, and the user can type those
-// keys as shortcuts for selecting the control.  These characters are called
+// Some strings are labels of dialog controls, and should include '&'
+// characters.  These will appear underlined, and the user can type those keys
+// as shortcuts for selecting the control.  These characters are called
 // "mnemonics" in wxWidgets documentation.
 // It is recommended to use a common context string for controls of one dialog.
 // If a control has no mnemonic, or two controls have the same mnemonic, then
 // there is no error at runtime, but there will be a control with no shortcut.
 // Use && to include a single ampersand character in the text, which is not
 // a mnemonic.
+// Note that choices in a drop-down menu do not use mnemonics, but the label
+// of the whole drop-down itself does.
 //XC("Spam && &Eggs",              "Viking menu"),
 //XC("Spam Eggs Sausage && &Spam", "Viking menu"),
 
@@ -112,12 +114,12 @@ XO("Failed to send crash report"),
 
 
 // i18n-hint Scheme refers to a color scheme for spectrogram colors
-XC("Scheme",             "spectrogram color choice"),
+XC("Sche&me",            "spectrum prefs"),
 // i18n-hint Choice of spectrogram colors
-XC("Color (&default)",   "spectrogram color choice"),
+XC("Color (default)",   "spectrum prefs"),
 // i18n-hint Choice of spectrogram colors
-XC("Color (&classic)",   "spectrogram color choice"),
+XC("Color (classic)",   "spectrum prefs"),
 // i18n-hint Choice of spectrogram colors
-XC("&Grayscale",         "spectrogram color choice"),
+XC("Grayscale",         "spectrum prefs"),
 // i18n-hint Choice of spectrogram colors
-XC("&Inverse grayscale", "spectrogram color choice"),
+XC("Inverse grayscale", "spectrum prefs"),
