@@ -26,7 +26,7 @@ Some example strings are also given first, to document the syntax.
 // A translated string may also have an accompanying special comment
 
 // i18n-hint to lower oneself
-XO("Get down"),
+//XO("Get down"),
 
 /* i18n-hint An example of a longer special comment that can wrap lines.
  These comments must begin with the special word i18n-hint and immediately
@@ -36,13 +36,13 @@ XO("Get down"),
  form of an English word (such as whether it's meant as noun or verb) when that
  is not clear from context.
  */
-XO("Get down"),
+//XO("Get down"),
 
-XO(
+//XO(
    /* i18n-hint one more example of alternative correct placement of an
     internationalization comment.  All comments on different occurrences of the
     same string are collected in the template file.  */
-   "Get down"),
+//   "Get down"),
 
 // Next is an example of a string with a disambiguating context.  This allows
 // one English string to have more than one entry in the translation catalog.
@@ -50,17 +50,17 @@ XO(
 // It only allows the code at runtime to choose the correct translation.
 
 // i18n-hint Have fun and dance
-XC("Get down", "party"),
+//XC("Get down", "party"),
 
 // i18n-hint Obtain the underfeathers of a goose
-XC("Get down", "pillows"),
+//XC("Get down", "pillows"),
 
 // Strings may have blanks in which names are substituted, such as a file name.
 // For good internationalization, allowing for variations of grammar between
 // languages, and giving translators the needed context, we substitute names
 // into larger phrases.  Do not build up messages by concatenating less complete
 // phrases.
-XO("Your batch command of %s was not recognized."),
+//XO("Your batch command of %s was not recognized."),
 
 // Sometimes strings must be given as singular-plural pairs.  The translation
 // system may make more or fewer than two entries in the catalog, depending
@@ -70,11 +70,56 @@ XO("Your batch command of %s was not recognized."),
 // Also %d is a blank appropriate for a number instead of a name.
 
 // i18n-hint
-XP("Got down one time", "Got down %d times", 0),
+//XP("Got down one time", "Got down %d times", 0),
 
 // Finally, singular-plural pairs may also have context strings.
 
 // i18n-hint Obtained underfeathers of geese on one or more occasions
-XPC("Got down one time", "Got down %d times", 0, "pillows"),
+//XPC("Got down one time", "Got down %d times", 0, "pillows"),
+
+// About keyboard shortcuts:
+// Some strings are labels of dialog controls, and should include '&'
+// characters.  These will appear underlined, and the user can type those keys
+// as shortcuts for selecting the control.  These characters are called
+// "mnemonics" in wxWidgets documentation.
+// It is recommended to use a common context string for controls of one dialog.
+// If a control has no mnemonic, or two controls have the same mnemonic, then
+// there is no error at runtime, but there will be a control with no shortcut.
+// Use && to include a single ampersand character in the text, which is not
+// a mnemonic.
+// Note that choices in a drop-down menu do not use mnemonics, but the label
+// of the whole drop-down itself does.
+//XC("Spam && &Eggs",              "Viking menu"),
+//XC("Spam Eggs Sausage && &Spam", "Viking menu"),
 
 // //////////////////////////////////////////////// End examples
+
+
+// Crash & error report window
+
+XO("Problem Report for Audacity"),
+XO("Click \"Send\" to submit the report to Audacity. This information is collected anonymously."),
+XO("Problem details"),
+XO("Comments"),
+XC("&Send",       "crash reporter button"),
+XC("&Don’t send", "crash reporter button"),
+// i18-hint C++ programming exception
+XO("Exception code 0x%x"),
+// i18-hint C++ programming exception
+XO("Unknown exception"),
+// i18-hint C++ programming assertion
+XO("Unknown assertion"),
+XO("Unknown error"),
+XO("Failed to send crash report"),
+
+
+// i18n-hint Scheme refers to a color scheme for spectrogram colors
+XC("Sche&me",            "spectrum prefs"),
+// i18n-hint Choice of spectrogram colors
+XC("Color (default)",   "spectrum prefs"),
+// i18n-hint Choice of spectrogram colors
+XC("Color (classic)",   "spectrum prefs"),
+// i18n-hint Choice of spectrogram colors
+XC("Grayscale",         "spectrum prefs"),
+// i18n-hint Choice of spectrogram colors
+XC("Inverse grayscale", "spectrum prefs"),
