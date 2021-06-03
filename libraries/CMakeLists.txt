@@ -13,6 +13,10 @@ if ( ${_OPT}has_networking )
    list( APPEND LIBRARIES "lib-network-manager")
 endif()
 
+if ( ${_OPT}has_updates_check )
+   list( APPEND LIBRARIES "lib-update-version")
+endif()
+
 foreach( LIBRARY ${LIBRARIES} )
    add_subdirectory( "${LIBRARY}" )
 endforeach()
