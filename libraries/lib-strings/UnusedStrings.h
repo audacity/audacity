@@ -77,6 +77,19 @@ Some example strings are also given first, to document the syntax.
 // i18n-hint Obtained underfeathers of geese on one or more occasions
 //XPC("Got down one time", "Got down %d times", 0, "pillows"),
 
+// About keyboard shortcuts:
+// Some strings, such as button labels or drop-down menu items, should include
+// '&' characters.  These will appear underlined, and the user can type those
+// keys as shortcuts for selecting the control.  These characters are called
+// "mnemonics" in wxWidgets documentation.
+// It is recommended to use a common context string for controls of one dialog.
+// If a control has no mnemonic, or two controls have the same mnemonic, then
+// there is no error at runtime, but there will be a control with no shortcut.
+// Use && to include a single ampersand character in the text, which is not
+// a mnemonic.
+//XC("Spam && &Eggs",              "Viking menu"),
+//XC("Spam Eggs Sausage && &Spam", "Viking menu"),
+
 // //////////////////////////////////////////////// End examples
 
 
