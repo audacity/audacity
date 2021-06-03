@@ -25,6 +25,7 @@ set( SOURCES
 set ( LIBRARIES PRIVATE
     lib-network-manager
     wxwidgets::base
+    expat::expat
 )
 
 set( DEFINES INTERFACE "HAS_UPDATES_CHECK" )

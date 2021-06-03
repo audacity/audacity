@@ -2,27 +2,38 @@
 
 #include <wx/arrstr.h>
 
-// Initialized of current build version by default.
-class VersionId final
+namespace audacity
 {
-public:
-    VersionId() = default;
-    VersionId (size_t version, size_t release, size_t revision);
+    namespace update_manager
+    {
 
-    static wxString makeString (size_t version, size_t release, size_t revision);
-    static VersionId ParseFromString (wxString& versionString);
+        // Initialized of current build version by default.
+        class VersionId final
+        {
+        public:
+            VersionId() = default;
+            VersionId(size_t version, size_t release, size_t revision);
 
-    wxString getString() const;
-    bool isZero();
+            VersionId(const VersionId&) = default;
+            VersionId(VersionId&&) = default;
 
-    bool operator== (const VersionId& other);
-    bool operator!= (const VersionId& other);
+            static wxString MakeString(size_t version, size_t release, size_t revision);
+            static VersionId ParseFromString(wxString& versionString);
 
-    bool operator< (const VersionId& other);
-    bool operator> (const VersionId& other);
+            wxString getString() const;
+            bool isZero();
 
-private:
-    size_t mVersion {AUDACITY_VERSION};
-    size_t mRelease {AUDACITY_RELEASE};
-    size_t mRevision {AUDACITY_REVISION};
-};
+            bool operator== (const VersionId& other);
+            bool operator!= (const VersionId& other);
+
+            bool operator< (const VersionId& other);
+            bool operator> (const VersionId& other);
+
+        private:
+            size_t mVersion{ AUDACITY_VERSION };
+            size_t mRelease{ AUDACITY_RELEASE };
+            size_t mRevision{ AUDACITY_REVISION };
+        };
+
+    }
+}
