@@ -131,7 +131,7 @@ public:
 
    typedef int ColorScheme;
    enum ColorSchemeValues : int {
-      // Keep in correspondence with AColor::gradient_pre
+      // Keep in correspondence with AColor::colorSchemes, AColor::gradient_pre
       csColorNew = 0,
       csColorTheme,
       csGrayscale,
