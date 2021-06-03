@@ -86,13 +86,23 @@ XO("Problem Report for Audacity"),
 XO("Click \"Send\" to submit the report to Audacity. This information is collected anonymously."),
 XO("Problem details"),
 XO("Comments"),
-XO("Send"),
-XO("Don’t send"),
+XO("&Send"),
+XO("&Don’t send"),
+// i18-hint C++ programming exception
+XO("Exception code 0x%x"),
+// i18-hint C++ programming exception
+XO("Unknown exception"),
+XO("Unknown error"),
+XO("Failed to send crash report"),
 
 
 // i18n-hint Scheme refers to a color scheme for spectrogram colors
-XO("Scheme"),
-XO("Color (default)"),
-XO("Color (classic)"),
-XO("Grayscale"),
-XO("Inverse grayscale"),
+XC("Scheme",             "spectrogram color choice"),
+// i18n-hint Choice of spectrogram colors
+XC("Color (&default)",   "spectrogram color choice"),
+// i18n-hint Choice of spectrogram colors
+XC("Color (&classic)",   "spectrogram color choice"),
+// i18n-hint Choice of spectrogram colors
+XC("&Grayscale",         "spectrogram color choice"),
+// i18n-hint Choice of spectrogram colors
+XC("&Inverse grayscale", "spectrogram color choice"),
