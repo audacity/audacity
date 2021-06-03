@@ -16,6 +16,7 @@ Paul Licameli
 
 #include "SpectrogramSettings.h"
 
+#include "../AColor.h"
 #include "../NumberScale.h"
 
 #include <algorithm>
@@ -160,14 +161,18 @@ const EnumValueSymbols &SpectrogramSettings::GetColorSchemeNames()
    static const EnumValueSymbols result{
       // Keep in correspondence with enum SpectrogramSettings::ColorScheme:
       /* i18n-hint: New color scheme for spectrograms */
-      XO("Color (New)") ,
+      { wxT("SpecColorNew"), XO("Color (New)") },
       /* i18n-hint: color scheme from theme for spectrograms */
-      XO("Color (from Theme)") ,
+      { wxT("SpecColorTheme"), XO("Color (from Theme)") },
       /* i18n-hint: grayscale color scheme for spectrograms */
-      XO("Grayscale") ,
+      { wxT("SpecGrayscale"), XO("Grayscale") },
       /* i18n-hint: inverse grayscale color scheme for spectrograms */
-      XO("Inv. Grayscale") ,
+      { wxT("SpecInvGrayscale"), XO("Inv. Grayscale") },
    };
+
+   wxASSERT(csNumColorScheme == result.size());
+   static_assert(csNumColorScheme == AColor::colorSchemes, "Broken correspondence");
+
    return result;
 }
 

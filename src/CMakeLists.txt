@@ -75,6 +75,7 @@ list( APPEND SOURCES
    PRIVATE
       AColor.cpp
       AColor.h
+      AColorResources.h
       ActiveProjects.cpp
       ActiveProjects.h
       AboutDialog.cpp
