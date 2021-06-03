@@ -4,6 +4,8 @@
 
 #include "xml/XMLFileReader.h"
 
+#include <wx/tokenzr.h>
+
 UpdateDataParser::UpdateDataParser()
 {}
 
@@ -19,6 +21,21 @@ bool UpdateDataParser::Parse(const ServerCommunication::UpdateDataFormat& update
 	mVersionPatch = nullptr;
 
 	return ok;
+}
+
+wxArrayString UpdateDataParser::splitChangelogSentences(const wxString& changelogContent)
+{
+	wxArrayString changelogSentenceList;
+
+	const wxString separator(". ");
+	wxStringTokenizer tokenizer(changelogContent, separator);
+
+	while (tokenizer.HasMoreTokens())
+	{
+		changelogSentenceList.Add(tokenizer.GetNextToken());
+	}
+
+	return changelogSentenceList;
 }
 
 bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
@@ -95,7 +112,8 @@ void UpdateDataParser::HandleXMLContent(const wxString& content)
 	case XmlParsedTags::kDescriptionTag:
 		trimedContent.Trim(true).Trim(false);
 		// TODO: need current spliting by ". "
-		mVersionPatch->changelog = wxSplit(trimedContent, '.');
+		//mVersionPatch->changelog = wxSplit(trimedContent, '.');
+		mVersionPatch->changelog = splitChangelogSentences(trimedContent);
 		break;
 
 	case XmlParsedTags::kVersionTag:

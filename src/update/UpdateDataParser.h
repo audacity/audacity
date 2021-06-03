@@ -5,6 +5,7 @@
 
 #include "xml/XMLTagHandler.h"
 
+#include <wx/arrstr.h>
 #include <map>
 
 class UpdateDataParser final : public XMLTagHandler
@@ -45,6 +46,8 @@ private:
 	void HandleXMLEndTag(const wxChar* tag) override;
 	void HandleXMLContent(const wxString& content) override;
 	XMLTagHandler* HandleXMLChild(const wxChar* tag) override;
+
+	wxArrayString splitChangelogSentences(const wxString& changelogContent);
 
 	VersionPatch* mVersionPatch{ nullptr };
 };
