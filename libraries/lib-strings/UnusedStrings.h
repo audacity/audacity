@@ -86,12 +86,14 @@ XO("Problem Report for Audacity"),
 XO("Click \"Send\" to submit the report to Audacity. This information is collected anonymously."),
 XO("Problem details"),
 XO("Comments"),
-XO("&Send"),
-XO("&Don’t send"),
+XC("&Send",       "crash reporter button"),
+XC("&Don’t send", "crash reporter button"),
 // i18-hint C++ programming exception
 XO("Exception code 0x%x"),
 // i18-hint C++ programming exception
 XO("Unknown exception"),
+// i18-hint C++ programming assertion
+XO("Unknown assertion"),
 XO("Unknown error"),
 XO("Failed to send crash report"),
 
