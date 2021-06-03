@@ -14,7 +14,7 @@ namespace audacity
 
 			using UpdateDataFormat = std::string;
 
-			bool getUpdateData(UpdateDataFormat *receivedData);
+			bool getUpdateData(UpdateDataFormat* receivedData);
 
 		private:
 			const std::string mUrl{ "https://updates.audacityteam.org/feed/latest.xml" };
