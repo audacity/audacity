@@ -977,6 +977,19 @@ list( APPEND SOURCES
       xml/XMLWriter.h
       xml/audacityproject.dtd
 
+      # Update version
+      update/VersionId.h
+      update/VersionId.cpp
+      update/VersionPatch.h
+      update/ServerCommunication.h
+      update/ServerCommunication.cpp
+      update/UpdateDataParser.h
+      update/UpdateDataParser.cpp
+      update/UpdateManager.h
+      update/UpdateManager.cpp
+      update/UpdatePopupDialog.h
+      update/UpdatePopupDialog.cpp
+
       Experimental.cmake
 )
 
