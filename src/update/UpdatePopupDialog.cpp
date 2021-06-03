@@ -85,22 +85,21 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     wxStringOutputStream o;
     wxTextOutputStream informationStr (o);
 
-    const auto title = wxString ("Audacity ")
-        + mUpdateManager->getVersionPatch().version.getString()
-        + " is available!";
+    const auto title = XO("Audacity %s is available!")
+        .Format(mUpdateManager->getVersionPatch().version.getString());
 
     informationStr
         << wxT("<html><body><h3>")
         << title
         << wxT("</h3><h5>")
-        << wxString("Changelog")
+        << XO("Changelog")
         << wxT("</h5><p>");
 
     informationStr << wxT("<ul>");
     for (auto& logLine : mUpdateManager->getVersionPatch().changelog)
     {
         informationStr << wxT("<li>");
-        informationStr << logLine;
+        informationStr << XO("%s").Format(logLine).Translation();
         informationStr << wxT("</li>");
     }
     informationStr << wxT("</ul></p>");

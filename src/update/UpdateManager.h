@@ -34,5 +34,7 @@ private:
 
 	wxWindow* mParent;
 	wxTimer mTimer;
+
+	// TODO: recalc to each 12 hrs per twenty-four hours
 	enum { kTimerInterval = 1000 * 60 };
 };

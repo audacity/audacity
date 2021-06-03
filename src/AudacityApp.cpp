@@ -1461,6 +1461,7 @@ bool AudacityApp::InitPart2()
       SplashDialog::DoHelpWelcome(*project);
    }
 
+   // TODO: Add #ifdef macro on check has_updates_check
    mUpdateManager = std::make_unique<UpdateManager>(*project);
 
    #ifdef USE_FFMPEG
