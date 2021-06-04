@@ -123,3 +123,8 @@ XC("Color (classic)",   "spectrum prefs"),
 XC("Grayscale",         "spectrum prefs"),
 // i18n-hint Choice of spectrogram colors
 XC("Inverse grayscale", "spectrum prefs"),
+
+// Update version dialog
+XC("Update Audacity", "update dialog"),
+XC("Skip", "update dialog"),
+XC("Install update", "update dialog"),
