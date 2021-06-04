@@ -52,6 +52,9 @@ message("${TORCH_LIBRARIES}")
 message("${TORCH_INCLUDE_DIRS}")
 message("${TARGET}")
 
+set_target_properties(torch PROPERTIES IMPORTED_GLOBAL On)
+set_target_properties(torch_cpu PROPERTIES IMPORTED_GLOBAL On)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 target_include_directories(${TARGET} INTERFACE "${TORCH_INCLUDE_DIRS}")
 target_link_libraries( ${TARGET} INTERFACE "${TORCH_LIBRARIES}")
