@@ -1,5 +1,7 @@
 # FOSS Audacity
 =========================
+# !!LOOKING FOR MAINTAINERS!!
+## Please ![open an issue](https://github.com/yonderbread/foss_audacity/issues) if you're interested in becoming a maintainer for this project! Thanks!
 
 **FOSS Audacity** is an easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. Developed by a group of volunteers as open source.
 
