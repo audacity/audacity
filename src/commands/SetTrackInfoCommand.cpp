@@ -445,7 +445,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
    }
    if (wt && bHasSpecColorScheme) {
-      wt->GetSpectrogramSettings().colorScheme = mSpecColorScheme;
+      wt->GetSpectrogramSettings().colorScheme = (SpectrogramSettings::ColorScheme)mSpecColorScheme;
    }
 
    return true;

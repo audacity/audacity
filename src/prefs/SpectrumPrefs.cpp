@@ -225,7 +225,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                8);
 
             S.Id(ID_COLOR_SCHEME).TieChoice(XXO("Color Sche&me:"),
-               mTempSettings.colorScheme,
+               (int&)mTempSettings.colorScheme,
                Msgids( SpectrogramSettings::GetColorSchemeNames() ) );
          }
          S.EndMultiColumn();

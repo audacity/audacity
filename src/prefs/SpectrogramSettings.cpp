@@ -176,6 +176,26 @@ const EnumValueSymbols &SpectrogramSettings::GetColorSchemeNames()
    return result;
 }
 
+
+void SpectrogramSettings::ColorSchemeEnumSetting::Migrate(wxString &value)
+{
+   // Migrate old grayscale option to Color scheme choice
+   bool isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+   if (isGrayscale && !gPrefs->Read(wxT("/Spectrum/ColorScheme"), &value)) {
+      value = GetColorSchemeNames().at(csInvGrayscale).Internal();
+      Write(value);
+      gPrefs->Flush();
+   }
+}
+
+SpectrogramSettings::ColorSchemeEnumSetting SpectrogramSettings::colorSchemeSetting{
+   wxT("/Spectrum/ColorScheme"),
+   GetColorSchemeNames(),
+   csColorNew, // default to Color(New)
+   { csColorNew, csColorTheme, csGrayscale, csInvGrayscale },
+};
+
+
 //static
 const TranslatableStrings &SpectrogramSettings::GetAlgorithmNames()
 {
@@ -249,7 +269,9 @@ bool SpectrogramSettings::Validate(bool quiet)
       ScaleType(std::max(0,
          std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
             (int)(scaleType))));
-   colorScheme = std::max(0, std::min(csNumColorScheme-1, colorScheme));
+   colorScheme = ColorScheme(
+      std::max(0, std::min<int>(csNumColorScheme-1, colorScheme))
+   );
    algorithm = Algorithm(
       std::max(0, std::min((int)(algNumAlgorithms) - 1, (int)(algorithm)))
    );
@@ -277,7 +299,7 @@ void SpectrogramSettings::LoadPrefs()
 
    gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
 
-   colorScheme = ColorScheme(gPrefs->Read(wxT("/Spectrum/ColorScheme"), 0L));
+   colorScheme = colorSchemeSetting.ReadEnum();
 
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
 
@@ -325,7 +347,7 @@ void SpectrogramSettings::SavePrefs()
 
    gPrefs->Write(wxT("/Spectrum/WindowType"), windowType);
 
-   gPrefs->Write(wxT("/Spectrum/ColorScheme"), (int) colorScheme);
+   colorSchemeSetting.WriteEnum(colorScheme);
 
    gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
 
@@ -385,9 +407,7 @@ void SpectrogramSettings::UpdatePrefs()
    }
 
    if (colorScheme == defaults().colorScheme) {
-      int temp;
-      gPrefs->Read(wxT("/Spectrum/ColorScheme"), &temp, 0L);
-      colorScheme = ColorScheme(temp);
+      colorScheme = colorSchemeSetting.ReadEnum();
    }
 
    if (scaleType == defaults().scaleType) {
