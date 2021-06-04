@@ -17,7 +17,7 @@
 
 #include "Identifier.h"
 
-#include "torch/script.h"
+
 
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
