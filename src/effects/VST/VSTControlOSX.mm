@@ -24,7 +24,7 @@
 
 #include "VSTControlOSX.h"
 
-#include "../../MemoryX.h"
+#include <memory>
 
 @interface VSTView : NSView
 {

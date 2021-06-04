@@ -17,7 +17,7 @@
 #include "Identifier.h"
 
 //#include <mutex>
-#include "MemoryX.h"
+#include <memory>
 
 #include "sndfile.h"
 

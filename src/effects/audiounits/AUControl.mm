@@ -31,7 +31,7 @@
 #include <AudioUnit/AudioUnitCarbonView.h>
 #endif
 
-#include "../../MemoryX.h"
+#include "MemoryX.h"
 
 @interface AUView : NSView
 {

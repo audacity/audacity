@@ -6,6 +6,10 @@
 # SRC    source library name
 # DST    destination directory
 #
+
+# enable IN_LIST operator
+cmake_policy(SET CMP0057 NEW)
+
 message( "==================================================================" )
 message( "Copying shared libraries:" )
 message( "==================================================================" )
@@ -34,18 +38,20 @@ function( execute )
    set( ${outlist} ${cmd_out} PARENT_SCOPE )
 endfunction()
 
+set( VISITED )
 function( gather_libs src )
+   list( APPEND VISITED "${src}" )
    if( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows" )
       execute( output cmd /k dumpbin /dependents ${src} )
 
       foreach( line ${output} )
          set( lib ${WXWIN}/${line} )
 
-         if( EXISTS "${lib}" )
+         if( EXISTS "${lib}" AND NOT "${lib}" IN_LIST VISITED )
             list( APPEND libs ${lib} )
 
             gather_libs( ${lib} )
-         elseif ( EXISTS "${DST}/${line}" )
+         elseif ( EXISTS "${DST}/${line}" AND NOT "${DST}/${line}" IN_LIST VISITED )
             gather_libs( "${DST}/${line}" )
          endif()
       endforeach()
@@ -65,7 +71,8 @@ function( gather_libs src )
             message(STATUS "Checking out ${line}")
             set( lib "${WXWIN}/${dylib_name}" )
 
-            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}")
+            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}"
+	       AND NOT "${lib}" IN_LIST VISITED )
                message(STATUS "\tProcessing ${lib}...")
 
                list( APPEND libs ${lib} )
@@ -94,7 +101,7 @@ function( gather_libs src )
 
          set(line "${WXWIN}/${line}")
          
-         if (EXISTS "${line}")
+         if (EXISTS "${line}" AND NOT "${line}" IN_LIST VISITED)
             message (STATUS "\tAdding ${line}...")
 
             set( lib ${line} )

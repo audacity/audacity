@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_IMPORT_RAW__
 #define __AUDACITY_IMPORT_RAW__
 
-#include "../MemoryX.h"
+#include <memory>
 
 class AudacityProject;
 class WaveTrackFactory;

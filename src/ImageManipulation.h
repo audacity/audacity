@@ -8,11 +8,12 @@
 
 **********************************************************************/
 
-#include "MemoryX.h"
+#include <memory>
 #include <wx/defs.h>
 
 class wxColour;
 class wxImage;
+class wxRect;
 
 // This looks at the first pixel in the image, and shifts
 // the entire image by the vector difference between that

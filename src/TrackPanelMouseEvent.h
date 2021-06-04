@@ -16,7 +16,7 @@ class wxMouseState;
 class wxRect;
 class wxSize;
 class TrackPanelCell;
-#include "MemoryX.h"
+#include <memory>
 
 // This is a hack so that the code that fakes a MOUSE_LEFT_BTN_UP on
 // capture lost doesn't get in the way of handling MOUSE_RIGHT_BTN_UP.

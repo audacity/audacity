@@ -22,7 +22,7 @@ responsible for calling the appropriate callback functions.
 
 
 
-#include "MemoryX.h"
+#include <memory>
 
 class AudacityCommand;
 class LoadableModule;

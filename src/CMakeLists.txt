@@ -180,14 +180,12 @@ list( APPEND SOURCES
       MacroMagic.h
       Matrix.cpp
       Matrix.h
-      MemoryX.h
       Menus.cpp
       Menus.h
       Mix.cpp
       Mix.h
       MixerBoard.cpp
       MixerBoard.h
-      ModuleConstants.h
       ModuleManager.cpp
       ModuleManager.h
       ModuleSettings.cpp

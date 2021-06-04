@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_HIT_TEST_RESULT__
 #define __AUDACITY_HIT_TEST_RESULT__
 
-#include "MemoryX.h"
+#include <memory>
 #include "Internat.h" // for TranslatableString
 
 class wxCursor;

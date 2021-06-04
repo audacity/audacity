@@ -133,6 +133,17 @@ if( ${_OPT}has_networking )
 
 endif()
 
+if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
+   add_conan_lib(
+      libuuid
+      libuuid/1.0.3
+      REQUIRED
+      OPTION_NAME uuid
+      PKG_CONFIG "uuid"
+      INTERFACE_NAME libuuid::libuuid
+   )
+endif()
+
 set_conan_vars_to_parent()
 
 # Required libraries

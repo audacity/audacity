@@ -13,7 +13,7 @@ Paul Licameli
 
 
 
-#include "MemoryX.h"
+#include <memory>
 #include "TrackPanelDrawable.h" // to inherit
 
 class AudacityProject;

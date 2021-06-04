@@ -55,8 +55,9 @@ and sends it to that message target.
 #ifndef __COMMANDTARGETS__
 #define __COMMANDTARGETS__
 
-#include "../MemoryX.h"
+#include <memory>
 #include <vector>
+#include <wx/string.h>
 #include <wx/thread.h>
 
 class wxStatusBar;

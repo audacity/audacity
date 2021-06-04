@@ -16,7 +16,7 @@
 #include <wx/event.h> // inherit wxEvtHandler
 #include <wx/weakref.h> // member variable
 #include "SelectedRegion.h"
-#include "MemoryX.h"
+#include <memory>
 #include "ZoomInfo.h" // to inherit
 
 
