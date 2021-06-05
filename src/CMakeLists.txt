@@ -589,6 +589,15 @@ list( APPEND SOURCES
          effects/vamp/VampEffect.h
       >
 
+      # Deep Learning Effects
+      $<$<BOOL:${USE_LIBTORCH}>:
+         effects/deeplearning/DeepModel.cpp
+         effects/deeplearning/DeepModel.h
+
+         effects/SourceSep.h
+         effects/SourceSep.cpp
+      >
+
       # Export
 
       export/Export.cpp
