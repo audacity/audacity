@@ -103,11 +103,11 @@ XO("Problem details"),
 XO("Comments"),
 XC("&Send",       "crash reporter button"),
 XC("&Don’t send", "crash reporter button"),
-// i18-hint C++ programming exception
+// i18n-hint C++ programming exception
 XO("Exception code 0x%x"),
-// i18-hint C++ programming exception
+// i18n-hint C++ programming exception
 XO("Unknown exception"),
-// i18-hint C++ programming assertion
+// i18n-hint C++ programming assertion
 XO("Unknown assertion"),
 XO("Unknown error"),
 XO("Failed to send crash report"),
@@ -135,3 +135,5 @@ XC("Unable to connect to Audacity update server.", "update dialog"),
 XC("Update data was corrupted.", "update dialog"),
 XC("Error downloading update.", "update dialog"),
 XC("Can't open the Audacity download link.", "update dialog"),
+// i18n-hint Substitution of version number for %s.
+XC("Audacity %s is available!", "update dialog"),
