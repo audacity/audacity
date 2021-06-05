@@ -25,16 +25,15 @@ public:
 
 	VersionPatch getVersionPatch() const;
 
-	void OnTimer(wxTimerEvent& event);
-
-	DECLARE_EVENT_TABLE()
-
 private:
 	VersionPatch mVersionPatch;
 
 	wxWindow* mParent;
+
 	wxTimer mTimer;
 
-	// TODO: recalc to each 12 hrs per twenty-four hours
-	enum { kTimerInterval = 1000 * 60 };
+	void OnTimer(wxTimerEvent& event);
+
+public:
+	DECLARE_EVENT_TABLE()
 };

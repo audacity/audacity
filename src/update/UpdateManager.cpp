@@ -21,23 +21,24 @@ UpdateManager::UpdateManager(AudacityProject& project)
     
     mParent = reinterpret_cast<wxWindow*> (parrentFrame);
     
-    getUpdates();
-    
     mTimer.SetOwner(this, ID_TIMER);
-    mTimer.StartOnce(kTimerInterval);
+    mTimer.StartOnce();
 }
 
 UpdateManager::~UpdateManager()
-{}
+{
+    mTimer.Stop();
+}
 
 void UpdateManager::enableNotification(bool enable)
 {
     gPrefs->Write(prefsUpdatePopupDialogShown, enable);
+    gPrefs->Flush();
 }
 
 bool UpdateManager::isNotificationEnabled()
 {
-    return gPrefs->ReadBool(prefsUpdatePopupDialogShown, false);
+    return gPrefs->ReadBool(prefsUpdatePopupDialogShown, true);
 }
 
 VersionPatch UpdateManager::getVersionPatch() const
@@ -50,43 +51,54 @@ void UpdateManager::getUpdates()
     ServerCommunication::UpdateDataFormat updateResponse;
     
     ServerCommunication communicator;
-    if (!communicator.getUpdateData(&updateResponse))
+    if (!communicator.getUpdateData(updateResponse))
     {
-        // TODO: remake text and may be Parrent.
         AudacityMessageBox(
-            XO("Unable to connect on Audacity update server."),
-            XO("Error update check"),
+            XO("Unable to connect to Audacity update server."),
+            XO("Error checking for update"),
             wxOK | wxCENTRE,
             mParent);
 
         return;
     }
     
-    // TODO: check and show MessageBox.
     UpdateDataParser updateDataParser;
     if (!updateDataParser.Parse(updateResponse, &mVersionPatch))
     {
-        ;
+        AudacityMessageBox(
+            XO("Update data was corrupted."),
+            XO("Error checking for update"),
+            wxOK | wxCENTRE,
+            mParent);
+
+        return;
     }
     
-    //if (isNotificationEnabled())
+    if (isNotificationEnabled() && mVersionPatch.version > CurrentBuildVersion())
     {
-        UpdatePopupDialog dlg(nullptr, this);
+        UpdatePopupDialog dlg(mParent, this);
         const int code = dlg.ShowModal();
         
         if (code == wxID_YES)
         {
             if (!wxLaunchDefaultBrowser(mVersionPatch.download))
             {
-                // TODO: MessageBox with error;
+                AudacityMessageBox(
+                    XO("Can't open the Audacity download link."),
+                    XO("Error downloading update"),
+                    wxOK | wxCENTRE,
+                    mParent);
+
+                return;
             }
         }
     }
 }
 
-void UpdateManager::OnTimer(wxTimerEvent& event)
+void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
     getUpdates();
     
-    mTimer.StartOnce(kTimerInterval);
+    mTimer.StartOnce(
+        std::chrono::milliseconds(std::chrono::hours(12)).count());
 }

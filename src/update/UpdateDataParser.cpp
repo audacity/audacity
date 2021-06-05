@@ -27,13 +27,18 @@ wxArrayString UpdateDataParser::splitChangelogSentences(const wxString& changelo
 {
 	wxArrayString changelogSentenceList;
 
-	const wxString separator(". ");
-	wxStringTokenizer tokenizer(changelogContent, separator);
+	size_t pos = 0;
+	std::string s(changelogContent.ToStdString());
+	std::string token;
+	std::string delimiter(". ");
 
-	while (tokenizer.HasMoreTokens())
-	{
-		changelogSentenceList.Add(tokenizer.GetNextToken());
+	while ((pos = s.find(delimiter)) != std::string::npos) {
+		token = s.substr(0, pos + 1);
+		changelogSentenceList.Add(token);
+
+		s.erase(0, pos + delimiter.length());
 	}
+	changelogSentenceList.Add(s);
 
 	return changelogSentenceList;
 }
@@ -111,8 +116,6 @@ void UpdateDataParser::HandleXMLContent(const wxString& content)
 	{
 	case XmlParsedTags::kDescriptionTag:
 		trimedContent.Trim(true).Trim(false);
-		// TODO: need current spliting by ". "
-		//mVersionPatch->changelog = wxSplit(trimedContent, '.');
 		mVersionPatch->changelog = splitChangelogSentences(trimedContent);
 		break;
 

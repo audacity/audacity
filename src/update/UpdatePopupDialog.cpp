@@ -27,7 +27,6 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS (UpdatePopupDialog, wxDialogWrapper)
 
 UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateManager)
-/* i18n-hint: information about the anonymous data collection */
     : wxDialogWrapper (parent, -1, XO ("Update Audacity"),
         wxDefaultPosition, wxDefaultSize,
         wxCAPTION),
@@ -45,6 +44,7 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
             // TODO: replace false on mUpdateManager->isNotificationEnabled();
             S.Id (DontShowID).AddCheckBox (XO ("Don't show this again at start up"), false);
             //TODO: ALIG buttons to Right side.
+            S.Prop(1).AddSpace(1, 0, 1);
             S.Id (wxID_NO).AddButton (XO ("Skip"));
             S.Id (wxID_YES).AddButton (XO ("Install update"));
             S.SetBorder (5);
@@ -71,13 +71,11 @@ void UpdatePopupDialog::OnUpdate (wxCommandEvent&)
 void UpdatePopupDialog::OnSkip (wxCommandEvent&)
 {
     EndModal (wxID_NO);
-    //Show (false);
 }
 
 void UpdatePopupDialog::OnDontShow (wxCommandEvent& event)
 {
     mUpdateManager->enableNotification (!event.IsChecked());
-    //gPrefs->Flush();
 }
 
 HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
@@ -85,12 +83,12 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     wxStringOutputStream o;
     wxTextOutputStream informationStr (o);
 
-    const auto title = XO("Audacity %s is available!")
+    static const auto title = XO("Audacity %s is available!")
         .Format(mUpdateManager->getVersionPatch().version.getString());
 
     informationStr
         << wxT("<html><body><h3>")
-        << title
+        << title.Translation()
         << wxT("</h3><h5>")
         << XO("Changelog")
         << wxT("</h5><p>");
@@ -99,13 +97,14 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     for (auto& logLine : mUpdateManager->getVersionPatch().changelog)
     {
         informationStr << wxT("<li>");
-        informationStr << XO("%s").Format(logLine).Translation();
+        // We won't to translate downloaded text.
+        informationStr << logLine;
         informationStr << wxT("</li>");
     }
     informationStr << wxT("</ul></p>");
 
     informationStr << wxT("<p>");
-    informationStr << "<a href = \"https://github.com/audacity/audacity/releases\">Read more om github</a>";
+    informationStr << XO("<a href = \"https://github.com/audacity/audacity/releases\">Read more on GitHub</a>");
     informationStr << wxT("</p>");
 
     informationStr << wxT("</body></html>");

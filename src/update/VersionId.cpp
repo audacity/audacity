@@ -1,12 +1,12 @@
 #include "VersionId.h"
 
-VersionId::VersionId(size_t version, size_t release, size_t revision)
+VersionId::VersionId(int version, int release, int revision)
 	: mVersion(version),
-	mRelease(release),
-	mRevision(revision)
+	  mRelease(release),
+	  mRevision(revision)
 {}
 
-wxString VersionId::MakeString(size_t version, size_t release, size_t revision)
+wxString VersionId::MakeString(int version, int release, int revision)
 {
 	return std::to_string(version)
 		+ "." + std::to_string(release)

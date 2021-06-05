@@ -7,9 +7,9 @@ class VersionId final
 {
 public:
 	VersionId() = default;
-	VersionId(size_t version, size_t release, size_t revision);
+	VersionId(int version, int release, int revision);
 
-	static wxString MakeString(size_t version, size_t release, size_t revision);
+	static wxString MakeString(int version, int release, int revision);
 	static VersionId ParseFromString(wxString& versionString);
 
 	wxString getString() const;
@@ -22,7 +22,9 @@ public:
 	bool operator> (const VersionId& other);
 
 private:
-	size_t mVersion{ AUDACITY_VERSION };
-	size_t mRelease{ AUDACITY_RELEASE };
-	size_t mRevision{ AUDACITY_REVISION };
+	int mVersion{ AUDACITY_VERSION };
+	int mRelease{ AUDACITY_RELEASE };
+	int mRevision{ AUDACITY_REVISION };
 };
+
+static inline VersionId CurrentBuildVersion() { return VersionId{}; }
