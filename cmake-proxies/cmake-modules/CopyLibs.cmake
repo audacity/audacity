@@ -116,6 +116,7 @@ function( gather_libs src )
 
    set( libs ${libs} PARENT_SCOPE )
    set( postcmds ${postcmds} PARENT_SCOPE )
+   set( VISITED ${VISITED} PARENT_SCOPE )
 endfunction()
 
 gather_libs( "${SRC}" )
