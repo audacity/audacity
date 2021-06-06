@@ -12,6 +12,7 @@
 #define __AUDACITY_PROJECT__
 
 #include "ClientData.h" // to inherit
+#include "GlobalVariable.h"
 
 #include <memory>
 #include <mutex>
@@ -135,5 +136,18 @@ private:
 class AudacityProject;
 using ProjectFileIORegistry = XMLMethodRegistry<AudacityProject>;
 DECLARE_XML_METHOD_REGISTRY( PROJECT_API, ProjectFileIORegistry );
+
+namespace BasicUI { class WindowPlacement; }
+
+//! Type of function that makes a WindowPlacement for dialogs, with project frame as parent
+using WindowPlacementFactory = GlobalHook< AudacityProject,
+   std::unique_ptr<const BasicUI::WindowPlacement>(
+      AudacityProject &project)
+>;
+
+//! Make a WindowPlacement object suitable for `project` (which may be null)
+/*! @post return value is not null */
+PROJECT_API std::unique_ptr<const BasicUI::WindowPlacement>
+ProjectFramePlacement( AudacityProject *project );
 
 #endif

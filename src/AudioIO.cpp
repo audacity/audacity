@@ -108,7 +108,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Decibels.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectWindows.h"
 #include "TransactionScope.h"
 
 #include "effects/RealtimeEffectManager.h"
