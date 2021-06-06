@@ -12,6 +12,8 @@ Paul Licameli
 
 using namespace BasicUI;
 
+wxWidgetsWindowPlacement::~wxWidgetsWindowPlacement() = default;
+
 wxWidgetsBasicUI::~wxWidgetsBasicUI() = default;
 
 void wxWidgetsBasicUI::DoCallAfter(const Action &action)
@@ -22,4 +24,14 @@ void wxWidgetsBasicUI::DoCallAfter(const Action &action)
 void wxWidgetsBasicUI::DoYield()
 {
    wxTheApp->Yield();
+}
+
+namespace {
+wxWindow *GetParent(const BasicUI::WindowPlacement &placement)
+{
+   if (auto *pPlacement =
+       dynamic_cast<const wxWidgetsWindowPlacement*>(&placement))
+      return pPlacement->pWindow;
+   return nullptr;
+}
 }
