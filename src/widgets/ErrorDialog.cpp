@@ -52,7 +52,7 @@ ErrorDialog::ErrorDialog(
    wxWindow *parent,
    const TranslatableString & dlogTitle,
    const TranslatableString & message,
-   const wxString & helpPage,
+   const ManualPageID & helpPage,
    const wxString & log,
    const bool Close, const bool modal)
 :  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
@@ -152,7 +152,7 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
-                     const wxString &helpPage,
+                     const ManualPageID &helpPage,
                      const bool Close,
                      const wxString &log)
 {
@@ -178,7 +178,7 @@ void ShowExceptionDialog(
 void ShowModelessErrorDialog(wxWindow *parent,
                              const TranslatableString &dlogTitle,
                              const TranslatableString &message,
-                             const wxString &helpPage,
+                             const ManualPageID &helpPage,
                              const bool Close,
                              const wxString &log)
 {

@@ -232,5 +232,7 @@ struct CommandIdTag;
 using CommandID = TaggedIdentifier< CommandIdTag, false >;
 using CommandIDs = std::vector<CommandID>;
 
+using ManualPageID = wxString;
+
 #endif
 

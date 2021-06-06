@@ -66,7 +66,7 @@ TranslatableString LibraryPrefs::GetDescription()
    return XO("Preferences for Library");
 }
 
-wxString LibraryPrefs::HelpPageName()
+ManualPageID LibraryPrefs::HelpPageName()
 {
    return "Libraries_Preferences";
 }

@@ -28,14 +28,14 @@ public:
    ErrorDialog(wxWindow *parent,
       const TranslatableString & dlogTitle,
       const TranslatableString & message,
-      const wxString & helpPage,
+      const ManualPageID & helpPage,
       const wxString & log,
       const bool Close = true, const bool modal = true);
 
    virtual ~ErrorDialog(){}
 
 private:
-   wxString dhelpPage;
+   ManualPageID dhelpPage;
    bool dClose;
    bool dModal;
 
@@ -50,7 +50,7 @@ AUDACITY_DLL_API
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
-                     const wxString &helpPage,
+                     const ManualPageID &helpPage,
                      bool Close = true,
                      const wxString &log = {});
 
@@ -65,7 +65,7 @@ void ShowExceptionDialog(
 void ShowModelessErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
-                     const wxString &helpPage,
+                     const ManualPageID &helpPage,
                      bool Close = true,
                      const wxString &log = {});
 

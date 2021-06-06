@@ -198,9 +198,9 @@ TranslatableString EffectDistortion::GetDescription()
    return XO("Waveshaping distortion effect");
 }
 
-wxString EffectDistortion::ManualPage()
+ManualPageID EffectDistortion::ManualPage()
 {
-   return wxT("Distortion");
+   return L"Distortion";
 }
 
 // EffectDefinitionInterface implementation

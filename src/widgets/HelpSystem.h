@@ -88,7 +88,7 @@ public:
    /// @param bModal Whether the resulting dialogue should be modal or not.
    /// Default is modeless dialogue
    static void ShowHelp(wxWindow *parent,
-                     const wxString &PageName,
+                     const ManualPageID &PageName,
                      bool bModal = false);
 
    /// Hostname (domain name including subdomain) of the server on which the

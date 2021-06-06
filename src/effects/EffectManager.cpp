@@ -135,7 +135,7 @@ TranslatableString EffectManager::GetCommandDescription(const PluginID & ID)
    return {};
 }
 
-wxString EffectManager::GetCommandUrl(const PluginID & ID)
+ManualPageID EffectManager::GetCommandUrl(const PluginID & ID)
 {
    Effect* pEff = GetEffect(ID);
    if( pEff )

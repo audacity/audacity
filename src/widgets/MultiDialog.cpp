@@ -59,7 +59,7 @@ private:
    void OnHelp(wxCommandEvent& event);
 
    wxRadioBox* mRadioBox;
-   wxString mHelpPage;
+   ManualPageID mHelpPage;
 
    DECLARE_EVENT_TABLE()
 };

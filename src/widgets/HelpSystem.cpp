@@ -307,7 +307,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
 }
 
 void HelpSystem::ShowHelp(wxWindow *parent,
-                          const wxString &PageName,
+                          const ManualPageID &PageName,
                           bool bModal)
 {
    FilePath localHelpPage;

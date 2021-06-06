@@ -48,7 +48,7 @@ TranslatableString EffectsPrefs::GetDescription()
    return XO("Preferences for Effects");
 }
 
-wxString EffectsPrefs::HelpPageName()
+ManualPageID EffectsPrefs::HelpPageName()
 {
    return "Effects_Preferences";
 }

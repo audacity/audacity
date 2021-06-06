@@ -348,14 +348,14 @@ TranslatableString EffectEqualization::GetDescription()
    return XO("Adjusts the volume levels of particular frequencies");
 }
 
-wxString EffectEqualization::ManualPage()
+ManualPageID EffectEqualization::ManualPage()
 {
    // Bug 2509: Must use _ and not space in names.
    if( mOptions == kEqOptionGraphic )
-      return wxT("Graphic_EQ");
+      return L"Graphic_EQ";
    if( mOptions == kEqOptionCurve )
-      return wxT("Filter_Curve_EQ");
-   return wxT("Equalization");
+      return L"Filter_Curve_EQ";
+   return L"Equalization";
 }
 
 // EffectDefinitionInterface implementation

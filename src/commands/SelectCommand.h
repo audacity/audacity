@@ -37,7 +37,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#select_time");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#select_time";}
 
    bool bHasT0;
    bool bHasT1;
@@ -63,7 +63,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#select_frequencies");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#select_frequencies";}
 
    bool bHasBottom;
    bool bHasTop;
@@ -85,7 +85,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#select_tracks");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#select_tracks";}
 
    bool bHasFirstTrack;
    bool bHasNumTracks;
@@ -123,7 +123,7 @@ public:
          mSelTracks.Apply(context);
    }
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#select");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#select";}
 private:
    SelectTimeCommand mSelTime;
    SelectFrequenciesCommand mSelFreq;
