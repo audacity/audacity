@@ -32,6 +32,8 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
         wxCAPTION),
       mUpdateManager (updateManager)
 {
+    wxASSERT(mUpdateManager);
+
     ShuttleGui S (this, eIsCreating);
     S.SetBorder (5);
     S.StartVerticalLay (wxEXPAND, 1);
@@ -41,12 +43,15 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
         S.StartHorizontalLay (wxEXPAND, 0);
         {
             S.SetBorder (5);
-            // TODO: replace false on mUpdateManager->isNotificationEnabled();
-            S.Id (DontShowID).AddCheckBox (XO ("Don't show this again at start up"), false);
-            //TODO: ALIG buttons to Right side.
+
+            S.Id (DontShowID).AddCheckBox (
+                XO ("Don't show this again at start up"), !mUpdateManager->isNotificationEnabled());
+
             S.Prop(1).AddSpace(1, 0, 1);
+
             S.Id (wxID_NO).AddButton (XO ("Skip"));
             S.Id (wxID_YES).AddButton (XO ("Install update"));
+
             S.SetBorder (5);
         }
         S.EndHorizontalLay();
@@ -112,7 +117,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     HtmlWindow* html = safenew LinkingHtmlWindow (parent, -1,
         wxDefaultPosition,
         wxSize (500, -1),
-        wxHW_SCROLLBAR_AUTO | wxNO_BORDER | wxHW_NO_SELECTION);
+        wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
 
     html->SetBorders (20);
     html->SetPage (o.GetString());

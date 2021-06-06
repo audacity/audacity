@@ -27,4 +27,5 @@ private:
 	int mRevision{ AUDACITY_REVISION };
 };
 
+// NOTE: May be move it to VersionId as static method.
 static inline VersionId CurrentBuildVersion() { return VersionId{}; }

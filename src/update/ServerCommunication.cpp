@@ -16,7 +16,7 @@ bool ServerCommunication::getUpdateData(UpdateDataFormat& receivedData)
 	auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
 	response->setRequestFinishedCallback([response, &receivedData, this](audacity::network_manager::IResponse*) {
-		std::lock_guard<std::mutex> lock(mResponseMutex);
+		std::lock_guard<std::mutex> lock{ mResponseMutex };
 
 		if (response->getError() == audacity::network_manager::NetworkError::NoError)
 			receivedData = response->readAll<UpdateDataFormat>();
@@ -26,7 +26,9 @@ bool ServerCommunication::getUpdateData(UpdateDataFormat& receivedData)
 	);
 
 	std::unique_lock<std::mutex> lock{ mResponseMutex };
-	mResponseCondition.wait_for(lock, std::chrono::seconds(60));
+	mResponseCondition.wait_for(lock,
+		std::chrono::seconds(100),
+		[response] {return response->isFinished(); });
 
 	if (!response->isFinished())
 	{

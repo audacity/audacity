@@ -37,5 +37,5 @@ public:
 private:
     HtmlWindow* AddHtmlContent (wxWindow* parent);
 
-    UpdateManager *mUpdateManager;
+    UpdateManager* const mUpdateManager;
 };
