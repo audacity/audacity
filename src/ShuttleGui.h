@@ -27,6 +27,8 @@
 class ChoiceSetting;
 
 class wxArrayStringEx;
+class Plot;
+class SliderTextCtrl;
 
 
 const int nMaxNestedSizers = 20;
@@ -276,6 +278,10 @@ public:
       int Value, int Max, int Min);
    wxTreeCtrl * AddTree();
 
+   SliderTextCtrl* AddSliderTextCtrl(
+      const TranslatableString &Prompt, double pos, double Max, double Min = 0,
+      int precision = 2, double* value = NULL, double scale = 0, double offset = 0);
+
    // Pass the same initValue to the sequence of calls to AddRadioButton and
    // AddRadioButtonToGroup.
    // The radio button is filled if selector == initValue
@@ -355,6 +361,11 @@ public:
       const TranslatableString & Str, bool bCenter = false, int wrapWidth = 0 );
    void AddConstTextBox(
       const TranslatableString &Caption, const TranslatableString & Value );
+
+   Plot* AddPlot( const TranslatableString &Prompt,
+      double x_min, double x_max, double y_min, double y_max,
+      const TranslatableString& x_label, const TranslatableString& y_label,
+      int x_format = 1, int y_format = 1, int count = 1 );
 
 //-- Start and end functions.  These are used for sizer, or other window containers
 //   and create the appropriate widget.

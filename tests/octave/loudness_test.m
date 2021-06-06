@@ -125,20 +125,12 @@ end
 ## Test Loudness LUFS mode: block to short and all silent
 CURRENT_TEST = "Loudness LUFS mode, short silent block";
 fs= 44100;
-x = zeros(ceil(fs*0.35), 2);
-audiowrite(TMP_FILENAME, x, fs);
-if EXPORT_TEST_SIGNALS
-  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-silence-test.wav"), x, fs);
-end
+x1 = zeros(ceil(fs*0.35), 2);
 
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs, "Loudness-LUFS-silence-test.wav");
 aud_do("LoudnessNormalization: LUFSLevel=-23 DualMono=1 NormalizeTo=0 StereoIndependent=0\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(2);
 do_test_equ(y, x, "identity");
 
 ## Test Loudness LUFS mode: stereo dependent
@@ -146,76 +138,50 @@ CURRENT_TEST = "Loudness LUFS mode, keep DC and stereo balance";
 randn("seed", 1);
 # Include some silence in the test signal to test loudness gating
 # and vary the overall loudness over time.
-x = [0.1*randn(15*fs, 2).', zeros(5*fs, 2).', 0.1*randn(15*fs, 2).'].';
-x(:,1) = x(:,1) .* sin(2*pi/fs/35*(1:1:35*fs)).' .* 1.2;
-x(:,2) = x(:,2) .* sin(2*pi/fs/35*(1:1:35*fs)).';
-audiowrite(TMP_FILENAME, x, fs);
-if EXPORT_TEST_SIGNALS
-  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-stereo-test.wav"), x, fs);
-end
+x1 = [0.1*randn(15*fs, 2).', zeros(5*fs, 2).', 0.1*randn(15*fs, 2).'].';
+x1(:,1) = x1(:,1) .* sin(2*pi/fs/35*(1:1:35*fs)).' .* 1.2;
+x1(:,2) = x1(:,2) .* sin(2*pi/fs/35*(1:1:35*fs)).';
 
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs, "Loudness-LUFS-stereo-test.wav");
 aud_do("LoudnessNormalization: LUFSLevel=-23 DualMono=1 NormalizeTo=0 StereoIndependent=0\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(2);
 do_test_equ(calc_LUFS(y, fs), -23, "loudness", LUFS_epsilon);
 do_test_neq(calc_LUFS(y(:,1), fs), calc_LUFS(y(:,2), fs), "stereo balance", 1);
 
 ## Test Loudness LUFS mode, stereo independent
 CURRENT_TEST = "Loudness LUFS mode, stereo independence";
-audiowrite(TMP_FILENAME, x, fs);
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs);
 aud_do("LoudnessNormalization: LUFSLevel=-23 DualMono=0 NormalizeTo=0 StereoIndependent=1\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(2);
 # Independently processed stereo channels have half the target loudness.
 do_test_equ(calc_LUFS(y(:,1), fs), -26, "channel 1 loudness", LUFS_epsilon);
 do_test_equ(calc_LUFS(y(:,2), fs), -26, "channel 2 loudness", LUFS_epsilon);
 
 ## Test Loudness LUFS mode: mono as mono
 CURRENT_TEST = "Test Loudness LUFS mode: mono as mono";
-x = x(:,1);
-audiowrite(TMP_FILENAME, x, fs);
-if EXPORT_TEST_SIGNALS
-  audiowrite(cstrcat(pwd(), "/Loudness-LUFS-mono-test.wav"), x, fs);
-end
+x1 = x1(:,1);
 
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs, "Loudness-LUFS-mono-test.wav");
 aud_do("LoudnessNormalization: LUFSLevel=-26 DualMono=0 NormalizeTo=0 StereoIndependent=1\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=1\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(1);
 do_test_equ(calc_LUFS(y, fs), -26, "loudness", LUFS_epsilon);
 
 ## Test Loudness LUFS mode: mono as dual-mono
 CURRENT_TEST = "Test Loudness LUFS mode: mono as dual-mono";
-audiowrite(TMP_FILENAME, x, fs);
-
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs);
 aud_do("LoudnessNormalization: LUFSLevel=-26 DualMono=1 NormalizeTo=0 StereoIndependent=0\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=1\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(1);
 # This shall be 3 LU quieter as it is compared to strict spec.
 do_test_equ(calc_LUFS(y, fs), -29, "loudness", LUFS_epsilon);
 
 ## Test Loudness LUFS mode: multi-rate project
 CURRENT_TEST = "Test Loudness LUFS mode: multi-rate project";
-audiowrite(TMP_FILENAME, x, fs);
+audiowrite(TMP_FILENAME, x1, fs);
+x = audioread(TMP_FILENAME);
 
 remove_all_tracks();
 aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
@@ -228,6 +194,7 @@ audiowrite(TMP_FILENAME, x1, fs1);
 if EXPORT_TEST_SIGNALS
   audiowrite(cstrcat(pwd(), "/Loudness-LUFS-stereo-test-8kHz.wav"), x1, fs1);
 end
+x1 = audioread(TMP_FILENAME);
 
 aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
 select_tracks(0, 100);
@@ -255,36 +222,22 @@ do_test_neq(calc_LUFS(y1(:,1), fs), calc_LUFS(y1(:,2), fs), "stereo balance trac
 CURRENT_TEST = "Loudness RMS mode, stereo independent";
 randn("seed", 1);
 fs= 44100;
-x = 0.1*randn(30*fs, 2);
-x(:,1) = x(:,1) * 0.6;
-audiowrite(TMP_FILENAME, x, fs);
-if EXPORT_TEST_SIGNALS
-  audiowrite(cstrcat(pwd(), "/Loudness-RMS-test.wav"), x, fs);
-end
+x1 = 0.1*randn(30*fs, 2);
+x1(:,1) = x1(:,1) * 0.6;
 
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs, "Loudness-RMS-test.wav");
 aud_do("LoudnessNormalization: RMSLevel=-20 DualMono=0 NormalizeTo=1 StereoIndependent=1\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(2);
 do_test_equ(20*log10(sqrt(sum(y(:,1).*y(:,1)/length(y)))), -20, "channel 1 RMS");
 do_test_equ(20*log10(sqrt(sum(y(:,2).*y(:,2)/length(y)))), -20, "channel 2 RMS");
 
 ## Test Loudness RMS mode: stereo dependent
 CURRENT_TEST = "Loudness RMS mode, stereo dependent";
-audiowrite(TMP_FILENAME, x, fs);
-
 remove_all_tracks();
-aud_do(cstrcat("Import2: Filename=\"", TMP_FILENAME, "\"\n"));
-select_tracks(0, 100);
+x = export_to_aud(x1, fs);
 aud_do("LoudnessNormalization: RMSLevel=-22 DualMono=1 NormalizeTo=1 StereoIndependent=0\n");
-aud_do(cstrcat("Export2: Filename=\"", TMP_FILENAME, "\" NumChannels=2\n"));
-system("sync");
-
-y = audioread(TMP_FILENAME);
+y = import_from_aud(2);
 # Stereo RMS must be calculated in quadratic domain.
 do_test_equ(20*log10(sqrt(sum(rms(y).^2)/size(y)(2))), -22, "RMS");
 do_test_neq(20*log10(rms(y(:,1))), 20*log10(rms(y(:,2))), "stereo balance", 1);
