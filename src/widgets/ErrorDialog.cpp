@@ -33,6 +33,7 @@
 #include <wx/artprov.h>
 
 #include "../AllThemeResources.h"
+#include "CodeConversions.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"
 #include "../Prefs.h"
@@ -53,7 +54,7 @@ ErrorDialog::ErrorDialog(
    const TranslatableString & dlogTitle,
    const TranslatableString & message,
    const ManualPageID & helpPage,
-   const wxString & log,
+   const std::wstring & log,
    const bool Close, const bool modal)
 :  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
                    wxDefaultPosition, wxDefaultSize,
@@ -155,7 +156,7 @@ void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &message,
                      const ManualPageID &helpPage,
                      const bool Close,
-                     const wxString &log)
+                     const std::wstring &log)
 {
    ErrorDialog dlog(parent, dlogTitle, message, helpPage, log, Close);
    dlog.CentreOnParent();
@@ -169,9 +170,11 @@ void ShowExceptionDialog(
    const wxString& log)
 {
 #ifndef HAS_SENTRY_REPORTING
-   ShowErrorDialog(parent, dlogTitle, message, helpPage, Close, log);
+   ShowErrorDialog(parent, dlogTitle, message, helpPage, Close,
+      audacity::ToWString(log));
 #else
-   ShowErrorReportDialog(parent, dlogTitle, message, helpPage, log);
+   ShowErrorReportDialog(parent, dlogTitle, message, helpPage,
+      audacity::ToWString(log));
 #endif // !HAS_SENTRY_REPORTING
 }
 
@@ -181,7 +184,7 @@ void ShowModelessErrorDialog(wxWindow *parent,
                              const TranslatableString &message,
                              const ManualPageID &helpPage,
                              const bool Close,
-                             const wxString &log)
+                             const std::wstring &log)
 {
    // ensure it has some parent.
    if( !parent )
