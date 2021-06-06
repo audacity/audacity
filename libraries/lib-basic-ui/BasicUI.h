@@ -20,6 +20,20 @@ namespace BasicUI {
 
 using Action = std::function<void()>;
 
+//! Subclasses may hold information such as a parent window pointer for a dialog.
+/*! The default-constructed empty value of this base class must be accepted by overrides of methods of
+ Services */
+class BASIC_UI_API WindowPlacement {
+public:
+   WindowPlacement() = default;
+
+   //! Don't slice
+   WindowPlacement( const WindowPlacement& ) PROHIBITED;
+   //! Don't slice
+   WindowPlacement &operator=( const WindowPlacement& ) PROHIBITED;
+   virtual ~WindowPlacement();
+};
+
 //! @}
 
 //! Abstract class defines a few user interface services, not mentioning particular toolkits

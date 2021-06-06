@@ -13,6 +13,8 @@ Paul Licameli
 #include <vector>
 
 namespace  BasicUI {
+WindowPlacement::~WindowPlacement() = default;
+
 Services::~Services() = default;
 
 static Services *theInstance = nullptr;
