@@ -362,7 +362,8 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    else if (releasePageName.StartsWith( "http" ) )
    {
       localHelpPage = "";
-      webHelpPage = releasePageName + anchor;
+      releasePageName += anchor;
+      // webHelpPath remains empty
    }
    else
    {
