@@ -309,7 +309,7 @@ void OnQuickHelp(const CommandContext &context)
    auto &project = context.project;
    HelpSystem::ShowHelp(
       &GetProjectFrame( project ),
-      wxT("Quick_Help"));
+      L"Quick_Help");
 }
 
 void OnManual(const CommandContext &context)
@@ -317,7 +317,7 @@ void OnManual(const CommandContext &context)
    auto &project = context.project;
    HelpSystem::ShowHelp(
       &GetProjectFrame( project ),
-      wxT("Main_Page"));
+      L"Main_Page");
 }
 
 void OnAudioDeviceInfo(const CommandContext &context)

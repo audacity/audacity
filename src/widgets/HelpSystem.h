@@ -110,10 +110,6 @@ public:
    /// Must both start and end with '/' characters.
    static const wxString LocalHelpManDir;
 
-   /// The string which is appended to the development manual page name in order
-   /// obtain the file name in the local and release web copies of the manual
-   static const wxString ReleaseSuffix;
-
 };
 
 class ShuttleGui;

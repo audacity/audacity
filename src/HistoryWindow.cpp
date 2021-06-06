@@ -313,7 +313,7 @@ void HistoryDialog::OnCompact(wxCommandEvent & WXUNUSED(event))
 
 void HistoryDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Undo,_Redo_and_History"));
+   HelpSystem::ShowHelp(this, L"Undo,_Redo_and_History");
 }
 
 void HistoryDialog::OnItemSelected(wxListEvent &event)

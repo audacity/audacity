@@ -1362,7 +1362,7 @@ public:
 
    void OnGetURL(wxCommandEvent &WXUNUSED(evt))
    {
-      HelpSystem::ShowHelp(this, wxT("File_Menu:_Compact_Project"), true);
+      HelpSystem::ShowHelp(this, L"File_Menu:_Compact_Project", true);
    }
 };
 }
