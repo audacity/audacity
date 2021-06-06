@@ -53,4 +53,4 @@ Categories=AudioVideo;Audio;AudioVideoEditing;
 Exec=env UBUNTU_MENUPROXY=0 @AUDACITY_NAME@ %F
 StartupNotify=false
 Terminal=false
-MimeType=application/x-audacity-project;@MIMETYPES@
+MimeType=application/x-audacity-project;application/x-audacity-legacy-project;@MIMETYPES@
