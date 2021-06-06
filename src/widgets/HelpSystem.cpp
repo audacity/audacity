@@ -236,8 +236,8 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
 
 // Shows help in browser, or possibly in own dialog.
 void HelpSystem::ShowHelp(wxWindow *parent,
-                    const wxString &localFileName,
-                    const wxString &remoteURL,
+                    const FilePath &localFileName,
+                    const URLString &remoteURL,
                     bool bModal,
                     bool alwaysDefaultBrowser)
 {
@@ -289,7 +289,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       // I can't find it'.
       // Use Built-in browser to suggest you use the remote url.
       wxString Text = HelpText( wxT("remotehelp") );
-      Text.Replace( wxT("*URL*"), remoteURL );
+      Text.Replace( wxT("*URL*"), remoteURL.GET() );
       // Always make the 'help on the internet' dialog modal.
       // Fixes Bug 1411.
       ShowHtmlText( parent, XO("Help on the Internet"), Text, false, true );
@@ -297,7 +297,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
    else if( HelpMode == wxT("Local") || alwaysDefaultBrowser)
    {
       // Local file, External browser
-      OpenInDefaultBrowser( wxString(wxT("file:"))+localFileName );
+      OpenInDefaultBrowser( L"file:" + localFileName );
    }
    else
    {
@@ -310,7 +310,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
                           const wxString &PageName,
                           bool bModal)
 {
-   wxString localHelpPage;
+   FilePath localHelpPage;
    wxString webHelpPath;
    wxString webHelpPage;
    wxString releasePageName;
@@ -515,9 +515,9 @@ void BrowserDialog::UpdateButtons()
    }
 }
 
-void OpenInDefaultBrowser(const wxHtmlLinkInfo& link)
+void OpenInDefaultBrowser(const URLString& link)
 {
-   wxURI uri(link.GetHref());
+   wxURI uri(link.GET());
    wxLaunchDefaultBrowser(uri.BuildURI());
 }
 
@@ -555,7 +555,7 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
    }
    else if( href.StartsWith(wxT("mailto:")) || href.StartsWith(wxT("file:")) )
    {
-      OpenInDefaultBrowser( link );
+      OpenInDefaultBrowser( link.GetHref() );
       return;
    }
    else if( !href.StartsWith( wxT("http:"))  && !href.StartsWith( wxT("https:")) )
@@ -564,7 +564,7 @@ void LinkingHtmlWindow::OnLinkClicked(const wxHtmlLinkInfo& link)
    }
    else
    {
-      OpenInDefaultBrowser(link);
+      OpenInDefaultBrowser(link.GetHref());
       return;
    }
    wxFrame * pFrame = GetRelatedFrame();
