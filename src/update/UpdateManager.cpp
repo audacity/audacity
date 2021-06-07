@@ -80,7 +80,7 @@ void UpdateManager::getUpdates()
             return;
         }
 
-        //if (mVersionPatch.version > CurrentBuildVersion())
+        if (mVersionPatch.version > CurrentBuildVersion())
         {
             mParent->CallAfter([this] {
                 UpdatePopupDialog dlg(mParent, this);
