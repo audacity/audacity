@@ -10,43 +10,42 @@
 class UpdateDataParser final : public XMLTagHandler
 {
 public:
-	UpdateDataParser();
-	~UpdateDataParser();
+    UpdateDataParser();
+    ~UpdateDataParser();
 
-	bool Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch);
+    bool Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch);
 
 private:
-	enum class XmlParsedTags : int
-	{
-		kNotUsedTag,
-		kUpdateTag,
-		kDescriptionTag,
-		kOsTag,
-		kWindowsTag,
-		kMacosTag,
-		kLinuxTag,
-		kVersionTag,
-		kLinkTag
-	};
-	XmlParsedTags mXmlParsingState{ XmlParsedTags::kNotUsedTag };
-	std::map<XmlParsedTags, wxString> mXmlTagNames
-	{
-		{XmlParsedTags::kUpdateTag, wxT("Updates")},
-		{XmlParsedTags::kDescriptionTag, wxT("Description")},
-		{XmlParsedTags::kOsTag, wxT("OS")},
-		{XmlParsedTags::kWindowsTag, wxT("Windows")},
-		{XmlParsedTags::kMacosTag, wxT("Macos")},
-		{XmlParsedTags::kLinuxTag, wxT("Linux")},
-		{XmlParsedTags::kVersionTag, wxT("Version")},
-		{XmlParsedTags::kLinkTag, wxT("Link")},
-	};
+    enum class XmlParsedTags : int {
+        kNotUsedTag,
+        kUpdateTag,
+        kDescriptionTag,
+        kOsTag,
+        kWindowsTag,
+        kMacosTag,
+        kLinuxTag,
+        kVersionTag,
+        kLinkTag
+    };
+    XmlParsedTags mXmlParsingState{ XmlParsedTags::kNotUsedTag };
 
-	bool HandleXMLTag(const wxChar* tag, const wxChar** attrs) override;
-	void HandleXMLEndTag(const wxChar* tag) override;
-	void HandleXMLContent(const wxString& content) override;
-	XMLTagHandler* HandleXMLChild(const wxChar* tag) override;
+    std::map<XmlParsedTags, wxString> mXmlTagNames{
+        { XmlParsedTags::kUpdateTag, wxT("Updates") },
+        { XmlParsedTags::kDescriptionTag, wxT("Description") },
+        { XmlParsedTags::kOsTag, wxT("OS") },
+        { XmlParsedTags::kWindowsTag, wxT("Windows") },
+        { XmlParsedTags::kMacosTag, wxT("Macos") },
+        { XmlParsedTags::kLinuxTag, wxT("Linux") },
+        { XmlParsedTags::kVersionTag, wxT("Version") },
+        { XmlParsedTags::kLinkTag, wxT("Link") },
+    };
 
-	wxArrayString splitChangelogSentences(const wxString& changelogContent);
+    bool HandleXMLTag(const wxChar* tag, const wxChar** attrs) override;
+    void HandleXMLEndTag(const wxChar* tag) override;
+    void HandleXMLContent(const wxString& content) override;
+    XMLTagHandler* HandleXMLChild(const wxChar* tag) override;
 
-	VersionPatch* mVersionPatch{ nullptr };
+    wxArrayString splitChangelogSentences(const wxString& changelogContent);
+
+    VersionPatch* mVersionPatch{ nullptr };
 };

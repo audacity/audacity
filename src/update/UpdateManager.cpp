@@ -22,10 +22,10 @@ UpdateManager::UpdateManager(AudacityProject& project)
 {
     wxFrame* parrentFrame = project.GetFrame();
     wxASSERT(parrentFrame);
-    
-    mParent = dynamic_cast<wxWindow*> (parrentFrame);
+
+    mParent = dynamic_cast<wxWindow*>(parrentFrame);
     wxASSERT(mParent);
-    
+
     mTimer.SetOwner(this, ID_TIMER);
     mTimer.StartOnce();
 }
@@ -86,24 +86,21 @@ void UpdateManager::getUpdates()
         if (mVersionPatch.version > CurrentBuildVersion())
         {
             mParent->CallAfter([this] {
-                    UpdatePopupDialog dlg(mParent, this);
-                    const int code = dlg.ShowModal();
+                UpdatePopupDialog dlg(mParent, this);
+                const int code = dlg.ShowModal();
 
-                    if (code == wxID_YES)
-                    {
-                        if (!wxLaunchDefaultBrowser(mVersionPatch.download))
-                        {
-                            AudacityMessageBox(
-                                XO("Can't open the Audacity download link."),
-                                XO("Error downloading update"),
-                                wxOK | wxCENTRE,
-                                NULL);
+                if (code == wxID_YES) {
+                    if (!wxLaunchDefaultBrowser(mVersionPatch.download)) {
+                        AudacityMessageBox(
+                            XO("Can't open the Audacity download link."),
+                            XO("Error downloading update"),
+                            wxOK | wxCENTRE,
+                            NULL);
 
-                            return;
-                        }
+                        return;
                     }
                 }
-            );
+                });
         }
         });
 }
@@ -111,7 +108,7 @@ void UpdateManager::getUpdates()
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
     getUpdates();
-    
+
     mTimer.StartOnce(
         std::chrono::milliseconds(std::chrono::hours(12)).count());
 }

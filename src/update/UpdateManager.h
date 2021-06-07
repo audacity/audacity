@@ -33,7 +33,7 @@ private:
 
 	wxTimer mTimer;
 
-	void OnTimer(wxTimerEvent& event);
+    void OnTimer(wxTimerEvent& event);
 
 public:
 	DECLARE_EVENT_TABLE()

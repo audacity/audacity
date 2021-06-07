@@ -4,11 +4,11 @@
 
 struct VersionPatch final
 {
-	VersionPatch() = default;
-	
-	using UpdateDataFormat = std::string;
+    using UpdateDataFormat = std::string;
 
-	VersionId version;
-	wxArrayString changelog;
-	wxString download;
+    VersionPatch() = default;	
+
+    VersionId version;
+    wxArrayString changelog;
+    wxString download;
 };

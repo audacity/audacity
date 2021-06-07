@@ -14,133 +14,134 @@ UpdateDataParser::~UpdateDataParser()
 
 bool UpdateDataParser::Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch)
 {
-	XMLFileReader xmlReader;
+    XMLFileReader xmlReader;
 
-	mVersionPatch = versionPatch;
-	auto ok = xmlReader.ParseString(this, updateData);
-	mVersionPatch = nullptr;
+    mVersionPatch = versionPatch;
+    auto ok = xmlReader.ParseString(this, updateData);
+    mVersionPatch = nullptr;
 
-	return ok;
+    return ok;
 }
 
 wxArrayString UpdateDataParser::splitChangelogSentences(const wxString& changelogContent)
 {
-	wxArrayString changelogSentenceList;
+    wxArrayString changelogSentenceList;
 
-	size_t pos = 0;
-	std::string s(changelogContent.ToStdString());
-	std::string token;
-	std::string delimiter(". ");
+    size_t pos = 0;
+    std::string s(changelogContent.ToStdString());
+    std::string token;
+    std::string delimiter(". ");
 
-	while ((pos = s.find(delimiter)) != std::string::npos) {
-		token = s.substr(0, pos + 1);
-		changelogSentenceList.Add(token);
+    while ((pos = s.find(delimiter)) != std::string::npos)
+    {
+        token = s.substr(0, pos + 1);
+        changelogSentenceList.Add(token);
 
-		s.erase(0, pos + delimiter.length());
-	}
-	changelogSentenceList.Add(s);
+        s.erase(0, pos + delimiter.length());
+    }
+    changelogSentenceList.Add(s);
 
-	return changelogSentenceList;
+    return changelogSentenceList;
 }
 
 bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
 {
-	if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kDescriptionTag]) == 0)
-	{
-		mXmlParsingState = XmlParsedTags::kDescriptionTag;
-		return true;
-	}
+    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kDescriptionTag]) == 0)
+    {
+        mXmlParsingState = XmlParsedTags::kDescriptionTag;
+        return true;
+    }
 
-	if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWindowsTag]) == 0)
-	{
-		if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_WINDOWS)
-			mXmlParsingState = XmlParsedTags::kOsTag;
-		return true;
-	}
+    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWindowsTag]) == 0)
+    {
+        if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_WINDOWS)
+            mXmlParsingState = XmlParsedTags::kOsTag;
+        return true;
+    }
 
-	if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kMacosTag]) == 0)
-	{
-		if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_MAC)
-			mXmlParsingState = XmlParsedTags::kOsTag;
-		return true;
-	}
+    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kMacosTag]) == 0)
+    {
+        if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_MAC)
+            mXmlParsingState = XmlParsedTags::kOsTag;
+        return true;
+    }
 
-	if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinuxTag]) == 0)
-	{
-		if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_UNIX_LINUX)
-			mXmlParsingState = XmlParsedTags::kOsTag;
-		return true;
-	}
+    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinuxTag]) == 0)
+    {
+        if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_UNIX_LINUX)
+            mXmlParsingState = XmlParsedTags::kOsTag;
+        return true;
+    }
 
-	if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kVersionTag]) == 0)
-	{
-		if (mXmlParsingState == XmlParsedTags::kOsTag)
-			mXmlParsingState = XmlParsedTags::kVersionTag;
-		return true;
-	}
+    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kVersionTag]) == 0)
+    {
+        if (mXmlParsingState == XmlParsedTags::kOsTag)
+            mXmlParsingState = XmlParsedTags::kVersionTag;
+        return true;
+    }
 
-	if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinkTag]) == 0)
-	{
-		if (mXmlParsingState == XmlParsedTags::kOsTag)
-			mXmlParsingState = XmlParsedTags::kLinkTag;
-		return true;
-	}
+    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinkTag]) == 0)
+    {
+        if (mXmlParsingState == XmlParsedTags::kOsTag)
+            mXmlParsingState = XmlParsedTags::kLinkTag;
+        return true;
+    }
 
-	for (auto& xmlTag : mXmlTagNames)
-	{
-		if (wxStrcmp(tag, xmlTag.second) == 0)
-			return true;
-	}
+    for (auto& xmlTag : mXmlTagNames)
+    {
+        if (wxStrcmp(tag, xmlTag.second) == 0)
+            return true;
+    }
 
-	return false;
+    return false;
 }
 
 void UpdateDataParser::HandleXMLEndTag(const wxChar* tag)
 {
-	if (mXmlParsingState == XmlParsedTags::kDescriptionTag ||
-		mXmlParsingState == XmlParsedTags::kLinkTag)
-		mXmlParsingState = XmlParsedTags::kNotUsedTag;
+    if (mXmlParsingState == XmlParsedTags::kDescriptionTag ||
+        mXmlParsingState == XmlParsedTags::kLinkTag)
+        mXmlParsingState = XmlParsedTags::kNotUsedTag;
 
-	if (mXmlParsingState == XmlParsedTags::kVersionTag)
-		mXmlParsingState = XmlParsedTags::kOsTag;
+    if (mXmlParsingState == XmlParsedTags::kVersionTag)
+        mXmlParsingState = XmlParsedTags::kOsTag;
 }
 
 void UpdateDataParser::HandleXMLContent(const wxString& content)
 {
-	if (mVersionPatch == nullptr)
-		return;
+    if (mVersionPatch == nullptr)
+        return;
 
-	wxString trimedContent(content);
+    wxString trimedContent(content);
 
-	switch (mXmlParsingState)
-	{
-	case XmlParsedTags::kDescriptionTag:
-		trimedContent.Trim(true).Trim(false);
-		mVersionPatch->changelog = splitChangelogSentences(trimedContent);
-		break;
+    switch (mXmlParsingState)
+    {
+    case XmlParsedTags::kDescriptionTag:
+        trimedContent.Trim(true).Trim(false);
+        mVersionPatch->changelog = splitChangelogSentences(trimedContent);
+        break;
 
-	case XmlParsedTags::kVersionTag:
-		trimedContent.Trim(true).Trim(false);
-		mVersionPatch->version = VersionId::ParseFromString(trimedContent);
-		break;
+    case XmlParsedTags::kVersionTag:
+        trimedContent.Trim(true).Trim(false);
+        mVersionPatch->version = VersionId::ParseFromString(trimedContent);
+        break;
 
-	case XmlParsedTags::kLinkTag:
-		trimedContent.Trim(true).Trim(false);
-		mVersionPatch->download = trimedContent;
-		break;
+    case XmlParsedTags::kLinkTag:
+        trimedContent.Trim(true).Trim(false);
+        mVersionPatch->download = trimedContent;
+        break;
 
-	default:
-		break;
-	}
+    default:
+        break;
+    }
 }
 
 XMLTagHandler* UpdateDataParser::HandleXMLChild(const wxChar* tag)
 {
-	for (auto& xmlTag : mXmlTagNames)
-	{
-		if (wxStrcmp(tag, xmlTag.second) == 0)
-			return this;
-	}
+    for (auto& xmlTag : mXmlTagNames)
+    {
+        if (wxStrcmp(tag, xmlTag.second) == 0)
+            return this;
+    }
 
-	return NULL;
+    return NULL;
 }
