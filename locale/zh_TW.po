@@ -9,9 +9,9 @@
 # pan93412 <pan93412@gmail.com>, 2020.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-04-07 22:00+0800\n"
 "Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
@@ -23,6 +23,203 @@ msgstr ""
 "X-ZhConverter: 繁化姬 dict-7640c40e-r920 @ 2020/01/01 01:04:23 | https://"
 "zhconvert.org\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "無法確定"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s 位元組"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "簡易"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "系統"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "為 Audacity 提供 VAMP 效果支援"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "註釋"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "未知格式"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "未知格式"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "無法設定預設集名稱"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4（預設值）"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "經典"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "灰度(&Y)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "線性尺度(&L)"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "結束 Audacity"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "略過(&S)"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "聲道"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "解碼檔案時發生錯誤"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "載入後設資料時發生錯誤"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s 工具列"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "特殊指令"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "特殊指令"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -394,8 +591,20 @@ msgstr "%s，開發者"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "%s，說明文件和支援"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr "%s，說明文件和支援"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "%s，說明文件和支援"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -614,8 +823,8 @@ msgstr "%s 軟體的著作權歸屬於 %s 1999-2021 %s Team。"
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark."
 msgstr "%s 是 Dominic Mazzoni 的註冊商標。"
 
 #: src/AboutDialog.cpp
@@ -2109,6 +2318,21 @@ msgid "Report generated to:"
 msgstr "報告已生成至："
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s：%s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "無法捨棄資料檔案連線"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "無法復原資料檔案連線"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
 msgstr "正在建立專案的檢查點"
 
@@ -2999,33 +3223,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "內部錯誤"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "無法確定"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s 位元組"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "編輯標籤"
@@ -3036,8 +3233,8 @@ msgid "Track"
 msgstr "軌道"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "標籤"
@@ -3130,14 +3327,6 @@ msgstr "所選的語言 %s (%s) 和系統語言 %s (%s) 不相同。"
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "確認"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "簡易"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "系統"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3627,6 +3816,10 @@ msgstr[0] "是否啟用這些外掛程式？\n"
 msgid "Enable new plug-ins"
 msgstr "啟用新的外掛程式"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist 提示字元"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "列印時發生錯誤。"
@@ -3988,10 +4181,11 @@ msgid "This is not an Audacity project file"
 msgstr "這不是 Audacity 專案檔案"
 
 #: src/ProjectFileIO.cpp
+#, fuzzy
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 "這個專案是用較新版本的 Audacity 建立的：\n"
 "\n"
@@ -4166,6 +4360,11 @@ msgstr "無法開啟專案檔案"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "無法從專案檔案移除自動儲存資訊。"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "尋找編解碼器失敗"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4370,6 +4569,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "另存專案時發生錯誤"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "無法開啟專案檔案"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "開啟檔案或專案時發生錯誤"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4624,7 +4833,7 @@ msgid "24-bit PCM"
 msgstr "24 位元 PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32 位元浮點"
 
@@ -4936,10 +5145,6 @@ msgstr "年份"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "類型"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "註釋"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6327,6 +6532,17 @@ msgstr "時間："
 msgid "Delete"
 msgstr "刪除"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "設定波封"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "波封"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "設定波封點位置。"
@@ -6346,6 +6562,11 @@ msgstr "結束："
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "已選擇"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "已編輯標籤"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -7964,10 +8185,6 @@ msgstr "停止播放(&P)"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "播放"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist 提示字元"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -9994,6 +10211,12 @@ msgstr "Nyquist 外掛程式標頭格式有問題"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11313,15 +11536,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (檔案較小)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "快速"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "標準"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11347,6 +11561,11 @@ msgstr "最高"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "極高"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "標準"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11380,10 +11599,6 @@ msgstr "位元率模式："
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "品質"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "變速："
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13310,7 +13525,7 @@ msgstr "音訊裝置資訊(&D)..."
 msgid "&MIDI Device Info..."
 msgstr "&MIDI 裝置資訊..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "顯示日誌(&L)..."
 
@@ -14811,6 +15026,11 @@ msgid "&Extra Menus (on/off)"
 msgstr "額外選單 (開啟/關閉) (&E)"
 
 #: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "額外選單 (開啟/關閉) (&E)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "顯示削波 (開啟/關閉) (&S)"
 
@@ -14996,6 +15216,11 @@ msgid "Bro&wse..."
 msgstr "瀏覽(&W)..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "顯示輸出"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "暫存檔案目錄"
 
@@ -15014,10 +15239,6 @@ msgstr "瀏覽(&S)..."
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "剩餘空間(&F)："
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "剩餘空間"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15354,10 +15575,6 @@ msgstr "顯示跟隨播放尺標"
 msgid "Language \"%s\" is unknown"
 msgstr "語言「%s」未知"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "主增益控制"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "圖像介面"
@@ -15608,24 +15825,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 函式庫版本："
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 函式庫："
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "定位(&L)..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "下載(&D)"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg 匯入/匯出函式庫"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg 函式庫版本："
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15634,6 +15835,10 @@ msgstr "找不到相容的 FFmpeg 函式庫"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "編譯時未加入 FFmpeg 支援"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg 函式庫版本："
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15890,11 +16095,6 @@ msgid "Move clip up/down between tracks"
 msgstr "在軌道之間上下移動剪輯"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "波封"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "變更波封增幅"
@@ -16029,14 +16229,6 @@ msgid "Preferences:"
 msgstr "偏好設定："
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16 位元"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24 位元"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "品質偏好設定"
 
@@ -16086,6 +16278,14 @@ msgstr "取樣頻率轉換器(&T)："
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "高頻抖動(&H)："
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16 位元"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24 位元"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -18713,7 +18913,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "錯誤。~%"
@@ -19377,7 +19577,8 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, fuzzy, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr "偵測到過多靜音.n只加入前 10000 個標籤。"
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -19627,20 +19828,18 @@ msgid "Allow"
 msgstr "允許"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "錯誤.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "成功。~%檔案已寫入至：~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
 msgstr "警告.n無法複製部分檔案：n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, fuzzy, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr "安裝的外掛程式.n(使用外掛程式管理工具啟用效果)："
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20436,6 +20635,30 @@ msgstr "Radar Needles 頻率 (赫茲)"
 msgid "Error.~%Stereo track required."
 msgstr "錯誤。~%必須是立體聲。"
 
+#~ msgid "Fast"
+#~ msgstr "快速"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "變速："
+
+#~ msgid "Free Space"
+#~ msgstr "剩餘空間"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "主增益控制"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3 函式庫："
+
+#~ msgid "&Locate..."
+#~ msgstr "定位(&L)..."
+
+#~ msgid "&Download"
+#~ msgstr "下載(&D)"
+
+#~ msgid "Error.n"
+#~ msgstr "錯誤.n"
+
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "無法清理孤立區塊"
 
@@ -20511,9 +20734,6 @@ msgstr "錯誤。~%必須是立體聲。"
 
 #~ msgid "Select to Ends"
 #~ msgstr "選擇到結束"
-
-#~ msgid "Special Command"
-#~ msgstr "特殊指令"
 
 #~ msgid ""
 #~ "Export recording to %s\n"
@@ -20625,9 +20845,6 @@ msgstr "錯誤。~%必須是立體聲。"
 
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "無法移除舊的自動儲存檔案：%s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "解碼檔案時發生錯誤"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"

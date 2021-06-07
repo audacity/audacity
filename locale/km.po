@@ -4,9 +4,9 @@
 # translation of audacity.po to
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2008-07-09 13:48+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <en@li.org>\n"
@@ -16,6 +16,200 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: KBabel 1.11.4\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "មិន​អាច​​កំណត់"
+
+#: libraries/lib-strings/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
+msgstr "បៃ"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr ""
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "Simplified"
+msgstr "ពង្រីក"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "​ចំណូលចិត្ត..."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "មតិយោបល់"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown exception"
+msgstr "មិនស្គាល់​ជម្រើស​​បន្ទាត់​​ពាក្យ​បញ្ជា ៖ %s\n"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown assertion"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown error"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "មិន​​អាច​​បើក/បង្កើត​​ឯកសារ​​សាកល្បង"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "ពង្រីក​លំនាំដើម"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "លីនេអ៊ែរ"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "បិទ Audacity"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "ឆានែល"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "កំហុស​ក្នុង​ការ​បើក​ឯកសារ"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "កំហុស​ក្នុង​ការ​បើក​ឯកសារ"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "របារ​ឧបករណ៍​របស់ Audacity %s"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "ជ្រើស​​ពាក្យ​បញ្ជា"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "ជ្រើស​​ពាក្យ​បញ្ជា"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -422,8 +616,20 @@ msgstr "ស្រោម​សំបុត្រ"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "ស្រោម​សំបុត្រ"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr ""
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -631,7 +837,7 @@ msgstr ""
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -2137,6 +2343,21 @@ msgid "Report generated to:"
 msgstr ""
 
 #: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr ""
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "ជម្រើស"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "មិន​អាច​យក '%s' ចេញ​បាន​ទេ"
+
+#: src/DBConnection.cpp
 #, fuzzy
 msgid "Checkpointing project"
 msgstr "អនុវត្ត​ទៅ​គម្រោង​បច្ចុប្បន្ន"
@@ -3000,33 +3221,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "(កម្មវិធី​ខាងក្រៅ)"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "មិន​អាច​​កំណត់"
-
-#: src/Internat.cpp
-#, fuzzy, c-format
-msgid "%s bytes"
-msgstr "បៃ"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr ""
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr ""
@@ -3037,8 +3231,8 @@ msgid "Track"
 msgstr "បទ"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "ស្លាក"
@@ -3134,15 +3328,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "អះអាង"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "Simplified"
-msgstr "ពង្រីក"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr ""
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3618,6 +3803,10 @@ msgstr[0] "សូម​អភ័យ​ទោស បាន​បរាជ័យ�
 msgid "Enable new plug-ins"
 msgstr "សូម​អភ័យ​ទោស បាន​បរាជ័យ​ក្នុងការ​ផ្ទុក​កម្មវិធី​ជំនួយ Vamp ។"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "មាន​បញ្ហា​ក្នុង​ការ​បោះពុម្ព ។"
@@ -3921,9 +4110,9 @@ msgstr "មិន​​អាច​​បើក/បង្កើត​​ឯក�
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4079,6 +4268,11 @@ msgstr "មិន​អាច​បើក​ឯកសារ​គម្រោង
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "មិនអាចចាប់ផ្តើមស្ទ្រីម MP3​ បាន​ទេ"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4255,6 +4449,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, fuzzy
 msgid "Error Saving Copy of Project"
+msgstr "អនុវត្ត​បែបផែន ៖ %s"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "មិន​អាច​បើក​ឯកសារ​គម្រោង"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
 msgstr "អនុវត្ត​បែបផែន ៖ %s"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
@@ -4500,7 +4704,7 @@ msgid "24-bit PCM"
 msgstr "២៤ ប៊ីត PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "៣២ ប៊ីត float"
 
@@ -4822,10 +5026,6 @@ msgstr "ឆ្នាំ"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "ចង្វាក់"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "មតិយោបល់"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6290,6 +6490,17 @@ msgstr "ពេលវេលា​​បញ្ចប់"
 msgid "Delete"
 msgstr "លុប"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "ស្រោម​សំបុត្រ"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "ស្រោម​សំបុត្រ"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr ""
@@ -6312,6 +6523,11 @@ msgstr ""
 #, fuzzy
 msgid "Selected"
 msgstr "ជ្រើស"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "បាន​កែ​សម្រួល​​ស្លាក"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8039,10 +8255,6 @@ msgstr "ចាក់ឡើងវិញ"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "ចាក់"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr ""
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10159,6 +10371,12 @@ msgstr "លទ្ធផល Nyquist ៖ "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11429,15 +11647,6 @@ msgstr ""
 msgid "45-85 kbps (Smaller files)"
 msgstr ""
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "លឿន"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "ស្តង់ដារ"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11463,6 +11672,11 @@ msgstr ""
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr ""
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "ស្តង់ដារ"
 
 #: src/export/ExportMP3.cpp
 #, fuzzy
@@ -11497,10 +11711,6 @@ msgstr "របៀប​អត្រា​ប៊ីត ៖"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "គុណភាព"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "ល្បឿន​អថេរ ៖"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13413,7 +13623,7 @@ msgstr ""
 msgid "&MIDI Device Info..."
 msgstr ""
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr ""
 
@@ -15143,6 +15353,10 @@ msgid "&Extra Menus (on/off)"
 msgstr ""
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
 #, fuzzy
 msgid "&Show Clipping (on/off)"
 msgstr "បង្ហាញ​​កា​រច្រឹប"
@@ -15343,6 +15557,11 @@ msgid "Bro&wse..."
 msgstr "រក​មើល..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "បង្ហាញ​លទ្ធផល"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "ថត​ឯកសារ​បណ្ដោះ​អាសន្ន"
 
@@ -15363,11 +15582,6 @@ msgstr "រក​មើល..."
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "&Free Space:"
-msgstr "ទំហំទំនេរ ៖"
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Free Space"
 msgstr "ទំហំទំនេរ ៖"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15716,10 +15930,6 @@ msgstr ""
 msgid "Language \"%s\" is unknown"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "ការ​ត្រួតពិនិត្យ​​កំណើន​​មេ"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -15975,23 +16185,7 @@ msgid "MP3 Library Version:"
 msgstr "កំណែ​បណ្ណាល័យ MP3 ៖"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -16000,6 +16194,10 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
+msgstr ""
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -16263,11 +16461,6 @@ msgid "Move clip up/down between tracks"
 msgstr "ផ្លាស់ទី​ឈុត​ឡើងលើ/ចុះក្រោម​រវាង​បទ"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "ស្រោម​សំបុត្រ"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "ផ្លាស់ប្ដូរ​ការ​ពង្រីក​ស្រោម​សំបុត្រ​"
@@ -16414,16 +16607,6 @@ msgstr "​ចំណូលចិត្ត..."
 
 #: src/prefs/QualityPrefs.cpp
 #, fuzzy
-msgid "16-bit"
-msgstr "១៦ ប៊ីត PCM"
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
-msgid "24-bit"
-msgstr "២៤ ប៊ីត PCM"
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "Preferences for Quality"
 msgstr "​ចំណូលចិត្ត..."
 
@@ -16477,6 +16660,16 @@ msgstr "កម្មវិធី​បម្លែង​អត្រា​គំ
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/QualitySettings.cpp
+#, fuzzy
+msgid "16-bit"
+msgstr "១៦ ប៊ីត PCM"
+
+#: src/prefs/QualitySettings.cpp
+#, fuzzy
+msgid "24-bit"
+msgstr "២៤ ប៊ីត PCM"
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -19324,7 +19517,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy, lisp-format
 msgid "Error.~%"
 msgstr "កំហុស"
@@ -20056,7 +20249,8 @@ msgid "~ah ~am ~as"
 msgstr ""
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -20324,21 +20518,18 @@ msgid "Allow"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
-msgid "Error.n"
-msgstr "កំហុស"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "មិន​អាច​យក '%s' ចេញ​បាន​ទេ"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -21175,6 +21366,23 @@ msgstr "ប្រេកង់ (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "Fast"
+#~ msgstr "លឿន"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "ល្បឿន​អថេរ ៖"
+
+#, fuzzy
+#~ msgid "Free Space"
+#~ msgstr "ទំហំទំនេរ ៖"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "ការ​ត្រួតពិនិត្យ​​កំណើន​​មេ"
+
+#, fuzzy
+#~ msgid "Error.n"
+#~ msgstr "កំហុស"
+
 #, fuzzy
 #~ msgid "Failed to copy tags"
 #~ msgstr "មិន​អាច​យក '%s' ចេញ​បាន​ទេ"
@@ -21232,10 +21440,6 @@ msgstr ""
 #~ msgstr "ជម្រើស​ទៅ​ចុង ប្ដូរ(Shift)+ចុង(End)"
 
 #, fuzzy
-#~ msgid "Special Command"
-#~ msgstr "ជ្រើស​​ពាក្យ​បញ្ជា"
-
-#, fuzzy
 #~ msgid ""
 #~ "Export recording to %s\n"
 #~ "/%s/%s.%s"
@@ -21291,10 +21495,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "មិន​អាច​យក​ឯកសារ​ដែល​រក្សាទុក​ដោយ​ស្វ័យ​ប្រវត្តិ​ចាស់ចេញ​បាន​ទេ ៖"
-
-#, fuzzy
-#~ msgid "Error decoding file"
-#~ msgstr "កំហុស​ក្នុង​ការ​បើក​ឯកសារ"
 
 #, fuzzy
 #~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
@@ -22274,9 +22474,6 @@ msgstr ""
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "ប្រើ​ទំហំ​ប្លុក​របស់ %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "មិនស្គាល់​ជម្រើស​​បន្ទាត់​​ពាក្យ​បញ្ជា ៖ %s\n"
 
 #~ msgid "Command-line options supported:"
 #~ msgstr "បានគាំទ្រ​ជម្រើស​​បន្ទាត់​​ពាក្យ​​បញ្ជា ៖"

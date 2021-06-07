@@ -10,9 +10,9 @@
 # Nguyen Mien <Hamien0604@gmail.com>, 2020-2021
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-02-11 01:50+0000\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/klyok/audacity/language/"
@@ -22,6 +22,199 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Không quyết định được"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%sbytes"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Tối giản hóa"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Hệ thống"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Tuỳ chọn Chất Lượng"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Ghi chú"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "Đuôi tập tin không xác định"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "Đuôi tập tin không xác định"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Lỗi khi đặt tên thiết lập sẫn"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Mặc định"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Cổ điển"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Thoát Audacity"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&bỏ qua"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Kênh"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Gặp lỗi Khóa Thư mục Tạm thời"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Lỗi khi tải siêu dữ liệu \"Metadata\""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Thanh công cụ %s của Audacity"
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr ""
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr ""
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -393,8 +586,20 @@ msgstr "%s, lập trình phát triển"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "%stài liệu và hỗ trợ"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr "%stài liệu và hỗ trợ"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "%stài liệu và hỗ trợ"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -607,8 +812,8 @@ msgstr "%s phần mềm bản quyền %s1999-2020  nhóm%s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark."
 msgstr "Tựa tên %s được đăng ký nhẵn hiệu bởi Dominic Mazzoni."
 
 #: src/AboutDialog.cpp
@@ -2123,6 +2328,21 @@ msgid "Report generated to:"
 msgstr "Báo cáo được tạo thành:"
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s: %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Lỗi lượt bỏ kết nối"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Lỗi phục hồi kết nối"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
 msgstr "Tạo điểm kiểm tra dự án."
 
@@ -3027,33 +3247,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Lỗi bên trong"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Không quyết định được"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%sbytes"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Chỉnh sửa các Nhãn"
@@ -3064,8 +3257,8 @@ msgid "Track"
 msgstr "Track - Đoạn âm"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Nhãn"
@@ -3159,14 +3352,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Xác nhận"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Tối giản hóa"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Hệ thống"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3655,6 +3840,10 @@ msgstr[0] "Bạn có muốn bật Plug-ins (điện toán) này không? \n"
 msgid "Enable new plug-ins"
 msgstr "Bật plug-ins (điện toán) mới "
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Dấu nhắc Nyquist"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Có lỗi xảy ra khi in."
@@ -4021,10 +4210,11 @@ msgid "This is not an Audacity project file"
 msgstr "Đây không phải tập tin dự án của Audacity"
 
 #: src/ProjectFileIO.cpp
+#, fuzzy
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 "Dự án này được tạo bằng một phiên bản Audacity mới hơn.\n"
 "\n"
@@ -4185,6 +4375,11 @@ msgstr "Không mở được tập tin dự án"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "Không thể xóa thông tin lưu tự động từ tập tin dự án."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Không tìm thấy codec"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4400,6 +4595,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "Lỗi khi lưu bản sao dự án"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Không mở được tập tin dự án"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "Lỗi khi mở tập tin hoặc dự án"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4655,7 +4860,7 @@ msgid "24-bit PCM"
 msgstr "24-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-bit float"
 
@@ -4968,10 +5173,6 @@ msgstr "Năm"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Thể loại"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Ghi chú"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6363,6 +6564,17 @@ msgstr "Thời gian:"
 msgid "Delete"
 msgstr "Xoá"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Đã sửa lại đường bao biên độ."
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Đường bao biên độ"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr ""
@@ -6382,6 +6594,11 @@ msgstr "Kết thúc:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Được chọn"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Đã sửa nhãn"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -7987,10 +8204,6 @@ msgstr "Tắt phát lại"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Phát"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Dấu nhắc Nyquist"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -9987,6 +10200,12 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11228,15 +11447,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Tệp nhỏ hơn)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Nhanh"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Chuẩn"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11262,6 +11472,11 @@ msgstr "Trên cả tuyệt"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Cực kỳ"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Chuẩn"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11295,10 +11510,6 @@ msgstr "Chế độ bit:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Chất lượng"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Tốc độ biến thiên:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13183,7 +13394,7 @@ msgstr "Thông tin thiết bị Au&dio "
 msgid "&MIDI Device Info..."
 msgstr "Thông tin thiết bị &MIDI"
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Hiển thị &Nhật ký máy "
 
@@ -14685,6 +14896,10 @@ msgid "&Extra Menus (on/off)"
 msgstr ""
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "Hiển thị Clipping (những âm thanh quá giới hạn) (bật/tắt) "
 
@@ -14868,6 +15083,11 @@ msgid "Bro&wse..."
 msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "Hiển thị đầu ra"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Thư mục tạm thời"
 
@@ -14885,10 +15105,6 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
-msgstr ""
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
 msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15225,10 +15441,6 @@ msgstr ""
 msgid "Language \"%s\" is unknown"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Điều chỉnh khuếch đại kênh chính"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI (Giao diện đồ họa người dùng)"
@@ -15475,24 +15687,8 @@ msgid "MP3 Library Version:"
 msgstr "Phiên bản thư viện MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Thư viện LAME MP3:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "&Tìm Vị Trí"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "&Tải về"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Thư viện  Nhập/ Xuất FFmpeg"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "Phiên bản thư viện FFmpeg"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15501,6 +15697,10 @@ msgstr "Không tìm thấy thư viện FFmpeg tương thích"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr ""
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "Phiên bản thư viện FFmpeg"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15754,11 +15954,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Di chuyển đoạn lên/xuống giữa các dải"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Đường bao biên độ"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Thay đổi đường bao biên độ"
@@ -15893,14 +16088,6 @@ msgid "Preferences:"
 msgstr "Tuỳ chọn:"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-bit"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-bit"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "Tuỳ chọn Chất Lượng"
 
@@ -15950,6 +16137,14 @@ msgstr "Bộ &chuyển đổi tốc độ lấy mẫu:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-bit"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-bit"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -18559,7 +18754,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Lỗi.~%"
@@ -19211,7 +19406,8 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -19452,20 +19648,18 @@ msgid "Allow"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Lỗi.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "Lỗi khi mở cơ sở dữ liệu của dự án"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, fuzzy, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 "Cài đặt Plug-ins (điện toán) ( Hãy sử dụng Plug-in quản lý để bật hiệu ứng ) "
 
@@ -20229,6 +20423,27 @@ msgstr "Tần số Radar Needles (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Lỗi. Bạn phải có dải âm ~%Stereo"
+
+#~ msgid "Fast"
+#~ msgstr "Nhanh"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Tốc độ biến thiên:"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Điều chỉnh khuếch đại kênh chính"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "Thư viện LAME MP3:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Tìm Vị Trí"
+
+#~ msgid "&Download"
+#~ msgstr "&Tải về"
+
+#~ msgid "Error.n"
+#~ msgstr "Lỗi.n"
 
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Dọn dẹp các blocks dòng mồ côi không thành công"

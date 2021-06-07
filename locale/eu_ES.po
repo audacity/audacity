@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-02-07 12:26+0100\n"
 "Last-Translator: Osoitz Elkorobarrutia <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
@@ -16,6 +16,203 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.3\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Ezin da zehaztu"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s byte"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Sinplifikatua"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Sistema"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Vamp efektuentzako euskarria dakar Audacity-ra"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Iruzkinak"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "Formatu ezezaguna"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "Formatu ezezaguna"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Ezin izan du aurre-ezarpenen izena ezartzen"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4 (lehenetsia)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Klasikoa"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "G&ris-eskala"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Eskala &lineala"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Irten Audacity-tik"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&Saltatu"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Kanala"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Errorea fitxategia deskodetzean"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Errorea metadatuak kargatzean"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s tresna-barra"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Hautatu agindua"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Hautatu agindua"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -388,8 +585,20 @@ msgstr "%s, garatzailea"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "%s, dokumentazioa eta laguntza"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr "%s, dokumentazioa eta laguntza"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "%s, dokumentazioa eta laguntza"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -615,8 +824,8 @@ msgstr "%s software copyright-a da %s 1999-2020 %s taldea."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark."
 msgstr "%s  izena Dominic Mazzonik erregistratutako marka bat da."
 
 #: src/AboutDialog.cpp
@@ -2149,6 +2358,21 @@ msgid "Report generated to:"
 msgstr "Txostena hemen sortu da:"
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s: %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Ezin izan da konexioa baztertu"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Ezin izan da konexioa berreskuratu"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
 msgstr "Kontrolerako proiektua"
 
@@ -3067,33 +3291,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Barne errorea"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Ezin da zehaztu"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s byte"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Editatu etiketak"
@@ -3104,8 +3301,8 @@ msgid "Track"
 msgstr "Pista"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Etiketa"
@@ -3200,14 +3397,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Berretsi"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Sinplifikatua"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Sistema"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3699,6 +3888,10 @@ msgstr[1] "Gaitu plugin hauek?\n"
 msgid "Enable new plug-ins"
 msgstr "Gaitu plugin berriak"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist gonbit"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Arazo bat gertatu da inprimatzean."
@@ -4059,10 +4252,11 @@ msgid "This is not an Audacity project file"
 msgstr "Hau ez da Audacity proiektu fitxategia"
 
 #: src/ProjectFileIO.cpp
+#, fuzzy
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 "Proiektu hau Audacity-ren bertsio berriago batekin sortu zen:\n"
 "\n"
@@ -4225,6 +4419,11 @@ msgid "Failed to remove the autosave information from the project file."
 msgstr ""
 "Ezin izan da gorde automatikoki informazioa proiektuaren fitxategitik "
 "kentzean."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Huts egin du kodeka aurkitzean"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4440,6 +4639,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "Errorea proiektuaren kopia gordetzean"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Ezin da proiektuaren fitxategia ireki"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "Errorea fitxategia edo proiektua irekitzerakoan"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4699,7 +4908,7 @@ msgid "24-bit PCM"
 msgstr "24-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-bit koma mugikorra"
 
@@ -5015,10 +5224,6 @@ msgstr "Urtea"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Generoa"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Iruzkinak"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6418,6 +6623,17 @@ msgstr "Denbora:"
 msgid "Delete"
 msgstr "Ezabatu"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Ezarri bilkaria"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Gutun-azala"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr ""
@@ -6437,6 +6653,11 @@ msgstr ""
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Hautatua"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Editatutako etiketak"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8069,10 +8290,6 @@ msgstr "Gelditu e&rreprodukzioa"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Erreproduzitu"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist gonbit"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10151,6 +10368,12 @@ msgstr "Gaizki osatutako Nyquist plugin goiburua"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11507,15 +11730,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (fitxategi txikiagoak)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Azkarra"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Estandarra"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11541,6 +11755,11 @@ msgstr "Zentzugabea"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Muturrekoa"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Estandarra"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11574,10 +11793,6 @@ msgstr "Bit-emaria modua:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kalitatea"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Abiadura aldakorra:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13542,7 +13757,7 @@ msgstr "Au&dio gailuaren informazioa..."
 msgid "&MIDI Device Info..."
 msgstr "&MIDI gailuaren informazioa..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Erakutsi &egunkaria..."
 
@@ -15055,6 +15270,11 @@ msgid "&Extra Menus (on/off)"
 msgstr "Menu ge&higarriak (bai/ez)"
 
 #: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "Menu ge&higarriak (bai/ez)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "&Erakutsi asetasun-distortsioa (bai/ez)"
 
@@ -15241,6 +15461,11 @@ msgid "Bro&wse..."
 msgstr "Arakatu..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "Erakutsi irteera"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Behin behineko fitxategien direktorioa"
 
@@ -15259,10 +15484,6 @@ msgstr "Arakatu..."
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Leku librea:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "Leku librea"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15603,10 +15824,6 @@ msgstr "Erakutsi herrestatze-erregela"
 msgid "Language \"%s\" is unknown"
 msgstr "\"%s\" hizkuntza ezezaguna da"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Irabazi-kontrol maisua"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI"
@@ -15867,24 +16084,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 liburutegiaren bertsioa:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 liburutegia:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "&Bilatu..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "&Deskargatu"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg inportazio/esportazio liburutegia"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg liburutegiaren bertsioa:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15893,6 +16094,10 @@ msgstr "Ez da FFmpeg liburutegi bateragarririk aurkitu"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "Konpilazio honek ez du FFmpeg euskarririk"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg liburutegiaren bertsioa:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16155,11 +16360,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Mugitu klipa gora/behera pisten artean"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Gutun-azala"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Aldatu anplifikazioaren gutun-azala"
@@ -16294,14 +16494,6 @@ msgid "Preferences:"
 msgstr "Hobespenak:"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-bit"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-bit"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "Kalitate hobespenak"
 
@@ -16351,6 +16543,14 @@ msgstr "Lagin-maiztasun bihur&tzailea:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Du&da:"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-bit"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-bit"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -18994,7 +19194,7 @@ msgstr ""
 "                    edo murriztu 'Zabalera' iragazkia."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Errorea.~%"
@@ -19666,7 +19866,8 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, fuzzy, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 "Isiltasun gehiegi hauteman dira.\n"
 "Soilik lehengo 10000 etiketa gehitu dira."
@@ -19928,20 +20129,18 @@ msgid "Allow"
 msgstr "Gaitu"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Errorea.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "Behar bezala burutu da.~%Fitxategiak hemen idatzi dira:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
 msgstr "Abisua.nZenbait fitxategien kopiak huts egin du:n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, fuzzy, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 "Pluginak instalatuta.\n"
 "(Erabili plugin kudeatzailea efektuak gaitzeko):"
@@ -20763,6 +20962,30 @@ msgstr "Radar orratzen maiztasuna (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Errorea.~%Pista estereoa behar da."
 
+#~ msgid "Fast"
+#~ msgstr "Azkarra"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Abiadura aldakorra:"
+
+#~ msgid "Free Space"
+#~ msgstr "Leku librea"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Irabazi-kontrol maisua"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3 liburutegia:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Bilatu..."
+
+#~ msgid "&Download"
+#~ msgstr "&Deskargatu"
+
+#~ msgid "Error.n"
+#~ msgstr "Errorea.n"
+
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Huts egin du bloke umezurtzen garbitzeak"
 
@@ -20847,10 +21070,6 @@ msgstr "Errorea.~%Pista estereoa behar da."
 #, fuzzy
 #~ msgid "Select to Ends"
 #~ msgstr "Hautatu amaieraraino"
-
-#, fuzzy
-#~ msgid "Special Command"
-#~ msgstr "Hautatu agindua"
 
 #, fuzzy
 #~ msgid ""
@@ -20966,9 +21185,6 @@ msgstr "Errorea.~%Pista estereoa behar da."
 #, fuzzy
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Ezin izan da gordetze automatikorako fitxategi zahar bat kendu:"
-
-#~ msgid "Error decoding file"
-#~ msgstr "Errorea fitxategia deskodetzean"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"

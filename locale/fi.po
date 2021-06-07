@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-03-31 18:59+0300\n"
 "Last-Translator: Sampo Hippeläinen\n"
 "Language-Team: fi\n"
@@ -12,6 +12,204 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Ei voitu päätellä"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s t"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s kt"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s Mt"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s Gt"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Yksinkertaistettu"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Järjestelmä"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Huolehtii Audacityn Vamp-tehostetuesta"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Kommentit"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown exception"
+msgstr "Tuntematon komentoriviparametri: %s\n"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "Tuntematon muoto"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "Tuntematon muoto"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Esimääritysnimen asettaminen epäonnistui"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4 (oletus)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Klassinen"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Harmaa&sävy"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "&Lineaarinen asteikko"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Poistu Audacitystä"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&Ohita"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Kanava"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Virhe tiedoston dekoodauksessa"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Metatietojen latausvirhe"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacityn %s-palkki"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Erikoiskomento"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Erikoiskomento"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -385,8 +583,20 @@ msgstr "%s, kehittäjä"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "%s, dokumentaatio ja tuki"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr "%s, dokumentaatio ja tuki"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "%s, dokumentaatio ja tuki"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -603,8 +813,8 @@ msgstr "%s-ohjelmiston tekijänoikeus %s 1999-2021 %s-tiimi."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark."
 msgstr "Nimi %s on Dominic Mazzonin rekisteröity tavaramerkki."
 
 #: src/AboutDialog.cpp
@@ -2128,6 +2338,21 @@ msgid "Report generated to:"
 msgstr "Raportti luotu paikkaan:"
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s: %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Yhteyttä ei voitu hylätä"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Yhteyttä ei voitu palauttaa"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
 msgstr "Lisätään projektiin tarkistuspisteitä"
 
@@ -3026,33 +3251,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Sisäinen virhe"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Ei voitu päätellä"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s t"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s kt"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s Mt"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s Gt"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Muokkaa merkkejä"
@@ -3063,8 +3261,8 @@ msgid "Track"
 msgstr "Raita"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Merkki"
@@ -3158,14 +3356,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Vahvista"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Yksinkertaistettu"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Järjestelmä"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3658,6 +3848,10 @@ msgstr[1] "Otetaanko nämä laajennukset käyttöön?\n"
 msgid "Enable new plug-ins"
 msgstr "Ota uudet laajennukset käyttöön"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist-kehote"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Tulostamisessa oli ongelma."
@@ -4024,10 +4218,11 @@ msgid "This is not an Audacity project file"
 msgstr "Tämä ei ole Audacity-projektitiedosto"
 
 #: src/ProjectFileIO.cpp
+#, fuzzy
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 "Projekti luotiin Audacityn uudemmalla versiolla:\n"
 "\n"
@@ -4202,6 +4397,11 @@ msgstr "Projektitiedoston avaaminen ei onnistu"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "Projektitiedoston automaattitallennustietoja ei voitu poistaa."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Koodekkia ei löytynyt"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4417,6 +4617,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "Virhe tallennettaessa projektin kopiota"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Projektitiedoston avaaminen ei onnistu"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "Virhe tiedoston tai projektin avauksessa"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4676,7 +4886,7 @@ msgid "24-bit PCM"
 msgstr "24-bittinen PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-bittinen liukuluku"
 
@@ -4989,10 +5199,6 @@ msgstr "Vuosi"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Tyylilaji"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Kommentit"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6391,6 +6597,17 @@ msgstr "Aika:"
 msgid "Delete"
 msgstr "Poista"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Määritä verhokäyrä"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Verhokäyrä"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "Määrittää verhokäyrän pisteen sijainnin."
@@ -6410,6 +6627,11 @@ msgstr "Loppu:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Valittu"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Muokattiin merkkejä"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8041,10 +8263,6 @@ msgstr "&Pysäytä toisto"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Toista"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist-kehote"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10114,6 +10332,12 @@ msgstr "Huonosti muotoiltu Nyquist-laajennusotsikko"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11457,15 +11681,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (pienemmät tiedostot)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Nopea"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Vakio"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11491,6 +11706,11 @@ msgstr "Maksimi"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Äärimmäinen"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Vakio"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11524,10 +11744,6 @@ msgstr "Bittinopeustila:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Laatu"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Muuttuva nopeus:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13472,7 +13688,7 @@ msgstr "Ääni&laitteen tiedot..."
 msgid "&MIDI Device Info..."
 msgstr "&MIDI-laitteen tiedot..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Näytä &loki..."
 
@@ -14984,6 +15200,11 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Lisävalikot (päällä/pois)"
 
 #: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "&Lisävalikot (päällä/pois)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "&Näytä leikkautuminen (päällä/pois)"
 
@@ -15169,6 +15390,11 @@ msgid "Bro&wse..."
 msgstr "Sel&aa..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "Näytä tuloste"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Väliaikaistiedostojen hakemisto"
 
@@ -15188,10 +15414,6 @@ msgstr "Sela&a..."
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Va&paa tila:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "Vapaa tila"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15532,10 +15754,6 @@ msgstr "Näytä hankausviivain"
 msgid "Language \"%s\" is unknown"
 msgstr "Kieli %s on tuntematon"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Vahvistuksen pääsäädin"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "Käyttöliittymä"
@@ -15797,24 +16015,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3-kirjaston versio:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 -kirjasto:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "&Etsi..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "&Lataa"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg-tuonti-/vientikirjasto"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg-kirjaston versio:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15823,6 +16025,10 @@ msgstr "Yhteensopivaa FFmpeg-kirjastoa ei löytynyt"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "FFmpeg-tukea ei ole käännetty"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg-kirjaston versio:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16082,11 +16288,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Siirrä leikettä ylös/alas raitojen välillä"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Verhokäyrä"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Muuta vahvistuksen verhokäyrää"
@@ -16221,14 +16422,6 @@ msgid "Preferences:"
 msgstr "Asetukset:"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-bittinen"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-bittinen"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "Laatuasetukset"
 
@@ -16278,6 +16471,14 @@ msgstr "Näytetaajuuden muun&nin:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Si&rottelu:"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-bittinen"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-bittinen"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -18921,7 +19122,7 @@ msgstr ""
 "                      tai laskea suodattimen \"leveyttä\"."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Virhe.~%"
@@ -19589,7 +19790,8 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, fuzzy, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 "Liian monta hiljaista kohtaa.\n"
 "Vain ensimmäiset 1000 merkkiä lisätään."
@@ -19852,20 +20054,18 @@ msgid "Allow"
 msgstr "Salli"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Virhe.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "Onnistui.~%Tiedostot, kirjoitettu ->:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
 msgstr "Varoitus.n Joidenkin tiedostojen kopioiminen epäonnistui:n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, fuzzy, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr "Laajennukset asennettu. (Ota käyttöön tehosteiden hallintaohjelmalla):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20687,6 +20887,30 @@ msgstr "Ryöppytaajuus (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Virhe.~%Stereoraita vaaditaan."
 
+#~ msgid "Fast"
+#~ msgstr "Nopea"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Muuttuva nopeus:"
+
+#~ msgid "Free Space"
+#~ msgstr "Vapaa tila"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Vahvistuksen pääsäädin"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3 -kirjasto:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Etsi..."
+
+#~ msgid "&Download"
+#~ msgstr "&Lataa"
+
+#~ msgid "Error.n"
+#~ msgstr "Virhe.n"
+
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Orpolohkojen siivous epäonnistui"
 
@@ -20764,9 +20988,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 
 #~ msgid "Select to Ends"
 #~ msgstr "Valitse päihin"
-
-#~ msgid "Special Command"
-#~ msgstr "Erikoiskomento"
 
 #~ msgid ""
 #~ "Export recording to %s\n"
@@ -20883,9 +21104,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Vanhaa automaattisen tallennuksen tiedostoa ei voitu poistaa: %s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "Virhe tiedoston dekoodauksessa"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"
@@ -22791,9 +23009,6 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 
 #~ msgid "Truncate Silence..."
 #~ msgstr "Lyhennä hiljaisuutta..."
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Tuntematon komentoriviparametri: %s\n"
 
 #~ msgid "User settings:"
 #~ msgstr "Käyttäjän asetukset:"
