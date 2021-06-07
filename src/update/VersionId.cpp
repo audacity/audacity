@@ -40,16 +40,11 @@ wxString VersionId::getString() const
 	return MakeString(mVersion, mRelease, mRevision);
 }
 
-bool VersionId::isZero()
-{
-	return mVersion == 0 && mRelease == 0 && mRevision == 0;
-}
-
 bool VersionId::operator== (const VersionId& other)
 {
-	return mVersion == other.mVersion &&
-		mRelease == other.mRelease &&
-		mRevision == other.mRevision;
+    return mVersion == other.mVersion &&
+           mRelease == other.mRelease &&
+           mRevision == other.mRevision;
 }
 
 bool VersionId::operator!= (const VersionId& other)

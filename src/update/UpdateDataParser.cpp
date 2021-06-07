@@ -12,7 +12,7 @@ UpdateDataParser::UpdateDataParser()
 UpdateDataParser::~UpdateDataParser()
 {}
 
-bool UpdateDataParser::Parse(const ServerCommunication::UpdateDataFormat& updateData, VersionPatch* versionPatch)
+bool UpdateDataParser::Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch)
 {
 	XMLFileReader xmlReader;
 

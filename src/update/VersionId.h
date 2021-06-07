@@ -13,7 +13,6 @@ public:
 	static VersionId ParseFromString(wxString& versionString);
 
 	wxString getString() const;
-	bool isZero();
 
 	bool operator== (const VersionId& other);
 	bool operator!= (const VersionId& other);

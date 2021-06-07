@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ServerCommunication.h"
 #include "VersionPatch.h"
 
 #include "xml/XMLTagHandler.h"
@@ -14,7 +13,7 @@ public:
 	UpdateDataParser();
 	~UpdateDataParser();
 
-	bool Parse(const ServerCommunication::UpdateDataFormat& updateData, VersionPatch* versionPatch);
+	bool Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch);
 
 private:
 	enum class XmlParsedTags : int

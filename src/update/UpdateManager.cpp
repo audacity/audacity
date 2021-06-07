@@ -72,7 +72,7 @@ void UpdateManager::getUpdates()
             return;
         }
 
-        if (!mUpdateDataParser.Parse(response->readAll<UpdateDataFormat>(), &mVersionPatch))
+        if (!mUpdateDataParser.Parse(response->readAll<VersionPatch::UpdateDataFormat>(), &mVersionPatch))
         {
             AudacityMessageBox(
                 XO("Update data was corrupted."),

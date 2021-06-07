@@ -2,7 +2,6 @@
 
 #include "VersionId.h"
 #include "VersionPatch.h"
-#include "ServerCommunication.h"
 #include "UpdateDataParser.h"
 
 #include "Project.h"
@@ -15,8 +14,6 @@
 class UpdateManager final : public wxEvtHandler
 {
 public:
-	using UpdateDataFormat = std::string;
-
 	UpdateManager(AudacityProject& project);
 	~UpdateManager();
 
