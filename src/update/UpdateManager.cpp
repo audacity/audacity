@@ -20,10 +20,7 @@ END_EVENT_TABLE()
 
 UpdateManager::UpdateManager(AudacityProject& project)
 {
-    wxFrame* parrentFrame = project.GetFrame();
-    wxASSERT(parrentFrame);
-
-    mParent = dynamic_cast<wxWindow*>(parrentFrame);
+    mParent = &GetProjectFrame(project);
     wxASSERT(mParent);
 
     mTimer.SetOwner(this, ID_TIMER);
@@ -83,7 +80,7 @@ void UpdateManager::getUpdates()
             return;
         }
 
-        if (mVersionPatch.version > CurrentBuildVersion())
+        //if (mVersionPatch.version > CurrentBuildVersion())
         {
             mParent->CallAfter([this] {
                 UpdatePopupDialog dlg(mParent, this);
