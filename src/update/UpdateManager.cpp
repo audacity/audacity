@@ -20,7 +20,7 @@ END_EVENT_TABLE()
 
 UpdateManager::UpdateManager(AudacityProject& project)
 {
-    mParent = static_cast<wxWindow*>(&GetProjectFrame(project));
+    mParent = (wxWindow*)(&GetProjectFrame(project));
     wxASSERT(mParent);
 
     mTimer.SetOwner(this, ID_TIMER);
