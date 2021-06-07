@@ -20,7 +20,7 @@ END_EVENT_TABLE()
 
 UpdateManager::UpdateManager(AudacityProject& project)
 {
-    mParent = &GetProjectFrame(project);
+    mParent = static_cast<wxWindow*>(&GetProjectFrame(project));
     wxASSERT(mParent);
 
     mTimer.SetOwner(this, ID_TIMER);
@@ -86,8 +86,10 @@ void UpdateManager::getUpdates()
                 UpdatePopupDialog dlg(mParent, this);
                 const int code = dlg.ShowModal();
 
-                if (code == wxID_YES) {
-                    if (!wxLaunchDefaultBrowser(mVersionPatch.download)) {
+                if (code == wxID_YES)
+                {
+                    if (!wxLaunchDefaultBrowser(mVersionPatch.download))
+                    {
                         AudacityMessageBox(
                             XO("Can't open the Audacity download link."),
                             XO("Error downloading update"),
