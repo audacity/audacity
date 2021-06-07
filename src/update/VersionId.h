@@ -22,10 +22,12 @@ public:
 	bool operator> (const VersionId& other);
 
 private:
-	int mVersion{ AUDACITY_VERSION };
-	int mRelease{ AUDACITY_RELEASE };
-	int mRevision{ AUDACITY_REVISION };
+	int mVersion{ 0 };
+	int mRelease{ 0 };
+	int mRevision{ 0 };
 };
 
-// NOTE: May be move it to VersionId as static method.
-static inline VersionId CurrentBuildVersion() { return VersionId{}; }
+static inline VersionId CurrentBuildVersion()
+{
+	return VersionId{ AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION };
+}

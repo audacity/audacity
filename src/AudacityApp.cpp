@@ -1475,14 +1475,9 @@ bool AudacityApp::InitPart2()
       // Remove duplicate shortcuts when there's a change of version
       int vMajorInit, vMinorInit, vMicroInit;
       gPrefs->GetVersionKeysInit(vMajorInit, vMinorInit, vMicroInit);
-#if 0
       if (vMajorInit != AUDACITY_VERSION || vMinorInit != AUDACITY_RELEASE
          || vMicroInit != AUDACITY_REVISION) {
          CommandManager::Get(*project).RemoveDuplicateShortcuts();
-      }
-#endif
-      if (VersionId{ vMajorInit, vMinorInit, vMicroInit } != CurrentBuildVersion()) {
-          CommandManager::Get(*project).RemoveDuplicateShortcuts();
       }
       //
       // Auto-recovery

@@ -20,12 +20,12 @@ VersionId VersionId::ParseFromString(wxString& versionString)
 	// If we have corrupted version string,
 	// then return the zero version number, that not allow us to update.
 	if (versionStringParts.size() != 3)
-		return VersionId(0, 0, 0);
+		return VersionId{};
 
 	for (auto& v : versionStringParts)
 	{
 		if (v.empty() || !v.IsNumber())
-			return VersionId(0, 0, 0);
+			return VersionId{};
 	}
 
 	return VersionId(

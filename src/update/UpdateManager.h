@@ -15,17 +15,21 @@
 class UpdateManager final : public wxEvtHandler
 {
 public:
+	using UpdateDataFormat = std::string;
+
 	UpdateManager(AudacityProject& project);
 	~UpdateManager();
 
 	void getUpdates();
 
-	void enableNotification(bool enable);
-	bool isNotificationEnabled();
+	void enableTracking(bool enable);
+	bool isTrackingEnabled();
 
 	VersionPatch getVersionPatch() const;
 
 private:
+	UpdateDataParser mUpdateDataParser;
+
 	VersionPatch mVersionPatch;
 
 	wxWindow* mParent;

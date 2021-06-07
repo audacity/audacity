@@ -981,8 +981,6 @@ list( APPEND SOURCES
       update/VersionId.h
       update/VersionId.cpp
       update/VersionPatch.h
-      update/ServerCommunication.h
-      update/ServerCommunication.cpp
       update/UpdateDataParser.h
       update/UpdateDataParser.cpp
       update/UpdateManager.h

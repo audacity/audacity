@@ -1,6 +1,10 @@
 #include "UpdateManager.h"
 #include "UpdatePopupDialog.h"
 
+#include "NetworkManager.h"
+#include "IResponse.h"
+#include "Request.h"
+
 #include "widgets/AudacityMessageBox.h"
 
 #include <wx/platinfo.h>
@@ -19,7 +23,8 @@ UpdateManager::UpdateManager(AudacityProject& project)
     wxFrame* parrentFrame = project.GetFrame();
     wxASSERT(parrentFrame);
     
-    mParent = reinterpret_cast<wxWindow*> (parrentFrame);
+    mParent = dynamic_cast<wxWindow*> (parrentFrame);
+    wxASSERT(mParent);
     
     mTimer.SetOwner(this, ID_TIMER);
     mTimer.StartOnce();
@@ -30,13 +35,13 @@ UpdateManager::~UpdateManager()
     mTimer.Stop();
 }
 
-void UpdateManager::enableNotification(bool enable)
+void UpdateManager::enableTracking(bool enable)
 {
     gPrefs->Write(prefsUpdatePopupDialogShown, enable);
     gPrefs->Flush();
 }
 
-bool UpdateManager::isNotificationEnabled()
+bool UpdateManager::isTrackingEnabled()
 {
     return gPrefs->ReadBool(prefsUpdatePopupDialogShown, true);
 }
@@ -48,51 +53,59 @@ VersionPatch UpdateManager::getVersionPatch() const
 
 void UpdateManager::getUpdates()
 {
-    ServerCommunication::UpdateDataFormat updateResponse;
-    
-    ServerCommunication communicator;
-    if (!communicator.getUpdateData(updateResponse))
-    {
-        AudacityMessageBox(
-            XO("Unable to connect to Audacity update server."),
-            XO("Error checking for update"),
-            wxOK | wxCENTRE,
-            mParent);
-
+    if (!isTrackingEnabled())
         return;
-    }
-    
-    UpdateDataParser updateDataParser;
-    if (!updateDataParser.Parse(updateResponse, &mVersionPatch))
-    {
-        AudacityMessageBox(
-            XO("Update data was corrupted."),
-            XO("Error checking for update"),
-            wxOK | wxCENTRE,
-            mParent);
 
-        return;
-    }
-    
-    if (isNotificationEnabled() && mVersionPatch.version > CurrentBuildVersion())
-    {
-        UpdatePopupDialog dlg(mParent, this);
-        const int code = dlg.ShowModal();
-        
-        if (code == wxID_YES)
+    audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
+    auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
+
+    response->setRequestFinishedCallback([response, this](audacity::network_manager::IResponse*) {
+
+        if (response->getError() != audacity::network_manager::NetworkError::NoError)
         {
-            if (!wxLaunchDefaultBrowser(mVersionPatch.download))
-            {
-                AudacityMessageBox(
-                    XO("Can't open the Audacity download link."),
-                    XO("Error downloading update"),
-                    wxOK | wxCENTRE,
-                    mParent);
+            AudacityMessageBox(
+                XO("Unable to connect to Audacity update server."),
+                XO("Error checking for update"),
+                wxOK | wxCENTRE,
+                NULL);
 
-                return;
-            }
+            return;
         }
-    }
+
+        if (!mUpdateDataParser.Parse(response->readAll<UpdateDataFormat>(), &mVersionPatch))
+        {
+            AudacityMessageBox(
+                XO("Update data was corrupted."),
+                XO("Error checking for update"),
+                wxOK | wxCENTRE,
+                NULL);
+
+            return;
+        }
+
+        if (mVersionPatch.version > CurrentBuildVersion())
+        {
+            mParent->CallAfter([this] {
+                    UpdatePopupDialog dlg(mParent, this);
+                    const int code = dlg.ShowModal();
+
+                    if (code == wxID_YES)
+                    {
+                        if (!wxLaunchDefaultBrowser(mVersionPatch.download))
+                        {
+                            AudacityMessageBox(
+                                XO("Can't open the Audacity download link."),
+                                XO("Error downloading update"),
+                                wxOK | wxCENTRE,
+                                NULL);
+
+                            return;
+                        }
+                    }
+                }
+            );
+        }
+        });
 }
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
