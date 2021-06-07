@@ -68,6 +68,9 @@ cmd_option(
 )
 set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 
+# Handlele update checking option.
+set( USE_UPDATE_CHECK ${${_OPT}has_updates_check} CACHE INTERNAL "" )
+
 #
 #
 #
@@ -978,15 +981,17 @@ list( APPEND SOURCES
       xml/audacityproject.dtd
 
       # Update version
-      update/VersionId.h
-      update/VersionId.cpp
-      update/VersionPatch.h
-      update/UpdateDataParser.h
-      update/UpdateDataParser.cpp
-      update/UpdateManager.h
-      update/UpdateManager.cpp
-      update/UpdatePopupDialog.h
-      update/UpdatePopupDialog.cpp
+      $<$<BOOL:${USE_UPDATE_CHECK}>:
+          update/VersionId.h
+          update/VersionId.cpp
+          update/VersionPatch.h
+          update/UpdateDataParser.h
+          update/UpdateDataParser.cpp
+          update/UpdateManager.h
+          update/UpdateManager.cpp
+          update/UpdatePopupDialog.h
+          update/UpdatePopupDialog.cpp
+      >
 
       Experimental.cmake
 )
@@ -1043,6 +1048,9 @@ list( APPEND DEFINES
          _CRT_SECURE_NO_WARNINGS
          __STDC_CONSTANT_MACROS
          STRICT
+      >
+      $<$<BOOL:${USE_UPDATE_CHECK}>:
+          HAVE_UPDATES_CHECK
       >
 )
 
