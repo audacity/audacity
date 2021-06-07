@@ -35,6 +35,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 #include "xml/XMLFileReader.h"
+#include "SentryHelper.h"
 
 // Don't change this unless the file format changes
 // in an irrevocable way
@@ -511,6 +512,9 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
 
    if (rc != SQLITE_ABORT && errmsg)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", query);
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+
       SetDBError(
          XO("Failed to execute a project file command:\n\n%s").Format(query),
          Verbatim(errmsg),
@@ -571,6 +575,10 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
    if (rc != SQLITE_OK)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::prepare");
+
       SetDBError(
          XO("Unable to prepare project file command:\n\n%s").Format(sql)
       );
@@ -587,6 +595,10 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
 
    if (rc != SQLITE_ROW)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::step");
+
       SetDBError(
          XO("Failed to retrieve data from the project file.\nThe following command failed:\n\n%s").Format(sql)
       );
@@ -729,6 +741,9 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::DeleteBlocks::create_function");
+
       /* i18n-hint: An error message.  Don't translate inset or blockids.*/
       SetDBError(XO("Unable to add 'inset' function (can't verify blockids)"));
       return false;
@@ -743,6 +758,10 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql.ToStdString());
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob");
+
       if( rc==SQLITE_READONLY)
          /* i18n-hint: An error message.  Don't translate blockfiles.*/
          SetDBError(XO("Project is read only\n(Unable to work with the blockfiles)"));
@@ -852,6 +871,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          // Only capture the error if there wasn't a previous error
          if (result != SQLITE_OK && (rc == SQLITE_DONE || rc == SQLITE_OK))
          {
+            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+            ADD_EXCEPTION_CONTEXT(
+               "sqlite3.context", "ProjectGileIO::CopyTo.cleanup");
+
             SetDBError(
                XO("Failed to rollback transaction during import")
             );
@@ -925,6 +948,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
                               nullptr);
       if (rc != SQLITE_OK)
       {
+         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.context", "ProjectGileIO::CopyTo.prepare");
+
          SetDBError(
             XO("Unable to prepare project file command:\n\n%s").Format(sql)
          );
@@ -955,6 +982,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          rc = sqlite3_bind_int64(stmt, 1, blockid);
          if (rc != SQLITE_OK)
          {
+            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+            ADD_EXCEPTION_CONTEXT(
+               "sqlite3.context", "ProjectGileIO::CopyTo.bind");
+
             SetDBError(
                XO("Failed to bind SQL parameter")
             );
@@ -966,6 +997,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          rc = sqlite3_step(stmt);
          if (rc != SQLITE_DONE)
          {
+            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+            ADD_EXCEPTION_CONTEXT(
+               "sqlite3.context", "ProjectGileIO::CopyTo.step");
+
             SetDBError(
                XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
             );
@@ -975,6 +1010,10 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          // Reset statement to beginning
          if (sqlite3_reset(stmt) != SQLITE_OK)
          {
+            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+            ADD_EXCEPTION_CONTEXT(
+               "sqlite3.context", "ProjectGileIO::CopyTo.reset");
+
             THROW_INCONSISTENCY_EXCEPTION;
          }
 
@@ -1005,6 +1044,9 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    rc = sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::CopyTo::detach");
+
       SetDBError(
          XO("Destination project could not be detached")
       );
@@ -1729,6 +1771,9 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3 *db /* = nullptr */)
    rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::AutoSaveDelete");
+
       SetDBError(
          XO("Failed to remove the autosave information from the project file.")
       );
@@ -1769,6 +1814,10 @@ bool ProjectFileIO::WriteDoc(const char *table,
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
    if (rc != SQLITE_OK)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::prepare");
+
       SetDBError(
          XO("Unable to prepare project file command:\n\n%s").Format(sql)
       );
@@ -1784,6 +1833,10 @@ bool ProjectFileIO::WriteDoc(const char *table,
    if (sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
        sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC))
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::bind");
+
       SetDBError(
          XO("Unable to bind to blob")
       );
@@ -1793,6 +1846,10 @@ bool ProjectFileIO::WriteDoc(const char *table,
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::step");
+
       SetDBError(
          XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
       );
@@ -2259,7 +2316,7 @@ void ProjectFileIO::ShowError(wxWindow *parent,
                               const TranslatableString &message,
                               const wxString &helpPage)
 {
-   ShowErrorDialog(parent, dlogTitle, message, helpPage, true, GetLastLog());
+   ShowExceptionDialog(parent, dlogTitle, message, helpPage, true, GetLastLog());
 }
 
 const TranslatableString &ProjectFileIO::GetLastError() const
@@ -2393,6 +2450,9 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /*
                     "SELECT rootpage FROM sqlite_master WHERE tbl_name = 'sampleblocks';");
    if (stmt == nullptr || sqlite3_step(stmt) != SQLITE_ROW)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(conn.DB())));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetDiskUsage");
+
       return 0;
    }
 
