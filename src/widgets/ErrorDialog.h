@@ -54,6 +54,13 @@ void ShowErrorDialog(wxWindow *parent,
                      bool Close = true,
                      const wxString &log = {});
 
+/// Displays an error dialog, possibly allowing to send error report.
+AUDACITY_DLL_API
+void ShowExceptionDialog(
+   wxWindow* parent, const TranslatableString& dlogTitle,
+   const TranslatableString& message, const wxString& helpPage,
+   bool Close = true, const wxString& log = {});
+
 /// Displays a modeless error dialog with a button that offers help
 void ShowModelessErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
