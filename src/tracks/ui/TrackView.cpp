@@ -97,10 +97,10 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
    long nValue;
    if (!wxStrcmp(attr, wxT("height")) &&
          XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
-      // Extreme values for track height (likely caused by integer overflow)
+      // Bug 2803: Extreme values for track height (caused by integer overflow)
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
-      nValue = std::max( 150l, std::min( nValue, 1000l ));
+      nValue = std::max( 40l, std::min( nValue, 1000l ));
       SetHeight(nValue);
       return true;
    }
