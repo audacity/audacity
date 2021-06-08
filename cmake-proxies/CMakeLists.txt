@@ -144,6 +144,12 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    )
 endif()
 
+add_conan_lib(
+   RapidJSON
+   rapidjson/1.1.0
+   REQUIRED
+)
+
 set_conan_vars_to_parent()
 
 # Required libraries
