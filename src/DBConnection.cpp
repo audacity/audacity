@@ -494,8 +494,8 @@ void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
 
          // Stop the audio.
          GuardedCall(
-            [&message] {
-            throw SimpleMessageBoxException{
+            [&message, rc] {
+            throw SimpleMessageBoxException{ rc != SQLITE_FULL ? ExceptionType::Internal : ExceptionType::BadEnvironment,
                message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
             SimpleGuard<void>{},
             [this](AudacityException * e) {
@@ -596,7 +596,7 @@ TransactionScope::TransactionScope(
    mInTrans = TransactionStart(mName);
    if ( !mInTrans )
       // To do, improve the message
-      throw SimpleMessageBoxException( 
+      throw SimpleMessageBoxException( ExceptionType::Internal,
          XO("Database error.  Sorry, but we don't have more details."), 
          XO("Warning"), 
          "Error:_Disk_full_or_not_writable"

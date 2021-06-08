@@ -307,6 +307,7 @@ DBConnection &ProjectFileIO::GetConnection()
       {
          throw SimpleMessageBoxException
          {
+            ExceptionType::Internal,
             XO("Failed to open the project's database"),
             XO("Warning"),
             "Error:_Disk_full_or_not_writable"
