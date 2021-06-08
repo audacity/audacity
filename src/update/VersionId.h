@@ -2,7 +2,6 @@
 
 #include <wx/arrstr.h>
 
-// Initialized of current build version by default.
 class VersionId final
 {
 public:

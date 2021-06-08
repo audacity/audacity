@@ -30,7 +30,7 @@ wxArrayString UpdateDataParser::splitChangelogSentences(const wxString& changelo
     size_t pos = 0;
     std::string s(changelogContent.ToStdString());
     std::string token;
-    std::string delimiter(". ");
+    const std::string delimiter(". ");
 
     while ((pos = s.find(delimiter)) != std::string::npos)
     {

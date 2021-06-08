@@ -68,9 +68,6 @@ cmd_option(
 )
 set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 
-# Handlele update checking option.
-set( USE_UPDATE_CHECK ${${_OPT}has_updates_check} CACHE INTERNAL "" )
-
 #
 #
 #
@@ -981,7 +978,7 @@ list( APPEND SOURCES
       xml/audacityproject.dtd
 
       # Update version
-      $<$<BOOL:${USE_UPDATE_CHECK}>:
+      $<$<BOOL:${${_OPT}has_updates_check}>:
           update/VersionId.h
           update/VersionId.cpp
           update/VersionPatch.h
