@@ -229,15 +229,15 @@ function( audacity_append_common_compiler_options var use_pch )
          -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
 
          # This renames a good use of this C++ keyword that we don't need
-	 # to review when hunting for leaks because of naked new and delete.
+	      # to review when hunting for leaks because of naked new and delete.
 	 -DPROHIBITED==delete
 
          # Reviewed, certified, non-leaky uses of NEW that immediately entrust
-	 # their results to RAII objects.
+	      # their results to RAII objects.
          # You may use it in NEW code when constructing a wxWindow subclass
-	 # with non-NULL parent window.
+	      # with non-NULL parent window.
          # You may use it in NEW code when the NEW expression is the
-	 # constructor argument for a standard smart
+	      # constructor argument for a standard smart
          # pointer like std::unique_ptr or std::shared_ptr.
          -Dsafenew=new
 
@@ -246,7 +246,7 @@ function( audacity_append_common_compiler_options var use_pch )
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
-	 # Yes, CMake will change -D to /D as needed for Windows:
+	      # Yes, CMake will change -D to /D as needed for Windows:
          -DWXINTL_NO_GETTEXT_MACRO
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
          $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
@@ -404,7 +404,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       add_custom_command(
          TARGET "${TARGET}"
          POST_BUILD
-	 COMMAND $<IF:$<CONFIG:Debug>,echo,strip> -x $<TARGET_FILE:${TARGET}>
+         COMMAND $<IF:$<CONFIG:Debug>,echo,strip> -x $<TARGET_FILE:${TARGET}>
       )
    endif()
 
@@ -432,15 +432,15 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       add_library("${INTERFACE_TARGET}" INTERFACE)
       foreach(PROP
          INTERFACE_INCLUDE_DIRECTORIES
-	 INTERFACE_COMPILE_DEFINITIONS
-	 INTERFACE_LINK_LIBRARIES
+         INTERFACE_COMPILE_DEFINITIONS
+         INTERFACE_LINK_LIBRARIES
       )
          get_target_property( PROPS "${TARGET}" "${PROP}" )
-	 if (PROPS)
+         if (PROPS)
             set_target_properties(
                "${INTERFACE_TARGET}"
-	       PROPERTIES "${PROP}" "${PROPS}" )
-	 endif()
+               PROPERTIES "${PROP}" "${PROPS}" )
+         endif()
       endforeach()
    endif()
 
@@ -505,6 +505,22 @@ macro( audacity_library NAME SOURCES IMPORT_TARGETS
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
    # Collect list of libraries for the executable to declare dependency on
+   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
+   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
+endmacro()
+
+# A special macro for header only libraries
+
+macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES )
+   # ditto comment in the previous macro
+   add_library( ${NAME} INTERFACE )
+
+   target_include_directories ( ${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+   target_sources( ${NAME} INTERFACE ${SOURCES})
+   target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
+   target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
+
    list( APPEND AUDACITY_LIBRARIES "${NAME}" )
    set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
