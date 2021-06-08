@@ -50,9 +50,6 @@ VersionPatch UpdateManager::getVersionPatch() const
 
 void UpdateManager::getUpdates()
 {
-    if (!isTrackingEnabled())
-        return;
-
     audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
@@ -106,7 +103,8 @@ void UpdateManager::getUpdates()
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    getUpdates();
+    if (isTrackingEnabled())
+        getUpdates();
 
     mTimer.StartOnce(
         std::chrono::milliseconds(std::chrono::hours(12)).count());
