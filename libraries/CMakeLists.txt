@@ -3,15 +3,20 @@
 # The list of modules is ordered so that each library occurs after any others
 # that it depends on
 set( LIBRARIES
-   "lib-string-utils"
+   lib-string-utils
    lib-strings
    lib-utility
    lib-uuid
 )
 
 if ( ${_OPT}has_networking )
-   list( APPEND LIBRARIES "lib-network-manager")
+   list( APPEND LIBRARIES lib-network-manager)
 endif()
+
+# This library depends on lib-network-manager
+# If Sentry reporting is disabled, an INTERFACE library
+# will be defined
+list( APPEND LIBRARIES lib-sentry-reporting)
 
 foreach( LIBRARY ${LIBRARIES} )
    add_subdirectory( "${LIBRARY}" )
