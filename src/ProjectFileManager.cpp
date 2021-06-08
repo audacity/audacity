@@ -341,7 +341,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       // Show this error only if we didn't fail reconnection in SaveProject
       // REVIEW: Could HasConnection() be true but SaveProject() still have failed?
       if (!projectFileIO.HasConnection())
-         ShowErrorDialog(
+         ShowExceptionDialog(
             &window,
             XO("Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
@@ -770,7 +770,7 @@ bool ProjectFileManager::OpenNewProject()
    bool bOK = OpenProject();
    if( !bOK )
    {
-      ShowErrorDialog(
+      ShowExceptionDialog(
          nullptr,
          XO("Can't open new empty project"),
          XO("Error opening a new empty project"), 

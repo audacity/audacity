@@ -341,6 +341,7 @@ DBConnection *SqliteSampleBlock::Conn() const
    if (!pConnection) {
       throw SimpleMessageBoxException
       {
+         ExceptionType::Internal,
          XO("Connection to project file is null"),
          XO("Warning"),
          "Error:_Disk_full_or_not_writable"

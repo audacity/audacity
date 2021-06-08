@@ -23,8 +23,10 @@ AudacityException::~AudacityException()
 
 wxAtomicInt sOutstandingMessages {};
 
-MessageBoxException::MessageBoxException( const TranslatableString &caption_ )
-   : caption{ caption_ }
+MessageBoxException::MessageBoxException(
+   ExceptionType exceptionType_, const TranslatableString& caption_)
+    : caption { caption_ }
+    , exceptionType { exceptionType_ }
 {
    if (!caption.empty())
       wxAtomicInc( sOutstandingMessages );
@@ -42,6 +44,7 @@ MessageBoxException::MessageBoxException( const MessageBoxException& that )
    caption = that.caption;
    moved = that.moved;
    helpUrl = that.helpUrl;
+   exceptionType = that.exceptionType;
    that.moved = true;
 }
 
@@ -73,21 +76,27 @@ void MessageBoxException::DelayedHandlerAction()
       // give the user no useful added information.
       
       if ( wxAtomicDec( sOutstandingMessages ) == 0 ) {
-         if (ErrorHelpUrl().IsEmpty())
+         if (exceptionType == ExceptionType::Internal)
+         {
+            ShowExceptionDialog(
+               nullptr,
+               (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
+               ErrorMessage(), ErrorHelpUrl());
+         }
+         // We show BadEnvironment and BadUserAction in a similar way
+         else if (ErrorHelpUrl().IsEmpty())
          {
             ::AudacityMessageBox(
                ErrorMessage(),
                (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
-               wxICON_ERROR 
-            );
+               wxICON_ERROR);
          }
          else
          {
             ShowErrorDialog(
                nullptr,
                (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
-               ErrorMessage(),
-               ErrorHelpUrl());
+               ErrorMessage(), ErrorHelpUrl());
          }
       }
 
