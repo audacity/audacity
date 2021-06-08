@@ -35,7 +35,7 @@ public:
    // DV: We consider a FileException to be internal for now.
    // We used to have some odd cases related to the read-only folder in 3.0.0,
    // so it is good to have a full picture here.
-   // In case we see to many - we will tweak this behavior in the next release.
+   // In case we see too many - we will tweak this behavior in the next release.
    : MessageBoxException{ ExceptionType::Internal, caption }
    , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }
    {}
