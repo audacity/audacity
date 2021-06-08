@@ -29,10 +29,6 @@ TODO: add more desc
 
 #include "LoadEffects.h"
 
-enum
-{
-   ID_LoadModel = 1000,
-};
 
 const ComponentInterfaceSymbol EffectSourceSep::Symbol
 { XO("Source Separation") };
@@ -42,7 +38,7 @@ namespace{ BuiltinEffectsModule::Registration<EffectSourceSep> reg; }
 
 // register event handlers
 BEGIN_EVENT_TABLE(EffectSourceSep, wxEvtHandler)
-   EVT_BUTTON(ID_LoadModel, EffectSourceSep::OnLoadButton)
+   EVT_BUTTON(wxID_ANY, EffectSourceSep::OnLoadButton)
 END_EVENT_TABLE()
 
 EffectSourceSep::EffectSourceSep()
@@ -135,7 +131,7 @@ void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
-      mLoadModelBtn = S.Id(ID_LoadModel).AddButton(XXO("&Load Source Separation Model"));
+      mLoadModelBtn = S.AddButton(XXO("&Load Source Separation Model"));
       mDescription = S.AddVariableText(XO("pls load a model!"));
    }
    S.EndHorizontalLay();
