@@ -1,0 +1,122 @@
+/**********************************************************************
+
+Audacity: A Digital Audio Editor
+
+BrushHandle.h
+
+Paul Licameli split from TrackPanel.cpp
+
+**********************************************************************/
+
+#ifndef __AUDACITY_BRUSH_HANDLE__
+#define __AUDACITY_BRUSH_HANDLE__
+
+#include "../../UIHandle.h"
+#include "../../SelectedRegion.h"
+#include "../../Snap.h"
+
+#include <vector>
+
+class SelectionStateChanger;
+class SnapManager;
+class SpectrumAnalyst;
+class Track;
+class TrackView;
+class TrackList;
+class ViewInfo;
+class WaveTrack;
+class wxMouseState;
+
+class AUDACITY_DLL_API BrushHandle : public UIHandle
+{
+   BrushHandle(const BrushHandle&);
+
+public:
+   explicit BrushHandle
+      (const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
+       const TrackList &trackList,
+       const TrackPanelMouseState &st, const ViewInfo &viewInfo);
+
+   // This always hits, but details of the hit vary with mouse position and
+   // key state.
+   static UIHandlePtr HitTest
+      (std::weak_ptr<BrushHandle> &holder,
+       const TrackPanelMouseState &state, const AudacityProject *pProject,
+       const std::shared_ptr<TrackView> &pTrackView);
+
+   BrushHandle &operator=(const BrushHandle&) = default;
+   
+   virtual ~BrushHandle();
+
+   bool IsClicked() const;
+
+   void Enter(bool forward, AudacityProject *pProject) override;
+
+   bool Escape(AudacityProject *pProject) override;
+
+   Result Click
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+
+   Result Drag
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+
+   HitTestPreview Preview
+      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      override;
+
+   Result Release
+      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+       wxWindow *pParent) override;
+
+   Result Cancel(AudacityProject*) override;
+
+   static UIHandle::Result NeedChangeHighlight
+      (const BrushHandle &oldState,
+       const BrushHandle &newState);
+
+private:
+   std::weak_ptr<Track> FindTrack();
+
+   void Connect(AudacityProject *pProject);
+public:
+   // This is needed to implement a command assignable to keystrokes
+   static void SnapCenterOnce
+      (SpectrumAnalyst &analyst,
+       ViewInfo &viewInfo, const WaveTrack *pTrack, bool up);
+private:
+
+   // TrackPanelDrawable implementation
+   void Draw(
+      TrackPanelDrawingContext &context,
+      const wxRect &rect, unsigned iPass ) override;
+
+   //void ResetFreqSelectionPin
+   //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
+
+
+   std::weak_ptr<TrackView> mpView;
+   wxRect mRect{};
+   SelectedRegion mInitialSelection{};
+
+   std::shared_ptr<SnapManager> mSnapManager;
+   SnapResults mSnapStart, mSnapEnd;
+   bool mUseSnap{ true };
+
+   bool mSelStartValid{};
+   double mSelStart{ 0.0 };
+
+   int mSelectionBoundary{ 0 };
+
+   std::weak_ptr<const WaveTrack> mFreqSelTrack;
+
+   int mMostRecentX{ -1 }, mMostRecentY{ -1 };
+
+   bool mAutoScrolling{};
+
+   std::shared_ptr<SelectionStateChanger> mSelectionStateChanger;
+
+   class TimerHandler;
+   friend TimerHandler;
+   std::shared_ptr<TimerHandler> mTimerHandler;
+};
+#endif

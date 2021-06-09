@@ -84,6 +84,7 @@ ToolsToolBar::ToolsToolBar( AudacityProject &project )
    wxASSERT( zoomTool     == zoomTool     - firstTool );
    wxASSERT( drawTool     == drawTool     - firstTool );
    wxASSERT( multiTool    == multiTool    - firstTool );
+   wxASSERT( brushTool    == brushTool    - firstTool );
 
    bool multiToolActive = false;
    gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
@@ -150,6 +151,7 @@ void ToolsToolBar::RegenerateTooltips()
       { zoomTool,     wxT("ZoomTool"),      XO("Zoom Tool")       },
       { drawTool,     wxT("DrawTool"),      XO("Draw Tool")       },
       { multiTool,    wxT("MultiTool"),     XO("Multi-Tool")      },
+      { brushTool,    wxT("BrushTool"),     XO("Brush Tool")      },
    };
 
    for (const auto &entry : table) {
@@ -194,7 +196,7 @@ void ToolsToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
-   Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
+   Add(mToolSizer = safenew wxGridSizer(2, 4, 1, 1));
 
    /* Tools */
    using namespace ToolCodes;
@@ -204,6 +206,7 @@ void ToolsToolBar::Populate()
    mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, XO("Zoom Tool") );
    mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, XO("Slide Tool") );
    mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi-Tool") );
+   mTool[ brushTool    ] = MakeTool( this, bmpDraw, brushTool, XO("Brush Tool") );
 
    // It's OK to reset the tool when regenerating this, e.g after visiting preferences.
    SetCurrentTool( selectTool );
@@ -356,6 +359,7 @@ void OnDrawTool(const CommandContext &context)
 /// Handler to set the Zoom tool active
 void OnZoomTool(const CommandContext &context)
 {
+   std::cout<< "ZOOM TOOL" << std::endl;
    SetTool(context.project, ToolCodes::zoomTool);
 }
 
@@ -368,6 +372,13 @@ void OnTimeShiftTool(const CommandContext &context)
 void OnMultiTool(const CommandContext &context)
 {
    SetTool(context.project, ToolCodes::multiTool);
+}
+
+/// Handler to set the brush tool active
+void OnBrushTool(const CommandContext &context)
+{
+   std::cout<< "BRUSH TOOL" << std::endl;
+   SetTool(context.project, ToolCodes::brushTool);
 }
 
 void OnPrevTool(const CommandContext &context)
@@ -425,6 +436,8 @@ BaseItemSharedPtr ExtraToolsMenu()
          FN(OnTimeShiftTool), AlwaysEnabledFlag, wxT("F5") ),
       Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
          AlwaysEnabledFlag, wxT("F6") ),
+      Command( wxT("BrushTool"), XXO("&Brush Tool"), FN(OnBrushTool),
+               AlwaysEnabledFlag, wxT("F7") ),
       Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
          AlwaysEnabledFlag, wxT("A") ),
       Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),

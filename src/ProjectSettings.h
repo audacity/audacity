@@ -38,10 +38,11 @@ enum {
    zoomTool,
    slideTool,
    multiTool,
+   brushTool,
    numTools,
    
    firstTool = selectTool,
-   lastTool = multiTool,
+   lastTool = brushTool,
 };
 }
 
