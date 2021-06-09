@@ -39,10 +39,11 @@ enum {
    zoomTool,
    slideTool,
    multiTool,
+   brushTool,
    numTools,
    
    firstTool = selectTool,
-   lastTool = multiTool,
+   lastTool = brushTool,
 };
 }
 
@@ -112,6 +113,8 @@ public:
    bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
 
    bool GetShowSplashScreen() const { return mShowSplashScreen; }
+
+   int GetBrushRadius() const { return 1; }
 
 private:
    void UpdatePrefs() override;
