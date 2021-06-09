@@ -275,10 +275,12 @@ def main():
             message = input("\nEnter command or 'Q' to quit: ")
         else:
             message = input(
-                "\nEnter command or 'Q' to quit: ")
+                "\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
         start = time.time()
         if message.upper() == 'Q':
             sys.exit(0)
+        elif message.upper() == 'H':
+            usage_helper(reply)
         elif message == '':
             pass
         else:
@@ -290,6 +292,47 @@ def main():
                 else:
                     reply = client.read()
             print(reply)
+
+def usage_helper(reply):
+    reply ="""
+    ===============================
+    Interactive command-line
+    ===============================
+
+    A full list of scripting commands and parameters can be found at:
+
+    https://manual.audacityteam.org/man/scripting_reference.html
+
+    
+    ==================
+    Command-line Usage
+    ==================
+    To send a command, provide the scripting id {command name}.
+    Commands sent without parameters use default values set in Audacity.
+
+    To include custom parameters, the scripting id must be followed by a colon ':',
+    then spacing each parameter key/value in the following form {key="Value"}.
+
+    Note: Quotes around values must be double.
+    Note: Key values are case-sensitive, commands and keys are not.
+
+    Command General Form:
+    {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ... 
+
+    Example
+    -------
+        > Help
+
+        This example sends the 'Help' scripting command using
+        defaults (Command="Help" Format="JSON"). 
+        
+
+        > Help: Command="Amplify" Format="Brief"
+        
+        This example sends the 'Help' scipting command for the 
+        command 'Amplify', returning it in "Brief" format.
+    """
+    print(reply)
 
 
 if __name__ == '__main__':
