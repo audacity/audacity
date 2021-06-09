@@ -40,8 +40,8 @@ endfunction()
 
 set( VISITED )
 function( gather_libs src )
+   list( APPEND VISITED "${src}" )
    if( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows" )
-      list( APPEND VISITED "${src}" )
       execute( output cmd /k dumpbin /dependents ${src} )
 
       foreach( line ${output} )
@@ -72,8 +72,7 @@ function( gather_libs src )
             set( lib "${WXWIN}/${dylib_name}" )
 
             if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}"
-	       AND NOT "${src}///${lib}" IN_LIST VISITED )
-               list( APPEND VISITED "${src}///${lib}" )
+	       AND NOT "${lib}" IN_LIST VISITED )
                message(STATUS "\tProcessing ${lib}...")
 
                list( APPEND libs ${lib} )
@@ -89,7 +88,6 @@ function( gather_libs src )
          endif()
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" )
-      list( APPEND VISITED "${src}" )
       message(STATUS "Executing LD_LIBRARY_PATH='${WXWIN}' ldd ${src}")
 
       execute( output sh -c "LD_LIBRARY_PATH='${WXWIN}' ldd ${src}" )
