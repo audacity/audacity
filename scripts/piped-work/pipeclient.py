@@ -75,6 +75,7 @@ import threading
 import time
 import errno
 import argparse
+import json
 
 
 if sys.version_info[0] < 3 and sys.version_info[1] < 7:
@@ -284,6 +285,10 @@ def main():
         elif message == '':
             pass
         else:
+            command_list = False
+            if message.upper() == 'A':
+                command_list = True
+                message = 'GetInfo: Type="Commands" Format="JSON"'
             client.write(message, timer=args.show)
             while reply == '':
                 time.sleep(0.1)  # allow time for reply
@@ -291,14 +296,20 @@ def main():
                     reply = 'PipeClient: Reply timed-out.'
                 else:
                     reply = client.read()
-            print(reply)
+            if command_list:
+                command_helper(reply)
+            else:
+                print(reply)
+
 
 def usage_helper(reply):
+    """Returns instructions for command-line usage"""
     reply ="""
     ===============================
     Interactive command-line
     ===============================
-
+    To see scripting commands available, enter 'A'
+    
     A full list of scripting commands and parameters can be found at:
 
     https://manual.audacityteam.org/man/scripting_reference.html
@@ -334,6 +345,59 @@ def usage_helper(reply):
     """
     print(reply)
 
+
+def command_helper(reply):
+    """Returns available commands in readable format, prompts for additional command info"""
+    reply = reply.replace('\n', '')
+    reply = reply.replace('\\', '/')
+    reply = reply.replace('/"', "'")
+    # save run time if requested
+    if reply.find('BatchCommand finished:'):
+        runtime = reply[reply.find('BatchCommand finished:'):]
+        reply = reply.replace(runtime, '')
+    
+    commands = json.loads(reply)
+    reply = ''
+    row = []
+    for command in commands:
+        row.append(command["id"])
+        if len(row) >= 3:
+            reply += str('{:<30s}{:<30s}{:<30s}\n'.format(row[0], row[1], row[2])) 
+            row = []
+    print(reply)
+    command_id = input("Lookup a particular command: ")
+    command_found = False
+    for command in commands:
+        if command["id"] == command_id:
+            print(command_info(command))
+            command_found = True
+    if not command_found:
+        print("No command lookup performed")
+
+    
+
+
+def command_info(command):
+    """Prints lookup info for particular command"""
+    reply = ''
+    reply += '==================================\n'
+    reply += 'Command: ' + command["name"] + '\n'
+    reply += command["tip"] + '\n\nUse:\n> '
+    if "params" not in command.keys():
+        reply += command["id"] 
+    else:
+        reply += command["id"] + ': '
+        for param in command["params"]:
+            reply += param["key"] + '="{' + param["type"] + '}" '
+            
+        reply += "\n\nParameters:\n"
+        for param in command["params"]:
+            reply += '\t' + param["key"] + '- Default(' + str(param["default"]) + ') '
+            if param["type"] == 'enum':
+                reply += 'Enum values(' + str(param["enum"]) + ')'
+            reply += '\n'
+    reply += '\n'
+    return reply
 
 if __name__ == '__main__':
     main()
