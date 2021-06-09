@@ -15,6 +15,7 @@ Paul Licameli split from class TrackView
 #include "TrackControls.h"
 #include "ZoomHandle.h"
 #include "../ui/SelectHandle.h"
+#include "../ui/BrushHandle.h"
 #include "../../AColor.h"
 #include "../../ProjectSettings.h"
 #include "../../Track.h"
@@ -42,6 +43,14 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
       // over all other tools, no matter what detail you point at.
       result = ZoomHandle::HitAnywhere(
          BackgroundCell::Get( *pProject ).mZoomHandle );
+      results.push_back(result);
+      return results;
+   }
+
+   if ( !isMultiTool && currentTool == brushTool ) {
+      // Zoom tool is a non-selecting tool that takes precedence in all tracks
+      // over all other tools, no matter what detail you point at.
+      result = BrushHandle::HitTest(mBrushHandle, st, pProject, shared_from_this());
       results.push_back(result);
       return results;
    }

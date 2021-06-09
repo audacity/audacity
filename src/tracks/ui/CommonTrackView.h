@@ -13,6 +13,7 @@ Paul Licameli split from class TrackView
 
 #include "TrackView.h" // to inherit
 
+class BrushHandle;
 class SelectHandle;
 class TimeShiftHandle;
 
@@ -43,6 +44,7 @@ protected:
       = 0;
 
    std::weak_ptr<SelectHandle> mSelectHandle;
+   std::weak_ptr<BrushHandle> mBrushHandle;
 
 public:
    std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;

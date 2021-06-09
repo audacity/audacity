@@ -65,7 +65,7 @@ class ToolsToolBar final : public ToolBar {
    static AButton *MakeTool(
       ToolsToolBar *pBar, teBmps eTool, int id, const TranslatableString &label);
 
-   enum { numTools = 6 };
+   enum { numTools = 7 };
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;
