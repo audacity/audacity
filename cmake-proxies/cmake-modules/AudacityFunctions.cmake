@@ -359,6 +359,15 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             PREFIX ""
             FOLDER "modules" # for IDE organization
       )
+      if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
+         add_custom_command(
+	    TARGET ${TARGET}
+            COMMAND ${CMAKE_COMMAND}
+	       -D SRC="${_MODDIR}/${TARGET}.so"
+               -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+               -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD )
+      endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
