@@ -39,9 +39,10 @@ function( execute )
 endfunction()
 
 set( VISITED )
+set( postcmds )
 function( gather_libs src )
+   list( APPEND VISITED "${src}" )
    if( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows" )
-      list( APPEND VISITED "${src}" )
       execute( output cmd /k dumpbin /dependents ${src} )
 
       foreach( line ${output} )
@@ -61,7 +62,8 @@ function( gather_libs src )
       execute( output otool -L ${src} )
 
       set( libname "${src}" )
-      
+
+      set( words )
       foreach( line ${output} )
          if( line MATCHES "^.*\\.dylib " )
             string( REGEX REPLACE "dylib .*" "dylib" line "${line}" )
@@ -71,9 +73,7 @@ function( gather_libs src )
             message(STATUS "Checking out ${line}")
             set( lib "${WXWIN}/${dylib_name}" )
 
-            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}"
-	       AND NOT "${src}///${lib}" IN_LIST VISITED )
-               list( APPEND VISITED "${src}///${lib}" )
+            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}" )
                message(STATUS "\tProcessing ${lib}...")
 
                list( APPEND libs ${lib} )
@@ -82,14 +82,28 @@ function( gather_libs src )
                
                message(STATUS "\t\tAdding ${refname} to ${src}")
 
-               list( APPEND postcmds "sh -c 'install_name_tool -change ${line} @executable_path/../Frameworks/${refname} ${src}'" )
+               list( APPEND words "-change ${line} @executable_path/../Frameworks/${refname}" )
 
-               gather_libs( ${lib} )
+               if(
+	          # Don't do depth first search from modules: assume the fixup
+		  # of .dylib libraries was already done when this function
+		  # was visited for the executable
+	          NOT src MATCHES "\\.so$"
+	          AND NOT "${lib}" IN_LIST VISITED
+	        )
+                  gather_libs( ${lib} )
+	       endif()
             endif()
          endif()
       endforeach()
+      if( words )
+         # There is at least one dependency to rename
+         list( PREPEND words "install_name_tool" )
+         list( APPEND words "${src}" )
+         string( JOIN " " postcmd ${words} )
+         list( APPEND postcmds "${postcmd}" )
+      endif()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" )
-      list( APPEND VISITED "${src}" )
       message(STATUS "Executing LD_LIBRARY_PATH='${WXWIN}' ldd ${src}")
 
       execute( output sh -c "LD_LIBRARY_PATH='${WXWIN}' ldd ${src}" )
@@ -133,5 +147,9 @@ foreach( cmd ${postcmds} )
    )
 endforeach()
 
-list( REMOVE_DUPLICATES libs )
-file( INSTALL ${libs} DESTINATION ${DST} FOLLOW_SYMLINK_CHAIN )
+# This .cmake file is invoked on Darwin for modules too.
+# Do the INSTALL only for the executable.
+if( NOT SRC MATCHES "\\.so$" )
+   list( REMOVE_DUPLICATES libs )
+   file( INSTALL ${libs} DESTINATION ${DST} FOLLOW_SYMLINK_CHAIN )
+endif()

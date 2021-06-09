@@ -301,6 +301,19 @@ function( export_symbol_define var module_name )
    set( "${var}" "${symbol}=${value}" PARENT_SCOPE )
 endfunction()
 
+# shorten a target name for purposes of generating a dependency graph picture
+function( canonicalize_node_name var node )
+   # strip generator expressions
+   string( REGEX REPLACE ".*>.*:(.*)>" "\\1" node "${node}" )
+   # omit the "-interface" for alias targets to modules
+   string( REGEX REPLACE "-interface\$" "" node "${node}"  )
+   # shorten names of standard libraries or Apple frameworks
+   string( REGEX REPLACE "^-(l|framework )" "" node "${node}" )
+   # shorten paths
+   get_filename_component( node "${node}" NAME_WE )
+   set( "${var}" "${node}" PARENT_SCOPE )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
@@ -346,6 +359,15 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             PREFIX ""
             FOLDER "modules" # for IDE organization
       )
+      if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
+         add_custom_command(
+	    TARGET ${TARGET}
+            COMMAND ${CMAKE_COMMAND}
+	       -D SRC="${_MODDIR}/${TARGET}.so"
+               -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+               -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD )
+      endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
@@ -454,7 +476,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       if(IMPORT IN_LIST ACCESS)
          continue()
       endif()
-      string( REGEX REPLACE "-interface\$" "" IMPORT "${IMPORT}"  )
+      canonicalize_node_name(IMPORT "${IMPORT}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
