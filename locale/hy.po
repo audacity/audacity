@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -13,6 +13,203 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.9\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Անհնար է որոշել"
+
+#: libraries/lib-strings/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
+msgstr "բիթեր"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr ""
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "Simplified"
+msgstr "Պարզեցված դիտում"
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "System"
+msgstr "Սկզբի ամսաթիվ"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Կարգավորումներ՝"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Նկարագրություն"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown exception"
+msgstr "Անհայտ հրահանգ՝ %s\n"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown assertion"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown error"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Խոշորացնել լռելյայն"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Դասական զտումներ"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Մասշտաբ"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "&Գծային"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Փակել Աուդասիթին"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Ալիք"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Ֆայլի բացումը անհաջող էր"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Ժամաչափի բեռնման սխալ"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Աուդասիթի %s գործիքադարակ"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Ընտրել հրահանգ"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Ընտրել հրահանգ"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -422,8 +619,20 @@ msgstr "Պատիչ"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "Պատիչ"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr ""
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -646,7 +855,7 @@ msgstr ""
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
 msgstr ""
 "Անունը <b>Audacity&reg;</b> գրանցված է Դոմինիկ Մացոնիի ապրանքանշանով "
 "(Dominic Mazzoni):"
@@ -2183,6 +2392,21 @@ msgid "Report generated to:"
 msgstr ""
 
 #: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr ""
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Չհաջողվեց գտնել կոդեկը"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
+
+#: src/DBConnection.cpp
 #, fuzzy
 msgid "Checkpointing project"
 msgstr "Հաստատել ընթացիկ &պրոեկտում"
@@ -3108,33 +3332,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "(արտաքին ծրագիր)"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Անհնար է որոշել"
-
-#: src/Internat.cpp
-#, fuzzy, c-format
-msgid "%s bytes"
-msgstr "բիթեր"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr ""
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Փոփոխել կետերը"
@@ -3145,8 +3342,8 @@ msgid "Track"
 msgstr "Ձայնային ֆայլ"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Նշիչ"
@@ -3244,16 +3441,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Հաստատել"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "Simplified"
-msgstr "Պարզեցված դիտում"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "System"
-msgstr "Սկզբի ամսաթիվ"
 
 #: src/Legacy.cpp
 #, fuzzy
@@ -3747,6 +3934,10 @@ msgstr[1] "Միացնել պլագինի բեռնման համար %s"
 msgid "Enable new plug-ins"
 msgstr "Միացնել պլագինի բեռնման համար %s"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist հրահանգ"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Կա տպման խնդիր"
@@ -4099,9 +4290,9 @@ msgstr "Պահպանում որպես Աուդասիթի պրոեկտ"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4259,6 +4450,11 @@ msgstr "Չի հաջողվում բացել պրոեկտ ֆայլը"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Չհաջողվեց գտնել կոդեկը"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4456,6 +4652,16 @@ msgstr ""
 #, fuzzy
 msgid "Error Saving Copy of Project"
 msgstr "Պրոեկտի պահպանումը անհաջող էր"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Չի հաջողվում բացել պրոեկտ ֆայլը"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "Պրոեկտի կամ ֆայլի բացումն անհաջող էր"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -4711,7 +4917,7 @@ msgid "24-bit PCM"
 msgstr "24-բիթ Պրոց. հիշ."
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-բիթ վերբեռն."
 
@@ -5033,10 +5239,6 @@ msgstr "Տարին"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Ոճը"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Նկարագրություն"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6521,6 +6723,17 @@ msgstr "Ժամ"
 msgid "Delete"
 msgstr "Ջնջել"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Պատիչ"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Պատիչ"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr ""
@@ -6543,6 +6756,11 @@ msgstr ""
 #, fuzzy
 msgid "Selected"
 msgstr "Ընտրել"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Փոփոխված մասեր"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8308,10 +8526,6 @@ msgstr "Նվագարկում"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Նվագարկել"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist հրահանգ"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10464,6 +10678,12 @@ msgstr "Nyquist ելք՝ "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11837,15 +12057,6 @@ msgstr ""
 msgid "45-85 kbps (Smaller files)"
 msgstr "(Փոքր ֆայլեր)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Արագ"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Ստանդարտ"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11871,6 +12082,11 @@ msgstr "ահռելի"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Ծայրահեղ"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Ստանդարտ"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11904,10 +12120,6 @@ msgstr "Բիթաչափի ձև՝"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Որակ"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Փոփոխական արագություն՝"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13914,7 +14126,7 @@ msgstr "Աուդիո սարքի մասին..."
 msgid "&MIDI Device Info..."
 msgstr "Աուդիո սարքի մասին..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Ցուցադրել &պատմության ֆայլերը..."
 
@@ -15632,6 +15844,11 @@ msgstr "Ձայնագրում ձայնին հավասար (միացնել/անջ�
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "Ձայնագրում ձայնին հավասար (միացնել/անջատել)"
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
 msgid "&Show Clipping (on/off)"
 msgstr "Ցուցադրել անջատվածությունը"
 
@@ -15835,6 +16052,11 @@ msgid "Bro&wse..."
 msgstr "Ընտրել..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "ցուցադրել ելքը"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
 
@@ -15855,11 +16077,6 @@ msgstr "Ընտրել..."
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "&Free Space:"
-msgstr "Դատարկ տեղ՝"
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Free Space"
 msgstr "Դատարկ տեղ՝"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -16218,10 +16435,6 @@ msgstr ""
 msgid "Language \"%s\" is unknown"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Մաստեր Գեյն համակարգ"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -16481,24 +16694,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 գրադարանի տարբերակ՝"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 գրադարան՝"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "Տեղավորել..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "Բեռնել"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg ներմուծման/վերցման գրադարան"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg գրադարանի տարբերակ՝"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -16508,6 +16705,10 @@ msgstr "Չկա աջակցող FFmpeg գրադարան"
 #, fuzzy
 msgid "FFmpeg support is not compiled in"
 msgstr "FFmpeg աջակցումը կազմված չէ"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg գրադարանի տարբերակ՝"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16783,11 +16984,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Մասի տեղափոխում վերև/ցած ձայնագրությունների միջև"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Պատիչ"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Փոխել վերափոխիչի ուժեղացումը"
@@ -16935,16 +17131,6 @@ msgstr "Կարգավորումներ՝"
 
 #: src/prefs/QualityPrefs.cpp
 #, fuzzy
-msgid "16-bit"
-msgstr "16-բիթ Պրոց. հիշ."
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
-msgid "24-bit"
-msgstr "24-բիթ Պրոց. հիշ."
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "Preferences for Quality"
 msgstr "Կարգավորումներ՝"
 
@@ -16994,6 +17180,16 @@ msgstr "Ձայնաչափի վերափոխում՝"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Ողորկում՝"
+
+#: src/prefs/QualitySettings.cpp
+#, fuzzy
+msgid "16-bit"
+msgstr "16-բիթ Պրոց. հիշ."
+
+#: src/prefs/QualitySettings.cpp
+#, fuzzy
+msgid "24-bit"
+msgstr "24-բիթ Պրոց. հիշ."
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -19828,7 +20024,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy, lisp-format
 msgid "Error.~%"
 msgstr "Եղավ սխալ"
@@ -20565,7 +20761,8 @@ msgid "~ah ~am ~as"
 msgstr ""
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -20836,21 +21033,18 @@ msgid "Allow"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
-msgid "Error.n"
-msgstr "Եղավ սխալ"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "Անհաջող հեռացում %s"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -21693,6 +21887,32 @@ msgstr "Հաճախականություն (Հց)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "Fast"
+#~ msgstr "Արագ"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Փոփոխական արագություն՝"
+
+#, fuzzy
+#~ msgid "Free Space"
+#~ msgstr "Դատարկ տեղ՝"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Մաստեր Գեյն համակարգ"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3 գրադարան՝"
+
+#~ msgid "&Locate..."
+#~ msgstr "Տեղավորել..."
+
+#~ msgid "&Download"
+#~ msgstr "Բեռնել"
+
+#, fuzzy
+#~ msgid "Error.n"
+#~ msgstr "Եղավ սխալ"
+
 #, fuzzy
 #~ msgid "Failed to copy tags"
 #~ msgstr "Անհաջող հեռացում %s"
@@ -21777,10 +21997,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Select to Ends"
 #~ msgstr "Վերջի նշումը"
-
-#, fuzzy
-#~ msgid "Special Command"
-#~ msgstr "Ընտրել հրահանգ"
 
 #, fuzzy
 #~ msgid ""
@@ -21896,10 +22112,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Չի ստացվում հեռացնել ավտոմատ պահպանման հին ֆայլը՝"
-
-#, fuzzy
-#~ msgid "Error decoding file"
-#~ msgstr "Ֆայլի բացումը անհաջող էր"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"
@@ -23711,9 +23923,6 @@ msgstr ""
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "Կիրառելով բլոկի չափը %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Անհայտ հրահանգ՝ %s\n"
 
 #~ msgid "Command-line options supported:"
 #~ msgstr "Աջակցում է հրահանգատեղի կարգավորմանը՝"

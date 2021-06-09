@@ -3,9 +3,9 @@
 # Pavel Fric <pavelfric@seznam.cz>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-03-20 09:04+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -15,6 +15,204 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Lokalize 20.12.0\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Nepodařilo se zjistit"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s bytů"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Zjednodušený"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Systémový"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Poskytuje Audacity podporu pro efekty Vamp"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Poznámky"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown exception"
+msgstr "Neznámá volba příkazového řádku: %s\n"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "Neznámý formát"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "Neznámý formát"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Nepodařilo se nastavit název přednastavení"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4 (výchozí)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Klasický"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Odstíny še&di"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "&Lineární stupnice"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Ukončit Audacity"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&Přeskočit"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Kanál"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Chyba při dekódování souboru"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Chyba při nahrávání popisných dat"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s panel nástrojů"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Zvláštní příkaz"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Zvláštní příkaz"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -387,8 +585,20 @@ msgstr "%s, vývojář"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "%s, dokumentace a podpora"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr "%s, dokumentace a podpora"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "%s, dokumentace a podpora"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -601,8 +811,8 @@ msgstr "Kopírovací právo k software %s %s 1999-2020 tým %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark."
 msgstr "Název %s je registrovaná ochranná známka Dominica Mazzoniho."
 
 #: src/AboutDialog.cpp
@@ -2128,6 +2338,21 @@ msgid "Report generated to:"
 msgstr "Zpráva vytvořena do:"
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s: %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Nepodařilo se zahodit spojení"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Nepodařilo se obnovit spojení"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
 msgstr "Kontrola projektu"
 
@@ -3035,33 +3260,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Vnitřní chyba"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Nepodařilo se zjistit"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s bytů"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Upravit štítky"
@@ -3072,8 +3270,8 @@ msgid "Track"
 msgstr "Stopa"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Štítek"
@@ -3166,14 +3364,6 @@ msgstr "Vámi vybraný jazyk, %s (%s), se neshoduje s jazykem systému, %s (%s).
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Potvrdit"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Zjednodušený"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Systémový"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3667,6 +3857,10 @@ msgstr[2] "Povolit tyto přídavné moduly?\n"
 msgid "Enable new plug-ins"
 msgstr "Povolit nové přídavné moduly"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Výzva k zadání Nyquist"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Vyskytly se problémy s tiskem."
@@ -4030,10 +4224,11 @@ msgid "This is not an Audacity project file"
 msgstr "Toto není soubor s projektem Audacity"
 
 #: src/ProjectFileIO.cpp
+#, fuzzy
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 "Tento projekt byl vytvořen s novější verzí Audacity:\n"
 "\n"
@@ -4196,6 +4391,11 @@ msgid "Failed to remove the autosave information from the project file."
 msgstr ""
 "Nepodařilo se odstranit informaci o automatickém uložení ze souboru s "
 "projektem."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Nepodařilo se najít kodek"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4411,6 +4611,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "Chyba při ukládání kopie projektu"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Nelze otevřít soubor s projektem"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "Chyba při otevírání souboru nebo projektu"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4673,7 +4883,7 @@ msgid "24-bit PCM"
 msgstr "24 bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32 bit float"
 
@@ -4986,10 +5196,6 @@ msgstr "Rok"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Žánr"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Poznámky"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6387,6 +6593,17 @@ msgstr "Čas:"
 msgid "Delete"
 msgstr "Smazat"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Nastavit obálku"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Obálka"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "Nastaví polohu bodu obálky."
@@ -6406,6 +6623,11 @@ msgstr "Konec:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Vybráno"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Upravené štítky"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8037,10 +8259,6 @@ msgstr "Zastavit &přehrávání"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Přehrát"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Výzva k zadání Nyquist"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10105,6 +10323,12 @@ msgstr "Vadná hlavička přídavného modulu Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11454,15 +11678,6 @@ msgstr "65-105 kB/s"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kB/s (menší soubory)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Rychle"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Standardní"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11488,6 +11703,11 @@ msgstr "Skvělý"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Mimořádný"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Standardní"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11521,10 +11741,6 @@ msgstr "Režim datového toku:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kvalita"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Proměnlivá rychlost:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13482,7 +13698,7 @@ msgstr "Informace o zvuko&vém zařízení..."
 msgid "&MIDI Device Info..."
 msgstr "Informace o zařízení &MIDI..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Zobrazit &zápis..."
 
@@ -14994,6 +15210,11 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Další nabídky (zapnout/vypnout)"
 
 #: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "&Další nabídky (zapnout/vypnout)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "&Zobrazit přebuzení"
 
@@ -15180,6 +15401,11 @@ msgid "Bro&wse..."
 msgstr "Pro&cházet..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "Ukázat výstup"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Adresář pro dočasné soubory"
 
@@ -15198,10 +15424,6 @@ msgstr "Proc&házet..."
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "&Volné místo:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "Volné místo"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15541,10 +15763,6 @@ msgstr "Ukázat pravítko pro přehrávání proměnlivou rychlostí"
 msgid "Language \"%s\" is unknown"
 msgstr "Jazyk \"%s\" je neznámý"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Ovládání zesílení (hlavní)"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "Rozhraní"
@@ -15808,24 +16026,8 @@ msgid "MP3 Library Version:"
 msgstr "Verze knihovny MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Knihovna LAME MP3:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "&Hledat..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "&Stáhnout"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Knihovna pro nahrávání/ukládání FFmpeg"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "Verze knihovny FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15834,6 +16036,10 @@ msgstr "Nenalezena žádná vhodná knihovna FFmpeg"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "Podpora FFmpegu není přeložena v"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "Verze knihovny FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16094,11 +16300,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Přesunout klip nahoru nebo dolů mezi stopami"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Obálka"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Změnit křivku hlasitosti"
@@ -16233,14 +16434,6 @@ msgid "Preferences:"
 msgstr "Nastavení:"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16 bit"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24 bit"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "Nastavení kvality"
 
@@ -16290,6 +16483,14 @@ msgstr "Pře&vodník vzorkovacího kmitočtu:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Ná&hodný šum:"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16 bit"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24 bit"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -18937,7 +19138,7 @@ msgstr ""
 "                      nebo zmenšete \"šířku\" filtru."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Chyba.~%"
@@ -19603,7 +19804,8 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, fuzzy, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr "Bylo zjištěno příliš mnoho ticha. Přidáno pouze prvních 10 000 štítků."
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -19864,20 +20066,18 @@ msgid "Allow"
 msgstr "Povolit"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Chyba.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "Úspěch.~%Soubory zapsány do:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
 msgstr "Varování.nNepodařilo se zkopírovat některé soubory:n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, fuzzy, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 "Přídavné moduly nainstalovány.n(Pro povolení efektu použijte správce "
 "přídavného modulu):"
@@ -20700,6 +20900,30 @@ msgstr "Kmitočet jehel radaru (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Chyba.~%Požadována stopa sterea."
 
+#~ msgid "Fast"
+#~ msgstr "Rychle"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Proměnlivá rychlost:"
+
+#~ msgid "Free Space"
+#~ msgstr "Volné místo"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Ovládání zesílení (hlavní)"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "Knihovna LAME MP3:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Hledat..."
+
+#~ msgid "&Download"
+#~ msgstr "&Stáhnout"
+
+#~ msgid "Error.n"
+#~ msgstr "Chyba.n"
+
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Nepodařilo se uklidit osiřelé bloky"
 
@@ -20776,9 +21000,6 @@ msgstr "Chyba.~%Požadována stopa sterea."
 
 #~ msgid "Select to Ends"
 #~ msgstr "Vybrat po konec"
-
-#~ msgid "Special Command"
-#~ msgstr "Zvláštní příkaz"
 
 #~ msgid ""
 #~ "Export recording to %s\n"
@@ -20895,9 +21116,6 @@ msgstr "Chyba.~%Požadována stopa sterea."
 
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Nelze odstranit starý automaticky uložený soubor: %s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "Chyba při dekódování souboru"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"
@@ -23385,9 +23603,6 @@ msgstr "Chyba.~%Požadována stopa sterea."
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "Použitá velikost bloku: %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Neznámá volba příkazového řádku: %s\n"
 
 #~ msgid "Command-line options supported:"
 #~ msgstr "Podporované možnosti příkazového řádku:"

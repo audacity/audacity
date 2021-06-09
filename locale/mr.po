@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2020-10-18 18:31+0530\n"
 "Last-Translator: Prof. Mukul Kulkarni <mlk.imcc@mespune.in>\n"
 "Language-Team: Prof. Mukul Kulkarni <mlk.imcc@mespune.in>\n"
@@ -18,6 +18,204 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
 "X-Generator: Poedit 2.4.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "निर्धारित करण्यात अक्षम"
+
+#: libraries/lib-strings/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
+msgstr "बाइट्स"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr ""
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "Simplified"
+msgstr "सोपे"
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "System"
+msgstr "संगणक प्रणाली तारीख(&D)"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "ऑड्यासिटीला व्हँप प्रभाव समर्थन प्रदान करते"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "टिप्पण्या"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "अज्ञात"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "अज्ञात"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "पूर्वनिर्धारितची धारिका वाचण्यात बंद."
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4 (पूर्वनिर्धारित)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "उत्कृष्ठ"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "ग्रेस्केल(&y)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "(&L)रेखीय प्रमाणात"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "ऑड्यासिटी मधून बाहेर पडा"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "माध्यम"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "धारिका विसंकेतन करताना त्रुटी आली"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "मेटा माहिती  लोड करण्यात त्रुटी"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "ऑड्यासिटी साधनपट्टी%s"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "विशेष आज्ञा"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "विशेष आज्ञा"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -404,7 +602,19 @@ msgstr "विकसक"
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "दस्तऐवजीकरण आणि समर्थन"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
 msgid "%s, documentation and support"
+msgstr "दस्तऐवजीकरण आणि समर्थन"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "दस्तऐवजीकरण आणि समर्थन"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -621,7 +831,7 @@ msgstr ""
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
 msgstr ""
 "&nbsp; &nbsp; ये <b>ऑड्यासिटी </b> हे नाव डोमिनिक माझोनीचे नोंदणीकृत अंकित केलेआहे.."
 "<br><br>"
@@ -2137,6 +2347,21 @@ msgid "Report generated to:"
 msgstr "इथे अहवाल निर्माण केला:"
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s: %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "कोडेक शोधण्यात अपयश"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "कोडेक शोधण्यात अपयश"
+
+#: src/DBConnection.cpp
 #, fuzzy
 msgid "Checkpointing project"
 msgstr "चालू प्रकल्प"
@@ -3053,33 +3278,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "अंतर्गत त्रुटी"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "निर्धारित करण्यात अक्षम"
-
-#: src/Internat.cpp
-#, fuzzy, c-format
-msgid "%s bytes"
-msgstr "बाइट्स"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr ""
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "नावपट्टी संपादित करा"
@@ -3090,8 +3288,8 @@ msgid "Track"
 msgstr "गीतपट्टा"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "नाव-पट्टी"
@@ -3185,16 +3383,6 @@ msgstr "तुम्ही निवडलेली भाषा, %s (%s), प�
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "खा‍त्री करा"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "Simplified"
-msgstr "सोपे"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "System"
-msgstr "संगणक प्रणाली तारीख(&D)"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3685,6 +3873,10 @@ msgstr[1] "हे प्लग-इन सुरू करायचे?"
 msgid "Enable new plug-ins"
 msgstr "नवीन प्लग-इन सुरू करा"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "'नाइक्विस्ट (Nyquist) Prompt"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "मुद्रण करताना समस्या आली."
@@ -4036,9 +4228,9 @@ msgstr "ऑड्यासिटी प्रकल्प जतन करत �
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4197,6 +4389,11 @@ msgstr "प्रकल्प धारिका उघडू शकत ना�
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "कोडेक शोधण्यात अपयश"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4396,6 +4593,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "प्रकल्पाची प्रत जतन करताना त्रुटी"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "प्रकल्प धारिका उघडू शकत नाही"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "धारिका किंवा प्रकल्प उघडण्यात त्रुटी"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4645,7 +4852,7 @@ msgid "24-bit PCM"
 msgstr "24-बिट PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-बिट दशमलव"
 
@@ -4960,10 +5167,6 @@ msgstr "वर्ष"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "जाति"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "टिप्पण्या"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6364,6 +6567,17 @@ msgstr "वेळ:"
 msgid "Delete"
 msgstr "हटवा"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "लिफाफा स्थापित करा"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "लिफाफा"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "एक लिफाफा बिंदू स्थान स्थापित करा."
@@ -6383,6 +6597,11 @@ msgstr "शेवट:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "निवडलेले"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "संपादित नावपट्टी"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8063,10 +8282,6 @@ msgstr "पुनर्मुद्रण बंद करा (&P)"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "वाजवा"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "'नाइक्विस्ट (Nyquist) Prompt"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10140,6 +10355,12 @@ msgstr "III - निर्मिती 'नाइक्विस्ट (Nyquist)
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11520,15 +11741,6 @@ msgstr ""
 msgid "45-85 kbps (Smaller files)"
 msgstr "%s kbps (लहान धारिका)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "वेगवान"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "मानक"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11554,6 +11766,11 @@ msgstr ""
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr ""
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "मानक"
 
 #: src/export/ExportMP3.cpp
 #, fuzzy
@@ -11588,10 +11805,6 @@ msgstr "बिट दर प्रभाव:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "गुणवत्ता"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "अस्थिर वेग:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13554,7 +13767,7 @@ msgstr "ध्वनी उपकरण माहिती ...(&d)"
 msgid "&MIDI Device Info..."
 msgstr "एमआयडीआय (MIDI) उपकरण माहिती ...(&M)"
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "नोंदी दाखवा...(&L)"
 
@@ -15092,6 +15305,11 @@ msgid "&Extra Menus (on/off)"
 msgstr "अतिरिक्त यादी (चालू / बंद)(&E)"
 
 #: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "अतिरिक्त यादी (चालू / बंद)(&E)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "फीत दर्शवा (चालू / बंद)(&S)"
 
@@ -15289,6 +15507,11 @@ msgid "Bro&wse..."
 msgstr "ब्राऊज़..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "उत्पादित दर्शवा"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "तात्पुरती धारिका  निर्देशिका"
 
@@ -15309,11 +15532,6 @@ msgstr "ब्राऊज़..."
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "&Free Space:"
-msgstr "मोकळी जागा:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Free Space"
 msgstr "मोकळी जागा:"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15661,10 +15879,6 @@ msgstr "स्क्रब मोजणेपट्टी दर्शवा"
 msgid "Language \"%s\" is unknown"
 msgstr "भाषा \"%s\" अज्ञात आहे"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "सर्वात महत्वाच नियंत्रण वाढवा"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -15922,24 +16136,8 @@ msgid "MP3 Library Version:"
 msgstr "एमपी३ (MP3) ग्रंथालय आवृत्ती:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME एमपी३ (MP3) ग्रंथालय:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "शोधून काढणे...(&L)"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "डाउनलोड करा(&D)"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "एफएफएमपीईजी (FFmpeg) आयात आणि निर्यात ग्रंथालय"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "Ffmpeg ग्रंथालय आवृत्ती:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15949,6 +16147,10 @@ msgstr "सुसंगत ffmpeg ग्रंथालय आढळली न�
 #, fuzzy
 msgid "FFmpeg support is not compiled in"
 msgstr "Ffmpeg समर्थन संकलित नाही"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "Ffmpeg ग्रंथालय आवृत्ती:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16217,11 +16419,6 @@ msgid "Move clip up/down between tracks"
 msgstr "गीतपट्टा दरम्यान फीत खाली /वर हलवा"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "लिफाफा"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "विस्तार लिफाफा बदला"
@@ -16358,14 +16555,6 @@ msgid "Preferences:"
 msgstr "प्राधान्ये: "
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-बिट्"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-बिट्"
-
-#: src/prefs/QualityPrefs.cpp
 #, fuzzy
 msgid "Preferences for Quality"
 msgstr "प्राधान्ये: "
@@ -16416,6 +16605,14 @@ msgstr "नमुना दर बदलणारा (&T):"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "डिथर:(&h)"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-बिट्"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-बिट्"
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -19115,7 +19312,7 @@ msgstr ""
 "                       किंवा 'रुंदी' चाळण कमी करा."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "त्रुटी. ~%"
@@ -19804,7 +20001,8 @@ msgid "~ah ~am ~as"
 msgstr ""
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -20066,21 +20264,18 @@ msgid "Allow"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
-msgid "Error.n"
-msgstr "त्रुटी"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "ऑड्यासिटी %s मध्ये धारिका  उघडण्यात अयशस्वी."
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20913,6 +21108,32 @@ msgstr "रडार सुयाची वारंवारता"
 msgid "Error.~%Stereo track required."
 msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आवश्यक."
 
+#~ msgid "Fast"
+#~ msgstr "वेगवान"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "अस्थिर वेग:"
+
+#, fuzzy
+#~ msgid "Free Space"
+#~ msgstr "मोकळी जागा:"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "सर्वात महत्वाच नियंत्रण वाढवा"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME एमपी३ (MP3) ग्रंथालय:"
+
+#~ msgid "&Locate..."
+#~ msgstr "शोधून काढणे...(&L)"
+
+#~ msgid "&Download"
+#~ msgstr "डाउनलोड करा(&D)"
+
+#, fuzzy
+#~ msgid "Error.n"
+#~ msgstr "त्रुटी"
+
 #~ msgid "File dialog failed with error code %0lx."
 #~ msgstr "त्रुटी संकेतसह धारिका संवाद अयशस्वी%0lx."
 
@@ -21009,9 +21230,6 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 
 #~ msgid "Select to Ends"
 #~ msgstr "समाप्त होण्याकरिता निवडा"
-
-#~ msgid "Special Command"
-#~ msgstr "विशेष आज्ञा"
 
 #~ msgid "cleaned"
 #~ msgstr "साफ"
@@ -21258,9 +21476,6 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 
 #~ msgid "Could not decode file: %s"
 #~ msgstr "आधीच्याप्रमाणे विसंकेतन करणे शक्य नाही:%s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "धारिका विसंकेतन करताना त्रुटी आली"
 
 #~ msgid "Could not remove old auto save file"
 #~ msgstr "जुनी स्वयंचलित जतन धारिका काढू शकली नाही"
@@ -21825,8 +22040,8 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ "Error~%The file must be a plain ASCII text file~%with '.txt' file "
 #~ "extension."
 #~ msgstr ""
-#~ "त्रुटी ~% धारिका '.txt' धारिका विस्तारासह धारिका एक साधी ASCII मजकूर धारिका "
-#~ "~% असणे आवश्यक आहे."
+#~ "त्रुटी ~% धारिका '.txt' धारिका विस्तारासह धारिका एक साधी ASCII मजकूर धारिका ~"
+#~ "% असणे आवश्यक आहे."
 
 #~ msgid "Error~%'~~/' is not valid on Windows"
 #~ msgstr "त्रुटी ~% '~~ /' विंडोज वर मान्य नाही"

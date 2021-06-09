@@ -17,6 +17,14 @@
 
 #include "Internat.h"
 
+//! A type of an exception
+enum class ExceptionType
+{
+    Internal, //!< Indicates internal failure from Audacity.
+    BadUserAction, //!< Indicates that the user performed an action that is not allowed.
+    BadEnvironment, //!< Indicates problems with environment, such as a full disk
+};
+
 //! Base class for exceptions specially processed by the application
 /*! Objects of this type can be thrown and caught in any thread, stored, and then used by the main
  thread in later idle time to explain the error condition to the user.
@@ -57,7 +65,8 @@ class AUDACITY_DLL_API MessageBoxException /* not final */
 protected:
    //! If default-constructed with empty caption, it makes no message box.
    explicit MessageBoxException(
-      const TranslatableString &caption = {} //!< Shown in message box's frame; not the actual message
+      ExceptionType exceptionType, //!< Exception type
+      const TranslatableString &caption //!< Shown in message box's frame; not the actual message
    );
    ~MessageBoxException() override;
 
@@ -69,6 +78,8 @@ protected:
 
 private:
    TranslatableString caption; //!< Stored caption
+   ExceptionType exceptionType; //!< Exception type
+
    mutable bool moved { false }; //!< Whether @c *this has been the source of a copy
 protected:
    mutable wxString helpUrl{ "" };
@@ -80,11 +91,12 @@ class AUDACITY_DLL_API SimpleMessageBoxException /* not final */
 {
 public:
    explicit SimpleMessageBoxException(
+      ExceptionType exceptionType,        //!< Exception type
       const TranslatableString &message_, //<! Message to show
       const TranslatableString &caption = XO("Message"), //<! Short caption in frame around message
       const wxString &helpUrl_ = "" // Optional URL for help.
    )
-      : MessageBoxException{ caption }
+      : MessageBoxException { exceptionType, caption }
       , message{ message_ }
    {
       helpUrl = helpUrl_;

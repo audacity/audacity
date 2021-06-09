@@ -145,7 +145,12 @@ void DoZoomFitV(AudacityProject &project)
          - range.sum( TrackView::GetTrackHeight );
    
    // Give each resized track the average of the remaining height
-   height = height / count;
+   // Bug 2803: Cast count to int, because otherwise the result of 
+   // division will be unsigned too, and will be a very large number 
+   // if height was negative!
+   height = height / (int)count;
+   // Use max() so that we don't set a negative height when there is
+   // not enough room.
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)

@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2003-06-23 11:40+0200\n"
 "Last-Translator: Ilija Iliev <strumjan@mol.net.mk>\n"
 "Language-Team: macedonian <mk@li.org>\n"
@@ -17,6 +17,201 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.0.1\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Неможно да се пронајде"
+
+#: libraries/lib-strings/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
+msgstr "бајти"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr ""
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "Simplified"
+msgstr "Засилување"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Аudacity поставки"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+#, fuzzy
+msgid "Comments"
+msgstr "Коментари:"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown exception"
+msgstr "Непозната команднолинијска опција: %s\n"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown assertion"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown error"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Неможно да се пронајде"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Стандардни краеви"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Година:"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Аudacity прва употреба"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Канали:"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Грешка при вчитување датотека."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Грешка при вчитување датотека."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Аudacity прва употреба"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Посебна благодарност:"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Посебна благодарност:"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -413,8 +608,20 @@ msgstr "Крива"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "Крива"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr ""
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -619,7 +826,7 @@ msgstr ""
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
 msgstr ""
 
 #: src/AboutDialog.cpp
@@ -2086,6 +2293,21 @@ msgid "Report generated to:"
 msgstr ""
 
 #: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr ""
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Тивок почеток"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Неможно да се пронајде"
+
+#: src/DBConnection.cpp
 #, fuzzy
 msgid "Checkpointing project"
 msgstr "Создаден нов проект"
@@ -2934,33 +3156,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr ""
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Неможно да се пронајде"
-
-#: src/Internat.cpp
-#, fuzzy, c-format
-msgid "%s bytes"
-msgstr "бајти"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr ""
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr ""
@@ -2971,8 +3166,8 @@ msgid "Track"
 msgstr ""
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 #, fuzzy
 msgid "Label"
@@ -3069,15 +3264,6 @@ msgstr ""
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
-msgstr ""
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "Simplified"
-msgstr "Засилување"
-
-#: src/Languages.cpp
-msgid "System"
 msgstr ""
 
 #: src/Legacy.cpp
@@ -3555,6 +3741,10 @@ msgstr[1] "Неможно да се пронајде"
 msgid "Enable new plug-ins"
 msgstr "Неможно да се пронајде"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr ""
@@ -3861,9 +4051,9 @@ msgstr "Неможно да се пронајде"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4018,6 +4208,11 @@ msgstr "Неможно да се отвори проектот."
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Неможно да се пронајде"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4189,6 +4384,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, fuzzy
 msgid "Error Saving Copy of Project"
+msgstr "Подготвувам Ladspa ефект: %s"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Неможно да се отвори проектот."
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
 msgstr "Подготвувам Ladspa ефект: %s"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
@@ -4432,7 +4637,7 @@ msgid "24-bit PCM"
 msgstr ""
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr ""
 
@@ -4752,11 +4957,6 @@ msgstr "Година:"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr ""
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Comments"
-msgstr "Коментари:"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6177,6 +6377,17 @@ msgstr ""
 msgid "Delete"
 msgstr "Означи"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Крива"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Крива"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr ""
@@ -6199,6 +6410,11 @@ msgstr ""
 #, fuzzy
 msgid "Selected"
 msgstr "Означи"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Даден наслов"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -7889,10 +8105,6 @@ msgstr "Плејбек"
 
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
-msgstr ""
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
 msgstr ""
 
 #. i18n-hint: Technical term for a kind of curve.
@@ -9954,6 +10166,12 @@ msgstr "Nyquist јавка"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11211,15 +11429,6 @@ msgstr ""
 msgid "45-85 kbps (Smaller files)"
 msgstr ""
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr ""
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr ""
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11244,6 +11453,11 @@ msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
+msgstr ""
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
 msgstr ""
 
 #: src/export/ExportMP3.cpp
@@ -11279,10 +11493,6 @@ msgstr ""
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Квалитет"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr ""
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13173,7 +13383,7 @@ msgstr ""
 msgid "&MIDI Device Info..."
 msgstr ""
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr ""
 
@@ -14863,6 +15073,10 @@ msgid "&Extra Menus (on/off)"
 msgstr ""
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr ""
+
+#: src/menus/ViewMenus.cpp
 #, fuzzy
 msgid "&Show Clipping (on/off)"
 msgstr "Не дозволувај преку"
@@ -15061,6 +15275,10 @@ msgid "Bro&wse..."
 msgstr "Одбери..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "&Macro output:"
+msgstr ""
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr ""
 
@@ -15080,11 +15298,6 @@ msgstr "Одбери..."
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "&Free Space:"
-msgstr "Слободен простор:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Free Space"
 msgstr "Слободен простор:"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15431,10 +15644,6 @@ msgstr ""
 msgid "Language \"%s\" is unknown"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr ""
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -15685,23 +15894,7 @@ msgid "MP3 Library Version:"
 msgstr "Верзија на MP3 библиотека:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
-msgstr ""
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -15710,6 +15903,10 @@ msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
+msgstr ""
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
 msgstr ""
 
 #: src/prefs/LibraryPrefs.cpp
@@ -15971,11 +16168,6 @@ msgid "Move clip up/down between tracks"
 msgstr ""
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Крива"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Смени крива на засилување"
@@ -16120,14 +16312,6 @@ msgid "Preferences:"
 msgstr "Аudacity поставки"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr ""
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr ""
-
-#: src/prefs/QualityPrefs.cpp
 #, fuzzy
 msgid "Preferences for Quality"
 msgstr "Аudacity поставки"
@@ -16179,6 +16363,14 @@ msgstr ""
 #. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
+msgstr ""
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr ""
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
 msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
@@ -18969,7 +19161,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy, lisp-format
 msgid "Error.~%"
 msgstr "Грешка"
@@ -19691,7 +19883,8 @@ msgid "~ah ~am ~as"
 msgstr ""
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -19956,21 +20149,18 @@ msgid "Allow"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
-msgid "Error.n"
-msgstr "Грешка"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "Неможно да се пронајде"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20804,6 +20994,14 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Free Space"
+#~ msgstr "Слободен простор:"
+
+#, fuzzy
+#~ msgid "Error.n"
+#~ msgstr "Грешка"
+
+#, fuzzy
 #~ msgid "Select any uncompressed audio file"
 #~ msgstr "Одберете која било некомпресирана аудио датотека..."
 
@@ -20844,10 +21042,6 @@ msgstr ""
 #~ msgstr "Селекција на крај"
 
 #, fuzzy
-#~ msgid "Special Command"
-#~ msgstr "Посебна благодарност:"
-
-#, fuzzy
 #~ msgid ""
 #~ "Export recording to %s\n"
 #~ "/%s/%s.%s"
@@ -20871,10 +21065,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Неможно да запишам во датотеката:"
-
-#, fuzzy
-#~ msgid "Error decoding file"
-#~ msgstr "Грешка при вчитување датотека."
 
 #, fuzzy
 #~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
@@ -21479,9 +21669,6 @@ msgstr ""
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "Користи блок големина од %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Непозната команднолинијска опција: %s\n"
 
 #, fuzzy
 #~ msgid "Plot Spectrum"

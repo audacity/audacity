@@ -956,6 +956,10 @@ list( APPEND SOURCES
       widgets/ReadOnlyText.h
       widgets/Ruler.cpp
       widgets/Ruler.h
+      $<$<BOOL:${${_OPT}has_sentry_reporting}>:
+         widgets/ErrorReportDialog.cpp
+         widgets/ErrorReportDialog.h
+      >
       widgets/Warning.cpp
       widgets/Warning.h
       widgets/WindowAccessible.cpp
@@ -1361,8 +1365,7 @@ endif()
 list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
 foreach( LIBRARY ${LIBRARIES} )
    if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
-      string( REGEX REPLACE ".*>.*:(.*)>" "\\1" LIBRARY "${LIBRARY}" )
-      string( REGEX REPLACE "^-(l|framework )" "" LIBRARY "${LIBRARY}" )
+      canonicalize_node_name(LIBRARY "${LIBRARY}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${LIBRARY}\"" )
    endif()
 endforeach()

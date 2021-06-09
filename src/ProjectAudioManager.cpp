@@ -264,7 +264,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          auto &window = GetProjectFrame( mProject );
          window.CallAfter( [&]{
          // Show error message if stream could not be opened
-         ShowErrorDialog(&window, XO("Error"),
+         ShowExceptionDialog(&window, XO("Error"),
                          XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
          });
@@ -757,7 +757,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Show error message if stream could not be opened
          auto msg = XO("Error opening recording device.\nError code: %s")
             .Format( gAudioIO->LastPaErrorString() );
-         ShowErrorDialog(&GetProjectFrame( mProject ),
+         ShowExceptionDialog(&GetProjectFrame( mProject ),
             XO("Error"), msg, wxT("Error_opening_sound_device"));
       }
    }

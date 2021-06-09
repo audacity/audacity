@@ -168,6 +168,14 @@ include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
 
+cmake_dependent_option(
+   ${_OPT}has_sentry_reporting 
+   "Build support for sending errors to Sentry"
+   On
+   "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
+   Off
+)
+
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
    set( IS_64BIT ON )

@@ -5,9 +5,9 @@
 # அருண் குமார் - Arun Kumar <thangam.arunx@gmail.com>, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -17,6 +17,202 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.9\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "தீர்மானிக்க முடியாதுள்ளது"
+
+#: libraries/lib-strings/Internat.cpp
+#, fuzzy, c-format
+msgid "%s bytes"
+msgstr "பைட்டுகள்"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr ""
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr ""
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "Simplified"
+msgstr "!எளிமையான தோற்றம்"
+
+#: libraries/lib-strings/Languages.cpp
+#, fuzzy
+msgid "System"
+msgstr "ஆரம்ப திகதி"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "விருப்பங்கள்: "
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "பின்னூட்டங்கள்"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown exception"
+msgstr "தெரியாத கட்டளை வரித் தெரிவு : %s\n"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown assertion"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown error"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "சோதனை கோப்பை திறக்க/உருவாக்க முடியவில்லை"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "இயல்பாக பெரிதாக்கவும்"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "அளவு"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "நேரியல்"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Audacity வெளியேறவும்"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "சானெல்"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "கோப்பை திறப்பதில் வழ"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "சுமையேற்றுவதில் வழு"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s கருவித்தட்டு "
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "கட்டளையை தெரிவு செய்க."
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "கட்டளையை தெரிவு செய்க."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -421,8 +617,20 @@ msgstr "மட்டம்"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "மட்டம்"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr ""
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -642,7 +850,7 @@ msgstr ""
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
 msgstr ""
 "<b>Audacity&reg;</b> எனும் பெயரானது Dominic Mazzoni இன் பதியப்பட்ட அடையாளமாகும்"
 
@@ -2182,6 +2390,21 @@ msgid "Report generated to:"
 msgstr ""
 
 #: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr ""
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "நேரடியாக வாசிக்கவும்"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "%s இனை நீக்க முடியாதுள்ளது"
+
+#: src/DBConnection.cpp
 #, fuzzy
 msgid "Checkpointing project"
 msgstr "தற்போதைய &செயற்திட்டத்தில் நிறைவேற்றவும்"
@@ -3075,33 +3298,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "(வெளி திட்டம்)"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "தீர்மானிக்க முடியாதுள்ளது"
-
-#: src/Internat.cpp
-#, fuzzy, c-format
-msgid "%s bytes"
-msgstr "பைட்டுகள்"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr ""
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr ""
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "சிட்டைகளை தொகு"
@@ -3112,8 +3308,8 @@ msgid "Track"
 msgstr "ஒலித்துண்டு"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "சிட்டை"
@@ -3209,16 +3405,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "உறுதி"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "Simplified"
-msgstr "!எளிமையான தோற்றம்"
-
-#: src/Languages.cpp
-#, fuzzy
-msgid "System"
-msgstr "ஆரம்ப திகதி"
 
 #: src/Legacy.cpp
 #, fuzzy
@@ -3698,6 +3884,10 @@ msgstr[1] "மன்னிக்கவும், Vamp சொருகியை �
 msgid "Enable new plug-ins"
 msgstr "மன்னிக்கவும், Vamp சொருகியை சுமையேற்றுவதில் தோல்வி"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr ""
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "அச்சிடுவதில் சிறு பிரட்சனை"
@@ -4040,9 +4230,9 @@ msgstr "Audacity திட்டத்தை சேமிக்கிறது"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4200,6 +4390,11 @@ msgstr "திட்ட கோப்பினை திறக்க முடி
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "வகை கோப்பை சேமிக்க முடியவில்லை"
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4386,6 +4581,16 @@ msgstr ""
 #, fuzzy
 msgid "Error Saving Copy of Project"
 msgstr "திட்டத்தை சேமிப்பதில் வழு"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "திட்ட கோப்பினை திறக்க முடியாதுள்ளது"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "கோப்பை அல்லது திட்டத்தை திறப்பதில் வழு"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -4642,7 +4847,7 @@ msgid "24-bit PCM"
 msgstr "24-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-bit float"
 
@@ -4965,10 +5170,6 @@ msgstr "வருடம்"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "இலக்கியநட"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "பின்னூட்டங்கள்"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6436,6 +6637,17 @@ msgstr "நேரம்"
 msgid "Delete"
 msgstr "அழி"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "மட்டம்"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr ""
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr ""
@@ -6458,6 +6670,11 @@ msgstr ""
 #, fuzzy
 msgid "Selected"
 msgstr "தெரிக"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "தொகுக்கப்பட்ட சிட்டைகள்"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8209,10 +8426,6 @@ msgstr "பின்னணி"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "ஒலி"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr ""
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10377,6 +10590,12 @@ msgstr "Nyquist வெளியீடு"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11643,15 +11862,6 @@ msgstr ""
 msgid "45-85 kbps (Smaller files)"
 msgstr "(சிறிய கோப்புகள்)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "வேகம்"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "நியமம்"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11677,6 +11887,11 @@ msgstr "அற்புதம்"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "அறுதி"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "நியமம்"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11710,10 +11925,6 @@ msgstr "பிட் வீத மாதிரி:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "தரம்"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "மாறி வேகம்"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13635,7 +13846,7 @@ msgstr "ஒலி சாதனா தகவல் ..."
 msgid "&MIDI Device Info..."
 msgstr "ஒலி சாதனா தகவல் ..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "புகுபதிகையை காண்பி"
 
@@ -15339,6 +15550,11 @@ msgstr "பெய&ர்கொடு (ஏற்று/அணை) "
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "பெய&ர்கொடு (ஏற்று/அணை) "
+
+#: src/menus/ViewMenus.cpp
+#, fuzzy
 msgid "&Show Clipping (on/off)"
 msgstr "வெட்டப்பட &துண்டை காட்டு"
 
@@ -15543,6 +15759,11 @@ msgid "Bro&wse..."
 msgstr "உலாவு..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "வெளியீட்டை காட்டு"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr ""
 
@@ -15563,11 +15784,6 @@ msgstr "உலாவு..."
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "&Free Space:"
-msgstr "இலவச இடம்:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Free Space"
 msgstr "இலவச இடம்:"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15935,10 +16151,6 @@ msgstr ""
 msgid "Language \"%s\" is unknown"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "தலைமை கட்டுபாட்டை பெற"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -16204,26 +16416,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 நூலக பதிப்பு"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 நூலகம்"
-
-#: src/prefs/LibraryPrefs.cpp
-#, fuzzy
-msgid "&Locate..."
-msgstr "கோ&amp;ப்பகத்தை காட்டு..."
-
-#: src/prefs/LibraryPrefs.cpp
-#, fuzzy
-msgid "&Download"
-msgstr "தரவிறக்கம்"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg இறக்கு/ஏற்று நூலகம்"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg நூலக பதிப்பு"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -16233,6 +16427,10 @@ msgstr "ஒத்த FFmpeg நூலகம் ஏதும் காணப்�
 #, fuzzy
 msgid "FFmpeg support is not compiled in"
 msgstr "FFmpeg ஆதரவு தொகுக்கப்படவில்லை"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg நூலக பதிப்பு"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16505,11 +16703,6 @@ msgid "Move clip up/down between tracks"
 msgstr "தடங்களுக்கு இடையே மேலும் கீழுமாக நகர்த்தவும்"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr ""
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr ""
@@ -16659,16 +16852,6 @@ msgstr "விருப்பங்கள்: "
 
 #: src/prefs/QualityPrefs.cpp
 #, fuzzy
-msgid "16-bit"
-msgstr "16-bit PCM"
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
-msgid "24-bit"
-msgstr "24-bit PCM"
-
-#: src/prefs/QualityPrefs.cpp
-#, fuzzy
 msgid "Preferences for Quality"
 msgstr "விருப்பங்கள்: "
 
@@ -16722,6 +16905,16 @@ msgstr "மாதிரி விகித மாற்றி:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr ""
+
+#: src/prefs/QualitySettings.cpp
+#, fuzzy
+msgid "16-bit"
+msgstr "16-bit PCM"
+
+#: src/prefs/QualitySettings.cpp
+#, fuzzy
+msgid "24-bit"
+msgstr "24-bit PCM"
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -19555,7 +19748,7 @@ msgid ""
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy, lisp-format
 msgid "Error.~%"
 msgstr "வழு."
@@ -20288,7 +20481,8 @@ msgid "~ah ~am ~as"
 msgstr ""
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -20558,21 +20752,18 @@ msgid "Allow"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
-msgid "Error.n"
-msgstr "வழு."
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr ""
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "%s இனை நீக்க முடியாதுள்ளது"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -21413,6 +21604,34 @@ msgstr "அதிர்வெண் (hz)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "Fast"
+#~ msgstr "வேகம்"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "மாறி வேகம்"
+
+#, fuzzy
+#~ msgid "Free Space"
+#~ msgstr "இலவச இடம்:"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "தலைமை கட்டுபாட்டை பெற"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3 நூலகம்"
+
+#, fuzzy
+#~ msgid "&Locate..."
+#~ msgstr "கோ&amp;ப்பகத்தை காட்டு..."
+
+#, fuzzy
+#~ msgid "&Download"
+#~ msgstr "தரவிறக்கம்"
+
+#, fuzzy
+#~ msgid "Error.n"
+#~ msgstr "வழு."
+
 #, fuzzy
 #~ msgid "Failed to copy tags"
 #~ msgstr "%s இனை நீக்க முடியாதுள்ளது"
@@ -21497,10 +21716,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Select to Ends"
 #~ msgstr "முடிவை தேர்ந்தெடு"
-
-#, fuzzy
-#~ msgid "Special Command"
-#~ msgstr "கட்டளையை தெரிவு செய்க."
 
 #, fuzzy
 #~ msgid ""
@@ -21616,10 +21831,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "பழைய தானாக சேமிக்கும் கோப்பை நீக்க முடியவில்லை:"
-
-#, fuzzy
-#~ msgid "Error decoding file"
-#~ msgstr "கோப்பை திறப்பதில் வழ"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"
@@ -22909,9 +23120,6 @@ msgstr ""
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "தொகுதி அளவாக %ld ஐ பாவிக்கிறது\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "தெரியாத கட்டளை வரித் தெரிவு : %s\n"
 
 #~ msgid "Command-line options supported:"
 #~ msgstr "கட்டளை வரிசை விருப்புகள் ஆதரித்தவை:"

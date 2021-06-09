@@ -1739,6 +1739,7 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
 
    if (error)
       throw SimpleMessageBoxException{
+         ExceptionType::Internal,
          XO("Resampling failed."),
          XO("Warning"),
          "Error:_Resampling"

@@ -95,6 +95,18 @@ jobs:
         key: host-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
         restore-keys: |
           host-${{ matrix.config.name }}-
+    - name: Check Sentry secrets
+      env:
+        SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+        SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
+        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      if: ${{ env.SENTRY_DSN_KEY != '' && env.SENTRY_HOST != '' && env.SENTRY_PROJECT != '' }}
+      shell: bash
+      run: |
+        echo "SENTRY_PARAMETERS<<EOF" >> $GITHUB_ENV
+        echo "-DSENTRY_DSN_KEY=${SENTRY_DSN_KEY} -DSENTRY_HOST=${SENTRY_HOST} -DSENTRY_PROJECT=${SENTRY_PROJECT}" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
     # =========================================================================
     # WINDOWS: Build (for all versions of Windows)
     # =========================================================================
@@ -113,7 +125,7 @@ jobs:
               -G "${{matrix.config.generator}}" \
               -A ${{matrix.config.platform}} \
               -D audacity_use_pch=no \
-              -D audacity_has_networking=yes 
+              -D audacity_has_networking=yes ${{ env.SENTRY_PARAMETERS }}
 
         # Build Audacity
         cmake --build build --config Release --verbose
@@ -152,7 +164,7 @@ jobs:
               -T buildsystem=1 \
               -G "${{matrix.config.generator}}" \
               -D audacity_use_pch=no \
-              -D audacity_has_networking=yes 
+              -D audacity_has_networking=yes ${{ env.SENTRY_PARAMETERS }}
 
         # Build Audacity
         cmake --build build --config Release
@@ -192,7 +204,7 @@ jobs:
               -B build \
               -G "${{matrix.config.generator}}" \
               -D audacity_use_pch=no \
-              -D audacity_has_networking=yes 
+              -D audacity_has_networking=yes ${{ env.SENTRY_PARAMETERS }} 
 
         # Build Audacity
         cmake --build build --config Release

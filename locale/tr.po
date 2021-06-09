@@ -7,9 +7,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-03-31 20:25+0300\n"
 "Last-Translator: Serkan ÖNDER <serkanonder@outlook.com>\n"
 "Language-Team: \n"
@@ -19,6 +19,203 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.3\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Belirlenemedi"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s bayt"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Basitleştirilmiş"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Sistem"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "Audacity için Vamp efekleri desteği sağlar"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Yorumlar"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown assertion"
+msgstr "Bilinmeyen format"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Unknown error"
+msgstr "Bilinmeyen format"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Ön ayar adı ayarlanamadı"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4 (varsayılan)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Klasik"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "&Gri Tonlamalı"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "&Doğrusal ölçek"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Audacity kapatılsın"
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&Atla"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Kanal"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Dosyanın kodu çözülürken sorun çıktı"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Üst Veri Yüklenirken Sorun Çıktı"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s Araç Çubuğu"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Komut Seçin"
+
+#: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Komut Seçin"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -390,8 +587,20 @@ msgstr "%s, geliştiren"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, developer and support"
+msgstr "%s, belgelendirme ve destek"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
+msgstr "%s, belgelendirme ve destek"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, QA tester, documentation and support"
 msgstr "%s, belgelendirme ve destek"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
@@ -604,8 +813,8 @@ msgstr "%s yazılımının telif hakkı %s 1999-2021 %s Takımına aittir."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+#, fuzzy, c-format
+msgid "The name %s is a registered trademark."
 msgstr "%s adı, Dominic Mazzoni'nin tescilli ticari markasıdır."
 
 #: src/AboutDialog.cpp
@@ -2121,6 +2330,21 @@ msgid "Report generated to:"
 msgstr "Rapor şuraya oluşturuldu:"
 
 #: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "(%d): %s"
+msgstr "%s: %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Bağlantı silinemedi"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Bağlantı geri yüklenemedi"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
 msgstr "Kontrol noktası oluşturma projesi"
 
@@ -3026,33 +3250,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "İç Sorun"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Belirlenemedi"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s bayt"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Etiketleri Düzenle"
@@ -3063,8 +3260,8 @@ msgid "Track"
 msgstr "Parça"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Etiket"
@@ -3157,14 +3354,6 @@ msgstr "Seçtiğiniz %s (%s) dili, %s (%s) sistem diliniz, ile aynı değil."
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Onayla"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Basitleştirilmiş"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Sistem"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3657,6 +3846,10 @@ msgstr[1] "Bu eklenti etkinleştirilsin mi?\n"
 msgid "Enable new plug-ins"
 msgstr "Yeni eklentileri etkinleştirin"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist Komutu"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Yazdırırken bir sorun oldu."
@@ -4024,10 +4217,11 @@ msgid "This is not an Audacity project file"
 msgstr "Bu bir Audacity proje dosyası değil"
 
 #: src/ProjectFileIO.cpp
+#, fuzzy
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
 "Bu proje, Audacity'nin daha yeni bir sürümüyle oluşturuldu:\n"
 "\n"
@@ -4201,6 +4395,11 @@ msgstr "Proje dosyası açılamadı"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "Otomatik kaydetme bilgileri proje dosyasından kaldırılamadı."
+
+#: src/ProjectFileIO.cpp
+#, fuzzy
+msgid "Unable to bind to blob"
+msgstr "Kodlayıcı-çözücü bulunamadı"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4417,6 +4616,16 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Saving Copy of Project"
 msgstr "Projenin Kopyası Kaydedilirken Hata Oluştu"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Can't open new empty project"
+msgstr "Proje dosyası açılamadı"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Error opening a new empty project"
+msgstr "Dosya ya da Proje Açılırken Sorun Çıktı"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4677,7 +4886,7 @@ msgid "24-bit PCM"
 msgstr "24-bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-bit kayan"
 
@@ -4989,10 +5198,6 @@ msgstr "Yıl"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Tür"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Yorumlar"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -6393,6 +6598,17 @@ msgstr "Zaman:"
 msgid "Delete"
 msgstr "Sil"
 
+#: src/commands/SetEnvelopeCommand.cpp
+#, fuzzy
+msgid "Edited Envelope"
+msgstr "Zarfı Ayarla"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Kılıf"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "Bir zarf noktası konumunu ayarlar."
@@ -6412,6 +6628,11 @@ msgstr "Son:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Seçili"
+
+#: src/commands/SetLabelCommand.cpp
+#, fuzzy
+msgid "Edited Label"
+msgstr "Etiketler düzenlendi"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -8042,10 +8263,6 @@ msgstr "Oynatmayı &Durdur"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Oynat"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist Komutu"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -10117,6 +10334,12 @@ msgstr "Nyquist uygulama eki üst bilgisi biçimi hatalı"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -11466,15 +11689,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Daha küçük dosyalar)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Hızlı"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Standart"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11500,6 +11714,11 @@ msgstr "Çılgın"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Ekstrem"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Standart"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11533,10 +11752,6 @@ msgstr "Bit Hızı Kipi:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kalite"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Değişken Hız:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13489,7 +13704,7 @@ msgstr "&Ses Aygıtı Bilgileri..."
 msgid "&MIDI Device Info..."
 msgstr "&MIDI Aygıtı Bilgileri..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Gün&lüğü Görüntüle..."
 
@@ -15001,6 +15216,11 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Ek Menüler (aç/kapat)"
 
 #: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Track &Name (on/off)"
+msgstr "&Ek Menüler (aç/kapat)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "&Kırpılma Görüntülensin (aç/kapat)"
 
@@ -15186,6 +15406,11 @@ msgid "Bro&wse..."
 msgstr "Göz&at..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Macro output:"
+msgstr "Çıkışı görüntüle"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Geçici dosyalar klasörü"
 
@@ -15204,10 +15429,6 @@ msgstr "Göza&t..."
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "&Boş Alan:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "Boş Alan"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15546,10 +15767,6 @@ msgstr "Sarma Cetvelini Görüntüle"
 msgid "Language \"%s\" is unknown"
 msgstr "\"%s\" dili bilinmiyor"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Ana Kazanç Denetimi"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "ARABİRİM"
@@ -15812,24 +16029,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 Kitaplığının Sürümü:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 Kitaplığı:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "&Konum..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "İn&dir"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg İçe/Dışa Aktarma Kitaplığı"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg Kitaplığının Sürümü:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15838,6 +16039,10 @@ msgstr "Uyumlu FFmpeg kitaplığı bulunamadı"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "FFmpeg desteği derlenmemiş"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg Kitaplığının Sürümü:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16099,11 +16304,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Klibi parçalar arasında yukarı / aşağı taşı"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Kılıf"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Ses Yükseltme Kılıfını Değiştir"
@@ -16238,14 +16438,6 @@ msgid "Preferences:"
 msgstr "Tercihler:"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-bit"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-bit"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "Kalite Tercihleri"
 
@@ -16295,6 +16487,14 @@ msgstr "Örnek Hızı Dönüş&türücü:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Titr&eme:"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-bit"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-bit"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -18938,7 +19138,7 @@ msgstr ""
 "                       veya 'Genişlik' süzgecini azaltın."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Hata.~%"
@@ -19607,7 +19807,8 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, fuzzy, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr "Çok fazla sessizlik algılandı. Yalnızca ilk 10000 etiket eklendi."
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -19866,20 +20067,18 @@ msgid "Allow"
 msgstr "İzin ver"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Hata.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "Başarılı.~%Dosyaya yazıldı:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
+#, fuzzy, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
 msgstr "Uyarı.nBazı dosyalar kopyalanamadı:n"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, fuzzy, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
 "Eklentiler yüklendi.n(Efektleri etkinleştirmek için Eklenti Yöneticisini "
 "kullanın):"
@@ -20702,6 +20901,30 @@ msgstr "Radar İğnelerinin Frekansı (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Hata.~%Çift kanal parça gerekli."
 
+#~ msgid "Fast"
+#~ msgstr "Hızlı"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Değişken Hız:"
+
+#~ msgid "Free Space"
+#~ msgstr "Boş Alan"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Ana Kazanç Denetimi"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "LAME MP3 Kitaplığı:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Konum..."
+
+#~ msgid "&Download"
+#~ msgstr "İn&dir"
+
+#~ msgid "Error.n"
+#~ msgstr "Hata.n"
+
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Boştaki blokların temizlenmesi başarısız oldu"
 
@@ -20781,10 +21004,6 @@ msgstr "Hata.~%Çift kanal parça gerekli."
 #, fuzzy
 #~ msgid "Select to Ends"
 #~ msgstr "Bitişe Kadar Seç"
-
-#, fuzzy
-#~ msgid "Special Command"
-#~ msgstr "Komut Seçin"
 
 #, fuzzy
 #~ msgid ""
@@ -20893,9 +21112,6 @@ msgstr "Hata.~%Çift kanal parça gerekli."
 
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Eski otomatik kayıt dosyası kaldırılamadı: %s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "Dosyanın kodu çözülürken sorun çıktı"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"
