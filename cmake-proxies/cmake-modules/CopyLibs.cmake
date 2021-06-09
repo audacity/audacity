@@ -84,7 +84,13 @@ function( gather_libs src )
 
                list( APPEND words "-change ${line} @executable_path/../Frameworks/${refname}" )
 
-               if( NOT "${lib}" IN_LIST VISITED )
+               if(
+	          # Don't do depth first search from modules: assume the fixup
+		  # of .dylib libraries was already done when this function
+		  # was visited for the executable
+	          NOT src MATCHES "\\.so$"
+	          AND NOT "${lib}" IN_LIST VISITED
+	        )
                   gather_libs( ${lib} )
 	       endif()
             endif()
@@ -141,5 +147,9 @@ foreach( cmd ${postcmds} )
    )
 endforeach()
 
-list( REMOVE_DUPLICATES libs )
-file( INSTALL ${libs} DESTINATION ${DST} FOLLOW_SYMLINK_CHAIN )
+# This .cmake file is invoked on Darwin for modules too.
+# Do the INSTALL only for the executable.
+if( NOT SRC MATCHES "\\.so$" )
+   list( REMOVE_DUPLICATES libs )
+   file( INSTALL ${libs} DESTINATION ${DST} FOLLOW_SYMLINK_CHAIN )
+endif()
