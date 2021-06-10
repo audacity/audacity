@@ -162,6 +162,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
+   // XC("Recording", "preference")
    S.StartStatic(XO("Recording"));
    {
       S.StartMultiColumn(2);
