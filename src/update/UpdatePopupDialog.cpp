@@ -45,7 +45,7 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
             S.SetBorder (5);
 
             S.Id (DontShowID).AddCheckBox (
-                XO ("Don't show this again at start up"), !mUpdateManager->isTrackingEnabled());
+                XO ("Don't show this again at start up"), !mUpdateManager->isUpdatesCheckingEnabled());
 
             S.Prop(1).AddSpace(1, 0, 1);
 
@@ -80,7 +80,7 @@ void UpdatePopupDialog::OnSkip (wxCommandEvent&)
 
 void UpdatePopupDialog::OnDontShow (wxCommandEvent& event)
 {
-    mUpdateManager->enableTracking(!event.IsChecked());
+    mUpdateManager->enableUpdatesChecking(!event.IsChecked());
 }
 
 HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)

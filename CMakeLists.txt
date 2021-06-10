@@ -193,7 +193,7 @@ cmake_dependent_option(
 
 cmake_dependent_option(
    ${_OPT}has_updates_check
-   "Has a builtin support for checking of updates"
+   "Build updates checking features into Audacity"
    On
    "${_OPT}has_networking"
    Off
