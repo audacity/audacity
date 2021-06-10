@@ -12,7 +12,6 @@
 #include "VersionPatch.h"
 #include "UpdateDataParser.h"
 
-#include "Project.h"
 #include "Prefs.h"
 
 #include <wx/string.h>
@@ -28,13 +27,13 @@
 class UpdateManager final : public wxEvtHandler
 {
 public:
-    UpdateManager(AudacityProject& project);
+    UpdateManager();
     ~UpdateManager();
 
     void getUpdates();
 
-    void enableTracking(bool enable);
-    bool isTrackingEnabled();
+    void enableUpdatesChecking(bool enable);
+    bool isUpdatesCheckingEnabled();
 
     VersionPatch getVersionPatch() const;
 
@@ -42,14 +41,12 @@ private:
     UpdateDataParser mUpdateDataParser;
     VersionPatch mVersionPatch;
 
-    wxWindow* mParent;
-
     wxTimer mTimer;
     const int mTrackingInterval;
 
     void OnTimer(wxTimerEvent& event);
 
-	/// Scheduling update time for avoiding multiplying update notifications.
+    /// Scheduling update time for avoiding multiplying update notifications.
     bool isTimeToUpdate();
 
 public:

@@ -14,10 +14,11 @@
 #include "IResponse.h"
 #include "Request.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/ErrorDialog.h"
 
 #include <wx/platinfo.h>
 #include <wx/utils.h>
+#include <wx/frame.h>
 
 static const char* prefsUpdatePopupDialogShown = "/Update/UpdatePopupDialogShown";
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
@@ -28,13 +29,10 @@ BEGIN_EVENT_TABLE(UpdateManager, wxEvtHandler)
     EVT_TIMER(ID_TIMER, UpdateManager::OnTimer)
 END_EVENT_TABLE()
 
-UpdateManager::UpdateManager(AudacityProject& project)
+UpdateManager::UpdateManager()
     : mTrackingInterval(
         std::chrono::milliseconds(std::chrono::hours(12)).count())
 {
-    mParent = (wxWindow*)(&GetProjectFrame(project));
-    wxASSERT(mParent);
-
     mTimer.SetOwner(this, ID_TIMER);
     mTimer.StartOnce();
 }
@@ -44,13 +42,13 @@ UpdateManager::~UpdateManager()
     mTimer.Stop();
 }
 
-void UpdateManager::enableTracking(bool enable)
+void UpdateManager::enableUpdatesChecking(bool enable)
 {
     gPrefs->Write(prefsUpdatePopupDialogShown, enable);
     gPrefs->Flush();
 }
 
-bool UpdateManager::isTrackingEnabled()
+bool UpdateManager::isUpdatesCheckingEnabled()
 {
     return gPrefs->ReadBool(prefsUpdatePopupDialogShown, true);
 }
@@ -62,48 +60,50 @@ VersionPatch UpdateManager::getVersionPatch() const
 
 void UpdateManager::getUpdates()
 {
-    audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
+    const audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
     response->setRequestFinishedCallback([response, this](audacity::network_manager::IResponse*) {
 
+        wxFrame* parent = FindProjectFrame(GetActiveProject());
+        wxASSERT(parent);
+
+        if (!parent) return;
+
         if (response->getError() != audacity::network_manager::NetworkError::NoError)
         {
-            AudacityMessageBox(
-                XO("Unable to connect to Audacity update server."),
+            ShowExceptionDialog(parent,
                 XO("Error checking for update"),
-                wxOK | wxCENTRE,
-                NULL);
+                XO("Unable to connect to Audacity update server."),
+                wxString());
 
             return;
         }
 
         if (!mUpdateDataParser.Parse(response->readAll<VersionPatch::UpdateDataFormat>(), &mVersionPatch))
         {
-            AudacityMessageBox(
-                XO("Update data was corrupted."),
+            ShowExceptionDialog(parent,
                 XO("Error checking for update"),
-                wxOK | wxCENTRE,
-                NULL);
+                XO("Update data was corrupted."),
+                wxString());
 
             return;
         }
 
         if (mVersionPatch.version > CurrentBuildVersion())
         {
-            mParent->CallAfter([this] {
-                UpdatePopupDialog dlg(mParent, this);
+            parent->CallAfter([this, parent] {
+                UpdatePopupDialog dlg(parent, this);
                 const int code = dlg.ShowModal();
 
                 if (code == wxID_YES)
                 {
                     if (!wxLaunchDefaultBrowser(mVersionPatch.download))
                     {
-                        AudacityMessageBox(
-                            XO("Can't open the Audacity download link."),
+                        ShowExceptionDialog(parent,
                             XO("Error downloading update"),
-                            wxOK | wxCENTRE,
-                            NULL);
+                            XO("Can't open the Audacity download link."),
+                            wxString());
 
                         return;
                     }
@@ -115,7 +115,7 @@ void UpdateManager::getUpdates()
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    if (isTrackingEnabled() && isTimeToUpdate())
+    if (isUpdatesCheckingEnabled() && isTimeToUpdate())
         getUpdates();
 
     mTimer.StartOnce(mTrackingInterval);
@@ -123,7 +123,7 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 
 bool UpdateManager::isTimeToUpdate()
 {
-    long long nextTrackingTime = std::stoll(
+    long long nextUpdatesCheckingTime = std::stoll(
         gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString());
 
     // Get current time in milliseconds
@@ -135,12 +135,12 @@ bool UpdateManager::isTimeToUpdate()
 
     // If next update time 0 or less then current time -> show update dialog,
     // else this condition allow us to avoid from duplicating update notifications.
-    if (nextTrackingTime < currentTimeInMillisec)
+    if (nextUpdatesCheckingTime < currentTimeInMillisec)
     {
-        nextTrackingTime = currentTimeInMillisec + mTrackingInterval;
+        nextUpdatesCheckingTime = currentTimeInMillisec + mTrackingInterval;
 
         gPrefs->Write(prefsUpdateScheduledTime,
-            wxString(std::to_string(nextTrackingTime)));
+            wxString(std::to_string(nextUpdatesCheckingTime)));
         gPrefs->Flush();
 
         return true;
