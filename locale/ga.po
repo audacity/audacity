@@ -64,10 +64,12 @@ msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Brúigh \"Seol\" chun an tuairisc a sheoladh chuig Audacity. Déantar an fhaisnéis sin "
+"a bhailiú go hanaithnid."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
-msgstr ""
+msgstr "Mionsonraí na faidhbe"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -76,12 +78,12 @@ msgstr "Nótaí"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "&Seol í"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "&Ná seol í"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
@@ -115,20 +117,20 @@ msgstr "Ní fhéidir a aithint"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "Gúm"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (réamhshocrú)"
+msgstr "Dath (réamhshocrú)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr ""
+msgstr "Dath (an seandhath)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
@@ -152,23 +154,23 @@ msgstr "Scoir ó Audacity"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Skip"
-msgstr ""
+msgstr "&Léim thar seo"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "&Suiteáil an nuashonrú"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Cainéal"
+msgstr "Oireas na n-athruithe"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "Léigh tuilleadh ar GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
@@ -184,7 +186,7 @@ msgstr ""
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Truaillíodh sonraí an nuashonraithe."
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
@@ -195,7 +197,7 @@ msgstr "Earráid le linn oscailt an chomhaid"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Ní féidir nasc íosluchtaithe Audacity a oscailt."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
@@ -207,12 +209,12 @@ msgstr "Barra Uirlisí %s Audacity"
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
 msgid "1st Experimental Command..."
-msgstr "Baochas fé leith:"
+msgstr "An Chéad Ordú Turgnamhach:"
 
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
 msgid "2nd Experimental Command"
-msgstr "Baochas fé leith:"
+msgstr "An Dara hOrdú Turgnamhach:"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -339,7 +341,7 @@ msgstr ""
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
-msgstr ""
+msgstr "Nior chuireadh an script i dtaisce."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
@@ -1100,7 +1102,7 @@ msgstr ""
 #: src/AudacityApp.cpp
 #, fuzzy
 msgid "Reset Audacity Preferences"
-msgstr "Roghanna Audacity"
+msgstr "Athshocraigh sainroghanna Audacity"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -1345,7 +1347,7 @@ msgstr "Scoir ó Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
-msgstr ""
+msgstr "&Féach arís é"
 
 #: src/AudacityLogger.cpp
 #, fuzzy
