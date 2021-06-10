@@ -270,10 +270,11 @@ def main():
         sys.exit(0)
 
     client = PipeClient()
+    view_commands_options = {"C": "Commands", "M": "Menus"}
     while True:
         reply = ''
         if sys.version_info[0] < 3:
-            message = input("\nEnter command or 'Q' to quit: ")
+            message = input("\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
         else:
             message = input(
                 "\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
@@ -286,9 +287,10 @@ def main():
             pass
         else:
             command_list = False
-            if message.upper() == 'A':
+            if message.upper() in view_commands_options:
+                category = view_commands_options[message.upper()]
                 command_list = True
-                message = 'GetInfo: Type="Commands" Format="JSON"'
+                message = 'GetInfo: Type="{type}" Format="JSON"'.format(type=category)
             client.write(message, timer=args.show)
             while reply == '':
                 time.sleep(0.1)  # allow time for reply
@@ -297,7 +299,7 @@ def main():
                 else:
                     reply = client.read()
             if command_list:
-                command_helper(reply)
+                command_helper(reply, message)
             else:
                 print(reply)
 
@@ -308,9 +310,20 @@ def usage_helper(reply):
     ===============================
     Interactive command-line
     ===============================
-    To see scripting commands available, enter 'A'
+    Usability assistance:
+    The following contains shortcut commands for easier access to essential
+    information needed to use this terminal with greater confidence.  
     
-    A full list of scripting commands and parameters can be found at:
+    View options are intended for readability for new users exploring the
+    commands available through the mod-script-pipe.
+
+    Terminal shortcut commands:
+    'H' : view this usage help message
+    'C' : view 'Commands' list (option to view individual usage requirements)
+    'M' : view 'Menus' list (option to view individual usage requirements)
+    'Q' : exit program
+    
+    A full detailed list of scripting commands and parameters can be found at:
 
     https://manual.audacityteam.org/man/scripting_reference.html
 
@@ -346,58 +359,78 @@ def usage_helper(reply):
     print(reply)
 
 
-def command_helper(reply):
+def command_helper(reply, message):
     """Returns available commands in readable format, prompts for additional command info"""
+    # check if message beginning indicates JSON
+    firstchar = reply[0]
+    if reply[0] != "[" and reply[0] != "{":
+        print(reply)
+        return
+    # clean string for JSON conversion 
     reply = reply.replace('\n', '')
     reply = reply.replace('\\', '/')
     reply = reply.replace('/"', "'")
+    runtime = ''
     # save run time if requested
-    if reply.find('BatchCommand finished:'):
-        runtime = reply[reply.find('BatchCommand finished:'):]
+    if reply.find('BatchCommand finished:') != -1:
+        index = reply.find('BatchCommand finished:')
+        runtime = reply[index:]
         reply = reply.replace(runtime, '')
-    
+    if reply.find('Execution time:') != -1:
+        print(reply)
+        return
+    # convert to json for processing information
     commands = json.loads(reply)
-    reply = ''
-    row = []
+    reply = runtime + '\n\n'
+    # arrange commands to be read in column form
+    command_ids = []
     for command in commands:
-        row.append(command["id"])
-        if len(row) >= 3:
-            reply += str('{:<30s}{:<30s}{:<30s}\n'.format(row[0], row[1], row[2])) 
-            row = []
+        if "id" in command:
+            command_ids.append(command["id"])
+    command_ids.sort()
+    row = [] 
+    for command in command_ids:  
+            row.append(command)     
+            if len(row) == 2:
+                reply += str('{:<40s}{:<40s}\n'.format(row[0], row[1])) 
+                row = []
     print(reply)
+    # prompt user for lookup info for command usage, a not match performs no lookup 
     command_id = input("Lookup a particular command: ")
     command_found = False
     for command in commands:
-        if command["id"] == command_id:
-            print(command_info(command))
-            command_found = True
+        if "id" in command:
+            if command["id"].upper() == command_id.upper():
+                print(command_info(command))
+                command_found = True
     if not command_found:
         print("No command lookup performed")
-
-    
 
 
 def command_info(command):
     """Prints lookup info for particular command"""
     reply = ''
     reply += '==================================\n'
-    reply += 'Command: ' + command["name"] + '\n'
-    reply += command["tip"] + '\n\nUse:\n> '
-    if "params" not in command.keys():
-        reply += command["id"] 
+    reply += 'Command {title} \n'.format(title='Name: ' + command["name"] if "name" in command else 'Label: ' + command["label"])
+    reply += '{info}'.format(info=command["tip"]+'\n' if "tip" in command else '')
+    reply += '{accel}'.format(accel='Audacity shortkey: ' + command["accel"] + '\n' if "accel" in command else '')
+    reply += '{depth}'.format(depth='depth: ' + str(command["depth"]) + ' ' if "depth" in command else '')
+    reply += '{flags}'.format(flags='flags: ' + str(command["flags"]) + ' ' if "flags" in command else '')
+    
+    reply += '{id}'.format(id='\n\nTo Use:\n> ' + command["id"] if "id" in command else '')
+    if "params" not in command:
+        params = "\n\nParameters: None"
     else:
-        reply += command["id"] + ': '
+        params = ':'
         for param in command["params"]:
-            reply += param["key"] + '="{' + param["type"] + '}" '
-            
-        reply += "\n\nParameters:\n"
+            params += ' {key}="{type}"'.format(key=param["key"],type=param["type"])    
+        params += "\n\nParameters:\n"
         for param in command["params"]:
-            reply += '\t' + param["key"] + '- Default(' + str(param["default"]) + ') '
-            if param["type"] == 'enum':
-                reply += 'Enum values(' + str(param["enum"]) + ')'
-            reply += '\n'
-    reply += '\n'
+            params += '\t{key} - Default({default})'.format(key=param["key"], default=str(param["default"]))
+            params += '{enum}\n'.format(enum=str(param["enum"] if param["type"] == 'enum' else ''))
+    reply += params
     return reply
+
 
 if __name__ == '__main__':
     main()
