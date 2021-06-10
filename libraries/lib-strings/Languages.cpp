@@ -377,7 +377,7 @@ wxString SetLang( const FilePaths &pathList, const wxString & lang )
       // xgettext when compiling the catalog template audacity.pot.
       // Including it here doesn't change that but does make the C++ compiler
       // check for correct syntax, but also generate no object code for them.
-#include "UnusedStrings.h"
+#include "FutureStrings.h"
       0
    );
 

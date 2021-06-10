@@ -2,7 +2,7 @@
  
  Audacity: A Digital Audio Editor
  
- @file UnusedStrings.h
+ @file FutureStrings.h
  
  Paul Licameli
  
