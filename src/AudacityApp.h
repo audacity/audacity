@@ -33,6 +33,7 @@ class Importer;
 class CommandHandler;
 class AppCommandEvent;
 class AudacityProject;
+class UpdateManager;
 
 class AudacityApp final : public wxApp {
  public:
@@ -111,6 +112,10 @@ class AudacityApp final : public wxApp {
    std::unique_ptr<IPCServ> mIPCServ;
 #else
    std::unique_ptr<wxSocketServer> mIPCServ;
+#endif
+
+#if defined(HAVE_UPDATES_CHECK)
+   std::unique_ptr<UpdateManager> mUpdateManager;
 #endif
 
  public:
