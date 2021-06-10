@@ -74,6 +74,15 @@ macro( set_cache_value var value )
    set_property( CACHE ${var} PROPERTY VALUE "${value}" )
 endmacro()
 
+# Set a CMake variable to the value of the corresponding environment variable
+# if the CMake variable is not already defined. Any addition arguments after
+# the variable name are passed through to set().
+macro( set_from_env var )
+   if( NOT DEFINED ${var} AND NOT "$ENV{${var}}" STREQUAL "" )
+      set( ${var} "$ENV{${var}}" ${ARGN} ) # pass additional args (e.g. CACHE)
+   endif()
+endmacro()
+
 # Set the given property and its config specific brethren to the same value
 function( set_target_property_all target property value )
    set_target_properties( "${target}" PROPERTIES "${property}" "${value}" )
