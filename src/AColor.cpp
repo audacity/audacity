@@ -638,85 +638,108 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 unsigned char AColor::gradient_pre[ColorGradientTotal][2][gradientSteps][3];
 
 void AColor::PreComputeGradient() {
-   {
-      if (!gradient_inited) {
-         gradient_inited = 1;
+   if (gradient_inited) return;
+   gradient_inited = 1;
 
-         for (int selected = 0; selected < ColorGradientTotal; selected++)
-            for (int grayscale = 0; grayscale <= 1; grayscale++) {
-               float r, g, b;
+   for (int selected = 0; selected < ColorGradientTotal; selected++) {
+      const int gsteps = 4;
+      float gradient[gsteps + 1][3];
+      theTheme.Colour( clrSpectro1 ) = theTheme.Colour( clrUnselected );
+      theTheme.Colour( clrSpectro1Sel ) = theTheme.Colour( clrSelected );
+      int clrFirst = (selected == ColorGradientUnselected ) ? clrSpectro1 : clrSpectro1Sel;
+      for(int j=0;j<(gsteps+1);j++){
+         wxColour c = theTheme.Colour( clrFirst+j );
+         gradient[ j] [0] = c.Red()/255.0;
+         gradient[ j] [1] = c.Green()/255.0;
+         gradient[ j] [2] = c.Blue()/255.0;
+      }
 
-               int i;
-               for (i=0; i<gradientSteps; i++) {
-                  float value = float(i)/gradientSteps;
+      // Color
+      for (int i = 0; i<gradientSteps; i++) {
+         float r, g, b;
+         float value = float(i)/gradientSteps;
 
-                  if (grayscale) {
-                     r = g = b = 0.84 - 0.84 * value;
-                  } else {
-                     const int gsteps = 4;
-                     float gradient[gsteps + 1][3];
-                     theTheme.Colour( clrSpectro1 ) = theTheme.Colour( clrUnselected );
-                     theTheme.Colour( clrSpectro1Sel ) = theTheme.Colour( clrSelected );
-                     int clrFirst = (selected == ColorGradientUnselected ) ? clrSpectro1 : clrSpectro1Sel;
-                     for(int j=0;j<(gsteps+1);j++){
-                        wxColour c = theTheme.Colour( clrFirst+j );
-                        gradient[ j] [0] = c.Red()/255.0;
-                        gradient[ j] [1] = c.Green()/255.0;
-                        gradient[ j] [2] = c.Blue()/255.0;
-                     }
+         int left = (int)(value * gsteps);
+         int right = (left == gsteps ? gsteps : left + 1);
 
+         float rweight = (value * gsteps) - left;
+         float lweight = 1.0 - rweight;
 
-                     int left = (int)(value * gsteps);
-                     int right = (left == gsteps ? gsteps : left + 1);
+         r = (gradient[left][0] * lweight) + (gradient[right][0] * rweight);
+         g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
+         b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
 
-                     float rweight = (value * gsteps) - left;
-                     float lweight = 1.0 - rweight;
+         switch (selected) {
+         case ColorGradientUnselected:
+            // not dimmed
+            break;
 
-                     r = (gradient[left][0] * lweight) + (gradient[right][0] * rweight);
-                     g = (gradient[left][1] * lweight) + (gradient[right][1] * rweight);
-                     b = (gradient[left][2] * lweight) + (gradient[right][2] * rweight);
-                  }
+         case ColorGradientTimeAndFrequencySelected:
+            float temp;
+            temp = r;
+            r = g;
+            g = b;
+            b = temp;
+            break;
 
-                  switch (selected) {
-                  case ColorGradientUnselected:
-                     // not dimmed
-                     break;
-
-                  case ColorGradientTimeAndFrequencySelected:
-                     if( !grayscale )
-                     {
-                        float temp;
-                        temp = r;
-                        r = g;
-                        g = b;
-                        b = temp;
-                        break;
-                     }
-                     // else fall through to SAME grayscale colour as normal selection.
-                     // The white lines show it up clearly enough.
-
-                  case ColorGradientTimeSelected:
-                     // partly dimmed
-                     r *= 0.75f;
-                     g *= 0.75f;
-                     b *= 0.75f;
-                     break;
+         case ColorGradientTimeSelected:
+            // partly dimmed
+            r *= 0.75f;
+            g *= 0.75f;
+            b *= 0.75f;
+            break;
 
 
-                  // For now edge colour is just black (or white if grey-scale)
-                  // Later we might invert or something else funky.
-                  case ColorGradientEdge:
-                     // fully dimmed
-                     r = 1.0f * grayscale;
-                     g = 1.0f * grayscale;
-                     b = 1.0f * grayscale;
-                     break;
-                  }
-                  gradient_pre[selected][grayscale][i][0] = (unsigned char) (255 * r);
-                  gradient_pre[selected][grayscale][i][1] = (unsigned char) (255 * g);
-                  gradient_pre[selected][grayscale][i][2] = (unsigned char) (255 * b);
-               }
-            }
+         // For now edge colour is just black (or white if grey-scale)
+         // Later we might invert or something else funky.
+         case ColorGradientEdge:
+            // fully dimmed
+            r = 0;
+            g = 0;
+            b = 0;
+            break;
+         }
+         gradient_pre[selected][0][i][0] = (unsigned char) (255 * r);
+         gradient_pre[selected][0][i][1] = (unsigned char) (255 * g);
+         gradient_pre[selected][0][i][2] = (unsigned char) (255 * b);
+      }
+    
+      // Grayscale
+      for (int i = 0; i<gradientSteps; i++) {
+         float r, g, b;
+         float value = float(i)/gradientSteps;
+
+         r = g = b = 0.84 - 0.84 * value;
+
+         switch (selected) {
+         case ColorGradientUnselected:
+            // not dimmed
+            break;
+
+         case ColorGradientTimeAndFrequencySelected:
+            // else fall through to SAME grayscale colour as normal selection.
+            // The white lines show it up clearly enough.
+
+         case ColorGradientTimeSelected:
+            // partly dimmed
+            r *= 0.75f;
+            g *= 0.75f;
+            b *= 0.75f;
+            break;
+
+
+         // For now edge colour is just black (or white if grey-scale)
+         // Later we might invert or something else funky.
+         case ColorGradientEdge:
+            // fully dimmed
+            r = 1.0f;
+            g = 1.0f;
+            b = 1.0f;
+            break;
+         }
+         gradient_pre[selected][1][i][0] = (unsigned char) (255 * r);
+         gradient_pre[selected][1][i][1] = (unsigned char) (255 * g);
+         gradient_pre[selected][1][i][2] = (unsigned char) (255 * b);
       }
    }
 }
