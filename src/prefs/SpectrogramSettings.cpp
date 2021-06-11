@@ -70,7 +70,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    , zeroPaddingFactor(other.zeroPaddingFactor)
 #endif
-   , isGrayscale(other.isGrayscale)
+   , colorScheme(other.colorScheme)
    , scaleType(other.scaleType)
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    , spectralSelection(other.spectralSelection)
@@ -107,7 +107,7 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
       zeroPaddingFactor = other.zeroPaddingFactor;
 #endif
-      isGrayscale = other.isGrayscale;
+      colorScheme = other.colorScheme;
       scaleType = other.scaleType;
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
       spectralSelection = other.spectralSelection;
@@ -150,6 +150,23 @@ const EnumValueSymbols &SpectrogramSettings::GetScaleNames()
       XO("ERB") ,
       /* i18n-hint: Time units, that is Period = 1 / Frequency */
       XO("Period") ,
+   };
+   return result;
+}
+
+//static
+const EnumValueSymbols &SpectrogramSettings::GetColorSchemeNames()
+{
+   static const EnumValueSymbols result{
+      // Keep in correspondence with enum SpectrogramSettings::ColorScheme:
+      /* i18n-hint: New color scheme for spectrograms */
+      XO("Color (New)") ,
+      /* i18n-hint: color scheme from theme for spectrograms */
+      XO("Color (from Theme)") ,
+      /* i18n-hint: grayscale color scheme for spectrograms */
+      XO("Grayscale") ,
+      /* i18n-hint: inverse grayscale color scheme for spectrograms */
+      XO("Inv. Grayscale") ,
    };
    return result;
 }
@@ -227,6 +244,7 @@ bool SpectrogramSettings::Validate(bool quiet)
       ScaleType(std::max(0,
          std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
             (int)(scaleType))));
+   colorScheme = std::max(0, std::min(csNumColorScheme-1, colorScheme));
    algorithm = Algorithm(
       std::max(0, std::min((int)(algNumAlgorithms) - 1, (int)(algorithm)))
    );
@@ -254,7 +272,7 @@ void SpectrogramSettings::LoadPrefs()
 
    gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
 
-   isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+   colorScheme = ColorScheme(gPrefs->Read(wxT("/Spectrum/ColorScheme"), 0L));
 
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
 
@@ -302,7 +320,7 @@ void SpectrogramSettings::SavePrefs()
 
    gPrefs->Write(wxT("/Spectrum/WindowType"), windowType);
 
-   gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
+   gPrefs->Write(wxT("/Spectrum/ColorScheme"), (int) colorScheme);
 
    gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
 
@@ -361,10 +379,10 @@ void SpectrogramSettings::UpdatePrefs()
       gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
    }
 
-   if (isGrayscale == defaults().isGrayscale) {
+   if (colorScheme == defaults().colorScheme) {
       int temp;
-      gPrefs->Read(wxT("/Spectrum/Grayscale"), &temp, 0L);
-      isGrayscale = (temp != 0);
+      gPrefs->Read(wxT("/Spectrum/ColorScheme"), &temp, 0L);
+      colorScheme = ColorScheme(temp);
    }
 
    if (scaleType == defaults().scaleType) {
