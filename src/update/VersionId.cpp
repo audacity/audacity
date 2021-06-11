@@ -50,9 +50,8 @@ wxString VersionId::getString() const
 
 bool VersionId::operator== (const VersionId& other)
 {
-    return mVersion == other.mVersion &&
-           mRelease == other.mRelease &&
-           mRevision == other.mRevision;
+    return std::tie(mVersion, mRelease, mRevision) ==
+           std::tie(other.mVersion, other.mRelease, other.mRevision);
 }
 
 bool VersionId::operator!= (const VersionId& other)
@@ -62,19 +61,8 @@ bool VersionId::operator!= (const VersionId& other)
 
 bool VersionId::operator< (const VersionId& other)
 {
-    if (mVersion < other.mVersion)
-        return true;
-
-    if (mRelease < other.mRelease &&
-        mVersion == other.mVersion)
-        return true;
-
-    if (mRevision < other.mRevision &&
-        mVersion == other.mVersion &&
-        mRelease == other.mRelease)
-        return true;
-
-    return false;
+    return std::tie(mVersion, mRelease, mRevision) <
+           std::tie(other.mVersion, other.mRelease, other.mRevision);
 }
 
 bool VersionId::operator> (const VersionId& other)

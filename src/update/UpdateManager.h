@@ -30,6 +30,10 @@ public:
     UpdateManager();
     ~UpdateManager();
 
+    static UpdateManager& GetInstance();
+    static void Start();
+    static void Stop();
+
     void getUpdates();
 
     void enableUpdatesChecking(bool enable);

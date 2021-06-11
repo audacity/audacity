@@ -34,12 +34,34 @@ UpdateManager::UpdateManager()
         std::chrono::milliseconds(std::chrono::hours(12)).count())
 {
     mTimer.SetOwner(this, ID_TIMER);
-    mTimer.StartOnce();
 }
 
 UpdateManager::~UpdateManager()
 {
-    mTimer.Stop();
+    Stop();
+}
+
+UpdateManager& UpdateManager::GetInstance()
+{
+    static UpdateManager updateManager;
+
+    return updateManager;
+}
+
+void UpdateManager::Start()
+{
+    auto& instance = GetInstance();
+
+    if (!instance.mTimer.IsRunning())
+        instance.mTimer.StartOnce();
+}
+
+void UpdateManager::Stop()
+{
+    auto& instance = GetInstance();
+
+    if (instance.mTimer.IsRunning())
+        instance.mTimer.Stop();
 }
 
 void UpdateManager::enableUpdatesChecking(bool enable)
@@ -65,47 +87,42 @@ void UpdateManager::getUpdates()
 
     response->setRequestFinishedCallback([response, this](audacity::network_manager::IResponse*) {
 
-        wxFrame* parent = FindProjectFrame(GetActiveProject());
-        wxASSERT(parent);
-
-        if (!parent) return;
-
         if (response->getError() != audacity::network_manager::NetworkError::NoError)
         {
-            ShowExceptionDialog(parent,
-                XO("Error checking for update"),
-                XO("Unable to connect to Audacity update server."),
+            wxTheApp->CallAfter([] {ShowExceptionDialog(nullptr,
+                XC("Error checking for update", "update dialog"),
+                XC("Unable to connect to Audacity update server.", "update dialog"),
                 wxString());
+                });
 
             return;
         }
 
         if (!mUpdateDataParser.Parse(response->readAll<VersionPatch::UpdateDataFormat>(), &mVersionPatch))
         {
-            ShowExceptionDialog(parent,
-                XO("Error checking for update"),
-                XO("Update data was corrupted."),
+            wxTheApp->CallAfter([] {ShowExceptionDialog(nullptr,
+                XC("Error checking for update", "update dialog"),
+                XC("Update data was corrupted.", "update dialog"),
                 wxString());
+                });
 
             return;
         }
 
         if (mVersionPatch.version > CurrentBuildVersion())
         {
-            parent->CallAfter([this, parent] {
-                UpdatePopupDialog dlg(parent, this);
+            wxTheApp->CallAfter([this] {
+                UpdatePopupDialog dlg(nullptr, this);
                 const int code = dlg.ShowModal();
 
                 if (code == wxID_YES)
                 {
                     if (!wxLaunchDefaultBrowser(mVersionPatch.download))
                     {
-                        ShowExceptionDialog(parent,
-                            XO("Error downloading update"),
-                            XO("Can't open the Audacity download link."),
+                        ShowExceptionDialog(nullptr,
+                            XC("Error downloading update.", "update dialog"),
+                            XC("Can't open the Audacity download link.", "update dialog"),
                             wxString());
-
-                        return;
                     }
                 }
                 });
