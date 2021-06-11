@@ -139,6 +139,8 @@ XC("Error downloading update.", "update dialog"),
 XC("Can't open the Audacity download link.", "update dialog"),
 // i18n-hint Substitution of version number for %s.
 XC("Audacity %s is available!", "update dialog"),
+// Update preferences
+XC("Check for updates on the application launch.", "update preferences"),
 
 // For after 3.0.3
 
