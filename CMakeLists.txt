@@ -168,8 +168,12 @@ include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
 
+set_from_env(SENTRY_DSN_KEY)
+set_from_env(SENTRY_HOST)
+set_from_env(SENTRY_PROJECT)
+
 cmake_dependent_option(
-   ${_OPT}has_sentry_reporting 
+   ${_OPT}has_sentry_reporting
    "Build support for sending errors to Sentry"
    On
    "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
@@ -525,3 +529,4 @@ execute_process( COMMAND
    print_properties( TARGET "wxWidgets" )
 #]]
 
+include( Package ) # do this last

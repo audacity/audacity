@@ -870,13 +870,6 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
    // convert these to long file name first.
    auto fileName = PlatformCompatibility::GetLongFileName(fileNameArg);
 
-   if (TempDirectory::FATFilesystemDenied(fileName,
-                                      XO("Project resides on FAT formatted drive.\n"
-                                         "Copy it to another drive to open it.")))
-   {
-      return nullptr;
-   }
-
    // Make sure it isn't already open.
    // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles()
    //    and AudacityApp::MRUOpen(), but if you open an aup file by double-clicking it
@@ -975,6 +968,15 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
          }
          return nullptr;
       }
+   }
+
+   // Disallow opening of .aup3 project files from FAT drives, but only such
+   // files, not importable types.  (Bug 2800)
+   if (TempDirectory::FATFilesystemDenied(fileName,
+      XO("Project resides on FAT formatted drive.\n"
+        "Copy it to another drive to open it.")))
+   {
+      return nullptr;
    }
 
    auto &project = chooser(true);
