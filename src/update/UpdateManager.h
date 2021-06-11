@@ -32,7 +32,6 @@ public:
 
     static UpdateManager& GetInstance();
     static void Start();
-    static void Stop();
 
     void getUpdates();
 

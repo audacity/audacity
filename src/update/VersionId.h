@@ -10,7 +10,7 @@
 
 #include <wx/arrstr.h>
 
- /// A class, that support base manipulation with version number.
+ /// A class, that supports base manipulation with version number.
  /**
      By default initialized by zero version number (Version = 0, Release = 0, Revision = 0),
      that not allow us to update.

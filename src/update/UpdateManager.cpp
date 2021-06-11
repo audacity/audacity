@@ -32,14 +32,10 @@ END_EVENT_TABLE()
 UpdateManager::UpdateManager()
     : mTrackingInterval(
         std::chrono::milliseconds(std::chrono::hours(12)).count())
-{
-    mTimer.SetOwner(this, ID_TIMER);
-}
+{}
 
 UpdateManager::~UpdateManager()
-{
-    Stop();
-}
+{}
 
 UpdateManager& UpdateManager::GetInstance()
 {
@@ -52,16 +48,11 @@ void UpdateManager::Start()
 {
     auto& instance = GetInstance();
 
-    if (!instance.mTimer.IsRunning())
+    static std::once_flag flag;
+    std::call_once(flag, [&instance] {
+        instance.mTimer.SetOwner(&instance, ID_TIMER);
         instance.mTimer.StartOnce();
-}
-
-void UpdateManager::Stop()
-{
-    auto& instance = GetInstance();
-
-    if (instance.mTimer.IsRunning())
-        instance.mTimer.Stop();
+        });
 }
 
 void UpdateManager::enableUpdatesChecking(bool enable)
