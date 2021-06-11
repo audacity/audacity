@@ -19,7 +19,7 @@ It is also a place to document colour usage policy in Audacity
 
 
 #include "AColor.h"
-
+#include "AColorResources.h"
 
 
 #include <wx/window.h>
@@ -635,13 +635,23 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 
 
 
-unsigned char AColor::gradient_pre[ColorGradientTotal][2][gradientSteps][3];
+unsigned char AColor::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 
 void AColor::PreComputeGradient() {
    if (gradient_inited) return;
    gradient_inited = 1;
 
+   // Keep in correspondence with enum SpectrogramSettings::ColorScheme
+
+   // colorScheme 0: Color (New)
+   std::copy_n(&specColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientUnselected][0][0][0]);
+   std::copy_n(&selColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientTimeSelected][0][0][0]);
+   std::copy_n(&freqSelColormap[0][0], gradientSteps * 3, &gradient_pre[ColorGradientTimeAndFrequencySelected][0][0][0]);
+   std::fill_n(&gradient_pre[ColorGradientEdge][0][0][0], gradientSteps * 3, 0);
+
+
    for (int selected = 0; selected < ColorGradientTotal; selected++) {
+      // Get color scheme from Theme
       const int gsteps = 4;
       float gradient[gsteps + 1][3];
       theTheme.Colour( clrSpectro1 ) = theTheme.Colour( clrUnselected );
@@ -654,7 +664,7 @@ void AColor::PreComputeGradient() {
          gradient[ j] [2] = c.Blue()/255.0;
       }
 
-      // Color
+      // colorScheme 1: Color (from theme)
       for (int i = 0; i<gradientSteps; i++) {
          float r, g, b;
          float value = float(i)/gradientSteps;
@@ -699,12 +709,46 @@ void AColor::PreComputeGradient() {
             b = 0;
             break;
          }
-         gradient_pre[selected][0][i][0] = (unsigned char) (255 * r);
-         gradient_pre[selected][0][i][1] = (unsigned char) (255 * g);
-         gradient_pre[selected][0][i][2] = (unsigned char) (255 * b);
+         gradient_pre[selected][1][i][0] = (unsigned char) (255 * r);
+         gradient_pre[selected][1][i][1] = (unsigned char) (255 * g);
+         gradient_pre[selected][1][i][2] = (unsigned char) (255 * b);
       }
-    
-      // Grayscale
+
+      // colorScheme 2: Grayscale
+      for (int i = 0; i < gradientSteps; i++) {
+         float r, g, b;
+         float value = float(i) / gradientSteps;
+
+         r = g = b = value;
+
+         switch (selected) {
+         case ColorGradientUnselected:
+            // not dimmed
+            break;
+
+         case ColorGradientTimeAndFrequencySelected:
+            // else fall through to SAME grayscale colour as normal selection.
+            // The white lines show it up clearly enough.
+
+         case ColorGradientTimeSelected:
+            // partly dimmed
+            r = r * 0.75f + 0.25f;
+            g = g * 0.75f + 0.25f;
+            b = b * 0.75f + 0.25f;
+            break;
+
+         case ColorGradientEdge:
+            r = 1.0f;
+            g = 1.0f;
+            b = 1.0f;
+            break;
+         }
+         gradient_pre[selected][2][i][0] = (unsigned char)(255 * r);
+         gradient_pre[selected][2][i][1] = (unsigned char)(255 * g);
+         gradient_pre[selected][2][i][2] = (unsigned char)(255 * b);
+      }
+
+      // colorScheme 3: Inv. Grayscale (=Old grayscale)
       for (int i = 0; i<gradientSteps; i++) {
          float r, g, b;
          float value = float(i)/gradientSteps;
@@ -737,9 +781,9 @@ void AColor::PreComputeGradient() {
             b = 1.0f;
             break;
          }
-         gradient_pre[selected][1][i][0] = (unsigned char) (255 * r);
-         gradient_pre[selected][1][i][1] = (unsigned char) (255 * g);
-         gradient_pre[selected][1][i][2] = (unsigned char) (255 * b);
+         gradient_pre[selected][3][i][0] = (unsigned char) (255 * r);
+         gradient_pre[selected][3][i][1] = (unsigned char) (255 * g);
+         gradient_pre[selected][3][i][2] = (unsigned char) (255 * b);
       }
    }
 }
