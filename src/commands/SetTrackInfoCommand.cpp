@@ -364,7 +364,7 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
    {
       S.SetStretchyCol( 2 );
       auto schemes = SpectrogramSettings::GetColorSchemeNames();
-      S.Optional( bHasSpecColorScheme).TieChoice( XXO("Spectro. Color scheme:"), mSpecColorScheme,
+      S.Optional( bHasSpecColorScheme).TieChoice( XC("Sche&me", "spectrum prefs"), mSpecColorScheme,
          Msgids( schemes.data(), schemes.size() ) );
    }
    S.EndMultiColumn();
