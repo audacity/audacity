@@ -9,11 +9,8 @@ set -euxo pipefail
 # each time job is started, workarounds?
 curl -sL https://sentry.io/get-cli/ | bash
 
-#Where debug symbols will go
-UPLOAD_URL=https://${SENTRY_HOST}/api/${SENTRY_PROJECT}/minidump/?sentry_key=${SENTRY_DSN_KEY}
-
 SYMBOLS=$(find debug | xargs)
 
-${INSTALL_DIR}/sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} --url ${UPLOAD_URL} \
+${INSTALL_DIR}/sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} --url ${SENTRY_HOST} \
     --org ${SENTRY_ORG_SLUG}} \
     --project ${SENTRY_PROJECT_SLUG} ${SYMBOLS}
