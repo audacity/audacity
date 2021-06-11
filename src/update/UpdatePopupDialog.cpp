@@ -27,7 +27,7 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS (UpdatePopupDialog, wxDialogWrapper)
 
 UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateManager)
-    : wxDialogWrapper (parent, -1, XO ("Update Audacity"),
+    : wxDialogWrapper (parent, -1, XC("Update Audacity", "update dialog"),
         wxDefaultPosition, wxDefaultSize,
         wxCAPTION),
       mUpdateManager (updateManager)
@@ -49,8 +49,8 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
 
             S.Prop(1).AddSpace(1, 0, 1);
 
-            S.Id (wxID_NO).AddButton (XO ("Skip"));
-            S.Id (wxID_YES).AddButton (XO ("Install update"));
+            S.Id (wxID_NO).AddButton (XC ("&Skip", "update dialog"));
+            S.Id (wxID_YES).AddButton (XC("&Install update", "update dialog"));
 
             S.SetBorder (5);
         }
@@ -88,14 +88,15 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     wxStringOutputStream o;
     wxTextOutputStream informationStr (o);
 
-    static const auto title = XO("Audacity %s is available!")
+    // i18n-hint Substitution of version number for %s.
+    static const auto title = XC("Audacity %s is available!", "update dialog")
         .Format(mUpdateManager->getVersionPatch().version.getString());
 
     informationStr
         << wxT("<html><body><h3>")
         << title.Translation()
         << wxT("</h3><h5>")
-        << XO("Changelog")
+        << XC("Changelog", "update dialog")
         << wxT("</h5><p>");
 
     informationStr << wxT("<ul>");
@@ -109,7 +110,9 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     informationStr << wxT("</ul></p>");
 
     informationStr << wxT("<p>");
-    informationStr << XO("<a href = \"https://github.com/audacity/audacity/releases\">Read more on GitHub</a>");
+    informationStr << wxT("<a href = \"https://github.com/audacity/audacity/releases\">");
+    informationStr << XC("Read more on GitHub", "update dialog");
+    informationStr << wxT("</a>");
     informationStr << wxT("</p>");
 
     informationStr << wxT("</body></html>");

@@ -1491,7 +1491,7 @@ bool AudacityApp::InitPart2()
    }
 
 #if defined(HAVE_UPDATES_CHECK)
-   mUpdateManager = std::make_unique<UpdateManager>();
+   UpdateManager::Start();
 #endif
 
    #ifdef USE_FFMPEG
