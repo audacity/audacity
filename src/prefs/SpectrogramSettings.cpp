@@ -161,13 +161,13 @@ const EnumValueSymbols &SpectrogramSettings::GetColorSchemeNames()
    static const EnumValueSymbols result{
       // Keep in correspondence with enum SpectrogramSettings::ColorScheme:
       /* i18n-hint: New color scheme for spectrograms */
-      { wxT("SpecColorNew"), XO("Color (New)") },
-      /* i18n-hint: color scheme from theme for spectrograms */
-      { wxT("SpecColorTheme"), XO("Color (from Theme)") },
-      /* i18n-hint: grayscale color scheme for spectrograms */
-      { wxT("SpecGrayscale"), XO("Grayscale") },
-      /* i18n-hint: inverse grayscale color scheme for spectrograms */
-      { wxT("SpecInvGrayscale"), XO("Inv. Grayscale") },
+      { wxT("SpecColorNew"),     XC("Color (default)",   "spectrum prefs") },
+      /* i18n-hint: Classic color scheme(from theme) for spectrograms */
+      { wxT("SpecColorTheme"),   XC("Color (classic)",   "spectrum prefs") },
+      /* i18n-hint: Grayscale color scheme for spectrograms */
+      { wxT("SpecGrayscale"),    XC("Grayscale",         "spectrum prefs") },
+      /* i18n-hint: Inverse grayscale color scheme for spectrograms */
+      { wxT("SpecInvGrayscale"), XC("Inverse grayscale", "spectrum prefs") },
    };
 
    wxASSERT(csNumColorScheme == result.size());
