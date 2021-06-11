@@ -12767,10 +12767,6 @@ msgid "MIDI Device Info"
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
-msgid "Menu Tree"
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
 msgstr ""
 
@@ -12808,10 +12804,6 @@ msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
-msgstr ""
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree..."
 msgstr ""
 
 #: src/menus/HelpMenus.cpp
