@@ -13,7 +13,9 @@ Paul Licameli split from WaveTrackView.h
 
 #include "WaveTrackView.h" // to inherit
 
+
 class WaveTrack;
+class BrushHandle;
 
 class SpectrumView final : public WaveTrackSubView
 {
@@ -31,6 +33,8 @@ public:
    bool IsSpectral() const override;
 
 private:
+    std::weak_ptr<BrushHandle> mBrushHandle;
+
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,
