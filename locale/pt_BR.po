@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-04-05 01:08-0300\n"
+"PO-Revision-Date: 2021-06-12 09:18-0300\n"
 "Last-Translator: Cleber Tavano <clebertavano@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) Cleber Tavano (2002-2021), com "
 "contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo "
@@ -58,19 +58,20 @@ msgid "System"
 msgstr "Sistema"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Provê suporte a efeitos VAMP no Audacity"
+msgstr "Reportar problemas no Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Clique em \"Enviar\" para submeter os detalhes do erro para o Audacity. "
+"Estas informações permanecerão anônimas."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
-msgstr ""
+msgstr "Detalhes do problema"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -79,82 +80,73 @@ msgstr "Comentários"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "&Enviar"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "&Não Enviar"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 #, c-format
 msgid "Exception code 0x%x"
-msgstr ""
+msgstr "Código de exceção 0x%x"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Unknown exception"
-msgstr ""
+msgstr "Exceção desconhecida"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown assertion"
-msgstr "Formato desconhecido"
+msgstr "Asserção desconhecida"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown error"
-msgstr "Formato desconhecido"
+msgstr "Erro desconhecido"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "Não foi possível dar nome ao arquivo de predefinições"
+msgstr "Não foi possível enviar descrição das falhas"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "Esque&ma de cores"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (padrão)"
+msgstr "Cor (padrão)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "Clássico"
+msgstr "Cor (clássico)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr "Es&cala de cinza"
+msgstr "Escala de cinza"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "Escala &Linear"
+msgstr "Escala de cinza invertida"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Sair do Audacity"
+msgstr "Atualizar o Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Ir para"
@@ -162,60 +154,57 @@ msgstr "&Ir para"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "&Instalar update"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Canal"
+msgstr "Changelog"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "Leia mais no Github"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error checking for update"
-msgstr "Erro ao obter acesso exclusivo à pasta temporária"
+msgstr "Erro ao verificar update"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr ""
+msgstr "Não foi possível conectar ao servidor de atualização do Audacity."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Dados de atualização corrompidos."
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update."
-msgstr "Erro ao Carregar Metadados"
+msgstr "Erro ao carregar update."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Não foi possível abrir o link de download do Audacity."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
+#, c-format
 msgctxt "update dialog"
 msgid "Audacity %s is available!"
-msgstr "Barra de %s do Audacity"
+msgstr "O Audacity %s está disponível!"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
-msgstr ""
+msgstr "1º Comando experimental..."
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "2nd Experimental Command"
-msgstr ""
+msgstr "2º Comando experimental"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -588,9 +577,9 @@ msgstr "%s, desenvolvedor"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer and support"
-msgstr "%s, documentação e suporte"
+msgstr "%s, desenvolvimento e suporte"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -598,11 +587,12 @@ msgstr "%s, documentação e suporte"
 msgid "%s, documentation and support"
 msgstr "%s, documentação e suporte"
 
+# QA Quality assurance -controle de qualidade
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, documentação e suporte"
+msgstr "%s, controle de qualidade, documentação e suporte"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -733,7 +723,7 @@ msgstr "fórum"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"Tradução para português do Brasil por Cleber Tavano (2002-2021), com "
+"Tradução para português do Brasil por Cleber Tavano (2002-2022), com "
 "contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo "
 "Castro (2013), Rogênio Belém (2013), Flávio Salgado Moreira (2014), Marcelo "
 "Thomaz de Aquino Filho (2014), Victor Westmann (2014-2015), Gutem (2015), "
@@ -820,13 +810,13 @@ msgstr "Site do %s: "
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "O software %s tem copyright %s 1999-2021 %s Team."
+msgstr "O software %s tem copyright %s 1999-2022 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark."
-msgstr "O nome %s é uma marca registrada por Dominic Mazzoni."
+msgstr "O nome %s é uma marca registrada."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -2354,19 +2344,21 @@ msgid "Report generated to:"
 msgstr "Relatório gerado para:"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "(%d): %s"
-msgstr "%s: %s"
+msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Não foi possível descartar conexão"
+msgstr ""
+"Não foi possível entrar no modo de segurança na conexão primária com %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Não foi possível restaurar conexão"
+msgstr ""
+"Não foi possível entrar no modo de segurança no ponto de conexão com %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -4255,15 +4247,14 @@ msgid "This is not an Audacity project file"
 msgstr "Este arquivo não é um Projeto do Audacity"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid ""
 "This project was created with a newer version of Audacity.\n"
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
-"Este projeto foi criado com uma versão mais recente do Audacity:\n"
+"Este projeto foi criado com uma versão mais recente do Audacity.\n"
 "\n"
-"Você precisará atualizá-lo antes da edição"
+"Você precisará atualizá-lo antes da edição."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4436,9 +4427,8 @@ msgid "Failed to remove the autosave information from the project file."
 msgstr "Não foi possível remover os dados de salvamento automático."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to bind to blob"
-msgstr "Não foi possível encontrar o codec"
+msgstr "Não foi possível se conectar ao blob"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4661,14 +4651,12 @@ msgid "Error Saving Copy of Project"
 msgstr "Erro ao salvar cópia do Projeto"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Can't open new empty project"
-msgstr "Não foi possível abrir o arquivo de projeto"
+msgstr "Não foi possível abrir um arquivo de projeto vazio"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error opening a new empty project"
-msgstr "Erro ao abrir arquivo ou projeto"
+msgstr "Erro ao abrir novo projeto"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -6645,9 +6633,8 @@ msgid "Delete"
 msgstr "Excluir"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Edited Envelope"
-msgstr "Ajustar Envelope"
+msgstr "Envelope ajustado"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
@@ -6676,9 +6663,8 @@ msgid "Selected"
 msgstr "Selecionado"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Edited Label"
-msgstr "Rótulos editados"
+msgstr "Rótulo editado"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -10387,6 +10373,8 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
+"Habilitar visualização do Espectrograma antes\n"
+"de aplicar os efeitos no Espectro."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -13152,8 +13140,8 @@ msgstr "fim"
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
 msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] "%s %d e clipe %s %d de %d %s"
-msgstr[1] "%s %d e clipes %s %d de %d %s"
+msgstr[0] "%s %d e %s %d de %d do clipe em %s"
+msgstr[1] "%s %d e %s %d de %d dos clipes em %s"
 
 #. i18n-hint:
 #. first number identifies one of a sequence of clips,
@@ -13163,8 +13151,8 @@ msgstr[1] "%s %d e clipes %s %d de %d %s"
 #, c-format
 msgid "%d of %d clip %s"
 msgid_plural "%d of %d clips %s"
-msgstr[0] "%d de %d clipe %s"
-msgstr[1] "%d de %d clipes %s"
+msgstr[0] "%d de %d clipe em %s"
+msgstr[1] "%d de %d clipes em %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -15273,9 +15261,8 @@ msgid "&Extra Menus (on/off)"
 msgstr "M&enus Extras (lig/desl)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Track &Name (on/off)"
-msgstr "M&enus Extras (lig/desl)"
+msgstr "&Nome da Faixa (lig/desl)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -15464,9 +15451,8 @@ msgid "Bro&wse..."
 msgstr "Pro&curar..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Macro output:"
-msgstr "Exibir saída"
+msgstr "Saída de &Macro:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -19708,7 +19694,7 @@ msgstr "Mensagem de conclusão"
 
 #: plug-ins/equalabel.ny
 msgid "Details"
-msgstr "Destalhes"
+msgstr "Detalhes"
 
 #: plug-ins/equalabel.ny
 msgid "Warnings only"
@@ -19874,10 +19860,10 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Excesso de silêncios detectado. Apenas os primeiros 10000 rótulos foram "
+"Excesso de silêncios detectado.~%Apenas os primeiros 10000 rótulos foram "
 "adicionados."
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -19901,8 +19887,8 @@ msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
 msgstr ""
-"A rotulagem de regiões entre sons requer pelo menos dois sons. Apenas um som "
-"foi detectado. %a."
+"A rotulagem de regiões entre sons requer ~%pelo menos dois sons. ~%Apenas um "
+"som foi detectado."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -20143,15 +20129,15 @@ msgid "Success.~%Files written to:~%~s~%"
 msgstr "Sucesso.~%Arquivos gravados em: ~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Aviso.nFalha na cópia de alguns arquivos:n"
+msgstr "Aviso.~%Falha na cópia de alguns arquivos:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Plug-ins instalados.n(Use o Gerenciador de Plug-ins para habilitar os "
+"Plug-ins instalados.~%(Use o Gerenciador de Plug-ins para habilitar os "
 "efeitos):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
