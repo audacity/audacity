@@ -15,6 +15,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 
+#include "../../../ui/BrushHandle.h"
+
 #include "../../../../AColor.h"
 #include "../../../../Prefs.h"
 #include "../../../../NumberScale.h"
@@ -24,6 +26,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
+#include "../../../../ProjectSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -42,11 +45,19 @@ bool SpectrumView::IsSpectral() const
    return true;
 }
 
+class BrushHandle;
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+
+   std::vector<UIHandlePtr> results;
+   if(currentTool == ToolCodes::brushTool){
+      const auto result = BrushHandle::HitTest(mBrushHandle, state, pProject, shared_from_this());
+      results.push_back(result);
+      return results;
+   }
 
    return WaveTrackSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt
