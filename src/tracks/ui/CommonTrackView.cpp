@@ -47,14 +47,6 @@ std::vector<UIHandlePtr> CommonTrackView::HitTest
       return results;
    }
 
-   if ( !isMultiTool && currentTool == brushTool ) {
-      // Zoom tool is a non-selecting tool that takes precedence in all tracks
-      // over all other tools, no matter what detail you point at.
-      result = BrushHandle::HitTest(mBrushHandle, st, pProject, shared_from_this());
-      results.push_back(result);
-      return results;
-   }
-
    // In other tools, let subclasses determine detailed hits.
    results =
       DetailedHitTest( st, pProject, currentTool, isMultiTool );
