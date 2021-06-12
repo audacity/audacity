@@ -40,6 +40,7 @@
 
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
+#include <wx/log.h>
 #include <wx/window.h>
 #endif
 

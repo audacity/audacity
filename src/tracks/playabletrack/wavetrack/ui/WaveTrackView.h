@@ -23,6 +23,8 @@ class WaveTrack;
 class WaveTrackView;
 class WaveClip;
 
+class wxDC;
+
 class AUDACITY_DLL_API WaveTrackSubView : public CommonTrackView
 {
 public:

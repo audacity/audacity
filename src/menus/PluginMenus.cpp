@@ -25,6 +25,8 @@
 #include "../prefs/EffectsPrefs.h"
 #include "../prefs/PrefsDialog.h"
 
+#include <wx/log.h>
+
 // private helper classes and functions
 namespace {
 

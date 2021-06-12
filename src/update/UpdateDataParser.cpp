@@ -11,6 +11,7 @@
 
 #include "xml/XMLFileReader.h"
 #include "MemoryX.h"
+#include <wx/platinfo.h>
 
 UpdateDataParser::UpdateDataParser()
 {}

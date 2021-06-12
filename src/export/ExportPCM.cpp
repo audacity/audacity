@@ -12,6 +12,7 @@
 
 #include <wx/defs.h>
 
+#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>

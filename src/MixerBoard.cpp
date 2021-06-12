@@ -19,6 +19,7 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
 #include <wx/icon.h>

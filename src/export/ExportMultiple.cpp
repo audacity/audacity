@@ -29,6 +29,7 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/radiobut.h>
 #include <wx/simplebook.h>
 #include <wx/sizer.h>

@@ -59,6 +59,7 @@ static const auto exts = {wxT("aup")};
 #include <wx/ffile.h>
 #include <wx/file.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/string.h>
 #include <wx/utils.h>
 

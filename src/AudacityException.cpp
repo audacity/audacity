@@ -12,6 +12,7 @@
 
 #include "AudacityException.h"
 
+#include <wx/app.h>
 #include <wx/atomic.h>
 
 #include "BasicUI.h"

@@ -46,8 +46,7 @@ is time to refresh some aspect of the screen.
 
 #include "TrackPanel.h"
 
-
-
+#include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "AdornedRulerPanel.h"

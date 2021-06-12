@@ -32,6 +32,7 @@
 #include "../import/ImportMIDI.h"
 #endif // USE_MIDI
 
+#include <wx/app.h>
 #include <wx/menu.h>
 
 // private helper classes and functions

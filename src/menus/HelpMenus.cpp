@@ -1,5 +1,5 @@
 
-
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>
 #include <wx/frame.h>
