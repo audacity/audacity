@@ -6901,7 +6901,7 @@ msgstr ""
 
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
-msgstr ""
+msgstr "&Tairseach (tá tairseach íseal níos íogaire):"
 
 #: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
 msgid "Threshold"
@@ -6993,7 +6993,7 @@ msgstr "Aga Ionsaithe:"
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/Compressor.cpp
 msgid "Attack Time"
-msgstr ""
+msgstr "Aga Ionsaithe"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
@@ -7084,11 +7084,11 @@ msgstr "&Tulra:"
 
 #: src/effects/Contrast.cpp
 msgid "Foreground start time"
-msgstr ""
+msgstr "Am tosaithe an tulra"
 
 #: src/effects/Contrast.cpp
 msgid "Foreground end time"
-msgstr ""
+msgstr "Am críochnaithe an tulra"
 
 #: src/effects/Contrast.cpp
 #, fuzzy
@@ -7101,11 +7101,11 @@ msgstr "&Cúlra:"
 
 #: src/effects/Contrast.cpp
 msgid "Background start time"
-msgstr ""
+msgstr "Am tosaithe an chúlra"
 
 #: src/effects/Contrast.cpp
 msgid "Background end time"
-msgstr ""
+msgstr "Am críochnaithe an chúlra"
 
 #: src/effects/Contrast.cpp
 #, fuzzy
@@ -7489,7 +7489,7 @@ msgstr "Tairseach:"
 
 #: src/effects/Distortion.cpp
 msgid "Hardness"
-msgstr ""
+msgstr "Cruacht"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion amount"
@@ -7608,7 +7608,7 @@ msgstr "%.0f ms"
 
 #: src/effects/DtmfGen.cpp
 msgid "Silence duration:"
-msgstr ""
+msgstr "Fad an chiúnas"
 
 #. i18n-hint milliseconds
 #: src/effects/DtmfGen.cpp
