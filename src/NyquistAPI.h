@@ -11,6 +11,7 @@
 
 **********************************************************************/
 
+
 // (AUD-GET-TRACK-INFO id) -- get a property list from track by name or index
 //     track index starts at 0, incremented by 1 for each multi-channel track
 //     E.g. if there are two stereo tracks, they are tracks 0 and 1.
@@ -60,6 +61,7 @@
 //     id is name or number
 //     start is the project time for the start of a region (beats or seconds)
 //     dur is the duration for a region (beats or seconds)
+//     inbeats is NULL if times and durations are in seconds; o.w. beats
 //     returns a list of events with time >= start and time < start + dur
 //         each event in the returned list has one of two formats:
 //         (NOTE key time channel pitch loudness duration 
@@ -72,20 +74,26 @@
 //              duration is event duration in beats or seconds (FLONUM)
 //              each parameter (optional) is a keyword followed by a value. 
 //                  The keyword prepends a colon (":") to the Allegro attribute
-//                  name and retains the type code suffix:
+//                  name, retains the type code suffix, and converts all to
+//                  upper case. Type code suffixes are:
 //                  s[tring], r[eal], i[nteger], or l[ogical].
-//              Example: (NOTE 60 4.0 3 100.0 1.0 :colors "blue")
+//              Example: (NOTE 60 4.0 3 100.0 1.0 :COLORS "blue")
 //         (UPDATE key time channel parameter)
 //              key is an event identifier, normally MIDI key number (FIXNUM)
 //              time is the start time (beats or seconds) (FLONUM)
 //              channel is the (usually MIDI) channel number (FIXNUM)
 //              parameter is an attribute keyword followed by value as in NOTE.
 // 
-// (AUD-PUT-NOTES id notes merge)
+// (AUD-PUT-NOTES id notes inbeats merge)
 //     id is name or number
 //     notes is an event list in the format returned by AUD-GET-NOTES
+//          any symbol may denote an attribute for a parameter. If the symbol
+//          name starts with ":", the colon is removed. The name is converted
+//          to lower case, and the last character must match the type of the
+//          parameter. For logical attributes, the value must be T or NIL.
+//     inbeats is NULL if times and durations are in seconds; o.w. beats
 //     if merge is NULL, replace all events in the track. Otherwise, merge.
-// 
+//
 // (AUD-GET-TIMES id start dur)
 //     id is name or number
 //     start is project time for start of region (FLONUM)
@@ -103,7 +111,7 @@
 #ifndef __AUDACITY_NYQUISTAPI__
 #define __AUDACITY_NYQUISTAPI__
 
-void NyquistAPICleanup();
+void setNyquistProject(const AudacityProject* p);
 
 LVAL getTrackInfo(LVAL nameOrNumber);
 /* LISP: (AUD-GET-TRACK-INFO ANY) */
@@ -120,11 +128,11 @@ LVAL getLabels(LVAL nameOrNumber, double start, double dur);
 LVAL putLabels(LVAL nameOrNumber, LVAL labels, LVAL merge_flag);
 /* LISP: (AUD-PUT-LABELS ANY ANY ANY) */
 
-LVAL getNotes(LVAL nameOrNumber, double start, double dur);
-/* LISP: (AUD-GET-NOTES ANY ANYNUM ANYNUM) */
+LVAL getNotes(LVAL nameOrNumber, double start, double dur, LVAL inbeats);
+/* LISP: (AUD-GET-NOTES ANY ANYNUM ANYNUM ANY) */
 
-LVAL putNotes(LVAL nameOrNumber, LVAL notes, LVAL merge_flag);
-/* LISP: (AUD-PUT-NOTES ANY ANY ANY) */
+LVAL putNotes(LVAL nameOrNumber, LVAL notes, LVAL inbeats, LVAL merge_flag);
+/* LISP: (AUD-PUT-NOTES ANY ANY ANY ANY) */
 
 LVAL getTimes(LVAL nameOrNumber, double start, double dur);
 /* LISP: (AUD-GET-TIMES ANY ANYNUM ANYNUM) */

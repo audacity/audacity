@@ -5,6 +5,11 @@
 #include "sndfnintdefs.h"
 #include "seqfnintdefs.h"
 
+/* from Nyquist.cpp */
+#include "audacityintdefs.h"
+
+#include "nyquistapiintdefs.h"
+
 /* from sndsliders.c */
 
 LVAL xslider_read(void);

@@ -538,7 +538,7 @@ void nyx_cleanup()
       free(nyx_audio_name);
       nyx_audio_name = NULL;
    }
-   NyquistAPICleanup();
+   nyquistAPICleanup();
 #if defined(NYX_MEMORY_STATS) && NYX_MEMORY_STATS
    printf("\nnyx_cleanup\n");
    xmem();
@@ -851,6 +851,11 @@ nyx_rval nyx_compute_type(LVAL expr)
    return ntype;
 }
 
+int nyx_load(const char* filename)
+{
+    return xlload(filename, false, false);
+}
+
 nyx_rval nyx_eval_expression(const char *expr_string)
 {
    LVAL expr = NULL;
@@ -1035,8 +1040,8 @@ finish:
 }
 
 
-// assumes sound is protected from garbage collection
-int nyx_pump_audio(LVAL sound, int64_t input_len, 
+// assumes input_len >= 0
+int nyx_pump_audio(LVAL sound, double maxdur,
                    nyx_audio_callback callback, void *userdata)
 {
 #define nyx_result do not access this global in nyx_pump_audio
@@ -1047,6 +1052,7 @@ int nyx_pump_audio(LVAL sound, int64_t input_len,
    int result = 0;
    int num_channels;
    int ch;
+   int64_t input_len;  // in samples
 
    // Any variable whose value is set between the _setjmp() and the "finish" label
    // and that is used after the "finish" label, must be marked volatile since
@@ -1082,22 +1088,6 @@ int nyx_pump_audio(LVAL sound, int64_t input_len,
    }
 
 
-   // if LEN is set, we will return LEN samples per channel. If LEN is
-   // unbound, we will compute samples until every channel has terminated
-   // that the samples per channel will match the last termination time,
-   // i.e. it could result in a partial block at the end.
-   if (input_len == 0) {
-      LVAL val = getvalue(xlenter("LEN"));
-      if (val != s_unbound) {
-         if (ntype(val) == FLONUM) {
-            input_len = (int64_t) getflonum(val);
-         }
-         else if (ntype(val) == FIXNUM) {
-            nyx_input_length = (int64_t) getfixnum(val);
-         }
-      }
-   }
-
    // at this point, input sounds which were referenced by symbol S
    // (or nyx_get_audio_name()) could be referenced by sound, but
    // S is now bound to NIL. sound is a protected (garbage
@@ -1116,11 +1106,21 @@ int nyx_pump_audio(LVAL sound, int64_t input_len,
    // To unify single and multi-channel sounds, we'll create an array
    // of one element for single-channel sounds.
 
+   // the value of sound is already protected, but sound itself is not
+   // we might reassign it, so we need to protect sound:
+   xlprot1(sound);
    if (num_channels == 1) {
       LVAL array = newvector(1);
       setelement(array, 0, sound);
       sound = array;
    }
+
+   maxdur = maxdur * getsound(getelement(sound, 0))->sr;  // convert to samples
+   if (maxdur > MAX_SND_LEN) {
+       maxdur = MAX_SND_LEN;  // avoid integer overflow
+   }
+   input_len = maxdur + 0.5;
+
    for (ch = 0; ch < num_channels; ch++) {
       if (ch > 0) {  // no need to copy first channel
          setelement(sound, ch, 
@@ -1140,7 +1140,7 @@ int nyx_pump_audio(LVAL sound, int64_t input_len,
       bool terminated = true;
       // how many samples to compute before calling callback:
       int64_t togo = max_sample_block_len;
-      if (input_len > 0 && total + togo > input_len) {
+      if (total + togo > input_len) {
          togo = input_len - total;
       }
       for (ch = 0; ch < num_channels; ch++) {
@@ -1188,6 +1188,7 @@ int nyx_pump_audio(LVAL sound, int64_t input_len,
    }
 
    sound = NULL;  // unreference sound array so GC can free it
+   xlpop();       // unprotect sound
 
 finish:
 
@@ -1328,6 +1329,11 @@ void nyx_continue()
 {
    xlflush();
    xlcontinue();
+}
+
+void nyx_xlerror(const char *emsg)
+{
+   xlerror(emsg, s_unbound);
 }
 
 int ostgetc()

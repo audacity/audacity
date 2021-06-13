@@ -4,6 +4,7 @@
 #include "stdlib.h"
 #endif
 #include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
+#include "NyquistAPI.h"
 
 extern LVAL s_true;
 #define cvboolean(i) ((i) ? s_true : NIL)
@@ -15,7 +16,14 @@ extern LVAL s_true;
 
 extern LVAL RSLT_sym;
 
-#include "nyquistapi.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "nyquistapiintdefs.h"
+#ifdef __cplusplus
+}
+#endif
+
 
 /* xlc_aud_get_track_info -- interface to C routine getTrackInfo */
 /**/
@@ -98,10 +106,11 @@ LVAL xlc_aud_get_notes(void)
     LVAL arg1 = xlgetarg();
     double arg2 = testarg2(xlgaanynum());
     double arg3 = testarg2(xlgaanynum());
+    LVAL arg4 = xlgetarg();
     LVAL result;
 
     xllastarg();
-    result = getNotes(arg1, arg2, arg3);
+    result = getNotes(arg1, arg2, arg3, arg4);
     return (result);
 }
 
@@ -113,10 +122,11 @@ LVAL xlc_aud_put_notes(void)
     LVAL arg1 = xlgetarg();
     LVAL arg2 = xlgetarg();
     LVAL arg3 = xlgetarg();
+    LVAL arg4 = xlgetarg();
     LVAL result;
 
     xllastarg();
-    result = putNotes(arg1, arg2, arg3);
+    result = putNotes(arg1, arg2, arg3, arg4);
     return (result);
 }
 

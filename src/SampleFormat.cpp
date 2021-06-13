@@ -99,6 +99,15 @@ void ReverseSamples(samplePtr dst, sampleFormat format,
    }
 }
 
+
+// Copy samples with dithering:
+//    src - copy from here
+//    srcFormat - int16Sample, int24Sample, floatSample
+//    dst - copy to here
+//    dstFormat - int16Sample, int24Sample, floatSample
+//    len - number of samples to copy
+//    srcStride - defaults to 1 sample
+//    dstStride - defaults to 1 sample
 void CopySamples(constSamplePtr src, sampleFormat srcFormat,
                  samplePtr dst, sampleFormat dstFormat,
                  unsigned int len,

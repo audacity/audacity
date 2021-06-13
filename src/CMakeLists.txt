@@ -186,6 +186,10 @@ list( APPEND SOURCES
       NoteTrack.cpp
       NoteTrack.h
       NumberScale.h
+      NyquistDialog.cpp
+      NyquistDialog.h
+      NyquistAPI.cpp
+      NyquistAPI.h
       PitchName.cpp
       PitchName.h
       PlatformCompatibility.cpp
@@ -569,8 +573,6 @@ list( APPEND SOURCES
          effects/nyquist/LoadNyquist.h
          effects/nyquist/Nyquist.cpp
          effects/nyquist/Nyquist.h
-         effects/nyquist/NyquistAPI.cpp
-         effects/nyquist/NyquistAPI.h
          effects/nyquist/nyquistapiint.cpp
          effects/nyquist/nyquistapiintdefs.h
          effects/nyquist/nyquistapiintptrs.h

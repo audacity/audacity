@@ -34,7 +34,7 @@ LVAL xstoprecordio(void);
 #endif
 
 /* the function table */
-FUNDEF init_funtab[] = {
+FUNDEF funtab[] = {
 
     /* read macro functions */
 {	NULL,				S, rmhash		}, /*   0 */
@@ -421,6 +421,12 @@ FUNDEF init_funtab[] = {
 
 };
 
+
+#ifdef RUNTIME_REDEFINE_PRIMITIVES
+/* NYQUIST XLisp already has an extension mechanism -- functions that extend
+ * Xlisp are defined in localptrs.h. There is no reason to keep multiple
+ * copies of the function table or extend it at runtime.
+ */
 FUNDEF *funtab = init_funtab;
 static size_t szfuntab = sizeof(init_funtab) / sizeof(*init_funtab);
 
@@ -445,6 +451,8 @@ int xlbindfunctions(const FUNDEF *functions, size_t nfunctions)
 
    /* To do: deallocate funtab when XLisp runtime shuts down */
 }
+#endif
+
 
 /* xnotimp does not return anything on purpose, so disable
  * "no return value" warning

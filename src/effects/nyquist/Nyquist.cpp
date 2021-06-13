@@ -26,6 +26,7 @@ effects from this one class.
 
 
 #include <limits>
+long mmmm = std::numeric_limits<long>::max();
 #include "../../Audacity.h" // for USE_* macros
 #include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
 #include "Nyquist.h"
@@ -82,6 +83,7 @@ effects from this one class.
 #include "../../widgets/ProgressDialog.h"
 
 #include "../../widgets/FileDialog/FileDialog.h"
+#include "NyquistAPI.h"
 
 // DEBUG TODO: REMOVE THIS
 #ifndef nyx_returns_start_and_end_time
@@ -93,6 +95,16 @@ effects from this one class.
 #include <ostream>
 #include <sstream>
 #include <float.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "audacityintdefs.h"
+#ifdef __cplusplus
+}
+#endif
+
 
 // DEBUG TODO: REMOVE THIS
 #include <stdio.h>
@@ -117,7 +129,7 @@ void dprintf(const wchar_t *format, ...)
 }
 #endif
 
-const AudacityProject* theNyquistProject;
+
 int NyquistEffect::mReentryCount = 0;
 
 enum
@@ -775,7 +787,7 @@ bool NyquistEffect::Process()
          (int) AllProjects{}.size());
       mProps += wxString::Format(wxT("(putprop '*PROJECT* \"%s\" 'NAME)\n"), EscapeString(project->GetProjectName()));
 
-      theNyquistProject = project;
+      setNyquistProject(project);
 
       int numTracks = 0;
       int numWave = 0;
@@ -3377,7 +3389,7 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
 // Registration of extra functions in XLisp.
 #include "../../../lib-src/libnyquist/nyquist/xlisp/xlisp.h"
 
-static LVAL gettext()
+LVAL xlc_gettext()
 {
    auto string = UTF8CTOWX(getstring(xlgastring()));
 #if !HAS_I18N_CONTEXTS
@@ -3389,7 +3401,7 @@ static LVAL gettext()
    return cvstring(GetCustomTranslation(string).mb_str(wxConvUTF8));
 }
 
-static LVAL gettextc()
+LVAL xlc_gettextc()
 {
 #if HAS_I18N_CONTEXTS
    auto string = UTF8CTOWX(getstring(xlgastring()));
@@ -3402,7 +3414,7 @@ static LVAL gettextc()
 #endif
 }
 
-static LVAL ngettext()
+LVAL xlc_ngettext()
 {
    auto string1 = UTF8CTOWX(getstring(xlgastring()));
    auto string2 = UTF8CTOWX(getstring(xlgastring()));
@@ -3417,7 +3429,7 @@ static LVAL ngettext()
       wxGetTranslation(string1, string2, number).mb_str(wxConvUTF8));
 }
 
-static LVAL ngettextc()
+LVAL xlc_ngettextc()
 {
 #if HAS_I18N_CONTEXTS
    auto string1 = UTF8CTOWX(getstring(xlgastring()));
@@ -3484,10 +3496,10 @@ LVAL xlc_aud_do(void)
     return (dst);
 }
 
-#include "nyquistapiintdefs.h"
 
 static void RegisterFunctions()
 {
+#ifdef RUNTIME_DEFINE_PRIMITIVES
    // Add functions to XLisp.  Do this only once,
    // before the first call to nyx_init.
    static bool firstTime = true;
@@ -3506,4 +3518,5 @@ static void RegisterFunctions()
 
       xlbindfunctions( functions, WXSIZEOF( functions ) );
    }
+#endif
 }

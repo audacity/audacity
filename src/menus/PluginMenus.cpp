@@ -3,6 +3,7 @@
 
 #include "../AudioIO.h"
 #include "../BatchProcessDialog.h"
+#include "../NyquistDialog.h"
 #include "../Benchmark.h"
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
@@ -630,6 +631,29 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 }
 
+void OnNyquist(const CommandContext& context)
+{
+    auto& project = context.project;
+    auto& window = ProjectWindow::Get(project);
+    NyquistDialog dlg(&window, project);
+    dlg.ApplyNyquist();
+    MenuManager::ModifyUndoMenuItems(project);
+
+    TranslatableString desc;
+    EffectManager& em = EffectManager::Get();
+    auto& undoManager = UndoManager::Get(project);
+    auto& commandManager = CommandManager::Get(project);
+    int cur = undoManager.GetCurrentState();
+    if (undoManager.UndoAvailable()) {
+        undoManager.GetShortDescription(cur, &desc);
+        commandManager.Modify(wxT("RepeatLastTool"), XXO("&Repeat Nyquist"));
+        auto& menuManager = MenuManager::Get(project);
+        menuManager.mLastTool = wxT("Nyquist");
+        menuManager.mLastToolRegistration = MenuCreator::repeattypeapplymacro;
+    }
+}
+
+
 void OnAudacityCommand(const CommandContext & ctx)
 {
    // using GET in a log message for devs' eyes only
@@ -1040,27 +1064,26 @@ BaseItemSharedPtr ToolsMenu()
    #endif
 
          Section( "RepeatLast",
-         // Delayed evaluation:
-         [](AudacityProject &project)
-         {
-            const auto &lastTool = MenuManager::Get(project).mLastTool;
-            TranslatableString buildMenuLabel;
-            if (!lastTool.empty())
-               buildMenuLabel = XO("Repeat %s")
-                  .Format( EffectManager::Get().GetCommandName(lastTool) );
-            else
-               buildMenuLabel = XO("Repeat Last Tool");
+            // Delayed evaluation:
+            [](AudacityProject &project)
+            {
+               const auto &lastTool = MenuManager::Get(project).mLastTool;
+               TranslatableString buildMenuLabel;
+               if (!lastTool.empty())
+                  buildMenuLabel = XO("Repeat %s")
+                     .Format( EffectManager::Get().GetCommandName(lastTool) );
+               else
+                  buildMenuLabel = XO("Repeat Last Tool");
 
-            return Command( wxT("RepeatLastTool"), buildMenuLabel,
-               FN(OnRepeatLastTool),
-               AudioIONotBusyFlag() |
-                  HasLastToolFlag(),
-               Options{}.IsGlobal(), findCommandHandler );
-         }
-      ),
+               return Command(wxT("RepeatLastTool"), buildMenuLabel,
+                              FN(OnRepeatLastTool),
+                              AudioIONotBusyFlag() | HasLastToolFlag(),
+                              Options{}.IsGlobal(), findCommandHandler);
+            }
+         ),
 
-      Command( wxT("ManageMacros"), XXO("&Macros..."),
-            FN(OnManageMacros), AudioIONotBusyFlag() ),
+         Command( wxT("ManageMacros"), XXO("&Macros..."),
+                  FN(OnManageMacros), AudioIONotBusyFlag() ),
 
          Menu( wxT("Macros"), XXO("&Apply Macro"),
             // Palette has no access key to ensure first letter navigation of
@@ -1075,57 +1098,59 @@ BaseItemSharedPtr ToolsMenu()
                [](AudacityProject&)
                { return Items( wxEmptyString, PopulateMacrosMenu( AudioIONotBusyFlag() ) ); }
             )
-         )
-      ),
+         ),
 
-      Section( "Other",
-         Command( wxT("ConfigReset"), XXO("Reset &Configuration"),
-            FN(OnResetConfig),
-            AudioIONotBusyFlag() ),
+         Command( wxT("Nyquist"), XXO("&Nyquist..."),
+                  FN(OnNyquist), AudioIONotBusyFlag() ),
 
-         Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
-            FN(OnScreenshot), AudioIONotBusyFlag() ),
+         Section( "Other",
+            Command( wxT("ConfigReset"), XXO("Reset &Configuration"),
+               FN(OnResetConfig),
+               AudioIONotBusyFlag() ),
+
+            Command( wxT("FancyScreenshot"), XXO("&Screenshot..."),
+               FN(OnScreenshot), AudioIONotBusyFlag() ),
 
    // PRL: team consensus for 2.2.0 was, we let end users have this diagnostic,
    // as they used to in 1.3.x
    //#ifdef IS_ALPHA
-         // TODO: What should we do here?  Make benchmark a plug-in?
-         // Easy enough to do.  We'd call it mod-self-test.
-         Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
-            FN(OnBenchmark), AudioIONotBusyFlag() )
+            // TODO: What should we do here?  Make benchmark a plug-in?
+            // Easy enough to do.  We'd call it mod-self-test.
+            Command( wxT("Benchmark"), XXO("&Run Benchmark..."),
+               FN(OnBenchmark), AudioIONotBusyFlag() )
    //#endif
-      ),
+         ),
 
-      Section( "Tools",
-         // Delayed evaluation:
-         [](AudacityProject&)
-         { return Items( wxEmptyString, PopulateEffectsMenu(
-            EffectTypeTool,
-            AudioIONotBusyFlag(),
-            AudioIONotBusyFlag() )
-         ); }
-      )
+         Section( "Tools",
+            // Delayed evaluation:
+            [](AudacityProject&)
+            { return Items( wxEmptyString, PopulateEffectsMenu(
+                            EffectTypeTool,
+                            AudioIONotBusyFlag(),
+                            AudioIONotBusyFlag() )
+                          ); }
+         )
 
 #ifdef IS_ALPHA
-      ,
-      Section( "",
-         Command( wxT("SimulateRecordingErrors"),
-            XXO("Simulate Recording Errors"),
-            FN(OnSimulateRecordingErrors),
-            AudioIONotBusyFlag(),
-            Options{}.CheckTest(
-               [](AudacityProject&){
-                  return AudioIO::Get()->mSimulateRecordingErrors; } ) ),
-         Command( wxT("DetectUpstreamDropouts"),
-            XXO("Detect Upstream Dropouts"),
-            FN(OnDetectUpstreamDropouts),
-            AudioIONotBusyFlag(),
-            Options{}.CheckTest(
-               [](AudacityProject&){
-                  return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
-      )
+         ,
+         Section( "",
+            Command( wxT("SimulateRecordingErrors"),
+               XXO("Simulate Recording Errors"),
+               FN(OnSimulateRecordingErrors),
+               AudioIONotBusyFlag(),
+               Options{}.CheckTest(
+                  [](AudacityProject&){
+                     return AudioIO::Get()->mSimulateRecordingErrors; } ) ),
+            Command( wxT("DetectUpstreamDropouts"),
+               XXO("Detect Upstream Dropouts"),
+               FN(OnDetectUpstreamDropouts),
+               AudioIONotBusyFlag(),
+               Options{}.CheckTest(
+                  [](AudacityProject&){
+                     return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
+         )
 #endif
-   ) ) };
+      ) ) ) };
    return menu;
 }
 

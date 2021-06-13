@@ -274,6 +274,7 @@ list( APPEND INCLUDES
       ${TARGET_ROOT}/nyquist/xlisp
       $<$<BOOL:${UNIX}>:${TARGET_ROOT}/nyquist/sys/unix>
       $<$<NOT:$<BOOL:${UNIX}>>:${TARGET_ROOT}/nyquist/sys/win/msvc>
+      ${TARGET_ROOT}/../../src/effects/nyquist
    PUBLIC
       ${TARGET_ROOT}
 )

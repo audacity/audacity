@@ -37,6 +37,7 @@ public:
     /// 'source' variable, the destination sample in the 'dest' variable,
     /// and hints to the formats of the samples. Even if the sample formats
     /// are the same, samples are clipped, if necessary.
+    /// (see definition for parameter descriptions)
     void Apply(DitherType ditherType,
                constSamplePtr source, sampleFormat sourceFormat,
                samplePtr dest, sampleFormat destFormat,

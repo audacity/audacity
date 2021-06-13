@@ -7,3 +7,9 @@
 /* extension to xlisp */
 #include "sndfnintptrs.h"
 #include "seqfnintptrs.h"
+         { "_", SUBR, xlc_gettext },
+         { "_C", SUBR, xlc_gettextc },
+         { "NGETTEXT", SUBR, xlc_ngettext },
+         { "NGETTEXTC", SUBR, xlc_ngettextc },
+         { "AUD-DO",  SUBR, xlc_aud_do },
+#include "nyquistapiintptrs.h"
