@@ -107,7 +107,7 @@ ErrorReportDialog::ErrorReportDialog(
          S.AddSpace(0, 20);
 
          S.AddVariableText(XO(
-               "Click \"Send\" to submit report to Audacity. This information is collected anonymously."))
+               "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
             ->SetFont(textFont);
 
          S.AddSpace(0, 20);
@@ -145,11 +145,11 @@ ErrorReportDialog::ErrorReportDialog(
             
             S.AddSpace(0, 0, 1);
 
-            S.Id(wxID_NO).AddButton(XO("Don't send"));
+            S.Id(wxID_NO).AddButton(XC("&Don't send", "crash reporter button"));
 
             S.AddSpace(13, 0);
 
-            S.Id(wxID_YES).AddButton(XO("Send"));
+            S.Id(wxID_YES).AddButton(XC("&Send", "crash reporter button"));
          }
          S.EndHorizontalLay();
 
