@@ -11,9 +11,9 @@
 /**
 
 \class SourceSep
-\brief SourceSep is an effect for source separation using DeepLearning 
+\brief SourceSep is an effect for source separation using deep learning 
 
-TODO: add more desc
+TODO: add a more thorough description
 
 */
 /*******************************************************************/
@@ -59,7 +59,7 @@ ComponentInterfaceSymbol EffectSourceSep::GetSymbol()
 
 TranslatableString EffectSourceSep::GetDescription()
 {
-   return XO("Source Separation!"); // TODO
+   return XO("Source Separation"); // TODO
 }
 
 wxString EffectSourceSep::ManualPage()
@@ -87,6 +87,7 @@ bool EffectSourceSep::Process()
    bool bGoodResult = true;
    double maxDestLen = 0.0; // used to change selection to generated bit
 
+   // TODO: copy pasted this from repeat, fill out with source sep. 
    for (auto track : mOutputTracks->Selected<WaveTrack>())
    {
       double trackStart = track->GetStartTime();
@@ -151,7 +152,7 @@ void EffectSourceSep::OnLoadButton(wxCommandEvent &WXUNUSED(event))
    if (path.empty()) return;
 
    // attempt load deep learning model
-   mModel = std::make_unique<DeepModel>(path.ToStdString());
+   mModel->Load(path);
 
    wxString descStr("loaded a deep model succesfully!");
    mDescription->SetLabel(descStr);

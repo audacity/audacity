@@ -1,23 +1,39 @@
 #include "DeepModel.h"
-#include <iostream>
-#include <vector>
-#include <stdlib.h>
 
 #include <torch/script.h>
 #include <torch/torch.h>
 
+#include <rapidjson/document.h>
+
 DeepModel::DeepModel() : mLoaded(false) {}
 
-DeepModel::DeepModel(const std::string &modelPath)
+bool DeepModel::Load(const std::string &modelPath)
 {
    try
    {
-      // load the model
-      mModel = torch::jit::load(modelPath);
+      // create a placeholder for our metadata string
+      torch::jit::ExtraFilesMap extraFilesMap_;
+		std::pair<std::string, std::string> metadata("metadata.json", "");
+		extraFilesMap_.insert(metadata);
+
+      // load the model to CPU, as well as the metadata
+      mModel = torch::jit::load(modelPath, torch::kCPU,  extraFilesMap_);
       mModel.eval();
 
       // load the model metadata
-      // TODO: load model metadata from a yaml file.
+      // TODO: load model metadata from a json string.
+      data = extraFilesMap_["metadata.json"]
+      rapidjson::Document document;
+
+      // parse the data
+      if (document.Parse(data).HasParseError) 
+         throw std::exception();
+
+      document.SetObject();
+
+      // set the sample rate
+      assert(document["sample_rate"].IsInt());
+      mSampleRate = document["sample_rate"].GetInt();
 
       mLoaded = true;
    }
@@ -27,6 +43,8 @@ DeepModel::DeepModel(const std::string &modelPath)
       std::cerr << e.what() << '\n';
       mLoaded = false;
    }
+
+   return mLoaded;
 }
 
 torch::Tensor DeepModel::Forward(const torch::Tensor tensorInput)

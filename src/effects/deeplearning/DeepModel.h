@@ -14,11 +14,10 @@ private:
    bool mLoaded;
 
    int mSampleRate;
-   int mInputSize;
 
 public:
    DeepModel();
-   DeepModel(const std::string &modelPath);
+   bool Load(const std::string &modelPath);
 
    torch::Tensor Downmix(const torch::Tensor audio);
    torch::Tensor Preprocess(const torch::Tensor audio);
