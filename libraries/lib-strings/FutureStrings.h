@@ -100,11 +100,7 @@ Some example strings are also given first, to document the syntax.
 // Crash & error report window
 
 XO("Problem Report for Audacity"),
-XO("Click \"Send\" to submit the report to Audacity. This information is collected anonymously."),
 XO("Problem details"),
-XO("Comments"),
-XC("&Send",       "crash reporter button"),
-XC("&Don't send", "crash reporter button"),
 // i18n-hint C++ programming exception
 XO("Exception code 0x%x"),
 // i18n-hint C++ programming exception
