@@ -111,17 +111,6 @@ XO("Unknown error"),
 XO("Failed to send crash report"),
 
 
-// i18n-hint Scheme refers to a color scheme for spectrogram colors
-XC("Sche&me",            "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Color (default)",   "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Color (classic)",   "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Grayscale",         "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Inverse grayscale", "spectrum prefs"),
-
 // Update version dialog
 XC("Update Audacity", "update dialog"),
 XC("&Skip", "update dialog"),
