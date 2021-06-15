@@ -534,6 +534,42 @@ file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
 execute_process( COMMAND
    dot -O -Tsvg "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" )
 
+#
+# Code signing
+#
+
+cmd_option( ${_OPT}perform_codesign
+            "Perform code signing during the install step. This only works on Windows and macOS."
+            Off
+)
+
+cmake_dependent_option(
+   ${_OPT}perform_notarization
+   "Perform notarization during the install step. This only works on macOS."
+   Off
+   "${_OPT}perform_codesign;APPLE"
+   Off
+)
+
+if( ${_OPT}perform_codesign )
+   include( AudacityCodeSigning )
+endif()
+
+#
+# Packaging
+#
+
+cmd_option( ${_OPT}package_manual
+            "Package the manual along with the DMG and InnoSetup targets"
+            Off
+)
+
+# Variables, that are common for all package targets
+
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   include( AudacityInnoSetup )
+endif()
+
 # Uncomment what follows for symbol values.
 #[[
    get_cmake_property( _variableNames VARIABLES )

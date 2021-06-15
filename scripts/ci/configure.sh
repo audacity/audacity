@@ -34,5 +34,34 @@ elif [[ "${AUDACITY_CMAKE_GENERATOR}" == Xcode* ]]; then
     )
 fi
 
+if [[ -n "${APPLE_CODESIGN_IDENTITY}" && "${OSTYPE}" == darwin* ]]; then
+    cmake_args+=(
+        -D APPLE_CODESIGN_IDENTITY="${APPLE_CODESIGN_IDENTITY}"
+        -D audacity_perform_codesign=yes
+    )
+
+    if [[ ${GIT_BRANCH} == release* ]]; then
+        cmake_args+=(
+            -D APPLE_NOTARIZATION_USER_NAME="${APPLE_NOTARIZATION_USER_NAME}"
+            -D APPLE_NOTARIZATION_PASSWORD="${APPLE_NOTARIZATION_PASSWORD}"
+            -D audacity_perform_notarization=yes
+        )
+    fi
+elif [[ -n "${WINDOWS_CERTIFICATE}" && "${OSTYPE}" == msys* ]]; then
+    # Windows certificate will be used from the environment
+    cmake_args+=(
+        -D audacity_perform_codesign=yes
+    )
+fi
+
+if [[ ${GIT_BRANCH} == release* ]]; then
+    cmake_args+=(
+        -D audacity_package_manual=yes
+    )
+fi
+
 # Configure Audacity
 cmake "${cmake_args[@]}"
+
+# Remove build directories and sources to reduce the cache size.
+conan remove "*" --src --builds --force

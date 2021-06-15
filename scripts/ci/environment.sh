@@ -15,11 +15,10 @@ function gh_export()
 
 repository_root="$(cd "$(dirname "${BASH_SOURCE}")/../.."; echo "${PWD}")"
 
-gh_export CONAN_USER_HOME="${repository_root}/conan-home/"
-gh_export CONAN_USER_HOME_SHORT="${repository_root}/conan-home/short"
-
 gh_export GIT_HASH="$(git show -s --format='%H')"
 gh_export GIT_HASH_SHORT="$(git show -s --format='%h')"
 
 gh_export AUDACITY_BUILD_TYPE="RelWithDebInfo"
 gh_export AUDACITY_INSTALL_PREFIX="${repository_root}/build/install"
+
+gh_export GIT_BRANCH=${GITHUB_REF##*/}
