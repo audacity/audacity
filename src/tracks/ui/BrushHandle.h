@@ -78,12 +78,6 @@ private:
    std::weak_ptr<Track> FindTrack();
 
    void Connect(AudacityProject *pProject);
-public:
-   // This is needed to implement a command assignable to keystrokes
-   static void SnapCenterOnce
-      (SpectrumAnalyst &analyst,
-       ViewInfo &viewInfo, const WaveTrack *pTrack, bool up);
-private:
 
    // TrackPanelDrawable implementation
    void Draw(
@@ -92,7 +86,6 @@ private:
 
    //void ResetFreqSelectionPin
    //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
-
 
    std::weak_ptr<TrackView> mpView;
    wxRect mRect{};

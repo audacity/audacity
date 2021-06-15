@@ -31,6 +31,11 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
 
+class BrushHandle;
+std::vector<std::pair<int, int>> SpectrumView::mTraversedPoints;
+std::unordered_map<wxInt64, std::vector<double>> SpectrumView::mFreqToTimePointsMap;
+int SpectrumView::mBrushSize = 5;
+
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
    { wxT("Spectrogram"), XXO("&Spectrogram") }
@@ -45,7 +50,6 @@ bool SpectrumView::IsSpectral() const
    return true;
 }
 
-class BrushHandle;
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
@@ -624,6 +628,28 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
 }
 
+void DrawTraversedPoints(TrackPanelDrawingContext &context, const WaveTrack *track,
+                         const wxRect &rect, int brushSize){
+   auto& dc = context.dc;
+   auto& traversedPoints = SpectrumView::mTraversedPoints;
+   if(traversedPoints.size() <= 1)
+      return;
+   int prev_x = traversedPoints[0].first;
+   int prev_y = traversedPoints[0].second;
+
+   wxPen pen;
+   pen.SetColour(101, 221, 255);
+   pen.SetWidth(brushSize);
+   pen.SetStyle(wxSOLID);
+   dc.SetPen(pen);
+
+   for(const auto &trackXY: traversedPoints) {
+      dc.DrawLine(prev_x, prev_y, trackXY.first, trackXY.second);
+      prev_x = trackXY.first;
+      prev_y = trackXY.second;
+   }
+}
+
 void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
                                 const WaveTrack *track,
                                 const wxRect & rect )
@@ -639,6 +665,8 @@ void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
       DrawClipSpectrum( context, cache, clip.get(), rect );
 
    DrawBoldBoundaries( context, track, rect );
+
+   DrawTraversedPoints(context, track, rect, mBrushSize);
 }
 
 void SpectrumView::Draw(

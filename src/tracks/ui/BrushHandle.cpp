@@ -35,6 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../WaveTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../../images/Cursors.h"
+#include "../playabletrack/wavetrack/ui/SpectrumView.h"
 
 #include <wx/event.h>
 
@@ -363,8 +364,6 @@ UIHandlePtr BrushHandle::HitTest
  const TrackPanelMouseState &st, const AudacityProject *pProject,
  const std::shared_ptr<TrackView> &pTrackView)
 {
-   std::cout << "Brush hittest()" << std::endl;
-
    // This handle is a little special because there may be some state to
    // preserve during movement before the click.
    auto old = holder.lock();
@@ -494,14 +493,19 @@ UIHandle::Result BrushHandle::Click
    wxMouseEvent &event = evt.event;
    const auto sTrack = TrackList::Get( *pProject ).Lock( FindTrack() );
    const auto pTrack = sTrack.get();
+   const WaveTrack *const wt =
+           static_cast<const WaveTrack*>(pTrack);
    auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
 
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
-   std::cout << mMostRecentX << ", " << mMostRecentY << std::endl;
 
-   return RefreshNone;
+   wxInt64 pos = PositionToFrequency(wt, 0, mMostRecentY, mRect.y, mRect.height);
+   const double selend = viewInfo.PositionToTime(mMostRecentX, mRect.x);
+   std::cout << pos << "____" << selend << std::endl;
+
+   return RefreshAll;
 }
 
 UIHandle::Result BrushHandle::Drag
@@ -513,16 +517,37 @@ UIHandle::Result BrushHandle::Drag
    if ( !pView )
       return Cancelled;
 
+   wxMouseEvent &event = evt.event;
+   const auto sTrack = TrackList::Get( *pProject ).Lock( FindTrack() );
+   const auto pTrack = sTrack.get();
+   const WaveTrack *const wt =
+           static_cast<const WaveTrack*>(pTrack);
+   auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
-   const wxMouseEvent &event = evt.event;
 
    int x = mAutoScrolling ? mMostRecentX : event.m_x;
    int y = mAutoScrolling ? mMostRecentY : event.m_y;
    mMostRecentX = x;
    mMostRecentY = y;
-   std::cout << mMostRecentX << ", " << mMostRecentY << std::endl;
 
-   return RefreshNone;
+   // Convert the cursor position to freq. value & time_position
+   wxInt64 posFreq = PositionToFrequency(wt, 0, mMostRecentY, mRect.y, mRect.height);
+   const double posTime = viewInfo.PositionToTime(mMostRecentX, mRect.x);
+   std::cout << posFreq << "____" << posTime << std::endl;
+
+   SpectrumView::mTraversedPoints.push_back(std::make_pair(x, y));
+
+   auto &mFreqToTimePointsMap = SpectrumView::mFreqToTimePointsMap;
+   if(mFreqToTimePointsMap.find(posFreq) == mFreqToTimePointsMap.end()){
+      std::vector<double> timePoints;
+      timePoints.push_back(posTime);
+      mFreqToTimePointsMap[posFreq] = timePoints;
+   }
+   else
+      mFreqToTimePointsMap[posFreq].push_back(posTime);
+
+
+   return RefreshAll;
 }
 
 HitTestPreview BrushHandle::Preview
@@ -555,14 +580,8 @@ void BrushHandle::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   if ( iPass == TrackArtist::PassSnapping ) {
-      auto &dc = context.dc;
-      // Draw snap guidelines if we have any
-      if ( mSnapManager ) {
-         auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
-         auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
-         mSnapManager->Draw( &dc, coord1, coord2 );
-      }
+   if ( iPass == TrackArtist::PassTracks ) {
+      auto& dc = context.dc;
    }
 }
 
