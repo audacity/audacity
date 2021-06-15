@@ -32,7 +32,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 
 class BrushHandle;
-std::unordered_map<wxInt64, std::vector<double>> SpectrumView::mFreqToTimePointsMap;
+std::unordered_map<wxInt64, std::unordered_set<double>> SpectrumView::mFreqToTimePointsMap;
 int SpectrumView::mBrushRadius = 5;
 
 static WaveTrackSubView::Type sType{
@@ -635,7 +635,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 //      std::cout<< convertedY << "[ ";
       for(const double &timePoint: freqTimePoints.second) {
          int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
-         drawingCoords.push_back(std::make_pair(convertedX, convertedY));
+         drawingCoords.emplace_back(convertedX, convertedY);
 //         std::cout << convertedX << ", ";
       }
 //      std::cout<< " ]" << std::endl;
