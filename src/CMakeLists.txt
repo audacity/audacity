@@ -1083,6 +1083,7 @@ list( APPEND LIBRARIES
       portaudio-v19
       sqlite
       $<$<BOOL:${USE_LIBTORCH}>:libtorch>
+      $<$<BOOL:${USE_LIBTORCH}>:RapidJSON::RapidJSON>
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
