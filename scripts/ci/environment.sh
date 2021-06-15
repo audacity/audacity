@@ -21,5 +21,5 @@ gh_export CONAN_USER_HOME_SHORT="${repository_root}/conan-home/short"
 gh_export GIT_HASH="$(git show -s --format='%H')"
 gh_export GIT_HASH_SHORT="$(git show -s --format='%h')"
 
-gh_export AUDACITY_BUILD_TYPE="Release"
+gh_export AUDACITY_BUILD_TYPE="RelWithDebInfo"
 gh_export AUDACITY_INSTALL_PREFIX="${repository_root}/build/install"

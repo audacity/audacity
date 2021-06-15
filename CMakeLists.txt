@@ -171,12 +171,21 @@ include( TestBigEndian )
 set_from_env(SENTRY_DSN_KEY)
 set_from_env(SENTRY_HOST)
 set_from_env(SENTRY_PROJECT)
+set_from_env(CRASH_REPORT_URL)
 
 cmake_dependent_option(
    ${_OPT}has_sentry_reporting
    "Build support for sending errors to Sentry"
    On
    "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_crashreports
+   "Enables crash reporting for Audacity"
+   On
+   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
    Off
 )
 
@@ -217,6 +226,11 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    endif()
    message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
    message( STATUS )
+
+   if(${_OPT}has_crashreports)
+      set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
+   endif()
+
 endif()
 
 # Try to get the current commit information
@@ -485,6 +499,9 @@ add_subdirectory( "cmake-proxies" )
 resolve_conan_dependencies()
 
 add_subdirectory( "help" )
+if(${_OPT}has_crashreports)
+add_subdirectory( "crashreports" )
+endif()
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
