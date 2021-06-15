@@ -33,7 +33,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 class BrushHandle;
 std::unordered_map<wxInt64, std::vector<double>> SpectrumView::mFreqToTimePointsMap;
-int SpectrumView::mBrushSize = 5;
+int SpectrumView::mBrushRadius = 5;
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
@@ -186,8 +186,8 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
 void DrawTraversedCoords(TrackPanelDrawingContext &context,
                          std::vector<std::pair<int, int>> drawingCoords){
    auto& dc = context.dc;
-   int brushSize = SpectrumView::mBrushSize;
-   if(!drawingCoords.size())
+   int brushSize = SpectrumView::mBrushRadius;
+   if(drawingCoords.empty())
       return;
    dc.SetPen( *wxTRANSPARENT_PEN );
    dc.SetBrush( *wxYELLOW_BRUSH );
