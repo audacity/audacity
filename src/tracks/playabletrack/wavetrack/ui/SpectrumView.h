@@ -34,6 +34,12 @@ public:
 
    bool IsSpectral() const override;
 
+<<<<<<< HEAD
+=======
+   static std::unordered_map<wxInt64, std::vector<double>> mFreqToTimePointsMap;
+   static int mBrushRadius;
+
+>>>>>>> [Brush] Minor variable change
 private:
     int mBrushSize;
     std::weak_ptr<BrushHandle> mBrushHandle;
