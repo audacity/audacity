@@ -11,6 +11,7 @@ Paul Licameli split from WaveTrackView.h
 #ifndef __AUDACITY_SPECTRUM_VIEW__
 #define __AUDACITY_SPECTRUM_VIEW__
 
+#include <unordered_map>
 #include "WaveTrackView.h" // to inherit
 
 
@@ -32,8 +33,13 @@ public:
 
    bool IsSpectral() const override;
 
+   static std::vector<std::pair<int, int>> mTraversedPoints;
+
+   static std::unordered_map<wxInt64, std::vector<double>> mFreqToTimePointsMap;
+
 private:
     std::weak_ptr<BrushHandle> mBrushHandle;
+    static int mBrushSize;
 
    // TrackPanelDrawable implementation
    void Draw(
