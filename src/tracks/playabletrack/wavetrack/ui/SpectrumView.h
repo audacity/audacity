@@ -35,8 +35,12 @@ public:
    bool IsSpectral() const override;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
    static std::unordered_map<wxInt64, std::vector<double>> mFreqToTimePointsMap;
+=======
+   static std::unordered_map<wxInt64, std::unordered_set<double>> mFreqToTimePointsMap;
+>>>>>>> [Brush] Replaced vector with unordered_set
    static int mBrushRadius;
 
 >>>>>>> [Brush] Minor variable change
