@@ -33,13 +33,11 @@ public:
 
    bool IsSpectral() const override;
 
-   static std::vector<std::pair<int, int>> mTraversedPoints;
-
    static std::unordered_map<wxInt64, std::vector<double>> mFreqToTimePointsMap;
+   static int mBrushSize;
 
 private:
     std::weak_ptr<BrushHandle> mBrushHandle;
-    static int mBrushSize;
 
    // TrackPanelDrawable implementation
    void Draw(

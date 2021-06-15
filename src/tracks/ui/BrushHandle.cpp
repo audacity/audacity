@@ -501,10 +501,6 @@ UIHandle::Result BrushHandle::Click
    mMostRecentX = event.m_x;
    mMostRecentY = event.m_y;
 
-   wxInt64 pos = PositionToFrequency(wt, 0, mMostRecentY, mRect.y, mRect.height);
-   const double selend = viewInfo.PositionToTime(mMostRecentX, mRect.x);
-   std::cout << pos << "____" << selend << std::endl;
-
    return RefreshAll;
 }
 
@@ -533,9 +529,10 @@ UIHandle::Result BrushHandle::Drag
    // Convert the cursor position to freq. value & time_position
    wxInt64 posFreq = PositionToFrequency(wt, 0, mMostRecentY, mRect.y, mRect.height);
    const double posTime = viewInfo.PositionToTime(mMostRecentX, mRect.x);
-   std::cout << posFreq << "____" << posTime << std::endl;
-
-   SpectrumView::mTraversedPoints.push_back(std::make_pair(x, y));
+//   std::cout << mMostRecentX << "____" << mMostRecentY << std::endl;
+//   std::cout << posFreq << "____" << posTime << std::endl;
+//   wxInt64 restoredX = viewInfo.TimeToPosition(posTime, mRect.x, 0);
+//   wxInt64 restoredY = FrequencyToPosition(wt, posFreq, mRect.y, mRect.height);
 
    auto &mFreqToTimePointsMap = SpectrumView::mFreqToTimePointsMap;
    if(mFreqToTimePointsMap.find(posFreq) == mFreqToTimePointsMap.end()){
@@ -559,7 +556,7 @@ HitTestPreview BrushHandle::Preview
 }
 
 UIHandle::Result BrushHandle::Release
-(const TrackPanelMouseEvent &, AudacityProject *pProject,
+(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
  wxWindow *)
 {
    using namespace RefreshCode;
@@ -571,7 +568,6 @@ UIHandle::Result BrushHandle::Release
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
-   ViewInfo::Get( *pProject ).selectedRegion = mInitialSelection;
 
    return RefreshCode::RefreshAll;
 }
