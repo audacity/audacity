@@ -13,8 +13,8 @@ bool DeepModel::Load(const std::string &modelPath)
    {
       // create a placeholder for our metadata string
       torch::jit::ExtraFilesMap extraFilesMap_;
-		std::pair<std::string, std::string> metadata("metadata.json", "");
-		extraFilesMap_.insert(metadata);
+      std::pair<std::string, std::string> metadata("metadata.json", "");
+      extraFilesMap_.insert(metadata);
 
       // load the model to CPU, as well as the metadata
       mModel = torch::jit::load(modelPath, torch::kCPU,  extraFilesMap_);
@@ -22,16 +22,36 @@ bool DeepModel::Load(const std::string &modelPath)
 
       // load the model metadata
       // TODO: load model metadata from a json string.
-      data = extraFilesMap_["metadata.json"]
-      rapidjson::Document document;
+      std::string data = extraFilesMap_["metadata.json"];
 
       // parse the data
-      if (document.Parse(data).HasParseError) 
-         throw std::exception();
+      rapidjson::Document document;
+      document.Parse(data.c_str());
+      if (document.Parse(data.c_str()).HasParseError()) 
+         throw std::exception(); // TODO: throw a better exception
 
-      document.SetObject();
+      assert(document.IsObject());
+      // // document.SetObject();
+
+      // //tmp: print the doc
+      // auto a = document.MemberBegin();
+      // auto b = document.MemberEnd();
+
+      // for (rapidjson::Value::MemberIterator M = document.MemberBegin(); 
+      //       M!=document.MemberEnd(); M++)
+      // {
+      //    const char* key   = M->name.GetString();
+      //    const char* value = M->value.GetString();
+
+      //    if (key!=NULL && value!=NULL)
+      //    {
+      //       printf("%s = %s", key,value);
+      //    }
+      // }
 
       // set the sample rate
+      printf("has sample_rate = %d\n", document.HasMember("sample_rate"));
+      assert(document.HasMember("sample_rate"));
       assert(document["sample_rate"].IsInt());
       mSampleRate = document["sample_rate"].GetInt();
 

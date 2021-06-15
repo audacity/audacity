@@ -34,7 +34,7 @@ const ComponentInterfaceSymbol EffectSourceSep::Symbol
 { XO("Source Separation") };
 
 // register source separation
-namespace{ BuiltinEffectsModule::Registration<EffectSourceSep> reg; }
+namespace{ BuiltinEffectsModule::Registration< EffectSourceSep > reg; }
 
 // register event handlers
 BEGIN_EVENT_TABLE(EffectSourceSep, wxEvtHandler)
@@ -59,7 +59,7 @@ ComponentInterfaceSymbol EffectSourceSep::GetSymbol()
 
 TranslatableString EffectSourceSep::GetDescription()
 {
-   return XO("Source Separation"); // TODO
+   return XO("Source Separation!"); // TODO
 }
 
 wxString EffectSourceSep::ManualPage()
@@ -152,7 +152,9 @@ void EffectSourceSep::OnLoadButton(wxCommandEvent &WXUNUSED(event))
    if (path.empty()) return;
 
    // attempt load deep learning model
-   mModel->Load(path);
+   // TODO: what's the fallback when the model doesn't load? 
+   mModel = std::make_unique<DeepModel>();
+   mModel->Load(path.ToStdString());
 
    wxString descStr("loaded a deep model succesfully!");
    mDescription->SetLabel(descStr);

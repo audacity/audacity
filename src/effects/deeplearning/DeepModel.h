@@ -4,8 +4,6 @@
 #include <torch/script.h>
 #include <torch/torch.h>
 
-#define kDEVICE torch::kCPU
-#define kCPU torch::kCPU
 
 class DeepModel
 {
