@@ -15,6 +15,13 @@ jobs:
     env:
       AUDACITY_CMAKE_GENERATOR: ${{ matrix.config.generator }}
       AUDACITY_ARCH_LABEL: ${{ matrix.config.arch }}
+      # Windows codesigning
+      # This variables will be used by all the steps
+      WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+      WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+      # Conan home location to be used for cache action
+      CONAN_USER_HOME: "${{ github.workspace }}/conan-home/"
+      CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-home/short"
     strategy:
       fail-fast: false
       matrix:
@@ -52,6 +59,13 @@ jobs:
     - name: Environment
       run: |
         source "scripts/ci/environment.sh"
+    
+    - name: Install Apple codesigning certificates
+      uses: apple-actions/import-codesign-certs@v1
+      if: startswith( matrix.config.os, 'macos' ) && github.event_name == 'push'
+      with: 
+        p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
+        p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
 
     - name: Cache for .conan
       id: cache-conan
@@ -66,10 +80,15 @@ jobs:
 
     - name: Configure
       env:
+        # Error reporing
         SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
         SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
         SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         CRASH_REPORT_URL: ${{ secrets.CRASH_REPORT_URL }}
+        # Apple code signing
+        APPLE_CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+        APPLE_NOTARIZATION_USER_NAME: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
+        APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
       run: |
         exec bash "scripts/ci/configure.sh"
 

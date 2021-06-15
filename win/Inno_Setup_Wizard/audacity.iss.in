@@ -1,5 +1,5 @@
 ﻿;   Audacity: A Digital Audio Editor
-;   Audacity(R) is copyright (c) 1999-2016 Audacity Team.
+;   Audacity(R) is copyright (c) 1999-2021 Audacity Team.
 ;   License: GPL v2.  See License.txt.
 ;
 ;   audacity.iss
@@ -7,7 +7,8 @@
 ;
 
 ; This requires that the ISS Preprocessor be installed
-#define AppExe "..\release\audacity.exe" 
+
+#define AppExe "Package\audacity.exe" 
 #define AppMajor ""
 #define AppMinor ""
 #define AppRev ""
@@ -22,7 +23,7 @@ Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-{#AppVersion}
+OutputBaseFilename=audacity-win-{#AppVersion}-@INSTALLER_SUFFIX@
 
 WizardImageFile=".\audacity_InnoWizardImage.bmp"
 WizardSmallImageFile=".\audacity_InnoWizardSmallImage.bmp"
@@ -43,8 +44,9 @@ AppPublisherURL=http://audacityteam.org
 AppSupportURL=http://audacityteam.org
 AppUpdatesURL=http://audacityteam.org
 ChangesAssociations=yes
+@INSTALLER_X64_MODE@
 
-DefaultDirName={pf}\Audacity
+DefaultDirName={commonpf}\Audacity
 
 VersionInfoProductName={#AppName}
 VersionInfoProductTextVersion={#GetFileProductVersion(AppExe)}
@@ -63,7 +65,7 @@ UninstallDisplayIcon="{app}\audacity.exe"
 
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=".\audacity_InnoWizard_InfoBefore.rtf"
-InfoAfterFile=..\..\README.txt
+InfoAfterFile=Additional\README.txt
 
 ; We no longer produce new ANSI builds. 
 ; As we use Inno Setup (u), the Unicode version, to build this script, 
@@ -72,7 +74,9 @@ InfoAfterFile=..\..\README.txt
 ;   MinVersion=4.0,5.0
 
 ; cosmetic-related directives
-SetupIconFile="..\audacity.ico"
+SetupIconFile="Additional\audacity.ico"
+
+@SIGN_TOOL@
 
 [INI]
 Filename: "{app}\FirstTime.ini"; Section: "FromInno"; Key: "ResetPrefs"; String: "1"; Tasks: resetPrefs;
@@ -89,47 +93,26 @@ Name: resetPrefs; Description:  "{cm:ResetPrefs}"; Flags: unchecked
 Source: ".\FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Permissions: users-modify
 
 ; Don't display in separate window, rather as InfoAfterFile.   Source: "..\README.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
-Source: "..\..\README.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Additional\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\..\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Additional\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
-Source: "..\..\help\manual\*"; DestDir: "{app}\help\manual\"; Flags: ignoreversion recursesubdirs
+@MANUAL@
 
-Source: "..\..\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "Additional\presets\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 
-; wxWidgets DLLs. Be specific (not *.dll) so we don't accidentally distribute avformat.dll, for example.
-; Don't use the WXWIN environment variable, because...
-; 1) Can't get the documented {%WXWIN|default dir} parsing to work.
-; 2) Need the DLL's in the release dir for testing, anyway.
-Source: "..\release\wxbase313u_xml_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxbase313u_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw313u_core_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw313u_html_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\wxmsw313u_qa_vc_custom.dll"; DestDir: "{app}"; Flags: ignoreversion
+; We include all dll files from the Adacity root directory. This script is now executed as a part of CI build process,
+; so we controll which dll files are present in the directory.
+Source: "Package\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 
-; MSVC runtime DLLs. Some users can't put these in the system dir, so just put them in the EXE dir.
-; It's legal, per http://www.fsf.org/licensing/licenses/gpl-faq.html#WindowsRuntimeAndGPL .
-; This is not an ideal solution, but should need the least tech support.
-; We'll know we have the right version, don't step on anybody else's older version, and
-; it's easy to make the zip (and they match better).
-; Copy the several required DLL's from 
-; "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
-; or "C:\Program Files\Microsoft Visual Studio 12.0\VC\redist\x86\Microsoft.VC120.CRT\"
-; according to your system 
-Source: "..\release\concrt140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\msvcp140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\msvcp140_2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\release\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
-
-Source: "..\release\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
+Source: "Package\languages\*"; DestDir: "{app}\Languages\"; Flags: ignoreversion recursesubdirs
 ; We don't ship all modules, so the next line is commented out
-; Source: "..\release\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: "..\release\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
-Source: "..\release\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
-Source: "..\release\modules\mod-script-pipe.dll"; DestDir: "{app}\modules\"; Flags: ignoreversion
+; Source: "Package\modules\*"; DestDir: "{app}\Modules\"; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: "Package\nyquist\*"; DestDir: "{app}\Nyquist\"; Flags: ignoreversion recursesubdirs
+Source: "Package\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
+Source: "Package\modules\*"; DestDir: "{app}\modules\"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
@@ -213,8 +196,8 @@ Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flag
 ; NOTE: "0" in locale name will be translated to "@" when read by Audacity.
 
 ; Create subdirectories where we'll store the unofficial and dummy translation files
-{#expr Exec("cmd", "/c mkdir """ + CompilerPath + "Languages\dummy""", , , SW_HIDE), \
-       Exec("cmd", "/c mkdir """ + CompilerPath + "Languages\unofficial""", , , SW_HIDE)}
+{#expr Exec("cmd", "/c mkdir """ + "Languages\dummy""", '.\', , SW_HIDE), \
+       Exec("cmd", "/c mkdir """ + "Languages\unofficial""", '.\', , SW_HIDE)}
 
 ; Download Additional Inno Setup translations from:
 ;
@@ -227,28 +210,28 @@ Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flag
 ; the Inno Setup Languages folder if it hasn't already been downloaded.
 ; (Sorry, it's not a quick process, but it only happens once.)
 #define Get(URL) \
-  Local[0] = "Languages\unofficial\" + Copy(URL, RPos("/", URL) + 1), \
-  Local[1] = (FileExists(CompilerPath + Local[0]) \
+  Local[0] = ".\Languages\unofficial\" + Copy(URL, RPos("/", URL) + 1), \
+  Local[1] = (FileExists(Local[0]) \
     ? "alreadyexists" \
-    : Exec("powershell", "echo 'Downloading: " + URL + "'; $wc = new-object System.Net.WebClient; $wc.DownloadFile('" + URLBase + URL + "', '" + Local[0] + "')", , , SW_NORMAL)), \
-  "compiler:" + Local[0]
+    : Exec("powershell", "echo 'Downloading: " + URL + "'; $wc = new-object System.Net.WebClient; $wc.DownloadFile('" + URLBase + URL + "', '" + Local[0] + "')", '.\', , SW_NORMAL)), \
+  Local[0]
 
 ; This macro will define a dummy translation based on the Defaults.isl
 #define Dummy(NAME, ID) \
-  Local[0] = "Languages\dummy\", \
+  Local[0] = ".\Languages\dummy\", \
   Local[1] = Local[0] + NAME + ".isl", \
-  Local[2] = CompilerPath + Local[1], \
+  Local[2] = SourcePath + Local[1], \
   Local[3] = (FileExists(Local[2]) \
     ? "alreadyexists" \
     : (CopyFile(CompilerPath + "Default.isl", Local[2]), \
        WriteIni(Local[2], "LangOptions", "LanguageName", NAME), \
        WriteIni(Local[2], "LangOptions", "LanguageID", "$" + ID))), \
-  "compiler:" + Local[1]
+  Local[1]
 
 Name: "af"; MessagesFile: "{#Get('Afrikaans.isl')}"
 Name: "ar"; MessagesFile: "{#Get('Arabic.isl')}"
 Name: "be"; MessagesFile: "{#Get('Belarusian.isl')}"
-Name: "bg"; MessagesFile: "{#Get('Bulgarian.isl')}"
+Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
 Name: "bn"; MessagesFile: "{#Get('Bengali.islu')}"
 Name: "bs"; MessagesFile: "{#Get('Bosnian.isl')}"
 Name: "ca"; MessagesFile: "compiler:Languages\Catalan.isl"
@@ -258,7 +241,7 @@ Name: "cs"; MessagesFile: "compiler:Languages\Czech.isl"
 Name: "cy"; MessagesFile: "{#Dummy('Welsh', '0452')}"
 Name: "da"; MessagesFile: "compiler:Languages\Danish.isl"
 Name: "de"; MessagesFile: "compiler:Languages\German.isl"
-Name: "el"; MessagesFile: "compiler:Languages\Greek.isl"
+Name: "el"; MessagesFile: "{#Get('Greek.isl')}"
 Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "es"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "eu"; MessagesFile: "{#Get('Basque.isl')}"
@@ -270,19 +253,19 @@ Name: "gl"; MessagesFile: "{#Get('Galician.isl')}"
 Name: "he"; MessagesFile: "compiler:Languages\Hebrew.isl"
 Name: "hi"; MessagesFile: "{#Get('Hindi.islu')}"
 Name: "hr"; MessagesFile: "{#Get('Croatian.isl')}"
-Name: "hu"; MessagesFile: "compiler:Languages\Hungarian.isl"
-Name: "hy"; MessagesFile: "compiler:Languages\Armenian.islu"
+Name: "hu"; MessagesFile: "{#Get('Hungarian.isl')}"
+Name: "hy"; MessagesFile: "compiler:Languages\Armenian.isl"
 Name: "id"; MessagesFile: "{#Get('Indonesian.isl')}"
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl"
 Name: "ja"; MessagesFile: "compiler:Languages\Japanese.isl"
-Name: "ka"; MessagesFile: "{#Get('Georgian.islu')}"
+Name: "ka"; MessagesFile: "{#Get('Georgian.isl')}"
 Name: "km"; MessagesFile: "{#Dummy('Khmer', '0409')}"
 Name: "ko"; MessagesFile: "{#Dummy('Korean', '0412')}"
 Name: "lt"; MessagesFile: "{#Get('Lithuanian.isl')}"
 Name: "mk"; MessagesFile: "{#Get('Macedonian.isl')}"
 Name: "my"; MessagesFile: "{#Dummy('Burmese', '0409')}"
 Name: "nb"; MessagesFile: "compiler:Languages\Norwegian.isl"
-;Name: "ne"; MessagesFile: "compiler:Languages\Nepali.islu"
+Name: "ne"; MessagesFile: "{#Get('Nepali.islu')}"
 Name: "nl"; MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "oc"; MessagesFile: "{#Get('Occitan.isl')}"
 Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl"
@@ -290,16 +273,16 @@ Name: "pt_PT"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl"
 Name: "ro"; MessagesFile: "{#Get('Romanian.isl')}"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "sk"; MessagesFile: "{#Get('Slovak.isl')}"
+Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl"
 Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
-Name: "sr_RS"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
-Name: "sr_RS0latin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
+Name: "sr_RS"; MessagesFile: "{#Get('SerbianCyrillic.isl')}"
+Name: "sr_RS0latin"; MessagesFile: "{#Get('SerbianLatin.isl')}"
 Name: "sv"; MessagesFile: "{#Get('Swedish.isl')}"
 Name: "ta"; MessagesFile: "{#Dummy('Tamil', '0449')}"
 Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"
-;Name: "vi"; MessagesFile: "{#Get('Vietnamese.islu')}"
+Name: "vi"; MessagesFile: "{#Get('Vietnamese.isl')}"
 Name: "zh_CN"; MessagesFile: "{#Get('ChineseSimplified.isl')}"
 Name: "zh_TW"; MessagesFile: "{#Get('ChineseTraditional.isl')}"
 
@@ -361,7 +344,7 @@ lt.ResetPrefs=Reset Preferences
 mk.ResetPrefs=Reset Preferences
 my.ResetPrefs=Reset Preferences
 nb.ResetPrefs=Reset Preferences
-;ne.ResetPrefs=Reset Preferences
+ne.ResetPrefs=Reset Preferences
 nl.ResetPrefs=Voorkeuren herstellen?
 oc.ResetPrefs=Reset Preferences
 pl.ResetPrefs=Zresetować ustawienia?
