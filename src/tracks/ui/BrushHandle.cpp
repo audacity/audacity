@@ -551,7 +551,7 @@ HitTestPreview BrushHandle::Preview
         (const TrackPanelMouseState &st, AudacityProject *pProject)
 {
    TranslatableString tip;
-   wxCursor *pCursor = SelectCursor();
+   wxCursor *pCursor = EnvelopeCursor();
    return { tip, pCursor };
 }
 
@@ -568,6 +568,7 @@ UIHandle::Result BrushHandle::Release
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
+   SpectrumView::mFreqToTimePointsMap.clear();
 
    return RefreshCode::RefreshAll;
 }
