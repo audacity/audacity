@@ -57,7 +57,7 @@ msgstr "Córas"
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Cuireann sé tacaíocht Mhaisiúcháin Réthionlacain ar fáil do Audacity"
+msgstr "Tuairiscigh an fhadhb do Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
@@ -67,7 +67,7 @@ msgstr ""
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
-msgstr ""
+msgstr "Mionsonraí faoin bhfadhb"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -76,12 +76,12 @@ msgstr "Nótaí"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "&Seol í"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "Ná seol í"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
@@ -93,7 +93,7 @@ msgstr ""
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgid "Unknown exception"
-msgstr "Rogha anaithnid ar an líne orduithe: %s\n"
+msgstr "Eisceacht anaithnid"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
@@ -104,7 +104,7 @@ msgstr "Anaithnid"
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgid "Unknown error"
-msgstr "Anaithnid"
+msgstr "Earráid anaithnid"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
@@ -115,26 +115,26 @@ msgstr "Ní fhéidir a aithint"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "Gúm"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (réamhshocrú)"
+msgstr "Dath (réamhshocrú)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr ""
+msgstr "Dath (mar a bhí fadó)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr ""
+msgstr "Scála liath"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
@@ -147,28 +147,28 @@ msgstr "Líneach"
 #, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Scoir ó Audacity"
+msgstr "Nuashonraigh Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Skip"
-msgstr ""
+msgstr "Léim thar &seo"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "&Suiteáil an nuashonrú"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Cainéal"
+msgstr "Oireas na n-athruithe"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "Léigh tuilleadh ar GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
@@ -184,7 +184,7 @@ msgstr ""
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Bhí na sonraí nuashonraithe truaillithe."
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
@@ -195,7 +195,7 @@ msgstr "Earráid le linn oscailt an chomhaid"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Ní féidir nasc íosluchtaithe Audacity a oscailt."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
@@ -207,7 +207,7 @@ msgstr "Barra Uirlisí %s Audacity"
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
 msgid "1st Experimental Command..."
-msgstr "Baochas fé leith:"
+msgstr "An Chéad Ordú Turgnamhach...:"
 
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
@@ -264,11 +264,11 @@ msgstr ""
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Previous S-expr\tF11"
-msgstr ""
+msgstr "&S-expr roimhe\tF11"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Next S-expr\tF12"
-msgstr ""
+msgstr "&S-expr ar aghaidh\tF12"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go to"
@@ -531,7 +531,7 @@ msgstr "Roimhe"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
-msgstr ""
+msgstr "Téigh chuig an S-expr roimhe"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Next"
@@ -539,7 +539,7 @@ msgstr "Ar aghaidh"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
-msgstr ""
+msgstr "Téigh chuig an S-expr ar aghaidh"
 
 #. i18n-hint noun
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
@@ -825,7 +825,7 @@ msgstr "Díchumasaithe"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr ""
+msgstr "An Tógáil"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -4678,7 +4678,7 @@ msgstr "Gach Maisiúchán"
 #: src/Screenshot.cpp
 #, fuzzy
 msgid "All Scriptables"
-msgstr "Gach Comhad (*)|*"
+msgstr "Gach ní ar féidir script a dhéanamh de"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
@@ -5041,6 +5041,9 @@ msgid ""
 "  %s\n"
 "for writing."
 msgstr ""
+"Níor bhféidir le Audacity an comhad seo a oscailt:\n"
+"  %s\n"
+"chun scríobh air."
 
 #: src/Theme.cpp
 #, c-format
