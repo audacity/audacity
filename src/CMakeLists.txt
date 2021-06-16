@@ -1243,6 +1243,9 @@ else()
    #
    # (Don't use generator expressions since it will leave null/empty
    # entries in the list.)
+   set( MIMETYPES
+      application/x-audacity-project
+   )
    if( USE_FFMPEG )
       list( APPEND MIMETYPES
          audio/aac
