@@ -97,11 +97,9 @@ jobs:
         exec bash "scripts/ci/build.sh"
 
     - name: Upload debug symbols
-      if: startsWith(github.ref, 'refs/tags/release-')
+      if: startsWith(github.ref, 'refs/heads/release-')
       env:
-        SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
         SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
-        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         SENTRY_ORG_SLUG: ${{ secrets.SENTRY_ORG_SLUG }}
         SENTRY_PROJECT_SLUG: ${{ secrets.SENTRY_PROJECT_SLUG }}
