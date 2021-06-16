@@ -14,10 +14,13 @@
 #include <wx/defs.h>
 
 #include "PrefsPanel.h"
+#include "Prefs.h"
 
 class ShuttleGui;
 
-#define WARNINGS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Application") }
+namespace ApplicationPrefsSettings {
+    extern AUDACITY_DLL_API BoolSetting DefaultUpdatesCheckingFlag;
+}
 
 class ApplicationPrefs final : public PrefsPanel
 {
@@ -30,14 +33,9 @@ class ApplicationPrefs final : public PrefsPanel
    bool Commit() override;
    wxString HelpPageName() override;
 
-   void OnCheckingUpdates(wxCommandEvent& event);
-
  private:
    void Populate();
    void PopulateOrExchange(ShuttleGui & S) override;
-
-public:
-	DECLARE_EVENT_TABLE()
 };
 
 #endif

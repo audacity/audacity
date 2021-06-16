@@ -24,11 +24,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-enum { CheckingUpdatesID = wxID_HIGHEST + 1 };
+static ComponentInterfaceSymbol s_ComponentInterfaceSymbol{ XO("Application") };
 
-BEGIN_EVENT_TABLE(ApplicationPrefs, PrefsPanel)
-    EVT_CHECKBOX(CheckingUpdatesID, ApplicationPrefs::OnCheckingUpdates)
-END_EVENT_TABLE()
+BoolSetting ApplicationPrefsSettings::DefaultUpdatesCheckingFlag{
+    L"/Update/DefaultUpdatesChecking", true };
 
 ApplicationPrefs::ApplicationPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Application"))
@@ -42,7 +41,7 @@ ApplicationPrefs::~ApplicationPrefs()
 
 ComponentInterfaceSymbol ApplicationPrefs::GetSymbol()
 {
-   return WARNINGS_PREFS_PLUGIN_SYMBOL;
+   return s_ComponentInterfaceSymbol;
 }
 
 TranslatableString ApplicationPrefs::GetDescription()
@@ -73,10 +72,9 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Update Audacity"));
    {
-      // TODO: replace `false` to UpdateManager::GetInstance().isUpdatesChakingEnabled()
-      // and XO("Check for Updates...") need remove endian after translation.
-      S.Id(CheckingUpdatesID).AddCheckBox(
-          XO("Check for Updates"), false);
+      S.TieCheckBox(
+          XO("&Check for Updates...").Stripped(TranslatableString::Ellipses | TranslatableString::MenuCodes),
+          ApplicationPrefsSettings::DefaultUpdatesCheckingFlag);
    }
    S.EndStatic();
    S.EndScroller();
@@ -88,12 +86,6 @@ bool ApplicationPrefs::Commit()
    PopulateOrExchange(S);
 
    return true;
-}
-
-void ApplicationPrefs::OnCheckingUpdates(wxCommandEvent& event)
-{
-    event.IsChecked();
-    // TODO: add UpdateManager::GetInstance().enableUpdatesChaking(event.IsChecked())
 }
 
 namespace{

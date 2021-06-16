@@ -14,7 +14,7 @@
 
 #include "Project.h"
 
-#include "update/UpdateManager.h"
+#include "VersionPatch.h"
 
 class HtmlWindow;
 class wxWindow;
@@ -30,7 +30,7 @@ class UpdatePopupDialog final : public wxDialogWrapper
 {
     DECLARE_DYNAMIC_CLASS (AboutDialog)
 public:
-    explicit UpdatePopupDialog (wxWindow* parent, UpdateManager *updateManager);
+    explicit UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch);
     virtual ~UpdatePopupDialog();
 
     void OnUpdate (wxCommandEvent& event);
@@ -42,5 +42,5 @@ public:
 private:
     HtmlWindow* AddHtmlContent (wxWindow* parent);
 
-    UpdateManager* const mUpdateManager;
+    const VersionPatch& mVersionPatch;
 };
