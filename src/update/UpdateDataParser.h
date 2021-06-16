@@ -60,7 +60,7 @@ private:
     void HandleXMLContent(const wxString& content) override;
     XMLTagHandler* HandleXMLChild(const wxChar* tag) override;
 
-    wxArrayString splitChangelogSentences(const wxString& changelogContent);
+    wxArrayString SplitChangelogSentences(const wxString& changelogContent);
 
     VersionPatch* mVersionPatch{ nullptr };
 };

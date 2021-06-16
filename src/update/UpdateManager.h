@@ -33,12 +33,12 @@ public:
     static UpdateManager& GetInstance();
     static void Start();
 
-    void getUpdates();
+    void GetUpdates();
 
-    void enableUpdatesChecking(bool enable);
-    bool isUpdatesCheckingEnabled();
+    void EnableUpdatesChecking(bool enable);
+    bool IsUpdatesCheckingEnabled();
 
-    VersionPatch getVersionPatch() const;
+    VersionPatch GetVersionPatch() const;
 
 private:
     UpdateDataParser mUpdateDataParser;
@@ -50,7 +50,7 @@ private:
     void OnTimer(wxTimerEvent& event);
 
     /// Scheduling update time for avoiding multiplying update notifications.
-    bool isTimeToUpdate();
+    bool IsTimeToUpdate();
 
 public:
     DECLARE_EVENT_TABLE()

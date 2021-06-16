@@ -43,7 +43,7 @@ VersionId VersionId::ParseFromString(wxString& versionString)
     );
 }
 
-wxString VersionId::getString() const
+wxString VersionId::GetString() const
 {
     return MakeString(mVersion, mRelease, mRevision);
 }

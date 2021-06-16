@@ -45,7 +45,7 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
             S.SetBorder (5);
 
             S.Id (DontShowID).AddCheckBox (
-                XO ("Don't show this again at start up"), !mUpdateManager->isUpdatesCheckingEnabled());
+                XO ("Don't show this again at start up"), !mUpdateManager->IsUpdatesCheckingEnabled());
 
             S.Prop(1).AddSpace(1, 0, 1);
 
@@ -80,7 +80,7 @@ void UpdatePopupDialog::OnSkip (wxCommandEvent&)
 
 void UpdatePopupDialog::OnDontShow (wxCommandEvent& event)
 {
-    mUpdateManager->enableUpdatesChecking(!event.IsChecked());
+    mUpdateManager->EnableUpdatesChecking(!event.IsChecked());
 }
 
 HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
@@ -90,7 +90,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
 
     // i18n-hint Substitution of version number for %s.
     static const auto title = XC("Audacity %s is available!", "update dialog")
-        .Format(mUpdateManager->getVersionPatch().version.getString());
+        .Format(mUpdateManager->GetVersionPatch().version.GetString());
 
     informationStr
         << wxT("<html><body><h3>")
@@ -100,7 +100,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
         << wxT("</h5><p>");
 
     informationStr << wxT("<ul>");
-    for (auto& logLine : mUpdateManager->getVersionPatch().changelog)
+    for (auto& logLine : mUpdateManager->GetVersionPatch().changelog)
     {
         informationStr << wxT("<li>");
         // We won't to translate downloaded text.

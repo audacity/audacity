@@ -51,27 +51,27 @@ void UpdateManager::Start()
     static std::once_flag flag;
     std::call_once(flag, [&instance] {
         instance.mTimer.SetOwner(&instance, ID_TIMER);
-        instance.mTimer.StartOnce();
+        instance.mTimer.StartOnce(1);
         });
 }
 
-void UpdateManager::enableUpdatesChecking(bool enable)
+void UpdateManager::EnableUpdatesChecking(bool enable)
 {
     gPrefs->Write(prefsUpdatePopupDialogShown, enable);
     gPrefs->Flush();
 }
 
-bool UpdateManager::isUpdatesCheckingEnabled()
+bool UpdateManager::IsUpdatesCheckingEnabled()
 {
     return gPrefs->ReadBool(prefsUpdatePopupDialogShown, true);
 }
 
-VersionPatch UpdateManager::getVersionPatch() const
+VersionPatch UpdateManager::GetVersionPatch() const
 {
     return mVersionPatch;
 }
 
-void UpdateManager::getUpdates()
+void UpdateManager::GetUpdates()
 {
     const audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
@@ -123,13 +123,13 @@ void UpdateManager::getUpdates()
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    if (isUpdatesCheckingEnabled() && isTimeToUpdate())
-        getUpdates();
+    if (IsUpdatesCheckingEnabled() && IsTimeToUpdate())
+        GetUpdates();
 
     mTimer.StartOnce(mTrackingInterval);
 }
 
-bool UpdateManager::isTimeToUpdate()
+bool UpdateManager::IsTimeToUpdate()
 {
     long long nextUpdatesCheckingTime = std::stoll(
         gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString());
