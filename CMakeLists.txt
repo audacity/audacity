@@ -136,6 +136,8 @@ project( Audacity )
 # Load our functions/macros
 include( AudacityFunctions )
 
+set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
+
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
