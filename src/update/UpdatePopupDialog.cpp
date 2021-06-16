@@ -11,6 +11,7 @@
 
 #include "ShuttleGui.h"
 #include "widgets/HelpSystem.h"
+#include "prefs/ApplicationPrefs.h"
 
 #include <wx/debug.h>
 #include <wx/sstream.h>
@@ -26,14 +27,12 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS (UpdatePopupDialog, wxDialogWrapper)
 
-UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateManager)
+UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch)
     : wxDialogWrapper (parent, -1, XC("Update Audacity", "update dialog"),
         wxDefaultPosition, wxDefaultSize,
         wxCAPTION),
-      mUpdateManager (updateManager)
+      mVersionPatch(versionPatch)
 {
-    wxASSERT(mUpdateManager);
-
     ShuttleGui S (this, eIsCreating);
     S.SetBorder (5);
     S.StartVerticalLay (wxEXPAND, 1);
@@ -45,7 +44,8 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, UpdateManager* updateMan
             S.SetBorder (5);
 
             S.Id (DontShowID).AddCheckBox (
-                XO ("Don't show this again at start up"), !mUpdateManager->IsUpdatesCheckingEnabled());
+                XO ("Don't show this again at start up"),
+                !ApplicationPrefsSettings::DefaultUpdatesCheckingFlag.Read());
 
             S.Prop(1).AddSpace(1, 0, 1);
 
@@ -80,7 +80,7 @@ void UpdatePopupDialog::OnSkip (wxCommandEvent&)
 
 void UpdatePopupDialog::OnDontShow (wxCommandEvent& event)
 {
-    mUpdateManager->EnableUpdatesChecking(!event.IsChecked());
+    ApplicationPrefsSettings::DefaultUpdatesCheckingFlag.Write(!event.IsChecked());
 }
 
 HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
@@ -90,7 +90,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
 
     // i18n-hint Substitution of version number for %s.
     static const auto title = XC("Audacity %s is available!", "update dialog")
-        .Format(mUpdateManager->GetVersionPatch().version.GetString());
+        .Format(mVersionPatch.version.GetString());
 
     informationStr
         << wxT("<html><body><h3>")
@@ -100,7 +100,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
         << wxT("</h5><p>");
 
     informationStr << wxT("<ul>");
-    for (auto& logLine : mUpdateManager->GetVersionPatch().changelog)
+    for (auto& logLine : mVersionPatch.changelog)
     {
         informationStr << wxT("<li>");
         // We won't to translate downloaded text.

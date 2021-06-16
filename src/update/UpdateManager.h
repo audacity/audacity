@@ -35,9 +35,6 @@ public:
 
     void GetUpdates();
 
-    void EnableUpdatesChecking(bool enable);
-    bool IsUpdatesCheckingEnabled();
-
     VersionPatch GetVersionPatch() const;
 
 private:
@@ -50,7 +47,7 @@ private:
     void OnTimer(wxTimerEvent& event);
 
     /// Scheduling update time for avoiding multiplying update notifications.
-    bool IsTimeToUpdate();
+    bool IsTimeToUpdatesChecking();
 
 public:
     DECLARE_EVENT_TABLE()

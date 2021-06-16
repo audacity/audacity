@@ -15,12 +15,12 @@
 #include "Request.h"
 
 #include "widgets/ErrorDialog.h"
+#include "prefs/ApplicationPrefs.h"
 
 #include <wx/platinfo.h>
 #include <wx/utils.h>
 #include <wx/frame.h>
 
-static const char* prefsUpdatePopupDialogShown = "/Update/UpdatePopupDialogShown";
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 
 enum { ID_TIMER = wxID_HIGHEST + 1 };
@@ -53,17 +53,6 @@ void UpdateManager::Start()
         instance.mTimer.SetOwner(&instance, ID_TIMER);
         instance.mTimer.StartOnce(1);
         });
-}
-
-void UpdateManager::EnableUpdatesChecking(bool enable)
-{
-    gPrefs->Write(prefsUpdatePopupDialogShown, enable);
-    gPrefs->Flush();
-}
-
-bool UpdateManager::IsUpdatesCheckingEnabled()
-{
-    return gPrefs->ReadBool(prefsUpdatePopupDialogShown, true);
 }
 
 VersionPatch UpdateManager::GetVersionPatch() const
@@ -103,7 +92,7 @@ void UpdateManager::GetUpdates()
         if (mVersionPatch.version > CurrentBuildVersion())
         {
             wxTheApp->CallAfter([this] {
-                UpdatePopupDialog dlg(nullptr, this);
+                UpdatePopupDialog dlg(nullptr, mVersionPatch);
                 const int code = dlg.ShowModal();
 
                 if (code == wxID_YES)
@@ -123,13 +112,15 @@ void UpdateManager::GetUpdates()
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    if (IsUpdatesCheckingEnabled() && IsTimeToUpdate())
+    bool updatesCheckingEnabled = ApplicationPrefsSettings::DefaultUpdatesCheckingFlag.Read();
+
+    if (updatesCheckingEnabled && IsTimeToUpdatesChecking())
         GetUpdates();
 
     mTimer.StartOnce(mTrackingInterval);
 }
 
-bool UpdateManager::IsTimeToUpdate()
+bool UpdateManager::IsTimeToUpdatesChecking()
 {
     long long nextUpdatesCheckingTime = std::stoll(
         gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString());
