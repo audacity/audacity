@@ -46,7 +46,7 @@
 #include "audacity/Types.h"
 #include <wx/string.h> // member variables
 
-extern AUDACITY_DLL_API const wxString& GetCustomTranslation(const wxString& str1 );
+STRINGS_API const wxString& GetCustomTranslation(const wxString& str1 );
 
 /**************************************************************************//**
 
