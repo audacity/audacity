@@ -96,32 +96,6 @@ Some example strings are also given first, to document the syntax.
 // //////////////////////////////////////////////// End examples
 #endif
 
-
-// Crash & error report window
-
-XO("Problem Report for Audacity"),
-XO("Problem details"),
-// i18n-hint C++ programming exception
-XO("Exception code 0x%x"),
-// i18n-hint C++ programming exception
-XO("Unknown exception"),
-// i18n-hint C++ programming assertion
-XO("Unknown assertion"),
-XO("Unknown error"),
-XO("Failed to send crash report"),
-
-
-// i18n-hint Scheme refers to a color scheme for spectrogram colors
-XC("Sche&me",            "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Color (default)",   "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Color (classic)",   "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Grayscale",         "spectrum prefs"),
-// i18n-hint Choice of spectrogram colors
-XC("Inverse grayscale", "spectrum prefs"),
-
 // Update version dialog
 XC("Update Audacity", "update dialog"),
 XC("&Skip", "update dialog"),

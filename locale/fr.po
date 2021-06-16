@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-03-31 15:13+0100\n"
+"PO-Revision-Date: 2021-06-14 22:34+0100\n"
 "Last-Translator: Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
@@ -64,104 +64,98 @@ msgid "System"
 msgstr "Système"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Fournit le support des effets Vamp à Audacity"
+msgstr "Rapport de problème pour Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Cliquez sur \"Envoyer\" pour envoyer le rapport à Audacity. Ces informations "
+"sont collectées de manière anonyme."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
-msgstr ""
+msgstr "Détails du problème"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "Commentaires"
 
+# trebmuh to check (accélérateur)
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "Envoyer (&s)"
 
+# trebmuh to check (accélérateur)
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "Ne pas envoyer (&d)"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 #, c-format
 msgid "Exception code 0x%x"
-msgstr ""
+msgstr "Code d’exception 0x%x"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Unknown exception"
-msgstr ""
+msgstr "Exception inconnue"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown assertion"
-msgstr "Format inconnu"
+msgstr "Assertion inconnue"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown error"
-msgstr "Format inconnu"
+msgstr "Erreur inconnue"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "Incapable de régler le nom du préréglage."
+msgstr "Échec de l’envoi du rapport de plantage"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "Sché&ma"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (par défaut)"
+msgstr "Couleur (défaut)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "Classique"
+msgstr "Couleur (classique)"
 
 # trebmuh to check (accélérateur)
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr "Échelle de gris (&y)"
+msgstr "Niveaux de gris"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "Échelle &linéaire"
+msgstr "Inverse de niveaux de gris"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Quitter Audacity"
+msgstr "Mettre Audacity à jour"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Sauter"
@@ -169,62 +163,57 @@ msgstr "&Sauter"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "&Installer la mise à jour"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Canal"
+msgstr "Journal des modifications"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "En lire davantage sur GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error checking for update"
-msgstr "Erreur du décodage du fichier"
+msgstr "Erreur de vérification de mise à jour"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr ""
+msgstr "Impossible de se connecter au serveur de mise à jour d’Audacity."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Les données de mise à jour ont été corrompues."
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update."
-msgstr "Erreur de chargement des métadonnées"
+msgstr "Erreur de téléchargement de la mise à jour."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Impossible d’ouvrir le lien de téléchargement d’Audacity."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
+#, c-format
 msgctxt "update dialog"
 msgid "Audacity %s is available!"
-msgstr "Barre d’outils %s d’Audacity"
+msgstr "Audacity %s est disponible !"
 
 #: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
 msgid "1st Experimental Command..."
-msgstr "Commande spéciale"
+msgstr "Première commande expérimentale…"
 
 #: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
 msgid "2nd Experimental Command"
-msgstr "Commande spéciale"
+msgstr "Seconde commande expérimentale"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -617,9 +606,9 @@ msgstr "%s, développeur"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer and support"
-msgstr "%s, documentation et support"
+msgstr "%s, développeur et support"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -629,9 +618,9 @@ msgstr "%s, documentation et support"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, documentation et support"
+msgstr "%s, testeur qualité, documentation et support"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -850,9 +839,9 @@ msgstr "Le logiciel %s est déposé %s 1999-2021 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark."
-msgstr "Le nom %s est une marque déposée de Dominic Mazzoni."
+msgstr "Le nom %s est une marque déposée."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -1169,7 +1158,7 @@ msgstr ""
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
-"Échec de l'initialisation de la bibliothèque SQLite.  Audacity ne peut pas "
+"Échec de l’initialisation de la bibliothèque SQLite.  Audacity ne peut pas "
 "continuer."
 
 #: src/AudacityApp.cpp
@@ -1338,7 +1327,7 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"Le serveur IPC Audacity n'a pas réussi à s'initialiser.\n"
+"Le serveur IPC Audacity n’a pas réussi à s’initialiser.\n"
 "\n"
 "Cela est probablement dû à un manque de ressources\n"
 "et un redémarrage peut être nécessaire."
@@ -1420,7 +1409,7 @@ msgstr ""
 "\t%s\n"
 "\n"
 "Cela peut être dû à de nombreuses raisons, mais les plus probables sont que "
-"le disque est plein ou que vous n'avez pas les droits d’écriture sur le "
+"le disque est plein ou que vous n’avez pas les droits d’écriture sur le "
 "fichier. Vous pouvez obtenir plus d’informations en cliquant sur le bouton "
 "d’aide ci-dessous.\n"
 "\n"
@@ -1429,7 +1418,7 @@ msgstr ""
 "\n"
 "Si vous choisissez de \"Quitter Audacity\", votre projet peut être laissé "
 "dans un état non sauvegardé qui sera récupéré la prochaine fois que vous "
-"l'ouvrirez."
+"l’ouvrirez."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
@@ -1777,8 +1766,8 @@ msgid ""
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Les projets suivants n'ont pas été sauvegardés correctement lors de la "
-"dernière exécution d'Audacity et peuvent être récupérés automatiquement.\n"
+"Les projets suivants n’ont pas été sauvegardés correctement lors de la "
+"dernière exécution d’Audacity et peuvent être récupérés automatiquement.\n"
 "\n"
 "Après la récupération, sauvegardez les projets pour vous assurer que les "
 "modifications sont bien écrites sur le disque."
@@ -2421,19 +2410,22 @@ msgid "Report generated to:"
 msgstr "Rapport généré pour :"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "(%d): %s"
-msgstr "%s : %s"
+msgstr "(%d) : %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Échec de la déconnexion"
+msgstr ""
+"Échec de la mise en place du mode sans échec sur la connexion primaire à %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Échec du rétablisssement de la connexion"
+msgstr ""
+"Échec de la mise en place du mode sans échec sur la connexion du point de "
+"contrôle à %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2486,7 +2478,7 @@ msgstr ""
 #: src/DBConnection.cpp
 msgid "Database error.  Sorry, but we don't have more details."
 msgstr ""
-"Erreur de base de données.  Désolé, mais nous n'avons pas plus de détails."
+"Erreur de base de données.  Désolé, mais nous n’avons pas plus de détails."
 
 #: src/Dependencies.cpp
 msgid "Removing Dependencies"
@@ -4020,7 +4012,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
 msgstr ""
-"Les pistes sélectionnées pour l'enregistrement doivent toutes avoir le même "
+"Les pistes sélectionnées pour l’enregistrement doivent toutes avoir le même "
 "taux d’échantillonnage."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
@@ -4033,7 +4025,7 @@ msgid ""
 "(Audacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
-"Trop peu de pistes sont sélectionnées pour l'enregistrement à\n"
+"Trop peu de pistes sont sélectionnées pour l’enregistrement à\n"
 "ce taux d’échantillonnage. (Audacity nécessite deux canaux à la\n"
 "même fréquence d’échantillonnage pour chaque piste stéréo)"
 
@@ -4299,7 +4291,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Impossible d'ouvrir le fichier de la base de données :\n"
+"Impossible d’ouvrir le fichier de la base de données :\n"
 "\n"
 "%s"
 
@@ -4318,7 +4310,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Impossible d'exécuter une commande de fichier de projet :\n"
+"Impossible d’exécuter une commande de fichier de projet :\n"
 "%s"
 
 #: src/ProjectFileIO.cpp
@@ -4359,15 +4351,14 @@ msgid "This is not an Audacity project file"
 msgstr "Ceci n’est pas un fichier de projet Audacity"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid ""
 "This project was created with a newer version of Audacity.\n"
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
-"Ce projet a été créé avec une version plus récente d'Audacity :\n"
+"Ce projet a été créé avec une version plus récente d’Audacity.\n"
 "\n"
-"Vous devrez la mettre à jour pour la traiter"
+"Vous devrez mettre à jour pour l’ouvrir."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4377,7 +4368,7 @@ msgstr "Impossible d’initialiser le fichier de projet"
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
 msgstr ""
-"Impossible d'ajouter la fonction 'inset' (ne peut pas vérifier les blockids)"
+"Impossible d’ajouter la fonction 'inset' (ne peut pas vérifier les blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4429,7 +4420,7 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
-"Une erreur d'E/S de disque\n"
+"Une erreur d’E/S de disque\n"
 "(Impossible de travailler avec les blockfiles)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
@@ -4542,9 +4533,8 @@ msgstr ""
 "de projet."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to bind to blob"
-msgstr "Impossible de trouver le codec"
+msgstr "Impossible de l’attacher au blob"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4582,7 +4572,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Échec de l'ouverture du projet, peut-être en raison d’un espace\n"
+"Échec de l’ouverture du projet, peut-être en raison d’un espace\n"
 " limité sur le périphérique de stockage.\n"
 "\n"
 "%s"
@@ -4622,7 +4612,7 @@ msgid ""
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
 msgstr ""
-"Ce projet n'a pas été correctement sauvegardé la dernière fois qu'Audacity a "
+"Ce projet n’a pas été correctement sauvegardé la dernière fois qu’Audacity a "
 "fonctionné.\n"
 "\n"
 "Il a été récupéré du dernier instantané, mais vous\n"
@@ -4679,7 +4669,7 @@ msgid ""
 "The project exceeds the maximum size of 4GB when writing to a FAT32 "
 "formatted filesystem."
 msgstr ""
-"Le projet dépasse la taille maximale de 4 Go lors de l'écriture sur un "
+"Le projet dépasse la taille maximale de 4 Go lors de l’écriture sur un "
 "système de fichiers au format FAT32."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
@@ -4742,7 +4732,7 @@ msgid ""
 "window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Le projet n'a pas été sauvegardé parce que le projet sélectionné est\n"
+"Le projet n’a pas été sauvegardé parce que le projet sélectionné est\n"
 "ouvert dans une autre fenêtre.\n"
 "Veuillez recommencer et choisissez un nom original."
 
@@ -4764,14 +4754,12 @@ msgid "Error Saving Copy of Project"
 msgstr "Erreur lors de la sauvegarde d’une copie du projet"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Can't open new empty project"
-msgstr "Impossible d’ouvrir le fichier projet"
+msgstr "Impossible d’ouvrir un nouveau projet vide"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error opening a new empty project"
-msgstr "Erreur d’ouverture du fichier ou du projet"
+msgstr "Erreur lors de l’ouverture d’un nouveau projet vide"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -4883,7 +4871,7 @@ msgstr ""
 "\n"
 "Il existe %s d’espace disque libre et ce projet utilise actuellement %s.\n"
 "\n"
-"Si vous continuez, l’historique d'annulation/rétablissement et le contenu du "
+"Si vous continuez, l’historique d’annulation/rétablissement et le contenu du "
 "presse-papiers seront abandonnés et vous récupérerez environ %s d’espace "
 "disque.\n"
 "\n"
@@ -6071,7 +6059,7 @@ msgstr "Déplacer la piste vers le bas"
 
 #: src/UndoManager.cpp
 msgid "Discarding undo/redo history"
-msgstr "Abandonner l'historique d'annulation/rétablissement"
+msgstr "Abandonner l’historique d’annulation/rétablissement"
 
 # trebmuh to check
 #. i18n-hint: Voice key is an experimental/incomplete feature that
@@ -6762,9 +6750,8 @@ msgid "Delete"
 msgstr "Effacer"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Edited Envelope"
-msgstr "Paramètre l’enveloppe"
+msgstr "Enveloppe éditée"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
@@ -6794,9 +6781,8 @@ msgid "Selected"
 msgstr "Sélectionné"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Edited Label"
-msgstr "Marqueurs édités"
+msgstr "Marqueur édité"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -10149,7 +10135,7 @@ msgstr ""
 "Dans le cadre de leur traitement, certains effets VST doivent retarder le "
 "retour audio à Audacity. Lorsque vous ne compensez pas ce retard, vous "
 "remarquerez que de petits silences ont été insérés dans l’audio. En activant "
-"cette option, vous obtiendrez cette compensation, mais il se peut qu'elle ne "
+"cette option, vous obtiendrez cette compensation, mais il se peut qu’elle ne "
 "fonctionne pas pour tous les effets VST."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -10314,7 +10300,7 @@ msgstr ""
 "retarder le retour audio à Audacity. Lorsque vous ne compensez pas ce "
 "retard, vous remarquerez que de petits silences ont été insérés dans "
 "l’audio. En activant cette option, vous obtiendrez cette compensation, mais "
-"il se peut qu'elle ne fonctionne pas pour tous les effets Audio Unit."
+"il se peut qu’elle ne fonctionne pas pour tous les effets Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -10494,7 +10480,7 @@ msgstr ""
 "Dans le cadre de leur traitement, certains effets LADSPA doivent retarder le "
 "retour audio à Audacity. Lorsque vous ne compensez pas ce retard, vous "
 "remarquerez que de petits silences ont été insérés dans l’audio. En activant "
-"cette option, vous obtiendrez cette compensation, mais il se peut qu'elle ne "
+"cette option, vous obtiendrez cette compensation, mais il se peut qu’elle ne "
 "fonctionne pas pour tous les effets LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
@@ -10537,7 +10523,7 @@ msgstr ""
 "Dans le cadre de leur traitement, certains effets LV2 doivent retarder le "
 "retour audio à Audacity. Lorsque vous ne compensez pas ce retard, vous "
 "remarquerez que de petits silences ont été insérés dans l’audio. En activant "
-"cette option, vous obtiendrez cette compensation, mais il se peut qu'elle ne "
+"cette option, vous obtiendrez cette compensation, mais il se peut qu’elle ne "
 "fonctionne pas pour tous les effets LV2."
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10609,8 +10595,10 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
+"Activez l’affichage du spectrogramme de la piste "
+"avant d’appliquer les effets 'spectraux'."
 
-# trbmuh to check (vérifier dans la GUI)
+# trebmuh to check (vérifier dans la GUI)
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
@@ -12503,7 +12491,7 @@ msgid ""
 "Audacity cannot open this type of file."
 msgstr ""
 "\"%s\" \n"
-"n'est pas un fichier audio. \n"
+"n’est pas un fichier audio. \n"
 "Audacity ne peut pas ouvrir ce type de fichier."
 
 #: src/import/Import.cpp
@@ -12771,7 +12759,7 @@ msgstr ""
 
 #: src/import/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
-msgstr "Erreur interne dans l’importateur...balise non reconnue"
+msgstr "Erreur interne dans l’importateur…balise non reconnue"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -13028,7 +13016,7 @@ msgid ""
 "This is likely caused by a malformed MP3.\n"
 "\n"
 msgstr ""
-"L'importation a échoué\n"
+"L’importation a échoué\n"
 "\n"
 "Ceci est probablement dû à un MP3 malformé.\n"
 "\n"
@@ -15641,9 +15629,8 @@ msgid "&Extra Menus (on/off)"
 msgstr "Menu &extra (marche/arrêt)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Track &Name (on/off)"
-msgstr "Menu &extra (marche/arrêt)"
+msgstr "&Nom de piste (marche/arrêt)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -15839,9 +15826,8 @@ msgid "Bro&wse..."
 msgstr "Parcourir… (&w)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Macro output:"
-msgstr "Montrer la sortie"
+msgstr "Sortie &macro :"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -19666,7 +19652,7 @@ msgid ""
 msgstr ""
 "~aLes paramètres de filtre à peigne ne peuvent pas être appliqués.~%~\n"
 "                      Essayez d’augmenter la limite de fréquence basse~%~\n"
-"                      ou de réduire le filtre de largeur ('Width')."
+"                      ou de réduire le filtre de largeur 'Width'."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
@@ -20351,10 +20337,10 @@ msgid "~ah ~am ~as"
 msgstr ""
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Trop de silences détectés.nSeules les 10000 premières balises ajoutées."
+"Trop de silences détectés.~%Seules les 10000 premières balises ajoutées."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -20627,15 +20613,15 @@ msgid "Success.~%Files written to:~%~s~%"
 msgstr "Succès.~%Fichiers écrits à :~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Attention.nÉchec de la copie de certains fichiers:n"
+msgstr "Attention.~%Échec de la copie de certains fichiers :~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Greffons installés.n (Utilisez le gestionnaire de greffon pour activer les "
+"Greffons installés.~%(Utilisez le gestionnaire de greffon pour activer les "
 "effets) :"
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -21470,1384 +21456,3 @@ msgstr "Fréquence des aiguilles de radar (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Erreur.~%Piste stéréo nécessaire."
-
-#~ msgid "Fast"
-#~ msgstr "Rapide"
-
-#~ msgid "Variable Speed:"
-#~ msgstr "Vitesse variable :"
-
-#~ msgid "Free Space"
-#~ msgstr "Espace libre"
-
-#~ msgid "Master Gain Control"
-#~ msgstr "Contrôle du niveau général"
-
-#~ msgid "LAME MP3 Library:"
-#~ msgstr "Bibliothèque MP3 LAME :"
-
-#~ msgid "&Locate..."
-#~ msgstr "&Localiser…"
-
-# trebmuh to check (accélérateur)
-#~ msgid "&Download"
-#~ msgstr "&Téléchargement"
-
-#~ msgid "Error.n"
-#~ msgstr "Erreur.n"
-
-#~ msgid "Cleanup of orphan blocks failed"
-#~ msgstr "Le nettoyage des blocs orphelins a échoué"
-
-#~ msgid "Failed to copy tags"
-#~ msgstr "Échec de la copie des balises"
-
-#~ msgid "Select any uncompressed audio file"
-#~ msgstr "Sélectionner un fichier audio non-compressé"
-
-#~ msgid ""
-#~ "One or more external audio files could not be found.\n"
-#~ "It is possible they were moved, deleted, or the drive they were on was "
-#~ "unmounted.\n"
-#~ "Silence is being substituted for the affected audio.\n"
-#~ "The first detected missing file is:\n"
-#~ "%s\n"
-#~ "There may be additional missing files.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
-#~ "locations of the missing files."
-#~ msgstr ""
-#~ "Un ou plusieurs fichiers audio externes n’ont pu être trouvé(s).\n"
-#~ "Ils ont pu être déplacés, effacés, ou le lecteur sur lesquels ils se "
-#~ "trouvaient a été démonté.\n"
-#~ "L’audio concernée a été remplacée par du silence.\n"
-#~ "Le premier fichier manquant détecté est :\n"
-#~ "%s\n"
-#~ "Il pourrait y avoir d’autres fichiers manquants.\n"
-#~ "Choisissez Aide > Diagnostics > Vérifier les fichiers associés pour voir "
-#~ "une liste des emplacements des fichiers manquants."
-
-#~ msgid "Files Missing"
-#~ msgstr "Fichiers manquants"
-
-#~ msgid "File decoded successfully\n"
-#~ msgstr "Fichier décodé avec succès\n"
-
-#~ msgid "decode an autosave file"
-#~ msgstr "décode un fichier auto-sauvegardé"
-
-#~ msgid "Error Decoding File"
-#~ msgstr "Erreur de décodage du fichier"
-
-#~ msgid "After recovery, save the project to save the changes to disk."
-#~ msgstr ""
-#~ "Après récupération, sauvegardez le projet afin de sauvegarder les "
-#~ "modifications sur le disque."
-
-#~ msgid "Discard Projects"
-#~ msgstr "Abandonner les projets"
-
-#~ msgid "Recover Projects"
-#~ msgstr "Récupérer les projets"
-
-#~ msgid "Confirm Discard Projects"
-#~ msgstr "Confirmer l’abandon des projets"
-
-#~ msgid "Could not enumerate files in auto save directory."
-#~ msgstr ""
-#~ "Impossible d’énumérer les fichiers du répertoire de sauvegarde "
-#~ "automatique."
-
-#~ msgid "No Action"
-#~ msgstr "Pas d’action"
-
-#~ msgid "Export as MP3 56k before"
-#~ msgstr "Exporter en MP3 56k avant"
-
-#~ msgid "Export as MP3 56k after"
-#~ msgstr "Exporter en MP3 56k après"
-
-#~ msgid "Export as MP3"
-#~ msgstr "Exporter en MP3"
-
-#~ msgid "Export as Ogg"
-#~ msgstr "Exporter en Ogg"
-
-#~ msgid "Export as WAV"
-#~ msgstr "Exporter en WAV"
-
-#~ msgid "Select to Ends"
-#~ msgstr "Sélection jusqu’aux fins"
-
-#~ msgid ""
-#~ "Export recording to %s\n"
-#~ "/%s/%s.%s"
-#~ msgstr ""
-#~ "Exporter l’enregistrement vers %s\n"
-#~ "/%s/%s.%s"
-
-#~ msgid "Export recording"
-#~ msgstr "Exporter l’enregistrement"
-
-#~ msgid "Ogg Vorbis support is not included in this build of Audacity"
-#~ msgstr ""
-#~ "Le support d’Ogg Vorbis n’est pas inclus dans cette version d’Audacity"
-
-#~ msgid "FLAC support is not included in this build of Audacity"
-#~ msgstr "Le support de FLAC n’est pas inclus dans cette version d’Audacity"
-
-#~ msgid "Command %s not implemented yet"
-#~ msgstr "La commande %s n’est pas encore disponible"
-
-#~ msgid ""
-#~ "Your project is currently self-contained; it does not depend on any "
-#~ "external audio files. \n"
-#~ "\n"
-#~ "If you change the project to a state that has external dependencies on "
-#~ "imported files, it will no longer be self-contained. If you then Save "
-#~ "without copying those files in, you may lose data."
-#~ msgstr ""
-#~ "Votre projet est actuellement auto-contenu ; il ne dépend d’aucun fichier "
-#~ "audio externe. \n"
-#~ "\n"
-#~ "Si vous modifiez le projet en le rendant dépendant de fichiers importés, "
-#~ "il ne sera plus auto-contenu. Si vous le sauvegardez alors sans y copier "
-#~ "ces fichiers, vous risquez de perdre des données."
-
-#~ msgid "Cleaning project temporary files"
-#~ msgstr "Nettoyage des fichiers temporaires de projet"
-
-#~ msgid "Cleaning up temporary files"
-#~ msgstr "Nettoyage des fichiers temporaires"
-
-#~ msgid "Cleaning up after failed save"
-#~ msgstr "Nettoyage après échec de sauvegarde"
-
-#~ msgid "Cleaning up cache directories"
-#~ msgstr "Nettoyage des répertoires de cache"
-
-#~ msgid "%s-old%d"
-#~ msgstr "%s-ancien%d"
-
-#~ msgid "Renamed file: %s\n"
-#~ msgstr "Renommer le fichier : %s\n"
-
-#~ msgid "Changed block %s to new alias name\n"
-#~ msgstr "Bloc %s modifié pour un nouveau nom d’alias\n"
-
-#~ msgid "Caching audio"
-#~ msgstr "Mise en cache de l’audio"
-
-#~ msgid "Caching audio into memory"
-#~ msgstr "Mise en cache de l’audio dans la mémoire"
-
-#~ msgid "Saving recorded audio"
-#~ msgstr "Sauvegarde de l’audio enregistré"
-
-#~ msgid "Saving recorded audio to disk"
-#~ msgstr "Sauvegarder de l’audio enregistré sur le disque"
-
-#~ msgid "Audacity projects"
-#~ msgstr "Projets Audacity"
-
-#~ msgid "Reclaimable Space"
-#~ msgstr "Espace récupérable"
-
-#~ msgid ""
-#~ "Audacity cannot start because the settings file at %s is not writable."
-#~ msgstr ""
-#~ "Audacity ne peut pas démarrer car il est impossible d’écrire sur le "
-#~ "fichier de paramètre %s."
-
-#~ msgid ""
-#~ "This file was saved by Audacity version %s. The format has changed. \n"
-#~ "\n"
-#~ "Audacity can try to open and save this file, but saving it in this \n"
-#~ "version will then prevent any 1.2 or earlier version opening it. \n"
-#~ "\n"
-#~ "Audacity might corrupt the file in opening it, so you should back it up "
-#~ "first. \n"
-#~ "\n"
-#~ "Open this file now?"
-#~ msgstr ""
-#~ "Ce fichier a été enregistré sous Audacity version %s. Le format a "
-#~ "changé.\n"
-#~ "\n"
-#~ "Audacity peut tenter d’ouvrir et sauvegarder ce fichier, mais le "
-#~ "sauvegarder sous\n"
-#~ "cette version empêchera de l’ouvrir avec une version 1.2 ou plus "
-#~ "ancienne.\n"
-#~ "\n"
-#~ "Audacity peut corrompre le fichier en l’ouvrant, vous devriez le "
-#~ "sauvegarder auparavant. \n"
-#~ "\n"
-#~ "Ouvrir le fichier maintenant ?"
-
-#~ msgid "1.0 or earlier"
-#~ msgstr "1.0 ou précédentes"
-
-#~ msgid "Warning - Opening Old Project File"
-#~ msgstr "Attention - Ouverture d’un ancien fichier de projet"
-
-#~ msgid "<unrecognized version -- possibly corrupt project file>"
-#~ msgstr "<version non reconnue -- fichier projet probablement corrompu>"
-
-#~ msgid "Could not create autosave file: %s"
-#~ msgstr "Impossible de créer le fichier de sauvegarde automatique : %s"
-
-#~ msgid "Could not remove old autosave file: %s"
-#~ msgstr ""
-#~ "Impossible de retirer l’ancien fichier de sauvegarde automatique : %s"
-
-#~ msgid ""
-#~ "Could not save project. Perhaps %s \n"
-#~ "is not writable or the disk is full."
-#~ msgstr ""
-#~ "Impossible de sauver le projet. %s est peut-être\n"
-#~ "protégé en écriture, ou le disque est plein."
-
-#~ msgid ""
-#~ "Could not save project. Path not found. Try creating \n"
-#~ "directory \"%s\" before saving project with this name."
-#~ msgstr ""
-#~ "Impossible de sauvegarder le projet. Chemin introuvable. Essayez de "
-#~ "créer \n"
-#~ "le répertoire \"%s\" avant de sauvegarder le projet sous ce nom."
-
-#~ msgid ""
-#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-#~ "file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ "\n"
-#~ "Lossless copies of project are a good way to backup your project, \n"
-#~ "with no loss of quality, but the projects are large.\n"
-#~ msgstr ""
-#~ "'Sauvegarder une copie sans-perte du projet' est pour un projet "
-#~ "Audacity, \n"
-#~ "pas pour un fichier audio.\n"
-#~ "Pour un fichier audio qui sera ouvert dans d’autres applications,\n"
-#~ " utilisez 'Exporter'.\n"
-#~ "\n"
-#~ "Les copies sans-perte de projet sont une bonne façon de sauvegarder "
-#~ "votre \n"
-#~ "projet sans perte de qualité, mais les projets sont volumineux.\n"
-
-#~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
-#~ msgstr "%sSauvegarder une copie compressée du projet \"%s\" sous…"
-
-#~ msgid ""
-#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
-#~ "audio file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ "\n"
-#~ "Compressed project files are a good way to transmit your project "
-#~ "online, \n"
-#~ "but they have some loss of fidelity.\n"
-#~ msgstr ""
-#~ "'Sauvegarder une copie compressée du projet' est pour un projet "
-#~ "Audacity, \n"
-#~ "pas pour un fichier audio.\n"
-#~ "Pour un fichier audio qui sera ouvert dans d’autres applications,\n"
-#~ "utiliser 'Exporter'.\n"
-#~ "\n"
-#~ "Les fichiers compressés de projet sont une bonne façon de transmettre\n"
-#~ "votre projet en ligne, mais ils ont des pertes de fidélité.\n"
-
-#~ msgid ""
-#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
-#~ "format."
-#~ msgstr ""
-#~ "Audacity ne peut pas convertir un projet Audacity 1.0 au nouveau format "
-#~ "de projet."
-
-#~ msgid "Could not remove old auto save file"
-#~ msgstr "Impossible de retirer l’ancien fichier de sauvegarde automatique"
-
-#~ msgid "On-demand import and waveform calculation complete."
-#~ msgstr "Importation à la demande et calcul de forme d’onde achevé."
-
-#~ msgid ""
-#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
-#~ "%2.0f%% complete."
-#~ msgstr ""
-#~ "Import(s) achevé(s). Exécution des calculs de forme d’onde %d à la "
-#~ "demande.%2.0f%% achevé cependant."
-
-#~ msgid ""
-#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
-#~ "complete."
-#~ msgstr ""
-#~ "Import achevé. Exécution d’un calcul de forme d’onde à la demande. %2.0f%"
-#~ "% achevé."
-
-#~ msgid "Compress"
-#~ msgstr "Compresser"
-
-#~ msgid "Waiting for waveform to finish computing..."
-#~ msgstr "Attente de la fin du calcul de la forme d’onde…"
-
-#~ msgid "&Use legacy (version 3) syntax."
-#~ msgstr "&Utiliser l’ancienne syntaxe (version 3)."
-
-#~ msgid ""
-#~ "You are attempting to overwrite an aliased file that is missing.\n"
-#~ "The file cannot be written because the path is needed to restore the "
-#~ "original audio to the project.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of "
-#~ "all missing files.\n"
-#~ "If you still wish to export, please choose a different filename or folder."
-#~ msgstr ""
-#~ "Vous essayez d’écraser un fichier associé qui est manquant.\n"
-#~ "Le fichier ne peut pas être inscrit car le chemin est nécessaire pour "
-#~ "restaurer l’audio originel dans le projet.\n"
-#~ "Choisissez Aide > Diagnostiques > Vérifier les Dépendances pour voir les "
-#~ "emplacements de tous les fichiers manquants.\n"
-#~ "Si vous souhaitez toujours exporter, veuillez choisir un nom de "
-#~ "répertoire ou de fichier différent."
-
-#~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
-#~ msgstr ""
-#~ "FFmpeg : ERREUR - Échec de l’écriture de la trame audio dans un fichier."
-
-#~ msgid ""
-#~ "\"%s\" is an Audacity Project file. \n"
-#~ "Use the 'File > Open' command to open Audacity Projects."
-#~ msgstr ""
-#~ "\"%s\" est un fichier-projet Audacity. \n"
-#~ "Utiliser la commande 'Fichier > Ouvrir' pour ouvrir les projets Audacity."
-
-#~ msgid ""
-#~ "MP3 Decoding Failed:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Échec du décodage du MP3 : \n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "When importing uncompressed audio files you can either copy them into the "
-#~ "project, or read them directly from their current location (without "
-#~ "copying).\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Lors de l’importation de fichiers audio non-compressés, vous pouvez soit "
-#~ "les copier dans le projet, soit les lire directement depuis leurs "
-#~ "emplacements actuels (sans les copier).\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Your current preference is set to copy in.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Votre préférence actuelle est paramétrée à la copie dans le projet.\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Your current preference is set to read directly.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Votre préférence actuelle est paramétrée à la lecture directe.\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Reading the files directly allows you to play or edit them almost "
-#~ "immediately. This is less safe than copying in, because you must retain "
-#~ "the files with their original names in their original locations.\n"
-#~ "Help > Diagnostics > Check Dependencies will show the original names and "
-#~ "locations of any files that you are reading directly.\n"
-#~ "\n"
-#~ "How do you want to import the current file(s)?"
-#~ msgstr ""
-#~ "Lire directement les fichiers vous permet de les lire ou de les éditer "
-#~ "presque instantanément. Ceci est toutefois moins sûr que de les copier "
-#~ "puisque vous devrez retenir les fichiers ainsi que leurs noms et leurs  "
-#~ "emplacements originaux.\n"
-#~ "Aide > Diagnostics > Vérifier les fichiers associés affichera les noms et "
-#~ "emplacements originaux de tous les fichiers lus directement.\n"
-#~ "\n"
-#~ "De quelle manière souhaitez-vous importer le (s) fichier(s) actuel(s) ?"
-
-#~ msgid "Choose an import method"
-#~ msgstr "Choisir une méthode d’importation"
-
-#~ msgid "Make a &copy of the files before editing (safer)"
-#~ msgstr "Faire une &copie des fichiers avant le montage (plus sûr)"
-
-#~ msgid "Read the files &directly from the original (faster)"
-#~ msgstr "Lire les fichiers &directement depuis l’original (plus rapide)"
-
-#~ msgid "Don't &warn again and always use my choice above"
-#~ msgstr "Ne plus a&vertir et toujours utiliser mon choix ci-dessus"
-
-#~ msgid "Bad data size"
-#~ msgstr "Mauvaise taille de données"
-
-# trebmuh to check (accélérateur + "clip" comme "partie d’un audio" ou comme "clipping/saturation" ?)
-#~ msgid "Clip L&eft"
-#~ msgstr "Clip gauch&e"
-
-# trebmuh to check (voir ci-dessus)
-#~ msgid "Clip Rig&ht"
-#~ msgstr "Clip droit (&h)"
-
-#~ msgid "Save Lossless Copy of Project..."
-#~ msgstr "Sauvegarder une copie sans-perte du projet…"
-
-#~ msgid "&Save Compressed Copy of Project..."
-#~ msgstr "&Sauvegarder une copie compressée du projet…"
-
-#~ msgid "Chec&k Dependencies..."
-#~ msgstr "Vérifier les fichiers &associés…"
-
-#~ msgid "C&hoose..."
-#~ msgstr "C&hoisir…"
-
-#~ msgid "Audio cache"
-#~ msgstr "Cache audio"
-
-#~ msgid "Play and/or record using &RAM (useful for slow drives)"
-#~ msgstr ""
-#~ "Lecture et/ou enregistrement en mémoire &RAM (utile pour des disques "
-#~ "lents)"
-
-#~ msgid "Mi&nimum Free Memory (MB):"
-#~ msgstr "Mémoire libre mi&nimale (Mo) :"
-
-#~ msgid ""
-#~ "If the available system memory falls below this value, audio will no "
-#~ "longer\n"
-#~ "be cached in memory and will be written to disk."
-#~ msgstr ""
-#~ "Si la mémoire système libre tombe en-dessous de cette valeur, l’audio ne "
-#~ "pourra\n"
-#~ "plus être dans le cache mémoire et sera écrit sur le disque."
-
-#~ msgid "When importing audio files"
-#~ msgstr "À l’importation de fichiers audio"
-
-# trebmuh to check (accélérateur)
-#~ msgid "Allow &background on-demand loading"
-#~ msgstr "Autoriser le chargement en arrière-plan à la demande (&b)"
-
-#~ msgid "Projects"
-#~ msgstr "Projets"
-
-#~ msgid "Preferences for Projects"
-#~ msgstr "Préférences pour les projets"
-
-#~ msgid "When saving a project that depends on other audio files"
-#~ msgstr ""
-#~ "Lors de la sauvegarde d’un projet qui dépend d’autres fichiers audio"
-
-#~ msgid "&Low disk space at launch or new project"
-#~ msgstr "Espace disque faib&le au lancement ou lors d’un nouveau projet"
-
-#~ msgid "&Importing uncompressed audio files"
-#~ msgstr "&Importation de fichiers audio non-compressés"
-
-#~ msgid "Silence Finder"
-#~ msgstr "Trouveur de silence"
-
-#~ msgid "Treat audio below this level as silence (dB)"
-#~ msgstr "Traite l’audio en dessous de ce niveau comme du silence (dB)"
-
-#~ msgid "Minimum duration of silence (seconds)"
-#~ msgstr "Durée minimum de silence (secondes)"
-
-#~ msgid "Label placement (seconds before silence ends)"
-#~ msgstr "Placement de marqueur (secondes avant que le silence ne finisse)"
-
-#~ msgid ""
-#~ "No silences found.\n"
-#~ "Try reducing the silence level and\n"
-#~ "the minimum silence duration."
-#~ msgstr ""
-#~ "Pas de silence trouvé.\n"
-#~ "Essayez de réduire le niveau de silence et\n"
-#~ "la durée de silence minimum."
-
-#~ msgid "Sound Finder"
-#~ msgstr "Trouveur de son"
-
-#~ msgid "Finding sound..."
-#~ msgstr "Recherche d’un son…"
-
-#~ msgid "Jeremy R. Brown"
-#~ msgstr "Jeremy R. Brown"
-
-#~ msgid "Treat audio below this level as silence [ -dB]"
-#~ msgstr "Traite l’audio en dessous de ce niveau comme du silence [ -dB]"
-
-#~ msgid "Minimum duration of silence between sounds [seconds]"
-#~ msgstr "Durée minimum de silence entre des sons [secondes]"
-
-#~ msgid "Label starting point [seconds before sound starts]"
-#~ msgstr "Marque un point de départ [secondes avant que le son ne démarre]"
-
-#~ msgid "Label ending point [seconds after sound ends]"
-#~ msgstr "Marque un point de fin [secondes après que le son ne s’arrête]"
-
-#~ msgid "Add a label at the end of the track? [No=0, Yes=1]"
-#~ msgstr "Ajoute un marqueur à la fin de la piste ? [Non=0, Oui=1]"
-
-#~ msgid "[End]"
-#~ msgstr "[Fin]"
-
-#~ msgid "Gating audio..."
-#~ msgstr "Filtrer l’audio…"
-
-#~ msgid "Apply Low-Cut filter"
-#~ msgstr "Appliquer un filtre coupe-bas"
-
-#~ msgid "File dialog failed with error code %0lx."
-#~ msgstr "Le dialogue de fichier a échoué avec le code d’erreur %0lx."
-
-#~ msgid "About Audacity"
-#~ msgstr "À propos d’Audacity"
-
-#~ msgid "<h3>Audacity "
-#~ msgstr "<h3>Audacity "
-
-#~ msgid ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-#~ msgstr ""
-#~ "<p><br>&nbsp; &nbsp; Le logiciel <b>Audacity<sup>&reg;</sup></b> est sous "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-
-#~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
-#~ msgstr "échec de mkdir dans DirManager::MakeBlockFilePath."
-
-#~ msgid ""
-#~ "Audacity found an orphan block file: %s. \n"
-#~ "Please consider saving and reloading the project to perform a complete "
-#~ "project check."
-#~ msgstr ""
-#~ "Audacity a trouvé un bloc de fichier orphelin %s. \n"
-#~ "Veuillez considérer à sauvegarder et recharger le projet pour effectuer "
-#~ "une vérification complète du projet."
-
-#~ msgid "Unable to open/create test file."
-#~ msgstr "Impossible d’ouvrir/créer le fichier de test."
-
-#~ msgid "Unable to remove '%s'."
-#~ msgstr "Impossible de supprimer '%s'."
-
-#~ msgid "Unable to rename '%s' to '%s'."
-#~ msgstr "Impossible de renommer '%s' en '%s'."
-
-#~ msgid "Missing aliased audio file: '%s'"
-#~ msgstr "Fichier audio alias manquant : '%s'"
-
-#~ msgid "Missing alias (.auf) block file: '%s'"
-#~ msgstr "Bloc de fichier (.auf) alias manquant : '%s'"
-
-#~ msgid "Missing data block file: '%s'"
-#~ msgstr "Bloc de fichier de données manquant : '%s'"
-
-#~ msgid "KB"
-#~ msgstr "Ko"
-
-#~ msgid "MB"
-#~ msgstr "Mo"
-
-#~ msgid "GB"
-#~ msgstr "Go"
-
-#~ msgid "Unable to load the module \"%s\". Error: %s"
-#~ msgstr "Impossible de charger le module \"%s\". Erreur : %s"
-
-#~ msgid ""
-#~ "The module \"%s\" does not provide a version string. It will not be "
-#~ "loaded."
-#~ msgstr ""
-#~ "Le module \"%s\" ne fournit pas de chaîne de version. Il ne sera pas "
-#~ "chargé."
-
-#~ msgid ""
-#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-#~ "loaded."
-#~ msgstr ""
-#~ "Le module \"%s\" correspond à la version \"%s\" d’Audacity. Il ne sera "
-#~ "pas chargé."
-
-#~ msgid ""
-#~ "The module \"%s\" failed to initialize.\n"
-#~ "It will not be loaded."
-#~ msgstr ""
-#~ "Le module \"%s\" a échoué à s’initialiser.\n"
-#~ "Il ne sera pas chargé."
-
-#~ msgid ""
-#~ "The module \"%s\" does not provide any of the required functions. It will "
-#~ "not be loaded."
-#~ msgstr ""
-#~ "Le module \"%s\" ne fournit aucune des fonctions nécessaires. Il ne sera "
-#~ "pas chargé."
-
-#~ msgid "   Project check replaced missing aliased file(s) with silence."
-#~ msgstr ""
-#~ "   Le vérificateur de projet a remplacé le(s) fichier(s) alias "
-#~ "manquant(s) par du silence."
-
-#~ msgid "   Project check regenerated missing alias summary file(s)."
-#~ msgstr ""
-#~ "   Le vérificateur de projet a régénéré le(s) fichier(s)-alias de "
-#~ "sommaire manquant(s)."
-
-#~ msgid ""
-#~ "   Project check replaced missing audio data block file(s) with silence."
-#~ msgstr ""
-#~ "   Le vérificateur de projet a remplacé le(s) bloc(s) de fichier de "
-#~ "données audio manquantes par du silence."
-
-#~ msgid ""
-#~ "   Project check ignored orphan block file(s). They will be deleted when "
-#~ "project is saved."
-#~ msgstr ""
-#~ "   Le vérificateur de projet a ignoré le(s) bloc(s) de fichier "
-#~ "orphelin(s). Ils seront effacés lors de la sauvegarde du projet."
-
-#~ msgid ""
-#~ "Project check found file inconsistencies inspecting the loaded project "
-#~ "data."
-#~ msgstr ""
-#~ "Le vérificateur de projet a trouvé des incohérences de fichier en "
-#~ "inspectant les données du projet chargé."
-
-#~ msgid "Presets (*.txt)|*.txt|All files|*"
-#~ msgstr "Préréglages (*.txt)|*.txt|Tous les fichiers|*"
-
-#~ msgid "VST plugin registration failed for %s\n"
-#~ msgstr "L’inscription du greffon VST a échoué pour %s\n"
-
-#~ msgid "VST plugin initialization failed\n"
-#~ msgstr "Échec de l’initialisation du greffon VST\n"
-
-#~ msgid "Couldn't create the \"%s\" directory"
-#~ msgstr "Impossible de créer le répertoire \"%s\""
-
-#~ msgid "LV2 sequence buffer overflow"
-#~ msgstr "Débordement de la mémoire tampon de la séquence LV2"
-
-#~ msgid "%s requires unsupported feature %s"
-#~ msgstr "%s nécessite une fonction non-supportée %s"
-
-#~ msgid "%s requires unsupported option %s"
-#~ msgstr "%s nécessite une option non-supportée %s"
-
-#~ msgid ""
-#~ "'%s' returned:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "'%s' a retourné :\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-#~ "Control not created."
-#~ msgstr ""
-#~ "Mauvaise spécification du type 'control' de Nyquist : '%s' dans le "
-#~ "fichier du greffon '%s'.\n"
-#~ "Le contrôle n’a pu être créé."
-
-#~ msgid ""
-#~ "Invalid wildcard string in 'path' control.'\n"
-#~ "Using empty string instead."
-#~ msgstr ""
-#~ "Chaîne de joker invalide dans le 'chemin' de contrôle.'\n"
-#~ "Utilisation d’un chemin vide à la place."
-
-#~ msgid "dummyStringClipBoundaryMessage"
-#~ msgstr "dummyStringClipBoundaryMessage"
-
-#~ msgid "dummyStringClipBoundaryMessageLong"
-#~ msgstr "dummyStringClipBoundaryMessageLong"
-
-#~ msgid "dummyStringOnSelectClip"
-#~ msgstr "dummyStringOnSelectClip"
-
-#~ msgid "' is used by \""
-#~ msgstr "' est utilisé par \""
-
-#~ msgid "\" and \""
-#~ msgstr "\" et \""
-
-#~ msgid ""
-#~ "\".\n"
-#~ "Nothing is imported."
-#~ msgstr ""
-#~ "\".\n"
-#~ "Rien n’est importé."
-
-#~ msgid "Zoom Reset\tShift-Right-Click"
-#~ msgstr "Réinitialiser le zoom\tMaj + clic-droit"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "Zoom arrière\tMaj + clic-gauche"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "Zoom adaptatif\tMaj + clic-droit"
-
-#~ msgid "e"
-#~ msgstr "e"
-
-#~ msgid "incorporating"
-#~ msgstr "incorporation"
-
-#~ msgid "Click to unpin"
-#~ msgstr "Cliquer pour désépingler"
-
-#~ msgid "Click to pin"
-#~ msgstr "Cliquer pour épingler"
-
-#~ msgid "Disable Quick-Play"
-#~ msgstr "Désactive la lecture-rapide"
-
-#~ msgid "Disable dragging selection"
-#~ msgstr "Désactive la sélection par déplacement"
-
-#~ msgid "Disable Timeline Tooltips"
-#~ msgstr "Désactiver les infobulles de la ligne du temps"
-
-#~ msgid "Do not scroll while playing"
-#~ msgstr "Ne pas défiler lors de la lecture"
-
-#~ msgid "Unlock Play Region"
-#~ msgstr "Déverrouiller lecture de région"
-
-#~ msgid "Disable Scrub Ruler"
-#~ msgstr "Désactiver la règle du frottement"
-
-#~ msgid "Enable Scrub Ruler"
-#~ msgstr "Activer la règle du frottement"
-
-#~ msgid ""
-#~ "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
-#~ "dll|All Files|*"
-#~ msgstr ""
-#~ "Uniquement avformat.dll|*avformat*.dll|Bibliothèques liées dynamiquement "
-#~ "(*.dll)|*.dll|Tous les fichiers|*"
-
-#~ msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-#~ msgstr "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
-
-#~ msgid ""
-#~ "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|"
-#~ "*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "Uniquement libavformat.so|libavformat*.so*|Bibliothèques liées "
-#~ "dynamiquement (*.so*)|*.so*|Tous les fichiers (*)|*"
-
-#~ msgid "Add to History:"
-#~ msgstr "Ajoute à l’historique :"
-
-#~ msgid "Delete:"
-#~ msgstr "Effacer :"
-
-#~ msgid "Selected:"
-#~ msgstr "Sélectionné :"
-
-#~ msgid "ms"
-#~ msgstr "ms"
-
-#~ msgid "xml files (*.xml;*.XML)|*.xml;*.XML"
-#~ msgstr "Fichiers xml (*.xml;*.XML)|*.xml;*.XML"
-
-#~ msgid "Sets the peak amplitude or loudness of one or more tracks"
-#~ msgstr ""
-#~ "Paramètre l’amplitude de crête ou la sonie pour une ou plusieurs pistes"
-
-#~ msgid "Use loudness instead of peak amplitude"
-#~ msgstr "Utilise la sonie au lieu de l’amplitude de crête"
-
-#~ msgid "The buffer size controls the number of samples sent to the effect "
-#~ msgstr ""
-#~ "La taille du tampon contrôle le nombre d’échantillons envoyés vers "
-#~ "l’effet "
-
-#~ msgid "on each iteration. Smaller values will cause slower processing and "
-#~ msgstr ""
-#~ "à chaque itération. De plus petites valeurs entraîneront un traitement "
-#~ "plus "
-
-#~ msgid "some effects require 8192 samples or less to work properly. However "
-#~ msgstr ""
-#~ "lent et certains effets nécessitent 8192 échantillons ou moins pour "
-
-#~ msgid "most effects can accept large buffers and using them will greatly "
-#~ msgstr ""
-#~ "fonctionner correctement. Cependant, la plupart des effets peuvent "
-#~ "accepter "
-
-#~ msgid "reduce processing time."
-#~ msgstr ""
-#~ "des tampons de grande taille et les utiliser réduira grandement le temps "
-#~ "d’exécution."
-
-# trebmuh to check (returning ?)
-#~ msgid "As part of their processing, some VST effects must delay returning "
-#~ msgstr ""
-#~ "En tant que partie de leur traitement, certains effets VST doivent "
-#~ "délayer "
-
-#~ msgid "audio to Audacity. When not compensating for this delay, you will "
-#~ msgstr "l’audio avec un délai vers Audacity. Lorsque ce délai n’a pas été"
-
-#~ msgid "notice that small silences have been inserted into the audio. "
-#~ msgstr ""
-#~ "compenser, vous remarquerez que des petits silences auront été insérés"
-
-#~ msgid "Enabling this option will provide that compensation, but it may "
-#~ msgstr "Activer cette option fournira cette compensation, mais il pourrait "
-
-#~ msgid "not work for all VST effects."
-#~ msgstr "elle peut ne pas fonctionner avec tous les effets VST."
-
-#~ msgid " A basic text-only method is also available. "
-#~ msgstr " Une méthode basique en mode texte est également disponible. "
-
-#~ msgid " Reopen the effect for this to take effect."
-#~ msgstr "Ré-ouvrir l’effet pour que celui-ci prennesoit pris en compte."
-
-# trebmuh to check (returning ?)
-#~ msgid ""
-#~ "As part of their processing, some Audio Unit effects must delay returning "
-#~ msgstr ""
-#~ "En tant que partie de leur traitement, certains effets Audio Unit doivent "
-#~ "délayer "
-
-#~ msgid "not work for all Audio Unit effects."
-#~ msgstr "ne pas fonctionner pour tous les effets Audio Unit."
-
-# trebmuh to check (vérifier que ’Full’ est bien traduit par ’complet’ dans l’interface graphique)
-#~ msgid ""
-#~ "Select \"Full\" to use the graphical interface if supplied by the Audio "
-#~ "Unit."
-#~ msgstr ""
-#~ "Sélectionner \"Complet\" pour utiliser l’interface graphique si elle est "
-#~ "fournie par l’Audio Unit."
-
-#~ msgid " Select \"Generic\" to use the system supplied generic interface."
-#~ msgstr ""
-#~ " Sélectionner \"Générique\" pour utiliser l’interface graphique fournie "
-#~ "par le système"
-
-#~ msgid " Select \"Basic\" for a basic text-only interface."
-#~ msgstr ""
-#~ " Sélectionner \"Basique\" pour une interface basique texte-uniquement."
-
-# trebmuh to check (returning ?)
-#~ msgid ""
-#~ "As part of their processing, some LADSPA effects must delay returning "
-#~ msgstr ""
-#~ "En tant que partie de leur traitement, certains effets LADSPA doivent "
-#~ "délayer "
-
-#~ msgid "not work for all LADSPA effects."
-#~ msgstr "ne fonctionne pas pour tous les effets LADSPA."
-
-# trebmuh to check (returning ?)
-#~ msgid "As part of their processing, some LV2 effects must delay returning "
-#~ msgstr ""
-#~ "En tant que partie de leur traitement, certains effets LV2 doivent "
-#~ "délayer "
-
-#~ msgid "Enabling this setting will provide that compensation, but it may "
-#~ msgstr "Activer ce paramètre fournira cette compression, mais ça pourrait "
-
-#~ msgid "not work for all LV2 effects."
-#~ msgstr "ne pas fonctionner pour tous les effets LV2."
-
-#~ msgid ""
-#~ "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|"
-#~ "*.txt|All files|*"
-#~ msgstr ""
-#~ "Scripts Nyquist (*.ny)|*.ny|Scripts Lisp (*.lsp)|*.lsp|Fichiers texte (*."
-#~ "txt)|*.txt|Tous les fichiers|*"
-
-#~ msgid "%i kbps"
-#~ msgstr "%i kbps"
-
-#~ msgid "XML files (*.xml)|*.xml|All files|*"
-#~ msgstr "Fichiers XML (*.xml)|*.xml|Tous les fichiers|*"
-
-#~ msgid "%s kbps"
-#~ msgstr "%s kbps"
-
-#~ msgid ""
-#~ "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-#~ "All Files|*"
-#~ msgstr ""
-#~ "Seulement lame_enc.dll|lame_enc.dll|Bibliothèques liées dynamiquement (*."
-#~ "dll)|*.dll|Tous les fichiers|*"
-
-#~ msgid ""
-#~ "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*."
-#~ "dylib)|*.dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "Seulement libmp3lame64bit.dylib|libmp3lame64bit.dylib|Bibliothèques "
-#~ "dynamiques (*.dylib)|*.dylib|Tous les fichiers (*)|*"
-
-#~ msgid ""
-#~ "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*."
-#~ "dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "Seulement libmp3lame.dylib|libmp3lame.dylib|Bibliothèques dynamiques (*."
-#~ "dylib)|*.dylib|Tous les fichiers (*)|*"
-
-#~ msgid ""
-#~ "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*."
-#~ "so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "Seulement libmp3lame.so|libmp3lame.so|Fichiers objets primairement "
-#~ "partagés (*.so)|*.so|Bibliothèques étendues (*.so*)|*.so*|Tous les "
-#~ "fichiers (*)|*"
-
-#~ msgid "AIFF (Apple) signed 16-bit PCM"
-#~ msgstr "AIFF (Apple) 16-bits PCM signé"
-
-#~ msgid "WAV (Microsoft) signed 16-bit PCM"
-#~ msgstr "WAV (Microsoft) 16-bits PCM signé"
-
-#~ msgid "WAV (Microsoft) signed 24-bit PCM"
-#~ msgstr "WAV (Microsoft) 24-bits PCM signé"
-
-#~ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
-#~ msgstr "Fichiers MIDI (*.mid)|*.mid|Fichiers Allegro (*.gro)|*.gro"
-
-#~ msgid ""
-#~ "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files "
-#~ "(*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-#~ msgstr ""
-#~ "Fichiers MIDI et Allegro (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|Fichiers "
-#~ "MIDI (*.mid;*.midi)|*.mid;*.midi|Fichiers Allegro (*.gro)|*.gro|Tous les "
-#~ "fichiers|*"
-
-#~ msgid "F&ocus"
-#~ msgstr "F&ocus"
-
-#~ msgid "%s - %s"
-#~ msgstr "%s - %s"
-
-#~ msgid ""
-#~ "This is a debug version of Audacity, with an extra button, 'Output "
-#~ "Sourcery'. This will save a\n"
-#~ "C version of the image cache that can be compiled in as a default."
-#~ msgstr ""
-#~ "Ceci est une version de débogage d’Audacity, avec un bouton "
-#~ "supplémentaire, 'Output Sourcery'. Ceci sauvegardera une\n"
-#~ "version C du cache image qui peut y être compilée en tant que défaut."
-
-#~ msgid "Waveform (dB)"
-#~ msgstr "Forme d’onde (dB)"
-
-#~ msgid "&Waveform (dB)"
-#~ msgstr "Forme d’onde (dB)"
-
-#~ msgid "Alex S. Brown"
-#~ msgstr "Alex S. Brown"
-
-#~ msgid "Error.~%~s is not a supported plug-in.~%"
-#~ msgstr "Erreur.~%~s n’est pas un greffon supporté.~%"
-
-#~ msgid "Error.~%~s is not a valid Nyquist plug-in.~%"
-#~ msgstr "Erreur.~%~s n’est pas un greffon Nyquist valide.~%"
-
-#~ msgid "This plug-in requires Audacity 2.3.1 or later."
-#~ msgstr "Ce greffon nécessite Audacity 2.3.1 ou ultérieur."
-
-#~ msgid "Remove Center Classic: Mono"
-#~ msgstr "Supprimer le centre classique : mono"
-
-#~ msgid "Could not decode file: %s"
-#~ msgstr "Échec du décodage du fichier : %s"
-
-#~ msgid "Could not create safety file: %s"
-#~ msgstr "Impossible de créer un fichier de sécurité : %s"
-
-#~ msgid "&Normalize all tracks in project"
-#~ msgstr "&Normaliser toutes les pistes du projet"
-
-# trebmuh to check (dans un environnement graphique)
-#~ msgid "&Use custom mix"
-#~ msgstr "&Utiliser un mix personnalisé"
-
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown "
-#~ "Menu."
-#~ msgstr ""
-#~ "Pour utiliser Retouche, choisir 'Forme d’onde' ou 'Forme d’onde (dB)' "
-#~ "dans le menu déroulant de la piste."
-
-#~ msgid "Vocal Remover"
-#~ msgstr "Supprimeur de voix"
-
-#~ msgid "Removing center-panned audio..."
-#~ msgstr "Suppression de l’audio centré…"
-
-#~ msgid "Remove vocals or view Help"
-#~ msgstr "Suppression de voix ou affichage de l’aide"
-
-#~ msgid "View Help"
-#~ msgstr "Affichage de l’aide"
-
-#~ msgid "Removal choice"
-#~ msgstr "Choix de suppression"
-
-#~ msgid "Simple (Entire Spectrum)"
-#~ msgstr "Simple (spectre entier)"
-
-#~ msgid "Remove Frequency Band"
-#~ msgstr "Suppression d’une bande de fréquence"
-
-#~ msgid "Retain Frequency Band"
-#~ msgstr "Conservation d’une bande de fréquence"
-
-#~ msgid "Frequency band from (Hz)"
-#~ msgstr "Bande de fréquence à partir de (Hz)"
-
-#~ msgid "Frequency band to (Hz)"
-#~ msgstr "Bande de fréquence jusqu’à (Hz)"
-
-#~ msgid ""
-#~ "Vocal Remover requires a stereo track. It works best with\n"
-#~ "lossless files like WAV or AIFF, rather than MP3 or\n"
-#~ "other compressed formats. It only removes vocals or other\n"
-#~ "audio that is panned to center (sounds equally loud in left\n"
-#~ "and right). Vocals may be mixed this way. Inverting one\n"
-#~ "channel then panning both to center cancels out any audio\n"
-#~ "which was originally center-panned, making it inaudible.\n"
-#~ "This can remove some parts of the audio you may want to\n"
-#~ "keep, such as drums, which are also often mixed to center.\n"
-#~ "If the vocals and other centered parts differ in pitch,\n"
-#~ "this can be solved by removing only selected frequencies.~%\n"
-#~ "Vocal Remover thus has three choices of removal method.\n"
-#~ "'Simple' inverts the entire frequency spectrum of one\n"
-#~ "channel. This may remove too much music if other parts of\n"
-#~ "the audio are centered as well as the vocals. In that case,\n"
-#~ "try the other choices. If the vocals are at a different\n"
-#~ "pitch than the other audio (such as a high female voice),\n"
-#~ "try 'Remove frequency band'. This only removes frequencies\n"
-#~ "between a lower and upper limit which you can enter in the\n"
-#~ "'Frequency band...' boxes. Experiment by entering what\n"
-#~ "sounds like the most significant frequency range of the\n"
-#~ "original vocals. If the other choices remove too much\n"
-#~ "audio in a particular frequency range (such as low drums\n"
-#~ "or bass), try 'Retain frequency band'. This only removes\n"
-#~ "frequencies outside the limits, retaining the others."
-#~ msgstr ""
-#~ "La suppression de voix ('Vocal Remover') nécessite une piste\n"
-#~ "Elle fonctionne mieux avec des fichiers sans-perte comme\n"
-#~ "les WAV ou AIFF, plutôt qu’avec des MP3 ou d’autres formats\n"
-#~ "compressés. Elle supprime uniquement les voix ou autre\n"
-#~ "audio panoramisé au centre (qui sonne avec la même puissance\n"
-#~ "à gauche et à droite. Les voix peuvent être mixées de cette\n"
-#~ "manière. Inverser un canal puis panoramiser les deux au\n"
-#~ "centre annule tout audio ayant été panoramisé-centré à\n"
-#~ "l’origine, le rendant inaudible. Ceci peut également supprimer\n"
-#~ "certaines parties de l’audio que vous voudriez conserver,\n"
-#~ "comme la batterie, étant aussi souvent mixé au centre.\n"
-#~ "Si les voix et les autres parties centrées différent en\n"
-#~ "hauteur, ceci peut être solutionné en supprimant uniquement\n"
-#~ "des fréquences sélectionnées.~%\n"
-#~ "La suppression de voix possède ainsi trois choix de méthode\n"
-#~ "de suppression. 'Simple' inverse le spectre de fréquence entier\n"
-#~ "d’un canal. Ceci pourrait supprimer trop de musique si d’autres\n"
-#~ "parties de l’audio sont également centrée comme les voix. Dans\n"
-#~ "ce cas,essayez les autres choix. Si les voix sont à une\n"
-#~ "hauteur différente du reste de l’audio (comme une voix\n"
-#~ "féminine haute), essayez 'Suppression de bande de fréquence'.\n"
-#~ "Ceci supprime seulement les fréquences entre une limite haute\n"
-#~ "et une limite basse que vous pouvez entrer dans les boîtes\n"
-#~ "'Bande de fréquence…'. Expérimenter en entrant ce qui vous\n"
-#~ "semble être la plage de fréquence signifiante des voix\n"
-#~ "originales. Si les autres choix supprime trop d’audio d’une\n"
-#~ "plage de fréquence particulière (comme les basses de batterie\n"
-#~ "ou les basses), essayez 'Conserver la bande de fréquence'.\n"
-#~ "Ceci supprime uniquement les fréquences en dehors des\n"
-#~ "limites, conservant les autres."
-
-#~ msgid ""
-#~ "~%Vocal Remover requires an unsplit, stereo track.~%~\n"
-#~ "If you have a stereo track split into left and right~%~\n"
-#~ "channels, use 'Make Stereo Track' on the Track~%~\n"
-#~ "Drop-Down Menu, then run Vocal Remover again.~%"
-#~ msgstr ""
-#~ "~%La suppression de voix nécessite une piste stéréo non-séparée.~%~\n"
-#~ "Si vous avez une piste stéréo séparée en canaux droit et gauche,~%~\n"
-#~ "utilisez 'Faire une piste stéréo' sur le menu déroulant de la piste,~%~\n"
-#~ "puis lancez la suppression de voix à nouveau.~%"
-
-#~ msgid ""
-#~ "Warning:~%~\n"
-#~ "              Selected band-stop filter is~%~\n"
-#~ "              ~a Hz to ~a Hz.~%~\n"
-#~ "              A very narrow stop-band filter may have~%~\n"
-#~ "              unexpected results.~%~%"
-#~ msgstr ""
-#~ "Attention :~%~\n"
-#~ "              Un filtre stop-bande sélectionné est~%~\n"
-#~ "              ~a Hz à ~a Hz.~%~\n"
-#~ "              Un filtre stop-bande très proche pourrait avoir~%~\n"
-#~ "              des résultats inattendus.~%~%"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Current settings returned the original audio."
-#~ msgstr "Les paramètres actuels ont rendus l’audio originel."
-
-#~ msgid "cleaned"
-#~ msgstr "nettoyé"
-
-#~ msgid "false"
-#~ msgstr "faux"
-
-#~ msgid "AudioUnit"
-#~ msgstr "AudioUnit"
-
-#~ msgid "Nyquist Effects Prompt"
-#~ msgstr "Prompt des effets Nyquist"
-
-#~ msgid "Save Device Info"
-#~ msgstr "Sauvegarder les informations de périphérique"
-
-#~ msgid "Unable to save device info"
-#~ msgstr "Incapable de sauvegarder les informations du périphérique"
-
-#~ msgid "Save MIDI Device Info"
-#~ msgstr "Sauvegarder les infos de périphérique MIDI"
-
-#~ msgid "Unable to save MIDI device info"
-#~ msgstr "Impossible de sauvegarder les infos de périphérique MIDI."
-
-#~ msgid "MP3 Library:"
-#~ msgstr "Bibliothèque MP3 :"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Number of echoes '~a' outside valid range 1 to 50.~%~a"
-#~ msgstr ""
-#~ "Nombre maximal d’échos '~a' en dehors de la plage valide de 1 à 50.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Pitch change '~a' outside valid range -12 to +12 semitones.~%~a"
-#~ msgstr ""
-#~ "Modification de hauteur '~a' en dehors de la plage valide de -12 à "
-#~ "+12demi-tons.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Delay time '~a' outside valid range 0 to 10 seconds.~%~a"
-#~ msgstr ""
-#~ "Temps de délai '~a' en dehors de la plage valide de 0 à +10 secondes.~%~a"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#~ msgid "Delay level '~a' outside valid range -30 to +6 dB.~%~a"
-#~ msgstr ""
-#~ "Niveau de délai '~a' en dehors de la plage valide de -30 à +6dB.~%~a"
-
-#~ msgid "Error.~%~a"
-#~ msgstr "Erreur.~%~a"
-
-#~ msgid "Use 'Number of labels' OR 'Label interval'"
-#~ msgstr "Utilise le 'nombre de marqueurs' OU 'l’intervalle de marqueur'"
-
-#~ msgid "Left"
-#~ msgstr "Gauche"
-
-#~ msgid "Right"
-#~ msgstr "Droit"
-
-#~ msgid ""
-#~ "Latency Correction setting has caused the recorded audio to be hidden "
-#~ "before zero.\n"
-#~ "Audacity has brought it back to start at zero.\n"
-#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
-#~ "to the right place."
-#~ msgstr ""
-#~ "Le réglage de correction de latence a caché l’audio enregistré avant le "
-#~ "zéro.\n"
-#~ "Audacity l’a ramené au zéro.\n"
-#~ "Vous pourrez avoir à utiliser l’outil de glissement temporel (<---> ou "
-#~ "F5) pour glisser la piste à sa place correcte."
-
-#~ msgid "Latency problem"
-#~ msgstr "Problème de latence"
-
-#~ msgid "Apply Chain"
-#~ msgstr "Appliquer une chaîne"
-
-#~ msgid "&Select Chain"
-#~ msgstr "&Sélectionnez une chaîne"
-
-#~ msgid "Chain"
-#~ msgstr "Chaîne"
-
-#~ msgid "Edit Chains"
-#~ msgstr "Éditer les chaînes"
-
-#~ msgid "&Chains"
-#~ msgstr "&Chaînes"
-
-#~ msgid "Re&name"
-#~ msgstr "Re&nommer"
-
-#~ msgid "C&hain (Double-Click or press SPACE to edit)"
-#~ msgstr "C&haîne (double-cliquer ou presser ESPACE pour éditer)"
-
-#~ msgid "<br><br>DarkAudacity is based on Audacity:"
-#~ msgstr "<br><br>DarkAudacity est basé sur Audacity&nbsp;:"
-
-#~ msgid ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
-#~ "between them."
-#~ msgstr ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - pour les "
-#~ "différences entre eux."
-
-#~ msgid ""
-#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-#~ "help using DarkAudacity."
-#~ msgstr ""
-#~ " courriel à [[mailto:james@audacityteam.org|james@audacityteam.org]] - "
-#~ "pour de l’aide pour l’utilisation de DarkAudacity."
-
-#~ msgid ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
-#~ "started with DarkAudacity."
-#~ msgstr ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutoriels (en anglais)]] - pour "
-#~ "démarrer avec DarkAudacity."
-
-#~ msgid "Insert &After"
-#~ msgstr "Insérer &après"
-
-# trebmuh to check (accélérateur)
-#~ msgid "Insert &Before"
-#~ msgstr "Insérer a&vant"
-
-#~ msgid "C&hains"
-#~ msgstr "C&haînes"
-
-# trebmuh to check (accélérateur)
-#~ msgid "Appl&y Chain..."
-#~ msgstr "Ap&pliquer la chaîne…"
-
-#~ msgid "Edit C&hains..."
-#~ msgstr "Éditer les c&haînes…"
-
-# trebmuh to check (accélérateur)
-#~ msgid "Tra&nscription Toolbar"
-#~ msgstr "Barre de lecture varia&ble"
-
-#~ msgid "&Tools"
-#~ msgstr "Ou&tils"
-
-#~ msgid "E&xtra"
-#~ msgstr "E&xtra"
-
-#~ msgid "Transcri&ption"
-#~ msgstr "Transcri&ption"
-
-#~ msgid "All Menus"
-#~ msgstr "Tous les menus"
-
-#~ msgid "Transcription"
-#~ msgstr "Lecture variable"
-
-#~ msgid "'?"
-#~ msgstr "'?"
-
-#~ msgid "' ?"
-#~ msgstr "' ?"
-
-#~ msgid "Delete "
-#~ msgstr "Effacer"
-
-#~ msgid "items?"
-#~ msgstr "éléments ?"
-
-#~ msgid "Maximum amplitude dB"
-#~ msgstr "Amplitude maximale dB"
-
-#~ msgid "Sliding Time Scale/Pitch Shift"
-#~ msgstr "Variation progressive de la hauteur"
-
-#~ msgid "Time Scale"
-#~ msgstr "Échelle temporelle"
-
-#~ msgid ""
-#~ "Your tracks will be mixed down to a single mono channel in the exported "
-#~ "file."
-#~ msgstr ""
-#~ "Dans le fichier exporté, vos pistes seront mélangées en un canal mono."
-
-#~ msgid "kbps"
-#~ msgstr "kbps"
-
-#~ msgid "Track &shift after record:"
-#~ msgstr "Décalage de pi&ste après enregistrement :"
-
-#~ msgid "Playthrough"
-#~ msgstr "Passage audio"
-
-# trebmuh to check (accélérateur)
-#~ msgid "&Hardware Playthrough of input"
-#~ msgstr "Lecture de l’entrée à travers le matériel (&h)"
-
-#~ msgid "Frequency g&ain (dB/dec):"
-#~ msgstr "G&ain fréquentielle (dB/dec) :"
-
-#~ msgid ""
-#~ "Error opening sound device.\n"
-#~ "Try changing the audio host, recording device and the project sample rate."
-#~ msgstr ""
-#~ "Erreur lors de l’ouverture du périphérique audio.\n"
-#~ "Essayez de changer l’hôte audio, le périphérique d’enregistrement, et le "
-#~ "taux d’échantillonnage du projet."
-
-#~ msgid "Slider Recording"
-#~ msgstr "Curseur d’enregistrement"
-
-#~ msgid "Slider Playback"
-#~ msgstr "Curseur de lecture"
-
-#~ msgid "Start - Length"
-#~ msgstr "Début - durée"
-
-#~ msgid "Length - End"
-#~ msgstr "Durée - fin"
-
-#~ msgid "Length - Center"
-#~ msgstr "Durée - centre"
-
-#~ msgid "Low Frequency:"
-#~ msgstr "Basse fréquence :"
-
-#~ msgid "High Frequency:"
-#~ msgstr "Haute fréquence :"
-
-#~ msgid "Change track name to:"
-#~ msgstr "Changer le nom de la piste en :"
-
-#~ msgid "Trans&cription"
-#~ msgstr "Lecture va&riable"
-
-#~ msgid "Appen&d Record"
-#~ msgstr "Poursuite de l’en&registrement"
-
-#~ msgid "&Always mix all tracks down to Stereo or Mono channel(s)"
-#~ msgstr "&Toujours réduire toutes les pistes à un mixage stéréo ou mono"
-
-#~ msgid "Error Flushing File"
-#~ msgstr "Erreur de traitement de fichier"
-
-#~ msgid "Out of disk space"
-#~ msgstr "Disque plein"
-
-#~ msgid "Time shift clip or move up/down between tracks"
-#~ msgstr "Glissement des clips temporellement ou d’une piste à l’autre "
-
-#~ msgid "AVX Threaded"
-#~ msgstr "AVX Multi-tâches"
-
-#~ msgid "Spectrogram log(f)"
-#~ msgstr "Spectre logarithmique décimal"

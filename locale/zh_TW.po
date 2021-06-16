@@ -10,22 +10,170 @@
 # Hank Lu <hankbox@gmail.com>, 2021
 # Paval Shalamitski <yehekim@gmail.com>, 2021
 # Hiunn-hué <hiunnhue108@ymail.com>, 2021
-# Jesse Lin <jesse.lin@arrowasia.com>, 2021
+# Jesse Lin <jesselin.com@gmail.com>, 2021
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-09 08:18+0000\n"
+"POT-Creation-Date: 2021-06-11 08:17+0000\n"
 "PO-Revision-Date: 2020-11-02 10:15+0000\n"
-"Last-Translator: Jesse Lin <jesse.lin@arrowasia.com>, 2021\n"
+"Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/klyok/teams/690/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Problem Report for Audacity"
+msgstr "將問題回報給Audacity"
+
+#: libraries/lib-strings/FutureStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr "按下送出將問題送出給Audacity。此資訊以匿名方式被收集。"
+
+#: libraries/lib-strings/FutureStrings.h src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr "問題細節"
+
+#: libraries/lib-strings/FutureStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "備註意見"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "送出 (&S)"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "不要送出 (&D)"
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/FutureStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr "例外判斷碼： 0x%x"
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/FutureStrings.h
+msgid "Unknown exception"
+msgstr "未知例外"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/FutureStrings.h
+msgid "Unknown assertion"
+msgstr "未知申告"
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Unknown error"
+msgstr "未知錯誤"
+
+#: libraries/lib-strings/FutureStrings.h
+msgid "Failed to send crash report"
+msgstr "在送出當機報告時候發生錯誤"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "Scheme 基模 (&m)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "彩色（預設值）"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "彩色（經典）"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "灰度(&Y)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "反轉灰階(&L)"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "更新 Audacity"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "略過(&S)"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "安裝更新(&I)"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "修改記錄"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "更多資訊請閱讀 GitHub"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "檢查更新檔案時發生錯誤"
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr "無法連結到Audacity的更新主機."
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "更新檔案可能是無效或已損壞."
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "下載更新檔案的時候發生錯誤."
+
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr "無法打開Audacity下載連結."
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/FutureStrings.h
+#, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "新版本 Audacity %s  已經出來了!"
+
+#. i18n-hint comment to be moved
+#. to one of them (one is enough)
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: libraries/lib-strings/FutureStrings.h
+msgctxt "preference"
+msgid "Recording"
+msgstr "錄製"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -61,146 +209,6 @@ msgstr "簡易"
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
 msgstr "系統"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem Report for Audacity"
-msgstr "將問題回報給Audacity"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid ""
-"Click \"Send\" to submit the report to Audacity. This information is "
-"collected anonymously."
-msgstr "按下送出將問題送出給Audacity。此資訊以匿名方式被收集。"
-
-#: libraries/lib-strings/UnusedStrings.h src/widgets/ErrorReportDialog.cpp
-msgid "Problem details"
-msgstr "問題細節"
-
-#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgid "Comments"
-msgstr "備註意見"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr "送出 (&S)"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr "不要送出 (&D)"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgid "Exception code 0x%x"
-msgstr "例外判斷碼： 0x%x"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown exception"
-msgstr "未知例外"
-
-#. i18n-hint C++ programming assertion
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown assertion"
-msgstr "未知申告"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown error"
-msgstr "未知錯誤"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Failed to send crash report"
-msgstr "在送出當機報告時候發生錯誤"
-
-#. i18n-hint Scheme refers to a color scheme for spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Sche&me"
-msgstr "Scheme 基模 (&m)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (default)"
-msgstr "彩色（預設值）"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "彩色（經典）"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "灰度(&Y)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "反轉灰階(&L)"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update Audacity"
-msgstr "更新 Audacity"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Skip"
-msgstr "略過(&S)"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr "安裝更新(&I)"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Changelog"
-msgstr "修改記錄"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Read more on GitHub"
-msgstr "更多資訊請閱讀 GitHub"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Error checking for update"
-msgstr "檢查更新檔案時發生錯誤"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Unable to connect to Audacity update server."
-msgstr "無法連結到Audacity的更新主機."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update data was corrupted."
-msgstr "更新檔案可能是無效的或已損壞."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "下載更新檔案的時候發生錯誤."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Can't open the Audacity download link."
-msgstr "無法打開Audacity下載連結."
-
-#. i18n-hint Substitution of version number for %s.
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgctxt "update dialog"
-msgid "Audacity %s is available!"
-msgstr "Audacity %s  新版本已經出來了!"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
@@ -600,7 +608,7 @@ msgstr "%s，說明文件和支援"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s，QA測試人員，說明文件和支援"
+msgstr "%s，品質驗證測試人員，說明文件和支援"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper
 #. name
@@ -614,7 +622,7 @@ msgstr "%s，說明文件和支援（法文）"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
-msgstr "%s，品質保證"
+msgstr "%s，品質驗證"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper
 #. name
@@ -642,7 +650,7 @@ msgstr "%s，作曲"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
-msgstr "%s，測試員"
+msgstr "%s，測試人員"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper
 #. name
@@ -762,7 +770,7 @@ msgstr "%s 是款免費、開源且跨平台的錄音及編輯音訊軟體。"
 
 #: src/AboutDialog.cpp
 msgid "Credits"
-msgstr "開發團隊"
+msgstr "版權所有"
 
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
@@ -1779,16 +1787,16 @@ msgstr "淡入淡出結束"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
-msgstr "匯入巨集"
+msgstr "匯入連續指令"
 
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
-msgstr "%s 巨集已經存在。是否替換？"
+msgstr "%s 連續指令已經存在。是否取代？"
 
 #: src/BatchCommands.cpp
 msgid "Export Macro"
-msgstr "匯出巨集"
+msgstr "匯出連續指令"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1822,11 +1830,11 @@ msgstr "無法識別批次指令 %s 。"
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
 msgid "Applied Macro"
-msgstr "已套用連鎖指令"
+msgstr "已套用連續指令"
 
 #: src/BatchCommands.cpp
 msgid "Apply Macro"
-msgstr "套用連鎖指令"
+msgstr "套用連續指令"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
@@ -1861,30 +1869,30 @@ msgstr "套用 %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
-msgstr "連鎖指令調製板"
+msgstr "連續指令編輯器"
 
 #: src/BatchProcessDialog.cpp
 msgid "Manage Macros"
-msgstr "管理連鎖指令"
+msgstr "管理連續指令"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
 msgid "Select Macro"
-msgstr "選擇連鎖指令"
+msgstr "選擇連續指令"
 
 #. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
 msgid "Macro"
-msgstr "連鎖指令"
+msgstr "連續指令"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
-msgstr "套用連鎖指令到："
+msgstr "套用連續指令到："
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to project"
-msgstr "套用連鎖指令到目前專案"
+msgstr "套用連續指令到目前專案"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Project"
@@ -1892,7 +1900,7 @@ msgstr "專案(&P)"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to files..."
-msgstr "套用連鎖指令到檔案..."
+msgstr "套用連續指令到檔案..."
 
 #: src/BatchProcessDialog.cpp
 msgid "&Files..."
@@ -1905,7 +1913,7 @@ msgstr "展開(&E)"
 
 #: src/BatchProcessDialog.cpp
 msgid "No macro selected"
-msgstr "未選擇連鎖指令"
+msgstr "未選擇連續指令"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
@@ -2016,11 +2024,11 @@ msgstr "要儲存變更嗎？"
 
 #: src/BatchProcessDialog.cpp
 msgid "Enter name of new macro"
-msgstr "輸入新連鎖指令的名稱"
+msgstr "輸入新連續指令的名稱"
 
 #: src/BatchProcessDialog.cpp
 msgid "Name of new macro"
-msgstr "新連鎖指令的名稱"
+msgstr "新連續指令的名稱"
 
 #: src/BatchProcessDialog.cpp
 msgid "Name must not be blank"
@@ -3845,7 +3853,7 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "開啟聲音裝置時發生錯誤。\n"
-"請試著變更音訊主機、播放裝置和專案的取樣頻率。"
+"請試著變更音訊通訊介面、播放裝置和專案的取樣頻率。"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
@@ -4582,14 +4590,6 @@ msgstr "開啟專案時發生錯誤"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr ""
-"專案存在 FAT 格式磁碟。\n"
-"複製到其他磁碟後才能開啟。"
-
-#: src/ProjectFileManager.cpp
-msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
@@ -4624,6 +4624,14 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Opening File or Project"
 msgstr "開啟檔案或專案時發生錯誤"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+"專案存在 FAT 格式磁碟。\n"
+"複製到其他磁碟後才能開啟。"
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -4806,7 +4814,7 @@ msgstr "高品質"
 
 #: src/Resample.cpp
 msgid "Best Quality (Slowest)"
-msgstr "超品質（最慢）"
+msgstr "最高品質（最慢）"
 
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp
@@ -6153,7 +6161,7 @@ msgstr "提供指令說明。"
 
 #: src/commands/HelpCommand.h
 msgid "For comments in a macro."
-msgstr "對於巨集中的註解。"
+msgstr "對於連續指令中的註解。"
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -6181,7 +6189,7 @@ msgstr "匯出到檔案。"
 
 #: src/commands/LoadCommands.cpp
 msgid "Builtin Commands"
-msgstr "內嵌指令"
+msgstr "內建指令"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -6192,7 +6200,7 @@ msgstr "Audacity 團隊"
 
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Audacity"
-msgstr "提供內嵌指令給 Audacity"
+msgstr "提供內建指令給 Audacity"
 
 #: src/commands/LoadCommands.cpp
 msgid "Unknown built-in command name"
@@ -7761,7 +7769,7 @@ msgstr "（0 至 5）:"
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF Tones"
-msgstr "雙音多頻音"
+msgstr "雙音多頻音(電話聲)"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -7847,7 +7855,7 @@ msgstr "衰減係數(&E)："
 
 #: src/effects/Effect.cpp
 msgid "Built-in"
-msgstr "內嵌"
+msgstr "內建"
 
 #: src/effects/Effect.cpp
 msgid "Presets"
@@ -8202,11 +8210,11 @@ msgstr "等化"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Filter Curve EQ"
-msgstr "濾波曲線 EQ"
+msgstr "EQ - 曲線等化器"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
-msgstr "圖形等化器"
+msgstr "EQ - 頻段等化器"
 
 #: src/effects/Equalization.cpp
 msgid "Adjusts the volume levels of particular frequencies"
@@ -8253,7 +8261,7 @@ msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
-"如要在連鎖指令使用此濾波曲線，請為其選擇新的名稱。\n"
+"如要在連續指令使用此濾波曲線，請為其選擇新的名稱。\n"
 "選擇「儲存/管理曲線...」按鈕並重新命名「未命名」曲線，接著便可使用該曲線。"
 
 #: src/effects/Equalization.cpp
@@ -8635,11 +8643,11 @@ msgstr "上下翻轉音訊樣本，顛倒兩極"
 
 #: src/effects/LoadEffects.cpp
 msgid "Builtin Effects"
-msgstr "內嵌效果"
+msgstr "內建效果"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
-msgstr "提供內嵌效果給 Audacity"
+msgstr "提供內建效果給 Audacity"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
@@ -9096,18 +9104,18 @@ msgstr "個別正規化立體聲聲道(&O)"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
-msgstr "Paulstretch"
+msgstr "慢速播放"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "使用 Paulstretch 僅在極端的時間拉伸或者「停滯」效果"
+msgstr "使用 慢速播放 僅在極端的時間拉伸或者「停滯」效果"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
-msgstr "拉伸係數(&S)："
+msgstr "幾倍長度(&S)："
 
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
@@ -11780,7 +11788,7 @@ msgstr "找不到 MP3 匯出函式庫"
 
 #: src/export/ExportMP3.cpp
 msgid "(Built-in)"
-msgstr "(內嵌)"
+msgstr "(內建)"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -13267,7 +13275,7 @@ msgstr "變更播放裝置(&P)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Audio &Host..."
-msgstr "變更音訊主機(&H)..."
+msgstr "變更音訊通訊介面(&H)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Recording Cha&nnels..."
@@ -13868,11 +13876,11 @@ msgstr "連鎖指令(&M)..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
-msgstr "套用連鎖指令(&A)"
+msgstr "套用連續指令(&A)"
 
 #: src/menus/PluginMenus.cpp
 msgid "Palette..."
-msgstr "調製板..."
+msgstr "編輯器..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Reset &Configuration"
@@ -14723,14 +14731,16 @@ msgstr "將焦點軌道置底(&B)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "正在播放"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
 #: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
@@ -15233,7 +15243,7 @@ msgstr "瀏覽(&W)..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Macro output:"
-msgstr "巨集輸出 (&M)"
+msgstr "連續指令輸出 (&M)"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -15357,7 +15367,7 @@ msgstr "V&ST"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
-msgstr "啟用效果"
+msgstr "啟用效果模組格式"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16230,15 +16240,15 @@ msgstr "長區間(&N)："
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr "變速播放(&V)"
+msgstr "允許播放中調整播放速度(&V)"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr "迷你推桿 (&M)"
+msgstr "播放時快速淡出淡入 (&M)"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr "Always scrub un&pinned"
+msgstr "忽略跟隨播放 當使用固定播放頭時 (&p)"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -16965,7 +16975,8 @@ msgstr "波形分貝範圍(&R)："
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
 msgstr "已停止"
@@ -17033,7 +17044,7 @@ msgstr "錄製裝置"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Audio Host"
-msgstr "音訊主機"
+msgstr "音訊通訊介面"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Recording Channels"
@@ -17057,7 +17068,7 @@ msgstr "選擇播放裝置"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Audio Host"
-msgstr "選擇音訊主機"
+msgstr "選擇音訊通訊介面"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Channels"
@@ -19179,7 +19190,7 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "尋找拍子"
+msgstr "找尋拍子"
 
 #: plug-ins/beat.ny
 msgid "Finding beats..."
@@ -19940,11 +19951,11 @@ msgstr "錯誤。~%未選擇檔案。"
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
-msgstr "Pluck"
+msgstr "撥弦聲"
 
 #: plug-ins/pluck.ny
 msgid "Generating pluck sound..."
-msgstr "正在生成 Pluck 聲音..."
+msgstr "正在生成撥弦聲..."
 
 #: plug-ins/pluck.ny
 msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
@@ -19956,7 +19967,7 @@ msgstr "David R.Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
-msgstr "Pluck MIDI 音高"
+msgstr "撥弦聲 MIDI 音高"
 
 #: plug-ins/pluck.ny
 msgid "Fade-out type"

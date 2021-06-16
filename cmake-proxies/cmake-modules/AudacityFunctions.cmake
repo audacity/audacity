@@ -262,7 +262,7 @@ function( audacity_append_common_compiler_options var use_pch )
 
          # Define/undefine _DEBUG
 	 # Yes, -U to /U too as needed for Windows:
-	 $<IF:$<CONFIG:Release>,-U_DEBUG,-D_DEBUG=1>
+	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
    )   
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
