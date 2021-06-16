@@ -28,7 +28,7 @@ public:
     static VersionId ParseFromString(wxString& versionString);
 
     /// Make string with version by MakeString() from instance values.
-    wxString getString() const;
+    wxString GetString() const;
 
     bool operator== (const VersionId& other);
     bool operator!= (const VersionId& other);

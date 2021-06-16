@@ -28,7 +28,7 @@ bool UpdateDataParser::Parse(const VersionPatch::UpdateDataFormat& updateData, V
     return ok;
 }
 
-wxArrayString UpdateDataParser::splitChangelogSentences(const wxString& changelogContent)
+wxArrayString UpdateDataParser::SplitChangelogSentences(const wxString& changelogContent)
 {
     wxArrayString changelogSentenceList;
 
@@ -122,7 +122,7 @@ void UpdateDataParser::HandleXMLContent(const wxString& content)
     {
     case XmlParsedTags::kDescriptionTag:
         trimedContent.Trim(true).Trim(false);
-        mVersionPatch->changelog = splitChangelogSentences(trimedContent);
+        mVersionPatch->changelog = SplitChangelogSentences(trimedContent);
         break;
 
     case XmlParsedTags::kVersionTag:
