@@ -1501,10 +1501,10 @@ loop
          (format t "WARNING: ~A ~A function; setting falltime to 0.01.\n"
                  "falltime must be greater than zero in" source)
          (setf falltime 0.01)))
-  (cond ((< floor 0.001)
-         (format t "WARNING: ~A ~A function; setting floor to 0.001.\n"
+  (cond ((< floor 0.00001)
+         (format t "WARNING: ~A ~A function; setting floor to 0.00001.\n"
                  "floor must be greater than zero in" source)
-         (setf floor 0.001)))
+         (setf floor 0.00001)))
   (let (s) ;; s becomes sound after collapsing to one channel
     (cond ((arrayp sound)           ;; use s-max over all channels so that
            (setf s (aref sound 0))  ;; ANY channel opens the gate
