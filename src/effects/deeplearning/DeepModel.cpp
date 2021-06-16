@@ -5,6 +5,8 @@
 
 #include <rapidjson/document.h>
 
+// DeepModel Implementation
+
 DeepModel::DeepModel() : mLoaded(false) {}
 
 bool DeepModel::Load(const std::string &modelPath)
@@ -25,35 +27,16 @@ bool DeepModel::Load(const std::string &modelPath)
       std::string data = extraFilesMap_["metadata.json"];
 
       // parse the data
-      rapidjson::Document document;
-      document.Parse(data.c_str());
-      if (document.Parse(data.c_str()).HasParseError()) 
+      mMetadata.Parse(data.c_str());
+      if (mMetadata.Parse(data.c_str()).HasParseError()) 
          throw std::exception(); // TODO: throw a better exception
 
-      assert(document.IsObject());
-      // // document.SetObject();
-
-      // //tmp: print the doc
-      // auto a = document.MemberBegin();
-      // auto b = document.MemberEnd();
-
-      // for (rapidjson::Value::MemberIterator M = document.MemberBegin(); 
-      //       M!=document.MemberEnd(); M++)
-      // {
-      //    const char* key   = M->name.GetString();
-      //    const char* value = M->value.GetString();
-
-      //    if (key!=NULL && value!=NULL)
-      //    {
-      //       printf("%s = %s", key,value);
-      //    }
-      // }
+      assert(mMetadata.IsObject());
 
       // set the sample rate
-      printf("has sample_rate = %d\n", document.HasMember("sample_rate"));
-      assert(document.HasMember("sample_rate"));
-      assert(document["sample_rate"].IsInt());
-      mSampleRate = document["sample_rate"].GetInt();
+      assert(mMetadata.HasMember("sample_rate"));
+      assert(mMetadata["sample_rate"].IsInt());
+      mSampleRate = mMetadata["sample_rate"].GetInt();
 
       mLoaded = true;
    }
@@ -67,7 +50,43 @@ bool DeepModel::Load(const std::string &modelPath)
    return mLoaded;
 }
 
-torch::Tensor DeepModel::Forward(const torch::Tensor tensorInput)
+rapidjson::Document DeepModel::GetMetadata()
+{
+   rapidjson::Document::AllocatorType& allocator = mMetadata.GetAllocator();
+
+   rapidjson::Document copy;
+   copy.CopyFrom(mMetadata, allocator);
+
+   if (!copy.IsObject()) copy.SetObject();
+
+   return copy;
+}
+
+std::string DeepModel::QueryMetadata(const char *key)
+{
+   std::string output;
+
+   if (!mMetadata.IsObject())
+   {
+      output = "None";
+   }
+   // get the value as a string type
+   else if (mMetadata.HasMember(key))
+   {
+      rapidjson::StringBuffer sBuffer;
+      rapidjson::Writer<rapidjson::StringBuffer> writer(sBuffer);
+
+      mMetadata[key].Accept(writer);
+      output = sBuffer.GetString();
+   }
+   else
+   {
+      output = "None";
+   }
+   return std::string(output);
+}
+
+torch::Tensor DeepModel::Forward(const torch::Tensor &tensorInput)
 {
    torch::NoGradGuard no_grad;
    if (mLoaded)

@@ -57,6 +57,8 @@ public:
 
    bool Process() override;
    void PopulateOrExchange(ShuttleGui &S) override;
+
+   void PopulateMetadata(ShuttleGui &S);
    // bool TransferDataToWindow() override;
    // bool TransferDataFromWindow() override;
 
@@ -69,6 +71,9 @@ private:
 
    wxButton *mLoadModelBtn;
    wxStaticText *mDescription;
+
+   std::map<std::string, wxStaticText*> mMetadataFields;
+   void UpdateMetadataFields();
 
    DECLARE_EVENT_TABLE()
 };

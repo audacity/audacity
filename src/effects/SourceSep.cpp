@@ -43,6 +43,8 @@ END_EVENT_TABLE()
 
 EffectSourceSep::EffectSourceSep()
 {
+   // create a deep model
+   mModel = std::make_unique<DeepModel>();
    SetLinearEffectFlag(false);
 }
 
@@ -130,12 +132,64 @@ bool EffectSourceSep::Process()
 
 void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)
 {
-   S.StartHorizontalLay(wxCENTER, false);
+   S.StartVerticalLay(wxCENTER, true);
    {
-      mLoadModelBtn = S.AddButton(XXO("&Load Source Separation Model"));
-      mDescription = S.AddVariableText(XO("pls load a model!"));
+
+      // if (mModel->IsLoaded())
+      PopulateMetadata(S);
+
+      S.StartHorizontalLay(wxCENTER, false);
+      {
+         mLoadModelBtn = S.AddButton(XXO("&Load Source Separation Model"));
+         mDescription = S.AddVariableText(XO("pls load a model!"));
+      }
+      S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
+   S.EndVerticalLay();
+
+}
+
+void EffectSourceSep::PopulateMetadata(ShuttleGui &S)
+{
+   // TODO: this does not take into account the possible
+   // depth of the metadata. 
+   rapidjson::Document document = mModel->GetMetadata();
+   S.StartVerticalLay(wxCENTER, false);
+   {
+      //TODO: bold not working, nicer table style
+      #define ADD_METADATA_ENTRY(desc, key) \
+         S.StartHorizontalLay(wxLEFT, false); \
+         { \
+            S.AddVariableText(XXO(desc)); \
+            std::string value = mModel->QueryMetadata(key); \
+            wxStaticText *text =  S.AddVariableText( \
+               TranslatableString(wxString(value.c_str()), {}) \
+               ); \
+            wxFont font = text->GetFont(); \
+            font.SetWeight(wxFONTWEIGHT_BOLD); \
+            font.MakeBold(); \
+            text->SetFont(font); \
+            mMetadataFields.insert(std::make_pair(key, text)); \
+         } \
+         S.EndHorizontalLay(); \
+
+      ADD_METADATA_ENTRY("&Separation Sample Rate:", "sample_rate")
+      ADD_METADATA_ENTRY("&Domain:", "domain")
+      ADD_METADATA_ENTRY("&Number of Sources:", "n_src")
+      ADD_METADATA_ENTRY("&Output Sources:", "labels")
+   }
+   S.EndVerticalLay();
+}
+
+void EffectSourceSep::UpdateMetadataFields(){
+   for (auto pair : mMetadataFields){
+      std::string key = pair.first;
+      wxStaticText *field = pair.second;
+
+      std::string value = mModel->QueryMetadata(key.c_str());
+      field->SetLabel(wxString(value));
+      field->SetName(wxString(value));
+   }
 }
 
 void EffectSourceSep::OnLoadButton(wxCommandEvent &WXUNUSED(event))
@@ -153,10 +207,11 @@ void EffectSourceSep::OnLoadButton(wxCommandEvent &WXUNUSED(event))
 
    // attempt load deep learning model
    // TODO: what's the fallback when the model doesn't load? 
-   mModel = std::make_unique<DeepModel>();
    mModel->Load(path.ToStdString());
 
-   wxString descStr("loaded a deep model succesfully!");
+   wxString descStr("loaded model succesfully!");
    mDescription->SetLabel(descStr);
    mDescription->SetName(descStr);
+
+   UpdateMetadataFields();
 }
