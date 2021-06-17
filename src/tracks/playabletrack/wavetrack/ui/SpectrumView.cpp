@@ -32,7 +32,6 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 
 class BrushHandle;
-std::unordered_map<wxInt64, std::vector<double>> SpectrumView::mFreqToTimePointsMap;
 int SpectrumView::mBrushSize = 5;
 
 static WaveTrackSubView::Type sType{
@@ -41,6 +40,10 @@ static WaveTrackSubView::Type sType{
 };
 
 static WaveTrackSubViewType::RegisteredType reg{ sType };
+
+SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
+   mpFreqToTimePointsMap = std::make_shared<std::unordered_map<wxInt64, std::vector<double>>>();
+}
 
 SpectrumView::~SpectrumView() = default;
 
@@ -54,10 +57,11 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
-
    std::vector<UIHandlePtr> results;
    if(currentTool == ToolCodes::brushTool){
-      const auto result = BrushHandle::HitTest(mBrushHandle, state, pProject, shared_from_this());
+      const auto result = BrushHandle::HitTest(mBrushHandle, state,
+                                               pProject, shared_from_this(),
+                                               mpFreqToTimePointsMap);
       results.push_back(result);
       return results;
    }
@@ -198,7 +202,8 @@ void DrawTraversedCoords(TrackPanelDrawingContext &context,
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
-                                   const wxRect & rect)
+                                   const wxRect &rect,
+                                   const std::unordered_map<wxInt64, std::vector<double>> &mFreqToTimePointsMap)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -626,7 +631,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    // Paint brush tool selected area afterwards, avoid heavy matching calculation
    std::vector<std::pair<int, int>> drawingCoords;
-   for(const auto &freqTimePoints: SpectrumView::mFreqToTimePointsMap) {
+   for(const auto &freqTimePoints: mFreqToTimePointsMap) {
       wxInt64 selFreq = freqTimePoints.first;
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(selFreq);
@@ -668,8 +673,10 @@ void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
       context, rect, track, blankSelectedBrush, blankBrush );
 
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
-   for (const auto &clip: track->GetClips())
-      DrawClipSpectrum( context, cache, clip.get(), rect );
+   for (const auto &clip: track->GetClips()){
+//      DrawClipSpectrum( context, cache, clip.get(), rect, nullptr);
+      DrawClipSpectrum( context, cache, clip.get(), rect, *mpFreqToTimePointsMap);
+   }
 
    DrawBoldBoundaries( context, track, rect );
 }
