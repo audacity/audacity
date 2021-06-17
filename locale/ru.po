@@ -17,10 +17,10 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-04-01 08:31+0500\n"
+"PO-Revision-Date: 2021-06-08 19:17+0500\n"
 "Last-Translator: Alexander Kovalenko <nktch@yandex.ru>\n"
 "Language-Team: \n"
-"Language: ru\n"
+"Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -64,19 +64,21 @@ msgid "System"
 msgstr "Система"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Обеспечивает поддержку Vamp-эффектов для Audacity"
+msgstr "Отчёт о проблемах Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Нажмите 'Отправить', чтобы отправить отчёт в Audacity. Эта информация "
+"собирается анонимно."
 
 #: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
 msgid "Problem details"
-msgstr ""
+msgstr "&Подробно"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -85,143 +87,145 @@ msgstr "Комментарии"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "&Отправить"
 
 #: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "Не связывать стерео"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 #, c-format
 msgid "Exception code 0x%x"
-msgstr ""
+msgstr "Код исключения 0x%x"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
 msgid "Unknown exception"
-msgstr ""
+msgstr "Неизвестно"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgid "Unknown assertion"
-msgstr "Неизвестный формат"
+msgstr "Неизвестно"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgid "Unknown error"
-msgstr "Неизвестный формат"
+msgstr "Неизвестно"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "Не удалось задать имя пресета"
+msgstr "Не удалось отправить отчёт о сбое"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "С&хема"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (по-умолчанию)"
+msgstr "Цвет:"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "Классическая"
+msgstr "Цвет:"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr "Оттенки &серого"
+msgstr "Оттенки серого"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "&Линейная шкала"
+msgstr "Обратная пилообразная"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Закрыть Audacity"
+msgstr "Обновление каталога Temp"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "Пропустить до начала выделения"
 
 #: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "update dialog"
+msgid "&Install update"
+msgstr "Обновление каталога Temp"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Канал"
+msgstr "Журнал изменений"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "Узнать больше на GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "update dialog"
 msgid "Error checking for update"
-msgstr "Ошибка блокировки каталога временных файлов"
+msgstr "Проверка утечек указателя файла:\n"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr ""
+msgstr "Невозможно подключиться к серверу обновлений Audacity."
 
 #: libraries/lib-strings/UnusedStrings.h
+#, fuzzy
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Обновлять отображение при проигрывании"
 
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update."
-msgstr "Ошибка загрузки метаданных"
+msgstr "Обновлять отображение при проигрывании"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Не удаётся открыть ссылку для загрузки Audacity."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy, c-format
 msgctxt "update dialog"
 msgid "Audacity %s is available!"
-msgstr "Панель: %s"
+msgstr "Караоке в Audacity%s"
 
 #: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
 msgid "1st Experimental Command..."
-msgstr ""
+msgstr "Команда  "
 
 #: modules/mod-null/ModNullCallback.cpp
+#, fuzzy
 msgid "2nd Experimental Command"
-msgstr ""
+msgstr "&Команда"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -595,7 +599,7 @@ msgstr "%s, разработчик"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "%s, developer and support"
-msgstr "%s, документация и техподдержка"
+msgstr "%s, сооснователь и разработчик"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -607,7 +611,7 @@ msgstr "%s, документация и техподдержка"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, документация и техподдержка"
+msgstr "%s, документация и техподдержка, Франция"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -2337,17 +2341,18 @@ msgstr "Отчёт подготовлен:"
 #: src/DBConnection.cpp
 #, fuzzy, c-format
 msgid "(%d): %s"
-msgstr "%s - %s"
+msgstr "%d - %s\n"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Не удалось отменить соединение"
+msgstr "Не удалось установить безопасный режим для основного подключения к %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Не удалось восстановить соединение"
+msgstr ""
+"Не удалось установить безопасный режим при подключении контрольной точки к %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -3839,7 +3844,7 @@ msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "Включить этот плагин?\n"
-msgstr[1] "Включить эти плагины?\n"
+msgstr[1] "Включить  эти плагины?\n"
 msgstr[2] "Включить эти плагины?\n"
 
 #: src/PluginManager.cpp
@@ -4402,7 +4407,7 @@ msgstr "Не удалось удалить информацию автосохр
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "Unable to bind to blob"
-msgstr "Не удалось найти кодек"
+msgstr "Не удалось привязать параметр SQL"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4669,6 +4674,7 @@ msgid "Error Opening File"
 msgstr "Ошибка открытия файла"
 
 #: src/ProjectFileManager.cpp
+#, fuzzy
 msgid "Error opening file"
 msgstr "Ошибка открытия файла"
 
@@ -4686,6 +4692,7 @@ msgid "Error Opening File or Project"
 msgstr "Ошибка открытия файла или проекта"
 
 #: src/ProjectFileManager.cpp
+#, fuzzy
 msgid "Project was recovered"
 msgstr "Проект восстановлен"
 
@@ -4815,9 +4822,9 @@ msgstr[2] "%d минут"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgid "%s and %s."
-msgstr "%s и %s"
+msgstr "%s (включая %s, %s, %s, %s и %s)"
 
 #: src/ProjectSerializer.cpp
 msgid ""
@@ -5178,7 +5185,7 @@ msgstr "Больше при запуске это не показывать"
 #: src/SqliteSampleBlock.cpp
 #, fuzzy
 msgid "Connection to project file is null"
-msgstr "Выполняется проверка данных проекта"
+msgstr "Это не файл проекта Audacit"
 
 #: src/Tags.cpp
 msgid "Artist Name"
@@ -6389,6 +6396,7 @@ msgid "Scriptables"
 msgstr "Сценарии"
 
 #: src/commands/ScreenshotCommand.cpp
+#, fuzzy
 msgid "Selectionbar"
 msgstr "Панель выбора"
 
@@ -6577,7 +6585,7 @@ msgstr "Цвет 3"
 
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
-msgstr "От:"
+msgstr "В:"
 
 #: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Color:"
@@ -6606,7 +6614,7 @@ msgstr "Удалить"
 #: src/commands/SetEnvelopeCommand.cpp
 #, fuzzy
 msgid "Edited Envelope"
-msgstr "Задать огибающую"
+msgstr "Отредактированные метки"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
@@ -6829,6 +6837,7 @@ msgstr ""
 "ниже выбранных треков."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#, fuzzy
 msgid "db"
 msgstr "дБ"
 
@@ -8917,6 +8926,7 @@ msgid "&Noise reduction (dB):"
 msgstr "&Подавление шума (дБ):"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#, fuzzy
 msgid "Noise reduction"
 msgstr "Подавление шума"
 
@@ -8933,6 +8943,7 @@ msgid "Attac&k time (secs):"
 msgstr "Время &атаки (сек.):"
 
 #: src/effects/NoiseReduction.cpp
+#, fuzzy
 msgid "Attack time"
 msgstr "Время атаки"
 
@@ -8941,6 +8952,7 @@ msgid "R&elease time (secs):"
 msgstr "Время &затухания (сек.)"
 
 #: src/effects/NoiseReduction.cpp
+#, fuzzy
 msgid "Release time"
 msgstr "Время затухания"
 
@@ -10343,6 +10355,8 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
+"Включить просмотр спектрограммы трека\n"
+"перед применением эффектов.'Спектра'"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -10548,6 +10562,7 @@ msgid "Value Error"
 msgstr "Ошибка значения"
 
 #: src/effects/nyquist/Nyquist.cpp plug-ins/sample-data-export.ny
+#, fuzzy
 msgid "Select a file"
 msgstr "Выберите файл"
 
@@ -11011,7 +11026,7 @@ msgstr "10"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "On"
-msgstr "На"
+msgstr "Включено"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Constrained"
@@ -12172,9 +12187,9 @@ msgid "Cannot export audio in this format."
 msgstr "Экспорт аудиоданных в этот формат невозможен."
 
 #: src/export/ExportPCM.cpp
-#, c-format
+#, fuzzy, c-format
 msgid "Exporting the selected audio as %s"
-msgstr "Экспорт выделенных аудиоданных в %s"
+msgstr "Экспорт выделенного звука в %s"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
@@ -12624,6 +12639,7 @@ msgstr ""
 "Индекс[%02x] Кодек[%s], Язык[%s], Битрейт[%s], Каналы[%d], Длительность[%d]"
 
 #: src/import/ImportFLAC.cpp
+#, fuzzy
 msgid "FLAC files"
 msgstr "Файлы FLAC"
 
@@ -13042,6 +13058,7 @@ msgstr "Количество для импорта:"
 
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
+#, fuzzy
 msgid "Sample rate:"
 msgstr "Частота дискретизации:"
 
@@ -13120,12 +13137,14 @@ msgstr[1] "%d из %d клипов %s"
 msgstr[2] "%d из %d клипов %s"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
 msgid "Time shifted clips to the right"
-msgstr "Фагменты со сдвигом по времени вправо"
+msgstr "Треки/фрагменты сдвинуты вправо на %.02f сек."
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
 msgid "Time shifted clips to the left"
-msgstr "Фагменты со сдвигом по времени влево"
+msgstr "Треки/фрагменты сдвинуты влево на %.02f сек."
 
 #: src/menus/ClipMenus.cpp src/prefs/MousePrefs.cpp
 #: src/tracks/ui/TimeShiftHandle.cpp
@@ -13205,6 +13224,7 @@ msgid "Nothing to redo"
 msgstr "Нечего повторить"
 
 #: src/menus/EditMenus.cpp
+#, fuzzy
 msgid "Cut to the clipboard"
 msgstr "Вырезать в буфер обмена"
 
@@ -13557,8 +13577,11 @@ msgid "Export as MP&3"
 msgstr "В MP&3"
 
 #: src/menus/FileMenus.cpp
+#, fuzzy
 msgid "Export as &WAV"
-msgstr "В &WAV"
+msgstr ""
+"Экспортированный WAV-файл был усечён - Audacity не может экспортировать\n"
+"WAV-файлы размером более 4 ГБ."
 
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
@@ -14305,10 +14328,12 @@ msgid "Snap-To &Prior"
 msgstr "Привязать к &предыдущему"
 
 #: src/menus/SelectMenus.cpp
+#, fuzzy
 msgid "Selection to &Start"
-msgstr "&Начало выделения"
+msgstr "Начало выделения"
 
 #: src/menus/SelectMenus.cpp
+#, fuzzy
 msgid "Selection to En&d"
 msgstr "&Конец выделения"
 
@@ -14345,8 +14370,9 @@ msgid "Selection Star&t"
 msgstr "Начало &выделения"
 
 #: src/menus/SelectMenus.cpp
+#, fuzzy
 msgid "Cursor to Selection Start"
-msgstr "Курсор в начало выделения"
+msgstr "Начало выровнено по курсору/началу выделения"
 
 #: src/menus/SelectMenus.cpp src/menus/ViewMenus.cpp
 msgid "Selection En&d"
@@ -15225,7 +15251,7 @@ msgstr "&Экстра-меню"
 #: src/menus/ViewMenus.cpp
 #, fuzzy
 msgid "Track &Name (on/off)"
-msgstr "&Экстра-меню"
+msgstr "Выкл"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -15406,8 +15432,9 @@ msgid "Br&owse..."
 msgstr "Об&зор..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
 msgid "&Export:"
-msgstr "&Экспорт..."
+msgstr "Экспорт..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Bro&wse..."
@@ -15416,7 +15443,7 @@ msgstr "Обзо&р..."
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "&Macro output:"
-msgstr "Показать вывод"
+msgstr "Вывод"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -15447,8 +15474,9 @@ msgid "unavailable - above location doesn't exist"
 msgstr "недоступно - расположение выше не существует"
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
 msgid "Choose a location"
-msgstr "Выберите папку сохранения файлов"
+msgstr "Выберите папку для сохранения файлов"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15914,8 +15942,9 @@ msgstr ""
 "Прим.: нажатие  Cmd+Q завершит работу. Все остальные клавиши действительны."
 
 #: src/prefs/KeyConfigPrefs.cpp
+#, fuzzy
 msgid "&Import..."
-msgstr "&Импорт..."
+msgstr "Импорт..."
 
 #: src/prefs/KeyConfigPrefs.cpp src/prefs/ThemePrefs.cpp
 msgid "&Defaults"
@@ -16047,6 +16076,7 @@ msgid "No compatible FFmpeg library was found"
 msgstr "Совместимая библиотека FFmpeg не найдена"
 
 #: src/prefs/LibraryPrefs.cpp
+#, fuzzy
 msgid "FFmpeg support is not compiled in"
 msgstr "Программа собрана без поддержки FFmpeg"
 
@@ -16517,8 +16547,9 @@ msgid "&Software playthrough of input"
 msgstr "&Программное проигрывание входных данных"
 
 #: src/prefs/RecordingPrefs.cpp
+#, fuzzy
 msgid "Record on a new track"
-msgstr "Записать новый трек"
+msgstr "Записать &новый трек"
 
 #. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
@@ -16541,7 +16572,7 @@ msgstr "Имя для вновь записанных треков"
 #. i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "With:"
-msgstr "В:"
+msgstr "На основе:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
@@ -16991,6 +17022,7 @@ msgid "Zoom to Selection"
 msgstr "Масштаб по выделению"
 
 #: src/prefs/TracksPrefs.cpp
+#, fuzzy
 msgid "Zoom Default"
 msgstr "Масштаб по умолчанию"
 
@@ -17180,6 +17212,7 @@ msgid "Record New Track"
 msgstr "Записать новый трек"
 
 #: src/toolbars/ControlToolBar.cpp
+#, fuzzy
 msgid "Append Record"
 msgstr "Дописать в конец"
 
@@ -19039,9 +19072,11 @@ msgid "Too many decimal digits"
 msgstr "Слишком много десятичных цифр"
 
 #: src/widgets/valnum.cpp
-#, c-format
+#, fuzzy, c-format
 msgid "Value not in range: %s to %s"
-msgstr "Значение не в диапазоне %s до %s"
+msgstr ""
+"Диапазон значений:\n"
+"от %s до %s"
 
 #: src/widgets/valnum.cpp
 #, c-format
@@ -19258,8 +19293,9 @@ msgid "dB Gain"
 msgstr "Усиление дБ"
 
 #: plug-ins/adjustable-fade.ny
+#, fuzzy
 msgid "Start (or end)"
-msgstr "Начало (или конец)"
+msgstr "Начало/конец как"
 
 #: plug-ins/adjustable-fade.ny
 msgid "End (or start)"
@@ -19413,6 +19449,7 @@ msgid "Crossfade Tracks"
 msgstr "Кроссфейд треков"
 
 #: plug-ins/crossfadetracks.ny
+#, fuzzy
 msgid "Fade type"
 msgstr "Тип фейда"
 
@@ -19433,6 +19470,7 @@ msgid "Custom Curve"
 msgstr "Задать кривую"
 
 #: plug-ins/crossfadetracks.ny
+#, fuzzy
 msgid "Custom curve"
 msgstr "Задать кривую"
 
@@ -19445,8 +19483,9 @@ msgid "Alternating Out / In"
 msgstr "Чередование выход/вход"
 
 #: plug-ins/crossfadetracks.ny
+#, fuzzy
 msgid "Alternating In / Out"
-msgstr "Чередование вход/выход"
+msgstr "Чередование выход/вход"
 
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
@@ -19579,6 +19618,7 @@ msgid "Label Interval"
 msgstr "Интервал между метками"
 
 #: plug-ins/equalabel.ny
+#, fuzzy
 msgid "Number of labels"
 msgstr "Количество меток"
 
@@ -20545,10 +20585,12 @@ msgid "linear"
 msgstr "линейная"
 
 #: plug-ins/sample-data-export.ny
+#, fuzzy
 msgid "2 channels (stereo)"
 msgstr "2 канала (стерео)"
 
 #: plug-ins/sample-data-export.ny
+#, fuzzy
 msgid "1 channel (mono)"
 msgstr "1 канал (моно)"
 
@@ -20899,36 +20941,3 @@ msgstr "Частота игл радара (Гц)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Ошибка.~%Требуется стереотрек."
-
-#~ msgid "Cleanup of orphan blocks failed"
-#~ msgstr "Не удалось очистить несвязанные блоки"
-
-#~ msgid "Failed to copy tags"
-#~ msgstr "Не удалось копировать теги"
-
-#~ msgid "Fast"
-#~ msgstr "Быстро"
-
-#~ msgid "Variable Speed:"
-#~ msgstr "Переменная скорость:"
-
-#~ msgid "Select any uncompressed audio file"
-#~ msgstr "Выберите любой несжатый аудиофайл"
-
-#~ msgid "Free Space"
-#~ msgstr "Доступно:"
-
-#~ msgid "Master Gain Control"
-#~ msgstr "Мастер-контроль усиления"
-
-#~ msgid "LAME MP3 Library:"
-#~ msgstr "Библиотека LAME MP3:"
-
-#~ msgid "&Locate..."
-#~ msgstr "&Найти..."
-
-#~ msgid "&Download"
-#~ msgstr "&Загрузить"
-
-#~ msgid "Error.n"
-#~ msgstr "Ошибка.n"
