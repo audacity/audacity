@@ -67,7 +67,5 @@ bool VersionId::operator< (const VersionId& other)
 
 bool VersionId::operator> (const VersionId& other)
 {
-    if (*this == other) return false;
-
-    return !(*this < other);
+    return !(*this < other) && (*this != other);
 }

@@ -2,7 +2,7 @@
  Audacity: A Digital Audio Editor
 
  @file UpdateDataParser.cpp
- @brief Declare a class that parse update server data format.
+ @brief Declare a class that parses update server data format.
 
  Anton Gerasimov
  **********************************************************************/
@@ -10,6 +10,7 @@
 #include "UpdateDataParser.h"
 
 #include "xml/XMLFileReader.h"
+#include "MemoryX.h"
 
 UpdateDataParser::UpdateDataParser()
 {}
@@ -21,11 +22,9 @@ bool UpdateDataParser::Parse(const VersionPatch::UpdateDataFormat& updateData, V
 {
     XMLFileReader xmlReader;
 
-    mVersionPatch = versionPatch;
-    auto ok = xmlReader.ParseString(this, updateData);
-    mVersionPatch = nullptr;
+    ValueRestorer<VersionPatch*> setter{ mVersionPatch, versionPatch };
 
-    return ok;
+    return xmlReader.ParseString(this, updateData);
 }
 
 wxArrayString UpdateDataParser::SplitChangelogSentences(const wxString& changelogContent)
@@ -40,11 +39,11 @@ wxArrayString UpdateDataParser::SplitChangelogSentences(const wxString& changelo
     while ((pos = s.find(delimiter)) != std::string::npos)
     {
         token = s.substr(0, pos + 1);
-        changelogSentenceList.Add(token);
+        changelogSentenceList.Add(wxString(token).Trim());
 
         s.erase(0, pos + delimiter.length());
     }
-    changelogSentenceList.Add(s);
+    changelogSentenceList.Add(wxString(s).Trim());
 
     return changelogSentenceList;
 }
@@ -107,6 +106,8 @@ void UpdateDataParser::HandleXMLEndTag(const wxChar* tag)
         mXmlParsingState == XmlParsedTags::kLinkTag)
         mXmlParsingState = XmlParsedTags::kNotUsedTag;
 
+    // If it is our working OS, using "kOsTag" for keeping ready for parse state for both tags:
+    // <Version> and <Link>, that ordered one after another.
     if (mXmlParsingState == XmlParsedTags::kVersionTag)
         mXmlParsingState = XmlParsedTags::kOsTag;
 }
@@ -116,23 +117,23 @@ void UpdateDataParser::HandleXMLContent(const wxString& content)
     if (mVersionPatch == nullptr)
         return;
 
-    wxString trimedContent(content);
+    wxString trimmedContent(content);
 
     switch (mXmlParsingState)
     {
     case XmlParsedTags::kDescriptionTag:
-        trimedContent.Trim(true).Trim(false);
-        mVersionPatch->changelog = SplitChangelogSentences(trimedContent);
+        trimmedContent.Trim(true).Trim(false);
+        mVersionPatch->changelog = SplitChangelogSentences(trimmedContent);
         break;
 
     case XmlParsedTags::kVersionTag:
-        trimedContent.Trim(true).Trim(false);
-        mVersionPatch->version = VersionId::ParseFromString(trimedContent);
+        trimmedContent.Trim(true).Trim(false);
+        mVersionPatch->version = VersionId::ParseFromString(trimmedContent);
         break;
 
     case XmlParsedTags::kLinkTag:
-        trimedContent.Trim(true).Trim(false);
-        mVersionPatch->download = trimedContent;
+        trimmedContent.Trim(true).Trim(false);
+        mVersionPatch->download = trimmedContent;
         break;
 
     default:

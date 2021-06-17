@@ -33,7 +33,6 @@ class Importer;
 class CommandHandler;
 class AppCommandEvent;
 class AudacityProject;
-class UpdateManager;
 
 class AudacityApp final : public wxApp {
  public:

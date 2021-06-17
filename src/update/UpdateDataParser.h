@@ -2,7 +2,7 @@
  Audacity: A Digital Audio Editor
 
  @file UpdateDataParser.h
- @brief Declare a class that parse update server data format.
+ @brief Declare a class that parses update server data format.
 
  Anton Gerasimov
  **********************************************************************/
@@ -15,19 +15,19 @@
 #include <wx/arrstr.h>
 #include <map>
 
-/// A class that parse update server data format.
+/// A class that parses update server data format.
 class UpdateDataParser final : public XMLTagHandler
 {
 public:
     UpdateDataParser();
     ~UpdateDataParser();
 
-    /// <summary>
-    /// Parsing from update data format to VersionPatch fields.
-    /// </summary>
-    /// <param name="updateData">Input data.</param>
-    /// <param name="versionPatch">Parsed output data.</param>
-    /// <returns>True if success.</returns>
+    //! Parsing from update data format to VersionPatch fields.
+    /*!
+       @param updateData InputData.
+       @param versionPath Parsed output data.
+       @return True if success.
+    */
     bool Parse(const VersionPatch::UpdateDataFormat& updateData, VersionPatch* versionPatch);
 
 private:

@@ -16,6 +16,7 @@
 
 
 #include "ApplicationPrefs.h"
+#include "update/UpdateManager.h"
 
 #include <wx/defs.h>
 
@@ -25,9 +26,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 static ComponentInterfaceSymbol s_ComponentInterfaceSymbol{ XO("Application") };
-
-BoolSetting ApplicationPrefsSettings::DefaultUpdatesCheckingFlag{
-    L"/Update/DefaultUpdatesChecking", true };
 
 ApplicationPrefs::ApplicationPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Application"))
@@ -74,7 +72,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieCheckBox(
           XO("&Check for Updates...").Stripped(TranslatableString::Ellipses | TranslatableString::MenuCodes),
-          ApplicationPrefsSettings::DefaultUpdatesCheckingFlag);
+          UpdatesCheckingSettings::DefaultUpdatesCheckingFlag);
    }
    S.EndStatic();
    S.EndScroller();
