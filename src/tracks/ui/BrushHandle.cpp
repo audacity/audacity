@@ -539,12 +539,12 @@ UIHandle::Result BrushHandle::Drag
 
    auto &mFreqToTimePointsMap = *mpFreqToTimePointsMap;
    if(mFreqToTimePointsMap.find(posFreq) == mFreqToTimePointsMap.end()){
-      std::vector<double> timePoints;
-      timePoints.push_back(posTime);
-      mFreqToTimePointsMap[posFreq] = timePoints;
+      std::unordered_set<double> timePointsSet;
+      timePointsSet.insert(posTime);
+      mFreqToTimePointsMap[posFreq] = timePointsSet;
    }
    else
-      mFreqToTimePointsMap[posFreq].push_back(posTime);
+      mFreqToTimePointsMap[posFreq].insert(posTime);
 
    return RefreshAll;
 }

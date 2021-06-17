@@ -191,7 +191,7 @@ void DrawTraversedCoords(TrackPanelDrawingContext &context,
                          std::vector<std::pair<int, int>> drawingCoords,
                          const int brushSize){
    auto& dc = context.dc;
-   if(!drawingCoords.size())
+   if(drawingCoords.empty())
       return;
    dc.SetPen( *wxTRANSPARENT_PEN );
    dc.SetBrush( *wxYELLOW_BRUSH );
@@ -641,7 +641,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 //      std::cout<< convertedY << "[ ";
       for(const double &timePoint: freqTimePoints.second) {
          int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
-         drawingCoords.push_back(std::make_pair(convertedX, convertedY));
+         drawingCoords.emplace_back(convertedX, convertedY);
 //         std::cout << convertedX << ", ";
       }
 //      std::cout<< " ]" << std::endl;
