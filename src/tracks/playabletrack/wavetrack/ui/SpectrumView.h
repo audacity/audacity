@@ -25,6 +25,7 @@ class SpectrumView final : public WaveTrackSubView
 
 public:
    using WaveTrackSubView::WaveTrackSubView;
+   SpectrumView(WaveTrackView &waveTrackView);
    ~SpectrumView() override;
 
    const Type &SubViewType() const override;
@@ -33,18 +34,18 @@ public:
 
    bool IsSpectral() const override;
 
-   static std::unordered_map<wxInt64, std::vector<double>> mFreqToTimePointsMap;
    static int mBrushSize;
 
 private:
     std::weak_ptr<BrushHandle> mBrushHandle;
+    std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> mpFreqToTimePointsMap;
 
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   static void DoDraw( TrackPanelDrawingContext &context,
+   void DoDraw( TrackPanelDrawingContext &context,
       const WaveTrack *track,
       const wxRect & rect );
 

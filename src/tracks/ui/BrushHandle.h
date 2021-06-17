@@ -16,6 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Snap.h"
 
 #include <vector>
+#include <tracks/playabletrack/wavetrack/ui/SpectrumView.h>
 
 class SelectionStateChanger;
 class SnapManager;
@@ -35,14 +36,16 @@ public:
    explicit BrushHandle
       (const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
        const TrackList &trackList,
-       const TrackPanelMouseState &st, const ViewInfo &viewInfo);
+       const TrackPanelMouseState &st, const ViewInfo &viewInfo,
+       const std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> &mpData);
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
    static UIHandlePtr HitTest
       (std::weak_ptr<BrushHandle> &holder,
        const TrackPanelMouseState &state, const AudacityProject *pProject,
-       const std::shared_ptr<TrackView> &pTrackView);
+       const std::shared_ptr<TrackView> &pTrackView,
+       const std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> &mpData);
 
    BrushHandle &operator=(const BrushHandle&) = default;
    
@@ -74,6 +77,8 @@ public:
       (const BrushHandle &oldState,
        const BrushHandle &newState);
 
+    std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> mpFreqToTimePointsMap;
+
 private:
    std::weak_ptr<Track> FindTrack();
 
@@ -86,7 +91,6 @@ private:
 
    //void ResetFreqSelectionPin
    //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
-
    std::weak_ptr<TrackView> mpView;
    wxRect mRect{};
    SelectedRegion mInitialSelection{};
