@@ -18,6 +18,19 @@ Paul Licameli split from WaveTrackView.h
 class WaveTrack;
 class BrushHandle;
 
+struct SpectralData{
+    bool fill_missing = true;
+    std::unordered_map<wxInt64, std::unordered_set<double>> freqTimePtsData;
+    std::vector<std::pair<int, int>> coordHistory;
+
+    void addFreqTimeData(wxInt64 freq, double timePt){
+       if(freqTimePtsData.find(freq) == freqTimePtsData.end())
+          freqTimePtsData[freq] = std::unordered_set<double>{ timePt };
+       else
+          freqTimePtsData[freq].insert(timePt);
+    }
+};
+
 class SpectrumView final : public WaveTrackSubView
 {
    SpectrumView( const SpectrumView& ) = delete;
@@ -37,7 +50,7 @@ public:
 private:
     int mBrushSize;
     std::weak_ptr<BrushHandle> mBrushHandle;
-    std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> mpFreqToTimePointsMap;
+    std::shared_ptr<SpectralData> mpSpectralData;
 
    // TrackPanelDrawable implementation
    void Draw(

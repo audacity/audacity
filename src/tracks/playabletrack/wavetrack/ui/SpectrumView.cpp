@@ -41,8 +41,8 @@ static WaveTrackSubView::Type sType{
 static WaveTrackSubViewType::RegisteredType reg{ sType };
 
 SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
-   mpFreqToTimePointsMap = std::make_shared<std::unordered_map<wxInt64, std::vector<double>>>();
-   mBrushSize = 5;
+   mpSpectralData = std::make_shared<SpectralData>();
+   mBrushSize = 2;
 }
 
 SpectrumView::~SpectrumView() = default;
@@ -61,7 +61,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    if(currentTool == ToolCodes::brushTool){
       const auto result = BrushHandle::HitTest(mBrushHandle, state,
                                                pProject, shared_from_this(),
-                                               mpFreqToTimePointsMap);
+                                               mpSpectralData);
       results.push_back(result);
       return results;
    }
@@ -203,7 +203,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
                                    const wxRect &rect,
-                                   const std::unordered_map<wxInt64, std::vector<double>> &mFreqToTimePointsMap,
+                                   const std::shared_ptr<SpectralData> &mpSpectralData,
                                    const int brushSize)
 {
    auto &dc = context.dc;
@@ -632,7 +632,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    // Paint brush tool selected area afterwards, avoid heavy matching calculation
    std::vector<std::pair<int, int>> drawingCoords;
-   for(const auto &freqTimePoints: mFreqToTimePointsMap) {
+   for(const auto &freqTimePoints: mpSpectralData->freqTimePtsData) {
       wxInt64 selFreq = freqTimePoints.first;
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(selFreq);
@@ -675,9 +675,8 @@ void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
 
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips()){
-//      DrawClipSpectrum( context, cache, clip.get(), rect, nullptr);
       DrawClipSpectrum( context, cache, clip.get(), rect,
-                        *mpFreqToTimePointsMap, mBrushSize);
+                        mpSpectralData, mBrushSize);
    }
 
    DrawBoldBoundaries( context, track, rect );
