@@ -993,6 +993,8 @@ list( APPEND SOURCES
           update/UpdateManager.cpp
           update/UpdatePopupDialog.h
           update/UpdatePopupDialog.cpp
+          prefs/ApplicationPrefs.h
+          prefs/ApplicationPrefs.cpp
       >
 
       Experimental.cmake
