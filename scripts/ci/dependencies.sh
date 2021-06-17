@@ -23,9 +23,20 @@ elif [[ "${OSTYPE}" == darwin* ]]; then # macOS
 
 else # Linux & others
 
+    if ! which sudo; then
+        function sudo() { "$@"; } # no-op sudo for use in Docker images
+    fi
+
     # Distribution packages
     if which apt-get; then
         apt_packages=(
+            # Docker image
+            file
+            g++
+            git
+            wget
+
+            # GitHub Actions
             libasound2-dev
             libgtk2.0-dev
             gettext
@@ -43,6 +54,9 @@ else # Linux & others
     pip_packages=(
         conan
     )
+
+    which cmake || pip_packages+=( cmake ) # get latest CMake when inside Docker image
+
     pip3 install wheel setuptools # need these first to install other packages (e.g. conan)
     pip3 install "${pip_packages[@]}"
 
