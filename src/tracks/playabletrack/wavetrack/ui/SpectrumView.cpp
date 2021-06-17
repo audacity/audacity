@@ -42,7 +42,7 @@ static WaveTrackSubViewType::RegisteredType reg{ sType };
 
 SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
    mpSpectralData = std::make_shared<SpectralData>();
-   mBrushSize = 2;
+   mBrushSize = 1;
 }
 
 SpectrumView::~SpectrumView() = default;
@@ -185,18 +185,6 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
       return  AColor::ColorGradientTimeAndFrequencySelected;
    
    return  AColor::ColorGradientTimeSelected;
-}
-
-void DrawTraversedCoords(TrackPanelDrawingContext &context,
-                         std::vector<std::pair<int, int>> drawingCoords,
-                         const int brushSize){
-   auto& dc = context.dc;
-   if(drawingCoords.empty())
-      return;
-   dc.SetPen( *wxTRANSPARENT_PEN );
-   dc.SetBrush( *wxYELLOW_BRUSH );
-   for(const auto &drawingCoord: drawingCoords)
-      dc.DrawCircle(drawingCoord.first, drawingCoord.second, brushSize);
 }
 
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
@@ -630,23 +618,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       } // each yy
    } // each xx
 
-   // Paint brush tool selected area afterwards, avoid heavy matching calculation
-   std::vector<std::pair<int, int>> drawingCoords;
-   for(const auto &freqTimePoints: mpSpectralData->freqTimePtsData) {
-      wxInt64 selFreq = freqTimePoints.first;
-      const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
-      const float p = numberScale.ValueToPosition(selFreq);
-      const int convertedY =  rect.y + wxInt64((1.0 - p) * rect.height);
-
-//      std::cout<< convertedY << "[ ";
-      for(const double &timePoint: freqTimePoints.second) {
-         int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
-         drawingCoords.emplace_back(convertedX, convertedY);
-//         std::cout << convertedX << ", ";
-      }
-//      std::cout<< " ]" << std::endl;
-   }
-
    wxBitmap converted = wxBitmap(image);
 
    wxMemoryDC memDC;
@@ -658,7 +629,30 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views
    params.DrawClipEdges( dc, rect );
-   DrawTraversedCoords(context, drawingCoords, brushSize);
+
+   auto drawPixelFromMap = [&]( std::unordered_map<wxInt64, std::unordered_set<double>> freqTimePtsData,
+                                wxBrush brush) -> void
+   {
+       for(const auto &freqTimePoints: freqTimePtsData) {
+          wxInt64 selFreq = freqTimePoints.first;
+          const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+          const float p = numberScale.ValueToPosition(selFreq);
+          const int convertedY =  rect.y + wxInt64((1.0 - p) * rect.height);
+
+          for(const double &timePoint: freqTimePoints.second) {
+             int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
+             dc.SetPen( *wxTRANSPARENT_PEN );
+             dc.SetBrush( brush );
+             dc.DrawCircle(convertedX, convertedY, brushSize);
+          }
+       }
+   };
+
+   // Paint history selected area first
+   for(const auto &freqTimePtsData: mpSpectralData->freqTimePtsDataHistory)
+      drawPixelFromMap(freqTimePtsData, *wxBLUE_BRUSH );
+   // Then paint the latest buffered data
+   drawPixelFromMap(mpSpectralData->freqTimePtsDataBuf, *wxYELLOW_BRUSH);
 }
 
 }
