@@ -18,10 +18,6 @@
 
 class ShuttleGui;
 
-namespace ApplicationPrefsSettings {
-    extern AUDACITY_DLL_API BoolSetting DefaultUpdatesCheckingFlag;
-}
-
 class ApplicationPrefs final : public PrefsPanel
 {
  public:

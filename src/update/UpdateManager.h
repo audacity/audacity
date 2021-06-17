@@ -2,7 +2,7 @@
  Audacity: A Digital Audio Editor
 
  @file UpdateManager.h
- @brief Declare a class that managing of updates.
+ @brief Declare a class that handles managing of updates.
 
  Anton Gerasimov
  **********************************************************************/
@@ -17,6 +17,10 @@
 #include <wx/string.h>
 #include <wx/event.h>
 #include <wx/timer.h>
+
+namespace UpdatesCheckingSettings {
+    extern AUDACITY_DLL_API BoolSetting DefaultUpdatesCheckingFlag;
+}
 
 /// A class that managing of updates.
 /**
@@ -42,12 +46,12 @@ private:
     VersionPatch mVersionPatch;
 
     wxTimer mTimer;
-    const int mTrackingInterval;
+    const int mUpdateCheckingInterval;
 
     void OnTimer(wxTimerEvent& event);
 
     /// Scheduling update time for avoiding multiplying update notifications.
-    bool IsTimeToUpdatesChecking();
+    bool IsTimeForUpdatesChecking();
 
 public:
     DECLARE_EVENT_TABLE()

@@ -2,7 +2,7 @@
  Audacity: A Digital Audio Editor
 
  @file UpdateManager.cpp
- @brief Declare a class that managing of updates.
+ @brief Declare a class that handles managing of updates.
 
  Anton Gerasimov
  **********************************************************************/
@@ -15,11 +15,15 @@
 #include "Request.h"
 
 #include "widgets/ErrorDialog.h"
-#include "prefs/ApplicationPrefs.h"
 
 #include <wx/platinfo.h>
 #include <wx/utils.h>
 #include <wx/frame.h>
+
+#include <mutex>
+
+BoolSetting UpdatesCheckingSettings::DefaultUpdatesCheckingFlag{
+    L"/Update/DefaultUpdatesChecking", true };
 
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 
@@ -30,7 +34,7 @@ BEGIN_EVENT_TABLE(UpdateManager, wxEvtHandler)
 END_EVENT_TABLE()
 
 UpdateManager::UpdateManager()
-    : mTrackingInterval(
+    : mUpdateCheckingInterval(
         std::chrono::milliseconds(std::chrono::hours(12)).count())
 {}
 
@@ -112,15 +116,15 @@ void UpdateManager::GetUpdates()
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    bool updatesCheckingEnabled = ApplicationPrefsSettings::DefaultUpdatesCheckingFlag.Read();
+    bool updatesCheckingEnabled = UpdatesCheckingSettings::DefaultUpdatesCheckingFlag.Read();
 
-    if (updatesCheckingEnabled && IsTimeToUpdatesChecking())
+    if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
         GetUpdates();
 
-    mTimer.StartOnce(mTrackingInterval);
+    mTimer.StartOnce(mUpdateCheckingInterval);
 }
 
-bool UpdateManager::IsTimeToUpdatesChecking()
+bool UpdateManager::IsTimeForUpdatesChecking()
 {
     long long nextUpdatesCheckingTime = std::stoll(
         gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString());
@@ -136,7 +140,7 @@ bool UpdateManager::IsTimeToUpdatesChecking()
     // else this condition allow us to avoid from duplicating update notifications.
     if (nextUpdatesCheckingTime < currentTimeInMillisec)
     {
-        nextUpdatesCheckingTime = currentTimeInMillisec + mTrackingInterval;
+        nextUpdatesCheckingTime = currentTimeInMillisec + mUpdateCheckingInterval;
 
         gPrefs->Write(prefsUpdateScheduledTime,
             wxString(std::to_string(nextUpdatesCheckingTime)));
