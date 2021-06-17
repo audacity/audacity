@@ -62,7 +62,7 @@ jobs:
     
     - name: Install Apple codesigning certificates
       uses: apple-actions/import-codesign-certs@v1
-      if: startswith( matrix.config.os, 'macos' ) && github.event_name == 'push'
+      if: startswith( matrix.config.os, 'macos' ) && github.event_name == 'push' && github.repository_owner == 'audacity'
       with: 
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
