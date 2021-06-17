@@ -32,7 +32,6 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 
 class BrushHandle;
-int SpectrumView::mBrushSize = 5;
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
@@ -43,6 +42,7 @@ static WaveTrackSubViewType::RegisteredType reg{ sType };
 
 SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
    mpFreqToTimePointsMap = std::make_shared<std::unordered_map<wxInt64, std::vector<double>>>();
+   mBrushSize = 5;
 }
 
 SpectrumView::~SpectrumView() = default;
@@ -188,9 +188,9 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
 }
 
 void DrawTraversedCoords(TrackPanelDrawingContext &context,
-                         std::vector<std::pair<int, int>> drawingCoords){
+                         std::vector<std::pair<int, int>> drawingCoords,
+                         const int brushSize){
    auto& dc = context.dc;
-   int brushSize = SpectrumView::mBrushSize;
    if(!drawingCoords.size())
       return;
    dc.SetPen( *wxTRANSPARENT_PEN );
@@ -203,7 +203,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
                                    const wxRect &rect,
-                                   const std::unordered_map<wxInt64, std::vector<double>> &mFreqToTimePointsMap)
+                                   const std::unordered_map<wxInt64, std::vector<double>> &mFreqToTimePointsMap,
+                                   const int brushSize)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -657,7 +658,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views
    params.DrawClipEdges( dc, rect );
-   DrawTraversedCoords(context, drawingCoords);
+   DrawTraversedCoords(context, drawingCoords, brushSize);
 }
 
 }
@@ -675,7 +676,8 @@ void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips()){
 //      DrawClipSpectrum( context, cache, clip.get(), rect, nullptr);
-      DrawClipSpectrum( context, cache, clip.get(), rect, *mpFreqToTimePointsMap);
+      DrawClipSpectrum( context, cache, clip.get(), rect,
+                        *mpFreqToTimePointsMap, mBrushSize);
    }
 
    DrawBoldBoundaries( context, track, rect );
