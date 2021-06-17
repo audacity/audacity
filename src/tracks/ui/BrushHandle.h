@@ -37,7 +37,7 @@ public:
       (const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
        const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-       const std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> &mpData);
+       const std::shared_ptr<SpectralData> &mpSpectralData);
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
@@ -45,7 +45,7 @@ public:
       (std::weak_ptr<BrushHandle> &holder,
        const TrackPanelMouseState &state, const AudacityProject *pProject,
        const std::shared_ptr<TrackView> &pTrackView,
-       const std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> &mpData);
+       const std::shared_ptr<SpectralData> &mpSpectralData);
 
    BrushHandle &operator=(const BrushHandle&) = default;
    
@@ -77,7 +77,7 @@ public:
       (const BrushHandle &oldState,
        const BrushHandle &newState);
 
-    std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> mpFreqToTimePointsMap;
+   std::shared_ptr<SpectralData> mpSpectralData;
 
 private:
    std::weak_ptr<Track> FindTrack();

@@ -363,7 +363,7 @@ UIHandlePtr BrushHandle::HitTest
 (std::weak_ptr<BrushHandle> &holder,
  const TrackPanelMouseState &st, const AudacityProject *pProject,
  const std::shared_ptr<TrackView> &pTrackView,
- const std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> &mpData)
+ const std::shared_ptr<SpectralData> &mpData)
 {
    // This handle is a little special because there may be some state to
    // preserve during movement before the click.
@@ -431,9 +431,9 @@ BrushHandle::BrushHandle
 ( const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
   const TrackList &trackList,
   const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-  const std::shared_ptr<std::unordered_map<wxInt64, std::vector<double>>> &mpData)
+  const std::shared_ptr<SpectralData> &mpSpectralData)
    : mpView{ pTrackView }
-   , mpFreqToTimePointsMap(mpData)
+   , mpSpectralData(mpSpectralData)
    , mSnapManager{ std::make_shared<SnapManager>(
       *trackList.GetOwner(), trackList, viewInfo) }
 {
@@ -537,15 +537,8 @@ UIHandle::Result BrushHandle::Drag
 //   wxInt64 restoredX = viewInfo.TimeToPosition(posTime, mRect.x, 0);
 //   wxInt64 restoredY = FrequencyToPosition(wt, posFreq, mRect.y, mRect.height);
 
-   auto &mFreqToTimePointsMap = *mpFreqToTimePointsMap;
-   if(mFreqToTimePointsMap.find(posFreq) == mFreqToTimePointsMap.end()){
-      std::vector<double> timePointsSet;
-      timePointsSet.push_back(posTime);
-      mFreqToTimePointsMap[posFreq] = timePointsSet;
-   }
-   else
-      mFreqToTimePointsMap[posFreq].push_back(posTime);
-
+   mpSpectralData->addFreqTimeData(posFreq, posTime);
+   mpSpectralData->coordHistory.push_back(std::make_pair(x, y));
    return RefreshAll;
 }
 
@@ -577,7 +570,8 @@ UIHandle::Result BrushHandle::Release
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
-   mpFreqToTimePointsMap->clear();
+   mpSpectralData->freqTimePtsData.clear();
+   mpSpectralData->coordHistory.clear();
 
    return RefreshCode::RefreshAll;
 }
