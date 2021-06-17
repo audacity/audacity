@@ -216,10 +216,10 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                   {PreferenceKey(Operation::Save, PathType::User),
                                    wxT("")},
                                   30);
-         wxString checkpath = mSaveText->GetValue();
-         checkpath = checkpath + "/temp.mp3";
-         wxFFile outFile(checkpath, wxT("w+b"));
-         if (!outFile.IsOpened())
+         wxString SavePath = mSaveText->GetValue();
+         SavePath = SavePath + "/temp.mp3";
+         wxFFile outFile2(SavePath, wxT("w+b"));
+         if (!outFile2.IsOpened() && SavePath !="/temp.mp3")
          {
             AudacityMessageBox(XO("Unwritable Location Preference for Save"));
          }
@@ -239,6 +239,16 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                     {PreferenceKey(Operation::Export, PathType::User),
                                      wxT("")},
                                     30);
+
+         wxString ExportPath = mExportText->GetValue();
+         ExportPath = ExportPath + "/temp.mp3";
+         wxFFile outFile(ExportPath, wxT("w+b"));
+         if (!outFile.IsOpened()&& ExportPath !="/temp.mp3")
+         {
+            AudacityMessageBox(XO("Unwritable Location Preference for Export"));
+         }
+
+         S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
 
          S.Id(MacrosTextID);
          mMacrosText = S.TieTextBox(XXO("&Macro output:"),
