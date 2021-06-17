@@ -20,14 +20,22 @@ class BrushHandle;
 
 struct SpectralData{
     bool fill_missing = true;
-    std::unordered_map<wxInt64, std::unordered_set<double>> freqTimePtsData;
+    std::unordered_map<wxInt64, std::unordered_set<double>> freqTimePtsDataBuf;
+    std::vector<std::unordered_map<wxInt64, std::unordered_set<double>>> freqTimePtsDataHistory;
+    // TODO: replace with two pairs to save space
     std::vector<std::pair<int, int>> coordHistory;
 
     void addFreqTimeData(wxInt64 freq, double timePt){
-       if(freqTimePtsData.find(freq) == freqTimePtsData.end())
-          freqTimePtsData[freq] = std::unordered_set<double>{ timePt };
+       if(freqTimePtsDataBuf.find(freq) == freqTimePtsDataBuf.end())
+          freqTimePtsDataBuf[freq] = std::unordered_set<double>{ timePt };
        else
-          freqTimePtsData[freq].insert(timePt);
+          freqTimePtsDataBuf[freq].insert(timePt);
+    }
+
+    void saveAndClearBuffer(){
+       freqTimePtsDataHistory.push_back(freqTimePtsDataBuf);
+       coordHistory.clear();
+       freqTimePtsDataBuf.clear();
     }
 };
 

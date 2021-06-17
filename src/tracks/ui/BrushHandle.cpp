@@ -10,7 +10,6 @@ Paul Licameli split from TrackPanel.cpp
 
 
 #include "BrushHandle.h"
-
 #include "Scrubbing.h"
 #include "TrackView.h"
 
@@ -37,6 +36,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../images/Cursors.h"
 #include "../playabletrack/wavetrack/ui/SpectrumView.h"
 
+#include <tgmath.h>
 #include <wx/event.h>
 
 // Only for definition of SonifyBeginModifyState:
@@ -529,14 +529,80 @@ UIHandle::Result BrushHandle::Drag
    mMostRecentX = x;
    mMostRecentY = y;
 
+   if(!mpSpectralData->coordHistory.empty()){
+      int x0 = mpSpectralData->coordHistory.back().first;
+      int y0 = mpSpectralData->coordHistory.back().second;
+      int wd = 3;
+
+      int dx = abs(x-x0), sx = x0 < x ? 1 : -1;
+      int dy = abs(y-y0), sy = y0 < y ? 1 : -1;
+      int err = dx-dy, e2, x2, y2;                          /* error value e_xy */
+      float ed = dx+dy == 0 ? 1 : sqrt((float)dx*dx+(float)dy*dy);
+
+      double posTime;
+      wxInt64 posFreq;
+      for (wd = (wd+1)/2; ; ) {                                   /* pixel loop */
+         posTime = viewInfo.PositionToTime(x0, mRect.x);
+         posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
+         mpSpectralData->addFreqTimeData(posFreq, posTime);
+
+         e2 = err; x2 = x0;
+         if (2*e2 >= -dx) {                                           /* x step */
+            for (e2 += dy, y2 = y0; e2 < ed*wd && (y != y2 || dx > dy); e2 += dx){
+               posTime = viewInfo.PositionToTime(x0, mRect.x);
+               posFreq = PositionToFrequency(wt, 0, y2 += sy, mRect.y, mRect.height);
+               mpSpectralData->addFreqTimeData(posFreq, posTime);
+            }
+            if (x0 == x) break;
+            e2 = err; err -= dy; x0 += sx;
+         }
+         if (2*e2 <= dy) {                                            /* y step */
+            for (e2 = dx-e2; e2 < ed*wd && (x != x2 || dx < dy); e2 += dy){
+               posTime = viewInfo.PositionToTime(x2 += sx, mRect.x);
+               posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
+               mpSpectralData->addFreqTimeData(posFreq, posTime);
+            }
+            if (y0 == y) break;
+            err += dx; y0 += sy;
+         }
+      }
+//      double distance = sqrt(pow(y - prev_y, 2) + pow(x - prev_x, 2));
+//      std::cout << "DIS: " << distance << std::endl;
+//
+//      if(distance > 5){
+//         const int mid_x = (prev_x + x) / 2;
+//         const int mid_y = (prev_y + y) / 2;
+//         wxInt64 fillPosFreq = PositionToFrequency(wt, 0, mid_y, mRect.y, mRect.height);
+//         const double fillPosTime = viewInfo.PositionToTime(mid_x, mRect.x);
+//         mpSpectralData->addFreqTimeData(fillPosFreq, fillPosTime);
+//      }
+
+//      int m_new = 2 * (y - prev_y);
+//      int slope_error_new = m_new - (x - prev_x);
+//      for (int ii = prev_x, jj = prev_y; ii <= x; ii++)
+//      {
+//         const double posTime = viewInfo.PositionToTime(ii, mRect.x);
+//         wxInt64 posFreq = PositionToFrequency(wt, 0, jj, mRect.y, mRect.height);
+//         mpSpectralData->addFreqTimeData(posFreq, posTime);
+//         std::cout << "(" << ii << " ," << jj << ")" << std::endl;
+//
+//         // Add slope to increment angle formed
+//         slope_error_new += m_new;
+//
+//         // Slope error reached limit, time to
+//         // increment y and update slope error.
+//         if (slope_error_new >= 0){
+//            y++;
+//            slope_error_new  -= 2 * (x - prev_x);
+//         }
+//      }
+
+
+   }
+
    // Convert the cursor position to freq. value & time_position
    wxInt64 posFreq = PositionToFrequency(wt, 0, mMostRecentY, mRect.y, mRect.height);
    const double posTime = viewInfo.PositionToTime(mMostRecentX, mRect.x);
-//   std::cout << mMostRecentX << "____" << mMostRecentY << std::endl;
-//   std::cout << posFreq << "____" << posTime << std::endl;
-//   wxInt64 restoredX = viewInfo.TimeToPosition(posTime, mRect.x, 0);
-//   wxInt64 restoredY = FrequencyToPosition(wt, posFreq, mRect.y, mRect.height);
-
    mpSpectralData->addFreqTimeData(posFreq, posTime);
    mpSpectralData->coordHistory.push_back(std::make_pair(x, y));
    return RefreshAll;
@@ -562,15 +628,15 @@ UIHandle::Result BrushHandle::Release
            /* i18n-hint: (verb) Do a special kind of DELETE on labeled audio
               regions */
            XO( "Brush tool selection" ) );
+   mpSpectralData->saveAndClearBuffer();
    ProjectHistory::Get( *pProject ).ModifyState(false);
-
    return RefreshNone;
 }
 
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
-   mpSpectralData->freqTimePtsData.clear();
+   mpSpectralData->freqTimePtsDataBuf.clear();
    mpSpectralData->coordHistory.clear();
 
    return RefreshCode::RefreshAll;
