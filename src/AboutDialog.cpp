@@ -131,8 +131,10 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("James Crook"), developerFormat, roleTeamMember);
    AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleTeamMember);
    AddCredit(wxT("Steve Daulton"), roleTeamMember);
+   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
@@ -186,6 +188,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Steven Jones"), developerFormat, roleContributor);
    AddCredit(wxT("Henric Jungheim"), developerFormat, roleContributor);
    AddCredit(wxT("Arun Kishore"), developerFormat, roleContributor);
+   AddCredit(wxT("Myungchul Keum"), developerFormat, roleContributor);
    AddCredit(wxT("Paul Livesey"), developerFormat, roleContributor);
    AddCredit(wxT("Harvey Lubin"), graphicArtistFormat, roleContributor);
    AddCredit(wxT("Max Maisel"), developerFormat, roleContributor);
