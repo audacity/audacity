@@ -1,18 +1,11 @@
 /**********************************************************************
-
   Audacity: A Digital Audio Editor
-  
   DirectoriesPrefs.cpp
-  
   Joshua Haberman
   James Crook
-  
-  
 *******************************************************************//**
-
 \class DirectoriesPrefs
 \brief A PrefsPanel used to select directories.
-
 *//*******************************************************************/
 
 
@@ -372,9 +365,9 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
    }
    if (evt.GetId() == SaveButtonID || evt.GetId() == ExportButtonID)
    {
-      bool ExportStat = wxFileName ::IsDirWritable(dlog.GetPath());
+      bool CheckStatus = wxFileName ::IsDirWritable(dlog.GetPath());
       wxString path{dlog.GetPath()};
-      if (!ExportStat)
+      if (!CheckStatus)
       {
          AudacityMessageBox(
              XO("Directory %s does not have write permissions")
