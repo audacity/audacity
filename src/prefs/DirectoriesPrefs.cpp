@@ -1,11 +1,18 @@
 /**********************************************************************
+
   Audacity: A Digital Audio Editor
+  
   DirectoriesPrefs.cpp
+  
   Joshua Haberman
   James Crook
+  
+  
 *******************************************************************//**
+
 \class DirectoriesPrefs
 \brief A PrefsPanel used to select directories.
+
 *//*******************************************************************/
 
 
