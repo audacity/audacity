@@ -20,7 +20,7 @@
 #include "DirectoriesPrefs.h"
 
 #include <math.h>
-
+#include <wx/filename.h>
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -217,12 +217,9 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                    wxT("")},
                                   30);
          wxString SavePath = mSaveText->GetValue();
-         SavePath = SavePath + "/temp.mp3";
-         wxFFile outFile2(SavePath, wxT("w+b"));
-         if (!outFile2.IsOpened() && SavePath !="/temp.mp3")
-         {
+         bool SaveStat = wxFileName ::IsDirWritable(SavePath);
+         if (!SaveStat)
             AudacityMessageBox(XO("Unwritable Location Preference for Save"));
-         }
          if (mSaveText)
             mSaveText->SetValidator(FilesystemValidator(XO("Projects cannot be saved to FAT drives.")));
          S.Id(SaveButtonID).AddButton(XXO("B&rowse..."));
@@ -241,13 +238,9 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                     30);
 
          wxString ExportPath = mExportText->GetValue();
-         ExportPath = ExportPath + "/temp.mp3";
-         wxFFile outFile(ExportPath, wxT("w+b"));
-         if (!outFile.IsOpened()&& ExportPath !="/temp.mp3")
-         {
+         bool ExportStat = wxFileName ::IsDirWritable(ExportPath);
+         if (!ExportStat)
             AudacityMessageBox(XO("Unwritable Location Preference for Export"));
-         }
-
          S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
 
          S.Id(MacrosTextID);
