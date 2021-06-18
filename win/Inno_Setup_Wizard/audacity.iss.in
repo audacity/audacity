@@ -96,7 +96,7 @@ Source: ".\FirstTimeModel.ini"; DestDir: "{app}"; DestName: "FirstTime.ini"; Per
 Source: "Additional\README.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "Additional\LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#AppExe}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Package\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Manual, which should be got from the manual wiki using ..\scripts\mw2html_audacity\wiki2htm.bat
 @MANUAL@
