@@ -216,10 +216,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                   {PreferenceKey(Operation::Save, PathType::User),
                                    wxT("")},
                                   30);
-         wxString SavePath = mSaveText->GetValue();
-         bool SaveStat = wxFileName ::IsDirWritable(SavePath);
-         if (!SaveStat)
-            AudacityMessageBox(XO("Unwritable Location Preference for Save"));
          if (mSaveText)
             mSaveText->SetValidator(FilesystemValidator(XO("Projects cannot be saved to FAT drives.")));
          S.Id(SaveButtonID).AddButton(XXO("B&rowse..."));
@@ -236,11 +232,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
                                     {PreferenceKey(Operation::Export, PathType::User),
                                      wxT("")},
                                     30);
-
-         wxString ExportPath = mExportText->GetValue();
-         bool ExportStat = wxFileName ::IsDirWritable(ExportPath);
-         if (!ExportStat)
-            AudacityMessageBox(XO("Unwritable Location Preference for Export"));
          S.Id(ExportButtonID).AddButton(XXO("Bro&wse..."));
 
          S.Id(MacrosTextID);
@@ -382,6 +373,17 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       {
          return;
       }
+   }
+   bool ExportStat = wxFileName ::IsDirWritable(dlog.GetPath());
+   wxString path{dlog.GetPath()};
+   if (!ExportStat)
+   {
+      AudacityMessageBox(
+          XO("Directory %s does not have write permissions")
+              .Format(path),
+          XO("Error"),
+          wxOK | wxICON_ERROR);
+      return;
    }
 
    tc->SetValue(dlog.GetPath());
