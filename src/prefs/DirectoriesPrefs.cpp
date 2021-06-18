@@ -374,19 +374,23 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
          return;
       }
    }
-   bool ExportStat = wxFileName ::IsDirWritable(dlog.GetPath());
-   wxString path{dlog.GetPath()};
-   if (!ExportStat)
-   {
-      AudacityMessageBox(
-          XO("Directory %s does not have write permissions")
-              .Format(path),
-          XO("Error"),
-          wxOK | wxICON_ERROR);
-      return;
-   }
 
-   tc->SetValue(dlog.GetPath());
+   if (evt.GetId() == SaveButtonID || evt.GetId() == ExportButtonID)
+   {
+      bool ExportStat = wxFileName ::IsDirWritable(dlog.GetPath());
+      wxString path{dlog.GetPath()};
+      if (!ExportStat)
+      {
+         AudacityMessageBox(
+             XO("Directory %s does not have write permissions")
+                 .Format(path),
+             XO("Error"),
+             wxOK | wxICON_ERROR);
+         return;
+      }
+
+      tc->SetValue(dlog.GetPath());
+   }
 }
 
 bool DirectoriesPrefs::Validate()
