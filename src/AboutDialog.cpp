@@ -187,8 +187,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Steve Jolly"), developerFormat, roleContributor);
    AddCredit(wxT("Steven Jones"), developerFormat, roleContributor);
    AddCredit(wxT("Henric Jungheim"), developerFormat, roleContributor);
-   AddCredit(wxT("Arun Kishore"), developerFormat, roleContributor);
    AddCredit(wxT("Myungchul Keum"), developerFormat, roleContributor);
+   AddCredit(wxT("Arun Kishore"), developerFormat, roleContributor);
    AddCredit(wxT("Paul Livesey"), developerFormat, roleContributor);
    AddCredit(wxT("Harvey Lubin"), graphicArtistFormat, roleContributor);
    AddCredit(wxT("Max Maisel"), developerFormat, roleContributor);
