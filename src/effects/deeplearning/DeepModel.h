@@ -49,17 +49,18 @@ public:
    rapidjson::Document GetMetadata();
    bool MetadataIsValid(rapidjson::Document &metadata);
    
-   // queries the metadata dictionary, 
+   // \brief queries the metadata dictionary, 
    // will convert any JSON type to a non-prettified string
    // if the key does not exist, returns "None"
+   // useful for when we want to display certain 
+   // model metadata to the user
    std::string QueryMetadata(const char *key);
 
-   torch::Tensor Downmix(const torch::Tensor &audio);
-   torch::Tensor Preprocess(const torch::Tensor &audio);
+   std::vector<std::string> GetLabels();
+
+   void PreprocessTrack(WaveTrack *channel);
 
    torch::Tensor Forward(const torch::Tensor &input);
-
-   static torch::Tensor Track2Tensor();
 };
 
 #endif

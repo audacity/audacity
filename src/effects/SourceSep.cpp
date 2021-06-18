@@ -29,6 +29,7 @@ TODO: add a more thorough description
 
 #include "LoadEffects.h"
 
+#include <torch/script.h>
 
 const ComponentInterfaceSymbol EffectSourceSep::Symbol
 { XO("Source Separation") };
@@ -82,52 +83,166 @@ EffectType EffectSourceSep::GetType()
 
 bool EffectSourceSep::Process()
 {
-   // Set up mOutputTracks.
-   CopyInputTracks(false);
+   // Similar to EffectSoundTouch::Process()
+   // Similar to EffectChangeSpeed::Process()
 
-   int nTrack = 0;
+   // Iterate over each track.
+   // All needed because this effect needs to introduce
+   // silence in the sync-lock group tracks to keep sync
+   CopyInputTracks(true); // Set up mOutputTracks.
    bool bGoodResult = true;
-   double maxDestLen = 0.0; // used to change selection to generated bit
 
-   // TODO: copy pasted this from repeat, fill out with source sep. 
-   for (auto track : mOutputTracks->Selected<WaveTrack>())
-   {
-      double trackStart = track->GetStartTime();
-      double trackEnd = track->GetEndTime();
-      double t0 = mT0 < trackStart ? trackStart : mT0;
-      double t1 = mT1 > trackEnd ? trackEnd : mT1;
+   mCurrentTrackNum = 0;
 
-      auto start = track->TimeToLongSamples(t0);
-      auto end = track->TimeToLongSamples(t1);
-      auto len = end - start;
-      double tLen = track->LongSamplesToTime(len);
-      double tc = mT0 + tLen;
+   for ( auto pOutWaveTrack : mOutputTracks->Selected< WaveTrack >() ) {
+      //Get start and end times from track
+      double tStart = pOutWaveTrack->GetStartTime();
+      double tEnd = pOutWaveTrack->GetEndTime();
 
-      int repeatCount = 2;
-      auto dest = track->Copy(mT0, mT1);
-      for (int j = 0; j < repeatCount; j++)
-      {
-         if (TrackProgress(nTrack, j / repeatCount)) // TrackProgress returns true on Cancel.
-         {
+      //Set the current bounds to whichever left marker is
+      //greater and whichever right marker is less:
+      tStart = wxMax(mT0, tStart);
+      tEnd = wxMin(mT1, tEnd);
+
+      // Process only if the right marker is to the right of the left marker
+      if (tEnd > tStart) {
+         //Transform the marker timepoints to samples
+         sampleCount start = pOutWaveTrack->TimeToLongSamples(tStart);
+         sampleCount end = pOutWaveTrack->TimeToLongSamples(tEnd);
+
+         //ProcessOne() (implemented below) processes a single track
+         if (!ProcessOne(pOutWaveTrack, start, end))
             bGoodResult = false;
-            return bGoodResult;
-         }
-         track->Paste(tc, dest.get());
-         tc += tLen;
       }
-      if (tc > maxDestLen)
-         maxDestLen = tc;
-      nTrack++;
-   }
-
-   if (bGoodResult)
-   {
-      // Select the NEW bits + original bit
-      mT1 = maxDestLen;
+      // increment current track
+      mCurrentTrackNum++;
    }
 
    ReplaceProcessedTracks(bGoodResult);
+
    return bGoodResult;
+}
+
+// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
+// and calls libsamplerate code on these blocks.
+bool EffectSourceSep::ProcessOne(WaveTrack *track,
+                           sampleCount start, sampleCount end)
+{
+   if (track == NULL)
+      return false;
+
+   // preprocess the track per the deep model
+   // TODO: need to do this to copy of the track, and make sure
+   // all the output audio is converted to match the output track 
+   mModel->PreprocessTrack(track);
+
+   // initialization, per examples of Mixer::Mixer and
+   // EffectSoundTouch::ProcessOne
+   // create a new track for each source that we will separate
+   std::vector<WaveTrack::Holder> outputSourceTracks;
+   for (auto &label : mModel->GetLabels())
+      outputSourceTracks.emplace_back(track->EmptyCopy());
+
+   //Get the length of the selection (as double). len is
+   //used simple to calculate a progress meter, so it is easier
+   //to make it a double now than it is to do it later
+   double len = (end - start).as_double();
+
+   // Initiate processing buffers, most likely shorter than
+   // the length of the selection being processed.
+   size_t inBufferSize = track->GetMaxBlockSize();
+   Floats inBuffer{ inBufferSize };
+
+   //Go through the track one buffer at a time. samplePos counts which
+   //sample the current buffer starts at.
+   bool bGoodResult = true;
+   sampleCount samplePos = start;
+   while (samplePos < end) {
+      //Get a blockSize of samples (smaller than the size of the buffer)
+      size_t blockSize = limitSampleBufferSize(
+         /*bufferSize*/ track->GetBestBlockSize(samplePos),
+         /*limit*/ end - samplePos
+      );
+
+      //Get the samples from the track and put them in the buffer
+      track->GetFloats(inBuffer.get(), samplePos, blockSize);
+
+      // get tensor input from buffer
+      torch::Tensor input = torch::from_blob(inBuffer.get(), 
+                                             blockSize, 
+                                             torch::TensorOptions().dtype(torch::kFloat32));
+      input = input.unsqueeze(0); // add channel dimension
+
+      // forward pass!
+      torch::Tensor output;
+      try
+      {
+         output = mModel->Forward(input);
+      }
+      catch (const std::exception &e)
+      {
+         Effect::MessageBox(XO("An error occurred during the forward pass"),
+            wxOK | wxICON_ERROR
+         );
+         bGoodResult = false;
+         output = input;
+         return bGoodResult;
+      }
+
+      // determine size of output buffers and create a  new
+      // buffer for each output sources
+      size_t outputLen = output.size(-1);
+      auto dbg = output.sizes();
+      // std::vector<Floats> outputBuffers;
+
+      // copy data from output tensor to the output tracks
+      for (size_t idx = 0 ; idx < output.size(0) ; idx++)
+      {
+         // create a new buffer and fill it with the output
+         // NOTE: may need to copy samples or transfer ownership
+         // index into the first channel (n_src, channels, samples)
+         float *data = output[idx][0].contiguous().data_ptr<float>();
+         try 
+         { 
+            outputSourceTracks.at(idx)->Set((samplePtr)inBuffer.get(), floatSample, samplePos, blockSize); 
+            // outputSourceTracks.at(idx)->Set((samplePtr)data, floatSample, samplePos, outputLen); 
+            outputSourceTracks.at(idx)->Flush(); 
+         }
+         catch (const std::exception &e)
+         { 
+            Effect::MessageBox(XO("Error copying tensor data to output track"),
+            wxOK | wxICON_ERROR 
+            );
+            return false; 
+         }
+      }
+
+      // Increment the sample pointer
+      samplePos += outputLen;
+
+      // Update the Progress meter
+      if (TrackProgress(mCurrentTrackNum, (samplePos - start).as_double() / len)) {
+         bGoodResult = false;
+         break;
+      }
+   }
+
+   // flush all output track buffers
+   if (bGoodResult)
+   {
+      for (std::shared_ptr<WaveTrack> track : outputSourceTracks)
+      {
+         track->Flush();
+         AddToOutputTracks(track);
+      }
+   }
+
+   return bGoodResult;
+}
+
+bool EffectSourceSep::Separate()
+{
+   return true;
 }
 
 void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)

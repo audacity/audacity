@@ -4,6 +4,8 @@
 #include <torch/torch.h>
 
 #include <rapidjson/document.h>
+#include "../../WaveTrack.h"
+#include "../../WaveClip.h"
 
 // DeepModel Implementation
 
@@ -23,7 +25,6 @@ bool DeepModel::Load(const std::string &modelPath)
       mModel.eval();
 
       // load the model metadata
-      // TODO: load model metadata from a json string.
       std::string data = extraFilesMap_["metadata.json"];
 
       // parse the data
@@ -86,6 +87,24 @@ std::string DeepModel::QueryMetadata(const char *key)
    return std::string(output);
 }
 
+std::vector<std::string> DeepModel::GetLabels()
+{
+   assert(mMetadata.HasMember("n_src"));
+   assert(mMetadata["n_src"].GetInt() == mMetadata["labels"].Size());
+
+   // iterate through the labels and collect
+   std::vector<std::string> labels;
+   for (rapidjson::Value::ConstValueIterator itr = mMetadata["labels"].Begin(); 
+                                             itr != mMetadata["labels"].End();
+                                             ++itr)
+   {
+      labels.emplace_back(itr->GetString());
+   }
+
+   return labels;
+}
+
+// forward pass through the model!
 torch::Tensor DeepModel::Forward(const torch::Tensor &tensorInput)
 {
    torch::NoGradGuard no_grad;
@@ -112,6 +131,43 @@ torch::Tensor DeepModel::Forward(const torch::Tensor &tensorInput)
    else 
    {
       // TODO: maybe this should return a bool indicating success?
-      return tensorInput;
+      throw std::exception();
    }
 }
+
+// resamples and converts to the appropriate sample format
+void DeepModel::PreprocessTrack(WaveTrack* channel)
+{
+   sampleFormat originalFormat = channel->GetSampleFormat();
+   double originalSampleRate = channel->GetRate();
+
+   channel->ConvertToSampleFormat(floatSample);
+   channel->Resample(mSampleRate);
+}
+
+// WaveClip* DeepModel::Tensor2Clip(torch::Tensor audio)
+// {
+//    sampleFormat format = floatSample;
+   
+//    sampleCount sourceLength = (sampleCount)audio.sizes()[0];
+//    SampleBuffer sourceBuffer(sourceLength, format);
+
+//    auto sourcePtr = source.accessor<float, 1>();
+
+//    // CopySamples((samplePtr)source.to(torch::kFloat32).data_ptr<float>(), 
+//    //               floatSample, sourceBuffer.ptr(), floatSample, sourceLength)
+
+//    CopySamples(source.contiguous().data_ptr<float>(), floatSample, sourceBuffer.ptr(), floatSample, sourceLength);
+   
+//    // make a separate clip where we will do the necessary conversions 
+//    auto newTrack = std::make_shared<WaveTrack>(sbFactory, floatSample, 8000);
+
+//    // fill the clip with our buffer
+//    // newTrack->Append(sourceBuffer.ptr(), floatSample, sourceLength);
+//    newTrack->Append((samplePtr)source.to(torch::kFloat32).data_ptr<float>(),
+//                      floatSample, sourceLength);
+//    newTrack->Flush();
+
+//    tracklist.Add(newTrack);
+//    // auto history = ;
+// }

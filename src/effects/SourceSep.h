@@ -54,10 +54,11 @@ public:
    // bool SetAutomationParameters(CommandParameters &parms) override;
 
    // Effect implementation
-
    bool Process() override;
-   void PopulateOrExchange(ShuttleGui &S) override;
+   bool ProcessOne(WaveTrack * track, sampleCount start, sampleCount end);
+   bool Separate();
 
+   void PopulateOrExchange(ShuttleGui &S) override;
    void PopulateMetadata(ShuttleGui &S);
    // bool TransferDataToWindow() override;
    // bool TransferDataFromWindow() override;
@@ -68,6 +69,8 @@ private:
 
 private:
    std::unique_ptr<DeepModel> mModel;
+
+   int mCurrentTrackNum;
 
    wxButton *mLoadModelBtn;
    wxStaticText *mDescription;
