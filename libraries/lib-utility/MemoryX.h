@@ -10,6 +10,7 @@
 #endif
 
 #include <functional>
+#include <limits>
 
 /*
  * ArrayOf<X>
