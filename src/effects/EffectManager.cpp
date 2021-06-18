@@ -56,12 +56,12 @@ EffectManager::~EffectManager()
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
-const PluginID & EffectManager::RegisterEffect(Effect *f)
+const PluginID & EffectManager::RegisterEffect(std::unique_ptr<Effect> uEffect)
 {
-   const PluginID & ID = PluginManager::Get().RegisterPlugin(f, PluginTypeEffect);
-
-   mEffects[ID] = f;
-
+   auto pEffect = uEffect.get();
+   const PluginID & ID =
+      PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
+   mEffects[ID] = pEffect;
    return ID;
 }
 

@@ -684,19 +684,12 @@ bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-ComponentInterface *VSTEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+VSTEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew VSTEffect(path);
-}
-
-void VSTEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < VSTEffect > {
-      dynamic_cast<VSTEffect *>(instance)
-   };
+   return std::make_unique<VSTEffect>(path);
 }
 
 // ============================================================================

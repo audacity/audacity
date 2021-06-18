@@ -1088,7 +1088,7 @@ PluginDescriptor::PluginDescriptor()
    mPluginType = PluginTypeNone;
    mEnabled = false;
    mValid = false;
-   mInstance = NULL;
+   mInstance = nullptr;
 
    mEffectType = EffectTypeNone;
    mEffectInteractive = false;
@@ -1100,21 +1100,13 @@ PluginDescriptor::PluginDescriptor()
 
 PluginDescriptor::~PluginDescriptor()
 {
-   DeleteInstance();
 }
 
-void PluginDescriptor::DeleteInstance()
-{
-   if (mInstance)
-   {
-      ModuleManager::Get().DeleteInstance(GetProviderID(), mInstance);
-      mInstance = nullptr;
-   }
-}
+PluginDescriptor &PluginDescriptor::operator =(PluginDescriptor &&) = default;
 
 bool PluginDescriptor::IsInstantiated() const
 {
-   return mInstance != NULL;
+   return mInstance != nullptr;
 }
 
 ComponentInterface *PluginDescriptor::GetInstance()
@@ -1122,29 +1114,21 @@ ComponentInterface *PluginDescriptor::GetInstance()
    if (!mInstance)
    {
       if (GetPluginType() == PluginTypeModule)
-      {
          mInstance = ModuleManager::Get().CreateProviderInstance(GetID(), GetPath());
-      }
       else
       {
-         mInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetPath());
+         muInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetPath());
+         mInstance = muInstance.get();
       }
    }
 
    return mInstance;
 }
 
-void PluginDescriptor::SetInstance(ComponentInterface *instance)
+void PluginDescriptor::SetInstance(std::unique_ptr<ComponentInterface> instance)
 {
-   if (mInstance && mInstance != instance)
-   {
-      // Be sure not to leak resources!!
-      DeleteInstance();
-   }
-
-   mInstance = instance;
-
-   return;
+   muInstance = std::move(instance);
+   mInstance = muInstance.get();
 }
 
 PluginType PluginDescriptor::GetPluginType() const
@@ -2273,7 +2257,7 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
       }
 
       // Everything checked out...accept the plugin
-      mPlugins[groupName] = plug;
+      mPlugins[groupName] = std::move(plug);
    }
 
    return;
@@ -2497,9 +2481,11 @@ bool PluginManager::ShowManager(wxWindow *parent, EffectType type)
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
-const PluginID & PluginManager::RegisterPlugin(EffectDefinitionInterface *effect, PluginType type)
+const PluginID & PluginManager::RegisterPlugin(
+   std::unique_ptr<EffectDefinitionInterface> effect, PluginType type)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, type);
+   PluginDescriptor & plug =
+      CreatePlugin(GetID(effect.get()), effect.get(), type);
 
    plug.SetEffectType(effect->GetType());
    plug.SetEffectFamily(effect->GetFamily().Internal());
@@ -2508,7 +2494,7 @@ const PluginID & PluginManager::RegisterPlugin(EffectDefinitionInterface *effect
    plug.SetEffectRealtime(effect->SupportsRealtime());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
-   plug.SetInstance(effect);
+   plug.SetInstance(std::move(effect));
    plug.SetEffectLegacy(true);
    plug.SetEnabled(true);
    plug.SetValid(true);

@@ -530,26 +530,14 @@ ModuleInterface *ModuleManager::CreateProviderInstance(const PluginID & provider
    return nullptr;
 }
 
-ComponentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
-                                              const PluginPath & path)
+std::unique_ptr<ComponentInterface> ModuleManager::CreateInstance(
+   const PluginID & providerID, const PluginPath & path)
 {
-   if (mDynModules.find(providerID) == mDynModules.end())
-   {
-      return NULL;
-   }
-
-   return mDynModules[providerID]->CreateInstance(path);
-}
-
-void ModuleManager::DeleteInstance(const PluginID & providerID,
-                                   ComponentInterface *instance)
-{
-   if (mDynModules.find(providerID) == mDynModules.end())
-   {
-      return;
-   }
-
-   mDynModules[providerID]->DeleteInstance(instance);
+   if (auto iter = mDynModules.find(providerID);
+       iter == mDynModules.end())
+      return nullptr;
+   else
+      return iter->second->CreateInstance(path);
 }
 
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),

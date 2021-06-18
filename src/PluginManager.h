@@ -46,11 +46,12 @@ class AUDACITY_DLL_API PluginDescriptor
 {
 public:
    PluginDescriptor();
+   PluginDescriptor &operator =(PluginDescriptor &&);
    virtual ~PluginDescriptor();
 
    bool IsInstantiated() const;
    ComponentInterface *GetInstance();
-   void SetInstance(ComponentInterface *instance);
+   void SetInstance(std::unique_ptr<ComponentInterface> instance);
 
    PluginType GetPluginType() const;
    void SetPluginType(PluginType type);
@@ -121,13 +122,12 @@ public:
 
 private:
 
-   void DeleteInstance();
-
    // Common
 
    // Among other purposes, PluginDescriptor acts as the resource handle,
    // or smart pointer, to a resource created in a plugin library, and is responsible
    // for a cleanup of this pointer.
+   std::unique_ptr<ComponentInterface> muInstance; // may be null for a module
    ComponentInterface *mInstance;
 
    PluginType mPluginType;
@@ -264,7 +264,10 @@ public:
 
    bool ShowManager(wxWindow *parent, EffectType type = EffectTypeNone);
 
-   const PluginID & RegisterPlugin(EffectDefinitionInterface *effect, PluginType type );
+   //! Used only by Nyquist Workbench module
+   const PluginID & RegisterPlugin(
+      std::unique_ptr<EffectDefinitionInterface> effect, PluginType type );
+   //! Used only by Nyquist Workbench module
    void UnregisterPlugin(const PluginID & ID);
 
 private:
