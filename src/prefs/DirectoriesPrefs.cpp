@@ -1,11 +1,18 @@
 /**********************************************************************
+
   Audacity: A Digital Audio Editor
+  
   DirectoriesPrefs.cpp
+  
   Joshua Haberman
   James Crook
+  
+  
 *******************************************************************//**
+
 \class DirectoriesPrefs
 \brief A PrefsPanel used to select directories.
+
 *//*******************************************************************/
 
 
@@ -362,6 +369,7 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       {
          return;
       }
+     
    }
    if (evt.GetId() == SaveButtonID || evt.GetId() == ExportButtonID)
    {
@@ -377,6 +385,7 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
          return;
       }
    }
+  
    tc->SetValue(dlog.GetPath());
 }
 
