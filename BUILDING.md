@@ -187,3 +187,8 @@ $ docker run --rm -v ${pwd}:/audacity/audacity/ -v ${pwd}/../build/linux-system:
 ```
 
 To find system packages, we rely on `pkg-config`. There are several packages that have broken `*.pc` or do not use `pkg-config` at all. For the docker image - we handle this issue by installing the correct [`pc` files](linux/build-environment/pkgconfig/).
+
+### Disabling Conan
+
+Conan can be disabled completely using `-Daudacity_conan_enabled=Off` during the configuration. 
+This option implies `-Daudacity_obey_system_dependencies=On` and disables `local` for packages that are managed with Conan. 
