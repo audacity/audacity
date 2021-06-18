@@ -1408,7 +1408,7 @@ const wxSize kDefaultSize =
    wxSize(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
-:  wxFrame( &GetProjectFrame( *parent ), -1, {},
+:  wxFrame( &GetProjectFrame( *parent ), -1, wxString{},
             wxDefaultPosition, kDefaultSize,
             wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
    , mProject(parent)

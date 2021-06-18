@@ -49,7 +49,7 @@ END_EVENT_TABLE()
 const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 
 LyricsWindow::LyricsWindow(AudacityProject *parent)
-   : wxFrame( &GetProjectFrame( *parent ), -1, {},
+   : wxFrame( &GetProjectFrame( *parent ), -1, wxString{},
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow,

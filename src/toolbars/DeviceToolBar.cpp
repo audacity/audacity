@@ -244,7 +244,7 @@ void DeviceToolBar::UpdatePrefs()
 
    int hostSelectionIndex = mHost->GetSelection();
    wxString oldHost = hostSelectionIndex >= 0 ? mHost->GetString(hostSelectionIndex) :
-                                                wxT("");
+                                                wxString{};
    auto hostName = AudioIOHost.Read();
 
    // if the prefs host name doesn't match the one displayed, it changed
