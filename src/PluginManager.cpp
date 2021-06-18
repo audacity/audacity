@@ -3032,7 +3032,7 @@ RegistryPath PluginManager::SettingsPath(const PluginID & ID, bool shared)
                  wxT("_") +
                  plug.GetVendor() +
                  wxT("_") +
-                 (shared ? wxT("") : plug.GetSymbol().Internal());
+                 (shared ? wxString{} : plug.GetSymbol().Internal());
 
    return SETROOT +
           ConvertID(id) +
