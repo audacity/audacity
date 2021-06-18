@@ -139,6 +139,12 @@ include( AudacityFunctions )
 set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
+cmd_option( ${_OPT}conan_enabled
+            "Use Conan package manager for 3d party dependencies" 
+            On
+)
+
+# Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
             "local"
@@ -510,7 +516,7 @@ resolve_conan_dependencies()
 
 add_subdirectory( "help" )
 if(${_OPT}has_crashreports)
-add_subdirectory( "crashreports" )
+   add_subdirectory( "crashreports" )
 endif()
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
