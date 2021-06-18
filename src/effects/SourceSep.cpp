@@ -94,7 +94,15 @@ bool EffectSourceSep::Process()
 
    mCurrentTrackNum = 0;
 
-   for ( auto pOutWaveTrack : mOutputTracks->Selected< WaveTrack >() ) {
+   // NOTE: because we will append the separated tracks to mOutputTracks in ProcessOne(), 
+   // we need to collect the track pointers before calling ProcessOne()
+   std::vector< WaveTrack* > pOutWaveTracks;
+   for ( WaveTrack *track : mOutputTracks->Selected< WaveTrack >())
+      pOutWaveTracks.emplace_back(track);
+
+   // now that we have all the tracks we want to process, 
+   // go ahead and separate!
+   for ( WaveTrack* pOutWaveTrack : pOutWaveTracks) {
       //Get start and end times from track
       double tStart = pOutWaveTrack->GetStartTime();
       double tEnd = pOutWaveTrack->GetEndTime();
@@ -106,12 +114,8 @@ bool EffectSourceSep::Process()
 
       // Process only if the right marker is to the right of the left marker
       if (tEnd > tStart) {
-         //Transform the marker timepoints to samples
-         sampleCount start = pOutWaveTrack->TimeToLongSamples(tStart);
-         sampleCount end = pOutWaveTrack->TimeToLongSamples(tEnd);
-
          //ProcessOne() (implemented below) processes a single track
-         if (!ProcessOne(pOutWaveTrack, start, end))
+         if (!ProcessOne(pOutWaveTrack, tStart, tEnd))
             bGoodResult = false;
       }
       // increment current track
@@ -126,22 +130,34 @@ bool EffectSourceSep::Process()
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
 bool EffectSourceSep::ProcessOne(WaveTrack *track,
-                           sampleCount start, sampleCount end)
+                           double tStart, double tEnd)
 {
    if (track == NULL)
       return false;
 
-   // preprocess the track per the deep model
-   // TODO: need to do this to copy of the track, and make sure
-   // all the output audio is converted to match the output track 
-   mModel->PreprocessTrack(track);
+   // keep track of the sample format and rate,
+   // we want to convert all output tracks to this
+   sampleFormat origFmt = track->GetSampleFormat();
+   int origRate = track->GetRate();
 
-   // initialization, per examples of Mixer::Mixer and
-   // EffectSoundTouch::ProcessOne
-   // create a new track for each source that we will separate
+   // resample the track, and make sure that we update the start and end 
+   // sampleCounts to reflect the new sample rate
+   track->Resample(mModel->GetSampleRate());
+   sampleCount start = track->TimeToLongSamples(tStart);
+   sampleCount end = track->TimeToLongSamples(tEnd);
+
+   // initialize source tracks, one for each source that we will separate
    std::vector<WaveTrack::Holder> outputSourceTracks;
-   for (auto &label : mModel->GetLabels())
-      outputSourceTracks.emplace_back(track->EmptyCopy());
+   std::vector<std::string>sourceLabels = mModel->GetLabels();
+   for (auto &label : sourceLabels)
+   {
+      WaveTrack::Holder srcTrack = track->EmptyCopy();
+      // append the source name to the track's name
+      srcTrack->SetName(
+         srcTrack->GetName() + wxString("-" + label)
+      );
+      outputSourceTracks.emplace_back(srcTrack);
+   }
 
    //Get the length of the selection (as double). len is
    //used simple to calculate a progress meter, so it is easier
@@ -157,7 +173,8 @@ bool EffectSourceSep::ProcessOne(WaveTrack *track,
    //sample the current buffer starts at.
    bool bGoodResult = true;
    sampleCount samplePos = start;
-   while (samplePos < end) {
+   while (samplePos < end) 
+   {
       //Get a blockSize of samples (smaller than the size of the buffer)
       size_t blockSize = limitSampleBufferSize(
          /*bufferSize*/ track->GetBestBlockSize(samplePos),
@@ -165,12 +182,12 @@ bool EffectSourceSep::ProcessOne(WaveTrack *track,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->GetFloats(inBuffer.get(), samplePos, blockSize);
+      bGoodResult |= track->GetFloats(inBuffer.get(), samplePos, blockSize);
 
       // get tensor input from buffer
       torch::Tensor input = torch::from_blob(inBuffer.get(), 
                                              blockSize, 
-                                             torch::TensorOptions().dtype(torch::kFloat32));
+                                             torch::TensorOptions().dtype(torch::kFloat));
       input = input.unsqueeze(0); // add channel dimension
 
       // forward pass!
@@ -192,21 +209,22 @@ bool EffectSourceSep::ProcessOne(WaveTrack *track,
       // determine size of output buffers and create a  new
       // buffer for each output sources
       size_t outputLen = output.size(-1);
-      auto dbg = output.sizes();
-      // std::vector<Floats> outputBuffers;
 
       // copy data from output tensor to the output tracks
       for (size_t idx = 0 ; idx < output.size(0) ; idx++)
       {
-         // create a new buffer and fill it with the output
-         // NOTE: may need to copy samples or transfer ownership
+         // create a new buffer and fill it with the output 
          // index into the first channel (n_src, channels, samples)
-         float *data = output[idx][0].contiguous().data_ptr<float>();
+         float *data = output[idx].contiguous().data_ptr<float>();
          try 
          { 
-            outputSourceTracks.at(idx)->Set((samplePtr)inBuffer.get(), floatSample, samplePos, blockSize); 
-            // outputSourceTracks.at(idx)->Set((samplePtr)data, floatSample, samplePos, outputLen); 
-            outputSourceTracks.at(idx)->Flush(); 
+            // add the separation data to a temporary track, then 
+            // paste on our output track
+            WaveTrack::Holder tmp = track->EmptyCopy();
+            tmp->Append((samplePtr)data, floatSample, outputLen);
+            tmp->Flush();
+
+            outputSourceTracks[idx]->ClearAndPaste(tStart, tEnd, tmp.get());
          }
          catch (const std::exception &e)
          { 
@@ -221,20 +239,21 @@ bool EffectSourceSep::ProcessOne(WaveTrack *track,
       samplePos += outputLen;
 
       // Update the Progress meter
-      if (TrackProgress(mCurrentTrackNum, (samplePos - start).as_double() / len)) {
+      if (TrackProgress(mCurrentTrackNum, (samplePos - start).as_double() / len)) 
+      {
          bGoodResult = false;
          break;
       }
    }
 
    // flush all output track buffers
-   if (bGoodResult)
+   // convert to the original rate and format
+   for (std::shared_ptr<WaveTrack> track : outputSourceTracks)
    {
-      for (std::shared_ptr<WaveTrack> track : outputSourceTracks)
-      {
-         track->Flush();
-         AddToOutputTracks(track);
-      }
+      track->Flush();
+      track->ConvertToSampleFormat(origFmt);
+      track->Resample(origRate);
+      AddToOutputTracks(track);
    }
 
    return bGoodResult;
@@ -250,13 +269,20 @@ void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)
    S.StartVerticalLay(wxCENTER, true);
    {
 
-      // if (mModel->IsLoaded())
       PopulateMetadata(S);
 
       S.StartHorizontalLay(wxCENTER, false);
       {
          mLoadModelBtn = S.AddButton(XXO("&Load Source Separation Model"));
-         mDescription = S.AddVariableText(XO("pls load a model!"));
+
+         std::string modelDesc;
+         if (mModel->IsLoaded()) 
+            modelDesc = "loaded model successfully";
+         else 
+            modelDesc = "pls load a model!";
+
+         mDescription = S.AddVariableText(
+            TranslatableString(wxString(modelDesc).c_str(), {}));
       }
       S.EndHorizontalLay();
    }
@@ -267,12 +293,12 @@ void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)
 void EffectSourceSep::PopulateMetadata(ShuttleGui &S)
 {
    // TODO: this does not take into account the possible
-   // depth of the metadata. 
+   // depth of the metadata.
    rapidjson::Document document = mModel->GetMetadata();
    S.StartVerticalLay(wxCENTER, false);
    {
       //TODO: bold not working, nicer table style
-      #define ADD_METADATA_ENTRY(desc, key) \
+#define ADD_METADATA_ENTRY(desc, key) \
          S.StartHorizontalLay(wxLEFT, false); \
          { \
             S.AddVariableText(XXO(desc)); \
@@ -284,10 +310,11 @@ void EffectSourceSep::PopulateMetadata(ShuttleGui &S)
             font.SetWeight(wxFONTWEIGHT_BOLD); \
             font.MakeBold(); \
             text->SetFont(font); \
-            mMetadataFields.insert(std::make_pair(key, text)); \
+            mMetadataFields[key] = text; \
          } \
          S.EndHorizontalLay(); \
 
+      ADD_METADATA_ENTRY("&Model Name:", "name")
       ADD_METADATA_ENTRY("&Separation Sample Rate:", "sample_rate")
       ADD_METADATA_ENTRY("&Domain:", "domain")
       ADD_METADATA_ENTRY("&Number of Sources:", "n_src")
@@ -322,9 +349,12 @@ void EffectSourceSep::OnLoadButton(wxCommandEvent &WXUNUSED(event))
 
    // attempt load deep learning model
    // TODO: what's the fallback when the model doesn't load? 
-   mModel->Load(path.ToStdString());
+   wxString descStr;
+   if (!mModel->Load(path.ToStdString()))
+      descStr = wxString("error loading model :(");
+   else
+      descStr = wxString("loaded model succesfully!");
 
-   wxString descStr("loaded model succesfully!");
    mDescription->SetLabel(descStr);
    mDescription->SetName(descStr);
 

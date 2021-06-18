@@ -55,10 +55,9 @@ public:
    // useful for when we want to display certain 
    // model metadata to the user
    std::string QueryMetadata(const char *key);
-
    std::vector<std::string> GetLabels();
 
-   void PreprocessTrack(WaveTrack *channel);
+   int GetSampleRate(){return mSampleRate;}
 
    torch::Tensor Forward(const torch::Tensor &input);
 };

@@ -55,7 +55,7 @@ public:
 
    // Effect implementation
    bool Process() override;
-   bool ProcessOne(WaveTrack * track, sampleCount start, sampleCount end);
+   bool ProcessOne(WaveTrack * track, double tStart, double tEnd);
    bool Separate();
 
    void PopulateOrExchange(ShuttleGui &S) override;

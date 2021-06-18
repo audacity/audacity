@@ -110,7 +110,6 @@ torch::Tensor DeepModel::Forward(const torch::Tensor &tensorInput)
    torch::NoGradGuard no_grad;
    if (mLoaded)
    {
-
       // TODO: check input sizes here and throw and exception
       // if the audio is not the correct dimensions
 
@@ -134,40 +133,3 @@ torch::Tensor DeepModel::Forward(const torch::Tensor &tensorInput)
       throw std::exception();
    }
 }
-
-// resamples and converts to the appropriate sample format
-void DeepModel::PreprocessTrack(WaveTrack* channel)
-{
-   sampleFormat originalFormat = channel->GetSampleFormat();
-   double originalSampleRate = channel->GetRate();
-
-   channel->ConvertToSampleFormat(floatSample);
-   channel->Resample(mSampleRate);
-}
-
-// WaveClip* DeepModel::Tensor2Clip(torch::Tensor audio)
-// {
-//    sampleFormat format = floatSample;
-   
-//    sampleCount sourceLength = (sampleCount)audio.sizes()[0];
-//    SampleBuffer sourceBuffer(sourceLength, format);
-
-//    auto sourcePtr = source.accessor<float, 1>();
-
-//    // CopySamples((samplePtr)source.to(torch::kFloat32).data_ptr<float>(), 
-//    //               floatSample, sourceBuffer.ptr(), floatSample, sourceLength)
-
-//    CopySamples(source.contiguous().data_ptr<float>(), floatSample, sourceBuffer.ptr(), floatSample, sourceLength);
-   
-//    // make a separate clip where we will do the necessary conversions 
-//    auto newTrack = std::make_shared<WaveTrack>(sbFactory, floatSample, 8000);
-
-//    // fill the clip with our buffer
-//    // newTrack->Append(sourceBuffer.ptr(), floatSample, sourceLength);
-//    newTrack->Append((samplePtr)source.to(torch::kFloat32).data_ptr<float>(),
-//                      floatSample, sourceLength);
-//    newTrack->Flush();
-
-//    tracklist.Add(newTrack);
-//    // auto history = ;
-// }
