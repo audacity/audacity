@@ -191,6 +191,14 @@ cmake_dependent_option(
    Off
 )
 
+cmake_dependent_option(
+   ${_OPT}has_updates_check
+   "Build updates checking features into Audacity"
+   On
+   "${_OPT}has_networking"
+   Off
+)
+
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
    set( IS_64BIT ON )

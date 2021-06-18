@@ -134,24 +134,6 @@ Suggested Threshold Setting ~a dB.")
 ;;; Gate Functions
 
 
-;; Override Nyquist GATE function (from nyquist.lsp)
-;; The default version has minimum floor of -60dB, which is not low enough here.
-(defun gate (sound lookahead risetime falltime floor threshold 
-             &optional (source "GATE"))
-  (let (s) ;; s becomes sound after collapsing to one channel
-    (cond ((arrayp sound)           ;; use s-max over all channels so that
-           (setf s (aref sound 0))  ;; ANY channel opens the gate
-           (dotimes (i (1- (length sound)))
-             (setf s (s-max s (aref sound (1+ i))))))
-          (t (setf s sound)))
-    (setf s (snd-gate (seq (cue s)
-                           (stretch-abs 1.0 (s-rest lookahead)))
-                      lookahead risetime falltime floor threshold))
-    (prog1 (snd-xform s (snd-srate s) (snd-t0 s)
-                      (+ (snd-t0 s) lookahead) MAX-STOP-TIME 1.0)
-           (setf s nil) (setf sound nil))))
-
-
 (defun noisegate (sig follow)
   ;; Takes a sound and a 'follow' sound as arguments.
   ;; Returns the gated audio.
