@@ -302,9 +302,8 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    std::vector<const PluginDescriptor*> optplugs;
 
    EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
-   while (plug)
-   {
+   for (auto &plugin : pm.EffectsOfType(type)) {
+      auto plug = &plugin;
       if( plug->IsInstantiated() && em.IsHidden(plug->GetID()) )
          continue;
       if ( !plug->IsEnabled() ){
@@ -322,7 +321,6 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
          defplugs.push_back(plug);
       else
          optplugs.push_back(plug);
-      plug = pm.GetNextPluginForEffectType(type);
    }
 
    wxString groupby = EffectsGroupBy.Read();

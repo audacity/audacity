@@ -627,15 +627,10 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    }
 
    PluginManager & pm = PluginManager::Get();
-   for (PluginMap::iterator iter = pm.mPlugins.begin(); iter != pm.mPlugins.end(); ++iter)
-   {
-      PluginDescriptor & plug = iter->second;
-
+   for (auto &plug : pm.AllPlugins()) {
       PluginType plugType = plug.GetPluginType();
       if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
-      {
          continue;
-      }
 
       const auto &path = plug.GetPath();
       ItemData & item = mItems[path];  // will create NEW entry
@@ -1025,10 +1020,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                if (mm.RegisterEffectPlugin(item.plugs[j]->GetProviderID(), path,
                                      errMsg))
                {
-                  for (size_t k = 0, cntk = item.plugs.size(); k < cntk; k++)
-                  {
-                     pm.mPlugins.erase(item.plugs[k]->GetProviderID() + wxT("_") + path);
-                  }
+                  for (auto plug : item.plugs)
+                     pm.UnregisterPlugin(
+                        plug->GetProviderID() + wxT("_") + path);
                   // Bug 1893.  We've found a provider that works.
                   // Error messages from any that failed are no longer useful.
                   errMsgs = {};
@@ -1047,19 +1041,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                   XO("Effect or Command at %s failed to register:\n%s")
                      .Format( path, errMsgs ) );
          }
-         else if (item.state == STATE_New)
-         {
-            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
-            {
-               item.plugs[j]->SetValid(false);
-            }
+         else if (item.state == STATE_New) {
+            for (auto plug : item.plugs)
+               plug->SetValid(false);
          }
-         else if (item.state != STATE_New)
-         {
-            for (size_t j = 0, cnt = item.plugs.size(); j < cnt; j++)
-            {
-               item.plugs[j]->SetEnabled(item.state == STATE_Enabled);
-               item.plugs[j]->SetValid(item.valid);
+         else if (item.state != STATE_New) {
+            for (auto plug : item.plugs) {
+               plug->SetEnabled(item.state == STATE_Enabled);
+               plug->SetValid(item.valid);
             }
          }
       }
@@ -1388,7 +1377,7 @@ const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
    return empty;
 }
 
-RegistryPath PluginManager::GetPluginEnabledSetting( const PluginID &ID )
+RegistryPath PluginManager::GetPluginEnabledSetting( const PluginID &ID ) const
 {
    auto pPlugin = GetPlugin( ID );
    if ( pPlugin )
@@ -1397,7 +1386,7 @@ RegistryPath PluginManager::GetPluginEnabledSetting( const PluginID &ID )
 }
 
 RegistryPath PluginManager::GetPluginEnabledSetting(
-   const PluginDescriptor &desc )
+   const PluginDescriptor &desc ) const
 {
    switch ( desc.GetPluginType() ) {
       case PluginTypeModule: {
@@ -1802,12 +1791,9 @@ bool PluginManager::DropFile(const wxString &fileName)
    auto &mm = ModuleManager::Get();
    const wxFileName src{ fileName };
 
-   for (const PluginDescriptor *plug = GetFirstPlugin(PluginTypeModule);
-        plug;
-        plug = GetNextPlugin(PluginTypeModule))
-   {
+   for (auto &plug : PluginsOfType(PluginTypeModule)) {
       auto module = static_cast<ModuleInterface *>
-         (mm.CreateProviderInstance(plug->GetID(), plug->GetPath()));
+         (mm.CreateProviderInstance(plug.GetID(), plug.GetPath()));
       if (! module)
          continue;
 
@@ -2483,8 +2469,6 @@ const PluginID & PluginManager::RegisterPlugin(
    return plug.GetID();
 }
 
-// Here solely for the purpose of Nyquist Workbench until
-// a better solution is devised.
 void PluginManager::UnregisterPlugin(const PluginID & ID)
 {
    mPlugins.erase(ID);
@@ -2496,7 +2480,7 @@ int PluginManager::GetPluginCount(PluginType type)
       return pair.second.GetPluginType() == type; });
 }
 
-const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID)
+const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID) const
 {
    if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
       return nullptr;
@@ -2504,93 +2488,57 @@ const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID)
       return &iter->second;
 }
 
-const PluginDescriptor *PluginManager::GetFirstPlugin(int type)
+void PluginManager::Iterator::Advance(bool incrementing)
 {
-   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); ++mPluginsIter)
-   {
-      PluginDescriptor & plug = mPluginsIter->second;
-      PluginType plugType = plug.GetPluginType();
-      if( plug.IsValid() && plug.IsEnabled() &&  ((plugType & type) != 0))
-      {
-         bool familyEnabled = true;
-         if( (plugType & PluginTypeEffect) != 0) {
+   const auto end = mPm.mPlugins.end();
+   if (incrementing && mIterator != end)
+      ++mIterator;
+   bool all = mPluginType == PluginTypeNone && mEffectType == EffectTypeNone;
+   for (; mIterator != end; ++mIterator) {
+      auto &plug = mIterator->second;
+      if (!all && !(plug.IsValid() && plug.IsEnabled()))
+         continue;
+      auto plugType = plug.GetPluginType();
+      if ((mPluginType == PluginTypeNone || (plugType & mPluginType)) &&
+         (mEffectType == EffectTypeNone || plug.GetEffectType() == mEffectType)) {
+         if (!all && (plugType & PluginTypeEffect)) {
             // This preference may be written by EffectsPrefs
-            auto setting = GetPluginEnabledSetting( plug );
-            familyEnabled = setting.empty()
-               ? true
-               : gPrefs->Read( setting, true );
+            auto setting = mPm.GetPluginEnabledSetting( plug );
+            if (!(setting.empty() || gPrefs->Read( setting, true )))
+               continue;
          }
-         if (familyEnabled)
-            return &mPluginsIter->second;
+         // Pause iteration at this match
+         break;
       }
    }
-
-   return NULL;
 }
 
-const PluginDescriptor *PluginManager::GetNextPlugin(int type)
-{
-   while (++mPluginsIter != mPlugins.end())
-   {
-      PluginDescriptor & plug = mPluginsIter->second;
-      PluginType plugType = plug.GetPluginType();
-      if( plug.IsValid() && plug.IsEnabled() &&  ((plugType & type) != 0))
-      {
-         bool familyEnabled = true;
-         if( (plugType & PluginTypeEffect) != 0) {
-            // This preference may be written by EffectsPrefs
-            auto setting = GetPluginEnabledSetting( plug );
-            familyEnabled = setting.empty()
-               ? true
-               : gPrefs->Read( setting, true );
-         }
-         if (familyEnabled)
-            return &mPluginsIter->second;
-      }
-   }
-
-   return NULL;
+PluginManager::Iterator::Iterator(PluginManager &manager)
+: mPm{ manager }
+, mIterator{ manager.mPlugins.begin() }
+{   
 }
 
-const PluginDescriptor *PluginManager::GetFirstPluginForEffectType(EffectType type)
+PluginManager::Iterator::Iterator(PluginManager &manager, int type)
+: mPm{ manager }
+, mIterator{ manager.mPlugins.begin() }
+, mPluginType{ type }
 {
-   for (mPluginsIter = mPlugins.begin(); mPluginsIter != mPlugins.end(); ++mPluginsIter)
-   {
-      PluginDescriptor & plug = mPluginsIter->second;
-
-      bool familyEnabled;
-      // This preference may be written by EffectsPrefs
-      auto setting = GetPluginEnabledSetting( plug );
-      familyEnabled = setting.empty()
-         ? true
-         : gPrefs->Read( setting, true );
-      if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
-      {
-         return &plug;
-      }
-   }
-
-   return NULL;
+   Advance(false);
 }
 
-const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType type)
+PluginManager::Iterator::Iterator(PluginManager &manager, EffectType type)
+: mPm{ manager }
+, mIterator{ manager.mPlugins.begin() }
+, mEffectType{ type }
 {
-   while (++mPluginsIter != mPlugins.end())
-   {
-      PluginDescriptor & plug = mPluginsIter->second;
-      bool familyEnabled;
-      // This preference may be written by EffectsPrefs
-      auto setting = GetPluginEnabledSetting( plug );
-      familyEnabled = setting.empty()
-         ? true
-         : gPrefs->Read( setting, true );
-      if (plug.IsValid() && plug.IsEnabled() && plug.GetEffectType() == type && familyEnabled)
-      {
-         return &plug;
-      }
-   }
+   Advance(false);
+}
 
-   return NULL;
+auto PluginManager::Iterator::operator ++() -> Iterator &
+{
+   Advance(true);
+   return *this;
 }
 
 bool PluginManager::IsPluginEnabled(const PluginID & ID)

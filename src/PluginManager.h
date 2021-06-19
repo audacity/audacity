@@ -30,8 +30,7 @@ class FileConfig;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-typedef enum
-{
+typedef enum : unsigned {
    PluginTypeNone = 0,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
    PluginTypeStub =1,               // Used for plugins that have not yet been registered
    PluginTypeEffect =1<<1,
@@ -173,8 +172,8 @@ class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
 {
 public:
 
-   RegistryPath GetPluginEnabledSetting( const PluginID &ID );
-   RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc );
+   RegistryPath GetPluginEnabledSetting( const PluginID &ID ) const;
+   RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc ) const;
 
    // PluginManagerInterface implementation
 
@@ -246,13 +245,42 @@ public:
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
-   const PluginDescriptor *GetPlugin(const PluginID & ID);
+   const PluginDescriptor *GetPlugin(const PluginID & ID) const;
 
-   const PluginDescriptor *GetFirstPlugin(int type); // possible or of several PlugInTypes.
-   const PluginDescriptor *GetNextPlugin( int type);
+   //! @name iteration over plugins of certain types, supporting range-for syntax
+   //! @{
+   class Iterator {
+   public:
+      //! Iterates all, even disabled
+      explicit Iterator(PluginManager &manager);
+      //! Iterates only enabled and matching plugins, with family enabled too if an effect
+      Iterator(PluginManager &manager,
+         int pluginType //!< bitwise or of values in PluginType
+      );
+      //! Iterates only enabled and matching effects, with family enabled too
+      Iterator(PluginManager &manager, EffectType type);
+      bool operator != (int) const {
+         return mIterator != mPm.mPlugins.end();
+      }
+      Iterator &operator ++ ();
+      auto &operator *() const { return mIterator->second; }
+   private:
+      void Advance(bool incrementing);
+      const PluginManager &mPm;
+      PluginMap::iterator mIterator;
+      EffectType mEffectType{ EffectTypeNone };
+      int mPluginType{ PluginTypeNone };
+   };
+   struct Range {
+      Iterator first;
+      Iterator begin() const { return first; }
+      int end() const { return 0; }
+   };
 
-   const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
-   const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
+   Range AllPlugins() { return { Iterator{ *this } }; }
+   Range PluginsOfType(int type) { return { Iterator{ *this, type } }; }
+   Range EffectsOfType(EffectType type) { return { Iterator{ *this, type } }; }
+   //! @}
 
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
@@ -267,17 +295,19 @@ public:
    //! Used only by Nyquist Workbench module
    const PluginID & RegisterPlugin(
       std::unique_ptr<EffectDefinitionInterface> effect, PluginType type );
-   //! Used only by Nyquist Workbench module
    void UnregisterPlugin(const PluginID & ID);
+
+   //! Load from preferences
+   void Load();
+   //! Save to preferences
+   void Save();
 
 private:
    // private! Use Get()
    PluginManager();
    ~PluginManager();
 
-   void Load();
    void LoadGroup(FileConfig *pRegistry, PluginType type);
-   void Save();
    void SaveGroup(FileConfig *pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
@@ -324,9 +354,6 @@ private:
    int mCurrentIndex;
 
    PluginMap mPlugins;
-   PluginMap::iterator mPluginsIter;
-
-   friend class PluginRegistrationDialog;
 };
 
 // Defining these special names in the low-level PluginManager.h

@@ -137,10 +137,8 @@ static const std::vector< Entry > &GetModuleData()
    struct ModuleData : public std::vector< Entry > {
       ModuleData() {
          auto &pm = PluginManager::Get();
-         for (auto plug = pm.GetFirstPlugin(PluginTypeModule);
-              plug;
-              plug = pm.GetNextPlugin(PluginTypeModule)) {
-            auto internal = plug->GetEffectFamily();
+         for (auto &plug : pm.PluginsOfType(PluginTypeModule)) {
+            auto internal = plug.GetEffectFamily();
             if ( internal.empty() )
                continue;
 
@@ -153,11 +151,11 @@ static const std::vector< Entry > &GetModuleData()
                // If there should be new modules, it is not important for them
                // to follow the " Effects" convention, but instead they can
                // have shorter msgids.
-               prompt = plug->GetSymbol().Msgid();
+               prompt = plug.GetSymbol().Msgid();
             else
                prompt = iter->second;
 
-            auto setting = pm.GetPluginEnabledSetting( *plug );
+            auto setting = pm.GetPluginEnabledSetting( plug );
 
             push_back( { prompt, setting } );
          }
