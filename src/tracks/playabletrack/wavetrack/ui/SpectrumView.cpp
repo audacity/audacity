@@ -229,6 +229,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    const double &hiddenLeftOffset = params.hiddenLeftOffset;
    const double &leftOffset = params.leftOffset;
    const wxRect &mid = params.mid;
+   std::cout << zoomInfo.PositionToTime(0.5, -leftOffset) << std::endl;
+   std::cout << zoomInfo.PositionToTime(0.5, -leftOffset) - tOffset << std::endl;
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
@@ -550,8 +552,26 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-   for (int xx = 0; xx < mid.width; ++xx) {
+//   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+//   auto &spectralDataBuf = mpSpectralData->dataBuffer;
+//
+//   auto timeIterToPos = [&] (auto timeIter) -> int{
+//      double nextTimePt = mpSpectralData->scToTimeDouble((*timeIter).first);
+//      return zoomInfo.TimeToPosition(nextTimePt, -leftOffset);
+//   };
+//
+//   auto freqIterToPos = [&] (auto freqIter) -> int {
+//      const float p = numberScale.ValueToPosition(*freqIter);
+//      return mid.height - wxInt64((1.0 - p) * rect.height);
+//   };
+//
+//   TimeFreqBinsMap::iterator timeIter = spectralDataBuf.begin();
+//   int nextTimePos = timeIterToPos(timeIter);
+//   std::set<wxInt64>::iterator freqIter;
+//   int nextFreqPos;
+//   bool hitSelectedTimePos = false;
 
+   for (int xx = 0; xx < mid.width; ++xx) {
       int correctedX = xx + leftOffset - hiddenLeftOffset;
 
       // in fisheye mode the time scale has changed, so the row values aren't cached
@@ -577,6 +597,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
       maybeSelected = maybeSelected || (xx == selectedX);
 
+//      if(!spectralDataBuf.empty() && timeIter != spectralDataBuf.end()){
+//         if (xx == timeIterToPos(timeIter)) {
+//            hitSelectedTimePos = true;
+//            freqIter = timeIter->second.begin();
+//         }
+//      }
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
@@ -592,6 +618,18 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+//
+//         if(hitSelectedTimePos) {
+//            std::cout << yy << " " << freqIterToPos(freqIter) << std::endl;
+//            if(yy == freqIterToPos(freqIter)) {
+//               selected =
+//                     ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
+//                                    (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+//            }
+////
+////            if(freqIter != timeIter->second.end())
+////               freqIter++;
+//         }
 
          const float value = uncached
             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
@@ -620,6 +658,31 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       } // each yy
    } // each xx
 
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+   auto drawPixelFromMap = [&] (TimeFreqBinsMap timeFreqBinsMap) -> void {
+      for(const auto &timeFreqBins: timeFreqBinsMap) {
+         const double timePoint = mpSpectralData->scToTimeDouble(timeFreqBins.first);
+         int convertedX = zoomInfo.TimeToPosition(timePoint, 0);
+         const std::set<wxInt64> &freqBins = timeFreqBins.second;
+         for(const wxInt64 freqzz: freqBins) {
+            const float p = numberScale.ValueToPosition(freqzz);
+            const int convertedY = mid.height - wxInt64((1.0 - p) * rect.height);
+
+            int px = ((mid.height - 1 - convertedY) * mid.width + convertedX);
+            px *= 3;
+            data[px++] = 0;
+            data[px++] = 0;
+            data[px] = 0;
+         }
+      }
+   };
+
+   // Paint history selected area first
+   for(const auto &freqTimePtsData: mpSpectralData->dataHistory)
+      drawPixelFromMap(freqTimePtsData);
+   // Then paint the latest buffered data
+   drawPixelFromMap(mpSpectralData->dataBuffer);
+
    wxBitmap converted = wxBitmap(image);
 
    wxMemoryDC memDC;
@@ -631,32 +694,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views
    params.DrawClipEdges( dc, rect );
-
-   auto drawPixelFromMap = [&]( TimeFreqBinsMap timeFreqBinsMap,
-                                wxBrush brush) -> void
-   {
-      const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
-       for(const auto &timeFreqBins: timeFreqBinsMap) {
-          const double timePoint = mpSpectralData->scToTimeDouble(timeFreqBins.first);
-          int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
-
-          const std::set<wxInt64> &freqBins = timeFreqBins.second;
-          for(const wxInt64 freq: freqBins) {
-             const float p = numberScale.ValueToPosition(freq);
-             const int convertedY =  rect.y + wxInt64((1.0 - p) * rect.height);
-
-             dc.SetPen( *wxTRANSPARENT_PEN );
-             dc.SetBrush( brush );
-             dc.DrawCircle(convertedX, convertedY, brushSize);
-          }
-       }
-   };
-
-   // Paint history selected area first
-   for(const auto &freqTimePtsData: mpSpectralData->dataHistory)
-      drawPixelFromMap(freqTimePtsData, *wxBLUE_BRUSH );
-   // Then paint the latest buffered data
-   drawPixelFromMap(mpSpectralData->dataBuffer, *wxYELLOW_BRUSH);
 }
 
 }
