@@ -49,11 +49,8 @@ public:
    virtual ~PluginDescriptor();
 
    bool IsInstantiated() const;
-   ComponentInterface *GetInstance();
-   void SetInstance(std::unique_ptr<ComponentInterface> instance);
 
    PluginType GetPluginType() const;
-   void SetPluginType(PluginType type);
 
    // All plugins
 
@@ -70,17 +67,6 @@ public:
 
    bool IsEnabled() const;
    bool IsValid() const;
-
-   // These should be passed an untranslated value
-   void SetID(const PluginID & ID);
-   void SetProviderID(const PluginID & providerID);
-   void SetPath(const PluginPath & path);
-   void SetSymbol(const ComponentInterfaceSymbol & symbol);
-
-   // These should be passed an untranslated value wrapped in XO() so
-   // the value will still be extracted for translation
-   void SetVersion(const wxString & version);
-   void SetVendor(const wxString & vendor);
 
    void SetEnabled(bool enable);
    void SetValid(bool valid);
@@ -100,6 +86,31 @@ public:
    bool IsEffectRealtime() const;
    bool IsEffectAutomatable() const;
 
+   // Importer plugins only
+
+   const wxString & GetImporterIdentifier() const;
+   const TranslatableString & GetImporterFilterDescription() const;
+   const FileExtensions & GetImporterExtensions() const;
+
+private:
+   friend class PluginManager;
+
+   ComponentInterface *GetInstance();
+   void SetInstance(std::unique_ptr<ComponentInterface> instance);
+
+   void SetPluginType(PluginType type);
+
+   // These should be passed an untranslated value
+   void SetID(const PluginID & ID);
+   void SetProviderID(const PluginID & providerID);
+   void SetPath(const PluginPath & path);
+   void SetSymbol(const ComponentInterfaceSymbol & symbol);
+
+   // These should be passed an untranslated value wrapped in XO() so
+   // the value will still be extracted for translation
+   void SetVersion(const wxString & version);
+   void SetVendor(const wxString & vendor);
+
    // "family" should be an untranslated string wrapped in wxT()
    void SetEffectFamily(const wxString & family);
    void SetEffectType(EffectType type);
@@ -109,17 +120,9 @@ public:
    void SetEffectRealtime(bool realtime);
    void SetEffectAutomatable(bool automatable);
 
-   // Importer plugins only
-
-   const wxString & GetImporterIdentifier() const;
-   const TranslatableString & GetImporterFilterDescription() const;
-   const FileExtensions & GetImporterExtensions() const;
-
    void SetImporterIdentifier(const wxString & identifier);
    void SetImporterFilterDescription(const TranslatableString & filterDesc);
    void SetImporterExtensions(FileExtensions extensions);
-
-private:
 
    // Common
 
