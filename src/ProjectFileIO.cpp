@@ -1140,7 +1140,7 @@ FilePath ProjectFileIO::SafetyFileName(const FilePath &src)
 
    int nn = 1;
    auto numberString = [](int num) -> wxString {
-      return num == 1 ? "" : wxString::Format(".%d", num);
+      return num == 1 ? wxString{} : wxString::Format(".%d", num);
    };
 
    auto suffixes = AuxiliaryFileSuffixes();

@@ -541,7 +541,7 @@ constexpr size_t TimeQueueGrainSize = 2000;
 #endif
 
 
-struct AudioIoCallback::ScrubState
+struct AudioIoCallback::ScrubState : NonInterferingBase
 {
    ScrubState(double t0,
               double rate,

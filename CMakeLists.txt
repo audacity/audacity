@@ -116,7 +116,7 @@ set( CMAKE_PREFIX_PATH
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF )
 
 # Set the required C++ standard
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # Use ccache if available
@@ -135,6 +135,8 @@ project( Audacity )
 
 # Load our functions/macros
 include( AudacityFunctions )
+
+set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
@@ -186,6 +188,14 @@ cmake_dependent_option(
    "Enables crash reporting for Audacity"
    On
    "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_updates_check
+   "Build updates checking features into Audacity"
+   On
+   "${_OPT}has_networking"
    Off
 )
 
