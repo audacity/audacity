@@ -1422,18 +1422,14 @@ RegistryPath PluginManager::GetPluginEnabledSetting(
 bool PluginManager::IsPluginRegistered(
    const PluginPath &path, const TranslatableString *pName)
 {
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
-   {
-      auto &descriptor = iter->second;
-      if (descriptor.GetPath() == path)
-      {
+   for (auto &pair : mPlugins) {
+      if (auto &descriptor = pair.second; descriptor.GetPath() == path) {
          if (pName)
             descriptor.SetSymbol(
                { descriptor.GetSymbol().Internal(), *pName });
          return true;
       }
    }
-
    return false;
 }
 
@@ -2056,12 +2052,8 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
       groupName = ConvertID(groupName);
 
       // Bypass group if the ID is already in use
-      if (mPlugins.find(groupName) != mPlugins.end())
-      {
-         pRegistry->SetPath(wxT(".."));
-
+      if (mPlugins.count(groupName))
          continue;
-      }
 
       // Set the ID and type
       plug.SetID(groupName);
@@ -2071,10 +2063,8 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
       if (!pRegistry->Read(KEY_PROVIDERID, &strVal, wxEmptyString))
       {
          // Bypass group if the provider isn't valid
-         if (!strVal.empty() && mPlugins.find(strVal) == mPlugins.end())
-         {
+         if (!strVal.empty() && !mPlugins.count(strVal))
             continue;
-         }
       }
       plug.SetProviderID(PluginID(strVal));
 
@@ -2297,9 +2287,8 @@ void PluginManager::Save()
 void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
 {
    wxString group = GetPluginTypeString(type);
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
-   {
-      PluginDescriptor & plug = iter->second;
+   for (auto &pair : mPlugins) {
+      auto & plug = pair.second;
 
       if (plug.GetPluginType() != type)
       {
@@ -2383,21 +2372,14 @@ void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
 // and built-ins.
 void PluginManager::CheckForUpdates(bool bFast)
 {
-   // Get ModuleManager reference
    ModuleManager & mm = ModuleManager::Get();
-
    wxArrayString pathIndex;
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
-   {
-      PluginDescriptor & plug = iter->second;
+   for (auto &pair : mPlugins) {
+      auto &plug = pair.second;
 
       // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
-      if (plug.GetPluginType() == PluginTypeNone)
-      {
-         continue;
-      }
-
-      pathIndex.push_back(plug.GetPath().BeforeFirst(wxT(';')));
+      if (plug.GetPluginType() != PluginTypeNone)
+         pathIndex.push_back(plug.GetPath().BeforeFirst(wxT(';')));
    }
 
    // Check all known plugins to ensure they are still valid and scan for NEW ones.
@@ -2411,9 +2393,8 @@ void PluginManager::CheckForUpdates(bool bFast)
    //
    // When the user enables the plugin, each provider that reported it will be asked
    // to register the plugin.
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
-   {
-      PluginDescriptor & plug = iter->second;
+   for (auto &pair : mPlugins) {
+      auto &plug = pair.second;
       const PluginID & plugID = plug.GetID();
       const wxString & plugPath = plug.GetPath();
       PluginType plugType = plug.GetPluginType();
@@ -2506,37 +2487,21 @@ const PluginID & PluginManager::RegisterPlugin(
 // a better solution is devised.
 void PluginManager::UnregisterPlugin(const PluginID & ID)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return;
-   }
-
    mPlugins.erase(ID);
 }
 
 int PluginManager::GetPluginCount(PluginType type)
 {
-   int num = 0;
-
-   for (PluginMap::iterator iter = mPlugins.begin(); iter != mPlugins.end(); ++iter)
-   {
-      if (iter->second.GetPluginType() == type)
-      {
-         num++;
-      }
-   }
-
-   return num;
+   return count_if(mPlugins.begin(), mPlugins.end(), [type](auto &pair){
+      return pair.second.GetPluginType() == type; });
 }
 
 const PluginDescriptor *PluginManager::GetPlugin(const PluginID & ID)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return NULL;
-   }
-
-   return &mPlugins[ID];
+   if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
+      return nullptr;
+   else
+      return &iter->second;
 }
 
 const PluginDescriptor *PluginManager::GetFirstPlugin(int type)
@@ -2630,56 +2595,49 @@ const PluginDescriptor *PluginManager::GetNextPluginForEffectType(EffectType typ
 
 bool PluginManager::IsPluginEnabled(const PluginID & ID)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
+   if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
       return false;
-   }
-
-   return mPlugins[ID].IsEnabled();
+   else
+      return iter->second.IsEnabled();
 }
 
 void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
+   if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
       return;
-   }
-
-   return mPlugins[ID].SetEnabled(enable);
+   else
+      iter->second.SetEnabled(enable);
 }
 
 const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
+   if (auto iter = mPlugins.find(ID); iter == mPlugins.end()) {
       static ComponentInterfaceSymbol empty;
       return empty;
    }
-
-   return mPlugins[ID].GetSymbol();
+   else
+      return iter->second.GetSymbol();
 }
 
 ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
 {
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return NULL;
-   }
+   if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
+      return nullptr;
+   else {
+      auto &plug = iter->second;
 
-   PluginDescriptor & plug = mPlugins[ID];
-
-   // If not dealing with legacy effects, make sure the provider is loaded 
-   if (!plug.IsEffectLegacy())
-   {
-      const PluginID & prov = plug.GetProviderID();
-      if (mPlugins.find(prov) == mPlugins.end())
+      // If not dealing with legacy effects, make sure the provider is loaded
+      if (!plug.IsEffectLegacy())
       {
-         return NULL;
+         const PluginID & prov = plug.GetProviderID();
+         if (auto iter2 = mPlugins.find(prov); iter2 == mPlugins.end())
+            return nullptr;
+         else
+            iter2->second.GetInstance();
       }
-      mPlugins[prov].GetInstance();
-   }
 
-   return plug.GetInstance();
+      return plug.GetInstance();
+   }
 }
 
 PluginID PluginManager::GetID(ModuleInterface *module)
@@ -3005,26 +2963,25 @@ RegistryPath PluginManager::SettingsPath(const PluginID & ID, bool shared)
    // be changed across Audacity versions, or else compatibility of the
    // configuration files will break.
 
-   if (mPlugins.find(ID) == mPlugins.end())
-   {
-      return wxEmptyString;
+   if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
+      return {};
+   else {
+      const PluginDescriptor & plug = iter->second;
+      
+      wxString id = GetPluginTypeString(plug.GetPluginType()) +
+                    wxT("_") +
+                    plug.GetEffectFamily() + // is empty for non-Effects
+                    wxT("_") +
+                    plug.GetVendor() +
+                    wxT("_") +
+                    (shared ? wxString{} : plug.GetSymbol().Internal());
+
+      return SETROOT +
+             ConvertID(id) +
+             wxCONFIG_PATH_SEPARATOR +
+             (shared ? wxT("shared") : wxT("private")) +
+             wxCONFIG_PATH_SEPARATOR;
    }
-
-   const PluginDescriptor & plug = mPlugins[ID];
-   
-   wxString id = GetPluginTypeString(plug.GetPluginType()) +
-                 wxT("_") +
-                 plug.GetEffectFamily() + // is empty for non-Effects
-                 wxT("_") +
-                 plug.GetVendor() +
-                 wxT("_") +
-                 (shared ? wxString{} : plug.GetSymbol().Internal());
-
-   return SETROOT +
-          ConvertID(id) +
-          wxCONFIG_PATH_SEPARATOR +
-          (shared ? wxT("shared") : wxT("private")) +
-          wxCONFIG_PATH_SEPARATOR;
 }
 
 /* Return value is a key for lookup in a config file */
