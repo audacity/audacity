@@ -17,7 +17,7 @@ Paul Licameli split from WaveTrackView.h
 
 class WaveTrack;
 class BrushHandle;
-using TimeFreqBinsMap = std::unordered_map<long long, std::unordered_set<wxInt64>>;
+using TimeFreqBinsMap = std::unordered_map<long long, std::set<wxInt64>>;
 
 class SpectralData{
 private:
@@ -35,12 +35,13 @@ public:
    // The double time points is quantized into long long
    void addFreqTimeData(wxInt64 freq, long long ll_sc){
       if(dataBuffer.find(ll_sc) == dataBuffer.end())
-         dataBuffer[ll_sc] = std::unordered_set<long long>();
+         dataBuffer[ll_sc] = std::set<wxInt64>{ freq };
       else
          dataBuffer[ll_sc].insert(freq);
    }
 
    // Using long long from the sample count, this function to convert it back to double time point
+   // TODO: Clone from sampleCount, find better way to reuse the code there
    double scToTimeDouble(long long ll) const{
       return ll / mSampleRate;
    }
