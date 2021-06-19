@@ -32,6 +32,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/graphics.h>
 
 class BrushHandle;
+class SpectralData;
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
@@ -41,7 +42,8 @@ static WaveTrackSubView::Type sType{
 static WaveTrackSubViewType::RegisteredType reg{ sType };
 
 SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
-   mpSpectralData = std::make_shared<SpectralData>();
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
    mBrushSize = 1;
 }
 
@@ -630,17 +632,19 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // of split views
    params.DrawClipEdges( dc, rect );
 
-   auto drawPixelFromMap = [&]( std::unordered_map<wxInt64, std::unordered_set<double>> freqTimePtsData,
+   auto drawPixelFromMap = [&]( TimeFreqBinsMap timeFreqBinsMap,
                                 wxBrush brush) -> void
    {
-       for(const auto &freqTimePoints: freqTimePtsData) {
-          wxInt64 selFreq = freqTimePoints.first;
-          const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
-          const float p = numberScale.ValueToPosition(selFreq);
-          const int convertedY =  rect.y + wxInt64((1.0 - p) * rect.height);
+      const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+       for(const auto &timeFreqBins: timeFreqBinsMap) {
+          const double timePoint = mpSpectralData->scToTimeDouble(timeFreqBins.first);
+          int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
 
-          for(const double &timePoint: freqTimePoints.second) {
-             int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
+          const std::unordered_set<wxInt64> &freqBins = timeFreqBins.second;
+          for(const wxInt64 freq: freqBins) {
+             const float p = numberScale.ValueToPosition(freq);
+             const int convertedY =  rect.y + wxInt64((1.0 - p) * rect.height);
+
              dc.SetPen( *wxTRANSPARENT_PEN );
              dc.SetBrush( brush );
              dc.DrawCircle(convertedX, convertedY, brushSize);
@@ -649,10 +653,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    };
 
    // Paint history selected area first
-   for(const auto &freqTimePtsData: mpSpectralData->freqTimePtsDataHistory)
+   for(const auto &freqTimePtsData: mpSpectralData->dataHistory)
       drawPixelFromMap(freqTimePtsData, *wxBLUE_BRUSH );
    // Then paint the latest buffered data
-   drawPixelFromMap(mpSpectralData->freqTimePtsDataBuf, *wxYELLOW_BRUSH);
+   drawPixelFromMap(mpSpectralData->dataBuffer, *wxYELLOW_BRUSH);
 }
 
 }
