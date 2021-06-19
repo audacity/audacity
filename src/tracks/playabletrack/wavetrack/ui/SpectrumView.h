@@ -17,26 +17,39 @@ Paul Licameli split from WaveTrackView.h
 
 class WaveTrack;
 class BrushHandle;
+using TimeFreqBinsMap = std::unordered_map<long long, std::unordered_set<wxInt64>>;
 
-struct SpectralData{
-    bool fill_missing = true;
-    std::unordered_map<wxInt64, std::unordered_set<double>> freqTimePtsDataBuf;
-    std::vector<std::unordered_map<wxInt64, std::unordered_set<double>>> freqTimePtsDataHistory;
-    // TODO: replace with two pairs to save space
-    std::vector<std::pair<int, int>> coordHistory;
+class SpectralData{
+private:
+   double mSampleRate;
 
-    void addFreqTimeData(wxInt64 freq, double timePt){
-       if(freqTimePtsDataBuf.find(freq) == freqTimePtsDataBuf.end())
-          freqTimePtsDataBuf[freq] = std::unordered_set<double>{ timePt };
-       else
-          freqTimePtsDataBuf[freq].insert(timePt);
-    }
+public:
+    SpectralData(double sr)
+    :mSampleRate(sr){}
 
-    void saveAndClearBuffer(){
-       freqTimePtsDataHistory.push_back(freqTimePtsDataBuf);
-       coordHistory.clear();
-       freqTimePtsDataBuf.clear();
-    }
+   TimeFreqBinsMap dataBuffer;
+   std::vector<TimeFreqBinsMap> dataHistory;
+   // TODO: replace with two pairs to save space
+   std::vector<std::pair<int, int>> coordHistory;
+
+   // The double time points is quantized into long long
+   void addFreqTimeData(wxInt64 freq, long long ll_sc){
+      if(dataBuffer.find(ll_sc) == dataBuffer.end())
+         dataBuffer[ll_sc] = std::unordered_set<long long>();
+      else
+         dataBuffer[ll_sc].insert(freq);
+   }
+
+   // Using long long from the sample count, this function to convert it back to double time point
+   double scToTimeDouble(long long ll) const{
+      return ll / mSampleRate;
+   }
+
+   void saveAndClearBuffer(){
+      dataHistory.emplace_back(dataBuffer);
+      dataBuffer.clear();
+      coordHistory.clear();
+   }
 };
 
 class SpectrumView final : public WaveTrackSubView

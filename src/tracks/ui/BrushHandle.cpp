@@ -541,63 +541,35 @@ UIHandle::Result BrushHandle::Drag
 
       double posTime;
       wxInt64 posFreq;
+
+      auto posToLongLong = [&](int x0){
+          posTime = viewInfo.PositionToTime(x0, mRect.x);
+          sampleCount sc = wt->TimeToLongSamples(posTime);
+          return sc.as_long_long();
+      };
+
       for (wd = (wd+1)/2; ; ) {                                   /* pixel loop */
-         posTime = viewInfo.PositionToTime(x0, mRect.x);
          posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-         mpSpectralData->addFreqTimeData(posFreq, posTime);
+         mpSpectralData->addFreqTimeData(posFreq, posToLongLong(x0));
 
          e2 = err; x2 = x0;
          if (2*e2 >= -dx) {                                           /* x step */
             for (e2 += dy, y2 = y0; e2 < ed*wd && (y != y2 || dx > dy); e2 += dx){
-               posTime = viewInfo.PositionToTime(x0, mRect.x);
                posFreq = PositionToFrequency(wt, 0, y2 += sy, mRect.y, mRect.height);
-               mpSpectralData->addFreqTimeData(posFreq, posTime);
+               mpSpectralData->addFreqTimeData(posFreq, posToLongLong(x0));
             }
             if (x0 == x) break;
             e2 = err; err -= dy; x0 += sx;
          }
          if (2*e2 <= dy) {                                            /* y step */
             for (e2 = dx-e2; e2 < ed*wd && (x != x2 || dx < dy); e2 += dy){
-               posTime = viewInfo.PositionToTime(x2 += sx, mRect.x);
                posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-               mpSpectralData->addFreqTimeData(posFreq, posTime);
+               mpSpectralData->addFreqTimeData(posFreq, posToLongLong(x2 += sx));
             }
             if (y0 == y) break;
             err += dx; y0 += sy;
          }
       }
-//      double distance = sqrt(pow(y - prev_y, 2) + pow(x - prev_x, 2));
-//      std::cout << "DIS: " << distance << std::endl;
-//
-//      if(distance > 5){
-//         const int mid_x = (prev_x + x) / 2;
-//         const int mid_y = (prev_y + y) / 2;
-//         wxInt64 fillPosFreq = PositionToFrequency(wt, 0, mid_y, mRect.y, mRect.height);
-//         const double fillPosTime = viewInfo.PositionToTime(mid_x, mRect.x);
-//         mpSpectralData->addFreqTimeData(fillPosFreq, fillPosTime);
-//      }
-
-//      int m_new = 2 * (y - prev_y);
-//      int slope_error_new = m_new - (x - prev_x);
-//      for (int ii = prev_x, jj = prev_y; ii <= x; ii++)
-//      {
-//         const double posTime = viewInfo.PositionToTime(ii, mRect.x);
-//         wxInt64 posFreq = PositionToFrequency(wt, 0, jj, mRect.y, mRect.height);
-//         mpSpectralData->addFreqTimeData(posFreq, posTime);
-//         std::cout << "(" << ii << " ," << jj << ")" << std::endl;
-//
-//         // Add slope to increment angle formed
-//         slope_error_new += m_new;
-//
-//         // Slope error reached limit, time to
-//         // increment y and update slope error.
-//         if (slope_error_new >= 0){
-//            y++;
-//            slope_error_new  -= 2 * (x - prev_x);
-//         }
-//      }
-
-
    }
 
    // Convert the cursor position to freq. value & time_position
@@ -622,21 +594,17 @@ UIHandle::Result BrushHandle::Release
 {
    using namespace RefreshCode;
    ProjectHistory::Get( *pProject ).PushState(
-           /* i18n-hint: (verb) Audacity has just done a special kind of DELETE on
-              the labeled audio regions */
            XO( "Selected area using Brush Tool" ),
-           /* i18n-hint: (verb) Do a special kind of DELETE on labeled audio
-              regions */
            XO( "Brush tool selection" ) );
    mpSpectralData->saveAndClearBuffer();
-   ProjectHistory::Get( *pProject ).ModifyState(false);
+   ProjectHistory::Get( *pProject ).ModifyState(true);
    return RefreshNone;
 }
 
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
    mSelectionStateChanger.reset();
-   mpSpectralData->freqTimePtsDataBuf.clear();
+   mpSpectralData->dataBuffer.clear();
    mpSpectralData->coordHistory.clear();
 
    return RefreshCode::RefreshAll;
