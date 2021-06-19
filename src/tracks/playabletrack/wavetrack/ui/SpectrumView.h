@@ -17,7 +17,7 @@ Paul Licameli split from WaveTrackView.h
 
 class WaveTrack;
 class BrushHandle;
-using TimeFreqBinsMap = std::unordered_map<long long, std::set<wxInt64>>;
+using TimeFreqBinsMap = std::map<long long, std::set<wxInt64>>;
 
 class SpectralData{
 private:
