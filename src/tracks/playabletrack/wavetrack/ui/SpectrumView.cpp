@@ -640,7 +640,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
           const double timePoint = mpSpectralData->scToTimeDouble(timeFreqBins.first);
           int convertedX = zoomInfo.TimeToPosition(timePoint, rect.x, 0);
 
-          const std::unordered_set<wxInt64> &freqBins = timeFreqBins.second;
+          const std::set<wxInt64> &freqBins = timeFreqBins.second;
           for(const wxInt64 freq: freqBins) {
              const float p = numberScale.ValueToPosition(freq);
              const int convertedY =  rect.y + wxInt64((1.0 - p) * rect.height);
