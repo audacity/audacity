@@ -736,54 +736,39 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
 {
    // Must have a "valid" ID
    if (ID.empty())
-   {
-      return NULL;
-   }
+      return nullptr;
 
    // If it is actually a command then refuse it (as an effect).
    if( mCommands.find( ID ) != mCommands.end() )
-      return NULL;
+      return nullptr;
 
-   // TODO: This is temporary and should be redone when all effects are converted
-   if (mEffects.find(ID) == mEffects.end())
-   {
+   if (auto iter = mEffects.find(ID); iter != mEffects.end())
+      return iter->second;
+   else {
+      std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      EffectDefinitionInterface *ident = dynamic_cast<EffectDefinitionInterface *>(PluginManager::Get().GetInstance(ID));
-      if (ident && ident->IsLegacy())
-      {
-         auto effect = dynamic_cast<Effect *>(ident);
-         if (effect && effect->Startup(NULL))
-         {
-            mEffects[ID] = effect;
-            return effect;
-         }
-      }
+      const auto instance = PluginManager::Get().GetInstance(ID);
 
-      auto effect = std::make_shared<Effect>(); // TODO: use make_unique and store in std::unordered_map
-      if (effect)
-      {
-         const auto client = dynamic_cast<EffectUIClientInterface *>(ident);
-         if (client && effect->Startup(client))
-         {
-            auto pEffect = effect.get();
-            mEffects[ID] = pEffect;
-            mHostEffects[ID] = std::move(effect);
-            return pEffect;
-         }
-      }
-
-      auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
-      if( !command )
-         AudacityMessageBox(
-            XO(
+      if (auto effect = dynamic_cast<Effect *>(instance);
+          effect && effect->Startup(nullptr))
+         // Self-hosting or "legacy" effect objects
+         return (mEffects[ID] = effect);
+      else if (auto client = dynamic_cast<EffectUIClientInterface *>(instance);
+          client && (hostEffect = std::make_shared<Effect>())->Startup(client))
+         // plugin that inherits only EffectUIClientInterface needs a host
+         return (mEffects[ID] =
+            (mHostEffects[ID] = move(hostEffect)).get());
+      else {
+         if ( !dynamic_cast<AudacityCommand *>(instance) )
+            AudacityMessageBox(
+               XO(
 "Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'")
-               .Format( GetCommandName(ID) ),
-            XO("Effect failed to initialize"));
+                  .Format( GetCommandName(ID) ),
+               XO("Effect failed to initialize"));
 
-      return NULL;
+         return nullptr;
+      }
    }
-
-   return mEffects[ID];
 }
 
 AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
@@ -794,10 +779,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
       return NULL;
    }
 
-   // TODO: This is temporary and should be redone when all effects are converted
-   if (mCommands.find(ID) == mCommands.end())
-   {
-
+   if (mCommands.find(ID) == mCommands.end()) {
       // This will instantiate the effect client if it hasn't already been done
       auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
       if (command )//&& command->Startup(NULL))
@@ -807,31 +789,6 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
          return command;
       }
 
-         /*
-      if (ident && ident->IsLegacy())
-      {
-         auto command = dynamic_cast<AudacityCommand *>(ident);
-         if (commandt && command->Startup(NULL))
-         {
-            mCommands[ID] = command;
-            return command;
-         }
-      }
-
-
-      auto command = std::make_shared<AudacityCommand>(); // TODO: use make_unique and store in std::unordered_map
-      if (command)
-      {
-         AudacityCommand *client = dynamic_cast<AudacityCommand *>(ident);
-         if (client && command->Startup(client))
-         {
-            auto pCommand = command.get();
-            mEffects[ID] = pCommand;
-            mHostEffects[ID] = std::move(effect);
-            return pEffect;
-         }
-      }
-*/
       AudacityMessageBox(
          XO(
 "Attempting to initialize the following command failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'")

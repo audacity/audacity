@@ -279,11 +279,6 @@ public:
       return false;
    }
 
-   bool IsLegacy() override
-   {
-      return false;
-   }
-
    bool SupportsRealtime() override
    {
       return mType == EffectTypeProcess;
@@ -1281,11 +1276,6 @@ bool VSTEffect::IsInteractive()
 }
 
 bool VSTEffect::IsDefault()
-{
-   return false;
-}
-
-bool VSTEffect::IsLegacy()
 {
    return false;
 }
