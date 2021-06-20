@@ -551,6 +551,28 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 #pragma omp parallel for
 #endif
 
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+   std::vector<std::pair<int, int>> selectedCoords;
+
+   mpSpectralData->dataHistory.push_back(mpSpectralData->dataBuffer);
+   for(const auto &spectralDataMap: mpSpectralData->dataHistory) {
+      for(const auto &spectralData: spectralDataMap){
+         double timePt = mpSpectralData->scToTimeDouble(spectralData.first);
+         int convertedX = zoomInfo.TimeToPosition(timePt, 0);
+
+         for(const wxInt64 &freqVal: spectralData.second){
+            const float p = numberScale.ValueToPosition(freqVal);
+            int convertedY = mid.height - wxInt64((1.0 - p) * rect.height);
+            selectedCoords.push_back(std::make_pair(convertedX, convertedY));
+         }
+      }
+   }
+   mpSpectralData->dataHistory.pop_back();
+//   std::sort(selectedCoords.begin(), selectedCoords.end());
+//   for(auto pairss: selectedCoords) {
+//      std::cout << pairss.first << ", " << pairss.second << std::endl;
+//   }
+//   auto coordIter = selectedCoords.begin();
    for (int xx = 0; xx < mid.width; ++xx) {
       int correctedX = xx + leftOffset - hiddenLeftOffset;
 
@@ -576,7 +598,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
       maybeSelected = maybeSelected || (xx == selectedX);
-
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
@@ -592,6 +613,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+//         if (coordIter != selectedCoords.end() && xx == coordIter->first && yy == coordIter->second) {
+//            selected =
+//                  ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
+//                                 (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+//            coordIter++;
+//         }
 
          const float value = uncached
             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
@@ -620,32 +647,38 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       } // each yy
    } // each xx
 
-   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+   for(std::pair<int, int> coord : selectedCoords) {
+      int xx = coord.first;
+      int correctedX = xx + leftOffset - hiddenLeftOffset;
+      int yy = coord.second;
 
-   // Additional method for painting on the image data for brush tool
-   auto drawPixelFromMap = [&] (TimeFreqBinsMap timeFreqBinsMap) -> void {
-      for(const auto &timeFreqBins: timeFreqBinsMap) {
-         const double timePoint = mpSpectralData->scToTimeDouble(timeFreqBins.first);
-         int convertedX = zoomInfo.TimeToPosition(timePoint, 0);
-         const std::set<wxInt64> &freqBins = timeFreqBins.second;
-         for(const wxInt64 freq: freqBins) {
-            const float p = numberScale.ValueToPosition(freq);
-            const int convertedY = mid.height - wxInt64((1.0 - p) * rect.height);
-
-            int px = ((mid.height - 1 - convertedY) * mid.width + convertedX);
-            px *= 3;
-            data[px++] = 0;
-            data[px++] = 0;
-            data[px] = 0;
-         }
+      float* uncached;
+      if (!zoomInfo.InFisheye(xx, -leftOffset)) {
+         uncached = 0;
       }
-   };
+      else {
+         int specIndex = (xx - fisheyeLeft) * nBins;
+         wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
+         uncached = &specCache.freq[specIndex];
+      }
+      const float bin     = bins[yy];
+      const float nextBin = bins[yy+1];
+      auto selected =
+            ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
+                           (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
 
-   // Paint history selected area first
-   for(const auto &freqTimePtsData: mpSpectralData->dataHistory)
-      drawPixelFromMap(freqTimePtsData);
-   // Then paint the latest buffered data
-   drawPixelFromMap(mpSpectralData->dataBuffer);
+      const float value = uncached
+                          ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
+                          : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
+
+      unsigned char rv, gv, bv;
+      GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
+
+      int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
+      data[px++] = rv;
+      data[px++] = gv;
+      data[px] = bv;
+   }
 
    wxBitmap converted = wxBitmap(image);
 

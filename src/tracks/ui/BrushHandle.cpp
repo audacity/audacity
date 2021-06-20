@@ -529,10 +529,15 @@ UIHandle::Result BrushHandle::Drag
    mMostRecentX = x;
    mMostRecentY = y;
 
+   // Clip the coordinates
+   // TODO: Find ways to access the ClipParameters (for the mid)
+   x = std::max(mRect.x + 10, std::min(x, mRect.x + mRect.width - 20));
+   y = std::max(mRect.y + 10, std::min(y, mRect.y + mRect.height - 10));
+
    if(!mpSpectralData->coordHistory.empty()){
       int x0 = mpSpectralData->coordHistory.back().first;
       int y0 = mpSpectralData->coordHistory.back().second;
-      int wd = 3;
+      int wd = 6;
 
       int dx = abs(x-x0), sx = x0 < x ? 1 : -1;
       int dy = abs(y-y0), sy = y0 < y ? 1 : -1;
@@ -571,11 +576,6 @@ UIHandle::Result BrushHandle::Drag
          }
       }
    }
-
-   // Convert the cursor position to freq. value & time_position
-   wxInt64 posFreq = PositionToFrequency(wt, 0, mMostRecentY, mRect.y, mRect.height);
-   const double posTime = viewInfo.PositionToTime(mMostRecentX, mRect.x);
-   mpSpectralData->addFreqTimeData(posFreq, posTime);
    mpSpectralData->coordHistory.push_back(std::make_pair(x, y));
    return RefreshAll;
 }

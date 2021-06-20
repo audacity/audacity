@@ -89,8 +89,6 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   //void ResetFreqSelectionPin
-   //   (const ViewInfo &viewInfo, double hintFrequency, bool logF);
    std::weak_ptr<TrackView> mpView;
    wxRect mRect{};
    SelectedRegion mInitialSelection{};
@@ -98,13 +96,6 @@ private:
    std::shared_ptr<SnapManager> mSnapManager;
    SnapResults mSnapStart, mSnapEnd;
    bool mUseSnap{ true };
-
-   bool mSelStartValid{};
-   double mSelStart{ 0.0 };
-
-   int mSelectionBoundary{ 0 };
-
-   std::weak_ptr<const WaveTrack> mFreqSelTrack;
 
    int mMostRecentX{ -1 }, mMostRecentY{ -1 };
 
