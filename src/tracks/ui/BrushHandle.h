@@ -99,6 +99,8 @@ private:
 
    int mMostRecentX{ -1 }, mMostRecentY{ -1 };
 
+   bool mbCtrlDown;
+
    bool mAutoScrolling{};
 
    std::shared_ptr<SelectionStateChanger> mSelectionStateChanger;
