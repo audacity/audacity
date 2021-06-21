@@ -670,7 +670,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       const float value = uncached
                           ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
                           : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
-
       unsigned char rv, gv, bv;
       GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
 

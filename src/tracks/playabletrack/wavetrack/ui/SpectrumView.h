@@ -33,11 +33,19 @@ public:
    std::vector<std::pair<int, int>> coordHistory;
 
    // The double time points is quantized into long long
-   void addFreqTimeData(wxInt64 freq, long long ll_sc){
+   void addTimeFreqData(long long ll_sc, wxInt64 freq){
       if(dataBuffer.find(ll_sc) == dataBuffer.end())
          dataBuffer[ll_sc] = std::set<wxInt64>{ freq };
       else
          dataBuffer[ll_sc].insert(freq);
+   }
+
+   void removeTimeFreqData(long long ll_sc, wxInt64 freq){
+      for(auto &dataBuf: dataHistory){
+         if(dataBuf.find(ll_sc) != dataBuf.end()){
+            dataBuf[ll_sc].erase(freq);
+         }
+      }
    }
 
    // Using long long from the sample count, this function to convert it back to double time point
