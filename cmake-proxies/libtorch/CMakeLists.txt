@@ -62,18 +62,14 @@ else()
    set(Torch_DIR "${LIBTORCH_DIR}/share/cmake/Torch/")
    list(APPEND CMAKE_PREFIX_PATH "${LIBTORCH_DIR}")
 
-   if (EXISTS ${TORCH_DIR})
-      # find torch
-      find_package(Torch REQUIRED)
+   # find torch
+   find_package(Torch REQUIRED)
 
-      set_target_properties(torch PROPERTIES IMPORTED_GLOBAL On)
-      set_target_properties(torch_cpu PROPERTIES IMPORTED_GLOBAL On)
+   set_target_properties(torch PROPERTIES IMPORTED_GLOBAL On)
+   set_target_properties(torch_cpu PROPERTIES IMPORTED_GLOBAL On)
 
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-      target_include_directories(${TARGET} INTERFACE "${TORCH_INCLUDE_DIRS}")
-      target_link_libraries( ${TARGET} INTERFACE "${TORCH_LIBRARIES}")
-   else()
-      message("failed to create ${TORCH_DIR}. skipping")
-   endif()
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+   target_include_directories(${TARGET} INTERFACE "${TORCH_INCLUDE_DIRS}")
+   target_link_libraries( ${TARGET} INTERFACE "${TORCH_LIBRARIES}")
 
 endif()
