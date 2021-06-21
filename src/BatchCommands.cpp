@@ -505,8 +505,8 @@ bool MacroCommands::DoAudacityCommand(
 
    if (flags & EffectManager::kConfigured)
    {
-      ProjectAudioManager::Get( project ).Stop();
-//    SelectAllIfNone();
+      //ProjectAudioManager::Get( project ).Stop();
+//    SelectAllIfNone(); KARL
    }
 
    EffectManager & em = EffectManager::Get();
