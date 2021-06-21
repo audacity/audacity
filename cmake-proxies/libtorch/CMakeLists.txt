@@ -16,11 +16,21 @@ function(download url filename)
    endif()
 endfunction(download)
 
+message( STATUS "========== Configuring ${name} ==========" )
+
+cmd_option( ${_OPT}use_libtorch
+            "Use libtorch library [local, ${desc}off]"
+            "off"
+            STRINGS "local" ${opt} "off"
+)
+
+# Determine if it will be turned off, linked to, or loaded
+if( ${_OPT}use_libtorch STREQUAL "off" )
+   message( STATUS "Disabling '${name}' library" )
 # if we're not building 64 bit, bail
-if(NOT IS_64BIT)
+elseif(NOT IS_64BIT)
    message("can't build libtorch in 32 bit architecture. skipping")
 else()
-
    # define download URL for libtorcb
    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
       set (LIBTORCH_URL "https://download.pytorch.org/libtorch/cpu/libtorch-macos-1.8.1.zip")
