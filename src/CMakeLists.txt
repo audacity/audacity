@@ -1053,7 +1053,7 @@ list( APPEND DEFINES
          __STDC_CONSTANT_MACROS
          STRICT
       >
-      $<$<BOOL:${USE_UPDATE_CHECK}>:
+      $<$<BOOL:${${_OPT}has_updates_check}>:
           HAVE_UPDATES_CHECK
       >
 )
