@@ -544,12 +544,12 @@ UIHandle::Result BrushHandle::Drag
    x = std::max(mRect.x + 10, std::min(x, mRect.x + mRect.width - 20));
    y = std::max(mRect.y + 10, std::min(y, mRect.y + mRect.height - 10));
 
-   bool bCtrlDown = event.ControlDown();
+   mbCtrlDown = event.ControlDown();
 
    if(!mpSpectralData->coordHistory.empty()){
       int x0 = mpSpectralData->coordHistory.back().first;
       int y0 = mpSpectralData->coordHistory.back().second;
-      int wd = 6;
+      int wd = 10;
 
       int dx = abs(x-x0), sx = x0 < x ? 1 : -1;
       int dy = abs(y-y0), sy = y0 < y ? 1 : -1;
@@ -567,7 +567,7 @@ UIHandle::Result BrushHandle::Drag
 
       for (wd = (wd+1)/2; ; ) {                                   /* pixel loop */
          posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-         if(bCtrlDown)
+         if(mbCtrlDown)
             mpSpectralData->removeTimeFreqData(posToLongLong(x0), posFreq);
          else
             mpSpectralData->addTimeFreqData(posToLongLong(x0), posFreq);
@@ -576,7 +576,7 @@ UIHandle::Result BrushHandle::Drag
          if (2*e2 >= -dx) {                                           /* x step */
             for (e2 += dy, y2 = y0; e2 < ed*wd && (y != y2 || dx > dy); e2 += dx){
                posFreq = PositionToFrequency(wt, 0, y2 += sy, mRect.y, mRect.height);
-               if(bCtrlDown)
+               if(mbCtrlDown)
                   mpSpectralData->removeTimeFreqData(posToLongLong(x0), posFreq);
                else
                   mpSpectralData->addTimeFreqData(posToLongLong(x0), posFreq);
@@ -587,7 +587,7 @@ UIHandle::Result BrushHandle::Drag
          if (2*e2 <= dy) {                                            /* y step */
             for (e2 = dx-e2; e2 < ed*wd && (x != x2 || dx < dy); e2 += dy){
                posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-               if(bCtrlDown)
+               if(mbCtrlDown)
                   mpSpectralData->removeTimeFreqData(posToLongLong(x2 += sx), posFreq);
                else
                   mpSpectralData->addTimeFreqData(posToLongLong(x2 += sx), posFreq);
@@ -614,11 +614,22 @@ UIHandle::Result BrushHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   ProjectHistory::Get( *pProject ).PushState(
-           XO( "Selected area using Brush Tool" ),
-           XO( "Brush tool selection" ) );
-   mpSpectralData->saveAndClearBuffer();
-   ProjectHistory::Get( *pProject ).ModifyState(true);
+
+   if(mbCtrlDown){
+      ProjectHistory::Get( *pProject ).PushState(
+            XO( "Erased selected area" ),
+            XO( "Erased selected area" ) );
+      ProjectHistory::Get( *pProject ).ModifyState(true);
+      mpSpectralData->saveAndClearBuffer();
+   }
+   else{
+      ProjectHistory::Get( *pProject ).PushState(
+            XO( "Selected area using Brush Tool" ),
+            XO( "Brush tool selection" ) );
+      ProjectHistory::Get( *pProject ).ModifyState(true);
+      mpSpectralData->saveAndClearBuffer();
+   }
+
    return RefreshNone;
 }
 
