@@ -33,6 +33,9 @@ elseif(NOT IS_64BIT)
 else()
    cmake_minimum_required( VERSION 3.18 )
 
+   # Let the Audacity target know that this library will be used
+   set( USE_${symbol} ON CACHE INTERNAL "" FORCE )
+
    # define download URL for libtorcb
    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
       set (LIBTORCH_URL "https://download.pytorch.org/libtorch/cpu/libtorch-macos-1.8.1.zip")
