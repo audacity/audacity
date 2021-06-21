@@ -102,6 +102,16 @@ namespace
       return numberScale.PositionToValue(1.0 - p);
    }
 
+   long long PositionToLongSample(const WaveTrack *wt,
+       const ViewInfo &viewInfo,
+       int trackTopEdgeX,
+       int mousePosX)
+    {
+      wxInt64 posTime = viewInfo.PositionToTime(mousePosX, trackTopEdgeX);
+      sampleCount sc = wt->TimeToLongSamples(posTime);
+      return sc.as_long_long();
+   }
+
    template<typename T>
    inline void SetIfNotNull(T * pValue, const T Value)
    {
@@ -534,6 +544,8 @@ UIHandle::Result BrushHandle::Drag
    x = std::max(mRect.x + 10, std::min(x, mRect.x + mRect.width - 20));
    y = std::max(mRect.y + 10, std::min(y, mRect.y + mRect.height - 10));
 
+   bool bCtrlDown = event.ControlDown();
+
    if(!mpSpectralData->coordHistory.empty()){
       int x0 = mpSpectralData->coordHistory.back().first;
       int y0 = mpSpectralData->coordHistory.back().second;
@@ -555,13 +567,19 @@ UIHandle::Result BrushHandle::Drag
 
       for (wd = (wd+1)/2; ; ) {                                   /* pixel loop */
          posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-         mpSpectralData->addFreqTimeData(posFreq, posToLongLong(x0));
+         if(bCtrlDown)
+            mpSpectralData->removeTimeFreqData(posToLongLong(x0), posFreq);
+         else
+            mpSpectralData->addTimeFreqData(posToLongLong(x0), posFreq);
 
          e2 = err; x2 = x0;
          if (2*e2 >= -dx) {                                           /* x step */
             for (e2 += dy, y2 = y0; e2 < ed*wd && (y != y2 || dx > dy); e2 += dx){
                posFreq = PositionToFrequency(wt, 0, y2 += sy, mRect.y, mRect.height);
-               mpSpectralData->addFreqTimeData(posFreq, posToLongLong(x0));
+               if(bCtrlDown)
+                  mpSpectralData->removeTimeFreqData(posToLongLong(x0), posFreq);
+               else
+                  mpSpectralData->addTimeFreqData(posToLongLong(x0), posFreq);
             }
             if (x0 == x) break;
             e2 = err; err -= dy; x0 += sx;
@@ -569,7 +587,10 @@ UIHandle::Result BrushHandle::Drag
          if (2*e2 <= dy) {                                            /* y step */
             for (e2 = dx-e2; e2 < ed*wd && (x != x2 || dx < dy); e2 += dy){
                posFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-               mpSpectralData->addFreqTimeData(posFreq, posToLongLong(x2 += sx));
+               if(bCtrlDown)
+                  mpSpectralData->removeTimeFreqData(posToLongLong(x2 += sx), posFreq);
+               else
+                  mpSpectralData->addTimeFreqData(posToLongLong(x2 += sx), posFreq);
             }
             if (y0 == y) break;
             err += dx; y0 += sy;
