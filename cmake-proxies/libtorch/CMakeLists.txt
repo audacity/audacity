@@ -31,6 +31,8 @@ if( ${_OPT}use_libtorch STREQUAL "off" )
 elseif(NOT IS_64BIT)
    message("can't build libtorch in 32 bit architecture. skipping")
 else()
+   cmake_minimum_required( VERSION 3.18 )
+
    # define download URL for libtorcb
    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
       set (LIBTORCH_URL "https://download.pytorch.org/libtorch/cpu/libtorch-macos-1.8.1.zip")
@@ -52,22 +54,26 @@ else()
       INPUT "${LIBTORCH_ZIP_PATH}"
       DESTINATION "${LIBTORCH_DIR}"
    )
-
+   
    # define a directory where the library will live
    set(LIBTORCH_DIR "${LIBTORCH_DIR}/libtorch")
-
+   
    # make sure we can find torch
    set(Torch_DIR "${LIBTORCH_DIR}/share/cmake/Torch/")
    list(APPEND CMAKE_PREFIX_PATH "${LIBTORCH_DIR}")
 
-   # find torch
-   find_package(Torch REQUIRED)
+   if (EXISTS ${TORCH_DIR})
+      # find torch
+      find_package(Torch REQUIRED)
 
-   set_target_properties(torch PROPERTIES IMPORTED_GLOBAL On)
-   set_target_properties(torch_cpu PROPERTIES IMPORTED_GLOBAL On)
+      set_target_properties(torch PROPERTIES IMPORTED_GLOBAL On)
+      set_target_properties(torch_cpu PROPERTIES IMPORTED_GLOBAL On)
 
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-   target_include_directories(${TARGET} INTERFACE "${TORCH_INCLUDE_DIRS}")
-   target_link_libraries( ${TARGET} INTERFACE "${TORCH_LIBRARIES}")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+      target_include_directories(${TARGET} INTERFACE "${TORCH_INCLUDE_DIRS}")
+      target_link_libraries( ${TARGET} INTERFACE "${TORCH_LIBRARIES}")
+   else()
+      message("failed to create ${TORCH_DIR}. skipping")
+   endif()
 
 endif()
