@@ -48,6 +48,11 @@ public:
       }
    }
 
+   void clearAllData(){
+      // DataBuffer should be clear when the user release cursor
+      dataHistory.clear();
+   }
+
    // Using long long from the sample count, this function to convert it back to double time point
    // TODO: Clone from sampleCount, find better way to reuse the code there
    double scToTimeDouble(long long ll) const{
@@ -76,6 +81,8 @@ public:
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
    bool IsSpectral() const override;
+
+   std::shared_ptr<SpectralData> GetSpectralData();
 
 private:
     int mBrushSize;

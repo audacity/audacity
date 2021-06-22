@@ -32,6 +32,7 @@ enum {
    ETBTrimID,
    ETBSilenceID,
 
+   ETBApplyID,
    ETBUndoID,
    ETBRedoID,
 

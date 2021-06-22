@@ -238,6 +238,12 @@ const ReservedCommandFlag&
       }
    }; return flag; }
 const ReservedCommandFlag&
+   ApplyAvailableFlag() { static ReservedCommandFlag flag{
+         [](const AudacityProject &project){
+            return ProjectHistory::Get( project ).UndoAvailable();
+         }
+   }; return flag; }
+const ReservedCommandFlag&
    UndoAvailableFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return ProjectHistory::Get( project ).UndoAvailable();

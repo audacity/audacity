@@ -108,6 +108,10 @@ std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
    return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
 }
 
+std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
+   return mpSpectralData;
+}
+
 namespace
 {
 
@@ -568,11 +572,17 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       }
    }
    mpSpectralData->dataHistory.pop_back();
-//   std::sort(selectedCoords.begin(), selectedCoords.end());
+//   std::sort( selectedCoords.begin(), selectedCoords.end(),
+//              []( const auto &p1, const auto &p2 ){
+//                 return ( p1.first < p2.first ||
+//                          ( !( p2.first > p1.first ) && p1.second < p2.second ) );
+//              } );
+//
 //   for(auto pairss: selectedCoords) {
 //      std::cout << pairss.first << ", " << pairss.second << std::endl;
 //   }
 //   auto coordIter = selectedCoords.begin();
+
    for (int xx = 0; xx < mid.width; ++xx) {
       int correctedX = xx + leftOffset - hiddenLeftOffset;
 

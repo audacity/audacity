@@ -24,6 +24,9 @@
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/SpectrumView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 // private helper classes and functions
 namespace {
@@ -135,6 +138,35 @@ namespace EditActions {
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
+
+void OnApply(const CommandContext &context){
+   auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+   auto &undoManager = UndoManager::Get( project );
+
+   int applyCount = 0;
+   for ( auto wt : tracks.Selected< WaveTrack >() ) {
+      std::vector< WaveTrackSubView::Type > displays = WaveTrackView::Get( *wt ).GetDisplays();
+      auto &trackView = TrackView::Get(*wt);
+      const wxRect trackRect(0, trackView.GetY(), 0, trackView.GetHeight());
+
+      for(const auto &subViewRefinement: trackView.GetSubViews(trackRect)){
+         std::shared_ptr<TrackView> subView = subViewRefinement.second;
+         if(subView->IsSpectral()){
+            wxCoord topLeft = subViewRefinement.first;
+            auto sView = std::dynamic_pointer_cast<SpectrumView>(subView).get();
+            auto sData = sView->GetSpectralData();
+            applyCount += static_cast<int>(sData->dataHistory.size());
+            sData->clearAllData();
+            trackPanel.Refresh(false);
+         }
+      }
+   }
+   if(applyCount != 0){
+      AudacityMessageBox(XO("Effect applied to %d selection(s).").Format(applyCount));
+   }
+}
 
 void OnUndo(const CommandContext &context)
 {
@@ -1028,6 +1060,9 @@ BaseItemSharedPtr EditMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
+         Command( wxT("Apply"), XXO("&Apply"), FN(OnApply),
+            AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Shift+Z") ),
+
          Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
