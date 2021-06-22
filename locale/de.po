@@ -4822,7 +4822,7 @@ msgstr "Herzlich Willkommen zu Audacity-Version %s"
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
-msgstr "%sÄnderungen speichern nach %s?"
+msgstr "%sÄnderungen an %s speichern?"
 
 #: src/ProjectManager.cpp
 msgid "Save project before closing?"
