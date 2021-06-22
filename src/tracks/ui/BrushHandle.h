@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <vector>
 #include <tracks/playabletrack/wavetrack/ui/SpectrumView.h>
+#include <TrackPanelDrawingContext.h>
 
 class SelectionStateChanger;
 class SnapManager;

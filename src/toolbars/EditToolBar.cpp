@@ -144,6 +144,8 @@ void EditToolBar::Populate()
 
    AddSeparator();
 
+   AddButton(this, bmpDrawCursor, bmpDrawCursor, bmpUndoDisabled, ETBApplyID,
+      XO("Apply"));
    AddButton(this, bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
       XO("Undo"));
    AddButton(this, bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
@@ -231,6 +233,7 @@ static const struct Entry {
    { ETBPasteID,    wxT("Paste"),       XO("Paste")  },
    { ETBTrimID,     wxT("Trim"),        XO("Trim audio outside selection")  },
    { ETBSilenceID,  wxT("Silence"),     XO("Silence audio selection")  },
+   { ETBApplyID,    wxT("Apply"),       XO("Apply effect to selection")  },
    { ETBUndoID,     wxT("Undo"),        XO("Undo")  },
    { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
 

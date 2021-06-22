@@ -48,6 +48,11 @@ public:
       }
    }
 
+   void clearAllData(){
+      // DataBuffer should be clear when the user release cursor
+      dataHistory.clear();
+   }
+
    // Using long long from the sample count, this function to convert it back to double time point
    // TODO: Clone from sampleCount, find better way to reuse the code there
    double scToTimeDouble(long long ll) const{
@@ -77,8 +82,8 @@ public:
 
    bool IsSpectral() const override;
 
-   static std::unordered_map<wxInt64, std::unordered_set<double>> mFreqToTimePointsMap;
-   static int mBrushRadius;
+
+   std::shared_ptr<SpectralData> GetSpectralData();
 
 private:
     int mBrushSize;
