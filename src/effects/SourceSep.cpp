@@ -152,35 +152,25 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
    // resample the track, and make sure that we update the start and end 
    // sampleCounts to reflect the new sample rate
    leader->Resample(mModel->GetSampleRate(), mProgress);
-   sampleCount start = leader->TimeToLongSamples(tStart);
-   sampleCount end = leader->TimeToLongSamples(tEnd);
 
    // initialize source tracks, one for each source that we will separate
    std::vector<WaveTrack::Holder> outputSourceTracks;
    std::vector<std::string>sourceLabels = mModel->GetLabels();
    outputSourceTracks = BuildOutputSourceTracks(leader, sourceLabels);
    
-   //Get the length of the selection (as double). len is
-   //used simple to calculate a progress meter, so it is easier
-   //to make it a double now than it is to do it later
-   double len = (end - start).as_double();
-
    // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
    Floats buffer{ leader->GetMaxBlockSize() };
 
-   //Go through the track one buffer at a time. samplePos counts which
-   //sample the current buffer starts at.
-   bool bGoodResult = true;
-   sampleCount samplePos = start;
-   while (samplePos < end) 
+   // get each of the blocks we will process
+   for (BlockIndex block : GetBlockIndices(leader, tStart, tEnd))
    {
       //Get a blockSize of samples (smaller than the size of the buffer)
-      size_t blockSize = limitSampleBufferSize(
-         /*bufferSize*/ leader->GetBestBlockSize(samplePos),
-         /*limit*/ end - samplePos
-      );
+      sampleCount samplePos = block.first;
+      size_t blockSize = block.second;
    
+      // get a torch tensor from the leader track
+      // TODO: get rid of the Floats entirely and simply pass the data_ptr to empty torch contiguous zeros
       torch::Tensor input = BuildMonoTensor(leader, buffer.get(), 
                                             samplePos, blockSize); 
 
@@ -190,25 +180,21 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
       // write the output to the new source tracks
       WriteOutputToSourceTracks(output, outputSourceTracks, tStart, tEnd);
 
-      // Increment the sample pointer
-      size_t outputLen = output.size(-1);
-      samplePos += outputLen;
-
       // Update the Progress meter
-      if (TrackProgress(mCurrentTrackNum, (samplePos - start).as_double() / len)) 
-      {
-         bGoodResult = false;
+      double tPos = leader->LongSamplesToTime(samplePos); 
+      if (TrackProgress(mCurrentTrackNum, (tPos - tStart) / (tEnd - tStart))) 
          return false;
-      }
    }
 
    // postprocess the source tracks to the user's sample rate and format
    PostProcessSources(outputSourceTracks, origFmt, origRate);
 
-   return bGoodResult;
+   return true;
 }
 
-// queries for the best block size from 
+// gets a list of starting samples and block lengths 
+// dictated by the track, so we can process the audio
+// audio in blocks
 std::vector<BlockIndex> EffectSourceSep::GetBlockIndices
 (WaveTrack *track, double tStart, double tEnd)
 {
@@ -243,7 +229,6 @@ std::vector<BlockIndex> EffectSourceSep::GetBlockIndices
    return blockIndices;
 }
 
-
 torch::Tensor EffectSourceSep::BuildMonoTensor(WaveTrack *track, float *buffer, 
                               sampleCount start, size_t len)
 {
@@ -263,16 +248,19 @@ torch::Tensor EffectSourceSep::ForwardPass(torch::Tensor input)
 {
    torch::Tensor output;
    try
-      {
-         output = mModel->Forward(input);
-      }
+   {
+      output = mModel->Forward(input);
+   }
    catch (const std::exception &e)
-      {
-         std::cerr<<e.what();
-         Effect::MessageBox(XO("An error occurred during the forward pass"),
-            wxOK | wxICON_ERROR
-         );
-      }
+   {
+      std::cerr<<e.what();
+      Effect::MessageBox(XO("An error occurred during the forward pass"),
+         wxOK | wxICON_ERROR
+      );
+
+      output = torch::zeros_like(input);
+   }
+   return output;
 }
 
 std::vector<WaveTrack::Holder> EffectSourceSep::BuildOutputSourceTracks

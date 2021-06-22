@@ -33,6 +33,8 @@ class wxButton;
 //    size_t len;
 // };
 
+// BlockIndex.first corresponds to the starting sample of a block
+// BlockIndex.second corresponds to the length of the block
 using BlockIndex = std::pair<sampleCount, size_t>;
 
 class EffectSourceSep final: public Effect
