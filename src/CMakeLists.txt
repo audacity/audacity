@@ -594,6 +594,8 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_LIBTORCH}>:
          effects/deeplearning/DeepModel.cpp
          effects/deeplearning/DeepModel.h
+         effects/deeplearning/EffectDeepLearning.cpp
+         effects/deeplearning/EffectDeepLearning.h
 
          effects/SourceSep.h
          effects/SourceSep.cpp
