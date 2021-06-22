@@ -64,5 +64,25 @@ fi
 # Configure Audacity
 cmake "${cmake_args[@]}"
 
+if [[ "${OSTYPE}" == msys* ]]; then # Windows
+    # On Windows, preserve PDB files before clearing the build cache
+    
+    conanUnixPath=$(cygpath ${CONAN_USER_HOME})
+    pdbOutputPath="${conanUnixPath}/pdbs"
+
+    ls -la ${conanUnixPath}
+
+    mkdir -p "${pdbOutputPath}"
+    find "${conanUnixPath}/.conan" -name '*.pdb' '!' -name "vc14?.pdb" -type f | xargs -I % cp -v % ${pdbOutputPath}
+elif [[ "${OSTYPE}" == darwin* ]]; then # macOS
+    # On macOS - find all the .dylib files and generate dSYMs from them 
+    # in the same folder.
+    # dsymutil requires *.o files, so we need to generate files before clearing
+    # the build directories.
+
+    chmod +x scripts/ci/macos/generate_dsym.sh
+    scripts/ci/macos/generate_dsym.sh
+fi
+
 # Remove build directories and sources to reduce the cache size.
 conan remove "*" --src --builds --force
