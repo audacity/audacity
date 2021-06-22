@@ -137,7 +137,8 @@ bool EffectSourceSep::Process()
 }
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
-// and calls libsamplerate code on these blocks.
+// performs a forward pass through the deep model, and writes 
+// the output to new tracks. 
 bool EffectSourceSep::ProcessOne(WaveTrack *leader,
                            double tStart, double tEnd)
 {
@@ -154,9 +155,9 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
    leader->Resample(mModel->GetSampleRate(), mProgress);
 
    // initialize source tracks, one for each source that we will separate
-   std::vector<WaveTrack::Holder> outputSourceTracks;
+   std::vector<WaveTrack::Holder> sourceTracks;
    std::vector<std::string>sourceLabels = mModel->GetLabels();
-   outputSourceTracks = BuildOutputSourceTracks(leader, sourceLabels);
+   sourceTracks = CreateSourceTracks(leader, sourceLabels);
    
    // Initiate processing buffers, most likely shorter than
    // the length of the selection being processed.
@@ -170,15 +171,18 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
       size_t blockSize = block.second;
    
       // get a torch tensor from the leader track
-      // TODO: get rid of the Floats entirely and simply pass the data_ptr to empty torch contiguous zeros
+      // TODO: get rid of the Floats entirely and simply pass the data_ptr
+      // to empty torch contiguous zeros
       torch::Tensor input = BuildMonoTensor(leader, buffer.get(), 
                                             samplePos, blockSize); 
 
       // forward pass!
       torch::Tensor output = ForwardPass(input);
 
-      // write the output to the new source tracks
-      WriteOutputToSourceTracks(output, outputSourceTracks, tStart, tEnd);
+      // write each source output to the source tracks
+      for (size_t idx = 0; idx < output.size(0) ; idx++)
+         TensorToTrack(output[idx].unsqueeze(0), sourceTracks[idx], 
+                       tStart, tEnd); 
 
       // Update the Progress meter
       double tPos = leader->LongSamplesToTime(samplePos); 
@@ -187,7 +191,7 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
    }
 
    // postprocess the source tracks to the user's sample rate and format
-   PostProcessSources(outputSourceTracks, origFmt, origRate);
+   PostProcessSources(sourceTracks, origFmt, origRate);
 
    return true;
 }
@@ -263,7 +267,7 @@ torch::Tensor EffectSourceSep::ForwardPass(torch::Tensor input)
    return output;
 }
 
-std::vector<WaveTrack::Holder> EffectSourceSep::BuildOutputSourceTracks
+std::vector<WaveTrack::Holder> EffectSourceSep::CreateSourceTracks
 (WaveTrack *leader, std::vector<std::string> &labels)
 {
    std::vector<WaveTrack::Holder> sources;
@@ -278,34 +282,31 @@ std::vector<WaveTrack::Holder> EffectSourceSep::BuildOutputSourceTracks
    return sources;
 }
 
-void EffectSourceSep::WriteOutputToSourceTracks(torch::Tensor output,
-                               std::vector<WaveTrack::Holder> &sourceTracks, 
-                               double tStart, double tEnd)
+void EffectSourceSep::TensorToTrack(torch::Tensor output, WaveTrack::Holder track, 
+                                   double tStart, double tEnd)
 {
-   // determine size of output buffers
-   size_t outputLen = output.size(-1);
-   // copy data from output tensor to the output tracks
-   for (size_t idx = 0 ; idx < output.size(0) ; idx++)
-   {
-      // create a new buffer and fill it with the output 
-      // index into the first channel (n_src, channels, samples)
-      float *data = output[idx].contiguous().data_ptr<float>();
-      try 
-      { 
-         // add the separation data to a temporary track, then 
-         // paste on our output track
-         WaveTrack::Holder tmp = sourceTracks[idx]->EmptyCopy();
-         tmp->Append((samplePtr)data, floatSample, outputLen);
-         tmp->Flush();
+   // TODO: exception: input audio should be shape (1, samples)
+   if (!(output.size(0) == 1))
+      throw std::exception(); 
 
-         sourceTracks[idx]->ClearAndPaste(tStart, tEnd, tmp.get());
-      }
-      catch (const std::exception &e)
-      { 
-         Effect::MessageBox(XO("Error copying tensor data to output track"),
-         wxOK | wxICON_ERROR 
-         ); 
-      }
+   // get the data pointer
+   float *data = output.contiguous().data_ptr<float>();
+   size_t outputLen = output.size(-1);
+
+   // add the data to a temporary track, then 
+   // paste on our output track
+   WaveTrack::Holder tmp = track->EmptyCopy();
+   tmp->Append((samplePtr)data, floatSample, outputLen);
+   tmp->Flush();
+
+   try {
+      track->ClearAndPaste(tStart, tEnd, tmp.get());
+   }
+   catch (const std::exception &e)
+   { 
+      Effect::MessageBox(XO("Error copying tensor data to output track"),
+      wxOK | wxICON_ERROR 
+      ); 
    }
 }
 

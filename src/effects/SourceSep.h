@@ -72,15 +72,22 @@ public:
    // bool TransferDataFromWindow() override;
 
 protected:
-   // track --> tensor conversions
-   void Preprocess(WaveTrack *leader);
+
+   // gets the number of channels in a (possibly multichannel) track
    size_t GetNumChannels(WaveTrack *leader){return TrackList::Channels(leader).size();}
 
    // builds a mono tensor with shape (1, samples)
+   // from a track
    torch::Tensor BuildMonoTensor(WaveTrack *track, float *buffer, 
                                  sampleCount start, size_t len);
-   // wraps the forward pass in an effect exception
+
+   // wraps the forward pass in an exception
    torch::Tensor ForwardPass(torch::Tensor input); 
+
+   // writes an output tensor to a track
+   // tensor should be shape (1, samples)
+   void TensorToTrack(torch::Tensor output, WaveTrack::Holder track, 
+                      double tStart, double tEnd);
 
    std::vector<BlockIndex> GetBlockIndices(WaveTrack *track, 
                                            double tStart, double tEnd);
@@ -89,13 +96,8 @@ private:
    // handlers
    void OnLoadButton(wxCommandEvent &event);
 
-   std::vector<WaveTrack::Holder> BuildOutputSourceTracks(WaveTrack *track, 
+   std::vector<WaveTrack::Holder> CreateSourceTracks(WaveTrack *track, 
                                              std::vector<std::string> &labels);
-
-   // given output tensor with shape (channels, samples), will 
-   void WriteOutputToSourceTracks(torch::Tensor output, 
-                                  std::vector<WaveTrack::Holder> &sourceTracks, 
-                                  double tStart, double tEnd);
    void PostProcessSources(std::vector<WaveTrack::Holder> &sourceTracks, 
                            sampleFormat fmt, int sampleRate);
 
