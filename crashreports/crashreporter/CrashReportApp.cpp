@@ -255,14 +255,19 @@ namespace
             wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)//disable frame resize
         );
         
+        //fixes focus issue with Windows build-in screen reader, but breaks VoiceOver
+#if defined(__WXMSW__)
+        dialog->SetFocus();
+#endif
+
         auto mainLayout = new wxBoxSizer(wxVERTICAL);
-        
-        auto headerText = new wxStaticText(dialog, wxID_ANY, header);
-        headerText->SetFont(wxFont(wxFontInfo().Bold()));
 
         auto headerLayout = new wxBoxSizer(wxHORIZONTAL);
         headerLayout->Add(new wxStaticBitmap(dialog, wxID_ANY, wxIcon(warning)));
         headerLayout->AddSpacer(5);
+
+        auto headerText = new wxStaticText(dialog, wxID_ANY, header);
+        headerText->SetFont(wxFont(wxFontInfo().Bold()));
         headerLayout->Add(headerText, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
 
         mainLayout->Add(headerLayout, wxSizerFlags().Border(wxALL));
@@ -284,8 +289,13 @@ namespace
         wxTextCtrl* commentCtrl = nullptr;
         if (onSend != nullptr)
         {
+            mainLayout->AddSpacer(10);
+            mainLayout->Add(new wxStaticText(dialog, wxID_ANY, _("Comments")), wxSizerFlags().Border(wxALL));
+
             commentCtrl = new wxTextCtrl(dialog, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(500, 100), wxTE_MULTILINE);
             commentCtrl->SetMaxLength(MaxUserCommentLength);
+
+            mainLayout->Add(commentCtrl, wxSizerFlags().Border(wxALL).Expand());
         }
 
         if (onSend != nullptr && commentCtrl != nullptr)
@@ -319,13 +329,6 @@ namespace
             buttonsLayout->Add(okButton);
         }
 
-        if (commentCtrl != nullptr)
-        {
-            mainLayout->AddSpacer(10);
-            mainLayout->Add(new wxStaticText(dialog, wxID_ANY, _("Comments")), wxSizerFlags().Border(wxALL));
-            mainLayout->Add(commentCtrl, wxSizerFlags().Border(wxALL).Expand());
-        }
-
         mainLayout->Add(buttonsLayout, wxSizerFlags().Border(wxALL).Align(wxALIGN_RIGHT));
         dialog->SetSizerAndFit(mainLayout);
 
@@ -334,7 +337,6 @@ namespace
         });
             
         dialog->Show(true);
-        dialog->SetFocus();
     }
 }
 
