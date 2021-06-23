@@ -132,8 +132,12 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleTeamMember);
    AddCredit(wxT("Steve Daulton"), roleTeamMember);
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Jouni Helminen"), roleTeamMember);
+   AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
 
