@@ -77,6 +77,12 @@ public:
 
    static ModuleManager & Get();
    
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   static wxString GetPluginTypeString();
+
+   static PluginID GetID(ModuleInterface *module);
+
 private:
    static void FindModules(FilePaths &files);
    using DelayedErrors =

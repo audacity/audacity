@@ -1552,16 +1552,6 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
    }
 }
 
-PluginID PluginManager::GetID(ModuleInterface *module)
-{
-   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeModule),
-                           wxEmptyString,
-                           module->GetVendor().Internal(),
-                           module->GetSymbol().Internal(),
-                           module->GetPath());
-}
-
 PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
@@ -1620,7 +1610,7 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
       str = wxT("Importer");
       break;
    case PluginTypeModule:
-      str = wxT("Module");
+      str = ModuleManager::GetPluginTypeString();
       break;
    }
 

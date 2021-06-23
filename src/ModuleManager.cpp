@@ -403,6 +403,21 @@ ModuleManager & ModuleManager::Get()
    return *mInstance;
 }
 
+wxString ModuleManager::GetPluginTypeString()
+{
+   return L"Module";
+}
+
+PluginID ModuleManager::GetID(ModuleInterface *module)
+{
+   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
+                           GetPluginTypeString(),
+                           wxEmptyString,
+                           module->GetVendor().Internal(),
+                           module->GetSymbol().Internal(),
+                           module->GetPath());
+}
+
 bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
@@ -569,4 +584,3 @@ bool ModuleManager::IsPluginValid(const PluginID & providerID,
 
    return mDynModules[providerID]->IsPluginValid(path, bFast);
 }
-
