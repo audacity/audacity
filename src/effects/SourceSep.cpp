@@ -95,6 +95,8 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
 
    // resample the track, and make sure that we update the start and end 
    // sampleCounts to reflect the new sample rate
+   // TODO: we should prevent from  having to resample the whole track
+   mProgress->SetMessage(XO("Resampling Track"));
    leader->Resample(mModel->GetSampleRate(), mProgress);
 
    // initialize source tracks, one for each source that we will separate
@@ -102,7 +104,7 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
    std::vector<std::string>sourceLabels = mModel->GetLabels();
    sourceTracks = CreateSourceTracks(leader, sourceLabels);
    
-   // Initiate processing buffers, most likely shorter than
+   // Initiate processing buffer, most likely shorter than
    // the length of the selection being processed.
    Floats buffer{ leader->GetMaxBlockSize() };
 
@@ -246,8 +248,11 @@ void EffectSourceSep::OnLoadButton(wxCommandEvent &WXUNUSED(event))
                                      XO("Load Source Separation Model"),
                                      wxEmptyString,
                                      wxEmptyString, 
-                                     wxEmptyString, //TODO: add default extenstion
-                                    { FileNames::AllFiles }, //TODO: change this to our deepmodel type
+                                     wxT("ts"),
+                                    { FileNames::FileType(
+                                       XO("TorchScript Files"), 
+                                       {wxT("ts")}, true
+                                    )},
                                      wxFD_OPEN | wxRESIZE_BORDER,
                                      nullptr);
 

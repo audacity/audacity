@@ -10,12 +10,6 @@
 ******************************************************************/
 /**
 
-TODO: write me
-\class SourceSep
-\brief SourceSep is an effect for source separation using deep learning 
-
-TODO: add a more thorough description
-
 */
 /*******************************************************************/
 

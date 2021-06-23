@@ -4,14 +4,15 @@
    Audacity(R) is copyright (c) 1999-2021 Audacity Team.
    License: GPL v2.  See License.txt.
 
-   SourceSep.h
+   EffectDeepLearning.h
    Hugo Flores Garcia
 
 ******************************************************************/
 /**
 
-\class SourceSep
-\brief SourceSep is an effect for source separation using DeepLearning 
+\class EffectDeepLearning
+\brief EffectDeepLearning provides methods for using deep learning
+                            models in Audacity Effects. 
 
 TODO: add more desc
 
@@ -23,7 +24,6 @@ TODO: add more desc
 
 #include "DeepModel.h"
 #include "../Effect.h"
-
 
 // BlockIndex.first corresponds to the starting sample of a block
 // BlockIndex.second corresponds to the length of the block
