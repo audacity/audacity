@@ -10,6 +10,7 @@
 #include "UpdateManager.h"
 #include "UpdatePopupDialog.h"
 
+#include "AudioIO.h"
 #include "NetworkManager.h"
 #include "IResponse.h"
 #include "Request.h"
@@ -71,9 +72,10 @@ void UpdateManager::GetUpdates()
 
     response->setRequestFinishedCallback([response, this](audacity::network_manager::IResponse*) {
 
+        auto gAudioIO = AudioIO::Get();
         if (response->getError() != audacity::network_manager::NetworkError::NoError)
         {
-            wxTheApp->CallAfter([] {ShowExceptionDialog(nullptr,
+            gAudioIO->CallAfterRecording([] {ShowExceptionDialog(nullptr,
                 XC("Error checking for update", "update dialog"),
                 XC("Unable to connect to Audacity update server.", "update dialog"),
                 wxString());
@@ -84,7 +86,7 @@ void UpdateManager::GetUpdates()
 
         if (!mUpdateDataParser.Parse(response->readAll<VersionPatch::UpdateDataFormat>(), &mVersionPatch))
         {
-            wxTheApp->CallAfter([] {ShowExceptionDialog(nullptr,
+            gAudioIO->CallAfterRecording([] {ShowExceptionDialog(nullptr,
                 XC("Error checking for update", "update dialog"),
                 XC("Update data was corrupted.", "update dialog"),
                 wxString());
@@ -95,7 +97,7 @@ void UpdateManager::GetUpdates()
 
         if (mVersionPatch.version > CurrentBuildVersion())
         {
-            wxTheApp->CallAfter([this] {
+            gAudioIO->CallAfterRecording([this] {
                 UpdatePopupDialog dlg(nullptr, mVersionPatch);
                 const int code = dlg.ShowModal();
 

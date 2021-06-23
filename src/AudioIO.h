@@ -18,9 +18,9 @@
 #include "AudioIOBase.h" // to inherit
 #include "PlaybackSchedule.h" // member variable
 
-
-
+#include <functional>
 #include <memory>
+#include <mutex>
 #include <utility>
 #include <wx/atomic.h> // member variable
 
@@ -621,6 +621,12 @@ public:
     * by the specified amount from where it is now */
    void SeekStream(double seconds) { mSeek = seconds; }
 
+   using PostRecordingAction = std::function<void()>;
+   
+   //! Enqueue action for main thread idle time, not before the end of any recording in progress
+   /*! This may be called from non-main threads */
+   void CallAfterRecording(PostRecordingAction action);
+
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
    bool IsScrubbing() const { return IsBusy() && mScrubState != 0; }
 
@@ -787,6 +793,9 @@ private:
      *
      * If bOnlyBuffers is specified, it only cleans up the buffers. */
    void StartStreamCleanup(bool bOnlyBuffers = false);
+
+   std::mutex mPostRecordingActionMutex;
+   PostRecordingAction mPostRecordingAction;
 };
 
 static constexpr unsigned ScrubPollInterval_ms = 50;
