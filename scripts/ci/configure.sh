@@ -58,6 +58,7 @@ fi
 if [[ ${GIT_BRANCH} == release* ]]; then
     cmake_args+=(
         -D audacity_package_manual=yes
+        -D AUDACITY_BUILD_LEVEL=2
     )
 fi
 
