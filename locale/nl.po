@@ -10,10 +10,10 @@
 # Tino Meinen <a.t.meinen@chello.nl>, 2002-2008
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-04-01 07:16+0000\n"
+"PO-Revision-Date: 2021-06-08 14:11+0000\n"
 "Last-Translator: Thomas De Rocker\n"
 "Language-Team: Dutch (http://www.transifex.com/klyok/audacity/language/nl/)\n"
 "Language: nl\n"
@@ -58,19 +58,20 @@ msgid "System"
 msgstr "Systeem"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Voorziet ondersteuning voor Vamp-effecten in Audacity"
+msgstr "Probleemrapport voor Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Klik op \"verzenden\" om het rapport naar Audacity te sturen. Deze "
+"informatie wordt anoniem verzameld."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
-msgstr ""
+msgstr "Details van probleem"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -79,82 +80,73 @@ msgstr "Opmerkingen"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "Verzenden"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "Niet verzenden"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 #, c-format
 msgid "Exception code 0x%x"
-msgstr ""
+msgstr "Uitzondering code 0x%x"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Unknown exception"
-msgstr ""
+msgstr "Onbekende uitzondering"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown assertion"
-msgstr "Onbekend formaat"
+msgstr "Onbekende verklaring"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown error"
-msgstr "Onbekend formaat"
+msgstr "Onbekende fout"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "Naam instellen van voorinstelling mislukt"
+msgstr "Verzenden van crashrapport mislukt"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "Schema"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (standaard)"
+msgstr "Kleur (standaard)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "Klassiek"
+msgstr "Kleur (klassiek)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
 msgstr "Grijswaarden"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "Lineaire schaal"
+msgstr "Omgekeerde grijswaarden"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Audacity afsluiten"
+msgstr "Audacity bijwerken"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "Overslaan"
@@ -162,60 +154,57 @@ msgstr "Overslaan"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "Update installeren"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Kanaal"
+msgstr "Wijzigingslog"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "Meer informatie op GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error checking for update"
-msgstr "Fout bij vergrendelen van tijdelijke map"
+msgstr "Fout bij controleren op updates"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr ""
+msgstr "Kon niet verbinden met de updateserver van Audacity."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Bijwerkingsgegevens zijn beschadigd."
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update."
-msgstr "Fout bij het laden van de metadata"
+msgstr "Fout bij downloaden van update"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Kan de Audacity-downloadkoppeling niet openen"
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
+#, c-format
 msgctxt "update dialog"
 msgid "Audacity %s is available!"
-msgstr "Audacity %s-werkbalk"
+msgstr "Audacity %s is beschikbaar!"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
-msgstr ""
+msgstr "Experimentele opdracht 1..."
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "2nd Experimental Command"
-msgstr ""
+msgstr "Experimentele opdracht 2..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -589,9 +578,9 @@ msgstr "%s, ontwikkelaar"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer and support"
-msgstr "%s, documentatie en ondersteuning"
+msgstr "%s, ontwikkelaar en ondersteuning"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -601,9 +590,9 @@ msgstr "%s, documentatie en ondersteuning"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, documentatie en ondersteuning"
+msgstr "%s, QA-tester, documentatie en ondersteuning"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -814,9 +803,9 @@ msgstr "%s-software is auteursrecht %s 1999-2021 %s-team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark."
-msgstr "De naam %s is een geregistreerd handelsmerk van Dominic Mazzoni."
+msgstr "De naam %s is een geregistreerd handelsmerk."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -2338,19 +2327,19 @@ msgid "Report generated to:"
 msgstr "Rapport gegenereerd aan:"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "(%d): %s"
-msgstr "%s: %s"
+msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Verbinding weggooien mislukt"
+msgstr "Instellen van veilige modus op primaire verbinding naar %s mislukt"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Verbinding herstellen mislukt"
+msgstr "Instellen van veilige modus op checkpoint-verbinding naar %s mislukt"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -4232,7 +4221,6 @@ msgid "This is not an Audacity project file"
 msgstr "Dit is geen Audacity-projectbestand"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid ""
 "This project was created with a newer version of Audacity.\n"
 "\n"
@@ -4240,7 +4228,7 @@ msgid ""
 msgstr ""
 "Dit project is aangemaakt met een nieuwere versie van Audacity:\n"
 "\n"
-"U heeft een upgrade nodig om het te verwerken"
+"U heeft een upgrade nodig om het te openen."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4412,9 +4400,8 @@ msgid "Failed to remove the autosave information from the project file."
 msgstr "Verwijderen van autosave-informatie uit het projectbestand mislukt"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to bind to blob"
-msgstr "Codec kon niet worden gevonden"
+msgstr "Kan niet binden aan blob"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4633,14 +4620,12 @@ msgid "Error Saving Copy of Project"
 msgstr "Fout bij opslaan van kopie van project"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Can't open new empty project"
-msgstr "Kan projectbestand niet openen"
+msgstr "Kan nieuw leeg project niet openen"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error opening a new empty project"
-msgstr "Fout bij openen van bestand of project"
+msgstr "Fout bij openen van een nieuw leeg project"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -6621,9 +6606,8 @@ msgid "Delete"
 msgstr "Verwijderen"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Edited Envelope"
-msgstr "Envelope instellen"
+msgstr "Envelope bewerkt"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
@@ -6652,9 +6636,8 @@ msgid "Selected"
 msgstr "Geselecteerd"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Edited Label"
-msgstr "Bewerkte labels"
+msgstr "Label bewerkt"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -10363,6 +10346,8 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
+"Schakel track-spectrogramweergave in voordat u\n"
+"'spectrale' effecten toepast."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -15252,9 +15237,8 @@ msgid "&Extra Menus (on/off)"
 msgstr "Extra menu's (aan/uit)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Track &Name (on/off)"
-msgstr "Extra menu's (aan/uit)"
+msgstr "Track-naam (aan/uit)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -15443,9 +15427,8 @@ msgid "Bro&wse..."
 msgstr "Bladeren..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Macro output:"
-msgstr "Uitvoer weergeven"
+msgstr "Macro-uitvoer:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -17512,7 +17495,7 @@ msgstr "Lengte en einde van selectie"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length and Center of Selection"
-msgstr "Lengte en center van selectie"
+msgstr "Lengte en centrum van selectie"
 
 #: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Show"
@@ -18661,13 +18644,13 @@ msgstr "Selecteer een actie"
 #. * on the end to the word for seconds. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 seconds"
-msgstr "01000,01000 seconden"
+msgstr "01000 01000 seconden"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes
 #. * and seconds
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss"
-msgstr "uu:mm:ss"
+msgstr "hh:mm:ss"
 
 #. i18n-hint: Format string for displaying time in hours, minutes and
 #. * seconds. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -18676,13 +18659,13 @@ msgstr "uu:mm:ss"
 #. * locale
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s"
-msgstr "0100 u 060 m 060 s"
+msgstr "0100 h 060 m 060 s"
 
 #. i18n-hint: Name of time display format that shows time in days, hours,
 #. * minutes and seconds
 #: src/widgets/NumericTextCtrl.cpp
 msgid "dd:hh:mm:ss"
-msgstr "dd:uu:mm:ss"
+msgstr "dd:hh:mm:ss"
 
 #. i18n-hint: Format string for displaying time in days, hours, minutes and
 #. * seconds. Change the 'days' to the word for days, 'h' to the abbreviation
@@ -18691,13 +18674,13 @@ msgstr "dd:uu:mm:ss"
 #. * 24 hours in a day in your locale
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 days 024 h 060 m 060 s"
-msgstr "0100 dagen 024 u 060 m 060 s"
+msgstr "0100 dagen 024 h 060 m 060 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and hundredths of a second (1/100 second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + hundredths"
-msgstr "uu:mm:ss + honderdsten"
+msgstr "hh:mm:ss + honderdsten"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
@@ -18708,13 +18691,13 @@ msgstr "uu:mm:ss + honderdsten"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>0100 s"
-msgstr "0100 u 060 m 060>0100 s"
+msgstr "0100 h 060 m 060<0100 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and milliseconds (1/1000 second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + milliseconds"
-msgstr "uu:mm:ss + milliseconden"
+msgstr "hh:mm:ss + milliseconden"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -18725,13 +18708,13 @@ msgstr "uu:mm:ss + milliseconden"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>01000 s"
-msgstr "0100 u 060 m 060>01000 s"
+msgstr "0100 h 060 m 060<01000 s"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + samples"
-msgstr "uu:mm:ss + samples"
+msgstr "hh:mm:ss + samples"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and samples. Change the 'h' to the abbreviation for hours, 'm' to the
@@ -18742,7 +18725,7 @@ msgstr "uu:mm:ss + samples"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 u 060 m 060 s+># samples"
+msgstr "0100 h 060 m 060 s + <# samples"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -18758,13 +18741,13 @@ msgstr "samples"
 #. * can change the numbers to an appropriate one, and put a 0 on the front
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000,01000 samples|#"
-msgstr "01000,01000,01000 samples|#"
+msgstr "01000 01000 01000 samples|#"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at 24 frames per second (commonly used for films)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "uu:mm:ss + film-frames (24 fps)"
+msgstr "hh:mm:ss + film-frames (24 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
@@ -18775,7 +18758,7 @@ msgstr "uu:mm:ss + film-frames (24 fps)"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 u 060 m 060 s+>24 frames"
+msgstr "0100 h 060 m 060 s + <24 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
@@ -18789,14 +18772,14 @@ msgstr "film-frames (24 fps)"
 #. * translate 'frames' and leave the rest alone
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|24"
-msgstr "01000,01000 frames|24"
+msgstr "01000 01000 frames|24"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV drop-frame rate (used for American /
 #. * Japanese TV, and very odd)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + NTSC drop frames"
-msgstr "uu:mm:ss + NTSC drop-frames"
+msgstr "hh:mm:ss + NTSC drop-frames"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -18806,14 +18789,14 @@ msgstr "uu:mm:ss + NTSC drop-frames"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 u 060 m 060 s+>30 frames|N"
+msgstr "0100 h 060 m 060 s + <30 frames|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
 #. * Japanese TV, and doesn't quite match wall time
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + NTSC non-drop frames"
-msgstr "uu:mm:ss + NTSC non-drop frames"
+msgstr "hh:mm:ss + NTSC non-drop frames"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -18824,7 +18807,7 @@ msgstr "uu:mm:ss + NTSC non-drop frames"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 u 060 m 060 s+>030 frames| .999000999"
+msgstr "0100 h 060 m 060 s + <030 frames| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
@@ -18839,13 +18822,13 @@ msgstr "NTSC-frames"
 #. * rate!
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|29.97002997"
-msgstr "01000,01000 frames|29.97002997"
+msgstr "01000 01000 frames|29.97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at PAL TV frame rate (used for European TV)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + PAL frames (25 fps)"
-msgstr "uu:mm:ss + PAL-frames (25 fps)"
+msgstr "hh:mm:ss + PAL-frames (25 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
@@ -18855,7 +18838,7 @@ msgstr "uu:mm:ss + PAL-frames (25 fps)"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 u 060 m 060 s+>25 frames"
+msgstr "0100 h 060 m 060 s + <25 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
 #. * TV frame rate (used for European TV)
@@ -18869,13 +18852,13 @@ msgstr "PAL-frames (25 fps)"
 #. * translate 'frames' and leave the rest alone.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|25"
-msgstr "01000,01000 frames|25"
+msgstr "01000 01000 frames|25"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at CD Audio frame rate (75 frames per second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "uu:mm:ss + CDDA-frames (75 fps)"
+msgstr "hh:mm:ss + CDDA-frames (75 fps)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
@@ -18885,7 +18868,7 @@ msgstr "uu:mm:ss + CDDA-frames (75 fps)"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 u 060 m 060 s+>75 frames"
+msgstr "0100 h 060 m 060 s + <75 frames"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
@@ -18899,7 +18882,7 @@ msgstr "CDDA-frames (75 fps)"
 #. * translate 'frames' and leave the rest alone
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|75"
-msgstr "01000,01000 frames|75"
+msgstr "01000 01000 frames|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
@@ -18907,7 +18890,7 @@ msgstr "01000,01000 frames|75"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "010,01000>0100 Hz"
-msgstr "010,01000<0100 Hz"
+msgstr "010 01000<0100 Hz"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "centihertz"
@@ -18924,7 +18907,7 @@ msgstr "kHz"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000>01000 kHz|0.001"
-msgstr "01000>01000 kHz|0.001"
+msgstr "01000<01000 kHz|0.001"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hertz"
@@ -18942,7 +18925,7 @@ msgstr "octaven"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100>01000 octaves|1.442695041"
-msgstr "100>01000 octaven|1.442695041"
+msgstr "100<01000 octaven|1.442695041"
 
 #. i18n-hint: an octave is a doubling of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -18962,7 +18945,7 @@ msgstr "semitonen + centiemen"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
-msgstr "1000 semitonen >0100 centiemen|17.312340491"
+msgstr "1000 semitonen <0100 centiemen|17.312340491"
 
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
@@ -18979,7 +18962,7 @@ msgstr "decades"
 #. * Change the decimal points for your locale. Don't change the numbers.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "10>01000 decades|0.434294482"
-msgstr "10>01000 decades|0.434294482"
+msgstr "10<01000 decades|0.434294482"
 
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
@@ -19850,10 +19833,10 @@ msgid "~ah ~am ~as"
 msgstr "~a h ~a m ~a s"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Te veel stiltes gedetecteerd. \n"
+"Te veel stiltes gedetecteerd. ~%\n"
 "Alleen de eerste 10000 labels zijn toegevoegd."
 
 #. i18n-hint: '~a' will be replaced by a time duration
@@ -20118,15 +20101,15 @@ msgid "Success.~%Files written to:~%~s~%"
 msgstr "Succes.~%Bestanden geschreven naar:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Waarschuwing.nKopiëren van een aantal bestanden mislukt:n"
+msgstr "Waarschuwing.~%Kopiëren van een aantal bestanden mislukt:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Plug-ins geïnstalleerd.n(Gebruik de plugin-beheerder om effecten in te "
+"Plug-ins geïnstalleerd.~%(Gebruik de plugin-beheerder om effecten in te "
 "schakelen):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20945,27 +20928,3 @@ msgstr "Frequentie van radar-needles (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Fout.~%Stereotrack vereist."
-
-#~ msgid "Fast"
-#~ msgstr "Snel"
-
-#~ msgid "Variable Speed:"
-#~ msgstr "Variabele snelheid:"
-
-#~ msgid "Free Space"
-#~ msgstr "Vrije ruimte"
-
-#~ msgid "Master Gain Control"
-#~ msgstr "Hoofdvolumebediening"
-
-#~ msgid "LAME MP3 Library:"
-#~ msgstr "LAME MP3-bibliotheek:"
-
-#~ msgid "&Locate..."
-#~ msgstr "Laden…"
-
-#~ msgid "&Download"
-#~ msgstr "Downloaden"
-
-#~ msgid "Error.n"
-#~ msgstr "Fout.n"

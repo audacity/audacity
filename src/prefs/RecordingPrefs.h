@@ -28,7 +28,10 @@ class ShuttleGui;
    #define AILA_DEF_NUMBER_ANALYSIS 5
 #endif
 
-#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Recording") }
+#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ \
+   L"Recording", \
+   XO("Recording")  /* XC("Recording", "preference") */ \
+}
 
 #define AUDIO_PRE_ROLL_KEY (wxT("/AudioIO/PreRoll"))
 #define DEFAULT_PRE_ROLL_SECONDS 5.0

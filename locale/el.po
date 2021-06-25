@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-04-01 11:52+0300\n"
+"PO-Revision-Date: 2021-06-12 13:36+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -55,19 +55,20 @@ msgid "System"
 msgstr "Σύστημα"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Δίνει υποστήριξη στα εφέ Vamp για το Audacity"
+msgstr "Αναφορά προβλήματος για το Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Πατήστε στην επιλογή \"Αποστολή\" για να υποβάλετε την αναφορά στο Audacity. "
+"Αυτές οι πληροφορίες συλλέγονται ανώνυμα."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
-msgstr ""
+msgstr "Λεπτομέρειες προβλήματος"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -76,83 +77,73 @@ msgstr "Σχόλια"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "&Αποστολή"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
-msgstr ""
+msgstr "&Να μην αποσταλεί"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 #, c-format
 msgid "Exception code 0x%x"
-msgstr ""
+msgstr "Κωδικός εξαίρεσης 0x%x"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown exception"
-msgstr "Άγνωστη command line επιλογή: %s\n"
+msgstr "Άγνωστη εξαίρεση"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown assertion"
-msgstr "Άγνωστη μορφή"
+msgstr "Άγνωστoς ισχυρισμός"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown error"
-msgstr "Άγνωστη μορφή"
+msgstr "Άγνωστο σφάλμα"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "Αδυναμία ορισμού προρυθμισμένου ονόματος"
+msgstr "Αποτυχία αποστολής αναφοράς κατάρρευσης"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
-msgstr ""
+msgstr "Σ&χήμα"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (προεπιλογή)"
+msgstr "Χρώμα (προεπιλογή)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "Κλασικό"
+msgstr "Χρώμα (Κλασικό)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr "Κ&λίμακα του γκρίζου"
+msgstr "Κλίμακα του γκρίζου"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "&Γραμμική κλίμακα"
+msgstr "Αντίστροφη κλίμακα του γκρίζου"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Έξοδος από το Audacity"
+msgstr "Ενημέρωση του Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "&Παράλειψη"
@@ -160,62 +151,57 @@ msgstr "&Παράλειψη"
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr ""
+msgstr "Ε&γκατάσταση ενημέρωσης"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Κανάλι"
+msgstr "Αρχείο αλλαγών"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr ""
+msgstr "Διαβάστε περισσότερα στο GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error checking for update"
-msgstr "Σφάλμα κατά την αποκωδικοποίηση του αρχείου"
+msgstr "Σφάλμα κατά τον έλεγχο για ενημέρωση"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr ""
+msgstr "Αδυναμία σύνδεσης με τον διακομιστή ενημέρωσης του Audacity."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr ""
+msgstr "Τα δεδομένα ενημέρωσης ήταν κατεστραμμένα."
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update."
-msgstr "Σφάλμα κατά την φόρτωση των μετατδεδομένων"
+msgstr "Σφάλμα κατά τη λήψη της ενημέρωσης."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
+msgstr "Αδυναμία ανοίγματος του συνδέσμου λήψης του Audacity."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
+#, c-format
 msgctxt "update dialog"
 msgid "Audacity %s is available!"
-msgstr "Γραμμή εργαλείων %s του Audacity"
+msgstr "Το Audacity %s είναι διαθέσιμο!"
 
 #: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
 msgid "1st Experimental Command..."
-msgstr "Ειδική εντολή"
+msgstr "1η πειραματική εντολή ..."
 
 #: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
 msgid "2nd Experimental Command"
-msgstr "Ειδική εντολή"
+msgstr "2η πειραματική εντολή"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -589,9 +575,9 @@ msgstr "%s, προγραμματιστής"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer and support"
-msgstr "%s, τεκμηρίωση και υποστήριξη"
+msgstr "%s, ανάπτυξη και υποστήριξη"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -601,9 +587,9 @@ msgstr "%s, τεκμηρίωση και υποστήριξη"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, τεκμηρίωση και υποστήριξη"
+msgstr "%s, Ελεγκτής ποιότητας, τεκμηρίωση και υποστήριξη"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -820,9 +806,9 @@ msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark."
-msgstr "Το όνομα %s είναι καταχωρισμένο εμπορικό σήμα του Dominic Mazzoni."
+msgstr "Το όνομα% s είναι σήμα κατατεθέν."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -2348,19 +2334,20 @@ msgid "Report generated to:"
 msgstr "Η αναφορά δημιουργήθηκε στο:"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "(%d): %s"
-msgstr "%s: %s"
+msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Αποτυχία απόρριψης της σύνδεσης"
+msgstr "Αποτυχία ορισμού ασφαλούς λειτουργίας στην κύρια σύνδεση στο %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Αποτυχία επαναφοράς της σύνδεσης"
+msgstr ""
+"Αποτυχία ορισμού ασφαλούς λειτουργίας στη σύνδεση σημείου ελέγχου στο % s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -4268,15 +4255,14 @@ msgid "This is not an Audacity project file"
 msgstr "Αυτό δεν είναι αρχείο έργου του Audacity"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid ""
 "This project was created with a newer version of Audacity.\n"
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
-"Αυτό το έργο δημιουργήθηκε με νεότερη έκδοση του Audacity:\n"
+"Αυτό το έργο δημιουργήθηκε με νεότερη έκδοση του Audacity.\n"
 "\n"
-"Θα χρειαστείτε να το αναβαθμίσετε για να το επεξεργαστείτε"
+"Θα χρειαστείτε να την αναβαθμίσετε για να το ανοίξετε."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4452,9 +4438,8 @@ msgstr ""
 "έργου."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to bind to blob"
-msgstr "Αποτυχία εύρεσης κωδικοποιητή"
+msgstr "Αδυναμία σύνδεσης στο blob"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4676,14 +4661,12 @@ msgid "Error Saving Copy of Project"
 msgstr "Σφάλμα κατά την αποθήκευση αντιγράφου του έργου"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Can't open new empty project"
-msgstr "Αδύνατο το άνοιγμα του αρχείου έργου"
+msgstr "Αδυναμία ανοίγματος νέου κενού έργου"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error opening a new empty project"
-msgstr "Σφάλμα κατά το άνοιγμα αρχείου ή έργου"
+msgstr "Σφάλμα κατά το άνοιγμα νέου κενού έργου"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -6668,9 +6651,8 @@ msgid "Delete"
 msgstr "Διαγραφή"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Edited Envelope"
-msgstr "Ορισμός καμπύλης ακουστότητας"
+msgstr "Επεξεργασμένος φάκελος"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
@@ -6699,9 +6681,8 @@ msgid "Selected"
 msgstr "Επιλεγμένο"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Edited Label"
-msgstr "Επεξεργασμένες ετικέτες"
+msgstr "Επεξεργασμένη ετικέτα"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -10431,6 +10412,8 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
+"Ενεργοποίηση της προβολής φασματογράφου κομματιού\n"
+"πριν την εφαρμογή των εφέ 'Φασματικά'."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -15363,9 +15346,8 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Πρόσθετα μενού (ναι/όχι)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Track &Name (on/off)"
-msgstr "&Πρόσθετα μενού (ναι/όχι)"
+msgstr "Κομμάτι ό&νομα (ναι/όχι)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -15558,9 +15540,8 @@ msgid "Bro&wse..."
 msgstr "Αναζήτ&ηση..."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Macro output:"
-msgstr "Εμφάνιση εξόδου"
+msgstr "Έξοδος &μακροεντολής:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -19988,10 +19969,11 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Ανιχνεύτηκαν υπερβολικές σιγές. Προστέθηκαν μόνο οι πρώτες 10000 ετικέτες."
+"Εντοπίστηκαν πάρα πολλές σιωπές.  Προστέθηκαν ~%μόνο οι πρώτες 10000 "
+"ετικέτες."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -20256,15 +20238,15 @@ msgid "Success.~%Files written to:~%~s~%"
 msgstr "Επιτυχία.~%Αρχεία γράφτηκαν στο:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Προειδοποίηση.nΑποτυχία αντιγραφής κάποιων αρχείων:n"
+msgstr "Προειδοποίηση. ~%Αποτυχία αντιγραφής ορισμένων αρχείων:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Εγκατάσταθηκαν πρόσθετα.n(Χρησιμοποιήστε τον διαχειριστή προσθέτων για να "
+"Εγκατάσταθηκαν πρόσθετα.~%(Χρησιμοποιήστε τον διαχειριστή προσθέτων για να "
 "ενεργοποιήσετε τα εφέ):"
 
 #: plug-ins/nyquist-plug-in-installer.ny

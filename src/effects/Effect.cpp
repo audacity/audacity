@@ -2468,7 +2468,7 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         ShowErrorDialog(FocusDialog, XO("Error"),
+         ShowExceptionDialog(FocusDialog, XO("Error"),
                          XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
       }

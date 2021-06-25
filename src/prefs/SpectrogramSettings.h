@@ -67,6 +67,7 @@ public:
    };
 
    static const EnumValueSymbols &GetScaleNames();
+   static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();
@@ -128,7 +129,22 @@ public:
    size_t GetFFTLength() const; // window size (times zero padding, if STFT)
    size_t NBins() const;
 
-   bool isGrayscale;
+   enum ColorScheme : int {
+      // Keep in correspondence with AColor::colorSchemes, AColor::gradient_pre
+      csColorNew = 0,
+      csColorTheme,
+      csGrayscale,
+      csInvGrayscale,
+
+      csNumColorScheme,
+   };
+   ColorScheme colorScheme;
+
+   class ColorSchemeEnumSetting : public EnumSetting< ColorScheme > {
+       using EnumSetting< ColorScheme >::EnumSetting;
+       void Migrate(wxString &value) override;
+   };
+   static ColorSchemeEnumSetting colorSchemeSetting;
 
    ScaleType scaleType;
 

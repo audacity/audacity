@@ -132,12 +132,11 @@ int audacityAudioCallback(
 // Data must be default-constructible and either copyable or movable.
 template<typename Data>
 class MessageBuffer {
-   struct alignas( 64
-      //std::hardware_destructive_interference_size // C++17
-   ) UpdateSlot {
+   struct UpdateSlot {
       std::atomic<bool> mBusy{ false };
       Data mData;
-   } mSlots[2];
+   };
+   NonInterfering<UpdateSlot> mSlots[2];
 
    std::atomic<unsigned char> mLastWrittenSlot{ 0 };
 
@@ -566,10 +565,11 @@ protected:
       // These need not be updated atomically, because we rely on the atomics
       // in the playback ring buffers to supply the synchronization.  Still,
       // align them to avoid false sharing.
-      alignas(64) struct Cursor {
+      struct Cursor {
          size_t mIndex {};
          size_t mRemainder {};
-      } mHead, mTail;
+      };
+      NonInterfering<Cursor> mHead, mTail;
 
       void Producer(
          const PlaybackSchedule &schedule, double rate, double scrubSpeed,

@@ -107,7 +107,8 @@ public:
       if (Read(key, &str))
       {
          struct lconv *info = localeconv();
-         wxString dec = info ? wxString::FromUTF8(info->decimal_point) : wxT(".");
+         wxString dec =
+            info ? wxString::FromUTF8(info->decimal_point) : wxString(".");
 
          str.Replace(wxT(","), dec);
          str.Replace(wxT("."), dec);

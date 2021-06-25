@@ -26,7 +26,7 @@ set( AUDACITY_BUILD_LEVEL 0 )
 # AUDACITY_BUILD_LEVEL to 0
 set( AUDACITY_VERSION 3 )
 set( AUDACITY_RELEASE 0 )
-set( AUDACITY_REVISION 3 )
+set( AUDACITY_REVISION 4 )
 set( AUDACITY_MODLEVEL 0 )
 
 string( TIMESTAMP __TDATE__ "%Y%m%d" )
@@ -116,7 +116,7 @@ set( CMAKE_PREFIX_PATH
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF )
 
 # Set the required C++ standard
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # Use ccache if available
@@ -135,6 +135,8 @@ project( Audacity )
 
 # Load our functions/macros
 include( AudacityFunctions )
+
+set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
@@ -167,6 +169,35 @@ include( CMakeDetermineASM_NASMCompiler )
 include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
+
+set_from_env(SENTRY_DSN_KEY)
+set_from_env(SENTRY_HOST)
+set_from_env(SENTRY_PROJECT)
+set_from_env(CRASH_REPORT_URL)
+
+cmake_dependent_option(
+   ${_OPT}has_sentry_reporting
+   "Build support for sending errors to Sentry"
+   On
+   "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_crashreports
+   "Enables crash reporting for Audacity"
+   On
+   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_updates_check
+   "Build updates checking features into Audacity"
+   On
+   "${_OPT}has_networking"
+   Off
+)
 
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
@@ -205,6 +236,11 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    endif()
    message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
    message( STATUS )
+
+   if(${_OPT}has_crashreports)
+      set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
+   endif()
+
 endif()
 
 # Try to get the current commit information
@@ -473,6 +509,9 @@ add_subdirectory( "cmake-proxies" )
 resolve_conan_dependencies()
 
 add_subdirectory( "help" )
+if(${_OPT}has_crashreports)
+add_subdirectory( "crashreports" )
+endif()
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
@@ -505,6 +544,42 @@ file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
 execute_process( COMMAND
    dot -O -Tsvg "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" )
 
+#
+# Code signing
+#
+
+cmd_option( ${_OPT}perform_codesign
+            "Perform code signing during the install step. This only works on Windows and macOS."
+            Off
+)
+
+cmake_dependent_option(
+   ${_OPT}perform_notarization
+   "Perform notarization during the install step. This only works on macOS."
+   Off
+   "${_OPT}perform_codesign;APPLE"
+   Off
+)
+
+if( ${_OPT}perform_codesign )
+   include( AudacityCodeSigning )
+endif()
+
+#
+# Packaging
+#
+
+cmd_option( ${_OPT}package_manual
+            "Package the manual along with the DMG and InnoSetup targets"
+            Off
+)
+
+# Variables, that are common for all package targets
+
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   include( AudacityInnoSetup )
+endif()
+
 # Uncomment what follows for symbol values.
 #[[
    get_cmake_property( _variableNames VARIABLES )
@@ -517,3 +592,4 @@ execute_process( COMMAND
    print_properties( TARGET "wxWidgets" )
 #]]
 
+include( Package ) # do this last

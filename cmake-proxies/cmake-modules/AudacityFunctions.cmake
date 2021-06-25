@@ -74,6 +74,15 @@ macro( set_cache_value var value )
    set_property( CACHE ${var} PROPERTY VALUE "${value}" )
 endmacro()
 
+# Set a CMake variable to the value of the corresponding environment variable
+# if the CMake variable is not already defined. Any addition arguments after
+# the variable name are passed through to set().
+macro( set_from_env var )
+   if( NOT DEFINED ${var} AND NOT "$ENV{${var}}" STREQUAL "" )
+      set( ${var} "$ENV{${var}}" ${ARGN} ) # pass additional args (e.g. CACHE)
+   endif()
+endmacro()
+
 # Set the given property and its config specific brethren to the same value
 function( set_target_property_all target property value )
    set_target_properties( "${target}" PROPERTIES "${property}" "${value}" )
@@ -229,15 +238,15 @@ function( audacity_append_common_compiler_options var use_pch )
          -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
 
          # This renames a good use of this C++ keyword that we don't need
-	 # to review when hunting for leaks because of naked new and delete.
+	      # to review when hunting for leaks because of naked new and delete.
 	 -DPROHIBITED==delete
 
          # Reviewed, certified, non-leaky uses of NEW that immediately entrust
-	 # their results to RAII objects.
+	      # their results to RAII objects.
          # You may use it in NEW code when constructing a wxWindow subclass
-	 # with non-NULL parent window.
+	      # with non-NULL parent window.
          # You may use it in NEW code when the NEW expression is the
-	 # constructor argument for a standard smart
+	      # constructor argument for a standard smart
          # pointer like std::unique_ptr or std::shared_ptr.
          -Dsafenew=new
 
@@ -246,14 +255,14 @@ function( audacity_append_common_compiler_options var use_pch )
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
-	 # Yes, CMake will change -D to /D as needed for Windows:
+	      # Yes, CMake will change -D to /D as needed for Windows:
          -DWXINTL_NO_GETTEXT_MACRO
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
          $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
 
          # Define/undefine _DEBUG
 	 # Yes, -U to /U too as needed for Windows:
-	 $<IF:$<CONFIG:Release>,-U_DEBUG,-D_DEBUG=1>
+	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
    )   
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
@@ -301,6 +310,19 @@ function( export_symbol_define var module_name )
    set( "${var}" "${symbol}=${value}" PARENT_SCOPE )
 endfunction()
 
+# shorten a target name for purposes of generating a dependency graph picture
+function( canonicalize_node_name var node )
+   # strip generator expressions
+   string( REGEX REPLACE ".*>.*:(.*)>" "\\1" node "${node}" )
+   # omit the "-interface" for alias targets to modules
+   string( REGEX REPLACE "-interface\$" "" node "${node}"  )
+   # shorten names of standard libraries or Apple frameworks
+   string( REGEX REPLACE "^-(l|framework )" "" node "${node}" )
+   # shorten paths
+   get_filename_component( node "${node}" NAME_WE )
+   set( "${var}" "${node}" PARENT_SCOPE )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
@@ -346,6 +368,15 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             PREFIX ""
             FOLDER "modules" # for IDE organization
       )
+      if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
+         add_custom_command(
+	    TARGET ${TARGET}
+            COMMAND ${CMAKE_COMMAND}
+	       -D SRC="${_MODDIR}/${TARGET}.so"
+               -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+               -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD )
+      endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
@@ -404,7 +435,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       add_custom_command(
          TARGET "${TARGET}"
          POST_BUILD
-	 COMMAND $<IF:$<CONFIG:Debug>,echo,strip> -x $<TARGET_FILE:${TARGET}>
+         COMMAND $<IF:$<CONFIG:Debug>,echo,strip> -x $<TARGET_FILE:${TARGET}>
       )
    endif()
 
@@ -432,15 +463,15 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       add_library("${INTERFACE_TARGET}" INTERFACE)
       foreach(PROP
          INTERFACE_INCLUDE_DIRECTORIES
-	 INTERFACE_COMPILE_DEFINITIONS
-	 INTERFACE_LINK_LIBRARIES
+         INTERFACE_COMPILE_DEFINITIONS
+         INTERFACE_LINK_LIBRARIES
       )
          get_target_property( PROPS "${TARGET}" "${PROP}" )
-	 if (PROPS)
+         if (PROPS)
             set_target_properties(
                "${INTERFACE_TARGET}"
-	       PROPERTIES "${PROP}" "${PROPS}" )
-	 endif()
+               PROPERTIES "${PROP}" "${PROPS}" )
+         endif()
       endforeach()
    endif()
 
@@ -454,7 +485,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       if(IMPORT IN_LIST ACCESS)
          continue()
       endif()
-      string( REGEX REPLACE "-interface\$" "" IMPORT "${IMPORT}"  )
+      canonicalize_node_name(IMPORT "${IMPORT}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
@@ -505,6 +536,22 @@ macro( audacity_library NAME SOURCES IMPORT_TARGETS
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
    # Collect list of libraries for the executable to declare dependency on
+   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
+   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
+endmacro()
+
+# A special macro for header only libraries
+
+macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES )
+   # ditto comment in the previous macro
+   add_library( ${NAME} INTERFACE )
+
+   target_include_directories ( ${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+   target_sources( ${NAME} INTERFACE ${SOURCES})
+   target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
+   target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
+
    list( APPEND AUDACITY_LIBRARIES "${NAME}" )
    set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()

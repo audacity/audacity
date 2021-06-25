@@ -75,6 +75,7 @@ list( APPEND SOURCES
    PRIVATE
       AColor.cpp
       AColor.h
+      AColorResources.h
       ActiveProjects.cpp
       ActiveProjects.h
       AboutDialog.cpp
@@ -958,6 +959,10 @@ list( APPEND SOURCES
       widgets/ReadOnlyText.h
       widgets/Ruler.cpp
       widgets/Ruler.h
+      $<$<BOOL:${${_OPT}has_sentry_reporting}>:
+         widgets/ErrorReportDialog.cpp
+         widgets/ErrorReportDialog.h
+      >
       widgets/Warning.cpp
       widgets/Warning.h
       widgets/WindowAccessible.cpp
@@ -978,6 +983,21 @@ list( APPEND SOURCES
       xml/XMLWriter.cpp
       xml/XMLWriter.h
       xml/audacityproject.dtd
+
+      # Update version
+      $<$<BOOL:${${_OPT}has_updates_check}>:
+          update/VersionId.h
+          update/VersionId.cpp
+          update/VersionPatch.h
+          update/UpdateDataParser.h
+          update/UpdateDataParser.cpp
+          update/UpdateManager.h
+          update/UpdateManager.cpp
+          update/UpdatePopupDialog.h
+          update/UpdatePopupDialog.cpp
+          prefs/ApplicationPrefs.h
+          prefs/ApplicationPrefs.cpp
+      >
 
       Experimental.cmake
 )
@@ -1035,6 +1055,9 @@ list( APPEND DEFINES
          __STDC_CONSTANT_MACROS
          STRICT
       >
+      $<$<BOOL:${USE_UPDATE_CHECK}>:
+          HAVE_UPDATES_CHECK
+      >
 )
 
 # If we have cmake 3.16 or higher, we can use precompiled headers, but
@@ -1070,6 +1093,7 @@ list( APPEND LIBRARIES
       libsoxr
       portaudio-v19
       sqlite
+      $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
@@ -1239,6 +1263,9 @@ else()
    #
    # (Don't use generator expressions since it will leave null/empty
    # entries in the list.)
+   set( MIMETYPES
+      application/x-audacity-project
+   )
    if( USE_FFMPEG )
       list( APPEND MIMETYPES
          audio/aac
@@ -1289,6 +1316,10 @@ else()
    )
 endif()
 
+if(CRASH_REPORT_URL)
+    list(APPEND DEFINES PRIVATE -DCRASH_REPORT_URL="${CRASH_REPORT_URL}")
+endif()
+
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
@@ -1337,7 +1368,15 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    endif()
 endif()
 
-if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+if( "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+   install(
+      DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/"
+      DESTINATION "."
+      USE_SOURCE_PERMISSIONS
+      PATTERN "*.pdb" EXCLUDE
+      PATTERN "*.ilk" EXCLUDE
+   )
+else()
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       install( TARGETS ${TARGET}
                DESTINATION "."
@@ -1356,6 +1395,9 @@ if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
                DESTINATION "${_DATADIR}/mime/packages" )
       install( FILES "${topdir}/presets/EQDefaultCurves.xml"
                DESTINATION "${_PKGDATA}" )
+      install( PROGRAMS "${PROJECT_SOURCE_DIR}/linux/audacity.sh"
+               DESTINATION "."
+               RENAME "audacity" )
    endif()
 endif()
 
@@ -1363,8 +1405,7 @@ endif()
 list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
 foreach( LIBRARY ${LIBRARIES} )
    if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
-      string( REGEX REPLACE ".*>.*:(.*)>" "\\1" LIBRARY "${LIBRARY}" )
-      string( REGEX REPLACE "^-(l|framework )" "" LIBRARY "${LIBRARY}" )
+      canonicalize_node_name(LIBRARY "${LIBRARY}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${LIBRARY}\"" )
    endif()
 endforeach()

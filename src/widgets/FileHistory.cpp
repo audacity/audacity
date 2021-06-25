@@ -115,7 +115,7 @@ void FileHistory::Load(wxConfigBase & config, const wxString & group)
 {
    mHistory.clear();
    mGroup = group.empty()
-      ? wxT("RecentFiles")
+      ? wxString{ "RecentFiles" }
       : group;
 
    config.SetPath(mGroup);

@@ -9,18 +9,15 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-03-31 16:03+0300\n"
+"PO-Revision-Date: 2021-06-08 17:19+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Lokalize 20.11.70\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Lokalize 20.12.0\n"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -58,19 +55,20 @@ msgid "System"
 msgstr "Системна"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Problem Report for Audacity"
-msgstr "Надає підтримку ефектів Vamp у Audacity"
+msgstr "Звіт щодо проблем в Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Audacity. This information is "
 "collected anonymously."
 msgstr ""
+"Натисніть кнопку «Надіслати», щоб подати звіт щодо Audacity. Ці відомості буде зібрано анонімно."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem details"
 msgstr ""
+"Подробиці проблеми"
 
 #: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
 msgid "Comments"
@@ -80,81 +78,77 @@ msgstr "Коментарі"
 msgctxt "crash reporter button"
 msgid "&Send"
 msgstr ""
+"&Надіслати"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "crash reporter button"
 msgid "&Don't send"
 msgstr ""
+"Н&е надсилати"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 #, c-format
 msgid "Exception code 0x%x"
 msgstr ""
+"Код виключення 0x%x"
 
 #. i18n-hint C++ programming exception
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Unknown exception"
 msgstr ""
+"Невідоме виключення"
 
 #. i18n-hint C++ programming assertion
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown assertion"
-msgstr "Невідомий формат"
+msgstr "Невідомий оператор контролю"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Unknown error"
-msgstr "Невідомий формат"
+msgstr "Невідома помилка"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgid "Failed to send crash report"
-msgstr "Не вдалося встановити назву набору шаблонів"
+msgstr "Не вдалося надіслати звіт щодо аварії"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "spectrum prefs"
 msgid "Sche&me"
 msgstr ""
+"С&хема"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (default)"
-msgstr "4 (типово)"
+msgstr "Колір (типовий)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (classic)"
-msgstr "Класична"
+msgstr "Колір (класичний)"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Grayscale"
-msgstr "&Тони сірого"
+msgstr "Тони сірого"
 
 #. i18n-hint Choice of spectrogram colors
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Inverse grayscale"
-msgstr "&Лінійний масштаб"
+msgstr "Інвертовані тони сірого"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Вийти з Audacity"
+msgstr "Оновити Audacity"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "&Skip"
 msgstr "Проп&устити"
@@ -163,59 +157,63 @@ msgstr "Проп&устити"
 msgctxt "update dialog"
 msgid "&Install update"
 msgstr ""
+"&Встановити оновлення"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "Канал"
+msgstr "Журнал змін"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Read more on GitHub"
 msgstr ""
+"Прочитати більше на GitHub"
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error checking for update"
-msgstr "Помилка при блокуванні теки тимчасових фалів"
+msgstr "Помилка під час перевірки оновлень"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
 msgstr ""
+"Не вдалося встановити з'єднання із сервером оновлення Audacity."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Update data was corrupted."
 msgstr ""
+"Дані оновлення пошкоджено."
 
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update."
-msgstr "Помилка під час завантаження метаданих"
+msgstr "Помилка під час отримання оновлення."
 
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr ""
+"Не вдалося відкрити посилання для отримання Audacity."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
+#, c-format
 msgctxt "update dialog"
 msgid "Audacity %s is available!"
-msgstr "Панель інструментів Audacity %s"
+msgstr "Випущено Audacity %s!"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
 msgstr ""
+"Перша експериментальна команда…"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "2nd Experimental Command"
 msgstr ""
+"Друга експериментальна команда"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -588,9 +586,9 @@ msgstr "%s, розробник"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, developer and support"
-msgstr "%s, документація і супровід"
+msgstr "%s, розробка і супровід"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -600,9 +598,9 @@ msgstr "%s, документація і супровід"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, документація і супровід"
+msgstr "%s, тестування, документування та супровід"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -818,11 +816,10 @@ msgstr "%s, %s Команда %s, 1999–2021."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "The name %s is a registered trademark."
 msgstr ""
-"Назва продукту %s є зареєстрованою торговельною маркою Домініка Маццоні "
-"(Dominic Mazzoni)."
+"Назва %s є зареєстрованою торговельною маркою."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -2352,19 +2349,19 @@ msgid "Report generated to:"
 msgstr "Звіт створено тут:"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "(%d): %s"
-msgstr "%s: %s"
+msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
-msgstr "Не вдалося відкинути з'єднання"
+msgstr "Не вдалося встановити безпечний режим для основного з'єднання із %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Не вдалося відновити з'єднання"
+msgstr "Не вдалося встановити безпечний режим при з'єднанні контрольної точки із %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -4260,15 +4257,12 @@ msgid "This is not an Audacity project file"
 msgstr "Цей файл не є файлом проєкту Audacity"
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid ""
 "This project was created with a newer version of Audacity.\n"
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
-"Цей проєкт було створено у новішій версії Audacity:\n"
-"\n"
-"Щоб працювати з ним, вам доведеться встановити новішу версію програми"
+"Цей проєкт було створено у новішій версії Audacity:\n\nЩоб відкрити його, вам доведеться встановити новішу версію програми"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4443,9 +4437,8 @@ msgid "Failed to remove the autosave information from the project file."
 msgstr "Не вдалося вилучити дані автоматичного збереження з файла проєкту."
 
 #: src/ProjectFileIO.cpp
-#, fuzzy
 msgid "Unable to bind to blob"
-msgstr "Не вдалося знайти кодек"
+msgstr "Неможливо прив'язатися до бінарних даних"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4667,14 +4660,12 @@ msgid "Error Saving Copy of Project"
 msgstr "Помилка під час збереження копії проєкту"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Can't open new empty project"
-msgstr "Не вдалося відкрити файл проєкту"
+msgstr "Не вдалося відкрити новий порожній проєкт"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Error opening a new empty project"
-msgstr "Помилка під час відкриття файла або проєкту"
+msgstr "Помилка під час спроби відкрити новий порожній проєкт"
 
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
@@ -6658,9 +6649,8 @@ msgid "Delete"
 msgstr "Вилучити"
 
 #: src/commands/SetEnvelopeCommand.cpp
-#, fuzzy
 msgid "Edited Envelope"
-msgstr "Налаштувати обгортку"
+msgstr "Редагована обгортка"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
@@ -6689,9 +6679,8 @@ msgid "Selected"
 msgstr "Позначене"
 
 #: src/commands/SetLabelCommand.cpp
-#, fuzzy
 msgid "Edited Label"
-msgstr "Змінені мітки"
+msgstr "Редагована мітка"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -10412,6 +10401,7 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
+"Увімкніть перегляд спектрограми доріжки до\nзастосування «Спектральних» ефектів."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -15324,9 +15314,8 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Додаткові меню (увімкн./вимкн.)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Track &Name (on/off)"
-msgstr "&Додаткові меню (увімкн./вимкн.)"
+msgstr "&Назва доріжки (увімкн./вимкн.)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -15516,9 +15505,8 @@ msgid "Bro&wse..."
 msgstr "&Навігація…"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "&Macro output:"
-msgstr "Показати вивід"
+msgstr "Виведене &макросом:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -19940,11 +19928,10 @@ msgid "~ah ~am ~as"
 msgstr "~aг ~aх ~aс"
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Виявлено забагато областей тиші.\n"
-"Додано лише перші 10000 міток."
+"Виявлено надто багато фрагментів тиші.~%Додано лише перші 10000 міток."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -20209,16 +20196,15 @@ msgid "Success.~%Files written to:~%~s~%"
 msgstr "Успіх.~%Файли записано сюди:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Увага.nНе вдалося скопіювати деякі файли:n"
+msgstr "Попередження.~%FНе вдалося скопіювати деякі файли:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Встановлено додатки.n(Скористайтеся керуванням додатками, щоб увімкнути "
-"ефекти):"
+"Додатки встановлено.~%(Скористайтеся сторінкою керування додатками для вмикання ефектів):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"

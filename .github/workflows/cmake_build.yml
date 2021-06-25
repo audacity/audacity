@@ -1,92 +1,74 @@
-#
-# CMake based build for Audacity
-#
 name: CMake Build
 
-#
-# Only execute on "git push" actions
-#
 on:
   push:
-    # Remove the "#" from the next 2 lines if you need to disable this action
-    #branches:
-    #  - disable
   pull_request:
-    # Remove the "#" from the next 2 lines if you need to disable this action
-    #branches:
-    #  - disable
 
-#
-# Global environment variables
-#
-env:
-  WXURL: https://github.com/audacity/wxWidgets
-  WXREF: audacity-fixes-3.1.3
-  WXWIN: ${{ github.workspace }}/wxwin
-  # As of 2021/01/01, github is using Xcode 12.2 as the default and
-  # it has a bug in the install_name_tool.  So explicitly use 12.3
-  # instead.
-  DEVELOPER_DIR: /Applications/Xcode_12.3.app/Contents/Developer
-  CONAN_USER_HOME: "${{ github.workspace }}/conan-home/"
-  CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-home/short"
-#
-# Define our job(s)
-#
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
+    env:
+      AUDACITY_CMAKE_GENERATOR: ${{ matrix.config.generator }}
+      AUDACITY_ARCH_LABEL: ${{ matrix.config.arch }}
+      # Windows codesigning
+      # This variables will be used by all the steps
+      WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+      WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+      # Conan home location to be used for cache action
+      CONAN_USER_HOME: "${{ github.workspace }}/conan-home/"
+      CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-home/short"
     strategy:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "Windows_32bit",
-            os: windows-latest,
-            generator: "Visual Studio 16 2019",
-            platform: "Win32"
-          }
-        - {
-            name: "Windows_64bit",
-            os: windows-latest,
-            generator: "Visual Studio 16 2019",
-            platform: "x64"
-          }
-        - {
-            name: "Ubuntu_18.04",
-            os: ubuntu-18.04,
-            generator: "Unix Makefiles"
-          }
-        - {
-            name: "macOS",
-            os: macos-latest,
-            generator: "Xcode"
-          }
+
+        - name: Ubuntu_18.04
+          os: ubuntu-18.04
+          arch: x86_64 # as reported by `arch` or `uname -m`
+          generator: Unix Makefiles
+
+        - name: macOS_Intel
+          os: macos-latest
+          arch: Intel # as reported by Apple menu > About This Mac
+          generator: Xcode
+
+        - name: Windows_32bit
+          os: windows-latest
+          arch: 32bit # as reported by Windows Settings > System > About
+          generator: Visual Studio 16 2019
+
+        - name: Windows_64bit
+          os: windows-latest
+          arch: 64bit # as reported by Windows Settings > System > About
+          generator: Visual Studio 16 2019
 
     steps:
-    # =========================================================================
-    # SHARED: Checkout source
-    # =========================================================================
+
     - name: Checkout
       uses: actions/checkout@v2
-    #  with:
-    #    ref: master   
-    # =========================================================================
-    # SHARED: Checkout source
-    # =========================================================================
-    - name: Calculate short hash
-      shell: bash
-      run: |
-        set -x
-        # Get the short hash
-        shorthash=$(git show -s --format='%h')
-        # Export the short hash for the upload step
-        echo "SHORTHASH=${shorthash}" >> ${GITHUB_ENV}
-        # Export the destination directory name
-        echo "DEST=${{matrix.config.name}}_${shorthash}" >> ${GITHUB_ENV}
 
-    - name: GitHub Action Cache for .conan
-      id: github-cache-conan
+    - name: Dependencies
+      run: |
+        exec bash "scripts/ci/dependencies.sh"
+
+    - name: Environment
+      run: |
+        source "scripts/ci/environment.sh"
+    
+    - name: Install Apple codesigning certificates
+      uses: apple-actions/import-codesign-certs@v1
+      if: startswith( matrix.config.os, 'macos' ) && github.event_name == 'push' && github.repository_owner == 'audacity'
+      with: 
+        p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
+        p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+
+    - name: Cache for .conan
+      id: cache-conan
       uses: actions/cache@v2
       env:
         cache-name: cache-conan-modules
@@ -95,134 +77,50 @@ jobs:
         key: host-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
         restore-keys: |
           host-${{ matrix.config.name }}-
-    # =========================================================================
-    # WINDOWS: Build (for all versions of Windows)
-    # =========================================================================
-    - name: Build for Windows
-      if: startswith( matrix.config.os, 'windows' )
-      shell: bash
+
+    - name: Configure
+      env:
+        # Error reporing
+        SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+        SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
+        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        CRASH_REPORT_URL: ${{ secrets.CRASH_REPORT_URL }}
+        # Apple code signing
+        APPLE_CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+        APPLE_NOTARIZATION_USER_NAME: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
+        APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
       run: |
-        set -x
-        pip install conan
-        conan --version
+        exec bash "scripts/ci/configure.sh"
 
-        # Configure Audacity
-        #
-        cmake -S . \
-              -B build \
-              -G "${{matrix.config.generator}}" \
-              -A ${{matrix.config.platform}} \
-              -D audacity_use_pch=no \
-              -D audacity_has_networking=yes 
-
-        # Build Audacity
-        cmake --build build --config Release --verbose
-
-        # "Install" Audacity
-        mkdir -p "${DEST}"
-        cp -a build/bin/Release/* "${DEST}"
-        rm -f "${DEST}"/{*.iobj,*.ipdb}
-
-        # Create artifact (zipped as Github actions don't preserve permissions)
-        cmake -E tar c "${GITHUB_SHA}.zip" --format=zip "${DEST}"
-
-    # =========================================================================
-    # MACOS: Build (for all versions of MacOS)
-    # =========================================================================
-    - name: Build for macOS
-      if: startswith( matrix.config.os, 'macos' )
-      shell: bash
+    - name: Build
       run: |
-        set -x
+        exec bash "scripts/ci/build.sh"
 
-        # Setup environment
-        export PATH="/usr/local/bin:${PATH}"
-        export DYLD_LIBRARY_PATH="/usr/local/lib"
-
-        # Install required packages
-        brew install gettext
-        brew link --force gettext
-
-        brew install conan
-        conan --version
-
-        # Configure Audacity
-        cmake -S . \
-              -B build \
-              -T buildsystem=1 \
-              -G "${{matrix.config.generator}}" \
-              -D audacity_use_pch=no \
-              -D audacity_has_networking=yes 
-
-        # Build Audacity
-        cmake --build build --config Release
-
-        # "Install" Audacity
-        mkdir -p "${DEST}"
-        cp -a build/bin/Release/ "${DEST}"
-
-        # Create artifact (zipped as Github actions don't preserve permissions)
-        cmake -E tar c "${GITHUB_SHA}.zip" --format=zip "${DEST}"
-
-    # =========================================================================
-    # UBUNTU: Build (for all versions of Ubuntu)
-    # =========================================================================
-    - name: Build for Ubuntu
-      if: startswith( matrix.config.os, 'ubuntu' )
-      shell: bash
+    - name: Upload debug symbols
+      if: startsWith(github.ref, 'refs/heads/release-')
+      env:
+        SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG_SLUG: ${{ secrets.SENTRY_ORG_SLUG }}
+        SENTRY_PROJECT_SLUG: ${{ secrets.SENTRY_PROJECT_SLUG }}
+        #this is required to run sentry's get-cli script on platforms where 'sudo' is not available
+        INSTALL_DIR: ${{ github.workspace }}
       run: |
-        set -x
+        exec bash "scripts/ci/upload_debug_symbols.sh"
 
-        # Setup environment
-        export PATH="/usr/local/bin:${PATH}"
-        export LD_LIBRARY_PATH="/usr/local/lib"
+    - name: Install
+      run: |
+        exec bash "scripts/ci/install.sh"
 
-        # Install required packages
-        sudo apt-get update -y
-        sudo apt-get install -y libgtk2.0-dev libasound2-dev gettext python3-pip
-        sudo apt-get remove -y ccache
+    - name: Package
+      run: |
+        exec bash "scripts/ci/package.sh"
 
-        pip3 install wheel setuptools
-        pip3 install conan
-
-        conan --version
-
-        # Configure Audacity
-        cmake -S . \
-              -B build \
-              -G "${{matrix.config.generator}}" \
-              -D audacity_use_pch=no \
-              -D audacity_has_networking=yes 
-
-        # Build Audacity
-        cmake --build build --config Release
-
-        # "Install" Audacity
-        cmake --install build --config Release --prefix "${DEST}"
-
-        # Create the lib directory
-        mkdir -p ${DEST}/lib
-
-        # Create wrapper script
-        cat >"${DEST}/audacity" <<"EOF"
-        #!/bin/sh
-        lib="${0%/*}/lib/audacity"
-        export LD_LIBRARY_PATH="${lib}:${LD_LIBRARY_PATH}"
-        export AUDACITY_MODULES_PATH="${lib}/modules"
-        "${0%/*}/bin/audacity"
-
-        EOF
-        chmod +x "${DEST}/audacity"
-
-        # Create artifact (zipped as Github actions don't preserve permissions)
-        cmake -E tar c "${GITHUB_SHA}.zip" --format=zip "${DEST}"
-
-    # =========================================================================
-    # SHARED: Attach the artifact to the workflow results
-    # =========================================================================
     - name: Upload artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
-        name: ${{ matrix.config.name }}_${{ env.SHORTHASH }}
-        path: ${{ github.sha }}.zip
-
+        name: Audacity_${{ matrix.config.name }}_${{ github.run_id }}_${{ env.GIT_HASH_SHORT }}
+        path: |
+          build/package/*
+          !build/package/_CPack_Packages
+        if-no-files-found: error

@@ -38,6 +38,10 @@
 #include "../Prefs.h"
 #include "HelpSystem.h"
 
+#ifdef HAS_SENTRY_REPORTING
+#   include "ErrorReportDialog.h"
+#endif
+
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
    EVT_COLLAPSIBLEPANE_CHANGED( wxID_ANY, ErrorDialog::OnPane )
    EVT_BUTTON( wxID_OK, ErrorDialog::OnOk)
@@ -157,6 +161,18 @@ void ShowErrorDialog(wxWindow *parent,
    dlog.ShowModal();
 }
 
+
+void ShowExceptionDialog(
+   wxWindow* parent, const TranslatableString& dlogTitle,
+   const TranslatableString& message, const wxString& helpPage, bool Close,
+   const wxString& log)
+{
+#ifndef HAS_SENTRY_REPORTING
+   ShowErrorDialog(parent, dlogTitle, message, helpPage, Close, log);
+#else
+   ShowErrorReportDialog(parent, dlogTitle, message, helpPage, log);
+#endif // !HAS_SENTRY_REPORTING
+}
 
 // unused.
 void ShowModelessErrorDialog(wxWindow *parent,

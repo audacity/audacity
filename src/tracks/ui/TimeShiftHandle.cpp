@@ -699,7 +699,7 @@ namespace {
    [[noreturn]] void MigrationFailure() {
       // Tracks may be in an inconsistent state; throw to the application
       // handler which restores consistency from undo history
-      throw SimpleMessageBoxException{
+      throw SimpleMessageBoxException{ ExceptionType::Internal,
          XO("Could not shift between tracks")};
    }
 
