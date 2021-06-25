@@ -31,8 +31,7 @@ namespace UpdatesCheckingSettings {
 class UpdateManager final : public wxEvtHandler
 {
 public:
-    UpdateManager();
-    ~UpdateManager();
+    UpdateManager() = default;
 
     static UpdateManager& GetInstance();
     static void Start();
@@ -46,7 +45,6 @@ private:
     VersionPatch mVersionPatch;
 
     wxTimer mTimer;
-    const int mUpdateCheckingInterval;
 
     void OnTimer(wxTimerEvent& event);
 
