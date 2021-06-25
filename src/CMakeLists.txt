@@ -1373,6 +1373,7 @@ if( "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
       USE_SOURCE_PERMISSIONS
       PATTERN "*.pdb" EXCLUDE
       PATTERN "*.ilk" EXCLUDE
+      PATTERN "*.dSYM" EXCLUDE
    )
 else()
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
