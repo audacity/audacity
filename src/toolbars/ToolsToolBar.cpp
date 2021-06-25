@@ -359,7 +359,6 @@ void OnDrawTool(const CommandContext &context)
 /// Handler to set the Zoom tool active
 void OnZoomTool(const CommandContext &context)
 {
-   std::cout<< "ZOOM TOOL" << std::endl;
    SetTool(context.project, ToolCodes::zoomTool);
 }
 
@@ -377,7 +376,6 @@ void OnMultiTool(const CommandContext &context)
 /// Handler to set the brush tool active
 void OnBrushTool(const CommandContext &context)
 {
-   std::cout<< "BRUSH TOOL" << std::endl;
    SetTool(context.project, ToolCodes::brushTool);
 }
 

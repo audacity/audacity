@@ -11,7 +11,8 @@ Paul Licameli split from WaveTrackView.h
 #ifndef __AUDACITY_SPECTRUM_VIEW__
 #define __AUDACITY_SPECTRUM_VIEW__
 
-#include <unordered_map>
+#include <map>
+#include <set>
 #include "WaveTrackView.h" // to inherit
 
 
@@ -26,11 +27,16 @@ private:
 public:
     SpectralData(double sr)
     :mSampleRate(sr){}
+    SpectralData(const SpectralData& src) = delete;
 
    TimeFreqBinsMap dataBuffer;
    std::vector<TimeFreqBinsMap> dataHistory;
    // TODO: replace with two pairs to save space
    std::vector<std::pair<int, int>> coordHistory;
+
+   double GetSR() const{
+      return mSampleRate;
+   }
 
    // The double time points is quantized into long long
    void addTimeFreqData(long long ll_sc, wxInt64 freq){
@@ -63,7 +69,7 @@ public:
 
 class SpectrumView final : public WaveTrackSubView
 {
-   SpectrumView( const SpectrumView& ) = delete;
+   SpectrumView(WaveTrackView &waveTrackView, const SpectrumView &src) = delete;
    SpectrumView &operator=( const SpectrumView& ) = delete;
 
 public:
@@ -75,11 +81,13 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
+   std::shared_ptr<SpectralData> GetSpectralData();
+
    bool IsSpectral() const override;
 
-   static std::unordered_map<wxInt64, std::unordered_set<double>> mFreqToTimePointsMap;
    static int mBrushRadius;
 
+   void CopyToSubView( WaveTrackSubView *destSubView ) const override;
 private:
     int mBrushSize;
     std::weak_ptr<BrushHandle> mBrushHandle;

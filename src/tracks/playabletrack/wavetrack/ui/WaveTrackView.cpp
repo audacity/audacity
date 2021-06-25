@@ -782,6 +782,10 @@ WaveTrackSubView::WaveTrackSubView( WaveTrackView &waveTrackView )
       waveTrackView.shared_from_this() );
 }
 
+void WaveTrackSubView::CopyToSubView(WaveTrackSubView *destSubView) const {
+
+}
+
 WaveTrackView::~WaveTrackView()
 {
 }
@@ -795,6 +799,14 @@ void WaveTrackView::CopyTo( Track &track ) const
       // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
       pOther->mMultiView = mMultiView;
+
+      auto srcSubViewsPtrs  = const_cast<WaveTrackView*>( this )->GetAllSubViews();
+      auto destSubViewsPtrs  = const_cast<WaveTrackView*>( pOther )->GetAllSubViews();
+      wxASSERT(srcSubViewsPtrs.size() == destSubViewsPtrs.size());
+
+      for(auto i = 0; i != srcSubViewsPtrs.size(); i++){
+         srcSubViewsPtrs[i]->CopyToSubView(destSubViewsPtrs[i].get());
+      }
    }
 }
 

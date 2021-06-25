@@ -111,6 +111,19 @@ std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
    return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
 }
 
+std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
+   return mpSpectralData;
+}
+
+void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
+   if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
+      pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
+      pDest->mpSpectralData->dataHistory = mpSpectralData->dataHistory;
+      pDest->mpSpectralData->dataBuffer = mpSpectralData->dataBuffer;
+      pDest->mpSpectralData->coordHistory = mpSpectralData->coordHistory;
+   }
+}
+
 namespace
 {
 
