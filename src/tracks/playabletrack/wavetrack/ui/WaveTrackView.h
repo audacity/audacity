@@ -37,6 +37,8 @@ public:
    
    virtual const Type &SubViewType() const = 0;
 
+   virtual void CopyToSubView(WaveTrackSubView *destSubView) const;
+
    std::pair<
       bool, // if true, hit-testing is finished
       std::vector<UIHandlePtr>
