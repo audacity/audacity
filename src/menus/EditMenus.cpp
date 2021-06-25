@@ -143,7 +143,6 @@ void OnApply(const CommandContext &context){
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
-   auto &undoManager = UndoManager::Get( project );
 
    int applyCount = 0;
    for ( auto wt : tracks.Selected< WaveTrack >() ) {
