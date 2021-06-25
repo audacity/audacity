@@ -47,7 +47,6 @@ public:
    bool IsLoaded(){ return mLoaded; };
 
    rapidjson::Document GetMetadata();
-   bool MetadataIsValid(rapidjson::Document &metadata);
    
    // \brief queries the metadata dictionary, 
    // will convert any JSON type to a non-prettified string
