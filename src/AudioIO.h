@@ -739,14 +739,17 @@ public:
    static void Init();
    static void Deinit();
 
-
+   /*! For purposes of CallAfterRecording, treat time from now as if
+    recording (when argument is true) or not necessarily so (false) */
+   void DelayActions(bool recording);
 
 private:
+
+   bool DelayingActions() const;
 
    /** \brief Set the current VU meters - this should be done once after
     * each call to StartStream currently */
    void SetMeters();
-
 
    /** \brief Opens the portaudio stream(s) used to do playback or recording
     * (or both) through.
@@ -796,6 +799,7 @@ private:
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
+   bool mDelayingActions{ false };
 };
 
 static constexpr unsigned ScrubPollInterval_ms = 50;

@@ -40,6 +40,7 @@
 #include <wx/timer.h>
 #include <wx/dynlib.h> //<! For windows.h
 
+#include "AudioIO.h"
 #include "ShuttleGui.h"
 #include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
@@ -481,58 +482,64 @@ int TimerRecordDialog::RunWaitDialog()
 {
    auto updateResult = ProgressResult::Success;
 
-   if (m_DateTime_Start > wxDateTime::UNow())
-      updateResult = this->WaitForStart();
+   const auto gAudioIO = AudioIO::Get();
+   gAudioIO->DelayActions(true);
+   {
+      auto cleanup = finally([gAudioIO]{ gAudioIO->DelayActions(false); });
 
-   if (updateResult != ProgressResult::Success)  {
-      // Don't proceed, but don't treat it as canceled recording. User just canceled waiting.
-      return POST_TIMER_RECORD_CANCEL_WAIT;
-   } else {
-      // Record for specified time.
-      ProjectAudioManager::Get( mProject ).OnRecord(false);
-      bool bIsRecording = true;
+      if (m_DateTime_Start > wxDateTime::UNow())
+         updateResult = this->WaitForStart();
 
-      auto sPostAction = Verbatim(
-         m_pTimerAfterCompleteChoiceCtrl->GetStringSelection() );
+      if (updateResult != ProgressResult::Success)  {
+         // Don't proceed, but don't treat it as canceled recording. User just canceled waiting.
+         return POST_TIMER_RECORD_CANCEL_WAIT;
+      } else {
+         // Record for specified time.
+         ProjectAudioManager::Get( mProject ).OnRecord(false);
+         bool bIsRecording = true;
 
-      // Two column layout.
-      TimerProgressDialog::MessageTable columns{
-         {
-            XO("Recording start:") ,
-            XO("Duration:") ,
-            XO("Recording end:") ,
-            {} ,
-            XO("Automatic Save enabled:") ,
-            XO("Automatic Export enabled:") ,
-            XO("Action after Timer Recording:") ,
-         },
-         {
-            GetDisplayDate(m_DateTime_Start) ,
-            Verbatim( m_TimeSpan_Duration.Format() ),
-            GetDisplayDate(m_DateTime_End) ,
-            {} ,
-            (m_bAutoSaveEnabled ? XO("Yes") : XO("No")) ,
-            (m_bAutoExportEnabled ? XO("Yes") : XO("No")) ,
-            sPostAction ,
+         auto sPostAction = Verbatim(
+            m_pTimerAfterCompleteChoiceCtrl->GetStringSelection() );
+
+         // Two column layout.
+         TimerProgressDialog::MessageTable columns{
+            {
+               XO("Recording start:") ,
+               XO("Duration:") ,
+               XO("Recording end:") ,
+               {} ,
+               XO("Automatic Save enabled:") ,
+               XO("Automatic Export enabled:") ,
+               XO("Action after Timer Recording:") ,
+            },
+            {
+               GetDisplayDate(m_DateTime_Start) ,
+               Verbatim( m_TimeSpan_Duration.Format() ),
+               GetDisplayDate(m_DateTime_End) ,
+               {} ,
+               (m_bAutoSaveEnabled ? XO("Yes") : XO("No")) ,
+               (m_bAutoExportEnabled ? XO("Yes") : XO("No")) ,
+               sPostAction ,
+            }
+         };
+
+         TimerProgressDialog
+            progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
+                     XO("Audacity Timer Record Progress"),
+                     columns,
+                     pdlgHideCancelButton | pdlgConfirmStopCancel);
+
+         // Make sure that start and end time are updated, so we always get the full
+         // duration, even if there's some delay getting here.
+         wxTimerEvent dummyTimerEvent;
+         this->OnTimer(dummyTimerEvent);
+
+         // Loop for progress display during recording.
+         while (bIsRecording && (updateResult == ProgressResult::Success)) {
+            updateResult = progress.UpdateProgress();
+            wxMilliSleep(kTimerInterval);
+            bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
          }
-      };
-
-      TimerProgressDialog
-         progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
-                  XO("Audacity Timer Record Progress"),
-                  columns,
-                  pdlgHideCancelButton | pdlgConfirmStopCancel);
-
-      // Make sure that start and end time are updated, so we always get the full
-      // duration, even if there's some delay getting here.
-      wxTimerEvent dummyTimerEvent;
-      this->OnTimer(dummyTimerEvent);
-
-      // Loop for progress display during recording.
-      while (bIsRecording && (updateResult == ProgressResult::Success)) {
-         updateResult = progress.UpdateProgress();
-         wxMilliSleep(kTimerInterval);
-         bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
       }
    }
 
