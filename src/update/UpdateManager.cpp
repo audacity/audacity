@@ -22,25 +22,25 @@
 #include <wx/frame.h>
 
 #include <mutex>
+#include <cstdint>
 
 BoolSetting UpdatesCheckingSettings::DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
 
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 
+
+using Clock = std::chrono::system_clock;
+using TimePoint = Clock::time_point;
+using Duration = TimePoint::duration;
+
+constexpr Duration updatesCheckInterval = std::chrono::hours(12);
+
 enum { ID_TIMER = wxID_HIGHEST + 1 };
 
 BEGIN_EVENT_TABLE(UpdateManager, wxEvtHandler)
     EVT_TIMER(ID_TIMER, UpdateManager::OnTimer)
 END_EVENT_TABLE()
-
-UpdateManager::UpdateManager()
-    : mUpdateCheckingInterval(
-        std::chrono::milliseconds(std::chrono::hours(12)).count())
-{}
-
-UpdateManager::~UpdateManager()
-{}
 
 UpdateManager& UpdateManager::GetInstance()
 {
@@ -123,29 +123,41 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
         GetUpdates();
 
-    mTimer.StartOnce(mUpdateCheckingInterval);
+    mTimer.StartOnce(std::chrono::duration_cast<std::chrono::milliseconds>(
+                        updatesCheckInterval)
+                        .count());
 }
 
 bool UpdateManager::IsTimeForUpdatesChecking()
 {
-    long long nextUpdatesCheckingTime = std::stoll(
-        gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString());
+    const TimePoint nextUpdatesCheckingTime(std::chrono::milliseconds(
+       stoll(gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString())));
 
-    // Get current time in milliseconds
-    auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now());
-
-    auto currentTimeInMillisec = std::chrono::duration_cast<std::chrono::milliseconds>(
-        now_ms.time_since_epoch()).count();
+    // Get current time
+    const TimePoint currentTime = Clock::now();
 
     // If next update time 0 or less then current time -> show update dialog,
     // else this condition allow us to avoid from duplicating update notifications.
-    if (nextUpdatesCheckingTime < currentTimeInMillisec)
+    if (nextUpdatesCheckingTime < currentTime)
     {
-        nextUpdatesCheckingTime = currentTimeInMillisec + mUpdateCheckingInterval;
 
-        gPrefs->Write(prefsUpdateScheduledTime,
-            wxString(std::to_string(nextUpdatesCheckingTime)));
+        // Round down the nextUpdatesChecking time to a day.
+        // This is required to ensure, that update is 
+        // checked daily
+        using DayDuration =
+          std::chrono::duration<int32_t, std::ratio<60 * 60 * 24>>;
+
+        const auto postponeUpdateUntil =
+          std::chrono::time_point_cast<DayDuration>(
+           currentTime) + DayDuration(1);
+
+        const std::chrono::milliseconds postponeUpdateUntilMS(
+           postponeUpdateUntil.time_since_epoch());
+
+        gPrefs->Write(
+           prefsUpdateScheduledTime,
+           wxString(std::to_string(postponeUpdateUntilMS.count())));
+
         gPrefs->Flush();
 
         return true;
