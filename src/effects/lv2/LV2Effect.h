@@ -293,7 +293,6 @@ public:
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
-   bool IsReady() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inbuf, float **outbuf, size_t size) override;

@@ -128,7 +128,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   bool IsReady() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
@@ -178,7 +177,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // EffectHostInterface implementation
 
    EffectDefinitionInterface &GetDefinition() override;
-   double GetDefaultDuration() override;
    double GetDuration() override;
    NumericFormatSymbol GetDurationFormat() override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
@@ -197,31 +195,26 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // Effect implementation
 
+   unsigned TestUIFlags(unsigned mask);
+
+   void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ) {
+      if( Names ) mPresetNames = *Names;
+      if( Values ) mPresetValues = *Values;
+   }
+
    // NEW virtuals
    virtual bool Startup(EffectUIClientInterface *client);
-   virtual bool Startup();
 
    virtual bool GetAutomationParameters(wxString & parms);
    virtual bool SetAutomationParameters(const wxString & parms);
-
-   virtual RegistryPaths GetUserPresets();
-   virtual bool HasCurrentSettings();
-   virtual bool HasFactoryDefaults();
 
    // Name of page in the Audacity alpha manual
    virtual ManualPageID ManualPage();
    // Fully qualified local help file name
    virtual FilePath HelpPage();
 
-   virtual void SetUIFlags(unsigned flags);
-   virtual unsigned TestUIFlags(unsigned mask);
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
-
-   /* not virtual */ void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ) {
-      if( Names ) mPresetNames = *Names;
-      if( Values ) mPresetValues = *Values;
-   }
 
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
@@ -230,6 +223,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    /* not virtual */ bool DoEffect( double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       // Prompt the user for input only if these arguments are both not null.
+      unsigned flags,
       wxWindow *pParent = nullptr,
       const EffectDialogFactory &dialogFactory = {} );
 
@@ -238,7 +232,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    virtual bool IsHidden();
 
-   // Nonvirtual
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.
    enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
@@ -247,6 +240,14 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   const TranslatableString& titleStr = {});
 
    static void IncEffectCounter(){ nEffectsDone++;};
+
+ protected:
+   bool EnableApply(bool enable = true);
+   bool EnablePreview(bool enable = true);
+
+ public:
+   // NEW virtuals
+   virtual bool Startup();
 
 //
 // protected virtual methods
@@ -273,7 +274,6 @@ protected:
    virtual bool ProcessPass();
    virtual bool InitPass1();
    virtual bool InitPass2();
-   virtual int GetPass();
 
    // clean up any temporary memory, needed only per invocation of the
    // effect, after either successful or failed or exception-aborted processing.
@@ -291,8 +291,6 @@ protected:
    virtual void PopulateOrExchange(ShuttleGui & S);
    virtual bool TransferDataToWindow() /* not override */;
    virtual bool TransferDataFromWindow() /* not override */;
-   virtual bool EnableApply(bool enable = true);
-   virtual bool EnablePreview(bool enable = true);
 
    // No more virtuals!
 
@@ -447,13 +445,15 @@ protected:
    //! This weak pointer may be the same as the above, or null
    wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
-   unsigned       mUIFlags;
+   unsigned       mUIFlags{ 0 };
 
    sampleCount    mSampleCnt;
 
  // Used only by the base Effect class
  //
  private:
+   double GetDefaultDuration();
+
    void CountWaveTracks();
 
    // Driver for client effects

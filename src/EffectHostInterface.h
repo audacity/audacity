@@ -35,7 +35,6 @@ public:
 
    virtual EffectDefinitionInterface &GetDefinition() = 0;
 
-   virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
    virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;

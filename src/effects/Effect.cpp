@@ -97,7 +97,6 @@ Effect::Effect()
    mProgress = NULL;
 
    mUIParent = NULL;
-   mUIFlags = 0;
 
    mNumAudioIn = 0;
    mNumAudioOut = 0;
@@ -350,16 +349,6 @@ size_t Effect::GetTailSize()
    }
 
    return 0;
-}
-
-bool Effect::IsReady()
-{
-   if (mClient)
-   {
-      return mClient->IsReady();
-   }
-
-   return true;
 }
 
 bool Effect::ProcessInitialize(sampleCount totalLen, ChannelNames chanMap)
@@ -1009,30 +998,6 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    return TransferDataToWindow();
 }
 
-RegistryPaths Effect::GetUserPresets()
-{
-   RegistryPaths presets;
-
-   GetConfigSubgroups(GetDefinition(), PluginSettings::Private,
-      GetUserPresetsGroup(wxEmptyString), presets);
-
-   std::sort( presets.begin(), presets.end() );
-
-   return presets;
-}
-
-bool Effect::HasCurrentSettings()
-{
-   return HasConfigGroup(GetDefinition(),
-      PluginSettings::Private, GetCurrentSettingsGroup());
-}
-
-bool Effect::HasFactoryDefaults()
-{
-   return HasConfigGroup(GetDefinition(),
-      PluginSettings::Private, GetFactoryDefaultsGroup());
-}
-
 ManualPageID Effect::ManualPage()
 {
    return {};
@@ -1041,10 +1006,6 @@ ManualPageID Effect::ManualPage()
 FilePath Effect::HelpPage()
 {
    return {};
-}
-
-void Effect::SetUIFlags(unsigned flags) {
-   mUIFlags = flags;
 }
 
 unsigned Effect::TestUIFlags(unsigned mask) {
@@ -1074,9 +1035,11 @@ bool Effect::DoEffect(double projectRate,
                       TrackList *list,
                       WaveTrackFactory *factory,
                       NotifyingSelectedRegion &selectedRegion,
+                      unsigned flags,
                       wxWindow *pParent,
                       const EffectDialogFactory &dialogFactory)
 {
+   auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
 
    mOutputTracks.reset();
@@ -1209,18 +1172,13 @@ bool Effect::Delegate(
    region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect( mProjectRate, mTracks, mFactory,
-      region, &parent, factory );
+      region, mUIFlags, &parent, factory );
 }
 
 // All legacy effects should have this overridden
 bool Effect::Init()
 {
    return true;
-}
-
-int Effect::GetPass()
-{
-   return mPass;
 }
 
 bool Effect::InitPass1()

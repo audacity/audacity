@@ -81,7 +81,6 @@ public:
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
-   bool IsReady() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
@@ -196,7 +195,6 @@ private:
    bool mUseLatency;
 
    AudioTimeStamp mTimeStamp;
-   bool mReady;
 
    ArrayOf<AudioBufferList> mInputList;
    ArrayOf<AudioBufferList> mOutputList;

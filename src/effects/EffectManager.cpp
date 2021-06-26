@@ -334,6 +334,27 @@ bool EffectManager::PromptUser(
    return result;
 }
 
+static bool HasCurrentSettings(EffectHostInterface &host)
+{
+   return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
+      host.GetCurrentSettingsGroup());
+}
+
+static bool HasFactoryDefaults(EffectHostInterface &host)
+{
+   return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
+      host.GetFactoryDefaultsGroup());
+}
+
+static RegistryPaths GetUserPresets(EffectHostInterface &host)
+{
+   RegistryPaths presets;
+   GetConfigSubgroups(host.GetDefinition(), PluginSettings::Private,
+      host.GetUserPresetsGroup({}), presets);
+   std::sort( presets.begin(), presets.end() );
+   return presets;
+}
+
 bool EffectManager::HasPresets(const PluginID & ID)
 {
    Effect *effect = GetEffect(ID);
@@ -343,10 +364,10 @@ bool EffectManager::HasPresets(const PluginID & ID)
       return false;
    }
 
-   return effect->GetUserPresets().size() > 0 ||
+   return GetUserPresets(*effect).size() > 0 ||
           effect->GetFactoryPresets().size() > 0 ||
-          effect->HasCurrentSettings() ||
-          effect->HasFactoryDefaults();
+          HasCurrentSettings(*effect) ||
+          HasFactoryDefaults(*effect);
 }
 
 #include <wx/choice.h>
@@ -424,7 +445,7 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
    }
    S.EndVerticalLay();
 
-   mUserPresets = effect->GetUserPresets();
+   mUserPresets = GetUserPresets(*effect);
    mFactoryPresets = effect->GetFactoryPresets();
 
    if (mUserPresets.size() > 0)
@@ -437,12 +458,12 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
       mType->Append(_("Factory Presets"));
    }
 
-   if (effect->HasCurrentSettings())
+   if (HasCurrentSettings(*effect))
    {
       mType->Append(_("Current Settings"));
    }
 
-   if (effect->HasFactoryDefaults())
+   if (HasFactoryDefaults(*effect))
    {
       mType->Append(_("Factory Defaults"));
    }
@@ -671,11 +692,11 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    }
 
    wxString preset;
-   if (effect->HasCurrentSettings())
+   if (HasCurrentSettings(*effect))
    {
       preset = Effect::kCurrentSettingsIdent;
    }
-   else if (effect->HasFactoryDefaults())
+   else if (HasFactoryDefaults(*effect))
    {
       preset = Effect::kFactoryDefaultsIdent;
    }

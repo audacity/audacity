@@ -178,7 +178,6 @@ public:
    virtual sampleCount GetLatency() = 0;
    virtual size_t GetTailSize() = 0;
 
-   virtual bool IsReady() = 0;
    virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
    // This may be called during stack unwinding:
    virtual bool ProcessFinalize() /* noexcept */ = 0;
