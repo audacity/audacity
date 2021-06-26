@@ -50,9 +50,10 @@ class wxDialog;
 class wxWindow;
 class EffectUIClientInterface;
 
+class EffectUIHostInterface;
 using EffectDialogFactory = std::function<
    wxDialog* ( wxWindow &parent,
-      EffectHostInterface&, EffectUIClientInterface& )
+      EffectUIHostInterface&, EffectUIClientInterface& )
 >;
 
 class TrackList;

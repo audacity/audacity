@@ -50,7 +50,6 @@ class AudacityProject;
 class LabelTrack;
 class NotifyingSelectedRegion;
 class SelectedRegion;
-class EffectUIHost;
 class Track;
 class TrackList;
 class WaveTrackFactory;
@@ -483,8 +482,6 @@ public:
    const static wxString kFactoryPresetIdent;
    const static wxString kCurrentSettingsIdent;
    const static wxString kFactoryDefaultsIdent;
-
-   friend class EffectUIHost;
 };
 
 // FIXME:
