@@ -46,6 +46,7 @@ and sample size to help you importing data of an unknown format.
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/combobox.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
@@ -295,6 +296,10 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent, const wxString & fileName)
    wxASSERT(mChannels >= 1);
 
    SetName();
+
+   // Append filename at window title
+   wxFileName wfn{ fileName };
+   wxDialog::SetTitle(GetTitle() + ": " + wfn.GetFullName());
 
    ShuttleGui S(this, eIsCreating);
    TranslatableStrings encodings;
