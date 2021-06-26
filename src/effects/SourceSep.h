@@ -59,6 +59,7 @@ public:
 
    void PopulateOrExchange(ShuttleGui &S) override;
    void PopulateMetadata(ShuttleGui &S);
+   void AddMetadataEntry(ShuttleGui &S, std::string desc, std::string key);
    // bool TransferDataToWindow() override;
    // bool TransferDataFromWindow() override;
 

@@ -20,6 +20,10 @@ bool DeepModel::Load(const std::string &modelPath)
       std::pair<std::string, std::string> metadata("metadata.json", "");
       extraFilesMap_.insert(metadata);
 
+      // load the resampler module
+      std::string resamplerPath = wxFileName(ModelsDir(), wxT("resampler.ts")).GetFullPath().ToStdString(); // TODO
+      mResampler = torch::jit::load(resamplerPath, torch::kCPU);
+
       // load the model to CPU, as well as the metadata
       mModel = torch::jit::load(modelPath, torch::kCPU,  extraFilesMap_);
       mModel.eval();
@@ -49,6 +53,13 @@ bool DeepModel::Load(const std::string &modelPath)
    }
 
    return mLoaded;
+}
+
+FilePath DeepModel::ModelsDir()
+{
+   wxFileName modelsDir(FileNames::BaseDir(), wxEmptyString);
+   modelsDir.AppendDir(wxT("deeplearning-models"));
+   return modelsDir.GetFullPath();
 }
 
 rapidjson::Document DeepModel::GetMetadata()
@@ -104,32 +115,39 @@ std::vector<std::string> DeepModel::GetLabels()
    return labels;
 }
 
+torch::Tensor DeepModel::Resample(const torch::Tensor &waveform, int sampleRateIn, 
+                                  int sampleRateOut)
+{
+   if (!mLoaded) throw std::exception(); //TODO
+
+   // set up inputs
+   // torchaudio likes that sample rates are cast to float, for some reason.
+   std::vector<torch::jit::IValue> inputs = {waveform, 
+                                             (float)sampleRateIn, 
+                                             (float)sampleRateOut};
+
+   auto output = mResampler(inputs).toTensor();
+   
+   return output.contiguous();
+}
+
 // forward pass through the model!
-torch::Tensor DeepModel::Forward(const torch::Tensor &tensorInput)
+torch::Tensor DeepModel::Forward(const torch::Tensor &waveform)
 {
    torch::NoGradGuard no_grad;
-   if (mLoaded)
-   {
-      // TODO: check input sizes here and throw and exception
-      // if the audio is not the correct dimensions
+   if (!mLoaded) throw std::exception(); //TODO
 
-      // set up for jit model
-      std::vector<torch::jit::IValue> inputs = {tensorInput};
+   // TODO: check input sizes here and throw and exception
+   // if the audio is not the correct dimensions
 
-      // forward pass!
-      auto tensorOutput = mModel.forward(inputs).toTensor();
+   // set up for jit model
+   std::vector<torch::jit::IValue> inputs = {waveform};
 
-      // move tensor output to CPU
-      tensorOutput = tensorOutput;
+   // forward pass!
+   auto tensorOutput = mModel.forward(inputs).toTensor();
 
-      // make tensor contiguous to return to track
-      tensorOutput = tensorOutput.contiguous();
+   // make tensor contiguous to return to track
+   tensorOutput = tensorOutput.contiguous();
 
-      return tensorOutput;
-   }
-   else 
-   {
-      // TODO: maybe this should return a bool indicating success?
-      throw std::exception();
-   }
+   return tensorOutput;
 }

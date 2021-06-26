@@ -93,12 +93,6 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
    sampleFormat origFmt = leader->GetSampleFormat();
    int origRate = leader->GetRate();
 
-   // resample the track, and make sure that we update the start and end 
-   // sampleCounts to reflect the new sample rate
-   // TODO: we should prevent from  having to resample the whole track
-   mProgress->SetMessage(XO("Resampling Track"));
-   leader->Resample(mModel->GetSampleRate(), mProgress);
-
    // initialize source tracks, one for each source that we will separate
    std::vector<WaveTrack::Holder> sourceTracks;
    std::vector<std::string>sourceLabels = mModel->GetLabels();
@@ -119,8 +113,14 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
       torch::Tensor input = BuildMonoTensor(leader, buffer.get(), 
                                             samplePos, blockSize); 
 
+      // resample!
+      input = mModel->Resample(input, origRate, mModel->GetSampleRate());
+
       // forward pass!
       torch::Tensor output = ForwardPass(input);
+      
+      // resample back
+      output = mModel->Resample(output, mModel->GetSampleRate(), origRate);
 
       // write each source output to the source tracks
       for (size_t idx = 0; idx < output.size(0) ; idx++)
@@ -135,9 +135,6 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
 
    // postprocess the source tracks to the user's sample rate and format
    PostProcessSources(sourceTracks, origFmt, origRate);
-
-   // resample the leader back
-   leader->Resample(origRate);
 
    return true;
 }
@@ -181,7 +178,7 @@ void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)
 
       S.StartHorizontalLay(wxCENTER, false);
       {
-         mLoadModelBtn = S.AddButton(XXO("&Load Source Separation Model"));
+         mLoadModelBtn = S.AddButton(XXO("&Import Model..."));
 
          std::string modelDesc;
          if (mModel->IsLoaded()) 
@@ -198,6 +195,27 @@ void EffectSourceSep::PopulateOrExchange(ShuttleGui &S)
 
 }
 
+void EffectSourceSep::AddMetadataEntry(ShuttleGui &S, std::string desc,
+                                       std::string key)
+{
+   S.StartHorizontalLay(wxLEFT, false); 
+   { 
+      wxStaticText *descText = S.AddVariableText(
+         TranslatableString(wxString(desc).c_str(), {})); 
+
+      wxFont font = descText->GetFont(); 
+      font = font.MakeBold(); 
+      descText->SetFont(font); 
+   
+      std::string value = mModel->QueryMetadata(key.c_str()); 
+      wxStaticText *text =  S.AddVariableText( 
+         TranslatableString(wxString(value).c_str(), {})); 
+
+      mMetadataFields[key] = text; 
+   } 
+   S.EndHorizontalLay(); 
+}
+
 void EffectSourceSep::PopulateMetadata(ShuttleGui &S)
 {
    // TODO: this does not take into account the possible
@@ -206,27 +224,11 @@ void EffectSourceSep::PopulateMetadata(ShuttleGui &S)
    S.StartVerticalLay(wxCENTER, false);
    {
       //TODO: bold not working, nicer table style
-#define ADD_METADATA_ENTRY(desc, key) \
-         S.StartHorizontalLay(wxLEFT, false); \
-         { \
-            S.AddVariableText(XXO(desc)); \
-            std::string value = mModel->QueryMetadata(key); \
-            wxStaticText *text =  S.AddVariableText( \
-               TranslatableString(wxString(value.c_str()), {}) \
-               ); \
-            wxFont font = text->GetFont(); \
-            font.SetWeight(wxFONTWEIGHT_BOLD); \
-            font.MakeBold(); \
-            text->SetFont(font); \
-            mMetadataFields[key] = text; \
-         } \
-         S.EndHorizontalLay(); \
-
-      ADD_METADATA_ENTRY("&Model Name:", "name")
-      ADD_METADATA_ENTRY("&Separation Sample Rate:", "sample_rate")
-      ADD_METADATA_ENTRY("&Domain:", "domain")
-      ADD_METADATA_ENTRY("&Number of Sources:", "n_src")
-      ADD_METADATA_ENTRY("&Output Sources:", "labels")
+      AddMetadataEntry(S, "Model Name:", "name");
+      AddMetadataEntry(S, "Separation Sample Rate:", "sample_rate");
+      AddMetadataEntry(S, "Domain:", "domain");
+      AddMetadataEntry(S, "Number of Sources:", "n_src");
+      AddMetadataEntry(S, "Output Sources:", "labels");
    }
    S.EndVerticalLay();
 }

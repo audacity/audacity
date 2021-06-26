@@ -35,11 +35,14 @@ class DeepModel
 {
 private:
    torch::jit::script::Module mModel;
+   torch::jit::script::Module mResampler;
    bool mLoaded;
 
    rapidjson::Document mMetadata;
 
    int mSampleRate;
+
+   FilePath ModelsDir(); 
 
 public:
    DeepModel();
@@ -58,7 +61,8 @@ public:
 
    int GetSampleRate(){return mSampleRate;}
 
-   torch::Tensor Forward(const torch::Tensor &input);
+   torch::Tensor Resample(const torch::Tensor &waveform, int sampleRateIn, int sampleRateOut);
+   torch::Tensor Forward(const torch::Tensor &waveform);
 };
 
 #endif

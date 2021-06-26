@@ -521,6 +521,9 @@ add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "scripts" )
 
+# add deep learning modules
+add_subdirectory( "deeplearning-models" )
+
 # Generate config file
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    configure_file( src/audacity_config.h.in src/private/configwin.h )
