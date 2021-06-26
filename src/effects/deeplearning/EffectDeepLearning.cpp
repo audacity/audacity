@@ -25,7 +25,15 @@ EffectDeepLearning::EffectDeepLearning()
 
 bool EffectDeepLearning::Process()
 {
-   // Similar to EffectSoundTouch::Process() and EffectChangeSpeed::Process()
+   // throw an error if there isn't a model loaded
+   if (!mModel->IsLoaded())
+   {
+      Effect::MessageBox(
+         // TODO: i18n-hint:  */
+         XO("Please load a model before applying the effect."),
+         wxICON_ERROR );
+      return false;
+   }
 
    // Iterate over each track.
    // All needed because this effect needs to introduce
