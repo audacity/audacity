@@ -60,6 +60,12 @@ enum NyqControlType
    NYQ_CTRL_FILE,
 };
 
+//! Correponds to a NyqControl
+struct NyqValue {
+   wxString valStr;
+   double val = 0.0;
+};
+
 class NyqControl
 {
 public:
@@ -75,10 +81,8 @@ public:
    wxString label;
    std::vector<EnumValueSymbol> choices;
    FileNames::FileTypes fileTypes;
-   wxString valStr;
    wxString lowStr;
    wxString highStr;
-   double val;
    double low;
    double high;
    int ticks;
@@ -89,6 +93,7 @@ struct NyquistSettings {
    EffectSettings proxySettings;
    bool proxyDebug{ false };
    std::vector<NyqControl> controls;
+   std::vector<NyqValue> bindings;
 
    // Other fields, to do
 };
@@ -167,7 +172,10 @@ public:
    void SetDebug(bool value) { mDebug = value; }
    void SetControls(std::vector<NyqControl> controls)
       { mControls = move(controls); }
+   void SetBindings(std::vector<NyqValue> bindings)
+      { mBindings = move(bindings); }
    std::vector<NyqControl> MoveControls() { return move(mControls); }
+   std::vector<NyqValue> MoveBindings() { return move(mBindings); }
 
 private:
    static int mReentryCount;
@@ -304,6 +312,7 @@ private:
 protected:
    int               mVersion{ 4 }; // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
    std::vector<NyqControl>   mControls;
+   std::vector<NyqValue> mBindings; //!< in correspondence with mControls
 
 private:
    unsigned          mCurNumChannels;

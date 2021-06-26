@@ -156,6 +156,7 @@ bool NyquistPrompt::Process(EffectInstance &instance, EffectSettings &settings)
       proxy.SetCommand(mInputCmd);
       proxy.SetDebug(nyquistSettings.proxyDebug);
       proxy.SetControls(move(nyquistSettings.controls));
+      proxy.SetBindings(move(nyquistSettings.bindings));
       auto result = Delegate(proxy, nyquistSettings.proxySettings);
       if (result) {
          mT0 = proxy.GetT0();
@@ -234,6 +235,7 @@ int NyquistPrompt::ShowHostInterface(
          nyquistSettings.proxySettings = std::move(newSettings);
          nyquistSettings.proxyDebug = this->mDebug;
          nyquistSettings.controls = effect.MoveControls();
+         nyquistSettings.bindings = effect.MoveBindings();
       });
    }
    if (!pNewInstance)

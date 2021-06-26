@@ -265,11 +265,13 @@ bool NyquistEffect::VisitSettings(
 bool NyquistEffect::DoVisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
+   auto pBinding = mBindings.cbegin();
    for (const auto &ctrl : mControls) {
-      double d = ctrl.val;
+      auto &binding = *pBinding++;
+      double d = binding.val;
 
       if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
-         d = NyquistFormatting::GetCtrlValue(ctrl.valStr);
+         d = NyquistFormatting::GetCtrlValue(binding.valStr);
 
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
@@ -289,7 +291,7 @@ bool NyquistEffect::DoVisitSettings(
             0, ctrl.choices.data(), ctrl.choices.size() );
       }
       else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE) {
-         visitor.Define( ctrl.valStr, ctrl.var,
+         visitor.Define( binding.valStr, ctrl.var,
             wxString{}, ctrl.lowStr, ctrl.highStr );
          //parms.Write(ctrl.var, ctrl.valStr);
       }
@@ -300,14 +302,14 @@ bool NyquistEffect::DoVisitSettings(
 bool NyquistEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
-   {
-      const NyqControl & ctrl = mControls[c];
-      double d = ctrl.val;
+   auto pBinding = mBindings.cbegin();
+   for (const auto &ctrl : mControls) {
+      auto &binding = *pBinding++;
+      double d = binding.val;
 
       if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
       {
-         d = NyquistFormatting::GetCtrlValue(ctrl.valStr);
+         d = NyquistFormatting::GetCtrlValue(binding.valStr);
       }
 
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
@@ -327,14 +329,14 @@ bool NyquistEffect::SaveSettings(
       }
       else if (ctrl.type == NYQ_CTRL_STRING)
       {
-         parms.Write(ctrl.var, ctrl.valStr);
+         parms.Write(ctrl.var, binding.valStr);
       }
       else if (ctrl.type == NYQ_CTRL_FILE)
       {
          // Convert the given path string to platform-dependent equivalent
          NyquistFormatting::
-         resolveFilePath(const_cast<wxString&>(ctrl.valStr));
-         parms.Write(ctrl.var, ctrl.valStr);
+         resolveFilePath(const_cast<NyqValue&>(binding).valStr);
+         parms.Write(ctrl.var, binding.valStr);
       }
    }
 
@@ -382,9 +384,9 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
 {
    int badCount = 0;
    // First pass verifies values
-   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
-   {
-      NyqControl & ctrl = mControls[c];
+   auto pBinding = mBindings.begin();
+   for (const auto &ctrl : mControls) {
+      auto &binding = *pBinding++;
       bool good = false;
 
       // This GetCtrlValue code is preserved from former code,
@@ -392,10 +394,10 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
       // and GetCtrlValue does not appear to have important needed
       // side effects.
       if (!bTestOnly) {
-         double d = ctrl.val;
+         double d = binding.val;
          if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
          {
-            d = NyquistFormatting::GetCtrlValue(ctrl.valStr);
+            d = NyquistFormatting::GetCtrlValue(binding.valStr);
          }
       }
 
@@ -407,7 +409,7 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
             val >= ctrl.low &&
             val <= ctrl.high;
          if (good && !bTestOnly)
-            ctrl.val = val;
+            binding.val = val;
       }
       else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
       {
@@ -416,7 +418,7 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
             val >= ctrl.low &&
             val <= ctrl.high;
          if (good && !bTestOnly)
-            ctrl.val = (double)val;
+            binding.val = (double)val;
       }
       else if (ctrl.type == NYQ_CTRL_CHOICE)
       {
@@ -426,14 +428,14 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
             ctrl.choices.data(), ctrl.choices.size()) &&
             val != wxNOT_FOUND;
          if (good && !bTestOnly)
-            ctrl.val = (double)val;
+            binding.val = (double)val;
       }
       else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
       {
          wxString val;
          good = parms.Read(ctrl.var, &val);
          if (good && !bTestOnly)
-            ctrl.valStr = val;
+            binding.valStr = val;
       }
       else if (ctrl.type == NYQ_CTRL_TEXT)
       {
@@ -1141,30 +1143,32 @@ bool NyquistEffect::ProcessOne()
       cmd += wxT("(setf *tracenable* NIL)\n");
    }
 
-   for (unsigned int j = 0; j < mControls.size(); j++) {
-      if (mControls[j].type == NYQ_CTRL_FLOAT || mControls[j].type == NYQ_CTRL_FLOAT_TEXT ||
-          mControls[j].type == NYQ_CTRL_TIME) {
+   auto pBinding = mBindings.cbegin();
+   for (const auto &ctrl : mControls) {
+      auto &binding = *pBinding++;
+      if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
+          ctrl.type == NYQ_CTRL_TIME) {
          // We use Internat::ToString() rather than "%f" here because we
          // always have to use the dot as decimal separator when giving
          // numbers to Nyquist, whereas using "%f" will use the user's
          // decimal separator which may be a comma in some countries.
          cmd += wxString::Format(wxT("(setf %s %s)\n"),
-                                 mControls[j].var,
-                                 Internat::ToString(mControls[j].val, 14));
+                                 ctrl.var,
+                                 Internat::ToString(binding.val, 14));
       }
-      else if (mControls[j].type == NYQ_CTRL_INT ||
-            mControls[j].type == NYQ_CTRL_INT_TEXT ||
-            mControls[j].type == NYQ_CTRL_CHOICE) {
+      else if (ctrl.type == NYQ_CTRL_INT ||
+            ctrl.type == NYQ_CTRL_INT_TEXT ||
+            ctrl.type == NYQ_CTRL_CHOICE) {
          cmd += wxString::Format(wxT("(setf %s %d)\n"),
-                                 mControls[j].var,
-                                 (int)(mControls[j].val));
+                                 ctrl.var,
+                                 (int)(binding.val));
       }
-      else if (mControls[j].type == NYQ_CTRL_STRING || mControls[j].type == NYQ_CTRL_FILE) {
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE) {
          cmd += wxT("(setf ");
          // restrict variable names to 7-bit ASCII:
-         cmd += mControls[j].var;
+         cmd += ctrl.var;
          cmd += wxT(" \"");
-         cmd += EscapeString(mControls[j].valStr); // unrestricted value will become quoted UTF-8
+         cmd += EscapeString(binding.valStr); // unrestricted value will become quoted UTF-8
          cmd += wxT("\")\n");
       }
    }
@@ -1996,6 +2000,7 @@ bool NyquistEffect::Parse(
 
    if (len >= 3 && tokens[0] == wxT("control")) {
       NyqControl ctrl;
+      NyqValue binding;
 
       if (len == 3 && tokens[1] == wxT("text")) {
          ctrl.var = tokens[1];
@@ -2010,12 +2015,12 @@ bool NyquistEffect::Parse(
          ctrl.label = tokens[4];
 
          // valStr may or may not be a quoted string
-         ctrl.valStr = len > 5 ? tokens[5] : wxString{};
-         ctrl.val = GetCtrlValue(ctrl.valStr);
-         if (ctrl.valStr.length() > 0 &&
-               (ctrl.valStr[0] == wxT('(') ||
-               ctrl.valStr[0] == wxT('"')))
-            ctrl.valStr = UnQuote( ctrl.valStr );
+         binding.valStr = len > 5 ? tokens[5] : wxString{};
+         binding.val = GetCtrlValue(binding.valStr);
+         if (binding.valStr.length() > 0 &&
+               (binding.valStr[0] == wxT('(') ||
+                binding.valStr[0] == wxT('"')))
+            binding.valStr = UnQuote( binding.valStr );
 
          // 6 is minimum, below
          // 7 is maximum, below
@@ -2103,12 +2108,12 @@ bool NyquistEffect::Parse(
                ctrl.high = ctrl.low;
             }
 
-            if (ctrl.val < ctrl.low) {
-               ctrl.val = ctrl.low;
+            if (binding.val < ctrl.low) {
+               binding.val = ctrl.low;
             }
 
-            if (ctrl.val > ctrl.high) {
-               ctrl.val = ctrl.high;
+            if (binding.val > ctrl.high) {
+               binding.val = ctrl.high;
             }
 
             ctrl.ticks = 1000;
@@ -2122,6 +2127,7 @@ bool NyquistEffect::Parse(
       if( ! make_iterator_range( mPresetNames ).contains( ctrl.var ) )
       {
          mControls.push_back(ctrl);
+         mBindings.push_back(binding);
       }
    }
 
@@ -2148,6 +2154,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mCmd.Alloc(10000);
    mIsSal = false;
    mControls.clear();
+   mBindings.clear();
    mCategories.clear();
    mIsSpectral = false;
    mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
@@ -2408,15 +2415,16 @@ FilePaths NyquistEffect::GetNyquistSearchPath()
 bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
    mUIParent->TransferDataToWindow();
-   for (size_t i = 0, cnt = mControls.size(); i < cnt; i++)
-   {
-      NyqControl & ctrl = mControls[i];
+   auto beginBinding = mBindings.cbegin(), pBinding = beginBinding;
+   for (const auto &ctrl : mControls) {
+      size_t i = pBinding - beginBinding;
+      auto &binding = *pBinding++;
 
       if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          const auto count = ctrl.choices.size();
 
-         int val = (int)ctrl.val;
+         int val = (int)binding.val;
          if (val < 0 || val >= (int)count)
          {
             val = 0;
@@ -2429,14 +2437,14 @@ bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
       {
          // wxTextCtrls are handled by the validators
          double range = ctrl.high - ctrl.low;
-         int val = (int)(0.5 + ctrl.ticks * (ctrl.val - ctrl.low) / range);
+         int val = (int)(0.5 + ctrl.ticks * (binding.val - ctrl.low) / range);
          wxSlider *s = (wxSlider *) mUIParent->FindWindow(ID_Slider + i);
          s->SetValue(val);
       }
       else if (ctrl.type == NYQ_CTRL_TIME)
       {
          NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
-         n->SetValue(ctrl.val);
+         n->SetValue(binding.val);
       }
    }
 
@@ -2456,31 +2464,32 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 
    using namespace NyquistFormatting;
    
-   for (unsigned int i = 0; i < mControls.size(); i++)
-   {
-      NyqControl *ctrl = &mControls[i];
+   auto beginBinding = mBindings.begin(), pBinding = beginBinding;
+   for (auto &ctrl : mControls) {
+      size_t i = pBinding - beginBinding;
+      auto &binding = *pBinding++;
 
-      if (ctrl->type == NYQ_CTRL_STRING || ctrl->type == NYQ_CTRL_TEXT)
+      if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_TEXT)
       {
          continue;
       }
 
-      if (ctrl->val == UNINITIALIZED_CONTROL)
+      if (binding.val == UNINITIALIZED_CONTROL)
       {
-         ctrl->val = GetCtrlValue(ctrl->valStr);
+         binding.val = GetCtrlValue(binding.valStr);
       }
 
-      if (ctrl->type == NYQ_CTRL_CHOICE)
+      if (ctrl.type == NYQ_CTRL_CHOICE)
       {
          continue;
       }
 
-      if (ctrl->type == NYQ_CTRL_FILE)
+      if (ctrl.type == NYQ_CTRL_FILE)
       {
-         resolveFilePath(ctrl->valStr);
+         resolveFilePath(binding.valStr);
 
          wxString path;
-         if (ctrl->valStr.StartsWith("\"", &path))
+         if (binding.valStr.StartsWith("\"", &path))
          {
             // Validate if a list of quoted paths.
             if (path.EndsWith("\"", &path))
@@ -2507,7 +2516,7 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
             {
                const auto message =
                   /* i18n-hint: Warning that there is one quotation mark rather than a pair.*/
-                  XO("Mismatched quotes in\n%s").Format( ctrl->valStr );
+                  XO("Mismatched quotes in\n%s").Format( binding.valStr );
                Effect::MessageBox(
                   message,
                   wxOK | wxICON_EXCLAMATION | wxCENTRE,
@@ -2516,14 +2525,14 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
             }
          }
          // Validate a single path.
-         else if (validatePath(ctrl->valStr))
+         else if (validatePath(binding.valStr))
          {
             continue;
          }
 
          // Validation failed
          const auto message =
-            XO("\"%s\" is not a valid file path.").Format( ctrl->valStr );
+            XO("\"%s\" is not a valid file path.").Format( binding.valStr );
          Effect::MessageBox(
             message,
             wxOK | wxICON_EXCLAMATION | wxCENTRE,
@@ -2531,58 +2540,58 @@ bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
          return false;
       }
 
-      if (ctrl->type == NYQ_CTRL_TIME)
+      if (ctrl.type == NYQ_CTRL_TIME)
       {
          NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
-         ctrl->val = n->GetValue();
+         binding.val = n->GetValue();
       }
 
-      if (ctrl->type == NYQ_CTRL_INT_TEXT && ctrl->lowStr.IsSameAs(wxT("nil"), false)) {
-         ctrl->low = INT_MIN;
+      if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.lowStr.IsSameAs(wxT("nil"), false)) {
+         ctrl.low = INT_MIN;
       }
-      else if ((ctrl->type == NYQ_CTRL_FLOAT_TEXT || ctrl->type == NYQ_CTRL_TIME) &&
-               ctrl->lowStr.IsSameAs(wxT("nil"), false))
+      else if ((ctrl.type == NYQ_CTRL_FLOAT_TEXT || ctrl.type == NYQ_CTRL_TIME) &&
+               ctrl.lowStr.IsSameAs(wxT("nil"), false))
       {
-         ctrl->low = -(FLT_MAX);
+         ctrl.low = -(FLT_MAX);
       }
       else
       {
-         ctrl->low = GetCtrlValue(ctrl->lowStr);
+         ctrl.low = GetCtrlValue(ctrl.lowStr);
       }
 
-      if (ctrl->type == NYQ_CTRL_INT_TEXT && ctrl->highStr.IsSameAs(wxT("nil"), false)) {
-         ctrl->high = INT_MAX;
+      if (ctrl.type == NYQ_CTRL_INT_TEXT && ctrl.highStr.IsSameAs(wxT("nil"), false)) {
+         ctrl.high = INT_MAX;
       }
-      else if ((ctrl->type == NYQ_CTRL_FLOAT_TEXT || ctrl->type == NYQ_CTRL_TIME) &&
-               ctrl->highStr.IsSameAs(wxT("nil"), false))
+      else if ((ctrl.type == NYQ_CTRL_FLOAT_TEXT || ctrl.type == NYQ_CTRL_TIME) &&
+               ctrl.highStr.IsSameAs(wxT("nil"), false))
       {
-         ctrl->high = FLT_MAX;
+         ctrl.high = FLT_MAX;
       }
       else
       {
-         ctrl->high = GetCtrlValue(ctrl->highStr);
+         ctrl.high = GetCtrlValue(ctrl.highStr);
       }
 
-      if (ctrl->high < ctrl->low)
+      if (ctrl.high < ctrl.low)
       {
-         ctrl->high = ctrl->low + 1;
+         ctrl.high = ctrl.low + 1;
       }
 
-      if (ctrl->val < ctrl->low)
+      if (binding.val < ctrl.low)
       {
-         ctrl->val = ctrl->low;
+         binding.val = ctrl.low;
       }
 
-      if (ctrl->val > ctrl->high)
+      if (binding.val > ctrl.high)
       {
-         ctrl->val = ctrl->high;
+         binding.val = ctrl.high;
       }
 
-      ctrl->ticks = 1000;
-      if (ctrl->type == NYQ_CTRL_INT &&
-          (ctrl->high - ctrl->low < ctrl->ticks))
+      ctrl.ticks = 1000;
+      if (ctrl.type == NYQ_CTRL_INT &&
+          (ctrl.high - ctrl.low < ctrl.ticks))
       {
-         ctrl->ticks = (int)(ctrl->high - ctrl->low);
+         ctrl.ticks = (int)(ctrl.high - ctrl.low);
       }
    }
 
@@ -2597,9 +2606,10 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
    {
       S.StartMultiColumn(4);
       {
-         for (size_t i = 0; i < mControls.size(); i++)
-         {
-            NyqControl & ctrl = mControls[i];
+         auto beginBinding = mBindings.begin(), pBinding = beginBinding;
+         for (const auto &ctrl : mControls) {
+            size_t i = pBinding - beginBinding;
+            auto &binding = *pBinding++;
 
             if (ctrl.type == NYQ_CTRL_TEXT)
             {
@@ -2622,7 +2632,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                   S.AddSpace(10, 10);
 
                   auto item = S.Id(ID_Text + i)
-                     .Validator<wxGenericValidator>(&ctrl.valStr)
+                     .Validator<wxGenericValidator>(&binding.valStr)
                      .Name( prompt )
                      .AddTextBox( {}, wxT(""), 50);
                }
@@ -2646,7 +2656,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                      NumericTextCtrl(S.GetParent(), (ID_Time + i),
                                      NumericConverter::TIME,
                                      GetSelectionFormat(),
-                                     ctrl.val,
+                                     binding.val,
                                      mProjectRate,
                                      options);
                   S
@@ -2666,18 +2676,20 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                         defaultExtension = type.extensions[0];
                   }
                   NyquistFormatting::
-                  resolveFilePath(ctrl.valStr, defaultExtension);
+                  resolveFilePath(binding.valStr, defaultExtension);
 
                   wxTextCtrl *item = S.Id(ID_Text+i)
                      .Name( prompt )
                      .AddTextBox( {}, wxT(""), 40);
-                  item->SetValidator(wxGenericValidator(&ctrl.valStr));
+                  item->SetValidator(wxGenericValidator(&binding.valStr));
 
-                  if (ctrl.label.empty())
-                     // We'd expect wxFileSelectorPromptStr to already be translated, but apparently not.
-                     ctrl.label = wxGetTranslation( wxFileSelectorPromptStr );
                   S.Id(ID_FILE + i).AddButton(
-                     Verbatim(ctrl.label), wxALIGN_LEFT);
+                     Verbatim( ctrl.label.empty ()
+                        // We'd expect wxFileSelectorPromptStr to already be
+                        // translated, but apparently not.
+                        ? wxGetTranslation( wxFileSelectorPromptStr )
+                        : ctrl.label ),
+                     wxALIGN_LEFT);
                }
                else
                {
@@ -2693,7 +2705,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                      double range = ctrl.high - ctrl.low;
                      S.Validator<FloatingPointValidator<double>>(
                         // > 12 decimal places can cause rounding errors in display.
-                        12, &ctrl.val,
+                        12, &binding.val,
                         // Set number of decimal places
                         (range < 10
                            ? NumValidatorStyle::THREE_TRAILING_ZEROES
@@ -2706,7 +2718,7 @@ std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
                   else
                   {
                      S.Validator<IntegerValidator<double>>(
-                        &ctrl.val, NumValidatorStyle::DEFAULT,
+                        &binding.val, NumValidatorStyle::DEFAULT,
                         (int) ctrl.low, (int) ctrl.high);
                   }
                   wxTextCtrl *item = S
@@ -2760,7 +2772,8 @@ bool NyquistEffect::IsOk()
 void NyquistEffect::OnSlider(wxCommandEvent & evt)
 {
    int i = evt.GetId() - ID_Slider;
-   NyqControl & ctrl = mControls[i];
+   const auto & ctrl = mControls[i];
+   auto &binding = mBindings[i];
 
    int val = evt.GetInt();
    double range = ctrl.high - ctrl.low;
@@ -2775,15 +2788,15 @@ void NyquistEffect::OnSlider(wxCommandEvent & evt)
    // If the value is at least one tick different from the current value
    // change it (this prevents changes from manually entered values unless
    // the slider actually moved)
-   if (fabs(newVal - ctrl.val) >= (1 / (double)ctrl.ticks) * range &&
-       fabs(newVal - ctrl.val) >= pow(0.1, precision) / 2)
+   if (fabs(newVal - binding.val) >= (1 / (double)ctrl.ticks) * range &&
+       fabs(newVal - binding.val) >= pow(0.1, precision) / 2)
    {
       // First round to the appropriate precision
       newVal *= pow(10.0, precision);
       newVal = floor(newVal + 0.5);
       newVal /= pow(10.0, precision);
 
-      ctrl.val = newVal;
+      binding.val = newVal;
 
       mUIParent->FindWindow(ID_Text + i)->GetValidator()->TransferToWindow();
    }
@@ -2791,14 +2804,14 @@ void NyquistEffect::OnSlider(wxCommandEvent & evt)
 
 void NyquistEffect::OnChoice(wxCommandEvent & evt)
 {
-   mControls[evt.GetId() - ID_Choice].val = (double) evt.GetInt();
+   mBindings[evt.GetId() - ID_Choice].val = (double) evt.GetInt();
 }
 
 void NyquistEffect::OnTime(wxCommandEvent& evt)
 {
    int i = evt.GetId() - ID_Time;
    static double value = 0.0;
-   NyqControl & ctrl = mControls[i];
+   const auto & ctrl = mControls[i];
 
    NumericTextCtrl *n = (NumericTextCtrl *) mUIParent->FindWindow(ID_Time + i);
    double val = n->GetValue();
@@ -2828,7 +2841,8 @@ void NyquistEffect::OnTime(wxCommandEvent& evt)
 void NyquistEffect::OnFileButton(wxCommandEvent& evt)
 {
    int i = evt.GetId() - ID_FILE;
-   NyqControl & ctrl = mControls[i];
+   const auto & ctrl = mControls[i];
+   auto &binding = mBindings[i];
 
    // Get style flags:
    // Ensure legal combinations so that wxWidgets does not throw an assert error.
@@ -2867,9 +2881,9 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
       }
    }
 
-   NyquistFormatting::resolveFilePath(ctrl.valStr);
+   NyquistFormatting::resolveFilePath(binding.valStr);
 
-   wxFileName fname = ctrl.valStr;
+   wxFileName fname = binding.valStr;
    wxString defaultDir = fname.GetPath();
    wxString defaultFile = fname.GetName();
    auto message = XO("Select a file");
@@ -2903,11 +2917,11 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
          path += selectedFiles[sf];
          path += "\"";
       }
-      ctrl.valStr = path;
+      binding.valStr = path;
    }
    else
    {
-      ctrl.valStr = openFileDialog.GetPath();
+      binding.valStr = openFileDialog.GetPath();
    }
 
    mUIParent->FindWindow(ID_Text + i)->GetValidator()->TransferToWindow();
@@ -2997,13 +3011,14 @@ void NyquistEffect::OnText(wxCommandEvent & evt)
 {
    int i = evt.GetId() - ID_Text;
 
-   NyqControl & ctrl = mControls[i];
+   const auto & ctrl = mControls[i];
+   const auto &binding = mBindings[i];
 
    if (wxDynamicCast(evt.GetEventObject(), wxWindow)->GetValidator()->TransferFromWindow())
    {
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_INT)
       {
-         int pos = (int)floor((ctrl.val - ctrl.low) /
+         int pos = (int)floor((binding.val - ctrl.low) /
                               (ctrl.high - ctrl.low) * ctrl.ticks + 0.5);
 
          wxSlider *slider = (wxSlider *)mUIParent->FindWindow(ID_Slider + i);
