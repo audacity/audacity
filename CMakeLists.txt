@@ -522,7 +522,9 @@ add_subdirectory( "plug-ins" )
 add_subdirectory( "scripts" )
 
 # add deep learning modules
-add_subdirectory( "deeplearning-models" )
+if(${_OPT}use_libtorch)
+   add_subdirectory( "deeplearning-models" )
+endif()
 
 # Generate config file
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
