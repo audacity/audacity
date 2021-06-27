@@ -88,11 +88,13 @@ public:
    int ticks;
 };
 
+using NyquistControls = std::vector</*const*/ NyqControl>;
+
 struct NyquistSettings {
    // other settings, for the Nyquist prompt; else null
    EffectSettings proxySettings;
    bool proxyDebug{ false };
-   std::vector<NyqControl> controls;
+   std::vector</*const*/ NyqControl> controls;
    std::vector<NyqValue> bindings;
 
    // Other fields, to do
@@ -170,11 +172,11 @@ public:
    void Stop();
 
    void SetDebug(bool value) { mDebug = value; }
-   void SetControls(std::vector<NyqControl> controls)
+   void SetControls(std::vector</*const*/ NyqControl> controls)
       { mControls = move(controls); }
    void SetBindings(std::vector<NyqValue> bindings)
       { mBindings = move(bindings); }
-   std::vector<NyqControl> MoveControls() { return move(mControls); }
+   std::vector</*const*/ NyqControl> MoveControls() { return move(mControls); }
    std::vector<NyqValue> MoveBindings() { return move(mBindings); }
 
 private:
@@ -311,7 +313,7 @@ private:
 
 protected:
    int               mVersion{ 4 }; // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
-   std::vector<NyqControl>   mControls;
+   NyquistControls   mControls;
    std::vector<NyqValue> mBindings; //!< in correspondence with mControls
 
 private:
