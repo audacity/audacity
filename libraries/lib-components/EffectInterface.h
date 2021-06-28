@@ -164,14 +164,7 @@ AudacityCommand.
 class COMPONENTS_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
 {
 public:
-   using EffectDialogFactory = std::function<
-      wxDialog* ( wxWindow &parent,
-         EffectHostInterface*, EffectUIClientInterface* )
-   >;
-
    virtual ~EffectClientInterface();
-
-   virtual bool SetHost(EffectHostInterface *host) = 0;
 
    virtual unsigned GetAudioInCount() = 0;
    virtual unsigned GetAudioOutCount() = 0;
@@ -202,10 +195,6 @@ public:
    virtual size_t RealtimeProcess(int group, float **inBuf, float **outBuf, size_t numSamples) = 0;
    virtual bool RealtimeProcessEnd() = 0;
 
-   virtual bool ShowInterface(
-      wxWindow &parent, const EffectDialogFactory &factory,
-      bool forceModal = false
-   ) = 0;
    // Some effects will use define params to define what parameters they take.
    // If they do, they won't need to implement Get or SetAutomation parameters.
    // since the Effect class can do it.  Or at least that is how things happen
@@ -224,6 +213,11 @@ public:
    virtual bool LoadFactoryDefaults() = 0;
 };
 
+using EffectDialogFactory = std::function<
+   wxDialog* ( wxWindow &parent,
+      EffectHostInterface*, EffectUIClientInterface* )
+>;
+
 /*************************************************************************************//**
 
 \class EffectUIClientInterface
@@ -233,10 +227,17 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
+   : public EffectClientInterface
 {
 public:
    virtual ~EffectUIClientInterface();
 
+   virtual bool ShowInterface(
+      wxWindow &parent, const EffectDialogFactory &factory,
+      bool forceModal = false
+   ) = 0;
+
+   virtual bool SetHost(EffectHostInterface *host) = 0;
    virtual void SetHostUI(EffectUIHostInterface *host) = 0;
    virtual bool IsGraphicalUI() = 0;
    virtual bool PopulateUI(ShuttleGui &S) = 0;

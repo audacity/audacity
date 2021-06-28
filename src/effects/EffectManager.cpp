@@ -306,8 +306,7 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 }
 
 bool EffectManager::PromptUser(
-   const PluginID & ID,
-   const EffectClientInterface::EffectDialogFactory &factory, wxWindow &parent)
+   const PluginID & ID, const EffectDialogFactory &factory, wxWindow &parent)
 {
    bool result = false;
    Effect *effect = GetEffect(ID);
@@ -735,7 +734,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       auto effect = std::make_shared<Effect>(); // TODO: use make_unique and store in std::unordered_map
       if (effect)
       {
-         EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(ident);
+         const auto client = dynamic_cast<EffectUIClientInterface *>(ident);
          if (client && effect->Startup(client))
          {
             auto pEffect = effect.get();

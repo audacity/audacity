@@ -888,7 +888,7 @@ wxString Effect::GetSavedStateGroup()
 
 // Effect implementation
 
-bool Effect::Startup(EffectClientInterface *client)
+bool Effect::Startup(EffectUIClientInterface *client)
 {
    // Let destructor know we need to be shutdown
    mClient = client;

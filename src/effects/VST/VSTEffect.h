@@ -90,7 +90,6 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final : public wxEvtHandler,
-                  public EffectClientInterface,
                   public EffectUIClientInterface,
                   public XMLTagHandler,
                   public VSTEffectLink
@@ -118,8 +117,6 @@ class VSTEffect final : public wxEvtHandler,
    bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
-
-   bool SetHost(EffectHostInterface *host) override;
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -166,6 +163,7 @@ class VSTEffect final : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
+   bool SetHost(EffectHostInterface *host) override;
    void SetHostUI(EffectUIHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
