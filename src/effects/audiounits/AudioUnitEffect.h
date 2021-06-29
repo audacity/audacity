@@ -26,6 +26,7 @@
 #include "PluginInterface.h"
 
 #include "AUControl.h"
+#include <wx/weakref.h>
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: the name of an Apple audio software protocol */
@@ -97,8 +98,8 @@ public:
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   bool ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -201,7 +202,7 @@ private:
    ArrayOf<AudioBufferList> mOutputList;
 
    wxWindow *mParent;
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical;
 

@@ -21,6 +21,7 @@ class wxArrayString;
 #include <wx/msgqueue.h>
 #include <wx/thread.h>
 #include <wx/timer.h>
+#include <wx/weakref.h>
 
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
@@ -306,8 +307,8 @@ public:
    size_t RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   bool ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -505,7 +506,7 @@ private:
 
    wxTimer mTimer;
 
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
 
    bool mUseGUI;

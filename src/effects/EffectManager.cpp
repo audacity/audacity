@@ -305,6 +305,10 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
    return false;
 }
 
+//! Shows an effect or command dialog so the user can specify settings for later
+/*!
+ It is used when defining a macro.  It does not invoke the effect or command.
+ */
 bool EffectManager::PromptUser(
    const PluginID & ID, const EffectDialogFactory &factory, wxWindow &parent)
 {
@@ -313,7 +317,8 @@ bool EffectManager::PromptUser(
 
    if (effect)
    {
-      result = effect->ShowInterface(
+      //! Show the effect dialog, only so that the user can choose settings.
+      result = effect->ShowHostInterface(
          parent, factory, effect->IsBatchProcessing() );
       return result;
    }

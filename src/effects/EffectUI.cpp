@@ -382,7 +382,7 @@ void EffectRack::OnEditor(wxCommandEvent & evt)
    }
 
    auto pEffect = mEffects[index];
-   pEffect->ShowInterface( *GetParent(), EffectUI::DialogFactory,
+   pEffect->ShowHostInterface( *GetParent(), EffectUI::DialogFactory,
       pEffect->IsBatchProcessing() );
 }
 
@@ -957,11 +957,14 @@ bool EffectUIHost::Initialize()
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
 
+   // Build a "host" dialog, framing a panel that the client fills in.
+   // The frame includes buttons to preview, apply, load and save presets, etc.
    EffectPanel *w {};
    ShuttleGui S{ this, eIsCreating };
    {
       S.StartHorizontalLay( wxEXPAND );
       {
+         // Make the panel for the client
          Destroy_ptr<EffectPanel> uw{ safenew EffectPanel( S.GetParent() ) };
          RTL_WORKAROUND(uw.get());
 
@@ -969,6 +972,7 @@ bool EffectUIHost::Initialize()
          uw->SetMinSize(wxSize(wxMax(600, mParent->GetSize().GetWidth() * 2 / 3),
             mParent->GetSize().GetHeight() / 2));
 
+         // Let the client add things to the panel
          ShuttleGui S1{ uw.get(), eIsCreating };
          if (!mClient.PopulateUI(S1))
          {

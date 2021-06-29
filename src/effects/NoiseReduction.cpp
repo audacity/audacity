@@ -446,7 +446,12 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-bool EffectNoiseReduction::ShowInterface(
+//! An override still here for historical reasons, ignoring the factory
+/*! We would like to make this effect behave more like others, but it does have
+ its unusual two-pass nature.  First choose and analyze an example of noise,
+ then apply noise reduction to another selection.  That is difficult to fit into
+ the framework for managing settings of other effects. */
+bool EffectNoiseReduction::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &, bool forceModal)
 {
    // to do: use forceModal correctly

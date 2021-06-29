@@ -18,6 +18,7 @@
 
 #include "SampleFormat.h"
 #include "XMLTagHandler.h"
+#include <wx/weakref.h>
 
 class wxSizerItem;
 class wxSlider;
@@ -148,8 +149,8 @@ class VSTEffect final : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   bool ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -366,7 +367,7 @@ private:
    size_t mNumSamples;
 
    // UI
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
    wxSizerItem *mContainer;
    bool mGui;

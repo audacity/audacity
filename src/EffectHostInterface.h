@@ -15,6 +15,8 @@
 #include "ConfigInterface.h"
 #include "ComponentInterfaceSymbol.h"
 
+#include <functional>
+
 class EffectDefinitionInterface;
 
 /*************************************************************************************//**
@@ -44,19 +46,33 @@ public:
    virtual RegistryPath GetFactoryDefaultsGroup() = 0;
 };
 
+class wxDialog;
+class wxWindow;
+class EffectUIClientInterface;
+
+using EffectDialogFactory = std::function<
+   wxDialog* ( wxWindow &parent,
+      EffectHostInterface&, EffectUIClientInterface& )
+>;
+
 /*************************************************************************************//**
 
 \class EffectUIHostInterface
-
-\brief EffectUIHostInterface has nothing in it.  It is provided so that an Effect
-can call SetHostUI passing in a pointer to an EffectUIHostInterface.  It contains no
-functionality and is provided, apparently, for type checking.  Since only EffectUIHost
-uses it, EffectUIHost could be used instead.
+@brief extends EffectHostInterface with UI-related services
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIHostInterface
+class AUDACITY_DLL_API EffectUIHostInterface : public EffectHostInterface
 {
 public:
    virtual ~EffectUIHostInterface();
+
+   /*!
+    @return true if destructive effect processing should proceed; if false,
+    there may be a non-modal dialog still opened
+    */
+   virtual bool ShowHostInterface(
+      wxWindow &parent, const EffectDialogFactory &factory,
+      bool forceModal = false
+   ) = 0;
 };
 
 #endif

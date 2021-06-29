@@ -17,6 +17,7 @@ class NumericTextCtrl;
 
 #include <wx/dynlib.h> // member variable
 #include <wx/event.h> // to inherit
+#include <wx/weakref.h>
 
 #include "EffectInterface.h"
 #include "ModuleInterface.h"
@@ -96,8 +97,8 @@ public:
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   bool ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -181,7 +182,7 @@ private:
    std::vector<LADSPA_Handle> mSlaves;
 
    NumericTextCtrl *mDuration;
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
    ArrayOf<wxSlider*> mSliders;
    ArrayOf<wxTextCtrl*> mFields;

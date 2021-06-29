@@ -42,8 +42,6 @@
 #ifndef __AUDACITY_EFFECTINTERFACE_H__
 #define __AUDACITY_EFFECTINTERFACE_H__
 
-#include <functional>
-
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
 #include "EffectAutomationParameters.h" // for command automation
@@ -210,11 +208,6 @@ public:
    virtual bool LoadFactoryDefaults() = 0;
 };
 
-using EffectDialogFactory = std::function<
-   wxDialog* ( wxWindow &parent,
-      EffectHostInterface&, EffectUIClientInterface& )
->;
-
 /*************************************************************************************//**
 
 \class EffectUIClientInterface
@@ -229,15 +222,21 @@ class COMPONENTS_API EffectUIClientInterface /* not final */
 public:
    virtual ~EffectUIClientInterface();
 
-   virtual bool ShowInterface(
-      wxWindow &parent, const EffectDialogFactory &factory,
-      bool forceModal = false
+   /*!
+    @return true if destructive effect processing should proceed; if false,
+    there may be a non-modal dialog still opened
+    */
+   virtual bool ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
 
    virtual bool SetHost(EffectHostInterface *host) = 0;
 
    virtual bool IsGraphicalUI() = 0;
+
+   //! Adds controls to a panel that is given as the parent window of `S`
    virtual bool PopulateUI(ShuttleGui &S) = 0;
+
    virtual bool ValidateUI() = 0;
    virtual bool HideUI() = 0;
    virtual bool CloseUI() = 0;

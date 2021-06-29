@@ -1009,13 +1009,13 @@ finish:
    return success;
 }
 
-bool NyquistEffect::ShowInterface(
+bool NyquistEffect::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
    bool res = true;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = Effect::ShowInterface(parent, factory, forceModal);
+      res = Effect::ShowHostInterface(parent, factory, forceModal);
    }
 
 
@@ -1041,7 +1041,7 @@ bool NyquistEffect::ShowInterface(
       effect.SetAutomationParameters(cp);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowInterface(parent, factory, forceModal);
+      res = effect.ShowHostInterface(parent, factory, forceModal);
       if (res)
       {
          CommandParameters cp;

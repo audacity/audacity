@@ -17,6 +17,7 @@
 
 #include <unordered_map>
 #include "EffectInterface.h"
+#include "EffectHostInterface.h" // for EffectDialogFactory
 #include "Identifier.h"
 
 class AudacityCommand;

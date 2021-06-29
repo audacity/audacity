@@ -389,8 +389,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mRolling = false;
    mActivated = false;
 
-   mDialog = NULL;
-
    mUIIdleInterface = NULL;
    mUIShowInterface = NULL;
 
@@ -1459,27 +1457,11 @@ bool LV2Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool LV2Effect::ShowInterface(
-   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
+bool LV2Effect::ShowClientInterface(
+   wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   if (mDialog)
-   {
-      if (mDialog->Close(true))
-      {
-         mDialog = nullptr;
-      }
-      return false;
-   }
-
-   // mDialog is null
-   auto cleanup = valueRestorer(mDialog);
-
-   if ( factory )
-      mDialog = factory(parent, *mHost, *this);
-   if (!mDialog)
-   {
-      return false;
-   }
+   // Remember the dialog with a weak pointer, but don't control its lifetime
+   mDialog = &dialog;
 
    // Try to give the window a sensible default/minimum size
    mDialog->Layout();
@@ -1493,14 +1475,10 @@ bool LV2Effect::ShowInterface(
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      cleanup.release();
-
       return false;
    }
 
-   bool res = mDialog->ShowModal() != 0;
-
-   return res;
+   return mDialog->ShowModal() != 0;
 }
 
 bool LV2Effect::GetAutomationParameters(CommandParameters &parms)

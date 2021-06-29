@@ -849,7 +849,6 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    mInteractive = false;
    mIsGraphical = false;
 
-   mDialog = NULL;
    mParent = NULL;
 
    mUnitInitialized = false;
@@ -1470,43 +1469,18 @@ bool AudioUnitEffect::RealtimeProcessEnd()
    return true;
 }
 
-bool AudioUnitEffect::ShowInterface(wxWindow &parent,
-                                    const EffectDialogFactory &factory,
-                                    bool forceModal)
+bool AudioUnitEffect::ShowClientInterface(
+   wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   if (mDialog)
-   {
-      if (mDialog->Close(true))
-      {
-         mDialog = nullptr;
-      }
-      return false;
-   }
-
-   // mDialog is null
-   auto cleanup = valueRestorer(mDialog);
-
-   if (factory)
-   {
-      mDialog = factory(parent, *mHost, *this);
-   }
-
-   if (!mDialog)
-   {
-      return false;
-   }
-
+   // Remember the dialog with a weak pointer, but don't control its lifetime
+   mDialog = &dialog;
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      cleanup.release();
-
       return false;
    }
 
-   bool res = mDialog->ShowModal() != 0;
-
-   return res;
+   return mDialog->ShowModal() != 0;
 }
 
 bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)

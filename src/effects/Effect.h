@@ -36,6 +36,7 @@ class wxWindow;
 #include "../Track.h"
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include <wx/windowptr.h>
 
 class wxArrayString;
 class ShuttleGui;
@@ -66,9 +67,10 @@ class WaveTrack;
 // TODO:  Much more cleanup of old methods and variables is needed, but
 // TODO:  can't be done until after all effects are using the NEW API.
 
+//! An Effect object is at once host and client:  it is self-hosting.
 class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
-                                public EffectUIClientInterface,
-                                public EffectHostInterface
+   public EffectUIClientInterface,
+   public EffectUIHostInterface
 {
  //
  // public methods
@@ -141,8 +143,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   bool ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -183,7 +185,13 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
    RegistryPath GetCurrentSettingsGroup() override;
    RegistryPath GetFactoryDefaultsGroup() override;
+
    virtual wxString GetSavedStateGroup() /* not override? */;
+
+   // EffectUIHostInterface implementation
+
+   bool ShowHostInterface( wxWindow &parent,
+      const EffectDialogFactory &factory, bool forceModal = false) override;
 
    // Effect implementation
 
@@ -413,7 +421,6 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-
    ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
@@ -434,7 +441,10 @@ protected:
    int            mPass;
 
    // UI
-   wxDialog       *mUIDialog;
+   //! This smart pointer controls the lifetime of the dialog
+   wxWindowPtr<wxDialog> mHostUIDialog;
+   //! This weak pointer may be the same as the above, or null
+   wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
    int            mUIResultID;
    unsigned       mUIFlags;
