@@ -15,8 +15,6 @@
 
 *//*******************************************************************/
 
-
-
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"
 
@@ -30,12 +28,12 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
-#include "TimeWarper.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
+#include "effects/TimeWarper.h"
 
-#include "LoadEffects.h"
+#include "effects/LoadEffects.h"
 
 // Soundtouch defines these as well, which are also in generated configmac.h
 // and configunix.h, so get rid of them before including,
@@ -201,8 +199,7 @@ bool EffectChangeTempo::Process()
    if (mUseSBSMS)
    {
       double tempoRatio = 1.0 + m_PercentChange / 100.0;
-      EffectSBSMS proxy;
-      proxy.mProxyEffectName = XO("High Quality Tempo Change");
+      EffectSBSMS proxy{ XO("High Quality Tempo Change") };
       proxy.setParameters(tempoRatio, 1.0);
       success = Delegate(proxy, *mUIParent, nullptr);
    }

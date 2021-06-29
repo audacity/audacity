@@ -13,13 +13,15 @@
 #ifndef __AUDACITY_EFFECT_CHANGESPEED__
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
-#include "Effect.h"
+#include "effects/Effect.h"
 
 class wxSlider;
 class wxChoice;
 class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
+
+namespace {
 
 class EffectChangeSpeed final : public Effect
 {
@@ -115,5 +117,7 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__

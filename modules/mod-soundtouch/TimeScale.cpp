@@ -13,20 +13,18 @@
 
 *//*******************************************************************/
 
-
-
 #if USE_SBSMS
 #include "TimeScale.h"
-#include "LoadEffects.h"
+#include "effects/LoadEffects.h"
 
 #include <math.h>
 
 #include <wx/intl.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/valnum.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/valnum.h"
 
 enum
 {

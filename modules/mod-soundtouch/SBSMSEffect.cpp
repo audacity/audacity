@@ -11,17 +11,15 @@ effect that uses SBSMS to do its processing (TimeScale)
 
 **********************************************************************/
 
-
-
 #if USE_SBSMS
 #include "SBSMSEffect.h"
 
 #include <math.h>
 
-#include "../LabelTrack.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "TimeWarper.h"
+#include "LabelTrack.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "effects/TimeWarper.h"
 
 enum {
   SBSMSOutBlockSize = 512

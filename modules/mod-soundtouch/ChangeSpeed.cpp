@@ -13,9 +13,8 @@
 
 *//*******************************************************************/
 
-
 #include "ChangeSpeed.h"
-#include "LoadEffects.h"
+#include "effects/LoadEffects.h"
 
 #include <math.h>
 
@@ -23,17 +22,17 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
-#include "../LabelTrack.h"
-#include "../Prefs.h"
-#include "../Resample.h"
-#include "../Shuttle.h"
-#include "../ShuttleGui.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/valnum.h"
+#include "LabelTrack.h"
+#include "Prefs.h"
+#include "Resample.h"
+#include "Shuttle.h"
+#include "ShuttleGui.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/valnum.h"
 
-#include "TimeWarper.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
+#include "effects/TimeWarper.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 
 enum
 {

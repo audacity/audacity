@@ -21,6 +21,8 @@ class wxSlider;
 class wxTextCtrl;
 class ShuttleGui;
 
+namespace {
+
 class EffectTimeScale final : public EffectSBSMS
 {
 public:
@@ -104,6 +106,8 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
+
+}
 
 #endif // __AUDACITY_EFFECT_TIMESCALE
 
