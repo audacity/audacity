@@ -70,8 +70,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Update Audacity"));
    {
-      S.TieCheckBox(
-          XO("&Check for Updates...").Stripped(TranslatableString::Ellipses | TranslatableString::MenuCodes),
+      S.TieCheckBox(XO("&Check for Updates"),
           UpdatesCheckingSettings::DefaultUpdatesCheckingFlag);
    }
    S.EndStatic();
