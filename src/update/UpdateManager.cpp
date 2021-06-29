@@ -24,9 +24,6 @@
 #include <mutex>
 #include <cstdint>
 
-BoolSetting UpdatesCheckingSettings::DefaultUpdatesCheckingFlag{
-    L"/Update/DefaultUpdatesChecking", true };
-
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 
 
@@ -127,7 +124,7 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    bool updatesCheckingEnabled = UpdatesCheckingSettings::DefaultUpdatesCheckingFlag.Read();
+    bool updatesCheckingEnabled = DefaultUpdatesCheckingFlag.Read();
 
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
         GetUpdates(true);
