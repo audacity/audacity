@@ -63,6 +63,9 @@
 #include "MemoryX.h"
 #include <memory>
 
+BoolSetting DefaultUpdatesCheckingFlag{
+    L"/Update/DefaultUpdatesChecking", true };
+
 std::unique_ptr<FileConfig> ugPrefs {};
 
 FileConfig *gPrefs = nullptr;
@@ -177,6 +180,25 @@ void InitPreferences( std::unique_ptr<FileConfig> uPrefs )
    gPrefs = uPrefs.get();
    ugPrefs = std::move(uPrefs);
    wxConfigBase::Set(gPrefs);
+}
+
+void ResetPreferences()
+{
+   // Future:  make this a static registry table, so the settings objects
+   // don't need to be defined in this source code file to avoid dependency
+   // cycles
+   std::pair<BoolSetting &, bool> stickyBoolSettings[] {
+      {DefaultUpdatesCheckingFlag, 0},
+      // ... others?
+   };
+   for (auto &pair : stickyBoolSettings)
+      pair.second = pair.first.Read();
+
+   bool savedValue = DefaultUpdatesCheckingFlag.Read();
+   gPrefs->DeleteAll();
+
+   for (auto &pair : stickyBoolSettings)
+      pair.first.Write(pair.second);
 }
 
 void FinishPreferences()

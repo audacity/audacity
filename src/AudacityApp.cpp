@@ -241,7 +241,7 @@ void PopulatePreferences()
          wxYES_NO, NULL);
       if (action == wxYES)   // reset
       {
-         gPrefs->DeleteAll();
+         ResetPreferences();
          writeLang = true;
       }
    }

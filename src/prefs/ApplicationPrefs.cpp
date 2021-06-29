@@ -72,7 +72,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.TieCheckBox(
           XO("&Check for Updates...").Stripped(TranslatableString::Ellipses | TranslatableString::MenuCodes),
-          UpdatesCheckingSettings::DefaultUpdatesCheckingFlag);
+          DefaultUpdatesCheckingFlag);
    }
    S.EndStatic();
    S.EndScroller();
