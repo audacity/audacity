@@ -65,34 +65,43 @@ VersionPatch UpdateManager::GetVersionPatch() const
     return mVersionPatch;
 }
 
-void UpdateManager::GetUpdates()
+void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
 {
     const audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
-    response->setRequestFinishedCallback([response, this](audacity::network_manager::IResponse*) {
+    response->setRequestFinishedCallback([response, ignoreNetworkErrors, this](audacity::network_manager::IResponse*) {
 
         auto gAudioIO = AudioIO::Get();
         if (response->getError() != audacity::network_manager::NetworkError::NoError)
         {
-            gAudioIO->CallAfterRecording([] {ShowExceptionDialog(nullptr,
-                XC("Error checking for update", "update dialog"),
-                XC("Unable to connect to Audacity update server.", "update dialog"),
-                wxString());
-                });
-
-            return;
+           if (!ignoreNetworkErrors)
+           {
+              gAudioIO->CallAfterRecording([] {
+                 ShowExceptionDialog(
+                    nullptr, XC("Error checking for update", "update dialog"),
+                    XC("Unable to connect to Audacity update server.",
+                       "update dialog"),
+                    wxString());
+              });
+           }
+           
+           return;
         }
 
         if (!mUpdateDataParser.Parse(response->readAll<VersionPatch::UpdateDataFormat>(), &mVersionPatch))
         {
-            gAudioIO->CallAfterRecording([] {ShowExceptionDialog(nullptr,
-                XC("Error checking for update", "update dialog"),
-                XC("Update data was corrupted.", "update dialog"),
-                wxString());
-                });
-
-            return;
+           if (!ignoreNetworkErrors)
+           {
+              gAudioIO->CallAfterRecording([] {
+                 ShowExceptionDialog(
+                    nullptr, XC("Error checking for update", "update dialog"),
+                    XC("Update data was corrupted.", "update dialog"),
+                    wxString());
+              });
+           }
+           
+           return;
         }
 
         if (mVersionPatch.version > CurrentBuildVersion())
@@ -113,7 +122,7 @@ void UpdateManager::GetUpdates()
                 }
                 });
         }
-        });
+    });
 }
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
@@ -121,7 +130,7 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
     bool updatesCheckingEnabled = UpdatesCheckingSettings::DefaultUpdatesCheckingFlag.Read();
 
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
-        GetUpdates();
+        GetUpdates(true);
 
     mTimer.StartOnce(std::chrono::duration_cast<std::chrono::milliseconds>(
                         updatesCheckInterval)
