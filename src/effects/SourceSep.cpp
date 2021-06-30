@@ -110,8 +110,8 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
       size_t blockSize = block.second;
    
       // get a torch tensor from the leader track
-      torch::Tensor input = BuildMonoTensor(leader, buffer.get(), 
-                                            samplePos, blockSize); 
+      torch::Tensor input = BuildMultichannelTensor(leader, buffer.get(), 
+                                            samplePos, blockSize).sum(0, true, torch::kFloat); 
 
       // resample!
       input = mModel->Resample(input, origRate, mModel->GetSampleRate());
@@ -165,6 +165,10 @@ void EffectSourceSep::PostProcessSources
       track->ConvertToSampleFormat(fmt);
       track->Resample(sampleRate);
       AddToOutputTracks(track);
+
+      // if the parent track used to be stereo,
+      // make the source mono anyway
+      mOutputTracks->GroupChannels(*track, 1);
    }
 }
 

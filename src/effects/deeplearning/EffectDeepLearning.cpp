@@ -45,26 +45,17 @@ bool EffectDeepLearning::Process()
 
    // NOTE: because we will append the separated tracks to mOutputTracks in ProcessOne(), 
    // we need to collect the track pointers before calling ProcessOne()
-   std::vector< WaveTrack* > pOutWaveTracks;
+   std::vector< WaveTrack* > pOutLeaders;
    for ( WaveTrack *track : mOutputTracks->SelectedLeaders< WaveTrack >())
-      pOutWaveTracks.emplace_back(track);
+      pOutLeaders.emplace_back(track);
 
    // now that we have all the tracks we want to process, 
    // go ahead and process each!
-   for ( WaveTrack* pOutWaveTrack : pOutWaveTracks) {
-
-      // if the track is multichannel, bail
-      bool isMono = GetNumChannels(pOutWaveTrack) == 1;
-      if (!isMono)
-      {
-         Effect::MessageBox(XO("The Source Separation effect can only process mono tracks. Please select a mono track and try again "));
-         bGoodResult = false;
-         return bGoodResult;
-      }
+   for ( WaveTrack* pOutLeader : pOutLeaders) {
 
       //Get start and end times from track
-      double tStart = pOutWaveTrack->GetStartTime();
-      double tEnd = pOutWaveTrack->GetEndTime();
+      double tStart = pOutLeader->GetStartTime();
+      double tEnd = pOutLeader->GetEndTime();
 
       //Set the current bounds to whichever left marker is
       //greater and whichever right marker is less:
@@ -74,7 +65,7 @@ bool EffectDeepLearning::Process()
       // Process only if the right marker is to the right of the left marker
       if (tEnd > tStart) {
          //ProcessOne() (implemented below) processes a single track
-         if (!ProcessOne(pOutWaveTrack, tStart, tEnd))
+         if (!ProcessOne(pOutLeader, tStart, tEnd))
             bGoodResult = false;
       }
       // increment current track
@@ -138,6 +129,22 @@ torch::Tensor EffectDeepLearning::BuildMonoTensor(WaveTrack *track, float *buffe
    audio = audio.unsqueeze(0); // add channel dimension
 
    return audio;
+}
+
+torch::Tensor EffectDeepLearning::BuildMultichannelTensor(WaveTrack *leader, float *buffer,
+                                                      sampleCount start, size_t len)
+{
+   auto channels = TrackList::Channels(leader);
+   std::vector<torch::Tensor> channelStack;
+
+   // because we're reusing the same buffer, it's important that
+   // we clone the tensor. 
+   for (WaveTrack *channel : channels)
+      channelStack.emplace_back(
+         BuildMonoTensor(channel, buffer, start, len).clone()
+      );
+
+   return torch::stack(channelStack);
 }
 
 torch::Tensor EffectDeepLearning::ForwardPass(torch::Tensor input)

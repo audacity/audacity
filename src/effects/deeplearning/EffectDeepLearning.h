@@ -52,6 +52,11 @@ protected:
    torch::Tensor BuildMonoTensor(WaveTrack *track, float *buffer, 
                                  sampleCount start, size_t len);
 
+   // builds a multichannel tensor with shape (channels, samples)
+   // given a leader track.
+   torch::Tensor BuildMultichannelTensor(WaveTrack *leader, float *buffer, 
+                                         sampleCount start, size_t len);
+
    // wraps the forward pass in an exception
    torch::Tensor ForwardPass(torch::Tensor input); 
 
