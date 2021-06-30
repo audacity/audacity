@@ -212,7 +212,7 @@ public:
 
 using EffectDialogFactory = std::function<
    wxDialog* ( wxWindow &parent,
-      EffectHostInterface*, EffectUIClientInterface* )
+      EffectHostInterface&, EffectUIClientInterface& )
 >;
 
 /*************************************************************************************//**

@@ -1475,7 +1475,7 @@ bool LV2Effect::ShowInterface(
    auto cleanup = valueRestorer(mDialog);
 
    if ( factory )
-      mDialog = factory(parent, mHost, this);
+      mDialog = factory(parent, *mHost, *this);
    if (!mDialog)
    {
       return false;

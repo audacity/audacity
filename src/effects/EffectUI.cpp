@@ -723,24 +723,24 @@ EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFacto
 END_EVENT_TABLE()
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
-                           AudacityProject &project,
-                           Effect *effect,
-                           EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, effect->GetName(),
+   AudacityProject &project,
+   Effect &effect,
+   EffectUIClientInterface &client)
+:  wxDialogWrapper(parent, wxID_ANY, effect.GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
+, mEffect{ effect }
+, mClient{ client }
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
    [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
 #endif
    
-   SetName( effect->GetName() );
+   SetName( effect.GetName() );
    SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
    
    mParent = parent;
-   mEffect = effect;
-   mCommand = NULL;
    mClient = client;
    
    mProject = &project;
@@ -754,55 +754,13 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    
    mPlayPos = 0.0;
 }
-
-EffectUIHost::EffectUIHost(wxWindow *parent,
-                           AudacityProject &project,
-                           AudacityCommand *command,
-                           EffectUIClientInterface *client)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Some Command") /*command->GetName()*/,
-                   wxDefaultPosition, wxDefaultSize,
-                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
-{
-#if defined(__WXMAC__)
-   // Make sure the effect window actually floats above the main window
-   [ [((NSView *)GetHandle()) window] setLevel:NSFloatingWindowLevel];
-#endif
-   
-   //SetName( command->GetName() );
-   SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
-   
-   mParent = parent;
-   mEffect = NULL;
-   mCommand = command;
-   mClient = client;
-   
-   mProject = &project;
-   
-   mInitialized = false;
-   mSupportsRealtime = false;
-   
-   mDisableTransport = false;
-   
-   mEnabled = true;
-   
-   mPlayPos = 0.0;
-}
-
-
-
 
 EffectUIHost::~EffectUIHost()
 {
    CleanupRealtime();
-   
-   if (mClient)
-   {
-      if (mNeedsResume)
-         Resume();
-      
-      mClient->CloseUI();
-      mClient = NULL;
-   }
+   if (mNeedsResume)
+      Resume();
+   mClient.CloseUI();
 }
 
 // ============================================================================
@@ -811,20 +769,12 @@ EffectUIHost::~EffectUIHost()
 
 bool EffectUIHost::TransferDataToWindow()
 {
-   if( mEffect )
-      return mEffect->TransferDataToWindow();
-   if( mCommand )
-      return mCommand->TransferDataToWindow();
-   return false;
+   return mEffect.TransferDataToWindow();
 }
 
 bool EffectUIHost::TransferDataFromWindow()
 {
-   if( mEffect)
-      return mEffect->TransferDataFromWindow();
-   if( mCommand)
-      return mCommand->TransferDataFromWindow();
-   return false;
+   return mEffect.TransferDataFromWindow();
 }
 
 // ============================================================================
@@ -862,10 +812,9 @@ int EffectUIHost::ShowModal()
 
 wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 {
-   mSupportsRealtime = mEffect && mEffect->SupportsRealtime();
-   mIsGUI = mClient->IsGraphicalUI();
-   mIsBatch = (mEffect && mEffect->IsBatchProcessing()) ||
-      (mCommand && mCommand->IsBatchProcessing());
+   mSupportsRealtime = mEffect.SupportsRealtime();
+   mIsGUI = mClient.IsGraphicalUI();
+   mIsBatch = mEffect.IsBatchProcessing();
 
    int margin = 0;
 #if defined(__WXMAC__)
@@ -913,9 +862,9 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
                   .AddButton( XXO("Start &Playback"),
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
-            else if (mEffect &&
-               (mEffect->GetType() != EffectTypeAnalyze) &&
-               (mEffect->GetType() != EffectTypeTool) )
+            else if (
+               (mEffect.GetType() != EffectTypeAnalyze) &&
+               (mEffect.GetType() != EffectTypeTool) )
             {
                mPlayToggleBtn = S.Id( kPlayID )
                   .ToolTip(XO("Preview effect"))
@@ -1021,7 +970,7 @@ bool EffectUIHost::Initialize()
             mParent->GetSize().GetHeight() / 2));
 
          ShuttleGui S1{ uw.get(), eIsCreating };
-         if (!mClient->PopulateUI(S1))
+         if (!mClient.PopulateUI(S1))
          {
             return false;
          }
@@ -1037,7 +986,7 @@ bool EffectUIHost::Initialize()
          const auto bar = BuildButtonBar( S.GetParent() );
 
          long buttons;
-         if ( mEffect && mEffect->ManualPage().empty() && mEffect->HelpPage().empty()) {
+         if ( mEffect.ManualPage().empty() && mEffect.HelpPage().empty()) {
             buttons = eApplyButton | eCloseButton;
             this->SetAcceleratorTable(wxNullAcceleratorTable);
          }
@@ -1053,7 +1002,7 @@ bool EffectUIHost::Initialize()
             this->SetAcceleratorTable(accel);
          }
 
-         if (mEffect && mEffect->mUIDebug) {
+         if (mEffect.mUIDebug) {
             buttons |= eDebugButton;
          }
 
@@ -1127,9 +1076,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    
    if (mNeedsResume)
       Resume();
-   mClient->CloseUI();
-   mClient = NULL;
-   
+   mClient.CloseUI();
+
    Destroy();
 }
 
@@ -1149,39 +1097,32 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch &&
-       mEffect &&
-       mEffect->GetType() != EffectTypeGenerate &&
-       mEffect->GetType() != EffectTypeTool &&
+       mEffect.GetType() != EffectTypeGenerate &&
+       mEffect.GetType() != EffectTypeTool &&
        ViewInfo::Get( project ).selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed =
       MenuManager::Get( project ).ReportIfActionNotAllowed(
-         mEffect->GetName(),
+         mEffect.GetName(),
          flags,
          WaveTracksSelectedFlag() | TimeSelectedFlag());
       if (!allowed)
          return;
    }
    
-   if (!mClient->ValidateUI())
+   if (!mClient.ValidateUI())
    {
       return;
    }
    
    // This will take care of calling TransferDataFromWindow() for an effect.
-   if (mEffect &&  !mEffect->SaveUserPreset(mEffect->GetCurrentSettingsGroup()))
+   if (!mEffect.SaveUserPreset(mEffect.GetCurrentSettingsGroup()))
    {
       return;
    }
-   // This will take care of calling TransferDataFromWindow() for a command.
-   if (mCommand ){
-      wxString params;
-      mCommand->GetAutomationParameters( params );
-   }
    
-   if( mEffect )
-      mEffect->mUIResultID = evt.GetId();
+   mEffect.mUIResultID = evt.GetId();
    
    if (IsModal())
    {
@@ -1199,26 +1140,18 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    mApplyBtn->Disable();
    auto cleanup = finally( [&] { mApplyBtn->Enable(); } );
 
-   if( mEffect ) {
-      CommandContext context( project );
-      // This is absolute hackage...but easy and I can't think of another way just now.
-      //
-      // It should callback to the EffectManager to kick off the processing
-      EffectUI::DoEffect(GetID(*mEffect), context,
-         EffectManager::kConfigured);
-   }
-
-   if( mCommand )
-      // PRL:  I don't like the global and would rather pass *mProject!
-      // But I am preserving old behavior
-      mCommand->Apply( CommandContext{ project } );
+   CommandContext context( project );
+   // This is absolute hackage...but easy and I can't think of another way just now.
+   //
+   // It should callback to the EffectManager to kick off the processing
+   EffectUI::DoEffect(GetID(mEffect), context,
+      EffectManager::kConfigured);
 }
 
 void EffectUIHost::DoCancel()
 {
    if (!mDismissed) {
-      if( mEffect )
-         mEffect->mUIResultID = wxID_CANCEL;
+      mEffect.mUIResultID = wxID_CANCEL;
       
       if (IsModal())
          EndModal(false);
@@ -1237,23 +1170,21 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect && mEffect->GetFamily() == NYQUISTEFFECTS_FAMILY && (mEffect->ManualPage().empty())) {
+   if (mEffect.GetFamily() == NYQUISTEFFECTS_FAMILY && (mEffect.ManualPage().empty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
-      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->HelpPage(), wxEmptyString, true, true);
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect.HelpPage(), wxEmptyString, true, true);
    }
-   else if( mEffect )
-   {
+   else {
       // otherwise use the NEW ShowHelp
-      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect->ManualPage(), true);
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect.ManualPage(), true);
    }
 }
 
 void EffectUIHost::OnDebug(wxCommandEvent & evt)
 {
    OnApply(evt);
-   if( mEffect )
-      mEffect->mUIResultID = evt.GetId();
+   mEffect.mUIResultID = evt.GetId();
 }
 
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
@@ -1261,9 +1192,6 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    wxMenu menu;
    menu.Bind(wxEVT_MENU, [](auto&){}, kUserPresetsDummyID);
    menu.Bind(wxEVT_MENU, [](auto&){}, kDeletePresetDummyID);
-   if( !mEffect )
-      return;
-   
    LoadUserPresets();
    
    if (mUserPresets.size() == 0)
@@ -1298,7 +1226,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    
    menu.AppendSeparator();
    
-   auto factory = mEffect->GetFactoryPresets();
+   auto factory = mEffect.GetFactoryPresets();
    
    {
       auto sub = std::make_unique<wxMenu>();
@@ -1321,21 +1249,21 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    }
    
    menu.AppendSeparator();
-   menu.Append(kImportID, _("Import..."))->Enable(mClient->CanExportPresets());
-   menu.Append(kExportID, _("Export..."))->Enable(mClient->CanExportPresets());
+   menu.Append(kImportID, _("Import..."))->Enable(mClient.CanExportPresets());
+   menu.Append(kExportID, _("Export..."))->Enable(mClient.CanExportPresets());
    menu.AppendSeparator();
-   menu.Append(kOptionsID, _("Options..."))->Enable(mClient->HasOptions());
+   menu.Append(kOptionsID, _("Options..."))->Enable(mClient.HasOptions());
    menu.AppendSeparator();
    
    {
       auto sub = std::make_unique<wxMenu>();
       
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
-                                             ::wxGetTranslation( mEffect->GetFamily().Translation() )));
-      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect->GetName().Translation()));
-      sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
-      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
-      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));
+         ::wxGetTranslation( mEffect.GetFamily().Translation() )));
+      sub->Append(kDummyID, wxString::Format(_("Name: %s"), mEffect.GetName().Translation()));
+      sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect.GetVersion()));
+      sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect.GetVendor().Translation()));
+      sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect.GetDescription().Translation()));
       sub->Bind(wxEVT_MENU, [](auto&){}, kDummyID);
 
       menu.Append(0, _("About"), sub.release());
@@ -1351,7 +1279,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::Resume()
 {
-   if (!mClient->ValidateUI()) {
+   if (!mClient.ValidateUI()) {
       // If we're previewing we should still be able to stop playback
       // so don't disable transport buttons.
       //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
@@ -1361,7 +1289,7 @@ void EffectUIHost::Resume()
       mEnableCb->SetValue(mEnabled);
       return;
    }
-   RealtimeEffectManager::Get().RealtimeResumeOne( *mEffect );
+   RealtimeEffectManager::Get().RealtimeResumeOne( mEffect );
 }
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
@@ -1374,7 +1302,7 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
    }
    else
    {
-      RealtimeEffectManager::Get().RealtimeSuspendOne( *mEffect );
+      RealtimeEffectManager::Get().RealtimeSuspendOne( mEffect );
       mNeedsResume = true;
    }
    
@@ -1385,12 +1313,12 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mSupportsRealtime)
    {
-      if (!mClient->ValidateUI() || !mEffect->TransferDataFromWindow())
+      if (!mClient.ValidateUI() || !mEffect.TransferDataFromWindow())
       {
          return;
       }
       
-      mEffect->Preview(false);
+      mEffect.Preview(false);
       
       return;
    }
@@ -1535,14 +1463,14 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 {
    int preset = evt.GetId() - kUserPresetsID;
    
-   mEffect->LoadUserPreset(mEffect->GetUserPresetsGroup(mUserPresets[preset]));
+   mEffect.LoadUserPreset(mEffect.GetUserPresetsGroup(mUserPresets[preset]));
    
    return;
 }
 
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
-   mEffect->LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
+   mEffect.LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
    
    return;
 }
@@ -1557,9 +1485,9 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
                                 wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)
    {
-      RemoveConfigSubgroup(mEffect->GetDefinition(),
+      RemoveConfigSubgroup(mEffect.GetDefinition(),
          PluginSettings::Private,
-         mEffect->GetUserPresetsGroup(preset));
+         mEffect.GetUserPresetsGroup(preset));
    }
    
    LoadUserPresets();
@@ -1636,7 +1564,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          }
       }
       
-      mEffect->SaveUserPreset(mEffect->GetUserPresetsGroup(name));
+      mEffect.SaveUserPreset(mEffect.GetUserPresetsGroup(name));
       LoadUserPresets();
       
       break;
@@ -1647,7 +1575,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
-   mClient->ImportPresets();
+   mClient.ImportPresets();
    
    LoadUserPresets();
    
@@ -1658,21 +1586,21 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
 {
    // may throw
    // exceptions are handled in AudacityApp::OnExceptionInMainLoop
-   mClient->ExportPresets();
+   mClient.ExportPresets();
    
    return;
 }
 
 void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 {
-   mClient->ShowOptions();
+   mClient.ShowOptions();
    
    return;
 }
 
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
-   mEffect->LoadFactoryDefaults();
+   mEffect.LoadFactoryDefaults();
    
    return;
 }
@@ -1728,7 +1656,8 @@ void EffectUIHost::UpdateControls()
    }
    
    mApplyBtn->Enable(!mCapturing);
-   if (mEffect && (mEffect->GetType() != EffectTypeAnalyze) && (mEffect->GetType() != EffectTypeTool) )
+   if ((mEffect.GetType() != EffectTypeAnalyze) &&
+       (mEffect.GetType() != EffectTypeTool) )
    {
       (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
    }
@@ -1792,10 +1721,8 @@ void EffectUIHost::LoadUserPresets()
 {
    mUserPresets.clear();
    
-   if( mEffect )
-      GetConfigSubgroups(mEffect->GetDefinition(),
-         PluginSettings::Private,
-         mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
+   GetConfigSubgroups(mEffect.GetDefinition(), PluginSettings::Private,
+      mEffect.GetUserPresetsGroup(wxEmptyString), mUserPresets);
    
    std::sort( mUserPresets.begin(), mUserPresets.end() );
    
@@ -1830,10 +1757,10 @@ void EffectUIHost::CleanupRealtime()
    }
 }
 
-wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
-   EffectUIClientInterface *client)
+wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface &host,
+   EffectUIClientInterface &client)
 {
-   auto pEffect = dynamic_cast< Effect* >( pHost );
+   const auto pEffect = dynamic_cast< Effect* >( &host ); // TODO remove dynamic_cast
    if ( ! pEffect )
       return nullptr;
 
@@ -1845,7 +1772,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       return nullptr;
 
    Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ &parent, *project, pEffect, client} };
+      safenew EffectUIHost{ &parent, *project, *pEffect, client} };
    
    if (dlg->Initialize())
    {

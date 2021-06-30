@@ -1488,7 +1488,7 @@ bool AudioUnitEffect::ShowInterface(wxWindow &parent,
 
    if (factory)
    {
-      mDialog = factory(parent, mHost, this);
+      mDialog = factory(parent, *mHost, *this);
    }
 
    if (!mDialog)
