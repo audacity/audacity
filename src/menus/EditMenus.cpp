@@ -145,16 +145,14 @@ void OnApply(const CommandContext &context){
    auto &trackPanel = TrackPanel::Get( project );
 
    int applyCount = 0;
-   for ( auto wt : tracks.Selected< WaveTrack >() ) {
-      std::vector< WaveTrackSubView::Type > displays = WaveTrackView::Get( *wt ).GetDisplays();
+   for ( auto wt : tracks.Any< WaveTrack >() ) {
       auto &trackView = TrackView::Get(*wt);
-      const wxRect trackRect(0, trackView.GetY(), 0, trackView.GetHeight());
 
-      for(const auto &subViewRefinement: trackView.GetSubViews(trackRect)){
-         std::shared_ptr<TrackView> subView = subViewRefinement.second;
-         if(subView->IsSpectral()){
-            wxCoord topLeft = subViewRefinement.first;
-            auto sView = std::dynamic_pointer_cast<SpectrumView>(subView).get();
+      if(auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&trackView)){
+         for(const auto &subViewPtr : waveTrackViewPtr->GetAllSubViews()){
+            if(!subViewPtr->IsSpectral())
+               continue;
+            auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
             auto sData = sView->GetSpectralData();
             applyCount += static_cast<int>(sData->dataHistory.size());
             sData->clearAllData();
