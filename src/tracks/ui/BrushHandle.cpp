@@ -401,6 +401,7 @@ UIHandle::Result BrushHandle::Release
        wxWindow *)
 {
    using namespace RefreshCode;
+   mpSpectralData->saveAndClearBuffer();
    if(mbCtrlDown){
       ProjectHistory::Get( *pProject ).PushState(
             XO( "Erased selected area" ),
@@ -413,7 +414,6 @@ UIHandle::Result BrushHandle::Release
             XO( "Brush tool selection" ) );
       ProjectHistory::Get( *pProject ).ModifyState(true);
    }
-   mpSpectralData->saveAndClearBuffer();
 
    return RefreshNone;
 }
