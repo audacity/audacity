@@ -12,7 +12,8 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include <memory>
+#include "MemoryX.h"
+#include <functional>
 #include <map>
 #include <vector>
 
@@ -77,6 +78,12 @@ public:
 
    static ModuleManager & Get();
    
+   // This string persists in configuration files
+   // So config compatibility will break if it is changed across Audacity versions
+   static wxString GetPluginTypeString();
+
+   static PluginID GetID(ModuleInterface *module);
+
 private:
    static void FindModules(FilePaths &files);
    using DelayedErrors =
@@ -92,13 +99,17 @@ public:
    // Can be called before Initialize()
    bool DiscoverProviders();
 
-   PluginPaths FindPluginsForProvider(const PluginID & provider, const PluginPath & path);
+   // Supports range-for iteration
+   auto Providers() const
+   { return make_iterator_range(mDynModules.cbegin(), mDynModules.cend()); }
+
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
                        TranslatableString &errMsg);
 
-   ModuleInterface *CreateProviderInstance(const PluginID & provider, const PluginPath & path);
-   ComponentInterface *CreateInstance(const PluginID & provider, const PluginPath & path);
-   void DeleteInstance(const PluginID & provider, ComponentInterface *instance);
+   ModuleInterface *CreateProviderInstance(
+      const PluginID & provider, const PluginPath & path);
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginID & provider, const PluginPath & path);
 
    bool IsProviderValid(const PluginID & provider, const PluginPath & path);
    bool IsPluginValid(const PluginID & provider, const PluginPath & path, bool bFast);

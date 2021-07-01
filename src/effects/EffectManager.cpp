@@ -56,12 +56,12 @@ EffectManager::~EffectManager()
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
-const PluginID & EffectManager::RegisterEffect(Effect *f)
+const PluginID & EffectManager::RegisterEffect(std::unique_ptr<Effect> uEffect)
 {
-   const PluginID & ID = PluginManager::Get().RegisterPlugin(f, PluginTypeEffect);
-
-   mEffects[ID] = f;
-
+   auto pEffect = uEffect.get();
+   const PluginID & ID =
+      PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
+   mEffects[ID] = pEffect;
    return ID;
 }
 
@@ -826,15 +826,12 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
 
    PluginManager & pm = PluginManager::Get();
    // Effects OR Generic commands...
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
-   while (plug)
-   {
-      if (GetCommandIdentifier(plug->GetID()) == strTarget)
-      {
-         return plug->GetID();
-      }
-      plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
+   for (auto &plug
+        : pm.PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand)) {
+      auto &ID = plug.GetID();
+      if (GetCommandIdentifier(ID) == strTarget)
+         return ID;
    }
-   return empty;;
+   return empty;
 }
 

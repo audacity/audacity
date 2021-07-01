@@ -30,8 +30,7 @@ class FileConfig;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-typedef enum
-{
+typedef enum : unsigned {
    PluginTypeNone = 0,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
    PluginTypeStub =1,               // Used for plugins that have not yet been registered
    PluginTypeEffect =1<<1,
@@ -46,14 +45,12 @@ class AUDACITY_DLL_API PluginDescriptor
 {
 public:
    PluginDescriptor();
+   PluginDescriptor &operator =(PluginDescriptor &&);
    virtual ~PluginDescriptor();
 
    bool IsInstantiated() const;
-   ComponentInterface *GetInstance();
-   void SetInstance(ComponentInterface *instance);
 
    PluginType GetPluginType() const;
-   void SetPluginType(PluginType type);
 
    // All plugins
 
@@ -70,17 +67,6 @@ public:
 
    bool IsEnabled() const;
    bool IsValid() const;
-
-   // These should be passed an untranslated value
-   void SetID(const PluginID & ID);
-   void SetProviderID(const PluginID & providerID);
-   void SetPath(const PluginPath & path);
-   void SetSymbol(const ComponentInterfaceSymbol & symbol);
-
-   // These should be passed an untranslated value wrapped in XO() so
-   // the value will still be extracted for translation
-   void SetVersion(const wxString & version);
-   void SetVendor(const wxString & vendor);
 
    void SetEnabled(bool enable);
    void SetValid(bool valid);
@@ -100,6 +86,31 @@ public:
    bool IsEffectRealtime() const;
    bool IsEffectAutomatable() const;
 
+   // Importer plugins only
+
+   const wxString & GetImporterIdentifier() const;
+   const TranslatableString & GetImporterFilterDescription() const;
+   const FileExtensions & GetImporterExtensions() const;
+
+private:
+   friend class PluginManager;
+
+   ComponentInterface *GetInstance();
+   void SetInstance(std::unique_ptr<ComponentInterface> instance);
+
+   void SetPluginType(PluginType type);
+
+   // These should be passed an untranslated value
+   void SetID(const PluginID & ID);
+   void SetProviderID(const PluginID & providerID);
+   void SetPath(const PluginPath & path);
+   void SetSymbol(const ComponentInterfaceSymbol & symbol);
+
+   // These should be passed an untranslated value wrapped in XO() so
+   // the value will still be extracted for translation
+   void SetVersion(const wxString & version);
+   void SetVendor(const wxString & vendor);
+
    // "family" should be an untranslated string wrapped in wxT()
    void SetEffectFamily(const wxString & family);
    void SetEffectType(EffectType type);
@@ -109,25 +120,16 @@ public:
    void SetEffectRealtime(bool realtime);
    void SetEffectAutomatable(bool automatable);
 
-   // Importer plugins only
-
-   const wxString & GetImporterIdentifier() const;
-   const TranslatableString & GetImporterFilterDescription() const;
-   const FileExtensions & GetImporterExtensions() const;
-
    void SetImporterIdentifier(const wxString & identifier);
    void SetImporterFilterDescription(const TranslatableString & filterDesc);
    void SetImporterExtensions(FileExtensions extensions);
-
-private:
-
-   void DeleteInstance();
 
    // Common
 
    // Among other purposes, PluginDescriptor acts as the resource handle,
    // or smart pointer, to a resource created in a plugin library, and is responsible
    // for a cleanup of this pointer.
+   std::unique_ptr<ComponentInterface> muInstance; // may be null for a module
    ComponentInterface *mInstance;
 
    PluginType mPluginType;
@@ -173,8 +175,8 @@ class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
 {
 public:
 
-   RegistryPath GetPluginEnabledSetting( const PluginID &ID );
-   RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc );
+   RegistryPath GetPluginEnabledSetting( const PluginID &ID ) const;
+   RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc ) const;
 
    // PluginManagerInterface implementation
 
@@ -236,7 +238,6 @@ public:
 
    static PluginManager & Get();
 
-   static PluginID GetID(ModuleInterface *module);
    static PluginID GetID(ComponentInterface *command);
    static PluginID GetID(EffectDefinitionInterface *effect);
    static PluginID GetID(ImporterInterface *importer);
@@ -246,13 +247,42 @@ public:
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
-   const PluginDescriptor *GetPlugin(const PluginID & ID);
+   const PluginDescriptor *GetPlugin(const PluginID & ID) const;
 
-   const PluginDescriptor *GetFirstPlugin(int type); // possible or of several PlugInTypes.
-   const PluginDescriptor *GetNextPlugin( int type);
+   //! @name iteration over plugins of certain types, supporting range-for syntax
+   //! @{
+   class Iterator {
+   public:
+      //! Iterates all, even disabled
+      explicit Iterator(PluginManager &manager);
+      //! Iterates only enabled and matching plugins, with family enabled too if an effect
+      Iterator(PluginManager &manager,
+         int pluginType //!< bitwise or of values in PluginType
+      );
+      //! Iterates only enabled and matching effects, with family enabled too
+      Iterator(PluginManager &manager, EffectType type);
+      bool operator != (int) const {
+         return mIterator != mPm.mPlugins.end();
+      }
+      Iterator &operator ++ ();
+      auto &operator *() const { return mIterator->second; }
+   private:
+      void Advance(bool incrementing);
+      const PluginManager &mPm;
+      PluginMap::iterator mIterator;
+      EffectType mEffectType{ EffectTypeNone };
+      int mPluginType{ PluginTypeNone };
+   };
+   struct Range {
+      Iterator first;
+      Iterator begin() const { return first; }
+      int end() const { return 0; }
+   };
 
-   const PluginDescriptor *GetFirstPluginForEffectType(EffectType type);
-   const PluginDescriptor *GetNextPluginForEffectType(EffectType type);
+   Range AllPlugins() { return { Iterator{ *this } }; }
+   Range PluginsOfType(int type) { return { Iterator{ *this, type } }; }
+   Range EffectsOfType(EffectType type) { return { Iterator{ *this, type } }; }
+   //! @}
 
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
@@ -262,19 +292,22 @@ public:
 
    void CheckForUpdates(bool bFast = false);
 
-   bool ShowManager(wxWindow *parent, EffectType type = EffectTypeNone);
-
-   const PluginID & RegisterPlugin(EffectDefinitionInterface *effect, PluginType type );
+   //! Used only by Nyquist Workbench module
+   const PluginID & RegisterPlugin(
+      std::unique_ptr<EffectDefinitionInterface> effect, PluginType type );
    void UnregisterPlugin(const PluginID & ID);
+
+   //! Load from preferences
+   void Load();
+   //! Save to preferences
+   void Save();
 
 private:
    // private! Use Get()
    PluginManager();
    ~PluginManager();
 
-   void Load();
    void LoadGroup(FileConfig *pRegistry, PluginType type);
-   void Save();
    void SaveGroup(FileConfig *pRegistry, PluginType type);
 
    PluginDescriptor & CreatePlugin(const PluginID & id, ComponentInterface *ident, PluginType type);
@@ -321,9 +354,6 @@ private:
    int mCurrentIndex;
 
    PluginMap mPlugins;
-   PluginMap::iterator mPluginsIter;
-
-   friend class PluginRegistrationDialog;
 };
 
 // Defining these special names in the low-level PluginManager.h

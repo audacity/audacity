@@ -6,6 +6,7 @@
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../PluginManager.h"
+#include "../PluginRegistrationDialog.h"
 #include "../Prefs.h"
 #include "../Project.h"
 #include "../ProjectSettings.h"
@@ -36,10 +37,20 @@ AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
    }
 };
 
+bool ShowManager(
+   PluginManager &pm, wxWindow *parent, EffectType type)
+{
+   pm.CheckForUpdates();
+
+   PluginRegistrationDialog dlg(parent, type);
+   return dlg.ShowModal() == wxID_OK;
+}
+
 void DoManagePluginsMenu(AudacityProject &project, EffectType type)
 {
    auto &window = GetProjectFrame( project );
-   if (PluginManager::Get().ShowManager(&window, type))
+   auto &pm = PluginManager::Get();
+   if (ShowManager(pm, &window, type))
       MenuCreator::RebuildAllMenuBars();
 }
 
@@ -302,9 +313,8 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    std::vector<const PluginDescriptor*> optplugs;
 
    EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
-   while (plug)
-   {
+   for (auto &plugin : pm.EffectsOfType(type)) {
+      auto plug = &plugin;
       if( plug->IsInstantiated() && em.IsHidden(plug->GetID()) )
          continue;
       if ( !plug->IsEnabled() ){
@@ -322,7 +332,6 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
          defplugs.push_back(plug);
       else
          optplugs.push_back(plug);
-      plug = pm.GetNextPluginForEffectType(type);
    }
 
    wxString groupby = EffectsGroupBy.Read();

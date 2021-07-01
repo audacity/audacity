@@ -202,6 +202,8 @@ list( APPEND SOURCES
       PlaybackSchedule.h
       PluginManager.cpp
       PluginManager.h
+      PluginRegistrationDialog.cpp
+      PluginRegistrationDialog.h
       Prefs.cpp
       Prefs.h
       Printing.cpp

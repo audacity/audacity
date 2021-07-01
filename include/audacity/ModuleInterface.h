@@ -43,6 +43,7 @@
 #define __AUDACITY_MODULEINTERFACE_H__
 
 #include <functional>
+#include <memory>
 #include "Identifier.h"
 #include "audacity/ComponentInterface.h"
 #include "audacity/PluginInterface.h"
@@ -129,10 +130,8 @@ public:
    virtual bool IsPluginValid(const PluginPath & path, bool bFast) = 0;
 
    // When appropriate, CreateInstance() will be called to instantiate the plugin.
-   virtual ComponentInterface *CreateInstance(const PluginPath & path) = 0;
-
-   // When appropriate, DeleteInstance() will be called to delete the plugin.
-   virtual void DeleteInstance(ComponentInterface *instance) = 0;
+   virtual std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) = 0;
 };
 
 // ----------------------------------------------------------------------------
