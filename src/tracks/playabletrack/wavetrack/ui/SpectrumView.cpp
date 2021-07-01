@@ -69,6 +69,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
       results.push_back(result);
       return results;
    }
+#endif
 
    return WaveTrackSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt
