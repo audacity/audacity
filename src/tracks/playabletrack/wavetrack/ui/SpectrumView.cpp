@@ -59,6 +59,8 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
    std::vector<UIHandlePtr> results;
+
+#ifdef EXPERIMENTAL_BRUSH_TOOL
    if(currentTool == ToolCodes::brushTool){
       const auto result = BrushHandle::HitTest(mBrushHandle, state,
                                                pProject, shared_from_this(),
@@ -66,6 +68,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
       results.push_back(result);
       return results;
    }
+#endif
 
    return WaveTrackSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt

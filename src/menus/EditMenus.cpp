@@ -1065,9 +1065,10 @@ BaseItemSharedPtr EditMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
+#ifdef EXPERIMENTAL_BRUSH_TOOL
          Command( wxT("Apply"), XXO("&Apply"), FN(OnApply),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Shift+Z") ),
-
+#endif
          Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 
