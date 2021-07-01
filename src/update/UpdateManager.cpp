@@ -117,7 +117,7 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
                             wxString());
                     }
                 }
-                });
+            });
         }
     });
 }
@@ -136,8 +136,11 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 
 bool UpdateManager::IsTimeForUpdatesChecking()
 {
+    // We use atoll here, so there is no need to handle the exception,
+    // if prefsUpdateScheduledTime is corrupted.
+    // atoll will return 0 on failure, which suits us well.
     const TimePoint nextUpdatesCheckingTime(std::chrono::milliseconds(
-       stoll(gPrefs->Read(prefsUpdateScheduledTime, "0").ToStdString())));
+       atoll(gPrefs->Read(prefsUpdateScheduledTime, "0").c_str())));
 
     // Get current time
     const TimePoint currentTime = Clock::now();
