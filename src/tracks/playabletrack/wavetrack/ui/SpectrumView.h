@@ -93,7 +93,6 @@ public:
 
    void CopyToSubView( WaveTrackSubView *destSubView ) const override;
 private:
-    int mBrushSize;
     std::weak_ptr<BrushHandle> mBrushHandle;
     std::shared_ptr<SpectralData> mpSpectralData;
 
