@@ -113,6 +113,9 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Paul Licameli (PRL) 5 Oct 2014
    SPECTRAL_EDITING
 
+   # Edward Hui 1 Jul 2021
+   BRUSH_TOOL
+
    # Paul Licameli (PRL) 29 Nov 2014
    #IMPROVED_SEEKING
 

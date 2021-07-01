@@ -109,6 +109,9 @@ private:
 
 protected:
    void DoSetMinimized( bool minimized ) override;
+
+private:
+   bool mOnBrushTool = false;
 };
 
 #endif

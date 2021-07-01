@@ -64,8 +64,11 @@ class ToolsToolBar final : public ToolBar {
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
    static AButton *MakeTool(
       ToolsToolBar *pBar, teBmps eTool, int id, const TranslatableString &label);
-
+#ifdef EXPERIMENTAL_BRUSH_TOOL
    enum { numTools = 7 };
+#else
+   enum { numTools = 6 };
+#endif
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;

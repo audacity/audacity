@@ -39,11 +39,17 @@ enum {
    zoomTool,
    slideTool,
    multiTool,
+#ifdef EXPERIMENTAL_BRUSH_TOOL
    brushTool,
+#endif
    numTools,
    
    firstTool = selectTool,
+#ifdef EXPERIMENTAL_BRUSH_TOOL
    lastTool = brushTool,
+#else
+   lastTool = multiTool,
+#endif
 };
 }
 
