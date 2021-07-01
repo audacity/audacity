@@ -267,6 +267,22 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
    S.EndScroller();
 }
 
+bool WritableLocationCheck(const FilePath &path)
+{
+   bool Status = wxFileName ::IsDirWritable(path);
+   if (!Status)
+   {
+      AudacityMessageBox(
+         XO("Directory %s does not have write permissions")
+            .Format(path),
+         XO("Error"),
+            wxOK | wxICON_ERROR);
+      return true;
+   }
+
+   return false;
+}
+
 void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
 {
    wxString oldTemp = gPrefs->Read(PreferenceKey(Operation::Open, PathType::_None),
@@ -292,6 +308,11 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
 
       if (FATFilesystemDenied(tmpDirPath.GetFullPath(),
           XO("Temporary files directory cannot be on a FAT drive."))) {
+         return;
+      }
+
+      if (WritableLocationCheck(dlog.GetPath())) 
+      {
          return;
       }
 
@@ -371,19 +392,9 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       }
    }
 
-   if (evt.GetId() == SaveButtonID || evt.GetId() == ExportButtonID)
+   if (WritableLocationCheck(dlog.GetPath())) 
    {
-      bool Status = wxFileName ::IsDirWritable(dlog.GetPath());
-      wxString path{dlog.GetPath()};
-      if (!Status)
-      {
-         AudacityMessageBox(
-             XO("Directory %s does not have write permissions")
-                 .Format(path),
-             XO("Error"),
-             wxOK | wxICON_ERROR);
-         return;
-      }
+      return;
    }
 
    tc->SetValue(dlog.GetPath());

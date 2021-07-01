@@ -308,17 +308,15 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
-      while (plug)
-      {
-         auto command = em.GetCommandIdentifier(plug->GetID());
+      for (auto &plug
+           : pm.PluginsOfType(PluginTypeEffect|PluginTypeAudacityCommand)) {
+         auto command = em.GetCommandIdentifier(plug.GetID());
          if (!command.empty())
             commands.push_back( {
-               { command, plug->GetSymbol().Msgid() },
-               plug->GetPluginType() == PluginTypeEffect ?
+               { command, plug.GetSymbol().Msgid() },
+               plug.GetPluginType() == PluginTypeEffect ?
                   XO("Effect") : XO("Menu Command (With Parameters)")
             } );
-         plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
    }
 
@@ -608,19 +606,12 @@ bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
    // Not one of the singleton commands.
    // We could/should try all the list-style commands.
    // instead we only try the effects.
-   PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
-   while (plug)
-   {
-      if (em.GetCommandIdentifier(plug->GetID()) == Str)
-      {
+   for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
+      if (em.GetCommandIdentifier(plug.GetID()) == Str)
          return EffectUI::DoEffect(
-            plug->GetID(), context,
+            plug.GetID(), context,
             EffectManager::kConfigured);
-      }
-      plug = pm.GetNextPlugin(PluginTypeEffect);
-   }
 
    return false;
 }

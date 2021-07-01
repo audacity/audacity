@@ -416,14 +416,12 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
-      while (plug)
-      {
-         auto command = em.GetCommandIdentifier(plug->GetID());
+      for (auto &plug
+           : pm.PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand)) {
+         auto command = em.GetCommandIdentifier(plug.GetID());
          if (!command.empty()){
-            em.GetCommandDefinition( plug->GetID(), context, flags );
+            em.GetCommandDefinition( plug.GetID(), context, flags );
          }
-         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand );
       }
    }
    context.EndArray();

@@ -31,7 +31,6 @@ i.e. an alternative to the usual interface, for Audacity.
 
 #include "FileNames.h"
 #include "MemoryX.h"
-#include "PluginManager.h"
 
 #include "audacity/PluginInterface.h"
 
@@ -403,6 +402,21 @@ ModuleManager & ModuleManager::Get()
    return *mInstance;
 }
 
+wxString ModuleManager::GetPluginTypeString()
+{
+   return L"Module";
+}
+
+PluginID ModuleManager::GetID(ModuleInterface *module)
+{
+   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
+                           GetPluginTypeString(),
+                           wxEmptyString,
+                           module->GetVendor().Internal(),
+                           module->GetSymbol().Internal(),
+                           module->GetPath());
+}
+
 bool ModuleManager::DiscoverProviders()
 {
    InitializeBuiltins();
@@ -433,20 +447,8 @@ bool ModuleManager::DiscoverProviders()
    FileNames::FindFilesInPathList(wxT("*.so"), pathList, provList);
 #endif
 
-   PluginManager & pm = PluginManager::Get();
-
-   for (int i = 0, cnt = provList.size(); i < cnt; i++)
-   {
-      ModuleInterface *module = LoadModule(provList[i]);
-      if (module)
-      {
-         // Register the provider
-         pm.RegisterPlugin(module);
-
-         // Now, allow the module to auto-register children
-         module->AutoRegisterPlugins(pm);
-      }
-   }
+   for ( const auto &path : provList )
+      LoadModule(path);
 #endif
 
    return true;
@@ -454,8 +456,6 @@ bool ModuleManager::DiscoverProviders()
 
 void ModuleManager::InitializeBuiltins()
 {
-   PluginManager & pm = PluginManager::Get();
-
    for (auto moduleMain : builtinModuleList())
    {
       ModuleInterfaceHandle module {
@@ -466,13 +466,10 @@ void ModuleManager::InitializeBuiltins()
       {
          // Register the provider
          ModuleInterface *pInterface = module.get();
-         const PluginID & id = pm.RegisterPlugin(pInterface);
+         auto id = GetID(pInterface);
 
          // Need to remember it 
          mDynModules[id] = std::move(module);
-
-         // Allow the module to auto-register children
-         pInterface->AutoRegisterPlugins(pm);
       }
       else
       {
@@ -488,22 +485,6 @@ void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
       pInterface->Terminate();
       std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
    }
-}
-
-PluginPaths ModuleManager::FindPluginsForProvider(const PluginID & providerID,
-                                                    const PluginPath & path)
-{
-   // Instantiate if it hasn't already been done
-   if (mDynModules.find(providerID) == mDynModules.end())
-   {
-      // If it couldn't be created, just give up and return an empty list
-      if (!CreateProviderInstance(providerID, path))
-      {
-         return {};
-      }
-   }
-
-   return mDynModules[providerID]->FindPluginPaths(PluginManager::Get());
 }
 
 bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, TranslatableString &errMsg)
@@ -530,26 +511,14 @@ ModuleInterface *ModuleManager::CreateProviderInstance(const PluginID & provider
    return nullptr;
 }
 
-ComponentInterface *ModuleManager::CreateInstance(const PluginID & providerID,
-                                              const PluginPath & path)
+std::unique_ptr<ComponentInterface> ModuleManager::CreateInstance(
+   const PluginID & providerID, const PluginPath & path)
 {
-   if (mDynModules.find(providerID) == mDynModules.end())
-   {
-      return NULL;
-   }
-
-   return mDynModules[providerID]->CreateInstance(path);
-}
-
-void ModuleManager::DeleteInstance(const PluginID & providerID,
-                                   ComponentInterface *instance)
-{
-   if (mDynModules.find(providerID) == mDynModules.end())
-   {
-      return;
-   }
-
-   mDynModules[providerID]->DeleteInstance(instance);
+   if (auto iter = mDynModules.find(providerID);
+       iter == mDynModules.end())
+      return nullptr;
+   else
+      return iter->second->CreateInstance(path);
 }
 
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
@@ -581,4 +550,3 @@ bool ModuleManager::IsPluginValid(const PluginID & providerID,
 
    return mDynModules[providerID]->IsPluginValid(path, bFast);
 }
-
