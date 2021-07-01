@@ -113,13 +113,6 @@ else()
    set ( curl_ssl "openssl" )
 endif ()
 
-add_conan_lib(
-   ThreadPool
-   threadpool/20140926
-   REQUIRED
-   ALWAYS_ALLOW_CONAN_FALLBACK
-)
-
 if( ${_OPT}has_networking )
 
    add_conan_lib(
@@ -134,6 +127,19 @@ if( ${_OPT}has_networking )
          libcurl:with_ssl=${curl_ssl}
          libcurl:shared=True
    )
+   
+   add_conan_lib(
+      RapidJSON
+      rapidjson/1.1.0
+      REQUIRED
+   )
+
+   add_conan_lib(
+      ThreadPool
+      threadpool/20140926
+      REQUIRED
+      ALWAYS_ALLOW_CONAN_FALLBACK
+   )
 
 endif()
 
@@ -147,12 +153,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
       INTERFACE_NAME libuuid::libuuid
    )
 endif()
-
-add_conan_lib(
-   RapidJSON
-   rapidjson/1.1.0
-   REQUIRED
-)
 
 set_conan_vars_to_parent()
 
