@@ -14,8 +14,6 @@
 UTILITY_API void lib_utility_dummy_symbol()
 {}
 
-#ifdef __APPLE__
-
 constexpr auto sizeof_align_val = sizeof(std::align_val_t);
 
 void *NonInterferingBase::operator new(std::size_t count, std::align_val_t al)
@@ -54,5 +52,3 @@ void NonInterferingBase::operator delete(void *ptr, std::align_val_t al)
    // Call through to default operator
    ::operator delete(p);
 }
-
-#endif
