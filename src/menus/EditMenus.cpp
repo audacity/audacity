@@ -164,6 +164,10 @@ void OnApply(const CommandContext &context){
    }
    if(applyCount != 0){
       AudacityMessageBox(XO("Effect applied to %d selection(s).").Format(applyCount));
+      ProjectHistory::Get( project ).PushState(
+            XO( "Applied effect to selection" ),
+            XO( "Applied effect to selection" ) );
+      ProjectHistory::Get( project ).ModifyState(true);
    }
 }
 
