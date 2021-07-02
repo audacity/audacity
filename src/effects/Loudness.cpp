@@ -93,9 +93,9 @@ TranslatableString EffectLoudness::GetDescription()
    return XO("Sets the loudness of one or more tracks");
 }
 
-wxString EffectLoudness::ManualPage()
+ManualPageID EffectLoudness::ManualPage()
 {
-   return wxT("Loudness_Normalization");
+   return L"Loudness_Normalization";
 }
 
 // EffectDefinitionInterface implementation

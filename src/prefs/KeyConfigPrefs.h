@@ -40,7 +40,7 @@ public:
 
    bool Commit() override;
    void Cancel() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
 private:

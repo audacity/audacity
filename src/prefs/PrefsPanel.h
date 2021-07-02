@@ -115,9 +115,9 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    virtual bool ShowsPreviewButton();
    virtual void PopulateOrExchange( ShuttleGui & WXUNUSED(S) ){};
 
-   // If not empty string, the Help button is added below the panel
-   // Default returns empty string.
-   virtual wxString HelpPageName();
+   //! If not empty string, the Help button is added below the panel
+   /*! Default returns empty string. */
+   virtual ManualPageID HelpPageName();
 
    virtual void Cancel();
 };

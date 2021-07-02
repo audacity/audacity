@@ -656,7 +656,7 @@ void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetCurrentPanel()->HelpPageName();
+   const auto &page = GetCurrentPanel()->HelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 

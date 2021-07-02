@@ -239,14 +239,14 @@ TranslatableString NyquistEffect::GetDescription()
    return mCopyright;
 }
 
-wxString NyquistEffect::ManualPage()
+ManualPageID NyquistEffect::ManualPage()
 {
       return mIsPrompt
          ? wxString("Nyquist_Prompt")
          : mManPage;
 }
 
-wxString NyquistEffect::HelpPage()
+FilePath NyquistEffect::HelpPage()
 {
    auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;

@@ -163,7 +163,7 @@ TranslatableString DirectoriesPrefs::GetDescription()
    return XO("Preferences for Directories");
 }
 
-wxString DirectoriesPrefs::HelpPageName()
+ManualPageID DirectoriesPrefs::HelpPageName()
 {
    return "Directories_Preferences";
 }
