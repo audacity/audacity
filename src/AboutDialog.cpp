@@ -487,6 +487,11 @@ visit our %s.")
       << XO("%s website: ").Format( ProgramName )
       << wxT("[[https://www.audacityteam.org/|https://www.audacityteam.org/]]")
 
+#if defined(HAS_SENTRY_REPORTING) || defined(HAVE_UPDATES_CHECK) || defined(USE_BREAKPAD)
+      << XO("<br/>Privacy policy: ")
+      << wxT("[[https://www.audacityteam.org/about/desktop-privacy-notice/|https://www.audacityteam.org/about/desktop-privacy-notice/]]")
+#endif
+
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
       << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
