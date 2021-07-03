@@ -171,8 +171,8 @@ private:
       field(sel0, double);
       field(sel1, double);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      field(selLow, double);
-      field(selHigh, double);
+      field(selLow, double) = SelectedRegion::UndefinedFrequency;
+      field(selHigh, double) = SelectedRegion::UndefinedFrequency;
 #endif
       field(rate, double);
       field(snapto, bool);
