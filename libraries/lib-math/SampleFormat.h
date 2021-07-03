@@ -11,32 +11,43 @@
 #ifndef __AUDACITY_SAMPLE_FORMAT__
 #define __AUDACITY_SAMPLE_FORMAT__
 
-
-
 #include "MemoryX.h"
-#include <wx/defs.h>
-
-#include "audacity/Types.h"
-#include "Dither.h"
+#include <cstdlib>
 
 //
 // Definitions / Meta-Information
 //
 
+enum DitherType : unsigned;
 //! These global variables are assigned at application startup or after change of preferences.
-extern AUDACITY_DLL_API DitherType gLowQualityDither, gHighQualityDither;
+extern MATH_API DitherType gLowQualityDither, gHighQualityDither;
 
-#if 0
-// Moved to audacity/types.h
-typedef enum {
+// ----------------------------------------------------------------------------
+// Supported sample formats
+// ----------------------------------------------------------------------------
+enum sampleFormat : unsigned
+{
+   //! The increasing sequence of these enum values must correspond to the increasing data type width
+   //! These values persist in saved project files, so must not be changed in later program versions
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
-   floatSample = 0x0004000F
-} sampleFormat;
+   floatSample = 0x0004000F,
 
-/** \brief Return the size (in memory) of one sample (bytes) */
-#define SAMPLE_SIZE(SampleFormat) ( size_t{ (SampleFormat) >> 16 } )
-#endif
+   //! Two synonyms for previous values that might change if more values were added
+   narrowestSampleFormat = int16Sample,
+   widestSampleFormat = floatSample,
+};
+
+// ----------------------------------------------------------------------------
+// Provide the number of bytes a specific sample will take
+// ----------------------------------------------------------------------------
+#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
+
+// ----------------------------------------------------------------------------
+// Generic pointer to sample data
+// ----------------------------------------------------------------------------
+using samplePtr = char *;
+using constSamplePtr = const char *;
 
 // Used to determine how to fill in empty areas of audio.
 typedef enum {
@@ -48,7 +59,8 @@ typedef enum {
 #define SAMPLE_SIZE_DISK(SampleFormat) (((SampleFormat) == int24Sample) ? \
    size_t{ 3 } : SAMPLE_SIZE(SampleFormat) )
 
-AUDACITY_DLL_API TranslatableString GetSampleFormatStr(sampleFormat format);
+class TranslatableString;
+MATH_API TranslatableString GetSampleFormatStr(sampleFormat format);
 
 //
 // Allocating/Freeing Samples
@@ -128,7 +140,7 @@ private:
 // Copying, Converting and Clearing Samples
 //
 
-AUDACITY_DLL_API
+MATH_API
 //! Copy samples from any format into the widest format, which is 32 bit float, with no dithering
 /*!
  @param src address of source samples
@@ -141,7 +153,7 @@ AUDACITY_DLL_API
 void SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
     float *dst, size_t len, size_t srcStride = 1, size_t dstStride = 1);
 
-AUDACITY_DLL_API
+MATH_API
 //! Copy samples from any format to any other format; apply dithering only if narrowing the format
 /*!
  @copydetails SamplesToFloats()
@@ -153,11 +165,11 @@ void CopySamples(constSamplePtr src, sampleFormat srcFormat,
    DitherType ditherType = gHighQualityDither, //!< default is loaded from a global variable
    unsigned int srcStride=1, unsigned int dstStride=1);
 
-AUDACITY_DLL_API
+MATH_API
 void      ClearSamples(samplePtr buffer, sampleFormat format,
                        size_t start, size_t len);
 
-AUDACITY_DLL_API
+MATH_API
 void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);
 
@@ -166,7 +178,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 // are set in preferences.
 //
 
-AUDACITY_DLL_API
+MATH_API
 void      InitDitherers();
 
 // These are so commonly done for processing samples in floating point form in memory,

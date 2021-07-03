@@ -26,6 +26,7 @@
 
 
 #include "RingBuffer.h"
+#include "Dither.h"
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
    : mFormat{ format }

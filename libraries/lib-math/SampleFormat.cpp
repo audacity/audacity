@@ -35,6 +35,7 @@
 *//*******************************************************************/
 
 #include "SampleFormat.h"
+#include "Dither.h" // CYCLE
 
 #include <wx/intl.h>
 #include <math.h>

@@ -12,7 +12,7 @@ Paul Licameli
 #define __AUDACITY_SAMPLE_HANDLE__
 
 #include "../../../../UIHandle.h"
-#include "../../../../SampleCount.h"
+#include "SampleCount.h"
 
 class wxMouseEvent;
 class wxMouseState;

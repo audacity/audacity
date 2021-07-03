@@ -23,7 +23,7 @@ class NumericTextCtrl;
 #include "PluginInterface.h"
 
 #include "ladspa.h"
-#include "../../SampleFormat.h"
+#include "SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"

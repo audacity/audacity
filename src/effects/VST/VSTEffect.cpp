@@ -27,7 +27,7 @@
 
 #include "VSTEffect.h"
 #include "../../ModuleManager.h"
-#include "../../SampleCount.h"
+#include "SampleCount.h"
 
 #include "../../widgets/ProgressDialog.h"
 

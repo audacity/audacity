@@ -18,7 +18,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "Effect.h"
-#include "../RealFFTf.h"
+#include "RealFFTf.h"
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;

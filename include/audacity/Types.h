@@ -59,33 +59,6 @@
 // ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
-// Supported sample formats
-// ----------------------------------------------------------------------------
-enum sampleFormat : unsigned
-{
-   //! The increasing sequence of these enum values must correspond to the increasing data type width
-   //! These values persist in saved project files, so must not be changed in later program versions
-   int16Sample = 0x00020001,
-   int24Sample = 0x00040001,
-   floatSample = 0x0004000F,
-
-   //! Two synonyms for previous values that might change if more values were added
-   narrowestSampleFormat = int16Sample,
-   widestSampleFormat = floatSample,
-};
-
-// ----------------------------------------------------------------------------
-// Provide the number of bytes a specific sample will take
-// ----------------------------------------------------------------------------
-#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
-
-// ----------------------------------------------------------------------------
-// Generic pointer to sample data
-// ----------------------------------------------------------------------------
-typedef char *samplePtr;
-typedef const char *constSamplePtr;
-
-// ----------------------------------------------------------------------------
 // The type for plugin IDs
 // ----------------------------------------------------------------------------
 typedef wxString PluginID;

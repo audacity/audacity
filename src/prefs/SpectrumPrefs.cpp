@@ -23,7 +23,7 @@
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 
-#include "../FFT.h"
+#include "FFT.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
 

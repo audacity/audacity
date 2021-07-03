@@ -14,7 +14,7 @@
 
 //! Positions or offsets within audio files need a wide type
 /*! This type disallows implicit interconversions with narrower types */
-class AUDACITY_DLL_API sampleCount
+class MATH_API sampleCount
 {
 public:
    using type = long long;
@@ -128,7 +128,7 @@ inline sampleCount operator % (sampleCount a, sampleCount b)
 // hiding the casts
 // ----------------------------------------------------------------------------
 
-AUDACITY_DLL_API
+MATH_API
 size_t limitSampleBufferSize( size_t bufferSize, sampleCount limit );
 
 #endif

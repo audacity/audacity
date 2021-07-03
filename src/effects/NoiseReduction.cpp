@@ -46,7 +46,7 @@
 #include "../ShuttleGui.h"
 #include "../widgets/HelpSystem.h"
 #include "Prefs.h"
-#include "../RealFFTf.h"
+#include "RealFFTf.h"
 
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
