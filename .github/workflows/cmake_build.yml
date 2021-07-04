@@ -47,6 +47,11 @@ jobs:
           arch: 64bit # as reported by Windows Settings > System > About
           generator: Visual Studio 16 2019
 
+        - name: Windows_ARM64
+          os: windows-latest
+          arch: ARM64
+          generator: Visual Studio 16 2019
+
     steps:
 
     - name: Checkout
