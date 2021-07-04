@@ -34,10 +34,16 @@ jobs:
           conan-arch: x86_64
           generator: Unix Makefiles
 
-        - name: macOS
+        - name: macOS_x86_64
           os: macos-latest
           cmake-arch: ""
           conan-arch: x86_64
+          generator: Xcode
+
+        - name: macOS_armv8
+          os: macos-latest
+          cmake-arch: ""
+          conan-arch: armv8
           generator: Xcode
 
         - name: Windows_x86
