@@ -98,12 +98,12 @@ add_conan_lib(
       libid3tag:zlib=${id3tag_zlib}
 )
 
-add_conan_lib(
-   libmad
-   libmad/0.15.2b@audacity/stable
-   OPTION_NAME libmad
-   PKG_CONFIG "mad >= 0.15.1b"
-)
+#add_conan_lib(
+#   libmad
+#   libmad/0.15.2b@audacity/stable
+#   OPTION_NAME libmad
+#   PKG_CONFIG "mad >= 0.15.1b"
+#)
 
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( curl_ssl "darwinssl" )
