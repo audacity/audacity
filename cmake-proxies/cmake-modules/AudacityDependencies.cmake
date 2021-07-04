@@ -210,7 +210,7 @@ function ( _conan_install build_type )
 
     conan_cmake_autodetect(settings BUILD_TYPE ${build_type})
 
-    list( APPEND settings "arch=$CONAN_ARCH_LABEL" )
+    list( APPEND settings "arch=${CONAN_ARCH_LABEL}" )
 
     if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
         # TODO: Read the target CPU architecture from the CMake option
