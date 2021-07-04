@@ -30,13 +30,13 @@ jobs:
 
         - name: Ubuntu_18.04
           os: ubuntu-18.04
-          cmake-arch: x64
+          cmake-arch: x86_64
           conan-arch: x86_64
           generator: Unix Makefiles
 
         - name: macOS_x86_64
           os: macos-latest
-          cmake-arch: x64
+          cmake-arch: x86_64
           conan-arch: x86_64
           generator: Xcode
 

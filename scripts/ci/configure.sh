@@ -15,6 +15,7 @@ cmake_args=(
     -D audacity_has_updates_check=yes
     -D CMAKE_BUILD_TYPE="${AUDACITY_BUILD_TYPE}"
     -D CMAKE_INSTALL_PREFIX="${AUDACITY_INSTALL_PREFIX}"
+    -D CONAN_ARCH_LABEL="${CONAN_ARCH_LABEL}"
     -A "${CMAKE_ARCH_LABEL}"
 )
 
