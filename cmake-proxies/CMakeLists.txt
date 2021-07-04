@@ -81,13 +81,13 @@ add_conan_lib(
       libjpeg-turbo:SIMD=False 
 )
 
-add_conan_lib(
-   libmp3lame
-   libmp3lame/3.100
-   REQUIRED
-   INTERFACE_NAME libmp3lame::libmp3lame
-   PKG_CONFIG "lame >= 3.100"
-)
+#add_conan_lib(
+#   libmp3lame
+#   libmp3lame/3.100
+#   REQUIRED
+#   INTERFACE_NAME libmp3lame::libmp3lame
+#   PKG_CONFIG "lame >= 3.100"
+#)
 
 add_conan_lib(
    libid3tag
