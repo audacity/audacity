@@ -25,6 +25,7 @@ if [[ "${AUDACITY_CMAKE_GENERATOR}" == "Visual Studio"* ]]; then
     case "${AUDACITY_ARCH_LABEL}" in
     32bit)  cmake_args+=( -A Win32 ) ;;
     64bit)  cmake_args+=( -A x64 ) ;;
+    ARM64)  cmake_args+=( -A ARM64 ) ;;
     *)      echo >&2 "$0: Unrecognised arch label '${AUDACITY_ARCH_LABEL}'" ; exit 1 ;;
     esac
 elif [[ "${AUDACITY_CMAKE_GENERATOR}" == Xcode* ]]; then
