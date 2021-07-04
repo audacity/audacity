@@ -28,11 +28,11 @@ endif()
 set(CPACK_PACKAGE_FILE_NAME "audacity-${os}-${CPACK_PACKAGE_VERSION}")
 set(zsync_name "audacity-${os}-*") # '*' is wildcard (here it means any version)
 
-if(DEFINED AUDACITY_ARCH_LABEL)
+if(DEFINED CMAKE_ARCH_LABEL)
    # audacity-linux-X.Y.Z-alpha-20210615-x86_64
-   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-${AUDACITY_ARCH_LABEL}")
-   set(zsync_name "${zsync_name}-${AUDACITY_ARCH_LABEL}")
-   set(CPACK_AUDACITY_ARCH_LABEL "${AUDACITY_ARCH_LABEL}")
+   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_FILE_NAME}-${CMAKE_ARCH_LABEL}")
+   set(zsync_name "${zsync_name}-${CMAKE_ARCH_LABEL}")
+   set(CPACK_CMAKE_ARCH_LABEL "${CMAKE_ARCH_LABEL}")
 endif()
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/package")
 
