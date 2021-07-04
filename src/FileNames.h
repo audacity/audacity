@@ -221,6 +221,9 @@ namespace FileNames
    AUDACITY_DLL_API char *VerifyFilename(const wxString &s, bool input = true);
 #endif
 
+   //! Check location on writable access and return true if checked successfully.
+   AUDACITY_DLL_API bool WritableLocationCheck(const FilePath& path);
+
    // wxString compare function for sorting case, which is needed to load correctly.
    AUDACITY_DLL_API int CompareNoCase(const wxString& first, const wxString& second);
 
