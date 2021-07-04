@@ -40,6 +40,12 @@ jobs:
           conan-arch: x86_64
           generator: Xcode
 
+        - name: macOS_armv8
+          os: macos-latest
+          cmake-arch: ARM64
+          conan-arch: armv8
+          generator: Xcode
+
         - name: Windows_x86
           os: windows-latest
           cmake-arch: Win32
