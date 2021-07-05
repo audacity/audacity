@@ -47,7 +47,7 @@ TranslatableString ApplicationPrefs::GetDescription()
    return XO("Preferences for Application");
 }
 
-wxString ApplicationPrefs::HelpPageName()
+ManualPageID ApplicationPrefs::HelpPageName()
 {
    return "Application_Preferences";
 }

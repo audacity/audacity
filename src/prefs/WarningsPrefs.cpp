@@ -47,7 +47,7 @@ TranslatableString WarningsPrefs::GetDescription()
    return XO("Preferences for Warnings");
 }
 
-wxString WarningsPrefs::HelpPageName()
+ManualPageID WarningsPrefs::HelpPageName()
 {
    return "Warnings_Preferences";
 }

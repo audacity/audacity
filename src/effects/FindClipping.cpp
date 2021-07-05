@@ -68,9 +68,9 @@ TranslatableString EffectFindClipping::GetDescription()
    return XO("Creates labels where clipping is detected");
 }
 
-wxString EffectFindClipping::ManualPage()
+ManualPageID EffectFindClipping::ManualPage()
 {
-   return wxT("Find_Clipping");
+   return L"Find_Clipping";
 }
 
 // EffectDefinitionInterface implementation

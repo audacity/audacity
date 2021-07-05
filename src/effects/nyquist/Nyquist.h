@@ -79,8 +79,8 @@ public:
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
    
-   wxString ManualPage() override;
-   wxString HelpPage() override;
+   ManualPageID ManualPage() override;
+   FilePath HelpPage() override;
 
    // EffectDefinitionInterface implementation
 

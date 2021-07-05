@@ -363,7 +363,7 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Timer_Record"), true);
+   HelpSystem::ShowHelp(this, L"Timer_Record", true);
 }
 
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))

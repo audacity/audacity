@@ -98,9 +98,9 @@ TranslatableString EffectBassTreble::GetDescription()
    return XO("Simple tone control effect");
 }
 
-wxString EffectBassTreble::ManualPage()
+ManualPageID EffectBassTreble::ManualPage()
 {
-   return wxT("Bass_and_Treble");
+   return L"Bass_and_Treble";
 }
 
 // EffectDefinitionInterface implementation

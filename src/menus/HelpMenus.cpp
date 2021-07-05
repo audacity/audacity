@@ -100,11 +100,11 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    void AddStuck( ShuttleGui & S, bool & bBool,
       const PrefSetter &prefSetter,
-      const TranslatableString &Prompt, wxString Help );
+      const TranslatableString &Prompt, const ManualPageID &Help );
 
    void OnOk(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
-   void OnHelp(const wxString &Str);
+   void OnHelp(const ManualPageID &Str);
    void OnFix(const PrefSetter &setter, wxWindowID id);
 
    AudacityProject &mProject;
@@ -154,7 +154,7 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
 
 void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool,
    const PrefSetter &prefSetter,
-   const TranslatableString &Prompt, wxString Help )
+   const TranslatableString &Prompt, const ManualPageID &Help )
 {
    mItem++;
    wxWindowID id = FixButtonID + mItem;
@@ -266,7 +266,7 @@ void QuickFixDialog::OnCancel(wxCommandEvent &event)
    EndModal(wxID_CANCEL);
 }
 
-void QuickFixDialog::OnHelp(const wxString &Str)
+void QuickFixDialog::OnHelp(const ManualPageID &Str)
 {
    HelpSystem::ShowHelp(this, Str, true);
 }
@@ -309,7 +309,7 @@ void OnQuickHelp(const CommandContext &context)
    auto &project = context.project;
    HelpSystem::ShowHelp(
       &GetProjectFrame( project ),
-      wxT("Quick_Help"));
+      L"Quick_Help");
 }
 
 void OnManual(const CommandContext &context)
@@ -317,7 +317,7 @@ void OnManual(const CommandContext &context)
    auto &project = context.project;
    HelpSystem::ShowHelp(
       &GetProjectFrame( project ),
-      wxT("Main_Page"));
+      L"Main_Page");
 }
 
 void OnAudioDeviceInfo(const CommandContext &context)

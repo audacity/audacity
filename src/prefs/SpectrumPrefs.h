@@ -53,7 +53,7 @@ class SpectrumPrefs final : public PrefsPanel
    void Rollback();
    bool ShowsPreviewButton() override;
    bool Validate() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
 
  private:
    void Populate(size_t windowSize);

@@ -594,10 +594,21 @@ struct UTILITY_API alignas(
    64 /* ? */
 #endif
 )
+
 NonInterferingBase {
-#ifdef __APPLE__
    static void *operator new(std::size_t count, std::align_val_t al);
    static void operator delete(void *ptr, std::align_val_t al);
+
+#if defined (_MSC_VER) && defined(_DEBUG)
+   // Versions that work in the presence of the DEBUG_NEW macro.
+   // Ignore the arguments supplied by the macro and forward to the
+   // other overloads.
+   static void *operator new(
+      std::size_t count, std::align_val_t al, int, const char *, int)
+   { return operator new(count, al); }
+   static void operator delete(
+      void *ptr, std::align_val_t al, int, const char *, int)
+   { return operator delete(ptr, al); }
 #endif
 };
 

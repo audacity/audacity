@@ -33,6 +33,7 @@
 #include <wx/artprov.h>
 
 #include "../AllThemeResources.h"
+#include "CodeConversions.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"
 #include "../Prefs.h"
@@ -52,8 +53,8 @@ ErrorDialog::ErrorDialog(
    wxWindow *parent,
    const TranslatableString & dlogTitle,
    const TranslatableString & message,
-   const wxString & helpPage,
-   const wxString & log,
+   const ManualPageID & helpPage,
+   const std::wstring & log,
    const bool Close, const bool modal)
 :  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
                    wxDefaultPosition, wxDefaultSize,
@@ -133,12 +134,13 @@ void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 
 void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if( dhelpPage.StartsWith(wxT("innerlink:")) )
+   const auto &str = dhelpPage.GET();
+   if( str.StartsWith(wxT("innerlink:")) )
    {
       HelpSystem::ShowHtmlText(
          this,
-         TitleText(dhelpPage.Mid( 10 ) ),
-         HelpText( dhelpPage.Mid( 10 )),
+         TitleText(str.Mid( 10 ) ),
+         HelpText( str.Mid( 10 )),
          false,
          true );
       return;
@@ -152,9 +154,9 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
-                     const wxString &helpPage,
+                     const ManualPageID &helpPage,
                      const bool Close,
-                     const wxString &log)
+                     const std::wstring &log)
 {
    ErrorDialog dlog(parent, dlogTitle, message, helpPage, log, Close);
    dlog.CentreOnParent();
@@ -168,9 +170,11 @@ void ShowExceptionDialog(
    const wxString& log)
 {
 #ifndef HAS_SENTRY_REPORTING
-   ShowErrorDialog(parent, dlogTitle, message, helpPage, Close, log);
+   ShowErrorDialog(parent, dlogTitle, message, helpPage, Close,
+      audacity::ToWString(log));
 #else
-   ShowErrorReportDialog(parent, dlogTitle, message, helpPage, log);
+   ShowErrorReportDialog(parent, dlogTitle, message, helpPage,
+      audacity::ToWString(log));
 #endif // !HAS_SENTRY_REPORTING
 }
 
@@ -178,9 +182,9 @@ void ShowExceptionDialog(
 void ShowModelessErrorDialog(wxWindow *parent,
                              const TranslatableString &dlogTitle,
                              const TranslatableString &message,
-                             const wxString &helpPage,
+                             const ManualPageID &helpPage,
                              const bool Close,
-                             const wxString &log)
+                             const std::wstring &log)
 {
    // ensure it has some parent.
    if( !parent )
