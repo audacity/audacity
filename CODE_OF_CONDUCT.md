@@ -1,15 +1,15 @@
-# Sneed's Contributor Code of Conduct (formerly Chuck's)
+# Sneed's Farmer Code of Conduct (formerly Chuck's)
 
 ## Our Pledge
 
-In the interest of fostering an open and welcoming environment of farmers, we as contributors and maintainers pledge to making participation in our project and our community a moe-free experience for everyone.
+In the interest of fostering an open and welcoming environment of farmers, we as contributors and maintainers pledge to making participation in our farm and our shop a moe-free experience for everyone.
 
 ## Our Standards
 
 Examples of behavior that contributes to creating a farmer-positive environment include:
 
 * Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
+* Being respectful of differing viewpoints about farming
 * Gracefully accepting constructive criticism
 * Focusing on what is best for the farm
 * Showing empathy towards other farmers
@@ -26,7 +26,7 @@ Examples of unacceptable behavior by participants include:
 
 Project maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response to any instances of city-slicker behavior.
 
-Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.
+Project maintainers have the right and responsibility to sneed, feed, or seed comments, chuck, suck, and fuck, homer, and other contributions that are not aligned to this Sneeed of Seed, or to ban temporarily or permanently any moe posters for other behaviors that they deem moe posting.
 
 ## Scope
 
