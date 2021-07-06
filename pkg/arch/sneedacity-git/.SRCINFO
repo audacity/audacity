@@ -1,6 +1,6 @@
 pkgbase = sneedacity-git
 	pkgdesc = Audacity fork without any telemetry (git-version)
-	pkgver = 3.0.2.r344.gd5a54f152
+	pkgver = 3.0.2.r18.g9e6196510
 	pkgrel = 1
 	url = https://github.com/Sneeds-Feed-and-Seed/sneedacity
 	arch = i686
@@ -10,7 +10,6 @@ pkgbase = sneedacity-git
 	license = CCPL
 	makedepends = git
 	makedepends = cmake
-	makedepends = clang
 	makedepends = sdl2
 	makedepends = libsoup
 	makedepends = libnotify
@@ -43,8 +42,6 @@ pkgbase = sneedacity-git
 	conflicts = audacity
 	conflicts = sneedacity
 	source = git+https://github.com/Sneeds-Feed-and-Seed/sneedacity.git
-	source = sneedacity.patch
-	sha256sums = SKIP
-	sha256sums = c06c60a9ae17b9265840fcd619d2c7a5668f26a94cec80c8785c7997afd4bc96
+	md5sums = SKIP
 
 pkgname = sneedacity-git
