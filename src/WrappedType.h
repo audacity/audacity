@@ -12,7 +12,7 @@
 #ifndef __WRAPPED_TYPE__
 #define __WRAPPED_TYPE__
 
-#include "Audacity.h"
+
 
 enum teWrappedType
 {

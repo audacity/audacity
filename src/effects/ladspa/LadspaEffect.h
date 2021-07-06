@@ -208,7 +208,7 @@ private:
 class LadspaEffectsModule final : public ModuleInterface
 {
 public:
-   LadspaEffectsModule(const wxString *path);
+   LadspaEffectsModule();
    virtual ~LadspaEffectsModule();
 
    // ComponentInterface implementation
@@ -237,14 +237,11 @@ public:
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const PluginPath & path) override;
-   void DeleteInstance(ComponentInterface *instance) override;
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) override;
 
    // LadspaEffectModule implementation
 
    FilePaths GetSearchPaths();
-
-private:
-   wxString mPath;
 };
 

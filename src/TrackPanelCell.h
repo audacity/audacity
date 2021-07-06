@@ -11,9 +11,9 @@ Paul Licameli
 #ifndef __AUDACITY_TRACK_PANEL_CELL__
 #define __AUDACITY_TRACK_PANEL_CELL__
 
-#include "Audacity.h"
 
-#include "MemoryX.h"
+
+#include <memory>
 #include "TrackPanelDrawable.h" // to inherit
 
 class AudacityProject;

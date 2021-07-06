@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "HelpCommand.h"
 
 #include "../Shuttle.h"

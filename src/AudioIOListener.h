@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_AUDIO_IO_LISTENER__
 #define __AUDACITY_AUDIO_IO_LISTENER__
 
-#include "Audacity.h"
+
 
 class WaveTrack;
 using WaveTrackArray =

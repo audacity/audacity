@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AboutDialog.cpp
 
@@ -20,15 +20,15 @@ close it.
 
 \class AboutDialogCreditItem
 \brief AboutDialogCreditItem is a structure used by the AboutDialog to
-hold information about one contributor to Audacity.
+hold information about one contributor to Sneedacity.
 
 *//********************************************************************/
 
 
-#include "Audacity.h" // for USE_* macros
+
 #include "AboutDialog.h"
 
-#include "Experimental.h"
+
 
 #include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
@@ -62,7 +62,7 @@ hold information about one contributor to Audacity.
 // RevisionIdent.h may contain #defines like these ones:
 //#define REV_LONG "28864acb238cb3ca71dda190a2d93242591dd80e"
 //#define REV_TIME "Sun Apr 12 12:40:22 2015 +0100"
-#include <RevisionIdent.h>
+#include "RevisionIdent.h"
 
 #ifndef REV_TIME
 #define REV_TIME "unknown date and time"
@@ -76,61 +76,63 @@ hold information about one contributor to Audacity.
 
 // To substitute into many other translatable strings
 static const auto ProgramName =
-   //XO("Audacity");
-   Verbatim("Audacity");
+   //XO("Sneedacity");
+   Verbatim("Sneedacity");
 
 void AboutDialog::CreateCreditsList()
 {
    const auto sysAdminFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, system administration");
    const auto coFounderFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, co-founder and developer");
    const auto developerFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, developer");
+   const auto developerAndSupprtFormat =
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
+      XO("%s, developer and support");
    const auto documentationAndSupportFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, documentation and support");
+   const auto qaDocumentationAndSupportFormat =
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
+      XO("%s, QA tester, documentation and support");
    const auto documentationAndSupportFrenchFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, documentation and support, French");
    const auto qualityAssuranceFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, quality assurance");
    const auto accessibilityAdvisorFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, accessibility advisor");
    const auto graphicArtistFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, graphic artist");
    const auto composerFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, composer");
    const auto testerFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, tester");
    const auto NyquistPluginsFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, Nyquist plug-ins");
    const auto webDeveloperFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, web developer");
    const auto graphicsFormat =
-   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+   /* i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name */
       XO("%s, graphics");
 
-   // The Audacity Team: developers and support
-   AddCredit(wxT("Arturo \"Buanzo\" Busleiman"), sysAdminFormat, roleTeamMember);
-   AddCredit(wxT("James Crook"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleTeamMember);
-   AddCredit(wxT("Steve Daulton"), roleTeamMember);
-   AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
+   // The Sneedacity Team: developers and support
+   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Leland Lucius"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Peter Sampson"), roleTeamMember);
-   AddCredit(wxT("Bill Wharrie"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Anonymous contributors from 4chan technology board /g/"), developerFormat, roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
@@ -142,19 +144,27 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Christian Brochec"),
       documentationAndSupportFrenchFormat, roleEmeritusTeam);
    AddCredit(wxT("Matt Brubeck"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Arturo \"Buanzo\" Busleiman"), sysAdminFormat, roleEmeritusTeam);
    AddCredit(wxT("Michael Chinen"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("James Crook"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleEmeritusTeam);
+   AddCredit(wxT("Steve Daulton"), roleEmeritusTeam);
    AddCredit(wxT("Al Dimond"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Benjamin Drung"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Joshua Haberman"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Leland Lucius"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Dominic Mazzoni"), coFounderFormat, roleEmeritusTeam);
    AddCredit(wxT("Markus Meyer"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Monty Montgomery"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Shane Mueller"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Tony Oetzmann"), documentationAndSupportFormat, roleEmeritusTeam);
    AddCredit(wxT("Alexandre Prokoudine"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Peter Sampson"), qaDocumentationAndSupportFormat, roleEmeritusTeam);
    AddCredit(wxT("Martyn Shaw"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Bill Wharrie"), documentationAndSupportFormat, roleEmeritusTeam);
 
    // Contributors
    AddCredit(wxT("Lynn Allan"), developerFormat, roleContributor);
@@ -178,6 +188,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Steve Jolly"), developerFormat, roleContributor);
    AddCredit(wxT("Steven Jones"), developerFormat, roleContributor);
    AddCredit(wxT("Henric Jungheim"), developerFormat, roleContributor);
+   AddCredit(wxT("Myungchul Keum"), developerFormat, roleContributor);
    AddCredit(wxT("Arun Kishore"), developerFormat, roleContributor);
    AddCredit(wxT("Paul Livesey"), developerFormat, roleContributor);
    AddCredit(wxT("Harvey Lubin"), graphicArtistFormat, roleContributor);
@@ -320,8 +331,8 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 // DA: Says that it is a customised version.
 #ifdef EXPERIMENTAL_DA
       wxT(
-"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
+"Sneedacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
+Sneedacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
 #else
 /* Do the i18n of a string with markup carefully with hints.
  (Remember languages with cases.) */
@@ -337,7 +348,7 @@ Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac
                .Format( XO("volunteers") ),
             ProgramName,
             Verbatim("[[https://www.audacityteam.org/download|%s]]")
-               /* i18n-hint: substitutes into "Audacity is %s" */
+               /* i18n-hint: substitutes into "Sneedacity is %s" */
                .Format( XO("available") ) )
 #endif
    ;
@@ -365,7 +376,7 @@ visit our %s.")
       par2StrTranslated.Replace( wxT(", in English,"), wxT("") );
 
    /* i18n-hint: The translation of "translator_credits" will appear
-    *  in the credits in the About Audacity window.  Use this to add
+    *  in the credits in the About Sneedacity window.  Use this to add
     *  your own name(s) to the credits.
     *
     *  For example:  "English translation by Dominic Mazzoni." */
@@ -388,10 +399,10 @@ visit our %s.")
       << wxT("<h3>DarkAudacity ")
       << wxString(AUDACITY_VERSION_STRING)
       << wxT("</center></h3>")
-      << wxT("Customised version of the Audacity free, open source, cross-platform software " )
+      << wxT("Customised version of the Sneedacity free, open source, cross-platform software " )
       << wxT("for recording and editing sounds.")
-      << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2021 Audacity Team.<br>")
-      << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
+      << wxT("<p><br>&nbsp; &nbsp; <b>Sneedacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2021 Sneedacity Team.<br>")
+      << wxT("&nbsp; &nbsp; The name <b>Sneedacity</b> is a registered trademark.<br><br>")
 
 #else
       << XO("<h3>")
@@ -478,7 +489,7 @@ visit our %s.")
       << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
 #else
       << wxT("<p><br>&nbsp; &nbsp; ")
-      /* i18n-hint Audacity's name substitutes for first and third %s,
+      /* i18n-hint Sneedacity's name substitutes for first and third %s,
        and a "copyright" symbol for the second */
       << XO("%s software is copyright %s 1999-2021 %s Team.")
          .Format(
@@ -488,8 +499,8 @@ visit our %s.")
       << wxT("<br>")
 
       << wxT("&nbsp; &nbsp; ")
-      /* i18n-hint Audacity's name substitutes for %s */
-      << XO("The name %s is a registered trademark of Dominic Mazzoni.")
+      /* i18n-hint Sneedacity's name substitutes for %s */
+      << XO("The name %s is a registered trademark.")
          .Format( Verbatim("<b>%s</b>").Format( ProgramName ) )
       << wxT("<br><br>")
 #endif

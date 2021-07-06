@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Snap.cpp
 
@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Snap.h"
 
 #include <algorithm>

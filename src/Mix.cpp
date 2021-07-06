@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Mix.cpp
 
@@ -21,7 +21,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Mix.h"
 
 #include <math.h>
@@ -460,7 +460,8 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
          // Nothing to do if past end of play interval
          if (getLen > 0) {
             if (backwards) {
-               auto results = cache.Get(floatSample, *pos - (getLen - 1), getLen, mMayThrow);
+               auto results =
+                  cache.GetFloats(*pos - (getLen - 1), getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
@@ -472,7 +473,7 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
                *pos -= getLen;
             }
             else {
-               auto results = cache.Get(floatSample, *pos, getLen, mMayThrow);
+               auto results = cache.GetFloats(*pos, getLen, mMayThrow);
                if (results)
                   memcpy(&queue[*queueLen], results, sizeof(float) * getLen);
                else
@@ -589,7 +590,7 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
    );
 
    if (backwards) {
-      auto results = cache.Get(floatSample, *pos - (slen - 1), slen, mMayThrow);
+      auto results = cache.GetFloats(*pos - (slen - 1), slen, mMayThrow);
       if (results)
          memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
       else
@@ -602,7 +603,7 @@ size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
       *pos -= slen;
    }
    else {
-      auto results = cache.Get(floatSample, *pos, slen, mMayThrow);
+      auto results = cache.GetFloats(*pos, slen, mMayThrow);
       if (results)
          memcpy(mFloatBuffer.get(), results, sizeof(float) * slen);
       else
@@ -691,7 +692,7 @@ size_t Mixer::Process(size_t maxToProcess)
             mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat)),
             mFormat,
             maxOut,
-            mHighQuality,
+            mHighQuality ? gHighQualityDither : gLowQualityDither,
             mNumChannels,
             mNumChannels);
       }
@@ -703,7 +704,7 @@ size_t Mixer::Process(size_t maxToProcess)
             mBuffer[c].ptr(),
             mFormat,
             maxOut,
-            mHighQuality);
+            mHighQuality ? gHighQualityDither : gLowQualityDither);
       }
    }
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
@@ -739,7 +740,7 @@ void Mixer::Restart()
       mQueueLen[i] = 0;
    }
 
-   // Bug 1887:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
+   // Bug 1887:  libsoxr 0.1.3, first used in Sneedacity 2.3.0, crashes with
    // constant rate resampling if you try to reuse the resampler after it has
    // flushed.  Should that be considered a bug in sox?  This works around it:
    MakeResamplers();
@@ -760,7 +761,7 @@ void Mixer::Reposition(double t, bool bSkipping)
       mQueueLen[i] = 0;
    }
 
-   // Bug 2025:  libsoxr 0.1.3, first used in Audacity 2.3.0, crashes with
+   // Bug 2025:  libsoxr 0.1.3, first used in Sneedacity 2.3.0, crashes with
    // constant rate resampling if you try to reuse the resampler after it has
    // flushed.  Should that be considered a bug in sox?  This works around it.
    // (See also bug 1887, and the same work around in Mixer::Restart().)

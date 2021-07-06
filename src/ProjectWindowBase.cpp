@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectWindowBase.cpp
 
@@ -15,7 +15,7 @@ Paul Licameli split from ProjectWindow.cpp
 ProjectWindowBase::ProjectWindowBase(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size, AudacityProject &project)
-   : wxFrame(parent, id, _TS("Audacity"), pos, size)
+   : wxFrame(parent, id, _TS("Sneedacity"), pos, size)
    , mProject{ project }
 {
    project.SetFrame( this );

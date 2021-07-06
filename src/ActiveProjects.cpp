@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ActiveProjects.cpp
 
@@ -11,7 +11,7 @@
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "ActiveProjects.h"
 #include "Prefs.h"
 
@@ -93,6 +93,6 @@ wxString ActiveProjects::Find(const FilePath &path)
 
    gPrefs->SetPath(configPath);
 
-   return found ? key : wxT("");
+   return found ? key : wxString{};
 }
 

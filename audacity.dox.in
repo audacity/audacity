@@ -38,7 +38,7 @@ PROJECT_NAME           = Audacity
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 3.0.2
+PROJECT_NUMBER         = 3.0.3
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -790,7 +790,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = src/ \
+INPUT                  = src/ libraries/ modules/ \
                          dox2-src/ \
                          include/ \
                          lib-src/FileDialog/

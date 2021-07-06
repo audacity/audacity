@@ -19,7 +19,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "SimpleMono.h"
 
 #include "../WaveTrack.h"
@@ -96,7 +96,7 @@ bool EffectSimpleMono::ProcessOne(WaveTrack * track,
          limitSampleBufferSize( track->GetBestBlockSize(s), end - s );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block);
+      track->GetFloats(buffer.get(), s, block);
 
       //Process the buffer.  If it fails, clean up and exit.
       if (!ProcessSimpleMono(buffer.get(), block))

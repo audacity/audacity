@@ -9,7 +9,7 @@
 #ifndef __AUDACITY_OVERLAY__
 #define __AUDACITY_OVERLAY__
 
-#include "../Audacity.h"
+
 
 #include <utility>
 
@@ -90,7 +90,7 @@ AdornedRulerPanel.
 
 */
 
-class Overlay
+class AUDACITY_DLL_API Overlay
 {
 public:
    Overlay() = default;

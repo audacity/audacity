@@ -30,10 +30,8 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
-#include "ControlToolBar.h"
 
-#include "../Experimental.h"
+#include "ControlToolBar.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -94,13 +92,16 @@ END_EVENT_TABLE()
 
 static const TranslatableString
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
+   is playing or recording or stopped, and whether it is paused;
+   progressive verb form */
      sStatePlay = XO("Playing")
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
+   is playing or recording or stopped, and whether it is paused;
+   progressive verb form */
    , sStateStop = XO("Stopped")
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
+   is playing or recording or stopped, and whether it is paused;
+   progressive verb form */
    , sStateRecord = XO("Recording")
 ;
 

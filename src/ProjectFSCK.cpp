@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ProjectFSCK.cpp
 
@@ -101,7 +101,7 @@ int ProjectFSCK(
          auto msg =
 XO("Project check of \"%s\" folder \
 \ndetected %lld missing external audio file(s) \
-\n('aliased files'). There is no way for Audacity \
+\n('aliased files'). There is no way for Sneedacity \
 \nto recover these files automatically. \
 \n\nIf you choose the first or second option below, \
 \nyou can try to find and restore the missing files \
@@ -262,7 +262,7 @@ XO("Project check of \"%s\" folder \
 XO("Project check of \"%s\" folder \
 \ndetected %lld missing audio data (.au) blockfile(s), \
 \nprobably due to a bug, system crash, or accidental \
-\ndeletion. There is no way for Audacity to recover \
+\ndeletion. There is no way for Sneedacity to recover \
 \nthese missing files automatically. \
 \n\nIf you choose the first or second option below, \
 \nyou can try to find and restore the missing files \

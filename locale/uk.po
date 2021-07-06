@@ -1,4 +1,4 @@
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) YEAR Sneedacity Team
 # This file is distributed under the same license as the audacity package.
 #
 # Translators:
@@ -6,10 +6,10 @@
 # Yuri Chornoivan <yurchor@ukr.net>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-03-31 16:03+0300\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
+"PO-Revision-Date: 2021-06-08 17:19+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -17,7 +17,203 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Lokalize 20.11.70\n"
+"X-Generator: Lokalize 20.12.0\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Не вдалося визначити"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s байтів"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s кБ"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s МБ"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s ГБ"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Спрощена"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Системна"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem Report for Sneedacity"
+msgstr "Звіт щодо проблем в Sneedacity"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid ""
+"Click \"Send\" to submit the report to Sneedacity. This information is "
+"collected anonymously."
+msgstr ""
+"Натисніть кнопку «Надіслати», щоб подати звіт щодо Sneedacity. Ці відомості буде зібрано анонімно."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr ""
+"Подробиці проблеми"
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "Коментарі"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+"&Надіслати"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+"Н&е надсилати"
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+"Код виключення 0x%x"
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr ""
+"Невідоме виключення"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown assertion"
+msgstr "Невідомий оператор контролю"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown error"
+msgstr "Невідома помилка"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Failed to send crash report"
+msgstr "Не вдалося надіслати звіт щодо аварії"
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
+"С&хема"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Колір (типовий)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Колір (класичний)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Тони сірого"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Інвертовані тони сірого"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update Sneedacity"
+msgstr "Оновити Sneedacity"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "Проп&устити"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+"&Встановити оновлення"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Журнал змін"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
+"Прочитати більше на GitHub"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Помилка під час перевірки оновлень"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Sneedacity update server."
+msgstr ""
+"Не вдалося встановити з'єднання із сервером оновлення Sneedacity."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+"Дані оновлення пошкоджено."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Помилка під час отримання оновлення."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Sneedacity download link."
+msgstr ""
+"Не вдалося відкрити посилання для отримання Sneedacity."
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgctxt "update dialog"
+msgid "Sneedacity %s is available!"
+msgstr "Випущено Sneedacity %s!"
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr ""
+"Перша експериментальна команда…"
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr ""
+"Друга експериментальна команда"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -180,9 +376,9 @@ msgstr "© Leland Lucius, 2009"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
+"External Sneedacity module which provides a simple IDE for writing effects."
 msgstr ""
-"Зовнішній модуль Audacity, який забезпечує роботу простого комплексного "
+"Зовнішній модуль Sneedacity, який забезпечує роботу простого комплексного "
 "середовища розробки для створення ефектів."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -370,79 +566,91 @@ msgstr "Зупинити скрипт"
 msgid "No revision identifier was provided"
 msgstr "Не надано ідентифікатора модифікації"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, адміністрування системи"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, співзасновник проєкту, розробник"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, розробник"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, developer and support"
+msgstr "%s, розробка і супровід"
+
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s, документація і супровід"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
+msgstr "%s, тестування, документування та супровід"
+
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s, документація і супровід, французька"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, контроль якості"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, поради з доступності"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, художник"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, композитор"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, тестувальник"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, додатки Nyquist"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, веброзробник"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
@@ -481,7 +689,7 @@ msgstr ""
 msgid "volunteers"
 msgstr "волонтерів"
 
-#. i18n-hint: substitutes into "Audacity is %s"
+#. i18n-hint: substitutes into "Sneedacity is %s"
 #: src/AboutDialog.cpp
 msgid "available"
 msgstr "можна користуватися"
@@ -515,7 +723,7 @@ msgid "forum"
 msgstr "форумі"
 
 #. i18n-hint: The translation of "translator_credits" will appear
-#. *  in the credits in the About Audacity window.  Use this to add
+#. *  in the credits in the About Sneedacity window.  Use this to add
 #. *  your own name(s) to the credits.
 #. *
 #. *  For example:  "English translation by Dominic Mazzoni."
@@ -599,20 +807,19 @@ msgstr "Особливі подяки:"
 msgid "%s website: "
 msgstr "Сайт %s: "
 
-#. i18n-hint Audacity's name substitutes for first and third %s,
+#. i18n-hint Sneedacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
 msgstr "%s, %s Команда %s, 1999–2021."
 
-#. i18n-hint Audacity's name substitutes for %s
+#. i18n-hint Sneedacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
 msgstr ""
-"Назва продукту %s є зареєстрованою торговельною маркою Домініка Маццоні "
-"(Dominic Mazzoni)."
+"Назва %s є зареєстрованою торговельною маркою."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -630,8 +837,7 @@ msgstr "Вимкнено"
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
-msgstr ""
-"Збірка"
+msgstr "Збірка"
 
 #: src/AboutDialog.cpp
 msgid "Program build date:"
@@ -907,8 +1113,8 @@ msgstr ""
 "запитувала вас щодо відновлення початкових значень налаштувань."
 
 #: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "Відновити налаштування Audacity"
+msgid "Reset Sneedacity Preferences"
+msgstr "Відновити налаштування Sneedacity"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -922,18 +1128,18 @@ msgstr ""
 "Його вилучено зі списку нещодавніх файлів."
 
 #: src/AudacityApp.cpp
-msgid "SQLite library failed to initialize.  Audacity cannot continue."
+msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 "Не вдалося ініціалізувати бібліотеку SQLite. Неможливо продовжити роботу "
-"Audacity."
+"Sneedacity."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Розмір блоку має належати діапазону від 256 до 100000000\n"
 
 #: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Триває запуск Audacity…"
+msgid "Sneedacity is starting up..."
+msgstr "Триває запуск Sneedacity…"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -950,8 +1156,8 @@ msgid "Open &Recent..."
 msgstr "Відкрити &недавні…"
 
 #: src/AudacityApp.cpp src/menus/HelpMenus.cpp
-msgid "&About Audacity..."
-msgstr "&Про Audacity…"
+msgid "&About Sneedacity..."
+msgstr "&Про Sneedacity…"
 
 #: src/AudacityApp.cpp
 msgid "&Preferences..."
@@ -963,19 +1169,19 @@ msgstr "&Файл"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
+"Sneedacity could not find a safe place to store temporary files.\n"
+"Sneedacity needs a place where automatic cleanup programs won't delete the "
 "temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Програмі не вдалося знайти безпечне місце для зберігання тимчасових файлів.\n"
-"Audacity потрібне місце, де програми для автоматичного вилучення файлів не "
+"Sneedacity потрібне місце, де програми для автоматичного вилучення файлів не "
 "пошкодять тимчасові файли.\n"
 "Вкажіть відповідний каталог у діалоговому вікні уподобань."
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity could not find a place to store temporary files.\n"
+"Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Програмі не вдається знайти каталог для зберігання тимчасових файлів.\n"
@@ -983,54 +1189,54 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
+"Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
 msgstr ""
-"Audacity готується до завершення. Повторно завантажте програму для "
+"Sneedacity готується до завершення. Повторно завантажте програму для "
 "використання нової теки тимчасових файлів."
 
 #: src/AudacityApp.cpp
 msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+"Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
-"Запуск двох копій Audacity одночасно може призвести\n"
+"Запуск двох копій Sneedacity одночасно може призвести\n"
 "до втрати даних або краху системи.\n"
 "\n"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
-"This folder may be in use by another copy of Audacity.\n"
+"Sneedacity was not able to lock the temporary files directory.\n"
+"This folder may be in use by another copy of Sneedacity.\n"
 msgstr ""
-"Audacity не може заблокувати теку з тимчасовими файлами.\n"
-"Можливо цю теку вже використовує інша копія Audacity.\n"
+"Sneedacity не може заблокувати теку з тимчасовими файлами.\n"
+"Можливо цю теку вже використовує інша копія Sneedacity.\n"
 
 #: src/AudacityApp.cpp
-msgid "Do you still want to start Audacity?"
-msgstr "Досі бажаєте запустити Audacity?"
+msgid "Do you still want to start Sneedacity?"
+msgstr "Досі бажаєте запустити Sneedacity?"
 
 #: src/AudacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "Помилка при блокуванні теки тимчасових фалів"
 
 #: src/AudacityApp.cpp
-msgid "The system has detected that another copy of Audacity is running.\n"
-msgstr "Система визначила, що вже запущено іншу копію Audacity.\n"
+msgid "The system has detected that another copy of Sneedacity is running.\n"
+msgstr "Система визначила, що вже запущено іншу копію Sneedacity.\n"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+"Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
 "Щоб відкрити одночасно декілька проєктів використовуйте\n"
 "команди «Створити» або «Відкрити» у копії\n"
-"Audacity, що зараз виконується.\n"
+"Sneedacity, що зараз виконується.\n"
 
 #: src/AudacityApp.cpp
-msgid "Audacity is already running"
-msgstr "Audacity вже запущено"
+msgid "Sneedacity is already running"
+msgstr "Sneedacity вже запущено"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1045,8 +1251,8 @@ msgstr ""
 "і може знадобитися перезавантаження системи."
 
 #: src/AudacityApp.cpp
-msgid "Audacity Startup Failure"
-msgstr "Помилка під час запуску Audacity"
+msgid "Sneedacity Startup Failure"
+msgstr "Помилка під час запуску Sneedacity"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1086,12 +1292,12 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
-"The Audacity IPC server failed to initialize.\n"
+"The Sneedacity IPC server failed to initialize.\n"
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"Не вдалося ініціалізувати сервер IPC Audacity.\n"
+"Не вдалося ініціалізувати сервер IPC Sneedacity.\n"
 "\n"
 "Ймовірною причиною є нестача ресурсів,\n"
 "і може знадобитися перезавантаження системи."
@@ -1100,7 +1306,7 @@ msgstr ""
 msgid "An unrecoverable error has occurred during startup"
 msgstr "Під час запуску сталася невиправна помилка"
 
-#. i18n-hint: This controls the number of bytes that Audacity will
+#. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
 #: src/AudacityApp.cpp
 msgid "set max disk block size in bytes"
@@ -1111,17 +1317,17 @@ msgstr "встановити максимальний розмір блоку д
 msgid "this help message"
 msgstr "це повідомлення"
 
-#. i18n-hint: This runs a set of automatic tests on Audacity itself
+#. i18n-hint: This runs a set of automatic tests on Sneedacity itself
 #: src/AudacityApp.cpp
 msgid "run self diagnostics"
 msgstr "запуск самодіагностики"
 
-#. i18n-hint: This displays the Audacity version
+#. i18n-hint: This displays the Sneedacity version
 #: src/AudacityApp.cpp
-msgid "display Audacity version"
-msgstr "показати версію Audacity"
+msgid "display Sneedacity version"
+msgstr "показати версію Sneedacity"
 
-#. i18n-hint: This is a list of one or more files that Audacity
+#. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
 #: src/AudacityApp.cpp
 msgid "audio or project file name"
@@ -1129,19 +1335,19 @@ msgstr "назва файла звукових даних або проєкту"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity project (.aup3) files are not currently \n"
-"associated with Audacity. \n"
+"Sneedacity project (.aup3) files are not currently \n"
+"associated with Sneedacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Файли проєктів Audacity (.aup3) зараз\n"
-"не пов'язані з Audacity. \n"
+"Файли проєктів Sneedacity (.aup3) зараз\n"
+"не пов'язані з Sneedacity. \n"
 "\n"
 "Пов'язати їх, щоб вони відкривались подвійним клацанням?"
 
 #: src/AudacityApp.cpp
-msgid "Audacity Project Files"
-msgstr "Файли проєктів Audacity"
+msgid "Sneedacity Project Files"
+msgstr "Файли проєктів Sneedacity"
 
 #: src/AudacityException.h src/commands/MessageCommand.cpp
 #: src/widgets/AudacityMessageBox.cpp
@@ -1149,8 +1355,8 @@ msgid "Message"
 msgstr "Повідомлення"
 
 #: src/AudacityFileConfig.cpp
-msgid "Audacity Configuration Error"
-msgstr "Помилка у налаштуваннях Audacity"
+msgid "Sneedacity Configuration Error"
+msgstr "Помилка у налаштуваннях Sneedacity"
 
 #: src/AudacityFileConfig.cpp
 #, c-format
@@ -1165,7 +1371,7 @@ msgid ""
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
+"If you choose to \"Quit Sneedacity\", your project may be left in an unsaved "
 "state which will be recovered the next time you open it."
 msgstr ""
 "Не вдалося отримати доступ до цього файла налаштувань:\n"
@@ -1179,7 +1385,7 @@ msgstr ""
 "Ви можете спробувати усунути причину помилки і натиснути кнопку «Повторити», "
 "щоб продовжити роботу програми.\n"
 "\n"
-"Якщо ви натиснете кнопку «Вийти з Audacity», ваш проєкт може залишитися у "
+"Якщо ви натиснете кнопку «Вийти з Sneedacity», ваш проєкт може залишитися у "
 "незбереженому стані — програма намагатиметься його відновити під час "
 "наступного запуску."
 
@@ -1190,16 +1396,16 @@ msgid "Help"
 msgstr "Довідка"
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
-msgid "&Quit Audacity"
-msgstr "Ви&йти з Audacity"
+msgid "&Quit Sneedacity"
+msgstr "Ви&йти з Sneedacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
 msgstr "&Повторити"
 
 #: src/AudacityLogger.cpp
-msgid "Audacity Log"
-msgstr "Журнал Audacity"
+msgid "Sneedacity Log"
+msgstr "Журнал Sneedacity"
 
 #: src/AudacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
@@ -1266,8 +1472,8 @@ msgid "Error Initializing Midi"
 msgstr "Помилка при ініціалізації MIDI"
 
 #: src/AudioIO.cpp
-msgid "Audacity Audio"
-msgstr "Звук Audacity"
+msgid "Sneedacity Audio"
+msgstr "Звук Sneedacity"
 
 #: src/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -1521,13 +1727,13 @@ msgstr "Автоматичне відновлення після краху"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
+"The following projects were not saved properly the last time Sneedacity was "
 "run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
 "Вказані нижче проєкти не було належним чином збережено під час останнього "
-"сеансу роботи з Audacity. Їх можна відновити у автоматичному режимі.\n"
+"сеансу роботи з Sneedacity. Їх можна відновити у автоматичному режимі.\n"
 "\n"
 "Після відновлення збережіть проєкти, щоб забезпечити запис внесених змін на "
 "диск."
@@ -2131,8 +2337,8 @@ msgstr ""
 "(Позначення інших типів доріжки не працюватиме.)"
 
 #: src/CrashReport.cpp
-msgid "Audacity Support Data"
-msgstr "Дані щодо супроводу Audacity"
+msgid "Sneedacity Support Data"
+msgstr "Дані щодо супроводу Sneedacity"
 
 #: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
 msgid "This may take several seconds"
@@ -2141,6 +2347,21 @@ msgstr "Виконання дії може тривати декілька се�
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr "Звіт створено тут:"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr "(%d): %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Не вдалося встановити безпечний режим для основного з'єднання із %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "Не вдалося встановити безпечний режим при з'єднанні контрольної точки із %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2264,20 +2485,20 @@ msgstr "Копіювати усі файли (безпечніше)"
 msgid "Whenever a project depends on other files:"
 msgstr "Чи залежить проєкт від інших файлів:"
 
-#. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
+#. i18n-hint: One of the choices of what you want Sneedacity to do when
+#. * Sneedacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Ask me"
 msgstr "Перепитувати"
 
-#. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
+#. i18n-hint: One of the choices of what you want Sneedacity to do when
+#. * Sneedacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Always copy all files (safest)"
 msgstr "Завжди копіювати усі файли (найбезпечніше)"
 
-#. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
+#. i18n-hint: One of the choices of what you want Sneedacity to do when
+#. * Sneedacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Never copy any files"
 msgstr "Ніколи не копіювати ніяких файлів"
@@ -2311,14 +2532,14 @@ msgid ""
 "Your project is self-contained; it does not depend on any external audio "
 "files. \n"
 "\n"
-"Some older Audacity projects may not be self-contained, and care \n"
+"Some older Sneedacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
 "Ваш проєкт є самодостатнім. Для роботи з ним не потрібні зовнішні файли "
 "звукових даних. \n"
 "\n"
-"Деякі із проєктів у застарілих версіях Audacity можуть містити посилання на "
+"Деякі із проєктів у застарілих версіях Sneedacity можуть містити посилання на "
 "сторонні дані.\n"
 "Для роботи з ними сторонні дані мають зберігатися у належних місцях.\n"
 "Проєкти у нових версіях є самодостатніми, тому з ними працювати простіше."
@@ -2402,13 +2623,13 @@ msgstr "Програму зібрано без підтримки FFmpeg"
 #: src/FFmpeg.cpp
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
-"but this time Audacity failed to load it at startup. \n"
+"but this time Sneedacity failed to load it at startup. \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
 "FFmpeg було налаштовано у «Параметрах», бібліотека успішно завантажувалася "
 "раніше, \n"
-"але цього разу Audacity не вдалося завантажити її під час запуску. \n"
+"але цього разу Sneedacity не вдалося завантажити її під час запуску. \n"
 "\n"
 "Можливо, вам слід повернутися до сторінки «Параметри > Бібліотеки» і "
 "повторно налаштувати параметри бібліотеки."
@@ -2427,9 +2648,9 @@ msgstr "Вказати адресу FFmpeg"
 
 #: src/FFmpeg.cpp
 #, c-format
-msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
+msgid "Sneedacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
-"Audacity потребує файла «%s» для імпортування та експортування звукових "
+"Sneedacity потребує файла «%s» для імпортування та експортування звукових "
 "даних за допомогою FFmpeg."
 
 #: src/FFmpeg.cpp
@@ -2470,13 +2691,13 @@ msgstr "FFmpeg не знайдено"
 
 #: src/FFmpeg.cpp
 msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+"Sneedacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Edit > Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
-"Програма Audacity намагалася скористатися FFmpeg для імпортування звукового "
+"Програма Sneedacity намагалася скористатися FFmpeg для імпортування звукового "
 "файла,\n"
 "але потрібних бібліотек не було виявлено.\n"
 "\n"
@@ -2503,29 +2724,29 @@ msgstr "Лише libavformat.so"
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity failed to open a file in %s."
-msgstr "Audacity не вдалося відкрити файл у %s."
+msgid "Sneedacity failed to open a file in %s."
+msgstr "Sneedacity не вдалося відкрити файл у %s."
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity failed to read from a file in %s."
-msgstr "Audacity не вдалося прочитати дані з файла у %s."
+msgid "Sneedacity failed to read from a file in %s."
+msgstr "Sneedacity не вдалося прочитати дані з файла у %s."
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgid "Sneedacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
-"Audacity вдалося успішно записати файл до %s, але не вдалося перейменувати "
+"Sneedacity вдалося успішно записати файл до %s, але не вдалося перейменувати "
 "його на %s."
 
 #: src/FileException.cpp
 #, c-format
 msgid ""
-"Audacity failed to write to a file.\n"
+"Sneedacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
-"Audacity не вдалося записати дані до файла.\n"
+"Sneedacity не вдалося записати дані до файла.\n"
 "Ймовірно, %s непридатний до запису або диск переповнено.\n"
 "Щоб дізнатися більше про вивільнення місця, натисніть кнопку «Довідка»."
 
@@ -2565,7 +2786,7 @@ msgstr "За&питати"
 msgid "All files"
 msgstr "усі файли"
 
-#. i18n-hint an Audacity project is the state of the program, stored as
+#. i18n-hint an Sneedacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
 msgid "AUP3 project files"
@@ -2833,8 +3054,8 @@ msgstr "Експорт аудіофайла"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
-msgid "Saving an Audacity Project"
-msgstr "Збереження проєкту Audacity"
+msgid "Saving an Sneedacity Project"
+msgstr "Збереження проєкту Sneedacity"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
@@ -2852,22 +3073,22 @@ msgstr "Відсутня локальна довідка"
 
 #: src/HelpText.cpp
 msgid ""
-"<br><br>The version of Audacity you are using is an <b>Alpha test version</"
+"<br><br>The version of Sneedacity you are using is an <b>Alpha test version</"
 "b>."
 msgstr ""
-"<br><br>Версія Audacity, якою ви користуєтеся є <b>попередньою тестовою "
+"<br><br>Версія Sneedacity, якою ви користуєтеся є <b>попередньою тестовою "
 "версією (Alpha)</b>."
 
 #: src/HelpText.cpp
 msgid ""
-"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+"<br><br>The version of Sneedacity you are using is a <b>Beta test version</b>."
 msgstr ""
-"<br><br>Версія Audacity, якою ви користуєтеся є <b>тестовою версією (Beta)</"
+"<br><br>Версія Sneedacity, якою ви користуєтеся є <b>тестовою версією (Beta)</"
 "b>."
 
 #: src/HelpText.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr "Отримати офіційну випущену версію Audacity"
+msgid "Get the Official Released Version of Sneedacity"
+msgstr "Отримати офіційну випущену версію Sneedacity"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2880,10 +3101,10 @@ msgstr ""
 
 #: src/HelpText.cpp
 msgid ""
-"You can help us get Audacity ready for release by joining our [[https://www."
+"You can help us get Sneedacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Ви можете допомогти нам поліпшити Audacity до випуску, долучившись до нашої  "
+"Ви можете допомогти нам поліпшити Sneedacity до випуску, долучившись до нашої  "
 "[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 
 #: src/HelpText.cpp
@@ -2931,13 +3152,13 @@ msgstr ""
 
 #: src/HelpText.cpp
 msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
+"Sneedacity can import unprotected files in many other formats (such as M4A and "
 "WMA, compressed WAV files from portable recorders and audio from video "
 "files) if you download and install the optional [[https://manual."
 "audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
 "library]] to your computer."
 msgstr ""
-"Audacity зможе імпортувати файли без захисту даних у багатьох інших форматах "
+"Sneedacity зможе імпортувати файли без захисту даних у багатьох інших форматах "
 "(зокрема M4A і WMA, файли стиснених даних WAV з портативних записувачів та "
 "звукові дані з відеофайлів), якщо ви встановите у вашій системі додаткову "
 "[[https://manual.audacityteam.org/man/faq_opening_and_saving_files."
@@ -3044,52 +3265,25 @@ msgstr "&Журнал змін…"
 #, c-format
 msgid ""
 "Internal error in %s at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
+"Please inform the Sneedacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Внутрішня помилка у %s, %s, рядок %d.\n"
-"Будь ласка, повідомте про цю помилку команду розробників Audacity за "
+"Будь ласка, повідомте про цю помилку команду розробників Sneedacity за "
 "допомогою форуму: https://forum.audacityteam.org/."
 
 #: src/InconsistencyException.cpp
 #, c-format
 msgid ""
 "Internal error at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
+"Please inform the Sneedacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Внутрішня помилка у %s, рядок %d.\n"
-"Будь ласка, повідомте про цю помилку команду розробників Audacity за "
+"Будь ласка, повідомте про цю помилку команду розробників Sneedacity за "
 "допомогою форуму: https://forum.audacityteam.org/."
 
 #: src/InconsistencyException.h
 msgid "Internal Error"
 msgstr "Внутрішня помилка"
-
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Не вдалося визначити"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s байтів"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s кБ"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s МБ"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s ГБ"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3101,8 +3295,8 @@ msgid "Track"
 msgstr "Доріжка"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Мітка"
@@ -3173,14 +3367,14 @@ msgid "One or more saved labels could not be read."
 msgstr "Одну або декілька збережених міток не вдалося прочитати."
 
 #. i18n-hint: Title on a dialog indicating that this is the first
-#. * time Audacity has been run.
+#. * time Sneedacity has been run.
 #: src/LangChoice.cpp
-msgid "Audacity First Run"
-msgstr "Перший запуск Audacity"
+msgid "Sneedacity First Run"
+msgstr "Перший запуск Sneedacity"
 
 #: src/LangChoice.cpp
-msgid "Choose Language for Audacity to use:"
-msgstr "Виберіть мову інтерфейсу для Audacity:"
+msgid "Choose Language for Sneedacity to use:"
+msgstr "Виберіть мову інтерфейсу для Sneedacity:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
 #. * versions of language names.
@@ -3198,14 +3392,6 @@ msgstr ""
 msgid "Confirm"
 msgstr "Підтвердити"
 
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Спрощена"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Системна"
-
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
 msgstr "Помилка під час спроби перетворити застарілий файл проєкту"
@@ -3220,13 +3406,13 @@ msgstr ""
 "Старий файл збережено з назвою «%s»"
 
 #: src/Legacy.cpp
-msgid "Opening Audacity Project"
-msgstr "Відкривається проєкт Audacity"
+msgid "Opening Sneedacity Project"
+msgstr "Відкривається проєкт Sneedacity"
 
 #: src/LyricsWindow.cpp
 #, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Audacity Караоке%s"
+msgid "Sneedacity Karaoke%s"
+msgstr "Sneedacity Караоке%s"
 
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
@@ -3277,8 +3463,8 @@ msgstr "Мікшування та зведення доріжок"
 
 #: src/MixerBoard.cpp
 #, c-format
-msgid "Audacity Mixer Board%s"
-msgstr "Панель мікшера Audacity%s"
+msgid "Sneedacity Mixer Board%s"
+msgstr "Панель мікшера Sneedacity%s"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
@@ -3373,11 +3559,11 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\".\n"
+"The module \"%s\" is matched with Sneedacity version \"%s\".\n"
 "\n"
 "It will not be loaded."
 msgstr ""
-"Модуль «%s» призначено для Audacity версії «%s».\n"
+"Модуль «%s» призначено для Sneedacity версії «%s».\n"
 "\n"
 "Його не буде завантажено."
 
@@ -3418,8 +3604,8 @@ msgid "No"
 msgstr "Ні"
 
 #: src/ModuleManager.cpp
-msgid "Audacity Module Loader"
-msgstr "Завантажувач модулів Audacity"
+msgid "Sneedacity Module Loader"
+msgstr "Завантажувач модулів Sneedacity"
 
 #: src/ModuleManager.cpp
 msgid "Try and load this module?"
@@ -3699,6 +3885,10 @@ msgstr[3] "Увімкнути цей додаток?\n"
 msgid "Enable new plug-ins"
 msgstr "Увімкнути нові додатки"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Запит до Nyquist"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Виникла проблема при друкуванні."
@@ -3745,11 +3935,11 @@ msgstr "Невідповідні частоти дискретизації"
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid ""
 "Too few tracks are selected for recording at this sample rate.\n"
-"(Audacity requires two channels at the same sample rate for\n"
+"(Sneedacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
 "Позначено надто мало доріжок для запису із цією частотою дискретизації.\n"
-"(Audacity потрібні два канали із однаковою частотою дискретизації для\n"
+"(Sneedacity потрібні два канали із однаковою частотою дискретизації для\n"
 "кожної стерео-доріжки)"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
@@ -3777,13 +3967,13 @@ msgstr "Провали"
 msgid ""
 "Recorded audio was lost at the labeled locations. Possible causes:\n"
 "\n"
-"Other applications are competing with Audacity for processor time\n"
+"Other applications are competing with Sneedacity for processor time\n"
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
 "У позначених мітками місцях записаний звук було втрачено. Можливі причини:\n"
 "\n"
-"Конкуренція за процесорний час Audacity з іншими програмами\n"
+"Конкуренція за процесорний час Sneedacity з іншими програмами\n"
 "\n"
 "Безпосереднє збереження даних на зовнішній пристрій із повільним доступом\n"
 
@@ -3828,7 +4018,7 @@ msgstr "Вивчення даних файла проєкту"
 msgid ""
 "Project check of \"%s\" folder \n"
 "detected %lld missing external audio file(s) \n"
-"('aliased files'). There is no way for Audacity \n"
+"('aliased files'). There is no way for Sneedacity \n"
 "to recover these files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -3843,7 +4033,7 @@ msgid ""
 "project immediately\" on further error alerts."
 msgstr ""
 "Перевіркою теки «%s» не виявлено %lld зовнішніх звукових \n"
-"файлів («приєднаних файлів»). Audacity не зможе відновити \n"
+"файлів («приєднаних файлів»). Sneedacity не зможе відновити \n"
 "дані цих файлів у автоматичному режимі. \n"
 "\n"
 "Якщо вами буде вибрано перший або другий з наведених нижче \n"
@@ -3875,11 +4065,11 @@ msgstr "Попередження: не знайдено приєднаних ф�
 msgid ""
 "Project check of \"%s\" folder \n"
 "detected %lld missing alias (.auf) blockfile(s). \n"
-"Audacity can fully regenerate these files \n"
+"Sneedacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "Перевірка теки «%s» виявила %lld пропущених приєднаних файлів (auf)\n"
-"Audacity може повторно створити приєднані файли з \n"
+"Sneedacity може повторно створити приєднані файли з \n"
 "аудіоданих у поточному проєкті."
 
 #: src/ProjectFSCK.cpp
@@ -3904,7 +4094,7 @@ msgid ""
 "Project check of \"%s\" folder \n"
 "detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
-"deletion. There is no way for Audacity to recover \n"
+"deletion. There is no way for Sneedacity to recover \n"
 "these missing files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -3917,7 +4107,7 @@ msgstr ""
 "Інструментом перевірки теки «%s» не було виявлено %lld блок-файлів \n"
 "звукових даних (au). Ймовірною причиною може бути вада у \n"
 "програмі, аварія у системі або випадкове вилучення даних. \n"
-"Audacity не зможе відновити дані у автоматичному режимі. \n"
+"Sneedacity не зможе відновити дані у автоматичному режимі. \n"
 "\n"
 "Якщо вами буде вибрано перший або другий з наведених нижче \n"
 "варіантів, ви зможете спробувати знайти і відновити \n"
@@ -4063,18 +4253,16 @@ msgstr ""
 "(Неможливо створити необхідні тимчасові файли)"
 
 #: src/ProjectFileIO.cpp
-msgid "This is not an Audacity project file"
-msgstr "Цей файл не є файлом проєкту Audacity"
+msgid "This is not an Sneedacity project file"
+msgstr "Цей файл не є файлом проєкту Sneedacity"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Sneedacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
-"Цей проєкт було створено у новішій версії Audacity:\n"
-"\n"
-"Щоб працювати з ним, вам доведеться встановити новішу версію програми"
+"Цей проєкт було створено у новішій версії Sneedacity:\n\nЩоб відкрити його, вам доведеться встановити новішу версію програми"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4204,11 +4392,11 @@ msgstr "Помилка під час спроби запису файла"
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid ""
-"Audacity failed to write file %s.\n"
+"Sneedacity failed to write file %s.\n"
 "Perhaps disk is full or not writable.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
-"Audacity не вдалося записати файл %s.\n"
+"Sneedacity не вдалося записати файл %s.\n"
 "Ймовірно, диск переповнено або диск є непридатним до запису.\n"
 "Щоб дізнатися більше про вивільнення місця на диску, натисніть кнопку "
 "«Довідка»."
@@ -4220,8 +4408,8 @@ msgstr "Ущільнення проєкту"
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
 #, c-format
-msgid "[Project %02i] Audacity \"%s\""
-msgstr "[Проєкт %02i] Audacity «%s»"
+msgid "[Project %02i] Sneedacity \"%s\""
+msgstr "[Проєкт %02i] Sneedacity «%s»"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: src/ProjectFileIO.cpp
@@ -4232,12 +4420,12 @@ msgstr "(Відновлено)"
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid ""
-"This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
+"This file was saved using Sneedacity %s.\n"
+"You are using Sneedacity %s. You may need to upgrade to a newer version to "
 "open this file."
 msgstr ""
-"Файл збережений програмою Audacity версії %s.\n"
-"Ви використовуєте Audacity версії %s. Щоб відкрити цей файл, слід оновити  "
+"Файл збережений програмою Sneedacity версії %s.\n"
+"Ви використовуєте Sneedacity версії %s. Щоб відкрити цей файл, слід оновити  "
 "версію програми."
 
 #: src/ProjectFileIO.cpp
@@ -4247,6 +4435,10 @@ msgstr "Не вдалося відкрити файл проєкту"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "Не вдалося вилучити дані автоматичного збереження з файла проєкту."
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to bind to blob"
+msgstr "Неможливо прив'язатися до бінарних даних"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4308,24 +4500,24 @@ msgstr "Резервне копіювання проєкту"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"This project was not saved properly the last time Audacity ran.\n"
+"This project was not saved properly the last time Sneedacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
 "Цей проєкт не було належним чином збережено під час останнього сеансу роботи "
-"з Audacity.\n"
+"з Sneedacity.\n"
 "\n"
 "Його відновлено з останнього зробленого знімка."
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"This project was not saved properly the last time Audacity ran.\n"
+"This project was not saved properly the last time Sneedacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
 msgstr ""
 "Цей проєкт не було належним чином збережено під час останнього сеансу роботи "
-"з Audacity.\n"
+"з Sneedacity.\n"
 "\n"
 "Його відновлено з останнього зробленого знімка, але вам слід зберегти\n"
 "його, щоб не втратити дані."
@@ -4408,10 +4600,10 @@ msgstr "%sЗберегти проєкт «%s» як…"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"'Save Project' is for an Audacity project, not an audio file.\n"
+"'Save Project' is for an Sneedacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
-"Дію «Зберегти проєкт» призначено для проєкту Audacity, а не файла звукових "
+"Дію «Зберегти проєкт» призначено для проєкту Sneedacity, а не файла звукових "
 "даних.\n"
 "Для звукових файлів, які відкриватимуться у інших програмах, скористайтеся "
 "дією «Експортувати».\n"
@@ -4467,6 +4659,14 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "Помилка під час збереження копії проєкту"
 
+#: src/ProjectFileManager.cpp
+msgid "Can't open new empty project"
+msgstr "Не вдалося відкрити новий порожній проєкт"
+
+#: src/ProjectFileManager.cpp
+msgid "Error opening a new empty project"
+msgstr "Помилка під час спроби відкрити новий порожній проєкт"
+
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Виберіть один або декілька файлів"
@@ -4493,13 +4693,13 @@ msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
-"Please open the actual Audacity project file instead."
+"Please open the actual Sneedacity project file instead."
 msgstr ""
 "Ви намагаєтеся відкрити файл резервної копії, створений у автоматичному "
 "режимі.\n"
 "Подібна дія може призвести до критичної втрати даних.\n"
 "\n"
-"Будь ласка, спробуйте відкрити справжній файл проєкту Audacity."
+"Будь ласка, спробуйте відкрити справжній файл проєкту Sneedacity."
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Backup File Detected"
@@ -4603,8 +4803,8 @@ msgstr "Не вдалося виконати автоматичне резерв
 
 #: src/ProjectManager.cpp
 #, c-format
-msgid "Welcome to Audacity version %s"
-msgstr "Ласкаво просимо до Audacity версії %s"
+msgid "Welcome to Sneedacity version %s"
+msgstr "Ласкаво просимо до Sneedacity версії %s"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
@@ -4668,16 +4868,16 @@ msgstr "%s і %s."
 
 #: src/ProjectSerializer.cpp
 msgid ""
-"This recovery file was saved by Audacity 2.3.0 or before.\n"
-"You need to run that version of Audacity to recover the project."
+"This recovery file was saved by Sneedacity 2.3.0 or before.\n"
+"You need to run that version of Sneedacity to recover the project."
 msgstr ""
-"Цей файл для відновлення було збережено у Audacity 2.3.0 або ще ранішій "
+"Цей файл для відновлення було збережено у Sneedacity 2.3.0 або ще ранішій "
 "версії.\n"
 "Для відновлення проєкту вам слід відкрити проєкт у відповідній версії "
-"Audacity."
+"Sneedacity."
 
 #. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
+#. Sneedacity is put on a notebook tab, and this is the name on that tab.
 #. Other tabs in that notebook may have instruments, patch panels etc.
 #: src/ProjectWindow.cpp
 msgid "Main Mix"
@@ -4736,7 +4936,7 @@ msgid "24-bit PCM"
 msgstr "24-бітовий PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-бітовий float"
 
@@ -5015,8 +5215,8 @@ msgid "Activation level (dB):"
 msgstr "Рівень активації (дБ):"
 
 #: src/SplashDialog.cpp
-msgid "Welcome to Audacity!"
-msgstr "Ласкаво просимо до Audacity!"
+msgid "Welcome to Sneedacity!"
+msgstr "Ласкаво просимо до Sneedacity!"
 
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
@@ -5049,10 +5249,6 @@ msgstr "Рік"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Жанр"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Коментарі"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -5166,15 +5362,15 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not write file:\n"
+"Sneedacity could not write file:\n"
 "  %s."
 msgstr ""
-"Audacity не може записати файл:\n"
+"Sneedacity не може записати файл:\n"
 "  %s."
 
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
+#. such as those on button controls.  Sneedacity can load and save alternative
 #. themes.
 #: src/Theme.cpp
 #, c-format
@@ -5188,21 +5384,21 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not open file:\n"
+"Sneedacity could not open file:\n"
 "  %s\n"
 "for writing."
 msgstr ""
-"Audacity не може відкрити файл:\n"
+"Sneedacity не може відкрити файл:\n"
 "  %s\n"
 "для запису."
 
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not write images to file:\n"
+"Sneedacity could not write images to file:\n"
 "  %s."
 msgstr ""
-"Audacity не може записати зображення у файл:\n"
+"Sneedacity не може записати зображення у файл:\n"
 "  %s."
 
 #. i18n-hint "Cee" means the C computer programming language
@@ -5218,11 +5414,11 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not find file:\n"
+"Sneedacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
 msgstr ""
-"Audacity не може знайти файл:\n"
+"Sneedacity не може знайти файл:\n"
 "  %s.\n"
 "Тему не завантажено."
 
@@ -5230,20 +5426,20 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not load file:\n"
+"Sneedacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
 msgstr ""
-"Audacity не може завантажити файл:\n"
+"Sneedacity не може завантажити файл:\n"
 "  %s.\n"
 "Можливо неправильний формат png?"
 
 #: src/Theme.cpp
 msgid ""
-"Audacity could not read its default theme.\n"
+"Sneedacity could not read its default theme.\n"
 "Please report the problem."
 msgstr ""
-"Audacity не може прочитати свою типову тему.\n"
+"Sneedacity не може прочитати свою типову тему.\n"
 "Будь ласка, повідомте авторів про проблему."
 
 #: src/Theme.cpp
@@ -5280,14 +5476,14 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not save file:\n"
+"Sneedacity could not save file:\n"
 "  %s"
 msgstr ""
-"Audacity не може зберегти файл:\n"
+"Sneedacity не може зберегти файл:\n"
 "  %s"
 
 #. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
+#. appearance of older versions of Sneedacity
 #: src/Theme.cpp
 msgid "Classic"
 msgstr "Класична"
@@ -5334,8 +5530,8 @@ msgid "Time Track"
 msgstr "Доріжка часу"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record"
-msgstr "Таймер запису Audacity"
+msgid "Sneedacity Timer Record"
+msgstr "Таймер запису Sneedacity"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -5432,8 +5628,8 @@ msgid "Action after Timer Recording:"
 msgstr "Дія після записування за таймером:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record Progress"
-msgstr "Поступ запису за таймером Audacity"
+msgid "Sneedacity Timer Record Progress"
+msgstr "Поступ запису за таймером Sneedacity"
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording stopped."
@@ -5587,8 +5783,8 @@ msgid "Do nothing"
 msgstr "Нічого не робити"
 
 #: src/TimerRecordDialog.cpp
-msgid "Exit Audacity"
-msgstr "Вийти з Audacity"
+msgid "Exit Sneedacity"
+msgstr "Вийти з Sneedacity"
 
 #: src/TimerRecordDialog.cpp
 msgid "Restart system"
@@ -5611,8 +5807,8 @@ msgid "Scheduled to stop at:"
 msgstr "Заплановано зупинку о:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record - Waiting for Start"
-msgstr "Запис за таймером Audacity — Очікування початку"
+msgid "Sneedacity Timer Record - Waiting for Start"
+msgstr "Запис за таймером Sneedacity — Очікування початку"
 
 #. i18n-hint: "in" means after a duration of time,
 #. which is shown below this string
@@ -5620,7 +5816,7 @@ msgstr "Запис за таймером Audacity — Очікування по�
 msgid "Recording will commence in:"
 msgstr "Запис буде почато за:"
 
-#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. i18n-hint: %s is one of "Do nothing", "Exit Sneedacity", "Restart system",
 #. or "Shutdown system", and
 #. "in" means after a duration of time, shown below this string
 #: src/TimerRecordDialog.cpp
@@ -5637,8 +5833,8 @@ msgid "Recording Exported:"
 msgstr "Запис експортовано:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record - Waiting"
-msgstr "Запис за таймером Audacity — очікування"
+msgid "Sneedacity Timer Record - Waiting"
+msgstr "Запис за таймером Sneedacity — очікування"
 
 #: src/TrackInfo.cpp
 msgid "Stereo, 999999Hz"
@@ -5823,8 +6019,8 @@ msgstr "Цю дію неможливо виконати до завершенн�
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
-msgid "Audacity"
-msgstr "Audacity"
+msgid "Sneedacity"
+msgstr "Sneedacity"
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #, c-format
@@ -6112,12 +6308,12 @@ msgstr "Вбудовані команди"
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-msgid "The Audacity Team"
-msgstr "Команда Audacity"
+msgid "The Sneedacity Team"
+msgstr "Команда Sneedacity"
 
 #: src/commands/LoadCommands.cpp
-msgid "Provides builtin commands to Audacity"
-msgstr "Надає вбудовані команди Audacity"
+msgid "Provides builtin commands to Sneedacity"
+msgstr "Надає вбудовані команди Sneedacity"
 
 #: src/commands/LoadCommands.cpp
 msgid "Unknown built-in command name"
@@ -6452,6 +6648,16 @@ msgstr "Час:"
 msgid "Delete"
 msgstr "Вилучити"
 
+#: src/commands/SetEnvelopeCommand.cpp
+msgid "Edited Envelope"
+msgstr "Редагована обгортка"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Обвідна"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "Встановлює позицію точки обгортки."
@@ -6471,6 +6677,10 @@ msgstr "Кінець:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Позначене"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "Edited Label"
+msgstr "Редагована мітка"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -7815,7 +8025,7 @@ msgid "Previewing"
 msgstr "Прослуховування"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Sneedacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/effects/Effect.h
@@ -8104,10 +8314,6 @@ msgstr "Зупинити &відтворення"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Відтворити"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Запит до Nyquist"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -8570,8 +8776,8 @@ msgid "Builtin Effects"
 msgstr "Вбудовані ефекти"
 
 #: src/effects/LoadEffects.cpp
-msgid "Provides builtin effects to Audacity"
-msgstr "Надає підтримку вбудованих ефектів у Audacity"
+msgid "Provides builtin effects to Sneedacity"
+msgstr "Надає підтримку вбудованих ефектів у Sneedacity"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
@@ -8810,10 +9016,10 @@ msgstr "Крок 1"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+"Select a few seconds of just noise so Sneedacity knows what to filter out,\n"
 "then click Get Noise Profile:"
 msgstr ""
-"Позначте декілька секунд чистого шуму, щоб Audacity знала, що фільтрувати,\n"
+"Позначте декілька секунд чистого шуму, щоб Sneedacity знала, що фільтрувати,\n"
 "а потім натисніть кнопку «Створити модель шуму»:"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
@@ -9685,8 +9891,8 @@ msgid "VST Effects"
 msgstr "Ефекти VST"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Adds the ability to use VST effects in Audacity."
-msgstr "Додає можливість використання ефектів VST у Audacity."
+msgid "Adds the ability to use VST effects in Sneedacity."
+msgstr "Додає можливість використання ефектів VST у Sneedacity."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
@@ -9735,12 +9941,12 @@ msgstr "Компенсація латентності"
 #: src/effects/VST/VSTEffect.cpp
 msgid ""
 "As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
+"Sneedacity. When not compensating for this delay, you will notice that small "
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
 "У межах частини процедури обробки, деякі ефекти VST мають затримати "
-"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"повернення даних до Sneedacity. Якщо не компенсувати цю затримку, ви помітите, "
 "що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
 "пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
 "для усіх ефектів VST."
@@ -9786,8 +9992,8 @@ msgid "Standard VST program file"
 msgstr "Стандартний файл програми VST"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Audacity VST preset file"
-msgstr "Файли набору шаблонів VST Audacity"
+msgid "Sneedacity VST preset file"
+msgstr "Файли набору шаблонів VST Sneedacity"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
@@ -9876,8 +10082,8 @@ msgid "Audio Unit Effects"
 msgstr "Ефекти Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Надає підтримку ефектів Audio Unit у Audacity"
+msgid "Provides Audio Unit Effects support to Sneedacity"
+msgstr "Надає підтримку ефектів Audio Unit у Sneedacity"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not find component"
@@ -9894,13 +10100,13 @@ msgstr "Параметри ефектів Audio Unit"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid ""
 "As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
+"audio to Sneedacity. When not compensating for this delay, you will notice "
 "that small silences have been inserted into the audio. Enabling this option "
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
 "У межах частини процедури обробки, деякі ефекти Audio Unit мають затримати "
-"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"повернення даних до Sneedacity. Якщо не компенсувати цю затримку, ви помітите, "
 "що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
 "пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
 "для усіх ефектів Audio Unit."
@@ -10065,8 +10271,8 @@ msgid "Provides LADSPA Effects"
 msgstr "Забезпечує роботу ефектів LADSPA"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid "Audacity no longer uses vst-bridge"
-msgstr "Audacity більше не використовує vst-bridge"
+msgid "Sneedacity no longer uses vst-bridge"
+msgstr "Sneedacity більше не використовує vst-bridge"
 
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effect Options"
@@ -10075,12 +10281,12 @@ msgstr "Параметри ефектів LADSPA"
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid ""
 "As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
+"to Sneedacity. When not compensating for this delay, you will notice that "
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 "У межах частини процедури обробки, деякі ефекти LADSPA мають затримати "
-"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"повернення даних до Sneedacity. Якщо не компенсувати цю затримку, ви помітите, "
 "що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
 "пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
 "для усіх ефектів LADSPA."
@@ -10117,12 +10323,12 @@ msgstr "Розмір &буфера (від 8 до %d семплів):"
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
+"Sneedacity. When not compensating for this delay, you will notice that small "
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
 "У межах частини процедури обробки, деякі ефекти LV2 мають затримати "
-"повернення даних до Audacity. Якщо не компенсувати цю затримку, ви помітите, "
+"повернення даних до Sneedacity. Якщо не компенсувати цю затримку, ви помітите, "
 "що до звукових даних вставляються невеличкі фрагменти тиші. Позначення цього "
 "пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
 "для усіх ефектів LV2."
@@ -10166,16 +10372,16 @@ msgid "LV2 Effects"
 msgstr "Ефекти LV2"
 
 #: src/effects/lv2/LoadLV2.cpp
-msgid "Provides LV2 Effects support to Audacity"
-msgstr "Надає підтримку ефектів LV2 у Audacity"
+msgid "Provides LV2 Effects support to Sneedacity"
+msgstr "Надає підтримку ефектів LV2 у Sneedacity"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
 msgstr "Ефекти Nyquist"
 
 #: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Надає підтримку ефектів Nyquist у Audacity"
+msgid "Provides Nyquist Effects support to Sneedacity"
+msgstr "Надає підтримку ефектів Nyquist у Sneedacity"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
@@ -10189,6 +10395,13 @@ msgstr "Стенд Nyquist"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
 msgstr "Помилкове форматування заголовка додатка Nyquist"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"Увімкніть перегляд спектрограми доріжки до\nзастосування «Спектральних» ефектів."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -10300,9 +10513,9 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgid "This version of Sneedacity does not support Nyquist plug-in version %ld"
 msgstr ""
-"У цій версії Audacity не передбачено підтримки додатків Nyquist версії %ld"
+"У цій версії Sneedacity не передбачено підтримки додатків Nyquist версії %ld"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -10413,8 +10626,8 @@ msgid "Vamp Effects"
 msgstr "Ефекти Vamp"
 
 #: src/effects/vamp/LoadVamp.cpp
-msgid "Provides Vamp Effects support to Audacity"
-msgstr "Надає підтримку ефектів Vamp у Audacity"
+msgid "Provides Vamp Effects support to Sneedacity"
+msgstr "Надає підтримку ефектів Vamp у Sneedacity"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid ""
@@ -11549,15 +11762,6 @@ msgstr "65–105 кбіт/с"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45–85 кбіт/с (найстисліше)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Швидка"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Стандартна"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11583,6 +11787,11 @@ msgstr "Надзвичайна"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Висока"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Стандартна"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11618,10 +11827,6 @@ msgid "Quality"
 msgstr "Якість"
 
 #: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Змінна швидкість:"
-
-#: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
 msgstr "Режим каналів:"
 
@@ -11636,8 +11841,8 @@ msgstr "Знайти LAME"
 
 #: src/export/ExportMP3.cpp
 #, c-format
-msgid "Audacity needs the file %s to create MP3s."
-msgstr "Audacity потребує файла %s для створення MP3."
+msgid "Sneedacity needs the file %s to create MP3s."
+msgstr "Sneedacity потребує файла %s для створення MP3."
 
 #: src/export/ExportMP3.cpp
 #, c-format
@@ -11667,12 +11872,12 @@ msgstr "Де знаходиться %s?"
 #, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
-"Please download the latest version of 'LAME for Audacity'."
+"Sneedacity %d.%d.%d.\n"
+"Please download the latest version of 'LAME for Sneedacity'."
 msgstr ""
 "Було здійснено спробу з’єднатися з бібліотекою lame_enc.dll v%d.%d. Ця "
-"версія бібліотеки не є сумісною з Audacity %d.%d.%d.\n"
-"Будь ласка, звантажте найостаннішу версію бібліотеки LAME для Audacity."
+"версія бібліотеки не є сумісною з Sneedacity %d.%d.%d.\n"
+"Будь ласка, звантажте найостаннішу версію бібліотеки LAME для Sneedacity."
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
@@ -12005,11 +12210,11 @@ msgstr "Інші нестиснуті файли"
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than "
 "4GB.\n"
-"Audacity cannot do this, the Export was abandoned."
+"Sneedacity cannot do this, the Export was abandoned."
 msgstr ""
 "Вами зроблено спробу експортувати файл WAV або AIFF, розмір якого перевищує "
 "4 ГБ.\n"
-"Audacity не зможе виконати потрібну вам дію. Експортування було скасовано."
+"Sneedacity не зможе виконати потрібну вам дію. Експортування було скасовано."
 
 #: src/export/ExportPCM.cpp
 msgid "Error Exporting"
@@ -12017,10 +12222,10 @@ msgstr "Помилка під час експортування"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"Your exported WAV file has been truncated as Sneedacity cannot export WAV\n"
 "files bigger than 4GB."
 msgstr ""
-"Експортований вами файл WAV було обрізано, оскільки Audacity не може "
+"Експортований вами файл WAV було обрізано, оскільки Sneedacity не може "
 "експортувати\n"
 "файли WAV, розмір яких перевищує 4 ГБ."
 
@@ -12062,12 +12267,12 @@ msgstr "всі файли, що підтримуються"
 msgid ""
 "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
+"Sneedacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
 msgstr ""
 "«%s» \n"
 "є нотним файлом MIDI, а не файлом аудіо. \n"
-"Audacity не може відкривати цей тип файлів для відтворення, але ви можете "
+"Sneedacity не може відкривати цей тип файлів для відтворення, але ви можете "
 "редагувати їх, якщо виберете пункт меню Файл > Імпорт > MIDI."
 
 #: src/import/Import.cpp
@@ -12075,11 +12280,11 @@ msgstr ""
 msgid ""
 "\"%s\" \n"
 "is a not an audio file. \n"
-"Audacity cannot open this type of file."
+"Sneedacity cannot open this type of file."
 msgstr ""
 "«%s» \n"
 "не є файлом звукових даних. \n"
-"Audacity не може відкривати файли цього типу."
+"Sneedacity не може відкривати файли цього типу."
 
 #: src/import/Import.cpp
 msgid "Select stream(s) to import"
@@ -12087,35 +12292,35 @@ msgstr "Оберіть потоки для імпортування"
 
 #: src/import/Import.cpp
 #, c-format
-msgid "This version of Audacity was not compiled with %s support."
-msgstr "Ця версія Audacity була зібрана без підтримки %s."
+msgid "This version of Sneedacity was not compiled with %s support."
+msgstr "Ця версія Sneedacity була зібрана без підтримки %s."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
 #, c-format
 msgid ""
 "\"%s\" is an audio CD track. \n"
-"Audacity cannot open audio CDs directly. \n"
+"Sneedacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
-"Audacity can import, such as WAV or AIFF."
+"Sneedacity can import, such as WAV or AIFF."
 msgstr ""
 "«%s» є доріжкою аудіо-КД. \n"
-"Audacity не може відкрити аудіо-КД напряму. \n"
+"Sneedacity не може відкрити аудіо-КД напряму. \n"
 "Експортуйте (виріжте) доріжки КД у імпортований \n"
-"Audacity формат, на зразок WAV або AIFF."
+"Sneedacity формат, на зразок WAV або AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
+"Sneedacity cannot open this file because it only contains links to other "
 "files. \n"
 "You may be able to open it in a text editor and download the actual audio "
 "files."
 msgstr ""
 "«%s» є файлом списку програвання.\n"
-"Audacity не може відкрити цей файл, оскільки він містить тільки посилання на "
+"Sneedacity не може відкрити цей файл, оскільки він містить тільки посилання на "
 "файли.\n"
 "Ви можете відкрити його у текстовому редакторі та завантажити справжні "
 "звукові файли."
@@ -12125,11 +12330,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Windows Media Audio file. \n"
-"Audacity cannot open this type of file due to patent restrictions. \n"
+"Sneedacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом Windows Media Audio. \n"
-"Audacity не може відкривати цей тип файлів через патентні обмеження. \n"
+"Sneedacity не може відкривати цей тип файлів через патентні обмеження. \n"
 "слід перетворити цей файл на файл підтримуваного аудіоформату, такого як WAV "
 "або AIFF."
 
@@ -12138,13 +12343,13 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
+"Without the optional FFmpeg library, Sneedacity cannot open this type of "
 "file.\n"
 "Otherwise, you need to convert it to a supported audio format, such as WAV "
 "or AIFF."
 msgstr ""
 "«%s» є файлом вдосконаленого аудіокодування (AAC). \n"
-"Без додаткової бібліотеки FFmpeg Audacity не може відкривати цей тип "
+"Без додаткової бібліотеки FFmpeg Sneedacity не може відкривати цей тип "
 "файлів.\n"
 "Слід перетворити цей файл на файл підтримуваного аудіоформату, зокрема WAV "
 "або AIFF."
@@ -12155,14 +12360,14 @@ msgstr ""
 msgid ""
 "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
-"Audacity cannot open this type of file due to the encryption. \n"
-"Try recording the file into Audacity, or burn it to audio CD then \n"
+"Sneedacity cannot open this type of file due to the encryption. \n"
+"Try recording the file into Sneedacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
 msgstr ""
 "«%s» є шифрованим аудіофайлом. \n"
 "Такі зазвичай продають у магазинах. \n"
-"Audacity не може відкривати цей тип файлів через шифрування. \n"
-"Спробуйте записати файл у Audacity, або записати його на CD, а потім \n"
+"Sneedacity не може відкривати цей тип файлів через шифрування. \n"
+"Спробуйте записати файл у Sneedacity, або записати його на CD, а потім \n"
 "копіювати доріжку CD у підтримуваний аудіоформат, на зразок WAV або AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -12170,11 +12375,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a RealPlayer media file. \n"
-"Audacity cannot open this proprietary format. \n"
+"Sneedacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом RealPlayer. \n"
-"Audacity не може відкрити цей закритий формат. \n"
+"Sneedacity не може відкрити цей закритий формат. \n"
 "слід перетворити цей файл у файл підтримуваного аудіоформату, такого як WAV "
 "або AIFF."
 
@@ -12183,28 +12388,28 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a notes-based file, not an audio file. \n"
-"Audacity cannot open this type of file. \n"
+"Sneedacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
-"then import it, or record it into Audacity."
+"then import it, or record it into Sneedacity."
 msgstr ""
 "«%s» є нотним файлом, а не файлом аудіо. \n"
-"Audacity не може відкривати цей тип файлів. \n"
+"Sneedacity не може відкривати цей тип файлів. \n"
 "Спробуйте перетворити його на файл аудіо, на зразок WAV або AIFF, а потім \n"
-"імпортувати, або записати за допомогою Audacity."
+"імпортувати, або записати за допомогою Sneedacity."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
 #, c-format
 msgid ""
 "\"%s\" is a Musepack audio file. \n"
-"Audacity cannot open this type of file. \n"
+"Sneedacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported "
 "audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом аудіоформату Musepack. \n"
-"Audacity не може відкривати цей тип файлів. \n"
+"Sneedacity не може відкривати цей тип файлів. \n"
 "Якщо ви впевнені, що насправді це файл mp3, змініть його суфікс назви на «."
 "mp3»\n"
 "і ще раз спробуйте його імпортувати. У іншому випадку Вам слід спочатку "
@@ -12216,11 +12421,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Wavpack audio file. \n"
-"Audacity cannot open this type of file. \n"
+"Sneedacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом аудіоформату Wavpack. \n"
-"Audacity не може відкривати цей тип файлів. \n"
+"Sneedacity не може відкривати цей тип файлів. \n"
 "Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на "
 "зразок WAV або AIFF."
 
@@ -12229,11 +12434,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Dolby Digital audio file. \n"
-"Audacity cannot currently open this type of file. \n"
+"Sneedacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом аудіоформату Dolby Digital. \n"
-"Audacity на даний момент не може відкривати цей тип файлів. \n"
+"Sneedacity на даний момент не може відкривати цей тип файлів. \n"
 "Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на "
 "зразок WAV або AIFF."
 
@@ -12242,11 +12447,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Ogg Speex audio file. \n"
-"Audacity cannot currently open this type of file. \n"
+"Sneedacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом аудіо Ogg Speex. \n"
-"Audacity на даний момент не може відкривати цей тип файлів. \n"
+"Sneedacity на даний момент не може відкривати цей тип файлів. \n"
 "Вам слід спочатку перетворити цей файл на файл формату, що підтримується, на "
 "зразок WAV або AIFF."
 
@@ -12255,11 +12460,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a video file. \n"
-"Audacity cannot currently open this type of file. \n"
+"Sneedacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
 msgstr ""
 "«%s» є файлом відео. \n"
-"Audacity на даний момент не може відкривати цей тип файлів. \n"
+"Sneedacity на даний момент не може відкривати цей тип файлів. \n"
 "Вам слід спочатку видобути звукові дані до файла у форматі, що "
 "підтримується, на зразок WAV або AIFF."
 
@@ -12272,7 +12477,7 @@ msgstr "Файла «%s» не знайдено."
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+"Sneedacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
@@ -12298,12 +12503,12 @@ msgstr "%s, %s"
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+"Sneedacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
-"Audacity визначено тип файла «%s».\n"
+"Sneedacity визначено тип файла «%s».\n"
 "Серед інструментів імпортування, які могли б підтримувати такі файли:\n"
 "%s,\n"
 "але жоден з інструментів не може обробити файл у цьому форматі."
@@ -12329,19 +12534,19 @@ msgstr "Імпортувати проєкт"
 
 #: src/import/ImportAUP.cpp
 msgid ""
-"This project was saved by Audacity version 1.0 or earlier. The format has\n"
-"changed and this version of Audacity is unable to import the project.\n"
+"This project was saved by Sneedacity version 1.0 or earlier. The format has\n"
+"changed and this version of Sneedacity is unable to import the project.\n"
 "\n"
-"Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
-"you may import it with this version of Audacity."
+"Use a version of Sneedacity prior to v3.0.0 to upgrade the project and then\n"
+"you may import it with this version of Sneedacity."
 msgstr ""
-"Цей проєкт було збережено у версії 1.0 Audacity або старішій версії. З того "
+"Цей проєкт було збережено у версії 1.0 Sneedacity або старішій версії. З того "
 "часу,\n"
-"формат було змінено, і ця версія Audacity не може імпортувати дані проєкту.\n"
+"формат було змінено, і ця версія Sneedacity не може імпортувати дані проєкту.\n"
 "\n"
-"Скористайтеся версією Audacity до 3.0.0, щоб оновити дані проєкту. Оновлені "
+"Скористайтеся версією Sneedacity до 3.0.0, щоб оновити дані проєкту. Оновлені "
 "дані\n"
-"можна буде імпортувати до цієї версії Audacity."
+"можна буде імпортувати до цієї версії Sneedacity."
 
 #: src/import/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
@@ -12387,10 +12592,10 @@ msgstr "Не вдалося знайти теку з даними проєкту
 
 #: src/import/ImportAUP.cpp
 msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
+"MIDI tracks found in project file, but this build of Sneedacity does not "
 "include MIDI support, bypassing track."
 msgstr ""
-"У файлі проєкту виявлено доріжки MIDI, але у цій збірці Audacity не "
+"У файлі проєкту виявлено доріжки MIDI, але у цій збірці Sneedacity не "
 "передбачено підтримки MIDI. Пропускаємо доріжку."
 
 #: src/import/ImportAUP.cpp
@@ -13571,8 +13776,8 @@ msgid "&Getting Started"
 msgstr "По&чаток роботи"
 
 #: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "&Підручник з Audacity"
+msgid "Sneedacity &Manual"
+msgstr "&Підручник з Sneedacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -13594,7 +13799,7 @@ msgstr "Інформація про &аудіопристрій…"
 msgid "&MIDI Device Info..."
 msgstr "Дані &щодо пристрою MIDI…"
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Показати &журнал…"
 
@@ -13619,7 +13824,7 @@ msgstr "Мітку додано"
 msgid "Paste Text to New Label"
 msgstr "Вставити текст до нової мітки"
 
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. i18n-hint: (verb) past tense.  Sneedacity has just cut the labeled audio
 #. regions.
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard"
@@ -13630,7 +13835,7 @@ msgstr "Ділянки звуку з мітками вирізано до буф
 msgid "Cut Labeled Audio"
 msgstr "Вирізати позначений звук"
 
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#. i18n-hint: (verb) Sneedacity has just deleted the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Deleted labeled audio regions"
 msgstr "Вилучено позначені ділянки звуку"
@@ -13640,7 +13845,7 @@ msgstr "Вилучено позначені ділянки звуку"
 msgid "Delete Labeled Audio"
 msgstr "Вилучити позначений звук"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. i18n-hint: (verb) Sneedacity has just split cut the labeled audio
 #. regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Cut labeled audio regions to clipboard"
@@ -13651,7 +13856,7 @@ msgstr "Позначені ділянки вирізано до буфера о�
 msgid "Split Cut Labeled Audio"
 msgstr "Вирізати звук з мітками з розрізанням"
 
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. i18n-hint: (verb) Sneedacity has just done a special kind of DELETE on
 #. the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Deleted labeled audio regions"
@@ -13682,7 +13887,7 @@ msgstr "Ділянки звуку з мітками скопійовано до 
 msgid "Copy Labeled Audio"
 msgstr "Копіювати позначений звук"
 
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. i18n-hint: (verb) past tense.  Sneedacity has just split the labeled
 #. audio (a point or a region)
 #: src/menus/LabelMenus.cpp
 msgid "Split labeled audio (points or regions)"
@@ -13694,7 +13899,7 @@ msgstr ""
 msgid "Split Labeled Audio"
 msgstr "Розрізати позначений звук"
 
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. i18n-hint: (verb) Sneedacity has just joined the labeled audio (points or
 #. regions)
 #: src/menus/LabelMenus.cpp
 msgid "Joined labeled audio (points or regions)"
@@ -13706,9 +13911,9 @@ msgstr ""
 msgid "Join Labeled Audio"
 msgstr "З’єднати позначений звук"
 
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. i18n-hint: (verb) Sneedacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
-#. Audacity has done.
+#. Sneedacity has done.
 #: src/menus/LabelMenus.cpp
 msgid "Detached labeled audio regions"
 msgstr "Позначені ділянки звуку від’єднано"
@@ -14512,9 +14717,9 @@ msgstr "Створено нову доріжку для позначок"
 
 #: src/menus/TrackMenus.cpp
 msgid ""
-"This version of Audacity only allows one time track for each project window."
+"This version of Sneedacity only allows one time track for each project window."
 msgstr ""
-"У цій версії Audacity можна використовувати лише по одній доріжці у кожному "
+"У цій версії Sneedacity можна використовувати лише по одній доріжці у кожному "
 "з вікон проєкту."
 
 #: src/menus/TrackMenus.cpp
@@ -14782,13 +14987,13 @@ msgstr "Пересунути фокусовану доріжку на &поча�
 msgid "Move Focused Track to &Bottom"
 msgstr "Пересунути фокусовану доріжку у &кінець"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Відтворення"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
 #: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -15109,6 +15314,10 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Додаткові меню (увімкн./вимкн.)"
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr "&Назва доріжки (увімкн./вимкн.)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "Показати з&різання (увімкн./вимкн.)"
 
@@ -15296,6 +15505,10 @@ msgid "Bro&wse..."
 msgstr "&Навігація…"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "&Macro output:"
+msgstr "Виведене &макросом:"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Тека для тимчасових файлів"
 
@@ -15314,10 +15527,6 @@ msgstr "Ви&брати…"
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Ві&льне місце:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "Вільне місце"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15354,11 +15563,11 @@ msgstr "Немає прав на запис у каталог %s"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
+"Changes to temporary directory will not take effect until Sneedacity is "
 "restarted"
 msgstr ""
 "Зміни каталогу для зберігання тимчасових файлів не наберуть сили, доки "
-"програму Audacity не буде перезавантажено."
+"програму Sneedacity не буде перезавантажено."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -15402,7 +15611,7 @@ msgid "LV&2"
 msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Sneedacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/prefs/EffectsPrefs.cpp
@@ -15442,12 +15651,12 @@ msgid "Plugin Options"
 msgstr "Параметри додатків"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Check for updated plugins when Audacity starts"
-msgstr "Шукати оновлення додатків під час запуску Audacity"
+msgid "Check for updated plugins when Sneedacity starts"
+msgstr "Шукати оновлення додатків під час запуску Sneedacity"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Rescan plugins next time Audacity is started"
-msgstr "Виконати повторний пошук додатків під час наступного запуску Audacity"
+msgid "Rescan plugins next time Sneedacity is started"
+msgstr "Виконати повторний пошук додатків під час наступного запуску Sneedacity"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -15519,13 +15728,13 @@ msgstr "Невикористані фільтри:"
 msgid ""
 "There are space characters (spaces, newlines, tabs or linefeeds) in one of "
 "the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
+"what you are doing, it is recommended to trim spaces. Do you want Sneedacity "
 "to trim spaces for you?"
 msgstr ""
 "У назві одного з пунктів виявлено символи пробілів (звичайні пробіли, "
 "символи розриву рядка, табуляції). Ймовірно, їх використання може зашкодити "
 "пошуку відповідників. Якщо ці символи не було додано спеціально, "
-"рекомендуємо вам їх вилучити. Хочете, щоб Audacity вилучила пробіли?"
+"рекомендуємо вам їх вилучити. Хочете, щоб Sneedacity вилучила пробіли?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15543,7 +15752,7 @@ msgstr "Підтвердження вилучення правила"
 msgid "Ext Import"
 msgstr "Розш. імпортування"
 
-#. i18n-hint: refers to Audacity's user interface settings
+#. i18n-hint: refers to Sneedacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
 msgctxt "GUI"
 msgid "Interface"
@@ -15634,8 +15843,8 @@ msgid "Re&tain labels if selection snaps to a label"
 msgstr "З&берігати мітки, якщо позначення прилипає до мітки"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "B&lend system and Audacity theme"
-msgstr "О&б'єднати загальносистемну тему та тему Audacity"
+msgid "B&lend system and Sneedacity theme"
+msgstr "О&б'єднати загальносистемну тему та тему Sneedacity"
 
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
@@ -15644,8 +15853,7 @@ msgstr "Використовувати компонування зліва пр�
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
-"Ніколи не використовувати кому замість десяткової крапки"
+msgstr "Ніколи не використовувати кому замість десяткової крапки"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -15659,10 +15867,6 @@ msgstr "Показати лінійку прокручування"
 #, c-format
 msgid "Language \"%s\" is unknown"
 msgstr "Невідома мова «%s»"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Загальний регулятор гучності"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
@@ -15819,8 +16023,8 @@ msgstr ""
 "   *   «%s»  (оскільки скорочення «%s» вже використано для «%s»)\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr "Виберіть XML-файл, що містить комбінації клавіш Audacity…"
+msgid "Select an XML file containing Sneedacity keyboard shortcuts..."
+msgstr "Виберіть XML-файл, що містить комбінації клавіш Sneedacity…"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -15928,24 +16132,8 @@ msgid "MP3 Library Version:"
 msgstr "Версія бібліотеки MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Бібліотека LAME MP3:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "В&казати…"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "&Звантажити"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Бібліотека імпорту/експорту FFmpeg"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "Версія бібліотеки FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15954,6 +16142,10 @@ msgstr "Не знайдено потрібної версії бібліотек
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "Програму зібрано без підтримки FFmpeg"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "Версія бібліотеки FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15969,10 +16161,10 @@ msgstr "Зва&нтажити"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+"Sneedacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
 msgstr ""
-"Audacity було у автоматичному режимі визначено належні бібліотеки FFmpeg.\n"
+"Sneedacity було у автоматичному режимі визначено належні бібліотеки FFmpeg.\n"
 "Бажаєте вказати розташування цих бібліотек вручну?"
 
 #: src/prefs/LibraryPrefs.cpp
@@ -16018,7 +16210,7 @@ msgstr "Латентність синтезатора MIDI має бути ви�
 msgid "Midi IO"
 msgstr "В/В Midi"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
+#. i18n-hint: Modules are optional extensions to Sneedacity that add NEW features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Модулі"
@@ -16029,18 +16221,18 @@ msgstr "Налаштування модуля"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
+"These are experimental modules. Enable them only if you've read the Sneedacity "
 "Manual\n"
 "and know what you are doing."
 msgstr ""
 "Ці модулі є недостатньо перевіреними. Вмикайте їх, лише якщо ви "
 "ознайомилися\n"
-"з підручником із Audacity, і вам відомі наслідки ваших дій."
+"з підручником із Sneedacity, і вам відомі наслідки ваших дій."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
+"  'Ask' means Sneedacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
 "  «Запитувати» — під час кожного запуску запитувати, чи слід завантажувати "
@@ -16048,7 +16240,7 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+msgid "  'Failed' means Sneedacity thinks the module is broken and won't run it."
 msgstr "  «Помилка» — модуль непрацездатний, він не завантажуватиметься."
 
 #. i18n-hint preserve the leading spaces
@@ -16057,9 +16249,9 @@ msgid "  'New' means no choice has been made yet."
 msgstr "  «Новий» означає, що вибору ще не було зроблено."
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
+msgid "Changes to these settings only take effect when Sneedacity starts up."
 msgstr ""
-"Зміни цих параметрів набудуть чинності лише після перезапуску Audacity."
+"Зміни цих параметрів набудуть чинності лише після перезапуску Sneedacity."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Ask"
@@ -16213,11 +16405,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Пересунути ділянку вгору або вниз між доріжками"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Обвідна"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Змінити обвідну підсилення"
@@ -16340,8 +16527,8 @@ msgid "Always scrub un&pinned"
 msgstr "Завжди витирати непри&шпилене"
 
 #: src/prefs/PrefsDialog.cpp
-msgid "Audacity Preferences"
-msgstr "Параметри Audacity"
+msgid "Sneedacity Preferences"
+msgstr "Параметри Sneedacity"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Category"
@@ -16350,14 +16537,6 @@ msgstr "Категорія"
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences:"
 msgstr "Налаштування:"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-бітовий"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-бітовий"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
@@ -16409,6 +16588,14 @@ msgstr "Перетвор&ювач част. дискр.:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Під&мішування шуму:"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-бітовий"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-бітовий"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -16737,7 +16924,7 @@ msgstr ""
 
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
+#. such as those on button controls.  Sneedacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
@@ -16760,7 +16947,7 @@ msgid ""
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
 "Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity.\n"
+"Sneedacity.\n"
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently "
 "affected, even\n"
@@ -16773,7 +16960,7 @@ msgstr ""
 "ImageCacheVxx.png використовуючи редактор зображень, наприклад, Gimp.\n"
 "\n"
 "Натисніть «Завантажити кеш тем», щоб завантажити змінені зображення та "
-"кольори до Audacity.\n"
+"кольори до Sneedacity.\n"
 "\n"
 "(У поточній версії підтримуються панель керування та кольори звукової "
 "доріжки, незважаючи на те, що файли\n"
@@ -17064,7 +17251,7 @@ msgstr "Налаштування форми хвиль"
 msgid "Waveform dB &range:"
 msgstr "Ді&апазон сигналу у дБ:"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
@@ -17102,7 +17289,7 @@ msgstr "Позначити до кінця"
 msgid "Select to Start"
 msgstr "Позначити до початку"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -17467,8 +17654,8 @@ msgstr "Панель &часу"
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
 #, c-format
-msgid "Audacity %s Toolbar"
-msgstr "Панель інструментів Audacity %s"
+msgid "Sneedacity %s Toolbar"
+msgstr "Панель інструментів Sneedacity %s"
 
 #: src/toolbars/ToolBar.cpp
 msgid "Click and drag to resize toolbar"
@@ -18140,7 +18327,7 @@ msgstr "Натисніть кнопку миші і перетягніть, що
 msgid "Click and drag to edit the amplitude envelope"
 msgstr "Натисніть кнопку миші і перетягніть, щоб редагувати діапазон амплітуд"
 
-#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#. i18n-hint: (verb) Sneedacity has just adjusted the envelope .
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Adjusted envelope."
 msgstr "Обвідна скорегована."
@@ -19067,7 +19254,7 @@ msgstr ""
 "                      або зменшити значення фільтра «Ширина»."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Помилка.~%"
@@ -19741,10 +19928,10 @@ msgid "~ah ~am ~as"
 msgstr "~aг ~aх ~aс"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Виявлено забагато областей тиші.\n"
-"Додано лише перші 10000 міток."
+"Виявлено надто багато фрагментів тиші.~%Додано лише перші 10000 міток."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -20004,23 +20191,20 @@ msgid "Allow"
 msgstr "Дозволити"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Помилка.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "Успіх.~%Файли записано сюди:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr "Увага.nНе вдалося скопіювати деякі файли:n"
+#, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "Попередження.~%FНе вдалося скопіювати деякі файли:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Встановлено додатки.n(Скористайтеся керуванням додатками, щоб увімкнути "
-"ефекти):"
+"Додатки встановлено.~%(Скористайтеся сторінкою керування додатками для вмикання ефектів):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20473,11 +20657,11 @@ msgstr "Правий (дБ)"
 #, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
-"<a href=\"~a\">Audacity</a> by Steve\n"
+"<a href=\"~a\">Sneedacity</a> by Steve\n"
 "Daulton"
 msgstr ""
 "Створено за допомогою додатка <span>Експортування даних семплів</span>\n"
-"для <a href=\"~a\">Audacity</a>, автор — Steve\n"
+"для <a href=\"~a\">Sneedacity</a>, автор — Steve\n"
 "Daulton"
 
 #: plug-ins/sample-data-export.ny
@@ -20840,6 +21024,30 @@ msgstr "Частота голок радару (у Гц)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Помилка.~%Потрібна стереодоріжка."
+
+#~ msgid "Fast"
+#~ msgstr "Швидка"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Змінна швидкість:"
+
+#~ msgid "Free Space"
+#~ msgstr "Вільне місце"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Загальний регулятор гучності"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "Бібліотека LAME MP3:"
+
+#~ msgid "&Locate..."
+#~ msgstr "В&казати…"
+
+#~ msgid "&Download"
+#~ msgstr "&Звантажити"
+
+#~ msgid "Error.n"
+#~ msgstr "Помилка.n"
 
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Не вдалося вилучити зайві блоки"

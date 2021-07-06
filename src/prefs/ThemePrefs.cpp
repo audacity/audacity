@@ -28,10 +28,8 @@ Provides:
 
 *//********************************************************************/
 
-#include "../Audacity.h"
-#include "ThemePrefs.h"
 
-#include "../Experimental.h"
+#include "ThemePrefs.h"
 
 #include <wx/app.h>
 #include <wx/wxprec.h>
@@ -84,7 +82,7 @@ TranslatableString ThemePrefs::GetDescription()
    return XO("Preferences for Theme");
 }
 
-wxString ThemePrefs::HelpPageName()
+ManualPageID ThemePrefs::HelpPageName()
 {
    return "Theme_Preferences";
 }

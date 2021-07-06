@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TrackPanelAx.cpp
 
@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "TrackPanelAx.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -328,7 +328,7 @@ wxAccStatus TrackPanelAx::GetLocation( wxRect& rect, int elementId )
       }
 
       rect = mFinder ? mFinder( *t ) : wxRect{};
-      // Inflate the screen reader's rectangle so it overpaints Audacity's own
+      // Inflate the screen reader's rectangle so it overpaints Sneedacity's own
       // yellow focus rectangle.
 #ifdef __WXMAC__
       const int dx = 2;

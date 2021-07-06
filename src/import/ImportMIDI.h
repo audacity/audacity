@@ -18,8 +18,8 @@ into a NoteTrack.
 #ifndef _IMPORT_MIDI_
 #define _IMPORT_MIDI_
 
-#include "../Audacity.h" // for USE_* macros
-#include "audacity/Types.h"
+
+#include "Identifier.h"
 
 #if defined(USE_MIDI)
 

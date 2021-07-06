@@ -12,7 +12,7 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #if USE_SOUNDTOUCH
 #include "SoundTouchEffect.h"
@@ -217,7 +217,7 @@ bool EffectSoundTouch::ProcessOne(WaveTrack *track,
             limitSampleBufferSize( track->GetBestBlockSize(s), end - s ));
 
          //Get the samples from the track and put them in the buffer
-         track->Get((samplePtr)buffer.get(), floatSample, s, block);
+         track->GetFloats(buffer.get(), s, block);
 
          //Add samples to SoundTouch
          mSoundTouch->putSamples(buffer.get(), block);
@@ -298,8 +298,8 @@ bool EffectSoundTouch::ProcessStereo(
          );
 
          // Get the samples from the tracks and put them in the buffers.
-         leftTrack->Get((samplePtr)(leftBuffer.get()), floatSample, sourceSampleCount, blockSize);
-         rightTrack->Get((samplePtr)(rightBuffer.get()), floatSample, sourceSampleCount, blockSize);
+         leftTrack->GetFloats((leftBuffer.get()), sourceSampleCount, blockSize);
+         rightTrack->GetFloats((rightBuffer.get()), sourceSampleCount, blockSize);
 
          // Interleave into soundTouchBuffer.
          for (decltype(blockSize) index = 0; index < blockSize; index++) {
@@ -403,7 +403,7 @@ void EffectSoundTouch::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarpe
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
-   double last = 0.0;
+   double last = mCurT0;
    auto clips = orig->SortedClipArray();
    auto front = clips.front();
    auto back = clips.back();
@@ -415,11 +415,12 @@ void EffectSoundTouch::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarpe
          if (mCurT0 < st && clip == front) {
             gaps.push_back(std::make_pair(mCurT0, st));
          }
-         if (mCurT1 > et && clip == back) {
-            gaps.push_back(std::make_pair(et, mCurT1));
-         }
-         if (last >= mCurT0) {
+         else if (last < st && mCurT0 <= last ) {
             gaps.push_back(std::make_pair(last, st));
+         }
+
+         if (et < mCurT1 && clip == back) {
+            gaps.push_back(std::make_pair(et, mCurT1));
          }
       }
       last = et;

@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "OpenSaveCommands.h"
 
 #include "LoadCommands.h"
@@ -59,13 +59,16 @@ bool OpenProjectCommand::Apply(const CommandContext & context){
    auto oldFileName = projectFileIO.GetFileName();
    if(mFileName.empty())
    {
+      // This path queries the user for files to open
       auto project = &context.project;
       ProjectManager::OpenFiles(project);
    }
    else
    {
-      ProjectFileManager::Get( context.project )
-         .OpenFile(mFileName, mbAddToHistory);
+      ProjectManager::ProjectChooser chooser{ &context.project, true };
+      if(ProjectFileManager::OpenFile(
+         std::ref(chooser), mFileName, mbAddToHistory))
+         chooser.Commit();
    }
    const auto &newFileName = projectFileIO.GetFileName();
 

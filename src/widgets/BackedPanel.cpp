@@ -6,7 +6,7 @@
 //
 //
 
-#include "../Audacity.h"
+
 #include "BackedPanel.h"
 
 BackedPanel::BackedPanel(wxWindow * parent, wxWindowID id,

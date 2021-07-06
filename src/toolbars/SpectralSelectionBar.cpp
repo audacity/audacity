@@ -26,11 +26,10 @@ with changes in the SpectralSelectionBar.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "SpectralSelectionBar.h"
 #include "SpectralSelectionBarListener.h"
 
-#include "../Experimental.h"
 #include "ToolManager.h"
 
 #include <algorithm>

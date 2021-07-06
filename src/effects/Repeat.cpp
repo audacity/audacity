@@ -20,7 +20,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "Repeat.h"
 
 
@@ -75,9 +75,9 @@ TranslatableString EffectRepeat::GetDescription()
    return XO("Repeats the selection the specified number of times");
 }
 
-wxString EffectRepeat::ManualPage()
+ManualPageID EffectRepeat::ManualPage()
 {
-   return wxT("Repeat");
+   return L"Repeat";
 }
 
 // EffectDefinitionInterface implementation

@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_SOUNDTOUCH
+
 
 #if USE_SOUNDTOUCH
 #include "ChangeTempo.h"
@@ -124,9 +124,9 @@ TranslatableString EffectChangeTempo::GetDescription()
    return XO("Changes the tempo of a selection without changing its pitch");
 }
 
-wxString EffectChangeTempo::ManualPage()
+ManualPageID EffectChangeTempo::ManualPage()
 {
-   return wxT("Change_Tempo");
+   return L"Change_Tempo";
 }
 
 // EffectDefinitionInterface implementation

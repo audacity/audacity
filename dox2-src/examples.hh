@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   examples.hh
 
-  James Crook
+  Sneed
 
 ********************************************************************//*
 

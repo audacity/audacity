@@ -1,12 +1,12 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SampleBlock.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "InconsistencyException.h"
 #include "SampleBlock.h"
 #include "SampleFormat.h"

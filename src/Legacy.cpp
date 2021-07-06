@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Legacy.cpp
 
@@ -9,12 +9,12 @@
 *******************************************************************//*!
 
 \file Legacy.cpp
-\brief Converts old Audacity file types.  Implements
+\brief Converts old Sneedacity file types.  Implements
 AutoRollbackRenamer.
 
-  These routines convert Audacity project files from the
+  These routines convert Sneedacity project files from the
   0.98...1.0 format into an XML format that's compatible with
-  Audacity 1.2.0 and newer.
+  Sneedacity 1.2.0 and newer.
 
 *//****************************************************************//**
 
@@ -26,7 +26,7 @@ On failure the old version is put back in place.
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Legacy.h"
 
 #include <stdio.h>
@@ -304,7 +304,7 @@ bool ConvertLegacyProjectFile(const wxFileName &filename)
          XO(
 "Converted a 1.0 project file to the new format.\nThe old file has been saved as '%s'")
             .Format( xmlFile.GetBackupName() ),
-         XO("Opening Audacity Project"));
+         XO("Opening Sneedacity Project"));
 
       return true;
    } );

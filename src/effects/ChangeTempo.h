@@ -11,7 +11,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #if USE_SOUNDTOUCH
 
 #ifndef __AUDACITY_EFFECT_CHANGETEMPO__
@@ -40,7 +40,7 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
-   wxString ManualPage() override;
+   ManualPageID ManualPage() override;
 
    // EffectDefinitionInterface implementation
 

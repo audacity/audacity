@@ -8,10 +8,8 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "WaveformView.h"
 
-#include "../../../../Experimental.h"
+#include "WaveformView.h"
 
 #include "WaveformVRulerControls.h"
 #include "WaveTrackView.h"

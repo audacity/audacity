@@ -14,7 +14,7 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+
 
 #if defined(USE_LV2)
 
@@ -23,6 +23,7 @@ Functions that find and load all LV2 plugins on the system.
 #endif
 
 #include "LoadLV2.h"
+#include "../../ModuleManager.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -34,7 +35,8 @@ Functions that find and load all LV2 plugins on the system.
 #include <wx/log.h>
 #include <wx/string.h>
 
-#include "../../Internat.h"
+#include "Internat.h"
+#include "wxArrayStringEx.h"
 
 #include "LV2Effect.h"
 #include "lv2/event/event.h"
@@ -59,7 +61,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LV2EffectsModule(path);
+   return safenew LV2EffectsModule();
 }
 
 // ============================================================================
@@ -76,12 +78,8 @@ using UriHash = std::unordered_map<wxString, LilvNode*>;
 
 LilvWorld *gWorld = NULL;
 
-LV2EffectsModule::LV2EffectsModule(const wxString *path)
+LV2EffectsModule::LV2EffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 LV2EffectsModule::~LV2EffectsModule()
@@ -94,7 +92,7 @@ LV2EffectsModule::~LV2EffectsModule()
 
 PluginPath LV2EffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol LV2EffectsModule::GetSymbol()
@@ -304,24 +302,13 @@ bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return GetPlugin(path) != NULL;
 }
 
-ComponentInterface *LV2EffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+LV2EffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   const LilvPlugin *plug = GetPlugin(path);
-   if (!plug)
-   {
-      return NULL;
-   }
-
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew LV2Effect(plug);
-}
-
-void LV2EffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < LV2Effect > {
-      dynamic_cast<LV2Effect *>(instance)
-   };
+   if (auto plug = GetPlugin(path))
+      return std::make_unique<LV2Effect>(plug);
+   return nullptr;
 }
 
 // ============================================================================

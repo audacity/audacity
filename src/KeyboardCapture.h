@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_KEYBOARD_CAPTURE__
 #define __AUDACITY_KEYBOARD_CAPTURE__
 
-#include "Audacity.h"
+
 
 #include <functional>
 #include <wx/event.h>
@@ -31,16 +31,17 @@ DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_CAPTURE_KEY, -1);
 
 namespace KeyboardCapture
 {
-   bool IsHandler(const wxWindow *handler);
-   wxWindow *GetHandler();
-   void Capture(wxWindow *handler);
-   void Release(wxWindow *handler);
+   AUDACITY_DLL_API bool IsHandler(const wxWindow *handler);
+   AUDACITY_DLL_API wxWindow *GetHandler();
+   AUDACITY_DLL_API void Capture(wxWindow *handler);
+   AUDACITY_DLL_API void Release(wxWindow *handler);
 
    using FilterFunction = std::function< bool( wxKeyEvent& ) >;
 
    /// \brief Install a pre-filter, returning the previously installed one
    /// Pre-filter is called before passing the event to the captured window; if it
    /// returns false, then skip the event entirely
+   AUDACITY_DLL_API
    FilterFunction SetPreFilter( const FilterFunction &function );
    
    /// \brief Install a post-filter, returning the previously installed one
@@ -49,12 +50,14 @@ namespace KeyboardCapture
    /// it skips only the wxEVT_CHAR or wxEVT_KEY_UP event); it is passed a
    /// wxKEY_DOWN or a wxKEY_UP event; if it returns false, then the event is
    /// skipped
+   AUDACITY_DLL_API
    FilterFunction SetPostFilter( const FilterFunction &function );
 
    /// \brief a function useful to implement a focus event handler
    /// The window releases the keyboard if the event is for killing focus,
    /// otherwise the window captures the keyboard; then refresh the window
    /// and skip the event
+   AUDACITY_DLL_API
    void OnFocus( wxWindow &window, wxFocusEvent &event );
 }
 

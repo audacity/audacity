@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   UndoManager.cpp
 
@@ -20,7 +20,7 @@ UndoManager
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "UndoManager.h"
 
 #include <wx/hashset.h>

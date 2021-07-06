@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SoundActivatedRecord.cpp
 
@@ -18,7 +18,7 @@
 
 *//********************************************************************/
 
-#include "Audacity.h"
+
 #include "SoundActivatedRecord.h"
 
 #include "ShuttleGui.h"

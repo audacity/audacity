@@ -15,48 +15,14 @@
 
 #include <wx/wx.h>
 #include "ScripterCallback.h"
-#include "../../src/Audacity.h"
+#include "commands/ScriptCommandRelay.h"
 
 /*
-There are several functions that can be used in a GUI module.
-
-//#define versionFnName   "GetVersionString"
-If the version is wrong, the module will be rejected.
-That is it will be loaded and then unloaded.
-
 //#define ModuleDispatchName "ModuleDispatch"
-The most useful function.  See the example in this 
-file.  It has several cases/options in it.
-
-//#define scriptFnName    "RegScriptServerFunc"
-This function is run from a non gui thread.  It was originally 
-created for the benefit of mod-script-pipe.
-
-//#define mainPanelFnName "MainPanelFunc"
-This function is the hijacking function, to take over Audacity
-and replace the main project window with our own wxFrame.
-
+See the example in this file.  It has several cases/options in it.
 */
 
-#ifdef _MSC_VER
-   #define DLL_API _declspec(dllexport)
-   #define DLL_IMPORT _declspec(dllimport)
-#else
-   #define DLL_API __attribute__ ((visibility("default")))
-   #define DLL_IMPORT
-#endif
-
-
-typedef enum
-{
-   ModuleInitialize,
-   ModuleTerminate,
-   AppInitialized,
-   AppQuiting,
-   ProjectInitialized,
-   ProjectClosing
-} ModuleDispatchTypes;
-
+#include "ModuleConstants.h"
 
 extern void PipeServer();
 typedef DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
@@ -64,38 +30,6 @@ static tpExecScriptServerFunc pScriptServerFn=NULL;
 
 
 extern "C" {
-
-
-DLL_API const wxChar * GetVersionString()
-{
-   // Make sure that this version of the module requires the version 
-   // of Audacity it is built with. 
-   // For now the versions must match exactly for Audacity to 
-   // agree to load the module.
-   return AUDACITY_VERSION_STRING;
-}
-
-extern int DLL_API  ModuleDispatch(ModuleDispatchTypes type);
-// ModuleDispatch
-// is called by Audacity to initialize/terminate the module
-// We don't (yet) do anything in this, since we have a special function for the scripter
-// all we need to do is return 1.
-int ModuleDispatch(ModuleDispatchTypes type){
-   switch (type){
-      case AppInitialized:{
-      }
-      break;
-      case AppQuiting: {
-      }
-      break;
-      case ProjectInitialized: {
-      }
-      break;
-      default:
-      break;
-   }
-   return 1;
-}   
 
 // And here is our special registration function.
 int DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
@@ -109,6 +43,18 @@ int DLL_API RegScriptServerFunc( tpExecScriptServerFunc pFn )
    return 4;
 }
 
+DEFINE_VERSION_CHECK
+extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
+{
+   switch (type) {
+   case ModuleInitialize:
+      ScriptCommandRelay::StartScriptServer(RegScriptServerFunc);
+      break;
+   default:
+      break;
+   }
+   return 1;
+}
 
 wxString Str2;
 wxArrayString aStr;

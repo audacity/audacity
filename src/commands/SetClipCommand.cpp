@@ -16,7 +16,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetClipCommand.h"
 
 #include "LoadCommands.h"

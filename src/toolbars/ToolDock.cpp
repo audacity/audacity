@@ -21,7 +21,7 @@
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ToolDock.h"
 
 #include <wx/tokenzr.h>

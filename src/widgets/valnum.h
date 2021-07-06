@@ -11,7 +11,7 @@
 #ifndef _WIDGETS_VALNUM_H_
 #define _WIDGETS_VALNUM_H_
 
-#include "../MemoryX.h"
+#include <memory>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 
@@ -46,7 +46,7 @@ inline int operator & (NumValidatorStyle x, NumValidatorStyle y)
 // Base class for all numeric validators.
 // ----------------------------------------------------------------------------
 
-class NumValidatorBase /* not final */ : public wxValidator
+class AUDACITY_DLL_API NumValidatorBase /* not final */ : public wxValidator
 {
 public:
     // Change the validator style. Usually it's specified during construction.
@@ -277,7 +277,8 @@ private:
 // type-dependent code of wxIntegerValidator<> and always works with values of
 // type LongestValueType. It is not meant to be used directly, please use
 // IntegerValidator<> only instead.
-class IntegerValidatorBase /* not final */ : public NumValidatorBase
+class AUDACITY_DLL_API IntegerValidatorBase /* not final */
+   : public NumValidatorBase
 {
 protected:
     // Define the type we use here, it should be the maximal-sized integer type
@@ -381,7 +382,8 @@ MakeIntegerValidator(T *value, NumValidatorStyle style = NumValidatorStyle::DEFA
 
 // Similar to IntegerValidatorBase, this class is not meant to be used
 // directly, only FloatingPointValidator<> should be used in the user code.
-class FloatingPointValidatorBase /* not final */ : public NumValidatorBase
+class AUDACITY_DLL_API FloatingPointValidatorBase /* not final */
+   : public NumValidatorBase
 {
 public:
     // Set precision i.e. the number of digits shown (and accepted on input)
@@ -509,7 +511,7 @@ MakeFloatingPointValidator(int precision, T *value, NumValidatorStyle style = Nu
 
 // Sometimes useful for specifying max and min values for validators, when they
 // must have the same precision as the validated value
-double RoundValue(int precision, double value);
+AUDACITY_DLL_API double RoundValue(int precision, double value);
 
 #endif // wxUSE_VALIDATORS
 

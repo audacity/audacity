@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
-#include "TimeShiftHandle.h"
 
-#include "../../Experimental.h"
+#include "TimeShiftHandle.h"
 
 #include "TrackView.h"
 #include "../../AColor.h"
@@ -112,6 +110,8 @@ void ClipMoveState::DoHorizontalOffset( double offset )
          channel->Offset( offset );
    }
 }
+
+TrackShifter::TrackShifter() = default;
 
 TrackShifter::~TrackShifter() = default;
 
@@ -699,7 +699,7 @@ namespace {
    [[noreturn]] void MigrationFailure() {
       // Tracks may be in an inconsistent state; throw to the application
       // handler which restores consistency from undo history
-      throw SimpleMessageBoxException{
+      throw SimpleMessageBoxException{ ExceptionType::Internal,
          XO("Could not shift between tracks")};
    }
 

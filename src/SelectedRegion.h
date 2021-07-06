@@ -25,9 +25,9 @@
 #ifndef __AUDACITY_SELECTEDREGION__
 #define __AUDACITY_SELECTEDREGION__
 
-#include "Audacity.h"
 
-#include "Experimental.h"
+
+
 
 #include <wx/defs.h>
 #include <wx/chartype.h> // for wxChar, a typedef

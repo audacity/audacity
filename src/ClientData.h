@@ -44,7 +44,7 @@ template< typename Object > using BarePtr = Object*;
  */
 template<
    template<typename> class Owner = UniquePtr
-> struct Cloneable
+> struct AUDACITY_DLL_API Cloneable
 {
    using Base = Cloneable;
    using PointerType = Owner< Base >;

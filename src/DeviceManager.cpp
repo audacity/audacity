@@ -1,18 +1,18 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2010 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2010 Sneedacity Team
    Michael Chinen
 
 ******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "DeviceManager.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "Experimental.h"
+
 
 #include "portaudio.h"
 #ifdef __WXMSW__

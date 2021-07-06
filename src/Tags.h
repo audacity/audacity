@@ -29,7 +29,7 @@
 #ifndef __AUDACITY_TAGS__
 #define __AUDACITY_TAGS__
 
-#include "Audacity.h"
+
 
 #include "xml/XMLTagHandler.h"
 
@@ -40,7 +40,7 @@
 
 #include <memory>
 #include <unordered_map>
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxArrayString;
 class wxComboBox;

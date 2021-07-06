@@ -32,7 +32,7 @@ a graph for EffectScienFilter.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ScienFilter.h"
 #include "LoadEffects.h"
 
@@ -192,9 +192,9 @@ TranslatableString EffectScienFilter::GetDescription()
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-wxString EffectScienFilter::ManualPage()
+ManualPageID EffectScienFilter::ManualPage()
 {
-   return wxT("Classic_Filters");
+   return L"Classic_Filters";
 }
 
 

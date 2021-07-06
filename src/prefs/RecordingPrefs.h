@@ -12,8 +12,7 @@
 #ifndef __AUDACITY_RECORDING_PREFS__
 #define __AUDACITY_RECORDING_PREFS__
 
-#include "../Audacity.h"
-#include "../Experimental.h"
+
 
 #include <wx/defs.h>
 
@@ -29,10 +28,10 @@ class ShuttleGui;
    #define AILA_DEF_NUMBER_ANALYSIS 5
 #endif
 
-#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Recording") }
-
-#define DEFAULT_LATENCY_DURATION 100.0
-#define DEFAULT_LATENCY_CORRECTION -130.0
+#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ \
+   L"Recording", \
+   XO("Recording")  /* XC("Recording", "preference") */ \
+}
 
 #define AUDIO_PRE_ROLL_KEY (wxT("/AudioIO/PreRoll"))
 #define DEFAULT_PRE_ROLL_SECONDS 5.0
@@ -49,7 +48,7 @@ class RecordingPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
  private:

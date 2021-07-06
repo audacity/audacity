@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   HistoryWindow.cpp
 
@@ -16,7 +16,7 @@ undo memory so as to free up space.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "HistoryWindow.h"
 
 #include <wx/app.h>
@@ -313,7 +313,7 @@ void HistoryDialog::OnCompact(wxCommandEvent & WXUNUSED(event))
 
 void HistoryDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Undo,_Redo_and_History"));
+   HelpSystem::ShowHelp(this, L"Undo,_Redo_and_History");
 }
 
 void HistoryDialog::OnItemSelected(wxListEvent &event)

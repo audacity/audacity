@@ -24,13 +24,12 @@ effects from this one class.
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
-#include "Nyquist.h"
 
-#include "../../Experimental.h"
+#include "Nyquist.h"
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 
 #include <locale.h>
 
@@ -56,9 +55,11 @@ effects from this one class.
 #include "../EffectManager.h"
 #include "../../FileNames.h"
 #include "../../LabelTrack.h"
+#include "Languages.h"
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
+#include "../../PluginManager.h"
 #include "../../Project.h"
 #include "../../ProjectSettings.h"
 #include "../../ShuttleGetDefinition.h"
@@ -166,7 +167,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
 
    // Interactive Nyquist
    if (fName == NYQUIST_PROMPT_ID) {
-      mName = XO("Nyquist Prompt");
+      mName = NYQUIST_PROMPT_NAME;
       mType = EffectTypeTool;
       mIsTool = true;
       mPromptName = mName;
@@ -211,7 +212,7 @@ PluginPath NyquistEffect::GetPath()
 ComponentInterfaceSymbol NyquistEffect::GetSymbol()
 {
    if (mIsPrompt)
-      return XO("Nyquist Prompt");
+      return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
 
    return mName;
 }
@@ -238,14 +239,14 @@ TranslatableString NyquistEffect::GetDescription()
    return mCopyright;
 }
 
-wxString NyquistEffect::ManualPage()
+ManualPageID NyquistEffect::ManualPage()
 {
       return mIsPrompt
-         ? wxT("Nyquist_Prompt")
+         ? wxString("Nyquist_Prompt")
          : mManPage;
 }
 
-wxString NyquistEffect::HelpPage()
+FilePath NyquistEffect::HelpPage()
 {
    auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;
@@ -563,30 +564,38 @@ bool NyquistEffect::Init()
 
    if (!mIsPrompt && mIsSpectral) {
       auto *project = FindProject();
-      bool bAllowSpectralEditing = true;
+      bool bAllowSpectralEditing = false;
+      bool hasSpectral = false;
 
       for ( auto t :
                TrackList::Get( *project ).Selected< const WaveTrack >() ) {
          const auto displays = WaveTrackView::Get(*t).GetDisplays();
-         bool hasSpectral = (displays.end() != std::find(
+         if (displays.end() != std::find(
             displays.begin(), displays.end(),
-            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }
-         ) );
-         if ( !hasSpectral ||
-             !(t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
-            bAllowSpectralEditing = false;
+            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
+            hasSpectral = true;
+         if ( hasSpectral &&
+             (t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
+            bAllowSpectralEditing = true;
             break;
          }
       }
 
       if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-         Effect::MessageBox(
-            XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                        "in the track Spectrogram settings and select the\n"
-                        "frequency range for the effect to act on."),
+         if (!hasSpectral) {
+            Effect::MessageBox(
+            XO("Enable track spectrogram view before\n"
+            "applying 'Spectral' effects."),
             wxOK | wxICON_EXCLAMATION | wxCENTRE,
             XO("Error") );
-
+         } else {
+            Effect::MessageBox(
+               XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                           "in the track Spectrogram settings and select the\n"
+                           "frequency range for the effect to act on."),
+               wxOK | wxICON_EXCLAMATION | wxCENTRE,
+               XO("Error") );
+         }
          return false;
       }
    }
@@ -693,7 +702,9 @@ bool NyquistEffect::Process()
 
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
-      lang = (lang.empty())? GUIPrefs::SetLang(lang) : lang;
+      lang = (lang.empty())
+         ? Languages::GetSystemLanguageCode(FileNames::AudacityPathList())
+         : lang;
       mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
@@ -1380,12 +1391,12 @@ bool NyquistEffect::ProcessOne()
 
    // Put the fetch buffers in a clean initial state
    for (size_t i = 0; i < mCurNumChannels; i++)
-      mCurBuffer[i].Free();
+      mCurBuffer[i].reset();
 
    // Guarantee release of memory when done
    auto cleanup = finally( [&] {
       for (size_t i = 0; i < mCurNumChannels; i++)
-         mCurBuffer[i].Free();
+         mCurBuffer[i].reset();
    } );
 
    // Evaluate the expression, which may invoke the get callback, but often does
@@ -1466,7 +1477,14 @@ bool NyquistEffect::ProcessOne()
       if (!msg.empty()) { // Empty string may be used as a No-Op return value.
          Effect::MessageBox( msg );
       }
+      else if (GetType() == EffectTypeTool) {
+         // ;tools may change the project with aud-do commands so
+         // it is essential that the state is added to history.
+         mProjectChanged = true;
+         return true;
+      }
       else {
+         // A true no-op.
          return true;
       }
 
@@ -1546,7 +1564,7 @@ bool NyquistEffect::ProcessOne()
 
       // Clean the initial buffer states again for the get callbacks
       // -- is this really needed?
-      mCurBuffer[i].Free();
+      mCurBuffer[i].reset();
    }
 
    // Now fully evaluate the sound
@@ -1780,6 +1798,7 @@ TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowPare
    if (len >= 2 && s[0] == wxT('\"') && s[len - 1] == wxT('\"')) {
       auto unquoted = s.Mid(1, len - 2);
       // Sorry, no context strings, yet
+      // (See also comments in NyquistEffectsModule::AutoRegisterPlugins)
       return TranslatableString{ unquoted, {} };
    }
    else if (allowParens &&
@@ -2038,6 +2057,9 @@ bool NyquistEffect::Parse(
    }
 
    if (len >= 2 && tokens[0] == wxT("name")) {
+      // Names do not yet support context strings for translations, or
+      // internal names distinct from visible English names.
+      // (See also comments in NyquistEffectsModule::AutoRegisterPlugins)
       auto name = UnQuote(tokens[1]);
       // Strip ... from name if it's present, perhaps in third party plug-ins
       // Menu system puts ... back if there are any controls
@@ -2161,7 +2183,7 @@ bool NyquistEffect::Parse(
          ctrl.label = tokens[4];
 
          // valStr may or may not be a quoted string
-         ctrl.valStr = len > 5 ? tokens[5] : wxT("");
+         ctrl.valStr = len > 5 ? tokens[5] : wxString{};
          ctrl.val = GetCtrlValue(ctrl.valStr);
          if (ctrl.valStr.length() > 0 &&
                (ctrl.valStr[0] == wxT('(') ||
@@ -2405,15 +2427,15 @@ int NyquistEffect::StaticGetCallback(float *buffer, int channel,
 int NyquistEffect::GetCallback(float *buffer, int ch,
                                int64_t start, int64_t len, int64_t WXUNUSED(totlen))
 {
-   if (mCurBuffer[ch].ptr()) {
+   if (mCurBuffer[ch]) {
       if ((mCurStart[ch] + start) < mCurBufferStart[ch] ||
           (mCurStart[ch] + start)+len >
           mCurBufferStart[ch]+mCurBufferLen[ch]) {
-         mCurBuffer[ch].Free();
+         mCurBuffer[ch].reset();
       }
    }
 
-   if (!mCurBuffer[ch].ptr()) {
+   if (!mCurBuffer[ch]) {
       mCurBufferStart[ch] = (mCurStart[ch] + start);
       mCurBufferLen[ch] = mCurTrack[ch]->GetBestBlockSize(mCurBufferStart[ch]);
 
@@ -2425,10 +2447,11 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
          limitSampleBufferSize( mCurBufferLen[ch],
                                 mCurStart[ch] + mCurLen - mCurBufferStart[ch] );
 
-      mCurBuffer[ch].Allocate(mCurBufferLen[ch], floatSample);
+      // C++20
+      // mCurBuffer[ch] = std::make_unique_for_overwrite(mCurBufferLen[ch]);
+      mCurBuffer[ch] = Buffer{ safenew float[ mCurBufferLen[ch] ] };
       try {
-         mCurTrack[ch]->Get(
-            mCurBuffer[ch].ptr(), floatSample,
+         mCurTrack[ch]->GetFloats( mCurBuffer[ch].get(),
             mCurBufferStart[ch], mCurBufferLen[ch]);
       }
       catch ( ... ) {
@@ -2441,9 +2464,8 @@ int NyquistEffect::GetCallback(float *buffer, int ch,
    // We have guaranteed above that this is nonnegative and bounded by
    // mCurBufferLen[ch]:
    auto offset = ( mCurStart[ch] + start - mCurBufferStart[ch] ).as_size_t();
-   CopySamples(mCurBuffer[ch].ptr() + offset*SAMPLE_SIZE(floatSample), floatSample,
-               (samplePtr)buffer, floatSample,
-               len);
+   const void *src = &mCurBuffer[ch][offset];
+   std::memcpy(buffer, src, len * sizeof(float));
 
    if (ch == 0) {
       double progress = mScale *

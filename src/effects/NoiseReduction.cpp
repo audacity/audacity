@@ -36,10 +36,8 @@
 *//****************************************************************//**
 */
 
-#include "../Audacity.h"
-#include "NoiseReduction.h"
 
-#include "../Experimental.h"
+#include "NoiseReduction.h"
 
 #include "LoadEffects.h"
 #include "EffectManager.h"
@@ -1332,7 +1330,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr)&buffer[0], floatSample, samplePos, blockSize);
+      track->GetFloats(&buffer[0], samplePos, blockSize);
       samplePos += blockSize;
 
       mInSampleCount += blockSize;

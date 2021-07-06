@@ -21,7 +21,7 @@ class Ruler;
 class ZoomInfo;
 struct TrackPanelDrawingContext;
 
-class TimeTrack final : public Track {
+class AUDACITY_DLL_API TimeTrack final : public Track {
 
  public:
 

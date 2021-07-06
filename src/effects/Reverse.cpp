@@ -14,7 +14,7 @@
 *//********************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "Reverse.h"
 #include "LoadEffects.h"
 
@@ -232,8 +232,8 @@ bool EffectReverse::ProcessOneClip(int count, WaveTrack *track,
          limitSampleBufferSize( track->GetBestBlockSize(first), len / 2 );
       auto second = first + (len - block);
 
-      track->Get((samplePtr)buffer1.get(), floatSample, first, block);
-      track->Get((samplePtr)buffer2.get(), floatSample, second, block);
+      track->GetFloats(buffer1.get(), first, block);
+      track->GetFloats(buffer2.get(), second, block);
       for (decltype(block) i = 0; i < block; i++) {
          tmp = buffer1[i];
          buffer1[i] = buffer2[block-i-1];

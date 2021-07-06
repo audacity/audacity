@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Screenshot.cpp
 
@@ -38,6 +38,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include <wx/tglbtn.h>
 #include <wx/window.h>
 
+#include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
@@ -558,7 +559,7 @@ void ScreenshotBigDialog::OnClose(wxCommandEvent &  WXUNUSED(event))
 
 void ScreenshotBigDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Screenshot"));
+   HelpSystem::ShowHelp(this, L"Screenshot");
 }
 
 void ScreenshotBigDialog::OnUIUpdate(wxUpdateUIEvent &  WXUNUSED(event))

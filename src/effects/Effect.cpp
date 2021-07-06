@@ -15,11 +15,9 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Effect.h"
 #include "TimeWarper.h"
-
-#include "../Experimental.h"
 
 #include <algorithm>
 
@@ -35,6 +33,7 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
+#include "../prefs/QualitySettings.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../ViewInfo.h"
@@ -114,9 +113,8 @@ Effect::Effect()
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
-   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-                &mProjectRate,
-                44100);
+   // (Which is called to compute the default-default value.)  (Bug 2280)
+   mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
 
    mIsBatch = false;
 }
@@ -1170,14 +1168,14 @@ bool Effect::HasFactoryDefaults()
    return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
 }
 
-wxString Effect::ManualPage()
+ManualPageID Effect::ManualPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
-wxString Effect::HelpPage()
+FilePath Effect::HelpPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
 void Effect::SetUIFlags(unsigned flags) {
@@ -1639,10 +1637,10 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) inBuffer[0].get(), floatSample, inPos, inputBufferCnt);
+            left->GetFloats(inBuffer[0].get(), inPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) inBuffer[1].get(), floatSample, inPos, inputBufferCnt);
+               right->GetFloats(inBuffer[1].get(), inPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
@@ -2470,7 +2468,7 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         ShowErrorDialog(FocusDialog, XO("Error"),
+         ShowExceptionDialog(FocusDialog, XO("Error"),
                          XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
       }

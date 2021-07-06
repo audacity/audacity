@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 
 #include "LoadNyquist.h"
 
@@ -17,6 +17,8 @@
 #include "Nyquist.h"
 
 #include "../../FileNames.h"
+#include "../../PluginManager.h"
+#include "../../ModuleManager.h"
 
 // ============================================================================
 // List of effects that ship with Audacity.  These will be autoregistered.
@@ -65,7 +67,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew NyquistEffectsModule(path);
+   return safenew NyquistEffectsModule();
 }
 
 // ============================================================================
@@ -79,17 +81,12 @@ DECLARE_BUILTIN_MODULE(NyquistsEffectBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-NyquistEffectsModule::NyquistEffectsModule(const wxString *path)
+NyquistEffectsModule::NyquistEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 NyquistEffectsModule::~NyquistEffectsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -98,7 +95,7 @@ NyquistEffectsModule::~NyquistEffectsModule()
 
 PluginPath NyquistEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
@@ -183,7 +180,8 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
-   if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID))
+   auto name = NYQUIST_PROMPT_NAME;
+   if (!pm.IsPluginRegistered(NYQUIST_PROMPT_ID, &name))
    {
       // No checking of error ?
       DiscoverPluginsAtPath(NYQUIST_PROMPT_ID, ignoredErrMsg,
@@ -196,6 +194,19 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
       pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
       for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
+         /*
+           TODO: Currently the names of Nyquist plug-ins cannot have
+          context specific translations or internal names different from
+          the visible English names.
+   
+          This makes it unnecessary to pass a second argument to
+          IsPluginRegistered for correction of the registry (as is needed
+          in the case of built-in effects).
+
+          If it does become necessary in the future, we will need to open the
+          .ny files to access their $name lines so that this argument could
+          be supplied.
+          */
          if (!pm.IsPluginRegistered(files[j]))
          {
             // No checking of error ?
@@ -253,24 +264,14 @@ bool NyquistEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return wxFileName::FileExists(path);
 }
 
-ComponentInterface *NyquistEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+NyquistEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    auto effect = std::make_unique<NyquistEffect>(path);
    if (effect->IsOk())
-   {
-      // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-      return effect.release();
-   }
-
-   return NULL;
-}
-
-void NyquistEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < NyquistEffect > {
-      dynamic_cast<NyquistEffect *>(instance)
-   };
+      return effect;
+   return nullptr;
 }
 
 // ============================================================================

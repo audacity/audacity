@@ -42,7 +42,7 @@
 #ifndef __AUDACITY_CONFIGINTERFACE_H__
 #define __AUDACITY_CONFIGINTERFACE_H__
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 /*************************************************************************************//**
 

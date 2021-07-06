@@ -16,10 +16,13 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetEnvelopeCommand.h"
 
+#include "CommandContext.h"
 #include "LoadCommands.h"
+#include "../ProjectHistory.h"
+#include "../UndoManager.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../Envelope.h"
@@ -57,7 +60,7 @@ void SetEnvelopeCommand::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool SetEnvelopeCommand::ApplyInner( const CommandContext &, Track * t )
+bool SetEnvelopeCommand::ApplyInner( const CommandContext &context, Track * t )
 {
    // if no time is specified, then
    //   - delete deletes any envelope in selected tracks.
@@ -75,10 +78,19 @@ bool SetEnvelopeCommand::ApplyInner( const CommandContext &, Track * t )
          {
             // Inside this IF is where we actually apply the command
             Envelope* pEnv = pClip->GetEnvelope();
+            bool didSomething = false;
             if( bHasDelete && mbDelete )
-               pEnv->Clear();
+               pEnv->Clear(), didSomething = true;
             if( bHasT && bHasV )
-               pEnv->InsertOrReplace( mT, pEnv->ClampValue( mV ) );
+               pEnv->InsertOrReplace( mT, pEnv->ClampValue( mV ) ),
+               didSomething = true;
+
+            if (didSomething)
+               // Consolidate, because this ApplyInner() function may be
+               // visited multiple times in one command invocation
+               ProjectHistory::Get(context.project).PushState(
+                  XO("Edited Envelope"), XO("Envelope"),
+                  UndoPush::CONSOLIDATE);
          }
       }
    } );

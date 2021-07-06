@@ -23,7 +23,7 @@ class ShuttleGui;
 
 template< typename Enum > class EnumSetting;
 
-class ImportExportPrefs final : public PrefsPanel
+class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
 {
  public:
    static EnumSetting< bool > ExportDownMixSetting;
@@ -36,7 +36,7 @@ class ImportExportPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
  private:

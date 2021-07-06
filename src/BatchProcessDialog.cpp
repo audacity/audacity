@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ApplyMacroDialog.cpp
 
@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "BatchProcessDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -222,7 +222,7 @@ void ApplyMacroDialog::PopulateMacros()
 
 void ApplyMacroDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetHelpPageName();
+   const auto &page = GetHelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 
@@ -1331,7 +1331,7 @@ bool MacrosWindow::SaveChanges(){
    return true;
 }
 
-/// Send changed values back to Prefs, and update Audacity.
+/// Send changed values back to Prefs, and update Sneedacity.
 void MacrosWindow::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    if( !SaveChanges() )

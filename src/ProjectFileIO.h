@@ -52,7 +52,7 @@ wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
 
 ///\brief Object associated with a project that manages reading and writing
 /// of Audacity project file formats, and autosave
-class ProjectFileIO final
+class AUDACITY_DLL_API ProjectFileIO final
    : public ClientData::Base
    , public XMLTagHandler
    , private PrefsListener
@@ -327,7 +327,7 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 
 //! Makes a temporary project that doesn't display on the screen
-class InvisibleTemporaryProject
+class AUDACITY_DLL_API InvisibleTemporaryProject
 {
 public:
    InvisibleTemporaryProject();

@@ -1,7 +1,7 @@
 
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Diags.cpp
 
@@ -28,7 +28,7 @@ count down so that we track how many times the event happens.
 *//********************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Diags.h"
 
 #include <wx/defs.h>

@@ -15,16 +15,16 @@
 #ifndef __AUDACITY_TIME_TEXT_CTRL__
 #define __AUDACITY_TIME_TEXT_CTRL__
 
-#include "../Audacity.h"
 
-#include "../MemoryX.h"
+
+#include <memory>
 #include "../../include/audacity/ComponentInterface.h"
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/control.h> // to inherit
 
-#include "../Internat.h"
+#include "Internat.h"
 
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and
@@ -43,7 +43,7 @@ class NumericField;
 
 class DigitInfo;
 
-class NumericConverter /* not final */
+class AUDACITY_DLL_API NumericConverter /* not final */
 {
 public:
 
@@ -85,6 +85,7 @@ public:
                     const NumericFormatSymbol & formatName = {},
                     double value = 0.0f,
                     double sampleRate = 1.0f /* to prevent div by 0 */);
+   NumericConverter(const NumericConverter&);
 
    virtual ~NumericConverter();
 
@@ -165,7 +166,8 @@ protected:
    int mDefaultNdx;
 };
 
-class NumericTextCtrl final : public wxControl, public NumericConverter
+class AUDACITY_DLL_API NumericTextCtrl final
+   : public wxControl, public NumericConverter
 {
    friend class NumericTextCtrlAx;
 

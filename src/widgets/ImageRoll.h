@@ -24,7 +24,7 @@
 // wxImage copies cheaply with reference counting
 using ImageArray = std::vector<wxImage>;
 
-class ImageRoll
+class AUDACITY_DLL_API ImageRoll
 {
  public:
    enum RollType {
@@ -38,6 +38,9 @@ class ImageRoll
    ImageRoll();
    ImageRoll(const wxImage &src);
    ImageRoll(RollType type, const wxImage &src, wxColour magicColor);
+   ImageRoll(const ImageRoll&);
+   ImageRoll &operator =(const ImageRoll&);
+   ~ImageRoll();
 
    bool Ok() const;
 

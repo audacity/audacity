@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SplashDialog.cpp
 
@@ -9,21 +9,21 @@
 ********************************************************************//**
 
 \class SplashDialog
-\brief The SplashDialog shows help information for Audacity when
-Audacity starts up.
+\brief The SplashDialog shows help information for Sneedacity when
+Sneedacity starts up.
 
 It was written for the benefit of NEW users who do not want to
 read the manual.  The text of the dialog is kept short to increase the
 chance of it being read.  The content is designed to reduce the
-most commonly asked questions about Audacity.
+most commonly asked questions about Sneedacity.
 
 *//********************************************************************/
 
 
-#include "Audacity.h"
+
 #include "SplashDialog.h"
 
-#include "Experimental.h"
+
 
 #include <wx/dialog.h>
 #include <wx/frame.h>
@@ -71,7 +71,7 @@ void SplashDialog::DoHelpWelcome( AudacityProject &project )
 }
 
 SplashDialog::SplashDialog(wxWindow * parent)
-   :  wxDialogWrapper(parent, -1, XO("Welcome to Audacity!"),
+   :  wxDialogWrapper(parent, -1, XO("Welcome to Sneedacity!"),
       wxPoint( -1, 60 ), // default x position, y position 60 pixels from top of screen.
       wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {

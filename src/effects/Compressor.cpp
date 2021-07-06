@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Compressor.h"
 #include "LoadEffects.h"
 
@@ -115,9 +115,9 @@ TranslatableString EffectCompressor::GetDescription()
    return XO("Compresses the dynamic range of audio");
 }
 
-wxString EffectCompressor::ManualPage()
+ManualPageID EffectCompressor::ManualPage()
 {
-   return wxT("Compressor");
+   return L"Compressor";
 }
 
 // EffectDefinitionInterface implementation

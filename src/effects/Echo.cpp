@@ -19,7 +19,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Echo.h"
 #include "LoadEffects.h"
 
@@ -67,9 +67,9 @@ TranslatableString EffectEcho::GetDescription()
    return XO("Repeats the selected audio again and again");
 }
 
-wxString EffectEcho::ManualPage()
+ManualPageID EffectEcho::ManualPage()
 {
-   return wxT("Echo");
+   return L"Echo";
 }
 
 // EffectDefinitionInterface implementation

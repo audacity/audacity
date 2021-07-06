@@ -18,7 +18,7 @@
 #include <wx/access.h> // to inherit
 #include <Internat.h> // for TranslatableString
 
-class WindowAccessible: public wxAccessible
+class AUDACITY_DLL_API WindowAccessible: public wxAccessible
 {
 public:
    WindowAccessible(wxWindow* win);
@@ -28,7 +28,7 @@ public:
 
 };
 
-class SliderAx final : public WindowAccessible
+class AUDACITY_DLL_API SliderAx final : public WindowAccessible
 {
 public:
    SliderAx(wxWindow * window, const TranslatableString &fmt);

@@ -17,15 +17,13 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
-#include "EffectsPrefs.h"
 
-#include "../Experimental.h"
+#include "EffectsPrefs.h"
 
 #include <wx/choice.h>
 #include <wx/defs.h>
 
-#include "../Languages.h"
+#include "Languages.h"
 #include "../PluginManager.h"
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -50,7 +48,7 @@ TranslatableString EffectsPrefs::GetDescription()
    return XO("Preferences for Effects");
 }
 
-wxString EffectsPrefs::HelpPageName()
+ManualPageID EffectsPrefs::HelpPageName()
 {
    return "Effects_Preferences";
 }
@@ -139,10 +137,8 @@ static const std::vector< Entry > &GetModuleData()
    struct ModuleData : public std::vector< Entry > {
       ModuleData() {
          auto &pm = PluginManager::Get();
-         for (auto plug = pm.GetFirstPlugin(PluginTypeModule);
-              plug;
-              plug = pm.GetNextPlugin(PluginTypeModule)) {
-            auto internal = plug->GetEffectFamily();
+         for (auto &plug : pm.PluginsOfType(PluginTypeModule)) {
+            auto internal = plug.GetEffectFamily();
             if ( internal.empty() )
                continue;
 
@@ -155,11 +151,11 @@ static const std::vector< Entry > &GetModuleData()
                // If there should be new modules, it is not important for them
                // to follow the " Effects" convention, but instead they can
                // have shorter msgids.
-               prompt = plug->GetSymbol().Msgid();
+               prompt = plug.GetSymbol().Msgid();
             else
                prompt = iter->second;
 
-            auto setting = pm.GetPluginEnabledSetting( *plug );
+            auto setting = pm.GetPluginEnabledSetting( plug );
 
             push_back( { prompt, setting } );
          }

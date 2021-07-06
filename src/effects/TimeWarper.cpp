@@ -15,11 +15,12 @@ Geometric TimeWarper classes
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "TimeWarper.h"
 
 #include <wx/string.h>
 #include <math.h>
+#include <wx/debug.h>
 
 TimeWarper::~TimeWarper() = default;
 

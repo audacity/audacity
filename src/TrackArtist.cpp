@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TrackArtist.cpp
 
@@ -17,7 +17,7 @@
   waveforms at least it needs to cache the samples that are
   currently on-screen.
 
-<b>How Audacity Redisplay Works \n
+<b>How Sneedacity Redisplay Works \n
  Roger Dannenberg</b> \n
 Oct 2010 \n
 
@@ -38,10 +38,10 @@ audio tracks.
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros and HAVE_ALLOCA_H
+
 #include "TrackArtist.h"
 
-#include "Experimental.h"
+
 
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -245,6 +245,8 @@ void TrackArtist::UpdateSelectedPrefs( int id )
 {
    if( id == ShowClippingPrefsID())
       mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
+   if( id == ShowTrackNameInWaveformPrefsID())
+      mbShowTrackNameInTrack = gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
 }
 
 void TrackArtist::UpdatePrefs()
@@ -252,10 +254,8 @@ void TrackArtist::UpdatePrefs()
    mdBrange = gPrefs->Read(ENV_DB_KEY, mdBrange);
    mSampleDisplay = TracksPrefs::SampleViewChoice();
 
-   mbShowTrackNameInTrack =
-      gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
-
    UpdateSelectedPrefs( ShowClippingPrefsID() );
+   UpdateSelectedPrefs( ShowTrackNameInWaveformPrefsID() );
 
    SetColours(0);
 }

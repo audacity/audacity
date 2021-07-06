@@ -1,9 +1,9 @@
 #ifndef __realfftf_h
 #define __realfftf_h
 
-#include "Audacity.h"
 
-#include "Experimental.h"
+
+
 
 #include "MemoryX.h"
 
@@ -17,7 +17,7 @@ struct FFTParam {
 #endif
 };
 
-struct FFTDeleter{
+struct AUDACITY_DLL_API FFTDeleter{
    void operator () (FFTParam *p) const;
 };
 
@@ -25,11 +25,11 @@ using HFFT = std::unique_ptr<
    FFTParam, FFTDeleter
 >;
 
-HFFT GetFFT(size_t);
-void RealFFTf(fft_type *, const FFTParam *);
-void InverseRealFFTf(fft_type *, const FFTParam *);
-void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut);
-void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
+AUDACITY_DLL_API HFFT GetFFT(size_t);
+AUDACITY_DLL_API void RealFFTf(fft_type *, const FFTParam *);
+AUDACITY_DLL_API void InverseRealFFTf(fft_type *, const FFTParam *);
+AUDACITY_DLL_API void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut);
+AUDACITY_DLL_API void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
 		   fft_type *RealOut, fft_type *ImagOut);
 
 #endif

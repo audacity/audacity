@@ -20,7 +20,7 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-class TimeDialog final : public wxDialogWrapper
+class AUDACITY_DLL_API TimeDialog final : public wxDialogWrapper
 {
  public:
 

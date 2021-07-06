@@ -41,10 +41,10 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"   // keep ffmpeg before wx because they interact // for USE_* macros
+
 #include "ExportFFmpegDialogs.h"
 
-#include "../FFmpeg.h"     // and Audacity.h before FFmpeg for config*.h
+#include "../FFmpeg.h"
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -2562,7 +2562,7 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
 
 void ExportFFmpegOptions::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Custom_FFmpeg_Export_Options"));
+   HelpSystem::ShowHelp(this, L"Custom_FFmpeg_Export_Options");
 }
 
 

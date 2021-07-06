@@ -8,10 +8,11 @@
 
 **********************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+
 
 #if defined(USE_VAMP)
 #include "LoadVamp.h"
+#include "../../ModuleManager.h"
 
 #include <wx/filename.h>
 
@@ -37,7 +38,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew VampEffectsModule(path);
+   return safenew VampEffectsModule();
 }
 
 // ============================================================================
@@ -51,12 +52,8 @@ DECLARE_BUILTIN_MODULE(VampsEffectBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-VampEffectsModule::VampEffectsModule(const wxString *path)
+VampEffectsModule::VampEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 VampEffectsModule::~VampEffectsModule()
@@ -69,7 +66,7 @@ VampEffectsModule::~VampEffectsModule()
 
 PluginPath VampEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
@@ -239,27 +236,16 @@ bool VampEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return bool(vp);
 }
 
-ComponentInterface *VampEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+VampEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    int output;
    bool hasParameters;
 
-   auto vp = FindPlugin(path, output, hasParameters);
-   if (vp)
-   {
-      // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-      return safenew VampEffect(std::move(vp), path, output, hasParameters);
-   }
-
-   return NULL;
-}
-
-void VampEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < VampEffect > {
-      dynamic_cast<VampEffect *>(instance)
-   };
+   if (auto vp = FindPlugin(path, output, hasParameters))
+      return std::make_unique<VampEffect>(std::move(vp), path, output, hasParameters);
+   return nullptr;
 }
 
 // VampEffectsModule implementation

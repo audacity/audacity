@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 #define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
 
-#include "Audacity.h"
+
 
 #include <functional>
 #include <memory>
@@ -156,7 +156,7 @@ private:
    int mMessageCount;
 };
 
-class TrackFocus final
+class AUDACITY_DLL_API TrackFocus final
    : public ClientData::Base
 {
 public:

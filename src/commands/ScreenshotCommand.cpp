@@ -17,7 +17,7 @@ small calculations of rectangles.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ScreenshotCommand.h"
 
 #include <mutex>

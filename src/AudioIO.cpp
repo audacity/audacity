@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudioIO.cpp
 
@@ -58,7 +58,7 @@ to the meters.
   from disk, but audio buffers are filled far in advance of playback
   time, and there is a lower latency thread (PortAudio's callback) that
   actually sends samples to the output device. The relatively low
-  latency to the output device allows Audacity to stop audio output
+  latency to the output device allows Sneedacity to stop audio output
   quickly. We want the same behavior for MIDI, but there is not
   periodic callback from PortMidi (because MIDI is asynchronous), so
   this function is performed by the MidiThread class.
@@ -81,7 +81,7 @@ to the meters.
   \par Audio Time
   Normally, the current time during playback is given by the variable
   mTime. mTime normally advances by frames / samplerate each time an
-  audio buffer is output by the audio callback. However, Audacity has
+  audio buffer is output by the audio callback. However, Sneedacity has
   a speed control that can perform continuously variable time stretching
   on audio. This is achieved in two places: the playback "mixer" that
   generates the samples for output processes the audio according to
@@ -313,7 +313,7 @@ Time (in seconds, = total_sample_count / sample_rate)
   ALSA is complicated because we get varying values of
   framesPerBuffer from callback to callback. It seems there is a lot
   of variation in callback times and buffer space. One solution would
-  be to go to fixed size double buffer, but Audacity seems to work
+  be to go to fixed size double buffer, but Sneedacity seems to work
   better as is, so Plan C is to rely on one invariant which is that
   the output buffer cannot overflow, so there's a limit to how far
   ahead of the DAC time we can be writing samples into the
@@ -413,10 +413,10 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "AudioIO.h"
 
-#include "Experimental.h"
+
 
 #include "AudioIOListener.h"
 
@@ -466,7 +466,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "WaveTrack.h"
 
 #include "effects/RealtimeEffectManager.h"
-#include "prefs/QualityPrefs.h"
+#include "prefs/QualitySettings.h"
 #include "prefs/RecordingPrefs.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
@@ -541,7 +541,7 @@ constexpr size_t TimeQueueGrainSize = 2000;
 #endif
 
 
-struct AudioIoCallback::ScrubState
+struct AudioIoCallback::ScrubState : NonInterferingBase
 {
    ScrubState(double t0,
               double rate,
@@ -923,8 +923,8 @@ void AudioIO::Init()
       int i = getRecordDevIndex();
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info) {
-         gPrefs->Write(wxT("/AudioIO/RecordingDevice"), DeviceName(info));
-         gPrefs->Write(wxT("/AudioIO/Host"), HostName(info));
+         AudioIORecordingDevice.Write(DeviceName(info));
+         AudioIOHost.Write(HostName(info));
       }
    }
 
@@ -932,8 +932,8 @@ void AudioIO::Init()
       int i = getPlayDevIndex();
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
       if (info) {
-         gPrefs->Write(wxT("/AudioIO/PlaybackDevice"), DeviceName(info));
-         gPrefs->Write(wxT("/AudioIO/Host"), HostName(info));
+         AudioIOPlaybackDevice.Write(DeviceName(info));
+         AudioIOHost.Write(HostName(info));
       }
    }
 
@@ -1263,7 +1263,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // since we need float values anyway to apply the gain.
    // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to 
    // be set to floatSample below.
-   // JKC: YES that's right.  Internally Audacity uses float, and float has space for
+   // JKC: YES that's right.  Internally Sneedacity uses float, and float has space for
    // 24 bits as well as exponent.  Actual 24 bit would require packing and
    // unpacking unaligned bytes and would be inefficient.
    // ANSWER ME: is floatSample 64 bit on 64 bit machines?
@@ -1277,8 +1277,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    PaStreamParameters playbackParameters{};
    PaStreamParameters captureParameters{};
 
-   double latencyDuration = DEFAULT_LATENCY_DURATION;
-   gPrefs->Read(wxT("/AudioIO/LatencyDuration"), &latencyDuration);
+   auto latencyDuration = AudioIOLatencyDuration.Read();
 
    if( numPlaybackChannels > 0)
    {
@@ -1428,7 +1427,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3,1,0)
    // Don't want the system to sleep while audio I/O is active
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-      wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Audacity Audio"));
+      wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Sneedacity Audio"));
    }
 #endif
 
@@ -1446,9 +1445,8 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
       return;
 
    bool success;
-   long captureChannels;
-   auto captureFormat = QualityPrefs::SampleFormatChoice();
-   gPrefs->Read(wxT("/AudioIO/RecordChannels"), &captureChannels, 2L);
+   auto captureFormat = QualitySettings::SampleFormatChoice();
+   auto captureChannels = AudioIORecordChannels.Read();
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
    int playbackChannels = 0;
 
@@ -1465,7 +1463,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    if (!success) {
       auto msg = XO("Error opening recording device.\nError code: %s")
          .Format( Get()->LastPaErrorString() );
-      ShowErrorDialog( FindProjectFrame( mOwningProject ),
+      ShowExceptionDialog( FindProjectFrame( mOwningProject ),
          XO("Error"), msg, wxT("Error_opening_sound_device"));
       return;
    }
@@ -1526,7 +1524,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 #ifdef __WXGTK__
    // Detect whether ALSA is the chosen host, and do the various involved MIDI
    // timing compensations only then.
-   mUsingAlsa = (gPrefs->Read(wxT("/AudioIO/Host"), wxT("")) == "ALSA");
+   mUsingAlsa = (AudioIOHost.Read() == L"ALSA");
 #endif
 
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
@@ -1556,9 +1554,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mRecordingSchedule = {};
    mRecordingSchedule.mPreRoll = preRoll;
    mRecordingSchedule.mLatencyCorrection =
-      (gPrefs->ReadDouble(wxT("/AudioIO/LatencyCorrection"),
-                   DEFAULT_LATENCY_CORRECTION))
-         / 1000.0;
+      AudioIOLatencyCorrection.Read() / 1000.0;
    mRecordingSchedule.mDuration = t1 - t0;
    if (options.pCrossfadeData)
       mRecordingSchedule.mCrossfadeData.swap( *options.pCrossfadeData );
@@ -2191,9 +2187,8 @@ void AudioIO::StopStream()
       // PortAudio callback can use the information that we are stopping to fade
       // out the audio.  Give PortAudio callback a chance to do so.
       mAudioThreadFillBuffersLoopRunning = false;
-      long latency;
-      gPrefs->Read(  wxT("/AudioIO/LatencyDuration"), &latency, DEFAULT_LATENCY_DURATION );
-      // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through 
+      auto latency = static_cast<long>(AudioIOLatencyDuration.Read());
+      // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through
       // the sound card, then do so.  If we can't, don't wait around.  Just stop quickly and accept 
       // there will be a click.
       if( mbMicroFades  && (latency < 150 ))
@@ -2235,7 +2230,7 @@ void AudioIO::StopStream()
 
    mAudioThreadFillBuffersLoopRunning = false;
 
-   // Audacity can deadlock if it tries to update meters while
+   // Sneedacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
    // tries to grab a UI mutex while PortAudio tries to join a
    // pthread).  So we tell the callback to stop updating meters,
@@ -2362,7 +2357,7 @@ void AudioIO::StopStream()
             // The calls to Flush
             // may cause exceptions because of exhaustion of disk space.
             // Stop those exceptions here, or else they propagate through too
-            // many parts of Audacity that are not effects or editing
+            // many parts of Sneedacity that are not effects or editing
             // operations.  GuardedCall ensures that the user sees a warning.
 
             // Also be sure to Flush each track, at the top of the guarded call,
@@ -2448,7 +2443,7 @@ void AudioIO::StopStream()
 
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
-#ifdef USE_MIDI
+#if defined(EXPERIMENTAL_MIDI_OUT) && defined(USE_MIDI)
    mMidiPlaybackTracks.clear();
 #endif
 
@@ -2585,6 +2580,16 @@ finished:
    mCachedBestRatePlaying = playing;
    mCachedBestRateCapturing = capturing;
    return retval;
+}
+
+double AudioIO::GetStreamTime()
+{
+   // Track time readout for the main thread
+
+   if( !IsStreamActive() )
+      return BAD_STREAM_TIME;
+
+   return mPlaybackSchedule.NormalizeTrackTime();
 }
 
 
@@ -3617,11 +3622,9 @@ static void DoSoftwarePlaythrough(const void *inputBuffer,
 {
    for (unsigned int i=0; i < inputChannels; i++) {
       samplePtr inputPtr = ((samplePtr)inputBuffer) + (i * SAMPLE_SIZE(inputFormat));
-      samplePtr outputPtr = ((samplePtr)outputBuffer) + (i * SAMPLE_SIZE(floatSample));
 
-      CopySamples(inputPtr, inputFormat,
-                  (samplePtr)outputPtr, floatSample,
-                  len, true, inputChannels, 2);
+      SamplesToFloats(inputPtr, inputFormat,
+         outputBuffer + i, len, inputChannels, 2);
    }
 
    // One mono input channel goes to both output channels...
@@ -4113,7 +4116,7 @@ void AudioIoCallback::FillInputBuffers(
                   inputFloats[numCaptureChannels*i+t];
          } break;
          case int24Sample:
-            // We should never get here. Audacity's int24Sample format
+            // We should never get here. Sneedacity's int24Sample format
             // is different from PortAudio's sample format and so we
             // make PortAudio return float samples when recording in
             // 24-bit samples.
@@ -4406,9 +4409,8 @@ int AudioIoCallback::AudioCallback(const void *inputBuffer, void *outputBuffer,
          inputSamples = (float *) inputBuffer;
       }
       else {
-         CopySamples((samplePtr)inputBuffer, mCaptureFormat,
-                     (samplePtr)tempFloats, floatSample,
-                     framesPerBuffer * numCaptureChannels);
+         SamplesToFloats(reinterpret_cast<constSamplePtr>(inputBuffer),
+            mCaptureFormat, tempFloats, framesPerBuffer * numCaptureChannels);
          inputSamples = tempFloats;
       }
 

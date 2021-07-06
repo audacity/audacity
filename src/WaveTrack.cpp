@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WaveTrack.cpp
 
@@ -28,7 +28,7 @@ from the project that will own the track.
 
 #include "WaveTrack.h"
 
-#include "Experimental.h"
+
 
 #include "WaveClip.h"
 
@@ -51,7 +51,7 @@ from the project that will own the track.
 #include "Prefs.h"
 
 #include "effects/TimeWarper.h"
-#include "prefs/QualityPrefs.h"
+#include "prefs/QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
 #include "prefs/TracksBehaviorsPrefs.h"
@@ -85,7 +85,7 @@ WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rate)
 {
    if (format == (sampleFormat)0)
-      format = QualityPrefs::SampleFormatChoice();
+      format = QualitySettings::SampleFormatChoice();
    if (rate == 0)
       rate = mSettings.GetRate();
    return std::make_shared<WaveTrack> ( mpFactory, format, rate );
@@ -994,6 +994,9 @@ bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
 void WaveTrack::HandleClear(double t0, double t1,
                             bool addCutLines, bool split)
 {
+   // For debugging, use an ASSERT so that we stop
+   // closer to the problem.
+   wxASSERT( t1 >= t0 );
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -1281,6 +1284,7 @@ void WaveTrack::Paste(double t0, const Track *src)
                      // Strong-guarantee in case of this path
                      // not that it matters.
                      throw SimpleMessageBoxException{
+                        ExceptionType::BadUserAction,
                         XO("There is not enough room available to paste the selection"),
                         XO("Warning"),
                         "Error:_Insufficient_space_in_track"
@@ -1303,6 +1307,7 @@ void WaveTrack::Paste(double t0, const Track *src)
          // Strong-guarantee in case of this path
          // not that it matters.
          throw SimpleMessageBoxException{
+            ExceptionType::BadUserAction,
             XO("There is not enough room available to paste the selection"),
             XO("Warning"),
             "Error:_Insufficient_space_in_track"
@@ -2419,6 +2424,7 @@ void WaveTrack::ExpandCutLine(double cutLinePosition, double* cutlineStart,
                 clip->GetEndTime() + end - start > clip2->GetStartTime())
                // Strong-guarantee in case of this path
                throw SimpleMessageBoxException{
+                  ExceptionType::BadUserAction,
                   XO("There is not enough room available to expand the cut line"),
                   XO("Warning"),
                   "Error:_Insufficient_space_in_track"
@@ -2539,9 +2545,10 @@ void WaveTrackCache::SetTrack(const std::shared_ptr<const WaveTrack> &pTrack)
    }
 }
 
-constSamplePtr WaveTrackCache::Get(sampleFormat format,
+const float *WaveTrackCache::GetFloats(
    sampleCount start, size_t len, bool mayThrow)
 {
+   constexpr auto format = floatSample;
    if (format == floatSample && len > 0) {
       const auto end = start + len;
 
@@ -2590,10 +2597,10 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          if (start0 >= 0) {
             const auto len0 = mPTrack->GetBestBlockSize(start0);
             wxASSERT(len0 <= mBufferSize);
-            if (!mPTrack->Get(
-                  samplePtr(mBuffers[0].data.get()), floatSample, start0, len0,
+            if (!mPTrack->GetFloats(
+                  mBuffers[0].data.get(), start0, len0,
                   fillZero, mayThrow))
-               return 0;
+               return nullptr;
             mBuffers[0].start = start0;
             mBuffers[0].len = len0;
             if (!fillSecond &&
@@ -2618,8 +2625,8 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             if (start1 == end0) {
                const auto len1 = mPTrack->GetBestBlockSize(start1);
                wxASSERT(len1 <= mBufferSize);
-               if (!mPTrack->Get(samplePtr(mBuffers[1].data.get()), floatSample, start1, len1, fillZero, mayThrow))
-                  return 0;
+               if (!mPTrack->GetFloats(mBuffers[1].data.get(), start1, len1, fillZero, mayThrow))
+                  return nullptr;
                mBuffers[1].start = start1;
                mBuffers[1].len = len1;
                mNValidBuffers = 2;
@@ -2628,7 +2635,7 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       }
       wxASSERT(mNValidBuffers < 2 || mBuffers[0].end() == mBuffers[1].start);
 
-      samplePtr buffer = 0;
+      samplePtr buffer = nullptr; // will point into mOverlapBuffer
       auto remaining = len;
 
       // Possibly get an initial portion that is uncached
@@ -2643,9 +2650,11 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
          mOverlapBuffer.Resize(len, format);
          // initLen is not more than len:
          auto sinitLen = initLen.as_size_t();
-         if (!mPTrack->Get(mOverlapBuffer.ptr(), format, start, sinitLen,
-                           fillZero, mayThrow))
-            return 0;
+         if (!mPTrack->GetFloats(
+            // See comment below about casting
+            reinterpret_cast<float *>(mOverlapBuffer.ptr()),
+            start, sinitLen, fillZero, mayThrow))
+            return nullptr;
          wxASSERT( sinitLen <= remaining );
          remaining -= sinitLen;
          start += initLen;
@@ -2666,12 +2675,12 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
             // All is contiguous already.  We can completely avoid copying
             // leni is nonnegative, therefore start falls within mBuffers[ii],
             // so starti is bounded between 0 and buffer length
-            return samplePtr(mBuffers[ii].data.get() + starti.as_size_t() );
+            return mBuffers[ii].data.get() + starti.as_size_t() ;
          }
          else if (leni > 0) {
             // leni is nonnegative, therefore start falls within mBuffers[ii]
             // But we can't satisfy all from one buffer, so copy
-            if (buffer == 0) {
+            if (!buffer) {
                mOverlapBuffer.Resize(len, format);
                buffer = mOverlapBuffer.ptr();
             }
@@ -2689,23 +2698,31 @@ constSamplePtr WaveTrackCache::Get(sampleFormat format,
       if (remaining > 0) {
          // Very big request!
          // Fall back to direct fetch
-         if (buffer == 0) {
+         if (!buffer) {
             mOverlapBuffer.Resize(len, format);
             buffer = mOverlapBuffer.ptr();
          }
-         if (!mPTrack->Get(buffer, format, start, remaining, fillZero, mayThrow))
+         // See comment below about casting
+         if (!mPTrack->GetFloats( reinterpret_cast<float*>(buffer),
+            start, remaining, fillZero, mayThrow))
             return 0;
       }
 
-      return mOverlapBuffer.ptr();
+      // Overlap buffer was meant for the more general support of sample formats
+      // besides float, which explains the cast
+      return reinterpret_cast<const float*>(mOverlapBuffer.ptr());
    }
-
-   // Cache works only for float format.
-   mOverlapBuffer.Resize(len, format);
-   if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
-      return mOverlapBuffer.ptr();
-   else
-      return 0;
+   else {
+#if 0
+      // Cache works only for float format.
+      mOverlapBuffer.Resize(len, format);
+      if (mPTrack->Get(mOverlapBuffer.ptr(), format, start, len, fillZero, mayThrow))
+         return mOverlapBuffer.ptr();
+#else
+      // No longer handling other than float format.  Therefore len is 0.
+#endif
+      return nullptr;
+   }
 }
 
 void WaveTrackCache::Free()

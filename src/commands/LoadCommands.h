@@ -17,7 +17,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
-#include "../MemoryX.h"
+#include <memory>
 
 class AudacityCommand;
 
@@ -27,10 +27,10 @@ class AudacityCommand;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class BuiltinCommandsModule final : public ModuleInterface
+class AUDACITY_DLL_API BuiltinCommandsModule final : public ModuleInterface
 {
 public:
-   BuiltinCommandsModule(const wxString *path);
+   BuiltinCommandsModule();
    virtual ~BuiltinCommandsModule();
 
    using Factory = std::function< std::unique_ptr<AudacityCommand> () >;
@@ -69,8 +69,8 @@ public:
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const PluginPath & path) override;
-   void DeleteInstance(ComponentInterface *instance) override;
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) override;
 
 private:
    // BuiltinEffectModule implementation
@@ -82,8 +82,6 @@ private:
 
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory );
-
-   wxString mPath;
 
    using CommandHash = std::unordered_map< wxString, const Entry* > ;
    CommandHash mCommands;

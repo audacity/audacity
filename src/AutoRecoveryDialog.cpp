@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 AutoRecoveryDialog.cpp
 
@@ -36,7 +36,7 @@ enum {
 class AutoRecoveryDialog final : public wxDialogWrapper
 {
 public:
-   AutoRecoveryDialog(AudacityProject *proj);
+   explicit AutoRecoveryDialog(AudacityProject *proj);
 
    bool HasRecoverables() const;
    FilePaths GetRecoverables();
@@ -98,7 +98,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartVerticalLay(wxEXPAND, 1);
    {
       S.AddFixedText(
-         XO("The following projects were not saved properly the last time Audacity was run and "
+         XO("The following projects were not saved properly the last time Sneedacity was run and "
             "can be automatically recovered.\n\n"
             "After recovery, save the projects to ensure changes are written to disk."),
          false,
@@ -122,7 +122,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
 
       S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
-         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("&Quit Audacity"));
+         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("&Quit Sneedacity"));
          S.Id(ID_DISCARD_SELECTED).AddButton(XXO("&Discard Selected"));
          S.Id(ID_RECOVER_SELECTED).AddButton(XXO("&Recover Selected"), wxALIGN_CENTRE, true);
          S.Id(ID_SKIP).AddButton(XXO("&Skip"));
@@ -417,29 +417,27 @@ void AutoRecoveryDialog::OnListKeyDown(wxKeyEvent &evt)
 ////////////////////////////////////////////////////////////////////////////
 
 static bool RecoverAllProjects(const FilePaths &files,
-                               AudacityProject **pproj)
+                               AudacityProject *&pproj)
 {
    // Open a project window for each auto save file
    wxString filename;
+   bool result = true;
 
    for (auto &file: files)
    {
       AudacityProject *proj = nullptr;
-      if (*pproj)
-      {
-         // Reuse existing project window
-         proj = *pproj;
-         *pproj = NULL;
-      }
+      // Reuse any existing project window, which will be the empty project
+      // created at application startup
+      std::swap(proj, pproj);
 
       // Open project.
-      if (ProjectManager::OpenProject(proj, file, false) == nullptr)
+      if (ProjectManager::OpenProject(proj, file, false, true) == nullptr)
       {
-         return false;
+         result = false;
       }
    }
 
-   return true;
+   return result;
 }
 
 static void DiscardAllProjects(const FilePaths &files)
@@ -449,7 +447,7 @@ static void DiscardAllProjects(const FilePaths &files)
       ProjectFileManager::DiscardAutosave(file);
 }
 
-bool ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj, bool *didRecoverAnything)
+bool ShowAutoRecoveryDialogIfNeeded(AudacityProject *&pproj, bool *didRecoverAnything)
 {
    if (didRecoverAnything)
    {
@@ -472,7 +470,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject **pproj, bool *didRecoverAny
    // This must be done before "dlg" is declared.
    wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-   AutoRecoveryDialog dialog(*pproj);
+   AutoRecoveryDialog dialog(pproj);
 
    if (dialog.HasRecoverables())
    {

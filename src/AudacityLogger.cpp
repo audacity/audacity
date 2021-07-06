@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudacityLogger.cpp
 
@@ -14,10 +14,10 @@ Provides thread-safe logging based on the wxWidgets log facility.
 *//*******************************************************************/
 
 
-#include "Audacity.h" // This should always be included first
+
 #include "AudacityLogger.h"
 
-#include "Experimental.h"
+
 
 #include "FileNames.h"
 #include "Internat.h"
@@ -42,11 +42,11 @@ Provides thread-safe logging based on the wxWidgets log facility.
 // Two reasons for this class instead of the wxLogWindow class (or any WX GUI logging class)
 //
 // 1)  If wxLogWindow is used and initialized before the Mac's "root" window, then
-//     Audacity may crash when terminating.  It's not fully understood why this occurs
+//     Sneedacity may crash when terminating.  It's not fully understood why this occurs
 //     but it probably has to do with the order of deletion.  However, deferring the
 //     creation of the log window until it is actually shown circumvents the problem.
-// 2)  By providing an Audacity specific logging class, it can be made thread-safe and,
-//     as such, can be used by the ever growing threading within Audacity.
+// 2)  By providing an Sneedacity specific logging class, it can be made thread-safe and,
+//     as such, can be used by the ever growing threading within Sneedacity.
 //
 enum
 {
@@ -79,6 +79,8 @@ AudacityLogger::AudacityLogger()
    mUpdated = false;
 }
 
+AudacityLogger::~AudacityLogger()  = default;
+
 void AudacityLogger::Flush()
 {
    if (mUpdated && mFrame && mFrame->IsShown()) {
@@ -98,7 +100,7 @@ void AudacityLogger::DoLogText(const wxString & str)
 
       TimeStamp(&stamp);
 
-      mBuffer << stamp << _TS("Audacity ") << AUDACITY_VERSION_STRING << wxT("\n");
+      mBuffer << stamp << _TS("Sneedacity ") << AUDACITY_VERSION_STRING << wxT("\n");
    }
 
    mBuffer << str << wxT("\n");
@@ -157,7 +159,7 @@ void AudacityLogger::Show(bool show)
 
    // This is the first use, so create the frame
    Destroy_ptr<wxFrame> frame
-      { safenew wxFrame(NULL, wxID_ANY, _("Audacity Log")) };
+      { safenew wxFrame(NULL, wxID_ANY, _("Sneedacity Log")) };
    frame->SetName(frame->GetTitle());
    frame->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
 

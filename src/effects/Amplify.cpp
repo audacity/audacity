@@ -18,7 +18,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Amplify.h"
 #include "LoadEffects.h"
 
@@ -99,9 +99,9 @@ TranslatableString EffectAmplify::GetDescription()
    return XO("Increases or decreases the volume of the audio you have selected");
 }
 
-wxString EffectAmplify::ManualPage()
+ManualPageID EffectAmplify::ManualPage()
 {
-   return wxT("Amplify");
+   return L"Amplify";
 }
 
 // EffectDefinitionInterface implementation

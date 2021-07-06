@@ -19,11 +19,9 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "Phaser.h"
 #include "LoadEffects.h"
-
-#include "../Experimental.h"
 
 #include <math.h>
 
@@ -117,9 +115,9 @@ TranslatableString EffectPhaser::GetDescription()
    return XO("Combines phase-shifted signals with the original signal");
 }
 
-wxString EffectPhaser::ManualPage()
+ManualPageID EffectPhaser::ManualPage()
 {
-   return wxT("Phaser");
+   return L"Phaser";
 }
 
 // EffectDefinitionInterface implementation

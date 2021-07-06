@@ -13,13 +13,11 @@
 #ifndef __AUDACITY_TRANSCRIPTION_TOOLBAR__
 #define __AUDACITY_TRANSCRIPTION_TOOLBAR__
 
-#include "../Experimental.h"
-
 #include "ToolBar.h"
 
 #include <wx/brush.h> // member variable
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxChoice;
 class wxCommandEvent;

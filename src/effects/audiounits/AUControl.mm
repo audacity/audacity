@@ -21,7 +21,7 @@
       
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 #include "AUControl.h"
 #include <AudioUnit/AudioUnitProperties.h>
 #include <AudioUnit/AUCocoaUIView.h>
@@ -31,7 +31,7 @@
 #include <AudioUnit/AudioUnitCarbonView.h>
 #endif
 
-#include "../../MemoryX.h"
+#include "MemoryX.h"
 
 @interface AUView : NSView
 {

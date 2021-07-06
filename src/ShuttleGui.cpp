@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ShuttleGui.cpp
 
   James Crook
 
-  Audacity is free software.
+  Sneedacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
 **********************************************************************//**
@@ -18,7 +18,7 @@
 
 \class ShuttleGui
 \brief
-  Derived from ShuttleGuiBase, an Audacity specific class for shuttling
+  Derived from ShuttleGuiBase, an Sneedacity specific class for shuttling
   data to and from GUI.
 
   ShuttleGui extends the idea of the data Shuttle class to include creation
@@ -31,7 +31,7 @@
   Most of the ShuttleGui functions are actually defined in
   ShuttleGuiBase.
      - wxWidgets widgets are dealt with by ShuttleGuiBase.
-     - Audacity specific widgets are dealt with by ShuttleGui
+     - Sneedacity specific widgets are dealt with by ShuttleGui
 
   There is documentation on how to use this class in \ref ShuttleSystem
 
@@ -93,10 +93,10 @@ for registering for changes.
 *//******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "ShuttleGui.h"
 
-#include "Experimental.h"
+
 
 #include "Prefs.h"
 #include "ShuttlePrefs.h"
@@ -822,7 +822,7 @@ void ShuttleGuiBase::DoInsertListColumns(
    // -- is it still correct for wxWidgets 3?
 
    // Do this BEFORE inserting the columns.  On the Mac at least, the
-   // columns are deleted and later InsertItem()s will cause Audacity to crash.
+   // columns are deleted and later InsertItem()s will cause Sneedacity to crash.
    for ( auto style = 1l; style <= listControlStyles; style <<= 1 )
       if ( (style & listControlStyles) )
          pListCtrl->SetSingleStyle(style, true);
@@ -1749,7 +1749,7 @@ wxString ShuttleGuiBase::TranslateFromIndex( const int nIn, const wxArrayStringE
 // ShuttleGui code uses the model that you read into program variables
 // and write out from program variables.
 
-// In programs like Audacity which don't use internal program variables
+// In programs like Sneedacity which don't use internal program variables
 // you have to do both steps in one go, using variants of the standard
 // 'Tie' functions which call the underlying Tie functions twice.
 
@@ -1815,7 +1815,7 @@ bool ShuttleGuiBase::DoStep( int iStep )
 /// between gui and stack variable and stack variable and shuttle.
 wxCheckBox * ShuttleGuiBase::TieCheckBox(
    const TranslatableString &Prompt,
-   const SettingSpec< bool > &Setting)
+   const BoolSetting &Setting)
 {
    wxCheckBox * pCheck=NULL;
 
@@ -1832,7 +1832,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(
 /// between gui and stack variable and stack variable and shuttle.
 wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
    const TranslatableString &Prompt,
-   const SettingSpec< bool > &Setting)
+   const BoolSetting & Setting)
 {
    wxCheckBox * pCheck=NULL;
 
@@ -1849,7 +1849,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
 /// between gui and stack variable and stack variable and shuttle.
 wxSlider * ShuttleGuiBase::TieSlider(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting & Setting,
    const int max,
    const int min)
 {
@@ -1868,7 +1868,7 @@ wxSlider * ShuttleGuiBase::TieSlider(
 /// between gui and stack variable and stack variable and shuttle.
 wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int max,
    const int min)
 {
@@ -1887,7 +1887,7 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
 /// between gui and stack variable and stack variable and shuttle.
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< wxString > &Setting,
+   const StringSetting & Setting,
    const int nChars)
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
@@ -1905,7 +1905,7 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int nChars)
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
@@ -1923,7 +1923,7 @@ wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
 /// This one does it for double values...
 wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< double > &Setting,
+   const DoubleSetting & Setting,
    const int nChars)
 {
    wxTextCtrl * pText=(wxTextCtrl*)NULL;
@@ -1984,7 +1984,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
 ///                             if null, then use 0, 1, 2, ...
 wxChoice * ShuttleGuiBase::TieNumberAsChoice(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting & Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices,
    int iNoMatchSelector)
@@ -2244,7 +2244,7 @@ ShuttleGui::~ShuttleGui()
 {
 }
 
-// Now we have Audacity specific shuttle functions.
+// Now we have Sneedacity specific shuttle functions.
 ShuttleGui & ShuttleGui::Id(int id )
 {
    miIdSetByUser = id;
@@ -2480,3 +2480,17 @@ void ShuttleGui::SetMinSize( wxWindow *window, const std::vector<int> & items )
    SetMinSize( window, strs );
 }
 */
+
+TranslatableStrings Msgids(
+   const EnumValueSymbol strings[], size_t nStrings)
+{
+   return transform_range<TranslatableStrings>(
+      strings, strings + nStrings,
+      std::mem_fn( &EnumValueSymbol::Msgid )
+   );
+}
+
+TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings )
+{
+   return Msgids( strings.data(), strings.size() );
+}

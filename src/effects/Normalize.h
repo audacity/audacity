@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_EFFECT_NORMALIZE__
 #define __AUDACITY_EFFECT_NORMALIZE__
 
-#include "../Experimental.h"
-
 #include "Effect.h"
 #include "Biquad.h"
 
@@ -34,7 +32,7 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
-   wxString ManualPage() override;
+   ManualPageID ManualPage() override;
 
    // EffectDefinitionInterface implementation
 

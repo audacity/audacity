@@ -75,9 +75,7 @@ CommandManager.  It holds the callback for one command.
 
 *//******************************************************************/
 
-#include "../Audacity.h"
 
-#include "../Experimental.h"
 
 #include "CommandManager.h"
 
@@ -586,6 +584,12 @@ auto CommandManager::Options::MakeCheckFn(
    const wxString key, bool defaultValue ) -> CheckFn
 {
    return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
+}
+
+auto CommandManager::Options::MakeCheckFn(
+   const BoolSetting &setting ) -> CheckFn
+{
+   return MakeCheckFn( setting.GetPath(), setting.GetDefault() );
 }
 
 ///
@@ -1209,7 +1213,7 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
       mNiceName = NiceName;
    }
    else {
-      mNiceName = XO("");
+      mNiceName = {};
    }
 
    const CommandContext context{ project, evt, entry->index, entry->parameter };

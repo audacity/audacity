@@ -15,7 +15,7 @@ the pitch without changing the tempo.
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #if USE_SOUNDTOUCH
 
 #ifndef __AUDACITY_EFFECT_CHANGEPITCH__
@@ -46,7 +46,7 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
-   wxString ManualPage() override;
+   ManualPageID ManualPage() override;
 
    // EffectDefinitionInterface implementation
 

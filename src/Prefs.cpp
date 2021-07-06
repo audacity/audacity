@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Prefs.cpp
 
@@ -12,7 +12,7 @@
 \brief Utility functions for working with our wxConf (gPrefs)
 
 
-  Audacity uses wxWidgets' wxConfig class to handle preferences.
+  Sneedacity uses wxWidgets' wxConfig class to handle preferences.
   See Prefs.h for more information on how it works...
 
 \verbatim
@@ -20,7 +20,7 @@
 
   Preference field specification:
    /
-      Version					- Audacity Version that created these prefs
+      Version					- Sneedacity Version that created these prefs
       DefaultOpenPath			- Default directory for NEW file selector
    /FileFormats
       CopyOrEditUncompressedData - Copy data from uncompressed files or
@@ -50,7 +50,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Prefs.h"
 
 #include <wx/defs.h>
@@ -61,6 +61,7 @@
 
 #include "Internat.h"
 #include "MemoryX.h"
+#include <memory>
 
 std::unique_ptr<FileConfig> ugPrefs {};
 
@@ -280,7 +281,7 @@ bool ChoiceSetting::Write( const wxString &value )
 }
 
 EnumSettingBase::EnumSettingBase(
-   const wxString &key,
+   const SettingBase &key,
    EnumValueSymbols symbols,
    long defaultSymbol,
 
@@ -344,7 +345,7 @@ void EnumSettingBase::Migrate( wxString &value )
         gPrefs->Read(mOldKey, &intValue, 0) ) {
       // Make the migration, only once and persistently.
       // Do not DELETE the old key -- let that be read if user downgrades
-      // Audacity.  But further changes will be stored only to the NEW key
+      // Sneedacity.  But further changes will be stored only to the NEW key
       // and won't be seen then.
       auto index = (long) FindInt( intValue );
       if ( index >= (long)mSymbols.size() )
@@ -397,4 +398,24 @@ void PreferenceInitializer::ReinitializeAll()
 {
    for ( auto pInitializer : allInitializers() )
       (*pInitializer)();
+}
+
+wxConfigBase *SettingBase::GetConfig() const
+{
+   return gPrefs;
+}
+
+bool SettingBase::Delete()
+{
+   auto config = GetConfig();
+   return config && config->DeleteEntry( GetPath() );
+}
+
+bool BoolSetting::Toggle()
+{
+   bool value = Read();
+   if ( Write( !value ) )
+      return !value;
+   else
+      return value;
 }

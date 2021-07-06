@@ -1,16 +1,15 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  CrashReport.cpp
  
  *//*******************************************************************/
 
-#include "Audacity.h"
-#include "CrashReport.h"
-#include "Experimental.h"
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+#include "CrashReport.h"
+
+#if defined(HAS_CRASH_REPORT)
 #include <atomic>
 #include <thread>
 
@@ -25,6 +24,7 @@
 #include "AudioIOBase.h"
 #include "FileNames.h"
 #include "Internat.h"
+#include "Languages.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "prefs/GUIPrefs.h"
@@ -44,7 +44,7 @@ void Generate(wxDebugReport::Context ctx)
 
    {
       // Provides a progress dialog with indeterminate mode
-      wxGenericProgressDialog pd(XO("Audacity Support Data").Translation(),
+      wxGenericProgressDialog pd(XO("Sneedacity Support Data").Translation(),
                                  XO("This may take several seconds").Translation(),
                                  300000,     // range
                                  nullptr,    // parent
@@ -54,15 +54,15 @@ void Generate(wxDebugReport::Context ctx)
       auto thread = std::thread([&]
       {
          wxFileNameWrapper fn{ FileNames::DataDir(), wxT("audacity.cfg") };
-         rpt.AddFile(fn.GetFullPath(), _TS("Audacity Configuration"));
+         rpt.AddFile(fn.GetFullPath(), _TS("Sneedacity Configuration"));
          rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
          rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
    
          if (ctx == wxDebugReport::Context_Current)
          {
-            auto saveLang = GUIPrefs::GetLangShort();
-            GUIPrefs::InitLang( wxT("en") );
-            auto cleanup = finally( [&]{ GUIPrefs::InitLang( saveLang ); } );
+            auto saveLang = Languages::GetLangShort();
+            GUIPrefs::SetLang( wxT("en") );
+            auto cleanup = finally( [&]{ GUIPrefs::SetLang( saveLang ); } );
       
             auto gAudioIO = AudioIOBase::Get();
             rpt.AddText(wxT("audiodev.txt"), gAudioIO->GetDeviceInfo(), wxT("Audio Device Info"));
@@ -77,7 +77,7 @@ void Generate(wxDebugReport::Context ctx)
          auto logger = AudacityLogger::Get();
          if (logger)
          {
-            rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Audacity Log"));
+            rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Sneedacity Log"));
          }
    
          done = true;
@@ -102,7 +102,7 @@ void Generate(wxDebugReport::Context ctx)
    {
       AudacityTextEntryDialog dlg(nullptr,
          XO("Report generated to:"),
-         XO("Audacity Support Data"),
+         XO("Sneedacity Support Data"),
          rpt.GetCompressedFileName(),
          wxOK | wxCENTER);
       dlg.SetName(dlg.GetTitle());

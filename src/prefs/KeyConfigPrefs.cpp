@@ -19,7 +19,7 @@ KeyConfigPrefs and MousePrefs use.
 
 *//*********************************************************************/
 
-#include "../Audacity.h"
+
 
 #include "KeyConfigPrefs.h"
 
@@ -117,7 +117,7 @@ TranslatableString KeyConfigPrefs::GetDescription()
    return XO("Preferences for KeyConfig");
 }
 
-wxString KeyConfigPrefs::HelpPageName()
+ManualPageID KeyConfigPrefs::HelpPageName()
 {
    return "Keyboard_Preferences";
 }

@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../Audacity.h"
-#include "SelectHandle.h"
 
-#include "../../Experimental.h"
+#include "SelectHandle.h"
 
 #include "Scrubbing.h"
 #include "TrackView.h"
@@ -1366,9 +1364,9 @@ void SelectHandle::StartSnappingFreqSelection
             end - start));
    const auto effectiveLength = std::max(minLength, length);
    frequencySnappingData.resize(effectiveLength, 0.0f);
-   pTrack->Get(
-      reinterpret_cast<samplePtr>(&frequencySnappingData[0]),
-      floatSample, start, length, fillZero,
+   pTrack->GetFloats(
+      &frequencySnappingData[0],
+      start, length, fillZero,
       // Don't try to cope with exceptions, just read zeroes instead.
       false);
 

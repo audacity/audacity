@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SpectrumAnalyst.cpp
 
@@ -23,7 +23,7 @@ and in the spectrogram spectral selection.
 */
 
 
-#include "Audacity.h"
+
 #include "SpectrumAnalyst.h"
 #include "FFT.h"
 

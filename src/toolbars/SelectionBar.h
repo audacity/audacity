@@ -42,7 +42,7 @@ class AudacityProject;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-class SelectionBar final : public ToolBar {
+class AUDACITY_DLL_API SelectionBar final : public ToolBar {
 
  public:
    SelectionBar( AudacityProject &project );

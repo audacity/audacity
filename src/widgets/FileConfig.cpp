@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+
 
 #include <errno.h>
 
@@ -22,6 +22,8 @@
 #include <wx/wfstream.h>
 
 #include "FileConfig.h"
+
+#include <cerrno> // for ENOENT
 
 #if !defined(F_OK)
 #define F_OK 0x00

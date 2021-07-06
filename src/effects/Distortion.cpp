@@ -16,11 +16,9 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Distortion.h"
 #include "LoadEffects.h"
-
-#include "../Experimental.h"
 
 #include <cmath>
 #include <algorithm>
@@ -200,9 +198,9 @@ TranslatableString EffectDistortion::GetDescription()
    return XO("Waveshaping distortion effect");
 }
 
-wxString EffectDistortion::ManualPage()
+ManualPageID EffectDistortion::ManualPage()
 {
-   return wxT("Distortion");
+   return L"Distortion";
 }
 
 // EffectDefinitionInterface implementation

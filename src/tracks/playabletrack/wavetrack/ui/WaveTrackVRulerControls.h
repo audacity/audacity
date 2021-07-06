@@ -18,9 +18,9 @@ class WaveTrack;
 
 namespace WaveTrackVRulerControls
 {
-   Ruler &ScratchRuler();
+   AUDACITY_DLL_API Ruler &ScratchRuler();
 
-   void DoDraw( TrackVRulerControls &controls,
+   AUDACITY_DLL_API void DoDraw( TrackVRulerControls &controls,
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass );
 };

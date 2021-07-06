@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Printing.cpp
 
@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Printing.h"
 
 #include <wx/defs.h>

@@ -13,19 +13,16 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-#include "Audacity.h" // for USE_* macros
+
 
 #include "AudioIOBase.h" // to inherit
+#include "PlaybackSchedule.h" // member variable
 
-#include "Experimental.h"
+
 
 #include <memory>
 #include <utility>
 #include <wx/atomic.h> // member variable
-
-#ifdef USE_MIDI
-
-// TODO: Put the relative paths into automake.
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 typedef void PmStream;
@@ -40,8 +37,6 @@ using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #endif // EXPERIMENTAL_MIDI_OUT
-
-#endif // USE_MIDI
 
 #include <wx/event.h> // to declare custom event types
 
@@ -137,12 +132,11 @@ int audacityAudioCallback(
 // Data must be default-constructible and either copyable or movable.
 template<typename Data>
 class MessageBuffer {
-   struct alignas( 64
-      //std::hardware_destructive_interference_size // C++17
-   ) UpdateSlot {
+   struct UpdateSlot {
       std::atomic<bool> mBusy{ false };
       Data mData;
-   } mSlots[2];
+   };
+   NonInterfering<UpdateSlot> mSlots[2];
 
    std::atomic<unsigned char> mLastWrittenSlot{ 0 };
 
@@ -571,10 +565,11 @@ protected:
       // These need not be updated atomically, because we rely on the atomics
       // in the playback ring buffers to supply the synchronization.  Still,
       // align them to avoid false sharing.
-      alignas(64) struct Cursor {
+      struct Cursor {
          size_t mIndex {};
          size_t mRemainder {};
-      } mHead, mTail;
+      };
+      NonInterfering<Cursor> mHead, mTail;
 
       void Producer(
          const PlaybackSchedule &schedule, double rate, double scrubSpeed,
@@ -582,6 +577,7 @@ protected:
       double Consumer( size_t nSamples, double rate );
    } mTimeQueue;
 
+   PlaybackSchedule mPlaybackSchedule;
 };
 
 class AUDACITY_DLL_API AudioIO final
@@ -720,6 +716,14 @@ public:
    * capturing is true if the stream is capturing one or more audio channels,
    * and playing is true if one or more channels are being played. */
    double GetBestRate(bool capturing, bool playing, double sampleRate);
+
+   /** \brief During playback, the track time most recently played
+    *
+    * When playing looped, this will start from t0 again,
+    * too. So the returned time should be always between
+    * t0 and t1
+    */
+   double GetStreamTime();
 
    friend class AudioThread;
 #ifdef EXPERIMENTAL_MIDI_OUT

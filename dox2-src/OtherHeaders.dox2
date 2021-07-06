@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   OtherHeaders.dox2
 
-  James Crook
+  Sneed
 
 ********************************************************************//**
 
@@ -12,7 +12,7 @@
 
 \section OtherHeadersIntro Introduction
 
-Some of the header files contained in the Audacity source directory 
+Some of the header files contained in the Sneedacity source directory 
 are headers for linkage with other modules.
 
  - lapspa.h provides the API for Linux Audio Plugins Architecture.

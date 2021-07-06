@@ -14,19 +14,15 @@
 #ifndef __AUDACITY_APP__
 #define __AUDACITY_APP__
 
-#include "Audacity.h"
-#include "audacity/Types.h"
 
-#include "Experimental.h"
+#include "Identifier.h"
+
+
 
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
 
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h> // for wxDebugReport::Context
-#endif
-
-#include "MemoryX.h"
+#include <memory>
 
 class wxSingleInstanceChecker;
 class wxSocketEvent;

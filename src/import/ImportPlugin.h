@@ -45,11 +45,13 @@ but little else.
 #ifndef __AUDACITY_IMPORTER__
 #define __AUDACITY_IMPORTER__
 
-#include "../Audacity.h"
 
+
+#include <memory>
 #include "audacity/Types.h"
-#include "../Internat.h"
-#include "../MemoryX.h"
+#include "Identifier.h"
+#include "Internat.h"
+#include "wxArrayStringEx.h"
 
 class AudacityProject;
 class ProgressDialog;
@@ -60,7 +62,7 @@ class Tags;
 
 class ImportFileHandle;
 
-class ImportPlugin /* not final */
+class AUDACITY_DLL_API ImportPlugin /* not final */
 {
 public:
 
@@ -77,16 +79,9 @@ public:
    // Get a list of extensions this plugin expects to be able to
    // import.  If a filename matches any of these extensions,
    // this importer will get first dibs on importing it.
-   virtual FileExtensions GetSupportedExtensions()
-   {
-      return mExtensions;
-   }
+   virtual FileExtensions GetSupportedExtensions();
 
-   bool SupportsExtension(const FileExtension &extension)
-   {
-      // Case-insensitive check if extension is supported
-      return mExtensions.Index(extension, false) != wxNOT_FOUND;
-   }
+   bool SupportsExtension(const FileExtension &extension);
 
    // Open the given file, returning true if it is in a recognized
    // format, false otherwise.  This puts the importer into the open
@@ -94,14 +89,11 @@ public:
    virtual std::unique_ptr<ImportFileHandle> Open(
       const FilePath &Filename, AudacityProject*) = 0;
 
-   virtual ~ImportPlugin() { }
+   virtual ~ImportPlugin();
 
 protected:
 
-   ImportPlugin(FileExtensions supportedExtensions):
-      mExtensions( std::move( supportedExtensions ) )
-   {
-   }
+   ImportPlugin(FileExtensions supportedExtensions);
 
    const FileExtensions mExtensions;
 };
@@ -110,7 +102,7 @@ protected:
 class WaveTrack;
 using TrackHolders = std::vector< std::vector< std::shared_ptr<WaveTrack> > >;
 
-class ImportFileHandle /* not final */
+class AUDACITY_DLL_API ImportFileHandle /* not final */
 {
 public:
    ImportFileHandle(const FilePath & filename);

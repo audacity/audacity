@@ -55,8 +55,9 @@ and sends it to that message target.
 #ifndef __COMMANDTARGETS__
 #define __COMMANDTARGETS__
 
-#include "../MemoryX.h"
+#include <memory>
 #include <vector>
+#include <wx/string.h>
 #include <wx/thread.h>
 
 class wxStatusBar;
@@ -70,7 +71,7 @@ public:
 };
 
 /// Interface for objects that can receive (string) messages from a command
-class CommandMessageTarget /* not final */
+class AUDACITY_DLL_API CommandMessageTarget /* not final */
 {
 public:
    CommandMessageTarget() {mCounts.push_back(0);}
@@ -202,7 +203,7 @@ public:
 };
 
 /// Displays messages from a command in an AudacityMessageBox
-class MessageBoxTarget final : public CommandMessageTarget
+class AUDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
@@ -210,7 +211,7 @@ public:
 };
 
 /// Displays messages from a command in a wxStatusBar
-class StatusBarTarget final : public CommandMessageTarget
+class AUDACITY_DLL_API StatusBarTarget final : public CommandMessageTarget
 {
 private:
    wxStatusBar &mStatus;
@@ -385,7 +386,8 @@ public:
    }
 };
 
-class LispifiedCommandOutputTargets : public CommandOutputTargets
+class AUDACITY_DLL_API LispifiedCommandOutputTargets
+   : public CommandOutputTargets
 {
 public :
    LispifiedCommandOutputTargets( CommandOutputTargets & target );
@@ -394,7 +396,7 @@ private:
    CommandOutputTargets * pToRestore;
 };
 
-class BriefCommandOutputTargets : public CommandOutputTargets
+class AUDACITY_DLL_API BriefCommandOutputTargets : public CommandOutputTargets
 {
 public :
    BriefCommandOutputTargets( CommandOutputTargets & target );

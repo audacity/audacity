@@ -79,8 +79,8 @@ public:
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
    
-   wxString ManualPage() override;
-   wxString HelpPage() override;
+   ManualPageID ManualPage() override;
+   FilePath HelpPage() override;
 
    // EffectDefinitionInterface implementation
 
@@ -267,7 +267,8 @@ private:
    double            mProgressTot;
    double            mScale;
 
-   SampleBuffer      mCurBuffer[2];
+   using Buffer = std::unique_ptr<float[]>;
+   Buffer            mCurBuffer[2];
    sampleCount       mCurBufferStart[2];
    size_t            mCurBufferLen[2];
 

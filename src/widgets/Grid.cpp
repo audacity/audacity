@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Grid.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -27,6 +27,7 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
+#include "MemoryX.h"
 #include "../SelectedRegion.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -572,7 +573,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
          {
             wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
             wxClipboard::Get()->SetData(data);
-            SetCellValue(crow, ccol, {});
+            SetCellValue(crow, ccol, "" );
             return;
          }
          break;

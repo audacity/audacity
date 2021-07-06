@@ -20,7 +20,7 @@ around to NEW positions.
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+
 #include "Grabber.h"
 
 #include <wx/defs.h>
@@ -31,7 +31,7 @@ around to NEW positions.
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
-#include "../Internat.h"
+#include "Internat.h"
 #include "../Theme.h"
 
 ////////////////////////////////////////////////////////////

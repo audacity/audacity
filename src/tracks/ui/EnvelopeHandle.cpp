@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../Audacity.h"
-#include "EnvelopeHandle.h"
 
-#include "../../Experimental.h"
+#include "EnvelopeHandle.h"
 
 #include "TrackView.h"
 

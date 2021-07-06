@@ -14,10 +14,11 @@
 
 *//*******************************************************************/
 
-#include "../../Audacity.h" // for USE_* macros
+
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
+#include "../../ModuleManager.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -232,7 +233,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew AudioUnitEffectsModule(path);
+   return safenew AudioUnitEffectsModule();
 }
 
 // ============================================================================
@@ -246,17 +247,12 @@ DECLARE_BUILTIN_MODULE(AudioUnitEffectsBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-AudioUnitEffectsModule::AudioUnitEffectsModule(const wxString *path)
+AudioUnitEffectsModule::AudioUnitEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 AudioUnitEffectsModule::~AudioUnitEffectsModule()
 {
-   mPath.clear();
 }
 
 // ============================================================================
@@ -265,7 +261,7 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 
 PluginPath AudioUnitEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
@@ -381,25 +377,13 @@ bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return FindAudioUnit(path, name) != NULL;
 }
 
-ComponentInterface *AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   wxString name;
-   AudioComponent component = FindAudioUnit(path, name);
-   if (component == NULL)
-   {
-      return NULL;
-   }
-
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew AudioUnitEffect(path, name, component);
-}
-
-void AudioUnitEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < AudioUnitEffect > {
-      dynamic_cast<AudioUnitEffect *>(instance)
-   };
+   if (wxString name; auto component = FindAudioUnit(path, name))
+      return std::make_unique<AudioUnitEffect>(path, name, component);
+   return nullptr;
 }
 
 // ============================================================================

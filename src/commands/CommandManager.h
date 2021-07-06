@@ -12,9 +12,7 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
-#include "../Experimental.h"
-
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include "../ClientData.h"
 #include "CommandFunctors.h"
@@ -29,13 +27,13 @@
 
 #include "../xml/XMLTagHandler.h"
 
-#include "audacity/Types.h"
-
 #include <unordered_map>
 
 class wxMenu;
 class wxMenuBar;
 using CommandParameter = CommandID;
+
+class BoolSetting;
 
 struct MenuBarListEntry;
 struct SubMenuListEntry;
@@ -96,7 +94,7 @@ class AUDACITY_DLL_API CommandManager final
    using CheckFn = std::function< bool(AudacityProject&) >;
 
    // For specifying unusual arguments in AddItem
-   struct Options
+   struct AUDACITY_DLL_API Options
    {
       Options() {}
       // Allow implicit construction from an accelerator string, which is
@@ -141,6 +139,11 @@ class AUDACITY_DLL_API CommandManager final
          checker = MakeCheckFn( key, defaultValue );
          return std::move(*this);
       }
+      // Take a BoolSetting
+      Options &&CheckTest ( const BoolSetting &setting ) && {
+         checker = MakeCheckFn( setting );
+         return std::move(*this);
+      }
 
       const wxChar *accel{ wxT("") };
       CheckFn checker; // default value means it's not a check item
@@ -157,6 +160,8 @@ class AUDACITY_DLL_API CommandManager final
    private:
       static CheckFn
          MakeCheckFn( const wxString key, bool defaultValue );
+      static CheckFn
+         MakeCheckFn( const BoolSetting &setting );
    };
 
    void AddItemList(const CommandID & name,
@@ -368,7 +373,7 @@ private:
    std::unique_ptr< wxMenuBar > mTempMenuBar;
 };
 
-struct MenuVisitor : Registry::Visitor
+struct AUDACITY_DLL_API MenuVisitor : Registry::Visitor
 {
    // final overrides
    void BeginGroup( Registry::GroupItem &item, const Path &path ) final;
@@ -399,17 +404,18 @@ namespace MenuTable {
    using namespace Registry;
 
    // These are found by dynamic_cast
-   struct MenuSection {
+   struct AUDACITY_DLL_API MenuSection {
       virtual ~MenuSection();
    };
-   struct WholeMenu {
+   struct AUDACITY_DLL_API WholeMenu {
       WholeMenu( bool extend = false ) : extension{ extend }  {}
       virtual ~WholeMenu();
       bool extension;
    };
 
    // Describes a main menu in the toolbar, or a sub-menu
-   struct MenuItem final : ConcreteGroupItem< false, ToolbarMenuVisitor >
+   struct AUDACITY_DLL_API MenuItem final
+      : ConcreteGroupItem< false, ToolbarMenuVisitor >
       , WholeMenu {
       // Construction from an internal name and a previously built-up
       // vector of pointers
@@ -462,7 +468,7 @@ namespace MenuTable {
    // This is used before a sequence of many calls to Command() and
    // CommandGroup(), so that the finder argument need not be specified
    // in each call.
-   class FinderScope : ValueRestorer< CommandHandlerFinder >
+   class AUDACITY_DLL_API FinderScope : ValueRestorer< CommandHandlerFinder >
    {
       static CommandHandlerFinder sFinder;
 
@@ -476,7 +482,7 @@ namespace MenuTable {
    };
 
    // Describes one command in a menu
-   struct CommandItem final : SingleItem {
+   struct AUDACITY_DLL_API CommandItem final : SingleItem {
       CommandItem(const CommandID &name_,
                const TranslatableString &label_in_,
                CommandFunctorPointer callback_,
@@ -510,7 +516,7 @@ namespace MenuTable {
    // Describes several successive commands in a menu that are closely related
    // and dispatch to one common callback, which will be passed a number
    // in the CommandContext identifying the command
-   struct CommandGroupItem final : SingleItem {
+   struct AUDACITY_DLL_API CommandGroupItem final : SingleItem {
       CommandGroupItem(const Identifier &name_,
                std::vector< ComponentInterfaceSymbol > items_,
                CommandFunctorPointer callback_,
@@ -685,7 +691,7 @@ namespace MenuTable {
    // Typically you make a static object of this type in the .cpp file that
    // also defines the added menu actions.
    // pItem can be specified by an expression using the inline functions above.
-   struct AttachedItem final
+   struct AUDACITY_DLL_API AttachedItem final
    {
       AttachedItem( const Placement &placement, BaseItemPtr pItem );
 

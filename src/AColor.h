@@ -22,7 +22,7 @@ class wxDC;
 class wxGraphicsContext;
 class wxRect;
 
-class AColor {
+class AUDACITY_DLL_API AColor {
  public:
 
     enum ColorGradientChoice {
@@ -123,8 +123,9 @@ class AColor {
    static wxBrush tooltipBrush;
 
    static bool gradient_inited;
-   static const int gradientSteps = 512;
-   static unsigned char gradient_pre[ColorGradientTotal][2][gradientSteps][3];
+   static const int colorSchemes = 4;
+   static const int gradientSteps = 256;
+   static unsigned char gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 
    // For experiments in mouse-over highlighting only
    static wxPen uglyPen;
@@ -139,16 +140,16 @@ class AColor {
 
 inline void GetColorGradient(float value,
                              AColor::ColorGradientChoice selected,
-                             bool grayscale,
+                             int colorScheme,
                              unsigned char * __restrict red,
                              unsigned char * __restrict green,
                              unsigned char * __restrict blue) {
 
    int idx = value * (AColor::gradientSteps - 1);
 
-   *red = AColor::gradient_pre[selected][grayscale][idx][0];
-   *green = AColor::gradient_pre[selected][grayscale][idx][1];
-   *blue = AColor::gradient_pre[selected][grayscale][idx][2];
+   *red = AColor::gradient_pre[selected][colorScheme][idx][0];
+   *green = AColor::gradient_pre[selected][colorScheme][idx][1];
+   *blue = AColor::gradient_pre[selected][colorScheme][idx][2];
 }
 
 #endif

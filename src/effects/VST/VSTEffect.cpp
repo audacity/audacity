@@ -24,8 +24,9 @@
 // WARNING:  This is NOT 64-bit safe
 // *******************************************************************
 
-#include "../../Audacity.h" // for USE_* macros
+
 #include "VSTEffect.h"
+#include "../../ModuleManager.h"
 
 #include "../../widgets/ProgressDialog.h"
 
@@ -142,7 +143,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
-   return safenew VSTEffectsModule(path);
+   return safenew VSTEffectsModule();
 }
 
 // ============================================================================
@@ -305,17 +306,12 @@ public:
 // VSTEffectsModule
 //
 // ============================================================================
-VSTEffectsModule::VSTEffectsModule(const wxString *path)
+VSTEffectsModule::VSTEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 VSTEffectsModule::~VSTEffectsModule()
 {
-   mPath = wxEmptyString;
 }
 
 // ============================================================================
@@ -324,7 +320,7 @@ VSTEffectsModule::~VSTEffectsModule()
 
 PluginPath VSTEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
@@ -688,19 +684,12 @@ bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-ComponentInterface *VSTEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+VSTEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew VSTEffect(path);
-}
-
-void VSTEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < VSTEffect > {
-      dynamic_cast<VSTEffect *>(instance)
-   };
+   return std::make_unique<VSTEffect>(path);
 }
 
 // ============================================================================

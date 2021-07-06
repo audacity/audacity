@@ -18,7 +18,7 @@ frequency changes smoothly during the tone.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ToneGen.h"
 #include "LoadEffects.h"
 
@@ -139,11 +139,11 @@ TranslatableString EffectToneGen::GetDescription()
       : XO("Generates a constant frequency tone of one of four types");
 }
 
-wxString EffectToneGen::ManualPage()
+ManualPageID EffectToneGen::ManualPage()
 {
    return mChirp
-      ? wxT("Chirp")
-      : wxT("Tone");
+      ? L"Chirp"
+      : L"Tone";
 }
 
 // EffectDefinitionInterface implementation

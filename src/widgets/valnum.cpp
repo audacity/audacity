@@ -19,7 +19,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#include "../Audacity.h"
+
 #include "valnum.h"
 
 // For compilers that support precompilation, includes "wx.h".
@@ -28,7 +28,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "AudacityMessageBox.h"
-#include "../Internat.h"
+#include "Internat.h"
 
 #ifdef __BORLANDC__
     #pragma hdrstop

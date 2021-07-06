@@ -52,7 +52,7 @@ struct SnapResults {
    bool Snapped() const { return snappedPoint || snappedTime; }
 };
 
-class SnapManager
+class AUDACITY_DLL_API SnapManager
 {
 public:
    SnapManager(const AudacityProject &project,

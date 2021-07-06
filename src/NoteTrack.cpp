@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   NoteTrack.cpp
 
@@ -14,10 +14,10 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h" // for USE_* macros
+
 #include "NoteTrack.h"
 
-#include "Experimental.h"
+
 
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>
@@ -289,7 +289,7 @@ void NoteTrack::DrawLabelControls
                AColor::MIDIChannel(&dc, chanName);
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in
-// "up" position (original Audacity style) or in "down" position
+// "up" position (original Sneedacity style) or in "down" position
 //
 #define CHANNEL_ON_IS_DOWN 1
 #if CHANNEL_ON_IS_DOWN
@@ -635,6 +635,7 @@ void NoteTrack::InsertSilence(double t, double len)
    // AddToDuration( len );
 }
 
+#ifdef EXPERIMENTAL_MIDI_OUT
 void NoteTrack::SetVelocity(float velocity)
 {
    if (mVelocity != velocity) {
@@ -642,6 +643,7 @@ void NoteTrack::SetVelocity(float velocity)
       Notify();
    }
 }
+#endif
 
 // Call this function to manipulate the underlying sequence data. This is
 // NOT the function that handles horizontal dragging.

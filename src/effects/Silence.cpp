@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Silence.h"
 #include "LoadEffects.h"
 
@@ -50,9 +50,9 @@ TranslatableString EffectSilence::GetDescription()
    return XO("Creates audio of zero amplitude");
 }
 
-wxString EffectSilence::ManualPage()
+ManualPageID EffectSilence::ManualPage()
 {
-   return wxT("Silence");
+   return L"Silence";
 }
 
 

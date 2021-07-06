@@ -44,7 +44,7 @@
 
 #include <functional>
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 #include "audacity/ComponentInterface.h"
 #include "audacity/ConfigInterface.h"
 #include "audacity/EffectAutomationParameters.h" // for command automation

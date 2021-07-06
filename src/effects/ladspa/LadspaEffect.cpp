@@ -22,7 +22,7 @@ effects from this one class.
 *//*******************************************************************/
 
 
-#include "../../Audacity.h"
+
 #include "LadspaEffect.h"       // This class's header file
 
 #include <float.h>
@@ -58,6 +58,7 @@ effects from this one class.
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
+#include "../../ModuleManager.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../../widgets/WindowAccessible.h"
@@ -84,7 +85,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
-   return safenew LadspaEffectsModule(path);
+   return safenew LadspaEffectsModule();
 }
 
 // ============================================================================
@@ -98,12 +99,8 @@ DECLARE_BUILTIN_MODULE(LadspaBuiltin);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-LadspaEffectsModule::LadspaEffectsModule(const wxString *path)
+LadspaEffectsModule::LadspaEffectsModule()
 {
-   if (path)
-   {
-      mPath = *path;
-   }
 }
 
 LadspaEffectsModule::~LadspaEffectsModule()
@@ -116,7 +113,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 
 PluginPath LadspaEffectsModule::GetPath()
 {
-   return mPath;
+   return {};
 }
 
 ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
@@ -333,7 +330,8 @@ bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return wxFileName::FileExists(realPath);
 }
 
-ComponentInterface *LadspaEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+LadspaEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -342,16 +340,7 @@ ComponentInterface *LadspaEffectsModule::CreateInstance(const PluginPath & path)
    long index;
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
-
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew LadspaEffect(realPath, (int)index);
-}
-
-void LadspaEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < LadspaEffect > {
-      dynamic_cast<LadspaEffect *>(instance)
-   };
+   return std::make_unique<LadspaEffect>(realPath, (int)index);
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()

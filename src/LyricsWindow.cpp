@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LyricsWindow.cpp
 
@@ -11,9 +11,9 @@
 
 #include "LyricsWindow.h"
 #include "Lyrics.h"
-#include "AudioIOBase.h"
+#include "AudioIO.h"
 #include "CommonCommandFlags.h"
-#include "Prefs.h" // for RTL_WORKAROUND
+#include "prefs/GUISettings.h" // for RTL_WORKAROUND
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -33,7 +33,7 @@
    #include <Carbon/Carbon.h>
 #endif
 
-#define AudacityKaraokeTitle XO("Audacity Karaoke%s")
+#define AudacityKaraokeTitle XO("Sneedacity Karaoke%s")
 
 enum {
    kID_RadioButton_BouncingBall = 10101,
@@ -49,7 +49,7 @@ END_EVENT_TABLE()
 const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 
 LyricsWindow::LyricsWindow(AudacityProject *parent)
-   : wxFrame( &GetProjectFrame( *parent ), -1, {},
+   : wxFrame( &GetProjectFrame( *parent ), -1, wxString{},
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
             // If both the project frame and LyricsWindow are minimized and you restore LyricsWindow,
@@ -160,7 +160,7 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
 {
    if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
    {
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
    }
    else

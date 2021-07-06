@@ -16,7 +16,7 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
-#include "../MemoryX.h"
+#include <memory>
 
 class Effect;
 
@@ -26,10 +26,10 @@ class Effect;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class BuiltinEffectsModule final : public ModuleInterface
+class AUDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
 {
 public:
-   BuiltinEffectsModule(const wxString *path);
+   BuiltinEffectsModule();
    virtual ~BuiltinEffectsModule();
 
    using Factory = std::function< std::unique_ptr<Effect> () >;
@@ -69,8 +69,8 @@ public:
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const PluginPath & path) override;
-   void DeleteInstance(ComponentInterface *instance) override;
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) override;
 
 private:
    // BuiltinEffectModule implementation
@@ -81,8 +81,6 @@ private:
    static void DoRegistration(
       const ComponentInterfaceSymbol &name, const Factory &factory,
       bool excluded );
-
-   PluginPath mPath;
 
    struct Entry;
    using EffectHash = std::unordered_map< wxString, const Entry* > ;

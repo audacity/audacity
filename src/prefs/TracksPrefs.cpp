@@ -17,10 +17,8 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
-#include "TracksPrefs.h"
 
-#include "../Experimental.h"
+#include "TracksPrefs.h"
 
 //#include <algorithm>
 //#include <wx/defs.h>
@@ -290,7 +288,7 @@ TranslatableString TracksPrefs::GetDescription()
    return XO("Preferences for Tracks");
 }
 
-wxString TracksPrefs::HelpPageName()
+ManualPageID TracksPrefs::HelpPageName()
 {
    return "Tracks_Preferences";
 }

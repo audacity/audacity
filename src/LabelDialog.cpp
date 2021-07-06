@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LabelDialog.cpp
 
@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "LabelDialog.h"
 
 #include <wx/button.h>
@@ -285,7 +285,7 @@ void LabelDialog::PopulateOrExchange( ShuttleGui & S )
 
 void LabelDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetHelpPageName();
+   const auto &page = GetHelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 

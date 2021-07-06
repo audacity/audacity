@@ -15,8 +15,9 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "QualityPrefs.h"
+#include "QualitySettings.h"
 
 #include <wx/choice.h>
 #include <wx/defs.h>
@@ -29,26 +30,6 @@
 #include "../ShuttleGui.h"
 
 #define ID_SAMPLE_RATE_CHOICE           7001
-
-//////////
-
-static EnumSetting< sampleFormat > formatSetting{
-   wxT("/SamplingRate/DefaultProjectSampleFormatChoice"),
-   {
-      { wxT("Format16Bit"), XO("16-bit") },
-      { wxT("Format24Bit"), XO("24-bit") },
-      { wxT("Format32BitFloat"), XO("32-bit float") }
-   },
-   2, // floatSample
-
-   // for migrating old preferences:
-   {
-      int16Sample,
-      int24Sample,
-      floatSample
-   },
-   wxT("/SamplingRate/DefaultProjectSampleFormat"),
-};
 
 //////////
 BEGIN_EVENT_TABLE(QualityPrefs, PrefsPanel)
@@ -76,7 +57,7 @@ TranslatableString QualityPrefs::GetDescription()
    return XO("Preferences for Quality");
 }
 
-wxString QualityPrefs::HelpPageName()
+ManualPageID QualityPrefs::HelpPageName()
 {
    return "Quality_Preferences";
 }
@@ -85,9 +66,7 @@ void QualityPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
    GetNamesAndLabels();
-   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-                &mOtherSampleRateValue,
-                AudioIOBase::GetOptimalSupportedSampleRate());
+   mOtherSampleRateValue = QualitySettings::DefaultSampleRate.Read();
 
    //------------------------- Main section --------------------
    // Now construct the GUI itself.
@@ -148,17 +127,17 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          {
             // First the choice...
             // We make sure it uses the ID we want, so that we get changes
-            S.Id(ID_SAMPLE_RATE_CHOICE);
             // We make sure we have a pointer to it, so that we can drive it.
-            mSampleRates = S.TieNumberAsChoice( {},
-                                       {wxT("/SamplingRate/DefaultProjectSampleRate"),
-                                        AudioIOBase::GetOptimalSupportedSampleRate()},
-                                       mSampleRateNames,
-                                       &mSampleRateLabels,
-                                       // If the value in Prefs isn't in the list, then we want
-                                       // the last item, 'Other...' to be shown.
-                                       mSampleRateNames.size() - 1
-                                       );
+            mSampleRates =
+            S
+               .Id(ID_SAMPLE_RATE_CHOICE)
+               .TieNumberAsChoice( {},
+                  QualitySettings::DefaultSampleRate,
+                  mSampleRateNames,
+                  &mSampleRateLabels,
+                  // If the value in Prefs isn't in the list, then we want
+                  // the last item, 'Other...' to be shown.
+                  mSampleRateNames.size() - 1 );
 
             // Now do the edit box...
             mOtherSampleRate = S.TieNumericTextBox( {},
@@ -167,8 +146,9 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndHorizontalLay();
 
-         S.TieChoice(XXO("Default Sample &Format:"),
-                     formatSetting);
+         S
+            .TieChoice( XXO("Default Sample &Format:"),
+                       QualitySettings::SampleFormatSetting );
       }
       S.EndMultiColumn();
    }
@@ -223,7 +203,7 @@ bool QualityPrefs::Commit()
    // The complex compound control may have value 'other' in which case the
    // value in prefs comes from the second field.
    if (mOtherSampleRate->IsEnabled()) {
-      gPrefs->Write(wxT("/SamplingRate/DefaultProjectSampleRate"), mOtherSampleRateValue);
+      QualitySettings::DefaultSampleRate.Write( mOtherSampleRateValue );
       gPrefs->Flush();
    }
 
@@ -241,10 +221,5 @@ PrefsPanel::Registration sAttachment{ "Quality",
       return safenew QualityPrefs(parent, winid);
    }
 };
-}
-
-sampleFormat QualityPrefs::SampleFormatChoice()
-{
-   return formatSetting.ReadEnum();
 }
 

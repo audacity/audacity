@@ -18,7 +18,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #ifdef USE_LIBFLAC
 

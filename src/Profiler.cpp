@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Profiler.cpp
 
   Created by Michael Chinen (mchinen) on 8/12/08
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -20,7 +20,7 @@ but it will probably work fine if you use it on a high level.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "Profiler.h"
 
 #include <stdio.h>
@@ -37,7 +37,7 @@ Profiler::~Profiler()
       time_t now;
 
       time(&now);
-      wxFprintf(log,"Audacity Profiler Run, Ended at ");
+      wxFprintf(log,"Sneedacity Profiler Run, Ended at ");
       wxFprintf(log,"%s",ctime(&now));
       wxFprintf(log,"****************************************\n");
       //print out the tasks

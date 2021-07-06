@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TrackPanelResizeHandle.cpp
 
@@ -8,7 +8,7 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "TrackPanelResizeHandle.h"
 
 #include <wx/cursor.h>

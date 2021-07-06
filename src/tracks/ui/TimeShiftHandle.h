@@ -28,8 +28,12 @@ class TrackInterval;
 class ViewInfo;
 
 //! Abstract base class for policies to manipulate a track type with the Time Shift tool
-class TrackShifter {
+class AUDACITY_DLL_API TrackShifter {
 public:
+   TrackShifter();
+   TrackShifter(const TrackShifter&) PROHIBITED;
+   TrackShifter &operator=(const TrackShifter&) PROHIBITED;
+
    virtual ~TrackShifter() = 0;
    //! There is always an associated track
    virtual Track &GetTrack() const = 0;
@@ -195,7 +199,15 @@ using MakeTrackShifter = AttachedVirtualFunction<
 
 class ViewInfo;
 
-struct ClipMoveState {
+struct AUDACITY_DLL_API ClipMoveState {
+   ClipMoveState() = default;
+
+   ClipMoveState(const ClipMoveState&) PROHIBITED;
+   ClipMoveState& operator =(const ClipMoveState&) PROHIBITED;
+
+   ClipMoveState(ClipMoveState&&) = default;
+   ClipMoveState& operator =(ClipMoveState&&) = default;
+
    using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
    
    //! Will associate a TrackShifter with each track in the list
@@ -239,7 +251,7 @@ struct ClipMoveState {
    }
 };
 
-class TimeShiftHandle final : public UIHandle
+class AUDACITY_DLL_API TimeShiftHandle final : public UIHandle
 {
    TimeShiftHandle(const TimeShiftHandle&) = delete;
    static HitTestPreview HitPreview

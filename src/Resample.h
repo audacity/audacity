@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_RESAMPLE_H__
 #define __AUDACITY_RESAMPLE_H__
 
-#include "Audacity.h"
+
 
 #include "SampleFormat.h"
 
@@ -25,7 +25,7 @@ struct soxr_deleter {
 };
 using soxrHandle = std::unique_ptr<soxr, soxr_deleter>;
 
-class Resample final
+class AUDACITY_DLL_API Resample final
 {
  public:
    /// Resamplers may have more than one method, offering a

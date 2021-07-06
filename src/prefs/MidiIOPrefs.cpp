@@ -23,10 +23,8 @@ other settings.
 
 *//********************************************************************/
 
-#include "../Audacity.h"
-#include "MidiIOPrefs.h"
 
-#include "../Experimental.h"
+#include "MidiIOPrefs.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -77,7 +75,7 @@ TranslatableString MidiIOPrefs::GetDescription()
    return XO("Preferences for MidiIO");
 }
 
-wxString MidiIOPrefs::HelpPageName()
+ManualPageID MidiIOPrefs::HelpPageName()
 {
    return "MIDI_Devices_Preferences";
 }

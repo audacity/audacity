@@ -6,7 +6,7 @@
 //
 //
 
-#include "../Audacity.h"
+
 #include "wxPanelWrapper.h"
 
 #include <wx/grid.h>

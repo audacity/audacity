@@ -21,7 +21,7 @@ capture the more lengthy output from some commands.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CommandTargets.h"
 
 #include <wx/app.h>
@@ -66,7 +66,7 @@ void CommandMessageTarget::EndStruct(){
 void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    wxString Padding;
    Padding.Pad( mCounts.size() *2 -2);
-   Padding = (( value.length() < 15 ) || (mCounts.back()<=0))  ? "" : wxString("\n") + Padding;
+   Padding = (( value.length() < 15 ) || (mCounts.back()<=0))  ? wxString{} : wxString("\n") + Padding;
    if( name.empty() )
       Update( wxString::Format( "%s%s\"%s\"", (mCounts.back()>0)?", ":"", Padding, Escaped(value)));
    else

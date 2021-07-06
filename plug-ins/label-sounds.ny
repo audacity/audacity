@@ -8,7 +8,7 @@ $debugbutton false
 ;; As this is a new plug-in (Jan2021), display errors if they occur.
 $debugflags trace
 $author (_ "Steve Daulton")
-$release 3.0.0
+$release 3.0.2
 $copyright (_ "Released under terms of the GNU General Public License version 2 or later.")
 
 ;; Released under terms of the GNU General Public License version 2 or later:
@@ -153,14 +153,14 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
         ((not val) snd-list)
       (cond
         ((< val threshold)
-            (when (and (= sil-count sil-dur)(>= snd-count snd-dur))
+            (when (and (>= sil-count sil-dur)(>= snd-count snd-dur))
               ;convert sample counts to seconds and push to list.
               (push (list (/ snd-start srate)
                           (/ (- sample-count sil-count) srate))
                     snd-list)
               (incf label-count)
               (when (= label-count max-labels)
-                (format t (_ "Too many silences detected.\nOnly the first 10000 labels added."))
+                (format t (_ "Too many silences detected.~%Only the first 10000 labels added."))
                 (return-from find-sounds snd-list))
               (setf snd-count 0)) ;Pushed to list, so reset sound sample counter.
             (when (> snd-count 0) ;Sound is shorter than snd-dur, so keep counting.

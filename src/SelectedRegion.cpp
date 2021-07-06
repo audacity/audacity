@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SelectedRegion.cpp
 
@@ -10,7 +10,7 @@ Paul Licameli
 
 #include "SelectedRegion.h"
 
-#include "Experimental.h"
+
 
 #include "xml/XMLWriter.h"
 

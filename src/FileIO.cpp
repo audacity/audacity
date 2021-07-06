@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FileIO.cpp
 
@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "FileIO.h"
 
 #include <wx/defs.h>

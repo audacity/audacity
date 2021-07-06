@@ -1,12 +1,12 @@
 /**********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  SelectionState.h
 
  **********************************************************************/
 
-#include "Audacity.h"
+
 #include "SelectionState.h"
 
 #include "ViewInfo.h"

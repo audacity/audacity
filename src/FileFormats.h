@@ -11,12 +11,13 @@
 #ifndef __AUDACITY_FILE_FORMATS__
 #define __AUDACITY_FILE_FORMATS__
 
-#include "Audacity.h" // for __UNIX__
+
 
 #include "audacity/Types.h"
+#include "Identifier.h"
 
 //#include <mutex>
-#include "MemoryX.h"
+#include <memory>
 
 #include "sndfile.h"
 
@@ -30,6 +31,7 @@ class wxString;
 /** @brief Get the number of container formats supported by libsndfile
  *
  * Uses SFC_GET_FORMAT_MAJOR_COUNT in sf_command interface */
+AUDACITY_DLL_API
 int sf_num_headers();
 
 /** @brief Get the name of a container format from libsndfile
@@ -39,8 +41,10 @@ int sf_num_headers();
  * @param format_num The libsndfile format number for the container format
  * required
  */
+AUDACITY_DLL_API
 wxString sf_header_index_name(int format_num);
 
+AUDACITY_DLL_API
 unsigned int sf_header_index_to_type(int format_num);
 
 //
@@ -48,11 +52,14 @@ unsigned int sf_header_index_to_type(int format_num);
 //
 /** @brief Get the number of data encodings libsndfile supports (in any
  * container or none */
+AUDACITY_DLL_API
 int sf_num_encodings();
 /** @brief Get the string name of the data encoding of the requested format
  *
  * uses SFC_GET_FORMAT_SUBTYPE */
+AUDACITY_DLL_API
 wxString sf_encoding_index_name(int encoding_num);
+AUDACITY_DLL_API
 unsigned int sf_encoding_index_to_subtype(int encoding_num);
 
 //
@@ -64,6 +71,7 @@ unsigned int sf_encoding_index_to_subtype(int encoding_num);
  * then use SFC_GET_FORMAT_INFO to get the description
  * @param format the libsndfile format to get the name for (only the container
  * part is used) */
+AUDACITY_DLL_API
 wxString sf_header_name(int format);
 /** @brief Get an abbreviated form of the string name of the specified format
  *
@@ -71,6 +79,7 @@ wxString sf_header_name(int format);
  * to get just the first word of the format name.
  * @param format the libsndfile format to get the name for (only the container
  * part is used) */
+AUDACITY_DLL_API
 wxString sf_header_shortname(int format);
 /** @brief Get the most common file extension for the given format
  *
@@ -78,6 +87,7 @@ wxString sf_header_shortname(int format);
  * format, then retrieve the most common extension using SFC_GET_FORMAT_INFO.
  * @param format the libsndfile format to get the name for (only the container
  * part is used) */
+AUDACITY_DLL_API
 wxString sf_header_extension(int format);
 /** @brief Get the string name of the specified data encoding
  *
@@ -98,13 +108,18 @@ SF_FORMAT_INFO *sf_simple_format(int i);
 // other utility functions
 //
 
+AUDACITY_DLL_API
 bool sf_subtype_more_than_16_bits(unsigned int format);
+AUDACITY_DLL_API
 bool sf_subtype_is_integer(unsigned int format);
+AUDACITY_DLL_API
 int sf_subtype_bytes_per_sample(unsigned int format);
 
+AUDACITY_DLL_API
 //! Choose the narrowest value in the sampleFormat enumeration for a given libsndfile format
 sampleFormat sf_subtype_to_effective_format(unsigned int format);
 
+AUDACITY_DLL_API
 extern FileExtensions sf_get_all_extensions();
 
 wxString sf_normalize_name(const char *name);
@@ -123,7 +138,7 @@ inline R SFCall(F fun, Args&&... args)
 }
 
 //RAII for SNDFILE*
-struct SFFileCloser { int operator () (SNDFILE*) const; };
+struct AUDACITY_DLL_API SFFileCloser { int operator () (SNDFILE*) const; };
 struct SFFile : public std::unique_ptr<SNDFILE, ::SFFileCloser>
 {
    SFFile() = default;

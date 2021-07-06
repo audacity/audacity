@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimeTrack.cpp
 
@@ -13,10 +13,10 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "TimeTrack.h"
 
-#include "Experimental.h"
+
 
 #include <cfloat>
 #include <wx/wxcrtvararg.h>

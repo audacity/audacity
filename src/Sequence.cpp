@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Sequence.cpp
 
@@ -28,7 +28,7 @@
 *//*******************************************************************/
 
 
-#include "Audacity.h"
+
 #include "Sequence.h"
 
 #include <algorithm>

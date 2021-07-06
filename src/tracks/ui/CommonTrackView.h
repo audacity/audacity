@@ -16,7 +16,7 @@ Paul Licameli split from class TrackView
 class SelectHandle;
 class TimeShiftHandle;
 
-class CommonTrackView /* not final */ : public TrackView
+class AUDACITY_DLL_API CommonTrackView /* not final */ : public TrackView
 {
 public:
    using TrackView::TrackView;

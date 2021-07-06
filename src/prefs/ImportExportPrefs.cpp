@@ -15,7 +15,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "ImportExportPrefs.h"
 
 #include <wx/defs.h>
@@ -43,7 +43,7 @@ TranslatableString ImportExportPrefs::GetDescription()
    return XO("Preferences for ImportExport");
 }
 
-wxString ImportExportPrefs::HelpPageName()
+ManualPageID ImportExportPrefs::HelpPageName()
 {
    return "Import_-_Export_Preferences";
 }

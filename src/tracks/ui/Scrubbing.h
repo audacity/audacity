@@ -11,8 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
-#include "../../Audacity.h"
-#include "../../Experimental.h"
+
 
 #include <vector>
 #include <wx/longlong.h>
@@ -23,7 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../widgets/Overlay.h" // to inherit
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h" // for MenuTable
-#include "../../../include/audacity/Types.h"
+#include "Identifier.h"
 
 class AudacityProject;
 class TranslatableString;
@@ -38,7 +37,7 @@ class TranslatableString;
 #endif
 
 // Scrub state object
-class Scrubber final
+class AUDACITY_DLL_API Scrubber final
    : public wxEvtHandler
    , public ClientData::Base
    , private PrefsListener

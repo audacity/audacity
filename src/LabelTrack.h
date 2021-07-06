@@ -26,7 +26,7 @@ class TimeWarper;
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
 
-class LabelStruct
+class AUDACITY_DLL_API LabelStruct
 {
 public:
    LabelStruct() = default;

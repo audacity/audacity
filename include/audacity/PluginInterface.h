@@ -51,7 +51,7 @@
 class ModuleInterface;
 
 
-class PluginManagerInterface /* not final */
+class AUDACITY_DLL_API PluginManagerInterface /* not final */
 {
 public:
 
@@ -60,7 +60,15 @@ public:
    static const PluginID &AudacityCommandRegistrationCallback(
       ModuleInterface *provider, ComponentInterface *ident );
 
-   virtual bool IsPluginRegistered(const PluginPath & path) = 0;
+   //! Was the plugin registry already populated for a path (maybe from loading the config file)?
+   /*!
+   @param path an identifier for the plug-in with meaning defined by provider; not always a file path
+   @param pName if supplied, a correction for the user visible name associated with the plug-in, if it is
+    registered already.  (Needed because the configuration file only stores an internal name.)
+    */
+   virtual bool IsPluginRegistered(
+      const PluginPath & path,
+      const TranslatableString *pName = nullptr) = 0;
 
    virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;
    virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) = 0;

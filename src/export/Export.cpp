@@ -28,7 +28,7 @@
 
 *//********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+
 #include "Export.h"
 
 #include <wx/bmpbuttn.h>
@@ -367,7 +367,7 @@ void Exporter::OnExtensionChanged(wxCommandEvent &evt)
 void Exporter::OnHelp(wxCommandEvent& WXUNUSED(evt))
 {
    wxWindow * pWin = FindProjectFrame( mProject );
-   HelpSystem::ShowHelp(pWin, wxT("File_Export_Dialog"), true);
+   HelpSystem::ShowHelp(pWin, L"File_Export_Dialog", true);
 }
 
 void Exporter::SetFileDialogTitle( const TranslatableString & DialogTitle )
@@ -1494,7 +1494,7 @@ void ExportMixerDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void ExportMixerDialog::OnMixerPanelHelp(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Advanced_Mixing_Options"), true);
+   HelpSystem::ShowHelp(this, L"Advanced_Mixing_Options", true);
 }
 
 
@@ -1519,7 +1519,7 @@ void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message,
    const TranslatableString& caption)
 {
-   ShowErrorDialog(nullptr,
+   ShowExceptionDialog(nullptr,
                   caption,
                   message.Format( ErrorCode ),
                   "Error:_Unable_to_export" // URL.

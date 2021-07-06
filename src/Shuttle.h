@@ -57,7 +57,7 @@ class CommandParameters;
 virtual functions that do nothing by default.
 Unrelated to class Shuttle.
 ********************************************************************************/
-class ShuttleParams /* not final */
+class AUDACITY_DLL_API ShuttleParams /* not final */
 {
 public:
    wxString mParams;
@@ -83,7 +83,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that gets parameter values into a string.
 ********************************************************************************/
-class ShuttleGetAutomation final : public ShuttleParams
+class AUDACITY_DLL_API ShuttleGetAutomation final : public ShuttleParams
 {
 public:
    ShuttleParams & Optional( bool & var ) override;
@@ -101,7 +101,7 @@ public:
 /**************************************************************************//**
 \brief Shuttle that sets parameters to a value (from a string)
 ********************************************************************************/
-class ShuttleSetAutomation final : public ShuttleParams
+class AUDACITY_DLL_API ShuttleSetAutomation final : public ShuttleParams
 {
 public:
    ShuttleSetAutomation(){ bWrite = false; bOK = false;};

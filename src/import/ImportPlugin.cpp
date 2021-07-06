@@ -13,7 +13,25 @@ Paul Licameli split from Import.cpp
 #include <wx/filename.h>
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
-#include "../prefs/QualityPrefs.h"
+#include "../prefs/QualitySettings.h"
+
+ImportPlugin::ImportPlugin(FileExtensions supportedExtensions):
+   mExtensions( std::move( supportedExtensions ) )
+{
+}
+
+ImportPlugin::~ImportPlugin() = default;
+
+FileExtensions ImportPlugin::GetSupportedExtensions()
+{
+   return mExtensions;
+}
+
+bool ImportPlugin::SupportsExtension(const FileExtension &extension)
+{
+   // Case-insensitive check if extension is supported
+   return mExtensions.Index(extension, false) != wxNOT_FOUND;
+}
 
 ImportFileHandle::ImportFileHandle(const FilePath & filename)
 :  mFilename(filename)
@@ -36,7 +54,7 @@ void ImportFileHandle::CreateProgress()
 sampleFormat ImportFileHandle::ChooseFormat(sampleFormat effectiveFormat)
 {
    // Consult user preference
-   auto defaultFormat = QualityPrefs::SampleFormatChoice();
+   auto defaultFormat = QualitySettings::SampleFormatChoice();
 
    // Don't choose format narrower than effective or default
    auto format = std::max(effectiveFormat, defaultFormat);

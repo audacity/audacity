@@ -9,15 +9,15 @@
 #ifndef __AUDACITY_WXPANEL_WRAPPER__
 #define __AUDACITY_WXPANEL_WRAPPER__
 
-#include "../MemoryX.h"
+#include <memory>
 #include <wx/panel.h> // to inherit
 #include <wx/dialog.h> // to inherit
 
-#include "../Internat.h"
+#include "Internat.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
-void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
+AUDACITY_DLL_API void wxTabTraversalWrapperCharHook(wxKeyEvent &event);
 
 template <typename Base>
 class AUDACITY_DLL_API wxTabTraversalWrapper : public Base

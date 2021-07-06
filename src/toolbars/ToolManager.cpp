@@ -24,10 +24,9 @@
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ToolManager.h"
 
-#include "../Experimental.h"
 #include "../commands/CommandContext.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

@@ -16,7 +16,8 @@
 class wxRect;
 class Track;
 
-class PlayableTrackControls /* not final */ : public CommonTrackControls
+class AUDACITY_DLL_API PlayableTrackControls /* not final */
+   : public CommonTrackControls
 {
 public:
    // To help subclasses define GetTCPLines

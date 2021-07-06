@@ -13,13 +13,18 @@
 
 class TranslatableString;
 class wxString;
+#include "Identifier.h"
 
-wxString HelpText( const wxString & Key );
-TranslatableString TitleText( const wxString & Key );
+struct URLStringTag;
+//! Distinct type for URLs
+using URLString = TaggedIdentifier< URLStringTag >;
 
-extern const wxString VerCheckArgs();
-extern const wxString VerCheckUrl();
-extern const wxString VerCheckHtml();
-extern wxString FormatHtmlText( const wxString & Text );
+AUDACITY_DLL_API  wxString HelpText( const wxString & Key );
+AUDACITY_DLL_API TranslatableString TitleText( const wxString & Key );
+
+extern AUDACITY_DLL_API const wxString VerCheckArgs();
+extern AUDACITY_DLL_API const URLString VerCheckUrl();
+extern AUDACITY_DLL_API const wxString VerCheckHtml();
+extern AUDACITY_DLL_API wxString FormatHtmlText( const wxString & Text );
 
 #endif

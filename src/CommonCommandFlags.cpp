@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 CommonCommandFlags.cpp
 
@@ -8,10 +8,10 @@ Paul Licameli split from Menus.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "CommonCommandFlags.h"
 
-#include "Experimental.h"
+
 
 #include <wx/frame.h>
 

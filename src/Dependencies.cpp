@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    Dependencies.cpp
@@ -23,7 +23,7 @@
 
 \class AliasedFile
 \brief An audio file that is referenced (pointed into) directly from
-an Audacity .aup file rather than Audacity having its own copies of the
+an Sneedacity .aup file rather than Sneedacity having its own copies of the
 data.
 
 *//*****************************************************************//**
@@ -34,7 +34,7 @@ AliasedFile s.
 
 *//********************************************************************/
 
-#include "Audacity.h"
+#include "Sneedacity.h"
 #include "Dependencies.h"
 
 #include <wx/button.h>
@@ -87,7 +87,7 @@ static void GetAllSeqBlocks(AudacityProject *project,
    }
 }
 
-// Given an Audacity project and a hash mapping aliased block
+// Given an Sneedacity project and a hash mapping aliased block
 // files to un-aliased block files, walk through all of the
 // tracks and replace each aliased block file with its replacement.
 // Note that this code respects reference-counting and thus the
@@ -396,14 +396,14 @@ void DependencyDialog::PopulateOrExchange(ShuttleGui& S)
                S.Id(FutureActionChoiceID).AddChoice(
                   XXO("Whenever a project depends on other files:"),
                   {
-                     /*i18n-hint: One of the choices of what you want Audacity to do when
-                     * Audacity finds a project depends on another file.*/
+                     /*i18n-hint: One of the choices of what you want Sneedacity to do when
+                     * Sneedacity finds a project depends on another file.*/
                      XO("Ask me") ,
-                     /*i18n-hint: One of the choices of what you want Audacity to do when
-                     * Audacity finds a project depends on another file.*/
+                     /*i18n-hint: One of the choices of what you want Sneedacity to do when
+                     * Sneedacity finds a project depends on another file.*/
                      XO("Always copy all files (safest)") ,
-                     /*i18n-hint: One of the choices of what you want Audacity to do when
-                     * Audacity finds a project depends on another file.*/
+                     /*i18n-hint: One of the choices of what you want Sneedacity to do when
+                     * Sneedacity finds a project depends on another file.*/
                      XO("Never copy any files") ,
                   },
                   0 // "Ask me"
@@ -611,7 +611,7 @@ bool ShowDependencyDialogIfNeeded(AudacityProject *project,
       {
          auto msg =
 XO("Your project is self-contained; it does not depend on any external audio files. \
-\n\nSome older Audacity projects may not be self-contained, and care \n\
+\n\nSome older Sneedacity projects may not be self-contained, and care \n\
 is needed to keep their external dependencies in the right place.\n\
 New projects will be self-contained and are less risky.");
          AudacityMessageBox(

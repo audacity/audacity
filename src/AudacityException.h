@@ -17,6 +17,14 @@
 
 #include "Internat.h"
 
+//! A type of an exception
+enum class ExceptionType
+{
+    Internal, //!< Indicates internal failure from Audacity.
+    BadUserAction, //!< Indicates that the user performed an action that is not allowed.
+    BadEnvironment, //!< Indicates problems with environment, such as a full disk
+};
+
 //! Base class for exceptions specially processed by the application
 /*! Objects of this type can be thrown and caught in any thread, stored, and then used by the main
  thread in later idle time to explain the error condition to the user.
@@ -45,7 +53,8 @@ protected:
 //! Abstract AudacityException subclass displays a message, specified by further subclass
 /*! At most one message will be displayed for each pass through the main event idle loop,
  no matter how many exceptions were caught. */
-class MessageBoxException /* not final */ : public AudacityException
+class AUDACITY_DLL_API MessageBoxException /* not final */
+   : public AudacityException
 {
    //! Privatize the inherited function
    using AudacityException::DelayedHandlerAction;
@@ -56,7 +65,8 @@ class MessageBoxException /* not final */ : public AudacityException
 protected:
    //! If default-constructed with empty caption, it makes no message box.
    explicit MessageBoxException(
-      const TranslatableString &caption = {} //!< Shown in message box's frame; not the actual message
+      ExceptionType exceptionType, //!< Exception type
+      const TranslatableString &caption //!< Shown in message box's frame; not the actual message
    );
    ~MessageBoxException() override;
 
@@ -68,21 +78,25 @@ protected:
 
 private:
    TranslatableString caption; //!< Stored caption
+   ExceptionType exceptionType; //!< Exception type
+
    mutable bool moved { false }; //!< Whether @c *this has been the source of a copy
 protected:
    mutable wxString helpUrl{ "" };
 };
 
 //! A MessageBoxException that shows a given, unvarying string.
-class SimpleMessageBoxException /* not final */ : public MessageBoxException
+class AUDACITY_DLL_API SimpleMessageBoxException /* not final */
+   : public MessageBoxException
 {
 public:
    explicit SimpleMessageBoxException(
+      ExceptionType exceptionType,        //!< Exception type
       const TranslatableString &message_, //<! Message to show
       const TranslatableString &caption = XO("Message"), //<! Short caption in frame around message
       const wxString &helpUrl_ = "" // Optional URL for help.
    )
-      : MessageBoxException{ caption }
+      : MessageBoxException { exceptionType, caption }
       , message{ message_ }
    {
       helpUrl = helpUrl_;

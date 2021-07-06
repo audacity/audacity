@@ -18,7 +18,7 @@ doing the second pass over all selected tracks.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "TwoPassSimpleMono.h"
 
 #include "../WaveTrack.h"
@@ -130,7 +130,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack
       std::min( maxblock, track->GetBestBlockSize(start) ), end - start );
 
    //Get the samples from the track and put them in the buffer
-   track->Get((samplePtr) buffer1.get(), floatSample, start, samples1);
+   track->GetFloats(buffer1.get(), start, samples1);
 
    // Process the first buffer with a NULL previous buffer
    if (mPass == 0)
@@ -152,7 +152,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr)buffer2.get(), floatSample, s, samples2);
+      track->GetFloats(buffer2.get(), s, samples2);
 
       //Process the buffer.  If it fails, clean up and exit.
       if (mPass == 0)

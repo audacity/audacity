@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_LYRICS__
 #define __AUDACITY_LYRICS__
 
-#include "Audacity.h"
+
 
 #include <vector>
 #include <wx/textctrl.h> // to inherit

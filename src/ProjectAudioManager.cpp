@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectAudioManager.cpp
 
@@ -8,10 +8,10 @@ Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "ProjectAudioManager.h"
 
-#include "Experimental.h"
+
 
 #include <wx/frame.h>
 #include <wx/statusbr.h>
@@ -264,7 +264,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          auto &window = GetProjectFrame( mProject );
          window.CallAfter( [&]{
          // Show error message if stream could not be opened
-         ShowErrorDialog(&window, XO("Error"),
+         ShowExceptionDialog(&window, XO("Error"),
                          XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
                          wxT("Error_opening_sound_device"));
          });
@@ -389,8 +389,7 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
 {
    auto p = &proj;
-   size_t recordingChannels =
-      std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+   size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
    bool strictRules = (recordingChannels <= 2);
 
    // Iterate over all wave tracks, or over selected wave tracks only.
@@ -512,7 +511,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             if (numberOfSelected > 0 && rateOfSelected != options.rate) {
                AudacityMessageBox(XO(
                   "Too few tracks are selected for recording at this sample rate.\n"
-                  "(Audacity requires two channels at the same sample rate for\n"
+                  "(Sneedacity requires two channels at the same sample rate for\n"
                   "each stereo track)"),
                   XO("Too Few Compatible Tracks Selected"),
                   wxICON_ERROR | wxCENTRE);
@@ -665,7 +664,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          auto &trackList = TrackList::Get( *p );
          auto numTracks = trackList.Leaders< const WaveTrack >().size();
 
-         auto recordingChannels = std::max(1L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+         auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 
          gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
@@ -758,7 +757,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Show error message if stream could not be opened
          auto msg = XO("Error opening recording device.\nError code: %s")
             .Format( gAudioIO->LastPaErrorString() );
-         ShowErrorDialog(&GetProjectFrame( mProject ),
+         ShowExceptionDialog(&GetProjectFrame( mProject ),
             XO("Error"), msg, wxT("Error_opening_sound_device"));
       }
    }
@@ -920,7 +919,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
                ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
 Recorded audio was lost at the labeled locations. Possible causes:\n\
 \n\
-Other applications are competing with Audacity for processor time\n\
+Other applications are competing with Sneedacity for processor time\n\
 \n\
 You are saving directly to a slow external storage device\n\
 "
@@ -1075,7 +1074,7 @@ bool ProjectAudioManager::DoPlayStopSelect( bool click, bool shift )
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
    auto &viewInfo = ViewInfo::Get( project );
    auto &selection = viewInfo.selectedRegion;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
 
    //If busy, stop playing, make sure everything is unpaused.
    if (scrubber.HasMark() ||

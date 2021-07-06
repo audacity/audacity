@@ -18,14 +18,14 @@
 #ifndef __AUDACITY_XML_TAG_HANDLER__
 #define __AUDACITY_XML_TAG_HANDLER__
 
-#include "../Audacity.h" // for USE_* macros
+
 
 #include <stdio.h>
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include "XMLWriter.h"
-class XMLValueChecker
+class AUDACITY_DLL_API XMLValueChecker
 {
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.

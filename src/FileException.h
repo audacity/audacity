@@ -14,7 +14,8 @@
 #include <wx/filename.h> // wxFileName member variable
 
 //! Thrown for failure of file or database operations in deeply nested places
-class FileException /* not final */ : public MessageBoxException
+class AUDACITY_DLL_API FileException /* not final */
+   : public MessageBoxException
 {
 public:
    //! Identifies file operation that failed
@@ -31,7 +32,11 @@ public:
       const TranslatableString &caption = XO("File Error"), //!< Shown in message box frame, not the main message
       const wxFileName &renameTarget_ = {} //!< A second file name, only for renaming failure
    )
-   : MessageBoxException{ caption }
+   // DV: We consider a FileException to be internal for now.
+   // We used to have some odd cases related to the read-only folder in 3.0.0,
+   // so it is good to have a full picture here.
+   // In case we see too many - we will tweak this behavior in the next release.
+   : MessageBoxException{ ExceptionType::Internal, caption }
    , cause{ cause_ }, fileName{ fileName_ }, renameTarget{ renameTarget_ }
    {}
 

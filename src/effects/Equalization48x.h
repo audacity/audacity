@@ -11,11 +11,9 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 #ifndef __AUDACITY_EFFECT_EQUALIZATION48X__
 #define __AUDACITY_EFFECT_EQUALIZATION48X__
 
-#include "../Experimental.h"
-
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
-#include "../MemoryX.h"
+#include <memory>
 
 #include <wx/thread.h> // to inherit
 #include <audacity/Types.h>

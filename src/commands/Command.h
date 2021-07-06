@@ -72,7 +72,8 @@ public:
 
 };
 
-class CommandImplementation /* not final */ : public OldStyleCommand
+class AUDACITY_DLL_API CommandImplementation /* not final */
+   : public OldStyleCommand
 {
 private:
    OldStyleCommandType &mType;

@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h" // for USE_SBSMS
+
 
 #if USE_SBSMS
 #include "TimeScale.h"
@@ -101,9 +101,9 @@ TranslatableString EffectTimeScale::GetDescription()
    return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
-wxString EffectTimeScale::ManualPage()
+ManualPageID EffectTimeScale::ManualPage()
 {
-   return wxT("Sliding_Stretch");
+   return L"Sliding_Stretch";
 }
 
 // EffectDefinitionInterface implementation

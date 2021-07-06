@@ -11,13 +11,13 @@
 #ifndef __AUDACITY_DEVICECHANGE_H__
 #define __AUDACITY_DEVICECHANGE_H__
 
-#include "Audacity.h" // for HAVE_LIBUDEV_H
 
-#include "Experimental.h"
+
+
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
-#include "MemoryX.h"
+#include <memory>
 
 #if defined(__WXMSW__) || defined(__WXMAC__) || defined(HAVE_LIBUDEV_H)
 #define HAVE_DEVICE_CHANGE

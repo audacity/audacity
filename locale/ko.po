@@ -1,18 +1,18 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) YEAR Sneedacity Team
 # This file is distributed under the same license as the audacity package.
 #
 # Translators:
-# Dongyoon Kim <kenny122@ajou.ac.kr>, 2020-2021
+# ajkenny122 <kenny122@ajou.ac.kr>, 2020-2021
 # LEE Hwanyong <hwan@ajou.ac.kr>, 2020-2021
 # Potato <sheppaul@naver.com>, 2017-2018
 # Seong-ho Cho <darkcircle.0426@gmail.com>, 2012-2014
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: Sneedacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-04-01 16:00+0900\n"
+"POT-Creation-Date: 2021-06-07 08:17-0400\n"
+"PO-Revision-Date: 2021-06-11 17:19+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (http://www.transifex.com/klyok/audacity/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -20,6 +20,187 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.4.1\n"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "결정할 수 없음"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s 바이트"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr " %s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "단순화"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "시스템"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem Report for Sneedacity"
+msgstr "오데시티의 문제점 리포트"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Click \"Send\" to submit the report to Sneedacity. This information is collected anonymously."
+msgstr "문제점 리포트를 보내려면 \"전송\"을 클릭하세요. 이 정보는 익명으로 처리됩니다."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Problem details"
+msgstr "문제 상세정보"
+
+#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
+msgid "Comments"
+msgstr "코멘트"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "전송(&S)"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "전송하지 않음(&D)"
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgid "Exception code 0x%x"
+msgstr "예외 코드 0x%x"
+
+#. i18n-hint C++ programming exception
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown exception"
+msgstr "알수없는 예외"
+
+#. i18n-hint C++ programming assertion
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown assertion"
+msgstr "알수없는 실패"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Unknown error"
+msgstr "알수없는 오류"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgid "Failed to send crash report"
+msgstr "오류 리포트 전송에 실패하였습니다. "
+
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "스킴(&M)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "컬러 (디폴트)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "컬러 (클래식)"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "회색조"
+
+#. i18n-hint Choice of spectrogram colors
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "반전된 회색조"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update Sneedacity"
+msgstr "오데시티 업데이트"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "건너뛰기(&S)"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "업데이트 설치 (&I)"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "변경 로그"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "GitHub의 상세정보를 참조하세요. "
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "업데이트를 위한 오류 점검"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Unable to connect to Sneedacity update server."
+msgstr "오데시티 업데이트 서버에 접속할 수 없습니다. "
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "업데이트 데이터가 손실되었습니다."
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "업그레이드를 다운로드하는데 오류"
+
+#: libraries/lib-strings/UnusedStrings.h
+msgctxt "update dialog"
+msgid "Can't open the Sneedacity download link."
+msgstr "오데시티 다운로드 링크를 열 수 없습니다."
+
+#. i18n-hint Substitution of version number for %s.
+#: libraries/lib-strings/UnusedStrings.h
+#, c-format
+msgctxt "update dialog"
+msgid "Sneedacity %s is available!"
+msgstr "오데시티 %s 를 사용할 수 있습니다."
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr "첫번째 실험적 명령..."
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr "두번째 실험적 명령"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -176,7 +357,7 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 리랜드 루시우스"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
+msgid "External Sneedacity module which provides a simple IDE for writing effects."
 msgstr "효과 작성용 간단한 IDE를 제공하는 외부 오데시티 모듈."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -357,79 +538,106 @@ msgstr "스크립트 정지"
 msgid "No revision identifier was provided"
 msgstr "수정본 ID가 없습니다."
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, 시스템 관리 "
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, 공동 설립자와 개발자"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, 개발자"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, developer and support"
+msgstr "%s, 개발자 및 지원"
+
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s, 문서화 및 지원 "
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
+msgstr "%s, QA 테스팅, 문서화 및 지원"
+
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s, 문서화 및 지원, 프랑스어"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, 품질 보증"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, 접근성 자문"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, 그래픽 아티스트"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, 작곡가"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, 테스터"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, 나이키시트 플러그인"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, 웹 개발자"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Sneedacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
@@ -446,9 +654,9 @@ msgstr "%s (%s, %s, %s, %s, 그리고 %s를 통합중)"
 msgid "About %s"
 msgstr "정보 %s"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
+#. button.
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
 msgstr "확인"
 
@@ -456,19 +664,15 @@ msgstr "확인"
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"%s is a free program written by a worldwide team of %s. %s is %s for "
-"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr ""
-"%s는 전세계 %s 팀이 개발한 무료 소프트웨어 입니다. %s는 윈도우, 맥, GNU/"
-"Linux(등 Unix 계열 시스템)에서 %s 합니다."
+msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "%s는 전세계 %s 팀이 개발한 무료 소프트웨어 입니다. %s는 윈도우, 맥, GNU/Linux(등 Unix 계열 시스템)에서 %s 합니다."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
 msgstr "자원봉사"
 
-#. i18n-hint: substitutes into "Audacity is %s"
+#. i18n-hint: substitutes into "Sneedacity is %s"
 #: src/AboutDialog.cpp
 msgid "available"
 msgstr "사용가능"
@@ -497,7 +701,7 @@ msgid "forum"
 msgstr "포럼"
 
 #. i18n-hint: The translation of "translator_credits" will appear
-#. *  in the credits in the About Audacity window.  Use this to add
+#. *  in the credits in the About Sneedacity window.  Use this to add
 #. *  your own name(s) to the credits.
 #. *
 #. *  For example:  "English translation by Dominic Mazzoni."
@@ -571,18 +775,18 @@ msgstr "특별히 감사할 분들:"
 msgid "%s website: "
 msgstr "%s 웹사이트: "
 
-#. i18n-hint Audacity's name substitutes for first and third %s,
+#. i18n-hint Sneedacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2021 %s Team."
-msgstr "%s 소프트웨어의 저작권은 %s 1999-2021 %s 팀에게 있음."
+msgstr "%s 소프트웨어의 저작권  %s 1999-2021 %s 팀."
 
-#. i18n-hint Audacity's name substitutes for %s
+#. i18n-hint Sneedacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr "명칭 %s 는 Dominic Mazzoni의 등록 상표입니다."
+msgid "The name %s is a registered trademark."
+msgstr " %s 는 등록 상표입니다."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -857,7 +1061,7 @@ msgstr ""
 "이 질문은 환경 설정을 초기화하도록 하는 '설치' 과정 이후 한 번만 묻습니다."
 
 #: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
+msgid "Reset Sneedacity Preferences"
 msgstr "오데시티 환경 설정 초기화"
 
 #: src/AudacityApp.cpp
@@ -872,7 +1076,7 @@ msgstr ""
 "최근 파일 목록에서 제거되었습니다."
 
 #: src/AudacityApp.cpp
-msgid "SQLite library failed to initialize.  Audacity cannot continue."
+msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr "SQLite 라이브러리 초기화 실패. 오데시티는 계속 실행할 수 없습니다."
 
 #: src/AudacityApp.cpp
@@ -880,7 +1084,7 @@ msgid "Block size must be within 256 to 100000000\n"
 msgstr "블럭 크기는 256에서 100000000 사이에 있어야 합니다.\n"
 
 #: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
+msgid "Sneedacity is starting up..."
 msgstr "오데시티 시작 중..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
@@ -898,7 +1102,7 @@ msgid "Open &Recent..."
 msgstr "최근 열기(&R)..."
 
 #: src/AudacityApp.cpp src/menus/HelpMenus.cpp
-msgid "&About Audacity..."
+msgid "&About Sneedacity..."
 msgstr "오데시티 정보(&A)..."
 
 #: src/AudacityApp.cpp
@@ -911,9 +1115,8 @@ msgstr "파일(&F)"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Sneedacity could not find a safe place to store temporary files.\n"
+"Sneedacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "오데시티는 임시 파일을 저장할 안전한 장소를 찾지 못했습니다.\n"
@@ -922,19 +1125,19 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity could not find a place to store temporary files.\n"
+"Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "오데시티는 임시 파일을 저장할 장소를 찾을 수 없습니다.\n"
 "환경 설정 대화상자에서 적당한 폴더를 입력하세요."
 
 #: src/AudacityApp.cpp
-msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgid "Sneedacity is now going to exit. Please launch Sneedacity again to use the new temporary directory."
 msgstr "오데시티를 지금 종료할 것입니다. 새 임시 폴더를 사용하도록 오데시티를 다시 실행하세요."
 
 #: src/AudacityApp.cpp
 msgid ""
-"Running two copies of Audacity simultaneously may cause\n"
+"Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
@@ -943,14 +1146,14 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity was not able to lock the temporary files directory.\n"
-"This folder may be in use by another copy of Audacity.\n"
+"Sneedacity was not able to lock the temporary files directory.\n"
+"This folder may be in use by another copy of Sneedacity.\n"
 msgstr ""
 "오데시티는 임시 파일 폴더를 잠글 수 없습니다.\n"
 "오데시티의 다른 사본에서 이 폴더를 사용 중인 것 같습니다.\n"
 
 #: src/AudacityApp.cpp
-msgid "Do you still want to start Audacity?"
+msgid "Do you still want to start Sneedacity?"
 msgstr "그래도 오데시티를 시작할까요?"
 
 #: src/AudacityApp.cpp
@@ -958,19 +1161,19 @@ msgid "Error Locking Temporary Folder"
 msgstr "임시 폴더를 잠그는 중 오류"
 
 #: src/AudacityApp.cpp
-msgid "The system has detected that another copy of Audacity is running.\n"
+msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "이 시스템은 오데시티의 다른 사본이 실행 중인 것을 감지했습니다.\n"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Use the New or Open commands in the currently running Audacity\n"
+"Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
 "현재 실행중인 오데시티 프로세스에서 여러 프로젝트를 동시에\n"
 "열려면 '새로 만들기'나 '열기' 명령을 사용하세요.\n"
 
 #: src/AudacityApp.cpp
-msgid "Audacity is already running"
+msgid "Sneedacity is already running"
 msgstr "오데시티가 이미 실행 중입니다"
 
 #: src/AudacityApp.cpp
@@ -986,7 +1189,7 @@ msgstr ""
 "리부트를 하면 해결될 수 있습니다."
 
 #: src/AudacityApp.cpp
-msgid "Audacity Startup Failure"
+msgid "Sneedacity Startup Failure"
 msgstr "오데시티 시동 실패"
 
 #: src/AudacityApp.cpp
@@ -1027,7 +1230,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid ""
-"The Audacity IPC server failed to initialize.\n"
+"The Sneedacity IPC server failed to initialize.\n"
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
@@ -1041,7 +1244,7 @@ msgstr ""
 msgid "An unrecoverable error has occurred during startup"
 msgstr "시동 중 복구할 수 없는 오류가 발생하였습니다."
 
-#. i18n-hint: This controls the number of bytes that Audacity will
+#. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
 #: src/AudacityApp.cpp
 msgid "set max disk block size in bytes"
@@ -1052,17 +1255,17 @@ msgstr "최대 디스크 블럭 크기 설정 (바이트)"
 msgid "this help message"
 msgstr "이 도움말 메시지"
 
-#. i18n-hint: This runs a set of automatic tests on Audacity itself
+#. i18n-hint: This runs a set of automatic tests on Sneedacity itself
 #: src/AudacityApp.cpp
 msgid "run self diagnostics"
 msgstr "자체 진단 실행"
 
-#. i18n-hint: This displays the Audacity version
+#. i18n-hint: This displays the Sneedacity version
 #: src/AudacityApp.cpp
-msgid "display Audacity version"
+msgid "display Sneedacity version"
 msgstr "오데시티 버전 표시"
 
-#. i18n-hint: This is a list of one or more files that Audacity
+#. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
 #: src/AudacityApp.cpp
 msgid "audio or project file name"
@@ -1070,8 +1273,8 @@ msgstr "오디오나 프로젝트 파일 이름"
 
 #: src/AudacityApp.cpp
 msgid ""
-"Audacity project (.aup3) files are not currently \n"
-"associated with Audacity. \n"
+"Sneedacity project (.aup3) files are not currently \n"
+"associated with Sneedacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
@@ -1081,7 +1284,7 @@ msgstr ""
 "연결해서 더블 클릭시 그 파일을 열까요?"
 
 #: src/AudacityApp.cpp
-msgid "Audacity Project Files"
+msgid "Sneedacity Project Files"
 msgstr "오데시티 프로젝트 파일"
 
 #: src/AudacityException.h src/commands/MessageCommand.cpp src/widgets/AudacityMessageBox.cpp
@@ -1089,7 +1292,7 @@ msgid "Message"
 msgstr "메시지"
 
 #: src/AudacityFileConfig.cpp
-msgid "Audacity Configuration Error"
+msgid "Sneedacity Configuration Error"
 msgstr "오데시티 설정 오류"
 
 #: src/AudacityFileConfig.cpp
@@ -1103,7 +1306,7 @@ msgid ""
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
+"If you choose to \"Quit Sneedacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 "다음 설정 파일에 접근할 수 없습니다:\n"
 "\n"
@@ -1120,7 +1323,7 @@ msgid "Help"
 msgstr "도움말"
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
-msgid "&Quit Audacity"
+msgid "&Quit Sneedacity"
 msgstr "오데시티 끝내기 (&Q)"
 
 #: src/AudacityFileConfig.cpp
@@ -1128,7 +1331,7 @@ msgid "&Retry"
 msgstr "재시도(&R)"
 
 #: src/AudacityLogger.cpp
-msgid "Audacity Log"
+msgid "Sneedacity Log"
 msgstr "오데시티 로그"
 
 #: src/AudacityLogger.cpp src/Tags.cpp
@@ -1195,7 +1398,7 @@ msgid "Error Initializing Midi"
 msgstr "미디 초기화 중 오류"
 
 #: src/AudioIO.cpp
-msgid "Audacity Audio"
+msgid "Sneedacity Audio"
 msgstr "오데시티 오디오"
 
 #: src/AudioIO.cpp src/ProjectAudioManager.cpp
@@ -1424,7 +1627,7 @@ msgstr "자동 충돌 복구"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Sneedacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
@@ -1537,7 +1740,8 @@ msgstr "(%s)"
 msgid "Menu Command (No Parameters)"
 msgstr "메뉴 명령 (매개 변수 없음)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
+#. Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -2018,7 +2222,7 @@ msgstr ""
 "(다른 종류의 트랙을 선택하면 동작하지 않을 것입니다.)"
 
 #: src/CrashReport.cpp
-msgid "Audacity Support Data"
+msgid "Sneedacity Support Data"
 msgstr "오데시티 지원 데이터"
 
 #: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
@@ -2028,6 +2232,21 @@ msgstr "몇초가 필요합니다."
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr "보고서 생성:"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr "(%d): %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "주 연결 %s 을 안전 모드로 설정하는데 실패했습니다."
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "점검을 위한 연결 %s 을 안전모드로 설정하는데 실패하였습니다. "
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2148,20 +2367,20 @@ msgstr "모든 파일 복사 (더 안전함)"
 msgid "Whenever a project depends on other files:"
 msgstr "프로젝트가 다른 파일에 의존할 때마다:"
 
-#. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
+#. i18n-hint: One of the choices of what you want Sneedacity to do when
+#. * Sneedacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Ask me"
 msgstr "확인하기"
 
-#. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
+#. i18n-hint: One of the choices of what you want Sneedacity to do when
+#. * Sneedacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Always copy all files (safest)"
 msgstr "항상 모든 파일 복사(가장 안전함)"
 
-#. i18n-hint: One of the choices of what you want Audacity to do when
-#. * Audacity finds a project depends on another file.
+#. i18n-hint: One of the choices of what you want Sneedacity to do when
+#. * Sneedacity finds a project depends on another file.
 #: src/Dependencies.cpp
 msgid "Never copy any files"
 msgstr "어떤 파일도 복사하지 않음"
@@ -2192,7 +2411,7 @@ msgstr "계속 진행하면, 프로젝트를 디스크에 저장하지 않을 �
 msgid ""
 "Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
-"Some older Audacity projects may not be self-contained, and care \n"
+"Some older Sneedacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
@@ -2278,7 +2497,7 @@ msgstr "FFmpeg 지원은 컴파일되지 않았습니다"
 #: src/FFmpeg.cpp
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
-"but this time Audacity failed to load it at startup. \n"
+"but this time Sneedacity failed to load it at startup. \n"
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
@@ -2301,7 +2520,7 @@ msgstr "FFmpeg 찾기"
 
 #: src/FFmpeg.cpp
 #, c-format
-msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
+msgid "Sneedacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "오데시티에서 FFmpeg을 통해 오디오를 가져오고 내보내는데 '%s' 파일이 필요합니다."
 
 #: src/FFmpeg.cpp
@@ -2341,7 +2560,7 @@ msgstr "FFmpeg을 찾지 못했습니다"
 
 #: src/FFmpeg.cpp
 msgid ""
-"Audacity attempted to use FFmpeg to import an audio file,\n"
+"Sneedacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
 "\n"
 "To use FFmpeg import, go to Edit > Preferences > Libraries\n"
@@ -2372,23 +2591,23 @@ msgstr "오직 libavformat.so"
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity failed to open a file in %s."
+msgid "Sneedacity failed to open a file in %s."
 msgstr "오데시티에서 1%s의 파일을 열지 못했습니다."
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity failed to read from a file in %s."
+msgid "Sneedacity failed to read from a file in %s."
 msgstr "오데시티는 1%s의 파일에서 읽지 못했습니다."
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgid "Sneedacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr "오데시티에서 %s에 파일을 잘 썼지만 이름을 %s로 바꾸는데 실패했습니다."
 
 #: src/FileException.cpp
 #, c-format
 msgid ""
-"Audacity failed to write to a file.\n"
+"Sneedacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
@@ -2430,7 +2649,7 @@ msgstr "묻기(&K)"
 msgid "All files"
 msgstr "모든 파일"
 
-#. i18n-hint an Audacity project is the state of the program, stored as
+#. i18n-hint an Sneedacity project is the state of the program, stored as
 #. files that can be reopened to resume the session later
 #: src/FileNames.cpp
 msgid "AUP3 project files"
@@ -2686,7 +2905,7 @@ msgstr "오디오 파일 내보내는 중"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
-msgid "Saving an Audacity Project"
+msgid "Saving an Sneedacity Project"
 msgstr "오데시티 프로젝트 저장 중"
 
 #. i18n-hint: Title for a topic.
@@ -2704,15 +2923,15 @@ msgid "No Local Help"
 msgstr "설치된 도움말이 없습니다"
 
 #: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+msgid "<br><br>The version of Sneedacity you are using is an <b>Alpha test version</b>."
 msgstr "<br><br>현재 사용 중인 오데시티는 <b>알파 테스트 버전</b>입니다."
 
 #: src/HelpText.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgid "<br><br>The version of Sneedacity you are using is a <b>Beta test version</b>."
 msgstr "<br><br>현재 사용 중인 오데시티는 <b>베타 테스트 버전</b>입니다."
 
 #: src/HelpText.cpp
-msgid "Get the Official Released Version of Audacity"
+msgid "Get the Official Released Version of Sneedacity"
 msgstr "오데시티 공식 배포 버전 구하기"
 
 #: src/HelpText.cpp
@@ -2720,7 +2939,7 @@ msgid "We strongly recommend that you use our latest stable released version, wh
 msgstr "완전한 설명서와 지원이 있는 최신 배포 버전을 사용하시길 강력히 권장합니다.<br><br>"
 
 #: src/HelpText.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgid "You can help us get Sneedacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 msgstr "여러분은 우리의 [[https://www.audacityteam.org/community/|커뮤니티]]에 가입하여 오데시티의 배포를 도와줄 수 있습니다.<hr><br><br>"
 
 #: src/HelpText.cpp
@@ -2750,7 +2969,7 @@ msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for 
 msgstr "추가:</b> 팁, 트릭, 추가 사용 지침서와 효과 플러그인 정보는 [[https://wiki.audacityteam.org/index.php|위키]]를 방문하세요."
 
 #: src/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
+msgid "Sneedacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
 msgstr "오데시티는 비보호된 파일을 다른 여러 형식으로 가져올 수 있습니다 (M4A와 WMA, 휴대용 레코더와 비디오 파일의 오디오에서 압축된 WAV 파일 등). 이를 위해서는 [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|FFmpeg 라이브러리]]를 받아서 설치해야 합니다."
 
 #: src/HelpText.cpp
@@ -2829,7 +3048,7 @@ msgstr "작업내역(&H)..."
 #, c-format
 msgid ""
 "Internal error in %s at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
+"Please inform the Sneedacity team at https://forum.audacityteam.org/."
 msgstr ""
 "내부 오류: %s에서, %s의 %d번째 줄.\n"
 "오데시티 팀에게 https://forum.audacityteam.org/로 알려주세요."
@@ -2838,7 +3057,7 @@ msgstr ""
 #, c-format
 msgid ""
 "Internal error at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
+"Please inform the Sneedacity team at https://forum.audacityteam.org/."
 msgstr ""
 "내부 오류: %s의 %d번째 줄.\n"
 "오데시티 팀에게 https://forum.audacityteam.org/로 알려주세요."
@@ -2846,33 +3065,6 @@ msgstr ""
 #: src/InconsistencyException.h
 msgid "Internal Error"
 msgstr "내부 오류"
-
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "결정할 수 없습니다."
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s 바이트"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr " %s GB"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -2884,7 +3076,7 @@ msgid "Track"
 msgstr "트랙"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "레이블"
 
@@ -2953,13 +3145,13 @@ msgid "One or more saved labels could not be read."
 msgstr "하나 이상의 저장된 레이블을 읽을 수 없습니다."
 
 #. i18n-hint: Title on a dialog indicating that this is the first
-#. * time Audacity has been run.
+#. * time Sneedacity has been run.
 #: src/LangChoice.cpp
-msgid "Audacity First Run"
+msgid "Sneedacity First Run"
 msgstr "오데시티 처음 실행"
 
 #: src/LangChoice.cpp
-msgid "Choose Language for Audacity to use:"
+msgid "Choose Language for Sneedacity to use:"
 msgstr "오데시티에서 사용할 언어 선택:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
@@ -2972,14 +3164,6 @@ msgstr "선택한 언어 %s (%s)가 시스템 언어 %s (%s)와 같지 않습니
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "확인"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "단순화"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "시스템"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -2995,12 +3179,12 @@ msgstr ""
 "이전 파일은 '%s' 이름으로 저장했습니다"
 
 #: src/Legacy.cpp
-msgid "Opening Audacity Project"
+msgid "Opening Sneedacity Project"
 msgstr "오데시티 프로젝트 열기"
 
 #: src/LyricsWindow.cpp
 #, c-format
-msgid "Audacity Karaoke%s"
+msgid "Sneedacity Karaoke%s"
 msgstr "오데시티 가라오케%s"
 
 #: src/LyricsWindow.cpp
@@ -3052,7 +3236,7 @@ msgstr "트랙 믹싱/렌더링"
 
 #: src/MixerBoard.cpp
 #, c-format
-msgid "Audacity Mixer Board%s"
+msgid "Sneedacity Mixer Board%s"
 msgstr "오데시티 믹서 보드%s"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
@@ -3136,7 +3320,7 @@ msgstr ""
 #: src/ModuleManager.cpp
 #, c-format
 msgid ""
-"The module \"%s\" is matched with Audacity version \"%s\".\n"
+"The module \"%s\" is matched with Sneedacity version \"%s\".\n"
 "\n"
 "It will not be loaded."
 msgstr ""
@@ -3179,7 +3363,7 @@ msgid "No"
 msgstr "아니요"
 
 #: src/ModuleManager.cpp
-msgid "Audacity Module Loader"
+msgid "Sneedacity Module Loader"
 msgstr "오데시티 모듈 로더"
 
 #: src/ModuleManager.cpp
@@ -3288,27 +3472,32 @@ msgstr "A♭"
 msgid "B♭"
 msgstr "B♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "C♯/D♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "D♯/E♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "F♯/G♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "G♯/A♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
@@ -3455,6 +3644,10 @@ msgstr[0] "이 플러그인들을 활성화?\n"
 msgid "Enable new plug-ins"
 msgstr "새 플러그인 활성화"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "나이키스트 프롬프트"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "인쇄 중에 문제가 발생했습니다."
@@ -3495,7 +3688,7 @@ msgstr "샘플링 주파수가 맞지 않음"
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid ""
 "Too few tracks are selected for recording at this sample rate.\n"
-"(Audacity requires two channels at the same sample rate for\n"
+"(Sneedacity requires two channels at the same sample rate for\n"
 "each stereo track)"
 msgstr ""
 "이 샘플링 주파수에서 녹음을 위한 트랙이 너무 적게 선택되었습니다. \n"
@@ -3527,7 +3720,7 @@ msgstr "드롭아웃"
 msgid ""
 "Recorded audio was lost at the labeled locations. Possible causes:\n"
 "\n"
-"Other applications are competing with Audacity for processor time\n"
+"Other applications are competing with Sneedacity for processor time\n"
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
@@ -3571,7 +3764,7 @@ msgstr "프로젝트 파일 데이터 검사 중"
 msgid ""
 "Project check of \"%s\" folder \n"
 "detected %lld missing external audio file(s) \n"
-"('aliased files'). There is no way for Audacity \n"
+"('aliased files'). There is no way for Sneedacity \n"
 "to recover these files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -3618,7 +3811,7 @@ msgstr "경고 - 별명 파일이 없습니다"
 msgid ""
 "Project check of \"%s\" folder \n"
 "detected %lld missing alias (.auf) blockfile(s). \n"
-"Audacity can fully regenerate these files \n"
+"Sneedacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
 "\"%s\" 폴더의 프로젝트 검사에서\n"
@@ -3648,7 +3841,7 @@ msgid ""
 "Project check of \"%s\" folder \n"
 "detected %lld missing audio data (.au) blockfile(s), \n"
 "probably due to a bug, system crash, or accidental \n"
-"deletion. There is no way for Audacity to recover \n"
+"deletion. There is no way for Sneedacity to recover \n"
 "these missing files automatically. \n"
 "\n"
 "If you choose the first or second option below, \n"
@@ -3804,18 +3997,18 @@ msgstr ""
 "(필요한 임시 파일을 생성할 수 없음)"
 
 #: src/ProjectFileIO.cpp
-msgid "This is not an Audacity project file"
+msgid "This is not an Sneedacity project file"
 msgstr "이 파일은 오데시티 프로젝트 파일이 아닙니다"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Sneedacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
-"이 프로젝트는  최신 버전의 오데시티에서 생성되었습니다:\n"
+"이 프로젝트는 새 버전의 오데시티로 생성되었습니다.\n"
 "\n"
-"이 프로젝트를 처리하려면 새 버전으로 업그레이드 해야 합니다."
+"이 프로젝트를 열기 위해서는 업그레이드를 해야 합니다. "
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -3943,7 +4136,7 @@ msgstr "파일을 쓰는 중 오류"
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid ""
-"Audacity failed to write file %s.\n"
+"Sneedacity failed to write file %s.\n"
 "Perhaps disk is full or not writable.\n"
 "For tips on freeing up space, click the help button."
 msgstr ""
@@ -3957,7 +4150,7 @@ msgstr "프로젝트 압축"
 #. i18n-hint: The %02i is the project number, the %s is the project name.
 #: src/ProjectFileIO.cpp
 #, c-format
-msgid "[Project %02i] Audacity \"%s\""
+msgid "[Project %02i] Sneedacity \"%s\""
 msgstr "[프로젝트 %02i] 오데시티 \"%s\""
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
@@ -3969,8 +4162,8 @@ msgstr "(복구함)"
 #: src/ProjectFileIO.cpp
 #, c-format
 msgid ""
-"This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
+"This file was saved using Sneedacity %s.\n"
+"You are using Sneedacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "이 파일은 오데시티 %s 버전에서 저장했습니다.\n"
 "현재 오데시티 %s 버전을 사용 중입니다. 이 파일을 열려면 새로운 버전으로 업그레이드하세요."
@@ -3982,6 +4175,10 @@ msgstr "프로젝트 파일을 열 수 없습니다."
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "이 프로젝트 파일에서 자동 저장 정보를 삭제하는데 실패했습니다."
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to bind to blob"
+msgstr "Blob과 바인딩 할 수 없습니다. "
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4039,7 +4236,7 @@ msgstr "프로젝트 백업 중"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"This project was not saved properly the last time Audacity ran.\n"
+"This project was not saved properly the last time Sneedacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
@@ -4049,7 +4246,7 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"This project was not saved properly the last time Audacity ran.\n"
+"This project was not saved properly the last time Sneedacity ran.\n"
 "\n"
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
@@ -4129,7 +4326,7 @@ msgstr "%s프로젝트 \"%s\"를 다른 이름으로 저장..."
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"'Save Project' is for an Audacity project, not an audio file.\n"
+"'Save Project' is for an Sneedacity project, not an audio file.\n"
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
 "'프로젝트 저장'은 오디오 파일이 아니라 오데시티 프로젝트용입니다.\n"
@@ -4184,6 +4381,14 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "프로젝트 저장 중 오류"
 
+#: src/ProjectFileManager.cpp
+msgid "Can't open new empty project"
+msgstr "빈 신규 프로젝트를 열 수 없습니다. "
+
+#: src/ProjectFileManager.cpp
+msgid "Error opening a new empty project"
+msgstr "빈 신규프로젝트 열기 오류"
+
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "하나 이상의 파일 선택"
@@ -4210,7 +4415,7 @@ msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
-"Please open the actual Audacity project file instead."
+"Please open the actual Sneedacity project file instead."
 msgstr ""
 "자동으로 생성된 백업 파일을 열려고 하는 중입니다.\n"
 "이것을 열면 심각한 데이터 손실이 발생할 수 있습니다.\n"
@@ -4311,7 +4516,7 @@ msgstr "자동 데이터베이스 백업 실패"
 
 #: src/ProjectManager.cpp
 #, c-format
-msgid "Welcome to Audacity version %s"
+msgid "Welcome to Sneedacity version %s"
 msgstr "오데시티 %s 버전 사용을 환영합니다"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project
@@ -4370,14 +4575,14 @@ msgstr "%s 및 %s."
 
 #: src/ProjectSerializer.cpp
 msgid ""
-"This recovery file was saved by Audacity 2.3.0 or before.\n"
-"You need to run that version of Audacity to recover the project."
+"This recovery file was saved by Sneedacity 2.3.0 or before.\n"
+"You need to run that version of Sneedacity to recover the project."
 msgstr ""
 "이 복구파일은 오데시티 2.3.0 또는 그 이전 버전에 의해 저장되었습니다.\n"
 "이 프로젝트를 열려면 그 버전의 오데시티를 실행시켜야합니다."
 
 #. i18n-hint: This is an experimental feature where the main panel in
-#. Audacity is put on a notebook tab, and this is the name on that tab.
+#. Sneedacity is put on a notebook tab, and this is the name on that tab.
 #. Other tabs in that notebook may have instruments, patch panels etc.
 #: src/ProjectWindow.cpp
 msgid "Main Mix"
@@ -4433,7 +4638,7 @@ msgid "24-bit PCM"
 msgstr "24-비트 PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-비트 실수"
 
@@ -4699,7 +4904,7 @@ msgid "Activation level (dB):"
 msgstr "활성화 레벨 (dB):"
 
 #: src/SplashDialog.cpp
-msgid "Welcome to Audacity!"
+msgid "Welcome to Sneedacity!"
 msgstr "오데시티 사용을 환영합니다!"
 
 #: src/SplashDialog.cpp
@@ -4733,10 +4938,6 @@ msgstr "연도"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "장르"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "코멘트"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -4848,7 +5049,7 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not write file:\n"
+"Sneedacity could not write file:\n"
 "  %s."
 msgstr ""
 "오데시티에서 파일을 쓸 수 없습니다:\n"
@@ -4857,7 +5058,7 @@ msgstr ""
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of
 #. images
-#. such as those on button controls.  Audacity can load and save alternative
+#. such as those on button controls.  Sneedacity can load and save alternative
 #. themes.
 #: src/Theme.cpp
 #, c-format
@@ -4871,7 +5072,7 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not open file:\n"
+"Sneedacity could not open file:\n"
 "  %s\n"
 "for writing."
 msgstr ""
@@ -4882,7 +5083,7 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not write images to file:\n"
+"Sneedacity could not write images to file:\n"
 "  %s."
 msgstr ""
 "오데시티에서 이미지를 파일에 쓸 수 없습니다:\n"
@@ -4901,7 +5102,7 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not find file:\n"
+"Sneedacity could not find file:\n"
 "  %s.\n"
 "Theme not loaded."
 msgstr ""
@@ -4913,7 +5114,7 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not load file:\n"
+"Sneedacity could not load file:\n"
 "  %s.\n"
 "Bad png format perhaps?"
 msgstr ""
@@ -4923,7 +5124,7 @@ msgstr ""
 
 #: src/Theme.cpp
 msgid ""
-"Audacity could not read its default theme.\n"
+"Sneedacity could not read its default theme.\n"
 "Please report the problem."
 msgstr ""
 "오데시티에서 기본 테마를 읽어올 수 없습니다.\n"
@@ -4962,14 +5163,14 @@ msgstr ""
 #: src/Theme.cpp
 #, c-format
 msgid ""
-"Audacity could not save file:\n"
+"Sneedacity could not save file:\n"
 "  %s"
 msgstr ""
 "오데시티에서 파일을 저장할 수 없습니다:\n"
 " %s"
 
 #. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
+#. appearance of older versions of Sneedacity
 #: src/Theme.cpp
 msgid "Classic"
 msgstr "클래식"
@@ -5017,7 +5218,7 @@ msgid "Time Track"
 msgstr "시간 트랙"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record"
+msgid "Sneedacity Timer Record"
 msgstr "오데시티 타이머 기록"
 
 #: src/TimerRecordDialog.cpp
@@ -5112,7 +5313,7 @@ msgid "Action after Timer Recording:"
 msgstr "타이머 기록 후 동작:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record Progress"
+msgid "Sneedacity Timer Record Progress"
 msgstr "오데시티 타이머 기록 진행"
 
 #: src/TimerRecordDialog.cpp
@@ -5269,7 +5470,7 @@ msgid "Do nothing"
 msgstr "동작 없음"
 
 #: src/TimerRecordDialog.cpp
-msgid "Exit Audacity"
+msgid "Exit Sneedacity"
 msgstr "오데시티 종료"
 
 #: src/TimerRecordDialog.cpp
@@ -5293,7 +5494,7 @@ msgid "Scheduled to stop at:"
 msgstr "중단 예정 시간:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record - Waiting for Start"
+msgid "Sneedacity Timer Record - Waiting for Start"
 msgstr "오데시티 타이머 기록 - 시작 대기 중"
 
 #. i18n-hint: "in" means after a duration of time,
@@ -5302,7 +5503,7 @@ msgstr "오데시티 타이머 기록 - 시작 대기 중"
 msgid "Recording will commence in:"
 msgstr "녹음이 시작될 것입니다:"
 
-#. i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+#. i18n-hint: %s is one of "Do nothing", "Exit Sneedacity", "Restart system",
 #. or "Shutdown system", and
 #. "in" means after a duration of time, shown below this string
 #: src/TimerRecordDialog.cpp
@@ -5319,7 +5520,7 @@ msgid "Recording Exported:"
 msgstr "녹음 내보내기 완료:"
 
 #: src/TimerRecordDialog.cpp
-msgid "Audacity Timer Record - Waiting"
+msgid "Sneedacity Timer Record - Waiting"
 msgstr "오데시티 타이머 기록 - 대기 중"
 
 #: src/TrackInfo.cpp
@@ -5501,7 +5702,7 @@ msgid "This operation cannot be done until importation of %s completes."
 msgstr "%s 가져오기가 끝날 때까지 이 동작을 수행할 수 없습니다."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
-msgid "Audacity"
+msgid "Sneedacity"
 msgstr "오데시티"
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
@@ -5773,11 +5974,11 @@ msgid "Builtin Commands"
 msgstr "내장 명령"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LoadLV2.cpp src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
-msgid "The Audacity Team"
+msgid "The Sneedacity Team"
 msgstr "오데시티 팀"
 
 #: src/commands/LoadCommands.cpp
-msgid "Provides builtin commands to Audacity"
+msgid "Provides builtin commands to Sneedacity"
 msgstr "오데시티에 내장 명령을 제공합니다"
 
 #: src/commands/LoadCommands.cpp
@@ -6108,6 +6309,15 @@ msgstr "시간:"
 msgid "Delete"
 msgstr "삭제"
 
+#: src/commands/SetEnvelopeCommand.cpp
+msgid "Edited Envelope"
+msgstr "편집된 포락선"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "포락선"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "포락선 점 위치를 설정합니다."
@@ -6127,6 +6337,10 @@ msgstr "끝:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "선택됨"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "Edited Label"
+msgstr "편집된 레이블"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -7439,7 +7653,7 @@ msgid "Previewing"
 msgstr "미리보기 처리 중"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Sneedacity, named in honor of the Swedish-American Harry Nyquist (or
 #. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
@@ -7724,10 +7938,6 @@ msgstr "재생 정지(&P)"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "재생"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "나이키스트 프롬프트"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -8183,7 +8393,7 @@ msgid "Builtin Effects"
 msgstr "내장 효과"
 
 #: src/effects/LoadEffects.cpp
-msgid "Provides builtin effects to Audacity"
+msgid "Provides builtin effects to Sneedacity"
 msgstr "내장 효과를 오데시티에 제공합니다"
 
 #: src/effects/LoadEffects.cpp
@@ -8414,7 +8624,7 @@ msgstr "스텝 1"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid ""
-"Select a few seconds of just noise so Audacity knows what to filter out,\n"
+"Select a few seconds of just noise so Sneedacity knows what to filter out,\n"
 "then click Get Noise Profile:"
 msgstr ""
 "오데시티가 필터할 내용을 알 수 있도록 단지 노이즈만 몇 초를 선택한 다음,\n"
@@ -9286,7 +9496,7 @@ msgid "VST Effects"
 msgstr "VST 효과"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Adds the ability to use VST effects in Audacity."
+msgid "Adds the ability to use VST effects in Sneedacity."
 msgstr "오데시티에서 VST 효과를 사용할 수 있게 합니다."
 
 #: src/effects/VST/VSTEffect.cpp
@@ -9323,7 +9533,7 @@ msgid "Latency Compensation"
 msgstr "레이턴시 보상"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
+msgid "As part of their processing, some VST effects must delay returning audio to Sneedacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr "처리의 일부 과정으로서, 일부 VST 효과는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 VST 효과에서 작동하는 것은 아닙니다. "
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9360,7 +9570,7 @@ msgid "Standard VST program file"
 msgstr "표준 VST 프로그램 파일"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid "Audacity VST preset file"
+msgid "Sneedacity VST preset file"
 msgstr "오데시티 VST 사전설정 파일"
 
 #: src/effects/VST/VSTEffect.cpp
@@ -9445,7 +9655,7 @@ msgid "Audio Unit Effects"
 msgstr "오디오 유니트 효과"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "Provides Audio Unit Effects support to Audacity"
+msgid "Provides Audio Unit Effects support to Sneedacity"
 msgstr "오디오 유니트 효과를 오데시티에 제공합니다"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -9461,7 +9671,7 @@ msgid "Audio Unit Effect Options"
 msgstr "오디오 유니트 효과 옵션"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Sneedacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
 msgstr "처리의 일부 과정으로서, 일부 오디오 유니트 효과는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음들이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 오디오 유니트 효과에서 작동하는 것은 아닙니다. "
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -9614,7 +9824,7 @@ msgid "Provides LADSPA Effects"
 msgstr "LADSPA 효과를 제공합니다"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid "Audacity no longer uses vst-bridge"
+msgid "Sneedacity no longer uses vst-bridge"
 msgstr "오데시티는 VST 브릿지를 더 이상 사용하지 않습니다"
 
 #: src/effects/ladspa/LadspaEffect.cpp
@@ -9622,7 +9832,7 @@ msgid "LADSPA Effect Options"
 msgstr "LADSPA 효과 옵션"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Sneedacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr "처리의 일부 과정으로서, 일부 LADSPA 효과는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 LADSPA 효과에서 작동하는 것은 아닙니다. "
 
 #. i18n-hint: An item name introducing a value, which is not part of the
@@ -9654,7 +9864,7 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "버퍼 크기 (8에서 %d 샘플)(&B):"
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgid "As part of their processing, some LV2 effects must delay returning audio to Sneedacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
 msgstr "처리의 일부 과정으로서, 일부 LV2 효과는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 LV2 효과에서 작동하는 것은 아닙니다. "
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -9690,7 +9900,7 @@ msgid "LV2 Effects"
 msgstr "LV2 효과"
 
 #: src/effects/lv2/LoadLV2.cpp
-msgid "Provides LV2 Effects support to Audacity"
+msgid "Provides LV2 Effects support to Sneedacity"
 msgstr "LV2 효과 지원을 오데시티에 제공합니다"
 
 #: src/effects/nyquist/LoadNyquist.cpp
@@ -9698,7 +9908,7 @@ msgid "Nyquist Effects"
 msgstr "나이키스트 효과"
 
 #: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
+msgid "Provides Nyquist Effects support to Sneedacity"
 msgstr "나이키스트 효과 지원을 오데시티에 제공합니다"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -9714,6 +9924,14 @@ msgstr "나이키스트 작업자"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
 msgstr "잘못된 형식의 나이키스트 플러그인 헤더"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"'스펙트럼' 효과를 적용하기 위해서는\n"
+"스펙트로그램 보기를 먼저 활성화하세요. "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9817,7 +10035,7 @@ msgstr "[경고: 나이키스트가 Latin-1으로 변환한, 무효한 UTF-8 문
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgid "This version of Sneedacity does not support Nyquist plug-in version %ld"
 msgstr "이 버전의 오데시티는 나이키스트 플러그인 %ld 버전을 지원하지 않습니다"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -9928,7 +10146,7 @@ msgid "Vamp Effects"
 msgstr "뱀프 효과"
 
 #: src/effects/vamp/LoadVamp.cpp
-msgid "Provides Vamp Effects support to Audacity"
+msgid "Provides Vamp Effects support to Sneedacity"
 msgstr "뱀프 효과를 오데시티에 제공합니다"
 
 #: src/effects/vamp/VampEffect.cpp
@@ -11029,14 +11247,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (최소 파일크기)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "빠르게"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "표준"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11062,6 +11272,10 @@ msgstr "미친"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "극단적"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "표준"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11097,10 +11311,6 @@ msgid "Quality"
 msgstr "품질"
 
 #: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "가변 속도:"
-
-#: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
 msgstr "채널 모드:"
 
@@ -11116,7 +11326,7 @@ msgstr "LAME 찾기"
 
 #: src/export/ExportMP3.cpp
 #, c-format
-msgid "Audacity needs the file %s to create MP3s."
+msgid "Sneedacity needs the file %s to create MP3s."
 msgstr "오데시티에서 MP3를 만들려면 %s 파일이 필요합니다."
 
 #: src/export/ExportMP3.cpp
@@ -11146,11 +11356,11 @@ msgstr "%s은 어디에 있습니까?"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
-"Please download the latest version of 'LAME for Audacity'."
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Sneedacity %d.%d.%d.\n"
+"Please download the latest version of 'LAME for Sneedacity'."
 msgstr ""
 "현재 링크하고 있는 파일은 lame_enc.dll v%d.%d임. 이버전은 오데시티 버전 %d.%d.%d 과 호환되지 않음.\n"
-"최신 버전의 'LAME for Audacity' 를 다운로드 하기 바랍니다. "
+"최신 버전의 'LAME for Sneedacity' 를 다운로드 하기 바랍니다. "
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
@@ -11472,7 +11682,7 @@ msgstr "기타 비압축 파일"
 #: src/export/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
-"Audacity cannot do this, the Export was abandoned."
+"Sneedacity cannot do this, the Export was abandoned."
 msgstr ""
 "4GB 보다 큰 파일로 WAV 또는 AIFF 파일을 내보내기를 시도하였습니다.\n"
 "오데시티가 지원하지 않습니다. 내보내기 중단되었습니다."
@@ -11483,7 +11693,7 @@ msgstr "오류 내보내기"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+"Your exported WAV file has been truncated as Sneedacity cannot export WAV\n"
 "files bigger than 4GB."
 msgstr ""
 "오데시티에서는 4GB보다 큰 WAV 파일 내보내기가 불가능하여\n"
@@ -11527,7 +11737,7 @@ msgstr "지원하는 모든 파일"
 msgid ""
 "\"%s\" \n"
 "is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
+"Sneedacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
 msgstr ""
 "\"%s\" \n"
@@ -11540,7 +11750,7 @@ msgstr ""
 msgid ""
 "\"%s\" \n"
 "is a not an audio file. \n"
-"Audacity cannot open this type of file."
+"Sneedacity cannot open this type of file."
 msgstr ""
 "\"%s\" \n"
 "는 오디오 파일이 아닙니다. \n"
@@ -11552,7 +11762,7 @@ msgstr "가져오기 스트림 선택"
 
 #: src/import/Import.cpp
 #, c-format
-msgid "This version of Audacity was not compiled with %s support."
+msgid "This version of Sneedacity was not compiled with %s support."
 msgstr "이 버전의 오데시티는 %s를 지원하도록 컴파일되지 않았습니다."
 
 #. i18n-hint: %s will be the filename
@@ -11560,9 +11770,9 @@ msgstr "이 버전의 오데시티는 %s를 지원하도록 컴파일되지 않�
 #, c-format
 msgid ""
 "\"%s\" is an audio CD track. \n"
-"Audacity cannot open audio CDs directly. \n"
+"Sneedacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
-"Audacity can import, such as WAV or AIFF."
+"Sneedacity can import, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 오디오 CD 트랙입니다. \n"
 "오데시티에서 오디오 CD를 직접 열 수는 없습니다. \n"
@@ -11574,7 +11784,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other files. \n"
+"Sneedacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 "\"%s\"는 재생 목록 파일입니다. \n"
@@ -11586,7 +11796,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Windows Media Audio file. \n"
-"Audacity cannot open this type of file due to patent restrictions. \n"
+"Sneedacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 윈도우 미디어 오디오 파일입니다. \n"
@@ -11598,7 +11808,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Without the optional FFmpeg library, Sneedacity cannot open this type of file.\n"
 "Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 고급 오디오 코딩 파일입니다. FFmpeg 라이브러리가 없으면, 오데시티는 이 형식의 파일을 열 수 없습니다.\n"
@@ -11610,8 +11820,8 @@ msgstr ""
 msgid ""
 "\"%s\" is an encrypted audio file. \n"
 "These typically are from an online music store. \n"
-"Audacity cannot open this type of file due to the encryption. \n"
-"Try recording the file into Audacity, or burn it to audio CD then \n"
+"Sneedacity cannot open this type of file due to the encryption. \n"
+"Try recording the file into Sneedacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 암호화된 오디오 파일입니다. \n"
@@ -11625,7 +11835,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a RealPlayer media file. \n"
-"Audacity cannot open this proprietary format. \n"
+"Sneedacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 리얼플레이어 미디어 파일입니다. \n"
@@ -11637,9 +11847,9 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a notes-based file, not an audio file. \n"
-"Audacity cannot open this type of file. \n"
+"Sneedacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
-"then import it, or record it into Audacity."
+"then import it, or record it into Sneedacity."
 msgstr ""
 "\"%s\"는 오디오 파일이 아니고, 노트 기반의 파일입니다. \n"
 "오데시티에서 이 형식의 파일을 열 수 없습니다. \n"
@@ -11651,7 +11861,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Musepack audio file. \n"
-"Audacity cannot open this type of file. \n"
+"Sneedacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
@@ -11667,7 +11877,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Wavpack audio file. \n"
-"Audacity cannot open this type of file. \n"
+"Sneedacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 Wavpack 오디오 파일입니다. \n"
@@ -11679,7 +11889,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a Dolby Digital audio file. \n"
-"Audacity cannot currently open this type of file. \n"
+"Sneedacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 돌비 디지털 오디오 파일입니다. \n"
@@ -11691,7 +11901,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Ogg Speex audio file. \n"
-"Audacity cannot currently open this type of file. \n"
+"Sneedacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 Ogg Speex 오디오 파일입니다. \n"
@@ -11703,7 +11913,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a video file. \n"
-"Audacity cannot currently open this type of file. \n"
+"Sneedacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
 msgstr ""
 "\"%s\"는 비디오 파일입니다. \n"
@@ -11719,7 +11929,7 @@ msgstr "파일 \"%s\" 을 찾을 수 없음"
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"Audacity did not recognize the type of the file '%s'.\n"
+"Sneedacity did not recognize the type of the file '%s'.\n"
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
@@ -11744,7 +11954,7 @@ msgstr "%s, %s"
 #: src/import/Import.cpp
 #, c-format
 msgid ""
-"Audacity recognized the type of the file '%s'.\n"
+"Sneedacity recognized the type of the file '%s'.\n"
 "Importers supposedly supporting such files are:\n"
 "%s,\n"
 "but none of them understood this file format."
@@ -11775,11 +11985,11 @@ msgstr "프로젝트 가져오기"
 
 #: src/import/ImportAUP.cpp
 msgid ""
-"This project was saved by Audacity version 1.0 or earlier. The format has\n"
-"changed and this version of Audacity is unable to import the project.\n"
+"This project was saved by Sneedacity version 1.0 or earlier. The format has\n"
+"changed and this version of Sneedacity is unable to import the project.\n"
 "\n"
-"Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
-"you may import it with this version of Audacity."
+"Use a version of Sneedacity prior to v3.0.0 to upgrade the project and then\n"
+"you may import it with this version of Sneedacity."
 msgstr ""
 "이 프로젝트는 오데시티 1.0 이전 버전에서 저장되었습니다.\n"
 "이후 버전에서 포맷이 바뀌어 이 프로젝트는 가져올수 없습니다.\n"
@@ -11830,7 +12040,7 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "프로젝트 데이터 폴더를 찾을 수 없습니다: \"%s\""
 
 #: src/import/ImportAUP.cpp
-msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
+msgid "MIDI tracks found in project file, but this build of Sneedacity does not include MIDI support, bypassing track."
 msgstr "MIDI 트랙이 프로젝트 파일에 있으나, 이 오데시티 빌드는MIDI 지원을 하지 않음, 트랙 무시."
 
 #: src/import/ImportAUP.cpp
@@ -12986,7 +13196,7 @@ msgid "&Getting Started"
 msgstr "시작하기(&G)"
 
 #: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
+msgid "Sneedacity &Manual"
 msgstr "오데시티 메뉴얼 (&M)"
 
 #: src/menus/HelpMenus.cpp
@@ -13009,7 +13219,7 @@ msgstr "오디오 장치 정보(&D)..."
 msgid "&MIDI Device Info..."
 msgstr "미디 장치 정보(&M)..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "로그 보기(&L)..."
 
@@ -13033,7 +13243,7 @@ msgstr "추가된 레이블"
 msgid "Paste Text to New Label"
 msgstr "새 레이블에 텍스트 붙여넣기"
 
-#. i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
+#. i18n-hint: (verb) past tense.  Sneedacity has just cut the labeled audio
 #. regions.
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard"
@@ -13044,7 +13254,7 @@ msgstr "레이블이 달린 오디오 영역을 클립보드로 잘라냅니다"
 msgid "Cut Labeled Audio"
 msgstr "레이블이 붙은 오디오 잘라내기"
 
-#. i18n-hint: (verb) Audacity has just deleted the labeled audio regions
+#. i18n-hint: (verb) Sneedacity has just deleted the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Deleted labeled audio regions"
 msgstr "레이블이 붙은 오디오 영역을 삭제했습니다"
@@ -13054,7 +13264,7 @@ msgstr "레이블이 붙은 오디오 영역을 삭제했습니다"
 msgid "Delete Labeled Audio"
 msgstr "레이블이 붙은 오디오 삭제"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
+#. i18n-hint: (verb) Sneedacity has just split cut the labeled audio
 #. regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Cut labeled audio regions to clipboard"
@@ -13065,7 +13275,7 @@ msgstr "레이블이 붙은 오디오 영역을 클립보드로 분할 잘라내
 msgid "Split Cut Labeled Audio"
 msgstr "레이블이 붙은 오디오 분할 잘라내기"
 
-#. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
+#. i18n-hint: (verb) Sneedacity has just done a special kind of DELETE on
 #. the labeled audio regions
 #: src/menus/LabelMenus.cpp
 msgid "Split Deleted labeled audio regions"
@@ -13096,7 +13306,7 @@ msgstr "레이블이 붙은 오디오 영역을 클립보드로 복사했습니�
 msgid "Copy Labeled Audio"
 msgstr "레이블이 붙은 오디오 복사"
 
-#. i18n-hint: (verb) past tense.  Audacity has just split the labeled
+#. i18n-hint: (verb) past tense.  Sneedacity has just split the labeled
 #. audio (a point or a region)
 #: src/menus/LabelMenus.cpp
 msgid "Split labeled audio (points or regions)"
@@ -13107,7 +13317,7 @@ msgstr "레이블이 붙은 오디오(점이나 영역)를 분할했습니다"
 msgid "Split Labeled Audio"
 msgstr "레이블이 붙은 오디오 분할하기"
 
-#. i18n-hint: (verb) Audacity has just joined the labeled audio (points or
+#. i18n-hint: (verb) Sneedacity has just joined the labeled audio (points or
 #. regions)
 #: src/menus/LabelMenus.cpp
 msgid "Joined labeled audio (points or regions)"
@@ -13118,9 +13328,9 @@ msgstr "레이블이 붙은 오디오(점이나 영역)를 연결했습니다"
 msgid "Join Labeled Audio"
 msgstr "레이블이 붙은 오디오 연결하기"
 
-#. i18n-hint: (verb) Audacity has just detached the labeled audio regions.
+#. i18n-hint: (verb) Sneedacity has just detached the labeled audio regions.
 #. This message appears in history and tells you about something
-#. Audacity has done.
+#. Sneedacity has done.
 #: src/menus/LabelMenus.cpp
 msgid "Detached labeled audio regions"
 msgstr "레이블이 붙은 오디오 영역을 분리했습니다"
@@ -13922,7 +14132,7 @@ msgid "Created new label track"
 msgstr "새 레이블 트랙을 만들었습니다"
 
 #: src/menus/TrackMenus.cpp
-msgid "This version of Audacity only allows one time track for each project window."
+msgid "This version of Sneedacity only allows one time track for each project window."
 msgstr "이 버전의 오데시티에서는 각 프로젝트 창에 한 개의 시간 트랙만 사용할 수 있습니다."
 
 #: src/menus/TrackMenus.cpp
@@ -14181,14 +14391,14 @@ msgid "Move Focused Track to &Bottom"
 msgstr "포커스된 트랙: 맨 아래로 이동(&B)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "재생 중"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
 msgid "Recording"
@@ -14506,6 +14716,10 @@ msgid "&Extra Menus (on/off)"
 msgstr "추가 메뉴 (켬/끔)(&E)"
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr "트랙 이름 (on/off) (&N)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "클리핑 보이기 (켬/끔)(&S)"
 
@@ -14689,6 +14903,10 @@ msgid "Bro&wse..."
 msgstr "검색 (&W)"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "&Macro output:"
+msgstr "매크로 출력 (&M)"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "임시 파일 폴더"
 
@@ -14707,10 +14925,6 @@ msgstr "검색 (&S)"
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "남은 공간 (&F)"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "남은 공간"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -14744,7 +14958,7 @@ msgid "Directory %s is not writable"
 msgstr "%s 폴더는 쓸 수 없습니다"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Changes to temporary directory will not take effect until Audacity is restarted"
+msgid "Changes to temporary directory will not take effect until Sneedacity is restarted"
 msgstr "임시 폴더 변경은 오데시티를 재시작해야 적용됩니다."
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -14788,7 +15002,7 @@ msgid "LV&2"
 msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Sneedacity, named in honor of the Swedish-American Harry Nyquist (or
 #. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
@@ -14831,11 +15045,11 @@ msgid "Plugin Options"
 msgstr "플러그인 옵션"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Check for updated plugins when Audacity starts"
+msgid "Check for updated plugins when Sneedacity starts"
 msgstr "오데시티 시작시 플러그인 업데이트 확인"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Rescan plugins next time Audacity is started"
+msgid "Rescan plugins next time Sneedacity is started"
 msgstr "오데시티 재실행시 플러그인 다시 검색"
 
 #: src/prefs/EffectsPrefs.cpp
@@ -14905,7 +15119,7 @@ msgid "Unused filters:"
 msgstr "미사용 필터:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Sneedacity to trim spaces for you?"
 msgstr "항목 중 하나에 공백 문자(공백, 개행, 탭, 라인피드)들이 있습니다. 패턴 매칭을 깰 것 같습니다. 무엇을 하는 것인지 잘 모르겠으면, 공백 문자 잘라내기를 추천합니다. 오데시티에서 공백 문자를 잘라내도록 할까요?"
 
 #: src/prefs/ExtImportPrefs.cpp
@@ -14924,7 +15138,7 @@ msgstr "규칙 삭제 확인"
 msgid "Ext Import"
 msgstr "Ext 가져오기"
 
-#. i18n-hint: refers to Audacity's user interface settings
+#. i18n-hint: refers to Sneedacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
 msgctxt "GUI"
 msgid "Interface"
@@ -15015,7 +15229,7 @@ msgid "Re&tain labels if selection snaps to a label"
 msgstr "선택 영역이 레이블에 스냅시 레이블 유지하기(&T)"
 
 #: src/prefs/GUIPrefs.cpp
-msgid "B&lend system and Audacity theme"
+msgid "B&lend system and Sneedacity theme"
 msgstr "시스템과 오데시티 테마 조합하기(&L)"
 
 #. i18n-hint: RTL stands for 'Right to Left'
@@ -15039,10 +15253,6 @@ msgstr "스크러빙 눈금자 보기"
 #, c-format
 msgid "Language \"%s\" is unknown"
 msgstr "\"%s\" 언어를 알 수 없습니다"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "마스터 게인 제어"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
@@ -15197,7 +15407,7 @@ msgstr ""
 "   *   \"%s\"  (단축키 '%s' 가 \"%s\"에 사용되고 있기 때문)\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
-msgid "Select an XML file containing Audacity keyboard shortcuts..."
+msgid "Select an XML file containing Sneedacity keyboard shortcuts..."
 msgstr "오데시티 키보드 단축키를 포함한 XML 파일 선택..."
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -15302,24 +15512,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 라이브러리 버전:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 라이브러리:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "위치 찾기(&L)..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "다운로드(&D)"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg 가져오기/내보내기 라이브러리"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg 라이브러리 버전:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15328,6 +15522,10 @@ msgstr "호환되는 FFmpeg 라이브러리를 찾지 못했습니다"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "FFmpeg 지원은 함께 컴파일되지 않음"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg 라이브러리 버전:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15343,7 +15541,7 @@ msgstr "다운로드(&N)"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid ""
-"Audacity has automatically detected valid FFmpeg libraries.\n"
+"Sneedacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
 msgstr ""
 "오데시티가 유효한 FFmpeg 라이브러리를 자동으로 찾았습니다.\n"
@@ -15392,7 +15590,7 @@ msgstr "미디 신디사이저 레이턴시는 정수여야 합니다"
 msgid "Midi IO"
 msgstr "Midi IO"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW
+#. i18n-hint: Modules are optional extensions to Sneedacity that add NEW
 #. features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
@@ -15404,7 +15602,7 @@ msgstr "Module 환경 설정"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+"These are experimental modules. Enable them only if you've read the Sneedacity Manual\n"
 "and know what you are doing."
 msgstr ""
 "이것은 실험적인 모듈입니다.\n"
@@ -15412,12 +15610,12 @@ msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+msgid "  'Ask' means Sneedacity will ask if you want to load the module each time it starts."
 msgstr "'확인하기'를 선택하면 오데시티가 시작할 때마다 모듈을 로딩할 것인지를 묻습니다. "
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+msgid "  'Failed' means Sneedacity thinks the module is broken and won't run it."
 msgstr "'실패'를 선택하면, 오데시티는 모듈이 작동하지 않는 것으로 간주하고 실행하지 않습니다."
 
 #. i18n-hint preserve the leading spaces
@@ -15426,7 +15624,7 @@ msgid "  'New' means no choice has been made yet."
 msgstr "'신규'를 선택하면 아무 선택도 하지 않았음을 의미"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
+msgid "Changes to these settings only take effect when Sneedacity starts up."
 msgstr "설정을 변경한 후 오데시티를 재시작해야 효과가 발생합니다."
 
 #: src/prefs/ModulePrefs.cpp
@@ -15578,11 +15776,6 @@ msgid "Move clip up/down between tracks"
 msgstr "트랙 사이에서 클립을 위아래로 이동"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "포락선"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "증폭 포락스 변경"
@@ -15705,7 +15898,7 @@ msgid "Always scrub un&pinned"
 msgstr "스크러빙 표시 고정 (&P)"
 
 #: src/prefs/PrefsDialog.cpp
-msgid "Audacity Preferences"
+msgid "Sneedacity Preferences"
 msgstr "오데시티 환경 설정"
 
 #: src/prefs/PrefsDialog.cpp
@@ -15715,14 +15908,6 @@ msgstr "카테고리"
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences:"
 msgstr "환경설정:"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-비트"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-비트"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
@@ -15776,6 +15961,14 @@ msgstr "샘플링 주파수 변환(&T):"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "디더(&H):"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-비트"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-비트"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -16108,7 +16301,7 @@ msgstr "최대 노트 개수는 1부터 128사이의 범위 내에 있어야 합
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of
 #. images
-#. such as those on button controls.  Audacity can load and save alternative
+#. such as those on button controls.  Sneedacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
 msgid "Theme"
@@ -16129,7 +16322,7 @@ msgid ""
 "To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Sneedacity.\n"
 "\n"
 "(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
@@ -16427,7 +16620,7 @@ msgid "Waveform dB &range:"
 msgstr "파형 dB 범위 (&R)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
@@ -16466,7 +16659,7 @@ msgid "Select to Start"
 msgstr "시작까지 선택"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. Sneedacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -16820,7 +17013,7 @@ msgstr "시간(&T) 도구모음"
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
 #, c-format
-msgid "Audacity %s Toolbar"
+msgid "Sneedacity %s Toolbar"
 msgstr "오데시티 %s 도구모음"
 
 #: src/toolbars/ToolBar.cpp
@@ -17463,7 +17656,7 @@ msgstr "재생 시간을 조정(warp)하려면 클릭 후 드래그하세요"
 msgid "Click and drag to edit the amplitude envelope"
 msgstr "진폭 포락선 편집은 클릭 후 드래그하세요"
 
-#. i18n-hint: (verb) Audacity has just adjusted the envelope .
+#. i18n-hint: (verb) Sneedacity has just adjusted the envelope .
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Adjusted envelope."
 msgstr "포락선을 조정했습니다."
@@ -18377,7 +18570,7 @@ msgstr ""
 "                      낮은 주파수 범위를 높이거나~%~\n"
 "                      필터 '너비'를 줄이세요."
 
-#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "오류.~%"
@@ -19033,8 +19226,9 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
-msgstr "너무 많은 묵음이 검출되었습니다.n 처음 10000개 레이블만 추가됩니다. "
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
+msgstr "너무 많은 묵음이 검출되었습니다. ~%처음 10000개 레이블만 추가됩니다. "
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -19285,21 +19479,19 @@ msgid "Allow"
 msgstr "허용"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "오류.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "성공.~%파일이 기록됨 :~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr "경고.n일부 파일을 복사하는데 실패:n"
+#, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "경고. ~1%F 일부 파일을 복사하는데 실패:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
-msgstr "플러그인이 설침됨.n(플러그 관리자를 사용하여 효과를 활성화 할 수 있음):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
+msgstr "플러그인이 설침됨.~%(플러그 관리자를 사용하여 효과를 활성화 할 수 있음):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -19745,11 +19937,11 @@ msgstr "오른쪽 (dB)"
 #, lisp-format
 msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
-"<a href=\"~a\">Audacity</a> by Steve\n"
+"<a href=\"~a\">Sneedacity</a> by Steve\n"
 "Daulton"
 msgstr ""
 "<span>샘플 데이터 내보내기</span> 로 만들어짐\n"
-"<a href=\"~a\">Audacity</a>\n"
+"<a href=\"~a\">Sneedacity</a>\n"
 "by Steve Daulton"
 
 #: plug-ins/sample-data-export.ny
@@ -20097,12 +20289,3 @@ msgstr "레이더 니들의 주파수 (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "오류.~%스테레오 트랙이 필요합니다."
-
-#~ msgid "Cleanup of orphan blocks failed"
-#~ msgstr "부모 없믐 블록을 지우는데 실패 하였습니다."
-
-#~ msgid "Failed to copy tags"
-#~ msgstr "태그를 복사하는데 실패하였습니다."
-
-#~ msgid "Select any uncompressed audio file"
-#~ msgstr "비압축 오디오 파일 선택"

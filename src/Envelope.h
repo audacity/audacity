@@ -68,7 +68,7 @@ private:
 typedef std::vector<EnvPoint> EnvArray;
 struct TrackPanelDrawingContext;
 
-class Envelope /* not final */ : public XMLTagHandler {
+class AUDACITY_DLL_API Envelope /* not final */ : public XMLTagHandler {
 public:
    // Envelope can define a piecewise linear function, or piecewise exponential.
    Envelope(bool exponential, double minValue, double maxValue, double defaultValue);

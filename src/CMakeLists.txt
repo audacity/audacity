@@ -21,12 +21,13 @@ if( GIT_FOUND )
    add_custom_target(
       version
       COMMAND
-         ${CMAKE_COMMAND} -D GIT=${GIT_EXECUTABLE}
-                          -D _PRVDIR=${_PRVDIR}
-                          -P ${CMAKE_MODULE_PATH}/Version.cmake
+         ${CMAKE_COMMAND} -D GIT="${GIT_EXECUTABLE}"
+                          -D "_PRVDIR=${_PRVDIR}"
+                          -P "${AUDACITY_MODULE_PATH}/Version.cmake"
       WORKING_DIRECTORY
          ${topdir}
    )
+
    add_dependencies( ${TARGET} version )
 endif()
 
@@ -38,6 +39,17 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       ON
    )
    set( USE_AUDIO_UNITS ${${_OPT}use_audio_units} CACHE INTERNAL "" )
+endif()
+
+# Detect, which version of FileDialog to use for
+# We always assume that GTK is used on platforms other than Windows and macOS,
+# as there is no other implementation avalaible now
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( wxIS_MAC on )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set ( wxIS_WIN on )
+else()
+   set ( wxIS_GTK on)
 endif()
 
 # Handle Ladspa option
@@ -63,6 +75,7 @@ list( APPEND SOURCES
    PRIVATE
       AColor.cpp
       AColor.h
+      AColorResources.h
       ActiveProjects.cpp
       ActiveProjects.h
       AboutDialog.cpp
@@ -72,7 +85,6 @@ list( APPEND SOURCES
       AllThemeResources.cpp
       AllThemeResources.h
       AttachedVirtualFunction.h
-      Audacity.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -125,7 +137,6 @@ list( APPEND SOURCES
       Envelope.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
-      Experimental.h
       FFT.cpp
       FFT.h
       FFmpeg.cpp
@@ -150,8 +161,6 @@ list( APPEND SOURCES
       ImageManipulation.h
       InconsistencyException.cpp
       InconsistencyException.h
-      Internat.cpp
-      Internat.h
       InterpolateAudio.cpp
       InterpolateAudio.h
       KeyboardCapture.cpp
@@ -162,8 +171,6 @@ list( APPEND SOURCES
       LabelTrack.h
       LangChoice.cpp
       LangChoice.h
-      Languages.cpp
-      Languages.h
       Legacy.cpp
       Legacy.h
       LightThemeAsCeeCode.h
@@ -174,7 +181,6 @@ list( APPEND SOURCES
       MacroMagic.h
       Matrix.cpp
       Matrix.h
-      MemoryX.h
       Menus.cpp
       Menus.h
       Mix.cpp
@@ -183,6 +189,8 @@ list( APPEND SOURCES
       MixerBoard.h
       ModuleManager.cpp
       ModuleManager.h
+      ModuleSettings.cpp
+      ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
       NumberScale.h
@@ -190,8 +198,12 @@ list( APPEND SOURCES
       PitchName.h
       PlatformCompatibility.cpp
       PlatformCompatibility.h
+      PlaybackSchedule.cpp
+      PlaybackSchedule.h
       PluginManager.cpp
       PluginManager.h
+      PluginRegistrationDialog.cpp
+      PluginRegistrationDialog.h
       Prefs.cpp
       Prefs.h
       Printing.cpp
@@ -715,6 +727,8 @@ list( APPEND SOURCES
       prefs/PrefsPanel.h
       prefs/QualityPrefs.cpp
       prefs/QualityPrefs.h
+      prefs/QualitySettings.cpp
+      prefs/QualitySettings.h
       prefs/RecordingPrefs.cpp
       prefs/RecordingPrefs.h
       prefs/SpectrogramSettings.cpp
@@ -945,6 +959,10 @@ list( APPEND SOURCES
       widgets/ReadOnlyText.h
       widgets/Ruler.cpp
       widgets/Ruler.h
+      $<$<BOOL:${${_OPT}has_sentry_reporting}>:
+         widgets/ErrorReportDialog.cpp
+         widgets/ErrorReportDialog.h
+      >
       widgets/Warning.cpp
       widgets/Warning.h
       widgets/WindowAccessible.cpp
@@ -965,6 +983,8 @@ list( APPEND SOURCES
       xml/XMLWriter.cpp
       xml/XMLWriter.h
       xml/audacityproject.dtd
+
+      Experimental.cmake
 )
 
 #
@@ -1004,7 +1024,6 @@ list( APPEND RESOURCES
 list( APPEND DEFINES
    PRIVATE
       BUILDING_AUDACITY
-      WXINTL_NO_GETTEXT_MACRO
       WXUSINGDLL
       CMAKE
       $<$<BOOL:${HAVE_LRINT}>:
@@ -1021,16 +1040,23 @@ list( APPEND DEFINES
          __STDC_CONSTANT_MACROS
          STRICT
       >
+      $<$<BOOL:${USE_UPDATE_CHECK}>:
+          HAVE_UPDATES_CHECK
+      >
 )
 
-list( APPEND OPTIONS
-   PRIVATE
-      $<$<CXX_COMPILER_ID:MSVC>:/permissive->
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Wno-underaligned-exception-object>
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
-      $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
-)
+# If we have cmake 3.16 or higher, we can use precompiled headers, but
+# only use them if ccache is not available and the user hasn't disabled
+# it.
+if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
+   cmd_option(
+      ${_OPT}use_pch
+      "Use precompiled headers [yes, no]"
+      YES
+   )
+endif()
+
+audacity_append_common_compiler_options( OPTIONS "${${_OPT}use_pch}" )
 
 list( APPEND LDFLAGS
    PRIVATE
@@ -1042,19 +1068,20 @@ list( APPEND LDFLAGS
 #
 #
 list( APPEND LIBRARIES
-   PRIVATE
+   PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
-      wxWidgets
-      expat
-      lame
+      ZLIB::ZLIB
+      wxwidgets::wxwidgets
+      expat::expat
+      libmp3lame::libmp3lame
       libsndfile
       libsoxr
       portaudio-v19
       sqlite
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
-      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag>
+      $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:libflac>
-      $<$<BOOL:${USE_LIBMAD}>:libmad>
+      $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBOGG}>:libogg>
       $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
@@ -1104,20 +1131,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       ../win/audacity.rc
    )
 
-   # Create the config file
-   configure_file( audacity_config.h.in private/configwin.h )
-
    # Copy over the wxWidgets DLLs
-   if( ${_OPT}use_wxwidgets STREQUAL "system" )
-      set( wxlibs "$ENV{WXWIN}" )
-   else()
-      set( wxlibs "${CMAKE_BINARY_DIR}" )
-   endif()
-
-   # Convert the paths to native
-   file( TO_NATIVE_PATH "${_INTDIR}/dlls" dlls )
-   file( TO_NATIVE_PATH "${wxWidgets_LIB_DIR}" libdir )
-   file( TO_NATIVE_PATH "${_EXEDIR}" exedir )
 
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
@@ -1126,8 +1140,8 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
                           -D DST="${_EXEDIR}"
-                          -D WXWIN="${libdir}"
-                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
+                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1148,7 +1162,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( PLATFORM_VERSION_SUPPORTED )
       list( APPEND LDFLAGS
          PRIVATE
-            -Wl,-platform_version,macos,10.7,10.13
+            -Wl,-platform_version,macos,${MIN_MACOS_VERSION},${TARGET_MACOS_VERSION}
       )
    else()
       list( APPEND LDFLAGS
@@ -1204,10 +1218,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # Use the Aqua theme
    set( USE_AQUA_THEME 1 )
 
-   # Create the config file
-   set( HAVE_VISIBILITY 1 )
-   configure_file( audacity_config.h.in private/configmac.h )
-
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
@@ -1215,7 +1225,8 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
                           -D DST="${_PKGLIB}"
-                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1232,14 +1243,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 else()
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DEST}" )
 
-   # Create the config file
-   set( HAVE_VISIBILITY 1 )
-   configure_file( audacity_config.h.in private/configunix.h )
-
    # Build the list of mimetypes
    #
    # (Don't use generator expressions since it will leave null/empty
    # entries in the list.)
+   set( MIMETYPES
+      application/x-audacity-project
+   )
    if( USE_FFMPEG )
       list( APPEND MIMETYPES
          audio/aac
@@ -1284,8 +1294,8 @@ else()
       COMMAND
          ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
                           -D DST="${_DEST}/${_PKGLIB}"
-                          -D WXWIN="${WXWIN}"
-                          -P ${CMAKE_MODULE_PATH}/CopyLibs.cmake
+                          -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 endif()
@@ -1311,32 +1321,42 @@ source_group(
         ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
 )
 
+# Define AUDACITY_DLL_API
+import_symbol_define( import_symbol AUDACITY_DLL )
+export_symbol_define( export_symbol AUDACITY_DLL )
+list( APPEND DEFINES PRIVATE "${export_symbol}" INTERFACE "${import_symbol}" )
+
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
-target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+target_link_libraries( ${TARGET} ${LIBRARIES} )
+target_link_libraries( ${TARGET} PUBLIC ${AUDACITY_LIBRARIES} )
 
-# If was have cmake 3.16 or higher, we can use precompiled headers, but
-# only use them if ccache is not available and the user hasn't disabled
-# it.
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
-   cmd_option(
-      ${_OPT}use_pch
-      "Use precompiled headers [yes, no]"
-      YES
-   )
-
    if( ${_OPT}use_pch )
       message( STATUS "Using precompiled headers" )
-      target_precompile_headers( ${TARGET} PRIVATE AudacityHeaders.h )
+      target_precompile_headers( ${TARGET} PRIVATE
+         $<$<PLATFORM_ID:Windows>:${CMAKE_BINARY_DIR}/src/private/configwin.h>
+         $<$<PLATFORM_ID:Darwin>:${CMAKE_BINARY_DIR}/src/private/configmac.h>
+         $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:${CMAKE_BINARY_DIR}/src/private/configunix.h>
+         AudacityHeaders.h
+      )
    else()
       message( STATUS "Not using precompiled headers" )
    endif()
 endif()
 
-if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+if( "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
+   install(
+      DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/"
+      DESTINATION "."
+      USE_SOURCE_PERMISSIONS
+      PATTERN "*.pdb" EXCLUDE
+      PATTERN "*.ilk" EXCLUDE
+   )
+else()
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       install( TARGETS ${TARGET}
                DESTINATION "."
@@ -1355,6 +1375,20 @@ if( NOT "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
                DESTINATION "${_DATADIR}/mime/packages" )
       install( FILES "${topdir}/presets/EQDefaultCurves.xml"
                DESTINATION "${_PKGDATA}" )
+      install( PROGRAMS "${PROJECT_SOURCE_DIR}/linux/audacity.sh"
+               DESTINATION "."
+               RENAME "audacity" )
    endif()
 endif()
 
+# collect dependency information for third party libraries
+list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
+foreach( LIBRARY ${LIBRARIES} )
+   if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
+      canonicalize_node_name(LIBRARY "${LIBRARY}")
+      list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${LIBRARY}\"" )
+   endif()
+endforeach()
+
+#propagate collected edgets to root CMakeLists.txt
+set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )

@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "SampleHandle.h"
 
-#include "../../../../Experimental.h"
+#include "SampleHandle.h"
 
 #include <algorithm>
 #include <wx/gdicmn.h>
@@ -129,7 +127,7 @@ UIHandlePtr SampleHandle::HitTest
    float oneSample;
    const double rate = wavetrack->GetRate();
    const auto s0 = (sampleCount)(tt * rate + 0.5);
-   if (! wavetrack->Get((samplePtr)&oneSample, floatSample, s0, 1, fillZero,
+   if (! wavetrack->GetFloats(&oneSample, s0, 1, fillZero,
          // Do not propagate exception but return a failure value
          false) )
       return {};
@@ -240,7 +238,7 @@ UIHandle::Result SampleHandle::Click
       Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
 
       //Get a sample  from the track to do some tricks on.
-      mClickedTrack->Get((samplePtr)sampleRegion.get(), floatSample,
+      mClickedTrack->GetFloats(sampleRegion.get(),
          mClickedStartSample - SMOOTHING_KERNEL_RADIUS - SMOOTHING_BRUSH_RADIUS,
          sampleRegionSize);
 

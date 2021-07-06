@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MacroCommands.cpp
 
@@ -17,7 +17,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 
 #define wxLOG_COMPONENT "MacroCommands"
 
-#include "Audacity.h" // for USE_* macros
+
 #include "BatchCommands.h"
 
 #include <wx/defs.h>
@@ -41,6 +41,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "SelectUtilities.h"
 #include "Shuttle.h"
 #include "Track.h"
+#include "UndoManager.h"
 
 #include "AllThemeResources.h"
 
@@ -307,17 +308,15 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
-      while (plug)
-      {
-         auto command = em.GetCommandIdentifier(plug->GetID());
+      for (auto &plug
+           : pm.PluginsOfType(PluginTypeEffect|PluginTypeAudacityCommand)) {
+         auto command = em.GetCommandIdentifier(plug.GetID());
          if (!command.empty())
             commands.push_back( {
-               { command, plug->GetSymbol().Msgid() },
-               plug->GetPluginType() == PluginTypeEffect ?
+               { command, plug.GetSymbol().Msgid() },
+               plug.GetPluginType() == PluginTypeEffect ?
                   XO("Effect") : XO("Menu Command (With Parameters)")
             } );
-         plug = pm.GetNextPlugin(PluginTypeEffect|PluginTypeAudacityCommand);
       }
    }
 
@@ -607,19 +606,12 @@ bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
    // Not one of the singleton commands.
    // We could/should try all the list-style commands.
    // instead we only try the effects.
-   PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect);
-   while (plug)
-   {
-      if (em.GetCommandIdentifier(plug->GetID()) == Str)
-      {
+   for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
+      if (em.GetCommandIdentifier(plug.GetID()) == Str)
          return EffectUI::DoEffect(
-            plug->GetID(), context,
+            plug.GetID(), context,
             EffectManager::kConfigured);
-      }
-      plug = pm.GetNextPlugin(PluginTypeEffect);
-   }
 
    return false;
 }
@@ -728,6 +720,9 @@ bool MacroCommands::ApplyMacro(
 
       // Save the project state before making any changes.  It will be rolled
       // back if an error occurs.
+      // It also causes any calls to ModifyState (such as by simple
+      // view-changing commands) to append changes to this state, not to the
+      // previous state in history.  See Bug 2076
       if (proj) {
          ProjectHistory::Get(*proj).PushState(longDesc, shortDesc);
       }
@@ -736,8 +731,18 @@ bool MacroCommands::ApplyMacro(
    // Upon exit of the top level apply, roll back the state if an error occurs.
    auto cleanup2 = finally([&, macroReentryCount = MacroReentryCount] {
       if (macroReentryCount == 1 && !res && proj) {
-         // Macro failed or was cancelled; revert to the previous state
-         ProjectHistory::Get(*proj).RollbackState();
+         // Be sure that exceptions do not escape this destructor
+         GuardedCall([&]{
+            // Macro failed or was cancelled; revert to the previous state
+            auto &history = ProjectHistory::Get(*proj);
+            history.RollbackState();
+            // The added undo state is now vacuous.  Remove it (Bug 2759)
+            auto &undoManager = UndoManager::Get(*proj);
+            undoManager.Undo(
+               [&]( const UndoStackElem &elem ){
+                  history.PopState( elem.state ); } );
+            undoManager.AbandonRedo();
+         });
       }
    });
 
@@ -878,9 +883,9 @@ void MacroCommands::MigrateLegacyChains()
       // but only if like-named files are not already present in Macros.
 
       // Leave the old copies in place, in case a user wants to go back to
-      // an old Audacity version.  They will have their old chains intact, but
+      // an old Sneedacity version.  They will have their old chains intact, but
       // won't have any edits they made to the copy that now lives in Macros
-      // which old Audacity will not read.
+      // which old Sneedacity will not read.
 
       const auto oldDir = FileNames::LegacyChainDir();
       FilePaths files;

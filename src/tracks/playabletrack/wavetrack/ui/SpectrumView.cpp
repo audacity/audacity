@@ -8,10 +8,8 @@ Paul Licameli split from WaveTrackView.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "SpectrumView.h"
 
-#include "../../../../Experimental.h"
+#include "SpectrumView.h"
 
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
@@ -217,7 +215,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    freqHi = selectedRegion.f1();
 #endif
 
-   const bool &isGrayscale = settings.isGrayscale;
+   const int &colorScheme = settings.colorScheme;
    const int &range = settings.range;
    const int &gain = settings.gain;
 
@@ -578,7 +576,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
 
          unsigned char rv, gv, bv;
-         GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
+         GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
          if (fftYGrid && yGrid[yy]) {

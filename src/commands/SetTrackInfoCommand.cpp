@@ -33,7 +33,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "SetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
@@ -320,7 +320,9 @@ bool SetTrackVisualsCommand::DefineParams( ShuttleParams & S ){
 
    S.OptionalN( bHasUseSpecPrefs   ).Define(     bUseSpecPrefs,   wxT("SpecPrefs"),  false );
    S.OptionalN( bHasSpectralSelect ).Define(     bSpectralSelect, wxT("SpectralSel"),true );
-   S.OptionalN( bHasGrayScale      ).Define(     bGrayScale,      wxT("GrayScale"),  false );
+
+   auto schemes = SpectrogramSettings::GetColorSchemeNames();
+   S.OptionalN( bHasSpecColorScheme).DefineEnum( mSpecColorScheme,wxT("SpecColor"),  SpectrogramSettings::csColorNew, schemes.data(), schemes.size());
 
    return true;
 };
@@ -356,7 +358,14 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
       S.SetStretchyCol( 1 );
       S.Optional( bHasUseSpecPrefs   ).TieCheckBox( XXO("Use Spectral Prefs"), bUseSpecPrefs );
       S.Optional( bHasSpectralSelect ).TieCheckBox( XXO("Spectral Select"),    bSpectralSelect);
-      S.Optional( bHasGrayScale      ).TieCheckBox( XXO("Gray Scale"),         bGrayScale );
+   }
+   S.EndMultiColumn();
+   S.StartMultiColumn(3, wxEXPAND);
+   {
+      S.SetStretchyCol( 2 );
+      auto schemes = SpectrogramSettings::GetColorSchemeNames();
+      S.Optional( bHasSpecColorScheme).TieChoice( XC("Sche&me", "spectrum prefs"), mSpecColorScheme,
+         Msgids( schemes.data(), schemes.size() ) );
    }
    S.EndMultiColumn();
 }
@@ -435,8 +444,8 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
    if( wt && bHasSpectralSelect ){
       wt->GetSpectrogramSettings().spectralSelection = bSpectralSelect;
    }
-   if( wt && bHasGrayScale ){
-      wt->GetSpectrogramSettings().isGrayscale = bGrayScale;
+   if (wt && bHasSpecColorScheme) {
+      wt->GetSpectrogramSettings().colorScheme = (SpectrogramSettings::ColorScheme)mSpecColorScheme;
    }
 
    return true;

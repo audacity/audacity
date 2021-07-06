@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Envelope.cpp
 
@@ -29,7 +29,7 @@ a draggable point type.
 
 #include "Envelope.h"
 
-#include "Experimental.h"
+
 
 #include <math.h>
 

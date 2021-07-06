@@ -20,9 +20,7 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"    // needed before FFmpeg.h // for USE_* macros
 
-#include "../Experimental.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>

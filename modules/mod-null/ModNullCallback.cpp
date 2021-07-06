@@ -27,41 +27,16 @@ click from the menu into the actual function to be called.
 
 #include <wx/wx.h>
 #include "ModNullCallback.h"
-#include "Audacity.h"
-#include "ModuleManager.h"
+#include "ModuleConstants.h"
 #include "ShuttleGui.h"
 #include "Project.h"
 #include "commands/CommandManager.h"
 #include "CommonCommandFlags.h"
 
 /*
-There are several functions that can be used in a GUI module.
-
-//#define versionFnName   "GetVersionString"
-If the version is wrong, the module will be rejected.
-That is it will be loaded and then unloaded.
-
 //#define ModuleDispatchName "ModuleDispatch"
-The most useful function.  See the example in this 
-file.  It has several cases/options in it.
-
-//#define scriptFnName    "RegScriptServerFunc"
-This function is run from a non gui thread.  It was originally 
-created for the benefit of mod-script-pipe.
-
-//#define mainPanelFnName "MainPanelFunc"
-This function is the hijacking function, to take over Audacity
-and replace the main project window with our own wxFrame.
-
+See the example in this file.  It has several cases/options in it.
 */
-
-#ifdef _MSC_VER
-   #define DLL_API _declspec(dllexport)
-   #define DLL_IMPORT _declspec(dllimport)
-#else
-   #define DLL_API __attribute__ ((visibility("default")))
-   #define DLL_IMPORT
-#endif
 
 // derived from wxFrame as it needs to be some kind of event handler.
 class ModNullCallback : public wxFrame
@@ -93,18 +68,7 @@ static CommandHandlerObject &ident(AudacityProject&project)
 return project;
 }
 
-// GetVersionString
-// REQUIRED for the module to be accepted by Audacity.
-// Without it Audacity will see a version number mismatch.
-extern DLL_API const wxChar * GetVersionString(); 
-const wxChar * GetVersionString()
-{
-   // Make sure that this version of the module requires the version 
-   // of Audacity it is built with. 
-   // For now, the versions must match exactly for Audacity to 
-   // agree to load the module.
-   return AUDACITY_VERSION_STRING;
-}
+DEFINE_VERSION_CHECK
 
 namespace {
 void RegisterMenuItems()

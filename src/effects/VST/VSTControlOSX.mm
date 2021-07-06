@@ -21,10 +21,10 @@
       
 **********************************************************************/
 
-#include "../../Audacity.h"
+
 #include "VSTControlOSX.h"
 
-#include "../../MemoryX.h"
+#include <memory>
 
 @interface VSTView : NSView
 {

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ZoomInfo.cpp
 
@@ -8,10 +8,10 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "ZoomInfo.h"
 
-#include "Experimental.h"
+
 
 #include "prefs/GUISettings.h"
 

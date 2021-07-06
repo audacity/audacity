@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  SampleFormat.h
+  @file SampleFormat.h
 
   Dominic Mazzoni
 
@@ -11,16 +11,20 @@
 #ifndef __AUDACITY_SAMPLE_FORMAT__
 #define __AUDACITY_SAMPLE_FORMAT__
 
-#include "Audacity.h"
+
 
 #include "MemoryX.h"
 #include <wx/defs.h>
 
 #include "audacity/Types.h"
+#include "Dither.h"
 
 //
 // Definitions / Meta-Information
 //
+
+//! These global variables are assigned at application startup or after change of preferences.
+extern AUDACITY_DLL_API DitherType gLowQualityDither, gHighQualityDither;
 
 #if 0
 // Moved to audacity/types.h
@@ -44,7 +48,7 @@ typedef enum {
 #define SAMPLE_SIZE_DISK(SampleFormat) (((SampleFormat) == int24Sample) ? \
    size_t{ 3 } : SAMPLE_SIZE(SampleFormat) )
 
-TranslatableString GetSampleFormatStr(sampleFormat format);
+AUDACITY_DLL_API TranslatableString GetSampleFormatStr(sampleFormat format);
 
 //
 // Allocating/Freeing Samples
@@ -124,21 +128,36 @@ private:
 // Copying, Converting and Clearing Samples
 //
 
-void      CopySamples(constSamplePtr src, sampleFormat srcFormat,
-                      samplePtr dst, sampleFormat dstFormat,
-                      unsigned int len, bool highQuality=true,
-                      unsigned int srcStride=1,
-                      unsigned int dstStride=1);
+AUDACITY_DLL_API
+//! Copy samples from any format into the widest format, which is 32 bit float, with no dithering
+/*!
+ @param src address of source samples
+ @param srcFormat format of source samples, determines sizeof each one
+ @param dst address of floating-point numbers
+ @param len count of samples to copy
+ @param srcStride how many samples to advance src after copying each one
+ @param dstString how many samples to advance dst after copying each one
+ */
+void SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
+    float *dst, size_t len, size_t srcStride = 1, size_t dstStride = 1);
 
-void      CopySamplesNoDither(samplePtr src, sampleFormat srcFormat,
-                      samplePtr dst, sampleFormat dstFormat,
-                      unsigned int len,
-                      unsigned int srcStride=1,
-                      unsigned int dstStride=1);
+AUDACITY_DLL_API
+//! Copy samples from any format to any other format; apply dithering only if narrowing the format
+/*!
+ @copydetails SamplesToFloats()
+ @param dstFormat format of destination samples, determines sizeof each one
+ @param ditherType choice of dithering algorithm to use if narrowing the format
+ */
+void CopySamples(constSamplePtr src, sampleFormat srcFormat,
+   samplePtr dst, sampleFormat dstFormat, size_t len,
+   DitherType ditherType = gHighQualityDither, //!< default is loaded from a global variable
+   unsigned int srcStride=1, unsigned int dstStride=1);
 
+AUDACITY_DLL_API
 void      ClearSamples(samplePtr buffer, sampleFormat format,
                        size_t start, size_t len);
 
+AUDACITY_DLL_API
 void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);
 
@@ -147,6 +166,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 // are set in preferences.
 //
 
+AUDACITY_DLL_API
 void      InitDitherers();
 
 // These are so commonly done for processing samples in floating point form in memory,

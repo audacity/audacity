@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   BatchCommandDialog.cpp
 
@@ -18,7 +18,7 @@ selected command.
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "BatchCommandDialog.h"
 
 #ifdef __WXMSW__
@@ -173,7 +173,7 @@ void MacroCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetHelpPageName();
+   const auto &page = GetHelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 

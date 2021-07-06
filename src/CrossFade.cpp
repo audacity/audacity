@@ -1,18 +1,18 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   CrossFade.cpp
 
 *******************************************************************//**
 
 \class CrossFader
-\brief Not used by Audacity (yet) apparently work in progress that has
+\brief Not used by Sneedacity (yet) apparently work in progress that has
 been abandoned.
 
 *//********************************************************************/
 
-#pragma message( "--- CrossFade.cpp: This is abandoned code, not included in Audacity builds")
+#pragma message( "--- CrossFade.cpp: This is abandoned code, not included in Sneedacity builds")
 
 #include "CrossFade.h"
 

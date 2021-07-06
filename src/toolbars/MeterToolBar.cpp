@@ -17,7 +17,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "MeterToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".

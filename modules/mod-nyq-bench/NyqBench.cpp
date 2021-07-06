@@ -6,7 +6,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 
 #include <wx/defs.h>
 
@@ -25,7 +25,7 @@
 
 #include "AudioIOBase.h"
 #include "CommonCommandFlags.h"
-#include "ModuleManager.h"
+#include "ModuleConstants.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
@@ -90,24 +90,8 @@
 #include "images/media-playback-stop-large.xpm"
 
 /*
-There are several functions that can be used in a GUI module.
-
-//#define versionFnName   "GetVersionString"
-If the version is wrong, the module will be rejected.
-That is it will be loaded and then unloaded.
-
 //#define ModuleDispatchName "ModuleDispatch"
-The most useful function.  See the example in this 
-file.  It has several cases/options in it.
-
-//#define scriptFnName    "RegScriptServerFunc"
-This function is run from a non gui thread.  It was originally 
-created for the benefit of mod-script-pipe.
-
-//#define mainPanelFnName "MainPanelFunc"
-This function is the hijacking function, to take over Audacity
-and replace the main project window with our own wxFrame.
-
+See the example in this file.  It has several cases/options in it.
 */
 
 namespace {
@@ -130,26 +114,11 @@ void RegisterMenuItems()
 }
 }
 
+DEFINE_VERSION_CHECK
+
 extern "C"
 {
    static NyqBench *gBench = NULL;
-
-   #ifdef _MSC_VER
-      #define DLL_API _declspec(dllexport)
-   #else
-      #define DLL_API __attribute__ ((visibility("default")))
-   #endif
-
-   extern DLL_API const wxChar * GetVersionString();
-   // GetVersionString
-   // REQUIRED for the module to be accepted by Audacity.
-   // Without it Audacity will see a version number mismatch.
-   const wxChar * GetVersionString()
-   {
-      // For now, the versions must match exactly for Audacity to 
-      // agree to load the module.
-      return AUDACITY_VERSION_STRING;
-   }
 
    extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
    // ModuleDispatch
@@ -1358,9 +1327,11 @@ void NyqBench::OnLargeIcons(wxCommandEvent & e)
 
 void NyqBench::OnGo(wxCommandEvent & e)
 {
-   // No need to delete...EffectManager will do it
-   mEffect = new NyquistEffect(wxT("Nyquist Effect Workbench"));
-   const PluginID & ID = EffectManager::Get().RegisterEffect(mEffect);
+   auto pEffect =
+      std::make_unique<NyquistEffect>(L"Nyquist Effect Workbench");
+   mEffect = pEffect.get();
+   const PluginID & ID =
+      EffectManager::Get().RegisterEffect(std::move(pEffect));
 
    mEffect->SetCommand(mScript->GetValue());
    mEffect->RedirectOutput();

@@ -16,7 +16,7 @@
 
 *******************************************************************/
 
-#include "../Audacity.h"
+
 #include "AutoDuck.h"
 #include "LoadEffects.h"
 
@@ -118,9 +118,9 @@ TranslatableString EffectAutoDuck::GetDescription()
    return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }
 
-wxString EffectAutoDuck::ManualPage()
+ManualPageID EffectAutoDuck::ManualPage()
 {
-   return wxT("Auto_Duck");
+   return L"Auto_Duck";
 }
 
 // EffectDefinitionInterface implementation
@@ -321,7 +321,7 @@ bool EffectAutoDuck::Process()
       {
          const auto len = limitSampleBufferSize( kBufSize, end - pos );
          
-         mControlTrack->Get((samplePtr)buf.get(), floatSample, pos, len);
+         mControlTrack->GetFloats(buf.get(), pos, len);
 
          for (auto i = pos; i < pos + len; i++)
          {
@@ -559,7 +559,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveTrack* t,
    {
       const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-      t->Get((samplePtr)buf.get(), floatSample, pos, len);
+      t->GetFloats(buf.get(), pos, len);
 
       for (auto i = pos; i < pos + len; i++)
       {

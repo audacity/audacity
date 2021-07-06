@@ -26,7 +26,7 @@ with changes in the SelectionBar.
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "SelectionBar.h"
 
 #include "SelectionBarListener.h"
@@ -51,7 +51,7 @@ with changes in the SelectionBar.
 #include <wx/statline.h>
 
 
-#include "../AudioIOBase.h"
+#include "../AudioIO.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
 #include "../Prefs.h"
@@ -60,6 +60,7 @@ with changes in the SelectionBar.
 #include "../ProjectSettings.h"
 #include "../Snap.h"
 #include "../ViewInfo.h"
+#include "../prefs/QualitySettings.h"
 #include "../AllThemeResources.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -123,8 +124,7 @@ SelectionBar::SelectionBar( AudacityProject &project )
    // Refer to bug #462 for a scenario where the division-by-zero causes
    // Audacity to fail.
    // We expect mRate to be set from the project later.
-   mRate = (double) gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-      AudioIOBase::GetOptimalSupportedSampleRate());
+   mRate = (double) QualitySettings::DefaultSampleRate.Read();
 
    // Selection mode of 0 means showing 'start' and 'end' only.
    mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
@@ -599,7 +599,7 @@ void SelectionBar::OnIdle( wxIdleEvent &evt )
 
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    if ( projectAudioIO.IsAudioActive() ){
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       audioTime = gAudioIO->GetStreamTime();
    }
    else {

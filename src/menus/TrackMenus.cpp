@@ -1,5 +1,4 @@
-#include "../Audacity.h"
-#include "../Experimental.h"
+
 
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -28,7 +27,7 @@
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
-#include "../prefs/QualityPrefs.h"
+#include "../prefs/QualitySettings.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -53,7 +52,7 @@ void DoMixAndRender
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto rate = settings.GetRate();
-   auto defaultFormat = QualityPrefs::SampleFormatChoice();
+   auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -610,7 +609,7 @@ void OnNewWaveTrack(const CommandContext &context)
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto defaultFormat = QualityPrefs::SampleFormatChoice();
+   auto defaultFormat = QualitySettings::SampleFormatChoice();
 
    auto rate = settings.GetRate();
 
@@ -634,7 +633,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto defaultFormat = QualityPrefs::SampleFormatChoice();
+   auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto rate = settings.GetRate();
 
    SelectUtilities::SelectNone( project );

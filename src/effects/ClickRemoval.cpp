@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "ClickRemoval.h"
 #include "LoadEffects.h"
 
@@ -93,9 +93,9 @@ TranslatableString EffectClickRemoval::GetDescription()
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
-wxString EffectClickRemoval::ManualPage()
+ManualPageID EffectClickRemoval::ManualPage()
 {
-   return wxT("Click_Removal");
+   return L"Click_Removal";
 }
 
 // EffectDefinitionInterface implementation
@@ -233,7 +233,7 @@ bool EffectClickRemoval::ProcessOne(int count, WaveTrack * track, sampleCount st
    {
       auto block = limitSampleBufferSize( idealBlockLen, len - s );
 
-      track->Get((samplePtr) buffer.get(), floatSample, start + s, block);
+      track->GetFloats(buffer.get(), start + s, block);
 
       for (decltype(block) i = 0; i + windowSize / 2 < block; i += windowSize / 2)
       {

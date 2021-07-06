@@ -13,7 +13,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+
 #include "RawAudioGuess.h"
 
 #include "../AudacityException.h"
@@ -210,6 +210,7 @@ static void Extract(bool bits16,
 
    if( dataSizeIn < 1 )
       throw SimpleMessageBoxException{
+         ExceptionType::BadUserAction,
          XO("Bad data size. Could not import audio"),
          XO("Warning"), 
          "Error:_Importing_raw_audio"

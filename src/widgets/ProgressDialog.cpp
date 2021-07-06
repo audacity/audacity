@@ -26,7 +26,7 @@
 
 *//**********************************************************************/
 
-#include "../Audacity.h"
+
 #include "ProgressDialog.h"
 
 #include <algorithm>

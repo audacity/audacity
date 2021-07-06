@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 UIHandle.cpp
 
@@ -8,7 +8,7 @@ Paul Licameli
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "UIHandle.h"
 
 #include "RefreshCode.h"

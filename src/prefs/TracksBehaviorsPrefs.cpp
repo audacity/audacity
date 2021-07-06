@@ -14,10 +14,8 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
-#include "TracksBehaviorsPrefs.h"
 
-#include "../Experimental.h"
+#include "TracksBehaviorsPrefs.h"
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -43,7 +41,7 @@ TranslatableString TracksBehaviorsPrefs::GetDescription()
    return XO("Preferences for TracksBehaviors");
 }
 
-wxString TracksBehaviorsPrefs::HelpPageName()
+ManualPageID TracksBehaviorsPrefs::HelpPageName()
 {
    return "Tracks_Behaviors_Preferences";
 }

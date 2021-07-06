@@ -51,7 +51,7 @@ private:
 };
 
 /// Used to restore pen, brush and logical-op in a DC back to what they were.
-struct DCUnchanger {
+struct AUDACITY_DLL_API DCUnchanger {
 public:
    DCUnchanger() {}
 
@@ -68,7 +68,7 @@ public:
 
 /// Makes temporary drawing context changes that you back out of, RAII style
 //  It's like wxDCPenChanger, etc., but simple and general
-class ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
+class AUDACITY_DLL_API ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
 {
    using Base = std::unique_ptr<wxDC, ::DCUnchanger>;
 public:

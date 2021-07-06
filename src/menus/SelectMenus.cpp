@@ -1,5 +1,4 @@
-#include "../Audacity.h"
-#include "../Experimental.h"
+
 
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
@@ -71,7 +70,7 @@ double NearestZeroCrossing
       auto s = one->TimeToLongSamples(t0);
       // fillTwo to ensure that missing values are treated as 2, and hence do
       // not get used as zero crossings.
-      one->Get((samplePtr)oneDist.get(), floatSample,
+      one->GetFloats(oneDist.get(),
                s - (int)oneWindowSize/2, oneWindowSize, fillTwo);
 
 
@@ -505,7 +504,7 @@ void OnSetLeftSelection(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    bool bSelChanged = false;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();
@@ -544,7 +543,7 @@ void OnSetRightSelection(const CommandContext &context)
    auto &window = GetProjectFrame( project );
 
    bool bSelChanged = false;
-   auto gAudioIO = AudioIOBase::Get();
+   auto gAudioIO = AudioIO::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();

@@ -15,7 +15,7 @@
 
 #include "../FileException.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 ///
 /// XMLWriter

@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_TRACK_PANEL_DRAWABLE__
 #define __AUDACITY_TRACK_PANEL_DRAWABLE__
 
-#include "Audacity.h"
+
 
 #include <wx/gdicmn.h> // for wxRect
 

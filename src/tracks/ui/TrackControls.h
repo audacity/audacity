@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class Track;
 
-class TrackControls /* not final */ : public CommonTrackCell
+class AUDACITY_DLL_API TrackControls /* not final */ : public CommonTrackCell
    , public std::enable_shared_from_this< TrackControls >
 {
 public:

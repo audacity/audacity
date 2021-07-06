@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_PROJECT__
 #define __AUDACITY_PROJECT__
 
-#include "Audacity.h"
+#include "Identifier.h"
 
 #include "ClientData.h" // to inherit
 
@@ -27,14 +27,14 @@ class AudacityProject;
 
 AUDACITY_DLL_API AudacityProject *GetActiveProject();
 // For use by ProjectManager only:
-extern void SetActiveProject(AudacityProject * project);
+AUDACITY_DLL_API void SetActiveProject(AudacityProject * project);
 
 /// \brief an object of class AllProjects acts like a standard library
 /// container, but refers to a global array of open projects.  So you can
 /// iterate easily over shared pointers to them with range-for :
 /// for (auto pProject : AllProjects{}) { ... }
 /// The pointers are never null.
-class AllProjects
+class AUDACITY_DLL_API AllProjects
 {
    // Use shared_ptr to projects, because elsewhere we need weak_ptr
    using AProjectHolder = std::shared_ptr< AudacityProject >;

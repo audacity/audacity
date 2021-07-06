@@ -16,10 +16,8 @@ It \TODO: description
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
-#include "ScoreAlignDialog.h"
 
-#include "../Experimental.h"
+#include "ScoreAlignDialog.h"
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 

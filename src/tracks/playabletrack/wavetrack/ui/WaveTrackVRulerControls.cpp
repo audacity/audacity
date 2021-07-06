@@ -8,10 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#include "../../../../Audacity.h"
-#include "WaveTrackVRulerControls.h"
 
-#include "../../../../Experimental.h"
+#include "WaveTrackVRulerControls.h"
 
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"

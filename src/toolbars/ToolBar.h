@@ -13,8 +13,6 @@
 #ifndef __AUDACITY_TOOLBAR__
 #define __AUDACITY_TOOLBAR__
 
-#include "../Experimental.h"
-
 #include <functional>
 #include <vector>
 #include <wx/defs.h>
@@ -41,6 +39,10 @@ class Grabber;
 class ToolDock;
 
 class ToolBarResizer;
+
+#ifdef __WXMAC__
+#define USE_AQUA_THEME 1
+#endif
 
 ////////////////////////////////////////////////////////////
 /// class ToolBar
@@ -90,7 +92,7 @@ enum { ToolBarFloatMargin = 1 };
 
 class AudacityProject;
 
-class ToolBar /* not final */
+class AUDACITY_DLL_API ToolBar /* not final */
 : public wxPanelWrapper
 , protected PrefsListener
 {
@@ -256,7 +258,7 @@ public:
    friend class ToolBarResizer;
 };
 
-struct RegisteredToolbarFactory {
+struct AUDACITY_DLL_API RegisteredToolbarFactory {
    using Function = std::function< ToolBar::Holder( AudacityProject & ) >;
    using Functions = std::vector< Function >;
 

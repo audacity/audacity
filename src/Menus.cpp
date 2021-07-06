@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Menus.cpp
 
@@ -25,10 +25,10 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Menus.h"
 
-#include "Experimental.h"
+
 
 #include <wx/frame.h>
 
@@ -102,7 +102,7 @@ void MenuManager::UpdatePrefs()
    // DA warns or greys out.
    mWhatIfNoSelection = bSelectAllIfNone ? 2 : 0;
 #else
-   // Audacity autoselects or warns.
+   // Sneedacity autoselects or warns.
    mWhatIfNoSelection = bSelectAllIfNone ? 1 : 2;
 #endif
    mStopIfWasPaused = true;  // not configurable for now, but could be later.
@@ -684,7 +684,7 @@ void MenuCreator::RebuildAllMenuBars()
       //
       //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
       //
-      // This workaround should be removed when Audacity updates to wxWidgets 3.x which has a fix.
+      // This workaround should be removed when Sneedacity updates to wxWidgets 3.x which has a fix.
       auto &window = GetProjectFrame( *p );
       wxRect r = window.GetRect();
       window.SetSize(wxSize(1,1));

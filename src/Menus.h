@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_MENUS__
 #define __AUDACITY_MENUS__
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include <wx/string.h> // member variable
 #include "Prefs.h"
@@ -22,7 +22,6 @@ class wxCommandEvent;
 class AudacityProject;
 class CommandContext;
 class CommandManager;
-class PluginDescriptor;
 class Track;
 class TrackList;
 class ViewInfo;
@@ -35,7 +34,7 @@ typedef wxArrayString PluginIDs;
 
 namespace Registry{ class Visitor; }
 
-class MenuCreator
+class AUDACITY_DLL_API MenuCreator
 {
 public:
    MenuCreator();
@@ -71,7 +70,7 @@ public:
 
 struct ToolbarMenuVisitor;
 
-class MenuManager final
+class AUDACITY_DLL_API MenuManager final
    : public MenuCreator
    , public ClientData::Base
    , private PrefsListener

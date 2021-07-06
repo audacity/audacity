@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudacityApp.cpp
 
@@ -9,16 +9,16 @@
 ******************************************************************//**
 
 \class AudacityApp
-\brief AudacityApp is the 'main' class for Audacity
+\brief AudacityApp is the 'main' class for Sneedacity
 
 It handles initialization and termination by subclassing wxApp.
 
 *//*******************************************************************/
 
-#include "Audacity.h" // This should always be included first; for USE_* macros and __UNIX__
+
 #include "AudacityApp.h"
 
-#include "Experimental.h"
+
 
 #if 0
 // This may be used to debug memory leaks.
@@ -29,6 +29,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxcrtvararg.h>
 #include <wx/defs.h>
+#include <wx/evtloop.h>
 #include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/docview.h>
@@ -76,7 +77,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "AudioIO.h"
 #include "Benchmark.h"
 #include "Clipboard.h"
-#include "CrashReport.h"
+#include "CrashReport.h" // for HAS_CRASH_REPORT
 #include "commands/CommandHandler.h"
 #include "commands/AppCommandEvent.h"
 #include "widgets/ASlider.h"
@@ -111,6 +112,10 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
 
+#ifdef HAS_NETWORKING
+#include "NetworkManager.h"
+#endif
+
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 #include "prefs/KeyConfigPrefs.h"
 #endif
@@ -121,12 +126,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "ModuleManager.h"
 
 #include "import/Import.h"
-
-#if defined(EXPERIMENTAL_CRASH_REPORT)
-#include <wx/debugrpt.h>
-#include <wx/evtloop.h>
-#include <wx/textdlg.h>
-#endif
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
@@ -196,7 +195,7 @@ void PopulatePreferences()
       auto &ini = *pIni;
 
       wxString lang;
-      if (ini.Read(wxT("/FromInno/Language"), &lang))
+      if (ini.Read(wxT("/FromInno/Language"), &lang) && !lang.empty())
       {
          // Only change "langCode" if the language was actually specified in the ini file.
          langCode = lang;
@@ -218,7 +217,12 @@ void PopulatePreferences()
       }
    }
 
-   langCode = GUIPrefs::InitLang( langCode );
+   // Use the system default language if one wasn't specified or if the user selected System.
+   if (langCode.empty())
+      langCode =
+         Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
+
+   langCode = GUIPrefs::SetLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
@@ -228,7 +232,7 @@ void PopulatePreferences()
 "Reset Preferences?\n\nThis is a one-time question, after an 'install' where you asked to have the Preferences reset.");
       int action = AudacityMessageBox(
          prompt,
-         XO("Reset Audacity Preferences"),
+         XO("Reset Sneedacity Preferences"),
          wxYES_NO, NULL);
       if (action == wxYES)   // reset
       {
@@ -243,9 +247,9 @@ void PopulatePreferences()
       gPrefs->Write(wxT("/Locale/Language"), langCode);
    }
 
-   // In AUdacity 2.1.0 support for the legacy 1.2.x preferences (depreciated since Audacity
+   // In AUdacity 2.1.0 support for the legacy 1.2.x preferences (depreciated since Sneedacity
    // 1.3.1) is dropped. As a result we can drop the import flag
-   // first time this version of Audacity is run we try to migrate
+   // first time this version of Sneedacity is run we try to migrate
    // old preferences.
    bool newPrefsInitialized = false;
    gPrefs->Read(wxT("/NewPrefsInitialized"), &newPrefsInitialized, false);
@@ -377,7 +381,6 @@ void PopulatePreferences()
 
    gPrefs->Flush();
 }
-
 }
 
 static bool gInited = false;
@@ -565,7 +568,7 @@ class GnomeShutdown
  public:
    GnomeShutdown()
    {
-      mArgv[0].reset(strdup("Audacity"));
+      mArgv[0].reset(strdup("Sneedacity"));
 
       mGnomeui = dlopen("libgnomeui-2.so.0", RTLD_NOW);
       if (!mGnomeui) {
@@ -634,7 +637,7 @@ static wxArrayString ofqueue;
 
 //
 // DDE support for opening multiple files with one instance
-// of Audacity.
+// of Sneedacity.
 //
 
 #define IPC_APPL wxT("audacity")
@@ -818,25 +821,8 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
             return false;
 
-         // DMM: If the project is dirty, that means it's been touched at
-         // all, and it's not safe to open a NEW project directly in its
-         // place.  Only if the project is brand-NEW clean and the user
-         // hasn't done any action at all is it safe for Open to take place
-         // inside the current project.
-         //
-         // If you try to Open a NEW project inside the current window when
-         // there are no tracks, but there's an Undo history, etc, then
-         // bad things can happen, including data files moving to the NEW
-         // project directory, etc.
-         if (proj && (
-            ProjectHistory::Get( *proj ).GetDirty() ||
-            !TrackList::Get( *proj ).empty()
-         ) )
-            proj = nullptr;
-         // This project is clean; it's never been touched.  Therefore
-         // all relevant member variables are in their initial state,
-         // and it's okay to open a NEW project inside this window.
-         ( void ) ProjectManager::OpenProject( proj, fullPathStr );
+         ( void ) ProjectManager::OpenProject( proj, fullPathStr,
+               true /* addtohistory */, false /* reuseNonemptyProject */ );
       }
       else {
          // File doesn't exist - remove file from history
@@ -882,7 +868,7 @@ void AudacityApp::OnMRUFile(wxCommandEvent& event) {
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-   // Filenames are queued when Audacity receives a few of the
+   // Filenames are queued when Sneedacity receives a few of the
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
    if (gInited) {
@@ -915,7 +901,9 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
             // PRL: Catch any exceptions, don't try this file again, continue to
             // other files.
             if (!SafeMRUOpen(name)) {
-               wxFAIL_MSG(wxT("MRUOpen failed"));
+               // Just log it.  Assertion failure is not appropriate on valid
+               // defensive path against bad file data.
+               wxLogMessage(wxT("MRUOpen failed"));
             }
          }
       }
@@ -940,7 +928,7 @@ wxLanguageInfo userLangs[] =
 
 void AudacityApp::OnFatalException()
 {
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(HAS_CRASH_REPORT)
    CrashReport::Generate(wxDebugReport::Context_Exception);
 #endif
 
@@ -1007,9 +995,8 @@ bool AudacityApp::OnExceptionInMainLoop()
 
 AudacityApp::AudacityApp()
 {
-// Do not capture crashes in debug builds
 #if !defined(_DEBUG)
-#if defined(EXPERIMENTAL_CRASH_REPORT)
+#if defined(HAS_CRASH_REPORT)
 #if defined(wxUSE_ON_FATAL_EXCEPTION) && wxUSE_ON_FATAL_EXCEPTION
    wxHandleFatalExceptions();
 #endif
@@ -1042,7 +1029,7 @@ bool AudacityApp::OnInit()
    if ( !ProjectFileIO::InitializeSQL() )
       this->CallAfter([]{
          ::AudacityMessageBox(
-            XO("SQLite library failed to initialize.  Audacity cannot continue.") );
+            XO("SQLite library failed to initialize.  Sneedacity cannot continue.") );
          QuitAudacity( true );
       });
 
@@ -1092,11 +1079,11 @@ bool AudacityApp::OnInit()
 #endif
 
    // Don't use AUDACITY_NAME here.
-   // We want Audacity with a capital 'A'
+   // We want Sneedacity with a capital 'A'
 
 // DA: App name
 #ifndef EXPERIMENTAL_DA
-   wxString appName = wxT("Audacity");
+   wxString appName = wxT("Sneedacity");
 #else
    wxString appName = wxT("DarkAudacity");
 #endif
@@ -1117,6 +1104,9 @@ bool AudacityApp::OnInit()
    FilePaths audacityPathList;
 
 #ifdef __WXGTK__
+   // Make sure install prefix is set so wxStandardPath resolves paths properly
+   wxStandardPaths::Get().SetInstallPrefix(wxT(INSTALL_PREFIX));
+
    /* Search path (for plug-ins, translations etc) is (in this order):
       * The AUDACITY_PATH environment variable
       * The current directory
@@ -1149,12 +1139,16 @@ bool AudacityApp::OnInit()
 
    wxString progPath = wxPathOnly(argv[0]);
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
+   // Add the path to modules:
+   FileNames::AddUniquePathToPathList(progPath + L"/lib/audacity", audacityPathList);
 
    FileNames::AddUniquePathToPathList(FileNames::DataDir(), audacityPathList);
 
 #ifdef AUDACITY_NAME
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
       home, wxT(AUDACITY_NAME)),
+      audacityPathList);
+   FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
       audacityPathList);
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/%s"),
       wxT(INSTALL_PREFIX), wxT(AUDACITY_NAME)),
@@ -1166,6 +1160,8 @@ bool AudacityApp::OnInit()
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
       home),
       audacityPathList)
+   FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
+      audacityPathList);
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/share/audacity"),
       wxT(INSTALL_PREFIX)),
       audacityPathList);
@@ -1197,9 +1193,9 @@ bool AudacityApp::OnInit()
 
 
 
-   // On Mac and Windows systems, use the directory which contains Audacity.
+   // On Mac and Windows systems, use the directory which contains Sneedacity.
 #ifdef __WXMSW__
-   // On Windows, the path to the Audacity program is in argv[0]
+   // On Windows, the path to the Sneedacity program is in argv[0]
    wxString progPath = wxPathOnly(argv[0]);
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    FileNames::AddUniquePathToPathList(progPath + wxT("\\Languages"), audacityPathList);
@@ -1211,11 +1207,11 @@ bool AudacityApp::OnInit()
 #endif //__WXWSW__
 
 #ifdef __WXMAC__
-   // On Mac OS X, the path to the Audacity program is in argv[0]
+   // On Mac OS X, the path to the Sneedacity program is in argv[0]
    wxString progPath = wxPathOnly(argv[0]);
 
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
-   // If Audacity is a "bundle" package, then the root directory is
+   // If Sneedacity is a "bundle" package, then the root directory is
    // the great-great-grandparent of the directory containing the executable.
    //FileNames::AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
 
@@ -1278,7 +1274,7 @@ bool AudacityApp::OnInit()
 
 #ifdef __WXMAC__
    // Bug2437:  When files are opened from Finder and another instance of
-   // Audacity is running, we must return from OnInit() to wxWidgets before
+   // Sneedacity is running, we must return from OnInit() to wxWidgets before
    // MacOpenFile is called, informing us of the paths that need to be
    // opened.  So use CallAfter() to delay the rest of initialization.
    // See CreateSingleInstanceChecker() where we send those paths over a
@@ -1326,11 +1322,11 @@ bool AudacityApp::InitPart2()
    // Initialize the CommandHandler
    InitCommandHandler();
 
+   // Initialize the ModuleManager, including loading found modules
+   ModuleManager::Get().Initialize();
+
    // Initialize the PluginManager
    PluginManager::Get().Initialize();
-
-   // Initialize the ModuleManager, including loading found modules
-   ModuleManager::Get().Initialize(*mCmdHandler);
 
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
@@ -1344,7 +1340,7 @@ bool AudacityApp::InitPart2()
 
    if (parser->Found(wxT("v")))
    {
-      wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
+      wxPrintf("Sneedacity v%s\n", AUDACITY_VERSION_STRING);
       exit(0);
    }
 
@@ -1370,7 +1366,7 @@ bool AudacityApp::InitPart2()
    AudacityProject *project;
    {
       // Bug 718: Position splash screen on same screen 
-      // as where Audacity project will appear.
+      // as where Sneedacity project will appear.
       wxRect wndRect;
       bool bMaximized = false;
       bool bIconized = false;
@@ -1397,7 +1393,7 @@ bool AudacityApp::InitPart2()
       temporarywindow.SetPosition( wndRect.GetTopLeft() );
       // Centered on whichever screen it is on.
       temporarywindow.Center();
-      temporarywindow.SetTitle(_("Audacity is starting up..."));
+      temporarywindow.SetTitle(_("Sneedacity is starting up..."));
       SetTopWindow(&temporarywindow);
       temporarywindow.Raise();
 
@@ -1423,7 +1419,7 @@ bool AudacityApp::InitPart2()
       fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
       fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
       fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
-      fileMenu->Append(wxID_ABOUT, _("&About Audacity..."));
+      fileMenu->Append(wxID_ABOUT, _("&About Sneedacity..."));
       fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
       {
@@ -1442,7 +1438,7 @@ bool AudacityApp::InitPart2()
       temporarywindow.Show(false);
    }
 
-   // Workaround Bug 1377 - Crash after Audacity starts and low disk space warning appears
+   // Workaround Bug 1377 - Crash after Sneedacity starts and low disk space warning appears
    // The temporary splash window is closed AND cleaned up, before attempting to create
    // a project and possibly creating a modal warning dialog by doing so.
    // Also fixes problem of warning being obscured.
@@ -1452,15 +1448,6 @@ bool AudacityApp::InitPart2()
    // seemed to arrive with wx3.
    {
       project = ProjectManager::New();
-      wxWindow * pWnd = MakeHijackPanel();
-      if (pWnd)
-      {
-         auto &window = GetProjectFrame( *project );
-         window.Show(false);
-         pWnd->SetParent( &window );
-         SetTopWindow(pWnd);
-         pWnd->Show(true);
-      }
    }
 
    if( ProjectSettings::Get( *project ).GetShowSplashScreen() ){
@@ -1490,7 +1477,8 @@ bool AudacityApp::InitPart2()
       // Auto-recovery
       //
       bool didRecoverAnything = false;
-      if (!ShowAutoRecoveryDialogIfNeeded(&project, &didRecoverAnything))
+      // This call may reassign project (passed by reference)
+      if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
       {
          QuitAudacity(true);
       }
@@ -1498,7 +1486,7 @@ bool AudacityApp::InitPart2()
       //
       // Remainder of command line parsing, but only if we didn't recover
       //
-      if (!didRecoverAnything)
+      if (project && !didRecoverAnything)
       {
          if (parser->Found(wxT("t")))
          {
@@ -1541,13 +1529,13 @@ bool AudacityApp::InitPart2()
 #endif
 
 #if defined(__WXMAC__)
-   // The first time this version of Audacity is run or when the preferences
+   // The first time this version of Sneedacity is run or when the preferences
    // are reset, execute the "tccutil" command to reset the microphone permissions
-   // currently assigned to Audacity.  The end result is that the user will be
-   // prompted to approve/deny Audacity access (again).
+   // currently assigned to Sneedacity.  The end result is that the user will be
+   // prompted to approve/deny Sneedacity access (again).
    //
-   // This should resolve confusion of why Audacity appears to record, but only
-   // gets silence due to Audacity being denied microphone access previously.
+   // This should resolve confusion of why Sneedacity appears to record, but only
+   // gets silence due to Sneedacity being denied microphone access previously.
    bool permsReset = false;
    gPrefs->Read(wxT("/MicrophonePermissionsReset"), &permsReset, false);
    if (!permsReset) {
@@ -1566,7 +1554,7 @@ bool AudacityApp::InitPart2()
 
    Bind(wxEVT_MENU_CLOSE, [=](wxMenuEvent &event)
    {
-      wxSetlocale(LC_NUMERIC, GUIPrefs::GetLocaleName());
+      wxSetlocale(LC_NUMERIC, Languages::GetLocaleName());
       event.Skip();
    });
 #endif
@@ -1672,10 +1660,10 @@ bool AudacityApp::InitTempDir()
       // Failed
       if( !TempDirectory::IsTempDirectoryNameOK( tempFromPrefs ) ) {
          AudacityMessageBox(XO(
-"Audacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+"Sneedacity could not find a safe place to store temporary files.\nAudacity needs a place where automatic cleanup programs won't delete the temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       } else {
          AudacityMessageBox(XO(
-"Audacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
+"Sneedacity could not find a place to store temporary files.\nPlease enter an appropriate directory in the preferences dialog."));
       }
 
       // Only want one page of the preferences
@@ -1685,14 +1673,14 @@ bool AudacityApp::InitTempDir()
       dialog.ShowModal();
 
       AudacityMessageBox(XO(
-"Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."));
+"Sneedacity is now going to exit. Please launch Sneedacity again to use the new temporary directory."));
       return false;
    }
 
    // The permissions don't always seem to be set on
    // some platforms.  Hopefully this fixes it...
    #ifdef __UNIX__
-   chmod(OSFILENAME(temp), 0755);
+   chmod(OSFILENAME(temp), 0700);
    #endif
 
    TempDirectory::ResetTempDir();
@@ -1703,7 +1691,7 @@ bool AudacityApp::InitTempDir()
 
 #if defined(__WXMSW__)
 
-// Return true if there are no other instances of Audacity running,
+// Return true if there are no other instances of Sneedacity running,
 // false otherwise.
 
 bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
@@ -1712,7 +1700,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    mChecker.reset();
    auto checker = std::make_unique<wxSingleInstanceChecker>();
 
-   auto runningTwoCopiesStr = XO("Running two copies of Audacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
+   auto runningTwoCopiesStr = XO("Running two copies of Sneedacity simultaneously may cause\ndata loss or cause your system to crash.\n\n");
 
    if (!checker->Create(name, dir))
    {
@@ -1720,9 +1708,9 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       // whether there is another instance running or not.
 
       auto prompt = XO(
-"Audacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Audacity.\n")
+"Sneedacity was not able to lock the temporary files directory.\nThis folder may be in use by another copy of Sneedacity.\n")
          + runningTwoCopiesStr
-         + XO("Do you still want to start Audacity?");
+         + XO("Do you still want to start Sneedacity?");
       int action = AudacityMessageBox(
          prompt,
          XO("Error Locking Temporary Folder"),
@@ -1742,7 +1730,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
       if (parser->Found(wxT("v")))
       {
-         wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
+         wxPrintf("Sneedacity v%s\n", AUDACITY_VERSION_STRING);
          return false;
       }
 
@@ -1759,9 +1747,9 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       }
 
       // On Windows, we attempt to make a connection
-      // to an already active Audacity.  If successful, we send
+      // to an already active Sneedacity.  If successful, we send
       // the first command line argument (the audio file name)
-      // to that Audacity for processing.
+      // to that Sneedacity for processing.
       wxClient client;
 
       // We try up to 50 times since there's a small window
@@ -1781,7 +1769,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             }
             else
             {
-               // Send an empty string to force existing Audacity to front
+               // Send an empty string to force existing Sneedacity to front
                ok = conn->Execute(wxEmptyString);
             }
 
@@ -1791,15 +1779,15 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
          wxMilliSleep(10);
       }
-      // There is another copy of Audacity running.  Force quit.
+      // There is another copy of Sneedacity running.  Force quit.
 
       auto prompt =  XO(
-"The system has detected that another copy of Audacity is running.\n")
+"The system has detected that another copy of Sneedacity is running.\n")
          + runningTwoCopiesStr
          + XO(
-"Use the New or Open commands in the currently running Audacity\nprocess to open multiple projects simultaneously.\n");
+"Use the New or Open commands in the currently running Sneedacity\nprocess to open multiple projects simultaneously.\n");
       AudacityMessageBox(
-         prompt, XO("Audacity is already running"),
+         prompt, XO("Sneedacity is already running"),
          wxOK | wxICON_ERROR);
 
       return false;
@@ -1818,7 +1806,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
 #include <sys/sem.h>
 #include <sys/shm.h>
 
-// Return true if there are no other instances of Audacity running,
+// Return true if there are no other instances of Sneedacity running,
 // false otherwise.
 
 bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
@@ -1849,7 +1837,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    int lockid = semget(lockkey, 1, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
 
    // If the LOCK semaphore was successfully created, then this is the first
-   // time Audacity has been run during this boot of the system. In this
+   // time Sneedacity has been run during this boot of the system. In this
    // case we know we'll become the "server" application, so set up the
    // semaphores to prepare for it.
    if (lockid != -1)
@@ -1873,7 +1861,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             XO("Unable to acquire semaphores.\n\n"
                "This is likely due to a resource shortage\n"
                "and a reboot may be required."),
-            XO("Audacity Startup Failure"),
+            XO("Sneedacity Startup Failure"),
             wxOK | wxICON_ERROR);
 
          return false;
@@ -1889,7 +1877,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
          XO("Unable to create semaphores.\n\n"
             "This is likely due to a resource shortage\n"
             "and a reboot may be required."),
-         XO("Audacity Startup Failure"),
+         XO("Sneedacity Startup Failure"),
          wxOK | wxICON_ERROR);
 
       return false;
@@ -1912,7 +1900,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             XO("Unable to acquire lock semaphore.\n\n"
                "This is likely due to a resource shortage\n"
                "and a reboot may be required."),
-            XO("Audacity Startup Failure"),
+            XO("Sneedacity Startup Failure"),
             wxOK | wxICON_ERROR);
 
          return false;
@@ -1934,7 +1922,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
             XO("Unable to acquire server semaphore.\n\n"
                "This is likely due to a resource shortage\n"
                "and a reboot may be required."),
-            XO("Audacity Startup Failure"),
+            XO("Sneedacity Startup Failure"),
             wxOK | wxICON_ERROR);
 
          return false;
@@ -1974,10 +1962,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       if (mIPCServ == nullptr)
       {
          AudacityMessageBox(
-            XO("The Audacity IPC server failed to initialize.\n\n"
+            XO("The Sneedacity IPC server failed to initialize.\n\n"
                "This is likely due to a resource shortage\n"
                "and a reboot may be required."),
-            XO("Audacity Startup Failure"),
+            XO("Sneedacity Startup Failure"),
             wxOK | wxICON_ERROR);
 
          return false;
@@ -1996,7 +1984,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    op.sem_op = 1;
    semop(lockid, &op, 1);
 
-   // If we get here, then Audacity is currently active. So, we connect
+   // If we get here, then Sneedacity is currently active. So, we connect
    // to it and we forward all filenames listed on the command line to
    // the active process.
 
@@ -2007,16 +1995,16 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
    Destroy_ptr<wxSocketClient> sock { safenew wxSocketClient() };
    sock->SetFlags(wxSOCKET_WAITALL);
 
-   // Attempt to connect to an active Audacity.
+   // Attempt to connect to an active Sneedacity.
    sock->Connect(addr, true);
    if (!sock->IsConnected())
    {
       // All attempts to become the server or connect to one have failed.  Not
       // sure what we can say about the error, but it's probably not because
-      // Audacity is already running.
+      // Sneedacity is already running.
       AudacityMessageBox(
          XO("An unrecoverable error has occurred during startup"),
-         XO("Audacity Startup Failure"),
+         XO("Sneedacity Startup Failure"),
          wxOK | wxICON_ERROR);
 
       return false;
@@ -2031,10 +2019,10 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       return false;
    }
 
-   // Display Audacity's version if requested
+   // Display Sneedacity's version if requested
    if (parser->Found(wxT("v")))
    {
-      wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
+      wxPrintf("Sneedacity v%s\n", AUDACITY_VERSION_STRING);
 
       return false;
    }
@@ -2062,7 +2050,7 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
       }
    }
 
-   // Send an empty string to force existing Audacity to front
+   // Send an empty string to force existing Sneedacity to front
    sock->WriteMsg(wxEmptyString, sizeof(wxChar));
 
    // We've forwarded all of the filenames, so let the caller know
@@ -2119,7 +2107,7 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
       return nullptr;
    }
 
-   /*i18n-hint: This controls the number of bytes that Audacity will
+   /*i18n-hint: This controls the number of bytes that Sneedacity will
     *           use when writing files to the disk */
    parser->AddOption(wxT("b"), wxT("blocksize"), _("set max disk block size in bytes"),
                      wxCMD_LINE_VAL_NUMBER);
@@ -2128,13 +2116,13 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
    parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),
                      wxCMD_LINE_OPTION_HELP);
 
-   /*i18n-hint: This runs a set of automatic tests on Audacity itself */
+   /*i18n-hint: This runs a set of automatic tests on Sneedacity itself */
    parser->AddSwitch(wxT("t"), wxT("test"), _("run self diagnostics"));
 
-   /*i18n-hint: This displays the Audacity version */
-   parser->AddSwitch(wxT("v"), wxT("version"), _("display Audacity version"));
+   /*i18n-hint: This displays the Sneedacity version */
+   parser->AddSwitch(wxT("v"), wxT("version"), _("display Sneedacity version"));
 
-   /*i18n-hint: This is a list of one or more files that Audacity
+   /*i18n-hint: This is a list of one or more files that Sneedacity
     *           should open upon startup */
    parser->AddParam(_("audio or project file name"),
                     wxCMD_LINE_VAL_STRING,
@@ -2218,6 +2206,10 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
+
+#ifdef HAS_NETWORKING
+   audacity::network_manager::NetworkManager::GetInstance().Terminate();
+#endif
 
    return 0;
 }
@@ -2317,7 +2309,7 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
 
 }
 
-//BG: On Windows, associate the aup file type with Audacity
+//BG: On Windows, associate the aup file type with Sneedacity
 /* We do this in the Windows installer now,
    to avoid issues where user doesn't have admin privileges, but
    in case that didn't work, allow the user to decide at startup.
@@ -2372,14 +2364,14 @@ void AudacityApp::AssociateFileTypes()
 
       if (!root_key.empty())
       {
-         associateFileTypes = wxT("Audacity.Project"); // Finally set value for the key
+         associateFileTypes = wxT("Sneedacity.Project"); // Finally set value for the key
       }
 
       return root_key;
    };
 
    // Check for legacy and UP types
-   if (IsDefined(wxT(".aup3")) && IsDefined(wxT(".aup")) && IsDefined(wxT("Audacity.Project")))
+   if (IsDefined(wxT(".aup3")) && IsDefined(wxT(".aup")) && IsDefined(wxT("Sneedacity.Project")))
    {
       // Already defined, so bail
       return;
@@ -2389,8 +2381,8 @@ void AudacityApp::AssociateFileTypes()
    int wantAssoc =
       AudacityMessageBox(
          XO(
-"Audacity project (.aup3) files are not currently \nassociated with Audacity. \n\nAssociate them, so they open on double-click?"),
-         XO("Audacity Project Files"),
+"Sneedacity project (.aup3) files are not currently \nassociated with Sneedacity. \n\nAssociate them, so they open on double-click?"),
+         XO("Sneedacity Project Files"),
          wxYES_NO | wxICON_QUESTION);
 
    if (wantAssoc == wxNO)
@@ -2416,28 +2408,28 @@ void AudacityApp::AssociateFileTypes()
    {
       DefineType(wxT(".aup"));
 
-      associateFileTypes = wxT("Audacity.Project"); // Finally set value for .AUP key
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project"));
+      associateFileTypes = wxT("Sneedacity.Project"); // Finally set value for .AUP key
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project"));
       if (!associateFileTypes.Exists())
       {
          associateFileTypes.Create(true);
-         associateFileTypes = wxT("Audacity Project File");
+         associateFileTypes = wxT("Sneedacity Project File");
       }
 
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell"));
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project\\shell"));
       if (!associateFileTypes.Exists())
       {
          associateFileTypes.Create(true);
          associateFileTypes = wxT("");
       }
 
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open"));
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project\\shell\\open"));
       if (!associateFileTypes.Exists())
       {
          associateFileTypes.Create(true);
       }
 
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\command"));
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project\\shell\\open\\command"));
       wxString tmpRegAudPath;
       if(associateFileTypes.Exists())
       {
@@ -2455,21 +2447,21 @@ void AudacityApp::AssociateFileTypes()
       // These can be use later to support more startup messages
       // like maybe "Import into existing project" or some such.
       // Leaving here for an example...
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\ddeexec"));
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project\\shell\\open\\ddeexec"));
       if (!associateFileTypes.Exists())
       {
          associateFileTypes.Create(true);
          associateFileTypes = wxT("%1");
       }
 
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\ddeexec\\Application"));
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project\\shell\\open\\ddeexec\\Application"));
       if (!associateFileTypes.Exists())
       {
          associateFileTypes.Create(true);
          associateFileTypes = IPC_APPL;
       }
 
-      associateFileTypes.SetName(root_key + wxT("Audacity.Project\\shell\\open\\ddeexec\\Topic"));
+      associateFileTypes.SetName(root_key + wxT("Sneedacity.Project\\shell\\open\\ddeexec\\Topic"));
       if (!associateFileTypes.Exists())
       {
          associateFileTypes.Create(true);

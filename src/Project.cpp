@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Project.cpp
 
@@ -9,7 +9,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h" // for USE_* macros
+
 #include "Project.h"
 
 #include "KeyboardCapture.h"

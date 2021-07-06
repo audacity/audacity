@@ -18,11 +18,9 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Wahwah.h"
 #include "LoadEffects.h"
-
-#include "../Experimental.h"
 
 #include <math.h>
 
@@ -108,9 +106,9 @@ TranslatableString EffectWahwah::GetDescription()
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
-wxString EffectWahwah::ManualPage()
+ManualPageID EffectWahwah::ManualPage()
 {
-   return wxT("Wahwah");
+   return L"Wahwah";
 }
 
 // EffectDefinitionInterface implementation

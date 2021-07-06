@@ -19,13 +19,13 @@
 #ifndef __AUDACITY_SCREENSHOT__
 #define __AUDACITY_SCREENSHOT__
 
-#include "Audacity.h"
+
 
 #include <wx/defs.h>
 
 class AudacityProject;
 
-void OpenScreenshotTools( AudacityProject &project );
+AUDACITY_DLL_API void OpenScreenshotTools( AudacityProject &project );
 void CloseScreenshotTools();
 
 #endif // __AUDACITY_SCREENSHOT__

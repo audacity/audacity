@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "ExtImportPrefs.h"
 
 #include <wx/defs.h>
@@ -84,7 +84,7 @@ TranslatableString ExtImportPrefs::GetDescription()
    return XO("Preferences for ExtImport");
 }
 
-wxString ExtImportPrefs::HelpPageName()
+ManualPageID ExtImportPrefs::HelpPageName()
 {
    return "Extended_Import_Preferences";
 }

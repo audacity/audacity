@@ -21,10 +21,11 @@
 #ifndef __AUDACITY_HELPSYSTEM__
 #define __AUDACITY_HELPSYSTEM__
 
-#include "../Audacity.h"
+
 
 #include <wx/defs.h>
 #include "wxPanelWrapper.h" // to inherit
+#include "../HelpText.h"
 
 class AudacityProject;
 
@@ -35,7 +36,7 @@ class AudacityProject;
  * the online copy of the Audacity manual is stored, so that it can be 
  * changed if required
  */
-class HelpSystem
+class AUDACITY_DLL_API HelpSystem
 {
 public:
    /// Displays cuttable information in a text ctrl, with an OK button.
@@ -62,28 +63,32 @@ public:
    /// OR else links to the internet. Generally using this outside this class
    /// is depreciated in favour of the "smarter" overload below, unless there
    /// is a good reason for using this form.
+   /// @param parent Parent window for the dialog
    /// @param localFileName Name and path of the file on the local machine
    /// file system to be opened. file.name#anchor syntax is allowed, and therefore
    /// file names containing a '#' are not (on any platform).
+   /// @param remoteURL use instead of file if nonempty, and user preferences specify remote,
+   /// or localFileName is invalid
    /// @param bModal Whether the resulting dialogue should be modal or not.
    /// Default is modeless dialogue
    /// @param alwaysDefaultBrowser Force use of default web browser.
    /// Default allows built in browser for local files.
    static void ShowHelp(wxWindow *parent,
-                     const wxString &localFileName,
-                     const wxString &remoteURL,
+                     const FilePath &localFileName,
+                     const URLString &remoteURL,
                      bool bModal = false,
                      bool alwaysDefaultBrowser = false);
 
    /// Displays a page from the Audacity manual  in your browser, if
    /// it's available locally, OR else links to the internet.
+   /// @param parent Parent window for the dialog
    /// @param PageName The name of the manual page to display as it is in
    /// _development version_ of the manual (i.e. in MediaWiki), _not_ the
    /// converted file name used for offline and released manuals.
    /// @param bModal Whether the resulting dialogue should be modal or not.
    /// Default is modeless dialogue
    static void ShowHelp(wxWindow *parent,
-                     const wxString &PageName,
+                     const ManualPageID &PageName,
                      bool bModal = false);
 
    /// Hostname (domain name including subdomain) of the server on which the
@@ -105,17 +110,13 @@ public:
    /// Must both start and end with '/' characters.
    static const wxString LocalHelpManDir;
 
-   /// The string which is appended to the development manual page name in order
-   /// obtain the file name in the local and release web copies of the manual
-   static const wxString ReleaseSuffix;
-
 };
 
 class ShuttleGui;
 
 #include "HtmlWindow.h" // to inherit
 
-void OpenInDefaultBrowser(const wxHtmlLinkInfo& link);
+AUDACITY_DLL_API void OpenInDefaultBrowser(const URLString& link);
 
 
 /// \brief An HtmlWindow that handles linked clicked - usually the

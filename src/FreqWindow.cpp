@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FreqWindow.cpp
 
@@ -32,7 +32,7 @@ the mouse around.
 */
 
 
-#include "Audacity.h"
+
 #include "FreqWindow.h"
 
 #include <algorithm>
@@ -550,7 +550,7 @@ void FrequencyPlotDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    // Original help page is back on-line (March 2016), but the manual should be more reliable.
    // http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm
-   HelpSystem::ShowHelp(this, wxT("Plot Spectrum"));
+   HelpSystem::ShowHelp(this, L"Plot Spectrum");
 }
 
 bool FrequencyPlotDialog::Show(bool show)
@@ -602,7 +602,7 @@ void FrequencyPlotDialog::GetAudio()
             mDataLen = dataLen.as_size_t();
          mData = Floats{ mDataLen };
          // Don't allow throw for bad reads
-         track->Get((samplePtr)mData.get(), floatSample, start, mDataLen,
+         track->GetFloats(mData.get(), start, mDataLen,
                     fillZero, false);
       }
       else {
@@ -617,7 +617,7 @@ void FrequencyPlotDialog::GetAudio()
          auto start = track->TimeToLongSamples(selectedRegion.t0());
          Floats buffer2{ mDataLen };
          // Again, stop exceptions
-         track->Get((samplePtr)buffer2.get(), floatSample, start, mDataLen,
+         track->GetFloats(buffer2.get(), start, mDataLen,
                     fillZero, false);
          for (size_t i = 0; i < mDataLen; i++)
             mData[i] += buffer2[i];

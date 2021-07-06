@@ -11,9 +11,9 @@
 #ifndef __AUDACITY_NOTETRACK__
 #define __AUDACITY_NOTETRACK__
 
-#include "Audacity.h" // for USE_* macros
 
-#include "Experimental.h"
+
+
 
 #include <utility>
 #include "Track.h"

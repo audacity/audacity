@@ -1,5 +1,4 @@
-#include "../Audacity.h"
-#include "../Experimental.h"
+
 
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
@@ -530,8 +529,8 @@ void OnPunchAndRoll(const CommandContext &context)
    auto tracks =
       ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected);
    if (tracks.empty()) {
-      int recordingChannels =
-         std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+      auto recordingChannels =
+         std::max(0, AudioIORecordChannels.Read());
       auto message =
          (recordingChannels == 1)
          ? XO("Please select in a mono track.")
@@ -594,7 +593,7 @@ void OnPunchAndRoll(const CommandContext &context)
       if (getLen > 0) {
          float *const samples = data.data();
          const sampleCount pos = wt->TimeToLongSamples(t1);
-         wt->Get((samplePtr)samples, floatSample, pos, getLen);
+         wt->GetFloats(samples, pos, getLen);
       }
       crossfadeData.push_back(std::move(data));
    }

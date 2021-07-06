@@ -18,7 +18,7 @@ for each problem encountered, since there can be many orphans.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "MultiDialog.h"
 
 #include "../ShuttleGui.h"
@@ -59,7 +59,7 @@ private:
    void OnHelp(wxCommandEvent& event);
 
    wxRadioBox* mRadioBox;
-   wxString mHelpPage;
+   ManualPageID mHelpPage;
 
    DECLARE_EVENT_TABLE()
 };
@@ -145,7 +145,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             auto pButton = S.Id(wxID_OK)
                .AddButton(XXO("OK"), wxALIGN_CENTER, !log);
 
-            if (!mHelpPage.IsEmpty()) {
+            if (!mHelpPage.empty()) {
                auto pHelpBtn = S.Id(wxID_HELP)
                   .AddBitmapButton(theTheme.Bitmap(bmpHelpIcon), wxALIGN_CENTER, false);
                pHelpBtn->SetToolTip(XO("Help").Translation());

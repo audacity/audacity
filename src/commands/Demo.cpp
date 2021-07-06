@@ -19,7 +19,7 @@ parameters.  It is for development purposes.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Demo.h"
 #include "LoadCommands.h"
 

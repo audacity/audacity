@@ -11,14 +11,14 @@
 #ifndef __AUDACITY_FILEIO__
 #define __AUDACITY_FILEIO__
 
-#include "MemoryX.h"
+#include <memory>
 
 class wxInputStream;
 class wxOutputStream;
 class wxFFileOutputStream;
 class wxFileNameWrapper;
 
-class FileIO
+class AUDACITY_DLL_API FileIO
 {
  public:
    typedef enum FileIOMode

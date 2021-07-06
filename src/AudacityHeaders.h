@@ -17,7 +17,7 @@
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +39,7 @@
 #include <wx/thread.h>
 #include <wx/tooltip.h>
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include "AColor.h"
 #include "AudioIO.h"

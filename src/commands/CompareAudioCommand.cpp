@@ -18,7 +18,7 @@ threshold of difference in two selected tracks
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "CompareAudioCommand.h"
 
 #include "LoadCommands.h"
@@ -138,8 +138,8 @@ bool CompareAudioCommand::Apply(const CommandContext & context)
       auto block = limitSampleBufferSize(
          mTrack0->GetBestBlockSize(position), s1 - position
       );
-      mTrack0->Get((samplePtr)buff0.get(), floatSample, position, block);
-      mTrack1->Get((samplePtr)buff1.get(), floatSample, position, block);
+      mTrack0->GetFloats(buff0.get(), position, block);
+      mTrack1->GetFloats(buff1.get(), position, block);
 
       for (decltype(block) buffPos = 0; buffPos < block; ++buffPos)
       {

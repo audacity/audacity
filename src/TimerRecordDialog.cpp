@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimerRecordDialog.cpp
 
@@ -18,7 +18,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "TimerRecordDialog.h"
 
 #include "FileNames.h"
@@ -152,7 +152,7 @@ END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(
    wxWindow* parent, AudacityProject &project, bool bAlreadySaved)
-: wxDialogWrapper(parent, -1, XO("Audacity Timer Record"), wxDefaultPosition,
+: wxDialogWrapper(parent, -1, XO("Sneedacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 , mProject{ project }
 {
@@ -363,7 +363,7 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Timer_Record"), true);
+   HelpSystem::ShowHelp(this, L"Timer_Record", true);
 }
 
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
@@ -519,7 +519,7 @@ int TimerRecordDialog::RunWaitDialog()
 
       TimerProgressDialog
          progress(m_TimeSpan_Duration.GetMilliseconds().GetValue(),
-                  XO("Audacity Timer Record Progress"),
+                  XO("Sneedacity Timer Record Progress"),
                   columns,
                   pdlgHideCancelButton | pdlgConfirmStopCancel);
 
@@ -551,7 +551,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
    // MY: We no longer automatically (and silently) call ->Save() when the 
    // timer recording is completed.  We can now Save and/or Export depending 
    // on the options selected by the user.
-   // Once completed, we can also close Audacity, restart the system or
+   // Once completed, we can also close Sneedacity, restart the system or
    // shutdown the system.
    // If there was any error with the auto save or export then we will not do
    // the actions requested and instead present an error mesasge to the user.
@@ -888,7 +888,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                m_pTimerAfterCompleteChoiceCtrl = S.AddChoice(XXO("After Recording completes:"),
                      {
                         XO("Do nothing") ,
-                        XO("Exit Audacity") ,
+                        XO("Exit Sneedacity") ,
                   #ifdef __WINDOWS__
                         XO("Restart system") ,
                         XO("Shutdown system") ,
@@ -1017,7 +1017,7 @@ ProgressResult TimerRecordDialog::WaitForStart()
    wxDateTime startWait_DateTime = wxDateTime::UNow();
    wxTimeSpan waitDuration = m_DateTime_Start - startWait_DateTime;
    TimerProgressDialog progress(waitDuration.GetMilliseconds().GetValue(),
-      XO("Audacity Timer Record - Waiting for Start"),
+      XO("Sneedacity Timer Record - Waiting for Start"),
       columns,
       pdlgHideStopButton | pdlgConfirmStopCancel | pdlgHideElapsedTime,
       /* i18n-hint: "in" means after a duration of time,
@@ -1040,7 +1040,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    auto sAction = Verbatim( m_pTimerAfterCompleteChoiceCtrl
       ->GetString(iActionIndex) );
 
-   /* i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
+   /* i18n-hint: %s is one of "Do nothing", "Exit Sneedacity", "Restart system",
       or "Shutdown system", and
       "in" means after a duration of time, shown below this string */
    auto sCountdownLabel = XO("%s in:").Format( sAction );
@@ -1069,7 +1069,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    wxDateTime dtActionTime = dtNow.Add(tsWait);
 
    TimerProgressDialog dlgAction(tsWait.GetMilliseconds().GetValue(),
-                          XO("Audacity Timer Record - Waiting"),
+                          XO("Sneedacity Timer Record - Waiting"),
                           columns,
                           pdlgHideStopButton | pdlgHideElapsedTime,
                           sCountdownLabel);

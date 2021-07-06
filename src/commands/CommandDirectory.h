@@ -27,7 +27,7 @@ they are kept separate to make things simpler.
 
 class CommandOutputTargets;
 
-class CommandDirectory
+class AUDACITY_DLL_API CommandDirectory
 {
 private:
    static std::unique_ptr<CommandDirectory> mInstance;

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   DeviceChange.cpp
 
@@ -15,7 +15,7 @@
 
 #include "DeviceChange.h"
 
-#include "Experimental.h"
+
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 

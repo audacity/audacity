@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 AudacityFileConfig.cpp
 
@@ -8,7 +8,7 @@ Paul Licameli split from Prefs.cpp
 
 **********************************************************************/
 
-#include "Audacity.h"
+
 #include "AudacityFileConfig.h"
 
 #include "widgets/HelpSystem.h"
@@ -52,7 +52,7 @@ std::unique_ptr<AudacityFileConfig> AudacityFileConfig::Create(
 
 void AudacityFileConfig::Warn()
 {
-   wxDialogWrapper dlg(nullptr, wxID_ANY, XO("Audacity Configuration Error"));
+   wxDialogWrapper dlg(nullptr, wxID_ANY, XO("Sneedacity Configuration Error"));
 
    ShuttleGui S(&dlg, eIsCreating);
 
@@ -72,7 +72,7 @@ void AudacityFileConfig::Warn()
                "the disk is full or you do not have write permissions to the file. "
                "More information can be obtained by clicking the help button below.\n\n"
                "You can attempt to correct the issue and then click \"Retry\" to continue.\n\n"
-               "If you choose to \"Quit Audacity\", your project may be left in an unsaved "
+               "If you choose to \"Quit Sneedacity\", your project may be left in an unsaved "
                "state which will be recovered the next time you open it.")
             .Format(GetFilePath()),
             false,
@@ -89,7 +89,7 @@ void AudacityFileConfig::Warn()
          b->SetToolTip( XO("Help").Translation() );
          b->SetLabel(XO("Help").Translation());       // for screen readers
 
-         b = S.Id(wxID_CANCEL).AddButton(XXO("&Quit Audacity"));
+         b = S.Id(wxID_CANCEL).AddButton(XXO("&Quit Sneedacity"));
          b = S.Id(wxID_OK).AddButton(XXO("&Retry"));
          dlg.SetAffirmativeId(wxID_OK);
 

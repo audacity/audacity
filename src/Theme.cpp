@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Theme.cpp
 
   James Crook
 
-  Audacity is free software.
+  Sneedacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
 ********************************************************************//**
@@ -18,7 +18,7 @@
    It maps sets of ids to the resources and to names of the resources,
    so that they can be loaded/saved from files.
 
-   Theme adds the Audacity specific images to ThemeBase.
+   Theme adds the Sneedacity specific images to ThemeBase.
 
 \see \ref Themability
 
@@ -28,7 +28,7 @@
 \brief Theme management - Image loading and saving.
 
    Base for the Theme class. ThemeBase is a generic
-   non-Audacity specific class.
+   non-Sneedacity specific class.
 
 \see \ref Themability
 
@@ -59,10 +59,10 @@ can't be.
 
 *//*****************************************************************/
 
-#include "Audacity.h"
+
 #include "Theme.h"
 
-#include "Experimental.h"
+
 
 #include <wx/wxprec.h>
 #include <wx/dcclient.h>
@@ -77,6 +77,7 @@ can't be.
 #include "Prefs.h"
 #include "ImageManipulation.h"
 #include "Internat.h"
+#include "MemoryX.h"
 #include "widgets/AudacityMessageBox.h"
 
 // JKC: First get the MAC specific images.
@@ -753,14 +754,14 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !ImageCache.SaveFile( FileName, wxBITMAP_TYPE_PNG ))
       {
          AudacityMessageBox(
-            XO("Audacity could not write file:\n  %s.")
+            XO("Sneedacity could not write file:\n  %s.")
                .Format( FileName ));
          return;
       }
       AudacityMessageBox(
 /* i18n-hint: A theme is a consistent visual style across an application's
  graphical user interface, including choices of colors, and similarity of images
- such as those on button controls.  Audacity can load and save alternative
+ such as those on button controls.  Sneedacity can load and save alternative
  themes. */
          XO("Theme written to:\n  %s.")
             .Format( FileName ));
@@ -773,14 +774,14 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       if( !OutStream.OpenFile( FileName ))
       {
          AudacityMessageBox(
-            XO("Audacity could not open file:\n  %s\nfor writing.")
+            XO("Sneedacity could not open file:\n  %s\nfor writing.")
                .Format( FileName ));
          return;
       }
       if( !ImageCache.SaveFile(OutStream, wxBITMAP_TYPE_PNG ) )
       {
          AudacityMessageBox(
-            XO("Audacity could not write images to file:\n  %s.")
+            XO("Sneedacity could not write images to file:\n  %s.")
                .Format( FileName ));
          return;
       }
@@ -940,7 +941,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          if( bOkIfNotFound )
             return false; // did not load the images, so return false.
          AudacityMessageBox(
-            XO("Audacity could not find file:\n  %s.\nTheme not loaded.")
+            XO("Sneedacity could not find file:\n  %s.\nTheme not loaded.")
                .Format( FileName ));
          return false;
       }
@@ -948,7 +949,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       {
          AudacityMessageBox(
             /* i18n-hint: Do not translate png.  It is the name of a file format.*/
-            XO("Audacity could not load file:\n  %s.\nBad png format perhaps?")
+            XO("Sneedacity could not load file:\n  %s.\nBad png format perhaps?")
                .Format( FileName ));
          return false;
       }
@@ -988,7 +989,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          // Or some experiment is being tried with NEW formats for it.
          AudacityMessageBox(
             XO(
-"Audacity could not read its default theme.\nPlease report the problem."));
+"Sneedacity could not read its default theme.\nPlease report the problem."));
          return false;
       }
       //wxLogDebug("Read %i by %i", ImageCache.GetWidth(), ImageCache.GetHeight() );
@@ -1073,7 +1074,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
                AudacityMessageBox(
                   XO(
                /* i18n-hint: Do not translate png.  It is the name of a file format.*/
-"Audacity could not load file:\n  %s.\nBad png format perhaps?")
+"Sneedacity could not load file:\n  %s.\nBad png format perhaps?")
                      .Format( FileName ));
                return;
             }
@@ -1164,7 +1165,7 @@ void ThemeBase::SaveComponents()
          if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             AudacityMessageBox(
-               XO("Audacity could not save file:\n  %s")
+               XO("Sneedacity could not save file:\n  %s")
                   .Format( FileName ));
             return;
          }
@@ -1312,7 +1313,7 @@ ChoiceSetting GUITheme{
       ByColumns,
       {
          /* i18n-hint: describing the "classic" or traditional
-            appearance of older versions of Audacity */
+            appearance of older versions of Sneedacity */
          XO("Classic")  ,
          /* i18n-hint: Light meaning opposite of dark */
          XO("Light")  ,

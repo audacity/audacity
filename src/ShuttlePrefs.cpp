@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ShuttlePrefs.cpp
 
@@ -24,7 +24,7 @@
 
 *//*******************************************************************/
 
-#include "Audacity.h"
+
 #include "ShuttlePrefs.h"
 
 #include <wx/defs.h>

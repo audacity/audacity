@@ -8,7 +8,7 @@ Paul Licameli split from class WaveTrack
 
 **********************************************************************/
 
-#include "../../../../Internat.h"
+#include "Internat.h"
 #include "WaveTrackViewConstants.h"
 
 // static

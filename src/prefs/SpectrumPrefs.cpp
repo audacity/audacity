@@ -14,10 +14,8 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
-#include "SpectrumPrefs.h"
 
-#include "../Experimental.h"
+#include "SpectrumPrefs.h"
 
 #include <wx/choice.h>
 #include <wx/defs.h>
@@ -79,7 +77,7 @@ TranslatableString SpectrumPrefs::GetDescription()
    return XO("Preferences for Spectrum");
 }
 
-wxString SpectrumPrefs::HelpPageName()
+ManualPageID SpectrumPrefs::HelpPageName()
 {
    // Currently (May2017) Spectrum Settings is the only preferences
    // we ever display in a dialog on its own without others.
@@ -103,7 +101,7 @@ enum {
    ID_GAIN,
    ID_RANGE,
    ID_FREQUENCY_GAIN,
-   ID_GRAYSCALE,
+   ID_COLOR_SCHEME,
    ID_SPECTRAL_SELECTION,
 #endif
    ID_DEFAULTS,
@@ -225,11 +223,13 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(XXO("High &boost (dB/dec):"),
                mTempSettings.frequencyGain,
                8);
+
+            // i18n-hint Scheme refers to a color scheme for spectrogram colors
+            S.Id(ID_COLOR_SCHEME).TieChoice(XC("Sche&me", "spectrum prefs"),
+               (int&)mTempSettings.colorScheme,
+               Msgids( SpectrogramSettings::GetColorSchemeNames() ) );
          }
          S.EndMultiColumn();
-
-         S.Id(ID_GRAYSCALE).TieCheckBox(XXO("Gra&yscale"),
-            mTempSettings.isGrayscale);
       }
       S.EndStatic();
    }
@@ -586,7 +586,7 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_TEXT(ID_GAIN, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_RANGE, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
-   EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
+   EVT_CHOICE(ID_COLOR_SCHEME, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_SPECTRAL_SELECTION, SpectrumPrefs::OnControl)
 
 END_EVENT_TABLE()

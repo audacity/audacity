@@ -15,7 +15,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-#include "../Audacity.h"
+
 #include "numformatter.h"
 
 // For compilers that support precompilation, includes "wx.h".
@@ -33,7 +33,7 @@
 #endif
 
 
-#include "../Internat.h"
+#include "Internat.h"
 #include <wx/intl.h>
 
 #include <locale.h> // for setlocale and LC_ALL
@@ -57,7 +57,7 @@ wxChar NumberFormatter::GetDecimalSeparator()
 {
 #if wxUSE_INTL
    struct lconv *info = localeconv();
-   wxString s = info ? wxString::FromUTF8(info->decimal_point) : wxT(".");
+   wxString s = info ? wxString::FromUTF8(info->decimal_point) : wxString(".");
    if (s.empty())
    {
       // We really must have something for decimal separator, so fall
@@ -75,7 +75,7 @@ bool NumberFormatter::GetThousandsSeparatorIfUsed(wxChar *sep)
 {
 #if wxUSE_INTL
    struct lconv *info = localeconv();
-   wxString s = info ? wxString::FromUTF8(info->thousands_sep) : wxT("");
+   wxString s = info ? wxString::FromUTF8(info->thousands_sep) : wxString{};
 
    if (s.empty())
    {

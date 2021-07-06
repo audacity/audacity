@@ -14,7 +14,7 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "Reverb.h"
 #include "LoadEffects.h"
 
@@ -149,9 +149,9 @@ TranslatableString EffectReverb::GetDescription()
    return XO("Adds ambience or a \"hall effect\"");
 }
 
-wxString EffectReverb::ManualPage()
+ManualPageID EffectReverb::ManualPage()
 {
-   return wxT("Reverb");
+   return L"Reverb";
 }
 
 // EffectDefinitionInterface implementation

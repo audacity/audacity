@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_THEME__
 #define __AUDACITY_THEME__
 
-#include "Audacity.h"
+
 
 #include <vector>
 #include <wx/defs.h>
@@ -179,7 +179,7 @@ class wxWindow;
 class wxString;
 class wxPaintEvent;
 
-class auStaticText : public wxWindow
+class AUDACITY_DLL_API auStaticText : public wxWindow
 {
 public:
    auStaticText(wxWindow* parent, wxString text);
@@ -193,7 +193,7 @@ public:
 
 extern AUDACITY_DLL_API Theme theTheme;
 
-extern ChoiceSetting
+extern AUDACITY_DLL_API ChoiceSetting
      GUITheme
 ;
 

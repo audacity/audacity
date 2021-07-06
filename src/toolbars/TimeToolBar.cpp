@@ -11,7 +11,7 @@
  
  *//*******************************************************************/
 
-#include "../Audacity.h"
+
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
@@ -362,7 +362,7 @@ void TimeToolBar::OnIdle(wxIdleEvent &evt)
 
    auto &projectAudioIO = ProjectAudioIO::Get(mProject);
    if (projectAudioIO.IsAudioActive()) {
-      auto gAudioIO = AudioIOBase::Get();
+      auto gAudioIO = AudioIO::Get();
       audioTime = gAudioIO->GetStreamTime();
    }
    else {

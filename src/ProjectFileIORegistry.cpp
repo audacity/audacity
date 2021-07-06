@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ProjectFileIORegistry.cpp
 
@@ -10,7 +10,7 @@
 
 #include "ProjectFileIORegistry.h"
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 #include <unordered_map>
 #include <wx/string.h>
 

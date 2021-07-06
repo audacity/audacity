@@ -19,7 +19,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h"
+
 #include "FindClipping.h"
 #include "LoadEffects.h"
 
@@ -68,9 +68,9 @@ TranslatableString EffectFindClipping::GetDescription()
    return XO("Creates labels where clipping is detected");
 }
 
-wxString EffectFindClipping::ManualPage()
+ManualPageID EffectFindClipping::ManualPage()
 {
-   return wxT("Find_Clipping");
+   return L"Find_Clipping";
 }
 
 // EffectDefinitionInterface implementation
@@ -198,7 +198,7 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
 
          block = limitSampleBufferSize( blockSize, len - s );
 
-         wt->Get((samplePtr)buffer.get(), floatSample, start + s, block);
+         wt->GetFloats(buffer.get(), start + s, block);
          ptr = buffer.get();
       }
 

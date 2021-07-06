@@ -13,13 +13,13 @@
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+
 #include "FileHistory.h"
 
 #include <wx/defs.h>
 #include <wx/menu.h>
 
-#include "../Internat.h"
+#include "Internat.h"
 #include "../Prefs.h"
 
 #include <mutex>
@@ -115,7 +115,7 @@ void FileHistory::Load(wxConfigBase & config, const wxString & group)
 {
    mHistory.clear();
    mGroup = group.empty()
-      ? wxT("RecentFiles")
+      ? wxString{ "RecentFiles" }
       : group;
 
    config.SetPath(mGroup);

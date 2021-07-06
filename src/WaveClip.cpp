@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WaveClip.cpp
 
@@ -21,7 +21,7 @@
 
 #include "WaveClip.h"
 
-#include "Experimental.h"
+
 
 #include <math.h>
 #include <vector>
@@ -525,9 +525,9 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                else {
                   b.reinit(len);
                   pb = b.get();
-                  CopySamples(mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
-                              seqFormat,
-                              (samplePtr)pb, floatSample, len);
+                  SamplesToFloats(
+                     mAppendBuffer.ptr() + sLeft * SAMPLE_SIZE(seqFormat),
+                     seqFormat, pb, len);
                }
 
                float theMax, theMin, sumsq;
@@ -707,8 +707,8 @@ bool SpecCache::CalculateOneSpectrum
          }
 
          if (myLen > 0) {
-            useBuffer = (float*)(waveTrackCache.Get(
-               floatSample, sampleCount(
+            useBuffer = (float*)(waveTrackCache.GetFloats(
+               sampleCount(
                   floor(0.5 + from.as_double() + offset * rate)
                ),
                myLen,
@@ -1248,7 +1248,7 @@ bool WaveClip::Append(constSamplePtr buffer, sampleFormat format,
                   mAppendBuffer.ptr() + mAppendBufferLen * SAMPLE_SIZE(seqFormat),
                   seqFormat,
                   toCopy,
-                  true, // high quality
+                  gHighQualityDither,
                   stride);
 
       mAppendBufferLen += toCopy;
@@ -1739,6 +1739,7 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
 
    if (error)
       throw SimpleMessageBoxException{
+         ExceptionType::Internal,
          XO("Resampling failed."),
          XO("Warning"),
          "Error:_Resampling"

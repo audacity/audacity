@@ -31,12 +31,12 @@ class EffectsPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
  private:
    void Populate();
 };
 
-extern ChoiceSetting EffectsGroupBy;
+AUDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
 #endif

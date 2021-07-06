@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   CellularPanel.cpp
 
@@ -27,7 +27,7 @@
 
 *//*****************************************************************/
 
-#include "Audacity.h"
+
 #include "CellularPanel.h"
 
 #include <wx/eventfilter.h>

@@ -14,7 +14,7 @@
 *//*******************************************************************/
 
 
-#include "../Audacity.h" // for rint from configwin.h
+
 #include "Loudness.h"
 
 #include <math.h>
@@ -23,7 +23,7 @@
 #include <wx/simplebook.h>
 #include <wx/valgen.h>
 
-#include "../Internat.h"
+#include "Internat.h"
 #include "../Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"
@@ -93,9 +93,9 @@ TranslatableString EffectLoudness::GetDescription()
    return XO("Sets the loudness of one or more tracks");
 }
 
-wxString EffectLoudness::ManualPage()
+ManualPageID EffectLoudness::ManualPage()
 {
-   return wxT("Loudness_Normalization");
+   return L"Loudness_Normalization";
 }
 
 // EffectDefinitionInterface implementation
@@ -515,7 +515,7 @@ void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
    int idx = 0;
    for(auto channel : range)
    {
-      channel->Get((samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len );
+      channel->GetFloats(mTrackBuffer[idx].get(), pos, len );
       ++idx;
    }
    mTrackBufferLen = len;
