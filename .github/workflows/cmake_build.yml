@@ -13,8 +13,8 @@ jobs:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     env:
-      AUDACITY_CMAKE_GENERATOR: ${{ matrix.config.generator }}
-      AUDACITY_ARCH_LABEL: ${{ matrix.config.arch }}
+      SNEEDACITY_CMAKE_GENERATOR: ${{ matrix.config.generator }}
+      SNEEDACITY_ARCH_LABEL: ${{ matrix.config.arch }}
       # Windows codesigning
       # This variables will be used by all the steps
       WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
