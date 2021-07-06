@@ -1,0 +1,17 @@
+diff --unified --recursive --text audacity/lib-src/portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c audacity.new/lib-src/portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c
+--- audacity/lib-src/portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c	2021-07-02 00:17:06.606660728 +0800
++++ audacity.new/lib-src/portaudio-v19/src/hostapi/alsa/pa_linux_alsa.c	2021-07-02 00:18:22.376662323 +0800
+@@ -4363,11 +4363,12 @@
+                 break;
+         }
+     }
++    
++    pthread_cleanup_pop( 1 );
+ 
+ end:
+     ; /* Hack to fix "label at end of compound statement" error caused by pthread_cleanup_pop(1) macro. */
+     /* Match pthread_cleanup_push */
+-    pthread_cleanup_pop( 1 );
+ 
+     PA_DEBUG(( "%s: Thread %d exiting\n ", __FUNCTION__, pthread_self() ));
+     PaUnixThreading_EXIT( result );
