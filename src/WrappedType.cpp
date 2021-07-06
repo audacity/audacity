@@ -3,7 +3,7 @@
   WrappedType.cpp
 
   James Crook
-  (C) Audacity Developers, 2007
+  (C) Sneedacity Developers, 2007
 
   wxWidgets license. See Licensing.txt
 

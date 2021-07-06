@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 AutoRecoveryDialog.cpp
 
@@ -98,7 +98,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartVerticalLay(wxEXPAND, 1);
    {
       S.AddFixedText(
-         XO("The following projects were not saved properly the last time Audacity was run and "
+         XO("The following projects were not saved properly the last time Sneedacity was run and "
             "can be automatically recovered.\n\n"
             "After recovery, save the projects to ensure changes are written to disk."),
          false,
@@ -122,7 +122,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
 
       S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
-         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("&Quit Audacity"));
+         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("&Quit Sneedacity"));
          S.Id(ID_DISCARD_SELECTED).AddButton(XXO("&Discard Selected"));
          S.Id(ID_RECOVER_SELECTED).AddButton(XXO("&Recover Selected"), wxALIGN_CENTRE, true);
          S.Id(ID_SKIP).AddButton(XXO("&Skip"));

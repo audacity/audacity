@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImageManipulation.cpp
 
@@ -52,7 +52,7 @@ std::unique_ptr<wxImage> ChangeImageColour(wxImage * srcImage,
    // be grayscale, and smoothly changes the overall color
    // to the specified color, and returns the result as a
    // NEW image.  This works well for grayscale 3D images.
-   // Audacity uses this routines to make the buttons
+   // Sneedacity uses this routines to make the buttons
    // (skip-start, play, stop, record, skip-end) adapt to
    // the color scheme of the user.
 

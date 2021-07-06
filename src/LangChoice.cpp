@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LangChoice.cpp
 
@@ -10,7 +10,7 @@
 
 \class LangChoiceDialog
 \brief A dialog used (at start up) to present the user with a choice
-of languages for Audacity.
+of languages for Sneedacity.
 
 *//*******************************************************************/
 
@@ -56,8 +56,8 @@ wxString ChooseLanguage(wxWindow *parent)
    wxString returnVal;
 
    /* i18n-hint: Title on a dialog indicating that this is the first
-    * time Audacity has been run. */
-   LangChoiceDialog dlog(parent, -1, XO("Audacity First Run"));
+    * time Sneedacity has been run. */
+   LangChoiceDialog dlog(parent, -1, XO("Sneedacity First Run"));
    dlog.CentreOnParent();
    dlog.ShowModal();
    returnVal = dlog.GetLang();
@@ -87,7 +87,7 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
       S.StartHorizontalLay();
       {
          S.SetBorder(15);
-         mChoice = S.AddChoice(XXO("Choose Language for Audacity to use:"),
+         mChoice = S.AddChoice(XXO("Choose Language for Sneedacity to use:"),
             mLangNames,
             lang);
       }

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectFileIO.cpp
 
@@ -36,7 +36,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 #include "xml/XMLFileReader.h"
-#include "SentryHelper.h"
 
 // Don't change this unless the file format changes
 // in an irrevocable way
@@ -59,19 +58,19 @@ wxDEFINE_EVENT( EVT_RECONNECTION_FAILURE, wxCommandEvent);
 #define PACK(b1, b2, b3, b4) ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4)
 
 // The ProjectFileID is stored in the SQLite database header to identify the file
-// as an Audacity project file. It can be used by applications that identify file
+// as an Sneedacity project file. It can be used by applications that identify file
 // types, such as the Linux "file" command.
 static const int ProjectFileID = PACK('A', 'U', 'D', 'Y');
 
-// The "ProjectFileVersion" represents the version of Audacity at which a specific
+// The "ProjectFileVersion" represents the version of Sneedacity at which a specific
 // database schema was used. It is assumed that any changes to the database schema
-// will require a new Audacity version so if schema changes are required set this
+// will require a new Sneedacity version so if schema changes are required set this
 // to the new release being produced.
 //
 // This version is checked before accessing any tables in the database since there's
 // no guarantee what tables exist. If it's found that the database is newer than the
-// currently running Audacity, an error dialog will be displayed informing the user
-// that they need a newer version of Audacity.
+// currently running Sneedacity, an error dialog will be displayed informing the user
+// that they need a newer version of Sneedacity.
 //
 // Note that this is NOT the "schema_version" that SQLite maintains. The value
 // specified here is stored in the "user_version" field of the SQLite database
@@ -513,9 +512,6 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
 
    if (rc != SQLITE_ABORT && errmsg)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", query);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-
       SetDBError(
          XO("Failed to execute a project file command:\n\n%s").Format(query),
          Verbatim(errmsg),
@@ -576,10 +572,6 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
    if (rc != SQLITE_OK)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::prepare");
-
       SetDBError(
          XO("Unable to prepare project file command:\n\n%s").Format(sql)
       );
@@ -596,10 +588,6 @@ bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
 
    if (rc != SQLITE_ROW)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::step");
-
       SetDBError(
          XO("Failed to retrieve data from the project file.\nThe following command failed:\n\n%s").Format(sql)
       );
@@ -654,7 +642,7 @@ bool ProjectFileIO::CheckVersion()
    // It's a database that SQLite recognizes, but it's not one of ours
    if (wxStrtoul<char **>(result, nullptr, 10) != ProjectFileID)
    {
-      SetError(XO("This is not an Audacity project file"));
+      SetError(XO("This is not an Sneedacity project file"));
       return false;
    }
 
@@ -671,7 +659,7 @@ bool ProjectFileIO::CheckVersion()
    if (version > ProjectFileVersion)
    {
       SetError(
-         XO("This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
+         XO("This project was created with a newer version of Sneedacity.\n\nYou will need to upgrade to open it.")
       );
       return false;
    }
@@ -742,9 +730,6 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::DeleteBlocks::create_function");
-
       /* i18n-hint: An error message.  Don't translate inset or blockids.*/
       SetDBError(XO("Unable to add 'inset' function (can't verify blockids)"));
       return false;
@@ -759,10 +744,6 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql.ToStdString());
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob");
-
       if( rc==SQLITE_READONLY)
          /* i18n-hint: An error message.  Don't translate blockfiles.*/
          SetDBError(XO("Project is read only\n(Unable to work with the blockfiles)"));
@@ -872,10 +853,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          // Only capture the error if there wasn't a previous error
          if (result != SQLITE_OK && (rc == SQLITE_DONE || rc == SQLITE_OK))
          {
-            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-            ADD_EXCEPTION_CONTEXT(
-               "sqlite3.context", "ProjectGileIO::CopyTo.cleanup");
-
             SetDBError(
                XO("Failed to rollback transaction during import")
             );
@@ -883,7 +860,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
          // And detach the outbound DB in case (if it's attached). Don't check for
          // errors since it may not be attached. But, if it is and the DETACH fails,
-         // subsequent CopyTo() actions will fail until Audacity is relaunched.
+         // subsequent CopyTo() actions will fail until Sneedacity is relaunched.
          sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
 
          // RemoveProject not necessary to clean up attached database
@@ -949,10 +926,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
                               nullptr);
       if (rc != SQLITE_OK)
       {
-         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-         ADD_EXCEPTION_CONTEXT(
-            "sqlite3.context", "ProjectGileIO::CopyTo.prepare");
-
          SetDBError(
             XO("Unable to prepare project file command:\n\n%s").Format(sql)
          );
@@ -983,10 +956,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          rc = sqlite3_bind_int64(stmt, 1, blockid);
          if (rc != SQLITE_OK)
          {
-            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-            ADD_EXCEPTION_CONTEXT(
-               "sqlite3.context", "ProjectGileIO::CopyTo.bind");
-
             SetDBError(
                XO("Failed to bind SQL parameter")
             );
@@ -998,10 +967,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          rc = sqlite3_step(stmt);
          if (rc != SQLITE_DONE)
          {
-            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-            ADD_EXCEPTION_CONTEXT(
-               "sqlite3.context", "ProjectGileIO::CopyTo.step");
-
             SetDBError(
                XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
             );
@@ -1011,11 +976,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
          // Reset statement to beginning
          if (sqlite3_reset(stmt) != SQLITE_OK)
          {
-            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-            ADD_EXCEPTION_CONTEXT(
-               "sqlite3.context", "ProjectGileIO::CopyTo.reset");
-
-            THROW_INCONSISTENCY_EXCEPTION;
+             THROW_INCONSISTENCY_EXCEPTION;
          }
 
          result = progress.Update(++count, total);
@@ -1045,9 +1006,6 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    rc = sqlite3_exec(db, "DETACH DATABASE outbound;", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::CopyTo::detach");
-
       SetDBError(
          XO("Destination project could not be detached")
       );
@@ -1193,7 +1151,7 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
       ShowError(
          &window,
          XO("Error Writing to File"),
-         XO("Audacity failed to write file %s.\n"
+         XO("Sneedacity failed to write file %s.\n"
             "Perhaps disk is full or not writable.\n"
             "For tips on freeing up space, click the help button.")
             .Format(dst),
@@ -1460,15 +1418,15 @@ void ProjectFileIO::SetProjectTitle(int number)
    {
       name =
       /* i18n-hint: The %02i is the project number, the %s is the project name.*/
-      XO("[Project %02i] Audacity \"%s\"")
+      XO("[Project %02i] Sneedacity \"%s\"")
          .Format( number + 1,
                  name.empty() ? XO("<untitled>") : Verbatim((const char *)name))
          .Translation();
    }
-   // If we are not showing numbers, then <untitled> shows as 'Audacity'.
+   // If we are not showing numbers, then <untitled> shows as 'Sneedacity'.
    else if (name.empty())
    {
-      name = _TS("Audacity");
+      name = _TS("Sneedacity");
    }
 
    if (mRecovered)
@@ -1621,7 +1579,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return false;
    }
 
-   // Parse the file version Audacity was build with
+   // Parse the file version Sneedacity was build with
    int cver;
    int crel;
    int crev;
@@ -1633,7 +1591,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    if (codeVer<fileVer)
    {
       /* i18n-hint: %s will be replaced by the version number.*/
-      auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
+      auto msg = XO("This file was saved using Sneedacity %s.\nYou are using Sneedacity %s. You may need to upgrade to a newer version to open this file.")
          .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
       ShowError(
@@ -1772,9 +1730,6 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3 *db /* = nullptr */)
    rc = sqlite3_exec(db, "DELETE FROM autosave;", nullptr, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::AutoSaveDelete");
-
       SetDBError(
          XO("Failed to remove the autosave information from the project file.")
       );
@@ -1815,10 +1770,6 @@ bool ProjectFileIO::WriteDoc(const char *table,
    rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
    if (rc != SQLITE_OK)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::prepare");
-
       SetDBError(
          XO("Unable to prepare project file command:\n\n%s").Format(sql)
       );
@@ -1834,10 +1785,6 @@ bool ProjectFileIO::WriteDoc(const char *table,
    if (sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
        sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC))
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::bind");
-
       SetDBError(
          XO("Unable to bind to blob")
       );
@@ -1847,10 +1794,6 @@ bool ProjectFileIO::WriteDoc(const char *table,
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::step");
-
       SetDBError(
          XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
       );
@@ -2452,9 +2395,6 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /*
                     "SELECT rootpage FROM sqlite_master WHERE tbl_name = 'sampleblocks';");
    if (stmt == nullptr || sqlite3_step(stmt) != SQLITE_ROW)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(conn.DB())));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetDiskUsage");
-
       return 0;
    }
 

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ApplyMacroDialog.cpp
 
@@ -1331,7 +1331,7 @@ bool MacrosWindow::SaveChanges(){
    return true;
 }
 
-/// Send changed values back to Prefs, and update Audacity.
+/// Send changed values back to Prefs, and update Sneedacity.
 void MacrosWindow::OnOK(wxCommandEvent & WXUNUSED(event))
 {
    if( !SaveChanges() )

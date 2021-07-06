@@ -576,12 +576,6 @@ BaseItemSharedPtr HelpMenu()
       ,
 #endif
 
-         // DA: Does not fully support update checking.
-   #ifndef EXPERIMENTAL_DA
-         Command( wxT("Updates"), XXO("&Check for Updates..."),
-            FN(OnCheckForUpdates),
-            AlwaysEnabledFlag ),
-   #endif
          Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
             AlwaysEnabledFlag )
       )

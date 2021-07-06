@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   NoteTrack.cpp
 
@@ -289,7 +289,7 @@ void NoteTrack::DrawLabelControls
                AColor::MIDIChannel(&dc, chanName);
             dc.DrawRectangle(box);
 // two choices: channel is enabled (to see and play) when button is in
-// "up" position (original Audacity style) or in "down" position
+// "up" position (original Sneedacity style) or in "down" position
 //
 #define CHANNEL_ON_IS_DOWN 1
 #if CHANNEL_ON_IS_DOWN

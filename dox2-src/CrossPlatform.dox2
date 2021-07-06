@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   CrossPlatform.dox2
 
-  James Crook
+  Sneed
 
   Documents Cross Platform coding issues.
 
@@ -40,7 +40,7 @@ Instead use the traditional:
 
 \section UnicodeStrings Unicode strings
 
-Audacity code is translated, and it may be built in Unicode versions.  
+Sneedacity code is translated, and it may be built in Unicode versions.  
 For this reason all strings should be wrapped like this:
 
 \code

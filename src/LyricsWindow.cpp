@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LyricsWindow.cpp
 
@@ -33,7 +33,7 @@
    #include <Carbon/Carbon.h>
 #endif
 
-#define AudacityKaraokeTitle XO("Audacity Karaoke%s")
+#define AudacityKaraokeTitle XO("Sneedacity Karaoke%s")
 
 enum {
    kID_RadioButton_BouncingBall = 10101,

@@ -1,18 +1,18 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Dependencies.dox2
 
 
 ********************************************************************//**
 
-\page Dependencies Dependencies in Audacity
+\page Dependencies Dependencies in Sneedacity
 
 \section DependenciesIntro Introduction
 
 A script that runs nightly maps out the dependencies between source
-files in the Audacity code base.  We aim for this graph to be 
+files in the Sneedacity code base.  We aim for this graph to be 
 relatively untangled, separation of concerns, so that classes can 
 be understood better on their own, without having to read many other
 source files.

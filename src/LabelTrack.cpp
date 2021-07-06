@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LabelTrack.cpp
 
@@ -457,7 +457,7 @@ void LabelStruct::Export(wxTextFile &file) const
       return;
 
    // Write a \ character at the start of a second line,
-   // so that earlier versions of Audacity ignore it.
+   // so that earlier versions of Sneedacity ignore it.
    file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
       Internat::ToString(f0, FLT_DIG),
       Internat::ToString(f1, FLT_DIG)
@@ -595,7 +595,7 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       } // while
 
-      // Handle files created by Audacity 1.1.   Labels in Audacity 1.1
+      // Handle files created by Sneedacity 1.1.   Labels in Sneedacity 1.1
       // did not have separate start- and end-times.
       // PRL: this superfluous now, given class SelectedRegion's internal
       // consistency guarantees

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectSettings.cpp
 
@@ -73,7 +73,7 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
    mRate = intRate;
    if ( !wasDefined ) {
       // The default given above can vary with host/devices. So unless there is
-      // an entry for the default sample rate in audacity.cfg, Audacity can open
+      // an entry for the default sample rate in audacity.cfg, Sneedacity can open
       // with a rate which is different from the rate with which it closed.
       // See bug 1879.
       QualitySettings::DefaultSampleRate.Write( mRate );

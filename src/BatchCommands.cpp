@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MacroCommands.cpp
 
@@ -883,9 +883,9 @@ void MacroCommands::MigrateLegacyChains()
       // but only if like-named files are not already present in Macros.
 
       // Leave the old copies in place, in case a user wants to go back to
-      // an old Audacity version.  They will have their old chains intact, but
+      // an old Sneedacity version.  They will have their old chains intact, but
       // won't have any edits they made to the copy that now lives in Macros
-      // which old Audacity will not read.
+      // which old Sneedacity will not read.
 
       const auto oldDir = FileNames::LegacyChainDir();
       FilePaths files;

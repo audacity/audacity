@@ -1,7 +1,7 @@
 
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AColor.cpp
 
@@ -13,7 +13,7 @@
 \class AColor
 \brief AColor Manages color brushes and pens
 
-It is also a place to document colour usage policy in Audacity
+It is also a place to document colour usage policy in Sneedacity
 
 *//********************************************************************/
 

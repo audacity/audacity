@@ -1,18 +1,18 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Themability.dox2
 
-  James Crook
+  Sneed
 
 ********************************************************************//**
 
-\page Themability Themability of Audacity
+\page Themability Themability of Sneedacity
 
 \section ThemeIntro Introduction
 
-Audacity is Themable.  That means the images, colours and fonts can be
+Sneedacity is Themable.  That means the images, colours and fonts can be
 changed at run time, and pre-built combinations can be loaded when the
 program starts.
 
@@ -112,10 +112,10 @@ to add the image ImageCache.png into the html directory):
 \endhtmlonly
 
 ThemeBase provides most of the implementation of Themes.  It is destined for 
-\ref WidgetMigration.   Theme is Audacity's variant of a class derived 
-from ThemeBase.  It contains the Audacity specific list of icons and images
+\ref WidgetMigration.   Theme is Sneedacity's variant of a class derived 
+from ThemeBase.  It contains the Sneedacity specific list of icons and images
 and overloads for the required virtual functions.  A singleton instance, 
-\p theTheme is created by Audacity.
+\p theTheme is created by Sneedacity.
 
 Another class, ThemePrefs, provides the GUI for loading and saving theme 
 information.
@@ -124,7 +124,7 @@ information.
 
 \section RepresentationOfIcons The Different Ways Theme Images are Stored 
 
-Audacity includes a system for loading and saving different icons and 
+Sneedacity includes a system for loading and saving different icons and 
 colours.
 
 There are three formats:
@@ -137,26 +137,26 @@ making systematic changes of the images, particularly systematic
 colour changes.  It is also convenient for archives containing many 
 themes and for sharing of themes.  However it is inconvenient when 
 there are additions to and removals from the image set used in 
-Audacity, as can happen between versions.  A combined PNG made 
-for one version of Audacity may no longer be suitable for the next 
+Sneedacity, as can happen between versions.  A combined PNG made 
+for one version of Sneedacity may no longer be suitable for the next 
 version.
 
 Storing as individual images solves that problem and makes it easier
 for a designer to change just one image.  In SVN we check in the 
 individual images.
 
-The third form allows Audacity to store the combined PNG in 'C' format
+The third form allows Sneedacity to store the combined PNG in 'C' format
 for use in the exe.  It is only ever used by developers.  It is this 
-third form that provides the built in defaults in Audacity.
+third form that provides the built in defaults in Sneedacity.
 
 \attention The button to save a theme in the 'C' format is only 
 provided in debug builds. 
 
 <hr>
 
-\section ThemesChoosingVersion How Audacity Chooses Which Version Of The images To Use?  
+\section ThemesChoosingVersion How Sneedacity Chooses Which Version Of The images To Use?  
 
-At the time of writing this document, Audacity also has a deprecated system
+At the time of writing this document, Sneedacity also has a deprecated system
 for its images where they initially start out with contents determined by
 XPMs built into the program.  
 
@@ -187,13 +187,13 @@ used for colours such as the colours in the waveform.
  - Use the 'Load Theme' button on the ThemePrefs panel to accept the 
 changes.
  - Check the 'Load Theme At Startup' check box so that the theme will be 
-loaded next time you start Audacity.
+loaded next time you start Sneedacity.
 
 <hr>
 
 \section AddingNewImages Adding New Images
 
-To add a new image to Audacity, add a blank place holder for the image into
+To add a new image to Sneedacity, add a blank place holder for the image into
 the program like so:
 
 \code
@@ -204,12 +204,12 @@ This reserves a 64 x 64 pixel bitmap.  You can now refer to it from within the
 program using bmpSomeNewImage.  If you add images on to the end of the list 
 you will generally have the least problems with compatibility of versions.  
 If you are adding many images, the most efficient packing of images occurs 
-when the images are added in tallest-first order since Audacity starts a new
+when the images are added in tallest-first order since Sneedacity starts a new
 row whenever the height increases.
 
 Having defined the new image, follow these steps:
 
- - Compile Audacity in debug mode.
+ - Compile Sneedacity in debug mode.
  - Run the program and use the 'Save Components' button on the 
 ThemePrefs panel.  This saves all the images as .png files, including 
 a blank image for your new image.  
@@ -219,11 +219,11 @@ a blank image for your new image.
 a composite .png file that includes your image.
  - Press the 'Output Sourcery' button on the Theme prefs panel.  This
 generates a new data file, ThemeAsCeeCode.h, which can be used for defaults.
- - Replace the existing ThemeAsCeeCode.h in the Audacity source code
-and recompile.  You should now have a version of Audacity with the new
+ - Replace the existing ThemeAsCeeCode.h in the Sneedacity source code
+and recompile.  You should now have a version of Sneedacity with the new
 .png as a built in default.
  
-Audacity will now be using the image.  
+Sneedacity will now be using the image.  
 
  - When you come to check in the updated code into SVN, including 
 ThemeAsCeeCode.h, remember to also add your new .png image into SVN 
@@ -238,12 +238,12 @@ through using an incorrect ThemeAsCeeCode.h.  A correct ThemeAsCeeCode.h
 can be regenerated as follows:
 
  - Retrieve a correct set of images from SVN and place them in the 
-components directory used by Audacity.
- - Compile Audacity in debug mode.
+components directory used by Sneedacity.
+ - Compile Sneedacity in debug mode.
  - Use ThemePrefs 'Load Components' to load the correct set of images.
  - Press the 'Output Sourcery' button on the Theme prefs panel.  This
 generates a corrected ThemeAsCeeCode.h using the images you just loaded.
- - Replace the existing ThemeAsCeeCode.h in the Audacity source code
+ - Replace the existing ThemeAsCeeCode.h in the Sneedacity source code
 and recompile.  
 
 

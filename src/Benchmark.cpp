@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Benchmark.cpp
 
@@ -95,7 +95,7 @@ void RunBenchmark( wxWindow *parent, AudacityProject &project )
 {
    /*
    int action = AudacityMessageBox(
-XO("This will close all project windows (without saving)\nand open the Audacity Benchmark dialog.\n\nAre you sure you want to do this?"),
+XO("This will close all project windows (without saving)\nand open the Sneedacity Benchmark dialog.\n\nAre you sure you want to do this?"),
       XO("Benchmark"),
       wxYES_NO | wxICON_EXCLAMATION,
       NULL);

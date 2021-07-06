@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudioIO.cpp
 
@@ -58,7 +58,7 @@ to the meters.
   from disk, but audio buffers are filled far in advance of playback
   time, and there is a lower latency thread (PortAudio's callback) that
   actually sends samples to the output device. The relatively low
-  latency to the output device allows Audacity to stop audio output
+  latency to the output device allows Sneedacity to stop audio output
   quickly. We want the same behavior for MIDI, but there is not
   periodic callback from PortMidi (because MIDI is asynchronous), so
   this function is performed by the MidiThread class.
@@ -81,7 +81,7 @@ to the meters.
   \par Audio Time
   Normally, the current time during playback is given by the variable
   mTime. mTime normally advances by frames / samplerate each time an
-  audio buffer is output by the audio callback. However, Audacity has
+  audio buffer is output by the audio callback. However, Sneedacity has
   a speed control that can perform continuously variable time stretching
   on audio. This is achieved in two places: the playback "mixer" that
   generates the samples for output processes the audio according to
@@ -313,7 +313,7 @@ Time (in seconds, = total_sample_count / sample_rate)
   ALSA is complicated because we get varying values of
   framesPerBuffer from callback to callback. It seems there is a lot
   of variation in callback times and buffer space. One solution would
-  be to go to fixed size double buffer, but Audacity seems to work
+  be to go to fixed size double buffer, but Sneedacity seems to work
   better as is, so Plan C is to rely on one invariant which is that
   the output buffer cannot overflow, so there's a limit to how far
   ahead of the DAC time we can be writing samples into the
@@ -1263,7 +1263,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // since we need float values anyway to apply the gain.
    // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to 
    // be set to floatSample below.
-   // JKC: YES that's right.  Internally Audacity uses float, and float has space for
+   // JKC: YES that's right.  Internally Sneedacity uses float, and float has space for
    // 24 bits as well as exponent.  Actual 24 bit would require packing and
    // unpacking unaligned bytes and would be inefficient.
    // ANSWER ME: is floatSample 64 bit on 64 bit machines?
@@ -1427,7 +1427,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3,1,0)
    // Don't want the system to sleep while audio I/O is active
    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-      wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Audacity Audio"));
+      wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Sneedacity Audio"));
    }
 #endif
 
@@ -2230,7 +2230,7 @@ void AudioIO::StopStream()
 
    mAudioThreadFillBuffersLoopRunning = false;
 
-   // Audacity can deadlock if it tries to update meters while
+   // Sneedacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
    // tries to grab a UI mutex while PortAudio tries to join a
    // pthread).  So we tell the callback to stop updating meters,
@@ -2357,7 +2357,7 @@ void AudioIO::StopStream()
             // The calls to Flush
             // may cause exceptions because of exhaustion of disk space.
             // Stop those exceptions here, or else they propagate through too
-            // many parts of Audacity that are not effects or editing
+            // many parts of Sneedacity that are not effects or editing
             // operations.  GuardedCall ensures that the user sees a warning.
 
             // Also be sure to Flush each track, at the top of the guarded call,
@@ -4116,7 +4116,7 @@ void AudioIoCallback::FillInputBuffers(
                   inputFloats[numCaptureChannels*i+t];
          } break;
          case int24Sample:
-            // We should never get here. Audacity's int24Sample format
+            // We should never get here. Sneedacity's int24Sample format
             // is different from PortAudio's sample format and so we
             // make PortAudio return float samples when recording in
             // 24-bit samples.

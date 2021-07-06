@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Tags.cpp
 
@@ -21,7 +21,7 @@
   It can present the user with a dialog for editing this information.
 
   Use of this functionality requires that libid3tag be compiled in
-  with Audacity.
+  with Sneedacity.
 
 *//****************************************************************//**
 

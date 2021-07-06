@@ -170,35 +170,6 @@ include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
 
-set_from_env(SENTRY_DSN_KEY)
-set_from_env(SENTRY_HOST)
-set_from_env(SENTRY_PROJECT)
-set_from_env(CRASH_REPORT_URL)
-
-cmake_dependent_option(
-   ${_OPT}has_sentry_reporting
-   "Build support for sending errors to Sentry"
-   On
-   "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
-   Off
-)
-
-cmake_dependent_option(
-   ${_OPT}has_crashreports
-   "Enables crash reporting for Audacity"
-   On
-   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
-   Off
-)
-
-cmake_dependent_option(
-   ${_OPT}has_updates_check
-   "Build updates checking features into Audacity"
-   On
-   "${_OPT}has_networking"
-   Off
-)
-
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
    set( IS_64BIT ON )
@@ -509,9 +480,6 @@ add_subdirectory( "cmake-proxies" )
 resolve_conan_dependencies()
 
 add_subdirectory( "help" )
-if(${_OPT}has_crashreports)
-add_subdirectory( "crashreports" )
-endif()
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
@@ -551,14 +519,6 @@ execute_process( COMMAND
 cmd_option( ${_OPT}perform_codesign
             "Perform code signing during the install step. This only works on Windows and macOS."
             Off
-)
-
-cmake_dependent_option(
-   ${_OPT}perform_notarization
-   "Perform notarization during the install step. This only works on macOS."
-   Off
-   "${_OPT}perform_codesign;APPLE"
-   Off
 )
 
 if( ${_OPT}perform_codesign )

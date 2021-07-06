@@ -9,15 +9,6 @@ set( LIBRARIES
    lib-uuid
 )
 
-if ( ${_OPT}has_networking )
-   list( APPEND LIBRARIES lib-network-manager)
-endif()
-
-# This library depends on lib-network-manager
-# If Sentry reporting is disabled, an INTERFACE library
-# will be defined
-list( APPEND LIBRARIES lib-sentry-reporting)
-
 foreach( LIBRARY ${LIBRARIES} )
    add_subdirectory( "${LIBRARY}" )
 endforeach()

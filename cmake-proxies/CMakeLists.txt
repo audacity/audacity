@@ -18,10 +18,6 @@ add_conan_lib(
       expat:shared=True
 )
 
-if(${_OPT}has_crashreports)
-   add_conan_lib(breakpad breakpad/0.1 REQUIRED)
-endif()
-
 set( wx_zlib "zlib" )
 
 set( wx_png "libpng" )

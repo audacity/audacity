@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectManager.cpp
 
@@ -162,7 +162,7 @@ void ProjectManager::SaveWindowSize()
       }
       else {
          // this would be a very strange case that might possibly occur on the Mac
-         // Audacity would have to be running with no projects open
+         // Sneedacity would have to be running with no projects open
          // in this case we are going to write only the default values
          wxRect defWndRect;
          GetDefaultWindowRect(&defWndRect);
@@ -432,7 +432,7 @@ void InitProjectWindow( ProjectWindow &window )
 
    auto &trackPanel = TrackPanel::Get( project );
 
-   // LLL: When Audacity starts or becomes active after returning from
+   // LLL: When Sneedacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
    //      making the TrackPanel that first window, we resolve several
@@ -514,7 +514,7 @@ void InitProjectWindow( ProjectWindow &window )
 #endif
 
    window.UpdateStatusWidths();
-   auto msg = XO("Welcome to Audacity version %s")
+   auto msg = XO("Welcome to Sneedacity version %s")
       .Format( AUDACITY_VERSION_STRING );
    ProjectManager::Get( project ).SetStatusText( msg, mainStatusBarField );
 
@@ -765,7 +765,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    }
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
-   // before the TrackPanel is destroyed. This change was needed to stop Audacity
+   // before the TrackPanel is destroyed. This change was needed to stop Sneedacity
    // crashing when running with Jaws on Windows 10 1703.
    AdornedRulerPanel::Destroy( project );
 

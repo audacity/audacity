@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SqliteSampleBlock.cpp
 
@@ -17,8 +17,6 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "xml/XMLTagHandler.h"
 
 #include "SampleBlock.h" // to inherit
-
-#include "SentryHelper.h"
 
 class SqliteSampleBlockFactory;
 
@@ -559,10 +557,6 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
    {
-      ADD_EXCEPTION_CONTEXT(
-         "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::GetBlob::bind");
-
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
@@ -570,9 +564,6 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::GetBlob::step");
-
       wxLogDebug(wxT("SqliteSampleBlock::GetBlob - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -684,10 +675,6 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, sbid))
    {
-
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Load::bind");
-
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
@@ -695,11 +682,6 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
    {
-
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Load::step");
-
-
       wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -752,12 +734,6 @@ void SqliteSampleBlock::Commit(Sizes sizes)
        sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC) ||
        sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC))
    {
-
-      ADD_EXCEPTION_CONTEXT(
-         "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Commit::bind");
-
-
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
  
@@ -765,9 +741,6 @@ void SqliteSampleBlock::Commit(Sizes sizes)
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Commit::step");
-
       wxLogDebug(wxT("SqliteSampleBlock::Commit - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -810,10 +783,6 @@ void SqliteSampleBlock::Delete()
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
    {
-      ADD_EXCEPTION_CONTEXT(
-         "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Delete::bind");
-
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
@@ -821,9 +790,6 @@ void SqliteSampleBlock::Delete()
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Delete::step");
-
       wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement

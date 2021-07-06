@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ModuleManager.cpp
 
@@ -11,10 +11,10 @@
 *******************************************************************//*!
 
 \file ModuleManager.cpp
-\brief Based on LoadLadspa, this code loads pluggable Audacity 
+\brief Based on LoadLadspa, this code loads pluggable Sneedacity 
 extension modules.  It also has the code to
 invoke a function returning a replacement window,
-i.e. an alternative to the usual interface, for Audacity.
+i.e. an alternative to the usual interface, for Sneedacity.
 
 *//*******************************************************************/
 
@@ -106,10 +106,10 @@ bool Module::Load(wxString &deferredErrorMessage)
    wxString moduleVersion = versionFn();
    if( moduleVersion != AUDACITY_VERSION_STRING) {
       AudacityMessageBox(
-         XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
+         XO("The module \"%s\" is matched with Sneedacity version \"%s\".\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion),
          XO("Module Unsuitable"));
-      wxLogMessage(wxT("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion);
+      wxLogMessage(wxT("The module \"%s\" is matched with Sneedacity version \"%s\". It will not be loaded."), mName, moduleVersion);
       mLib->Unload();
       return false;
    }
@@ -291,7 +291,7 @@ void ModuleManager::TryLoadModules(
             XO("Yes"), XO("No"),
          };  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
          int action;
-         action = ShowMultiDialog(msg, XO("Audacity Module Loader"),
+         action = ShowMultiDialog(msg, XO("Sneedacity Module Loader"),
             buttons,
             "",
             XO("Try and load this module?"),

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectFileManager.cpp
 
@@ -169,9 +169,9 @@ auto ProjectFileManager::ReadProjectFile(
 
          AudacityMessageBox(
             resaved
-               ? XO("This project was not saved properly the last time Audacity ran.\n\n"
+               ? XO("This project was not saved properly the last time Sneedacity ran.\n\n"
                     "It has been recovered to the last snapshot.")
-               : XO("This project was not saved properly the last time Audacity ran.\n\n"
+               : XO("This project was not saved properly the last time Sneedacity ran.\n\n"
                     "It has been recovered to the last snapshot, but you must save it\n"
                     "to preserve its contents."),
             XO("Project Recovered"),
@@ -433,7 +433,7 @@ bool ProjectFileManager::SaveAs(bool allowOverwrite /* = false */)
    TranslatableString title = XO("%sSave Project \"%s\" As...")
       .Format( Restorer.sProjNumber, Restorer.sProjName );
    TranslatableString message = XO("\
-'Save Project' is for an Audacity project, not an audio file.\n\
+'Save Project' is for an Sneedacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n");
 
    if (ShowWarningDialog(&window, wxT("FirstProjectSave"), message, true) != wxID_OK) {
@@ -882,13 +882,13 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
       return nullptr;
 
    // Data loss may occur if users mistakenly try to open ".aup3.bak" files
-   // left over from an unsuccessful save or by previous versions of Audacity.
+   // left over from an unsuccessful save or by previous versions of Sneedacity.
    // So we always refuse to open such files.
    if (fileName.Lower().EndsWith(wxT(".aup3.bak")))
    {
       AudacityMessageBox(
          XO(
-"You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Audacity project file instead."),
+"You are trying to open an automatically created backup file.\nDoing this may result in severe data loss.\n\nPlease open the actual Sneedacity project file instead."),
          XO("Warning - Backup File Detected"),
          wxOK | wxCENTRE,
          nullptr);

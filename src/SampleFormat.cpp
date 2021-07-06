@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SampleFormat.h
 
@@ -13,7 +13,7 @@
 
 
   This file handles converting between all of the different
-  sample formats that Audacity supports, such as 16-bit,
+  sample formats that Sneedacity supports, such as 16-bit,
   24-bit (packed into a 32-bit int), and 32-bit float.
 
   Floating-point samples use the range -1.0...1.0, inclusive.

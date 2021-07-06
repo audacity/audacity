@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Track.cpp
 
@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class Track
-\brief Fundamental data object of Audacity, displayed in the TrackPanel.
+\brief Fundamental data object of Sneedacity, displayed in the TrackPanel.
 Classes derived form it include the WaveTrack, NoteTrack, LabelTrack
 and TimeTrack.
 

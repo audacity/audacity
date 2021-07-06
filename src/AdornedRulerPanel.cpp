@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AdornedRulerPanel.cpp
 
@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class AdornedRulerPanel
-\brief This is an Audacity Specific ruler panel which additionally
+\brief This is an Sneedacity Specific ruler panel which additionally
   has border, selection markers, play marker.
   
   Once TrackPanel uses wxSizers, we will derive it from some

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectAudioManager.cpp
 
@@ -511,7 +511,7 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             if (numberOfSelected > 0 && rateOfSelected != options.rate) {
                AudacityMessageBox(XO(
                   "Too few tracks are selected for recording at this sample rate.\n"
-                  "(Audacity requires two channels at the same sample rate for\n"
+                  "(Sneedacity requires two channels at the same sample rate for\n"
                   "each stereo track)"),
                   XO("Too Few Compatible Tracks Selected"),
                   wxICON_ERROR | wxCENTRE);
@@ -919,7 +919,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
                ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
 Recorded audio was lost at the labeled locations. Possible causes:\n\
 \n\
-Other applications are competing with Audacity for processor time\n\
+Other applications are competing with Sneedacity for processor time\n\
 \n\
 You are saving directly to a slow external storage device\n\
 "

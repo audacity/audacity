@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectWindow.cpp
 
@@ -568,7 +568,7 @@ enum {
 };
 
 //If you want any of these files, ask JKC.  They are not
-//yet checked in to Audacity SVN as of 12-Feb-2010
+//yet checked in to Sneedacity SVN as of 12-Feb-2010
 #ifdef EXPERIMENTAL_NOTEBOOK
    #include "GuiFactory.h"
    #include "APanel.h"
@@ -612,7 +612,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
       this, wxPoint( left, top ), wxSize( width, height ) );
    pNotebook  = Factory.AddNotebook( mMainPanel );
    /* i18n-hint: This is an experimental feature where the main panel in
-      Audacity is put on a notebook tab, and this is the name on that tab.
+      Sneedacity is put on a notebook tab, and this is the name on that tab.
       Other tabs in that notebook may have instruments, patch panels etc.*/
    pPage = Factory.AddPage( pNotebook, _("Main Mix"));
 #else
@@ -627,7 +627,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mMainPanel->SetLabel("Main Panel");// Not localised.
    pPage = mMainPanel;
    // Set the colour here to the track panel background to avoid
-   // flicker when Audacity starts up.
+   // flicker when Sneedacity starts up.
    // However, that leads to areas next to the horizontal scroller
    // being painted in background colour and not scroller background
    // colour, so suppress this for now.
@@ -646,7 +646,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    // PRL: Old comments below.  No longer observing the ordering that it
    //      recommends.  ProjectWindow::OnActivate puts the focus directly into
    //      the TrackPanel, which avoids the problems.
-   // LLL: When Audacity starts or becomes active after returning from
+   // LLL: When Sneedacity starts or becomes active after returning from
    //      another application, the first window that can accept focus
    //      will be given the focus even if we try to SetFocus().  By
    //      creating the scrollbars after the TrackPanel, we resolve
@@ -1360,7 +1360,7 @@ void ProjectWindow::OnShow(wxShowEvent & event)
    //  us from doing clipboard operations in wxShowEvent and wxTimerEvent
    //  processing because those event could possibly be processed during
    //  the (not sufficiently protected) Yield() of a first clipboard
-   //  operation, causing reentry. Audacity had a workaround in place
+   //  operation, causing reentry. Sneedacity had a workaround in place
    //  for this problem (the class "CaptureEvents"), which however isn't
    //  applicable with wxWidgets 3.0 because it's based on changing the
    //  gdk event handler, a change that would be overridden by wxWidgets's
@@ -1514,10 +1514,10 @@ void ProjectWindow::OnActivate(wxActivateEvent & event)
    mActive = event.GetActive();
 
    // Under Windows, focus can be "lost" when returning to
-   // Audacity from a different application.
+   // Sneedacity from a different application.
    //
    // This was observed by minimizing all windows using WINDOWS+M and
-   // then ALT+TAB to return to Audacity.  Focus will be given to the
+   // then ALT+TAB to return to Sneedacity.  Focus will be given to the
    // project window frame which is not at all useful.
    //
    // So, we use ToolManager's observation of focus changes in a wxEventFilter.

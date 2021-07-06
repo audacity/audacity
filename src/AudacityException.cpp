@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   @file AudacityException.cpp
   @brief Implements AudacityException and related

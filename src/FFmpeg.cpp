@@ -1,10 +1,10 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 FFmpeg.cpp
 
-Audacity(R) is copyright (c) 1999-2009 Audacity Team.
+Sneedacity(R) is copyright (c) 1999-2009 Sneedacity Team.
 License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -91,7 +91,7 @@ bool LoadFFmpeg(bool showerror)
    }
 }
 
-/** Called during Audacity start-up to try and load the ffmpeg libraries */
+/** Called during Sneedacity start-up to try and load the ffmpeg libraries */
 void FFmpegStartup()
 {
    bool enabled = false;
@@ -103,7 +103,7 @@ void FFmpegStartup()
       {
          AudacityMessageBox(XO(
 "FFmpeg was configured in Preferences and successfully loaded before, \
-\nbut this time Audacity failed to load it at startup. \
+\nbut this time Sneedacity failed to load it at startup. \
 \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
             XO("FFmpeg startup failed"));
       }
@@ -476,7 +476,7 @@ public:
       {
          S.AddTitle(
             XO(
-"Audacity needs the file '%s' to import and export audio via FFmpeg.")
+"Sneedacity needs the file '%s' to import and export audio via FFmpeg.")
                .Format( mName ) );
 
          S.SetBorder(3);
@@ -585,7 +585,7 @@ void FFmpegNotFoundDialog::PopulateOrExchange(ShuttleGui & S)
    S.StartVerticalLay(true);
    {
       S.AddFixedText(XO(
-"Audacity attempted to use FFmpeg to import an audio file,\n\
+"Sneedacity attempted to use FFmpeg to import an audio file,\n\
 but the libraries were not found.\n\n\
 To use FFmpeg import, go to Edit > Preferences > Libraries\n\
 to download or locate the FFmpeg libraries."

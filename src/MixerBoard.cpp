@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MixerBoard.cpp
 
@@ -62,7 +62,7 @@
 
 #include "commands/CommandManager.h"
 
-#define AudacityMixerBoardTitle XO("Audacity Mixer Board%s")
+#define AudacityMixerBoardTitle XO("Sneedacity Mixer Board%s")
 
 // class MixerTrackSlider
 
