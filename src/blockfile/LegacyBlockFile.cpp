@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LegacyBlockFile.cpp
 
@@ -9,16 +9,16 @@
 ******************************************************************//**
 
 \class LegacyBlockFile
-\brief Audacity 1.1.0 block file format:
+\brief Sneedacity 1.1.0 block file format:
 
-  - Header tag: 20 bytes "AudacityBlockFile110"
+  - Header tag: 20 bytes "SneedacityBlockFile110"
   - 64K summaries (min, max, RMS, each a 4-byte float)
   - 256 summaries (min, max, RMS, each a 4-byte float)
 
 *//******************************************************************/
 
 
-#include "../Audacity.h"
+#include "../Sneedacity.h"
 #include "LegacyBlockFile.h"
 
 #include <float.h>

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 NoteTrackControls.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_NOTE_TRACK_CONTROLS__
-#define __AUDACITY_NOTE_TRACK_CONTROLS__
+#ifndef __SNEEDACITY_NOTE_TRACK_CONTROLS__
+#define __SNEEDACITY_NOTE_TRACK_CONTROLS__
 
 #include "../../ui/PlayableTrackControls.h" // to inherit
 class wxEvent;
@@ -49,7 +49,7 @@ public:
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *pProject) override;
+       const SneedacityProject *pProject) override;
 
    PopupMenuTable *GetMenuExtension(Track *pTrack) override;
 

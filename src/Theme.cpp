@@ -78,7 +78,7 @@ can't be.
 #include "ImageManipulation.h"
 #include "Internat.h"
 #include "MemoryX.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 // JKC: First get the MAC specific images.
 // As we've disabled USE_AQUA_THEME, we need to name each file we use.
@@ -177,9 +177,9 @@ can't be.
 #include "../images/GlyphImages.h"
 #include "../images/UploadImages.h"
 
-#include "../images/AudacityLogoWithName.xpm"
-//#include "../images/AudacityLogo.xpm"
-#include "../images/AudacityLogo48x48.xpm"
+#include "../images/SneedacityLogoWithName.xpm"
+//#include "../images/SneedacityLogo.xpm"
+#include "../images/SneedacityLogo48x48.xpm"
 #endif
 
 
@@ -199,7 +199,7 @@ static const unsigned char HiContrastImageCacheAsData[] = {
 };
 
 // theTheme is a global variable.
-AUDACITY_DLL_API Theme theTheme;
+SNEEDACITY_DLL_API Theme theTheme;
 
 Theme::Theme(void)
 {
@@ -624,7 +624,7 @@ SourceOutputStream::~SourceOutputStream()
 }
 
 
-// Must be wide enough for bmpAudacityLogo. Use double width + 10.
+// Must be wide enough for bmpSneedacityLogo. Use double width + 10.
 const int ImageCacheWidth = 440;
 
 const int ImageCacheHeight = 836;
@@ -739,7 +739,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 //"Theme cache file:\n  %s\nalready exists.\nAre you sure you want to replace it?")
 //             .Format( FileName );
             TranslatableString{ FileName };
-         AudacityMessageBox( message );
+         SneedacityMessageBox( message );
          return;
       }
 #endif
@@ -753,12 +753,12 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 #endif
       if( !ImageCache.SaveFile( FileName, wxBITMAP_TYPE_PNG ))
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Sneedacity could not write file:\n  %s.")
                .Format( FileName ));
          return;
       }
-      AudacityMessageBox(
+      SneedacityMessageBox(
 /* i18n-hint: A theme is a consistent visual style across an application's
  graphical user interface, including choices of colors, and similarity of images
  such as those on button controls.  Sneedacity can load and save alternative
@@ -773,19 +773,19 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       const auto &FileName = FileNames::ThemeCacheAsCee( );
       if( !OutStream.OpenFile( FileName ))
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Sneedacity could not open file:\n  %s\nfor writing.")
                .Format( FileName ));
          return;
       }
       if( !ImageCache.SaveFile(OutStream, wxBITMAP_TYPE_PNG ) )
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Sneedacity could not write images to file:\n  %s.")
                .Format( FileName ));
          return;
       }
-      AudacityMessageBox(
+      SneedacityMessageBox(
          /* i18n-hint "Cee" means the C computer programming language */
          XO("Theme as Cee code written to:\n  %s.")
             .Format( FileName ));
@@ -940,14 +940,14 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       {
          if( bOkIfNotFound )
             return false; // did not load the images, so return false.
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Sneedacity could not find file:\n  %s.\nTheme not loaded.")
                .Format( FileName ));
          return false;
       }
       if( !ImageCache.LoadFile( FileName, wxBITMAP_TYPE_PNG ))
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             /* i18n-hint: Do not translate png.  It is the name of a file format.*/
             XO("Sneedacity could not load file:\n  %s.\nBad png format perhaps?")
                .Format( FileName ));
@@ -987,7 +987,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          // was not a valid png image.
          // Most likely someone edited it by mistake,
          // Or some experiment is being tried with NEW formats for it.
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO(
 "Sneedacity could not read its default theme.\nPlease report the problem."));
          return false;
@@ -1071,7 +1071,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
          {
             if( !mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
             {
-               AudacityMessageBox(
+               SneedacityMessageBox(
                   XO(
                /* i18n-hint: Do not translate png.  It is the name of a file format.*/
 "Sneedacity could not load file:\n  %s.\nBad png format perhaps?")
@@ -1096,7 +1096,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
    {
       if( bOkIfNotFound )
          return;
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "None of the expected theme component files\n were found in:\n  %s.")
             .Format( FileNames::ThemeComponentsDir() ));
@@ -1120,7 +1120,7 @@ void ThemeBase::SaveComponents()
 #endif
       if( !wxDirExists( FileNames::ThemeComponentsDir() ))
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Could not create directory:\n  %s")
                .Format( FileNames::ThemeComponentsDir() ) );
          return;
@@ -1147,11 +1147,11 @@ void ThemeBase::SaveComponents()
    if (n > 0)
    {
       auto result =
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO(
 "Some required files in:\n  %s\nwere already present. Overwrite?")
                .Format( FileNames::ThemeComponentsDir() ),
-            AudacityMessageBoxCaptionStr(),
+            SneedacityMessageBoxCaptionStr(),
             wxYES_NO | wxNO_DEFAULT);
       if(result == wxNO)
          return;
@@ -1164,14 +1164,14 @@ void ThemeBase::SaveComponents()
          FileName = FileNames::ThemeComponent( mBitmapNames[i] );
          if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
-            AudacityMessageBox(
+            SneedacityMessageBox(
                XO("Sneedacity could not save file:\n  %s")
                   .Format( FileName ));
             return;
          }
       }
    }
-   AudacityMessageBox(
+   SneedacityMessageBox(
       XO("Theme written to:\n  %s.")
          .Format( FileNames::ThemeComponentsDir() ) );
 }

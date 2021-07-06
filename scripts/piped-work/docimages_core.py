@@ -2,7 +2,7 @@
 # Sends commands to get images for the manual.
 # This is the shared part reused in a bunch of scripts.
 
-# Make sure Audacity is running first and that mod-script-pipe is enabled
+# Make sure Sneedacity is running first and that mod-script-pipe is enabled
 # before running this script.
 
 import os
@@ -19,18 +19,18 @@ def startPipes() :
         EOL = '\r\n\0'
     else:
         print( "pipe-test.py, running on linux or mac" )
-        toname = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-        fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+        toname = '/tmp/sneedacity_script_pipe.to.' + str(os.getuid())
+        fromname = '/tmp/sneedacity_script_pipe.from.' + str(os.getuid())
         EOL = '\n'
 
     print( "Write to  \"" + toname +"\"" )
     if not os.path.exists( toname ) :
-       print( " ..does not exist.  Ensure Audacity is running with mod-script-pipe." )
+       print( " ..does not exist.  Ensure Sneedacity is running with mod-script-pipe." )
        sys.exit();
         
     print( "Read from \"" + fromname +"\"")
     if not os.path.exists( fromname ) :
-       print( " ..does not exist.  Ensure Audacity is running with mod-script-pipe." )
+       print( " ..does not exist.  Ensure Sneedacity is running with mod-script-pipe." )
        sys.exit();
 
     print( "-- Both pipes exist.  Good." )

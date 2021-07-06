@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 NoteTrackVRulerControls.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_NOTE_TRACK_VRULER_CONTROLS__
-#define __AUDACITY_NOTE_TRACK_VRULER_CONTROLS__
+#ifndef __SNEEDACITY_NOTE_TRACK_VRULER_CONTROLS__
+#define __SNEEDACITY_NOTE_TRACK_VRULER_CONTROLS__
 
 #include "../../../ui/TrackVRulerControls.h"
 
@@ -28,11 +28,11 @@ public:
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *pProject) override;
+       const SneedacityProject *pProject) override;
 
    unsigned HandleWheelRotation
       (const TrackPanelMouseEvent &event,
-       AudacityProject *pProject) override;
+       SneedacityProject *pProject) override;
 
 private:
    // TrackPanelDrawable implementation

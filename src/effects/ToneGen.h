@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ToneGen.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_TONEGEN__
-#define __AUDACITY_EFFECT_TONEGEN__
+#ifndef __SNEEDACITY_EFFECT_TONEGEN__
+#define __SNEEDACITY_EFFECT_TONEGEN__
 
 #include "Effect.h"
 

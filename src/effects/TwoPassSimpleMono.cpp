@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TwoPassSimpleMono.cpp
 
@@ -32,7 +32,7 @@ bool EffectTwoPassSimpleMono::Process()
    this->CopyInputTracks(); // Set up mOutputTracks.
 
    mWorkTracks = TrackList::Create(
-      const_cast<AudacityProject*>( FindProject() ) );
+      const_cast<SneedacityProject*>( FindProject() ) );
    for (auto track : mOutputTracks->Selected< WaveTrack >()) {
       mWorkTracks->Add(track->EmptyCopy())->ConvertToSampleFormat(floatSample);
       if( mT0 > 0 )

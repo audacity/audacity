@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExpandingToolBar.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EXPANDING_TOOL_BAR__
-#define __AUDACITY_EXPANDING_TOOL_BAR__
+#ifndef __SNEEDACITY_EXPANDING_TOOL_BAR__
+#define __SNEEDACITY_EXPANDING_TOOL_BAR__
 
 #include <vector>
 #include <wx/defs.h>
@@ -249,4 +249,4 @@ class ToolBarArea final : public wxPanelWrapper
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_EXPANDING_TOOL_BAR__
+#endif // __SNEEDACITY_EXPANDING_TOOL_BAR__

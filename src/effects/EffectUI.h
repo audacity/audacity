@@ -1,18 +1,18 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   EffectUI.h
 
   Leland Lucius
 
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECTUI_H__
-#define __AUDACITY_EFFECTUI_H__
+#ifndef __SNEEDACITY_EFFECTUI_H__
+#define __SNEEDACITY_EFFECTUI_H__
 
 #include <wx/bitmap.h> // member variables
 
@@ -28,7 +28,7 @@ class wxFlexGridSizer;
 class wxPanel;
 class wxStaticText;
 
-class AudacityProject;
+class SneedacityProject;
 
 class Effect;
 using EffectArray = std::vector<Effect*>;
@@ -36,12 +36,12 @@ using EffectArray = std::vector<Effect*>;
 class EffectRack final : public wxFrame
 {
 public:
-   EffectRack( AudacityProject &project );
+   EffectRack( SneedacityProject &project );
    virtual ~EffectRack();
 
    void Add(Effect *effect, bool active = false, bool favorite = false);
 
-   static EffectRack &Get( AudacityProject &project );
+   static EffectRack &Get( SneedacityProject &project );
 
 private:
 
@@ -63,7 +63,7 @@ private:
    void OnRemove(wxCommandEvent & evt);
 
 private:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    wxStaticText *mLatency;
    int mLastLatency;
@@ -102,13 +102,13 @@ private:
 
 #endif
 
-#include "audacity/EffectInterface.h"
+#include "sneedacity/EffectInterface.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
 #include "../SelectedRegion.h"
 
-class AudacityCommand;
-class AudacityProject;
+class SneedacityCommand;
+class SneedacityProject;
 class Effect;
 
 class wxCheckBox;
@@ -120,12 +120,12 @@ class EffectUIHost final : public wxDialogWrapper,
 public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
-                AudacityProject &project,
+                SneedacityProject &project,
                 Effect *effect,
                 EffectUIClientInterface *client);
    EffectUIHost(wxWindow *parent,
-                AudacityProject &project,
-                AudacityCommand *command,
+                SneedacityProject &project,
+                SneedacityCommand *command,
                 EffectUIClientInterface *client);
    virtual ~EffectUIHost();
 
@@ -173,10 +173,10 @@ private:
    void Resume();
 
 private:
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
    wxWindow *mParent;
    Effect *mEffect;
-   AudacityCommand * mCommand;
+   SneedacityCommand * mCommand;
    EffectUIClientInterface *mClient;
 
    RegistryPaths mUserPresets;
@@ -220,15 +220,15 @@ class CommandContext;
 
 namespace  EffectUI {
 
-   AUDACITY_DLL_API
+   SNEEDACITY_DLL_API
    wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
       EffectUIClientInterface *client);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
-   // Audacity's standard UI.
-   AUDACITY_DLL_API bool DoEffect(
+   // Sneedacity's standard UI.
+   SNEEDACITY_DLL_API bool DoEffect(
       const PluginID & ID, const CommandContext &context, unsigned flags );
 
 }
@@ -236,7 +236,7 @@ namespace  EffectUI {
 class ShuttleGui;
 
 // Obsolescent dialog still used only in Noise Reduction/Removal
-class AUDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
+class SNEEDACITY_DLL_API EffectDialog /* not final */ : public wxDialogWrapper
 {
 public:
    // constructors and destructors
@@ -265,4 +265,4 @@ private:
    wxDECLARE_NO_COPY_CLASS(EffectDialog);
 };
 
-#endif // __AUDACITY_EFFECTUI_H__
+#endif // __SNEEDACITY_EFFECTUI_H__

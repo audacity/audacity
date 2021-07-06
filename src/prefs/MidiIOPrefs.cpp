@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MidiIOPrefs.cpp
 
@@ -38,7 +38,7 @@ other settings.
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 #define DEFAULT_SYNTH_LATENCY 5
 
@@ -292,7 +292,7 @@ bool MidiIOPrefs::Validate()
 {
    long latency;
    if (!mLatency->GetValue().ToLong(&latency)) {
-      AudacityMessageBox( XO(
+      SneedacityMessageBox( XO(
 "The MIDI Synthesizer Latency must be an integer") );
       return false;
    }
@@ -302,7 +302,7 @@ bool MidiIOPrefs::Validate()
 #ifdef EXPERIMENTAL_MIDI_OUT
 namespace{
 PrefsPanel::Registration sAttachment{ "MidiIO",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew MidiIOPrefs(parent, winid);

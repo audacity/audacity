@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ImportGStreamer.cpp
 
@@ -23,7 +23,7 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-#include "../Audacity.h"	// needed before GStreamer.h // for USE_* macros
+#include "../Sneedacity.h"	// needed before GStreamer.h // for USE_* macros
 
 #if defined(USE_GSTREAMER)
 #include "ImportGStreamer.h"
@@ -57,12 +57,12 @@ extern "C"
 }
 
 // Convenience macros
-#define AUDCTX "audacity::context"
+#define AUDCTX "sneedacity::context"
 #define GETCTX(o) (GStreamContext *) g_object_get_data(G_OBJECT((o)), AUDCTX)
 #define SETCTX(o, c) g_object_set_data(G_OBJECT((o)), AUDCTX, (gpointer) (c))
 #define WARN(e, msg) GST_ELEMENT_WARNING((e), STREAM, FAILED, msg, (NULL));
 
-// Capabilities that Audacity can handle
+// Capabilities that Sneedacity can handle
 //
 // This resolves to: (on little endian)
 //
@@ -216,7 +216,7 @@ public:
 
 private:
    TranslatableStrings     mStreamInfo;   //!< Array of stream descriptions. Length is the same as mStreams
-   Tags                    mTags;         //!< Tags to be passed back to Audacity
+   Tags                    mTags;         //!< Tags to be passed back to Sneedacity
    TrackFactory           *mTrackFactory; //!< Factory to create tracks when samples arrive
 
    GstString               mUri;          //!< URI of file
@@ -230,7 +230,7 @@ private:
 };
 
 /// A representative of GStreamer loader in
-/// the Audacity import plugin list
+/// the Sneedacity import plugin list
 class GStreamerImportPlugin final : public ImportPlugin
 {
 public:
@@ -248,7 +248,7 @@ public:
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(
-      const wxString &Filename, AudacityProject*) override;
+      const wxString &Filename, SneedacityProject*) override;
 };
 
 // ============================================================================
@@ -261,7 +261,7 @@ public:
 static
 Importer::RegisteredImportPlugin{ "GStreamer",
    []() -> std::unique_ptr< ImportPlugin > {
-   wxLogMessage(_TS("Audacity is built against GStreamer version %d.%d.%d-%d"),
+   wxLogMessage(_TS("Sneedacity is built against GStreamer version %d.%d.%d-%d"),
                 GST_VERSION_MAJOR,
                 GST_VERSION_MINOR,
                 GST_VERSION_MICRO,
@@ -343,7 +343,7 @@ FileExtensions
 GStreamerImportPlugin::GetSupportedExtensions()
 {
    // We refresh the extensions each time this is called in case the
-   // user had installed additional gstreamer plugins while Audacity
+   // user had installed additional gstreamer plugins while Sneedacity
    // was active.
    mExtensions.clear();
 
@@ -410,7 +410,7 @@ GStreamerImportPlugin::GetSupportedExtensions()
 // ----------------------------------------------------------------------------
 // Open the file and return an importer "file handle"
 std::unique_ptr<ImportFileHandle> GStreamerImportPlugin::Open(
-   const wxString &filename, AudacityProject*)
+   const wxString &filename, SneedacityProject*)
 {
    auto handle = std::make_unique<GStreamerImportFileHandle>(filename);
 
@@ -501,7 +501,7 @@ GStreamerNewSample(GstAppSink *appsink, gpointer data)
          sample{ gst_app_sink_pull_sample(appsink) };
 
       // We must single thread here to prevent concurrent use of the
-      // Audacity track functions.
+      // Sneedacity track functions.
       g_mutex_locker locker{ mutex };
 
       handle->OnNewSample(GETCTX(appsink), sample.get());
@@ -943,7 +943,7 @@ GStreamerImportFileHandle::Init()
    // Add the decoder to the pipeline
    if (!gst_bin_add(GST_BIN(mPipeline.get()), mDec))
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Unable to add decoder to pipeline"),
          XO("GStreamer Importer"));
 
@@ -955,7 +955,7 @@ GStreamerImportFileHandle::Init()
    GstStateChangeReturn state = gst_element_set_state(mPipeline.get(), GST_STATE_PAUSED);
    if (state == GST_STATE_CHANGE_FAILURE)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Unable to set stream state to paused."),
          XO("GStreamer Importer"));
       return false;
@@ -1085,7 +1085,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    // Can't do much if we don't have any streams to process
    if (!haveStreams)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("File doesn't contain any audio streams."),
          XO("GStreamer Importer"));
       return ProgressResult::Failed;
@@ -1095,7 +1095,7 @@ GStreamerImportFileHandle::Import(TrackFactory *trackFactory,
    GstStateChangeReturn state = gst_element_set_state(mPipeline.get(), GST_STATE_PLAYING);
    if (state == GST_STATE_CHANGE_FAILURE)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Unable to import file, state change failed."),
          XO("GStreamer Importer"));
       return ProgressResult::Failed;
@@ -1212,7 +1212,7 @@ GStreamerImportFileHandle::ProcessBusMessage(bool & success)
                debug ? wxString::FromUTF8(debug.get()) : wxT(""));
             auto msg = XO("GStreamer Error: %s").Format( m );
 #if defined(_DEBUG)
-            AudacityMessageBox( msg );
+            SneedacityMessageBox( msg );
 #else
             wxLogMessage( msg.Debug() );
 #endif

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ButtonHandle.cpp
 
@@ -27,13 +27,13 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
-void ButtonHandle::Enter(bool, AudacityProject *)
+void ButtonHandle::Enter(bool, SneedacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }
 
 UIHandle::Result ButtonHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
@@ -56,7 +56,7 @@ UIHandle::Result ButtonHandle::Click
 }
 
 UIHandle::Result ButtonHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    const wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
@@ -71,7 +71,7 @@ UIHandle::Result ButtonHandle::Drag
 }
 
 HitTestPreview ButtonHandle::Preview
-(const TrackPanelMouseState &st, AudacityProject *project)
+(const TrackPanelMouseState &st, SneedacityProject *project)
 {
    // No special cursor
    TranslatableString message;
@@ -81,7 +81,7 @@ HitTestPreview ButtonHandle::Preview
 }
 
 UIHandle::Result ButtonHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject,
  wxWindow *pParent)
 {
    using namespace RefreshCode;
@@ -96,7 +96,7 @@ UIHandle::Result ButtonHandle::Release
    return result;
 }
 
-UIHandle::Result ButtonHandle::Cancel(AudacityProject *WXUNUSED(pProject))
+UIHandle::Result ButtonHandle::Cancel(SneedacityProject *WXUNUSED(pProject))
 {
    using namespace RefreshCode;
    return RefreshCell; // perhaps unnecessarily if pointer is out of the box

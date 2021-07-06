@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2013-09-19 05:24-0000\n"
 "Last-Translator: Martin Bagic\n"
@@ -199,7 +199,7 @@ msgstr ""
 #, fuzzy, c-format
 msgctxt "update dialog"
 msgid "Sneedacity %s is available!"
-msgstr "Audacityjeva alatna traka - %s"
+msgstr "Sneedacityjeva alatna traka - %s"
 
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Script was not saved."
 msgstr ""
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -717,11 +717,11 @@ msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Sneedacity su napisali <a href=\"http://audacity.sourceforge.net/community/"
+"Sneedacity su napisali <a href=\"http://sneedacity.sourceforge.net/community/"
 "developers\">razvijatelji dobrovoljci</a> iz cijeloga svijeta. Zahvaljujemo "
 "<a href=\"http://sourceforge.net\">SourceForge.net</a> i <a href=\"http://"
 "code.google.com\">Google Code</a> za mrežno posluživanje. Sneedacity je <a "
-"href=\"http://audacity.sourceforge.net/download/\">višesustavni</a> program "
+"href=\"http://sneedacity.sourceforge.net/download/\">višesustavni</a> program "
 "- dostupan za Windows, Mac, GNU, Linux (i Unixove sustave)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
@@ -792,7 +792,7 @@ msgid "Credits"
 msgstr "Zasluge"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
+msgid "DarkSneedacity Customisation"
 msgstr ""
 
 #. i18n-hint: The program's name substitutes for %s
@@ -843,7 +843,7 @@ msgstr "Posebna hvala:"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "%s website: "
-msgstr "Prvi pogon Audacityja"
+msgstr "Prvi pogon Sneedacityja"
 
 #. i18n-hint Sneedacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
@@ -871,7 +871,7 @@ msgstr "omogućeno"
 msgid "Disabled"
 msgstr "onemogućeno"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "The Build"
@@ -911,7 +911,7 @@ msgstr "Vrsta gradnje:"
 msgid "Compiler:"
 msgstr "Sažimač"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "Installation Prefix:"
@@ -922,7 +922,7 @@ msgstr "Ugradni predmetak:"
 msgid "Settings folder:"
 msgstr "Mapa postavaka:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "Jezgrene knjižnice"
@@ -1142,16 +1142,16 @@ msgstr ""
 msgid "Error"
 msgstr "Pogrješka"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "Uklanjanje %s nije uspjelo"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "Neuspjelo!"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1163,11 +1163,11 @@ msgstr ""
 "Ovo se pitanje samo jednom prikazuje nakon 'ugradbe' koja je pitala za "
 "prepostavljanje (reset) postavaka."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "Preprilagodi Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1178,46 +1178,46 @@ msgstr ""
 "\n"
 "Uklonjeno je s popisa nedavnih datoteka."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity je već upaljen"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Novo"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Otvori..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "&Otvori nedavnu..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
-msgstr "&O Audacityju..."
+msgstr "&O Sneedacityju..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&Postavke..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Datoteka"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
@@ -1228,7 +1228,7 @@ msgstr ""
 "Sneedacity nije našao prostora za spremanje privremenih datoteka.\n"
 "Molimo unijeti prikladnu mapu u postavkama."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1236,7 +1236,7 @@ msgstr ""
 "Sneedacity nije našao prostora za spremanje privremenih datoteka.\n"
 "Molimo unijeti prikladnu mapu u postavkama."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
@@ -1244,17 +1244,17 @@ msgstr ""
 "Sneedacity se zatvara. Molimo ponovno upaliti Sneedacity za uporabu novih "
 "privremenih mapa."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
-"Dvije istovremeno upaljene kopije Audacityja\n"
+"Dvije istovremeno upaljene kopije Sneedacityja\n"
 "mogu prouzročiti gubitak podataka ili rušenje sustava.\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1262,31 +1262,31 @@ msgstr ""
 "Sneedacity ne može zaključati mapu privremenih datoteka.\n"
 "Tu mapu možda rabi drugi Sneedacity.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "Želite li svejedno upaliti Sneedacity?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "Pogrješka pri zaključavanju privremene mape"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "Sustav je uočio da je Sneedacity već upaljen.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
-"Uporabite naredbe Novo ili Otvori u trenutačno upaljenom Audacityju\n"
+"Uporabite naredbe Novo ili Otvori u trenutačno upaljenom Sneedacityju\n"
 "za istovremeno otvaranje više projekata.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity je već upaljen"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1294,12 +1294,12 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Sneedacity Startup Failure"
-msgstr "Audacityjeve datoteke projekta"
+msgstr "Sneedacityjeve datoteke projekta"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1307,7 +1307,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1315,7 +1315,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1323,7 +1323,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1331,44 +1331,44 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr ""
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "set max disk block size in bytes"
 msgstr ""
 "\t-blocksize nnn (postavite najveću veličinu diskovnoga bloka; u bajtima)"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "this help message"
 msgstr "\t-help (ovu poruku)"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "run self diagnostics"
 msgstr "\t-test (pokreni samodijagnostiku)"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "display Sneedacity version"
-msgstr "\t-version (prikaži inačicu Audacityja)"
+msgstr "\t-version (prikaži inačicu Sneedacityja)"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "audio or project file name"
 msgstr "Nije moguće otvoriti datoteku projekta"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
@@ -1376,26 +1376,26 @@ msgid ""
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Datoteke Audacityjeva projekta (.AUP) trenutačno \n"
-"nisu povezane s Audacityjem.\n"
+"Datoteke Sneedacityjeva projekta (.AUP) trenutačno \n"
+"nisu povezane s Sneedacityjem.\n"
 "\n"
 "Želite li ih povezati kako biste ih mogli otvoriti dvoklikom?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
-msgstr "Audacityjeve datoteke projekta"
+msgstr "Sneedacityjeve datoteke projekta"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr ""
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, fuzzy
 msgid "Sneedacity Configuration Error"
 msgstr "Potvrda brisanja pravila"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1412,49 +1412,49 @@ msgid ""
 "state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Pomoć"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Sneedacity"
 msgstr "Ugasi Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
-msgstr "Audacityjev dnevnik"
+msgstr "Sneedacityjev dnevnik"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "&Spremi..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "Iz&briši uneseno"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Zatvori"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, fuzzy
 msgid "Save log to:"
 msgstr "Spremi slike u:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, fuzzy, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "Pogrješka pri pisanju u datoteku: "
@@ -1499,7 +1499,7 @@ msgstr "Pogrješka pri inicijalizaciji MIDI-ja"
 #: src/AudioIO.cpp
 #, fuzzy
 msgid "Sneedacity Audio"
-msgstr "Audacityjev dnevnik"
+msgstr "Sneedacityjev dnevnik"
 
 #: src/AudioIO.cpp src/ProjectAudioManager.cpp
 #, fuzzy, c-format
@@ -1766,7 +1766,7 @@ msgid ""
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Neki projekti nisu se dobro spremili pri zadnjem pogonu Audacityja.\n"
+"Neki projekti nisu se dobro spremili pri zadnjem pogonu Sneedacityja.\n"
 "Na sreću, Sneedacity ih može automatski obnoviti:"
 
 #: src/AutoRecoveryDialog.cpp
@@ -2393,7 +2393,7 @@ msgstr ""
 #: src/CrashReport.cpp
 #, fuzzy
 msgid "Sneedacity Support Data"
-msgstr "Audacityjeva ekipa za podršku"
+msgstr "Sneedacityjeva ekipa za podršku"
 
 #: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
 msgid "This may take several seconds"
@@ -3119,7 +3119,7 @@ msgstr "Izvoženje zvučnih datoteka"
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
 msgid "Saving an Sneedacity Project"
-msgstr "Spremanje Audacityjeva projekta"
+msgstr "Spremanje Sneedacityjeva projekta"
 
 #. i18n-hint: Title for a topic.
 #: src/HelpText.cpp
@@ -3432,7 +3432,7 @@ msgstr ""
 #. * time Sneedacity has been run.
 #: src/LangChoice.cpp
 msgid "Sneedacity First Run"
-msgstr "Prvi pogon Audacityja"
+msgstr "Prvi pogon Sneedacityja"
 
 #: src/LangChoice.cpp
 msgid "Choose Language for Sneedacity to use:"
@@ -3468,12 +3468,12 @@ msgstr ""
 
 #: src/Legacy.cpp
 msgid "Opening Sneedacity Project"
-msgstr "Otvaranje Audacityjeva projekta"
+msgstr "Otvaranje Sneedacityjeva projekta"
 
 #: src/LyricsWindow.cpp
 #, c-format
 msgid "Sneedacity Karaoke%s"
-msgstr "Audacityjeve karaoke%s"
+msgstr "Sneedacityjeve karaoke%s"
 
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
@@ -3620,7 +3620,7 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul %s je pridružen Audacityjevoj inačici %s.\n"
+"Modul %s je pridružen Sneedacityjevoj inačici %s.\n"
 "\n"
 "Ne će biti učitan."
 
@@ -4033,7 +4033,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr ""
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -4292,7 +4292,7 @@ msgstr ""
 #: src/ProjectFileIO.cpp
 #, fuzzy
 msgid "This is not an Sneedacity project file"
-msgstr "Spremanje Audacityjeva projekta"
+msgstr "Spremanje Sneedacityjeva projekta"
 
 #: src/ProjectFileIO.cpp
 msgid ""
@@ -4445,7 +4445,7 @@ msgid ""
 "You are using Sneedacity %s. You may need to upgrade to a newer version to "
 "open this file."
 msgstr ""
-"Ova datoteka spremljena je u Audacityju %s.\n"
+"Ova datoteka spremljena je u Sneedacityju %s.\n"
 "Vi rabite Sneedacity %s. Možda biste ga trebali nadograditi prije otvaranja."
 
 #: src/ProjectFileIO.cpp
@@ -4520,7 +4520,7 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Neki projekti nisu se dobro spremili pri zadnjem pogonu Audacityja.\n"
+"Neki projekti nisu se dobro spremili pri zadnjem pogonu Sneedacityja.\n"
 "Na sreću, Sneedacity ih može automatski obnoviti:"
 
 #: src/ProjectFileManager.cpp
@@ -4698,7 +4698,7 @@ msgstr ""
 "Pokušavate otvoriti samostvorenu sigurnosnu presliku.\n"
 "Zbog toga moglo bi doći do golemoga gubitka podataka.\n"
 "\n"
-"Mjesto toga radije otvorite suvremeni Audacityjev projekt."
+"Mjesto toga radije otvorite suvremeni Sneedacityjev projekt."
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Backup File Detected"
@@ -6023,13 +6023,13 @@ msgstr "Nema dosta prostora za širenje crte reza"
 msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Sneedacity"
-msgstr "Audacityjev dnevnik"
+msgstr "Sneedacityjev dnevnik"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -6037,13 +6037,13 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, fuzzy, c-format
 msgid "Applying %s..."
 msgstr "Primjenjivanje..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -6052,7 +6052,7 @@ msgstr "Primjenjivanje..."
 msgid "%s: %s"
 msgstr ""
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr ""
 
@@ -6334,7 +6334,7 @@ msgstr "Izaberite naredbu"
 #: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
 #, fuzzy
 msgid "The Sneedacity Team"
-msgstr "Audacityjeva ekipa za podršku"
+msgstr "Sneedacityjeva ekipa za podršku"
 
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Sneedacity"
@@ -6386,7 +6386,7 @@ msgstr "Po&čisti"
 #: src/commands/OpenSaveCommands.h
 #, fuzzy
 msgid "Opens a project."
-msgstr "Otvaranje Audacityjeva projekta"
+msgstr "Otvaranje Sneedacityjeva projekta"
 
 #: src/commands/OpenSaveCommands.h
 #, fuzzy
@@ -10284,7 +10284,7 @@ msgstr "Učitaj program VST:"
 #: src/effects/VST/VSTEffect.cpp
 #, fuzzy
 msgid "Sneedacity VST preset file"
-msgstr "Audacityjeve datoteke projekta"
+msgstr "Sneedacityjeve datoteke projekta"
 
 #: src/effects/VST/VSTEffect.cpp
 #, fuzzy
@@ -10807,7 +10807,7 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy, c-format
 msgid "This version of Sneedacity does not support Nyquist plug-in version %ld"
-msgstr "Podrška %s nije prevedena za ovu inačicu Audacityja."
+msgstr "Podrška %s nije prevedena za ovu inačicu Sneedacityja."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -12187,7 +12187,7 @@ msgid ""
 "Please download the latest version of 'LAME for Sneedacity'."
 msgstr ""
 "Poveznica usmjeruje na lame_enc.dll razl%d.%d. Ta inačica nije uskladiva s "
-"Audacityjem %d.%d.%d.\n"
+"Sneedacityjem %d.%d.%d.\n"
 "Preuzmite najnoviju inačicu knjižnice LAME MP3."
 
 #: src/export/ExportMP3.cpp
@@ -12597,7 +12597,7 @@ msgstr "Izaberite tok(ove) za uvoz"
 #: src/import/Import.cpp
 #, c-format
 msgid "This version of Sneedacity was not compiled with %s support."
-msgstr "Podrška %s nije prevedena za ovu inačicu Audacityja."
+msgstr "Podrška %s nije prevedena za ovu inačicu Sneedacityja."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -14118,7 +14118,7 @@ msgstr "Početak izbora:"
 #: src/menus/HelpMenus.cpp
 #, fuzzy
 msgid "Sneedacity &Manual"
-msgstr "Audacityjev dnevnik"
+msgstr "Sneedacityjev dnevnik"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -15199,7 +15199,7 @@ msgstr "Napravljen novi oznakovni zapis"
 #: src/menus/TrackMenus.cpp
 msgid ""
 "This version of Sneedacity only allows one time track for each project window."
-msgstr "Ova inačica Audacityja dopušta samo jedan vremenski zapis po prozoru."
+msgstr "Ova inačica Sneedacityja dopušta samo jedan vremenski zapis po prozoru."
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new time track"
@@ -16136,7 +16136,7 @@ msgid ""
 "Changes to temporary directory will not take effect until Sneedacity is "
 "restarted"
 msgstr ""
-"Promjene privremene mape primjenit će se tek pri sljedećem pogonu Audacityja"
+"Promjene privremene mape primjenit će se tek pri sljedećem pogonu Sneedacityja"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -16232,7 +16232,7 @@ msgstr ""
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
 msgid "Rescan plugins next time Sneedacity is started"
-msgstr "Pretraži učinke VST pri sljedećem pogonu Audacityja"
+msgstr "Pretraži učinke VST pri sljedećem pogonu Sneedacityja"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -16620,7 +16620,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Sneedacity keyboard shortcuts..."
-msgstr "Izaberi datoteku XML s Audacityjevim tipkovnim prečacima..."
+msgstr "Izaberi datoteku XML s Sneedacityjevim tipkovnim prečacima..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -16834,7 +16834,7 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when Sneedacity starts up."
 msgstr ""
-"Promjene privremene mape primjenit će se tek pri sljedećem pogonu Audacityja"
+"Promjene privremene mape primjenit će se tek pri sljedećem pogonu Sneedacityja"
 
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
@@ -17130,7 +17130,7 @@ msgstr ""
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Sneedacity Preferences"
-msgstr "Postavke Audacityja"
+msgstr "Postavke Sneedacityja"
 
 #: src/prefs/PrefsDialog.cpp
 #, fuzzy
@@ -18374,7 +18374,7 @@ msgstr "Traka za &uređaje"
 #: src/toolbars/ToolBar.cpp
 #, fuzzy, c-format
 msgid "Sneedacity %s Toolbar"
-msgstr "Audacityjeva alatna traka - %s"
+msgstr "Sneedacityjeva alatna traka - %s"
 
 #: src/toolbars/ToolBar.cpp
 #, fuzzy
@@ -22092,7 +22092,7 @@ msgstr ""
 #~ msgstr "Spremanje snimljenoga zvuka na disk"
 
 #~ msgid "Sneedacity projects"
-#~ msgstr "Audacityjevi projekti"
+#~ msgstr "Sneedacityjevi projekti"
 
 #, fuzzy
 #~ msgid "Reclaimable Space"
@@ -22109,7 +22109,7 @@ msgstr ""
 #~ "\n"
 #~ "Open this file now?"
 #~ msgstr ""
-#~ "Ova je  datoteka spremljena u Audacityjevoj inačici %s. Format se "
+#~ "Ova je  datoteka spremljena u Sneedacityjevoj inačici %s. Format se "
 #~ "promijenio.\n"
 #~ "\n"
 #~ "Sneedacity ju može pokušati otvoriti i spremiti, ali spremanje u ovoj \n"
@@ -22329,15 +22329,15 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "About Sneedacity"
-#~ msgstr "O Audacityju..."
+#~ msgstr "O Sneedacityju..."
 
 #, fuzzy
 #~ msgid "<h3>Sneedacity "
-#~ msgstr "Audacityjev dnevnik"
+#~ msgstr "Sneedacityjev dnevnik"
 
 #, fuzzy
 #~ msgid "Sneedacity Team Members"
-#~ msgstr "Ravijatelji Audacityja"
+#~ msgstr "Ravijatelji Sneedacityja"
 
 #, fuzzy
 #~ msgid ""
@@ -22394,7 +22394,7 @@ msgstr ""
 #~ msgid ""
 #~ "The module \"%s\" is matched with Sneedacity version \"%s\". It will not be "
 #~ "loaded."
-#~ msgstr "Modul %s je pridružen Audacityjevoj inačici %s. Ne će biti učitan."
+#~ msgstr "Modul %s je pridružen Sneedacityjevoj inačici %s. Ne će biti učitan."
 
 #, fuzzy
 #~ msgid ""
@@ -23505,7 +23505,7 @@ msgstr ""
 #~ msgstr "suosnivač"
 
 #~ msgid "Sneedacity Support Team"
-#~ msgstr "Audacityjeva ekipa za podršku"
+#~ msgstr "Sneedacityjeva ekipa za podršku"
 
 #~ msgid "Emeritus Developers"
 #~ msgstr "Časni razvijatelji"
@@ -23831,7 +23831,7 @@ msgstr ""
 #~ "In addition, specify the name of an audio file or Sneedacity project to "
 #~ "open it."
 #~ msgstr ""
-#~ "Također, navedite ime zvučne datoteke ili Audacityjeva projekta koji "
+#~ "Također, navedite ime zvučne datoteke ili Sneedacityjeva projekta koji "
 #~ "želite otvoriti."
 
 #~ msgid "Stereo to Mono Effect not found"
@@ -24306,7 +24306,7 @@ msgstr ""
 #~ msgstr "Grafički prikaži učinke zvučne jedinice"
 
 #~ msgid "&Rescan VST effects next time Sneedacity is started"
-#~ msgstr "&Pretraži učinke VST pri sljedećem pogonu Audacityja"
+#~ msgstr "&Pretraži učinke VST pri sljedećem pogonu Sneedacityja"
 
 #~ msgid "Input Meter"
 #~ msgstr "Mjerilo ulaza"
@@ -24492,7 +24492,7 @@ msgstr ""
 #~ "duže\n"
 #~ "nego obično jer uvozi svaki sažet zapis.\n"
 #~ "\n"
-#~ "Većina drugih programa ne zna otvoriti datoteku Audacityjeva projekta.\n"
+#~ "Većina drugih programa ne zna otvoriti datoteku Sneedacityjeva projekta.\n"
 #~ "Zato, ako vam datoteka treba biti čitljiva drugim programima, radije ju "
 #~ "izvezite."
 
@@ -24538,7 +24538,7 @@ msgstr ""
 #~ "   Omjer sažimanja mora biti najmanje 1:1."
 
 #~ msgid "Enable these Modules (if present), next time Sneedacity is started"
-#~ msgstr "Omogućuje ove module pri sljedećem pogonu Audacityja (ako ih ima)"
+#~ msgstr "Omogućuje ove module pri sljedećem pogonu Sneedacityja (ako ih ima)"
 
 #~ msgid "mod-&script-pipe"
 #~ msgstr "mod-&script-pipe"
@@ -24650,7 +24650,7 @@ msgstr ""
 #~ msgstr "&Razvrstaj zapise"
 
 #~ msgid "&About Sneedacity CleanSpeech..."
-#~ msgstr "&O Audacityjevom CleanSpeech..."
+#~ msgstr "&O Sneedacityjevom CleanSpeech..."
 
 #~ msgid "Trim"
 #~ msgstr "Obreži"

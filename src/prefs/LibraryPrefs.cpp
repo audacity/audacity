@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LibraryPrefs.cpp
 
@@ -26,7 +26,7 @@ MP3 and FFmpeg encoding libraries.
 #include "../FFmpeg.h"
 #include "../export/ExportMP3.h"
 #include "../widgets/HelpSystem.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
 
@@ -193,9 +193,9 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
    // Libs are fine, don't show "locate" dialog unless user really wants it
    if (!locate) {
-      int response = AudacityMessageBox(
+      int response = SneedacityMessageBox(
          XO(
-"Audacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
+"Sneedacity has automatically detected valid FFmpeg libraries.\nDo you still want to locate them manually?"),
          XO("Success"),
          wxCENTRE | wxYES_NO | wxNO_DEFAULT |wxICON_QUESTION);
       if (response == wxYES) {
@@ -231,7 +231,7 @@ bool LibraryPrefs::Commit()
 #if !defined(DISABLE_DYNAMIC_LOADING_FFMPEG) || !defined(DISABLE_DYNAMIC_LOADING_LAME)
 namespace{
 PrefsPanel::Registration sAttachment{ "Library",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew LibraryPrefs(parent, winid);

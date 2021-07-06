@@ -1,6 +1,6 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  PlaybackSchedule.h
  
@@ -8,8 +8,8 @@
  
  **********************************************************************/
 
-#ifndef __AUDACITY_PLAYBACK_SCHEDULE__
-#define __AUDACITY_PLAYBACK_SCHEDULE__
+#ifndef __SNEEDACITY_PLAYBACK_SCHEDULE__
+#define __SNEEDACITY_PLAYBACK_SCHEDULE__
 
 #include <atomic>
 #include <vector>
@@ -35,7 +35,7 @@ struct RecordingSchedule {
    double ToDiscard() const;
 };
 
-struct AUDACITY_DLL_API PlaybackSchedule {
+struct SNEEDACITY_DLL_API PlaybackSchedule {
    /// Playback starts at offset of mT0, which is measured in seconds.
    double              mT0;
    /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.

@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -25,7 +25,7 @@ class wxString;
 class wxVariant;
 class Validator;
 
-class AUDACITY_DLL_API CommandSignature
+class SNEEDACITY_DLL_API CommandSignature
 {
 private:
    ParamValueMap mDefaults;

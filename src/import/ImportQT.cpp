@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportQT.cpp
 
@@ -13,11 +13,11 @@
 
 **********************************************************************/
 
-#include "../Audacity.h" // for USE_* macros
+#include "../Sneedacity.h" // for USE_* macros
 
 #include "Import.h"
 #include "ImportPlugin.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 #define DESC XO("QuickTime files")
@@ -41,7 +41,7 @@ static const auto exts = {
 // Bug 2068: misleading error message about QuickTime
 // In 64 bit versions we cannot compile in (obsolete) QuickTime
 // So don't register the QuickTime extensions, so ensuring we never report
-// "This version of Audacity was not compiled with QuickTime files support"  
+// "This version of Sneedacity was not compiled with QuickTime files support"  
 // When attempting to import MP4 files.
 /*
 static Importer::RegisteredUnusableImportPlugin registered{
@@ -123,7 +123,7 @@ class QTImportPlugin final : public ImportPlugin
 
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
-      const wxString & Filename, AudacityProject*) override;
+      const wxString & Filename, SneedacityProject*) override;
 
  private:
    bool mInitialized;
@@ -180,7 +180,7 @@ TranslatableString QTImportPlugin::GetPluginFormatDescription()
 }
 
 std::unique_ptr<ImportFileHandle> QTImportPlugin::Open(
-   const wxString & Filename, AudacityProject*)
+   const wxString & Filename, SneedacityProject*)
 {
    OSErr err;
    FSRef inRef;
@@ -265,7 +265,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
    {
       err = MovieAudioExtractionBegin(mMovie, 0, &maer);
       if (err != noErr) {
-         AudacityMessageBox( XO("Unable to start QuickTime extraction") );
+         SneedacityMessageBox( XO("Unable to start QuickTime extraction") );
          break;
       }
    
@@ -275,7 +275,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             sizeof(quality),
                                             &quality);
       if (err != noErr) {
-         AudacityMessageBox( XO("Unable to set QuickTime render quality") );
+         SneedacityMessageBox( XO("Unable to set QuickTime render quality") );
          break;
       }
    
@@ -285,7 +285,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             sizeof(discrete),
                                             &discrete);
       if (err != noErr) {
-         AudacityMessageBox( XO(
+         SneedacityMessageBox( XO(
 "Unable to set QuickTime discrete channels property") );
          break;
       }
@@ -297,7 +297,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             &maxSampleSize,
                                             NULL);
       if (err != noErr) {
-         AudacityMessageBox( XO(
+         SneedacityMessageBox( XO(
 "Unable to get QuickTime sample size property") );
          break;
       }
@@ -309,7 +309,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                             &desc,
                                             NULL);
       if (err != noErr) {
-         AudacityMessageBox( XO("Unable to retrieve stream description") );
+         SneedacityMessageBox( XO("Unable to retrieve stream description") );
          break;
       }
    
@@ -368,7 +368,7 @@ ProgressResult QTImportFileHandle::Import(TrackFactory *trackFactory,
                                               abl.get(),
                                               &flags);
          if (err != noErr) {
-            AudacityMessageBox( XO("Unable to get fill buffer") );
+            SneedacityMessageBox( XO("Unable to get fill buffer") );
             break;
          }
    

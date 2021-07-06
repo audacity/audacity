@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 LabelTrackView.cpp
 
@@ -177,7 +177,7 @@ std::shared_ptr<const LabelTrack> LabelTrackView::FindLabelTrack() const
 
 std::vector<UIHandlePtr> LabelTrackView::DetailedHitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *WXUNUSED(pProject), int, bool)
+ const SneedacityProject *WXUNUSED(pProject), int, bool)
 {
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
@@ -692,7 +692,7 @@ void getXPos( const LabelStruct &ls, wxDC & dc, int * xPos1, int cursorPos)
 }
 }
 
-bool LabelTrackView::CalcCursorX( AudacityProject &project, int * x) const
+bool LabelTrackView::CalcCursorX( SneedacityProject &project, int * x) const
 {
    if ( HasSelection( project ) ) {
       wxMemoryDC dc;
@@ -997,7 +997,7 @@ void LabelTrackView::calculateFontHeight(wxDC & dc)
    mFontHeight += CursorExtraHeight - (charLeading+charDescent);
 }
 
-bool LabelTrackView::IsTextSelected( AudacityProject &project ) const
+bool LabelTrackView::IsTextSelected( SneedacityProject &project ) const
 {
    if ( !HasSelection( project ) )
       return false;
@@ -1008,7 +1008,7 @@ bool LabelTrackView::IsTextSelected( AudacityProject &project ) const
 
 /// Cut the selected text in the text box
 ///  @return true if text is selected in text box, false otherwise
-bool LabelTrackView::CutSelectedText( AudacityProject &project )
+bool LabelTrackView::CutSelectedText( SneedacityProject &project )
 {
    if (!IsTextSelected( project ))
       return false;
@@ -1061,7 +1061,7 @@ bool LabelTrackView::CutSelectedText( AudacityProject &project )
 
 /// Copy the selected text in the text box
 ///  @return true if text is selected in text box, false otherwise
-bool LabelTrackView::CopySelectedText( AudacityProject &project )
+bool LabelTrackView::CopySelectedText( SneedacityProject &project )
 {
    if ( !HasSelection( project ) )
       return false;
@@ -1096,7 +1096,7 @@ bool LabelTrackView::CopySelectedText( AudacityProject &project )
 /// Paste the text on the clipboard to text box
 ///  @return true if mouse is clicked in text box, false otherwise
 bool LabelTrackView::PasteSelectedText(
-   AudacityProject &project, double sel0, double sel1 )
+   SneedacityProject &project, double sel0, double sel1 )
 {
    const auto pTrack = FindLabelTrack();
 
@@ -1153,7 +1153,7 @@ bool LabelTrackView::IsTextClipSupported()
 }
 
 
-int LabelTrackView::GetSelectedIndex( AudacityProject &project ) const
+int LabelTrackView::GetSelectedIndex( SneedacityProject &project ) const
 {
    // may make delayed update of mutable mSelIndex after track selection change
    auto track = FindLabelTrack();
@@ -1288,7 +1288,7 @@ static bool IsGoodLabelEditKey(const wxKeyEvent & evt)
 
 // Check for keys that we will process
 bool LabelTrackView::DoCaptureKey(
-   AudacityProject &project, wxKeyEvent & event )
+   SneedacityProject &project, wxKeyEvent & event )
 {
    // Check for modifiers and only allow shift
    int mods = event.GetModifiers();
@@ -1350,7 +1350,7 @@ bool LabelTrackView::DoCaptureKey(
 }
 
 unsigned LabelTrackView::CaptureKey(
-   wxKeyEvent & event, ViewInfo &, wxWindow *, AudacityProject *project )
+   wxKeyEvent & event, ViewInfo &, wxWindow *, SneedacityProject *project )
 {
    event.Skip(!DoCaptureKey( *project, event ));
    return RefreshCode::RefreshNone;
@@ -1358,7 +1358,7 @@ unsigned LabelTrackView::CaptureKey(
 
 unsigned LabelTrackView::KeyDown(
    wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *WXUNUSED(pParent),
-   AudacityProject *project)
+   SneedacityProject *project)
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
@@ -1402,7 +1402,7 @@ unsigned LabelTrackView::KeyDown(
 }
 
 unsigned LabelTrackView::Char(
-   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *, AudacityProject *project)
+   wxKeyEvent & event, ViewInfo &viewInfo, wxWindow *, SneedacityProject *project)
 {
    double bkpSel0 = viewInfo.selectedRegion.t0(),
       bkpSel1 = viewInfo.selectedRegion.t1();
@@ -1442,7 +1442,7 @@ unsigned LabelTrackView::Char(
 
 /// KeyEvent is called for every keypress when over the label track.
 bool LabelTrackView::DoKeyDown(
-   AudacityProject &project, NotifyingSelectedRegion &newSel, wxKeyEvent & event)
+   SneedacityProject &project, NotifyingSelectedRegion &newSel, wxKeyEvent & event)
 {
    // Only track true changes to the label
    bool updated = false;
@@ -1697,7 +1697,7 @@ bool LabelTrackView::DoKeyDown(
 /// OnChar is called for incoming characters -- that's any keypress not handled
 /// by OnKeyDown.
 bool LabelTrackView::DoChar(
-   AudacityProject &project, NotifyingSelectedRegion &WXUNUSED(newSel),
+   SneedacityProject &project, NotifyingSelectedRegion &WXUNUSED(newSel),
    wxKeyEvent & event)
 {
    // Check for modifiers and only allow shift.
@@ -1801,7 +1801,7 @@ enum
    OnEditSelectedLabelID,
 };
 
-void LabelTrackView::ShowContextMenu( AudacityProject &project )
+void LabelTrackView::ShowContextMenu( SneedacityProject &project )
 {
    wxWindow *parent = wxWindow::FindFocus();
 
@@ -1863,7 +1863,7 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
 }
 
 void LabelTrackView::OnContextMenu(
-   AudacityProject &project, wxCommandEvent & evt )
+   SneedacityProject &project, wxCommandEvent & evt )
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
@@ -1942,7 +1942,7 @@ void LabelTrackView::RemoveSelectedText()
    mInitialCursorPos = mCurrentCursorPos = left.length();
 }
 
-bool LabelTrackView::HasSelection( AudacityProject &project ) const
+bool LabelTrackView::HasSelection( SneedacityProject &project ) const
 {
    const auto selIndex = GetSelectedIndex( project );
    return (selIndex >= 0 &&
@@ -2177,7 +2177,7 @@ void LabelTrackView::CreateCustomGlyphs()
 #include "../../../LabelDialog.h"
 
 void LabelTrackView::DoEditLabels
-(AudacityProject &project, LabelTrack *lt, int index)
+(SneedacityProject &project, LabelTrack *lt, int index)
 {
    const auto &settings = ProjectSettings::Get( project );
    auto format = settings.GetSelectionFormat(),
@@ -2202,7 +2202,7 @@ void LabelTrackView::DoEditLabels
 }
 
 int LabelTrackView::DialogForLabelName(
-   AudacityProject &project,
+   SneedacityProject &project,
    const SelectedRegion& region, const wxString& initialValue, wxString& value)
 {
    auto &trackFocus = TrackFocus::Get( project );
@@ -2219,14 +2219,14 @@ int LabelTrackView::DialogForLabelName(
    position.y += 2;  // just below the bottom of the track
    position = trackPanel.ClientToScreen(position);
    auto &window = GetProjectFrame( project );
-   AudacityTextEntryDialog dialog{ &window,
+   SneedacityTextEntryDialog dialog{ &window,
       XO("Name:"),
       XO("New label"),
       initialValue,
       wxOK | wxCANCEL,
       position };
 
-   // keep the dialog within Audacity's window, so that the dialog is always fully visible
+   // keep the dialog within Sneedacity's window, so that the dialog is always fully visible
    wxRect dialogScreenRect = dialog.GetScreenRect();
    wxRect projScreenRect = window.GetScreenRect();
    wxPoint max = projScreenRect.GetBottomRight() + wxPoint{ -dialogScreenRect.width, -dialogScreenRect.height };

@@ -5,8 +5,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-06-16 02:35+0900\n"
 "Last-Translator: Phroneris <phroneris@gmail.com>\n"
@@ -337,7 +337,7 @@ msgstr "Nyquist スクリプト (*.ny)|*.ny|Lisp スクリプト (*.lsp)|*.lsp|�
 msgid "Script was not saved."
 msgstr "Nyquist スクリプトは保存されていません。"
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -735,8 +735,8 @@ msgid "Credits"
 msgstr "クレジット"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr "DarkAudacity カスタム"
+msgid "DarkSneedacity Customisation"
+msgstr "DarkSneedacity カスタム"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -814,7 +814,7 @@ msgstr "有効です"
 msgid "Disabled"
 msgstr "無効"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
 msgstr "ビルド"
@@ -850,7 +850,7 @@ msgstr "ビルドの種類:"
 msgid "Compiler:"
 msgstr "コンパイラ:"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 msgid "Installation Prefix:"
 msgstr "インストールプレフィックス:"
@@ -859,7 +859,7 @@ msgstr "インストールプレフィックス:"
 msgid "Settings folder:"
 msgstr "設定フォルダー:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "コアライブラリ"
@@ -1072,16 +1072,16 @@ msgstr ""
 msgid "Error"
 msgstr "エラー"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "%s を削除できませんでした"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "失敗！"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1092,12 +1092,12 @@ msgstr ""
 "この質問は、インストール時に環境設定のリセットが選択されたために、\n"
 "一度だけ表示される質問です。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "Sneedacity の環境設定をリセット"
 
 # ja: 文字列だけ見ると「（既に）削除されています」かと思っちゃうが、これは見つからなかったファイルについて「（今）削除しました」という意味。
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1108,45 +1108,45 @@ msgstr ""
 "\n"
 "最近のファイル一覧から削除しました。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr "SQLite ライブラリの初期化に失敗しました。  続行不能です。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "ブロックサイズは 256～100000000 でなければなりません\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity の起動中です..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "新規(&N)"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "開く(&O)..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "最近開いたファイル(&R)..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "Sneedacity について(&A)..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "環境設定(&P)..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "ファイル(&F)"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
 "Sneedacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
@@ -1156,7 +1156,7 @@ msgstr ""
 "自動クリーンアッププログラムに一時ファイルを削除されないような場所が必要となります。\n"
 "環境設定ダイアログで適切なディレクトリ名を入力してください。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1164,11 +1164,11 @@ msgstr ""
 "Sneedacity は一時ファイルを保存する場所を見つけられませんでした。\n"
 "環境設定ダイアログで適切なディレクトリ名を入力してください。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is now going to exit. Please launch Sneedacity again to use the new temporary directory."
 msgstr "Sneedacity を終了させます。新しい一時ディレクトリを利用するには、Sneedacity を再起動してください。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -1178,7 +1178,7 @@ msgstr ""
 "システムのクラッシュの危険性があります。\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1186,19 +1186,19 @@ msgstr ""
 "Sneedacity は一時ファイルのあるフォルダーをロックできませんでした。\n"
 "このフォルダは別に起動している Sneedacity が使用中のようです。\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "それでも Sneedacity を開始しますか？"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "一時フォルダーのロックに失敗"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "動作中の他の Sneedacity があることが、システムによって検知されました。\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -1206,11 +1206,11 @@ msgstr ""
 "複数のプロジェクトを同時に開いて作業するには、今動作している Sneedacity で\n"
 "[新規] または [開く] コマンドを実行してください。\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity は既に起動しています"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1222,11 +1222,11 @@ msgstr ""
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Startup Failure"
 msgstr "Sneedacity 起動失敗"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1238,7 +1238,7 @@ msgstr ""
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1250,7 +1250,7 @@ msgstr ""
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1262,7 +1262,7 @@ msgstr ""
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1274,38 +1274,38 @@ msgstr ""
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr "起動に際して回復不能なエラーが発生しました"
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "最大ディスクブロックをバイトで設定"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "this help message"
 msgstr "このヘルプメッセージ"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "run self diagnostics"
 msgstr "自己診断の実行"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "display Sneedacity version"
 msgstr "Sneedacity のバージョン表示"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "audio or project file name"
 msgstr "音声またはプロジェクトファイル名"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
 "associated with Sneedacity. \n"
@@ -1317,20 +1317,20 @@ msgstr ""
 "\n"
 "関連付けを行い、ダブルクリックで開けるようにしますか？"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "Sneedacity プロジェクトファイル"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr "メッセージ"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "Sneedacity Configuration Error"
 msgstr "Sneedacity 設定エラー"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1356,47 +1356,47 @@ msgstr ""
 "あるいは、[Sneedacity を終了] をクリックした場合、現在のプロジェクトは未保存状態に保たれ、\n"
 "次に開いた時に回復の対象となります。"
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "ヘルプ"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Sneedacity"
 msgstr "Sneedacity を終了(&Q)"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr "再試行(&R)"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
 msgstr "Sneedacity ログ"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "保存(&S)..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "消去(&E)"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "閉じる(&C)"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "log.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr "ログ保存先:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "ログをファイルに保存できませんでした: %s"
@@ -3824,7 +3824,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "ドロップアウトの検出を無効にする"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -5788,12 +5788,12 @@ msgstr "カットラインを延長するのに十分な余裕がありません
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "この操作は %s の取り込みが完了するまでは行うことができません。"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Sneedacity"
 msgstr "Sneedacity"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5804,13 +5804,13 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "「%s」を適用中..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5819,7 +5819,7 @@ msgstr "「%s」を適用中..."
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr "失敗"
 
@@ -7387,7 +7387,7 @@ msgstr "WCAG 2.0 Success Criteria 1.4.7: 不合格"
 msgid "Data gathered"
 msgstr "データ収集日時"
 
-# ja: 2番目の "%s" は、Audacityの言語設定が日本語だと「4月」、英語だと「April」のようになる
+# ja: 2番目の "%s" は、Sneedacityの言語設定が日本語だと「4月」、英語だと「April」のようになる
 #. i18n-hint: day of month, month, year, hour, minute, second
 #: src/effects/Contrast.cpp
 #, c-format

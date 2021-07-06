@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Effect.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT__
-#define __AUDACITY_EFFECT__
+#ifndef __SNEEDACITY_EFFECT__
+#define __SNEEDACITY_EFFECT__
 
 
 
@@ -25,8 +25,8 @@ class wxChoice;
 class wxListBox;
 class wxWindow;
 
-#include "audacity/ConfigInterface.h"
-#include "audacity/EffectInterface.h"
+#include "sneedacity/ConfigInterface.h"
+#include "sneedacity/EffectInterface.h"
 
 #include "../SelectedRegion.h"
 
@@ -36,11 +36,11 @@ class wxWindow;
 
 class wxArrayString;
 class ShuttleGui;
-class AudacityCommand;
+class SneedacityCommand;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
-class AudacityProject;
+class SneedacityProject;
 class LabelTrack;
 class NotifyingSelectedRegion;
 class ProgressDialog;
@@ -52,7 +52,7 @@ class WaveTrackFactory;
 class WaveTrack;
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
- Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+ Sneedacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
 #define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
@@ -63,7 +63,7 @@ class WaveTrack;
 // TODO:  Much more cleanup of old methods and variables is needed, but
 // TODO:  can't be done until after all effects are using the NEW API.
 
-class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
+class SNEEDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                 public EffectClientInterface,
                                 public EffectUIClientInterface,
                                 public EffectHostInterface
@@ -236,7 +236,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual bool HasCurrentSettings();
    virtual bool HasFactoryDefaults();
 
-   // Name of page in the Audacity alpha manual
+   // Name of page in the Sneedacity alpha manual
    virtual ManualPageID ManualPage();
    // Fully qualified local help file name
    virtual FilePath HelpPage();
@@ -253,7 +253,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // Returns true on success.  Will only operate on tracks that
    // have the "selected" flag set to true, which is consistent with
-   // Audacity's standard UI.
+   // Sneedacity's standard UI.
    // Create a user interface only if the supplied function is not null.
    /* not virtual */ bool DoEffect( double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
@@ -375,7 +375,7 @@ protected:
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.
-   class AUDACITY_DLL_API AddedAnalysisTrack {
+   class SNEEDACITY_DLL_API AddedAnalysisTrack {
       friend Effect;
       AddedAnalysisTrack(Effect *pEffect, const wxString &name);
       AddedAnalysisTrack(const AddedAnalysisTrack&) PROHIBITED;
@@ -405,7 +405,7 @@ protected:
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to modify label tracks.
-   class AUDACITY_DLL_API ModifiedAnalysisTrack {
+   class SNEEDACITY_DLL_API ModifiedAnalysisTrack {
       friend Effect;
       ModifiedAnalysisTrack
          (Effect *pEffect, const LabelTrack *pOrigTrack, const wxString &name);
@@ -459,7 +459,7 @@ protected:
    wxWeakRef<NotifyingSelectedRegion> mpSelectedRegion{};
    WaveTrackFactory   *mFactory;
    const TrackList *inputTracks() const { return mTracks; }
-   const AudacityProject *FindProject() const;
+   const SneedacityProject *FindProject() const;
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;

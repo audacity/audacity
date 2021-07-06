@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ShuttlePrefs.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SHUTTLE_PREFS__
-#define __AUDACITY_SHUTTLE_PREFS__
+#ifndef __SNEEDACITY_SHUTTLE_PREFS__
+#define __SNEEDACITY_SHUTTLE_PREFS__
 
 #include "Shuttle.h"
 

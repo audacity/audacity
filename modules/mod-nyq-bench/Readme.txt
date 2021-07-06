@@ -1,6 +1,6 @@
 THIS MODULE IS OBSOLETE.
 
-As of Audacity 2.3.2, this module is no longer maintained.
+As of Sneedacity 2.3.2, this module is no longer maintained.
 The instructions below are very old and probably incorrect.
 For more information see:
 https://wiki.audacityteam.org/wiki/Proposal_Nyquist_IDE
@@ -14,6 +14,6 @@ Two things first...
 2)  The NyqBench effect is just my (Leland Lucius) hairbrained idea and it
     may not produce desired results.
 
-For Mac and Linux user, you must change the AUDACITY_DIR variable
-at the top of your Makefile to point to the base of the Audacity
+For Mac and Linux user, you must change the SNEEDACITY_DIR variable
+at the top of your Makefile to point to the base of the Sneedacity
 source directory.

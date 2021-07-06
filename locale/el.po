@@ -5,8 +5,8 @@
 # Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2014-2020.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-06-12 13:36+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Script was not saved."
 msgstr "Η δέσμη ενεργειών δεν αποθηκεύτηκε."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -744,8 +744,8 @@ msgid "Credits"
 msgstr "Εύσημα"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr "Προσαρμογή DarkAudacity"
+msgid "DarkSneedacity Customisation"
+msgstr "Προσαρμογή DarkSneedacity"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -823,7 +823,7 @@ msgstr "Ενεργοποιημένο"
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
 msgstr "Η δόμηση"
@@ -859,7 +859,7 @@ msgstr "Τύπος δόμησης:"
 msgid "Compiler:"
 msgstr "Μεταγλωττιστής:"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 msgid "Installation Prefix:"
 msgstr "Πρόθεμα εγκατάστασης:"
@@ -868,7 +868,7 @@ msgstr "Πρόθεμα εγκατάστασης:"
 msgid "Settings folder:"
 msgstr "Φάκελος ρυθμίσεων:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "Βιβλιοθήκες πυρήνα"
@@ -1076,16 +1076,16 @@ msgstr ""
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "Απέτυχε η απομάκρυνση του %s"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "Απέτυχε!"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1097,11 +1097,11 @@ msgstr ""
 "Αυτή είναι μια ερώτηση μιας φοράς, μετά από μια 'εγκατάσταση' όπου ζητήσατε "
 "να έχετε νέα ρύθμιση προτιμήσεων."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "Επαναφορά στις αρχικές προτιμήσεις του Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1112,47 +1112,47 @@ msgstr ""
 "\n"
 "Έχει αφαιρεθεί από τον κατάλογο των πρόσφατων αρχείων."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 "Η βιβλιοθήκη του SQLite απέτυχε να ξεκινήσει. Το Sneedacity δεν μπορεί να "
 "συνεχίσει."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Το μέγεθος του μπλοκ πρέπει να είναι μεταξύ 256 έως 100000000\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Εκκίνηση του Sneedacity ..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Νέο έργο"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Άνοιγμα..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "Άνοιγμα &προσφάτου..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "&Σχετικά με το Sneedacity..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&Προτιμήσεις..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Αρχείο"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
 "Sneedacity needs a place where automatic cleanup programs won't delete the "
@@ -1165,7 +1165,7 @@ msgstr ""
 "θα διαγράψουν τα προσωρινά αρχεία.\n"
 "Παρακαλούμε εισάγετε έναν κατάλληλο κατάλογο στον διάλογο προτιμήσεων."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1174,7 +1174,7 @@ msgstr ""
 "αρχεία.\n"
 "Παρακαλώ προσθέστε μία κατάλληλη τοποθεσία στις προτιμήσεις."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
@@ -1182,7 +1182,7 @@ msgstr ""
 "Το Sneedacity τώρα θα κλείσει. Παρακαλούμε επανεκκινήστε το Sneedacity για να "
 "χρησιμοποιήσετε τον νέο προσωρινό κατάλογο."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -1192,7 +1192,7 @@ msgstr ""
 "απόλει δεδομένων ή την κατάρρευση του συστήματος.\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1200,21 +1200,21 @@ msgstr ""
 "Το Sneedacity δεν μπόρεσε να κλειδώσει τον κατάλογο προσωρινών αρχείων.\n"
 "Ο φάκελος μπορεί να χρησιμοποιείται από άλλο αντίγραφο του Sneedacity.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "Θέλετε ακόμα να ξεκινήσετε το Sneedacity;"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "Σφάλμα κλειδώματος του προσωρινού φακέλου"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr ""
 "Το σύστημα ανέγνωσε ότι ένα άλλο αντίγραφο του Sneedacity βρρίσκεται σε "
 "λειτουργία.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -1222,11 +1222,11 @@ msgstr ""
 "Χρησιμοποιήστε τις εντολές Άνοιγμα ή Νέο από το Sneedacity που ήδη τρέχει\n"
 "για να ανοίξετε πολλά έργα συγχρόνως.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Το Sneedacity είναι είδη σε λειτουργία"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1238,11 +1238,11 @@ msgstr ""
 "Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
 "και μπορεί να χρειαστεί επανεκκίνηση."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Startup Failure"
 msgstr "Αποτυχία εκκίνησης Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1254,7 +1254,7 @@ msgstr ""
 "Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
 "και μπορεί να χρειαστεί επανεκκίνηση."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1266,7 +1266,7 @@ msgstr ""
 "Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
 "και μπορεί να απαιτηθεί επανεκκίνηση."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1278,7 +1278,7 @@ msgstr ""
 "Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
 "και μπορεί να χρειαστεί επανεκκίνηση."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1290,38 +1290,38 @@ msgstr ""
 "Αυτό μπορεί να οφείλεται σε έλλειψη πόρων\n"
 "και μπορεί να απαιτηθεί επανεκκίνηση."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr "Κατά την εκκίνηση συνέβη ανεπανόρθωτο σφάλμα"
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "ορισμός μέγιστου μεγέθους μπλοκ δίσκου σε ψηφιολέξεις (bytes)"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "this help message"
 msgstr "μήνυμα βοήθειας"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "run self diagnostics"
 msgstr "εκτέλεση αυτοδιαγνωστικών"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "display Sneedacity version"
 msgstr "εμφάνιση της έκδοσης του Sneedacity"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "audio or project file name"
 msgstr "όνομα αρχείου ήχου ή έργου"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
 "associated with Sneedacity. \n"
@@ -1333,20 +1333,20 @@ msgstr ""
 "\n"
 "Να συσχετισθούν, έτσι ώστε να ανοίγουν διπλοπατώντας;"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "Αρχεία έργου Sneedacity"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr "Μήνυμα"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "Sneedacity Configuration Error"
 msgstr "Σφάλμα διαμόρφωσης του Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1376,47 +1376,47 @@ msgstr ""
 "Εάν επιλέξετε \"Έξοδος από το Sneedacity\", το έργο σας μπορεί να αφεθεί σε "
 "αναποθήκευτη κατάσταση που θα ανακτηθεί την επόμενη φορά που θα το ανοίξετε."
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Sneedacity"
 msgstr "Έ&ξοδος από το Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr "Ε&πανάληψη"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
 msgstr "Ημερολόγιο Sneedacity"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "Απο&θήκευση..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "Καθ&αρισμός"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Κλείσιμο ανοιχτής εργασίας"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "log.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr "Αποθήκευση ημερολογίου στο:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "Αδύνατη η αποθήκευση ημερολογίου στο αρχείο: %s"
@@ -3263,7 +3263,7 @@ msgid ""
 "Please inform the Sneedacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Εσωτερικό σφάλμα στο %s του %s γραμμή %d.\n"
-"Παρακαλούμε, ειδοποιήστε την ομάδα Sneedacity στο https://forum.audacityteam."
+"Παρακαλούμε, ειδοποιήστε την ομάδα Sneedacity στο https://forum.sneedacityteam."
 "org/."
 
 #: src/InconsistencyException.cpp
@@ -3273,7 +3273,7 @@ msgid ""
 "Please inform the Sneedacity team at https://forum.audacityteam.org/."
 msgstr ""
 "Εσωτερικό σφάλμα στη %s γραμμή %d.\n"
-"Παρακαλούμε, ειδοποιήστε την ομάδα Sneedacity στο https://forum.audacityteam."
+"Παρακαλούμε, ειδοποιήστε την ομάδα Sneedacity στο https://forum.sneedacityteam."
 "org/."
 
 #: src/InconsistencyException.h
@@ -3976,7 +3976,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Απενεργοποίηση ανίχνευσης διακοπών"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -6017,12 +6017,12 @@ msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 "Αυτή η λειτουργία δεν μπορεί να γίνει μέχρι να ολοκληρωθεί η εισαγωγή του %s."
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Sneedacity"
 msgstr "Sneedacity"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -6034,13 +6034,13 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "Εφαρμογή του %s..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -6049,7 +6049,7 @@ msgstr "Εφαρμογή του %s..."
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr "ΑΠΟΤΥΧΙΑ"
 
@@ -22299,29 +22299,29 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgid "C&hain (Double-Click or press SPACE to edit)"
 #~ msgstr "Αλ&υσίδα (διπλό-πάτημα ή SPACE για επεξεργασία)"
 
-#~ msgid "<br><br>DarkAudacity is based on Sneedacity:"
-#~ msgstr "<br><br>Το DarkAudacity βασίζεται στο Sneedacity:"
+#~ msgid "<br><br>DarkSneedacity is based on Sneedacity:"
+#~ msgstr "<br><br>Το DarkSneedacity βασίζεται στο Sneedacity:"
 
 #~ msgid ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
+#~ " [[http://www.darksneedacity.com|www.darksneedacity.com]] - for differences "
 #~ "between them."
 #~ msgstr ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - για διαφορές "
+#~ " [[http://www.darksneedacity.com|www.darksneedacity.com]] - για διαφορές "
 #~ "μεταξύ τους."
 
 #~ msgid ""
 #~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-#~ "help using DarkAudacity."
+#~ "help using DarkSneedacity."
 #~ msgstr ""
 #~ " στείλτε στο [[mailto:james@audacityteam.org|james@audacityteam.org]] - "
-#~ "για βοήθεια χρήσης του DarkAudacity."
+#~ "για βοήθεια χρήσης του DarkSneedacity."
 
 #~ msgid ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
-#~ "started with DarkAudacity."
+#~ " [[http://www.darksneedacity.com/video.html|Tutorials]] - for getting "
+#~ "started with DarkSneedacity."
 #~ msgstr ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - για να ξεκινήσετε "
-#~ "με το DarkAudacity."
+#~ " [[http://www.darksneedacity.com/video.html|Tutorials]] - για να ξεκινήσετε "
+#~ "με το DarkSneedacity."
 
 #~ msgid "Insert &After"
 #~ msgstr "Εισαγωγή &μετά"
@@ -22852,7 +22852,7 @@ msgstr "Σφάλμα. Απαιτείται ~%Stereo κομμάτι."
 #~ msgstr "Flanger"
 
 #~ msgid ""
-#~ "Sneedacity website: [[http://www.audacityteam.org/|http://www.audacityteam."
+#~ "Sneedacity website: [[http://www.audacityteam.org/|http://www.sneedacityteam."
 #~ "org/]]"
 #~ msgstr ""
 #~ "Ο ιστότοπος του Sneedacity: [[http://www.audacityteam.org/|http://www."

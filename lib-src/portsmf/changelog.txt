@@ -1,6 +1,6 @@
 Change Log for portsmf
 
-09-Oct-2010 RBD Many more changes to fix bugs, support Audacity, and general
+09-Oct-2010 RBD Many more changes to fix bugs, support Sneedacity, and general
                 cleanup.
 
 03-Jul-2008 RBD Extensive modifications: most c-strings are now c++ strings to

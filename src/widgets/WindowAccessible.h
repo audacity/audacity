@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WindowAccessible
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WINDOW_ACCESSIBLE__
-#define __AUDACITY_WINDOW_ACCESSIBLE__
+#ifndef __SNEEDACITY_WINDOW_ACCESSIBLE__
+#define __SNEEDACITY_WINDOW_ACCESSIBLE__
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -18,7 +18,7 @@
 #include <wx/access.h> // to inherit
 #include <Internat.h> // for TranslatableString
 
-class AUDACITY_DLL_API WindowAccessible: public wxAccessible
+class SNEEDACITY_DLL_API WindowAccessible: public wxAccessible
 {
 public:
    WindowAccessible(wxWindow* win);
@@ -28,7 +28,7 @@ public:
 
 };
 
-class AUDACITY_DLL_API SliderAx final : public WindowAccessible
+class SNEEDACITY_DLL_API SliderAx final : public WindowAccessible
 {
 public:
    SliderAx(wxWindow * window, const TranslatableString &fmt);
@@ -99,4 +99,4 @@ private:
 };
 
 #endif      // wxUSE_ACCESSIBILITY
-#endif      // __AUDACITY_WINDOW_ACCESSIBLE__
+#endif      // __SNEEDACITY_WINDOW_ACCESSIBLE__

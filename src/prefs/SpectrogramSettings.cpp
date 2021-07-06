@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SpectrogramSettings.cpp
 
@@ -26,7 +26,7 @@ Paul Licameli
 
 #include <cmath>
 
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 SpectrogramSettings::Globals::Globals()
 {
@@ -214,7 +214,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 {
    if (!quiet &&
       maxFreq < 100) {
-      AudacityMessageBox( XO("Maximum frequency must be 100 Hz or above") );
+      SneedacityMessageBox( XO("Maximum frequency must be 100 Hz or above") );
       return false;
    }
    else
@@ -222,7 +222,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       minFreq < 0) {
-      AudacityMessageBox( XO("Minimum frequency must be at least 0 Hz") );
+      SneedacityMessageBox( XO("Minimum frequency must be at least 0 Hz") );
       return false;
    }
    else
@@ -230,7 +230,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       maxFreq <= minFreq) {
-      AudacityMessageBox( XO(
+      SneedacityMessageBox( XO(
 "Minimum frequency must be less than maximum frequency") );
       return false;
    }
@@ -239,7 +239,7 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       range <= 0) {
-      AudacityMessageBox( XO("The range must be at least 1 dB") );
+      SneedacityMessageBox( XO("The range must be at least 1 dB") );
       return false;
    }
    else
@@ -247,12 +247,12 @@ bool SpectrogramSettings::Validate(bool quiet)
 
    if (!quiet &&
       frequencyGain < 0) {
-      AudacityMessageBox( XO("The frequency gain cannot be negative") );
+      SneedacityMessageBox( XO("The frequency gain cannot be negative") );
       return false;
    }
    else if (!quiet &&
       frequencyGain > 60) {
-      AudacityMessageBox( XO(
+      SneedacityMessageBox( XO(
 "The frequency gain must be no more than 60 dB/dec") );
       return false;
    }

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Internat.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_INTERNAT__
-#define __AUDACITY_INTERNAT__
+#ifndef __SNEEDACITY_INTERNAT__
+#define __SNEEDACITY_INTERNAT__
 
 #include <vector>
 #include <wx/longlong.h>

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   NumericTextCtrl.h
 
@@ -12,13 +12,13 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIME_TEXT_CTRL__
-#define __AUDACITY_TIME_TEXT_CTRL__
+#ifndef __SNEEDACITY_TIME_TEXT_CTRL__
+#define __SNEEDACITY_TIME_TEXT_CTRL__
 
 
 
 #include <memory>
-#include "../../include/audacity/ComponentInterface.h"
+#include "../../include/sneedacity/ComponentInterface.h"
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
@@ -29,9 +29,9 @@
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and
 // update their formats to agree.
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TIMETEXTCTRL_UPDATED, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1);
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
+DECLARE_EXPORTED_EVENT_TYPE(SNEEDACITY_DLL_API, EVT_TIMETEXTCTRL_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(SNEEDACITY_DLL_API, EVT_FREQUENCYTEXTCTRL_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(SNEEDACITY_DLL_API, EVT_BANDWIDTHTEXTCTRL_UPDATED,
                             -1);
 
 /** \brief struct to hold a formatting control string and its user facing name
@@ -43,7 +43,7 @@ class NumericField;
 
 class DigitInfo;
 
-class AUDACITY_DLL_API NumericConverter /* not final */
+class SNEEDACITY_DLL_API NumericConverter /* not final */
 {
 public:
 
@@ -166,7 +166,7 @@ protected:
    int mDefaultNdx;
 };
 
-class AUDACITY_DLL_API NumericTextCtrl final
+class SNEEDACITY_DLL_API NumericTextCtrl final
    : public wxControl, public NumericConverter
 {
    friend class NumericTextCtrlAx;
@@ -299,4 +299,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_TIME_TEXT_CTRL__
+#endif // __SNEEDACITY_TIME_TEXT_CTRL__

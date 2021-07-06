@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   VSTControlMSW.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef AUDACITY_VSTCONTROLMSW_H
-#define AUDACITY_VSTCONTROLMSW_H
+#ifndef SNEEDACITY_VSTCONTROLMSW_H
+#define SNEEDACITY_VSTCONTROLMSW_H
 
 #include <Windows.h>
 

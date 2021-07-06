@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportMIDI.h
 
@@ -23,10 +23,10 @@ into a NoteTrack.
 
 #if defined(USE_MIDI)
 
-class AudacityProject;
+class SneedacityProject;
 class NoteTrack;
 
-bool DoImportMIDI( AudacityProject &project, const FilePath &fileName );
+bool DoImportMIDI( SneedacityProject &project, const FilePath &fileName );
 
 bool ImportMIDI(const FilePath &fName, NoteTrack * dest);
 

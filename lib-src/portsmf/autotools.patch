@@ -4,7 +4,7 @@ Index: configure.ac
 +++ configure.ac	(working copy)
 @@ -28,7 +28,7 @@
  AM_INIT_AUTOMAKE([-Wall foreign])
- dnl Audacity policy: don't enable automatic rebuild of configure et al if 
+ dnl Sneedacity policy: don't enable automatic rebuild of configure et al if 
  dnl sources change
 -AM_MAINTAINER_MODE([enabled])
 +AM_MAINTAINER_MODE

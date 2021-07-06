@@ -33,7 +33,7 @@ $control constrain (_ "Allow duration to change") choice ((_ "Yes")(_ "No")) 0
 
 ;; The default pitch shift effect is a simple resampling, 
 ;; so both pitch and tempo of the delayed audio will change 
-;; [as in Audacity's Change Speed effect].
+;; [as in Sneedacity's Change Speed effect].
 ;; LQ Pitch Shift (Low Quality) changes the pitch without 
 ;; changing the tempo, but the sound quality is not very good 
 ;; and tends to cause a short echo effect which can be quite 

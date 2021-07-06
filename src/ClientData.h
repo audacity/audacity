@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 @file ClientData.h
 @brief Utility ClientData::Site to register hooks into a host class that attach client data
@@ -9,8 +9,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_CLIENT_DATA__
-#define __AUDACITY_CLIENT_DATA__
+#ifndef __SNEEDACITY_CLIENT_DATA__
+#define __SNEEDACITY_CLIENT_DATA__
 
 #include "ClientDataHelpers.h"
 
@@ -24,7 +24,7 @@ Paul Licameli
 namespace ClientData {
 
 //! A convenient default parameter for class template @b Site
-struct AUDACITY_DLL_API Base
+struct SNEEDACITY_DLL_API Base
 {
    virtual ~Base() {}
 };
@@ -44,7 +44,7 @@ template< typename Object > using BarePtr = Object*;
  */
 template<
    template<typename> class Owner = UniquePtr
-> struct AUDACITY_DLL_API Cloneable
+> struct SNEEDACITY_DLL_API Cloneable
 {
    using Base = Cloneable;
    using PointerType = Owner< Base >;

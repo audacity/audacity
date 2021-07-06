@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformView.cpp
 
@@ -45,7 +45,7 @@ WaveformView::~WaveformView() = default;
 
 std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
    const TrackPanelMouseState &st,
-   const AudacityProject *pProject, int currentTool, bool bMultiTool )
+   const SneedacityProject *pProject, int currentTool, bool bMultiTool )
 {
    auto &view = *this;
    const auto pTrack =
@@ -1144,7 +1144,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 
    int newWaveColor = id - OnInstrument1ID;
 
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
 
    for (auto channel : TrackList::Channels(pTrack))
       channel->SetWaveColorIndex(newWaveColor);

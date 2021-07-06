@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODDecodeBlockFile.h
 
   Created by Michael Chinen (mchinen)
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -24,8 +24,8 @@ Also, see ODPCMAliasBlockFile for a similar file.
 
 
 
-#ifndef __AUDACITY_ODDecodeBlockFile__
-#define __AUDACITY_ODDecodeBlockFile__
+#ifndef __SNEEDACITY_ODDecodeBlockFile__
+#define __SNEEDACITY_ODDecodeBlockFile__
 
 #include "SimpleBlockFile.h"
 #include <wx/atomic.h> // member variable

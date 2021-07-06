@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudioUnitEffect.cpp
 
@@ -43,7 +43,7 @@
 #include <wx/tokenzr.h>
 
 #include "../../ShuttleGui.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "../../widgets/SneedacityMessageBox.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
 
@@ -54,7 +54,7 @@
 //
 // The advantages of XML format is less chance of failures occurring
 // when exporting.  But, it can take a bit more space per preset int
-// the Audacity settings file.
+// the Sneedacity settings file.
 //
 // Using binary for now.  Use kCFPropertyListXMLFormat_v1_0 if XML
 // format is desired.
@@ -223,13 +223,13 @@ public:
 // ============================================================================
 // Module registration entry point
 //
-// This is the symbol that Audacity looks for when the module is built as a
+// This is the symbol that Sneedacity looks for when the module is built as a
 // dynamic library.
 //
-// When the module is builtin to Audacity, we use the same function, but it is
+// When the module is builtin to Sneedacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_MODULE_ENTRY(SneedacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -272,7 +272,7 @@ ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
 
 VendorSymbol AudioUnitEffectsModule::GetVendor()
 {
-   return XO("The Audacity Team");
+   return XO("The Sneedacity Team");
 }
 
 wxString AudioUnitEffectsModule::GetVersion()
@@ -283,7 +283,7 @@ wxString AudioUnitEffectsModule::GetVersion()
 
 TranslatableString AudioUnitEffectsModule::GetDescription()
 {
-   return XO("Provides Audio Unit Effects support to Audacity");
+   return XO("Provides Audio Unit Effects support to Sneedacity");
 }
 
 // ============================================================================
@@ -550,7 +550,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText(XO(
 "As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
+"audio to Sneedacity. When not compensating for this delay, you will "
 "notice that small silences have been inserted into the audio. "
 "Enabling this option will provide that compensation, but it may "
 "not work for all Audio Unit effects."),
@@ -801,7 +801,7 @@ void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & evt)
 
       if (!msg.empty())
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Could not import \"%s\" preset\n\n%s").Format(name, msg),
             XO("Import Audio Unit Presets"),
             wxOK | wxCENTRE,
@@ -1883,7 +1883,7 @@ void AudioUnitEffect::ExportPresets()
    auto msg = Export(path);
    if (!msg.empty())
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
          XO("Export Audio Unit Presets"),
          wxOK | wxCENTRE,
@@ -1925,7 +1925,7 @@ void AudioUnitEffect::ImportPresets()
    auto msg = Import(path);
    if (!msg.empty())
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
          wxOK | wxCENTRE,

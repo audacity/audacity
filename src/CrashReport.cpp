@@ -20,7 +20,7 @@
 #endif
 
 #include "wxFileNameWrapper.h"
-#include "AudacityLogger.h"
+#include "SneedacityLogger.h"
 #include "AudioIOBase.h"
 #include "FileNames.h"
 #include "Internat.h"
@@ -53,7 +53,7 @@ void Generate(wxDebugReport::Context ctx)
       std::atomic_bool done = {false};
       auto thread = std::thread([&]
       {
-         wxFileNameWrapper fn{ FileNames::DataDir(), wxT("audacity.cfg") };
+         wxFileNameWrapper fn{ FileNames::DataDir(), wxT("sneedacity.cfg") };
          rpt.AddFile(fn.GetFullPath(), _TS("Sneedacity Configuration"));
          rpt.AddFile(FileNames::PluginRegistry(), wxT("Plugin Registry"));
          rpt.AddFile(FileNames::PluginSettings(), wxT("Plugin Settings"));
@@ -74,7 +74,7 @@ void Generate(wxDebugReport::Context ctx)
             rpt.AddText(wxT("project.txt"), projectFileIO.GenerateDoc(), wxT("Active project doc"));
          }
    
-         auto logger = AudacityLogger::Get();
+         auto logger = SneedacityLogger::Get();
          if (logger)
          {
             rpt.AddText(wxT("log.txt"), logger->GetLog(), _TS("Sneedacity Log"));
@@ -100,7 +100,7 @@ void Generate(wxDebugReport::Context ctx)
    
    if (ok && rpt.Process())
    {
-      AudacityTextEntryDialog dlg(nullptr,
+      SneedacityTextEntryDialog dlg(nullptr,
          XO("Report generated to:"),
          XO("Sneedacity Support Data"),
          rpt.GetCompressedFileName(),

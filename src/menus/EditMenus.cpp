@@ -23,7 +23,7 @@
 #include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 // private helper classes and functions
 namespace {
@@ -37,7 +37,7 @@ void FinishCopy
 
 // Handle text paste (into active label), if any. Return true if did paste.
 // (This was formerly the first part of overly-long OnPaste.)
-bool DoPasteText(AudacityProject &project)
+bool DoPasteText(SneedacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -72,7 +72,7 @@ bool DoPasteText(AudacityProject &project)
 // Return true if nothing selected, regardless of paste result.
 // If nothing was selected, create and paste into NEW tracks.
 // (This was formerly the second part of overly-long OnPaste.)
-bool DoPasteNothingSelected(AudacityProject &project)
+bool DoPasteNothingSelected(SneedacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -145,7 +145,7 @@ void OnUndo(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    if (!ProjectHistory::Get( project ).UndoAvailable()) {
-      AudacityMessageBox( XO("Nothing to undo") );
+      SneedacityMessageBox( XO("Nothing to undo") );
       return;
    }
 
@@ -176,7 +176,7 @@ void OnRedo(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    if (!ProjectHistory::Get( project ).RedoAvailable()) {
-      AudacityMessageBox( XO("Nothing to redo") );
+      SneedacityMessageBox( XO("Nothing to redo") );
       return;
    }
    // Can't redo whilst dragging
@@ -927,7 +927,7 @@ void OnPreferences(const CommandContext &context)
       //
       //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
       //
-      // This workaround should be removed when Audacity updates to wxWidgets
+      // This workaround should be removed when Sneedacity updates to wxWidgets
       // 3.x which has a fix.
       auto &window = GetProjectFrame( *p );
       wxRect r = window.GetRect();
@@ -945,11 +945,11 @@ void OnPasteOver(const CommandContext &context)
    auto &project = context.project;
    auto &selectedRegion = project.GetViewInfo().selectedRegion;
 
-   if((AudacityProject::msClipT1 - AudacityProject::msClipT0) > 0.0)
+   if((SneedacityProject::msClipT1 - SneedacityProject::msClipT0) > 0.0)
    {
       selectedRegion.setT1(
          selectedRegion.t0() +
-         (AudacityProject::msClipT1 - AudacityProject::msClipT0));
+         (SneedacityProject::msClipT1 - SneedacityProject::msClipT0));
          // MJS: pointless, given what we do in OnPaste?
    }
    OnPaste(context);
@@ -962,9 +962,9 @@ void OnPasteOver(const CommandContext &context)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static EditActions::Handler instance;
    return instance;
 };
@@ -975,12 +975,12 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 static const ReservedCommandFlag
 &CutCopyAvailableFlag() { static ReservedCommandFlag flag{
-   [](const AudacityProject &project){
+   [](const SneedacityProject &project){
       auto range = TrackList::Get( project ).Any<const LabelTrack>()
          + [&](const LabelTrack *pTrack){
             return LabelTrackView::Get( *pTrack ).IsTextSelected(
                // unhappy const_cast because track focus might be set
-               const_cast<AudacityProject&>(project)
+               const_cast<SneedacityProject&>(project)
             );
          };
       if ( !range.empty() )
@@ -1037,7 +1037,7 @@ BaseItemSharedPtr EditMenu()
             AudioIONotBusyFlag() | RedoAvailableFlag(), redoKey ),
             
          Special( wxT("UndoItemsUpdateStep"),
-         [](AudacityProject &project, wxMenu&) {
+         [](SneedacityProject &project, wxMenu&) {
             // Change names in the CommandManager as a side-effect
             MenuManager::ModifyUndoMenuItems(project);
          })
@@ -1124,7 +1124,7 @@ BaseItemSharedPtr EditMenu()
 
       // Note that on Mac, the Preferences menu item is specially handled in
       // CommandManager (assigned a special wxWidgets id) so that it does
-      // not appear in the Edit menu but instead under Audacity, consistent with
+      // not appear in the Edit menu but instead under Sneedacity, consistent with
       // MacOS conventions.
       Section( "Preferences",
          Command( wxT("Preferences"), XXO("Pre&ferences..."), FN(OnPreferences),
@@ -1158,9 +1158,9 @@ BaseItemSharedPtr ExtraEditMenu()
    return menu;
 }
 
-auto canSelectAll = [](const AudacityProject &project){
+auto canSelectAll = [](const SneedacityProject &project){
    return MenuManager::Get( project ).mWhatIfNoSelection != 0; };
-auto selectAll = []( AudacityProject &project, CommandFlag flagsRqd ){
+auto selectAll = []( SneedacityProject &project, CommandFlag flagsRqd ){
    if ( MenuManager::Get( project ).mWhatIfNoSelection == 1 &&
       (flagsRqd & NoAutoSelect()).none() )
       SelectUtilities::DoSelectAllAudio(project);

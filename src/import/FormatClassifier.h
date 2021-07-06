@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FormatClassifier.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_FORMATCLASSIFIER_H_
-#define __AUDACITY_FORMATCLASSIFIER_H_
+#ifndef __SNEEDACITY_FORMATCLASSIFIER_H_
+#define __SNEEDACITY_FORMATCLASSIFIER_H_
 
 #include <vector>
 #include "MultiFormatReader.h"

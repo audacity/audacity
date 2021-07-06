@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SelectionBar.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SELECTION_BAR__
-#define __AUDACITY_SELECTION_BAR__
+#ifndef __SNEEDACITY_SELECTION_BAR__
+#define __SNEEDACITY_SELECTION_BAR__
 
 #include <wx/defs.h>
 
@@ -38,18 +38,18 @@ class wxDC;
 class wxSizeEvent;
 class wxStaticText;
 
-class AudacityProject;
+class SneedacityProject;
 class SelectionBarListener;
 class NumericTextCtrl;
 
-class AUDACITY_DLL_API SelectionBar final : public ToolBar {
+class SNEEDACITY_DLL_API SelectionBar final : public ToolBar {
 
  public:
-   SelectionBar( AudacityProject &project );
+   SelectionBar( SneedacityProject &project );
    virtual ~SelectionBar();
 
-   static SelectionBar &Get( AudacityProject &project );
-   static const SelectionBar &Get( const AudacityProject &project );
+   static SelectionBar &Get( SneedacityProject &project );
+   static const SelectionBar &Get( const SneedacityProject &project );
 
    void Create(wxWindow *parent) override;
 

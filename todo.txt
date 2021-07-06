@@ -1,6 +1,6 @@
 todo.txt
 
-See also the Audacity Bugzilla for some logged enhancement issues:
+See also the Sneedacity Bugzilla for some logged enhancement issues:
 http://tinyurl.com/32udrem
 
 and ideas on Feature Requests:
@@ -39,7 +39,7 @@ Only the Selector tool can set the cursor, right?
 Multitool should be considered as a base for the default mode.
 Some operations would work always, like making a selection.
 Then various tools would change function of some of the mouse
-buttons. Without the multitool the Audacity is very annoying to
+buttons. Without the multitool the Sneedacity is very annoying to
 use, IMHO.   JS]
 
 * More built-in code for automated testing, not sure exactly what,
@@ -51,7 +51,7 @@ its paces, capturing .pngs of toolbars, sliders, dialogs according to
 an external script file.  This makes updating the images in the
 documentation much easier.
 [ Third party screen capture program which accepts remote commands
-via a named pipe, say. Audacity would then have a way to send one
+via a named pipe, say. Sneedacity would then have a way to send one
 command only and a way to send commands repeatedly (n times per
 minute). ]
 
@@ -153,8 +153,8 @@ UI::
   and the export doesn't require any mixing, mark the project
   as not dirty (i.e. don't ask if they want to save it).
 - Put close box in toolbar.
-- Import... should be able to import Audacity projects
-  and Audacity project files
+- Import... should be able to import Sneedacity projects
+  and Sneedacity project files
 - Adapt text color - should be white by default if
   the background color is very dark
 - Invert selection (for now, until we allow discontiguous selections,

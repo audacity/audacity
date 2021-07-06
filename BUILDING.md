@@ -113,7 +113,7 @@ Alternatively, you can use **CLion**. If you chose to do so, open the directory 
 At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon hardware but **mad** and **id3tag** should be disabled:
 
 ```
-cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../sneedacity
+cmake -GXCode -T buildsystem=1 -Dsneedacity_use_mad="off" -Dsneedacity_use_id3tag=off ../sneedacity
 ```
 
 ## Linux & Other OS
@@ -127,7 +127,7 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 2. Configure Sneedacity using CMake:
    ```
    $ mkdir build && cd build
-   $ cmake -G "Unix Makefiles" -Daudacity_use_ffmpeg=loaded ../sneedacity
+   $ cmake -G "Unix Makefiles" -Dsneedacity_use_ffmpeg=loaded ../sneedacity
    ```
    By default, Debug build will be configured. To change that, pass `-DCMAKE_BUILD_TYPE=Release` to CMake.
 
@@ -163,16 +163,16 @@ On Linux it is possible to build Sneedacity using (almost) only the libraries pr
 ```
 $ mkdir build && cd build
 $ cmake -G "Unix Makefiles" \
-        -Daudacity_use_ffmpeg=loaded \
-        -Daudacity_lib_preference=system \
-        -Daudacity_obey_system_dependencies=On \
+        -Dsneedacity_use_ffmpeg=loaded \
+        -Dsneedacity_lib_preference=system \
+        -Dsneedacity_obey_system_dependencies=On \
          ../sneedacity
 ```
 
 There are a few cases when the local library build is preferred:
 
 1. **wxWidgets**: While Sneedacity on **Linux** uses vanilla version of wxWidgets, we **require** that version **3.1.3** is used. This version is not available in most of the distributions.
-2. **portaudio-v19**: Sneedacity currently uses [some private APIs](https://github.com/audacity/audacity/issues/871), so using system portaudio is not yet possible.
+2. **portaudio-v19**: Sneedacity currently uses [some private APIs](https://github.com/sneedacity/sneedacity/issues/871), so using system portaudio is not yet possible.
 3. **vamp-host-sdk**: Development packages are not available in Ubuntu 20.04.
 4. **libnyquist** & **portmixer**: Libraries are not available in Ubuntu 20.04.
 5. **sqlite3** & **libsmbs**: Libraries are very outdated in Ubuntu 20.04.

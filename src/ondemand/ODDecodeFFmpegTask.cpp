@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2012 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    ODDecodeFFmpegTask.cpp
@@ -9,7 +9,7 @@
 
 ******************************************************************/
 
-#include "../Audacity.h"   // needed before FFmpeg.h // for USE_* macros
+#include "../Sneedacity.h"   // needed before FFmpeg.h // for USE_* macros
 #include "../blockfile/ODDecodeBlockFile.h" // base class
 #include "ODDecodeFFmpegTask.h"
 

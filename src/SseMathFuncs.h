@@ -1,12 +1,12 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
+   Sneedacity: A Digital Audio Editor
 
    SseMathFuncs.h
 
    Stephen Moshier (wrote original C version, The Cephes Library)
    Julien Pommier (converted to use SSE)
-   Andrew Hallendorff (adapted for Audacity)
+   Andrew Hallendorff (adapted for Sneedacity)
 
 *******************************************************************//**
 

@@ -105,5 +105,5 @@ $control gain (_ "Reduce amplitude to allow for restored peaks (dB)") float "" -
            (* (- j t0) (- j t1) (+ (* m j) b)))))))
 
 
-;; (get '*selection* 'peak) introduced in Audacity 2.1.3
+;; (get '*selection* 'peak) introduced in Sneedacity 2.1.3
 (multichan-expand #'declip *track* threshold (get '*selection* 'peak))

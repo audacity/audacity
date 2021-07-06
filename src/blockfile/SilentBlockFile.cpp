@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SilentBlockFile.cpp
 
@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Sneedacity.h"
 #include "SilentBlockFile.h"
 
 #include "../FileFormats.h"

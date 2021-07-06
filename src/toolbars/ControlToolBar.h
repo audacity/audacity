@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
 
   ControlToolbar.h
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_CONTROL_TOOLBAR__
-#define __AUDACITY_CONTROL_TOOLBAR__
+#ifndef __SNEEDACITY_CONTROL_TOOLBAR__
+#define __SNEEDACITY_CONTROL_TOOLBAR__
 
 #include "ToolBar.h"
 
@@ -26,19 +26,19 @@ class wxWindow;
 class wxStatusBar;
 
 class AButton;
-class AudacityProject;
+class SneedacityProject;
 
 // In the GUI, ControlToolBar appears as the "Transport Toolbar". "Control Toolbar" is historic.
-class AUDACITY_DLL_API ControlToolBar final : public ToolBar {
+class SNEEDACITY_DLL_API ControlToolBar final : public ToolBar {
 
  public:
 
-   ControlToolBar( AudacityProject &project );
+   ControlToolBar( SneedacityProject &project );
    virtual ~ControlToolBar();
 
-   static ControlToolBar *Find( AudacityProject &project );
-   static ControlToolBar &Get( AudacityProject &project );
-   static const ControlToolBar &Get( const AudacityProject &project );
+   static ControlToolBar *Find( SneedacityProject &project );
+   static ControlToolBar &Get( SneedacityProject &project );
+   static const ControlToolBar &Get( const SneedacityProject &project );
 
    void Create(wxWindow *parent) override;
 

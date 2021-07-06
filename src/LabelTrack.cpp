@@ -48,7 +48,7 @@ for drawing different aspects of the label and its text box.
 #include "prefs/ImportExportPrefs.h"
 
 #include "effects/TimeWarper.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_DELETION, LabelTrackEvent);
@@ -57,7 +57,7 @@ wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "labeltrack" ),
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       auto &tracks = TrackList::Get( project );
       auto result = tracks.Add(std::make_shared<LabelTrack>());
       TrackView::Get( *result );
@@ -85,7 +85,7 @@ LabelTrack::LabelTrack(const LabelTrack &orig) :
    }
 }
 
-Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
+Track::Holder LabelTrack::PasteInto( SneedacityProject & ) const
 {
    auto pNewTrack = std::make_shared<LabelTrack>();
    pNewTrack->Paste(0.0, this);
@@ -405,7 +405,7 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
 
    // Newer selection fields are written on additional lines beginning with
    // '\' which is an impossible numerical character that older versions of
-   // audacity will ignore.  Test for the presence of such a line and then
+   // sneedacity will ignore.  Test for the presence of such a line and then
    // parse it if we can.
 
    // There may also be additional continuation lines from future formats that
@@ -561,7 +561,7 @@ void LabelTrack::Import(wxTextFile & in)
       catch(const LabelStruct::BadFormatException&) { error = true; }
    }
    if (error)
-      ::AudacityMessageBox( XO("One or more saved labels could not be read.") );
+      ::SneedacityMessageBox( XO("One or more saved labels could not be read.") );
    SortLabels();
 }
 

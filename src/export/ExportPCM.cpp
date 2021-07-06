@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExportPCM.cpp
 
@@ -30,7 +30,7 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
@@ -367,7 +367,7 @@ void ExportPCMOptions::GetEncodings(int enc)
 void ExportPCMOptions::SendSuffixEvent()
 {
    // Synchronously process a change in suffix.
-   wxCommandEvent evt(AUDACITY_FILE_SUFFIX_EVENT, GetId());
+   wxCommandEvent evt(SNEEDACITY_FILE_SUFFIX_EVENT, GetId());
    evt.SetEventObject(this);
    evt.SetString(sf_header_extension(mType));
    ProcessWindowEvent(evt);
@@ -386,7 +386,7 @@ public:
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
-   ProgressResult Export(AudacityProject *project,
+   ProgressResult Export(SneedacityProject *project,
                          std::unique_ptr<ProgressDialog> &pDialog,
                          unsigned channels,
                          const wxFileNameWrapper &fName,
@@ -404,7 +404,7 @@ public:
 private:
    void ReportTooBigError(wxWindow * pParent);
    ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
-   bool AddStrings(AudacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
+   bool AddStrings(SneedacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
    bool AddID3Chunk(
       const wxFileNameWrapper &fName, const Tags *tags, int sf_format);
 
@@ -440,7 +440,7 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
    //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
    auto message =
       XO("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
-      "Audacity cannot do this, the Export was abandoned.");
+      "Sneedacity cannot do this, the Export was abandoned.");
 
    ShowErrorDialog(pParent, XO("Error Exporting"), message,
                   wxT("Size_limits_for_WAV_and_AIFF_files"));
@@ -449,7 +449,7 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
 // compute the size in advance.
 #if 0
    ShowErrorDialog(pParent, XO("Error Exporting"),
-                  XO("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
+                  XO("Your exported WAV file has been truncated as Sneedacity cannot export WAV\n"
                     "files bigger than 4GB."),
                   wxT("Size_limits_for_WAV_files"));
 #endif
@@ -460,7 +460,7 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
  * @param subformat Control whether we are doing a "preset" export to a popular
  * file type, or giving the user full control over libsndfile.
  */
-ProgressResult ExportPCM::Export(AudacityProject *project,
+ProgressResult ExportPCM::Export(SneedacityProject *project,
                                  std::unique_ptr<ProgressDialog> &pDialog,
                                  unsigned numChannels,
                                  const wxFileNameWrapper &fName,
@@ -536,12 +536,12 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       // Bug 46.  Trap here, as sndfile.c does not trap it properly.
       if( (numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610) )
       {
-         AudacityMessageBox( XO("GSM 6.10 requires mono") );
+         SneedacityMessageBox( XO("GSM 6.10 requires mono") );
          return ProgressResult::Cancelled;
       }
 
       if (sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("WAVEX and GSM 6.10 formats are not compatible") );
          return ProgressResult::Cancelled;
       }
@@ -555,7 +555,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       if (!sf_format_check(&info))
          info.format = (info.format & SF_FORMAT_TYPEMASK);
       if (!sf_format_check(&info)) {
-         AudacityMessageBox( XO("Cannot export audio in this format.") );
+         SneedacityMessageBox( XO("Cannot export audio in this format.") );
          return ProgressResult::Cancelled;
       }
       const auto path = fName.GetFullPath();
@@ -569,7 +569,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
       }
 
       if (!sf) {
-         AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
+         SneedacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
          return ProgressResult::Cancelled;
       }
       // Retrieve tags if not given a set
@@ -663,7 +663,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                sf_error_str(sf.get(), buffer2, 1000);
                //Used to give this error message
 #if 0
-               AudacityMessageBox(
+               SneedacityMessageBox(
                   XO(
                   /* i18n-hint: %s will be the error message from libsndfile, which
                    * is usually something unhelpful (and untranslated) like "system
@@ -807,7 +807,7 @@ ArrayOf<char> ExportPCM::AdjustString(const wxString & wxStr, int sf_format)
    return pDest;
 }
 
-bool ExportPCM::AddStrings(AudacityProject * WXUNUSED(project), SNDFILE *sf, const Tags *tags, int sf_format)
+bool ExportPCM::AddStrings(SneedacityProject * WXUNUSED(project), SNDFILE *sf, const Tags *tags, int sf_format)
 {
    if (tags->HasTag(TAG_TITLE)) {
       auto ascii7Str = AdjustString(tags->GetTag(TAG_TITLE), sf_format);

@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file UrlDecode.cpp
  @brief Define a function to decode an URL encode string.
@@ -12,7 +12,7 @@
 
 #include "HexHelpers.h"
 
-namespace audacity
+namespace sneedacity
 {
 
 std::string UrlDecode (const std::string& url)

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ExportFLAC.cpp
 
@@ -38,7 +38,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 #include "../Tags.h"
 #include "../Track.h"
 
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
 
@@ -212,7 +212,7 @@ public:
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
-   ProgressResult Export(AudacityProject *project,
+   ProgressResult Export(SneedacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
@@ -225,7 +225,7 @@ public:
 
 private:
 
-   bool GetMetadata(AudacityProject *project, const Tags *tags);
+   bool GetMetadata(SneedacityProject *project, const Tags *tags);
 
    // Should this be a stack variable instead in Export?
    FLAC__StreamMetadataHandle mMetadata;
@@ -244,7 +244,7 @@ ExportFLAC::ExportFLAC()
    SetDescription(XO("FLAC Files"),0);
 }
 
-ProgressResult ExportFLAC::Export(AudacityProject *project,
+ProgressResult ExportFLAC::Export(SneedacityProject *project,
                         std::unique_ptr<ProgressDialog> &pDialog,
                         unsigned numChannels,
                         const wxFileNameWrapper &fName,
@@ -343,7 +343,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    wxFFile f;     // will be closed when it goes out of scope
    const auto path = fName.GetFullPath();
    if (!f.Open(path, wxT("w+b"))) {
-      AudacityMessageBox( XO("FLAC export couldn't open %s").Format( path ) );
+      SneedacityMessageBox( XO("FLAC export couldn't open %s").Format( path ) );
       return ProgressResult::Cancelled;
    }
 
@@ -352,7 +352,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
    // libflac can't (under Windows).
    int status = encoder.init(f.fp());
    if (status != FLAC__STREAM_ENCODER_INIT_STATUS_OK) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FLAC encoder failed to initialize\nStatus: %d")
             .Format( status ) );
       return ProgressResult::Cancelled;
@@ -445,7 +445,7 @@ void ExportFLAC::OptionsCreate(ShuttleGui &S, int format)
 //      expects that array to be valid until the stream is initialized.
 //
 //      This has been fixed in 1.1.4.
-bool ExportFLAC::GetMetadata(AudacityProject *project, const Tags *tags)
+bool ExportFLAC::GetMetadata(SneedacityProject *project, const Tags *tags)
 {
    // Retrieve tags if needed
    if (tags == NULL)

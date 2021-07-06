@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   EffectsPrefs.cpp
 
@@ -112,7 +112,7 @@ const std::map< wxString, TranslatableString > SuggestedPrompts{
    { wxT("LV2"),       XXO("LV&2") },
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
- Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+ Sneedacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
    { wxT("Nyquist"),   XXO("N&yquist") },
@@ -216,10 +216,10 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
 #ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
    S.StartStatic(XO("Plugin Options"));
    {
-      S.TieCheckBox(XXO("Check for updated plugins when Audacity starts"),
+      S.TieCheckBox(XXO("Check for updated plugins when Sneedacity starts"),
                      {wxT("/Plugins/CheckForUpdates"),
                      true});
-      S.TieCheckBox(XXO("Rescan plugins next time Audacity is started"),
+      S.TieCheckBox(XXO("Rescan plugins next time Sneedacity is started"),
                      {wxT("/Plugins/Rescan"),
                      false});
    }
@@ -248,7 +248,7 @@ bool EffectsPrefs::Commit()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "Effects",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew EffectsPrefs(parent, winid);

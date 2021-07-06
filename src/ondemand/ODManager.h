@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODManager.h
 
   Created by Michael Chinen (mchinen) on 6/8/08
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -16,8 +16,8 @@ number of threads.
 
 *//*******************************************************************/
 
-#ifndef __AUDACITY_ODMANAGER__
-#define __AUDACITY_ODMANAGER__
+#ifndef __SNEEDACITY_ODMANAGER__
+#define __SNEEDACITY_ODMANAGER__
 
 #include <vector>
 #include "ODTaskThread.h"
@@ -31,7 +31,7 @@ number of threads.
 #endif //__WXMAC__
 
 // This event is posted to the application
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_ODTASK_UPDATE, wxCommandEvent);
 
 ///wxstring compare function for sorting case, which is needed to load correctly.

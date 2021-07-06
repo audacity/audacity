@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 EditCursorOverlay.cpp
 
@@ -30,15 +30,15 @@ namespace {
    }
 }
 
-static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
-  []( AudacityProject &parent ){
+static const SneedacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( SneedacityProject &parent ){
      auto result = std::make_shared< EditCursorOverlay >( &parent );
      TrackPanel::Get( parent ).AddOverlay( result );
      return result;
    }
 };
 
-EditCursorOverlay::EditCursorOverlay(AudacityProject *project, bool isMaster)
+EditCursorOverlay::EditCursorOverlay(SneedacityProject *project, bool isMaster)
    : mProject(project)
    , mIsMaster(isMaster)
    , mLastCursorX(-1)

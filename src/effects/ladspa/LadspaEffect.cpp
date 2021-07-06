@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LadspaEffect.cpp
 
@@ -65,7 +65,7 @@ effects from this one class.
 #endif
 
 // ============================================================================
-// List of effects that ship with Audacity.  These will be autoregistered.
+// List of effects that ship with Sneedacity.  These will be autoregistered.
 // ============================================================================
 const static wxChar *kShippedEffects[] =
 {
@@ -75,13 +75,13 @@ const static wxChar *kShippedEffects[] =
 // ============================================================================
 // Module registration entry point
 //
-// This is the symbol that Audacity looks for when the module is built as a
+// This is the symbol that Sneedacity looks for when the module is built as a
 // dynamic library.
 //
-// When the module is builtin to Audacity, we use the same function, but it is
+// When the module is builtin to Sneedacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_MODULE_ENTRY(SneedacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -126,7 +126,7 @@ ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
 
 VendorSymbol LadspaEffectsModule::GetVendor()
 {
-   return XO("The Audacity Team");
+   return XO("The Sneedacity Team");
 }
 
 wxString LadspaEffectsModule::GetVersion()
@@ -197,7 +197,7 @@ FilePath LadspaEffectsModule::InstallPath()
 bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
-   // Audacity.  A little simplistic, but it should suffice for now.
+   // Sneedacity.  A little simplistic, but it should suffice for now.
    auto pathList = GetSearchPaths();
    FilePaths files;
    TranslatableString ignoredErrMsg;
@@ -255,7 +255,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    // causes duplicate menu entries to appear.
    wxFileName ff(path);
    if (ff.GetName().CmpNoCase(wxT("vst-bridge")) == 0) {
-      errMsg = XO("Audacity no longer uses vst-bridge");
+      errMsg = XO("Sneedacity no longer uses vst-bridge");
       return 0;
    }
 
@@ -439,7 +439,7 @@ void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
          {
             S.AddVariableText( XO(
 "As part of their processing, some LADSPA effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
+"audio to Sneedacity. When not compensating for this delay, you will "
 "notice that small silences have been inserted into the audio. "
 "Enabling this option will provide that compensation, but it may "
 "not work for all LADSPA effects."),

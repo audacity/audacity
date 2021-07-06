@@ -1,13 +1,13 @@
 //
 //  BackedPanel.h
-//  Audacity
+//  Sneedacity
 //
 //  Created by Paul Licameli on 5/7/16.
 //
 //
 
-#ifndef __AUDACITY_BACKED_PANEL__
-#define __AUDACITY_BACKED_PANEL__
+#ifndef __SNEEDACITY_BACKED_PANEL__
+#define __SNEEDACITY_BACKED_PANEL__
 
 #include <wx/dcmemory.h> // member variable
 #include "wxPanelWrapper.h" // to inherit
@@ -16,7 +16,7 @@
 /// \brief BackedPanel is for a panel that consists of a bitmap with something drawn
 /// over it.  It supports efficient repainting when the overlays change and
 /// recreation of the bitmap when the panel size is changed.
-class AUDACITY_DLL_API BackedPanel /* not final */ : public wxPanelWrapper {
+class SNEEDACITY_DLL_API BackedPanel /* not final */ : public wxPanelWrapper {
 public:
    BackedPanel(wxWindow * parent, wxWindowID id,
                const wxPoint & pos,

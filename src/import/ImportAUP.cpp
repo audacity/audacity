@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   @file ImportAUP.cpp
   @brief Upgrading project file formats from before version 3
@@ -43,7 +43,7 @@
 #include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "../toolbars/SelectionBar.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ProgressDialog.h"
 #include "../xml/XMLFileReader.h"
@@ -78,7 +78,7 @@ public:
    TranslatableString GetPluginFormatDescription() override;
 
    ImportHandle Open(const FilePath &fileName,
-                     AudacityProject *project) override;
+                     SneedacityProject *project) override;
 };
 
 class AUPImportFileHandle final : public ImportFileHandle,
@@ -86,7 +86,7 @@ class AUPImportFileHandle final : public ImportFileHandle,
 {
 public:
    AUPImportFileHandle(const FilePath &name,
-                       AudacityProject *project);
+                       SneedacityProject *project);
    ~AUPImportFileHandle();
 
    TranslatableString GetFileDescription() override;
@@ -157,7 +157,7 @@ private:
    bool SetWarning(const TranslatableString &msg);
 
 private:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
    Tags *mTags;
 
    // project tag values that will be set in the actual project if the
@@ -242,7 +242,7 @@ TranslatableString AUPImportPlugin::GetPluginFormatDescription()
 }
 
 ImportHandle AUPImportPlugin::Open(const FilePath &fileName,
-                                   AudacityProject *project)
+                                   SneedacityProject *project)
 {
    auto handle = std::make_unique<AUPImportFileHandle>(fileName, project);
 
@@ -261,7 +261,7 @@ static Importer::RegisteredImportPlugin registered
 };
 
 AUPImportFileHandle::AUPImportFileHandle(const FilePath &fileName,
-                                         AudacityProject *project)
+                                         SneedacityProject *project)
 :  ImportFileHandle(fileName),
    mProject(*project)
 {
@@ -318,7 +318,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    bool success = xmlFile.Parse(this, mFilename);
    if (!success)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Couldn't import the project:\n\n%s").Format(xmlFile.GetErrorStr()),
          XO("Import Project"),
          wxOK | wxCENTRE,
@@ -330,7 +330,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    if (!mErrorMsg.empty())
    {
       // Error or warning
-      AudacityMessageBox(
+      SneedacityMessageBox(
          mErrorMsg,
          XO("Import Project"),
          wxOK | wxCENTRE,
@@ -483,13 +483,13 @@ bool AUPImportFileHandle::Open()
 
       buf[sizeof(buf) - 1] = '\0';
 
-      if (!wxStrncmp(buf, wxT("AudacityProject"), 15))
+      if (!wxStrncmp(buf, wxT("SneedacityProject"), 15))
       {
-         AudacityMessageBox(
-            XO("This project was saved by Audacity version 1.0 or earlier. The format has\n"
-               "changed and this version of Audacity is unable to import the project.\n\n"
-               "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
-               "you may import it with this version of Audacity."),
+         SneedacityMessageBox(
+            XO("This project was saved by Sneedacity version 1.0 or earlier. The format has\n"
+               "changed and this version of Sneedacity is unable to import the project.\n\n"
+               "Use a version of Sneedacity prior to v3.0.0 to upgrade the project and then\n"
+               "you may import it with this version of Sneedacity."),
             XO("Import Project"),
             wxOK | wxCENTRE,
             &GetProjectFrame(mProject));
@@ -498,7 +498,7 @@ bool AUPImportFileHandle::Open()
       }
 
       if (wxStrncmp(buf, "<?xml", 5) == 0 &&
-          (wxStrstr(buf, "<audacityproject") ||
+          (wxStrstr(buf, "<sneedacityproject") ||
            wxStrstr(buf, "<project") ))
       {
          return true;
@@ -557,7 +557,7 @@ bool AUPImportFileHandle::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    bool success = false;
 
    if (mCurrentTag.IsSameAs(wxT("project")) ||
-       mCurrentTag.IsSameAs(wxT("audacityproject")))
+       mCurrentTag.IsSameAs(wxT("sneedacityproject")))
    {
       success = HandleProject(handler);
    }
@@ -736,7 +736,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          requiredTags++;
       }
 
-      else if (!wxStrcmp(attr, wxT("audacityversion")))
+      else if (!wxStrcmp(attr, wxT("sneedacityversion")))
       {
          requiredTags++;
       }
@@ -779,7 +779,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          // No luck...complain and bail
          if (projName.empty())
          {
-            AudacityMessageBox(
+            SneedacityMessageBox(
                XO("Couldn't find the project data folder: \"%s\"").Format(value),
                XO("Error Opening Project"),
                wxOK | wxCENTRE,
@@ -860,8 +860,8 @@ bool AUPImportFileHandle::HandleNoteTrack(XMLTagHandler *&handler)
 
    return true;
 #else
-   AudacityMessageBox(
-      XO("MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."),
+   SneedacityMessageBox(
+      XO("MIDI tracks found in project file, but this build of Sneedacity does not include MIDI support, bypassing track."),
       XO("Project Import"),
       wxOK | wxICON_EXCLAMATION | wxCENTRE,
       &GetProjectFrame(mProject));
@@ -878,7 +878,7 @@ bool AUPImportFileHandle::HandleTimeTrack(XMLTagHandler *&handler)
    // (See HandleTimeEnvelope and HandleControlPoint also)
    if (*tracks.Any<TimeTrack>().begin())
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."),
          XO("Project Import"),
          wxOK | wxICON_EXCLAMATION | wxCENTRE,
@@ -900,7 +900,7 @@ bool AUPImportFileHandle::HandleWaveTrack(XMLTagHandler *&handler)
    handler = mWaveTrack =
       TrackList::Get(mProject).Add(trackFactory.NewWaveTrack());
 
-   // No active clip.  In early versions of Audacity, there was a single
+   // No active clip.  In early versions of Sneedacity, there was a single
    // implied clip so we'll create a clip when the first "sequence" is
    // found.
    mClip = nullptr;
@@ -1057,7 +1057,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
          handler = timetrack->GetEnvelope();
       }
    }
-   // Earlier versions of Audacity had a single implied waveclip, so for
+   // Earlier versions of Sneedacity had a single implied waveclip, so for
    // these versions, we get or create the only clip in the track.
    else if (mParentTag.IsSameAs(wxT("wavetrack")))
    {
@@ -1099,7 +1099,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 
    WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
 
-   // Earlier versions of Audacity had a single implied waveclip, so for
+   // Earlier versions of Sneedacity had a single implied waveclip, so for
    // these versions, we get or create the only clip in the track.
    if (mParentTag.IsSameAs(wxT("wavetrack")))
    {
@@ -1405,7 +1405,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    GuardedCall(
       [&] {
          ProjectFileManager::Get( mProject ).Import(strAttr, false); },
-      [&] (AudacityException*) {}
+      [&] (SneedacityException*) {}
    );
 
    if (oldNumTracks == tracks.size())

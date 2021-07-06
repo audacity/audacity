@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SpectrumPrefs.cpp
 
@@ -33,10 +33,10 @@
 
 #include <algorithm>
 
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
-   AudacityProject *pProject, WaveTrack *wt)
+   SneedacityProject *pProject, WaveTrack *wt)
 :  PrefsPanel(parent, winid, wt ? XO("Spectrogram Settings") : XO("Spectrograms"))
 , mProject{ pProject }
 , mWt(wt)
@@ -342,48 +342,48 @@ bool SpectrumPrefs::Validate()
 
    long maxFreq;
    if (!mMaxFreq->GetValue().ToLong(&maxFreq)) {
-      AudacityMessageBox( XO("The maximum frequency must be an integer") );
+      SneedacityMessageBox( XO("The maximum frequency must be an integer") );
       return false;
    }
 
    long minFreq;
    if (!mMinFreq->GetValue().ToLong(&minFreq)) {
-      AudacityMessageBox( XO("The minimum frequency must be an integer") );
+      SneedacityMessageBox( XO("The minimum frequency must be an integer") );
       return false;
    }
 
    long gain;
    if (!mGain->GetValue().ToLong(&gain)) {
-      AudacityMessageBox( XO("The gain must be an integer") );
+      SneedacityMessageBox( XO("The gain must be an integer") );
       return false;
    }
 
    long range;
    if (!mRange->GetValue().ToLong(&range)) {
-      AudacityMessageBox( XO("The range must be a positive integer") );
+      SneedacityMessageBox( XO("The range must be a positive integer") );
       return false;
    }
 
    long frequencygain;
    if (!mFrequencyGain->GetValue().ToLong(&frequencygain)) {
-      AudacityMessageBox( XO("The frequency gain must be an integer") );
+      SneedacityMessageBox( XO("The frequency gain must be an integer") );
       return false;
    }
 
 #ifdef EXPERIMENTAL_FIND_NOTES
    long findNotesMinA;
    if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
-      AudacityMessageBox( XO("The minimum amplitude (dB) must be an integer") );
+      SneedacityMessageBox( XO("The minimum amplitude (dB) must be an integer") );
       return false;
    }
 
    long findNotesN;
    if (!mFindNotesN->GetValue().ToLong(&findNotesN)) {
-      AudacityMessageBox( XO("The maximum number of notes must be an integer") );
+      SneedacityMessageBox( XO("The maximum number of notes must be an integer") );
       return false;
    }
    if (findNotesN < 1 || findNotesN > 128) {
-      AudacityMessageBox( XO(
+      SneedacityMessageBox( XO(
 "The maximum number of notes must be in the range 1..128") );
       return false;
    }
@@ -594,7 +594,7 @@ END_EVENT_TABLE()
 PrefsPanel::Factory
 SpectrumPrefsFactory( WaveTrack *wt )
 {
-   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *pProject)
+   return [=](wxWindow *parent, wxWindowID winid, SneedacityProject *pProject)
    {
       wxASSERT(parent); // to justify safenew
       return safenew SpectrumPrefs(parent, winid, pProject, wt);

@@ -49,7 +49,7 @@
 #include "ProjectFileIORegistry.h"
 #include "ShuttleGui.h"
 #include "widgets/Grid.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/HelpSystem.h"
 #include "xml/XMLFileReader.h"
 
@@ -226,24 +226,24 @@ static const wxChar *DefaultGenres[] =
 
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "tags" ),
-   []( AudacityProject &project ){ return &Tags::Get( project ); }
+   []( SneedacityProject &project ){ return &Tags::Get( project ); }
 };
 
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  [](AudacityProject &){ return std::make_shared< Tags >(); }
+static const SneedacityProject::AttachedObjects::RegisteredFactory key{
+  [](SneedacityProject &){ return std::make_shared< Tags >(); }
 };
 
-Tags &Tags::Get( AudacityProject &project )
+Tags &Tags::Get( SneedacityProject &project )
 {
    return project.AttachedObjects::Get< Tags >( key );
 }
 
-const Tags &Tags::Get( const AudacityProject &project )
+const Tags &Tags::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
-Tags &Tags::Set( AudacityProject &project, const std::shared_ptr< Tags > &tags )
+Tags &Tags::Set( SneedacityProject &project, const std::shared_ptr< Tags > &tags )
 {
    auto &result = *tags;
    project.AttachedObjects::Assign( key, tags );
@@ -1170,7 +1170,7 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
    wxFileName fn(FileNames::DataDir(), wxT("genres.txt"));
    wxFile f(fn.GetFullPath(), wxFile::write);
    if (!f.IsOpened() || !f.Write(tc->GetValue())) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Unable to save genre file."),
          XO("Reset Genres") );
       return;
@@ -1183,7 +1183,7 @@ void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
 
 void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
 {
-   int id = AudacityMessageBox(
+   int id = SneedacityMessageBox(
       XO("Are you sure you want to reset the genre list to defaults?"),
       XO("Reset Genres"),
       wxYES_NO);
@@ -1200,7 +1200,7 @@ void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
                (!tf.Exists() && tf.Create());
 
    if (!open) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Unable to open genre file."),
          XO("Reset Genres") );
       mLocal.LoadGenres();
@@ -1214,7 +1214,7 @@ void TagsEditorDialog::OnReset(wxCommandEvent & WXUNUSED(event))
    }
 
    if (!tf.Write()) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Unable to save genre file."),
          XO("Reset Genres") );
       mLocal.LoadGenres();
@@ -1257,7 +1257,7 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    XMLFileReader reader;
    if (!reader.Parse(&temp, fn)) {
       // Inform user of load failure
-      AudacityMessageBox(
+      SneedacityMessageBox(
          reader.GetErrorStr(),
          XO("Error Loading Metadata"),
          wxOK | wxCENTRE,

@@ -1,13 +1,13 @@
 //
 //  ImportForwards.h
-//  Audacity
+//  Sneedacity
 //
 //  Created by Paul Licameli on 8/10/16.
 //
 //
 
-#ifndef __AUDACITY_IMPORT_FORWARDS__
-#define __AUDACITY_IMPORT_FORWARDS__
+#ifndef __SNEEDACITY_IMPORT_FORWARDS__
+#define __SNEEDACITY_IMPORT_FORWARDS__
 
 #include <vector>
 #include <memory>

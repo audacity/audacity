@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Noise.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_NOISE__
-#define __AUDACITY_EFFECT_NOISE__
+#ifndef __SNEEDACITY_EFFECT_NOISE__
+#define __SNEEDACITY_EFFECT_NOISE__
 
 #include "Effect.h"
 

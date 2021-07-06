@@ -267,8 +267,8 @@ $control messages (_ "Show messages") choice ((_ "Yes")
 <head>
 <meta name=\"generator\" content=
 \"Sample Data Export by Steve Daulton, (http://www.easyspacepro.com). Released under GPL v2.\">
-<meta name=\"description\" content=\"Sample Printer, Free Audacity plug-in\" />
-<meta name=\"keywords\" content=\"sample printer,Audacity,plug-ins,plugins,effects,audio,audio processing,music,analyze\" />
+<meta name=\"description\" content=\"Sample Printer, Free Sneedacity plug-in\" />
+<meta name=\"keywords\" content=\"sample printer,Sneedacity,plug-ins,plugins,effects,audio,audio processing,music,analyze\" />
 <meta name=\"author\" content=\"Steve Daulton\" />
 <meta charset=\"UTF-8\">
 
@@ -410,7 +410,7 @@ ul {
   (format nil (strcat
 "</table>
 <p id=\"footer\">" (_ "Produced with <span>Sample Data Export</span> for
-<a href=\"~a\">Audacity</a> by Steve
+<a href=\"~a\">Sneedacity</a> by Steve
 Daulton") " (<a href=
 \"http://www.easyspacepro.com\">www.easyspacepro.com</a>)</p>
 </body>

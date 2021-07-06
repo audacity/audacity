@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TimeTrackControls.cpp
 
@@ -25,7 +25,7 @@ TimeTrackControls::~TimeTrackControls()
 
 std::vector<UIHandlePtr> TimeTrackControls::HitTest
 (const TrackPanelMouseState & state,
- const AudacityProject *pProject)
+ const SneedacityProject *pProject)
 {
    return CommonTrackControls::HitTest(state, pProject);
 }
@@ -80,7 +80,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
       if (lower >= TimeTrackControls::kRangeMin &&
           upper <= TimeTrackControls::kRangeMax &&
           lower < upper) {
-         AudacityProject *const project = &mpData->project;
+         SneedacityProject *const project = &mpData->project;
          pTrack->SetRangeLower((double)lower / 100.0);
          pTrack->SetRangeUpper((double)upper / 100.0);
          ProjectHistory::Get( *project )
@@ -96,7 +96,7 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(false);
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
       .PushState(XO("Set time track display to linear"), XO("Set Display"));
 
@@ -108,7 +108,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(true);
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
       .PushState(XO("Set time track display to logarithmic"), XO("Set Display"));
 
@@ -119,7 +119,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
 void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
    if (pTrack->GetInterpolateLog()) {
       pTrack->SetInterpolateLog(false);
       ProjectHistory::Get( *project )

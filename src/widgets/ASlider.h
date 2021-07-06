@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ASlider.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SLIDER__
-#define __AUDACITY_SLIDER__
+#ifndef __SNEEDACITY_SLIDER__
+#define __SNEEDACITY_SLIDER__
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
@@ -58,7 +58,7 @@ class TipWindow;
 // which uses this class, is below.
 //
 
-class AUDACITY_DLL_API LWSlider
+class SNEEDACITY_DLL_API LWSlider
 {
    friend class ASlider;
    friend class ASliderAx;
@@ -230,7 +230,7 @@ class AUDACITY_DLL_API LWSlider
    bool mEnabled;
 };
 
-class AUDACITY_DLL_API ASlider /* not final */ : public wxPanel
+class SNEEDACITY_DLL_API ASlider /* not final */ : public wxPanel
 {
    friend class ASliderAx;
 

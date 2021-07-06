@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FileNames.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_FILE_NAMES__
-#define __AUDACITY_FILE_NAMES__
+#ifndef __SNEEDACITY_FILE_NAMES__
+#define __SNEEDACITY_FILE_NAMES__
 
 
 
@@ -69,9 +69,9 @@ namespace FileNames
    };
 
    // Frequently used types
-   extern AUDACITY_DLL_API const FileType
+   extern SNEEDACITY_DLL_API const FileType
         AllFiles // *
-      , AudacityProjects // *.aup3
+      , SneedacityProjects // *.aup3
       , DynamicLibraries // depends on the operating system
       , TextFiles // *.txt
       , XMLFiles; // *.xml, *.XML
@@ -80,76 +80,76 @@ namespace FileNames
 
    // Convert fileTypes into a single string as expected by wxWidgets file
    // selection dialog
-   AUDACITY_DLL_API wxString FormatWildcard( const FileTypes &fileTypes );
+   SNEEDACITY_DLL_API wxString FormatWildcard( const FileTypes &fileTypes );
 
    // This exists to compensate for bugs in wxCopyFile:
-   AUDACITY_DLL_API bool DoCopyFile(
+   SNEEDACITY_DLL_API bool DoCopyFile(
       const FilePath& file1, const FilePath& file2, bool overwrite = true);
 
    // wxWidgets doesn't have a function to do this:  make a hard file-system
    // link if possible.  It might not be, as when the paths are on different
    // storage devices.
-   AUDACITY_DLL_API
+   SNEEDACITY_DLL_API
    bool HardLinkFile( const FilePath& file1, const FilePath& file2);
 
-   AUDACITY_DLL_API wxString MkDir(const wxString &Str);
+   SNEEDACITY_DLL_API wxString MkDir(const wxString &Str);
 
-   AUDACITY_DLL_API bool IsMidi(const FilePath &fName);
+   SNEEDACITY_DLL_API bool IsMidi(const FilePath &fName);
 
-   /** \brief A list of directories that should be searched for Audacity files
+   /** \brief A list of directories that should be searched for Sneedacity files
     * (plug-ins, help files, etc.).
     *
-    * On Unix this will include the directory Audacity was installed into,
-    * plus the current user's .audacity-data/Plug-Ins directory.  Additional
-    * directories can be specified using the AUDACITY_PATH environment
+    * On Unix this will include the directory Sneedacity was installed into,
+    * plus the current user's .sneedacity-data/Plug-Ins directory.  Additional
+    * directories can be specified using the SNEEDACITY_PATH environment
     * variable.  On Windows or Mac OS, this will include the directory
-    * which contains the Audacity program. */
-   AUDACITY_DLL_API const FilePaths &AudacityPathList();
-   AUDACITY_DLL_API void SetAudacityPathList( FilePaths list );
+    * which contains the Sneedacity program. */
+   SNEEDACITY_DLL_API const FilePaths &SneedacityPathList();
+   SNEEDACITY_DLL_API void SetSneedacityPathList( FilePaths list );
 
    // originally an ExportMultipleDialog method. Append suffix if newName appears in otherNames.
-   AUDACITY_DLL_API void MakeNameUnique(
+   SNEEDACITY_DLL_API void MakeNameUnique(
       FilePaths &otherNames, wxFileName &newName);
 
-   AUDACITY_DLL_API wxString LowerCaseAppNameInPath( const wxString & dirIn);
-   /** \brief Audacity user data directory
+   SNEEDACITY_DLL_API wxString LowerCaseAppNameInPath( const wxString & dirIn);
+   /** \brief Sneedacity user data directory
     *
-    * Where audacity keeps its settings and other user data squirreled away,
-    * by default ~/.audacity-data/ on Unix, Application Data/Audacity on
+    * Where sneedacity keeps its settings and other user data squirreled away,
+    * by default ~/.sneedacity-data/ on Unix, Application Data/Sneedacity on
     * windows system */
-   AUDACITY_DLL_API FilePath DataDir();
-   AUDACITY_DLL_API FilePath ResourcesDir();
-   AUDACITY_DLL_API FilePath HtmlHelpDir();
-   AUDACITY_DLL_API FilePath HtmlHelpIndexFile(bool quick);
-   AUDACITY_DLL_API FilePath LegacyChainDir();
-   AUDACITY_DLL_API FilePath MacroDir();
-   AUDACITY_DLL_API FilePath NRPDir();
-   AUDACITY_DLL_API FilePath NRPFile();
-   AUDACITY_DLL_API FilePath PluginRegistry();
-   AUDACITY_DLL_API FilePath PluginSettings();
+   SNEEDACITY_DLL_API FilePath DataDir();
+   SNEEDACITY_DLL_API FilePath ResourcesDir();
+   SNEEDACITY_DLL_API FilePath HtmlHelpDir();
+   SNEEDACITY_DLL_API FilePath HtmlHelpIndexFile(bool quick);
+   SNEEDACITY_DLL_API FilePath LegacyChainDir();
+   SNEEDACITY_DLL_API FilePath MacroDir();
+   SNEEDACITY_DLL_API FilePath NRPDir();
+   SNEEDACITY_DLL_API FilePath NRPFile();
+   SNEEDACITY_DLL_API FilePath PluginRegistry();
+   SNEEDACITY_DLL_API FilePath PluginSettings();
 
-   AUDACITY_DLL_API FilePath BaseDir();
-   AUDACITY_DLL_API FilePath ModulesDir();
+   SNEEDACITY_DLL_API FilePath BaseDir();
+   SNEEDACITY_DLL_API FilePath ModulesDir();
 
    /** \brief The user plug-in directory (not a system one)
     *
     * This returns the string path to where the user may have put plug-ins
     * if they don't have system admin rights. Under default settings, it's
     * <DataDir>/Plug-Ins/ */
-   AUDACITY_DLL_API FilePath PlugInDir();
-   AUDACITY_DLL_API FilePath ThemeDir();
-   AUDACITY_DLL_API FilePath ThemeComponentsDir();
-   AUDACITY_DLL_API FilePath ThemeCachePng();
-   AUDACITY_DLL_API FilePath ThemeCacheAsCee();
-   AUDACITY_DLL_API FilePath ThemeComponent(const wxString &Str);
-   AUDACITY_DLL_API FilePath ThemeCacheHtm();
-   AUDACITY_DLL_API FilePath ThemeImageDefsAsCee();
+   SNEEDACITY_DLL_API FilePath PlugInDir();
+   SNEEDACITY_DLL_API FilePath ThemeDir();
+   SNEEDACITY_DLL_API FilePath ThemeComponentsDir();
+   SNEEDACITY_DLL_API FilePath ThemeCachePng();
+   SNEEDACITY_DLL_API FilePath ThemeCacheAsCee();
+   SNEEDACITY_DLL_API FilePath ThemeComponent(const wxString &Str);
+   SNEEDACITY_DLL_API FilePath ThemeCacheHtm();
+   SNEEDACITY_DLL_API FilePath ThemeImageDefsAsCee();
 
    // Obtain name of loaded module that contains address
-   AUDACITY_DLL_API FilePath PathFromAddr(void *addr);
+   SNEEDACITY_DLL_API FilePath PathFromAddr(void *addr);
 
-   AUDACITY_DLL_API bool IsPathAvailable( const FilePath & Path);
-   AUDACITY_DLL_API wxFileNameWrapper DefaultToDocumentsFolder
+   SNEEDACITY_DLL_API bool IsPathAvailable( const FilePath & Path);
+   SNEEDACITY_DLL_API wxFileNameWrapper DefaultToDocumentsFolder
       (const wxString &preference);
 
    // If not None, determines a preference key (for the default path string) to
@@ -177,10 +177,10 @@ namespace FileNames
       LastUsed
    };
 
-   AUDACITY_DLL_API wxString PreferenceKey(FileNames::Operation op, FileNames::PathType type);
+   SNEEDACITY_DLL_API wxString PreferenceKey(FileNames::Operation op, FileNames::PathType type);
 
-   AUDACITY_DLL_API FilePath FindDefaultPath(Operation op);
-   AUDACITY_DLL_API void UpdateDefaultPath(Operation op, const FilePath &path);
+   SNEEDACITY_DLL_API FilePath FindDefaultPath(Operation op);
+   SNEEDACITY_DLL_API void UpdateDefaultPath(Operation op, const FilePath &path);
 
    // F is a function taking a wxString, returning wxString
    template<typename F>
@@ -195,7 +195,7 @@ namespace FileNames
       return result;
    }
 
-   AUDACITY_DLL_API FilePath
+   SNEEDACITY_DLL_API FilePath
    SelectFile(Operation op,   // op matters only when default_path is empty
       const TranslatableString& message,
       const FilePath& default_path,
@@ -206,11 +206,11 @@ namespace FileNames
       wxWindow *parent);
 
    // Useful functions for working with search paths
-   AUDACITY_DLL_API void AddUniquePathToPathList(const FilePath &path,
+   SNEEDACITY_DLL_API void AddUniquePathToPathList(const FilePath &path,
                                        FilePaths &pathList);
-   AUDACITY_DLL_API void AddMultiPathsToPathList(const wxString &multiPathString,
+   SNEEDACITY_DLL_API void AddMultiPathsToPathList(const wxString &multiPathString,
                                        FilePaths &pathList);
-   AUDACITY_DLL_API void FindFilesInPathList(const wxString & pattern,
+   SNEEDACITY_DLL_API void FindFilesInPathList(const wxString & pattern,
                                    const FilePaths & pathList,
                                    FilePaths &results,
                                    int flags = wxDIR_FILES);
@@ -218,23 +218,23 @@ namespace FileNames
    /** \brief Protect against Unicode to multi-byte conversion failures
     * on Windows */
 #if defined(__WXMSW__)
-   AUDACITY_DLL_API char *VerifyFilename(const wxString &s, bool input = true);
+   SNEEDACITY_DLL_API char *VerifyFilename(const wxString &s, bool input = true);
 #endif
 
    // wxString compare function for sorting case, which is needed to load correctly.
-   AUDACITY_DLL_API int CompareNoCase(const wxString& first, const wxString& second);
+   SNEEDACITY_DLL_API int CompareNoCase(const wxString& first, const wxString& second);
 
    // Create a unique filename using the passed prefix and suffix
-   AUDACITY_DLL_API wxString CreateUniqueName(const wxString &prefix,
+   SNEEDACITY_DLL_API wxString CreateUniqueName(const wxString &prefix,
                              const wxString &suffix = wxEmptyString);
 
    // File extension used for unsaved/temporary project files
-   AUDACITY_DLL_API wxString UnsavedProjectExtension();
+   SNEEDACITY_DLL_API wxString UnsavedProjectExtension();
 
-   AUDACITY_DLL_API
+   SNEEDACITY_DLL_API
    bool IsOnFATFileSystem(const FilePath &path);
 
-   AUDACITY_DLL_API
+   SNEEDACITY_DLL_API
    //! Give enough of the path to identify the device.  (On Windows, drive letter plus ':')
    wxString AbbreviatePath(const wxFileName &fileName);
 };

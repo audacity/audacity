@@ -1,18 +1,18 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Theme.h
 
   James Crook
 
-  Audacity is free software.
+  Sneedacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
 **********************************************************************/
 
-#ifndef __AUDACITY_THEME__
-#define __AUDACITY_THEME__
+#ifndef __SNEEDACITY_THEME__
+#define __SNEEDACITY_THEME__
 
 
 
@@ -62,7 +62,7 @@ enum teThemeType
 
 
 
-class AUDACITY_DLL_API FlowPacker
+class SNEEDACITY_DLL_API FlowPacker
 {
 public:
    FlowPacker(){;};
@@ -95,7 +95,7 @@ private:
 
 };
 
-class AUDACITY_DLL_API ThemeBase /* not final */
+class SNEEDACITY_DLL_API ThemeBase /* not final */
 {
 public:
    ThemeBase(void);
@@ -160,7 +160,7 @@ protected:
 };
 
 
-class AUDACITY_DLL_API Theme final : public ThemeBase
+class SNEEDACITY_DLL_API Theme final : public ThemeBase
 {
 public:
    Theme(void);
@@ -179,7 +179,7 @@ class wxWindow;
 class wxString;
 class wxPaintEvent;
 
-class AUDACITY_DLL_API auStaticText : public wxWindow
+class SNEEDACITY_DLL_API auStaticText : public wxWindow
 {
 public:
    auStaticText(wxWindow* parent, wxString text);
@@ -191,10 +191,10 @@ public:
    DECLARE_EVENT_TABLE();
 };
 
-extern AUDACITY_DLL_API Theme theTheme;
+extern SNEEDACITY_DLL_API Theme theTheme;
 
-extern AUDACITY_DLL_API ChoiceSetting
+extern SNEEDACITY_DLL_API ChoiceSetting
      GUITheme
 ;
 
-#endif // __AUDACITY_THEME__
+#endif // __SNEEDACITY_THEME__

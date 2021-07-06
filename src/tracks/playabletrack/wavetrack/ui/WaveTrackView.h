@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveTrackView.h
 
@@ -8,13 +8,13 @@ Paul Licameli split from class WaveTrack
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WAVE_TRACK_VIEW__
-#define __AUDACITY_WAVE_TRACK_VIEW__
+#ifndef __SNEEDACITY_WAVE_TRACK_VIEW__
+#define __SNEEDACITY_WAVE_TRACK_VIEW__
 
 #include "../../../ui/CommonTrackView.h"
 #include "../../../../ClientData.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 struct WaveTrackSubViewType;
 
 class CutlineHandle;
@@ -22,7 +22,7 @@ class TranslatableString;
 class WaveTrack;
 class WaveTrackView;
 
-class AUDACITY_DLL_API WaveTrackSubView : public CommonTrackView
+class SNEEDACITY_DLL_API WaveTrackSubView : public CommonTrackView
 {
 public:
 
@@ -39,7 +39,7 @@ public:
       std::vector<UIHandlePtr>
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const SneedacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt );
    
 protected:
@@ -66,7 +66,7 @@ using WaveTrackSubViews = ClientData::Site<
    WaveTrackView, WaveTrackSubView, ClientData::SkipCopying, std::shared_ptr
 >;
 
-class AUDACITY_DLL_API WaveTrackView final
+class SNEEDACITY_DLL_API WaveTrackView final
    : public CommonTrackView
    , public WaveTrackSubViews
 {
@@ -96,7 +96,7 @@ public:
       std::vector<UIHandlePtr>
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool,
+      const SneedacityProject *pProject, int currentTool, bool bMultiTool,
       const std::shared_ptr<WaveTrack> &wt,
       CommonTrackView &view);
 
@@ -133,7 +133,7 @@ private:
 
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+       const SneedacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
    // TrackView implementation
@@ -157,7 +157,7 @@ class SelectedRegion;
 class WaveClip;
 class ZoomInfo;
 
-struct AUDACITY_DLL_API ClipParameters
+struct SNEEDACITY_DLL_API ClipParameters
 {
    // Do a bunch of calculations common to waveform and spectrum drawing.
    ClipParameters

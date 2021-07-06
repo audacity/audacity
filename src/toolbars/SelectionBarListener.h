@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SelectionBarListener.h
 
@@ -8,14 +8,14 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SELECTION_BAR_LISTENER__
-#define __AUDACITY_SELECTION_BAR_LISTENER__
+#ifndef __SNEEDACITY_SELECTION_BAR_LISTENER__
+#define __SNEEDACITY_SELECTION_BAR_LISTENER__
 
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 
 class SelectedRegion;
 
-class AUDACITY_DLL_API SelectionBarListener /* not final */ {
+class SNEEDACITY_DLL_API SelectionBarListener /* not final */ {
 
  public:
 
@@ -31,7 +31,7 @@ class AUDACITY_DLL_API SelectionBarListener /* not final */ {
    virtual void AS_ModifySelection(double &start, double &end, bool done) = 0;
 };
 
-class AUDACITY_DLL_API TimeToolBarListener /* not final */ {
+class SNEEDACITY_DLL_API TimeToolBarListener /* not final */ {
 
  public:
 

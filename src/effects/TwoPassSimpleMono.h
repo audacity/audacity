@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TwoPassSimpleMono.h
 
@@ -9,15 +9,15 @@
   This bit by Martyn Shaw.
 
 **********************************************************************/
-#ifndef __AUDACITY_EFFECT_TWOPASSSIMPLEMONO__
-#define __AUDACITY_EFFECT_TWOPASSSIMPLEMONO__
+#ifndef __SNEEDACITY_EFFECT_TWOPASSSIMPLEMONO__
+#define __SNEEDACITY_EFFECT_TWOPASSSIMPLEMONO__
 
 #include "SimpleMono.h"
 
 
 class WaveTrack;
 
-class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
+class SNEEDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
 {
 public:
    // Effect implementation

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LoadEffects.h
 
@@ -8,10 +8,10 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LOAD_EFFECTS__
-#define __AUDACITY_LOAD_EFFECTS__
+#ifndef __SNEEDACITY_LOAD_EFFECTS__
+#define __SNEEDACITY_LOAD_EFFECTS__
 
-#include "audacity/ModuleInterface.h"
+#include "sneedacity/ModuleInterface.h"
 
 #include <functional>
 #include <memory>
@@ -26,7 +26,7 @@ class Effect;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
+class SNEEDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
 {
 public:
    BuiltinEffectsModule();

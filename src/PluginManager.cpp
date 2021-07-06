@@ -28,15 +28,15 @@ for shared and private configs - which need to move out.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
-#include "audacity/ModuleInterface.h"
+#include "sneedacity/ModuleInterface.h"
 
-#include "AudacityFileConfig.h"
+#include "SneedacityFileConfig.h"
 #include "Internat.h" // for macro XO
 #include "FileNames.h"
 #include "MemoryX.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -339,7 +339,7 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
    return empty;
 }
 
-const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
+const PluginID &PluginManagerInterface::SneedacityCommandRegistrationCallback(
    ModuleInterface *provider, ComponentInterface *pInterface )
 {
    ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
@@ -407,7 +407,7 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
 
 const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ComponentInterface *command)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
+   PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeSneedacityCommand);
 
    plug.SetProviderID(PluginManager::GetID(provider));
 
@@ -794,7 +794,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             dst.SetFullName( src.GetFullName() );
             if ( dst.Exists() ) {
                // Query whether to overwrite
-               bool overwrite = (wxYES == ::AudacityMessageBox(
+               bool overwrite = (wxYES == ::SneedacityMessageBox(
                   XO("Overwrite the plug-in file %s?")
                      .Format( dst.GetFullPath() ),
                   XO("Plug-in already exists"),
@@ -818,7 +818,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             }
 
             if (!copied) {
-               ::AudacityMessageBox(
+               ::SneedacityMessageBox(
                   XO("Plug-in file is in use. Failed to overwrite") );
                return true;
             }
@@ -839,7 +839,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
-               ::AudacityMessageBox(
+               ::SneedacityMessageBox(
                   XO("Failed to register:\n%s").Format( errMsg ) );
                return true;
             }
@@ -856,7 +856,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                )( nIds );
                for (const auto &name : names)
                   message.Join( Verbatim( name ), wxT("\n") );
-               bool enable = (wxYES == ::AudacityMessageBox(
+               bool enable = (wxYES == ::SneedacityMessageBox(
                   message,
                   XO("Enable new plug-ins"),
                   wxYES_NO ) );
@@ -877,7 +877,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   auto pRegistry = AudacityFileConfig::Create(
+   auto pRegistry = SneedacityFileConfig::Create(
       {}, {}, FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
@@ -951,7 +951,7 @@ void PluginManager::Load()
 
    // Now the rest
    LoadGroup(&registry, PluginTypeEffect);
-   LoadGroup(&registry, PluginTypeAudacityCommand );
+   LoadGroup(&registry, PluginTypeSneedacityCommand );
    LoadGroup(&registry, PluginTypeExporter);
    LoadGroup(&registry, PluginTypeImporter);
 
@@ -1219,7 +1219,7 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   auto pRegistry = AudacityFileConfig::Create(
+   auto pRegistry = SneedacityFileConfig::Create(
       {}, {}, FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
@@ -1232,7 +1232,7 @@ void PluginManager::Save()
    // Save the individual groups
    SaveGroup(&registry, PluginTypeEffect);
    SaveGroup(&registry, PluginTypeExporter);
-   SaveGroup(&registry, PluginTypeAudacityCommand);
+   SaveGroup(&registry, PluginTypeSneedacityCommand);
    SaveGroup(&registry, PluginTypeImporter);
    SaveGroup(&registry, PluginTypeStub);
 
@@ -1562,7 +1562,7 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
 PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeAudacityCommand),
+                           GetPluginTypeString(PluginTypeSneedacityCommand),
                            wxEmptyString,
                            command->GetVendor().Internal(),
                            command->GetSymbol().Internal(),
@@ -1607,7 +1607,7 @@ wxString PluginManager::GetPluginTypeString(PluginType type)
    case PluginTypeEffect:
       str = wxT("Effect");
       break;
-   case PluginTypeAudacityCommand:
+   case PluginTypeSneedacityCommand:
       str = wxT("Generic");
       break;
    case PluginTypeExporter:
@@ -1647,7 +1647,7 @@ FileConfig *PluginManager::GetSettings()
    if (!mSettings)
    {
       mSettings =
-         AudacityFileConfig::Create({}, {}, FileNames::PluginSettings());
+         SneedacityFileConfig::Create({}, {}, FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))

@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    File License: wxWidgets
 
    Dan Horgan
@@ -18,9 +18,9 @@
 #define __COMMAND__
 
 #include "CommandSignature.h"
-#include "../commands/AudacityCommand.h"
+#include "../commands/SneedacityCommand.h"
 
-class AudacityApp;
+class SneedacityApp;
 class CommandContext;
 class CommandOutputTargets;
 
@@ -28,9 +28,9 @@ class CommandOutputTargets;
 class OldStyleCommand /* not final */
 {
 public:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
-   OldStyleCommand(AudacityProject &project) : mProject{ project } {};
+   OldStyleCommand(SneedacityProject &project) : mProject{ project } {};
    virtual ~OldStyleCommand() { }
    virtual ComponentInterfaceSymbol GetSymbol() = 0;
    virtual CommandSignature &GetSignature() = 0;
@@ -72,7 +72,7 @@ public:
 
 };
 
-class AUDACITY_DLL_API CommandImplementation /* not final */
+class SNEEDACITY_DLL_API CommandImplementation /* not final */
    : public OldStyleCommand
 {
 private:
@@ -99,7 +99,7 @@ protected:
 public:
    /// Constructor should not be called directly; only by a factory which
    /// ensures name and params are set appropriately for the command.
-   CommandImplementation(AudacityProject &project, OldStyleCommandType &type);
+   CommandImplementation(SneedacityProject &project, OldStyleCommandType &type);
 
    virtual ~CommandImplementation();
 

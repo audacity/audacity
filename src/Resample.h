@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2012 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    Resample.cpp
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_RESAMPLE_H__
-#define __AUDACITY_RESAMPLE_H__
+#ifndef __SNEEDACITY_RESAMPLE_H__
+#define __SNEEDACITY_RESAMPLE_H__
 
 
 
@@ -25,12 +25,12 @@ struct soxr_deleter {
 };
 using soxrHandle = std::unique_ptr<soxr, soxr_deleter>;
 
-class AUDACITY_DLL_API Resample final
+class SNEEDACITY_DLL_API Resample final
 {
  public:
    /// Resamplers may have more than one method, offering a
    /// tradeoff between speed and quality.
-   /// Audacity identifies two methods out of all of the choices:
+   /// Sneedacity identifies two methods out of all of the choices:
    /// a Fast method intended for real-time audio I/O, and a Best
    /// method intended for mixing and exporting.
    //
@@ -83,4 +83,4 @@ class AUDACITY_DLL_API Resample final
    bool mbWantConstRateResampling;
 };
 
-#endif // __AUDACITY_RESAMPLE_H__
+#endif // __SNEEDACITY_RESAMPLE_H__

@@ -1,6 +1,6 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  @file TranslatableString.h
  
@@ -8,8 +8,8 @@
  
  **********************************************************************/
 
-#ifndef __AUDACITY_TRANSLATABLE_STRING__
-#define __AUDACITY_TRANSLATABLE_STRING__
+#ifndef __SNEEDACITY_TRANSLATABLE_STRING__
+#define __SNEEDACITY_TRANSLATABLE_STRING__
 
 #include <stddef.h> // for size_t
 #include <functional>

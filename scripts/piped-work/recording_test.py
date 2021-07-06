@@ -18,7 +18,7 @@ User supplied variables
 With a little modification, can be suitable for rinse and repeat with different
 input files.
 
-Make sure Audacity is running and that mod-script-pipe is enabled
+Make sure Sneedacity is running and that mod-script-pipe is enabled
 before running this script.
 """
 
@@ -57,45 +57,45 @@ INFILE = os.path.splitext(INFILE)[0]
 # Platform specific constants
 if sys.platform == 'win32':
     print("recording-test.py, running on windows")
-    PIPE_TO_AUDACITY = '\\\\.\\pipe\\ToSrvPipe'
-    PIPE_FROM_AUDACITY = '\\\\.\\pipe\\FromSrvPipe'
+    PIPE_TO_SNEEDACITY = '\\\\.\\pipe\\ToSrvPipe'
+    PIPE_FROM_SNEEDACITY = '\\\\.\\pipe\\FromSrvPipe'
     EOL = '\r\n\0'
 else:
     print("recording-test.py, running on linux or mac")
-    PIPE_TO_AUDACITY = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-    PIPE_FROM_AUDACITY = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+    PIPE_TO_SNEEDACITY = '/tmp/sneedacity_script_pipe.to.' + str(os.getuid())
+    PIPE_FROM_SNEEDACITY = '/tmp/sneedacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'
 
 
-print("Write to  \"" + PIPE_TO_AUDACITY +"\"")
-if not os.path.exists(PIPE_TO_AUDACITY):
+print("Write to  \"" + PIPE_TO_SNEEDACITY +"\"")
+if not os.path.exists(PIPE_TO_SNEEDACITY):
     print(""" ..does not exist.
-    Ensure Audacity is running with mod-script-pipe.""")
+    Ensure Sneedacity is running with mod-script-pipe.""")
     sys.exit()
 
-print("Read from \"" + PIPE_FROM_AUDACITY +"\"")
-if not os.path.exists(PIPE_FROM_AUDACITY):
+print("Read from \"" + PIPE_FROM_SNEEDACITY +"\"")
+if not os.path.exists(PIPE_FROM_SNEEDACITY):
     print(""" ..does not exist.
-    Ensure Audacity is running with mod-script-pipe.""")
+    Ensure Sneedacity is running with mod-script-pipe.""")
     sys.exit()
 
 print("-- Both pipes exist.  Good.")
 
-TOPIPE = open(PIPE_TO_AUDACITY, 'w')
+TOPIPE = open(PIPE_TO_SNEEDACITY, 'w')
 print("-- File to write to has been opened")
-FROMPIPE = open(PIPE_FROM_AUDACITY, 'r')
+FROMPIPE = open(PIPE_FROM_SNEEDACITY, 'r')
 print("-- File to read from has now been opened too\r\n")
 
 
 def send_command(command):
-    """Send a command to Audacity."""
+    """Send a command to Sneedacity."""
     print("Send: >>> "+command)
     TOPIPE.write(command + EOL)
     TOPIPE.flush()
 
 
 def get_response():
-    """Get response from Audacity."""
+    """Get response from Sneedacity."""
     line = FROMPIPE.readline()
     result = ""
     while True:

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 HitTestResult.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_HIT_TEST_RESULT__
-#define __AUDACITY_HIT_TEST_RESULT__
+#ifndef __SNEEDACITY_HIT_TEST_RESULT__
+#define __SNEEDACITY_HIT_TEST_RESULT__
 
 #include <memory>
 #include "Internat.h" // for TranslatableString

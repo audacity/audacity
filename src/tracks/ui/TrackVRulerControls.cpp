@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TrackVRulerControls.cpp
 
@@ -52,7 +52,7 @@ std::shared_ptr<Track> TrackVRulerControls::DoFindTrack()
 }
 
 std::vector<UIHandlePtr> TrackVRulerControls::HitTest
-(const TrackPanelMouseState &, const AudacityProject *)
+(const TrackPanelMouseState &, const SneedacityProject *)
 {
    return std::vector<UIHandlePtr>{};
 }

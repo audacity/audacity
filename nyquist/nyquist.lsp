@@ -2227,7 +2227,7 @@ loop
 ;;          or array thereof, got "bad-value"
 ;;
 ;; Many existing Nyquist plug-ins require the old version of multichan-expand,
-;; so in Audacity we need to support both the old and new versions.
+;; so in Sneedacity we need to support both the old and new versions.
 (defun multichan-expand (&rest args)
   (if (stringp (first args))
       (apply 'multichan-expand-new args)

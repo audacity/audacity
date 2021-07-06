@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LoadVamp.h
 
@@ -14,9 +14,9 @@
 
 #include <memory>
 
-#include "audacity/ModuleInterface.h"
-#include "audacity/EffectInterface.h"
-#include "audacity/PluginInterface.h"
+#include "sneedacity/ModuleInterface.h"
+#include "sneedacity/EffectInterface.h"
+#include "sneedacity/PluginInterface.h"
 
 #include <vamp-hostsdk/PluginLoader.h>
 

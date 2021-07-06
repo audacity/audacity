@@ -28,8 +28,8 @@
 // private helper classes and functions
 namespace {
 
-AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+SneedacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
+   []( SneedacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew MacrosWindow(
          &window, parent, true
@@ -46,7 +46,7 @@ bool ShowManager(
    return dlg.ShowModal() == wxID_OK;
 }
 
-void DoManagePluginsMenu(AudacityProject &project, EffectType type)
+void DoManagePluginsMenu(SneedacityProject &project, EffectType type)
 {
    auto &window = GetProjectFrame( project );
    auto &pm = PluginManager::Get();
@@ -417,12 +417,12 @@ void OnResetConfig(const CommandContext &context)
    // These are necessary to preserve the newly correctly laid out toolbars.
    // In particular the Device Toolbar ends up short on next restart, 
    // if they are left out.
-   gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
+   gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(SNEEDACITY_PREFS_VERSION_STRING)));
 
    // write out the version numbers to the prefs file for future checking
-   gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
-   gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
-   gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
+   gPrefs->Write(wxT("/Version/Major"), SNEEDACITY_VERSION);
+   gPrefs->Write(wxT("/Version/Minor"), SNEEDACITY_RELEASE);
+   gPrefs->Write(wxT("/Version/Micro"), SNEEDACITY_REVISION);
 
    gPrefs->Flush();
 
@@ -638,12 +638,12 @@ void OnApplyMacroDirectlyByName(const CommandContext& context, const MacroID& Na
 
 }
 
-void OnAudacityCommand(const CommandContext & ctx)
+void OnSneedacityCommand(const CommandContext & ctx)
 {
    // using GET in a log message for devs' eyes only
    wxLogDebug( "Command was: %s", ctx.parameter.GET());
    // Not configured, so prompt user.
-   MacroCommands::DoAudacityCommand(
+   MacroCommands::DoSneedacityCommand(
       EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
       ctx, EffectManager::kNone);
 }
@@ -652,9 +652,9 @@ void OnAudacityCommand(const CommandContext & ctx)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static PluginActions::Handler instance;
    return instance;
 };
@@ -827,7 +827,7 @@ using namespace MenuTable;
 
 const ReservedCommandFlag&
    HasLastGeneratorFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
+      [](const SneedacityProject &project){
          return !MenuManager::Get( project ).mLastGenerator.empty();
       }
    }; return flag; }
@@ -851,7 +851,7 @@ BaseItemSharedPtr GenerateMenu()
 
       Section("RepeatLast",
          // Delayed evaluation:
-         [](AudacityProject &project)
+         [](SneedacityProject &project)
          {
             const auto &lastGenerator = MenuManager::Get(project).mLastGenerator;
             TranslatableString buildMenuLabel;
@@ -871,7 +871,7 @@ BaseItemSharedPtr GenerateMenu()
 
       Section( "Generators",
          // Delayed evaluation:
-         [](AudacityProject &)
+         [](SneedacityProject &)
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeGenerate,
             AudioIONotBusyFlag(),
@@ -884,7 +884,7 @@ BaseItemSharedPtr GenerateMenu()
 
 static const ReservedCommandFlag
 &IsRealtimeNotActiveFlag() { static ReservedCommandFlag flag{
-   [](const AudacityProject &){
+   [](const SneedacityProject &){
       return !RealtimeEffectManager::Get().RealtimeIsActive();
    }
 }; return flag; }  //lll
@@ -896,7 +896,7 @@ AttachedItem sAttachment1{
 
 const ReservedCommandFlag&
    HasLastEffectFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
+      [](const SneedacityProject &project) {
          return !MenuManager::Get(project).mLastEffect.empty();
       }
    }; return flag;
@@ -919,7 +919,7 @@ BaseItemSharedPtr EffectMenu()
 
       Section( "RepeatLast",
          // Delayed evaluation:
-         [](AudacityProject &project)
+         [](SneedacityProject &project)
          {
             const auto &lastEffect = MenuManager::Get(project).mLastEffect;
             TranslatableString buildMenuLabel;
@@ -939,7 +939,7 @@ BaseItemSharedPtr EffectMenu()
 
       Section( "Effects",
          // Delayed evaluation:
-         [](AudacityProject &)
+         [](SneedacityProject &)
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeProcess,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
@@ -957,7 +957,7 @@ AttachedItem sAttachment2{
 
 const ReservedCommandFlag&
    HasLastAnalyzerFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
+      [](const SneedacityProject &project) {
          if (MenuManager::Get(project).mLastAnalyzerRegistration == MenuCreator::repeattypeunique) return true;
          return !MenuManager::Get(project).mLastAnalyzer.empty();
       }
@@ -983,7 +983,7 @@ BaseItemSharedPtr AnalyzeMenu()
 
       Section("RepeatLast",
          // Delayed evaluation:
-         [](AudacityProject &project)
+         [](SneedacityProject &project)
          {
             const auto &lastAnalyzer = MenuManager::Get(project).mLastAnalyzer;
             TranslatableString buildMenuLabel;
@@ -1005,7 +1005,7 @@ BaseItemSharedPtr AnalyzeMenu()
          Items( "Windows" ),
 
          // Delayed evaluation:
-         [](AudacityProject&)
+         [](SneedacityProject&)
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeAnalyze,
             AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag(),
@@ -1023,7 +1023,7 @@ AttachedItem sAttachment3{
 
 const ReservedCommandFlag&
    HasLastToolFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project) {
+      [](const SneedacityProject &project) {
       auto& menuManager = MenuManager::Get(project);
          if (menuManager.mLastToolRegistration == MenuCreator::repeattypeunique) return true;
          return !menuManager.mLastTool.empty();
@@ -1049,7 +1049,7 @@ BaseItemSharedPtr ToolsMenu()
 
          Section( "RepeatLast",
          // Delayed evaluation:
-         [](AudacityProject &project)
+         [](SneedacityProject &project)
          {
             const auto &lastTool = MenuManager::Get(project).mLastTool;
             TranslatableString buildMenuLabel;
@@ -1080,7 +1080,7 @@ BaseItemSharedPtr ToolsMenu()
 
             Section( "",
                // Delayed evaluation:
-               [](AudacityProject&)
+               [](SneedacityProject&)
                { return Items( wxEmptyString, PopulateMacrosMenu( AudioIONotBusyFlag() ) ); }
             )
          )
@@ -1106,7 +1106,7 @@ BaseItemSharedPtr ToolsMenu()
 
       Section( "Tools",
          // Delayed evaluation:
-         [](AudacityProject&)
+         [](SneedacityProject&)
          { return Items( wxEmptyString, PopulateEffectsMenu(
             EffectTypeTool,
             AudioIONotBusyFlag(),
@@ -1122,14 +1122,14 @@ BaseItemSharedPtr ToolsMenu()
             FN(OnSimulateRecordingErrors),
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
-               [](AudacityProject&){
+               [](SneedacityProject&){
                   return AudioIO::Get()->mSimulateRecordingErrors; } ) ),
          Command( wxT("DetectUpstreamDropouts"),
             XXO("Detect Upstream Dropouts"),
             FN(OnDetectUpstreamDropouts),
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
-               [](AudacityProject&){
+               [](SneedacityProject&){
                   return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
       )
 #endif
@@ -1153,37 +1153,37 @@ BaseItemSharedPtr ExtraScriptablesIMenu()
       // whereas the short-form used here must not.
       // (So if you did write "CompareAudio" for the PLUGIN_SYMBOL name, then
       // you would have to use "Compareaudio" here.)
-      Command( wxT("SelectTime"), XXO("Select Time..."), FN(OnAudacityCommand),
+      Command( wxT("SelectTime"), XXO("Select Time..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SelectFrequencies"), XXO("Select Frequencies..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SelectTracks"), XXO("Select Tracks..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrackStatus"), XXO("Set Track Status..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrackAudio"), XXO("Set Track Audio..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SetTrackVisuals"), XXO("Set Track Visuals..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("GetPreference"), XXO("Get Preference..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SetPreference"), XXO("Set Preference..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("SetClip"), XXO("Set Clip..."), FN(OnAudacityCommand),
+      Command( wxT("SetClip"), XXO("Set Clip..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SetEnvelope"), XXO("Set Envelope..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("SetLabel"), XXO("Set Label..."), FN(OnAudacityCommand),
+      Command( wxT("SetLabel"), XXO("Set Label..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("SetProject"), XXO("Set Project..."), FN(OnAudacityCommand),
+      Command( wxT("SetProject"), XXO("Set Project..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() )
    ) ) };
    return menu;
@@ -1201,34 +1201,34 @@ BaseItemSharedPtr ExtraScriptablesIIMenu()
    ( FinderScope{ findCommandHandler },
    // i18n-hint: Scriptables are commands normally used from Python, Perl etc.
    Menu( wxT("Scriptables2"), XXO("Scripta&bles II"),
-      Command( wxT("Select"), XXO("Select..."), FN(OnAudacityCommand),
+      Command( wxT("Select"), XXO("Select..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("SetTrack"), XXO("Set Track..."), FN(OnAudacityCommand),
+      Command( wxT("SetTrack"), XXO("Set Track..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("GetInfo"), XXO("Get Info..."), FN(OnAudacityCommand),
+      Command( wxT("GetInfo"), XXO("Get Info..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("Message"), XXO("Message..."), FN(OnAudacityCommand),
+      Command( wxT("Message"), XXO("Message..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("Help"), XXO("Help..."), FN(OnAudacityCommand),
+      Command( wxT("Help"), XXO("Help..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("Import2"), XXO("Import..."), FN(OnAudacityCommand),
+      Command( wxT("Import2"), XXO("Import..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("Export2"), XXO("Export..."), FN(OnAudacityCommand),
+      Command( wxT("Export2"), XXO("Export..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("OpenProject2"), XXO("Open Project..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("SaveProject2"), XXO("Save Project..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
-      Command( wxT("Drag"), XXO("Move Mouse..."), FN(OnAudacityCommand),
+      Command( wxT("Drag"), XXO("Move Mouse..."), FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       Command( wxT("CompareAudio"), XXO("Compare Audio..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() ),
       // i18n-hint: Screenshot in the help menu has a much bigger dialog.
       Command( wxT("Screenshot"), XXO("Screenshot (short format)..."),
-         FN(OnAudacityCommand),
+         FN(OnSneedacityCommand),
          AudioIONotBusyFlag() )
    ) ) };
    return menu;

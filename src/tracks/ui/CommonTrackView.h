@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 CommonTrackView.h
 
@@ -8,15 +8,15 @@ Paul Licameli split from class TrackView
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COMMON_TRACK_VIEW__
-#define __AUDACITY_COMMON_TRACK_VIEW__
+#ifndef __SNEEDACITY_COMMON_TRACK_VIEW__
+#define __SNEEDACITY_COMMON_TRACK_VIEW__
 
 #include "TrackView.h" // to inherit
 
 class SelectHandle;
 class TimeShiftHandle;
 
-class AUDACITY_DLL_API CommonTrackView /* not final */ : public TrackView
+class SNEEDACITY_DLL_API CommonTrackView /* not final */ : public TrackView
 {
 public:
    using TrackView::TrackView;
@@ -28,7 +28,7 @@ public:
    // uniformly in all tracks, disregarding track contents.
    // Do not further override this...
    std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *pProject)
+      (const TrackPanelMouseState &, const SneedacityProject *pProject)
       final override;
 
    void TimeShiftHitTest();
@@ -39,7 +39,7 @@ protected:
    // Rather override this for subclasses:
    virtual std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+       const SneedacityProject *pProject, int currentTool, bool bMultiTool)
       = 0;
 
    std::weak_ptr<SelectHandle> mSelectHandle;

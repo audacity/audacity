@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PrefsDialog.cpp
 
@@ -220,8 +220,8 @@ wxAccStatus TreeCtrlAx::GetDescription( int WXUNUSED(childId), wxString *descrip
    return wxACC_OK;
 }
 
-// This isn't really used yet by wxWidgets as patched by Audacity for
-// Mac accessibility, as of Audacity 2.3.2, but here it is anyway, keeping the
+// This isn't really used yet by wxWidgets as patched by Sneedacity for
+// Mac accessibility, as of Sneedacity 2.3.2, but here it is anyway, keeping the
 // analogy with TrackPanelAx
 wxAccStatus TreeCtrlAx::GetFocus( int *childId, wxAccessible **child )
 {
@@ -443,10 +443,10 @@ int wxTreebookExt::SetSelection(size_t n)
 }
 
 PrefsDialog::PrefsDialog(
-   wxWindow * parent, AudacityProject *pProject,
+   wxWindow * parent, SneedacityProject *pProject,
    const TranslatableString &titlePrefix,
    PrefsPanel::Factories &factories)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Audacity Preferences"),
+:  wxDialogWrapper(parent, wxID_ANY, XO("Sneedacity Preferences"),
             wxDefaultPosition,
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
@@ -738,7 +738,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    if (gAudioIO) {
       // We cannot have opened this dialog if gAudioIO->IsAudioTokenActive(),
       // per the setting of AudioIONotBusyFlag and AudioIOBusyFlag in
-      // AudacityProject::GetUpdateFlags().
+      // SneedacityProject::GetUpdateFlags().
       // However, we can have an invalid audio token (so IsAudioTokenActive()
       // is false), but be monitoring.
       // If monitoring, have to stop the stream, so HandleDeviceChange() can work.
@@ -763,7 +763,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    //      handled instead by delayed event processing?
 
    // LL:  wxMac can't handle recreating the menus when this dialog is still active,
-   //      so AudacityProject::UpdatePrefs() or any of the routines it calls must
+   //      so SneedacityProject::UpdatePrefs() or any of the routines it calls must
    //      not cause MenuCreator::RebuildMenuBar() to be executed.
 
    wxTheApp->AddPendingEvent(wxCommandEvent{ EVT_PREFS_UPDATE });
@@ -797,7 +797,7 @@ int PrefsDialog::GetSelectedPage() const
 }
 
 GlobalPrefsDialog::GlobalPrefsDialog(
-   wxWindow * parent, AudacityProject *pProject,
+   wxWindow * parent, SneedacityProject *pProject,
    PrefsPanel::Factories &factories)
    : PrefsDialog(parent, pProject, XO("Preferences:"), factories)
 {
@@ -837,7 +837,7 @@ void PrefsDialog::RecordExpansionState()
 #include "../Menus.h"
 #include "../Project.h"
 
-void DoReloadPreferences( AudacityProject &project )
+void DoReloadPreferences( SneedacityProject &project )
 {
    PreferenceInitializer::ReinitializeAll();
 
@@ -860,7 +860,7 @@ void DoReloadPreferences( AudacityProject &project )
       //
       //   http://bugzilla.audacityteam.org/show_bug.cgi?id=458
       //
-      // This workaround should be removed when Audacity updates to wxWidgets
+      // This workaround should be removed when Sneedacity updates to wxWidgets
       // 3.x which has a fix.
       auto &window = GetProjectFrame( *p );
       wxRect r = window.GetRect();

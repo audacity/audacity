@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODTask.h
 
   Created by Michael Chinen (mchinen)
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -20,19 +20,19 @@ in a background thread.
 
 
 
-#ifndef __AUDACITY_ODTASK__
-#define __AUDACITY_ODTASK__
+#ifndef __SNEEDACITY_ODTASK__
+#define __SNEEDACITY_ODTASK__
 
 #include "../BlockFile.h"
 
 #include <vector>
 #include <wx/event.h> // to declare custom event type
-class AudacityProject;
+class SneedacityProject;
 class Track;
 class WaveTrack;
 
 
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_ODTASK_COMPLETE, wxCommandEvent);
 
 /// A class representing a modular task to be used with the On-Demand structures.
@@ -120,7 +120,7 @@ class ODTask /* not final */
    virtual TranslatableString GetTip()=0;
 
     ///returns true if the task is associated with the project.
-   virtual bool IsTaskAssociatedWithProject(AudacityProject* proj);
+   virtual bool IsTaskAssociatedWithProject(SneedacityProject* proj);
 
    bool IsRunning();
 

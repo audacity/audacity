@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   DtmfGen.cpp
 
@@ -38,11 +38,11 @@ enum
    ID_DutyCycle,
 };
 
-// DA: DTMF for Audacity uses a different string.
+// DA: DTMF for Sneedacity uses a different string.
 #ifdef EXPERIMENTAL_DA
-#define SHORT_APP_NAME "darkaudacity"
+#define SHORT_APP_NAME "darksneedacity"
 #else
-#define SHORT_APP_NAME "audacity"
+#define SHORT_APP_NAME "sneedacity"
 #endif
 
 // Define keys, defaults, minimums, and maximums for the effect parameters

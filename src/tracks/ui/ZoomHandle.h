@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ZoomHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ZOOM_HANDLE__
-#define __AUDACITY_ZOOM_HANDLE__
+#ifndef __SNEEDACITY_ZOOM_HANDLE__
+#define __SNEEDACITY_ZOOM_HANDLE__
 
 #include "../../UIHandle.h"
 
@@ -20,7 +20,7 @@ class ZoomHandle final : public UIHandle
 {
    ZoomHandle(const ZoomHandle&) = delete;
    static HitTestPreview HitPreview
-      (const wxMouseState &state, const AudacityProject *pProject);
+      (const wxMouseState &state, const SneedacityProject *pProject);
 
 public:
    ZoomHandle();
@@ -35,20 +35,20 @@ public:
    virtual ~ZoomHandle();
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(SneedacityProject *pProject) override;
 
 private:
 

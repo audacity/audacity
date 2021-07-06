@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2018 Sneedacity Team
    License: wxWidgets
 
    James Crook
@@ -417,7 +417,7 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
    EffectManager & em = EffectManager::Get();
    {
       for (auto &plug
-           : pm.PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand)) {
+           : pm.PluginsOfType(PluginTypeEffect | PluginTypeSneedacityCommand)) {
          auto command = em.GetCommandIdentifier(plug.GetID());
          if (!command.empty()){
             em.GetCommandDefinition( plug.GetID(), context, flags );
@@ -441,7 +441,7 @@ bool GetInfoCommand::SendBoxes(const CommandContext &context)
    //wxString Name = pWin->GetName();
    context.StartStruct();
    context.AddItem( 0, "depth" );
-   context.AddItem( "Audacity Window", "name" ); 
+   context.AddItem( "Sneedacity Window", "name" ); 
    context.StartField( "box" );
    context.StartArray( );
    context.AddItem( R.GetLeft() );
@@ -656,7 +656,7 @@ void GetInfoCommand::ExploreMenu( const CommandContext &context, wxMenu * pMenu,
       if( !Name.empty() )
          // using GET to expose CommandID in results of GetInfoCommand...
          // PRL asks, is that all right?
-         context.AddItem( Name.GET(), "id" );// It is called Scripting ID outside Audacity.
+         context.AddItem( Name.GET(), "id" );// It is called Scripting ID outside Sneedacity.
       context.EndStruct();
 
       if (item->IsSubMenu()) {
@@ -696,7 +696,7 @@ void GetInfoCommand::ExploreAdornments( const CommandContext &context,
 void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    wxPoint P, wxWindow * pWin, int WXUNUSED(Id), int depth )
 {
-   AudacityProject * pProj = &context.project;
+   SneedacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
    auto &viewInfo = ViewInfo::Get( *pProj );
 

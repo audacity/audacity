@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SpectralSelectionBarListener.h
 
@@ -8,13 +8,13 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECTRAL_SELECTION_BAR_LISTENER__
-#define __AUDACITY_SPECTRAL_SELECTION_BAR_LISTENER__
+#ifndef __SNEEDACITY_SPECTRAL_SELECTION_BAR_LISTENER__
+#define __SNEEDACITY_SPECTRAL_SELECTION_BAR_LISTENER__
 
 
 #include "Identifier.h"
 
-class AUDACITY_DLL_API SpectralSelectionBarListener /* not final */ {
+class SNEEDACITY_DLL_API SpectralSelectionBarListener /* not final */ {
 
  public:
 

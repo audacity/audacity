@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 NumberScale.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_NUMBER_SCALE__
-#define __AUDACITY_NUMBER_SCALE__
+#ifndef __SNEEDACITY_NUMBER_SCALE__
+#define __SNEEDACITY_NUMBER_SCALE__
 
 #include <algorithm>
 #include <cmath>

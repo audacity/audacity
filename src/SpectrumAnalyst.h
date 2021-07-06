@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SpectrumAnalyst.h
 
@@ -9,15 +9,15 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECTRUM_ANALYST__
-#define __AUDACITY_SPECTRUM_ANALYST__
+#ifndef __SNEEDACITY_SPECTRUM_ANALYST__
+#define __SNEEDACITY_SPECTRUM_ANALYST__
 
 #include <vector>
 #include <wx/statusbr.h>
 
 class FreqGauge;
 
-class AUDACITY_DLL_API SpectrumAnalyst
+class SNEEDACITY_DLL_API SpectrumAnalyst
 {
 public:
 
@@ -59,7 +59,7 @@ private:
    std::vector<float> mProcessed;
 };
 
-class AUDACITY_DLL_API FreqGauge final : public wxStatusBar
+class SNEEDACITY_DLL_API FreqGauge final : public wxStatusBar
 {
 public:
    FreqGauge(wxWindow * parent, wxWindowID winid);

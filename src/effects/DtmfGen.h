@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   DtmfGen.h
 
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_DTMF__
-#define __AUDACITY_EFFECT_DTMF__
+#ifndef __SNEEDACITY_EFFECT_DTMF__
+#define __SNEEDACITY_EFFECT_DTMF__
 
 #include "Effect.h"
 

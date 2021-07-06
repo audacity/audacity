@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODDecodeTask.h
 
   Created by Michael Chinen (mchinen) on 8/10/08.
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -25,8 +25,8 @@ robust enough to allow all the user changes such as copy/paste, DELETE, and so o
 
 
 
-#ifndef __AUDACITY_ODDecodeTask__
-#define __AUDACITY_ODDecodeTask__
+#ifndef __SNEEDACITY_ODDecodeTask__
+#define __SNEEDACITY_ODDecodeTask__
 
 #include <vector>
 #include "ODTask.h"

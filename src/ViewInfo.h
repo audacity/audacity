@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ViewInfo.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_VIEWINFO__
-#define __AUDACITY_VIEWINFO__
+#ifndef __SNEEDACITY_VIEWINFO__
+#define __SNEEDACITY_VIEWINFO__
 
 #include <utility>
 #include <vector>
@@ -33,12 +33,12 @@ struct SelectedRegionEvent : public wxEvent
 };
 
 // To do:  distinguish time changes from frequency changes perhaps?
-wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT( SNEEDACITY_DLL_API,
                           EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
 
 // This heavyweight wrapper of the SelectedRegion structure emits events
 // on mutating operations, that other classes can listen for.
-class AUDACITY_DLL_API NotifyingSelectedRegion : public wxEvtHandler
+class SNEEDACITY_DLL_API NotifyingSelectedRegion : public wxEvtHandler
 {
 public:
    // Expose SelectedRegion's const accessors
@@ -167,12 +167,12 @@ private:
    bool mLocked{ false };
 };
 
-class AUDACITY_DLL_API ViewInfo final
+class SNEEDACITY_DLL_API ViewInfo final
    : public wxEvtHandler, public ZoomInfo
 {
 public:
-   static ViewInfo &Get( AudacityProject &project );
-   static const ViewInfo &Get( const AudacityProject &project );
+   static ViewInfo &Get( SneedacityProject &project );
+   static const ViewInfo &Get( const SneedacityProject &project );
 
    ViewInfo(double start, double screenDuration, double pixelsPerSecond);
    ViewInfo( const ViewInfo & ) PROHIBITED;

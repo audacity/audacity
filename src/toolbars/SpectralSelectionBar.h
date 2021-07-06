@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SpectralSelectionBar.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECTRAL_SELECTION_BAR__
-#define __AUDACITY_SPECTRAL_SELECTION_BAR__
+#ifndef __SNEEDACITY_SPECTRAL_SELECTION_BAR__
+#define __SNEEDACITY_SPECTRAL_SELECTION_BAR__
 
 #include <wx/defs.h>
 
@@ -21,7 +21,7 @@ class wxCommandEvent;
 class wxDC;
 class wxSizeEvent;
 
-class AudacityProject;
+class SneedacityProject;
 class SpectralSelectionBarListener;
 class NumericTextCtrl;
 
@@ -29,11 +29,11 @@ class SpectralSelectionBar final : public ToolBar {
 
 public:
 
-   SpectralSelectionBar( AudacityProject &project );
+   SpectralSelectionBar( SneedacityProject &project );
    virtual ~SpectralSelectionBar();
 
-   static SpectralSelectionBar &Get( AudacityProject &project );
-   static const SpectralSelectionBar &Get( const AudacityProject &project );
+   static SpectralSelectionBar &Get( SneedacityProject &project );
+   static const SpectralSelectionBar &Get( const SneedacityProject &project );
 
    void Create(wxWindow *parent) override;
 

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudioIOListener.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_AUDIO_IO_LISTENER__
-#define __AUDACITY_AUDIO_IO_LISTENER__
+#ifndef __SNEEDACITY_AUDIO_IO_LISTENER__
+#define __SNEEDACITY_AUDIO_IO_LISTENER__
 
 
 
@@ -19,7 +19,7 @@ class WaveTrack;
 using WaveTrackArray =
    std::vector < std::shared_ptr < WaveTrack > >;
 
-class AUDACITY_DLL_API AudioIOListener /* not final */ {
+class SNEEDACITY_DLL_API AudioIOListener /* not final */ {
 public:
    AudioIOListener() {}
    virtual ~AudioIOListener() {}

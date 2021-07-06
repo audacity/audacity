@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LegacyAliasBlockFile.cpp
 
@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Sneedacity.h"
 #include "LegacyAliasBlockFile.h"
 
 #include <wx/utils.h>
@@ -151,7 +151,7 @@ void LegacyAliasBlockFile::Recover(){
 
 static const auto sFactory = []( DirManager &dm, const wxChar **attrs ){
 
-   // Support Audacity version 1.1.1 project files
+   // Support Sneedacity version 1.1.1 project files
 
    int i=0;
    bool alias = false;

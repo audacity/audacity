@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TracksBehaviorsPrefs.h
 
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACKSBEHAVIORS_PREFS__
-#define __AUDACITY_TRACKSBEHAVIORS_PREFS__
+#ifndef __SNEEDACITY_TRACKSBEHAVIORS_PREFS__
+#define __SNEEDACITY_TRACKSBEHAVIORS_PREFS__
 
 #include "PrefsPanel.h"
 
@@ -21,7 +21,7 @@ class ShuttleGui;
 
 #define TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tracks Behaviors") }
 
-class AUDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
+class SNEEDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
 {
  public:
    TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid);
@@ -40,8 +40,8 @@ class AUDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
    void PopulateOrExchange(ShuttleGui & S) override;
 };
 
-extern AUDACITY_DLL_API ChoiceSetting TracksBehaviorsSolo;
+extern SNEEDACITY_DLL_API ChoiceSetting TracksBehaviorsSolo;
 
-AUDACITY_DLL_API bool GetEditClipsCanMove();
+SNEEDACITY_DLL_API bool GetEditClipsCanMove();
 
 #endif

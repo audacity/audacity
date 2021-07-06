@@ -1,22 +1,22 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   DeviceManager.h
 
   Created by Michael Chinen (mchinen) on 2/12/11
-  Audacity(R) is copyright (c) 1999-2011 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2011 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
 
 \class DeviceManager
-\brief A singleton that manages the audio devices known to Audacity
+\brief A singleton that manages the audio devices known to Sneedacity
 
 *//*******************************************************************/
 
-#ifndef __AUDACITY_DEVICEMANAGER__
-#define __AUDACITY_DEVICEMANAGER__
+#ifndef __SNEEDACITY_DEVICEMANAGER__
+#define __SNEEDACITY_DEVICEMANAGER__
 
 #include <chrono>
 #include <vector>
@@ -29,7 +29,7 @@
 #endif
 
 // Event sent to the application
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_RESCANNED_DEVICES, wxCommandEvent);
 
 typedef struct DeviceSourceMap {
@@ -43,10 +43,10 @@ typedef struct DeviceSourceMap {
    wxString hostString;
 } DeviceSourceMap;
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
-class AUDACITY_DLL_API DeviceManager final
+class SNEEDACITY_DLL_API DeviceManager final
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
 :  public DeviceChangeHandler

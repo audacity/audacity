@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   RawAudioGuess.cpp
 
@@ -16,7 +16,7 @@
 
 #include "RawAudioGuess.h"
 
-#include "../AudacityException.h"
+#include "../SneedacityException.h"
 
 #include <stdio.h>
 #include <stdlib.h>

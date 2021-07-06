@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WaveClip.h
 
@@ -9,8 +9,8 @@
 
 *******************************************************************/
 
-#ifndef __AUDACITY_WAVECLIP__
-#define __AUDACITY_WAVECLIP__
+#ifndef __SNEEDACITY_WAVECLIP__
+#define __SNEEDACITY_WAVECLIP__
 
 
 
@@ -34,7 +34,7 @@ class WaveCache;
 class WaveTrackCache;
 class wxFileNameWrapper;
 
-class AUDACITY_DLL_API SpecCache {
+class SNEEDACITY_DLL_API SpecCache {
 public:
 
    // Make invalid cache
@@ -168,7 +168,7 @@ public:
    }
 };
 
-class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
+class SNEEDACITY_DLL_API WaveClip final : public XMLTagHandler
 {
 private:
    // It is an error to copy a WaveClip without specifying the

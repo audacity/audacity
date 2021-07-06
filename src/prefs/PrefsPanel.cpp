@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 PrefsPanel.cpp
 
@@ -69,10 +69,10 @@ PluginPath PrefsPanel::GetPath()
 { return BUILTIN_PREFS_PANEL_PREFIX + GetSymbol().Internal(); }
 
 VendorSymbol PrefsPanel::GetVendor()
-{  return XO("Audacity");}
+{  return XO("Sneedacity");}
 
 wxString PrefsPanel::GetVersion()
-{     return AUDACITY_VERSION_STRING;}
+{     return SNEEDACITY_VERSION_STRING;}
 
 PrefsPanel::Registration::Registration( const wxString &name,
    const Factory &factory, bool expanded,

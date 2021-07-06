@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -23,7 +23,7 @@ classes
 
 class WaveTrack;
 
-class CompareAudioCommand final : public AudacityCommand
+class CompareAudioCommand final : public SneedacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -34,7 +34,7 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   // AudacityCommand overrides
+   // SneedacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#compare_Audio";}
    bool Apply(const CommandContext &context) override;
 
@@ -46,7 +46,7 @@ private:
    const WaveTrack *mTrack1;
 
    // Update member variables with project selection data (and validate)
-   bool GetSelection(const CommandContext &context, AudacityProject &proj);
+   bool GetSelection(const CommandContext &context, SneedacityProject &proj);
 
 protected:
    double CompareSample(double value1, double value2) /* not override */;

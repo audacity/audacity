@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SelectHandle.cpp
 
@@ -360,7 +360,7 @@ namespace
 
 UIHandlePtr SelectHandle::HitTest
 (std::weak_ptr<SelectHandle> &holder,
- const TrackPanelMouseState &st, const AudacityProject *pProject,
+ const TrackPanelMouseState &st, const SneedacityProject *pProject,
  const std::shared_ptr<TrackView> &pTrackView)
 {
    // This handle is a little special because there may be some state to
@@ -470,12 +470,12 @@ namespace {
    }
 }
 
-void SelectHandle::Enter(bool, AudacityProject *project)
+void SelectHandle::Enter(bool, SneedacityProject *project)
 {
    SetUseSnap(true, project);
 }
 
-void SelectHandle::SetUseSnap(bool use, AudacityProject *project)
+void SelectHandle::SetUseSnap(bool use, SneedacityProject *project)
 {
    mUseSnap = use;
 
@@ -504,7 +504,7 @@ bool SelectHandle::HasEscape() const
    return HasSnap() && mUseSnap;
 }
 
-bool SelectHandle::Escape(AudacityProject *project)
+bool SelectHandle::Escape(SneedacityProject *project)
 {
    if (SelectHandle::HasEscape()) {
       SetUseSnap(false, project);
@@ -514,7 +514,7 @@ bool SelectHandle::Escape(AudacityProject *project)
 }
 
 UIHandle::Result SelectHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    /// This method gets called when we're handling selection
    /// and the mouse was just clicked.
@@ -780,7 +780,7 @@ UIHandle::Result SelectHandle::Click
 }
 
 UIHandle::Result SelectHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
 
@@ -874,7 +874,7 @@ UIHandle::Result SelectHandle::Drag
 }
 
 HitTestPreview SelectHandle::Preview
-(const TrackPanelMouseState &st, AudacityProject *pProject)
+(const TrackPanelMouseState &st, SneedacityProject *pProject)
 {
    if (!HasSnap() && !mUseSnap)
       // Moved out of snapping; revert to un-escaped state
@@ -985,7 +985,7 @@ HitTestPreview SelectHandle::Preview
 }
 
 UIHandle::Result SelectHandle::Release
-(const TrackPanelMouseEvent &, AudacityProject *pProject,
+(const TrackPanelMouseEvent &, SneedacityProject *pProject,
  wxWindow *)
 {
    using namespace RefreshCode;
@@ -1003,7 +1003,7 @@ UIHandle::Result SelectHandle::Release
       return RefreshNone;
 }
 
-UIHandle::Result SelectHandle::Cancel(AudacityProject *pProject)
+UIHandle::Result SelectHandle::Cancel(SneedacityProject *pProject)
 {
    mSelectionStateChanger.reset();
    ViewInfo::Get( *pProject ).selectedRegion = mInitialSelection;
@@ -1045,7 +1045,7 @@ std::weak_ptr<Track> SelectHandle::FindTrack()
       return pView->FindTrack();
 }
 
-void SelectHandle::Connect(AudacityProject *pProject)
+void SelectHandle::Connect(SneedacityProject *pProject)
 {
    mTimerHandler = std::make_shared<TimerHandler>( this, pProject );
 }
@@ -1053,7 +1053,7 @@ void SelectHandle::Connect(AudacityProject *pProject)
 class SelectHandle::TimerHandler : public wxEvtHandler
 {
 public:
-   TimerHandler( SelectHandle *pParent, AudacityProject *pProject )
+   TimerHandler( SelectHandle *pParent, SneedacityProject *pProject )
       : mParent{ pParent }
       , mConnectedProject{ pProject }
    {
@@ -1068,7 +1068,7 @@ public:
 
 private:
    SelectHandle *mParent;
-   AudacityProject *mConnectedProject;
+   SneedacityProject *mConnectedProject;
 };
 
 void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
@@ -1145,7 +1145,7 @@ void SelectHandle::TimerHandler::OnTimer(wxCommandEvent &event)
 }
 
 /// Reset our selection markers.
-void SelectHandle::StartSelection( AudacityProject *pProject )
+void SelectHandle::StartSelection( SneedacityProject *pProject )
 {
    auto &viewInfo = ViewInfo::Get( *pProject );
    mSelStartValid = true;
@@ -1161,7 +1161,7 @@ void SelectHandle::StartSelection( AudacityProject *pProject )
 
 /// Extend or contract the existing selection
 void SelectHandle::AdjustSelection
-(AudacityProject *pProject,
+(SneedacityProject *pProject,
  ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
  Track *track)
 {
@@ -1388,7 +1388,7 @@ void SelectHandle::StartSnappingFreqSelection
 }
 
 void SelectHandle::MoveSnappingFreqSelection
-   (AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
+   (SneedacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
     int trackTopEdge,
     int trackHeight, TrackView *pTrackView)
 {

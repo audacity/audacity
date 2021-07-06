@@ -1,16 +1,16 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Steve Harris
   Markus Meyer
 
 **********************************************************************/
 
-#ifndef __AUDACITY_DITHER_H__
-#define __AUDACITY_DITHER_H__
+#ifndef __SNEEDACITY_DITHER_H__
+#define __SNEEDACITY_DITHER_H__
 
-#include "audacity/Types.h" // for samplePtr
+#include "sneedacity/Types.h" // for samplePtr
 
 template< typename Enum > class EnumSetting;
 
@@ -25,7 +25,7 @@ public:
     static DitherType FastDitherChoice();
     static DitherType BestDitherChoice();
 
-    static AUDACITY_DLL_API EnumSetting< DitherType > FastSetting, BestSetting;
+    static SNEEDACITY_DLL_API EnumSetting< DitherType > FastSetting, BestSetting;
 
     /// Default constructor
     Dither();
@@ -62,4 +62,4 @@ private:
     float mBuffer[8 /* = BUF_SIZE */];
 };
 
-#endif /* __AUDACITY_DITHER_H__ */
+#endif /* __SNEEDACITY_DITHER_H__ */

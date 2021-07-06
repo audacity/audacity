@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Compressor.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_COMPRESSOR__
-#define __AUDACITY_EFFECT_COMPRESSOR__
+#ifndef __SNEEDACITY_EFFECT_COMPRESSOR__
+#define __SNEEDACITY_EFFECT_COMPRESSOR__
 
 #include "TwoPassSimpleMono.h"
 

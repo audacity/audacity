@@ -31,7 +31,7 @@ $control gain (_ "Amplitude (0 - 1)") real "" 0.8 0 1
 (defun sanitise (val minx maxx)
   (min (max val minx) maxx))
 
-;; Not required with validation in Audacity 2.1.1 but left
+;; Not required with validation in Sneedacity 2.1.1 but left
 ;; for compatibility.
 (setq freq (sanitise freq 1 (/ *sound-srate* 2)))
 (setq decay (sanitise decay 0.1 600))

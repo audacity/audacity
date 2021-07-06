@@ -1,16 +1,16 @@
 //
 //  CommandFunctors.h
-//  Audacity
+//  Sneedacity
 //
 //  Created by Paul Licameli on 4/22/16.
 //
 //
 
-#ifndef __AUDACITY_COMMAND_FUNCTORS__
-#define __AUDACITY_COMMAND_FUNCTORS__
+#ifndef __SNEEDACITY_COMMAND_FUNCTORS__
+#define __SNEEDACITY_COMMAND_FUNCTORS__
 
-class AudacityProject;
-class AudacityApp;
+class SneedacityProject;
+class SneedacityApp;
 class CommandContext;
 class wxEvtHandler;
 
@@ -28,9 +28,9 @@ class wxEvtHandler;
 using CommandHandlerObject = wxEvtHandler;
 
 // First of two functions registered with each command: an extractor
-// of the handler object from the AudacityProject
+// of the handler object from the SneedacityProject
 using CommandHandlerFinder =
-   std::function< CommandHandlerObject&(AudacityProject &) >;
+   std::function< CommandHandlerObject&(SneedacityProject &) >;
 
 // Second of two function pointers registered with each command: a pointer
 // to a member function of the handler object

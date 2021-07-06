@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 NoteTrackVRulerControls.cpp
 
@@ -35,7 +35,7 @@ NoteTrackVRulerControls::~NoteTrackVRulerControls()
 
 std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *pProject)
+ const SneedacityProject *pProject)
 {
    std::vector<UIHandlePtr> results;
    UIHandlePtr result;
@@ -55,7 +55,7 @@ std::vector<UIHandlePtr> NoteTrackVRulerControls::HitTest
 }
 
 unsigned NoteTrackVRulerControls::HandleWheelRotation
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;

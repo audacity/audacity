@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODWaveTrackTaskQueue.h
 
   Created by Michael Chinen (mchinen)
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -19,8 +19,8 @@ tasks associated with a WaveTrack.
 
 
 
-#ifndef __AUDACITY_ODWAVETRACKTASKQUEUE__
-#define __AUDACITY_ODWAVETRACKTASKQUEUE__
+#ifndef __SNEEDACITY_ODWAVETRACKTASKQUEUE__
+#define __SNEEDACITY_ODWAVETRACKTASKQUEUE__
 
 #include <vector>
 #include "ODTaskThread.h"

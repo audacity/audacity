@@ -126,9 +126,9 @@ void OnFullScreen(const CommandContext &context)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static ExtraActions::Handler instance;
    return instance;
 };
@@ -222,7 +222,7 @@ BaseItemSharedPtr ExtraMiscItems()
    static BaseItemSharedPtr items{
    Items( wxT("Misc"),
       // Delayed evaluation
-      []( AudacityProject &project ) {
+      []( SneedacityProject &project ) {
 
    static const auto key =
 #ifdef __WXMAC__
@@ -238,7 +238,7 @@ BaseItemSharedPtr ExtraMiscItems()
          Command( wxT("FullScreenOnOff"), XXO("&Full Screen (on/off)"),
             FN(OnFullScreen),
             AlwaysEnabledFlag,
-            Options{ key }.CheckTest( []( const AudacityProject &project ) {
+            Options{ key }.CheckTest( []( const SneedacityProject &project ) {
                return GetProjectFrame( project )
                   .wxTopLevelWindow::IsFullScreen(); } ) )
         );

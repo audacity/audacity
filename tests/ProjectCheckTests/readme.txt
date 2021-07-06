@@ -1,4 +1,4 @@
-Audacity Test Files for Project Check (DirManager::ProjectFSCK)
+Sneedacity Test Files for Project Check (DirManager::ProjectFSCK)
 Vaughan Johnson
 2010-08-10
 

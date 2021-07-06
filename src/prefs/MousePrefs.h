@@ -1,13 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MousePrefs.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MOUSE_PREFS__
-#define __AUDACITY_MOUSE_PREFS__
+#ifndef __SNEEDACITY_MOUSE_PREFS__
+#define __SNEEDACITY_MOUSE_PREFS__
 
 #include <wx/defs.h>
 

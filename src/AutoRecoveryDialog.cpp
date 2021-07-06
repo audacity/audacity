@@ -16,7 +16,7 @@ Paul Licameli split from AutoRecovery.cpp
 #include "ProjectFileManager.h"
 #include "ShuttleGui.h"
 #include "TempDirectory.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h"
 
 #include <wx/dir.h>
@@ -26,7 +26,7 @@ Paul Licameli split from AutoRecovery.cpp
 #include <wx/listctrl.h>
 
 enum {
-   ID_QUIT_AUDACITY = 10000,
+   ID_QUIT_SNEEDACITY = 10000,
    ID_DISCARD_SELECTED,
    ID_RECOVER_SELECTED,
    ID_SKIP,
@@ -36,7 +36,7 @@ enum {
 class AutoRecoveryDialog final : public wxDialogWrapper
 {
 public:
-   explicit AutoRecoveryDialog(AudacityProject *proj);
+   explicit AutoRecoveryDialog(SneedacityProject *proj);
 
    bool HasRecoverables() const;
    FilePaths GetRecoverables();
@@ -46,7 +46,7 @@ private:
    void PopulateList();
    bool HaveChecked();
 
-   void OnQuitAudacity(wxCommandEvent &evt);
+   void OnQuitSneedacity(wxCommandEvent &evt);
    void OnDiscardSelected(wxCommandEvent &evt);
    void OnRecoverSelected(wxCommandEvent &evt);
    void OnSkip(wxCommandEvent &evt);
@@ -56,14 +56,14 @@ private:
 
    FilePaths mFiles;
    wxListCtrl *mFileList;
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
 
 public:
    DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialogWrapper)
-   EVT_BUTTON(ID_QUIT_AUDACITY, AutoRecoveryDialog::OnQuitAudacity)
+   EVT_BUTTON(ID_QUIT_SNEEDACITY, AutoRecoveryDialog::OnQuitSneedacity)
    EVT_BUTTON(ID_DISCARD_SELECTED, AutoRecoveryDialog::OnDiscardSelected)
    EVT_BUTTON(ID_RECOVER_SELECTED, AutoRecoveryDialog::OnRecoverSelected)
    EVT_BUTTON(ID_SKIP, AutoRecoveryDialog::OnSkip)
@@ -71,7 +71,7 @@ BEGIN_EVENT_TABLE(AutoRecoveryDialog, wxDialogWrapper)
    EVT_LIST_ITEM_ACTIVATED(ID_FILE_LIST, AutoRecoveryDialog::OnItemActivated)
 END_EVENT_TABLE()
 
-AutoRecoveryDialog::AutoRecoveryDialog(AudacityProject *project)
+AutoRecoveryDialog::AutoRecoveryDialog(SneedacityProject *project)
 :  wxDialogWrapper(nullptr, wxID_ANY, XO("Automatic Crash Recovery"),
                    wxDefaultPosition, wxDefaultSize,
                    (wxDEFAULT_DIALOG_STYLE & (~wxCLOSE_BOX)) | wxRESIZE_BORDER), // no close box
@@ -122,7 +122,7 @@ void AutoRecoveryDialog::PopulateOrExchange(ShuttleGui &S)
 
       S.StartHorizontalLay(wxALIGN_CENTRE, 0);
       {
-         S.Id(ID_QUIT_AUDACITY).AddButton(XXO("&Quit Sneedacity"));
+         S.Id(ID_QUIT_SNEEDACITY).AddButton(XXO("&Quit Sneedacity"));
          S.Id(ID_DISCARD_SELECTED).AddButton(XXO("&Discard Selected"));
          S.Id(ID_RECOVER_SELECTED).AddButton(XXO("&Recover Selected"), wxALIGN_CENTRE, true);
          S.Id(ID_SKIP).AddButton(XXO("&Skip"));
@@ -223,14 +223,14 @@ bool AutoRecoveryDialog::HaveChecked()
       }
    }
 
-   AudacityMessageBox(XO("No projects selected"), XO("Automatic Crash Recovery"));
+   SneedacityMessageBox(XO("No projects selected"), XO("Automatic Crash Recovery"));
 
    return false;
 }
 
-void AutoRecoveryDialog::OnQuitAudacity(wxCommandEvent &WXUNUSED(evt))
+void AutoRecoveryDialog::OnQuitSneedacity(wxCommandEvent &WXUNUSED(evt))
 {
-   EndModal(ID_QUIT_AUDACITY);
+   EndModal(ID_QUIT_SNEEDACITY);
 }
 
 void AutoRecoveryDialog::OnDiscardSelected(wxCommandEvent &WXUNUSED(evt))
@@ -258,7 +258,7 @@ void AutoRecoveryDialog::OnDiscardSelected(wxCommandEvent &WXUNUSED(evt))
    // Don't give this warning message if all of the checked items are
    // previously saved, non-temporary projects.
    if (selectedTemporary) {
-      int ret = AudacityMessageBox(
+      int ret = SneedacityMessageBox(
          XO("Are you sure you want to discard the selected projects?\n\n"
             "Choosing \"Yes\" permanently deletes the selected projects immediately."),
          XO("Automatic Crash Recovery"),
@@ -332,7 +332,7 @@ void AutoRecoveryDialog::OnRecoverSelected(wxCommandEvent &WXUNUSED(evt))
       {
          if (!selected)
          {
-            AudacityMessageBox(XO("No projects selected"), XO("Automatic Crash Recovery"));
+            SneedacityMessageBox(XO("No projects selected"), XO("Automatic Crash Recovery"));
          }
          break;
       }
@@ -417,7 +417,7 @@ void AutoRecoveryDialog::OnListKeyDown(wxKeyEvent &evt)
 ////////////////////////////////////////////////////////////////////////////
 
 static bool RecoverAllProjects(const FilePaths &files,
-                               AudacityProject *&pproj)
+                               SneedacityProject *&pproj)
 {
    // Open a project window for each auto save file
    wxString filename;
@@ -425,7 +425,7 @@ static bool RecoverAllProjects(const FilePaths &files,
 
    for (auto &file: files)
    {
-      AudacityProject *proj = nullptr;
+      SneedacityProject *proj = nullptr;
       // Reuse any existing project window, which will be the empty project
       // created at application startup
       std::swap(proj, pproj);
@@ -447,7 +447,7 @@ static void DiscardAllProjects(const FilePaths &files)
       ProjectFileManager::DiscardAutosave(file);
 }
 
-bool ShowAutoRecoveryDialogIfNeeded(AudacityProject *&pproj, bool *didRecoverAnything)
+bool ShowAutoRecoveryDialogIfNeeded(SneedacityProject *&pproj, bool *didRecoverAnything)
 {
    if (didRecoverAnything)
    {
@@ -499,7 +499,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject *&pproj, bool *didRecoverAny
          break;
 
       default:
-         // This includes ID_QUIT_AUDACITY
+         // This includes ID_QUIT_SNEEDACITY
          return false;
       }
    }

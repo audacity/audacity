@@ -1,13 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ReadOnlyText.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_READONLYTEXT__
-#define __AUDACITY_READONLYTEXT__
+#ifndef __SNEEDACITY_READONLYTEXT__
+#define __SNEEDACITY_READONLYTEXT__
 
 
 #include <wx/wx.h>
@@ -134,4 +134,4 @@ public:
    }
 };
 
-#endif // __AUDACITY_READONLYTEXT__
+#endif // __SNEEDACITY_READONLYTEXT__

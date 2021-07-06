@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ErrorReportDialog.cpp
 
@@ -54,13 +54,13 @@ ErrorReportDialog::ErrorReportDialog(
     , mHelpUrl(helpUrl)
     , mIsModal(modal)
 {
-   audacity::sentry::Exception ex = audacity::sentry::Exception::Create(
-      audacity::ToUTF8(dlogTitle.Debug()),message.Debug());
+   sneedacity::sentry::Exception ex = sneedacity::sentry::Exception::Create(
+      sneedacity::ToUTF8(dlogTitle.Debug()),message.Debug());
 
    if (!log.empty())
       ex.AddData("log", log);
 
-   mReport = std::make_unique<audacity::sentry::Report> (ex);
+   mReport = std::make_unique<sneedacity::sentry::Report> (ex);
 
    ShuttleGui S(this, eIsCreating);
 
@@ -107,7 +107,7 @@ ErrorReportDialog::ErrorReportDialog(
          S.AddSpace(0, 20);
 
          S.AddVariableText(XO(
-               "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
+               "Click \"Send\" to submit the report to Sneedacity. This information is collected anonymously."))
             ->SetFont(textFont);
 
          S.AddSpace(0, 20);
@@ -181,7 +181,7 @@ void ErrorReportDialog::OnSend(wxCommandEvent& event)
 {
    Disable();
 
-   mReport->AddUserComment(audacity::ToUTF8(mCommentsControl->GetValue()));
+   mReport->AddUserComment(sneedacity::ToUTF8(mCommentsControl->GetValue()));
 
    mReport->Send(
       [this](int code, std::string body) { 

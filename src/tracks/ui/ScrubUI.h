@@ -1,6 +1,6 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  ScrubUI.h
  
@@ -8,8 +8,8 @@
  
  **********************************************************************/
 
-#ifndef __AUDACITY_SCRUB_UI__
-#define __AUDACITY_SCRUB_UI__
+#ifndef __SNEEDACITY_SCRUB_UI__
+#define __SNEEDACITY_SCRUB_UI__
 
 
 

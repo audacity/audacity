@@ -9,18 +9,18 @@ fi
 
 export LD_LIBRARY_PATH="${APPDIR}/lib:${LD_LIBRARY_PATH}"
 
-export AUDACITY_PATH="${AUDACITY_PATH}:${APPDIR}/share/audacity"
-export AUDACITY_MODULES_PATH="${AUDACITY_MODULES_PATH}:${APPDIR}/lib/modules"
+export SNEEDACITY_PATH="${SNEEDACITY_PATH}:${APPDIR}/share/sneedacity"
+export SNEEDACITY_MODULES_PATH="${SNEEDACITY_MODULES_PATH}:${APPDIR}/lib/modules"
 
 function help()
 {
-    # Normal audacity help
-    "${APPDIR}/bin/audacity" --help
+    # Normal sneedacity help
+    "${APPDIR}/bin/sneedacity" --help
     # Special options handled by this script
     cat >&2 <<EOF
   --readme              display README
   --license             display LICENSE
-  --man[ual|page]       display audacity(1) manual page
+  --man[ual|page]       display sneedacity(1) manual page
   --check-dependencies  check library dependency fulfillment (developer tool)
 
 EOF
@@ -34,19 +34,19 @@ case "$1" in
     help
     ;;
 --readme )
-    exec less "${APPDIR}/share/doc/audacity/README.txt"
+    exec less "${APPDIR}/share/doc/sneedacity/README.txt"
     ;;
 --license )
-    exec less "${APPDIR}/share/doc/audacity/LICENSE.txt"
+    exec less "${APPDIR}/share/doc/sneedacity/LICENSE.txt"
     ;;
 --man|--manual|--manpage )
-    exec man "${APPDIR}/share/man/man1/audacity.1"
+    exec man "${APPDIR}/share/man/man1/sneedacity.1"
     ;;
 --check-depends|--check-dependencies )
     exec bash "${APPDIR}/bin/check_dependencies"
     ;;
 * )
-    # Other arguments go to Audacity
-    exec "${APPDIR}/bin/audacity" "$@"
+    # Other arguments go to Sneedacity
+    exec "${APPDIR}/bin/sneedacity" "$@"
     ;;
 esac

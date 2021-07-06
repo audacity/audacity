@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2010 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    SilentBlockFile.h
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SILENT_BLOCKFILE__
-#define __AUDACITY_SILENT_BLOCKFILE__
+#ifndef __SNEEDACITY_SILENT_BLOCKFILE__
+#define __SNEEDACITY_SILENT_BLOCKFILE__
 
 #include "../BlockFile.h"
 

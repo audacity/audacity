@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Repeat.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_REPEAT__
-#define __AUDACITY_EFFECT_REPEAT__
+#ifndef __SNEEDACITY_EFFECT_REPEAT__
+#define __SNEEDACITY_EFFECT_REPEAT__
 
 #include "Effect.h"
 

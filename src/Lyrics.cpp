@@ -64,7 +64,7 @@ void HighlightTextCtrl::OnMouseEvent(wxMouseEvent& event)
 
          //v Should probably select to end as in
          // SelectUtilities::Handler::OnSelectCursorEnd,
-         // but better to generalize that in AudacityProject methods.
+         // but better to generalize that in SneedacityProject methods.
          selectedRegion.setT1( pCurSyl->t );
       }
    }
@@ -87,7 +87,7 @@ END_EVENT_TABLE()
 IMPLEMENT_CLASS(LyricsPanel, wxPanel)
 
 LyricsPanel::LyricsPanel(wxWindow* parent, wxWindowID id,
-               AudacityProject *project,
+               SneedacityProject *project,
                const wxPoint& pos /*= wxDefaultPosition*/,
                const wxSize& size /*= wxDefaultSize*/) :
    wxPanelWrapper(parent, id, pos, size, wxWANTS_CHARS),

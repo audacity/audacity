@@ -1,16 +1,16 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   KeyView.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WIDGETS_KEYVIEW__
-#define __AUDACITY_WIDGETS_KEYVIEW__
+#ifndef __SNEEDACITY_WIDGETS_KEYVIEW__
+#define __SNEEDACITY_WIDGETS_KEYVIEW__
 
 
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros

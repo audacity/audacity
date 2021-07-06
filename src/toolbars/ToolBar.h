@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ToolBar.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TOOLBAR__
-#define __AUDACITY_TOOLBAR__
+#ifndef __SNEEDACITY_TOOLBAR__
+#define __SNEEDACITY_TOOLBAR__
 
 #include <functional>
 #include <vector>
@@ -51,7 +51,7 @@ class ToolBarResizer;
 //
 // Custom event
 //
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TOOLBAR_UPDATED, -1);
+DECLARE_EXPORTED_EVENT_TYPE(SNEEDACITY_DLL_API, EVT_TOOLBAR_UPDATED, -1);
 
 //
 // Height of a single line toolbar
@@ -90,9 +90,9 @@ enum ToolBarID
 // How may pixels padding each side of a floating toolbar
 enum { ToolBarFloatMargin = 1 };
 
-class AudacityProject;
+class SneedacityProject;
 
-class AUDACITY_DLL_API ToolBar /* not final */
+class SNEEDACITY_DLL_API ToolBar /* not final */
 : public wxPanelWrapper
 , protected PrefsListener
 {
@@ -101,7 +101,7 @@ class AUDACITY_DLL_API ToolBar /* not final */
 
    using Holder = wxWindowPtr<ToolBar>;
 
-   ToolBar( AudacityProject &project,
+   ToolBar( SneedacityProject &project,
       int type, const TranslatableString & label, const wxString & section,
       bool resizable = false);
    virtual ~ToolBar();
@@ -176,7 +176,7 @@ public:
 
    static
    void SetButtonToolTip
-      (AudacityProject &project, AButton &button,
+      (SneedacityProject &project, AButton &button,
        // If a shortcut key is defined for the command, then it is appended,
        // parenthesized, after the translated name.
        const ComponentInterfaceSymbol commands[], size_t nCommands);
@@ -232,7 +232,7 @@ public:
    void OnMouseEvents(wxMouseEvent &event);
 
  protected:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
    TranslatableString mLabel;
    wxString mSection;
    int mType;
@@ -258,8 +258,8 @@ public:
    friend class ToolBarResizer;
 };
 
-struct AUDACITY_DLL_API RegisteredToolbarFactory {
-   using Function = std::function< ToolBar::Holder( AudacityProject & ) >;
+struct SNEEDACITY_DLL_API RegisteredToolbarFactory {
+   using Function = std::function< ToolBar::Holder( SneedacityProject & ) >;
    using Functions = std::vector< Function >;
 
    RegisteredToolbarFactory( int id, const Function &function );

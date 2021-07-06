@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 CommonTrackControls.cpp
 
@@ -22,7 +22,7 @@ Paul Licameli split from TrackControls.cpp
 #include "../../TrackPanelMouseEvent.h"
 #include "../../TrackUtilities.h"
 #include <wx/textdlg.h>
-#include "../../commands/AudacityCommand.h"
+#include "../../commands/SneedacityCommand.h"
 #include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
 #include "../../Track.h"
@@ -33,7 +33,7 @@ Paul Licameli split from TrackControls.cpp
 
 std::vector<UIHandlePtr> CommonTrackControls::HitTest
 (const TrackPanelMouseState &st,
- const AudacityProject *WXUNUSED(project))
+ const SneedacityProject *WXUNUSED(project))
 {
    // Hits are mutually exclusive, results single
 
@@ -185,11 +185,11 @@ END_POPUP_MENU()
 
 
 
-// An example of using an AudacityCommand simply to create a dialog.
+// An example of using an SneedacityCommand simply to create a dialog.
 // We can add additional functions later, if we want to make it
 // available to scripting.
 // However there is no reason to, as SetTrackStatus is already provided.
-class SetTrackNameCommand : public AudacityCommand
+class SetTrackNameCommand : public SneedacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -227,7 +227,7 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
    Track *const pTrack = mpData->pTrack;
    if (pTrack)
    {
-      AudacityProject *const proj = &mpData->project;
+      SneedacityProject *const proj = &mpData->project;
       const wxString oldName = pTrack->GetName();
 
       SetTrackNameCommand Command;
@@ -252,7 +252,7 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
 
 void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 {
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
    TrackUtilities::MoveChoice choice;
    switch (event.GetId()) {
    default:
@@ -275,7 +275,7 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 }
 
 unsigned CommonTrackControls::DoContextMenu(
-   const wxRect &rect, wxWindow *pParent, wxPoint *, AudacityProject *pProject)
+   const wxRect &rect, wxWindow *pParent, wxPoint *, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    wxRect buttonRect;

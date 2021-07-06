@@ -1,10 +1,10 @@
 
-set( TARGET Audacity )
+set( TARGET Sneedacity )
 set( TARGET_ROOT ${topdir}/src )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
-# Allow modules to link against the Audacity executable
+# Allow modules to link against the Sneedacity executable
 set( CMAKE_ENABLE_EXPORTS ON )
 
 add_executable( ${TARGET} )
@@ -23,7 +23,7 @@ if( GIT_FOUND )
       COMMAND
          ${CMAKE_COMMAND} -D GIT="${GIT_EXECUTABLE}"
                           -D "_PRVDIR=${_PRVDIR}"
-                          -P "${AUDACITY_MODULE_PATH}/Version.cmake"
+                          -P "${SNEEDACITY_MODULE_PATH}/Version.cmake"
       WORKING_DIRECTORY
          ${topdir}
    )
@@ -85,17 +85,17 @@ list( APPEND SOURCES
       AllThemeResources.cpp
       AllThemeResources.h
       AttachedVirtualFunction.h
-      AudacityApp.cpp
-      AudacityApp.h
-      $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
-      AudacityException.cpp
-      AudacityException.h
-      AudacityFileConfig.cpp
-      AudacityFileConfig.h
-      AudacityHeaders.cpp
-      AudacityHeaders.h
-      AudacityLogger.cpp
-      AudacityLogger.h
+      SneedacityApp.cpp
+      SneedacityApp.h
+      $<$<BOOL:${wxIS_MAC}>:SneedacityApp.mm>
+      SneedacityException.cpp
+      SneedacityException.h
+      SneedacityFileConfig.cpp
+      SneedacityFileConfig.h
+      SneedacityHeaders.cpp
+      SneedacityHeaders.h
+      SneedacityLogger.cpp
+      SneedacityLogger.h
       AudioIO.cpp
       AudioIO.h
       AudioIOBase.cpp
@@ -347,8 +347,8 @@ list( APPEND SOURCES
 
       commands/AppCommandEvent.cpp
       commands/AppCommandEvent.h
-      commands/AudacityCommand.cpp
-      commands/AudacityCommand.h
+      commands/SneedacityCommand.cpp
+      commands/SneedacityCommand.h
       commands/BatchEvalCommand.cpp
       commands/BatchEvalCommand.h
       commands/Command.cpp
@@ -902,8 +902,8 @@ list( APPEND SOURCES
       widgets/ASlider.h
       widgets/AttachableScrollBar.cpp
       widgets/AttachableScrollBar.h
-      widgets/AudacityMessageBox.cpp
-      widgets/AudacityMessageBox.h
+      widgets/SneedacityMessageBox.cpp
+      widgets/SneedacityMessageBox.h
       widgets/BackedPanel.cpp
       widgets/BackedPanel.h
       widgets/ErrorDialog.cpp
@@ -982,7 +982,7 @@ list( APPEND SOURCES
       xml/XMLTagHandler.h
       xml/XMLWriter.cpp
       xml/XMLWriter.h
-      xml/audacityproject.dtd
+      xml/sneedacityproject.dtd
 
       Experimental.cmake
 )
@@ -991,14 +991,14 @@ list( APPEND SOURCES
 #
 #
 list( APPEND HEADERS
-   ../include/audacity/EffectInterface.h
-   ../include/audacity/Types.h
-   ../include/audacity/ConfigInterface.h
-   ../include/audacity/ModuleInterface.h
-   ../include/audacity/PluginInterface.h
-   ../include/audacity/ComponentInterface.h
-   ../include/audacity/EffectAutomationParameters.h
-   ../include/audacity/ImporterInterface.h
+   ../include/sneedacity/EffectInterface.h
+   ../include/sneedacity/Types.h
+   ../include/sneedacity/ConfigInterface.h
+   ../include/sneedacity/ModuleInterface.h
+   ../include/sneedacity/PluginInterface.h
+   ../include/sneedacity/ComponentInterface.h
+   ../include/sneedacity/EffectAutomationParameters.h
+   ../include/sneedacity/ImporterInterface.h
 )
 
 #
@@ -1023,7 +1023,7 @@ list( APPEND RESOURCES
 #
 list( APPEND DEFINES
    PRIVATE
-      BUILDING_AUDACITY
+      BUILDING_SNEEDACITY
       WXUSINGDLL
       CMAKE
       $<$<BOOL:${HAVE_LRINT}>:
@@ -1056,7 +1056,7 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    )
 endif()
 
-audacity_append_common_compiler_options( OPTIONS "${${_OPT}use_pch}" )
+sneedacity_append_common_compiler_options( OPTIONS "${${_OPT}use_pch}" )
 
 list( APPEND LDFLAGS
    PRIVATE
@@ -1099,7 +1099,7 @@ list( APPEND LIBRARIES
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:pthread>
 )
 
-set( BUILDING_AUDACITY YES )
+set( BUILDING_SNEEDACITY YES )
 set( INSTALL_PREFIX "${_PREFIX}" )
 set( PKGLIBDIR "${_PKGLIBDIR}" )
 set( LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}" )
@@ -1128,7 +1128,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
 
    # Define the Windows specific resources
    list( APPEND WIN_RESOURCES
-      ../win/audacity.rc
+      ../win/sneedacity.rc
    )
 
    # Copy over the wxWidgets DLLs
@@ -1138,10 +1138,10 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       TARGET
          ${TARGET}
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Sneedacity.exe"
                           -D DST="${_EXEDIR}"
                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
-                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+                          -P ${SNEEDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1173,13 +1173,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
 
    # Define Mac specific resources
    list( APPEND MAC_RESOURCES
-      ../mac/Resources/Audacity.icns
-      ../mac/Resources/AudacityAIFF.icns
-      ../mac/Resources/AudacityAU.icns
-      ../mac/Resources/AudacityMP3.icns
-      ../mac/Resources/AudacityOGG.icns
-      ../mac/Resources/AudacityProject.icns
-      ../mac/Resources/AudacityWAV.icns
+      ../mac/Resources/Sneedacity.icns
+      ../mac/Resources/SneedacityAIFF.icns
+      ../mac/Resources/SneedacityAU.icns
+      ../mac/Resources/SneedacityMP3.icns
+      ../mac/Resources/SneedacityOGG.icns
+      ../mac/Resources/SneedacityProject.icns
+      ../mac/Resources/SneedacityWAV.icns
    )
 
    set_target_properties(
@@ -1195,7 +1195,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    # These sources must be compiled as Objective C++ and excluded
    # from precompiled header usage
    set_source_files_properties(
-      AudacityApp.mm
+      SneedacityApp.mm
       KeyboardCapture.cpp
       effects/EffectUI.cpp
       effects/VST/VSTControlOSX.mm
@@ -1223,10 +1223,10 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       TARGET
          ${TARGET}
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Sneedacity"
                           -D DST="${_PKGLIB}"
                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
-                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+                          -P ${SNEEDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 
@@ -1248,7 +1248,7 @@ else()
    # (Don't use generator expressions since it will leave null/empty
    # entries in the list.)
    set( MIMETYPES
-      application/x-audacity-project
+      application/x-sneedacity-project
    )
    if( USE_FFMPEG )
       list( APPEND MIMETYPES
@@ -1285,22 +1285,22 @@ else()
    endif()
 
    # Create the desktop file
-   configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
+   configure_file( sneedacity.desktop.in ${_INTDIR}/sneedacity.desktop )
 
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
          ${TARGET}
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/sneedacity"
                           -D DST="${_DEST}/${_PKGLIB}"
                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
-                          -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+                          -P ${SNEEDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 endif()
 
-set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )
+set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${SNEEDACITY_NAME} )
 
 organize_source( "${TARGET_ROOT}/.." "include" "${HEADERS}" )
 organize_source( "${TARGET_ROOT}/../presets" "presets" "${RESOURCES}" )
@@ -1317,13 +1317,13 @@ source_group(
     PREFIX
         "CMake"
     FILES
-        ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.cxx
-        ${_INTDIR}/CMakeFiles/Audacity.dir/cmake_pch.hxx
+        ${_INTDIR}/CMakeFiles/Sneedacity.dir/cmake_pch.cxx
+        ${_INTDIR}/CMakeFiles/Sneedacity.dir/cmake_pch.hxx
 )
 
-# Define AUDACITY_DLL_API
-import_symbol_define( import_symbol AUDACITY_DLL )
-export_symbol_define( export_symbol AUDACITY_DLL )
+# Define SNEEDACITY_DLL_API
+import_symbol_define( import_symbol SNEEDACITY_DLL )
+export_symbol_define( export_symbol SNEEDACITY_DLL )
 list( APPEND DEFINES PRIVATE "${export_symbol}" INTERFACE "${import_symbol}" )
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
@@ -1332,7 +1332,7 @@ target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
 target_link_libraries( ${TARGET} ${LIBRARIES} )
-target_link_libraries( ${TARGET} PUBLIC ${AUDACITY_LIBRARIES} )
+target_link_libraries( ${TARGET} PUBLIC ${SNEEDACITY_LIBRARIES} )
 
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    if( ${_OPT}use_pch )
@@ -1341,7 +1341,7 @@ if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
          $<$<PLATFORM_ID:Windows>:${CMAKE_BINARY_DIR}/src/private/configwin.h>
          $<$<PLATFORM_ID:Darwin>:${CMAKE_BINARY_DIR}/src/private/configmac.h>
          $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:${CMAKE_BINARY_DIR}/src/private/configunix.h>
-         AudacityHeaders.h
+         SneedacityHeaders.h
       )
    else()
       message( STATUS "Not using precompiled headers" )
@@ -1367,22 +1367,22 @@ else()
                DESTINATION "${_LIBDIR}"
                USE_SOURCE_PERMISSIONS
                FILES_MATCHING PATTERN "*.so*" )
-      install( FILES "${_INTDIR}/audacity.desktop"
+      install( FILES "${_INTDIR}/sneedacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.txt"
-               DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )
-      install( FILES "${_SRCDIR}/audacity.xml"
+               DESTINATION "${_DATADIR}/doc/${SNEEDACITY_NAME}" )
+      install( FILES "${_SRCDIR}/sneedacity.xml"
                DESTINATION "${_DATADIR}/mime/packages" )
       install( FILES "${topdir}/presets/EQDefaultCurves.xml"
                DESTINATION "${_PKGDATA}" )
-      install( PROGRAMS "${PROJECT_SOURCE_DIR}/linux/audacity.sh"
+      install( PROGRAMS "${PROJECT_SOURCE_DIR}/linux/sneedacity.sh"
                DESTINATION "."
-               RENAME "audacity" )
+               RENAME "sneedacity" )
    endif()
 endif()
 
 # collect dependency information for third party libraries
-list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
+list( APPEND GRAPH_EDGES "Sneedacity [shape=house]" )
 foreach( LIBRARY ${LIBRARIES} )
    if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
       canonicalize_node_name(LIBRARY "${LIBRARY}")

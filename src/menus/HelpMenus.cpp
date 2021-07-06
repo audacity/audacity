@@ -6,7 +6,7 @@
 
 #include "../AboutDialog.h"
 #include "../AllThemeResources.h"
-#include "../AudacityLogger.h"
+#include "../SneedacityLogger.h"
 #include "../AudioIOBase.h"
 #include "../CommonCommandFlags.h"
 #include "../CrashReport.h" // for HAS_CRASH_REPORT
@@ -22,14 +22,14 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/PrefsDialog.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
 // private helper classes and functions
 namespace {
 
 void ShowDiagnostics(
-   AudacityProject &project, const wxString &info,
+   SneedacityProject &project, const wxString &info,
    const TranslatableString &description, const wxString &defaultPath,
    bool fixedWidth = false)
 {
@@ -75,7 +75,7 @@ void ShowDiagnostics(
       {
          if (!text->SaveFile(fName))
          {
-            AudacityMessageBox(
+            SneedacityMessageBox(
                XO("Unable to save %s").Format( description ),
                fileDialogTitle);
          }
@@ -95,7 +95,7 @@ class QuickFixDialog : public wxDialogWrapper
 public:
    using PrefSetter = std::function< void() > ;
 
-   QuickFixDialog(wxWindow * pParent, AudacityProject &project);
+   QuickFixDialog(wxWindow * pParent, SneedacityProject &project);
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
    void AddStuck( ShuttleGui & S, bool & bBool,
@@ -107,7 +107,7 @@ public:
    void OnHelp(const ManualPageID &Str);
    void OnFix(const PrefSetter &setter, wxWindowID id);
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    int mItem;
    bool mbSyncLocked;
@@ -125,7 +125,7 @@ BEGIN_EVENT_TABLE(QuickFixDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_CANCEL,                                        QuickFixDialog::OnCancel)
 END_EVENT_TABLE();
 
-QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
+QuickFixDialog::QuickFixDialog(wxWindow * pParent, SneedacityProject &project) :
       wxDialogWrapper(pParent, wxID_ANY, XO("Do you have these problems?"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE )
@@ -203,7 +203,7 @@ void QuickFixDialog::PopulateOrExchange(ShuttleGui & S)
          mItem = -1;
 
          auto defaultAction =
-         [](AudacityProject *pProject, const wxString &path){ return
+         [](SneedacityProject *pProject, const wxString &path){ return
             [pProject, path]{
                gPrefs->Write(path, 0);
                gPrefs->Flush();
@@ -342,7 +342,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
 
 void OnShowLog( const CommandContext &context )
 {
-   auto logger = AudacityLogger::Get();
+   auto logger = SneedacityLogger::Get();
    if (logger) {
       logger->Show();
    }
@@ -469,7 +469,7 @@ void OnAbout(const CommandContext &context)
 
 // Only does the update checks if it's an ALPHA build and not disabled by
 // preferences.
-void MayCheckForUpdates(AudacityProject &project)
+void MayCheckForUpdates(SneedacityProject &project)
 {
 #ifdef IS_ALPHA
    OnCheckForUpdates(project);
@@ -487,9 +487,9 @@ void OnHelpWelcome(const CommandContext &context)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static HelpActions::Handler instance;
    return instance;
 };
@@ -506,7 +506,7 @@ BaseItemSharedPtr HelpMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
-         // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
+         // QuickFix menu item not in Sneedacity 2.3.1 whilst we discuss further.
    #ifdef EXPERIMENTAL_DA
          // DA: Has QuickFix menu item.
          Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
@@ -514,8 +514,8 @@ BaseItemSharedPtr HelpMenu()
          // DA: 'Getting Started' rather than 'Quick Help'.
          Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp),
             AlwaysEnabledFlag ),
-         // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
+         // DA: Emphasise it is the Sneedacity Manual (No separate DA manual).
+         Command( wxT("Manual"), XXO("Sneedacity &Manual"), FN(OnManual),
             AlwaysEnabledFlag )
 
    #else
@@ -576,7 +576,7 @@ BaseItemSharedPtr HelpMenu()
       ,
 #endif
 
-         Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
+         Command( wxT("About"), XXO("&About Sneedacity..."), FN(OnAbout),
             AlwaysEnabledFlag )
       )
    ) ) };

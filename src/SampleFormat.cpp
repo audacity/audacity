@@ -26,7 +26,7 @@
   clipping by 1 LSB.  This creates some distortion, but I (MJS) have
   not been able to measure it, it's so small.  Zero is preserved.
 
-  http://limpet.net/audacity/bugzilla/show_bug.cgi?id=200
+  http://limpet.net/sneedacity/bugzilla/show_bug.cgi?id=200
   leads to some of the discussions that were held about this.
 
    Note: These things are now handled by the Dither class, which

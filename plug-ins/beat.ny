@@ -4,7 +4,7 @@ $type analyze
 $name (_ "Beat Finder")
 $manpage "Beat_Finder"
 $action (_ "Finding beats...")
-$author (_ "Audacity")
+$author (_ "Sneedacity")
 $release 2.3.2
 $copyright (_ "Released under terms of the GNU General Public License version 2")
 

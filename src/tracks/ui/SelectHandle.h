@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SelectHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SELECT_HANDLE__
-#define __AUDACITY_SELECT_HANDLE__
+#ifndef __SNEEDACITY_SELECT_HANDLE__
+#define __SNEEDACITY_SELECT_HANDLE__
 
 #include "../../UIHandle.h"
 #include "../../SelectedRegion.h"
@@ -27,7 +27,7 @@ class ViewInfo;
 class WaveTrack;
 class wxMouseState;
 
-class AUDACITY_DLL_API SelectHandle : public UIHandle
+class SNEEDACITY_DLL_API SelectHandle : public UIHandle
 {
    SelectHandle(const SelectHandle&);
 
@@ -41,7 +41,7 @@ public:
    // key state.
    static UIHandlePtr HitTest
       (std::weak_ptr<SelectHandle> &holder,
-       const TrackPanelMouseState &state, const AudacityProject *pProject,
+       const TrackPanelMouseState &state, const SneedacityProject *pProject,
        const std::shared_ptr<TrackView> &pTrackView);
 
    SelectHandle &operator=(const SelectHandle&) = default;
@@ -50,29 +50,29 @@ public:
 
    bool IsClicked() const;
 
-   void SetUseSnap(bool use, AudacityProject *pProject);
-   void Enter(bool forward, AudacityProject *pProject) override;
+   void SetUseSnap(bool use, SneedacityProject *pProject);
+   void Enter(bool forward, SneedacityProject *pProject) override;
 
    bool HasSnap() const;
    bool HasEscape() const override;
 
-   bool Escape(AudacityProject *pProject) override;
+   bool Escape(SneedacityProject *pProject) override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject*) override;
+   Result Cancel(SneedacityProject*) override;
 
    static UIHandle::Result NeedChangeHighlight
       (const SelectHandle &oldState,
@@ -81,11 +81,11 @@ public:
 private:
    std::weak_ptr<Track> FindTrack();
 
-   void Connect(AudacityProject *pProject);
+   void Connect(SneedacityProject *pProject);
 
-   void StartSelection(AudacityProject *pProject);
+   void StartSelection(SneedacityProject *pProject);
    void AdjustSelection
-      (AudacityProject *pProject,
+      (SneedacityProject *pProject,
        ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
        Track *pTrack);
    void AssignSelection(ViewInfo &viewInfo, double selend, Track *pTrack);
@@ -105,7 +105,7 @@ private:
       (SpectrumAnalyst &analyst,
        const ViewInfo &viewInfo, const WaveTrack *pTrack);
    void MoveSnappingFreqSelection
-      (AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
+      (SneedacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
        int trackTopEdge,
        int trackHeight, TrackView *pTrackView);
 public:

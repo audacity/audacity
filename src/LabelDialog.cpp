@@ -36,7 +36,7 @@
 #include "ProjectWindow.h"
 #include "ViewInfo.h"
 #include "tracks/labeltrack/ui/LabelTrackView.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/Grid.h"
 #include "widgets/HelpSystem.h"
@@ -94,7 +94,7 @@ BEGIN_EVENT_TABLE(LabelDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LabelDialog::LabelDialog(wxWindow *parent,
-                         AudacityProject &project,
+                         SneedacityProject &project,
                          TrackList *tracks,
                          LabelTrack *selectedTrack,
                          int index,
@@ -647,7 +647,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
       // Get at the data
       f.Open(fileName);
       if (!f.IsOpened()) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Could not open file: %s").Format( fileName ) );
       }
       else {
@@ -673,7 +673,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
    // Silly user (could just disable the button, but that's a hassle ;-))
    if (cnt == 0) {
-      AudacityMessageBox( XO("No labels to export.") );
+      SneedacityMessageBox( XO("No labels to export.") );
       return;
    }
 
@@ -716,7 +716,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 #endif
    f.Open();
    if (!f.IsOpened()) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
@@ -815,7 +815,7 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
 
    // User selected the "New..." choice so ask for a NEW name
    if ( make_iterator_range( mTrackNames ).index( val ) == 0 ) {
-      AudacityTextEntryDialog d(this,
+      SneedacityTextEntryDialog d(this,
          XO("New Label Track"),
          XO("Enter track name"),
          /* i18n-hint: (noun) it's the name of a kind of track.*/

@@ -1,7 +1,7 @@
 This directory contains a series of instructions for
- comprehensively testing the Audacity application.  They 
+ comprehensively testing the Sneedacity application.  They 
 should be performed on all platforms, on the latest 
-build, as downloaded from the Audacity code repository, to help
+build, as downloaded from the Sneedacity code repository, to help
  detect obvious bugs and regressions. 
 
 In addition, check the file structure for missing files

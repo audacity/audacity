@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Contrast.cpp
 
@@ -24,7 +24,7 @@
 #include "../ViewInfo.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 
 #include <cmath>
@@ -59,7 +59,7 @@ bool ContrastDialog::GetDB(float &dB)
       TrackList::Get( *p ).SelectedLeaders< const WaveTrack >();
    auto numberSelectedTracks = range.size();
    if (numberSelectedTracks > 1) {
-      AudacityMessageDialog m(
+      SneedacityMessageDialog m(
          nullptr,
          XO("You can only measure one track at a time."),
          XO("Error"),
@@ -68,7 +68,7 @@ bool ContrastDialog::GetDB(float &dB)
       return false;
    }
    if(numberSelectedTracks == 0) {
-      AudacityMessageDialog m(
+      SneedacityMessageDialog m(
          nullptr,
          XO("Please select an audio track."),
          XO("Error"),
@@ -92,7 +92,7 @@ bool ContrastDialog::GetDB(float &dB)
 
       if(SelT0 > SelT1)
       {
-         AudacityMessageDialog m(
+         SneedacityMessageDialog m(
             nullptr,
             XO("Invalid audio selection.\nPlease ensure that audio is selected."),
             XO("Error"),
@@ -103,7 +103,7 @@ bool ContrastDialog::GetDB(float &dB)
 
       if(SelT0 == SelT1)
       {
-         AudacityMessageDialog m(
+         SneedacityMessageDialog m(
             nullptr,
             XO("Nothing to measure.\nPlease select a section of a track."),
             XO("Error"),
@@ -547,7 +547,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    wxFFileOutputStream ffStream{ fName };
 
    if (!ffStream.IsOk()) {
-      AudacityMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
+      SneedacityMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
       return;
    }
 
@@ -657,8 +657,8 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 namespace {
 
 // Contrast window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+SneedacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
+   []( SneedacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew ContrastDialog(
          &window, -1, XO("Contrast Analysis (WCAG 2 compliance)"),
@@ -683,9 +683,9 @@ struct Handler : CommandHandlerObject {
    }
 };
 
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
+CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static Handler instance;
    return instance;
 }

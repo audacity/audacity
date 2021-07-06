@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ErrorDialog.cpp
 
@@ -171,10 +171,10 @@ void ShowExceptionDialog(
 {
 #ifndef HAS_SENTRY_REPORTING
    ShowErrorDialog(parent, dlogTitle, message, helpPage, Close,
-      audacity::ToWString(log));
+      sneedacity::ToWString(log));
 #else
    ShowErrorReportDialog(parent, dlogTitle, message, helpPage,
-      audacity::ToWString(log));
+      sneedacity::ToWString(log));
 #endif // !HAS_SENTRY_REPORTING
 }
 
@@ -199,12 +199,12 @@ void ShowModelessErrorDialog(wxWindow *parent,
    // but in practice Destroy() in OnOK does that
 }
 
-void AudacityTextEntryDialog::SetInsertionPointEnd()
+void SneedacityTextEntryDialog::SetInsertionPointEnd()
 {
    mSetInsertionPointEnd = true;
 }
 
-bool AudacityTextEntryDialog::Show(bool show)
+bool SneedacityTextEntryDialog::Show(bool show)
 {
    bool ret = wxTabTraversalWrapper< wxTextEntryDialog >::Show(show);
 

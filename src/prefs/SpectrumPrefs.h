@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SpectrumPrefs.h
 
@@ -18,8 +18,8 @@
 */
 
 
-#ifndef __AUDACITY_SPECTRUM_PREFS__
-#define __AUDACITY_SPECTRUM_PREFS__
+#ifndef __SNEEDACITY_SPECTRUM_PREFS__
+#define __SNEEDACITY_SPECTRUM_PREFS__
 
 #include <vector>
 #include <wx/defs.h>
@@ -42,7 +42,7 @@ class SpectrumPrefs final : public PrefsPanel
 {
  public:
    SpectrumPrefs(wxWindow * parent, wxWindowID winid,
-      AudacityProject *pProject, WaveTrack *wt);
+      SneedacityProject *pProject, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
@@ -67,7 +67,7 @@ class SpectrumPrefs final : public PrefsPanel
 
    void EnableDisableSTFTOnlyControls();
 
-   AudacityProject *mProject{};
+   SneedacityProject *mProject{};
 
    WaveTrack *const mWt;
    bool mDefaulted, mOrigDefaulted;

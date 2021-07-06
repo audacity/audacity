@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxWidgets
 
    Dan Horgan
@@ -35,7 +35,7 @@ CommandDirectory::CommandDirectory()
    // Not needed.  Sets selected/solo/mute on multiple tracks.
    //AddCommand(std::make_unique<SetProjectInfoCommandType>());
 
-//   Moved to AudacityCommand
+//   Moved to SneedacityCommand
 //   AddCommand(std::make_unique<OpenProjectCommandType>());
 //   AddCommand(std::make_unique<SaveProjectCommandType>());
 //   AddCommand(std::make_unique<ImportCommandType>());

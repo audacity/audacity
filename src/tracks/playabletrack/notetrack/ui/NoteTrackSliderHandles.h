@@ -1,6 +1,6 @@
 /**********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  NoteTrackSliderHandles.h
 
@@ -8,8 +8,8 @@
 
  **********************************************************************/
 
-#ifndef __AUDACITY_NOTE_TRACK_SLIDER_HANDLES__
-#define __AUDACITY_NOTE_TRACK_SLIDER_HANDLES__
+#ifndef __SNEEDACITY_NOTE_TRACK_SLIDER_HANDLES__
+#define __SNEEDACITY_NOTE_TRACK_SLIDER_HANDLES__
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -36,12 +36,12 @@ public:
 protected:
    float GetValue() override;
    Result SetValue
-   (AudacityProject *pProject, float newValue) override;
+   (SneedacityProject *pProject, float newValue) override;
    Result CommitChanges
-   (const wxMouseEvent &event, AudacityProject *pProject) override;
+   (const wxMouseEvent &event, SneedacityProject *pProject) override;
 
    TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
+      const wxMouseState &state, SneedacityProject &) const override;
 
    bool StopsOnKeystroke () override { return true; }
 

@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ThemePrefs.cpp
 
   James Crook
 
-  Audacity is free software.
+  Sneedacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
 ********************************************************************//**
@@ -61,7 +61,7 @@ END_EVENT_TABLE()
 ThemePrefs::ThemePrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: A theme is a consistent visual style across an application's
  graphical user interface, including choices of colors, and similarity of images
- such as those on button controls.  Audacity can load and save alternative
+ such as those on button controls.  Sneedacity can load and save alternative
  themes. */
 :  PrefsPanel(parent, winid, XO("Theme"))
 {
@@ -111,13 +111,13 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.AddFixedText(
          XO(
-"Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
+"Themability is an experimental feature.\n\nTo try it out, click \"Save Theme Cache\" then find and modify the images and colors in\nImageCacheVxx.png using an image editor such as the Gimp.\n\nClick \"Load Theme Cache\" to load the changed images and colors back into Sneedacity.\n\n(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\nthough the image file shows other icons too.)")
          );
 
 #ifdef _DEBUG
       S.AddFixedText(
          Verbatim(
-"This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
+"This is a debug version of Sneedacity, with an extra button, 'Output Sourcery'. This will save a\nC version of the image cache that can be compiled in as a default.")
          );
 #endif
 
@@ -138,7 +138,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
          S.Id(idLoadThemeCache).AddButton(XXO("Load Theme Cache"));
 
          // This next button is only provided in Debug mode.
-         // It is for developers who are compiling Audacity themselves
+         // It is for developers who are compiling Sneedacity themselves
          // and who wish to generate a NEW ThemeAsCeeCode.h and compile it in.
 #ifdef _DEBUG
          S.Id(idSaveThemeAsCode).AddButton(Verbatim("Output Sourcery"));
@@ -232,7 +232,7 @@ bool ThemePrefs::Commit()
 #ifdef EXPERIMENTAL_THEME_PREFS
 namespace{
 PrefsPanel::Registration sAttachment{ "Theme",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ThemePrefs(parent, winid);

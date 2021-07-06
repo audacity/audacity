@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ModuleManager.h
 
@@ -9,15 +9,15 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MODULEMANAGER_H__
-#define __AUDACITY_MODULEMANAGER_H__
+#ifndef __SNEEDACITY_MODULEMANAGER_H__
+#define __SNEEDACITY_MODULEMANAGER_H__
 
 #include "MemoryX.h"
 #include <functional>
 #include <map>
 #include <vector>
 
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 #include "Identifier.h"
 
 class wxArrayString;
@@ -68,7 +68,7 @@ typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 using PluginIDs = wxArrayString;
 
-class AUDACITY_DLL_API ModuleManager final
+class SNEEDACITY_DLL_API ModuleManager final
 {
 public:
 
@@ -79,7 +79,7 @@ public:
    static ModuleManager & Get();
    
    // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
+   // So config compatibility will break if it is changed across Sneedacity versions
    static wxString GetPluginTypeString();
 
    static PluginID GetID(ModuleInterface *module);
@@ -143,9 +143,9 @@ private:
 // ----------------------------------------------------------------------------
 using ModuleMain = ModuleInterface *(*)();
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void RegisterProvider(ModuleMain rtn);
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void UnregisterProvider(ModuleMain rtn);
 
 // Guarantee the registry exists before any registrations, so it will
@@ -153,4 +153,4 @@ void UnregisterProvider(ModuleMain rtn);
 static struct Init{
    Init() { RegisterProvider(nullptr); } } sInitBuiltinModules;
 
-#endif /* __AUDACITY_MODULEMANAGER_H__ */
+#endif /* __SNEEDACITY_MODULEMANAGER_H__ */

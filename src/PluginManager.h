@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PluginManager.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PLUGINMANAGER_H__
-#define __AUDACITY_PLUGINMANAGER_H__
+#ifndef __SNEEDACITY_PLUGINMANAGER_H__
+#define __SNEEDACITY_PLUGINMANAGER_H__
 
 #include <wx/defs.h>
 
@@ -17,9 +17,9 @@
 #include <map>
 #include <memory>
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ImporterInterface.h"
-#include "audacity/PluginInterface.h"
+#include "sneedacity/EffectInterface.h"
+#include "sneedacity/ImporterInterface.h"
+#include "sneedacity/PluginInterface.h"
 
 class wxArrayString;
 class FileConfig;
@@ -34,14 +34,14 @@ typedef enum : unsigned {
    PluginTypeNone = 0,          // 2.1.0 placeholder entries...not used by 2.1.1 or greater
    PluginTypeStub =1,               // Used for plugins that have not yet been registered
    PluginTypeEffect =1<<1,
-   PluginTypeAudacityCommand=1<<2,
+   PluginTypeSneedacityCommand=1<<2,
    PluginTypeExporter=1<<3,
    PluginTypeImporter=1<<4,
    PluginTypeModule=1<<5,
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
-class AUDACITY_DLL_API PluginDescriptor
+class SNEEDACITY_DLL_API PluginDescriptor
 {
 public:
    PluginDescriptor();
@@ -76,7 +76,7 @@ public:
    // Internal string only, no translated counterpart!
    // (Use Effect::GetFamilyName instead)
    // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
+   // So config compatibility will break if it is changed across Sneedacity versions
    wxString GetEffectFamily() const;
 
    EffectType GetEffectType() const;
@@ -171,7 +171,7 @@ typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
-class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
+class SNEEDACITY_DLL_API PluginManager final : public PluginManagerInterface
 {
 public:
 
@@ -243,7 +243,7 @@ public:
    static PluginID GetID(ImporterInterface *importer);
 
    // This string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
+   // So config compatibility will break if it is changed across Sneedacity versions
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
@@ -363,4 +363,4 @@ private:
 // User-visible name might change in later versions
 #define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
-#endif /* __AUDACITY_PLUGINMANAGER_H__ */
+#endif /* __SNEEDACITY_PLUGINMANAGER_H__ */

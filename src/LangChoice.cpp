@@ -27,7 +27,7 @@ of languages for Sneedacity.
 
 #include "Languages.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h"
 
 class LangChoiceDialog final : public wxDialogWrapper {
@@ -75,7 +75,7 @@ LangChoiceDialog::LangChoiceDialog(wxWindow * parent,
    wxDialogWrapper(parent, id, title)
 {
    SetName();
-   const auto &paths = FileNames::AudacityPathList();
+   const auto &paths = FileNames::SneedacityPathList();
    Languages::GetLanguages(paths, mLangCodes, mLangNames);
    int lang = make_iterator_range( mLangCodes )
       .index( Languages::GetSystemLanguageCode(paths) );
@@ -107,7 +107,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
    mLang = mLangCodes[ndx];
 
    auto slang =
-      Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
+      Languages::GetSystemLanguageCode(FileNames::SneedacityPathList());
    int sndx = make_iterator_range( mLangCodes ).index( slang );
    wxString sname;
 
@@ -129,7 +129,7 @@ void LangChoiceDialog::OnOk(wxCommandEvent & WXUNUSED(event))
                  mLang,
                  sname,
                  slang);
-      if ( wxNO == AudacityMessageBox( msg, XO("Confirm"), wxYES_NO ) ) {
+      if ( wxNO == SneedacityMessageBox( msg, XO("Confirm"), wxYES_NO ) ) {
          return;
       }
    }

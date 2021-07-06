@@ -20,7 +20,7 @@
 -  AC_CHECK_FUNC(oggpack_writealign, , AC_MSG_ERROR(Ogg >= 1.0 required !))
 -  LIBS=$libs_save
 +
-+dnl Audacity-specific code by dmazzoni:
++dnl Sneedacity-specific code by dmazzoni:
 +dnl If libogg is in the same parent directory and it has been
 +dnl configured already, then we assume that libogg is going to
 +dnl be built, too.
@@ -33,7 +33,7 @@
 +              ogg_configured="no")
 +
 +if test "x$ogg_configured" = "xyes" && test "x$ogg_h_available" = "xyes" ; then
-+  echo "Using local libogg library from Audacity lib-src directory."
++  echo "Using local libogg library from Sneedacity lib-src directory."
 +
 +  AC_SUBST(OGG_CFLAGS)
 +  AC_SUBST(OGG_LIBS)

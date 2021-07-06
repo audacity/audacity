@@ -8,7 +8,7 @@
  * If something is wrong with your applications delivery of analysis frames,
  * probably most frames are wrong, so you should write, say, 10 initial
  * files and look at them. Set MAX_FILES to 10 and MAX_SAVE to 10. Then,
- * after running your program, use Audacity to open the 10 frames saved
+ * after running your program, use Sneedacity to open the 10 frames saved
  * to disk: use the Files:Import:Audio command to load all 10 in one 
  * command as different tracks. You should see 10 tracks, each containing
  * one frame, shifted to the correct source time location. (If not, then
@@ -18,7 +18,7 @@
  * or output buffers. To get the most out of this, you should set the first
  * parameter, zeros, to the absolute sample offset, e.g. if you want to view
  * synthesis frames that are spaced with a 64 sample hop size, you should set
- * zeros to 0, 64, 128, 192, ... so that when you view the files in Audacity,
+ * zeros to 0, 64, 128, 192, ... so that when you view the files in Sneedacity,
  * the samples will line up in time with each other and with the output file.
  *
  * You can display multiple frame types and lengths, so the prefix parameter

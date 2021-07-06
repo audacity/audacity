@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SpecPowerMeter.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECPOWERMETER_H_
-#define __AUDACITY_SPECPOWERMETER_H_
+#ifndef __SNEEDACITY_SPECPOWERMETER_H_
+#define __SNEEDACITY_SPECPOWERMETER_H_
 
 #include <cstddef>
 #include "../SampleFormat.h"

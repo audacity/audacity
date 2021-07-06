@@ -1,13 +1,13 @@
 //
 //  Overlay.h
-//  Audacity
+//  Sneedacity
 //
 //  Created by Paul Licameli on 5/7/16.
 //
 //
 
-#ifndef __AUDACITY_OVERLAY__
-#define __AUDACITY_OVERLAY__
+#ifndef __SNEEDACITY_OVERLAY__
+#define __SNEEDACITY_OVERLAY__
 
 
 
@@ -19,14 +19,14 @@ class wxRect;
 class wxSize;
 
 /*
-<b>How Audacity Redisplay Works \n
+<b>How Sneedacity Redisplay Works \n
  Roger Dannenberg</b> \n
 Oct 2010 \n
 
-This is a brief guide to Audacity redisplay -- it may not be complete. It
+This is a brief guide to Sneedacity redisplay -- it may not be complete. It
 is my attempt to understand the complicated graphics strategy.
 
-One basic idea is that redrawing waveforms is rather slow, so Audacity
+One basic idea is that redrawing waveforms is rather slow, so Sneedacity
 saves waveform images in bitmaps to make redrawing faster. In particular,
 during audio playback (and recording), the vertical time indicator is
 drawn over the waveform about 20 times per second. To avoid unnecessary
@@ -50,11 +50,11 @@ calling Refresh() and without waiting for OnPaint() to be called.
 I would expect there to be a 2-level invalidation scheme: Some changes
 invalidate the bitmap, forcing a bitmap redraw *and* a screen redraw.
 Other changes merely update the screen using pre-existing bitmaps. In
-Audacity, the "2-level" invalidation works like this: Anything
+Sneedacity, the "2-level" invalidation works like this: Anything
 that invalidates the bitmap calls TrackPanel::Refresh(), which
 has an eraseBackground parameter. This flag says to redraw the
 bitmap when OnPaint() is called. If eraseBackground is false, the
-existing bitmap can be used for waveform images. Audacity also
+existing bitmap can be used for waveform images. Sneedacity also
 draws directly to the screen to update the time indicator during
 playback. To move the indicator, one column of pixels is drawn to
 the screen to remove the indicator. Then the indicator is drawn at
@@ -90,7 +90,7 @@ AdornedRulerPanel.
 
 */
 
-class AUDACITY_DLL_API Overlay
+class SNEEDACITY_DLL_API Overlay
 {
 public:
    Overlay() = default;

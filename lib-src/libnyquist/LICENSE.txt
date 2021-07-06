@@ -9,8 +9,8 @@ with Roger Dannenberg.  It is distributed under identical terms
 as Nyquist - essentially a BSD-style Nyquist with a nonbinding
 request that modifications be sent to the original authors.
 
-If any modifications affect Nyx or Audacity, please send these
-modifications to the Audacity developers, otherwise contact
+If any modifications affect Nyx or Sneedacity, please send these
+modifications to the Sneedacity developers, otherwise contact
 Roger Dannenberg directly.
 
 Refer to nyquist/license.txt for Nyquist licensing details.

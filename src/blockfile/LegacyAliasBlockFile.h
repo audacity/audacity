@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LegacyAliasBlockFile.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LEGACYALIASBLOCKFILE__
-#define __AUDACITY_LEGACYALIASBLOCKFILE__
+#ifndef __SNEEDACITY_LEGACYALIASBLOCKFILE__
+#define __SNEEDACITY_LEGACYALIASBLOCKFILE__
 
 #include "PCMAliasBlockFile.h"
 

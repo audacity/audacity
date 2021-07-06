@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectHistory.h
 
@@ -8,23 +8,23 @@ Paul Licameli split from ProjectManager.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_HISTORY__
-#define __AUDACITY_PROJECT_HISTORY__
+#ifndef __SNEEDACITY_PROJECT_HISTORY__
+#define __SNEEDACITY_PROJECT_HISTORY__
 
 #include "ClientData.h"
 
-class AudacityProject;
+class SneedacityProject;
 struct UndoState;
 enum class UndoPush : unsigned char;
 
-class AUDACITY_DLL_API ProjectHistory final
+class SNEEDACITY_DLL_API ProjectHistory final
    : public ClientData::Base
 {
 public:
-   static ProjectHistory &Get( AudacityProject &project );
-   static const ProjectHistory &Get( const AudacityProject &project );
+   static ProjectHistory &Get( SneedacityProject &project );
+   static const ProjectHistory &Get( const SneedacityProject &project );
 
-   explicit ProjectHistory( AudacityProject &project )
+   explicit ProjectHistory( SneedacityProject &project )
       : mProject{ project }
    {}
    ProjectHistory( const ProjectHistory & ) PROHIBITED;
@@ -52,7 +52,7 @@ public:
    void SetDirty( bool value ) { mDirty = value; }
 
 private:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    bool mDirty{ false };
 };

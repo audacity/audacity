@@ -1,26 +1,26 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   EffectManager.h
 
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECTMANAGER__
-#define __AUDACITY_EFFECTMANAGER__
+#ifndef __SNEEDACITY_EFFECTMANAGER__
+#define __SNEEDACITY_EFFECTMANAGER__
 
 #include <memory>
 #include <vector>
 
 #include <unordered_map>
-#include "audacity/EffectInterface.h"
+#include "sneedacity/EffectInterface.h"
 #include "Identifier.h"
 
-class AudacityCommand;
-class AudacityProject;
+class SneedacityCommand;
+class SneedacityProject;
 class CommandContext;
 class CommandMessageTarget;
 class ComponentInterfaceSymbol;
@@ -31,18 +31,18 @@ class wxString;
 typedef wxString PluginID;
 
 using EffectMap = std::unordered_map<wxString, Effect *>;
-using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
+using SneedacityCommandMap = std::unordered_map<wxString, SneedacityCommand *>;
 using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<Effect> >;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 class EffectRack;
 #endif
-class AudacityCommand;
+class SneedacityCommand;
 
 
 class NotifyingSelectedRegion;
 
-class AUDACITY_DLL_API EffectManager
+class SNEEDACITY_DLL_API EffectManager
 {
 public:
 
@@ -86,7 +86,7 @@ public:
 
    /** Run a command given the plugin ID */
    // Returns true on success. 
-   bool DoAudacityCommand(const PluginID & ID,
+   bool DoSneedacityCommand(const PluginID & ID,
                          const CommandContext &,
                          wxWindow *parent,
                          bool shouldPrompt  = true );
@@ -139,10 +139,10 @@ public:
    Effect *GetEffect(const PluginID & ID);
 
 private:
-   AudacityCommand *GetAudacityCommand(const PluginID & ID);
+   SneedacityCommand *GetSneedacityCommand(const PluginID & ID);
 
    EffectMap mEffects;
-   AudacityCommandMap mCommands;
+   SneedacityCommandMap mCommands;
    EffectOwnerMap mHostEffects;
 
    int mNumEffects;

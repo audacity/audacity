@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Amplify.h
 
@@ -12,8 +12,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_AMPLIFY__
-#define __AUDACITY_EFFECT_AMPLIFY__
+#ifndef __SNEEDACITY_EFFECT_AMPLIFY__
+#define __SNEEDACITY_EFFECT_AMPLIFY__
 
 #include "Effect.h"
 
@@ -85,4 +85,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_EFFECT_AMPLIFY__
+#endif // __SNEEDACITY_EFFECT_AMPLIFY__

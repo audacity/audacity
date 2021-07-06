@@ -1,10 +1,10 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectAudioIO.h
 
-Paul Licameli split from AudacityProject.h
+Paul Licameli split from SneedacityProject.h
 
 **********************************************************************/
 
@@ -14,7 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 #include <wx/weakref.h>
 
-class AudacityProject;
+class SneedacityProject;
 
 // Windows build needs complete type for parameter of wxWeakRef
 // class MeterPanelBase;
@@ -22,14 +22,14 @@ class AudacityProject;
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
-class AUDACITY_DLL_API ProjectAudioIO final
+class SNEEDACITY_DLL_API ProjectAudioIO final
    : public ClientData::Base
 {
 public:
-   static ProjectAudioIO &Get( AudacityProject &project );
-   static const ProjectAudioIO &Get( const AudacityProject &project );
+   static ProjectAudioIO &Get( SneedacityProject &project );
+   static const ProjectAudioIO &Get( const SneedacityProject &project );
 
-   explicit ProjectAudioIO( AudacityProject &project );
+   explicit ProjectAudioIO( SneedacityProject &project );
    ProjectAudioIO( const ProjectAudioIO & ) PROHIBITED;
    ProjectAudioIO &operator=( const ProjectAudioIO & ) PROHIBITED;
    ~ProjectAudioIO();
@@ -44,7 +44,7 @@ public:
    void SetCaptureMeter(MeterPanelBase *capture);
 
 private:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    // Project owned meters
    wxWeakRef<MeterPanelBase> mPlaybackMeter{};

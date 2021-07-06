@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 @file AttachedVirtualFunction.h
 @brief Utility for non-intrusive definition of a new method on a base class
@@ -9,8 +9,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ATTACHED_VIRTUAL_FUNCTION__
-#define __AUDACITY_ATTACHED_VIRTUAL_FUNCTION__
+#ifndef __SNEEDACITY_ATTACHED_VIRTUAL_FUNCTION__
+#define __SNEEDACITY_ATTACHED_VIRTUAL_FUNCTION__
 
 
 #include <functional>

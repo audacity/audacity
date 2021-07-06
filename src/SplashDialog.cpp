@@ -37,7 +37,7 @@ most commonly asked questions about Sneedacity.
 #include "FileNames.h"
 #include "Project.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/HelpSystem.h"
 
 #include "AllThemeResources.h"
@@ -46,9 +46,9 @@ most commonly asked questions about Sneedacity.
 
 // DA: Logo for Splash Dialog (welcome dialog)
 #ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
+#include "../images/DarkSneedacityLogoWithName.xpm"
 #else
-#include "../images/AudacityLogoWithName.xpm"
+#include "../images/SneedacityLogoWithName.xpm"
 #endif
 
 SplashDialog * SplashDialog::pSelf=NULL;
@@ -65,7 +65,7 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(SplashDialog, wxDialogWrapper)
 
-void SplashDialog::DoHelpWelcome( AudacityProject &project )
+void SplashDialog::DoHelpWelcome( SneedacityProject &project )
 {
    Show2( &GetProjectFrame( project ) );
 }
@@ -98,8 +98,8 @@ void SplashDialog::Populate( ShuttleGui & S )
    gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &bShow, true );
    S.StartVerticalLay(1);
 
-   //v For now, change to AudacityLogoWithName via old-fashioned ways, not Theme.
-   m_pLogo = std::make_unique<wxBitmap>((const char **) AudacityLogoWithName_xpm); //v
+   //v For now, change to SneedacityLogoWithName via old-fashioned ways, not Theme.
+   m_pLogo = std::make_unique<wxBitmap>((const char **) SneedacityLogoWithName_xpm); //v
 
 
    // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
@@ -118,7 +118,7 @@ void SplashDialog::Populate( ShuttleGui & S )
    wxBitmap RescaledBitmap( RescaledImage );
    wxStaticBitmap *const icon =
        safenew wxStaticBitmap(S.GetParent(), -1,
-                          //*m_pLogo, //v theTheme.Bitmap(bmpAudacityLogoWithName),
+                          //*m_pLogo, //v theTheme.Bitmap(bmpSneedacityLogoWithName),
                           RescaledBitmap,
                           wxDefaultPosition,
                           wxSize((int)(LOGOWITHNAME_WIDTH*fScale), (int)(LOGOWITHNAME_HEIGHT*fScale)));

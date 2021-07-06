@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimeTrack.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIMETRACK__
-#define __AUDACITY_TIMETRACK__
+#ifndef __SNEEDACITY_TIMETRACK__
+#define __SNEEDACITY_TIMETRACK__
 
 #include "Track.h"
 
@@ -21,7 +21,7 @@ class Ruler;
 class ZoomInfo;
 struct TrackPanelDrawingContext;
 
-class AUDACITY_DLL_API TimeTrack final : public Track {
+class SNEEDACITY_DLL_API TimeTrack final : public Track {
 
  public:
 
@@ -42,7 +42,7 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
    bool SupportsBasicEditing() const override;
 
-   Holder PasteInto( AudacityProject & ) const override;
+   Holder PasteInto( SneedacityProject & ) const override;
 
    Holder Cut( double t0, double t1 ) override;
    Holder Copy( double t0, double t1, bool forClipboard ) const override;
@@ -120,5 +120,5 @@ private:
 };
 
 
-#endif // __AUDACITY_TIMETRACK__
+#endif // __SNEEDACITY_TIMETRACK__
 

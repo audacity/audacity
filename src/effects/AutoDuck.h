@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AutoDuck.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_AUTODUCK__
-#define __AUDACITY_EFFECT_AUTODUCK__
+#ifndef __SNEEDACITY_EFFECT_AUTODUCK__
+#define __SNEEDACITY_EFFECT_AUTODUCK__
 
 #include "Effect.h"
 

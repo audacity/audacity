@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -104,7 +104,7 @@ bool SelectTimeCommand::Apply(const CommandContext & context){
    if( !bHasRelativeSpec )
       mRelativeTo = 0;
 
-   AudacityProject * p = &context.project;
+   SneedacityProject * p = &context.project;
    double end = TrackList::Get( *p ).GetEndTime();
    double t0;
    double t1;

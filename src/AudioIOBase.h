@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 AudioIOBase.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from AudioIO.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_AUDIO_IO_BASE__
-#define __AUDACITY_AUDIO_IO_BASE__
+#ifndef __SNEEDACITY_AUDIO_IO_BASE__
+#define __SNEEDACITY_AUDIO_IO_BASE__
 
 
 
@@ -30,7 +30,7 @@ typedef void PxMixer;
 
 class AudioIOBase;
 
-class AudacityProject;
+class SneedacityProject;
 class AudioIOListener;
 class BoundedEnvelope;
 // Windows build needs complete type for parameter of wxWeakRef
@@ -76,7 +76,7 @@ struct ScrubbingOptions {
 struct AudioIOStartStreamOptions
 {
    explicit
-   AudioIOStartStreamOptions(AudacityProject *pProject_, double rate_)
+   AudioIOStartStreamOptions(SneedacityProject *pProject_, double rate_)
       : pProject{ pProject_ }
       , envelope(nullptr)
       , rate(rate_)
@@ -87,7 +87,7 @@ struct AudioIOStartStreamOptions
       , preRoll(0.0)
    {}
 
-   AudacityProject *pProject{};
+   SneedacityProject *pProject{};
    MeterPanelBase *captureMeter{}, *playbackMeter{};
    const BoundedEnvelope *envelope; // for time warping
    std::shared_ptr< AudioIOListener > listener;
@@ -116,7 +116,7 @@ struct AudioIOStartStreamOptions
 
 ///\brief A singleton object supporting queries of the state of any active
 /// audio streams, and audio device capabilities
-class AUDACITY_DLL_API AudioIOBase /* not final */
+class SNEEDACITY_DLL_API AudioIOBase /* not final */
    : public NonInterferingBase
 {
 public:
@@ -124,8 +124,8 @@ public:
 
    virtual ~AudioIOBase();
 
-   void SetCaptureMeter(AudacityProject *project, MeterPanelBase *meter);
-   void SetPlaybackMeter(AudacityProject *project, MeterPanelBase *meter);
+   void SetCaptureMeter(SneedacityProject *project, MeterPanelBase *meter);
+   void SetPlaybackMeter(SneedacityProject *project, MeterPanelBase *meter);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -198,7 +198,7 @@ public:
    /** \brief Array of common audio sample rates
     *
     * These are the rates we will always support, regardless of hardware support
-    * for them (by resampling in audacity if needed) */
+    * for them (by resampling in sneedacity if needed) */
    static const int StandardRates[];
    /** \brief How many standard sample rates there are */
    static const int NumStandardRates;
@@ -257,7 +257,7 @@ protected:
    static wxString DeviceName(const PaDeviceInfo* info);
    static wxString HostName(const PaDeviceInfo* info);
 
-   AudacityProject    *mOwningProject;
+   SneedacityProject    *mOwningProject;
 
    /// True if audio playback is paused
    bool                mPaused;
@@ -342,11 +342,11 @@ protected:
 
 #include "Prefs.h"
 
-extern AUDACITY_DLL_API StringSetting AudioIOHost;
-extern AUDACITY_DLL_API DoubleSetting AudioIOLatencyCorrection;
-extern AUDACITY_DLL_API DoubleSetting AudioIOLatencyDuration;
-extern AUDACITY_DLL_API StringSetting AudioIOPlaybackDevice;
-extern AUDACITY_DLL_API IntSetting    AudioIORecordChannels;
-extern AUDACITY_DLL_API StringSetting AudioIORecordingDevice;
-extern AUDACITY_DLL_API StringSetting AudioIORecordingSource;
-extern AUDACITY_DLL_API IntSetting    AudioIORecordingSourceIndex;
+extern SNEEDACITY_DLL_API StringSetting AudioIOHost;
+extern SNEEDACITY_DLL_API DoubleSetting AudioIOLatencyCorrection;
+extern SNEEDACITY_DLL_API DoubleSetting AudioIOLatencyDuration;
+extern SNEEDACITY_DLL_API StringSetting AudioIOPlaybackDevice;
+extern SNEEDACITY_DLL_API IntSetting    AudioIORecordChannels;
+extern SNEEDACITY_DLL_API StringSetting AudioIORecordingDevice;
+extern SNEEDACITY_DLL_API StringSetting AudioIORecordingSource;
+extern SNEEDACITY_DLL_API IntSetting    AudioIORecordingSourceIndex;

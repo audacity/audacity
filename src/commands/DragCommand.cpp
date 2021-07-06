@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2018 Sneedacity Team
    License: wxwidgets
 
    James Crook
@@ -108,7 +108,7 @@ bool DragCommand::Apply(const CommandContext & context)
       pWin1 = pWin->FindWindowByName( mWinName );
    if( pWin1 )
       pWin = pWin1;
-   // Process twice - possible bug in Audacity being worked around
+   // Process twice - possible bug in Sneedacity being worked around
    // where we need an event to enter AND an event to move.
    // AdornedRuler Quick-Play bug.
    pWin->GetEventHandler()->ProcessEvent( Evt );

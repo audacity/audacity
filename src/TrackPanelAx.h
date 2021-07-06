@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TrackPanelAx.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
-#define __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
+#ifndef __SNEEDACITY_TRACK_PANEL_ACCESSIBILITY__
+#define __SNEEDACITY_TRACK_PANEL_ACCESSIBILITY__
 
 
 
@@ -29,12 +29,12 @@
 
 class wxRect;
 
-class AudacityProject;
+class SneedacityProject;
 class Track;
 class TrackList;
 
 // An event sent to the project
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_TRACK_FOCUS_CHANGE, wxCommandEvent);
 
 class TrackPanelAx final
@@ -43,7 +43,7 @@ class TrackPanelAx final
 #endif
 {
 public:
-   TrackPanelAx(AudacityProject &project);
+   TrackPanelAx(SneedacityProject &project);
    virtual ~ TrackPanelAx();
 
    using RectangleFinder = std::function< wxRect( Track& ) >;
@@ -140,7 +140,7 @@ private:
    int TrackNum( const std::shared_ptr<Track> &track );
    std::shared_ptr<Track> FindTrack( int num );
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
 #if !wxUSE_ACCESSIBILITY
    wxWindow *mWindow{};
@@ -156,14 +156,14 @@ private:
    int mMessageCount;
 };
 
-class AUDACITY_DLL_API TrackFocus final
+class SNEEDACITY_DLL_API TrackFocus final
    : public ClientData::Base
 {
 public:
-   static TrackFocus &Get( AudacityProject &project );
-   static const TrackFocus &Get( const AudacityProject &project );
+   static TrackFocus &Get( SneedacityProject &project );
+   static const TrackFocus &Get( const SneedacityProject &project );
 
-   explicit TrackFocus( AudacityProject &project );
+   explicit TrackFocus( SneedacityProject &project );
    ~TrackFocus() override;
 
    TrackFocus( const TrackFocus & ) PROHIBITED;
@@ -192,7 +192,7 @@ public:
 
 private:
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
 #if wxUSE_ACCESSIBILITY
    TrackPanelAx *mAx{};
@@ -201,4 +201,4 @@ private:
 #endif
 };
 
-#endif // __AUDACITY_TRACK_PANEL_ACCESSIBILITY__
+#endif // __SNEEDACITY_TRACK_PANEL_ACCESSIBILITY__

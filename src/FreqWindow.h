@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FreqWindow.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_FREQ_WINDOW__
-#define __AUDACITY_FREQ_WINDOW__
+#ifndef __SNEEDACITY_FREQ_WINDOW__
+#define __SNEEDACITY_FREQ_WINDOW__
 
 #include <vector>
 #include <wx/font.h> // member variable
@@ -27,12 +27,12 @@ class wxButton;
 class wxCheckBox;
 class wxChoice;
 
-class AudacityProject;
+class SneedacityProject;
 class FrequencyPlotDialog;
 class FreqGauge;
 class RulerPanel;
 
-DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_FREQWINDOW_RECALC, -1);
+DECLARE_EXPORTED_EVENT_TYPE(SNEEDACITY_DLL_API, EVT_FREQWINDOW_RECALC, -1);
 
 class FreqPlot final : public wxWindow
 {
@@ -58,7 +58,7 @@ class FrequencyPlotDialog final : public wxDialogWrapper,
 {
 public:
    FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
-              AudacityProject &project,
+              SneedacityProject &project,
               const TranslatableString & title, const wxPoint & pos);
    virtual ~ FrequencyPlotDialog();
 
@@ -102,7 +102,7 @@ private:
    int mFunc;
    int mAxis;
    int dBRange;
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
 
 #ifdef __WXMSW__
    static const int fontSize = 8;

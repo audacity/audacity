@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 UIHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_UI_HANDLE__
-#define __AUDACITY_UI_HANDLE__
+#ifndef __SNEEDACITY_UI_HANDLE__
+#define __SNEEDACITY_UI_HANDLE__
 
 #include <utility>
 #include <memory>
@@ -20,7 +20,7 @@ class wxRect;
 class wxRegion;
 class wxWindow;
 
-class AudacityProject;
+class SneedacityProject;
 struct HitTestPreview;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
@@ -30,7 +30,7 @@ struct TrackPanelMouseState;
 // A TrackPanelCell reports a handle object of some subclass, in response to a
 // hit test at a mouse position; then this handle processes certain events,
 // and maintains necessary state through click-drag-release event sequences.
-class AUDACITY_DLL_API UIHandle /* not final */ : public TrackPanelDrawable
+class SNEEDACITY_DLL_API UIHandle /* not final */ : public TrackPanelDrawable
 {
 public:
    // See RefreshCode.h for bit flags:
@@ -45,7 +45,7 @@ public:
    // This might put the handle into its first rotated state
    // (or last, if forward is false) or mark itself as needing a highlight.
    // Default does nothing.
-   virtual void Enter(bool forward, AudacityProject *pProject);
+   virtual void Enter(bool forward, SneedacityProject *pProject);
 
    // Tell whether the handle has more than one TAB key rotation state.
    // Default is always false.
@@ -63,27 +63,27 @@ public:
 
    // The handle may change state and mark itself for highlight change.
    // Default does nothing and returns false
-   virtual bool Escape(AudacityProject *pProject);
+   virtual bool Escape(SneedacityProject *pProject);
 
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.
    // Otherwise the framework will later call Release or Cancel after
    // some number of Drag calls.
    virtual Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) = 0;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) = 0;
 
    // Assume previously Clicked and not yet Released or Cancelled.
    // pCell may be other than for Click; may be NULL, and rect empty.
    // Return value may include the Cancelled return flag,
    // in which case the handle will not be invoked again.
    virtual Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) = 0;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) = 0;
 
    // Can be called when the handle has been hit but not yet clicked,
    // or called after Drag().
    // Specifies cursor and status bar message.
    virtual HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject) = 0;
+      (const TrackPanelMouseState &state, SneedacityProject *pProject) = 0;
 
    // Assume previously Clicked and not yet Released or Cancelled.
    // event.pCell may be other than for Click; may be NULL, and rect empty.
@@ -91,12 +91,12 @@ public:
    // connecting and disconnecting event handlers for the menu items.
    // Cancelled in return flags has no effect.
    virtual Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) = 0;
 
    // Assume previously Clicked and not yet Released or Cancelled.
    // Cancelled in return flags has no effect.
-   virtual Result Cancel(AudacityProject *pProject) = 0;
+   virtual Result Cancel(SneedacityProject *pProject) = 0;
 
    // Whether to force Release (not Cancel!) of the drag when a
    // keystroke command is about to be dispatched.  Default is always false.
@@ -110,7 +110,7 @@ public:
    // PRL: all former uses of this are now accomplished with weak_ptr instead
    // to avoid dangling pointers to tracks.  But maybe there will be a future
    // use?
-   virtual void OnProjectChange(AudacityProject *pProject);
+   virtual void OnProjectChange(SneedacityProject *pProject);
 
 public:
    Result GetChangeHighlight() const { return mChangeHighlight; }

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Clipboard.h
 
@@ -8,22 +8,22 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_CLIPBOARD__
-#define __AUDACITY_CLIPBOARD__
+#ifndef __SNEEDACITY_CLIPBOARD__
+#define __SNEEDACITY_CLIPBOARD__
 
 
 
 #include <memory>
 #include <wx/event.h> // to inherit wxEvtHandler
 
-class AudacityProject;
+class SneedacityProject;
 class TrackList;
 
 // An event emitted by the clipboard whenever its contents change.
-wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT( SNEEDACITY_DLL_API,
                           EVT_CLIPBOARD_CHANGE, wxCommandEvent );
 
-class AUDACITY_DLL_API Clipboard final
+class SNEEDACITY_DLL_API Clipboard final
    : public wxEvtHandler
 {
 public:
@@ -35,13 +35,13 @@ public:
    double T1() const { return mT1; }
    double Duration() const { return mT1 - mT0; }
 
-   const std::weak_ptr<AudacityProject> &Project() const { return mProject; }
+   const std::weak_ptr<SneedacityProject> &Project() const { return mProject; }
 
    void Clear();
    
    void Assign(
      TrackList && newContents, double t0, double t1,
-     const std::weak_ptr<AudacityProject> &pProject );
+     const std::weak_ptr<SneedacityProject> &pProject );
 
    Clipboard();
    ~Clipboard();
@@ -51,7 +51,7 @@ public:
 private:
 
    std::shared_ptr<TrackList> mTracks;
-   std::weak_ptr<AudacityProject> mProject{};
+   std::weak_ptr<SneedacityProject> mProject{};
    double mT0{ 0 };
    double mT1{ 0 };
 };

@@ -28,7 +28,7 @@ cmd_option( ${_OPT}use_ffmpeg
 if( ${_OPT}use_ffmpeg STREQUAL "off" )
    message( STATUS "Disabling '${name}' library" )
 else()
-   # Let the Audacity target know that this library will be used.
+   # Let the Sneedacity target know that this library will be used.
    set( USE_${symbol} ON CACHE INTERNAL "" )
 
    # Check for system package

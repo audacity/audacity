@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   CommandManager.cpp
 
@@ -94,7 +94,7 @@ CommandManager.  It holds the callback for one command.
 #include "../Menus.h"
 
 #include "../Project.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
 
@@ -148,7 +148,7 @@ struct CommandListEntry
    CommandParameter parameter;
 
    // type of a function that determines checkmark state
-   using CheckFn = std::function< bool(AudacityProject&) >;
+   using CheckFn = std::function< bool(SneedacityProject&) >;
    CheckFn checkmarkFn;
 
    bool multi;
@@ -193,20 +193,20 @@ SubMenuListEntry::~SubMenuListEntry()
 }
 
 ///
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   [](AudacityProject&) {
+static const SneedacityProject::AttachedObjects::RegisteredFactory key{
+   [](SneedacityProject&) {
       return std::make_unique<CommandManager>();
    }
 };
 
-CommandManager &CommandManager::Get( AudacityProject &project )
+CommandManager &CommandManager::Get( SneedacityProject &project )
 {
    return project.AttachedObjects::Get< CommandManager >( key );
 }
 
-const CommandManager &CommandManager::Get( const AudacityProject &project )
+const CommandManager &CommandManager::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
 static CommandManager::MenuHook &sMenuHook()
@@ -527,7 +527,7 @@ wxMenu * CommandManager::CurrentMenu() const
    return tmpCurrentSubMenu;
 }
 
-void CommandManager::UpdateCheckmarks( AudacityProject &project )
+void CommandManager::UpdateCheckmarks( SneedacityProject &project )
 {
    for ( const auto &entry : mCommandList ) {
       if ( entry->menu && entry->checkmarkFn && !entry->isOccult) {
@@ -538,7 +538,7 @@ void CommandManager::UpdateCheckmarks( AudacityProject &project )
 
 
 
-void CommandManager::AddItem(AudacityProject &project,
+void CommandManager::AddItem(SneedacityProject &project,
                              const CommandID &name,
                              const TranslatableString &label_in,
                              CommandHandlerFinder finder,
@@ -583,7 +583,7 @@ void CommandManager::AddItem(AudacityProject &project,
 auto CommandManager::Options::MakeCheckFn(
    const wxString key, bool defaultValue ) -> CheckFn
 {
-   return [=](AudacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
+   return [=](SneedacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
 
 auto CommandManager::Options::MakeCheckFn(
@@ -1074,7 +1074,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
 ///
 ///
 ///
-bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent & evt, bool permit)
+bool CommandManager::FilterKeyEvent(SneedacityProject *project, const wxKeyEvent & evt, bool permit)
 {
    if (!project)
       return false;
@@ -1187,7 +1187,7 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 /// returning true iff successful.  If you pass any flags,
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
-bool CommandManager::HandleCommandEntry(AudacityProject &project,
+bool CommandManager::HandleCommandEntry(SneedacityProject &project,
    const CommandListEntry * entry,
    CommandFlag flags, bool alwaysEnabled, const wxEvent * evt)
 {
@@ -1264,7 +1264,7 @@ void CommandManager::DoRepeatProcess(const CommandContext& context, int id) {
 ///the command won't be executed unless the flags are compatible
 ///with the command's flags.
 bool CommandManager::HandleMenuID(
-   AudacityProject &project, int id, CommandFlag flags, bool alwaysEnabled)
+   SneedacityProject &project, int id, CommandFlag flags, bool alwaysEnabled)
 {
    mLastProcessId = id;
    CommandListEntry *entry = mCommandNumericIDHash[id];
@@ -1316,7 +1316,7 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
    return CommandNotFound;
 }
 
-TranslatableStrings CommandManager::GetCategories( AudacityProject& )
+TranslatableStrings CommandManager::GetCategories( SneedacityProject& )
 {
    TranslatableStrings cats;
 
@@ -1472,7 +1472,7 @@ NormalizedKeyString CommandManager::GetDefaultKeyFromName(const CommandID &name)
 
 bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
-   if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
+   if (!wxStrcmp(tag, wxT("sneedacitykeyboard"))) {
       mXMLKeysRead = 0;
    }
 
@@ -1506,8 +1506,8 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 void CommandManager::HandleXMLEndTag(const wxChar *tag)
 {
    /*
-   if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
-      AudacityMessageBox(
+   if (!wxStrcmp(tag, wxT("sneedacitykeyboard"))) {
+      SneedacityMessageBox(
          XO("Loaded %d keyboard shortcuts\n")
             .Format( mXMLKeysRead ),
          XO("Loading Keyboard Shortcuts"),
@@ -1524,8 +1524,8 @@ XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
 void CommandManager::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   xmlFile.StartTag(wxT("audacitykeyboard"));
-   xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
+   xmlFile.StartTag(wxT("sneedacitykeyboard"));
+   xmlFile.WriteAttr(wxT("sneedacityversion"), SNEEDACITY_VERSION_STRING);
 
    for(const auto &entry : mCommandList) {
 
@@ -1535,7 +1535,7 @@ void CommandManager::WriteXML(XMLWriter &xmlFile) const
       xmlFile.EndTag(wxT("command"));
    }
 
-   xmlFile.EndTag(wxT("audacitykeyboard"));
+   xmlFile.EndTag(wxT("sneedacitykeyboard"));
 }
 
 void CommandManager::BeginOccultCommands()
@@ -1608,8 +1608,8 @@ void CommandManager::CheckDups()
 // must both be in either the first or the second group, so there is no need
 // to test for this case.
 // Note that if a user is using the full set of default shortcuts, and one
-// of these is changed, then if /GUI/Shortcuts/FullDefaults is not set in audacity.cfg,
-// because the defaults appear as user assigned shortcuts in audacity.cfg,
+// of these is changed, then if /GUI/Shortcuts/FullDefaults is not set in sneedacity.cfg,
+// because the defaults appear as user assigned shortcuts in sneedacity.cfg,
 // the previous default overrides the changed default, and no duplicate can
 // be introduced.
 void CommandManager::RemoveDuplicateShortcuts()
@@ -1638,7 +1638,7 @@ void CommandManager::RemoveDuplicateShortcuts()
       " because their default shortcut is new or changed, and is the same shortcut"
       " that you have assigned to another command.")
          + disabledShortcuts;
-      AudacityMessageBox(message, XO("Shortcuts have been removed"), wxOK | wxCENTRE);
+      SneedacityMessageBox(message, XO("Shortcuts have been removed"), wxOK | wxCENTRE);
 
       gPrefs->Flush();
       MenuCreator::RebuildAllMenuBars();
@@ -1654,12 +1654,12 @@ static struct InstallHandlers
       KeyboardCapture::SetPreFilter( []( wxKeyEvent & ) {
          // We must have a project since we will be working with the
          // CommandManager, which is tied to individual projects.
-         AudacityProject *project = GetActiveProject();
+         SneedacityProject *project = GetActiveProject();
          return project && GetProjectFrame( *project ).IsEnabled();
       } );
       KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
          // Capture handler window didn't want it, so ask the CommandManager.
-         AudacityProject *project = GetActiveProject();
+         SneedacityProject *project = GetActiveProject();
          auto &manager = CommandManager::Get( *project );
          return manager.FilterKeyEvent(project, key);
       } );

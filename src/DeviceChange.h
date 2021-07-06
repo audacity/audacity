@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   DeviceChange.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_DEVICECHANGE_H__
-#define __AUDACITY_DEVICECHANGE_H__
+#ifndef __SNEEDACITY_DEVICECHANGE_H__
+#define __SNEEDACITY_DEVICECHANGE_H__
 
 
 

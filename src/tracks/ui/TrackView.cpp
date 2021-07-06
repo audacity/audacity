@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TrackView.cpp
 
@@ -98,7 +98,7 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
    if (!wxStrcmp(attr, wxT("height")) &&
          XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
       // Bug 2803: Extreme values for track height (caused by integer overflow)
-      // will stall Audacity as it tries to create an enormous vertical ruler.
+      // will stall Sneedacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
       nValue = std::max( 40l, std::min( nValue, 1000l ));
       SetHeight(nValue);
@@ -171,9 +171,9 @@ namespace {
 // track Y coordinates
 struct TrackPositioner final : ClientData::Base, wxEvtHandler
 {
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
-   explicit TrackPositioner( AudacityProject &project )
+   explicit TrackPositioner( SneedacityProject &project )
       : mProject{ project }
    {
       TrackList::Get( project ).Bind(
@@ -209,8 +209,8 @@ struct TrackPositioner final : ClientData::Base, wxEvtHandler
    }
 };
 
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  []( AudacityProject &project ){
+static const SneedacityProject::AttachedObjects::RegisteredFactory key{
+  []( SneedacityProject &project ){
      return std::make_shared< TrackPositioner >( project );
    }
 };

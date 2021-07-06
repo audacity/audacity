@@ -3,7 +3,7 @@
   WrappedType.h
 
   James Crook
-  (C) Audacity Developers, 2007
+  (C) Sneedacity Developers, 2007
 
   wxWidgets license. See Licensing.txt
 
@@ -27,7 +27,7 @@ enum teWrappedType
 class wxString;
 class ShuttlePrefs;
 
-class AUDACITY_DLL_API WrappedType
+class SNEEDACITY_DLL_API WrappedType
 {
 public:
 

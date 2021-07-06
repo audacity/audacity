@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CookiesList.h
  @brief Define HTTP cookies list class.
@@ -16,7 +16,7 @@
 
 #include "NetworkManagerApi.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

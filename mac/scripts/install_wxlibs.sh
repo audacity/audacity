@@ -38,8 +38,8 @@ update_paths()
 }
 
 # For testing
-# BUILT_PRODUCTS_DIR=/tmp/Audacity.app/Contents
-# EXECUTABLE_PATH=MacOS/audacity
+# BUILT_PRODUCTS_DIR=/tmp/Sneedacity.app/Contents
+# EXECUTABLE_PATH=MacOS/sneedacity
 # FRAMEWORKS_FOLDER_PATH=Frameworks
 
 EXEPATH="${TARGET_BUILD_DIR}/${EXECUTABLE_PATH}"
@@ -47,7 +47,7 @@ LIBPATH="${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 
 mkdir -p "${LIBPATH}"
 
-echo "Updating Audacity executable"
+echo "Updating Sneedacity executable"
 
 for lib in $(otool -L "${EXEPATH}" | awk '/libwx.*dylib /{print $1}')
 do

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 LabelTrackView.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from class LabelTrack
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LABEL_TRACK_VIEW__
-#define __AUDACITY_LABEL_TRACK_VIEW__
+#ifndef __SNEEDACITY_LABEL_TRACK_VIEW__
+#define __SNEEDACITY_LABEL_TRACK_VIEW__
 
 #include "../../ui/CommonTrackView.h"
 
@@ -36,7 +36,7 @@ constexpr int MAX_NUM_ROWS =80;
 
 class wxKeyEvent;
 
-class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
+class SNEEDACITY_DLL_API LabelTrackView final : public CommonTrackView
 {
    LabelTrackView( const LabelTrackView& ) = delete;
    LabelTrackView &operator=( const LabelTrackView& ) = delete;
@@ -53,11 +53,11 @@ public:
    static LabelTrackView &Get( LabelTrack& );
    static const LabelTrackView &Get( const LabelTrack& );
 
-   bool DoCaptureKey( AudacityProject &project, wxKeyEvent &event );
+   bool DoCaptureKey( SneedacityProject &project, wxKeyEvent &event );
    bool DoKeyDown(
-      AudacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
+      SneedacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
    bool DoChar(
-      AudacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
+      SneedacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region,
@@ -70,20 +70,20 @@ private:
 
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+       const SneedacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
    unsigned CaptureKey
      (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
-      AudacityProject *project) override;
+      SneedacityProject *project) override;
 
    unsigned KeyDown
       (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
-      AudacityProject *project) override;
+      SneedacityProject *project) override;
 
    unsigned Char
       (wxKeyEvent &event, ViewInfo &viewInfo, wxWindow *pParent,
-      AudacityProject *project) override;
+      SneedacityProject *project) override;
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
@@ -92,13 +92,13 @@ private:
 
 public:
    static void DoEditLabels(
-      AudacityProject &project, LabelTrack *lt = nullptr, int index = -1);
+      SneedacityProject &project, LabelTrack *lt = nullptr, int index = -1);
 
    static int DialogForLabelName(
-      AudacityProject &project, const SelectedRegion& region,
+      SneedacityProject &project, const SelectedRegion& region,
       const wxString& initialValue, wxString& value);
 
-   bool IsTextSelected( AudacityProject &project ) const;
+   bool IsTextSelected( SneedacityProject &project ) const;
 
 private:
    void CreateCustomGlyphs();
@@ -109,13 +109,13 @@ public:
 
    void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
-   int GetSelectedIndex( AudacityProject &project ) const;
+   int GetSelectedIndex( SneedacityProject &project ) const;
    void SetSelectedIndex( int index );
 
-   bool CutSelectedText( AudacityProject &project );
-   bool CopySelectedText( AudacityProject &project );
+   bool CutSelectedText( SneedacityProject &project );
+   bool CopySelectedText( SneedacityProject &project );
    bool PasteSelectedText(
-      AudacityProject &project, double sel0, double sel1 );
+      SneedacityProject &project, double sel0, double sel1 );
 
    static void OverGlyph(
       const LabelTrack &track, LabelTrackHit &hit, int x, int y );
@@ -176,16 +176,16 @@ private:
 public:
    //get current cursor position,
    // relative to the left edge of the track panel
-   bool CalcCursorX( AudacityProject &project, int * x ) const;
+   bool CalcCursorX( SneedacityProject &project, int * x ) const;
 
 private:
    void CalcHighlightXs(int *x1, int *x2) const;
 
 public:
-   void ShowContextMenu( AudacityProject &project );
+   void ShowContextMenu( SneedacityProject &project );
 
 private:
-   void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
+   void OnContextMenu( SneedacityProject &project, wxCommandEvent & evt);
 
    mutable Index mSelIndex{-1};  /// Keeps track of the currently selected label
 
@@ -235,7 +235,7 @@ private:
    static void calculateFontHeight(wxDC & dc);
 
 public:
-   bool HasSelection( AudacityProject &project ) const;
+   bool HasSelection( SneedacityProject &project ) const;
 
 private:
    void RemoveSelectedText();

@@ -7,7 +7,7 @@ Changes in version 3.0.0:
 
 Improvements
 
- * Audacity now uses 'aup3' format, with all audio in one file, rather than 
+ * Sneedacity now uses 'aup3' format, with all audio in one file, rather than 
    the previous 'pile of file' format.  We are using the SQLite library to 
    manageis the contents of this file.  Too many users were previously getting
    caught out by copying part of the project only, when backing up.
@@ -22,7 +22,7 @@ Improvements
    analyzer or tool.  Previously only most recent effect could be repeated.
  * Upgraded Nyquist to 3.16
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.0
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Sneedacity_3.0.0
 
 
 Bug Fixes
@@ -46,7 +46,7 @@ Bug Fixes
  * 2187 - No error/warning message when using a missing aliased audio file
  * 2296 - There is no Import or Export for Macros
  * 2464 - Cannot drag just the selected audio and label with Time Shift Tool
- * 2437 - Mac: "Open with" fails when Audacity is running
+ * 2437 - Mac: "Open with" fails when Sneedacity is running
  * 2473 - Linux: Numbers on meters have opaque backgrounds
  * 2487 - Playback meters do not respond during preview of non-real-time effects
  * 2491 - Reset Configuration does not reset Extended Import preferences
@@ -67,13 +67,13 @@ Changes in version 2.4.2:
 
 Improvements
 
- * Audacity is now built with (our version of) the wx3.1.3 library.
+ * Sneedacity is now built with (our version of) the wx3.1.3 library.
    Previously we used wx3.1.1.
  * We added a command 'Reset Configuration' to reset to default 
    settings.
  * MP3 Audio is now exported without padding.
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.2
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Sneedacity_2.4.2
 
 
 Bug Fixes
@@ -92,12 +92,12 @@ Bug Fixes
 Changes in version 2.4.1:
 
 Critical Bug Fix:
- * Audacity 2.4.0 was released with a critical bug, (Bug 2436),
+ * Sneedacity 2.4.0 was released with a critical bug, (Bug 2436),
    which is fixed in 2.4.1.  The bug caused loss of data when using two projects at the same time.
 
 Improvements
 
- * Audacity now runs on Mac Catalina.
+ * Sneedacity now runs on Mac Catalina.
  * A new Time Toolbar showing current record/playback time has been
    split from the Selection Toolbar.  It can be resized large.
  * Presets for more effects can be imported and exported.
@@ -110,7 +110,7 @@ Improvements
  * New Noise Gate effect.
  * New Spectral Delete effect.
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_2.4.1
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Sneedacity_2.4.1
 
 
 Bug Fixes
@@ -158,12 +158,12 @@ Changes in version 2.3.2:
 
 Improvements
 
- * Audacity now includes the LAME mp3 encoder. Previously, due to now expired
+ * Sneedacity now includes the LAME mp3 encoder. Previously, due to now expired
    patents, you had to download it separately.
  * There is a new 'Select' button in the track panel to select the whole 
    track.
- * Audacity mod-script-pipe for driving Audacity from Python now comes with
-   Audacity and can be enabled via preferences.
+ * Sneedacity mod-script-pipe for driving Sneedacity from Python now comes with
+   Sneedacity and can be enabled via preferences.
  * Options and preferences:
    * Type to Create a Label is now off by default.
  * A plug-in installer for Nyquist now provides a file browser for 
@@ -173,7 +173,7 @@ Bug Fixes
 
  Over 20 bugs in 2.3.1 fixed, including:
 
- * Audacity 2.3.1 would crash if append-recording to a collapsed track.
+ * Sneedacity 2.3.1 would crash if append-recording to a collapsed track.
  * Many accessibility bugs on macOS fixed
 
 
@@ -182,7 +182,7 @@ Changes in version 2.3.1:
 
 Improvements
 
-    * Audacity now supports 64 bit Mac.
+    * Sneedacity now supports 64 bit Mac.
     * Options and preferences:
         * Microfades are now an opt-in feature. They were always on in 2.3.0.
         * The advanced vertical zooming option is now available in the 
@@ -193,7 +193,7 @@ Bug Fixes
 
  Over 20 bugs in 2.3.0 fixed, including:
 
-    * A crashing bug on Linux that made Audacity 2.3.0. unsuitable for Linux.
+    * A crashing bug on Linux that made Sneedacity 2.3.0. unsuitable for Linux.
     * Crash on Mac when right clicking on label.
     * Problems with Change Pitch, including not remembering parameter values.
 
@@ -226,7 +226,7 @@ Bug Fixes
 
     Over 90 bugs in 2.2.2 fixed, including:
 
-    * Windows: Queen Mary 1.7.1 Vamp plug-ins crash Audacity on opening 
+    * Windows: Queen Mary 1.7.1 Vamp plug-ins crash Sneedacity on opening 
       Plug-in Manager - bug #1244
     * Inconsistent behavior when recording with a selection defined - bug #1839
     * Ctrl + M does not open label for editing - bug #1852
@@ -237,7 +237,7 @@ Bug Fixes
       data loss - bug #1851
     * Duplicate shortcuts can be created - bug #1786
     * Labels longer than 260 characters are now supported - bug #1905
-    * Using Spectrogram Settings in TCP or using Preferences causes Audacity 
+    * Using Spectrogram Settings in TCP or using Preferences causes Sneedacity 
       to reset Project Rate to default rate in Quality Preferences - bug #1977
     * Cut Preview should play all selected/sync-locked tracks, respecting 
       Mute/Solo during preview - bug #231
@@ -251,7 +251,7 @@ Improvements
     * Dropout detection
       Dropout detection is controlled from a setting in Recording Preferences 
       called "Detect dropouts".
-      When this setting is "on" (default setting) Audacity will detect dropouts 
+      When this setting is "on" (default setting) Sneedacity will detect dropouts 
       (brief gaps in the recording) and will insert zeroes into the recording 
       to keep the other good parts synchronized. These silent spans will make 
       the dropouts more obvious, but keep the duration of the recording correct.
@@ -321,9 +321,9 @@ Improvements
 Bug Fixes
 
    * Release 2.2.1 was mainly a maintenance release.
-     Soon after the release of 2.2.0 we discovered some problematical bugs in Audacity:
+     Soon after the release of 2.2.0 we discovered some problematical bugs in Sneedacity:
        Bug #1767 - Opening a second project from Mac's Finder produces a second
-         inaccessible instance of Audacity
+         inaccessible instance of Sneedacity
        Bug #1770 - Crash applying certain chain files
        Bug #1783 - Preview fails when selection extends before zero
        Bug #1787 - Auto-scroll stopped working in 2.2.0
@@ -368,7 +368,7 @@ Bug Fixes
 
    * Major work on bug fixing. 198 bugs that were in 2.1.3 were fixed for 2.2.0.
         * The most serious bug fixed this time round was bug 437 which was
-          about what happens when Audacity is recording and runs out of storage.
+          about what happens when Sneedacity is recording and runs out of storage.
         * Most of the bugs fixed were more minor, such as bug 463 which was
           about a case in which the numbering on the timeline could display
           incorrect times.
@@ -396,12 +396,12 @@ Changes in version 2.1.3:
    * Nyquist effects now significantly faster.
 
  * Other Changes:
-   * Upgraded the PortAudio library to v19 rev r1966.  This gives Audacity
+   * Upgraded the PortAudio library to v19 rev r1966.  This gives Sneedacity
      Windows 10 support.
    * (Windows) DirectSound now records 24-bit samples.
-   * (macOS) Audacity.app now has its resources inside it rather than in a
+   * (macOS) Sneedacity.app now has its resources inside it rather than in a
      separate folder, so installation to /Applications/ is cleaner.
-   * (macOS) Audacity 2.1.3 provides partial support for Sierra. Details at
+   * (macOS) Sneedacity 2.1.3 provides partial support for Sierra. Details at
      http://wiki.audacityteam.org/wiki/Partial_Support_for_Mac_Sierra_in_2.1.3 .
 
 Bug fixes:
@@ -464,7 +464,7 @@ Changes in version 2.1.1:
      window sizes.
    * Scrubbing and Seeking, including backwards play. 
    * Quick-Play from Timeline enhancements, particularly for looping.
-   * (Windows) Language of Audacity user interface is now set in installer.
+   * (Windows) Language of Sneedacity user interface is now set in installer.
    * More VI usability enhancements for track focus & navigation.
    
  * Other Changes:   
@@ -545,8 +545,8 @@ Bug fixes:
    * Undo could fail silently if a selection included/touched a clip boundary.
 
  * Imports and Exports 
-   * If there were invalid FFmpeg libs in system PATH this prevented Audacity
-      recognising the installed FFmpeg or the FFmpeg specified in audacity.cfg.
+   * If there were invalid FFmpeg libs in system PATH this prevented Sneedacity
+      recognising the installed FFmpeg or the FFmpeg specified in sneedacity.cfg.
 
  * Mac OS X:
    * Fix uninitialized buffer - this should correct playback buzz or crackle
@@ -556,26 +556,26 @@ Bug fixes:
    * Waves v9 Audio Units should now work correctly.
 
  * GNU/Linux: 
-   * Fix "Audacity already running" error when using the command-line or 
+   * Fix "Sneedacity already running" error when using the command-line or 
       context menu to open multiple or further files. 
    * Fix segfault exporting an FFmpeg format to an unwritable folder.
    * Fix silent failure exporting FFmpeg, MP2 or OGG to an unwritable folder.
    * Fix ENTER activated an effect when OK button was greyed out.  
 
  * Operating system and sound device support:
-   * (Windows) Audacity 2.1.0 requires Windows XP SP3 (32-bit) or XP SP2
+   * (Windows) Sneedacity 2.1.0 requires Windows XP SP3 (32-bit) or XP SP2
       (64-bit), Vista, Windows 7, Windows 8 or 8.1. 
-   * (Windows) Audacity is now compiled using Visual Studio 2013.  
+   * (Windows) Sneedacity is now compiled using Visual Studio 2013.  
    * (Windows) Recording with WASAPI host now includes experimental support 
       for physical inputs (up to 24-bit depth) as well as loopback recording.  
    * (OS X) 10.10 (Yosemite) is now supported including Apple Audio Units.
    * Please report any issues with WASAPI recording/playback or Yosemite 
       to http://www.audacityteam.org/contact/#feedback .
    * (Linux Ubuntu) Under Unity, keyboard shortcuts are not visible in the
-     Audacity menus. Keyboard shortcuts are visible if you install the classic
-     GNOME Flashback interface or under Unity if you open Audacity with the
-     UBUNTU_MENUPROXY=0 environment variable. Audacity compiled from source
-     will ship with src/audacity.desktop.in set to UBUNTU_MENUPROXY=0 but it
+     Sneedacity menus. Keyboard shortcuts are visible if you install the classic
+     GNOME Flashback interface or under Unity if you open Sneedacity with the
+     UBUNTU_MENUPROXY=0 environment variable. Sneedacity compiled from source
+     will ship with src/sneedacity.desktop.in set to UBUNTU_MENUPROXY=0 but it
      will remain up to distributions to use this desktop file.    
 
 
@@ -608,11 +608,11 @@ Changes in version 2.0.6:
     http://manual.audacityteam.org/o/man/faq_installation_and_plug_ins.html#ffdown .
  * New Tamil translation (largely complete). 
  * (Windows) FLAC exports can now exceed 2 GB in size. 
- * (OS X) Easier Audacity installation using the DMG: drag the Audacity folder
+ * (OS X) Easier Sneedacity installation using the DMG: drag the Sneedacity folder
     to the /Applications shortcut. 
- * (OS X) Audacity 2.0.6 will not officially support OS X 10.10 Yosemite when 
-    released (in particular, Apple Audio Units may not open in Audacity).
- * (Linux) Self-compiled builds of Audacity now search for system LADSPA 
+ * (OS X) Sneedacity 2.0.6 will not officially support OS X 10.10 Yosemite when 
+    released (in particular, Apple Audio Units may not open in Sneedacity).
+ * (Linux) Self-compiled builds of Sneedacity now search for system LADSPA 
     effects in /usr/lib/ladspa.  
 
 Bug fixes:
@@ -621,7 +621,7 @@ Bug fixes:
    * Region Restore did not restore the region after using Preferences. 
    * Dragging selections with the keyboard or Selection Toolbar digits 
       was very slow.  
-   * (Windows) Help > About Audacity crashed when run in Magyar language.  
+   * (Windows) Help > About Sneedacity crashed when run in Magyar language.  
    * (OS X) Some full and reduced Menu Bar items were not translated.  
    * (OS X and Linux) Fixed various interface crashes.
 
@@ -633,7 +633,7 @@ Bug fixes:
 
  * Click or drag on the Timeline after Loop Play continued to loop.
  * Transcription Toolbar did not play slower than 0.1x speed.
- * (Linux) Audacity did not build if python 2 was not available.  
+ * (Linux) Sneedacity did not build if python 2 was not available.  
  * Projects did not reopen correctly if they contained tracks having 
    2^31 samples or greater of audio (just over 13.5 hours at 44100 Hz).
 
@@ -652,18 +652,18 @@ Changes in version 2.0.5:
       or backwards respectively to the nearest label.
 
  * (Windows) On a very few machines, the Windows WDM-KS low latency audio host
-    introduced in Audacity 2.0.4 caused Audacity to hang or the computer to 
+    introduced in Sneedacity 2.0.4 caused Sneedacity to hang or the computer to 
     crash. WDM-KS has been removed from 2.0.5 until it can be safely enabled.
 
  * (Windows and OS X) Screen reader improvements for Install VST Effects dialog.  
 
- * (OS X) Audio Unit plug-ins detected by Audacity on launch are now not loaded
+ * (OS X) Audio Unit plug-ins detected by Sneedacity on launch are now not loaded
     until chosen from the Effect menu. This should speed up launch and avoid
     crashes at launch due to misbehaving Audio Units.  
 
  * (Linux) Update to PortAudio r1910 fixes memory and other bugs under ALSA.
 
- * (Linux) Applied fix for wxGTK 2.8.12 bug which resulted in loss of Audacity's
+ * (Linux) Applied fix for wxGTK 2.8.12 bug which resulted in loss of Sneedacity's
     menu bar (or visual corruption under Unity) on Debian-based systems.
 
  Bug fixes:
@@ -684,13 +684,13 @@ Changes in version 2.0.5:
  * (Windows) When first changing to Windows WASAPI host, the input volume slider
     in Mixer Toolbar was enabled when it should have been permanently disabled. 
 
- * (Windows) On some machines, launching Audacity then recording from the current
+ * (Windows) On some machines, launching Sneedacity then recording from the current
     Device Toolbar input would not record until the input was reselected. 
 
  * (OS X) Frequent crashes occurred on importing audio files on some machines.
 
  * (OS X) Files did not open using Finder "Open with", double-clicking the 
-    file or dragging the file to the Audacity icon.    
+    file or dragging the file to the Sneedacity icon.    
 
  * (Linux 64-bit) Fixed a crash when using Equalization.
 
@@ -720,7 +720,7 @@ Changes in version 2.0.4:
  * (Windows and Mac OS X): VST scanning dialog now replaced with a dialog
     for choosing which VST effects to load. 
  * (Linux) CTRL + ALT can now be used to smooth samples in Draw Tool. 
- * Modules Preferences replaced with a dialog on launch of Audacity 
+ * Modules Preferences replaced with a dialog on launch of Sneedacity 
     enabling you to choose which modules to load.  
 
 Bug fixes:
@@ -734,13 +734,13 @@ Bug fixes:
  * Bass Boost no longer clips if the track contains 32-bit audio.   
  * Auto Duck was excessively slow on older machines. 
  * (Windows) Exported MP3 comments tags were not seen by Windows programs.   
- * (Windows and OS X) Audacity crashed if you used system quit before
+ * (Windows and OS X) Sneedacity crashed if you used system quit before
     file import was complete. 
- * (Linux) Equalization crashed Audacity if the XML file was corrupted.  
+ * (Linux) Equalization crashed Sneedacity if the XML file was corrupted.  
  * (Linux) When configuring effect parameters in "Edit Chains", "Preview" 
     (not intended to be functional) caused a crash.
  * (Linux) LICENSE.txt and README.txt were wrongly installed in
-     /usr/local/share/doc instead of /usr/local/share/doc/audacity/ .
+     /usr/local/share/doc instead of /usr/local/share/doc/sneedacity/ .
  * Accessibility: ENTER did not toggle selectedness of a label track unless
     a label was selected.  
  * Numerous other interface fixes.  
@@ -750,7 +750,7 @@ Bug fixes:
 Changes in version 2.0.3:
 
  * The SoX Resampler library (libsoxr) has replaced libresample in 
-    Audacity releases, offering both higher quality and greater speed. . 
+    Sneedacity releases, offering both higher quality and greater speed. . 
 
  * Time Tracks new features:
    * "Set Range" now changes only the range of the Time Track,
@@ -759,7 +759,7 @@ Changes in version 2.0.3:
       display and interpolation.
    * Upper and lower speed limits will now be remembered when saving 
       and reopening a project in 2.0.3. Warp points in projects saved 
-      by previous Audacity versions will be correctly restored in 2.0.3.
+      by previous Sneedacity versions will be correctly restored in 2.0.3.
    * Warp points saved in a 2.0.3 project will be preserved if opened
       in previous versions but playback and display will be incorrect.
 
@@ -780,7 +780,7 @@ Changes in version 2.0.3:
 
  * Compilation: cmake is required in order to build libsoxr.
 
- * New Croatian translation of Audacity.
+ * New Croatian translation of Sneedacity.
 
 Bug fixes:
 
@@ -827,7 +827,7 @@ Changes in version 2.0.2:
     due to frequent crash reports. All data operations will now 
     be written to disk and not to RAM. 
  * Removed the FFmpeg "On-Demand" option from Libraries Preferences
-    (this fixes Audacity not building if configured --without-ffmpeg). 
+    (this fixes Sneedacity not building if configured --without-ffmpeg). 
  * Compilation: Progress on making the Modules feature mainstream. 
     Modules can now be individually enabled and disabled in Preferences.
 
@@ -873,12 +873,12 @@ Changes in version 2.0.1:
 
  * (Windows installer) New option to reset Preferences on next launch. 
 
- * (Mac) Audacity now has excellent compatibility with the VoiceOver
+ * (Mac) Sneedacity now has excellent compatibility with the VoiceOver
      screen reader. For details, please see:
      http://manual.audacityteam.org/help/manual/man/accessibility.html#mac .  
 
  * CleanSpeech Mode (no longer supported) will not now be enabled 
-    even if it was enabled by an earlier version of Audacity.  
+    even if it was enabled by an earlier version of Sneedacity.  
 
  * Added Serbian (Latin and Cyrillic) translations.   
 
@@ -897,7 +897,7 @@ Bug fixes:
    * Exporting to WAV or AIFF led to a "Libsndfile says" error or
       corrupted output due to order of metadata in imported files. 
    * (Mac) Fixed crashes importing MP3 files on PPC machines.    
-   * (Linux Ubuntu) .Aup files could not be associated with Audacity
+   * (Linux Ubuntu) .Aup files could not be associated with Sneedacity
       (they opened in the web browser instead).
 
  * Effects and Analysis:
@@ -935,13 +935,13 @@ Changes between version 1.3.14 Beta and 2.0.0:
       or AIFF files using the Track Drop-Down Menu. 
    * Fixed a crash importing MP3 files that had duplicate metadata tags 
       (this is a bug in current libsndfile which has been patched in 
-       Audacity; MP3 files mislabeled as WAV which have duplicate tags
-       will still crash Audacity on Linux if Audacity has been compiled 
+       Sneedacity; MP3 files mislabeled as WAV which have duplicate tags
+       will still crash Sneedacity on Linux if Sneedacity has been compiled 
        against an affected version of system libsndfile).
    * Fixed an issue where excessively high or corrupted sample values in
       the audio could corrupt exports from the start of the problem for
       the rest of the file, and could corrupt the rest of the project.  
-   * (Linux) Fixed Audacity could not be compiled against FFmpeg
+   * (Linux) Fixed Sneedacity could not be compiled against FFmpeg
       0.7.x and 0.8.x. 
 
  * Effects and Analysis:
@@ -983,8 +983,8 @@ Summary of bug fixes and new features between 1.2.6 and 2.0.0:
    * (Windows Vista/7) Pressing Stop after recording could cause a crash.
    * (Mac OS X) Fixed shortcut keys activating when typing in file open or
       save windows.
-   * (Mac OS X) Audacity 2.0.0 fully supports Unicode, which fixes an
-      issue where Audacity could not work with folders having non-English
+   * (Mac OS X) Sneedacity 2.0.0 fully supports Unicode, which fixes an
+      issue where Sneedacity could not work with folders having non-English
       characters in their name. 
    * (Linux) Playing existing tracks while recording in mono could cause
       recordings to be distorted or low-pitched. 
@@ -1003,11 +1003,11 @@ Changes in version 1.3.14 Beta:
     To retain silence before the audio starts, generate silence after render.     
  * Grouped some Edit Menu items into "Remove Audio" and "Clip Boundaries".  
  * CleanSpeech Mode removed from Interface Preferences (it still runs if it
-    was enabled in a previous Audacity but can only be turned off there). 
+    was enabled in a previous Sneedacity but can only be turned off there). 
  * (OS X) Added support for AudioUnit MusicEffects (but no MIDI support). 
  * (Linux) Set the per-user files directory per the program name set in 
     configure.
- * (Linux) Changed the default location of the Audacity temporary directory
+ * (Linux) Changed the default location of the Sneedacity temporary directory
     to be in /var/tmp not /tmp, so preserving the directory between reboots. 
 
 Bug fixes:
@@ -1034,7 +1034,7 @@ Bug fixes:
       analyzed.  
 
  * Other bug fixes:
-   * Audacity has been provisionally fixed so that it can no longer create 
+   * Sneedacity has been provisionally fixed so that it can no longer create 
       block files longer than the sample format or project format allows, 
       and can no longer delete these, which led to data loss. Any overlong 
       blocks found are preserved but "orphaned", so will appear as silence.
@@ -1068,7 +1068,7 @@ Changes in version 1.3.13 Beta:
  * (Windows and Linux) The window Close button and other system close or
     shutdown commands now quit on closing the last window. File > Close now 
     always clears to a new, empty project. 
- * (OS X) Simpler installer with top-level "Audacity" folder. 
+ * (OS X) Simpler installer with top-level "Sneedacity" folder. 
 
 Bug fixes:
 
@@ -1121,12 +1121,12 @@ Bug fixes:
    * Nyquist effects: fixes for crashes, incorrect slider behaviour and better
       support for backslashes, double quotes and Unicode characters. 
    * (Windows and OS X) Processing of VST effects was substantially slower than
-      in previous versions of Audacity.
-   * (OS X 10.5 PPC) A first-time installation of Audacity Beta would hang
+      in previous versions of Sneedacity.
+   * (OS X 10.5 PPC) A first-time installation of Sneedacity Beta would hang
       on launch if VST effects were detected. 
    * (Linux) Recordings made with the pulse device crashed or stalled when
       using overdub and/or software playthrough.  
-   * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Audacity was
+   * (Linux) Play-at-Speed crashed at 0.08 speed or lower if Sneedacity was
       configured with libsamplerate. 
 
 
@@ -1196,7 +1196,7 @@ Bug fixes:
       exported is fixed.
    * Fix corrupt files exported through FFmpeg when metadata included,
       (metadata is now exported correctly in M4A files)
-   * Prevent saving a new Audacity Project over an existing one as this 
+   * Prevent saving a new Sneedacity Project over an existing one as this 
       could corrupt both projects.
    * Improved help for files that cannot be imported because the relevant
       optional library is missing.
@@ -1225,7 +1225,7 @@ Bug fixes:
  * Other bug fixes:
    * Several timing-dependent crashes and minor incorrect behaviors have been
       fixed
-   * Windows installer now installs correctly over previous versions of Audacity 
+   * Windows installer now installs correctly over previous versions of Sneedacity 
 
 
 
@@ -1277,7 +1277,7 @@ Bug fixes:
     * Preferences window: OK button did not respond to ENTER when
        a tab selected in left-hand panel
     * Mixer Board solo button handling 
-    * (Windows) After a period launching correctly, Audacity 
+    * (Windows) After a period launching correctly, Sneedacity 
        sometimes did not come up on top at launch
     * (Mac OS X) Correctly installed Help folder could not be found 
     * (Mac OS X and Linux) Output slider could affect VU playback 
@@ -1508,7 +1508,7 @@ Import / Export:
            threading issues
         * Exports: Single AAC filter (M4A LC profile) with quality
            settings slider; removed FFmpeg formats already supported
-           by Audacity; added explicit GSM 6.10 (WAV) filter; current
+           by Sneedacity; added explicit GSM 6.10 (WAV) filter; current
            project rate now used for all exports, with check for
            format-invalid rates; improvements to metadata support
 
@@ -1685,7 +1685,7 @@ Effects:
    * New Vocal Remover plug-in, improvements for Generate effects.
 
 Compilation:
-   * Fixes when building Audacity with libraries disabled.
+   * Fixes when building Sneedacity with libraries disabled.
    * Improvements to make Mac and Solaris builds easier.
 
 Security:
@@ -1701,8 +1701,8 @@ Miscellaneous:
 Changes in 1.3.4:
 
 New Features
-   * New Welcome Screen with introduction to Audacity
-   * Enhanced Windows Shell integration, so Audacity shows up in lots of
+   * New Welcome Screen with introduction to Sneedacity
+   * Enhanced Windows Shell integration, so Sneedacity shows up in lots of
       Windows places such as "Open With".
    * New keyboard command: 'Mix and Render to New Track'
       (bound to Ctrl+Shift+M).
@@ -1757,7 +1757,7 @@ Recording / Playback:
    * Updated version of portaudio-v19 library.
 
 Note that Help is no longer built in, but accessible on the Web via links
-in Audacity.
+in Sneedacity.
 
 
 
@@ -1791,7 +1791,7 @@ Other features:
    * Major speed improvement in Spectrogram rendering
    * Increased support for drag and drop on OS X
    * Support added for building against wxWidgets 2.8
-   * Support opening multiple Audacity Projects at once from Explorer on
+   * Support opening multiple Sneedacity Projects at once from Explorer on
      Windows
    * Improved main window sliders
    * New support for snapping while selecting and sliding
@@ -1834,24 +1834,24 @@ o Intel Mac support
 Changes in 1.3.0:
 
    New features
-   The new features in Audacity 1.3 have been grouped into the
+   The new features in Sneedacity 1.3 have been grouped into the
    following six major categories.
 
    1. Collapse/Expand Tracks
-      In Audacity 1.3, every track has an upward-pointing triangle at
+      In Sneedacity 1.3, every track has an upward-pointing triangle at
       the bottom of the label area on the left side of the track.
 
    2. Multiple clips per track
-      In Audacity 1.2, there is one audio 'clip' per track. There is
+      In Sneedacity 1.2, there is one audio 'clip' per track. There is
       no easy way to time-shift part of a track without moving the
-      rest. In Audacity 1.3, you can split a single track into multiple
+      rest. In Sneedacity 1.3, you can split a single track into multiple
       clips. You can move these clips around between different tracks,
       making it easy to construct complex compositions out of hundreds
       of smaller audio samples.
 
    3. Selection Bar
-      In Audacity 1.2, the current selection is contained in a
-      status bar at the bottom of the window. In Audacity 1.3,
+      In Sneedacity 1.2, the current selection is contained in a
+      status bar at the bottom of the window. In Sneedacity 1.3,
       this is replaced by a fully functional Selection Bar, which
       displays and controls the current selection (your choice of
       Start and End, or Start and Length), and the current audio
@@ -1861,22 +1861,22 @@ Changes in 1.3.0:
       different units, such as samples, CD frames, or NTSC video frames.
 
    4. Improved Label Tracks
-      Label Tracks are Audacity's way for you to create markings 3
-      and annotations within your project. In Audacity 1.3, Label
+      Label Tracks are Sneedacity's way for you to create markings 3
+      and annotations within your project. In Sneedacity 1.3, Label
       Tracks are much improved, with support for overlapping labels,
       and support for modifying both the left and right edge of the
       label region just by clicking and dragging.
 
    5. QuickTime and Audio Units on Mac OS X
-      On Mac OS X, Audacity can now import and audio file supported
+      On Mac OS X, Sneedacity can now import and audio file supported
       by Apple's QuickTime technology. This includes .MOV and .MP4
       (AAC) files. Unfortunately encrypted audio files (such as
       those from the iTunes Music Store) cannot be imported directly
-      into Audacity - Apple does not allow this to be done easily
+      into Sneedacity - Apple does not allow this to be done easily
       because it would be too easy to circumvent the encryption this way.
 
-      Also on Mac OS X, Audacity now supports Audio Unit plug-ins.
-      Audacity searches for Audio Units in the usual location, in the
+      Also on Mac OS X, Sneedacity now supports Audio Unit plug-ins.
+      Sneedacity searches for Audio Units in the usual location, in the
       system or user's Library folder.
 
    6. Other features
@@ -1902,10 +1902,10 @@ Changes in 1.2.4:
 
   * The "Generate Silence" effect now prompts for a length.
 
-  * Audacity is now built with Vorbis 1.1, which features better encoding
+  * Sneedacity is now built with Vorbis 1.1, which features better encoding
     quality and file compression.
 
-  * Dragging sound files into the Audacity window now works on Mac OS X
+  * Dragging sound files into the Sneedacity window now works on Mac OS X
     and Linux, as well as Windows.  (Before, it worked only on Windows.)
 
   * The "View History" window can now discard old undo levels to save disk
@@ -1915,11 +1915,11 @@ Changes in 1.2.4:
 
   * "Plot Spectrum" command is now in Analyze menu.
 
-  * Opening a project file saved by a later version of Audacity displays
+  * Opening a project file saved by a later version of Sneedacity displays
     an intelligent error message.  Also, trying to import a project file
     (instead of open it) displays an intelligent error message.
 
-  * Audacity now compiles in Visual C++ .NET 2003.
+  * Sneedacity now compiles in Visual C++ .NET 2003.
 
   * Other minor bug fixes.
 
@@ -1933,7 +1933,7 @@ Changes in 1.2.3:
 
   * Fixed a bug that caused recording to stop or display incorrectly
     after about 50 minutes on some Windows systems.  (This was partly
-    fixed in Audacity 1.2.2, but still didn't work on some systems.)
+    fixed in Sneedacity 1.2.2, but still didn't work on some systems.)
 
   * The Change Pitch and Change Tempo effects have been upgraded to
     use a new version of the SoundTouch library by Olli Parviainen,
@@ -1951,13 +1951,13 @@ Changes in 1.2.3:
     button has been added to Nyquist effect dialogs, which allows you
     to see all of the output produced by Nyquist, for aid in debugging.
 
-  * When the audio file referenced ("aliased") by an Audacity project is
-    missing, Audacity will now always play silence.  Before, Audacity
+  * When the audio file referenced ("aliased") by an Sneedacity project is
+    missing, Sneedacity will now always play silence.  Before, Sneedacity
     would sometimes repeat the most recent audio that was played previously.
 
   * VU Meters will now always reset when audio I/O has stopped.
 
-  * Fixed a major Mac-only bug that was causing Audacity to crash at seemingly
+  * Fixed a major Mac-only bug that was causing Sneedacity to crash at seemingly
     random times, but especially during audio playback and recording.
 
   * New or updated translations: Italian (it), Hungarian (hu),
@@ -1979,7 +1979,7 @@ Changes in 1.2.2:
     systems.  It will improve in future versions.)
 
   * Fixed a serious bug that could cause data loss when you save and
-    then reload and re-edit an Audacity project containing repeated
+    then reload and re-edit an Sneedacity project containing repeated
     or duplicate data.
 
   * MP3 tags dialog will only pop up the first time you export as
@@ -2006,11 +2006,11 @@ Changes in 1.2.2:
     audio device while listening to it play through a separate device.
 
   * Unix/Linux: Fixed freeze caused by captured mouse when audio
-    device hangs.  (Audacity may not respond, but it will no longer
+    device hangs.  (Sneedacity may not respond, but it will no longer
     freeze all of X.)
 
   * Fixed a cosmetic bug that caused improper waveform display if
-    you tried to open an Audacity project saved on a different
+    you tried to open an Sneedacity project saved on a different
     platform (e.g., copying a project from a Mac to a PC).
 
   * Fixed bug that could cause instability when pasting, splitting,
@@ -2023,7 +2023,7 @@ Changes in 1.2.2:
     entire project to fit exactly on one page.  Try printing in
     landscape orientation for best results.
 
-  * Mac OS X and Windows: Audacity ships with a newer version (1.0.1)
+  * Mac OS X and Windows: Sneedacity ships with a newer version (1.0.1)
     of the Ogg Vorbis encoder.  Vorbis compression will now have higher
     quality and smaller file sizes.
 
@@ -2055,7 +2055,7 @@ Changes in 1.2.1:
 
   * Fix a crash when the temporary directory is not available on startup.
 
-  * Correctly load ID3 tags saved in Audacity project files.
+  * Correctly load ID3 tags saved in Sneedacity project files.
 
   * On Linux and OS X, store lockfiles in the temp directory instead of
     the user's home directory.  This fixes problems in lab environments
@@ -2100,9 +2100,9 @@ Changes in 1.2.0:
   * Mac OS X: Fixed audio problems on the Apple PowerMac G5.
 
   * Linux/ALSA: Work around a bug in ALSA's OSS emulation that
-    caused Audacity's playback cursor to move too quickly.
+    caused Sneedacity's playback cursor to move too quickly.
 
-  * Microsoft Windows: The Audacity source code should now
+  * Microsoft Windows: The Sneedacity source code should now
     compile out of the box on Windows.
 
   * Many new/updated translations.
@@ -2135,14 +2135,14 @@ Changes in 1.2.0-pre4:
   * The Delete key can now be used to delete the current selection,
     in addition to the Backspace key.
 
-  * Fixed bug where Audacity didn't ask whether to save
+  * Fixed bug where Sneedacity didn't ask whether to save
     changes if you close the project or exit while recording.
 
   * Mac OS X: Supports Playthrough (listen to what you're recording
     while recording it) if your hardware device supports it.
 
-  * Mac OS X: Audacity is now a package (you can right-click on
-    Audacity.app and select 'Show Package Contents').  Launch time
+  * Mac OS X: Sneedacity is now a package (you can right-click on
+    Sneedacity.app and select 'Show Package Contents').  Launch time
     has improved significantly.
 
   * MS Windows: Fixed problem that caused Windows XP to use
@@ -2154,7 +2154,7 @@ Changes in 1.2.0-pre4:
     if the destination directory was the root folder of a
     Windows drive.
 
-  * MS Windows: Audacity's application information which
+  * MS Windows: Sneedacity's application information which
     is written to the Windows registry now always contains
     the full path to the executable.
 
@@ -2174,7 +2174,7 @@ Changes in 1.2.0-pre3:
   * Fixed bug where Export is grayed out when nothing is
     selected.
 
-  * Fixed crash caused by opening Audacity on a computer with
+  * Fixed crash caused by opening Sneedacity on a computer with
     a high-end sound card with no mixer support.
 
   * Fixed crash in Import Raw.
@@ -2185,7 +2185,7 @@ Changes in 1.2.0-pre3:
 
   * Support for the VST Enabler on Windows added.
 
-  * Fixed crash if you close Audacity while the Preferences
+  * Fixed crash if you close Sneedacity while the Preferences
     dialog is open.
 
   * Fixed duplicate-character bug in Mac OS X Label Tracks.
@@ -2209,7 +2209,7 @@ Changes in 1.2.0-pre3:
     devices exist, or if the audio device doesn't support the
     mode you selected.
 
-  * Audacity no longer sets the process priority to high while
+  * Sneedacity no longer sets the process priority to high while
     recording on Windows.  Users can still do this manually
     using the Task Manager.
 
@@ -2232,7 +2232,7 @@ Changes in 1.2.0-pre2:
   * Online help completed.  The full manual is nearly complete
     and will be posted to the web site for online browsing shortly.
 
-  * Audacity will no longer let you do unsafe editing operations
+  * Sneedacity will no longer let you do unsafe editing operations
     while playing or recording.  This eliminates many potential
     crashes.
 
@@ -2241,10 +2241,10 @@ Changes in 1.2.0-pre2:
   * New resampling library, with no restrictions on the maximum or
     minimum rate of resampling.
 
-  * Audacity now supports LADSPA plug-ins on all platforms, and
+  * Sneedacity now supports LADSPA plug-ins on all platforms, and
     supports VST plug-ins through an optional LADSPA plug-in
     called the "VST Enabler", which you can download separately.
-    Because of licensing issues, Audacity cannot be distributed
+    Because of licensing issues, Sneedacity cannot be distributed
     with VST support built-in.
 
   * Mac OS X keyboard shortcut problems have been fixed.
@@ -2264,7 +2264,7 @@ Changes in 1.2.0-pre2:
   * Canceling an Import operation doesn't cause an extra error
     dialog to appear.
 
-  * Audacity now handles filenames with international characters
+  * Sneedacity now handles filenames with international characters
     correctly.
 
   * Now outputs ID3v2.3 tags (instead of ID3v2.4), to be
@@ -2274,7 +2274,7 @@ Changes in 1.2.0-pre2:
 
 
 
-New features in Audacity 1.2:
+New features in Sneedacity 1.2:
   * User Interface
     - Vertical zooming of tracks.
     - Improved look and placement of toolbars.
@@ -2284,7 +2284,7 @@ New features in Audacity 1.2:
     - Mouse wheel can be used to zoom in and out.
     - Multi-Tool mode.
     - Amplify using envelope.
-    - Labels can store selections (like Audacity 1.0.0).
+    - Labels can store selections (like Sneedacity 1.0.0).
 
   * Effects
     - Repeat Last Effect command
@@ -2302,8 +2302,8 @@ New features in Audacity 1.2:
     - Looped play.
 
   * File I/O
-    - Audacity 1.2.0 opens project files from all previous versions
-      of Audacity from 0.98 through 1.1.3.
+    - Sneedacity 1.2.0 opens project files from all previous versions
+      of Sneedacity from 0.98 through 1.1.3.
     - Open multiple files from the same dialog.
     - Use a text file to specify a list of audio files to open with offsets.
 
@@ -2312,7 +2312,7 @@ New features in Audacity 1.2:
   * Bug fixes
     - Project files with special characters are no longer invalid.
     - "Scratchy" noises caused by bad clipping are fixed.
-    - Audacity no longer exports invalid Ogg files, and does not cut off the
+    - Sneedacity no longer exports invalid Ogg files, and does not cut off the
       last few seconds of exported Ogg files.
     - Mono MP3 files now export at the correct speed.
     - Many incorrect results from the Envelope tool have been fixed.
@@ -2323,18 +2323,18 @@ New features in Audacity 1.2:
 
 
 
-New features in Audacity 1.1.3:
+New features in Sneedacity 1.1.3:
   * User Interface
     - New Mixer toolbar allows you to control the output
       volume, input volume, and input source directly
-      from Audacity.
+      from Sneedacity.
     - Every track now has its own gain and pan controls.
 
   * File I/O
     - Uses improved project file format.  (Unfortunately reading
       previous formats, including 1.1.1, is not supported.)
-    - Block files (stored in Audacity project directories) now
-      use the standard AU format.  Though some Audacity
+    - Block files (stored in Sneedacity project directories) now
+      use the standard AU format.  Though some Sneedacity
       meta-information is in these files, they can now be
       read by many other popular audio programs as well.
     - Fixed some bugs relating to reading/writing audio
@@ -2361,7 +2361,7 @@ New features in Audacity 1.1.3:
 
 
 
-New features in Audacity 1.1.2:
+New features in Sneedacity 1.1.2:
   * User Interface
     - Fixed bug in Windows version, for track menu commands
      "Name..." and "Split Stereo Track"/"Make Stereo Track".
@@ -2372,7 +2372,7 @@ New features in Audacity 1.1.2:
 
 
 
-New features in Audacity 1.1.1:
+New features in Sneedacity 1.1.1:
 
   * User Interface
     - Tooltips appear in Status Bar.
@@ -2404,23 +2404,23 @@ New features in Audacity 1.1.1:
     - Support for full-duplex (play while recording)
     - Support for MP3 exporting using LameLib Carbon
   * Unix
-    - Audacity now has a man page (it describes command-line
+    - Sneedacity now has a man page (it describes command-line
       options and how to set the search path)
   * File Formats
     - Uses libsndfile 1.0, which fixes some bugs and
       improves performance
   * Searching for Files:
-    - On Windows and Mac OS, Audacity now looks for
+    - On Windows and Mac OS, Sneedacity now looks for
       translations in the "Languages" folder and all plug-ins
       in the "Plug-ins" folder, relative to the program.
-    - On Unix, Audacity looks for translations in
+    - On Unix, Sneedacity looks for translations in
       <prefix>/share/locale and looks for everything else
-      in <prefix>/share/audacity and also in any paths in
-      the AUDACITY_PATH environment variable
+      in <prefix>/share/sneedacity and also in any paths in
+      the SNEEDACITY_PATH environment variable
 
 
 
-New features in Audacity 1.1.0:
+New features in Sneedacity 1.1.0:
 
   * Core audio processing:
     - Support for 24-bit and 32-bit sample formats
@@ -2429,7 +2429,7 @@ New features in Audacity 1.1.0:
   * Effects:
     - Support LADSPA plug-ins on Linux / Unix
   * File formats:
-    - New XML-based Audacity project format
+    - New XML-based Sneedacity project format
     - Full Ogg Vorbis support now (importing and exporting)
     - Export to any command-line programs on Unix
     - Support for reading and writing many more types of
@@ -2448,12 +2448,12 @@ New features in Audacity 1.1.0:
     - The waveform now displays the average value in a lighter
         color inside the peak values
   * Localization
-    - Audacity can now be localized to different foreign
+    - Sneedacity can now be localized to different foreign
       languages.
 
 
 
-New libraries in Audacity 1.1:
+New libraries in Sneedacity 1.1:
 
   * libmad for fast MP3 importing
   * libid3tag for editing MP3 file information

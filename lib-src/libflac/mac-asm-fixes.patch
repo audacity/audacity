@@ -1,6 +1,6 @@
 Index: lib-src/libflac/src/libFLAC/ia32/nasm.h
 ===================================================================
-RCS file: /cvsroot/audacity/lib-src/libflac/src/libFLAC/ia32/nasm.h,v
+RCS file: /cvsroot/sneedacity/lib-src/libflac/src/libFLAC/ia32/nasm.h,v
 retrieving revision 1.2
 diff -u -r1.2 nasm.h
 --- lib-src/libflac/src/libFLAC/ia32/nasm.h	13 Feb 2006 11:36:45 -0000	1.2

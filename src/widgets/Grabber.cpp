@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Grabber.cpp
 
@@ -306,7 +306,7 @@ void Grabber::OnKeyDown(wxKeyEvent &event)
 }
 
 // Piggy back in same source file as Grabber.
-// Audacity Flicker-free StaticBitmap.
+// Sneedacity Flicker-free StaticBitmap.
 BEGIN_EVENT_TABLE(AStaticBitmap,wxStaticBitmap)
     EVT_ERASE_BACKGROUND(AStaticBitmap::OnErase)
 END_EVENT_TABLE()

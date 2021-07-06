@@ -1,13 +1,13 @@
-# translation of AUDACITY.PO.po to
+# translation of SNEEDACITY.PO.po to
 # Sneedacity Strings for Translation.
 # Copyright (C) YEAR Sneedacity Development Team
 # This file is distributed under the same license as Sneedacity.
-# Sneedacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
+# Sneedacity Team <sneedacity-translation@lists.sourceforge.net>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2009-01-16 03:10-0000\n"
 "Last-Translator: g <g@g>\n"
@@ -351,7 +351,7 @@ msgstr ""
 msgid "Script was not saved."
 msgstr ""
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -779,7 +779,7 @@ msgid "Credits"
 msgstr "კრედიტები"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
+msgid "DarkSneedacity Customisation"
 msgstr ""
 
 #. i18n-hint: The program's name substitutes for %s
@@ -858,7 +858,7 @@ msgstr "გააქტიურებულია"
 msgid "Disabled"
 msgstr "გამორთულია"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "The Build"
@@ -898,7 +898,7 @@ msgstr "აგების ტიპი:"
 msgid "Compiler:"
 msgstr "კომპრესორი"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "Installation Prefix:"
@@ -909,7 +909,7 @@ msgstr "ინსტალაციის პრეფიქსი:"
 msgid "Settings folder:"
 msgstr "პარამეტრების საქაღალდე:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "ძირითადი ბიბლიოთეკები"
@@ -1129,16 +1129,16 @@ msgstr ""
 msgid "Error"
 msgstr "შეცდომა"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy, c-format
 msgid "Failed to remove %s"
 msgstr "შეუძლებელია '%s'-ის წაშლა"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1146,12 +1146,12 @@ msgid ""
 "Preferences reset."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Reset Sneedacity Preferences"
 msgstr "Sneedacity  პარამეტრები"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1159,46 +1159,46 @@ msgid ""
 "It has been removed from the list of recent files."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity კვლავ გაშვებულია"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&ახალი"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&გახსნა..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr ""
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "Sneedacity-ის &შესახებ..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&პარამეტრები..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&ფაილი"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
@@ -1209,7 +1209,7 @@ msgstr ""
 "Sneedacity ვერ პოულობს დროებითი ფაილების შესანახ ადგილს.\n"
 "გთხოვთ, შეიყვანოთ შესაბამისი დირექტორია პარამეტრების დიალოგურ სარკმელში."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1217,7 +1217,7 @@ msgstr ""
 "Sneedacity ვერ პოულობს დროებითი ფაილების შესანახ ადგილს.\n"
 "გთხოვთ, შეიყვანოთ შესაბამისი დირექტორია პარამეტრების დიალოგურ სარკმელში."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
@@ -1225,7 +1225,7 @@ msgstr ""
 "Sneedacity  ახლა დაიხურება. გთხოვთ, გაუშვათ თავიდან ახალი დროებითი დირექტორიის "
 "გამოსაყენებლად."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -1235,7 +1235,7 @@ msgstr ""
 "მონაცემების დაკარგვა ან სისტემური მარცხი.\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1243,19 +1243,19 @@ msgstr ""
 "Sneedacity-მა ვერ შეძლო დროებითი ფაილების დირექტორიის ჩაკეტვა.\n"
 "ეს საქაღალდე შეიძლება Sneedacity-ის სხვა ასლის მიერ გამოიყენება.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "კვლავ გსურთ  Sneedacity-ის დაწყება?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "სისტემამ დაადგინა, რომ გაშვებულია Sneedacity -ის ასლი.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -1263,11 +1263,11 @@ msgstr ""
 "გამოიყენეთ ახალი ან გახსნა ბრძანებები მიმდინარე Sneedacity-ში\n"
 "პროცესში მრავალჯერადი პროექტების თანადროული გახსნისთვის.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity კვლავ გაშვებულია"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1275,12 +1275,12 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Sneedacity Startup Failure"
 msgstr "Sneedacity პროექტის ფაილები"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1288,7 +1288,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1296,7 +1296,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1304,7 +1304,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1312,43 +1312,43 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr ""
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "set max disk block size in bytes"
 msgstr "\t-ბლოკის ზომა nnn (დისკის ბლოკის მაქსიმალური ზომის მომართვა ბაიტებში)"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "this help message"
 msgstr "\t-დახმარება (ეს შეტყობინება)"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "run self diagnostics"
 msgstr "\t-ტესტი (დიაგნოსტიკის გაშვება)"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "display Sneedacity version"
 msgstr "\t-ვერსია (Sneedacity ვერსიის ჩვენება)"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "audio or project file name"
 msgstr "შეუძლებელია პროექტის ფაილის გახსნა"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
@@ -1361,21 +1361,21 @@ msgstr ""
 "\n"
 "დავაკავშირო ფაილები, რომ ორმაგი წკაპით გაიხსნას?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "Sneedacity პროექტის ფაილები"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr ""
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, fuzzy
 msgid "Sneedacity Configuration Error"
 msgstr "აუდიოს ჩაწერა"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1392,49 +1392,49 @@ msgid ""
 "state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "დახმარება"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Sneedacity"
 msgstr "Sneedacity-ის დახურვა"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, fuzzy
 msgid "Sneedacity Log"
 msgstr "Sneedacity %s ხელსაწყოთა ზოლი"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "&შენახვა..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr ""
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&დახურვა"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, fuzzy, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "შეუძლებელია ფაილზე ჩაწერა:"
@@ -3919,7 +3919,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr ""
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -5838,13 +5838,13 @@ msgstr "ამოჭრის ხაზის გასაფართოებ�
 msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Sneedacity"
 msgstr "Sneedacity %s ხელსაწყოთა ზოლი"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5852,13 +5852,13 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, fuzzy, c-format
 msgid "Applying %s..."
 msgstr "გააქტიურება..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5867,7 +5867,7 @@ msgstr "გააქტიურება..."
 msgid "%s: %s"
 msgstr ""
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr ""
 

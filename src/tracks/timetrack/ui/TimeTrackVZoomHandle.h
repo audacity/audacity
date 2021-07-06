@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TimeTrackVZoomHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TimeTrackVZoomHandle.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIMETRACK_VZOOM_HANDLE__
-#define __AUDACITY_TIMETRACK_VZOOM_HANDLE__
+#ifndef __SNEEDACITY_TIMETRACK_VZOOM_HANDLE__
+#define __SNEEDACITY_TIMETRACK_VZOOM_HANDLE__
 
 #include "../../../UIHandle.h" // to inherit
 
@@ -27,23 +27,23 @@ public:
 
    ~TimeTrackVZoomHandle() override;
 
-   void Enter( bool forward, AudacityProject * ) override;
+   void Enter( bool forward, SneedacityProject * ) override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(SneedacityProject *pProject) override;
 
 private:
    std::weak_ptr<TimeTrack> mpTrack;

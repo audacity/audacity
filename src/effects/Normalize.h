@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Normalize.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_NORMALIZE__
-#define __AUDACITY_EFFECT_NORMALIZE__
+#ifndef __SNEEDACITY_EFFECT_NORMALIZE__
+#define __SNEEDACITY_EFFECT_NORMALIZE__
 
 #include "Effect.h"
 #include "Biquad.h"

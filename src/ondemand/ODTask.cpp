@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODTask.cpp
 
   Created by Michael Chinen (mchinen)
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -145,10 +145,10 @@ void ODTask::DoSome(float amountWork)
    }
    else
    {
-      //for profiling, uncomment and look in audacity.app/exe's folder for AudacityProfile.txt
+      //for profiling, uncomment and look in sneedacity.app/exe's folder for SneedacityProfile.txt
       //static int tempLog =0;
       //if(++tempLog % 5==0)
-         //END_TASK_PROFILING("On Demand Drag and Drop 5 80 mb files into audacity, 5 wavs per task");
+         //END_TASK_PROFILING("On Demand Drag and Drop 5 80 mb files into sneedacity, 5 wavs per task");
       //END_TASK_PROFILING("On Demand open an 80 mb wav stereo file");
 
       wxCommandEvent event( EVT_ODTASK_COMPLETE );
@@ -173,7 +173,7 @@ void ODTask::DoSome(float amountWork)
    mBlockUntilTerminateMutex.Unlock();
 }
 
-bool ODTask::IsTaskAssociatedWithProject(AudacityProject* proj)
+bool ODTask::IsTaskAssociatedWithProject(SneedacityProject* proj)
 {
    for (auto tr : TrackList::Get( *proj ).Any<const WaveTrack>())
    {

@@ -100,11 +100,11 @@ be "PIC-enabled".
 
 USING AUTOCONF
 
-Audacity (the audio editor ) uses an autoconf-based build system, and 
+Sneedacity (the audio editor ) uses an autoconf-based build system, and 
 the files are also included in the PortMidi download. The associated
-files are tested only in the context of building Audacity, but if you
+files are tested only in the context of building Sneedacity, but if you
 really prefer autoconf to cmake or want to include portmidi in another
-autoconf-based project (like Audacity), maybe this will be useful.
+autoconf-based project (like Sneedacity), maybe this will be useful.
 
 The files are: configure.ac, portmidi-uninstalled.pc.in, portmidi.pc.in,
     and everything in autotools/.
@@ -138,7 +138,7 @@ Finally, run make to create
 CHANGELOG
 
 6-dec-2012 Roger B. Dannenberg
-   Copied notes on Autoconf from Audacity sources
+   Copied notes on Autoconf from Sneedacity sources
 
 22-jan-2010 Roger B. Dannenberg
    Updated instructions about Java paths

@@ -3,7 +3,7 @@
  *
  * There is now a function provided to set the xlisp_path.
  * This is particularly useful for external programs
- * (e.g. Audacity, or a Nyquist GUI) that have their own
+ * (e.g. Sneedacity, or a Nyquist GUI) that have their own
  * mechanism of setting/finding the path.  If xlisp_path
  * is NULL, the old platform-specific methods are still
  * used.

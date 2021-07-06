@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Meter.cpp
 
@@ -284,7 +284,7 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(MeterPanel, wxPanelWrapper)
 
-MeterPanel::MeterPanel(AudacityProject *project,
+MeterPanel::MeterPanel(SneedacityProject *project,
              wxWindow* parent, wxWindowID id,
              bool isInput,
              const wxPoint& pos /*= wxDefaultPosition*/,
@@ -1890,7 +1890,7 @@ void MeterPanel::StartMonitoring()
    } 
 
    if (start && !gAudioIO->IsBusy()){
-      AudacityProject *p = mProject;
+      SneedacityProject *p = mProject;
       if (p){
          gAudioIO->StartMonitoring( DefaultPlayOptions( *p ) );
       }
@@ -1912,7 +1912,7 @@ void MeterPanel::StopMonitoring(){
 void MeterPanel::OnAudioIOStatus(wxCommandEvent &evt)
 {
    evt.Skip();
-   AudacityProject *p = (AudacityProject *) evt.GetEventObject();
+   SneedacityProject *p = (SneedacityProject *) evt.GetEventObject();
 
    mActive = (evt.GetInt() != 0) && (p == mProject);
 

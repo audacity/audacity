@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Snap.h
 
@@ -12,14 +12,14 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SNAP__
-#define __AUDACITY_SNAP__
+#ifndef __SNEEDACITY_SNAP__
+#define __SNEEDACITY_SNAP__
 
 #include <vector>
 #include <wx/defs.h>
 #include "widgets/NumericTextCtrl.h" // member variable
 
-class AudacityProject;
+class SneedacityProject;
 class Track;
 class TrackList;
 class ZoomInfo;
@@ -52,16 +52,16 @@ struct SnapResults {
    bool Snapped() const { return snappedPoint || snappedTime; }
 };
 
-class AUDACITY_DLL_API SnapManager
+class SNEEDACITY_DLL_API SnapManager
 {
 public:
-   SnapManager(const AudacityProject &project,
+   SnapManager(const SneedacityProject &project,
                SnapPointArray candidates,
                const ZoomInfo &zoomInfo,
                bool noTimeSnap = false,
                int pixelTolerance = kPixelTolerance);
 
-   SnapManager(const AudacityProject &project,
+   SnapManager(const SneedacityProject &project,
                const TrackList &tracks,
                const ZoomInfo &zoomInfo,
                bool noTimeSnap = false,
@@ -94,7 +94,7 @@ private:
 
 private:
 
-   const AudacityProject *mProject;
+   const SneedacityProject *mProject;
    const ZoomInfo *mZoomInfo;
    int mPixelTolerance;
    bool mNoTimeSnap;

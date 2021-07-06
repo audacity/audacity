@@ -36,7 +36,7 @@
 
 wxDEFINE_EVENT(EVT_TRACK_FOCUS_CHANGE, wxCommandEvent);
 
-TrackPanelAx::TrackPanelAx( AudacityProject &project )
+TrackPanelAx::TrackPanelAx( SneedacityProject &project )
    :
 #if wxUSE_ACCESSIBILITY
      WindowAccessible( nullptr ) // window pointer must be set after construction
@@ -727,23 +727,23 @@ wxAccStatus TrackPanelAx::Select(int childId, wxAccSelectionFlags selectFlags)
 
 #endif // wxUSE_ACCESSIBILITY
 
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-   []( AudacityProject &parent ){
+static const SneedacityProject::AttachedObjects::RegisteredFactory key{
+   []( SneedacityProject &parent ){
       return std::make_shared< TrackFocus >( parent );
    }
 };
 
-TrackFocus &TrackFocus::Get( AudacityProject &project )
+TrackFocus &TrackFocus::Get( SneedacityProject &project )
 {
    return project.AttachedObjects::Get< TrackFocus >( key );
 }
 
-const TrackFocus &TrackFocus::Get( const AudacityProject &project )
+const TrackFocus &TrackFocus::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
-TrackFocus::TrackFocus( AudacityProject &project )
+TrackFocus::TrackFocus( SneedacityProject &project )
    : mProject{ project }
 {
 }

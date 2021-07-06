@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ToolDock.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TOOLDOCK__
-#define __AUDACITY_TOOLDOCK__
+#ifndef __SNEEDACITY_TOOLDOCK__
+#define __SNEEDACITY_TOOLDOCK__
 
 #include <vector>
 #include <wx/defs.h>

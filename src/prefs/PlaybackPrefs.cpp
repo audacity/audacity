@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PlaybackPrefs.cpp
 
@@ -184,7 +184,7 @@ bool PlaybackPrefs::Commit()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "Playback",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew PlaybackPrefs(parent, winid);

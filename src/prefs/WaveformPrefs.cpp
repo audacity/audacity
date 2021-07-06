@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformPrefs.cpp
 
@@ -31,7 +31,7 @@ Paul Licameli
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
-   AudacityProject *pProject, WaveTrack *wt)
+   SneedacityProject *pProject, WaveTrack *wt)
 /* i18n-hint: A waveform is a visual representation of vibration */
 : PrefsPanel(parent, winid, XO("Waveforms"))
 , mProject{ pProject }
@@ -257,7 +257,7 @@ END_EVENT_TABLE()
 PrefsPanel::Factory
 WaveformPrefsFactory(WaveTrack *wt)
 {
-   return [=](wxWindow *parent, wxWindowID winid, AudacityProject *pProject)
+   return [=](wxWindow *parent, wxWindowID winid, SneedacityProject *pProject)
    {
       wxASSERT(parent); // to justify safenew
       return safenew WaveformPrefs(parent, winid, pProject, wt);

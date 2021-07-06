@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2010 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    MultiDialog.h
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MULTIDIALOG__
-#define __AUDACITY_MULTIDIALOG__
+#ifndef __SNEEDACITY_MULTIDIALOG__
+#define __SNEEDACITY_MULTIDIALOG__
 
 #include <wx/defs.h>
 
@@ -32,4 +32,4 @@ int ShowMultiDialog(const TranslatableString &message,
                        = DefaultMultiDialogMessage(),
                     bool log = true);
 
-#endif // __AUDACITY_MULTIDIALOG__
+#endif // __SNEEDACITY_MULTIDIALOG__

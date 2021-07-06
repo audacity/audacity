@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 NoteTrackVZoomHandle.cpp
 
@@ -33,7 +33,7 @@ namespace
    struct InitMenuData
    {
    public:
-      AudacityProject &project;
+      SneedacityProject &project;
       NoteTrack *pTrack;
       wxRect rect;
       unsigned result;
@@ -58,7 +58,7 @@ NoteTrackVZoomHandle::NoteTrackVZoomHandle
 {
 }
 
-void NoteTrackVZoomHandle::Enter(bool, AudacityProject *)
+void NoteTrackVZoomHandle::Enter(bool, SneedacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
@@ -106,7 +106,7 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 }
 
 UIHandle::Result NoteTrackVZoomHandle::Click
-(const TrackPanelMouseEvent &, AudacityProject *)
+(const TrackPanelMouseEvent &, SneedacityProject *)
 {
    // change note track to zoom like audio track
    //          mpTrack->StartVScroll();
@@ -115,7 +115,7 @@ UIHandle::Result NoteTrackVZoomHandle::Click
 }
 
 UIHandle::Result NoteTrackVZoomHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
@@ -133,7 +133,7 @@ UIHandle::Result NoteTrackVZoomHandle::Drag
 }
 
 HitTestPreview NoteTrackVZoomHandle::Preview
-(const TrackPanelMouseState &st, AudacityProject *)
+(const TrackPanelMouseState &st, SneedacityProject *)
 {
    return HitPreview(st.state);
 }
@@ -245,7 +245,7 @@ void NoteTrackVRulerMenuTable::OnZoom( int iZoomCode ){
       mpData->pTrack->ShiftNoteRange(-12);
       break;
    }
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project ).ModifyState(false);
    using namespace RefreshCode;
    mpData->result = UpdateVRuler | RefreshAll;
@@ -288,7 +288,7 @@ END_POPUP_MENU()
 
 
 UIHandle::Result NoteTrackVZoomHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject,
  wxWindow *pParent)
 {
    using namespace RefreshCode;
@@ -354,7 +354,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
    return RefreshAll;
 }
 
-UIHandle::Result NoteTrackVZoomHandle::Cancel(AudacityProject *WXUNUSED(pProject))
+UIHandle::Result NoteTrackVZoomHandle::Cancel(SneedacityProject *WXUNUSED(pProject))
 {
    // Cancel is implemented!  And there is no initial state to restore,
    // so just return a code.

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SBSMSEffect.h
 
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_SBSMS__
-#define __AUDACITY_EFFECT_SBSMS__
+#ifndef __SNEEDACITY_EFFECT_SBSMS__
+#define __SNEEDACITY_EFFECT_SBSMS__
 
 
 

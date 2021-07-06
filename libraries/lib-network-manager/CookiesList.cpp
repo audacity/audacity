@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CookiesList.cpp
  @brief Define HTTP cookies list class.
@@ -30,7 +30,7 @@
 
 #include "DateTimeConversions.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

@@ -18,10 +18,10 @@ else # Linux & others
 
 fi
 
-# Build Audacity
-cmake --build build -j "${cpus}" --config "${AUDACITY_BUILD_TYPE}"
+# Build Sneedacity
+cmake --build build -j "${cpus}" --config "${SNEEDACITY_BUILD_TYPE}"
 
-BIN_OUTPUT_DIR=build/bin/${AUDACITY_BUILD_TYPE}
+BIN_OUTPUT_DIR=build/bin/${SNEEDACITY_BUILD_TYPE}
 SYMBOLS_OUTPUT_DIR=debug
 
 mkdir ${SYMBOLS_OUTPUT_DIR}

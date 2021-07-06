@@ -18,7 +18,7 @@ repository_root="$(cd "$(dirname "${BASH_SOURCE}")/../.."; echo "${PWD}")"
 gh_export GIT_HASH="$(git show -s --format='%H')"
 gh_export GIT_HASH_SHORT="$(git show -s --format='%h')"
 
-gh_export AUDACITY_BUILD_TYPE="RelWithDebInfo"
-gh_export AUDACITY_INSTALL_PREFIX="${repository_root}/build/install"
+gh_export SNEEDACITY_BUILD_TYPE="RelWithDebInfo"
+gh_export SNEEDACITY_INSTALL_PREFIX="${repository_root}/build/install"
 
 gh_export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)

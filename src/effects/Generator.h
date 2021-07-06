@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Generator.h
 
@@ -15,8 +15,8 @@
 **********************************************************************/
 
 
-#ifndef __AUDACITY_GENERATOR__
-#define __AUDACITY_GENERATOR__
+#ifndef __SNEEDACITY_GENERATOR__
+#define __SNEEDACITY_GENERATOR__
 
 #include "Effect.h"
 
@@ -51,7 +51,7 @@ protected:
    // Postcondition:
    // If mDuration was valid (>= 0), then the tracks are replaced by the
    // generated results and true is returned. Otherwise, return false.
-   AUDACITY_DLL_API bool Process() override;
+   SNEEDACITY_DLL_API bool Process() override;
 };
 
 // Abstract generator which creates the sound in discrete blocks, whilst

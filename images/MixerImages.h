@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////  
 //   MixerImages.h
 //   
-//   Audacity
+//   Sneedacity
 //
 //   Loads Images related to the mixer toolbar
 //   and the on-track mixer

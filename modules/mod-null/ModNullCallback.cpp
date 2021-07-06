@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ModNullCallback.cpp
 
   James Crook
 
-  Audacity is free software.
+  Sneedacity is free software.
   This file is licensed under the wxWidgets license, see License.txt
 
 ********************************************************************//**
@@ -14,7 +14,7 @@
 \class ModNullCallback
 \brief ModNullCallback is a class containing all the callback 
 functions for this demonstartion module.  These functions are 
-added into the standard Audacity Project Menus.
+added into the standard Sneedacity Project Menus.
 
 *//*****************************************************************//**
 
@@ -62,7 +62,7 @@ ModNullCallback * pModNullCallback=NULL;
 
 extern "C" {
 
-static CommandHandlerObject &ident(AudacityProject&project)
+static CommandHandlerObject &ident(SneedacityProject&project)
 {
 // no specific command handler object ...  use the project.
 return project;
@@ -93,7 +93,7 @@ void RegisterMenuItems()
 }
 }
 
-// This is the function that connects us to Audacity.
+// This is the function that connects us to Sneedacity.
 extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
 int ModuleDispatch(ModuleDispatchTypes type)
 {
@@ -119,7 +119,7 @@ int ModuleDispatch(ModuleDispatchTypes type)
 int DLL_API MainPanelFunc(int ix)
 {
    ix=ix;//compiler food
-   // If we wanted to hide Audacity's Project, 
+   // If we wanted to hide Sneedacity's Project, 
    // we'd create a new wxFrame right here and return a pointer to it
    // as our return result.
 

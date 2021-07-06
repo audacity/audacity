@@ -1,15 +1,15 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectWindow.h
 
-Paul Licameli split from AudacityProject.h
+Paul Licameli split from SneedacityProject.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_WINDOW__
-#define __AUDACITY_PROJECT_WINDOW__
+#ifndef __SNEEDACITY_PROJECT_WINDOW__
+#define __SNEEDACITY_PROJECT_WINDOW__
 
 #include <memory>
 #include "ProjectWindowBase.h" // to inherit
@@ -26,20 +26,20 @@ void InitProjectWindow( ProjectWindow &window );
 
 ///\brief A top-level window associated with a project, and handling scrollbars
 /// and zooming
-class AUDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
+class SNEEDACITY_DLL_API ProjectWindow final : public ProjectWindowBase
    , public TrackPanelListener
    , public PrefsListener
 {
 public:
-   static ProjectWindow &Get( AudacityProject &project );
-   static const ProjectWindow &Get( const AudacityProject &project );
-   static ProjectWindow *Find( AudacityProject *pProject );
-   static const ProjectWindow *Find( const AudacityProject *pProject );
+   static ProjectWindow &Get( SneedacityProject &project );
+   static const ProjectWindow &Get( const SneedacityProject &project );
+   static ProjectWindow *Find( SneedacityProject *pProject );
+   static const ProjectWindow *Find( const SneedacityProject *pProject );
 
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
-      AudacityProject &project );
+      SneedacityProject &project );
    ~ProjectWindow() override;
 
    // Next available ID for sub-windows
@@ -60,7 +60,7 @@ public:
    class PlaybackScroller final : public wxEvtHandler
    {
    public:
-      explicit PlaybackScroller(AudacityProject *project);
+      explicit PlaybackScroller(SneedacityProject *project);
 
       enum class Mode {
          Off,
@@ -80,7 +80,7 @@ public:
    private:
       void OnTimer(wxCommandEvent &event);
 
-      AudacityProject *mProject;
+      SneedacityProject *mProject;
       Mode mMode { Mode::Off };
 
       // During timer update, grab the volatile stream time just once, so that

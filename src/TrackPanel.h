@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TrackPanel.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_PANEL__
-#define __AUDACITY_TRACK_PANEL__
+#ifndef __SNEEDACITY_TRACK_PANEL__
+#define __SNEEDACITY_TRACK_PANEL__
 
 
 
@@ -57,15 +57,15 @@ enum {
 
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
-class AUDACITY_DLL_API TrackPanel final
+class SNEEDACITY_DLL_API TrackPanel final
    : public CellularPanel
    , public NonKeystrokeInterceptingWindow
    , private PrefsListener
 {
  public:
-   static TrackPanel &Get( AudacityProject &project );
-   static const TrackPanel &Get( const AudacityProject &project );
-   static void Destroy( AudacityProject &project );
+   static TrackPanel &Get( SneedacityProject &project );
+   static const TrackPanel &Get( const SneedacityProject &project );
+   static void Destroy( SneedacityProject &project );
  
    TrackPanel(wxWindow * parent,
               wxWindowID id,
@@ -73,7 +73,7 @@ class AUDACITY_DLL_API TrackPanel final
               const wxSize & size,
               const std::shared_ptr<TrackList> &tracks,
               ViewInfo * viewInfo,
-              AudacityProject * project,
+              SneedacityProject * project,
               AdornedRulerPanel * ruler );
 
    virtual ~ TrackPanel();
@@ -109,7 +109,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void HandlePageUpKey();
    void HandlePageDownKey();
-   AudacityProject * GetProject() const override;
+   SneedacityProject * GetProject() const override;
 
    void OnTrackMenu(Track *t = NULL);
 
@@ -174,7 +174,7 @@ protected:
 
    std::unique_ptr<TrackArtist> mTrackArtist;
 
-   class AUDACITY_DLL_API AudacityTimer final : public wxTimer {
+   class SNEEDACITY_DLL_API SneedacityTimer final : public wxTimer {
    public:
      void Notify() override{
        // (From Debian)
@@ -213,9 +213,9 @@ protected:
 };
 
 // A predicate class
-struct AUDACITY_DLL_API IsVisibleTrack
+struct SNEEDACITY_DLL_API IsVisibleTrack
 {
-   IsVisibleTrack(AudacityProject *project);
+   IsVisibleTrack(SneedacityProject *project);
 
    bool operator () (const Track *pTrack) const;
 

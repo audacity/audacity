@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 Scrubbing.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SCRUBBING__
-#define __AUDACITY_SCRUBBING__
+#ifndef __SNEEDACITY_SCRUBBING__
+#define __SNEEDACITY_SCRUBBING__
 
 
 
@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../commands/CommandManager.h" // for MenuTable
 #include "Identifier.h"
 
-class AudacityProject;
+class SneedacityProject;
 class TranslatableString;
 
 // Conditionally compile either a separate thead, or else use a timer in the main
@@ -37,18 +37,18 @@ class TranslatableString;
 #endif
 
 // Scrub state object
-class AUDACITY_DLL_API Scrubber final
+class SNEEDACITY_DLL_API Scrubber final
    : public wxEvtHandler
    , public ClientData::Base
    , private PrefsListener
    , public std::enable_shared_from_this< Scrubber >
 {
 public:   
-   static Scrubber &Get( AudacityProject &project );
-   static const Scrubber &Get( const AudacityProject &project );
+   static Scrubber &Get( SneedacityProject &project );
+   static const Scrubber &Get( const SneedacityProject &project );
 
    explicit
-   Scrubber(AudacityProject *project);
+   Scrubber(SneedacityProject *project);
    Scrubber( const Scrubber & ) PROHIBITED;
    Scrubber &operator=( const Scrubber & ) PROHIBITED;
    ~Scrubber();
@@ -176,7 +176,7 @@ private:
    int mLogMaxScrubSpeed;
 #endif
 
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
 
    DECLARE_EVENT_TABLE()
 

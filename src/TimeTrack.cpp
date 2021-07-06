@@ -39,7 +39,7 @@
 
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "timetrack" ),
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       auto &tracks = TrackList::Get( project );
       auto &viewInfo = ViewInfo::Get( project );
       auto result = tracks.Add(std::make_shared<TimeTrack>(&viewInfo));
@@ -141,7 +141,7 @@ bool TimeTrack::SupportsBasicEditing() const
    return false;
 }
 
-Track::Holder TimeTrack::PasteInto( AudacityProject &project ) const
+Track::Holder TimeTrack::PasteInto( SneedacityProject &project ) const
 {
    // Maintain uniqueness of the time track!
    std::shared_ptr<TimeTrack> pNewTrack;

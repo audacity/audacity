@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveTrackSliderHandles.cpp
 
@@ -43,7 +43,7 @@ float GainSliderHandle::GetValue()
 }
 
 UIHandle::Result GainSliderHandle::SetValue
-(AudacityProject *pProject, float newValue)
+(SneedacityProject *pProject, float newValue)
 {
    (void)pProject;//Compiler food
    auto pTrack = GetWaveTrack();
@@ -58,7 +58,7 @@ UIHandle::Result GainSliderHandle::SetValue
 }
 
 UIHandle::Result GainSliderHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *pProject)
+(const wxMouseEvent &, SneedacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
       .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE);
@@ -66,7 +66,7 @@ UIHandle::Result GainSliderHandle::CommitChanges
 }
 
 TranslatableString GainSliderHandle::Tip(
-   const wxMouseState &, AudacityProject &project) const
+   const wxMouseState &, SneedacityProject &project) const
 {
    TranslatableString val;
    float value = 0;
@@ -101,7 +101,7 @@ UIHandlePtr GainSliderHandle::HitTest
       wxRect sliderRect2;
       WaveTrackControls::GetGainRect(rect.GetTopLeft(), sliderRect2);
       auto sliderFn =
-      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+      []( SneedacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return WaveTrackControls::GainSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));
@@ -140,7 +140,7 @@ float PanSliderHandle::GetValue()
       return 0;
 }
 
-UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newValue)
+UIHandle::Result PanSliderHandle::SetValue(SneedacityProject *pProject, float newValue)
 {
    (void)pProject;//Compiler food
    using namespace RefreshCode;
@@ -157,7 +157,7 @@ UIHandle::Result PanSliderHandle::SetValue(AudacityProject *pProject, float newV
 }
 
 UIHandle::Result PanSliderHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *pProject)
+(const wxMouseEvent &, SneedacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
       .PushState(XO("Moved pan slider"), XO("Pan"), UndoPush::CONSOLIDATE);
@@ -165,7 +165,7 @@ UIHandle::Result PanSliderHandle::CommitChanges
 }
 
 TranslatableString PanSliderHandle::Tip(
-   const wxMouseState &, AudacityProject &project) const
+   const wxMouseState &, SneedacityProject &project) const
 {
    TranslatableString val;
    float value = 0.0;
@@ -210,7 +210,7 @@ UIHandlePtr PanSliderHandle::HitTest
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       auto sliderFn =
-      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+      []( SneedacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return WaveTrackControls::PanSlider
             (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));

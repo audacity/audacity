@@ -26,21 +26,21 @@ $control files (_ "Select file(s) to install") file (_ "Browse...") "~/Desktop/"
 $control overwrite (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
 
 
-(defun audacity-version-ok (min-version)
-  ;; No longer required as this plug-in is shipped with Audacity.
+(defun sneedacity-version-ok (min-version)
+  ;; No longer required as this plug-in is shipped with Sneedacity.
   ;; Left in for illustration purposes.
-  ;; min-version is a list of three numbers (the minimum Audacity version number).
-  ;; Example, if the minimum version required is Audacity 2.4.0, then
-  ;; call (audacity-version-ok '(2 4 0))
+  ;; min-version is a list of three numbers (the minimum Sneedacity version number).
+  ;; Example, if the minimum version required is Sneedacity 2.4.0, then
+  ;; call (sneedacity-version-ok '(2 4 0))
   ;; Treturns t if plug-in is running on 2.4.0 or later, otherwise nil.
   (cond
-    ((get '*audacity* 'version)
+    ((get '*sneedacity* 'version)
       (mapc (lambda (x y)
               (cond
                 ((boundp 'isok))
                 ((> x y) (setf isok t))
                 ((< x y) (setf isok nil))))
-            (get '*audacity* 'version)
+            (get '*sneedacity* 'version)
             min-version)
       (or (not (boundp 'isok)) isok))
     (t nil)))

@@ -1,14 +1,14 @@
-# translation of audacity.po to
+# translation of sneedacity.po to
 # Sneedacity Strings for Translation.
 # Copyright (C) 2008 Sneedacity Development Team
 # This file is distributed under the same license as Sneedacity.
 #
-# Sneedacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
+# Sneedacity Team <sneedacity-translation@lists.sourceforge.net>, YEAR.
 # Djalel Chefrour <cdjalel@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2020-06-17 17:06-0400\n"
 "Last-Translator: Hussam al-Homsi <sawuare@gmail.com>\n"
@@ -61,7 +61,7 @@ msgstr "تاريخ النظام"
 #: libraries/lib-strings/UnusedStrings.h
 #, fuzzy
 msgid "Problem Report for Sneedacity"
-msgstr "يوفر دعم تأثيرات  Vamp لAudacity"
+msgstr "يوفر دعم تأثيرات  Vamp لSneedacity"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
@@ -346,7 +346,7 @@ msgstr "نصوص Nyquist (*.ny)|*.ny|نصوص Lisp (*.lsp)|*.lsp|جميع الم
 msgid "Script was not saved."
 msgstr "لم يحفظ النص."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -755,7 +755,7 @@ msgid "Credits"
 msgstr "تقدير"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
+msgid "DarkSneedacity Customisation"
 msgstr "تعديلات Sneedacity المظلم"
 
 #. i18n-hint: The program's name substitutes for %s
@@ -834,7 +834,7 @@ msgstr "ممَكن"
 msgid "Disabled"
 msgstr "غير ممَكن"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "The Build"
@@ -871,7 +871,7 @@ msgstr "نوع الصيغة:"
 msgid "Compiler:"
 msgstr "المجمع:"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 msgid "Installation Prefix:"
 msgstr "بادئة التثبيت:"
@@ -881,7 +881,7 @@ msgstr "بادئة التثبيت:"
 msgid "Settings folder:"
 msgstr "مجلد الأوضاع: "
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "المكتبات الأساسية"
@@ -1091,16 +1091,16 @@ msgstr "لا أستطيع قفل المنطقة بعد نهاية المشروع
 msgid "Error"
 msgstr "خطأ"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "أخفقت في إزالة %s"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "أخفق!"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1111,11 +1111,11 @@ msgstr ""
 "\n"
 "هذا سؤال مرة واحدة، بعد 'تثبيت' طلبت فيه أن يعاد تعيين التفضيلات."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "أعد تعيين تفضيلات Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1126,45 +1126,45 @@ msgstr ""
 "\n"
 "لقد تمت إزالته من قائمة الملفات الحديثة."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "حجم الكتلة يجب أن يكون ما بين 256 إلى 100000000\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity يبدأ..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "جديد"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "افتح..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "فتح ملف حديث..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "حول Sneedacity..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "التفضيلات..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "ملف"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
 "Sneedacity needs a place where automatic cleanup programs won't delete the "
@@ -1175,7 +1175,7 @@ msgstr ""
 "Sneedacity يحتاج إلى مكان لا تحذف فيه برامج التنظيف التلقائي الملفات المؤقتة.\n"
 "من فضلك أدخل مجلدا مناسبا لهذه الملفات في حوار التفضيلات."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1183,7 +1183,7 @@ msgstr ""
 "Sneedacity لم يتمكن من إيجاد مكان لتخزين الملفات المؤقتة.\n"
 "من فضلك أدخل مجلدا مناسبا في حوار التفضيلات."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
@@ -1191,7 +1191,7 @@ msgstr ""
 "سيتم الخروج من Sneedacity الآن. من فضلك شغل Sneedacity مرة أخرى لكي تستخدم "
 "المجلد المؤقت الجديد."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -1201,7 +1201,7 @@ msgstr ""
 "إلى فقدان البيانات أو يؤدي إلى تحطم نظامك.\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1209,19 +1209,19 @@ msgstr ""
 "لم يستطع Sneedacity من إقفال مجلد الملفات المؤقتة.\n"
 "يُحتمل أن نسخة أخرى من Sneedacity تستخدم هذا المجلد.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "هل لا تزال تريد بدأ Sneedacity؟"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "خطأ في إقفال وجهة الملفات المؤقتة"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "كشف النظام أن هناك نسخة أخرى من Sneedacity قيد الاستخدام.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -1229,11 +1229,11 @@ msgstr ""
 "استخدم أوامر \"جديد\" أو \"فتح\" في Sneedacity الذي قيد الاستخدام حاليا \n"
 "أكمل لفتح عدة مشاريع معا.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity يشتغل الآن"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1241,12 +1241,12 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Sneedacity Startup Failure"
 msgstr "ملفات مشروع Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1254,7 +1254,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1262,7 +1262,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1270,7 +1270,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1278,38 +1278,38 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr ""
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "عين الحجم الأقصى لكتل القرص بالبايتات"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "this help message"
 msgstr "رسالة المساعدة هذه"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "run self diagnostics"
 msgstr "شغل التشخيصات الذاتية"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "display Sneedacity version"
 msgstr "اعرض إصدار Sneedacity"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "audio or project file name"
 msgstr "اسم ملف صوتي أو مشروع"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
@@ -1318,25 +1318,25 @@ msgid ""
 "Associate them, so they open on double-click?"
 msgstr ""
 "ملفات مشروع Sneedacity (.AUP) \n"
-"ليست مرتبطة بAudacity حاليا. \n"
+"ليست مرتبطة بSneedacity حاليا. \n"
 "\n"
 "هل تريد ربطها حتى يمكن فتحها بنقرة-مزدوجة؟"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "ملفات مشروع Sneedacity"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr "رسالة"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, fuzzy
 msgid "Sneedacity Configuration Error"
 msgstr "تعديلات Sneedacity المظلم"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1353,48 +1353,48 @@ msgid ""
 "state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "مساعدة"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Sneedacity"
 msgstr "اخرج من Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
 msgstr "سجل Sneedacity"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "حفظ..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "مسح"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "إغلاق"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "سجل.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr "حفظ السجل في:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "لم أتمكن من حفظ السجل إلى الملف: %s"
@@ -1694,7 +1694,7 @@ msgid ""
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"بعض المشاريع لم تُحفظ بشكل  عند آخر تشغيل لAudacity.\n"
+"بعض المشاريع لم تُحفظ بشكل  عند آخر تشغيل لSneedacity.\n"
 "لحسن الحظ، يمكن استرجاع المشاريع التالية تلقائيا:"
 
 #: src/AutoRecoveryDialog.cpp
@@ -3304,7 +3304,7 @@ msgstr "لم بمكن قراءة واحد أو أكثر من العلامات ا
 #. * time Sneedacity has been run.
 #: src/LangChoice.cpp
 msgid "Sneedacity First Run"
-msgstr "أول تشغيل لAudacity"
+msgstr "أول تشغيل لSneedacity"
 
 #: src/LangChoice.cpp
 msgid "Choose Language for Sneedacity to use:"
@@ -3900,7 +3900,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "أطفئ اكتشاف الانقطاعات المؤقتة"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -3952,7 +3952,7 @@ msgid ""
 msgstr ""
 "تحقق المشروع من مجلد \"%s\" \n"
 "وجد %lld ملفات صوت خارجية مفقودة \n"
-"('ملفات ذات اسم مستعار'). لا يمكن لAudacity \n"
+"('ملفات ذات اسم مستعار'). لا يمكن لSneedacity \n"
 "استعادة هذه الملفات تلقائيا. \n"
 "\n"
 "إذا اخترت الاختيار الأول أو الثاني في الأسفل، \n"
@@ -4025,7 +4025,7 @@ msgstr ""
 "تحقق المشروع من مجلد \"%s\" \n"
 "كشف %lld ملفات كتلة بيانات صوت (au.) مفقودة، \n"
 "على الأرجح بسبب خطأ برمجي أو تحطم نظام أو حذف عن غير قصد. \n"
-"لا يمكن لAudacity استعادة هذه الملفات المفقودة بشكل تلقائي. \n"
+"لا يمكن لSneedacity استعادة هذه الملفات المفقودة بشكل تلقائي. \n"
 "\n"
 "إذا اخترت الاختيار الأول أو الثاني في الأسفل، \n"
 "يمكنك أن تحاول أن تجد و تعيد الملفات المفقودة إلى موقعها السابق. \n"
@@ -4387,7 +4387,7 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"بعض المشاريع لم تُحفظ بشكل  عند آخر تشغيل لAudacity.\n"
+"بعض المشاريع لم تُحفظ بشكل  عند آخر تشغيل لSneedacity.\n"
 "لحسن الحظ، يمكن استرجاع المشاريع التالية تلقائيا:"
 
 #: src/ProjectFileManager.cpp
@@ -5864,12 +5864,12 @@ msgstr "ليست هناك مساحة كافية لتوسيع خط القص"
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "لا بمكن أن تنجز هذه العملية حتى ينتهي استوراد %s."
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Sneedacity"
 msgstr "Sneedacity"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5880,13 +5880,13 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "أطبق %s..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5895,7 +5895,7 @@ msgstr "أطبق %s..."
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr "فشل"
 
@@ -9976,7 +9976,7 @@ msgstr "تأثيرات Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Provides Audio Unit Effects support to Sneedacity"
-msgstr "يوفر دعم تأثيرات Audio Unit لAudacity"
+msgstr "يوفر دعم تأثيرات Audio Unit لSneedacity"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not find component"
@@ -10246,7 +10246,7 @@ msgstr "تأثيرات LV2"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Sneedacity"
-msgstr "يوفر دعم تأثيرات LV2 لAudacity"
+msgstr "يوفر دعم تأثيرات LV2 لSneedacity"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
@@ -10254,7 +10254,7 @@ msgstr "تأثيرات Nyquist"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Provides Nyquist Effects support to Sneedacity"
-msgstr "يوفر دعم تأثيرات Nyquist لAudacity"
+msgstr "يوفر دعم تأثيرات Nyquist لSneedacity"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
@@ -10496,7 +10496,7 @@ msgstr "تأثيرات Vamp"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Provides Vamp Effects support to Sneedacity"
-msgstr "يوفر دعم تأثيرات  Vamp لAudacity"
+msgstr "يوفر دعم تأثيرات  Vamp لSneedacity"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid ""
@@ -12155,7 +12155,7 @@ msgid ""
 msgstr ""
 "\"%s\" هو مقطع قرص مضغوط صوتي. \n"
 "Sneedacity لا يستطيع فتح الأقراص المضغوطة الصوتية مباشرة. \n"
-"استخرج مقاطع القرص المضغوط إلى صيغة صوتية يمكن لAudacity استيرادها، \n"
+"استخرج مقاطع القرص المضغوط إلى صيغة صوتية يمكن لSneedacity استيرادها، \n"
 "مثل WAV أو AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -16111,7 +16111,7 @@ msgid ""
 "  'Ask' means Sneedacity will ask if you want to load the module each time it "
 "starts."
 msgstr ""
-"'اسأل' تعني أن Sneedacity سيسأل إذا كنت تريد تحميل الوحدة عند كل بدء لAudacity."
+"'اسأل' تعني أن Sneedacity سيسأل إذا كنت تريد تحميل الوحدة عند كل بدء لSneedacity."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -21891,27 +21891,27 @@ msgstr ""
 #~ msgid "C&hain (Double-Click or press SPACE to edit)"
 #~ msgstr "سلسلة (انقر نقرة مزدوجة أو اضغط على زر المسافة للتحرير)"
 
-#~ msgid "<br><br>DarkAudacity is based on Sneedacity:"
+#~ msgid "<br><br>DarkSneedacity is based on Sneedacity:"
 #~ msgstr "<br><br>جرأة القاتم مبني على أساس جرأة:"
 
 #~ msgid ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
+#~ " [[http://www.darksneedacity.com|www.darksneedacity.com]] - for differences "
 #~ "between them."
 #~ msgstr ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - لاختلافات بينهما."
+#~ " [[http://www.darksneedacity.com|www.darksneedacity.com]] - لاختلافات بينهما."
 
 #~ msgid ""
 #~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-#~ "help using DarkAudacity."
+#~ "help using DarkSneedacity."
 #~ msgstr ""
 #~ " أرسل بريداً إلكترونياً إلى [[mailto:james@audacityteam.org|"
 #~ "james@audacityteam.org]] - للمساعدة باستخدام جرأة المظلم."
 
 #~ msgid ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
-#~ "started with DarkAudacity."
+#~ " [[http://www.darksneedacity.com/video.html|Tutorials]] - for getting "
+#~ "started with DarkSneedacity."
 #~ msgstr ""
-#~ " [[http://www.darkaudacity.com/video.html|دروس]] - لتبدأ مع جرأة القاتم."
+#~ " [[http://www.darksneedacity.com/video.html|دروس]] - لتبدأ مع جرأة القاتم."
 
 #~ msgid "Insert &After"
 #~ msgstr "أدخل بعد"
@@ -22385,10 +22385,10 @@ msgstr ""
 #~ "'%s'"
 
 #~ msgid ""
-#~ "Sneedacity website: [[http://www.audacityteam.org/|http://www.audacityteam."
+#~ "Sneedacity website: [[http://www.audacityteam.org/|http://www.sneedacityteam."
 #~ "org/]]"
 #~ msgstr ""
-#~ "موقع-ويب جرأة: [[http://www.audacityteam.org/|http://www.audacityteam."
+#~ "موقع-ويب جرأة: [[http://www.audacityteam.org/|http://www.sneedacityteam."
 #~ "org/]]"
 
 #~ msgid "Size"

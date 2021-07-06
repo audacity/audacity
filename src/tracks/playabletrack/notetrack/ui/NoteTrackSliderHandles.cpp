@@ -1,6 +1,6 @@
 /**********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  NoteTrackSliderHandles.cpp
 
@@ -47,7 +47,7 @@ float VelocitySliderHandle::GetValue()
 }
 
 UIHandle::Result VelocitySliderHandle::SetValue
-(AudacityProject *pProject, float newValue)
+(SneedacityProject *pProject, float newValue)
 {
    (void)pProject;//Compiler food
    auto pTrack = GetNoteTrack();
@@ -60,7 +60,7 @@ UIHandle::Result VelocitySliderHandle::SetValue
 }
 
 UIHandle::Result VelocitySliderHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *pProject)
+(const wxMouseEvent &, SneedacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
       .PushState(XO("Moved velocity slider"), XO("Velocity"),
@@ -69,7 +69,7 @@ UIHandle::Result VelocitySliderHandle::CommitChanges
 }
 
 TranslatableString VelocitySliderHandle::Tip(
-   const wxMouseState &, AudacityProject &project) const
+   const wxMouseState &, SneedacityProject &project) const
 {
    TranslatableString val;
    float value = 0;
@@ -106,7 +106,7 @@ UIHandlePtr VelocitySliderHandle::HitTest
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {
       auto sliderFn =
-      []( AudacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
+      []( SneedacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return NoteTrackControls::VelocitySlider
             (sliderRect, static_cast<NoteTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));

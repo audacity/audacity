@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExportMP3.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EXPORTMP3__
-#define __AUDACITY_EXPORTMP3__
+#ifndef __SNEEDACITY_EXPORTMP3__
+#define __SNEEDACITY_EXPORTMP3__
 
 /* --------------------------------------------------------------------------*/
 

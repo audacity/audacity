@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no" ?>
-<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
-<project xmlns="http://audacity.sourceforge.net/xml/" projname="orphaned_blockfiles_data" version="1.3.0" audacityversion="1.3.13-alpha-Aug 10 2010" sel0="0.0000000000" sel1="1.0000000000" vpos="0" h="0.0000000000" zoom="819.0000000000" rate="44100">
+<!DOCTYPE project PUBLIC "-//sneedacityproject-1.3.0//DTD//EN" "http://sneedacity.sourceforge.net/xml/sneedacityproject-1.3.0.dtd" >
+<project xmlns="http://sneedacity.sourceforge.net/xml/" projname="orphaned_blockfiles_data" version="1.3.0" sneedacityversion="1.3.13-alpha-Aug 10 2010" sel0="0.0000000000" sel1="1.0000000000" vpos="0" h="0.0000000000" zoom="819.0000000000" rate="44100">
 	<tags>
 		<tag name="id3v2" value="1"/>
 	</tags>

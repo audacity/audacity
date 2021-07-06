@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Loudness.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_LOUDNESS__
-#define __AUDACITY_EFFECT_LOUDNESS__
+#ifndef __SNEEDACITY_EFFECT_LOUDNESS__
+#define __SNEEDACITY_EFFECT_LOUDNESS__
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>

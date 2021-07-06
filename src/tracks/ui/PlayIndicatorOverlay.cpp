@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 PlayIndicatorOverlay.cpp
 
@@ -38,7 +38,7 @@ namespace {
    enum { IndicatorMediumWidth = 13 };
 }
 
-PlayIndicatorOverlayBase::PlayIndicatorOverlayBase(AudacityProject *project, bool isMaster)
+PlayIndicatorOverlayBase::PlayIndicatorOverlayBase(SneedacityProject *project, bool isMaster)
 : mProject(project)
 , mIsMaster(isMaster)
 {
@@ -129,15 +129,15 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
       wxASSERT(false);
 }
 
-static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
-  []( AudacityProject &parent ){
+static const SneedacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
+  []( SneedacityProject &parent ){
      auto result = std::make_shared< PlayIndicatorOverlay >( &parent );
      TrackPanel::Get( parent ).AddOverlay( result );
      return result;
    }
 };
 
-PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
+PlayIndicatorOverlay::PlayIndicatorOverlay(SneedacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
    ProjectWindow::Get( *mProject ).GetPlaybackScroller().Bind(

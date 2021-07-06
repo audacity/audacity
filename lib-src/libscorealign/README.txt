@@ -103,7 +103,7 @@ be performed with tempo changes that match those in the midi file.
 Some notes on the software architecture of scorealign:
 
 scorealign was originally implemented as a fairly monolithic program
-in MatLab. It was ported to C++. To incorporate this code into Audacity,
+in MatLab. It was ported to C++. To incorporate this code into Sneedacity,
 the code was restructured so that audio input is obtained from
 Audio_reader, an abstract class that calls on a subclass to implement
 read(). The subclass just copies floats into the provided buffer. It is
@@ -112,8 +112,8 @@ The Audio_reader returns possibly overlapping buffers of floats. The
 Audio_file_reader subclass uses libsndfile to read in samples and convert
 them to float. It does its own conversion to mono.
 
-When scorealign is used in Audacity, a different subclass of Audio_reader
-will call into Audacity using a Mixer object to retrieve samples from
+When scorealign is used in Sneedacity, a different subclass of Audio_reader
+will call into Sneedacity using a Mixer object to retrieve samples from
 selected tracks.
 
 For use from the command line, scorealign has a module main.cpp that 

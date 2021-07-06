@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveTrackLocation.h
 
@@ -8,8 +8,8 @@ Paul Licameli -- split from WaveTrack.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WAVE_TRACK_LOCATION__
-#define __AUDACITY_WAVE_TRACK_LOCATION__
+#ifndef __SNEEDACITY_WAVE_TRACK_LOCATION__
+#define __SNEEDACITY_WAVE_TRACK_LOCATION__
 
 struct WaveTrackLocation {
 

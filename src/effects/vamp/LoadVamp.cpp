@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LoadVamp.cpp
 
@@ -28,13 +28,13 @@ using namespace Vamp::HostExt;
 // ============================================================================
 // Module registration entry point
 //
-// This is the symbol that Audacity looks for when the module is built as a
+// This is the symbol that Sneedacity looks for when the module is built as a
 // dynamic library.
 //
-// When the module is builtin to Audacity, we use the same function, but it is
+// When the module is builtin to Sneedacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_MODULE_ENTRY(SneedacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -76,7 +76,7 @@ ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
 
 VendorSymbol VampEffectsModule::GetVendor()
 {
-   return XO("The Audacity Team");
+   return XO("The Sneedacity Team");
 }
 
 wxString VampEffectsModule::GetVersion()
@@ -87,7 +87,7 @@ wxString VampEffectsModule::GetVersion()
 
 TranslatableString VampEffectsModule::GetDescription()
 {
-   return XO("Provides Vamp Effects support to Audacity");
+   return XO("Provides Vamp Effects support to Sneedacity");
 }
 
 // ============================================================================
@@ -143,7 +143,7 @@ PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED
       }
 
       // We limit the listed plugin outputs to those whose results can
-      // readily be displayed in an Audacity label track.
+      // readily be displayed in an Sneedacity label track.
       //
       // - Any output whose features have no values (time instants only),
       //   with or without duration, is fine
@@ -263,7 +263,7 @@ std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath & p
    }
 
    // We limit the listed plugin outputs to those whose results can
-   // readily be displayed in an Audacity label track.
+   // readily be displayed in an Sneedacity label track.
    //
    // - Any output whose features have no values (time instants only),
    //   with or without duration, is fine

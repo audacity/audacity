@@ -1,13 +1,13 @@
 /*
  *  ODDecodeFlacTask.cpp
- *  Audacity
+ *  Sneedacity
  *
  *  Created by apple on 8/10/08.
  *  Copyright 2008 __MyCompanyName__. All rights reserved.
  *
  */
 
-#include "../Audacity.h" // for USE_* macros
+#include "../Sneedacity.h" // for USE_* macros
 #include "ODDecodeFlacTask.h"
 
 #include "../Prefs.h"

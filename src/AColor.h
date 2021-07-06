@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AColor.h
 
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COLOR__
-#define __AUDACITY_COLOR__
+#ifndef __SNEEDACITY_COLOR__
+#define __SNEEDACITY_COLOR__
 
 #include <memory>
 #include <wx/brush.h> // member variable
@@ -22,7 +22,7 @@ class wxDC;
 class wxGraphicsContext;
 class wxRect;
 
-class AUDACITY_DLL_API AColor {
+class SNEEDACITY_DLL_API AColor {
  public:
 
     enum ColorGradientChoice {

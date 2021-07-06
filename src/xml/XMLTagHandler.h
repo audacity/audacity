@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   XMLTagHandler.h
 
@@ -15,8 +15,8 @@
   input values from XML files.
 
 **********************************************************************/
-#ifndef __AUDACITY_XML_TAG_HANDLER__
-#define __AUDACITY_XML_TAG_HANDLER__
+#ifndef __SNEEDACITY_XML_TAG_HANDLER__
+#define __SNEEDACITY_XML_TAG_HANDLER__
 
 
 
@@ -25,7 +25,7 @@
 #include "Identifier.h"
 
 #include "XMLWriter.h"
-class AUDACITY_DLL_API XMLValueChecker
+class SNEEDACITY_DLL_API XMLValueChecker
 {
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.
@@ -77,7 +77,7 @@ public:
 };
 
 
-class AUDACITY_DLL_API XMLTagHandler /* not final */ {
+class SNEEDACITY_DLL_API XMLTagHandler /* not final */ {
  public:
    XMLTagHandler(){};
    virtual ~XMLTagHandler(){};
@@ -116,5 +116,5 @@ class AUDACITY_DLL_API XMLTagHandler /* not final */ {
    XMLTagHandler *ReadXMLChild(const char *tag);
 };
 
-#endif // define __AUDACITY_XML_TAG_HANDLER__
+#endif // define __SNEEDACITY_XML_TAG_HANDLER__
 

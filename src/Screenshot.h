@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Screenshot.h
 
@@ -16,16 +16,16 @@
 
 *//*******************************************************************/
 
-#ifndef __AUDACITY_SCREENSHOT__
-#define __AUDACITY_SCREENSHOT__
+#ifndef __SNEEDACITY_SCREENSHOT__
+#define __SNEEDACITY_SCREENSHOT__
 
 
 
 #include <wx/defs.h>
 
-class AudacityProject;
+class SneedacityProject;
 
-AUDACITY_DLL_API void OpenScreenshotTools( AudacityProject &project );
+SNEEDACITY_DLL_API void OpenScreenshotTools( SneedacityProject &project );
 void CloseScreenshotTools();
 
-#endif // __AUDACITY_SCREENSHOT__
+#endif // __SNEEDACITY_SCREENSHOT__

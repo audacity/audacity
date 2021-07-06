@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODPCMAliasBlockFile.cpp
 
   Created by Michael Chinen (mchinen)
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -33,8 +33,8 @@ Some of these methods have been overridden only because they used the unsafe wxL
 
 
 
-#ifndef __AUDACITY_ODPCMALIASBLOCKFILE__
-#define __AUDACITY_ODPCMALIASBLOCKFILE__
+#ifndef __SNEEDACITY_ODPCMALIASBLOCKFILE__
+#define __SNEEDACITY_ODPCMALIASBLOCKFILE__
 
 #include "PCMAliasBlockFile.h"
 

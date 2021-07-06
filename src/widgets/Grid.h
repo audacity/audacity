@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Grid.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WIDGETS_GRID__
-#define __AUDACITY_WIDGETS_GRID__
+#ifndef __SNEEDACITY_WIDGETS_GRID__
+#define __SNEEDACITY_WIDGETS_GRID__
 
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -34,7 +34,7 @@ class NumericTextCtrl;
 #define GRID_VALUE_TIME wxT("Time")
 #define GRID_VALUE_FREQUENCY wxT("Frequency")
 
-class AUDACITY_DLL_API NumericEditor /* not final */ : public wxGridCellEditor
+class SNEEDACITY_DLL_API NumericEditor /* not final */ : public wxGridCellEditor
 {
 public:
 
@@ -116,7 +116,7 @@ wxComboBox.
 **************************************************************************/
 #define GRID_VALUE_CHOICE wxT("Choice")
 
-class AUDACITY_DLL_API ChoiceEditor final
+class SNEEDACITY_DLL_API ChoiceEditor final
    : public wxGridCellEditor, wxEvtHandler
 {
 public:
@@ -181,7 +181,7 @@ public:
 \brief wxGrid with support for accessibility.
 **************************************************************************/
 
-class AUDACITY_DLL_API Grid final : public wxGrid
+class SNEEDACITY_DLL_API Grid final : public wxGrid
 {
 
  public:

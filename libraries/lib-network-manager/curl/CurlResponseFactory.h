@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CurlResponseFactory.h
  @brief Declare an implementation of IResponseFactory using libcurl.
@@ -20,7 +20,7 @@
 #include "CurlHandleManager.h"
 #include "ThreadPool/ThreadPool.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

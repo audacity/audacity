@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    File License: wxWidgets
 
    Dan Horgan
@@ -17,8 +17,8 @@
 #define __COMMANDHANDLER__
 
 #include <memory>
-class AudacityApp;
-class AudacityProject;
+class SneedacityApp;
+class SneedacityProject;
 class AppCommandEvent;
 class CommandContext;
 

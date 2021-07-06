@@ -1,13 +1,13 @@
 //
 //  OverlayPanel.h
-//  Audacity
+//  Sneedacity
 //
 //  Created by Paul Licameli on 5/1/16.
 //
 //
 
-#ifndef __AUDACITY_OVERLAY_PANEL__
-#define __AUDACITY_OVERLAY_PANEL__
+#ifndef __SNEEDACITY_OVERLAY_PANEL__
+#define __SNEEDACITY_OVERLAY_PANEL__
 
 #include <memory>
 #include <vector>
@@ -15,7 +15,7 @@
 
 class Overlay;
 
-class AUDACITY_DLL_API OverlayPanel /* not final */ : public BackedPanel {
+class SNEEDACITY_DLL_API OverlayPanel /* not final */ : public BackedPanel {
 public:
    OverlayPanel(wxWindow * parent, wxWindowID id,
                 const wxPoint & pos,
@@ -51,7 +51,7 @@ private:
 };
 
 /// Used to restore pen, brush and logical-op in a DC back to what they were.
-struct AUDACITY_DLL_API DCUnchanger {
+struct SNEEDACITY_DLL_API DCUnchanger {
 public:
    DCUnchanger() {}
 
@@ -68,7 +68,7 @@ public:
 
 /// Makes temporary drawing context changes that you back out of, RAII style
 //  It's like wxDCPenChanger, etc., but simple and general
-class AUDACITY_DLL_API ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
+class SNEEDACITY_DLL_API ADCChanger : public std::unique_ptr<wxDC, ::DCUnchanger>
 {
    using Base = std::unique_ptr<wxDC, ::DCUnchanger>;
 public:

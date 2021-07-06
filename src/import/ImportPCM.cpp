@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportPCM.cpp
 
@@ -79,7 +79,7 @@ public:
    wxString GetPluginStringID() override { return wxT("libsndfile"); }
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
-      const FilePath &Filename, AudacityProject*) override;
+      const FilePath &Filename, SneedacityProject*) override;
 };
 
 
@@ -117,7 +117,7 @@ TranslatableString PCMImportPlugin::GetPluginFormatDescription()
 }
 
 std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
-   const FilePath &filename, AudacityProject*)
+   const FilePath &filename, SneedacityProject*)
 {
    SF_INFO info;
    wxFile f;   // will be closed when it goes out of scope
@@ -129,7 +129,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
 #ifdef __WXGTK__
    if (filename.Lower().EndsWith(wxT("mp3"))) {
       // There is a bug in libsndfile where mp3s with duplicated metadata tags
-      // will crash libsndfile and thus audacity.
+      // will crash libsndfile and thus sneedacity.
       // We have patched the lib-src version of libsndfile, but
       // for linux the user can build against the system libsndfile which
       // still has this bug.

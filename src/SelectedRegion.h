@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SelectedRegion.h
 
@@ -22,8 +22,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SELECTEDREGION__
-#define __AUDACITY_SELECTEDREGION__
+#ifndef __SNEEDACITY_SELECTEDREGION__
+#define __SNEEDACITY_SELECTEDREGION__
 
 
 
@@ -35,7 +35,7 @@
 
 class XMLWriter;
 
-class AUDACITY_DLL_API SelectedRegion {
+class SNEEDACITY_DLL_API SelectedRegion {
 
    // Maintains the invariant:  t1() >= t0()
 

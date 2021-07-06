@@ -4,7 +4,7 @@
 
 set -euxo pipefail
 
-readonly appdir="$1" # input path (Audacity install directory)
+readonly appdir="$1" # input path (Sneedacity install directory)
 readonly appimage="$2" # output path to use for created AppImage
 
 #============================================================================
@@ -79,9 +79,9 @@ linuxdeploy --list-plugins
 #============================================================================
 
 ln -sf --no-dereference . "${appdir}/usr"
-ln -sf share/applications/audacity.desktop "${appdir}/audacity.desktop"
-ln -sf share/icons/hicolor/scalable/apps/audacity.svg "${appdir}/audacity.svg"
-ln -sf share/icons/hicolor/scalable/apps/audacity.svg "${appdir}/.DirIcon"
+ln -sf share/applications/sneedacity.desktop "${appdir}/sneedacity.desktop"
+ln -sf share/icons/hicolor/scalable/apps/sneedacity.svg "${appdir}/sneedacity.svg"
+ln -sf share/icons/hicolor/scalable/apps/sneedacity.svg "${appdir}/.DirIcon"
 
 #============================================================================
 # Bundle dependencies
@@ -89,7 +89,7 @@ ln -sf share/icons/hicolor/scalable/apps/audacity.svg "${appdir}/.DirIcon"
 
 # HACK: Some wxWidget libraries depend on themselves. Add
 # them to LD_LIBRARY_PATH so that linuxdeploy can find them.
-export LD_LIBRARY_PATH="${appdir}/usr/lib/audacity:${LD_LIBRARY_PATH-}"
+export LD_LIBRARY_PATH="${appdir}/usr/lib/sneedacity:${LD_LIBRARY_PATH-}"
 
 linuxdeploy --appdir "${appdir}" # add all shared library dependencies
 
@@ -101,9 +101,9 @@ appimagetool_args=(
     # none
 )
 
-if [[ "${AUDACITY_UPDATE_INFO-}" ]]; then
+if [[ "${SNEEDACITY_UPDATE_INFO-}" ]]; then
     # Enable updates. See https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information
-    appimagetool_args+=( --updateinformation="${AUDACITY_UPDATE_INFO}" )
+    appimagetool_args+=( --updateinformation="${SNEEDACITY_UPDATE_INFO}" )
 else
     echo >&2 "$0: Automatic updates disabled"
 fi

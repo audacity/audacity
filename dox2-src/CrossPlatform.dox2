@@ -30,8 +30,8 @@ The following is not supported under gcc 2.x:
 Instead use the traditional:
 
 \code
-#ifndef __AUDACITY_HEADER_FILE_NAME__
-#define __AUDACITY_HEADER_FILE_NAME__
+#ifndef __SNEEDACITY_HEADER_FILE_NAME__
+#define __SNEEDACITY_HEADER_FILE_NAME__
 
 // your header file contents goes here.
 

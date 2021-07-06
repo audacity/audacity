@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Repair.cpp
 
@@ -30,7 +30,7 @@ the audio, rather than actually finding the clicks.
 
 #include "../InterpolateAudio.h"
 #include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 #include "LoadEffects.h"
 

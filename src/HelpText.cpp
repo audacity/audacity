@@ -239,18 +239,18 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 // DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
          // Deliberately not translated.
-         << wxT("<center><h3>DarkAudacity ")
-         << AUDACITY_VERSION_STRING
+         << wxT("<center><h3>DarkSneedacity ")
+         << SNEEDACITY_VERSION_STRING
          << wxT("</h3></center>")
-         << wxT("<br><br>DarkAudacity is based on Sneedacity:")
+         << wxT("<br><br>DarkSneedacity is based on Sneedacity:")
          << wxT("<ul><li>")
-         << wxT(" [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them.")
+         << wxT(" [[http://www.darksneedacity.com|www.darksneedacity.com]] - for differences between them.")
          << wxT("</li><li>")
          << wxT(
-" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity.")
+" email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkSneedacity.")
          << wxT("</li><li>")
          << wxT(
-" [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity.")
+" [[http://www.darksneedacity.com/video.html|Tutorials]] - for getting started with DarkSneedacity.")
          << wxT("</li></ul>")
          << wxT("<br><br>Sneedacity has these support methods:")
          << wxT("<ul><li>")
@@ -260,7 +260,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << wxT("</li></ul>")
 #else
          << wxT("<center><h3>Sneedacity ")
-         << AUDACITY_VERSION_STRING
+         << SNEEDACITY_VERSION_STRING
          << wxT("</h3><h3>")
          << XO("How to get help")
          << wxT("</h3></center>")
@@ -377,7 +377,7 @@ wxString FormatHtmlText( const wxString & Text ){
 
 // Function to give the extra arguments to put on the version check string.
 const wxString VerCheckArgs(){
-   wxString result = wxString("from_ver=") + AUDACITY_VERSION_STRING;
+   wxString result = wxString("from_ver=") + SNEEDACITY_VERSION_STRING;
 #ifdef REV_LONG
    result += wxString("&CommitId=")+wxString(REV_LONG).Left(6);
 #endif

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SpectrumView.cpp
 
@@ -44,7 +44,7 @@ bool SpectrumView::IsSpectral() const
 
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
-   const AudacityProject *pProject, int currentTool, bool bMultiTool )
+   const SneedacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
 
@@ -679,7 +679,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"
-#include "../../../../widgets/AudacityMessageBox.h"
+#include "../../../../widgets/SneedacityMessageBox.h"
 #include "../../../../widgets/PopupMenuTable.h"
 
 namespace {
@@ -710,7 +710,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
    class ViewSettingsDialog final : public PrefsDialog
    {
    public:
-      ViewSettingsDialog(wxWindow *parent, AudacityProject &project,
+      ViewSettingsDialog(wxWindow *parent, SneedacityProject &project,
          const TranslatableString &title, PrefsPanel::Factories &factories,
          int page)
          : PrefsDialog(parent, &project, title, factories)
@@ -733,7 +733,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
 
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "To change Spectrogram Settings, stop any\n playing or recording first."),
          XO("Stop the Audio First"),
@@ -756,7 +756,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
 
    if (0 != dialog.ShowModal()) {
       // Redraw
-      AudacityProject *const project = &mpData->project;
+      SneedacityProject *const project = &mpData->project;
       ProjectHistory::Get( *project ).ModifyState(true);
       //Bug 1725 Toolbar was left greyed out.
       //This solution is overkill, but does fix the problem and is what the

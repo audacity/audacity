@@ -13,7 +13,7 @@ print "Note that ALL pending messages are discarded, with no notice sent\n";
 print "to anyone!  You CANNOT recover messages after running this script!\n";
 print "";
 
-print "Enter Sourceforge list name (such as 'audacity-devel'): ";
+print "Enter Sourceforge list name (such as 'sneedacity-devel'): ";
 $list = <STDIN>;
 
 print "Enter list password (warning, not hidden): ";

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Export.cpp
 
@@ -63,7 +63,7 @@
 #include "../Tags.h"
 #include "../Theme.h"
 #include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"
 #include "../AColor.h"
@@ -271,12 +271,12 @@ void ExportPlugin::InitProgress(std::unique_ptr<ProgressDialog> &pDialog,
 //----------------------------------------------------------------------------
 
 
-wxDEFINE_EVENT(AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+wxDEFINE_EVENT(SNEEDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
 BEGIN_EVENT_TABLE(Exporter, wxEvtHandler)
    EVT_FILECTRL_FILTERCHANGED(wxID_ANY, Exporter::OnFilterChanged)
    EVT_BUTTON(wxID_HELP, Exporter::OnHelp)
-   EVT_COMMAND(wxID_ANY, AUDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
+   EVT_COMMAND(wxID_ANY, SNEEDACITY_FILE_SUFFIX_EVENT, Exporter::OnExtensionChanged)
 END_EVENT_TABLE()
 
 namespace {
@@ -316,7 +316,7 @@ Exporter::RegisteredExportPlugin::RegisteredExportPlugin(
          std::make_unique< ExporterItem >( id, factory ) );
 }
 
-Exporter::Exporter( AudacityProject &project )
+Exporter::Exporter( SneedacityProject &project )
 : mProject{ &project }
 {
    using namespace Registry;
@@ -395,7 +395,7 @@ const ExportPluginArray &Exporter::GetPlugins()
    return mPlugins;
 }
 
-bool Exporter::DoEditMetadata(AudacityProject &project,
+bool Exporter::DoEditMetadata(SneedacityProject &project,
    const TranslatableString &title,
    const TranslatableString &shortUndoDescription, bool force)
 {
@@ -714,7 +714,7 @@ bool Exporter::GetFilename()
                XO("Are you sure you want to export the file as \"%s\"?\n")
                   .Format( mFilename.GetFullName() );
 
-            int action = AudacityMessageBox(
+            int action = SneedacityMessageBox(
                prompt,
                XO("Warning"),
                wxYES_NO | wxICON_EXCLAMATION);
@@ -736,7 +736,7 @@ bool Exporter::GetFilename()
                        mFilename.GetFullName(),
                        defext);
 
-         int action = AudacityMessageBox(
+         int action = SneedacityMessageBox(
             prompt,
             XO("Warning"),
             wxYES_NO | wxICON_EXCLAMATION);
@@ -746,7 +746,7 @@ bool Exporter::GetFilename()
       }
 
       if (mFilename.GetFullPath().length() >= 256) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO( "Sorry, pathnames longer than 256 characters not supported.") );
          continue;
       }
@@ -757,7 +757,7 @@ bool Exporter::GetFilename()
          auto prompt = XO("A file named \"%s\" already exists. Replace?")
             .Format( mFilename.GetFullPath() );
 
-         int action = AudacityMessageBox(
+         int action = SneedacityMessageBox(
             prompt,
             XO("Warning"),
             wxYES_NO | wxICON_EXCLAMATION);
@@ -1498,11 +1498,11 @@ void ExportMixerDialog::OnMixerPanelHelp(wxCommandEvent & WXUNUSED(event))
 }
 
 
-TranslatableString AudacityExportCaptionStr()
+TranslatableString SneedacityExportCaptionStr()
 {
    return XO("Warning");
 }
-TranslatableString AudacityExportMessageStr()
+TranslatableString SneedacityExportMessageStr()
 {
    return XO("Unable to export.\nError %s");
 }

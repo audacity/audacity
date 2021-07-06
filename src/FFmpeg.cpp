@@ -22,7 +22,7 @@ License: GPL v2.  See License.txt.
 
 #include "FileNames.h"
 #include "widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 #include <wx/checkbox.h>
 #include <wx/dynlib.h>
@@ -101,7 +101,7 @@ void FFmpegStartup()
    {
       if (enabled)
       {
-         AudacityMessageBox(XO(
+         SneedacityMessageBox(XO(
 "FFmpeg was configured in Preferences and successfully loaded before, \
 \nbut this time Sneedacity failed to load it at startup. \
 \n\nYou may want to go back to Preferences > Libraries and re-configure it."),
@@ -719,7 +719,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
 #if defined(__WXMAC__)
    // If not successful, try loading it from legacy path
    if (!mLibsLoaded && !GetLibAVFormatPath().empty()) {
-      const wxFileName fn{wxT("/usr/local/lib/audacity"), GetLibAVFormatName()};
+      const wxFileName fn{wxT("/usr/local/lib/sneedacity"), GetLibAVFormatName()};
       wxString path = fn.GetFullPath();
       wxLogMessage(wxT("Trying to load FFmpeg libraries from legacy path, '%s'."), path);
       mLibsLoaded = InitLibs(path,showerr);
@@ -754,7 +754,7 @@ bool FFmpegLibs::LoadLibs(wxWindow * WXUNUSED(parent), bool showerr)
    if (!ValidLibsLoaded()) {
       auto msg = XO("Failed to find compatible FFmpeg libraries.");
       if (showerr)
-         AudacityMessageBox( msg );
+         SneedacityMessageBox( msg );
       wxLogError(msg.Debug());
       return false;
    }

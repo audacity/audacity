@@ -6,7 +6,7 @@
 #  sudo <path to this script>/build_wxwidgets
 #
 
-# The minimum OS X version supported by Audacity is 10.7.
+# The minimum OS X version supported by Sneedacity is 10.7.
 minver=10.7
 
 # If you want to use a specific SDK, specify the full path here
@@ -23,12 +23,12 @@ function bld
    mkdir -p "bld_${flavour}_${arch}"
    pushd "bld_${flavour}_${arch}"
 
-   # Force Audacity specific options
+   # Force Sneedacity specific options
    export CXX="g++ -std=c++1z -stdlib=libc++"
    export LD="g++ -std=c++1z -stdlib=libc++"
 
-   # NOTES: liblzma isn't available on MacOS 10.8 or older and Audacity doesn't
-   #        need it.  So, build wxWidgets without the support to allow Audacity
+   # NOTES: liblzma isn't available on MacOS 10.8 or older and Sneedacity doesn't
+   #        need it.  So, build wxWidgets without the support to allow Sneedacity
    #        to run on MacOS 10.7 or newer.
    ../configure --prefix="/usr/local/${arch}" \
                 --enable-macosx-arch="${arch}" \

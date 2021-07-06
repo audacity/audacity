@@ -79,7 +79,7 @@ function cleanfulltree {
    printf "Done\n"
 
    printf "removing executable and other intermediate files ... "
-   myrmvf $1 src/audacity src/.depend src/.gchdepend
+   myrmvf $1 src/sneedacity src/.depend src/.gchdepend
    myfindrm $1 config.status
    myfindrm $1 config.log
    myfindrm $1 config.cache
@@ -150,8 +150,8 @@ function slimtree {
    myrmvf $1 plug-ins/undcbias.ny
    printf "Done\n"
    
-   printf "Removing developer scripts not needed to build audacity ... "
-   myrmrvf $1 scripts/mw2html_audacity 
+   printf "Removing developer scripts not needed to build sneedacity ... "
+   myrmrvf $1 scripts/mw2html_sneedacity 
    printf "Done\n"
 
    printf "Removing Mac and Windows build files ... "
@@ -160,11 +160,11 @@ function slimtree {
    printf "Done\n"
 }
 
-echo "Maketarball 2.1.0 -- make an Audacity distribution tarball"
+echo "Maketarball 2.1.0 -- make an Sneedacity distribution tarball"
 
 # check number of arguments, if not one then print a usage message
 if [ $# -ne 1 ] ; then
-   echo "Script to make directory trees for audacity source tarballs"
+   echo "Script to make directory trees for sneedacity source tarballs"
    echo "Usage: $0 <mode>"
    echo "Where mode is either \"quiet\" or \"verbose\""
    exit 1
@@ -179,8 +179,8 @@ else
    exit 1
 fi
 
-if [ ! -f "src/Audacity.h" ] ; then
-   echo "$0 must be run from top-level audacity directory"
+if [ ! -f "src/Sneedacity.h" ] ; then
+   echo "$0 must be run from top-level sneedacity directory"
    exit 1
 fi
 
@@ -188,7 +188,7 @@ fi
 sourcedir="$(pwd)"   # where the sources are
 cd ..
 topdir="$(pwd)"   # one level up where the tarballs come out
-tmpsrc="${topdir}/$(mktemp -d audacity-src-XXXXXX)" # where initial modifications are done
+tmpsrc="${topdir}/$(mktemp -d sneedacity-src-XXXXXX)" # where initial modifications are done
 
 printf "making copy of source directory ... "
 cp -pr "${sourcedir}/." "${tmpsrc}"
@@ -253,7 +253,7 @@ fi
 
 echo -n "Getting program version ... "
 # first off, find out what C++ pre-processor configure has found for us to use
-# (because we want the same one that will be used to build Audacity). This is a
+# (because we want the same one that will be used to build Sneedacity). This is a
 # neat trick using the config.status script left behind after configure has
 # been run
 cppprog="$(echo '@CXX@' | ./config.status --file=-)"
@@ -268,11 +268,11 @@ eval $(cpp -E <<CPPEOF | sed -e 's/wxT("//g' \
                              -e 's/$/"/' \
                              -e '/^v_/p' \
                              -e 'd'
-#include "src/Audacity.h"
-v_major=AUDACITY_VERSION
-v_minor=AUDACITY_RELEASE
-v_micro=AUDACITY_REVISION
-v_suffix=AUDACITY_SUFFIX
+#include "src/Sneedacity.h"
+v_major=SNEEDACITY_VERSION
+v_minor=SNEEDACITY_RELEASE
+v_micro=SNEEDACITY_REVISION
+v_suffix=SNEEDACITY_SUFFIX
 CPPEOF
 )
 
@@ -284,14 +284,14 @@ printf "${version}\n"
 cleanfulltree $mode
 
 # now we have the full source tree, lets slim it down to the bits that 
-# you actually need to build audacity on a shared library system with the
+# you actually need to build sneedacity on a shared library system with the
 # relevant libraries installed on the system (e.g. Linux distros)
 slimtree $mode
 
 # Rename the source tree to the versioned name
 cd "${topdir}"
 printf "Renaming source tree ... "
-tarname="audacity-minsrc-${version}" # the directory we will find inside tarballs
+tarname="sneedacity-minsrc-${version}" # the directory we will find inside tarballs
 mv "${tmpsrc}" "${tarname}"
 printf "Done\n"
 

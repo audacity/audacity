@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxWidgets
 
    Dan Horgan
@@ -27,7 +27,7 @@ they are kept separate to make things simpler.
 
 class CommandOutputTargets;
 
-class AUDACITY_DLL_API CommandDirectory
+class SNEEDACITY_DLL_API CommandDirectory
 {
 private:
    static std::unique_ptr<CommandDirectory> mInstance;

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 MeterPanelBase.h
 
@@ -8,12 +8,12 @@ Paul Licameli split from Meter.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_METER_PANEL_BASE__
-#define __AUDACITY_METER_PANEL_BASE__
+#ifndef __SNEEDACITY_METER_PANEL_BASE__
+#define __SNEEDACITY_METER_PANEL_BASE__
 
 #include "wxPanelWrapper.h"
 
-class AUDACITY_DLL_API MeterPanelBase /* not final */
+class SNEEDACITY_DLL_API MeterPanelBase /* not final */
    : public wxPanelWrapper
 {
 public:

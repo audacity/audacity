@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AdornedRulerPanel.h
 
@@ -8,30 +8,30 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ADORNED_RULER_PANEL__
-#define __AUDACITY_ADORNED_RULER_PANEL__
+#ifndef __SNEEDACITY_ADORNED_RULER_PANEL__
+#define __SNEEDACITY_ADORNED_RULER_PANEL__
 
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
 
-class AudacityProject;
+class SneedacityProject;
 struct SelectedRegionEvent;
 class SnapManager;
 class TrackList;
 
-// This is an Audacity Specific ruler panel.
-class AUDACITY_DLL_API AdornedRulerPanel final
+// This is an Sneedacity Specific ruler panel.
+class SNEEDACITY_DLL_API AdornedRulerPanel final
 : public CellularPanel
 , private PrefsListener
 {
 public:
-   static AdornedRulerPanel &Get( AudacityProject &project );
-   static const AdornedRulerPanel &Get( const AudacityProject &project );
-   static void Destroy( AudacityProject &project );
+   static AdornedRulerPanel &Get( SneedacityProject &project );
+   static const AdornedRulerPanel &Get( const SneedacityProject &project );
+   static void Destroy( SneedacityProject &project );
 
-   AdornedRulerPanel(AudacityProject *project,
+   AdornedRulerPanel(SneedacityProject *project,
                      wxWindow* parent,
                      wxWindowID id,
                      const wxPoint& pos = wxDefaultPosition,
@@ -127,7 +127,7 @@ private:
 private:
 
    Ruler mRuler;
-   AudacityProject *const mProject;
+   SneedacityProject *const mProject;
    TrackList *mTracks;
 
    wxRect mOuter;
@@ -193,7 +193,7 @@ private:
    // area into cells
    std::shared_ptr<TrackPanelNode> Root() override;
 public:
-   AudacityProject * GetProject() const override;
+   SneedacityProject * GetProject() const override;
 private:
    TrackPanelCell *GetFocusedCell() override;
    void SetFocusedCell() override;
@@ -234,4 +234,4 @@ private:
    bool mDirtySelectedRegion{};
 };
 
-#endif //define __AUDACITY_ADORNED_RULER_PANEL__
+#endif //define __SNEEDACITY_ADORNED_RULER_PANEL__

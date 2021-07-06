@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file NetworkManager.cpp
  @brief Define a class for preforming HTTP requests.
@@ -20,7 +20,7 @@
 #include "IResponseFactory.h"
 #include "curl/CurlResponseFactory.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

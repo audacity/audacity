@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AUControl.h
 
@@ -15,8 +15,8 @@
 \brief a wxWidgetCocoaImpl 
 
 *//********************************************************************/
-#ifndef AUDACITY_AUCONTROL_H
-#define AUDACITY_AUCONTROL_H
+#ifndef SNEEDACITY_AUCONTROL_H
+#define SNEEDACITY_AUCONTROL_H
 
 #if !defined(_LP64)
 #include <Carbon/Carbon.h>

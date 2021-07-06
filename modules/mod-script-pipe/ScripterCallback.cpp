@@ -6,11 +6,11 @@
 //
 // The service function is provided by the application
 // and not by libscript.  mod_script_pipe was developed for
-// Audacity.  Because it forwards commands
+// Sneedacity.  Because it forwards commands
 // rather than handling them itself it can be used in
 // other projects too.  
 //
-// Enabling other programs to connect to Audacity via a pipe is a potential 
+// Enabling other programs to connect to Sneedacity via a pipe is a potential 
 // security risk.  Use at your own risk.
 
 #include <wx/wx.h>
@@ -61,7 +61,7 @@ wxArrayString aStr;
 unsigned int currentLine;
 size_t currentPosition;
 
-// Send the received command to Audacity and build an array of response lines.
+// Send the received command to Sneedacity and build an array of response lines.
 // The response lines can be retrieved by calling DoSrvMore repeatedly.
 int DoSrv(char *pIn)
 {

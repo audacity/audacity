@@ -1,21 +1,21 @@
 I. GENERAL PROGRAM EXECUTION.  To open 'with arguments', run
 	from the command line or drag the appropriate files onto
-	an icon that launches audacity. In each of the following
-	cases, expected results are that audacity should open
+	an icon that launches sneedacity. In each of the following
+	cases, expected results are that sneedacity should open
 	without crashing, and passed-in filenames should be
 	opened appropriately, or a prompt to open an unknown
 	format should be given.
 
-	A. Open audacity with no arguments.
-	B. Open audacity with one .wav file as an argument.
-	C. Open audacity with more than one .wav file as an
+	A. Open sneedacity with no arguments.
+	B. Open sneedacity with one .wav file as an argument.
+	C. Open sneedacity with more than one .wav file as an
 	argument.
-	D. Open audacity with an .mp3 file as an argument.
-	E. Open audacity with a non-audio file as an argument.
-	F. Open audacity with one audio file and one non-audio
+	D. Open sneedacity with an .mp3 file as an argument.
+	E. Open sneedacity with a non-audio file as an argument.
+	F. Open sneedacity with one audio file and one non-audio
 	file as arguments.
 
-II. CLOSING.  Audacity should perform all operations without 
+II. CLOSING.  Sneedacity should perform all operations without 
 	segmentation fault.
 	
 	A. Open one project window with no content. In each case,
@@ -49,26 +49,26 @@ II. CLOSING.  Audacity should perform all operations without
 
 III. WINDOW DECOR:
 	
-	A: Open a new Audacity project.
-			A1. Titlebar should say "Audacity"
+	A: Open a new Sneedacity project.
+			A1. Titlebar should say "Sneedacity"
 			A2. Status window should say "Welcome to
-				Audacity version X" (write down what X is).
-	B: Open a new Audacity project with a .wav file as a
+				Sneedacity version X" (write down what X is).
+	B: Open a new Sneedacity project with a .wav file as a
 				command line argument.
 
-			B1. Title bar should initially say "Audacity".
+			B1. Title bar should initially say "Sneedacity".
 				After file is imported, title should change to
 				the filename (with extension).
 
 			B2. Status window should say "Welcome to
-				Audacity version X".
-	C: Open a new Audacity project. Then open a .wav file
+				Sneedacity version X".
+	C: Open a new Sneedacity project. Then open a .wav file
 				with the "File|Open" menu.
 			C1. Titlebar should say the file's name
 				(with extension.)
 			C2. Status window should say "Welcome to
-				Audacity version X"
-	D: Open a new Audacity project. Then open a .wav file
+				Sneedacity version X"
+	D: Open a new Sneedacity project. Then open a .wav file
 				with the "File|Open" menu. Then close the file.
-			D1. Titlebar should say the "Audacity".
+			D1. Titlebar should say the "Sneedacity".
 			D2. Status window should be blank.

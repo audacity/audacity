@@ -20,7 +20,7 @@ i.e. an alternative to the usual interface, for Sneedacity.
 
 
 #include "ModuleManager.h"
-#include "audacity/ModuleInterface.h"
+#include "sneedacity/ModuleInterface.h"
 
 
 
@@ -32,7 +32,7 @@ i.e. an alternative to the usual interface, for Sneedacity.
 #include "FileNames.h"
 #include "MemoryX.h"
 
-#include "audacity/PluginInterface.h"
+#include "sneedacity/PluginInterface.h"
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
@@ -41,7 +41,7 @@ i.e. an alternative to the usual interface, for Sneedacity.
 
 #include "widgets/MultiDialog.h"
 
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -63,7 +63,7 @@ Module::~Module()
 void Module::ShowLoadFailureError(const wxString &Error)
 {
    auto ShortName = wxFileName(mName).GetName();
-   AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
+   SneedacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
                       XO("Module Unsuitable"));
    wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
 }
@@ -94,7 +94,7 @@ bool Module::Load(wxString &deferredErrorMessage)
    // Check version string matches.  (For now, they must match exactly)
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("The module \"%s\" does not provide a version string.\n\nIt will not be loaded.")
             .Format( ShortName),
          XO("Module Unsuitable"));
@@ -104,8 +104,8 @@ bool Module::Load(wxString &deferredErrorMessage)
    }
 
    wxString moduleVersion = versionFn();
-   if( moduleVersion != AUDACITY_VERSION_STRING) {
-      AudacityMessageBox(
+   if( moduleVersion != SNEEDACITY_VERSION_STRING) {
+      SneedacityMessageBox(
          XO("The module \"%s\" is matched with Sneedacity version \"%s\".\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion),
          XO("Module Unsuitable"));
@@ -129,7 +129,7 @@ bool Module::Load(wxString &deferredErrorMessage)
 
    mDispatch = NULL;
 
-   AudacityMessageBox(
+   SneedacityMessageBox(
       XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.").Format(ShortName),
       XO("Module Unsuitable"));
    wxLogMessage(wxT("The module \"%s\" failed to initialize.\nIt will not be loaded."), mName);
@@ -216,16 +216,16 @@ ModuleManager::~ModuleManager()
 // static
 void ModuleManager::FindModules(FilePaths &files)
 {
-   const auto &audacityPathList = FileNames::AudacityPathList();
+   const auto &sneedacityPathList = FileNames::SneedacityPathList();
    FilePaths pathList;
    wxString pathVar;
 
    // Code from LoadLadspa that might be useful in load modules.
-   pathVar = wxGetenv(wxT("AUDACITY_MODULES_PATH"));
+   pathVar = wxGetenv(wxT("SNEEDACITY_MODULES_PATH"));
    if (!pathVar.empty())
       FileNames::AddMultiPathsToPathList(pathVar, pathList);
 
-   for (const auto &path : audacityPathList) {
+   for (const auto &path : sneedacityPathList) {
       wxString prefix = path + wxFILE_SEP_PATH;
       FileNames::AddUniquePathToPathList(prefix + wxT("modules"),
                                          pathList);
@@ -324,7 +324,7 @@ void ModuleManager::TryLoadModules(
          if (!module->HasDispatch())
          {
             auto ShortName = wxFileName(file).GetName();
-            AudacityMessageBox(
+            SneedacityMessageBox(
                XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.").Format(ShortName),
                XO("Module Unsuitable"));
             wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), file);
@@ -428,7 +428,7 @@ bool ModuleManager::DiscoverProviders()
    FilePaths pathList;
 
    // Code from LoadLadspa that might be useful in load modules.
-   wxString pathVar = wxString::FromUTF8(getenv("AUDACITY_MODULES_PATH"));
+   wxString pathVar = wxString::FromUTF8(getenv("SNEEDACITY_MODULES_PATH"));
 
    if (!pathVar.empty())
    {

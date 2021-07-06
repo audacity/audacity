@@ -62,7 +62,7 @@ BEGIN_EVENT_TABLE(MacroCommandDialog, wxDialogWrapper)
 END_EVENT_TABLE();
 
 MacroCommandDialog::MacroCommandDialog(
-   wxWindow * parent, wxWindowID id, AudacityProject &project):
+   wxWindow * parent, wxWindowID id, SneedacityProject &project):
    wxDialogWrapper(parent, id, XO("Select Command"),
             wxDefaultPosition, wxDefaultSize,
             wxCAPTION | wxRESIZE_BORDER)

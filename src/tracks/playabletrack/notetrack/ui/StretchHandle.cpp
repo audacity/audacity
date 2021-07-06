@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 StretchHandle.cpp
 
@@ -70,7 +70,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
 
 UIHandlePtr StretchHandle::HitTest
 (std::weak_ptr<StretchHandle> &holder,
- const TrackPanelMouseState &st, const AudacityProject *pProject,
+ const TrackPanelMouseState &st, const SneedacityProject *pProject,
  const std::shared_ptr<NoteTrack> &pTrack)
 {
    StretchState stretchState;
@@ -156,7 +156,7 @@ StretchHandle::~StretchHandle()
 }
 
 UIHandle::Result StretchHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
@@ -185,7 +185,7 @@ UIHandle::Result StretchHandle::Click
 }
 
 UIHandle::Result StretchHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
@@ -209,14 +209,14 @@ UIHandle::Result StretchHandle::Drag
 }
 
 HitTestPreview StretchHandle::Preview
-(const TrackPanelMouseState &, AudacityProject *pProject)
+(const TrackPanelMouseState &, SneedacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    return HitPreview( mStretchState.mMode, unsafe );
 }
 
 UIHandle::Result StretchHandle::Release
-(const TrackPanelMouseEvent &, AudacityProject *pProject,
+(const TrackPanelMouseEvent &, SneedacityProject *pProject,
  wxWindow *)
 {
    using namespace RefreshCode;
@@ -265,7 +265,7 @@ UIHandle::Result StretchHandle::Release
    return RefreshAll;
 }
 
-UIHandle::Result StretchHandle::Cancel(AudacityProject *pProject)
+UIHandle::Result StretchHandle::Cancel(SneedacityProject *pProject)
 {
    ProjectHistory::Get( *pProject ).RollbackState();
    return RefreshCode::RefreshNone;
@@ -281,7 +281,7 @@ double StretchHandle::GetT1(const Track &track, const ViewInfo &viewInfo)
    return std::min(track.GetEndTime(), viewInfo.selectedRegion.t1());
 }
 
-void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge,
+void StretchHandle::Stretch(SneedacityProject *pProject, int mouseXCoordinate, int trackLeftEdge,
    Track *pTrack)
 {
    auto &viewInfo = ViewInfo::Get( *pProject );

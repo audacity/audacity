@@ -1,5 +1,5 @@
 //
-// Copied from wxWidgets 3.0.2 and modified for Audacity
+// Copied from wxWidgets 3.0.2 and modified for Sneedacity
 //
 /////////////////////////////////////////////////////////////////////////////
 // Name:        src/gtk/filedlg.cpp
@@ -12,7 +12,7 @@
 #include <gtk/gtk.h>
 
 #include "Internat.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "../FileDialog.h"
 
 #ifdef __UNIX__
@@ -68,7 +68,7 @@ static void gtk_filedialog_ok_callback(GtkWidget *widget, FileDialog *dialog)
         {
             if ( g_file_test(filename, G_FILE_TEST_EXISTS) )
             {
-                int result = AudacityMessageBox(
+                int result = SneedacityMessageBox(
                   XO("File '%s' already exists, do you really want to overwrite it?")
                      .Format(wxString::FromUTF8(filename)),
                   XO("Confirm"),
@@ -86,7 +86,7 @@ static void gtk_filedialog_ok_callback(GtkWidget *widget, FileDialog *dialog)
     {
         if ( !g_file_test(filename, G_FILE_TEST_EXISTS) )
         {
-            AudacityMessageBox(XO("Please choose an existing file."),
+            SneedacityMessageBox(XO("Please choose an existing file."),
                                XO("Error"),
                                wxOK | wxICON_ERROR);
             return;

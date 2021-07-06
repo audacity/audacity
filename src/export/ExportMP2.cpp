@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExportMP2.cpp
 
@@ -54,7 +54,7 @@
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 #define LIBTWOLAME_STATIC
@@ -209,7 +209,7 @@ public:
    // Required
 
    void OptionsCreate(ShuttleGui &S, int format) override;
-   ProgressResult Export(AudacityProject *project,
+   ProgressResult Export(SneedacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
                unsigned channels,
                const wxFileNameWrapper &fName,
@@ -222,7 +222,7 @@ public:
 
 private:
 
-   int AddTags(AudacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
+   int AddTags(SneedacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
    void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
@@ -240,7 +240,7 @@ ExportMP2::ExportMP2()
    SetDescription(XO("MP2 Files"),0);
 }
 
-ProgressResult ExportMP2::Export(AudacityProject *project,
+ProgressResult ExportMP2::Export(SneedacityProject *project,
    std::unique_ptr<ProgressDialog> &pDialog,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1, MixerSpec *mixerSpec, const Tags *metadata,
@@ -265,7 +265,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    if (twolame_init_params(encodeOptions) != 0)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Cannot export MP2 with this sample rate and bit rate"),
          XO("Error"),
          wxICON_STOP);
@@ -278,7 +278,7 @@ ProgressResult ExportMP2::Export(AudacityProject *project,
 
    FileIO outFile(fName, FileIO::Output);
    if (!outFile.IsOpened()) {
-      AudacityMessageBox( XO("Unable to open target file for writing") );
+      SneedacityMessageBox( XO("Unable to open target file for writing") );
       return ProgressResult::Cancelled;
    }
 
@@ -395,7 +395,7 @@ using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 
 // returns buffer len; caller frees
 int ExportMP2::AddTags(
-   AudacityProject * WXUNUSED(project), ArrayOf< char > &buffer,
+   SneedacityProject * WXUNUSED(project), ArrayOf< char > &buffer,
    bool *endOfFile, const Tags *tags)
 {
 #ifdef USE_LIBID3TAG

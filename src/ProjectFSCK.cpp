@@ -17,7 +17,7 @@
 
 #include "BlockFile.h"
 #include "DirManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "Internat.h"
 #include "MemoryX.h"
 #include "widgets/MultiDialog.h"
@@ -51,7 +51,7 @@ int ProjectFSCK(
    if (bForceError && !bAutoRecoverMode)
    {
       // TODO: Replace with more user friendly error message?
-      /* i18n-hint: The audacity project file is XML and has 'tags' in it,
+      /* i18n-hint: The sneedacity project file is XML and has 'tags' in it,
          rather like html tags <something>some stuff</something>.
          This error message is about the tags that hold the sequence information.
          The error message is confusing to users in English, and could just say
@@ -156,7 +156,7 @@ XO("Project check of \"%s\" folder \
                   // error message for the user.
                   GuardedCall(
                      [&] { ab->Recover(); },
-                     [&] (AudacityException*) { action = 1; }
+                     [&] (SneedacityException*) { action = 1; }
                   );
 
                   nResult = FSCKstatus_CHANGED | FSCKstatus_SAVE_AUP;
@@ -191,7 +191,7 @@ XO("Project check of \"%s\" folder \
          auto msg =
 XO("Project check of \"%s\" folder \
 \ndetected %lld missing alias (.auf) blockfile(s). \
-\nAudacity can fully regenerate these files \
+\nSneedacity can fully regenerate these files \
 \nfrom the current audio in the project.")
             .Format(
                dm.GetProjectName(), (long long) missingAUFHash.size() );
@@ -229,7 +229,7 @@ XO("Project check of \"%s\" folder \
                         b->Recover();
                         nResult |= FSCKstatus_CHANGED;
                      },
-                     [&] (AudacityException*) { action = 1; }
+                     [&] (SneedacityException*) { action = 1; }
                   );
                }
 
@@ -307,7 +307,7 @@ XO("Project check of \"%s\" folder \
                         b->Recover();
                         nResult |= FSCKstatus_CHANGED;
                      },
-                     [&] (AudacityException*) { action = 1; }
+                     [&] (SneedacityException*) { action = 1; }
                   );
                }
 
@@ -397,7 +397,7 @@ other projects. \
 
       // In auto-recover mode, we didn't do any ShowMultiDialog calls above, so put up an alert.
       if (bAutoRecoverMode)
-         ::AudacityMessageBox(
+         ::SneedacityMessageBox(
             XO(
 "Project check found file inconsistencies during automatic recovery.\n\nSelect 'Help > Diagnostics > Show Log...' to see details."),
             XO("Warning: Problems in Automatic Recovery"),

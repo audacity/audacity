@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   VSTControlOSX.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef AUDACITY_VSTCONTROLOSX_H
-#define AUDACITY_VSTCONTROLOSX_H
+#ifndef SNEEDACITY_VSTCONTROLOSX_H
+#define SNEEDACITY_VSTCONTROLOSX_H
 
 #if !defined(_LP64)
 #include <Carbon/Carbon.h>

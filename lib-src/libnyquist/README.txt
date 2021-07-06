@@ -8,11 +8,11 @@ which was based on xlisp 2 by David Michael Betz.
 
 For license information, please see the file LICENSE.txt
 
-libnyquist currently only exists as part of Audacity.  For
+libnyquist currently only exists as part of Sneedacity.  For
 information on using libnyquist as an embedded audio processor
-within another application, contact the Audacity developers:
+within another application, contact the Sneedacity developers:
 
-  https://lists.sourceforge.net/lists/listinfo/audacity-devel 
+  https://lists.sourceforge.net/lists/listinfo/sneedacity-devel 
 
 For information about Nyquist as a standalone, interactive audio
 programming language, see the Nyquist website:

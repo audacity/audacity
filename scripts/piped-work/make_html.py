@@ -5,7 +5,7 @@ import glob
 import os
 
 def getFiles() :
-    files = glob.glob("C:\\OpenSourceGit\\AudacityTeamTools\\wit-html\\auto_images\\*.png")
+    files = glob.glob("C:\\OpenSourceGit\\SneedacityTeamTools\\wit-html\\auto_images\\*.png")
     files.sort(key=os.path.getmtime)
     return [ os.path.basename( name ) for name in files ]
     #print("\n".join(files))

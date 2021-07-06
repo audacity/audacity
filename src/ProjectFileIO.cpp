@@ -4,7 +4,7 @@ Sneedacity: A Digital Audio Editor
 
 ProjectFileIO.cpp
 
-Paul Licameli split from AudacityProject.cpp
+Paul Licameli split from SneedacityProject.cpp
 
 **********************************************************************/
 
@@ -30,7 +30,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "TempDirectory.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/ProgressDialog.h"
@@ -39,7 +39,7 @@ Paul Licameli split from AudacityProject.cpp
 
 // Don't change this unless the file format changes
 // in an irrevocable way
-#define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
+#define SNEEDACITY_FILE_FORMAT_VERSION "1.3.0"
 
 #undef NO_SHM
 #if !defined(__WXMSW__)
@@ -227,7 +227,7 @@ static void RefreshAllTitles(bool bShowProjectNumbers )
 }
 
 TitleRestorer::TitleRestorer(
-   wxTopLevelWindow &window, AudacityProject &project )
+   wxTopLevelWindow &window, SneedacityProject &project )
 {
    if( window.IsIconized() )
       window.Restore();
@@ -258,25 +258,25 @@ TitleRestorer::~TitleRestorer() {
       RefreshAllTitles( false );
 }
 
-static const AudacityProject::AttachedObjects::RegisteredFactory sFileIOKey{
-   []( AudacityProject &parent ){
+static const SneedacityProject::AttachedObjects::RegisteredFactory sFileIOKey{
+   []( SneedacityProject &parent ){
       auto result = std::make_shared< ProjectFileIO >( parent );
       return result;
    }
 };
 
-ProjectFileIO &ProjectFileIO::Get( AudacityProject &project )
+ProjectFileIO &ProjectFileIO::Get( SneedacityProject &project )
 {
    auto &result = project.AttachedObjects::Get< ProjectFileIO >( sFileIOKey );
    return result;
 }
 
-const ProjectFileIO &ProjectFileIO::Get( const AudacityProject &project )
+const ProjectFileIO &ProjectFileIO::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
-ProjectFileIO::ProjectFileIO(AudacityProject &project)
+ProjectFileIO::ProjectFileIO(SneedacityProject &project)
    : mProject{ project }
    , mpErrors{ std::make_shared<DBConnectionErrors>() }
 {
@@ -1487,7 +1487,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    auto &settings = ProjectSettings::Get(project);
 
    wxString fileVersion;
-   wxString audacityVersion;
+   wxString sneedacityVersion;
    int requiredTags = 0;
    long longVpos = 0;
 
@@ -1516,9 +1516,9 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          requiredTags++;
       }
 
-      else if (!wxStrcmp(attr, wxT("audacityversion")))
+      else if (!wxStrcmp(attr, wxT("sneedacityversion")))
       {
-         audacityVersion = value;
+         sneedacityVersion = value;
          requiredTags++;
       }
 
@@ -1583,7 +1583,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    int cver;
    int crel;
    int crev;
-   wxSscanf(wxT(AUDACITY_FILE_FORMAT_VERSION), wxT("%i.%i.%i"), &cver, &crel, &crev);
+   wxSscanf(wxT(SNEEDACITY_FILE_FORMAT_VERSION), wxT("%i.%i.%i"), &cver, &crel, &crev);
 
    int fileVer = ((fver *100)+frel)*100+frev;
    int codeVer = ((cver *100)+crel)*100+crev;
@@ -1592,13 +1592,13 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    {
       /* i18n-hint: %s will be replaced by the version number.*/
       auto msg = XO("This file was saved using Sneedacity %s.\nYou are using Sneedacity %s. You may need to upgrade to a newer version to open this file.")
-         .Format(audacityVersion, AUDACITY_VERSION_STRING);
+         .Format(sneedacityVersion, SNEEDACITY_VERSION_STRING);
 
       ShowError(
          &window,
          XO("Can't open project file"),
          msg, 
-         "FAQ:Errors_opening_an_Audacity_project"
+         "FAQ:Errors_opening_an_Sneedacity_project"
          );
 
       return false;
@@ -1641,8 +1641,8 @@ void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
    xmlFile.Write(wxT("<!DOCTYPE "));
    xmlFile.Write(wxT("project "));
    xmlFile.Write(wxT("PUBLIC "));
-   xmlFile.Write(wxT("\"-//audacityproject-1.3.0//DTD//EN\" "));
-   xmlFile.Write(wxT("\"http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd\" "));
+   xmlFile.Write(wxT("\"-//sneedacityproject-1.3.0//DTD//EN\" "));
+   xmlFile.Write(wxT("\"http://sneedacity.sourceforge.net/xml/sneedacityproject-1.3.0.dtd\" "));
    xmlFile.Write(wxT(">\n"));
 }
 
@@ -1657,13 +1657,13 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
    auto &tags = Tags::Get(proj);
    const auto &settings = ProjectSettings::Get(proj);
 
-   //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
+   //TIMER_START( "SneedacityProject::WriteXML", xml_writer_timer );
 
    xmlFile.StartTag(wxT("project"));
-   xmlFile.WriteAttr(wxT("xmlns"), wxT("http://audacity.sourceforge.net/xml/"));
+   xmlFile.WriteAttr(wxT("xmlns"), wxT("http://sneedacity.sourceforge.net/xml/"));
 
-   xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
-   xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
+   xmlFile.WriteAttr(wxT("version"), wxT(SNEEDACITY_FILE_FORMAT_VERSION));
+   xmlFile.WriteAttr(wxT("sneedacityversion"), SNEEDACITY_VERSION_STRING);
 
    viewInfo.WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
@@ -2261,7 +2261,7 @@ void ProjectFileIO::ShowError(wxWindow *parent,
                               const wxString &helpPage)
 {
    ShowExceptionDialog(parent, dlogTitle, message, helpPage, true,
-                   audacity::ToWString(GetLastLog()));
+                   sneedacity::ToWString(GetLastLog()));
 }
 
 const TranslatableString &ProjectFileIO::GetLastError() const
@@ -2619,7 +2619,7 @@ int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
 }
 
 InvisibleTemporaryProject::InvisibleTemporaryProject()
-   : mpProject{ std::make_shared< AudacityProject >() }
+   : mpProject{ std::make_shared< SneedacityProject >() }
 {
 }
 

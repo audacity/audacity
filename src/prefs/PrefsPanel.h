@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PrefsPanel.h
 
@@ -24,12 +24,12 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 
 *//*******************************************************************/
 
-#ifndef __AUDACITY_PREFS_PANEL__
-#define __AUDACITY_PREFS_PANEL__
+#ifndef __SNEEDACITY_PREFS_PANEL__
+#define __SNEEDACITY_PREFS_PANEL__
 
 #include <functional>
 #include "../widgets/wxPanelWrapper.h" // to inherit
-#include "../include/audacity/ComponentInterface.h"
+#include "../include/sneedacity/ComponentInterface.h"
 #include "../Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
@@ -43,10 +43,10 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #define TOP_LEVEL_BORDER       5
 #define GENERIC_CONTROL_BORDER 5
 
-class AudacityProject;
+class SneedacityProject;
 class ShuttleGui;
 
-class AUDACITY_DLL_API PrefsPanel /* not final */
+class SNEEDACITY_DLL_API PrefsPanel /* not final */
    : public wxPanelWrapper, ComponentInterface
 {
  public:
@@ -54,7 +54,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
     struct PrefsNode {
        using Factory =
          std::function< PrefsPanel * (
-            wxWindow *parent, wxWindowID winid, AudacityProject *) >;
+            wxWindow *parent, wxWindowID winid, SneedacityProject *) >;
        Factory factory;
        size_t nChildren{ 0 };
        bool expanded{ false };
@@ -76,11 +76,11 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    // preview the preference changes for spectrograms.
    using Factory =
       std::function< PrefsPanel * (
-         wxWindow *parent, wxWindowID winid, AudacityProject *) >;
+         wxWindow *parent, wxWindowID winid, SneedacityProject *) >;
 
    // Typically you make a static object of this type in the .cpp file that
    // also implements the PrefsPanel subclass.
-   struct AUDACITY_DLL_API Registration final
+   struct SNEEDACITY_DLL_API Registration final
    {
       Registration( const wxString &name, const Factory &factory,
          bool expanded = true,

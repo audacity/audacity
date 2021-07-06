@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: GPL v2 - see LICENSE.txt
 
    Dan Horgan
@@ -71,7 +71,7 @@ public:
 };
 
 /// Interface for objects that can receive (string) messages from a command
-class AUDACITY_DLL_API CommandMessageTarget /* not final */
+class SNEEDACITY_DLL_API CommandMessageTarget /* not final */
 {
 public:
    CommandMessageTarget() {mCounts.push_back(0);}
@@ -202,8 +202,8 @@ public:
    void Update(const wxString &) override {}
 };
 
-/// Displays messages from a command in an AudacityMessageBox
-class AUDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
+/// Displays messages from a command in an SneedacityMessageBox
+class SNEEDACITY_DLL_API MessageBoxTarget final : public CommandMessageTarget
 {
 public:
    virtual ~MessageBoxTarget() {}
@@ -211,7 +211,7 @@ public:
 };
 
 /// Displays messages from a command in a wxStatusBar
-class AUDACITY_DLL_API StatusBarTarget final : public CommandMessageTarget
+class SNEEDACITY_DLL_API StatusBarTarget final : public CommandMessageTarget
 {
 private:
    wxStatusBar &mStatus;
@@ -386,7 +386,7 @@ public:
    }
 };
 
-class AUDACITY_DLL_API LispifiedCommandOutputTargets
+class SNEEDACITY_DLL_API LispifiedCommandOutputTargets
    : public CommandOutputTargets
 {
 public :
@@ -396,7 +396,7 @@ private:
    CommandOutputTargets * pToRestore;
 };
 
-class AUDACITY_DLL_API BriefCommandOutputTargets : public CommandOutputTargets
+class SNEEDACITY_DLL_API BriefCommandOutputTargets : public CommandOutputTargets
 {
 public :
    BriefCommandOutputTargets( CommandOutputTargets & target );

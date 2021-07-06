@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 NoteTrackControls.cpp
 
@@ -38,7 +38,7 @@ NoteTrackControls::~NoteTrackControls()
 
 std::vector<UIHandlePtr> NoteTrackControls::HitTest
 (const TrackPanelMouseState & st,
- const AudacityProject *pProject)
+ const SneedacityProject *pProject)
 {
    // Hits are mutually exclusive, results single
    std::vector<UIHandlePtr> results;
@@ -122,7 +122,7 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
    const bool bDown = (OnDownOctaveID == event.GetId());
    pTrack->ShiftNoteRange((bDown) ? -12 : 12);
 
-   AudacityProject *const project = &mpData->project;
+   SneedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
       .ModifyState(false);
    mpData->result = RefreshCode::RefreshAll;

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TracksPrefs.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACKS_PREFS__
-#define __AUDACITY_TRACKS_PREFS__
+#ifndef __SNEEDACITY_TRACKS_PREFS__
+#define __SNEEDACITY_TRACKS_PREFS__
 
 //#include <wx/defs.h>
 
@@ -24,7 +24,7 @@ class ShuttleGui;
 
 #define TRACKS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tracks") }
 
-class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
+class SNEEDACITY_DLL_API TracksPrefs final : public PrefsPanel
 {
  public:
    TracksPrefs(wxWindow * parent, wxWindowID winid);

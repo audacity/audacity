@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AButton.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_BUTTON__
-#define __AUDACITY_BUTTON__
+#ifndef __SNEEDACITY_BUTTON__
+#define __SNEEDACITY_BUTTON__
 
 #include <vector>
 
@@ -22,7 +22,7 @@
 class wxImage;
 class TranslatableString;
 
-class AUDACITY_DLL_API AButton final : public wxWindow {
+class SNEEDACITY_DLL_API AButton final : public wxWindow {
    friend class AButtonAx;
    class Listener;
 

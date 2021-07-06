@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
 
   EditToolbar.h
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EDIT_TOOLBAR__
-#define __AUDACITY_EDIT_TOOLBAR__
+#ifndef __SNEEDACITY_EDIT_TOOLBAR__
+#define __SNEEDACITY_EDIT_TOOLBAR__
 
 #include <wx/defs.h>
 
@@ -72,7 +72,7 @@ class EditToolBar final : public ToolBar {
 
  public:
 
-   EditToolBar( AudacityProject &project );
+   EditToolBar( SneedacityProject &project );
    virtual ~EditToolBar();
 
    void Create(wxWindow *parent) override;

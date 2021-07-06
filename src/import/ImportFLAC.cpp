@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportFLAC.cpp
 
@@ -129,7 +129,7 @@ class FLACImportPlugin final : public ImportPlugin
    wxString GetPluginStringID() override { return wxT("libflac"); }
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
-      const FilePath &Filename, AudacityProject*)  override;
+      const FilePath &Filename, SneedacityProject*)  override;
 };
 
 
@@ -280,7 +280,7 @@ TranslatableString FLACImportPlugin::GetPluginFormatDescription()
 
 
 std::unique_ptr<ImportFileHandle> FLACImportPlugin::Open(
-   const FilePath &filename, AudacityProject*)
+   const FilePath &filename, SneedacityProject*)
 {
    // First check if it really is a FLAC file
 

@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file DateTimeConversions.cpp
  @brief Define functions to work with date and time string representations.
@@ -14,7 +14,7 @@
 
 #include "CodeConversions.h"
 
-namespace audacity
+namespace sneedacity
 {
 
 bool ParseRFC822Date (const std::string& dateString, SystemTime* time)

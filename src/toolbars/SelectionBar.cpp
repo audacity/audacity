@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SelectionBar.cpp
 
@@ -107,7 +107,7 @@ BEGIN_EVENT_TABLE(SelectionBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, SelectionBar::OnCaptureKey)
 END_EVENT_TABLE()
 
-SelectionBar::SelectionBar( AudacityProject &project )
+SelectionBar::SelectionBar( SneedacityProject &project )
 : ToolBar(project, SelectionBarID, XO("Selection"), wxT("Selection")),
   mListener(NULL), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
@@ -122,7 +122,7 @@ SelectionBar::SelectionBar( AudacityProject &project )
    // depend on it.  Otherwise, division-by-zero floating point exceptions
    // will occur.
    // Refer to bug #462 for a scenario where the division-by-zero causes
-   // Audacity to fail.
+   // Sneedacity to fail.
    // We expect mRate to be set from the project later.
    mRate = (double) QualitySettings::DefaultSampleRate.Read();
 
@@ -134,15 +134,15 @@ SelectionBar::~SelectionBar()
 {
 }
 
-SelectionBar &SelectionBar::Get( AudacityProject &project )
+SelectionBar &SelectionBar::Get( SneedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return *static_cast<SelectionBar*>( toolManager.GetToolBar(SelectionBarID) );
 }
 
-const SelectionBar &SelectionBar::Get( const AudacityProject &project )
+const SelectionBar &SelectionBar::Get( const SneedacityProject &project )
 {
-   return Get( const_cast<AudacityProject&>( project )) ;
+   return Get( const_cast<SneedacityProject&>( project )) ;
 }
 
 void SelectionBar::Create(wxWindow * parent)
@@ -810,7 +810,7 @@ void SelectionBar::OnSnapTo(wxCommandEvent & WXUNUSED(event))
 }
 
 static RegisteredToolbarFactory factory{ SelectionBarID,
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       return ToolBar::Holder{ safenew SelectionBar{ project } }; }
 };
 

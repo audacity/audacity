@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformPrefs.h
 
@@ -9,8 +9,8 @@ Paul Licameli
 **********************************************************************/
 
 
-#ifndef __AUDACITY_WAVEFORM_PREFS__
-#define __AUDACITY_WAVEFORM_PREFS__
+#ifndef __SNEEDACITY_WAVEFORM_PREFS__
+#define __SNEEDACITY_WAVEFORM_PREFS__
 
 #include "PrefsPanel.h"
 #include "WaveformSettings.h"
@@ -26,7 +26,7 @@ class WaveformPrefs final : public PrefsPanel
 {
 public:
    WaveformPrefs(wxWindow * parent, wxWindowID winid,
-      AudacityProject *pProject, WaveTrack *wt);
+      SneedacityProject *pProject, WaveTrack *wt);
    virtual ~WaveformPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
@@ -47,7 +47,7 @@ private:
 
    void EnableDisableRange();
 
-   AudacityProject *mProject{};
+   SneedacityProject *mProject{};
 
    WaveTrack *const mWt;
    bool mDefaulted;

@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2012 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2012 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
   ChangePitch.h
@@ -18,8 +18,8 @@ the pitch without changing the tempo.
 
 #if USE_SOUNDTOUCH
 
-#ifndef __AUDACITY_EFFECT_CHANGEPITCH__
-#define __AUDACITY_EFFECT_CHANGEPITCH__
+#ifndef __SNEEDACITY_EFFECT_CHANGEPITCH__
+#define __SNEEDACITY_EFFECT_CHANGEPITCH__
 
 #if USE_SBSMS
 #include "SBSMSEffect.h"
@@ -149,6 +149,6 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_EFFECT_CHANGEPITCH__
+#endif // __SNEEDACITY_EFFECT_CHANGEPITCH__
 
 #endif // USE_SOUNDTOUCH

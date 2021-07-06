@@ -1,6 +1,6 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  @file wxArrayStringEx.h
  
@@ -8,8 +8,8 @@
  
  **********************************************************************/
 
-#ifndef __AUDACITY_WX_ARRAY_STRING_EX__
-#define __AUDACITY_WX_ARRAY_STRING_EX__
+#ifndef __SNEEDACITY_WX_ARRAY_STRING_EX__
+#define __SNEEDACITY_WX_ARRAY_STRING_EX__
 
 #include <wx/arrstr.h>
 
