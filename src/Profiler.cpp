@@ -33,7 +33,7 @@ Profiler::~Profiler()
    if(mTasks.size())
    {
       //print everything out.  append to a log.
-      FILE* log = fopen("AudacityProfilerLog.txt", "a");
+      FILE* log = fopen("SneedacityProfilerLog.txt", "a");
       time_t now;
 
       time(&now);

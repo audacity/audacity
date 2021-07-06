@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Phaser.cpp
 
@@ -129,7 +129,7 @@ EffectType EffectPhaser::GetType()
 
 bool EffectPhaser::SupportsRealtime()
 {
-#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
+#if defined(EXPERIMENTAL_REALTIME_SNEEDACITY_EFFECTS)
    return true;
 #else
    return false;

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformView.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from WaveTrackView.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WAVEFORM_VIEW__
-#define __AUDACITY_WAVEFORM_VIEW__
+#ifndef __SNEEDACITY_WAVEFORM_VIEW__
+#define __SNEEDACITY_WAVEFORM_VIEW__
 
 #include "WaveTrackView.h" // to inherit
 
@@ -43,7 +43,7 @@ private:
 
    std::vector<UIHandlePtr> DetailedHitTest(
       const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool )
+      const SneedacityProject *pProject, int currentTool, bool bMultiTool )
       override;
 
 protected:

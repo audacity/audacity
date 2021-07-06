@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ChangeSpeed.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_CHANGESPEED__
-#define __AUDACITY_EFFECT_CHANGESPEED__
+#ifndef __SNEEDACITY_EFFECT_CHANGESPEED__
+#define __SNEEDACITY_EFFECT_CHANGESPEED__
 
 #include "Effect.h"
 
@@ -116,4 +116,4 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_EFFECT_CHANGESPEED__
+#endif // __SNEEDACITY_EFFECT_CHANGESPEED__

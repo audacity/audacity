@@ -566,7 +566,7 @@ void CellularPanel::OnKeyDown(wxKeyEvent & event)
       // This switch case is now redundant with the global filter
       if(HandleEscapeKey(true))
          // Don't skip the event, eat it so that
-         // AudacityApp does not also stop any playback.
+         // SneedacityApp does not also stop any playback.
          return;
       else
          break;

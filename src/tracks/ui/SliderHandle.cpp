@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SliderHandle.cpp
 
@@ -25,7 +25,7 @@ SliderHandle::SliderHandle
 {
 }
 
-void SliderHandle::Enter(bool, AudacityProject *)
+void SliderHandle::Enter(bool, SneedacityProject *)
 {
    mChangeHighlight = RefreshCode::RefreshCell;
 }
@@ -35,7 +35,7 @@ SliderHandle::~SliderHandle()
 }
 
 UIHandle::Result SliderHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
@@ -62,7 +62,7 @@ UIHandle::Result SliderHandle::Click
 }
 
 UIHandle::Result SliderHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    wxMouseEvent &event = evt.event;
    using namespace RefreshCode;
@@ -74,7 +74,7 @@ UIHandle::Result SliderHandle::Drag
 }
 
 HitTestPreview SliderHandle::Preview
-(const TrackPanelMouseState &st, AudacityProject *project)
+(const TrackPanelMouseState &st, SneedacityProject *project)
 {
    // No special cursor
    TranslatableString message;
@@ -84,7 +84,7 @@ HitTestPreview SliderHandle::Preview
 }
 
 UIHandle::Result SliderHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject,
  wxWindow *)
 {
    using namespace RefreshCode;
@@ -102,7 +102,7 @@ UIHandle::Result SliderHandle::Release
    return result;
 }
 
-UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
+UIHandle::Result SliderHandle::Cancel(SneedacityProject *pProject)
 {
    wxMouseEvent event(wxEVT_LEFT_UP);
    GetSlider( pProject )->OnMouseEvent(event);
@@ -113,7 +113,7 @@ UIHandle::Result SliderHandle::Cancel(AudacityProject *pProject)
    return RefreshCode::RefreshCell | result;
 }
 
-LWSlider *SliderHandle::GetSlider( AudacityProject *pProject )
+LWSlider *SliderHandle::GetSlider( SneedacityProject *pProject )
 {
    auto pTrack = TrackList::Get( *pProject ).Lock(mpTrack);
    return mSliderFn( pProject, mRect, pTrack.get() );

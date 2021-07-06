@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportOGG.cpp
 
@@ -18,7 +18,7 @@
   all but the first logical bitstream.
 
   Ogg also allows for an arbitrary number of channels. Luckily, so does
-  Audacity. We'll call the first channel LeftChannel, the second
+  Sneedacity. We'll call the first channel LeftChannel, the second
   RightChannel, and all others after it MonoChannel.
 
 *//****************************************************************//**
@@ -91,7 +91,7 @@ public:
    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
    TranslatableString GetPluginFormatDescription() override;
    std::unique_ptr<ImportFileHandle> Open(
-      const FilePath &Filename, AudacityProject*) override;
+      const FilePath &Filename, SneedacityProject*) override;
 };
 
 
@@ -164,7 +164,7 @@ TranslatableString OggImportPlugin::GetPluginFormatDescription()
 }
 
 std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
-   const FilePath &filename, AudacityProject*)
+   const FilePath &filename, SneedacityProject*)
 {
    // Suppress some compiler warnings about unused global variables in the library header
    wxUnusedVar(OV_CALLBACKS_DEFAULT);

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PlaybackPrefs.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PLAYBACK_PREFS__
-#define __AUDACITY_PLAYBACK_PREFS__
+#ifndef __SNEEDACITY_PLAYBACK_PREFS__
+#define __SNEEDACITY_PLAYBACK_PREFS__
 
 #include <wx/defs.h>
 

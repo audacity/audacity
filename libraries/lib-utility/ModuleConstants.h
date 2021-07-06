@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ModuleConstants.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MODULE_CONSTANTS__
-#define __AUDACITY_MODULE_CONSTANTS__
+#ifndef __SNEEDACITY_MODULE_CONSTANTS__
+#define __SNEEDACITY_MODULE_CONSTANTS__
 
 #define ModuleDispatchName "ModuleDispatch"
 
@@ -33,17 +33,17 @@ enum ModuleDispatchTypes
 
 // Macro generates one of the required entry points of a module
 // GetVersionString
-// REQUIRED for the module to be accepted by Audacity.
-// Without it Audacity will see a version number mismatch.
+// REQUIRED for the module to be accepted by Sneedacity.
+// Without it Sneedacity will see a version number mismatch.
 #define DEFINE_VERSION_CHECK                                           \
 extern "C" {                                                           \
    DLL_API const wchar_t * GetVersionString()                          \
    {                                                                   \
      /* Make sure that this version of the module requires the version \
-      of Audacity it is built with.                                    \
-      For now, the versions must match exactly for Audacity to         \
+      of Sneedacity it is built with.                                    \
+      For now, the versions must match exactly for Sneedacity to         \
       agree to load the module. */                                     \
-      return AUDACITY_VERSION_STRING;                                  \
+      return SNEEDACITY_VERSION_STRING;                                  \
    }                                                                   \
 }
 

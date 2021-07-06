@@ -58,7 +58,7 @@ q=8
 f=qb-$rate1-$rate2-v
 $tool $rate1 $rate2 1 $e $e 4 20 < 0.$ext | sox -c1 -r$rate2 -t $ext - $f.wav
 
-# Combine impuse responses into multi-channel file (for inspection in Audacity):
+# Combine impuse responses into multi-channel file (for inspection in Sneedacity):
 sox -M qb-$rate1-$rate2-?.wav q$rate1-$rate2.wav
 
 rm qb-$rate1-$rate2-?.wav

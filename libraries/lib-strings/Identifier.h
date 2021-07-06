@@ -1,6 +1,6 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  Identifier.h
  
@@ -8,8 +8,8 @@
  
  **********************************************************************/
 
-#ifndef __AUDACITY_IDENTIFIER__
-#define __AUDACITY_IDENTIFIER__
+#ifndef __SNEEDACITY_IDENTIFIER__
+#define __SNEEDACITY_IDENTIFIER__
 
 #include <vector>
 #include <wx/string.h>

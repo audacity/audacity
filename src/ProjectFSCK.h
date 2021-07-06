@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ProjectFSCK.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_FSCK__
-#define __AUDACITY_PROJECT_FSCK__
+#ifndef __SNEEDACITY_PROJECT_FSCK__
+#define __SNEEDACITY_PROJECT_FSCK__
 
 class DirManager;
 

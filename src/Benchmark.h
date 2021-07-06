@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Benchmark.h
 
@@ -8,13 +8,13 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_BENCHMARK__
-#define __AUDACITY_BENCHMARK__
+#ifndef __SNEEDACITY_BENCHMARK__
+#define __SNEEDACITY_BENCHMARK__
 
 class wxWindow;
-class AudacityProject;
+class SneedacityProject;
 
-AUDACITY_DLL_API
-void RunBenchmark( wxWindow *parent, AudacityProject &project );
+SNEEDACITY_DLL_API
+void RunBenchmark( wxWindow *parent, SneedacityProject &project );
 
-#endif // define __AUDACITY_BENCHMARK__
+#endif // define __SNEEDACITY_BENCHMARK__

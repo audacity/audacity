@@ -2,7 +2,7 @@
 
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file HexHelpers.h
  @brief Define helper functions for hex-to-num conversion.
@@ -14,7 +14,7 @@
 #include <cassert>
 #include <cctype>
 
-namespace audacity
+namespace sneedacity
 {
 
 inline uint8_t HexCharToNum (char c) noexcept

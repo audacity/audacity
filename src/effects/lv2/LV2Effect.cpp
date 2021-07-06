@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LV2Effect.cpp
 
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 **********************************************************************/
@@ -48,7 +48,7 @@
 
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "../../widgets/SneedacityMessageBox.h"
 #include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/NumericTextCtrl.h"
 
@@ -276,7 +276,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
          {
             S.AddVariableText( XO(
 "As part of their processing, some LV2 effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
+"audio to Sneedacity. When not compensating for this delay, you will "
 "notice that small silences have been inserted into the audio. "
 "Enabling this setting will provide that compensation, but it may "
 "not work for all LV2 effects."),
@@ -1567,7 +1567,7 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
    mMaster = InitInstance(mSampleRate);
    if (mMaster == NULL)
    {
-      AudacityMessageBox( XO("Couldn't instantiate effect") );
+      SneedacityMessageBox( XO("Couldn't instantiate effect") );
       return false;
    }
 

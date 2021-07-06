@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODComputeSummaryTask.h
 
   Created by Michael Chinen (mchinen) on 6/8/08.
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -16,8 +16,8 @@ updating the ODPCMAliasBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
-#ifndef __AUDACITY_ODComputeSummaryTask__
-#define __AUDACITY_ODComputeSummaryTask__
+#ifndef __SNEEDACITY_ODComputeSummaryTask__
+#define __SNEEDACITY_ODComputeSummaryTask__
 
 #include <vector>
 #include "ODTask.h"

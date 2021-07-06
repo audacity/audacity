@@ -1,13 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ActiveProjects.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ACTIVE_PROJECTS__
-#define __AUDACITY_ACTIVE_PROJECTS__
+#ifndef __SNEEDACITY_ACTIVE_PROJECTS__
+#define __SNEEDACITY_ACTIVE_PROJECTS__
 
 
 #include "Identifier.h"

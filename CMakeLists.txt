@@ -8,34 +8,34 @@ cmake_minimum_required( VERSION 3.15 )
 # If building with GNU compiler, then must be 4.9 or later.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
     CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
-   message(FATAL_ERROR "Audacity requires at least GCC 4.9")
+   message(FATAL_ERROR "Sneedacity requires at least GCC 4.9")
 endif ()
 
 # We only do alpha builds, beta builds, and release versions.
-# Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
+# Most of the time we're in development, so SNEEDACITY_BUILD_LEVEL should be
 # defined to 0.
 # Its value may be more than 0 for pre-release "Beta" builds that differ only
 # in the welcome screen, and hiding of some development menu commands, but
 # still link to the alpha manual online.
 
 # Set this value to 0 for alpha, 1 for beta, 2 for release builds
-set( AUDACITY_BUILD_LEVEL 0 )
+set( SNEEDACITY_BUILD_LEVEL 0 )
 
-# The Audacity version
+# The Sneedacity version
 # Increment as appropriate after release of a new version, and set back
-# AUDACITY_BUILD_LEVEL to 0
-set( AUDACITY_VERSION 3 )
-set( AUDACITY_RELEASE 0 )
-set( AUDACITY_REVISION 4 )
-set( AUDACITY_MODLEVEL 0 )
+# SNEEDACITY_BUILD_LEVEL to 0
+set( SNEEDACITY_VERSION 3 )
+set( SNEEDACITY_RELEASE 0 )
+set( SNEEDACITY_REVISION 4 )
+set( SNEEDACITY_MODLEVEL 0 )
 
 string( TIMESTAMP __TDATE__ "%Y%m%d" )
-if( AUDACITY_BUILD_LEVEL EQUAL 0 )
-   set( AUDACITY_SUFFIX "-alpha-${__TDATE__}" )
-elseif(  AUDACITY_BUILD_LEVEL EQUAL 1 )
-   set( AUDACITY_SUFFIX "-beta-${__TDATE__}" )
+if( SNEEDACITY_BUILD_LEVEL EQUAL 0 )
+   set( SNEEDACITY_SUFFIX "-alpha-${__TDATE__}" )
+elseif(  SNEEDACITY_BUILD_LEVEL EQUAL 1 )
+   set( SNEEDACITY_SUFFIX "-beta-${__TDATE__}" )
 else()
-   set( AUDACITY_SUFFIX "" )
+   set( SNEEDACITY_SUFFIX "" )
 endif()
 
 # Don't allow in-source builds...no real reason, just
@@ -98,9 +98,9 @@ endif()
 
 # Add our module path
 # CMAKE_BINARY_DIR is required for Conan to work
-set( AUDACITY_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules")
+set( SNEEDACITY_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules")
 set( CMAKE_MODULE_PATH 
-   ${AUDACITY_MODULE_PATH}
+   ${SNEEDACITY_MODULE_PATH}
    ${CMAKE_BINARY_DIR}
    ${CMAKE_MODULE_PATH} 
 )
@@ -128,15 +128,15 @@ if( CCACHE_PROGRAM )
 endif()
 
 # Define option() prefix
-set( _OPT "audacity_" )
+set( _OPT "sneedacity_" )
 
 # Our very own project
-project( Audacity )
+project( Sneedacity )
 
 # Load our functions/macros
-include( AudacityFunctions )
+include( SneedacityFunctions )
 
-set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
+set_from_env(SNEEDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
@@ -152,10 +152,10 @@ cmd_option( ${_OPT}obey_system_dependencies
 )
 
 cmd_option( ${_OPT}has_networking 
-   "Build networking features into Audacity"
+   "Build networking features into Sneedacity"
    Off)
 
-include( AudacityDependencies )
+include( SneedacityDependencies )
 
 # Pull all the modules we'll need
 include( CheckCXXCompilerFlag )
@@ -244,7 +244,7 @@ message( STATUS )
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
 if( CMAKE_GENERATOR MATCHES "Visual Studio" )
-   # Make sure Audacity is the startup project
+   # Make sure Sneedacity is the startup project
    set_directory_properties(
       PROPERTIES
          VS_STARTUP_PROJECT "${CMAKE_PROJECT_NAME}"
@@ -284,8 +284,8 @@ set( _DEST "${_DESTDIR}" )
 set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
 set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
-set( _PKGLIB "${_LIBDIR}/audacity" )
-set( _PKGDATA "${_DATADIR}/audacity/" )
+set( _PKGLIB "${_LIBDIR}/sneedacity" )
+set( _PKGDATA "${_DATADIR}/sneedacity/" )
 set( _MANDIR "${CMAKE_INSTALL_MANDIR}" )
 set( _MODDIR "${_DEST}/modules" )
 set( _EXEDIR "${_DEST}" )
@@ -298,7 +298,7 @@ set( CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE )
 
 # Adjust them for the Mac
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( _APPDIR "Audacity.app/Contents" )
+   set( _APPDIR "Sneedacity.app/Contents" )
    set( _DEST "${_DESTDIR}/${_APPDIR}" )
    set( _EXEDIR "${_DEST}/MacOS" )
    set( _MODDIR "${_DEST}/modules" )
@@ -448,16 +448,16 @@ if( NOT CMAKE_INSTALL_LIBDIR STREQUAL "lib" AND NOT EXISTS "${CMAKE_BINARY_DIR}/
    file( CREATE_LINK "${CMAKE_BINARY_DIR}/lib" "${CMAKE_BINARY_DIR}/lib64" SYMBOLIC )
 endif()
 
-# Define Audacity's name
+# Define Sneedacity's name
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows" )
-   set( AUDACITY_NAME "Audacity" )
+   set( SNEEDACITY_NAME "Sneedacity" )
 else()
-   set( AUDACITY_NAME "audacity" )
+   set( SNEEDACITY_NAME "sneedacity" )
 endif()
 
 # Create short and full version strings
-set( AUDACITY_DIST_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION} )
-set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}.${AUDACITY_MODLEVEL} )
+set( SNEEDACITY_DIST_VERSION ${SNEEDACITY_VERSION}.${SNEEDACITY_RELEASE}.${SNEEDACITY_REVISION} )
+set( SNEEDACITY_INFO_VERSION ${SNEEDACITY_VERSION}.${SNEEDACITY_RELEASE}.${SNEEDACITY_REVISION}.${SNEEDACITY_MODLEVEL} )
 
 # Python is used for the manual and (possibly) message catalogs
 find_package( Python3 )
@@ -491,13 +491,13 @@ add_subdirectory( "scripts" )
 
 # Generate config file
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   configure_file( src/audacity_config.h.in src/private/configwin.h )
+   configure_file( src/sneedacity_config.h.in src/private/configwin.h )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( HAVE_VISIBILITY 1 )
-   configure_file( src/audacity_config.h.in src/private/configmac.h )
+   configure_file( src/sneedacity_config.h.in src/private/configmac.h )
 else()
    set( HAVE_VISIBILITY 1 )
-   configure_file( src/audacity_config.h.in src/private/configunix.h )
+   configure_file( src/sneedacity_config.h.in src/private/configunix.h )
 endif()
 
 # Generate a picture of module dependencies
@@ -522,7 +522,7 @@ cmd_option( ${_OPT}perform_codesign
 )
 
 if( ${_OPT}perform_codesign )
-   include( AudacityCodeSigning )
+   include( SneedacityCodeSigning )
 endif()
 
 #
@@ -537,7 +537,7 @@ cmd_option( ${_OPT}package_manual
 # Variables, that are common for all package targets
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   include( AudacityInnoSetup )
+   include( SneedacityInnoSetup )
 endif()
 
 # Uncomment what follows for symbol values.

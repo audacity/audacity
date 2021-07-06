@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectAudioManager.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from ProjectManager.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_AUDIO_MANAGER__
-#define __AUDACITY_PROJECT_AUDIO_MANAGER__
+#ifndef __SNEEDACITY_PROJECT_AUDIO_MANAGER__
+#define __SNEEDACITY_PROJECT_AUDIO_MANAGER__
 
 #include <memory>
 #include <vector>
@@ -19,7 +19,7 @@ Paul Licameli split from ProjectManager.h
 
 constexpr int RATE_NOT_SELECTED{ -1 };
 
-class AudacityProject;
+class SneedacityProject;
 struct AudioIOStartStreamOptions;
 class TrackList;
 class SelectedRegion;
@@ -38,18 +38,18 @@ struct TransportTracks;
 
 enum StatusBarField : int;
 
-class AUDACITY_DLL_API ProjectAudioManager final
+class SNEEDACITY_DLL_API ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
    , public std::enable_shared_from_this< ProjectAudioManager >
 {
 public:
-   static ProjectAudioManager &Get( AudacityProject &project );
-   static const ProjectAudioManager &Get( const AudacityProject &project );
+   static ProjectAudioManager &Get( SneedacityProject &project );
+   static const ProjectAudioManager &Get( const SneedacityProject &project );
 
    // Find suitable tracks to record into, or return an empty array.
    static WaveTrackArray ChooseExistingRecordingTracks(
-      AudacityProject &proj, bool selectedOnly,
+      SneedacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);
 
    static bool UseDuplex();
@@ -57,7 +57,7 @@ public:
    static TransportTracks GetAllPlaybackTracks(
       TrackList &trackList, bool selectedOnly, bool useMidi = false);
 
-   explicit ProjectAudioManager( AudacityProject &project );
+   explicit ProjectAudioManager( SneedacityProject &project );
    ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
    ProjectAudioManager &operator=( const ProjectAudioManager & ) PROHIBITED;
    ~ProjectAudioManager() override;
@@ -86,7 +86,7 @@ public:
 
    void OnRecord(bool altAppearance);
 
-   bool DoRecord(AudacityProject &project,
+   bool DoRecord(SneedacityProject &project,
       const TransportTracks &transportTracks, // If captureTracks is empty, then tracks are created
       double t0, double t1,
       bool altAppearance,
@@ -142,7 +142,7 @@ private:
 
    void OnCheckpointFailure(wxCommandEvent &evt);
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    std::shared_ptr<TrackList> mCutPreviewTracks;
 
@@ -160,13 +160,13 @@ private:
    int mDisplayedRate{ 0 };
    static std::pair< TranslatableStrings, unsigned >
       StatusWidthFunction(
-         const AudacityProject &project, StatusBarField field);
+         const SneedacityProject &project, StatusBarField field);
 };
 
-AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
-AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
+SNEEDACITY_DLL_API
+AudioIOStartStreamOptions DefaultPlayOptions( SneedacityProject &project );
+SNEEDACITY_DLL_API
+AudioIOStartStreamOptions DefaultSpeedPlayOptions( SneedacityProject &project );
 
 struct PropertiesOfSelected
 {
@@ -175,12 +175,12 @@ struct PropertiesOfSelected
    int numberOfSelected{ 0 };
 };
 
-AUDACITY_DLL_API
-PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject &proj);
+SNEEDACITY_DLL_API
+PropertiesOfSelected GetPropertiesOfSelected(const SneedacityProject &proj);
 
 #include "commands/CommandFlag.h"
 
-extern AUDACITY_DLL_API const ReservedCommandFlag
+extern SNEEDACITY_DLL_API const ReservedCommandFlag
    &CanStopAudioStreamFlag();
 
 #endif

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Silence.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_SILENCE__
-#define __AUDACITY_EFFECT_SILENCE__
+#ifndef __SNEEDACITY_EFFECT_SILENCE__
+#define __SNEEDACITY_EFFECT_SILENCE__
 
 #include "Generator.h"
 

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ErrorReportDialog.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SENTRYERRORDIALOG__
-#define __AUDACITY_SENTRYERRORDIALOG__
+#ifndef __SNEEDACITY_SENTRYERRORDIALOG__
+#define __SNEEDACITY_SENTRYERRORDIALOG__
 
 #include <memory>
 
@@ -18,7 +18,7 @@
 
 #include "wxPanelWrapper.h" // to inherit
 
-namespace audacity
+namespace sneedacity
 {
 namespace sentry
 {
@@ -29,7 +29,7 @@ class Report;
 class wxTextCtrl;
 
 //! A dialog, that has "Send", "Don't send" and help buttons.
-/*! This dialog is used in place of error dialogs for Audacity errors
+/*! This dialog is used in place of error dialogs for Sneedacity errors
     when Sentry reporting is enabled.
 */
 class ErrorReportDialog final : public wxDialogWrapper
@@ -48,7 +48,7 @@ private:
 
    void OnHelp(wxCommandEvent& event);
 
-   std::unique_ptr<audacity::sentry::Report> mReport;
+   std::unique_ptr<sneedacity::sentry::Report> mReport;
 
    wxString mHelpUrl;
 
@@ -60,10 +60,10 @@ private:
 };
 
 /// Displays an error dialog that allows to send the error report
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void ShowErrorReportDialog(
    wxWindow* parent, const TranslatableString& dlogTitle,
    const TranslatableString& message, const wxString& helpPage = {},
    const wxString& log = {});
 
-#endif // __AUDACITY_SENTRYERRORDIALOG__
+#endif // __SNEEDACITY_SENTRYERRORDIALOG__

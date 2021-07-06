@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TimeTrackVRulerControls.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIME_TRACK_VRULER_CONTROLS__
-#define __AUDACITY_TIME_TRACK_VRULER_CONTROLS__
+#ifndef __SNEEDACITY_TIME_TRACK_VRULER_CONTROLS__
+#define __SNEEDACITY_TIME_TRACK_VRULER_CONTROLS__
 
 #include "../../ui/TrackVRulerControls.h"
 
@@ -30,7 +30,7 @@ public:
 
    std::vector<UIHandlePtr> HitTest(
       const TrackPanelMouseState &state,
-      const AudacityProject *) override;
+      const SneedacityProject *) override;
 
 private:
 

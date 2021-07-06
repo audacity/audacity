@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 LabelDefaultClickHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LABEL_DEFAULT_CLICK_HANDLE__
-#define __AUDACITY_LABEL_DEFAULT_CLICK_HANDLE__
+#ifndef __SNEEDACITY_LABEL_DEFAULT_CLICK_HANDLE__
+#define __SNEEDACITY_LABEL_DEFAULT_CLICK_HANDLE__
 
 #include "../../../UIHandle.h"
 
@@ -28,24 +28,24 @@ public:
       (const LabelDefaultClickHandle&) = default;
    
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    // does not override Preview()
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(SneedacityProject *pProject) override;
 
 private:
    struct LabelState;
    std::shared_ptr< LabelState > mLabelState;
-   void SaveState( AudacityProject *pProject );
-   void RestoreState( AudacityProject *pProject );
+   void SaveState( SneedacityProject *pProject );
+   void RestoreState( SneedacityProject *pProject );
 };
 
 #endif

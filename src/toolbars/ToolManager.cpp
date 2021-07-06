@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ToolManager.cpp
 
@@ -71,7 +71,7 @@
 // Constructor
 //
 ToolFrame::ToolFrame
-   ( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
+   ( SneedacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos )
    : wxFrame( FindProjectFrame( parent ),
           bar->GetId(),
           wxEmptyString,
@@ -347,25 +347,25 @@ auto ToolManager::SetGetTopPanelHook( const GetTopPanelHook &hook )
    return result;
 }
 
-static const AudacityProject::AttachedObjects::RegisteredFactory key{
-  []( AudacityProject &parent ){
+static const SneedacityProject::AttachedObjects::RegisteredFactory key{
+  []( SneedacityProject &parent ){
      return std::make_shared< ToolManager >( &parent ); }
 };
 
-ToolManager &ToolManager::Get( AudacityProject &project )
+ToolManager &ToolManager::Get( SneedacityProject &project )
 {
    return project.AttachedObjects::Get< ToolManager >( key );
 }
 
-const ToolManager &ToolManager::Get( const AudacityProject &project )
+const ToolManager &ToolManager::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
 //
 // Constructor
 //
-ToolManager::ToolManager( AudacityProject *parent )
+ToolManager::ToolManager( SneedacityProject *parent )
 : wxEvtHandler()
 {
    wxPoint pt[ 3 ];
@@ -493,7 +493,7 @@ void ToolManager::Destroy()
 
       // This function causes the toolbars to be destroyed, so
       // clear the configuration of the ToolDocks which refer to
-      // these toolbars. This change was needed to stop Audacity
+      // these toolbars. This change was needed to stop Sneedacity
       // crashing when running with Jaws on Windows 10 1703.
       mTopDock->GetConfiguration().Clear();
       mBotDock->GetConfiguration().Clear();
@@ -680,7 +680,7 @@ void ToolManager::Reset()
    // If audio was playing, we stopped the VU meters,
    // It would be nice to show them again, but hardly essential as
    // they will show up again on the next play.
-   // SetVUMeters(AudacityProject *p);
+   // SetVUMeters(SneedacityProject *p);
    Updated();
 }
 
@@ -743,9 +743,9 @@ void ToolManager::ReadConfig()
    int vMajor, vMinor, vMicro;
    gPrefs->GetVersionKeysInit(vMajor, vMinor, vMicro);
    bool useLegacyDock = false;
-   // note that vMajor, vMinor, and vMicro will all be zero if either it's a new audacity.cfg file
+   // note that vMajor, vMinor, and vMicro will all be zero if either it's a new sneedacity.cfg file
    // or the version is less than 1.3.13 (when there were no version keys according to the comments in
-   // InitPreferences()). So for new audacity.cfg
+   // InitPreferences()). So for new sneedacity.cfg
    // file useLegacyDock will be true, but this doesn't matter as there are no Dock or DockV2 keys in the file yet.
    if (vMajor <= 1 ||
       (vMajor == 2 && (vMinor <= 1 || (vMinor == 2 && vMicro <= 1))))   // version <= 2.2.1
@@ -854,7 +854,7 @@ void ToolManager::ReadConfig()
          }
 #else
          // note that this section is here because if you had been using sync-lock and now you aren't,
-         // the space for the extra button is stored in audacity.cfg, and so you get an extra space
+         // the space for the extra button is stored in sneedacity.cfg, and so you get an extra space
          // in the EditToolbar.
          // It is needed so that the meterToolbar size gets preserved.
          // Longer-term we should find a better fix for this.
@@ -1582,12 +1582,12 @@ AttachedToolBarMenuItem::AttachedToolBarMenuItem(
    , mAttachedItem{
       Registry::Placement{ wxT("View/Other/Toolbars/Toolbars/Other"), hint },
       (  MenuTable::FinderScope(
-            [this](AudacityProject &) -> CommandHandlerObject&
+            [this](SneedacityProject &) -> CommandHandlerObject&
                { return *this; } ),
          MenuTable::Command( name, label_in,
             &AttachedToolBarMenuItem::OnShowToolBar,
             AlwaysEnabledFlag,
-            CommandManager::Options{}.CheckTest( [id](AudacityProject &project){
+            CommandManager::Options{}.CheckTest( [id](SneedacityProject &project){
                auto &toolManager = ToolManager::Get( project );
                return toolManager.IsVisible( id ); } ) ) ) }
    , mExcludeIds{ std::move( excludeIDs ) }

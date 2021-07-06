@@ -1,5 +1,5 @@
 //
-// Copied from wxWidgets 3.0.2 and modified for Audacity
+// Copied from wxWidgets 3.0.2 and modified for Sneedacity
 //
 /////////////////////////////////////////////////////////////////////////////
 // Name:        wx/msw/filedlg.h
@@ -22,7 +22,7 @@
 // FileDialog
 //-------------------------------------------------------------------------
 
-class AUDACITY_DLL_API FileDialog : public FileDialogBase
+class SNEEDACITY_DLL_API FileDialog : public FileDialogBase
 {
 public:
    FileDialog();

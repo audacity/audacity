@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Keyboard.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_KEYBOARD__
-#define __AUDACITY_KEYBOARD__
+#ifndef __SNEEDACITY_KEYBOARD__
+#define __SNEEDACITY_KEYBOARD__
 
 #include "Identifier.h"
 #include <wx/defs.h>
@@ -21,7 +21,7 @@ struct NormalizedKeyStringTag;
 // Case insensitive comparisons
 using NormalizedKeyStringBase = TaggedIdentifier<NormalizedKeyStringTag, false>;
 
-struct AUDACITY_DLL_API NormalizedKeyString : NormalizedKeyStringBase
+struct SNEEDACITY_DLL_API NormalizedKeyString : NormalizedKeyStringBase
 {
    NormalizedKeyString() = default;
    explicit NormalizedKeyString( const wxString &key );
@@ -35,7 +35,7 @@ namespace std
       : hash< NormalizedKeyStringBase > {};
 }
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 NormalizedKeyString KeyEventToKeyString(const wxKeyEvent & keyEvent);
 
 #endif

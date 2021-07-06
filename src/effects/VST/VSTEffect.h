@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   VSTEffect.h
 
@@ -12,9 +12,9 @@
 
 #if USE_VST
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ModuleInterface.h"
-#include "audacity/PluginInterface.h"
+#include "sneedacity/EffectInterface.h"
+#include "sneedacity/ModuleInterface.h"
+#include "sneedacity/PluginInterface.h"
 
 #include "../../SampleFormat.h"
 #include "../../xml/XMLTagHandler.h"
@@ -33,7 +33,7 @@ class VSTControl;
    developed by Steinberg GmbH */
 #define VSTPLUGINTYPE XO("VST")
 
-#define audacityVSTID CCONST('a', 'u', 'D', 'y');
+#define sneedacityVSTID CCONST('a', 'u', 'D', 'y');
 
 typedef intptr_t (*dispatcherFn)(AEffect * effect,
                                  int opCode,
@@ -85,7 +85,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffect is an Audacity EffectClientInterface that forwards actual 
+/// VSTEffect is an Sneedacity EffectClientInterface that forwards actual 
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -396,7 +396,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffectsModule is an Audacity ModuleInterface, in other words it 
+/// VSTEffectsModule is an Sneedacity ModuleInterface, in other words it 
 /// represents one plug in.
 ///
 ///////////////////////////////////////////////////////////////////////////////

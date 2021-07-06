@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FindClipping.cpp
 
@@ -30,7 +30,7 @@
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"

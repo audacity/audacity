@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""Automate Audacity via mod-script-pipe.
+"""Automate Sneedacity via mod-script-pipe.
 
 Pipe Client may be used as a command-line script to send commands to
-Audacity via the mod-script-pipe interface, or loaded as a module.
+Sneedacity via the mod-script-pipe interface, or loaded as a module.
 Requires Python 2.7 or later. Python 3 strongly recommended.
 
 ======================
@@ -61,7 +61,7 @@ Example
 See Also
 --------
 PipeClient.write : Write a command to _write_pipe.
-PipeClient.read : Read Audacity's reply from pipe.
+PipeClient.read : Read Sneedacity's reply from pipe.
 
 Copyright Steve Daulton 2018
 Released under terms of the GNU General Public License version 2:
@@ -87,14 +87,14 @@ if sys.platform == 'win32':
     EOL = '\r\n\0'
 else:
     # Linux or Mac
-    PIPE_BASE = '/tmp/audacity_script_pipe.'
+    PIPE_BASE = '/tmp/sneedacity_script_pipe.'
     WRITE_NAME = PIPE_BASE + 'to.' + str(os.getuid())
     READ_NAME = PIPE_BASE + 'from.' + str(os.getuid())
     EOL = '\n'
 
 
 class PipeClient():
-    """Write / read client access to Audacity via named pipes.
+    """Write / read client access to Sneedacity via named pipes.
 
     Normally there should be just one instance of this class. If
     more instances are created, they all share the same state.
@@ -109,18 +109,18 @@ class PipeClient():
     Attributes
     ----------
         reader_pipe_broken : event object
-            Set if pipe reader fails. Audacity may have crashed
+            Set if pipe reader fails. Sneedacity may have crashed
         reply_ready : event object
             flag cleared when command sent and set when response received
         timer : bool
             When true, time the command execution (default False)
         reply : string
-            message received when Audacity completes the command
+            message received when Sneedacity completes the command
 
     See Also
     --------
     write : Write a command to _write_pipe.
-    read : Read Audacity's reply from pipe.
+    read : Read Sneedacity's reply from pipe.
 
     """
 
@@ -146,7 +146,7 @@ class PipeClient():
     def _write_thread_start(self):
         """Start _write_pipe thread"""
         # Pipe is opened in a new thread so that we don't
-        # freeze if Audacity is not running.
+        # freeze if Sneedacity is not running.
         write_thread = threading.Thread(target=self._write_pipe_open)
         write_thread.daemon = True
         write_thread.start()
@@ -171,7 +171,7 @@ class PipeClient():
         Parameters
         ----------
             command : string
-                The command to send to Audacity
+                The command to send to Sneedacity
             timer : bool, optional
                 If true, time the execution of the command
 
@@ -214,7 +214,7 @@ class PipeClient():
                 line = read_pipe.readline()
                 if line == '':
                     # No data in read_pipe indicates that the pipe is broken
-                    # (Audacity may have crashed).
+                    # (Sneedacity may have crashed).
                     PipeClient.reader_pipe_broken.set()
                     pipe_ok = False
             if self.timer:
@@ -226,13 +226,13 @@ class PipeClient():
         read_pipe.close()
 
     def read(self):
-        """Read Audacity's reply from pipe.
+        """Read Sneedacity's reply from pipe.
 
         Returns
         -------
         string
-            The reply from the last command sent to Audacity, or null string
-            if reply not received. Null string usually indicates that Audacity
+            The reply from the last command sent to Sneedacity, or null string
+            if reply not received. Null string usually indicates that Sneedacity
             is still processing the last command.
 
         """

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   CommandContext.h
 
@@ -8,28 +8,28 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COMMAND_CONTEXT__
-#define __AUDACITY_COMMAND_CONTEXT__
+#ifndef __SNEEDACITY_COMMAND_CONTEXT__
+#define __SNEEDACITY_COMMAND_CONTEXT__
 
 #include <memory>
 #include "Identifier.h"
 
-class AudacityProject;
+class SneedacityProject;
 class wxEvent;
 class CommandOutputTargets;
 using CommandParameter = CommandID;
 
-class AUDACITY_DLL_API CommandContext {
+class SNEEDACITY_DLL_API CommandContext {
 public:
    CommandContext(
-      AudacityProject &p
+      SneedacityProject &p
       , const wxEvent *e = nullptr
       , int ii = 0
       , const CommandParameter &param = CommandParameter{}
    );
 
    CommandContext(
-      AudacityProject &p,
+      SneedacityProject &p,
       std::unique_ptr<CommandOutputTargets> target);
 
    ~CommandContext();
@@ -49,7 +49,7 @@ public:
    void AddBool(const bool value      , const wxString &name = {} ) const;
    void AddItem(const double value    , const wxString &name = {} ) const;
 
-   AudacityProject &project;
+   SneedacityProject &project;
    std::unique_ptr<CommandOutputTargets> pOutput;
    const wxEvent *pEvt;
    int index;

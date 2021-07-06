@@ -2,7 +2,7 @@
 # Sends commands to get images for the manual.
 # Image oddments that don't fit the other categories.
 
-# Make sure Audacity is running first and that mod-script-pipe is enabled
+# Make sure Sneedacity is running first and that mod-script-pipe is enabled
 # before running this script.
 # Historically this file has had peculiar problems with line endings.
 

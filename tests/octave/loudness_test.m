@@ -1,4 +1,4 @@
-## Audacity Loudness effect unit test
+## Sneedacity Loudness effect unit test
 #
 # Max Maisel
 #
@@ -244,7 +244,7 @@ system("sync");
 y1 = audioread(TMP_FILENAME);
 
 do_test_equ(calc_LUFS(y, fs),   -30, "loudness track 1", LUFS_epsilon);
-# XXX: Audacity does not export at 8kHz through scripting thus this test is expected to fail!
+# XXX: Sneedacity does not export at 8kHz through scripting thus this test is expected to fail!
 #      To ensure that this works you have to set the project rate to 8 kHz,
 #      export the track and check the results manually.
 do_test_equ(calc_LUFS(y1, fs1), -30, "loudness track 2", LUFS_epsilon, true);

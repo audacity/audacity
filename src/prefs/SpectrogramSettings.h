@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SpectrogramSettings.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
-#define __AUDACITY_SPECTROGRAM_SETTINGS__
+#ifndef __SNEEDACITY_SPECTROGRAM_SETTINGS__
+#define __SNEEDACITY_SPECTROGRAM_SETTINGS__
 
 #include "../Prefs.h"
 #include "../SampleFormat.h"
@@ -23,13 +23,13 @@ class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
 
-class AUDACITY_DLL_API SpectrogramSettings : public PrefsListener
+class SNEEDACITY_DLL_API SpectrogramSettings : public PrefsListener
 {
    friend class SpectrumPrefs;
 public:
 
    // Singleton for settings that are not per-track
-   class AUDACITY_DLL_API Globals
+   class SNEEDACITY_DLL_API Globals
    {
    public:
       static Globals &Get();

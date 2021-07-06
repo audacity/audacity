@@ -1,17 +1,17 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Prefs.h
 
   Dominic Mazzoni
   Markus Meyer
 
-  Audacity uses wxWidgets' wxFileConfig class to handle preferences.
-  In Audacity versions prior to 1.3.1, it used wxConfig, which would
+  Sneedacity uses wxWidgets' wxFileConfig class to handle preferences.
+  In Sneedacity versions prior to 1.3.1, it used wxConfig, which would
   store the prefs in a platform-dependent way (e.g. in the registry
   on Windows). Now it always stores the settings in a configuration file
-  in the Audacity Data Directory.
+  in the Sneedacity Data Directory.
 
   Every time we read a preference, we need to specify the default
   value for that preference, to be used if the preference hasn't
@@ -26,19 +26,19 @@
   track of...
 
 **********************************************************************/
-#ifndef __AUDACITY_PREFS__
-#define __AUDACITY_PREFS__
+#ifndef __SNEEDACITY_PREFS__
+#define __SNEEDACITY_PREFS__
 
 
 
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place
 // the second part (after the r) indicates the number of times the prefs have been reset within the same version
-#define AUDACITY_PREFS_VERSION_STRING "1.1.1r1"
+#define SNEEDACITY_PREFS_VERSION_STRING "1.1.1r1"
 
 #include <functional>
 
-#include "../include/audacity/ComponentInterface.h"
+#include "../include/sneedacity/ComponentInterface.h"
 #include "wxArrayStringEx.h"
 #include "widgets/FileConfig.h"
 
@@ -50,7 +50,7 @@ class wxFileName;
 void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
 void FinishPreferences();
 
-extern AUDACITY_DLL_API FileConfig *gPrefs;
+extern SNEEDACITY_DLL_API FileConfig *gPrefs;
 extern int gMenusDirty;
 
 
@@ -59,7 +59,7 @@ extern ByColumns_t ByColumns;
 
 //! Base class for settings objects.  It holds a configuration key path.
 /* The constructors are non-explicit for convenience */
-class AUDACITY_DLL_API SettingBase
+class SNEEDACITY_DLL_API SettingBase
 {
 public:
    SettingBase( const char *path ) : mPath{ path } {}
@@ -229,7 +229,7 @@ public:
 /// A table of EnumValueSymbol that you can access by "row" with
 /// operator [] but also allowing access to the "columns" of internal or
 /// translated strings, and also allowing convenient column-wise construction
-class AUDACITY_DLL_API EnumValueSymbols : public std::vector< EnumValueSymbol >
+class SNEEDACITY_DLL_API EnumValueSymbols : public std::vector< EnumValueSymbol >
 {
 public:
    EnumValueSymbols() = default;
@@ -257,7 +257,7 @@ private:
 
 /// Packages a table of user-visible choices each with an internal code string,
 /// a preference key path, and a default choice
-class AUDACITY_DLL_API ChoiceSetting
+class SNEEDACITY_DLL_API ChoiceSetting
 {
 public:
    ChoiceSetting(
@@ -307,7 +307,7 @@ protected:
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class AUDACITY_DLL_API EnumSettingBase : public ChoiceSetting
+class SNEEDACITY_DLL_API EnumSettingBase : public ChoiceSetting
 {
 public:
    EnumSettingBase(
@@ -380,11 +380,11 @@ public:
 
 // An event emitted by the application when the Preference dialog commits
 // changes
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
    EVT_PREFS_UPDATE, wxCommandEvent);
 
 // Invoke UpdatePrefs() when Preference dialog commits changes.
-class AUDACITY_DLL_API PrefsListener
+class SNEEDACITY_DLL_API PrefsListener
 {
 public:
    PrefsListener();
@@ -408,14 +408,14 @@ private:
 /// Return the config file key associated with a warning dialog identified
 /// by internalDialogName.  When the box is checked, the value at the key
 /// becomes false.
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 wxString WarningDialogKey(const wxString &internalDialogName);
 
 /*
  Meant to be statically constructed.  A callback to repopulate configuration
  files after a reset.
  */
-struct AUDACITY_DLL_API PreferenceInitializer {
+struct SNEEDACITY_DLL_API PreferenceInitializer {
    PreferenceInitializer();
    virtual ~PreferenceInitializer();
    virtual void operator () () = 0;

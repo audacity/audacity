@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TrackPanelResizeHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
-#define __AUDACITY_TRACK_PANEL_RESIZE_HANDLE__
+#ifndef __SNEEDACITY_TRACK_PANEL_RESIZE_HANDLE__
+#define __SNEEDACITY_TRACK_PANEL_RESIZE_HANDLE__
 
 #include "UIHandle.h"
 
@@ -31,20 +31,20 @@ public:
    std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(SneedacityProject *pProject) override;
 
 private:
    enum Mode {

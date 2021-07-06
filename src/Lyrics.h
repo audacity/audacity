@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Lyrics.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LYRICS__
-#define __AUDACITY_LYRICS__
+#ifndef __SNEEDACITY_LYRICS__
+#define __SNEEDACITY_LYRICS__
 
 
 
@@ -19,7 +19,7 @@
 #include "commands/CommandManagerWindowClasses.h"
 #include "widgets/wxPanelWrapper.h" // to inherit
 
-class AudacityProject;
+class SneedacityProject;
 class LabelTrack;
 
 
@@ -86,7 +86,7 @@ class LyricsPanel final
 
  public:
    LyricsPanel(wxWindow* parent, wxWindowID id,
-          AudacityProject *project,
+          SneedacityProject *project,
           const wxPoint& pos = wxDefaultPosition,
           const wxSize& size = wxDefaultSize);
    virtual ~LyricsPanel();
@@ -156,10 +156,10 @@ private:
    int            mTextHeight; // only for drawn text
    bool           mMeasurementsDone; // only for drawn text
 
-   wxWeakRef<AudacityProject> mProject;
+   wxWeakRef<SneedacityProject> mProject;
    bool           mDelayedUpdate{ false };
 
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_LYRICS__
+#endif // __SNEEDACITY_LYRICS__

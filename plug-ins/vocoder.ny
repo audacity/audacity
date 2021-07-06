@@ -65,7 +65,7 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") real "" 30 1 100
 ;; make *radar-table* become a nyquist wavetable of frequency radar-f
 (setf *radar-table* (list *radar-table* (hz-to-step radar-f) T))
 
-;; increase the volume of the audacity track in the middle of the slider
+;; increase the volume of the sneedacity track in the middle of the slider
 ;; the sqrt trick is something like an artificial db scaling
 (setf track-vol (sqrt (/ track-vl 100.0)))
 ;; decrease the volume of the white noise in the middle of the slider
@@ -82,7 +82,7 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") real "" 30 1 100
 
 ;;; The Mixer
 
-;; calculate duration of audacity selection
+;; calculate duration of sneedacity selection
 (setf duration (/ len *sound-srate*))
 
 (defun mix ()
@@ -136,7 +136,7 @@ $control radar-f (_ "Frequency of Radar Needles (Hz)") real "" 30 1 100
     ;; Now normalize s to 0 db peak
     (setf s (scale (/ (peak s ny:all)) s))
     (case mst
-          (0 s)             ; let Audacity coerce back to stereo
+          (0 s)             ; let Sneedacity coerce back to stereo
           (1 (vector original s)))))
  (t                         ; this effect isn't meant for mono
   (format nil (_ "Error.~%Stereo track required."))))

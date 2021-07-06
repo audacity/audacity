@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MixerBoard.h
 
@@ -11,8 +11,8 @@
 
 
 
-#ifndef __AUDACITY_MIXER_BOARD__
-#define __AUDACITY_MIXER_BOARD__
+#ifndef __SNEEDACITY_MIXER_BOARD__
+#define __SNEEDACITY_MIXER_BOARD__
 
 #include <wx/frame.h> // to inherit
 #include <wx/scrolwin.h> // to inherit
@@ -59,7 +59,7 @@ public:
 };
 
 
-class AudacityProject;
+class SneedacityProject;
 class MeterPanel;
 class MixerBoard;
 
@@ -76,7 +76,7 @@ class MixerTrackCluster final : public wxPanelWrapper
 {
 public:
    MixerTrackCluster(wxWindow* parent,
-                     MixerBoard* grandParent, AudacityProject* project,
+                     MixerBoard* grandParent, SneedacityProject* project,
                      const std::shared_ptr<PlayableTrack> &pTrack,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
@@ -129,7 +129,7 @@ public:
 
 private:
    MixerBoard* mMixerBoard;
-   AudacityProject* mProject;
+   SneedacityProject* mProject;
 
    // controls
    auStaticText* mStaticText_TrackName;
@@ -168,7 +168,7 @@ using MusicalInstrumentArray = std::vector<std::unique_ptr<MusicalInstrument>>;
 class MixerBoardScrolledWindow final : public wxScrolledWindow
 {
 public:
-   MixerBoardScrolledWindow(AudacityProject* project,
+   MixerBoardScrolledWindow(SneedacityProject* project,
                               MixerBoard* parent, wxWindowID id = -1,
                               const wxPoint& pos = wxDefaultPosition,
                               const wxSize& size = wxDefaultSize,
@@ -180,7 +180,7 @@ private:
 
 private:
    MixerBoard* mMixerBoard;
-   AudacityProject* mProject;
+   SneedacityProject* mProject;
 
 public:
    DECLARE_EVENT_TABLE()
@@ -195,7 +195,7 @@ class MixerBoard final : public wxWindow, private PrefsListener
    friend class MixerBoardFrame;
 
 public:
-   MixerBoard(AudacityProject* pProject,
+   MixerBoard(SneedacityProject* pProject,
                wxFrame* parent,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize);
@@ -251,7 +251,7 @@ private:
    std::vector<MixerTrackCluster*> mMixerTrackClusters;
 
    MusicalInstrumentArray     mMusicalInstruments;
-   AudacityProject*           mProject;
+   SneedacityProject*           mProject;
    MixerBoardScrolledWindow*  mScrolledWindow; // Holds the MixerTrackClusters and handles scrolling.
    double                     mPrevT1;
    TrackList*                 mTracks;
@@ -267,10 +267,10 @@ class MixerBoardFrame final
    , public TopLevelKeystrokeHandlingWindow
 {
 public:
-   MixerBoardFrame(AudacityProject* parent);
+   MixerBoardFrame(SneedacityProject* parent);
    virtual ~MixerBoardFrame();
 
-   void Recreate(AudacityProject *pProject);
+   void Recreate(SneedacityProject *pProject);
 
 private:
    // event handlers
@@ -281,7 +281,7 @@ private:
 
    void SetWindowTitle();
 
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
 public:
    MixerBoard* mMixerBoard;
 
@@ -289,6 +289,6 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_MIXER_BOARD__
+#endif // __SNEEDACITY_MIXER_BOARD__
 
 

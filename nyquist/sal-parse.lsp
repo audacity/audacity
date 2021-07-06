@@ -1036,7 +1036,7 @@
                   ;  :system 
                   :play :print :display :plot))
       (parse-command)
-      (if (and (token-is '(:return)) *audacity-top-level-return-flag*)
+      (if (and (token-is '(:return)) *sneedacity-top-level-return-flag*)
           (parse-command))))
 
 
@@ -1057,7 +1057,7 @@
          (parse-print-display :display 'display))
         ((token-is :plot)
          (parse-plot))
-        ((and *audacity-top-level-return-flag* (token-is :return))
+        ((and *sneedacity-top-level-return-flag* (token-is :return))
          (parse-return))
 ;        ((token-is :output)
 ;         (parse-output))
@@ -1271,7 +1271,7 @@
   (let (loc expr)
     ;; this seems to be a redundant test
     (if (and (null *sal-fn-name*)
-             (not *audacity-top-level-return-flag*))
+             (not *sneedacity-top-level-return-flag*))
         (errexit "Return must be inside a function body"))
     (setf loc (parse-token))
     (setf expr (parse-sexpr))

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TimeTrackView.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from class TimeTrack
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIME_TRACK_VIEW__
-#define __AUDACITY_TIME_TRACK_VIEW__
+#ifndef __SNEEDACITY_TIME_TRACK_VIEW__
+#define __SNEEDACITY_TIME_TRACK_VIEW__
 
 #include "../../ui/CommonTrackView.h"
 
@@ -30,7 +30,7 @@ public:
 private:
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
+       const SneedacityProject *pProject, int currentTool, bool bMultiTool)
       override;
 
    std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;

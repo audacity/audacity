@@ -1,4 +1,4 @@
-# This CMake script is invoked to build the InnoSetup installer for Audacity
+# This CMake script is invoked to build the InnoSetup installer for Sneedacity
 # Requiered parameters:
 # BUILD_DIR - should be set to CMAKE_BINARY_DIR by the caller
 # SOURCE_DIR - should be set to CMAKE_SOURCE_DIR by teh caller
@@ -42,7 +42,7 @@ endif()
 # Prepare the output directory
 
 file(COPY "${SOURCE_DIR}/win/Inno_Setup_Wizard/" DESTINATION "${OUTPUT_DIR}")
-configure_file("${OUTPUT_DIR}/audacity.iss.in" "${OUTPUT_DIR}/audacity.iss")
+configure_file("${OUTPUT_DIR}/sneedacity.iss.in" "${OUTPUT_DIR}/sneedacity.iss")
 
 # Copy additional files
 
@@ -51,7 +51,7 @@ file(COPY "${SOURCE_DIR}/presets" DESTINATION "${OUTPUT_DIR}/Additional")
 file(COPY 
         "${SOURCE_DIR}/LICENSE.txt"
         "${SOURCE_DIR}/README.txt"
-        "${SOURCE_DIR}/win/audacity.ico"
+        "${SOURCE_DIR}/win/sneedacity.ico"
     DESTINATION 
         "${OUTPUT_DIR}/Additional"
 )
@@ -69,7 +69,7 @@ execute_process(
 
 execute_process(
     COMMAND
-        ${INNO_SETUP_COMPILER} /Sbyparam=$p "audacity.iss"
+        ${INNO_SETUP_COMPILER} /Sbyparam=$p "sneedacity.iss"
     WORKING_DIRECTORY
         ${OUTPUT_DIR}
 )

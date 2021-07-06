@@ -1,14 +1,14 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
+   Sneedacity: A Digital Audio Editor
    Paulstretch.h
 
    Nasca Octavian Paul (Paul Nasca)
 
  **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_PAULSTRETCH__
-#define __AUDACITY_EFFECT_PAULSTRETCH__
+#ifndef __SNEEDACITY_EFFECT_PAULSTRETCH__
+#define __SNEEDACITY_EFFECT_PAULSTRETCH__
 
 #include "Effect.h"
 

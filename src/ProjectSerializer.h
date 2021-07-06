@@ -1,15 +1,15 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2010 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    ProjectSerializer.h
 
 *******************************************************************/
 
-#ifndef __AUDACITY_PROJECTSERIALIZER__
-#define __AUDACITY_PROJECTSERIALIZER__
+#ifndef __SNEEDACITY_PROJECTSERIALIZER__
+#define __SNEEDACITY_PROJECTSERIALIZER__
 
 #include "xml/XMLTagHandler.h"
 
@@ -29,8 +29,8 @@ using SampleBlockID = long long;
 using NameMap = std::unordered_map<wxString, unsigned short>;
 using IdMap = std::unordered_map<unsigned short, wxString>;
 
-// This class's overrides do NOT throw AudacityException.
-class AUDACITY_DLL_API ProjectSerializer final : public XMLWriter
+// This class's overrides do NOT throw SneedacityException.
+class SNEEDACITY_DLL_API ProjectSerializer final : public XMLWriter
 {
 public:
 

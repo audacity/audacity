@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LabelDialog.h
 
@@ -8,18 +8,18 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LABELDIALOG__
-#define __AUDACITY_LABELDIALOG__
+#ifndef __SNEEDACITY_LABELDIALOG__
+#define __SNEEDACITY_LABELDIALOG__
 
 #include <vector>
 #include <wx/defs.h>
 
 #include "widgets/wxPanelWrapper.h" // to inherit
-#include "audacity/ComponentInterface.h" // member variable
+#include "sneedacity/ComponentInterface.h" // member variable
 
 class wxArrayString;
 class wxGridEvent;
-class AudacityProject;
+class SneedacityProject;
 class ChoiceEditor;
 class Grid;
 class NumericEditor;
@@ -37,7 +37,7 @@ class LabelDialog final : public wxDialogWrapper
  public:
 
    LabelDialog(wxWindow *parent,
-               AudacityProject &project,
+               SneedacityProject &project,
                TrackList *tracks,
 
                // if NULL edit all tracks, else this one only:
@@ -93,7 +93,7 @@ class LabelDialog final : public wxDialogWrapper
 
  private:
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    Grid *mGrid;
    ChoiceEditor *mChoiceEditor;

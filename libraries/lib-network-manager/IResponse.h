@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file IResponse.h
  @brief Declare an interface for HTTP response.
@@ -17,7 +17,7 @@
 
 #include "NetworkManagerApi.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

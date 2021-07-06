@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -17,7 +17,7 @@
 #define __COMMANDTYPE__
 
 #include "CommandSignature.h"
-#include "../commands/AudacityCommand.h"
+#include "../commands/SneedacityCommand.h"
 
 class OldStyleCommand;
 
@@ -39,7 +39,7 @@ class CommandOutputTargets;
 class CommandSignature;
 class wxString;
 
-class AUDACITY_DLL_API OldStyleCommandType : public AudacityCommand
+class SNEEDACITY_DLL_API OldStyleCommandType : public SneedacityCommand
 {
 private:
    ComponentInterfaceSymbol mSymbol;
@@ -64,7 +64,7 @@ public:
 
    // Create a command instance with the specified output target
    virtual OldStyleCommandPointer Create(
-      AudacityProject *project, std::unique_ptr<CommandOutputTargets> &&target) = 0;
+      SneedacityProject *project, std::unique_ptr<CommandOutputTargets> &&target) = 0;
 };
 
 #endif /* End of include guard: __COMMANDTYPE__ */

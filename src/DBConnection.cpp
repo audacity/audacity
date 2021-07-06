@@ -16,7 +16,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include <wx/progdlg.h>
 #include <wx/string.h>
 
-#include "AudacityLogger.h"
+#include "SneedacityLogger.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "Project.h"
@@ -39,7 +39,7 @@ static const char *FastConfig =
    "PRAGMA <schema>.journal_mode = OFF;";
 
 DBConnection::DBConnection(
-   const std::weak_ptr<AudacityProject> &pProject,
+   const std::weak_ptr<SneedacityProject> &pProject,
    const std::shared_ptr<DBConnectionErrors> &pErrors,
    CheckpointFailureCallback callback)
 : mpProject{ pProject }
@@ -90,7 +90,7 @@ void DBConnection::SetError(
                  mpErrors->mLastError.Debug(),
                  mpErrors->mLibraryError.Debug());
 
-   auto logger = AudacityLogger::Get();
+   auto logger = SneedacityLogger::Get();
    if (logger)
    {
       mpErrors->mLog = logger->GetLog(10);
@@ -122,7 +122,7 @@ void DBConnection::SetDBError(
                  mpErrors->mLastError.Debug(),
                  mpErrors->mLibraryError.Debug());
 
-   auto logger = AudacityLogger::Get();
+   auto logger = SneedacityLogger::Get();
    if (logger)
    {
       mpErrors->mLog = logger->GetLog(10);
@@ -501,7 +501,7 @@ void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
             throw SimpleMessageBoxException{ rc != SQLITE_FULL ? ExceptionType::Internal : ExceptionType::BadEnvironment,
                message, XO("Warning"), "Error:_Disk_full_or_not_writable" }; },
             SimpleGuard<void>{},
-            [this](AudacityException * e) {
+            [this](SneedacityException * e) {
                // This executes in the main thread.
                if (mCallback)
                   mCallback();
@@ -647,9 +647,9 @@ ConnectionPtr::~ConnectionPtr()
    }
 }
 
-static const AudacityProject::AttachedObjects::RegisteredFactory
+static const SneedacityProject::AttachedObjects::RegisteredFactory
 sConnectionPtrKey{
-   []( AudacityProject & ){
+   []( SneedacityProject & ){
       // Ignore the argument; this is just a holder of a
       // unique_ptr to DBConnection, which must be filled in later
       // (when we can get a weak_ptr to the project)
@@ -658,15 +658,15 @@ sConnectionPtrKey{
    }
 };
 
-ConnectionPtr &ConnectionPtr::Get( AudacityProject &project )
+ConnectionPtr &ConnectionPtr::Get( SneedacityProject &project )
 {
    auto &result =
       project.AttachedObjects::Get< ConnectionPtr >( sConnectionPtrKey );
    return result;
 }
 
-const ConnectionPtr &ConnectionPtr::Get( const AudacityProject &project )
+const ConnectionPtr &ConnectionPtr::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 

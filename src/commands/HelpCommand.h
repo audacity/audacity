@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2018 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -23,7 +23,7 @@
 #include "CommandType.h"
 #include "Command.h"
 
-class HelpCommand : public AudacityCommand
+class HelpCommand : public SneedacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -37,13 +37,13 @@ public:
    bool Apply(const CommandContext & context) override;
    bool ApplyInner(const CommandContext & context);
 
-   // AudacityCommand overrides
+   // SneedacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#help";}
 public:
    wxString mCommandName;
 };
 
-class CommentCommand : public AudacityCommand
+class CommentCommand : public SneedacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -57,7 +57,7 @@ public:
    bool Apply(const CommandContext & context) override {
       return true;
    };
-   // AudacityCommand overrides
+   // SneedacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#comment";}
 public:
    wxString mComment;

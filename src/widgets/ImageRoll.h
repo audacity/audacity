@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImageRoll.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_IMAGE_ROLL__
-#define __AUDACITY_IMAGE_ROLL__
+#ifndef __SNEEDACITY_IMAGE_ROLL__
+#define __SNEEDACITY_IMAGE_ROLL__
 
 #include <vector>
 // #include <wx/dc.h> // for enum wxRasterOperationMode
@@ -24,7 +24,7 @@
 // wxImage copies cheaply with reference counting
 using ImageArray = std::vector<wxImage>;
 
-class AUDACITY_DLL_API ImageRoll
+class SNEEDACITY_DLL_API ImageRoll
 {
  public:
    enum RollType {
@@ -97,4 +97,4 @@ class ImageRollPanel final : public wxPanelWrapper
 
 };
 
-#endif // __AUDACITY_IMAGE_ROLL__
+#endif // __SNEEDACITY_IMAGE_ROLL__

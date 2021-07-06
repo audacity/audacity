@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CurlResponse.h
  @brief Declare an implementation of IResponse using libcurl.
@@ -22,7 +22,7 @@
 
 #include "CurlHandleManager.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

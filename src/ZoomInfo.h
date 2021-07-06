@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ZoomInfo.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ZOOM_INFO__
-#define __AUDACITY_ZOOM_INFO__
+#ifndef __SNEEDACITY_ZOOM_INFO__
+#define __SNEEDACITY_ZOOM_INFO__
 
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
@@ -20,7 +20,7 @@
 #define CONST const
 #endif
 
-class AudacityProject;
+class SneedacityProject;
 
 // See big pictorial comment in TrackPanel.cpp for explanation of these numbers
 enum : int {
@@ -39,7 +39,7 @@ enum : int {
 // The subset of ViewInfo information (other than selection)
 // that is sufficient for purposes of TrackArtist,
 // and for computing conversions between track times and pixel positions.
-class AUDACITY_DLL_API ZoomInfo /* not final */
+class SNEEDACITY_DLL_API ZoomInfo /* not final */
    // Note that ViewInfo inherits from ZoomInfo but there are no virtual functions.
    // That's okay if we pass always by reference and never copy, suffering "slicing."
    : public ClientData::Base

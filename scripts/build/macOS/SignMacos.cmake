@@ -1,7 +1,7 @@
 # CMake script to sign macOS build
 # Arguments:
 # APP_IDENTIFIER - app identifier
-# APP_LOCATION - the path to Audacity.app
+# APP_LOCATION - the path to Sneedacity.app
 # DMG_LOCATION - the path to Audaicty dmg package
 # APPLE_CODESIGN_IDENTITY - identity to use
 # APPLE_CODESIGN_ENTITLEMENTS - path to the entitlements

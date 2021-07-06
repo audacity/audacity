@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Generator.h
 
@@ -24,7 +24,7 @@
 
 #include "TimeWarper.h"
 
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 
 bool Generator::Process()
 {

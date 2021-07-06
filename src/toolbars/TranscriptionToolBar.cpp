@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TranscriptionToolBar.cpp
 
@@ -93,7 +93,7 @@ END_EVENT_TABLE()
    ;   //semicolon enforces  proper automatic indenting in emacs.
 
 ////Standard Constructor
-TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
+TranscriptionToolBar::TranscriptionToolBar( SneedacityProject &project )
 : ToolBar( project,
    TranscriptionBarID, XO("Play-at-Speed"), wxT("Transcription"), true )
 {
@@ -107,15 +107,15 @@ TranscriptionToolBar::~TranscriptionToolBar()
 {
 }
 
-TranscriptionToolBar &TranscriptionToolBar::Get( AudacityProject &project )
+TranscriptionToolBar &TranscriptionToolBar::Get( SneedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return *static_cast<TranscriptionToolBar*>( toolManager.GetToolBar(TranscriptionBarID) );
 }
 
-const TranscriptionToolBar &TranscriptionToolBar::Get( const AudacityProject &project )
+const TranscriptionToolBar &TranscriptionToolBar::Get( const SneedacityProject &project )
 {
-   return Get( const_cast<AudacityProject&>( project )) ;
+   return Get( const_cast<SneedacityProject&>( project )) ;
 }
 
 void TranscriptionToolBar::Create(wxWindow * parent)
@@ -294,7 +294,7 @@ void TranscriptionToolBar::Populate()
 
 void TranscriptionToolBar::EnableDisableButtons()
 {
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
 
    auto gAudioIO = AudioIO::Get();
    bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
@@ -431,7 +431,7 @@ void TranscriptionToolBar::GetSamples(
    // GetSamples attempts to translate the start and end selection markers into sample indices
    // These selection numbers are doubles.
 
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
    if (!p) {
       return;
    }
@@ -474,7 +474,7 @@ void TranscriptionToolBar::GetSamples(
 void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 {
    // Can't do anything without an active project
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
    if (!p) {
       return;
    }
@@ -614,7 +614,7 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       return;
    }
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
 
    SetButton(false, mButtons[TTB_StartOff]);
    auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
@@ -649,7 +649,7 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
    }
 
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
    auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
    if(t) {
       auto wt = static_cast<const WaveTrack*>(t);
@@ -685,7 +685,7 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
       return;
    }
    mVk->AdjustThreshold(GetSensitivity());
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
 
    auto t = *TrackList::Get( mProject ).Any< const WaveTrack >().begin();
    if(t) {
@@ -838,7 +838,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 namespace {
 int DoAddLabel(
-   AudacityProject &project, const SelectedRegion &region )
+   SneedacityProject &project, const SelectedRegion &region )
 {
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
@@ -1054,7 +1054,7 @@ void TranscriptionToolBar::AdjustPlaySpeed(float adj)
 }
 
 static RegisteredToolbarFactory factory{ TranscriptionBarID,
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       return ToolBar::Holder{ safenew TranscriptionToolBar{ project } }; }
 };
 

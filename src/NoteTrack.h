@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   NoteTrack.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_NOTETRACK__
-#define __AUDACITY_NOTETRACK__
+#ifndef __SNEEDACITY_NOTETRACK__
+#define __SNEEDACITY_NOTETRACK__
 
 
 
@@ -61,7 +61,7 @@ using QuantizedTimeAndBeat = std::pair< double, double >;
 class StretchHandle;
 class TimeWarper;
 
-class AUDACITY_DLL_API NoteTrack final
+class SNEEDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
 {
 public:
@@ -185,7 +185,7 @@ public:
          mVisibleChannels = CHANNEL_BIT(c);
    }
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto( SneedacityProject & ) const override;
 
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;

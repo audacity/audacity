@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Sneedacity Team
-# This file is distributed under the same license as the audacity package.
+# This file is distributed under the same license as the sneedacity package.
 # 
 # Translators:
 # brad freedom <brad.freedom@gmail.com>, 2020-2021
@@ -11,11 +11,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Sneedacity\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-06-11 23:25+0000\n"
 "Last-Translator: Transifex Bot <>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/klyok/audacity/language/vi/)\n"
+"Language-Team: Vietnamese (http://www.transifex.com/klyok/sneedacity/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -330,7 +330,7 @@ msgstr "Tập lệnh Nyquist (*.ny)|*.ny|kịch bàn Lisp (*.lsp)|*.lsp|All file
 msgid "Script was not saved."
 msgstr "Tập lệnh chưa lưu."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -747,8 +747,8 @@ msgid "Credits"
 msgstr "Công trạng"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr "Tùy biến DarkAudacity"
+msgid "DarkSneedacity Customisation"
+msgstr "Tùy biến DarkSneedacity"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -824,7 +824,7 @@ msgstr "Đã bật"
 msgid "Disabled"
 msgstr "Đã Tắt"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
 msgstr "kiến trúc"
@@ -860,7 +860,7 @@ msgstr "Dựng kiểu:"
 msgid "Compiler:"
 msgstr "Trình biên dịch:"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 msgid "Installation Prefix:"
 msgstr "Cài đặt tiền tố:"
@@ -869,7 +869,7 @@ msgstr "Cài đặt tiền tố:"
 msgid "Settings folder:"
 msgstr "Thư mục cài đặt:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "Các thư viện lõi"
@@ -1070,27 +1070,27 @@ msgstr "Không thể khóa được vùng tua nhạc nằm ngoài \nkết thúc 
 msgid "Error"
 msgstr "Lỗi"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "Không gỡ bỏ được %s"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "Không thành công!"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
 "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr "Cài lại Cài đặt Ưu tiên? \n\nCâu hỏi này chỉ được thực hiện một lần sau khi \"cài đặt\" xong, khi bạn được hỏi để cài đặt lại Cài đặt Uu tiên"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "Khởi động lại Cài đặt Ưu tiên của Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1098,99 +1098,99 @@ msgid ""
 "It has been removed from the list of recent files."
 msgstr "%s không được tìm thấy.\n\nTệp tin đã bị loại bỏ trong danh sách các tệp gần đây."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr "Sneedacity không thể chạy tiếp. thư viện SQLite bị lỗi."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Khối phải có kích thước từ 256 đến 100000000\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity đang khởi động..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Mới"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Mở..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "Mở &Gần đây..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "&Thông tin về Sneedacity..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&Tuỳ thích..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Tập tin"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
 "Sneedacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
-msgstr "Sneedacity đã không tìm thấy nơi an toàn nào để chứa các tệp tin tạm thời.\nAudacity cần tìm vùng đĩa trong máy không bị xóa bỏ bởi phần mềm dọn rác để lưu tệp tin tạm thời.\nHãy nhập vào một địa chỉ thư mục trong các hộp thoại cài đặt ưu tiên."
+msgstr "Sneedacity đã không tìm thấy nơi an toàn nào để chứa các tệp tin tạm thời.\nSneedacity cần tìm vùng đĩa trong máy không bị xóa bỏ bởi phần mềm dọn rác để lưu tệp tin tạm thời.\nHãy nhập vào một địa chỉ thư mục trong các hộp thoại cài đặt ưu tiên."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr "Sneedacity không tìm được nơi nào để chứa các tập tin tạm thời.\nXin hãy nhập vào địa chỉ thích hợp và chọn thư mục chứa các tập tin tạm thời."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
 msgstr "Đang thoát Sneedacity. Thư mục tạm thời mới sẽ được dùng trong lần chạy kế tiếp."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr "Chạy 2 tiến trình Sneedacity cùng lúc có thể gây ra \nmất dữ liệu hay làm hỏng hệ thống của bạn.\n\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
 msgstr "Sneedacity không thể sử dụng thư mục chứa các tệp tạm thời,\ncó lẽ thư mục này đang được sử dùng bỡi 1 bản Sneedacity khác.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "Bạn vẫn muốn khởi động Sneedacity?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "Gặp lỗi Khóa Thư mục Tạm thời"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "Hệ thống phát hiện ra một bản Sneedacity khác đang chạy.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr "Dùng lệnh Mới hoặc Mở trên bản Sneedacity đang chạy \nđể mở nhiều dự án cùng lúc.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity đang hoạt động từ trước..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1198,11 +1198,11 @@ msgid ""
 "and a reboot may be required."
 msgstr "Không thể tìm ra tín hiệu.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Startup Failure"
 msgstr "Sneedacity Khởi động KHÔNG Thành công"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1210,7 +1210,7 @@ msgid ""
 "and a reboot may be required."
 msgstr "Không thể tạo ra tín hiệu.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1218,7 +1218,7 @@ msgid ""
 "and a reboot may be required."
 msgstr "Không thể khóa tín hiệu.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1226,7 +1226,7 @@ msgid ""
 "and a reboot may be required."
 msgstr "Không thể tìm ra tín hiệu máy chủ.\n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1234,38 +1234,38 @@ msgid ""
 "and a reboot may be required."
 msgstr "Máy chủ Sneedacity IPC bị lỗi khởi động. \n\nĐiều này có thể vì thiếu tài nguyên.\nBạn có thể thử khởi động lại chương trình."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr "Đã xảy ra lỗi nghiêm trọng khi khởi động"
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "đặt kích thước khối dung lượng lớn nhất theo bytes"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "this help message"
 msgstr "tin nhắn trợ giúp này"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "run self diagnostics"
 msgstr "chạy tác vụ tự chẩn đoán"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "display Sneedacity version"
 msgstr "hiện phiên bản Sneedacity"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "audio or project file name"
 msgstr "tên tập âm thanh hoặc dự án"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
 "associated with Sneedacity. \n"
@@ -1273,20 +1273,20 @@ msgid ""
 "Associate them, so they open on double-click?"
 msgstr "Các tập tin dự án (.aup3) chưa được liên kết với Sneedacity\n\nHãy liên kết chúng lại để mở chúng bằng Sneedacity chỉ với một lần click đúp?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "Tập tin Dự án Sneedacity"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr "Tin nhắn"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "Sneedacity Configuration Error"
 msgstr "Lỗi cấu trúc Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1300,47 +1300,47 @@ msgid ""
 "If you choose to \"Quit Sneedacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr "Không thể truy cập vào tập tin cấu trúc :\n\n\t%s\n\nCó nhiều nguyên nhân dẫn đến điều này, nhưng có vẻ như là ổ đĩa của bạn đã đầy hoặc bạn không có quyền ghi lên tệp này. bạn có thể click vào nút \"trợ giúp\" để có nhiều thông tin hơn.\n\nBạn cũng có thể thử điều chỉnh thông tin rồi click vào nút \"thử lại\" để tiếp tục.\n\nNếu bạn click vào \"thoát Sneedacity. dự án của bạn sẽ được tạm thời lưu vào hệ thống, nó sẽ được khôi phục ở lần tiếp theo bạn mở Sneedacity."
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Trợ giúp"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Sneedacity"
 msgstr "&Thoát Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr "&Thử lại"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
 msgstr "Tập nhật ký của Sneedacity"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "&Lưu..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "&Xoá"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Đóng"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "log.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr "Lưu lại tập nhật ký vào:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "Nhật ký lưu vào tập tin không thành công: %s"
@@ -3700,7 +3700,7 @@ msgstr "Audio thu âm bị mất ở vị trí được đánh dấu. Có thể 
 msgid "Turn off dropout detection"
 msgstr "Tắt phát hiện khoảng hụt tiếng 'dropout'"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -3767,7 +3767,7 @@ msgid ""
 "detected %lld missing alias (.auf) blockfile(s). \n"
 "Sneedacity can fully regenerate these files \n"
 "from the current audio in the project."
-msgstr "Kiểm tra thư mục \"%s\"\nvà phát hiện %lld thiếu tên bí danh  (.auf) của khối tập tin. \nAudacity có thể tạo lại các tập tin này \ntừ những audio hiện tại "
+msgstr "Kiểm tra thư mục \"%s\"\nvà phát hiện %lld thiếu tên bí danh  (.auf) của khối tập tin. \nSneedacity có thể tạo lại các tập tin này \ntừ những audio hiện tại "
 
 #: src/ProjectFSCK.cpp
 msgid "Regenerate alias summary files (safe and recommended)"
@@ -3800,7 +3800,7 @@ msgid ""
 "\n"
 "Note that for the second option, the waveform \n"
 "may not show silence."
-msgstr "Kiểm tra dự án thư  mục %s\nphát hiện %lld thiếu audio data của các khối tập tin (.au)\ncó thể là do lỗi phần mềm, lỗi hệ thống hoặc vô tình bị xoá\nAudacity không thể khôi phục \nnhững tập tin này một cách tự động \n\nNếu bạn chọn tuỳ chọn thứ nhất hoặc thứ hai bên dưới \nbạn có thể tìm và khôi phục các tập tin bị mất\ntrở về lại dúng vị trí của nó\n\nLưu ý với tuỳ chọn thứ hai,  dạng sóng \ncó thể không hiển thị im lặng "
+msgstr "Kiểm tra dự án thư  mục %s\nphát hiện %lld thiếu audio data của các khối tập tin (.au)\ncó thể là do lỗi phần mềm, lỗi hệ thống hoặc vô tình bị xoá\nSneedacity không thể khôi phục \nnhững tập tin này một cách tự động \n\nNếu bạn chọn tuỳ chọn thứ nhất hoặc thứ hai bên dưới \nbạn có thể tìm và khôi phục các tập tin bị mất\ntrở về lại dúng vị trí của nó\n\nLưu ý với tuỳ chọn thứ hai,  dạng sóng \ncó thể không hiển thị im lặng "
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
@@ -5497,12 +5497,12 @@ msgstr "Không đủ chỗ để mở rộng đường cắt"
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "thao tác này không thể thực hiện cho đến khi quá trình nhập %shoàn tất."
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Sneedacity"
 msgstr "Sneedacity"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5510,14 +5510,14 @@ msgid ""
 "%s"
 msgstr "%s: Không thể tải các cài đặt bên dưới. Cài đặt mặc định sẽ được sử dụng.\n\n%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "Đang áp dụng %s..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating
 #. punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5526,7 +5526,7 @@ msgstr "Đang áp dụng %s..."
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr "FAIL - không thành"
 
@@ -11451,7 +11451,7 @@ msgid ""
 "is a MIDI file, not an audio file. \n"
 "Sneedacity cannot open this type of file for playing, but you can\n"
 "edit it by clicking File > Import > MIDI."
-msgstr "\"%s\"\nđây là một tập tin MIDI, không phải tập tin âm thanh.\nAudacity không thể chạy định dạng tập tin này, nhưng bạn vẫn có thể chạy nó. \nchỉnh sửa tệp này bằng cách click vào Tệp>Nhập>MIDI."
+msgstr "\"%s\"\nđây là một tập tin MIDI, không phải tập tin âm thanh.\nSneedacity không thể chạy định dạng tập tin này, nhưng bạn vẫn có thể chạy nó. \nchỉnh sửa tệp này bằng cách click vào Tệp>Nhập>MIDI."
 
 #: src/import/Import.cpp
 #, c-format
@@ -11478,7 +11478,7 @@ msgid ""
 "Sneedacity cannot open audio CDs directly. \n"
 "Extract (rip) the CD tracks to an audio format that \n"
 "Sneedacity can import, such as WAV or AIFF."
-msgstr "\"%s\" là một bài hát trong CD âm thanh.\nAudacity không thể trực tiếp mở nó.\nBạn phải xuất (rip) nó thành một định dạng mà\nAudacity có thể mở, như WAV hay AIFF."
+msgstr "\"%s\" là một bài hát trong CD âm thanh.\nSneedacity không thể trực tiếp mở nó.\nBạn phải xuất (rip) nó thành một định dạng mà\nSneedacity có thể mở, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11487,7 +11487,7 @@ msgid ""
 "\"%s\" is a playlist file. \n"
 "Sneedacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
-msgstr "\"%s\" là một danh sách bài hát.\nAudacity không thể mở nó vì nó chỉ chứa liên kết tới các tập tin khác.\nBạn có thể mở nó trong một bộ soạn thảo văn bản và tải các tập tin trong đó về."
+msgstr "\"%s\" là một danh sách bài hát.\nSneedacity không thể mở nó vì nó chỉ chứa liên kết tới các tập tin khác.\nBạn có thể mở nó trong một bộ soạn thảo văn bản và tải các tập tin trong đó về."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11496,7 +11496,7 @@ msgid ""
 "\"%s\" is a Windows Media Audio file. \n"
 "Sneedacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Windows Media Audio.\nAudacity không thể mở định dạng này vì lỗi vi phạm bản quyền.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
+msgstr "\"%s\" là một tập tin Windows Media Audio.\nSneedacity không thể mở định dạng này vì lỗi vi phạm bản quyền.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11525,7 +11525,7 @@ msgid ""
 "\"%s\" is a RealPlayer media file. \n"
 "Sneedacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin RealPlayer.\nAudacity không mở được loại tập tin này.\nBạn phải tự mình chuyển nó về định dạng được Sneedacity hỗ trợ, như WAV hay AIFF."
+msgstr "\"%s\" là một tập tin RealPlayer.\nSneedacity không mở được loại tập tin này.\nBạn phải tự mình chuyển nó về định dạng được Sneedacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11535,7 +11535,7 @@ msgid ""
 "Sneedacity cannot open this type of file. \n"
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Sneedacity."
-msgstr "\"%s\" là một tập tin giữ liệu gốc, không phải tập tin âm thanh.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ,\nnhư WAV hay AIFF, hoặc ghi âm nó trực tiếp trên Sneedacity."
+msgstr "\"%s\" là một tập tin giữ liệu gốc, không phải tập tin âm thanh.\nSneedacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ,\nnhư WAV hay AIFF, hoặc ghi âm nó trực tiếp trên Sneedacity."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11546,7 +11546,7 @@ msgid ""
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Musepack.\nAudacity không thể mở định dạng này.\nNếu bạn nghĩ đây là tập tin mp3, hãy đổi đuôi nó thành \".mp3\"\nvà thử nhập lại xem sao. Nếu không, bạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ\nnhư WAV hay AIFF."
+msgstr "\"%s\" là một tập tin Musepack.\nSneedacity không thể mở định dạng này.\nNếu bạn nghĩ đây là tập tin mp3, hãy đổi đuôi nó thành \".mp3\"\nvà thử nhập lại xem sao. Nếu không, bạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ\nnhư WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11555,7 +11555,7 @@ msgid ""
 "\"%s\" is a Wavpack audio file. \n"
 "Sneedacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Wavpack.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
+msgstr "\"%s\" là một tập tin Wavpack.\nSneedacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11564,7 +11564,7 @@ msgid ""
 "\"%s\" is a Dolby Digital audio file. \n"
 "Sneedacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Dolby Digital.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
+msgstr "\"%s\" là một tập tin Dolby Digital.\nSneedacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11573,7 +11573,7 @@ msgid ""
 "\"%s\" is an Ogg Speex audio file. \n"
 "Sneedacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr "\"%s\" là một tập tin Ogg Speex.\nAudacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
+msgstr "\"%s\" là một tập tin Ogg Speex.\nSneedacity không thể mở loại tập tin này.\nBạn phải tự mình chuyển nó về 1 định dạng Sneedacity hỗ trợ, như WAV hay AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp

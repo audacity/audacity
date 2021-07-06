@@ -49,7 +49,7 @@
 #include "Track.h"
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/HelpSystem.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
 #include "widgets/wxTextCtrlWrapper.h"
@@ -86,7 +86,7 @@ const int kSlowTimerInterval = 1000; // ms
 // This timer interval is used in some busy-wait loops and is much shorter.
 const int kTimerInterval = 50; // ms
 
-static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
+static double wxDateTime_to_SneedacityTime(wxDateTime& dateTime)
 {
    return (dateTime.GetHour() * 3600.0) + (dateTime.GetMinute() * 60.0) + dateTime.GetSecond();
 };
@@ -151,7 +151,7 @@ BEGIN_EVENT_TABLE(TimerRecordDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 TimerRecordDialog::TimerRecordDialog(
-   wxWindow* parent, AudacityProject &project, bool bAlreadySaved)
+   wxWindow* parent, SneedacityProject &project, bool bAlreadySaved)
 : wxDialogWrapper(parent, -1, XO("Sneedacity Timer Record"), wxDefaultPosition,
            wxDefaultSize, wxCAPTION)
 , mProject{ project }
@@ -197,7 +197,7 @@ void TimerRecordDialog::OnTimer(wxTimerEvent& WXUNUSED(event))
    if (m_DateTime_Start < dateTime_UNow) {
       m_DateTime_Start = dateTime_UNow;
       m_pDatePickerCtrl_Start->SetValue(m_DateTime_Start);
-      m_pTimeTextCtrl_Start->SetValue(wxDateTime_to_AudacityTime(m_DateTime_Start));
+      m_pTimeTextCtrl_Start->SetValue(wxDateTime_to_SneedacityTime(m_DateTime_Start));
       this->UpdateEnd(); // Keep Duration constant and update End for changed Start.
    }
 }
@@ -260,7 +260,7 @@ void TimerRecordDialog::OnDatePicker_End(wxDateEvent& WXUNUSED(event))
    if (m_DateTime_End < m_DateTime_Start) {
       m_DateTime_End = m_DateTime_Start;
       m_pDatePickerCtrl_End->SetValue(m_DateTime_End);
-      m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
+      m_pTimeTextCtrl_End->SetValue(wxDateTime_to_SneedacityTime(m_DateTime_End));
    }
 
    this->UpdateDuration(); // Keep Start constant and update Duration for changed End.
@@ -307,7 +307,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
       m_fnAutoSaveFile.GetPath(),
       m_fnAutoSaveFile.GetFullName(),
       wxT("aup3"),
-      { FileNames::AudacityProjects },
+      { FileNames::SneedacityProjects },
       wxFD_SAVE | wxRESIZE_BORDER,
       this);
 
@@ -317,7 +317,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
    // If project already exists then abort - we do not allow users to overwrite an existing project
    // unless it is the current project.
    if (wxFileExists(fName) && (projectFileIO.GetFileName() != fName)) {
-      AudacityMessageDialog m(
+      SneedacityMessageDialog m(
          nullptr,
          XO("The selected file name could not be used\nfor Timer Recording because it \
 would overwrite another project.\nPlease try again and select an original name."),
@@ -371,7 +371,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    this->TransferDataFromWindow();
    if (!m_TimeSpan_Duration.IsPositive())
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Duration is zero. Nothing will be recorded."),
          XO("Error in Duration"),
          wxICON_EXCLAMATION | wxOK);
@@ -382,7 +382,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    wxString sTemp = m_fnAutoSaveFile.GetFullPath();
    if (m_pTimerAutoSaveCheckBoxCtrl->IsChecked()) {
       if (!m_fnAutoSaveFile.IsOk() || m_fnAutoSaveFile.IsDir()) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Automatic Save path is invalid."),
             XO("Error in Automatic Save"),
             wxICON_EXCLAMATION | wxOK);
@@ -391,7 +391,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
    }
    if (m_pTimerAutoExportCheckBoxCtrl->IsChecked()) {
       if (!m_fnAutoExportFile.IsOk() || m_fnAutoExportFile.IsDir()) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("Automatic Export path is invalid."),
             XO("Error in Automatic Export"),
             wxICON_EXCLAMATION | wxOK);
@@ -426,7 +426,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 "You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n\nDo you wish to continue?\n\nPlanned recording duration:   %s\nRecording time remaining on disk:   %s")
          .Format( sPlannedTime, sRemainingTime );
 
-      AudacityMessageDialog dlgMessage(
+      SneedacityMessageDialog dlgMessage(
          nullptr,
          sMessage,
          XO("Timer Recording Disk Space Warning"),
@@ -625,7 +625,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
          }
 
          // Show Error Message Box
-         AudacityMessageBox(
+         SneedacityMessageBox(
             sMessage,
             XO("Error"),
             wxICON_EXCLAMATION | wxOK);
@@ -637,7 +637,7 @@ int TimerRecordDialog::ExecutePostRecordActions(bool bWasStopped) {
                             m_pTimerAfterCompleteChoiceCtrl->GetString(iOverriddenAction));
          }
 
-         AudacityMessageBox(
+         SneedacityMessageBox(
             sMessage,
             XO("Timer Recording"),
             wxICON_INFORMATION | wxOK);
@@ -776,7 +776,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                Options{}
                   .MenuEnabled(false)
                   .Format(strFormat)
-                  .Value(true, wxDateTime_to_AudacityTime(m_DateTime_Start)));
+                  .Value(true, wxDateTime_to_SneedacityTime(m_DateTime_Start)));
             S.Name(XO("Start Time"))
                .AddWindow(m_pTimeTextCtrl_Start);
          }
@@ -805,7 +805,7 @@ void TimerRecordDialog::PopulateOrExchange(ShuttleGui& S)
                Options{}
                   .MenuEnabled(false)
                   .Format(strFormat)
-                  .Value(true, wxDateTime_to_AudacityTime(m_DateTime_End)));
+                  .Value(true, wxDateTime_to_SneedacityTime(m_DateTime_End)));
             S.Name(XO("End Time"))
                .AddWindow(m_pTimeTextCtrl_End);
          }
@@ -970,7 +970,7 @@ void TimerRecordDialog::UpdateDuration()
 // Update m_DateTime_End and ctrls based on m_DateTime_Start and m_TimeSpan_Duration.
 void TimerRecordDialog::UpdateEnd()
 {
-   //v Use remaining disk -> record time calcs from AudacityProject::OnTimer to set range?
+   //v Use remaining disk -> record time calcs from SneedacityProject::OnTimer to set range?
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
    //wxLogDebug( "Time start %s end %s", 
    //   m_DateTime_Start.FormatISOCombined(' '),
@@ -983,7 +983,7 @@ void TimerRecordDialog::UpdateEnd()
    // Re-enable range limitation to constrain user input.
    m_pDatePickerCtrl_End->SetRange(m_DateTime_Start, wxInvalidDateTime); // No backdating.
    m_pDatePickerCtrl_End->Refresh();
-   m_pTimeTextCtrl_End->SetValue(wxDateTime_to_AudacityTime(m_DateTime_End));
+   m_pTimeTextCtrl_End->SetValue(wxDateTime_to_SneedacityTime(m_DateTime_End));
 }
 
 ProgressResult TimerRecordDialog::WaitForStart()

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests the audacity pipe.
+"""Tests the sneedacity pipe.
 
 Keep pipe_test.py short!!
 You can make more complicated longer tests to test other functionality
 or to generate screenshots etc in other scripts.
 
-Make sure Audacity is running first and that mod-script-pipe is enabled
+Make sure Sneedacity is running first and that mod-script-pipe is enabled
 before running this script.
 
 Requires Python 2.7 or later. Python 3 is strongly recommended.
@@ -25,18 +25,18 @@ if sys.platform == 'win32':
     EOL = '\r\n\0'
 else:
     print("pipe-test.py, running on linux or mac")
-    TONAME = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-    FROMNAME = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+    TONAME = '/tmp/sneedacity_script_pipe.to.' + str(os.getuid())
+    FROMNAME = '/tmp/sneedacity_script_pipe.from.' + str(os.getuid())
     EOL = '\n'
 
 print("Write to  \"" + TONAME +"\"")
 if not os.path.exists(TONAME):
-    print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+    print(" ..does not exist.  Ensure Sneedacity is running with mod-script-pipe.")
     sys.exit()
 
 print("Read from \"" + FROMNAME +"\"")
 if not os.path.exists(FROMNAME):
-    print(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+    print(" ..does not exist.  Ensure Sneedacity is running with mod-script-pipe.")
     sys.exit()
 
 print("-- Both pipes exist.  Good.")

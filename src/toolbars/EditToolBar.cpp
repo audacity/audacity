@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   EditToolBar.cpp
 
@@ -22,7 +22,7 @@
   window, or within a ToolBarFrame.
 
   All of the controls in this window were custom-written for
-  Audacity - they are not native controls on any platform -
+  Sneedacity - they are not native controls on any platform -
   however, it is intended that the images could be easily
   replaced to allow "skinning" or just customization to
   match the look and feel of each platform.
@@ -75,7 +75,7 @@ BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
 END_EVENT_TABLE()
 
 //Standard constructor
-EditToolBar::EditToolBar( AudacityProject &project )
+EditToolBar::EditToolBar( SneedacityProject &project )
 : ToolBar(project, EditBarID, XO("Edit"), wxT("Edit"))
 {
 }
@@ -254,7 +254,7 @@ static const struct Entry {
 
 void EditToolBar::ForAllButtons(int Action)
 {
-   AudacityProject *p;
+   SneedacityProject *p;
    CommandManager* cm = nullptr;
 
    if( Action & ETBActEnableDisable ){
@@ -293,7 +293,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
    // Be sure the pop-up happens even if there are exceptions, except for buttons which toggle.
    auto cleanup = finally( [&] { mButtons[id]->InteractionOver();});
 
-   AudacityProject *p = &mProject;
+   SneedacityProject *p = &mProject;
    auto &cm = CommandManager::Get( *p );
 
    auto flags = MenuManager::Get(*p).GetUpdateFlags();
@@ -313,7 +313,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
 }
 
 static RegisteredToolbarFactory factory{ EditBarID,
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       return ToolBar::Holder{ safenew EditToolBar{ project } }; }
 };
 

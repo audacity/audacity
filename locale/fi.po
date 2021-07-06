@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2021-06-09 22:01+0300\n"
 "Last-Translator: Sampo Hippeläinen\n"
@@ -50,14 +50,14 @@ msgstr "Järjestelmä"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid "Problem Report for Sneedacity"
-msgstr "Audacityn ongelmailmoitus"
+msgstr "Sneedacityn ongelmailmoitus"
 
 #: libraries/lib-strings/UnusedStrings.h
 msgid ""
 "Click \"Send\" to submit the report to Sneedacity. This information is "
 "collected anonymously."
 msgstr ""
-"Napsauta \"Lähetä\" lähettääksesi tämän ilmoituksen Audacitylle. Tiedot "
+"Napsauta \"Lähetä\" lähettääksesi tämän ilmoituksen Sneedacitylle. Tiedot "
 "kerätään anonyymisti."
 
 #: libraries/lib-strings/UnusedStrings.h
@@ -180,7 +180,7 @@ msgstr "Päivityksen lataus epäonnistui."
 #: libraries/lib-strings/UnusedStrings.h
 msgctxt "update dialog"
 msgid "Can't open the Sneedacity download link."
-msgstr "Audacityn latauslinkkiä ei voitu avata."
+msgstr "Sneedacityn latauslinkkiä ei voitu avata."
 
 #. i18n-hint Substitution of version number for %s.
 #: libraries/lib-strings/UnusedStrings.h
@@ -324,7 +324,7 @@ msgstr ""
 msgid "Script was not saved."
 msgstr "Skriptiä ei ole tallennettu."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -738,8 +738,8 @@ msgid "Credits"
 msgstr "Tekijät"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
-msgstr "DarkAudacityn mukauttaminen"
+msgid "DarkSneedacity Customisation"
+msgstr "DarkSneedacityn mukauttaminen"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -816,7 +816,7 @@ msgstr "Käytössä"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 msgid "The Build"
 msgstr "Koontiversio"
@@ -852,7 +852,7 @@ msgstr "Koostetyyppi:"
 msgid "Compiler:"
 msgstr "Kääntäjä:"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 msgid "Installation Prefix:"
 msgstr "Asennuksen etuliite:"
@@ -861,7 +861,7 @@ msgstr "Asennuksen etuliite:"
 msgid "Settings folder:"
 msgstr "Asetuskansio:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "Ydinkirjastot"
@@ -1069,16 +1069,16 @@ msgstr ""
 msgid "Error"
 msgstr "Virhe"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "Kohteen %s poisto epäonnistui"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "Epäonnistui!"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1090,11 +1090,11 @@ msgstr ""
 "Tämä on kertaluonteinen kysymys 'asennuksen' jälkeen, jossa pyysit "
 "oletusasetusten palauttamista."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
-msgstr "Palauta Audacityn asetukset"
+msgstr "Palauta Sneedacityn asetukset"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1105,45 +1105,45 @@ msgstr ""
 "\n"
 "Se on poistettu luettelosta 'Viimeksi avatut tiedostot'."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr "SQLite-kirjastoa ei voitu alustaa.  Sneedacity ei voi käynnistyä."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Lohkon koko täytyy olla välillä 256 - 100000000\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity käynnistyy..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Uusi"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Avaa..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "Avaa &viimeisin..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
-msgstr "&Tietoja Audacitystä..."
+msgstr "&Tietoja Sneedacitystä..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&Asetukset..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Tiedosto"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
 "Sneedacity needs a place where automatic cleanup programs won't delete the "
@@ -1156,7 +1156,7 @@ msgstr ""
 "poista väliaikaisia tiedostoja.\n"
 "Anna sopiva hakemisto asetusikkunassa."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1164,24 +1164,24 @@ msgstr ""
 "Sneedacity ei löytänyt paikkaa väliaikaisille tiedostoille.\n"
 "Ole hyvä ja syötä kelvollinen hakemisto asetusikkunassa."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
 msgstr ""
-"Sneedacity on nyt sulkeutumassa. Audacityn uudelleenkäynnistys ottaa uuden "
+"Sneedacity on nyt sulkeutumassa. Sneedacityn uudelleenkäynnistys ottaa uuden "
 "tilapäishakemiston käyttöön."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
 "\n"
 msgstr ""
-"Kahden Audacityn samanaikaisesta käytöstä voi seurata\n"
+"Kahden Sneedacityn samanaikaisesta käytöstä voi seurata\n"
 "datan menetys tai järjestelmän kaatuminen.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1189,31 +1189,31 @@ msgstr ""
 "Sneedacity ei voinut lukita väliaikaistiedostojen hakemistoa.\n"
 "Se saattaa olla toisen Sneedacity-kopion käytössä.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
-msgstr "Haluatko silti käynnistää Audacityn?"
+msgstr "Haluatko silti käynnistää Sneedacityn?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "Virhe tilapäiskansion lukitsemisessa"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
-msgstr "Järjestelmä on havainnut toisen käynnissä olevan Audacityn.\n"
+msgstr "Järjestelmä on havainnut toisen käynnissä olevan Sneedacityn.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
-"Jos tarvitset avata useamman projektin Audacityyn, \n"
-"käytä käynnissä olevan Audacityn Uusi tai Avaa -komentoa.\n"
+"Jos tarvitset avata useamman projektin Sneedacityyn, \n"
+"käytä käynnissä olevan Sneedacityn Uusi tai Avaa -komentoa.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity on jo käynnissä"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1226,11 +1226,11 @@ msgstr ""
 "Järjestelmä tulee ehkä käynnistää\n"
 "uudelleen."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Startup Failure"
 msgstr "Sneedacity-käynnistysvirhe"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1243,7 +1243,7 @@ msgstr ""
 "Järjestelmä tulee ehkä käynnistää\n"
 "uudelleen."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1256,7 +1256,7 @@ msgstr ""
 "Järjestelmä tulee ehkä käynnistää\n"
 "uudelleen."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1269,77 +1269,77 @@ msgstr ""
 "Järjestelmä tulee ehkä käynnistää\n"
 "uudelleen."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"Audacityn IPC-palvelin ei käynnistynyt.\n"
+"Sneedacityn IPC-palvelin ei käynnistynyt.\n"
 "\n"
 "Resurssit saattavat olla vähissä.\n"
 "Järjestelmä tulee ehkä käynnistää\n"
 "uudelleen."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr "Käynnistyksen aikana tapahtui korjaamaton virhe"
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "aseta levylohkon enimmäiskoko tavuina"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "this help message"
 msgstr "tämä ohje"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "run self diagnostics"
 msgstr "suorita itsediagnostiikka"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "display Sneedacity version"
-msgstr "näytä Audacityn versio"
+msgstr "näytä Sneedacityn versio"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "audio or project file name"
 msgstr "ääni- tai projektitiedoston nimi"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
 "associated with Sneedacity. \n"
 "\n"
 "Associate them, so they open on double-click?"
 msgstr ""
-"Audacityn projektitiedostoja (.aup3) ei ole\n"
-"asetettu käynnistymään Audacityssä.\n"
+"Sneedacityn projektitiedostoja (.aup3) ei ole\n"
+"asetettu käynnistymään Sneedacityssä.\n"
 "\n"
 "Kytketäänkö tiedostomuoto, jotta voit avata\n"
 "projektitiedostot kaksoisnapsautuksella?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
-msgstr "Audacityn projektitiedostot"
+msgstr "Sneedacityn projektitiedostot"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr "Viesti"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "Sneedacity Configuration Error"
-msgstr "Audacityn määritysvirhe"
+msgstr "Sneedacityn määritysvirhe"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1365,50 +1365,50 @@ msgstr ""
 "\n"
 "Voit yrittää korjata ongelman ja painaa \"Yritä uudelleen\" jatkaaksesi.\n"
 "\n"
-"Jos päätät sulkea Audacityn, projekti saattaa jäädä keskeneräiseen tilaan ja "
-"Audacityn pitää palauttaa se ensi kerralla."
+"Jos päätät sulkea Sneedacityn, projekti saattaa jäädä keskeneräiseen tilaan ja "
+"Sneedacityn pitää palauttaa se ensi kerralla."
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Ohje"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Sneedacity"
 msgstr "&Lopeta Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr "&Yritä uudelleen"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
-msgstr "Audacityn loki"
+msgstr "Sneedacityn loki"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "&Tallenna..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "Tyhj&ennä"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Sulje"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "log.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr "Tallenna loki kansioon:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "Lokia ei voitu tallentaa tiedostoon: %s"
@@ -1709,7 +1709,7 @@ msgid ""
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Joitakin projekteja ei tallennettu oikein Audacityn viimeisen käyttökerran "
+"Joitakin projekteja ei tallennettu oikein Sneedacityn viimeisen käyttökerran "
 "aikana, mutta ne voidaan palauttaa automaattisesti.\n"
 "\n"
 "Palautuksen jälkeen projektit tulee tallentaa, tai muuten niiden tiedot "
@@ -2313,7 +2313,7 @@ msgstr ""
 
 #: src/CrashReport.cpp
 msgid "Sneedacity Support Data"
-msgstr "Audacityn tukidata"
+msgstr "Sneedacityn tukidata"
 
 #: src/CrashReport.cpp src/DBConnection.cpp src/ProjectFileIO.cpp
 msgid "This may take several seconds"
@@ -3047,7 +3047,7 @@ msgstr "<br><br>Käyttämäsi Sneedacity on <b>beta-testiversio.</b>."
 
 #: src/HelpText.cpp
 msgid "Get the Official Released Version of Sneedacity"
-msgstr "Hanki Audacityn virallinen julkaisuversio"
+msgstr "Hanki Sneedacityn virallinen julkaisuversio"
 
 #: src/HelpText.cpp
 msgid ""
@@ -3062,7 +3062,7 @@ msgid ""
 "You can help us get Sneedacity ready for release by joining our [[https://www."
 "audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"Voit auttaa saamaan Audacityn valmiiksi julkaistavaksi liittymällä [[https://"
+"Voit auttaa saamaan Sneedacityn valmiiksi julkaistavaksi liittymällä [[https://"
 "www.audacityteam.org/community/|yhteisöön]].<hr><br><br>"
 
 #: src/HelpText.cpp
@@ -3323,11 +3323,11 @@ msgstr "Vähintään yhtä tallennettua merkkiä ei voitu lukea."
 #. * time Sneedacity has been run.
 #: src/LangChoice.cpp
 msgid "Sneedacity First Run"
-msgstr "Audacityn ensimmäinen käynnistys"
+msgstr "Sneedacityn ensimmäinen käynnistys"
 
 #: src/LangChoice.cpp
 msgid "Choose Language for Sneedacity to use:"
-msgstr "Valitse Audacityn kieli:"
+msgstr "Valitse Sneedacityn kieli:"
 
 #. i18n-hint: The %s's are replaced by translated and untranslated
 #. * versions of language names.
@@ -3364,7 +3364,7 @@ msgstr "Avataan Sneedacity-projektia"
 #: src/LyricsWindow.cpp
 #, c-format
 msgid "Sneedacity Karaoke%s"
-msgstr "Audacityn karaoke%s"
+msgstr "Sneedacityn karaoke%s"
 
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
@@ -3416,7 +3416,7 @@ msgstr "Miksataan ja hahmonnetaan raitoja"
 #: src/MixerBoard.cpp
 #, c-format
 msgid "Sneedacity Mixer Board%s"
-msgstr "Audacityn miksauspöytä%s"
+msgstr "Sneedacityn miksauspöytä%s"
 
 #. i18n-hint: title of the Gain slider, used to adjust the volume
 #. i18n-hint: Title of the Gain slider, used to adjust the volume
@@ -3921,7 +3921,7 @@ msgid ""
 msgstr ""
 "Äänitetty ääni menetettiin merkityissä paikoissa. Mahdolliset syyt:\n"
 "\n"
-"Muut sovellukset kilpailevat Audacityn kanssa suoritinajasta\n"
+"Muut sovellukset kilpailevat Sneedacityn kanssa suoritinajasta\n"
 "\n"
 "Tallennat suoraan hitaaseen ulkoiseen tallennuslaitteeseen\n"
 
@@ -3929,7 +3929,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Sammuta katkosten tunnistus"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -4210,7 +4210,7 @@ msgid ""
 "\n"
 "You will need to upgrade to open it."
 msgstr ""
-"Projekti luotiin Audacityn uudemmalla versiolla.\n"
+"Projekti luotiin Sneedacityn uudemmalla versiolla.\n"
 "\n"
 "Päivitä Sneedacity avataksesi sen."
 
@@ -4373,7 +4373,7 @@ msgid ""
 "open this file."
 msgstr ""
 "Tämän tiedoston on tallentanut Sneedacity %s.\n"
-"Käytät Audacityn versiota %s. Sinun tulee päivittää uudempi versio tiedoston "
+"Käytät Sneedacityn versiota %s. Sinun tulee päivittää uudempi versio tiedoston "
 "avaamiseksi."
 
 #: src/ProjectFileIO.cpp
@@ -4452,7 +4452,7 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Tätä projektia ei tallennettu oikein Audacityn viimeisen käyttökerran "
+"Tätä projektia ei tallennettu oikein Sneedacityn viimeisen käyttökerran "
 "aikana.\n"
 "\n"
 "Se on palautettu viimeisimpään vedokseen."
@@ -4464,7 +4464,7 @@ msgid ""
 "It has been recovered to the last snapshot, but you must save it\n"
 "to preserve its contents."
 msgstr ""
-"Projekti ei tallentunut oikein viime Audacityn käyttökerralla.\n"
+"Projekti ei tallentunut oikein viime Sneedacityn käyttökerralla.\n"
 "\n"
 "Se on palautettu viimeisimpään vedokseen, mutta sinun\n"
 "pitää tallentaa se säilyttääksesi sen sisällön."
@@ -4642,7 +4642,7 @@ msgstr ""
 "Yrität avata automaattisesti luotua varmuuskopiota.\n"
 "Tämä voi aiheuttaa vakavaa tietojen häviämistä.\n"
 "\n"
-"Avaa sen sijaan varsinainen Audacityn projektitiedosto."
+"Avaa sen sijaan varsinainen Sneedacityn projektitiedosto."
 
 #: src/ProjectFileManager.cpp
 msgid "Warning - Backup File Detected"
@@ -4744,7 +4744,7 @@ msgstr "Tietokannan automaattinen varmuuskopiointi epäonnistui."
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Sneedacity version %s"
-msgstr "Tervetuloa käyttämään Audacityn versiota %s"
+msgstr "Tervetuloa käyttämään Sneedacityn versiota %s"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
@@ -5149,7 +5149,7 @@ msgstr "Aktivointitaso (dB):"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Sneedacity!"
-msgstr "Tervetuloa käyttämään Audacityä!"
+msgstr "Tervetuloa käyttämään Sneedacityä!"
 
 #: src/SplashDialog.cpp
 msgid "Don't show this again at start up"
@@ -5464,7 +5464,7 @@ msgstr "Aikaraita"
 
 #: src/TimerRecordDialog.cpp
 msgid "Sneedacity Timer Record"
-msgstr "Audacityn ajastettu äänitys"
+msgstr "Sneedacityn ajastettu äänitys"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -5562,7 +5562,7 @@ msgstr "Toiminto ajastetun tallennuksen jälkeen:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Sneedacity Timer Record Progress"
-msgstr "Audacityn ajastettu äänitys käynnissä"
+msgstr "Sneedacityn ajastettu äänitys käynnissä"
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording stopped."
@@ -5717,7 +5717,7 @@ msgstr "Älä tee mitään"
 
 #: src/TimerRecordDialog.cpp
 msgid "Exit Sneedacity"
-msgstr "Poistu Audacitystä"
+msgstr "Poistu Sneedacitystä"
 
 #: src/TimerRecordDialog.cpp
 msgid "Restart system"
@@ -5741,7 +5741,7 @@ msgstr "Ajoitettu pysähtymään:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Sneedacity Timer Record - Waiting for Start"
-msgstr "Audacityn ajastettu äänitys - odottaa aloitusta"
+msgstr "Sneedacityn ajastettu äänitys - odottaa aloitusta"
 
 #. i18n-hint: "in" means after a duration of time,
 #. which is shown below this string
@@ -5950,12 +5950,12 @@ msgstr "Leikkauslinjan laajentamiseksi ei ole tarpeeksi tilaa"
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "Tätä toimintoa ei voi tehdä, kunnes kohteen %s tuonti on valmis."
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Sneedacity"
 msgstr "Sneedacity"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5966,13 +5966,13 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "%s kesken..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5981,7 +5981,7 @@ msgstr "%s kesken..."
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr "EPÄONN"
 
@@ -6245,7 +6245,7 @@ msgstr "Sneedacity-tiimi"
 
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Sneedacity"
-msgstr "Tarjoaa sisäänrakennettuja komentoja Audacitylle"
+msgstr "Tarjoaa sisäänrakennettuja komentoja Sneedacitylle"
 
 #: src/commands/LoadCommands.cpp
 msgid "Unknown built-in command name"
@@ -8704,7 +8704,7 @@ msgstr "Sisäänrakennetut tehosteet"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Sneedacity"
-msgstr "Huolehtii Audacityn sisäänrakennetuista tehosteista"
+msgstr "Huolehtii Sneedacityn sisäänrakennetuista tehosteista"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
@@ -9812,7 +9812,7 @@ msgstr "VST-tehosteet"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Adds the ability to use VST effects in Sneedacity."
-msgstr "Mahdollistaa VST-tehosteiden käytön Audacityssä."
+msgstr "Mahdollistaa VST-tehosteiden käytön Sneedacityssä."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Scanning Shell VST"
@@ -9866,7 +9866,7 @@ msgid ""
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
 "Joidenkin VST-tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
+"palauttamista Sneedacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
 "tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
 "korjaamaan viiveet, mutta se ei välttämättä toimi kaikille VST-tehosteille."
 
@@ -9912,7 +9912,7 @@ msgstr "Tavallinen VST-ohjelmatiedosto"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Sneedacity VST preset file"
-msgstr "Audacityn VST-esiasetustiedosto"
+msgstr "Sneedacityn VST-esiasetustiedosto"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
@@ -10001,7 +10001,7 @@ msgstr "Audio Units -tehosteet"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Provides Audio Unit Effects support to Sneedacity"
-msgstr "Huolehtii Audacityn Audio Units -tehostetuesta"
+msgstr "Huolehtii Sneedacityn Audio Units -tehostetuesta"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Could not find component"
@@ -10024,7 +10024,7 @@ msgid ""
 "effects."
 msgstr ""
 "Joidenkin Audio Units -tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
+"palauttamista Sneedacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
 "tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
 "korjaamaan viiveet, mutta se ei välttämättä toimi kaikille Audio Units -"
 "tehosteille."
@@ -10203,7 +10203,7 @@ msgid ""
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 "Joidenkin LADSPA-tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
+"palauttamista Sneedacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
 "tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
 "korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LADSPA-"
 "tehosteille."
@@ -10245,7 +10245,7 @@ msgid ""
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
 "Joidenkin LV2-tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
+"palauttamista Sneedacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
 "tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
 "korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LV2-tehosteille."
 
@@ -10289,7 +10289,7 @@ msgstr "LV2-tehosteet"
 
 #: src/effects/lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Sneedacity"
-msgstr "Huolehtii Audacityn LV2-tehostetuesta"
+msgstr "Huolehtii Sneedacityn LV2-tehostetuesta"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
@@ -10297,7 +10297,7 @@ msgstr "Nyquist-tehosteet"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Provides Nyquist Effects support to Sneedacity"
-msgstr "Huolehtii Audacityn Nyquist-tehostetuesta"
+msgstr "Huolehtii Sneedacityn Nyquist-tehostetuesta"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
@@ -10542,7 +10542,7 @@ msgstr "Vamp-tehosteet"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Provides Vamp Effects support to Sneedacity"
-msgstr "Huolehtii Audacityn Vamp-tehostetuesta"
+msgstr "Huolehtii Sneedacityn Vamp-tehostetuesta"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid ""
@@ -11779,7 +11779,7 @@ msgid ""
 "Please download the latest version of 'LAME for Sneedacity'."
 msgstr ""
 "Olet linkittämässä kohteeseen lame_enc.dll v%d.%d. Tämä versio ei ole "
-"yhteensopiva Audacityn %d.%d.%d kanssa.\n"
+"yhteensopiva Sneedacityn %d.%d.%d kanssa.\n"
 "Lataa uusin versio \"LAME for Sneedacity\"."
 
 #: src/export/ExportMP3.cpp
@@ -12188,7 +12188,7 @@ msgstr "Valitse tuotavat virrat"
 #: src/import/Import.cpp
 #, c-format
 msgid "This version of Sneedacity was not compiled with %s support."
-msgstr "Tähän Audacityn versioon ei ole käännetty tukea muodolle %s."
+msgstr "Tähän Sneedacityn versioon ei ole käännetty tukea muodolle %s."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12201,7 +12201,7 @@ msgid ""
 msgstr ""
 "\"%s\" on ääni-CD-raita. \n"
 "Sneedacity ei voi avata CD:tä suoraan. \n"
-"Pura (rippaa) CD-raidat Audacityn tukemaan\n"
+"Pura (rippaa) CD-raidat Sneedacityn tukemaan\n"
 "äänimuotoon, kuten WAV tai AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -12260,7 +12260,7 @@ msgstr ""
 "\"%s\" on salattu äänitiedosto. \n"
 "Nämä ovat tyypillisesti peräisin verkkomusiikkikaupasta. \n"
 "Sneedacity ei voi avata salattuja tiedostoja. \n"
-"Yritä äänittää tiedosto Audacityllä, tai polttaa se CD-äänilevylle\n"
+"Yritä äänittää tiedosto Sneedacityllä, tai polttaa se CD-äänilevylle\n"
 "ja pura sitten CD-raita tuettuun äänimuotoon, kuten WAV tai AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -12287,7 +12287,7 @@ msgstr ""
 "\"%s\" on nuottipohjainen tiedosto, ei äänitiedosto. \n"
 "Sneedacity ei voi avata tällaista tiedostoa.  \n"
 "Yritä muuttaa se äänitiedostoksi, kuten WAV tai AIFF ja \n"
-"sitten tuoda se, tai äänittää se Audacityllä."
+"sitten tuoda se, tai äänittää se Sneedacityllä."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12426,10 +12426,10 @@ msgid ""
 "Use a version of Sneedacity prior to v3.0.0 to upgrade the project and then\n"
 "you may import it with this version of Sneedacity."
 msgstr ""
-"Projekti tallennettiin Audacityn versiolla 1.0 tai vanhemmalla.\n"
+"Projekti tallennettiin Sneedacityn versiolla 1.0 tai vanhemmalla.\n"
 "Koska tiedostomuoto on muuttunut, tämä versio ei voi tuoda sitä.\n"
 "\n"
-"Käytä Audacityn vanhempaa versiota (vanhempi kuin v3.0.0), tuo\n"
+"Käytä Sneedacityn vanhempaa versiota (vanhempi kuin v3.0.0), tuo\n"
 "projekti sillä ja sitten tuo päivitetty projekti tällä Sneedacity-versiolla."
 
 #: src/import/ImportAUP.cpp
@@ -12479,7 +12479,7 @@ msgid ""
 "MIDI tracks found in project file, but this build of Sneedacity does not "
 "include MIDI support, bypassing track."
 msgstr ""
-"Projektitiedostossa on MIDI-raitoja, mutta tämä koontiversio Audacitysta ei "
+"Projektitiedostossa on MIDI-raitoja, mutta tämä koontiversio Sneedacitysta ei "
 "tue niitä, joten ne ohitetaan."
 
 #: src/import/ImportAUP.cpp
@@ -13650,7 +13650,7 @@ msgstr "&Aloitusopas"
 
 #: src/menus/HelpMenus.cpp
 msgid "Sneedacity &Manual"
-msgstr "Audacityn &käyttöohje"
+msgstr "Sneedacityn &käyttöohje"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -14590,7 +14590,7 @@ msgstr "Luotiin uusi merkkiraita"
 msgid ""
 "This version of Sneedacity only allows one time track for each project window."
 msgstr ""
-"Tämä Audacityn versio sallii vain yhden aikaraidan kussakin projekti-"
+"Tämä Sneedacityn versio sallii vain yhden aikaraidan kussakin projekti-"
 "ikkunassa."
 
 #: src/menus/TrackMenus.cpp
@@ -15518,7 +15518,7 @@ msgstr "Laajennusvalinnat"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Check for updated plugins when Sneedacity starts"
-msgstr "Tarkista päivitetyt liitännäiset Audacityn käynnistyessä"
+msgstr "Tarkista päivitetyt liitännäiset Sneedacityn käynnistyessä"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Rescan plugins next time Sneedacity is started"
@@ -15600,7 +15600,7 @@ msgid ""
 msgstr ""
 "Jossakin kohteista on välilyöntejä (välilyönti, rivinvaihto, sarkainmerkki "
 "tai rivinsiirto), jotka aiheuttavat ongelmia hahmontunnistuksessa. Jos et "
-"ole varma, niiden poistamista suositellaan. Haluatko Audacityn tekevän niin "
+"ole varma, niiden poistamista suositellaan. Haluatko Sneedacityn tekevän niin "
 "puolestasi?"
 
 #: src/prefs/ExtImportPrefs.cpp
@@ -15711,7 +15711,7 @@ msgstr "Pidä merkki vaikka valinta tarraisi siihen"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "B&lend system and Sneedacity theme"
-msgstr "Sulauta järjestelmän ja Audacityn teemaa"
+msgstr "Sulauta järjestelmän ja Sneedacityn teemaa"
 
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
@@ -15889,7 +15889,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Sneedacity keyboard shortcuts..."
-msgstr "Valitse Audacityn pikanäppäimet sisältävä XML-tiedosto..."
+msgstr "Valitse Sneedacityn pikanäppäimet sisältävä XML-tiedosto..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -16392,7 +16392,7 @@ msgstr "&Hankaus jättää toistopään kiinnityksen huomiotta"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Sneedacity Preferences"
-msgstr "Audacityn asetukset"
+msgstr "Sneedacityn asetukset"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Category"
@@ -16823,7 +16823,7 @@ msgstr ""
 "-tiedostot ja muokkaa niissä olevia kuvia sekä värejä käyttäen "
 "kuvankäsittelyohjelmaa, kuten Gimp.\n"
 "\n"
-"Lataa muutetut kuvat ja värit takaisin Audacityyn napsauttamalla \"Lataa "
+"Lataa muutetut kuvat ja värit takaisin Sneedacityyn napsauttamalla \"Lataa "
 "teemavälimuisti\".\n"
 "\n"
 "(Tämä vaikuttaa tällä hetkellä vain siirtotyökaluriviin ja aaltoraidan "
@@ -17519,7 +17519,7 @@ msgstr "Aika&työkalupalkki"
 #: src/toolbars/ToolBar.cpp
 #, c-format
 msgid "Sneedacity %s Toolbar"
-msgstr "Audacityn %s-palkki"
+msgstr "Sneedacityn %s-palkki"
 
 #: src/toolbars/ToolBar.cpp
 msgid "Click and drag to resize toolbar"
@@ -20504,7 +20504,7 @@ msgid ""
 "<a href=\"~a\">Sneedacity</a> by Steve\n"
 "Daulton"
 msgstr ""
-"Tehty <a href=\"~a\">Audacitylle</a>-ohjelman\n"
+"Tehty <a href=\"~a\">Sneedacitylle</a>-ohjelman\n"
 "<span>Sample Data Exportilla</span>, tekijänä Steve\n"
 "Daulton"
 
@@ -20981,10 +20981,10 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Vie äänitys"
 
 #~ msgid "Ogg Vorbis support is not included in this build of Sneedacity"
-#~ msgstr "Ogg Vorbis -tukea ei ole sisällytetty tähän Audacityn versioon"
+#~ msgstr "Ogg Vorbis -tukea ei ole sisällytetty tähän Sneedacityn versioon"
 
 #~ msgid "FLAC support is not included in this build of Sneedacity"
-#~ msgstr "FLAC-tukea ei ole sisällytetty tähän Audacityn versioon"
+#~ msgstr "FLAC-tukea ei ole sisällytetty tähän Sneedacityn versioon"
 
 #~ msgid "Command %s not implemented yet"
 #~ msgstr "Komentoa %s ei ole vielä toteutettu"
@@ -21038,7 +21038,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Tallennetaan äänitettä levylle"
 
 #~ msgid "Sneedacity projects"
-#~ msgstr "Audacityn projektit"
+#~ msgstr "Sneedacityn projektit"
 
 #~ msgid "Reclaimable Space"
 #~ msgstr "Takaisin saatava tila"
@@ -21046,7 +21046,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid ""
 #~ "Sneedacity cannot start because the settings file at %s is not writable."
 #~ msgstr ""
-#~ "Audacityä ei voi käynnistää, koska asetustiedostoon %s ei voi kirjoittaa."
+#~ "Sneedacityä ei voi käynnistää, koska asetustiedostoon %s ei voi kirjoittaa."
 
 #~ msgid ""
 #~ "This file was saved by Sneedacity version %s. The format has changed. \n"
@@ -21059,7 +21059,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "\n"
 #~ "Open this file now?"
 #~ msgstr ""
-#~ "Tämä tiedosto oli tallennettu Audacityn versiolla %s. Tiedostomuoto on "
+#~ "Tämä tiedosto oli tallennettu Sneedacityn versiolla %s. Tiedostomuoto on "
 #~ "sittemmin muuttunut. \n"
 #~ "\n"
 #~ "Sneedacity voi yrittää avata ja tallentaa tämän tiedoston, mutta "
@@ -21195,7 +21195,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "\"%s\" is an Sneedacity Project file. \n"
 #~ "Use the 'File > Open' command to open Sneedacity Projects."
 #~ msgstr ""
-#~ "\"%s\" on Audacityn projektitiedosto. \n"
+#~ "\"%s\" on Sneedacityn projektitiedosto. \n"
 #~ "Avaa Sneedacity-projekti käyttämällä Tiedosto > Avaa."
 
 #~ msgid ""
@@ -21387,7 +21387,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Tiedostodialogi epäonnistui, virhekoodi %0lx."
 
 #~ msgid "About Sneedacity"
-#~ msgstr "Tietoja Audacitystä"
+#~ msgstr "Tietoja Sneedacitystä"
 
 #~ msgid "<h3>Sneedacity "
 #~ msgstr "<h3>Sneedacity "
@@ -21656,7 +21656,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Luo ääntä nolla amplitudilla"
 
 #~ msgid "audio to Sneedacity. When not compensating for this delay, you will "
-#~ msgstr "audio Audacityyn. Jos tätä viiveettä ei kompensoida , voit "
+#~ msgstr "audio Sneedacityyn. Jos tätä viiveettä ei kompensoida , voit "
 
 #~ msgid "Enabling this option will provide that compensation, but it may "
 #~ msgstr "Tämän vaihtoehdon salliminen tarjoaa korvausta, mutta se voi "
@@ -22484,7 +22484,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "perustaja"
 
 #~ msgid "Sneedacity Support Team"
-#~ msgstr "Audacityn tukitiimi"
+#~ msgstr "Sneedacityn tukitiimi"
 
 #~ msgid "Emeritus Developers"
 #~ msgstr "Emeritus kehittäjät"
@@ -22493,7 +22493,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "<center><h3>Mistä saan apua</h3></center>"
 
 #~ msgid "Welcome to Sneedacity "
-#~ msgstr "Tervetuloa käyttämään Audacityä"
+#~ msgstr "Tervetuloa käyttämään Sneedacityä"
 
 #~ msgid ""
 #~ " For even quicker answers, all the online resources above are "

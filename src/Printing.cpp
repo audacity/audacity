@@ -8,7 +8,7 @@
 
 *******************************************************************//*!
 
-\class AudacityPrintout
+\class SneedacityPrintout
 \brief Derived from wxPrintout, this class helps with printing.
 
 *//*******************************************************************/
@@ -28,7 +28,7 @@
 #include "ViewInfo.h"
 #include "Track.h"
 #include "widgets/Ruler.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 #include "TrackPanelDrawingContext.h"
 
@@ -41,10 +41,10 @@ wxPrintData &gPrintData()
    return theData;
 }
 
-class AudacityPrintout final : public wxPrintout
+class SneedacityPrintout final : public wxPrintout
 {
  public:
-   AudacityPrintout(wxString title,
+   SneedacityPrintout(wxString title,
                     TrackList *tracks, TrackPanel &panel):
       wxPrintout(title),
       mTracks(tracks)
@@ -62,7 +62,7 @@ class AudacityPrintout final : public wxPrintout
    TrackList *mTracks;
 };
 
-bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
+bool SneedacityPrintout::OnPrintPage(int WXUNUSED(page))
 {
    wxDC *dc = GetDC();
    if (!dc)
@@ -135,17 +135,17 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    return true;
 }
 
-bool AudacityPrintout::HasPage(int page)
+bool SneedacityPrintout::HasPage(int page)
 {
    return (page==1);
 }
 
-bool AudacityPrintout::OnBeginDocument(int startPage, int endPage)
+bool SneedacityPrintout::OnBeginDocument(int startPage, int endPage)
 {
    return wxPrintout::OnBeginDocument(startPage, endPage);
 }
 
-void AudacityPrintout::GetPageInfo(int *minPage, int *maxPage,
+void SneedacityPrintout::GetPageInfo(int *minPage, int *maxPage,
                                    int *selPageFrom, int *selPageTo)
 {
    *minPage = 1;
@@ -171,10 +171,10 @@ void HandlePrint(
    wxPrintDialogData printDialogData(gPrintData());
 
    wxPrinter printer(&printDialogData);
-   AudacityPrintout printout(name, tracks, panel);
+   SneedacityPrintout printout(name, tracks, panel);
    if (!printer.Print(parent, &printout, true)) {
       if (wxPrinter::GetLastError() == wxPRINTER_ERROR) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("There was a problem printing."),
             XO("Print"),
             wxOK);

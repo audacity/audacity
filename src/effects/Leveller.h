@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Leveller.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_LEVELER__
-#define __AUDACITY_EFFECT_LEVELER__
+#ifndef __SNEEDACITY_EFFECT_LEVELER__
+#define __SNEEDACITY_EFFECT_LEVELER__
 
 // PRL: no longer used
 

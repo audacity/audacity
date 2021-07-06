@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TruncSilence.h
 
@@ -14,8 +14,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_TRUNC_SILENCE__
-#define __AUDACITY_EFFECT_TRUNC_SILENCE__
+#ifndef __SNEEDACITY_EFFECT_TRUNC_SILENCE__
+#define __SNEEDACITY_EFFECT_TRUNC_SILENCE__
 
 #include "Effect.h"
 

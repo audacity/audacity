@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 PopupMenuTable.h
 
@@ -15,8 +15,8 @@ tables, and automatically attaches and detaches the event handlers.
 
 **********************************************************************/
 
-#ifndef __AUDACITY_POPUP_MENU_TABLE__
-#define __AUDACITY_POPUP_MENU_TABLE__
+#ifndef __SNEEDACITY_POPUP_MENU_TABLE__
+#define __SNEEDACITY_POPUP_MENU_TABLE__
 
 class wxCommandEvent;
 
@@ -31,7 +31,7 @@ class wxCommandEvent;
 class PopupMenuHandler;
 class PopupMenuTable;
 
-struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
+struct SNEEDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
 {
    enum Type { Item, RadioItem, CheckItem };
    using InitFunction =
@@ -60,7 +60,7 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    ~PopupMenuTableEntry() override;
 };
 
-struct AUDACITY_DLL_API PopupSubMenu : Registry::ConcreteGroupItem< false >
+struct SNEEDACITY_DLL_API PopupSubMenu : Registry::ConcreteGroupItem< false >
    , MenuTable::WholeMenu
 {
    TranslatableString caption;
@@ -100,7 +100,7 @@ struct PopupMenuVisitor : public MenuVisitor {
    PopupMenuTable &mTable;
 };
 
-class AUDACITY_DLL_API PopupMenuTable : public PopupMenuHandler
+class SNEEDACITY_DLL_API PopupMenuTable : public PopupMenuHandler
 {
 public:
    using Entry = PopupMenuTableEntry;

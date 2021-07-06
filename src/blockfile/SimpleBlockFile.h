@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SimpleBlockFile.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SIMPLE_BLOCKFILE__
-#define __AUDACITY_SIMPLE_BLOCKFILE__
+#ifndef __SNEEDACITY_SIMPLE_BLOCKFILE__
+#define __SNEEDACITY_SIMPLE_BLOCKFILE__
 
 #include "../BlockFile.h"
 

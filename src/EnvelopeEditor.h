@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   EnvelopeEditor.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ENVELOPE_EDITOR__
-#define __AUDACITY_ENVELOPE_EDITOR__
+#ifndef __SNEEDACITY_ENVELOPE_EDITOR__
+#define __SNEEDACITY_ENVELOPE_EDITOR__
 
 class wxMouseEvent;
 class wxRect;
@@ -19,7 +19,7 @@ class ZoomInfo;
 
 // A class that holds state for the duration of dragging
 // of an envelope point.
-class AUDACITY_DLL_API EnvelopeEditor
+class SNEEDACITY_DLL_API EnvelopeEditor
 {
 public:
    static void DrawPoints(

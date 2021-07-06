@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WavelTrackButtonHandles.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_BUTTON_HANDLES__
-#define __AUDACITY_TRACK_BUTTON_HANDLES__
+#ifndef __SNEEDACITY_TRACK_BUTTON_HANDLES__
+#define __SNEEDACITY_TRACK_BUTTON_HANDLES__
 
 #include "../ui/ButtonHandle.h"
 
@@ -21,11 +21,11 @@ class MinimizeButtonHandle final : public ButtonHandle
 
 protected:
    Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+      (const wxMouseEvent &event, SneedacityProject *pProject, wxWindow *pParent)
       override;
 
    TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
+      const wxMouseState &state, SneedacityProject &) const override;
 
 public:
    explicit MinimizeButtonHandle
@@ -47,11 +47,11 @@ class SelectButtonHandle final : public ButtonHandle
 
 protected:
    Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+      (const wxMouseEvent &event, SneedacityProject *pProject, wxWindow *pParent)
       override;
 
    TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
+      const wxMouseState &state, SneedacityProject &) const override;
 
 public:
    explicit SelectButtonHandle
@@ -73,11 +73,11 @@ class CloseButtonHandle final : public ButtonHandle
 
 protected:
    Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+      (const wxMouseEvent &event, SneedacityProject *pProject, wxWindow *pParent)
       override;
 
    TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &project) const override;
+      const wxMouseState &state, SneedacityProject &project) const override;
 
    bool StopsOnKeystroke () override { return true; }
    
@@ -102,11 +102,11 @@ class MenuButtonHandle final : public ButtonHandle
 
 protected:
    Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
+      (const wxMouseEvent &event, SneedacityProject *pProject, wxWindow *pParent)
       override;
 
    TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
+      const wxMouseState &state, SneedacityProject &) const override;
 
 public:
    explicit MenuButtonHandle

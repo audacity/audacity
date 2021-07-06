@@ -1,14 +1,14 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Menus.h
 
   Dominic Mazzoni
 
 **********************************************************************/
-#ifndef __AUDACITY_MENUS__
-#define __AUDACITY_MENUS__
+#ifndef __SNEEDACITY_MENUS__
+#define __SNEEDACITY_MENUS__
 
 #include "Identifier.h"
 
@@ -19,7 +19,7 @@
 
 class wxArrayString;
 class wxCommandEvent;
-class AudacityProject;
+class SneedacityProject;
 class CommandContext;
 class CommandManager;
 class Track;
@@ -34,13 +34,13 @@ typedef wxArrayString PluginIDs;
 
 namespace Registry{ class Visitor; }
 
-class AUDACITY_DLL_API MenuCreator
+class SNEEDACITY_DLL_API MenuCreator
 {
 public:
    MenuCreator();
    ~MenuCreator();
-   void CreateMenusAndCommands(AudacityProject &project);
-   void RebuildMenuBar(AudacityProject &project);
+   void CreateMenusAndCommands(SneedacityProject &project);
+   void RebuildMenuBar(SneedacityProject &project);
 
    static void RebuildAllMenuBars();
 
@@ -70,26 +70,26 @@ public:
 
 struct ToolbarMenuVisitor;
 
-class AUDACITY_DLL_API MenuManager final
+class SNEEDACITY_DLL_API MenuManager final
    : public MenuCreator
    , public ClientData::Base
    , private PrefsListener
 {
 public:
 
-   static MenuManager &Get( AudacityProject &project );
-   static const MenuManager &Get( const AudacityProject &project );
+   static MenuManager &Get( SneedacityProject &project );
+   static const MenuManager &Get( const SneedacityProject &project );
 
    explicit
-   MenuManager( AudacityProject &project );
+   MenuManager( SneedacityProject &project );
    MenuManager( const MenuManager & ) PROHIBITED;
    MenuManager &operator=( const MenuManager & ) PROHIBITED;
    ~MenuManager();
 
    static void Visit( ToolbarMenuVisitor &visitor );
 
-   static void ModifyUndoMenuItems(AudacityProject &project);
-   static void ModifyToolbarMenus(AudacityProject &project);
+   static void ModifyUndoMenuItems(SneedacityProject &project);
+   static void ModifyToolbarMenus(SneedacityProject &project);
    // Calls ModifyToolbarMenus() on all projects
    static void ModifyAllProjectToolbarMenus();
 
@@ -115,7 +115,7 @@ private:
 
    void OnUndoRedo( wxCommandEvent &evt );
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
 public:
    // 0 is grey out, 1 is Autoselect, 2 is Give warnings.

@@ -1,10 +1,10 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
+   Sneedacity: A Digital Audio Editor
 
    ExportFFmpeg.cpp
 
-   Audacity(R) is copyright (c) 1999-2009 Audacity Team.
+   Sneedacity(R) is copyright (c) 1999-2009 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    LRN
@@ -37,7 +37,7 @@ function.
 #include "../ProjectSettings.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
@@ -63,7 +63,7 @@ static bool CheckFFmpegPresence(bool quiet = false)
    {
       if (!quiet)
       {
-         AudacityMessageBox(XO(
+         SneedacityMessageBox(XO(
 "Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
       }
       result = false;
@@ -102,10 +102,10 @@ public:
    bool CheckFileName(wxFileName &filename, int format = 0) override;
 
    /// Format initialization
-   bool Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat);
+   bool Init(const char *shortname, SneedacityProject *project, const Tags *metadata, int subformat);
 
    /// Codec initialization
-   bool InitCodecs(AudacityProject *project);
+   bool InitCodecs(SneedacityProject *project);
 
    /// Writes metadata
    bool AddTags(const Tags *metadata);
@@ -132,7 +132,7 @@ public:
    int  AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates);
 
    /// Exports audio
-   ///\param project Audacity project
+   ///\param project Sneedacity project
    ///\param fName output file name
    ///\param selectedOnly true if exporting only selected audio
    ///\param t0 audio start time
@@ -141,7 +141,7 @@ public:
    ///\param metadata tags to write into file
    ///\param subformat index of export type
    ///\return true if export succeeded
-   ProgressResult Export(AudacityProject *project,
+   ProgressResult Export(SneedacityProject *project,
       std::unique_ptr<ProgressDialog> &pDialog,
       unsigned channels,
       const wxFileNameWrapper &fName,
@@ -259,7 +259,7 @@ bool ExportFFmpeg::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(f
    return result;
 }
 
-bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const Tags *metadata, int subformat)
+bool ExportFFmpeg::Init(const char *shortname, SneedacityProject *project, const Tags *metadata, int subformat)
 {
    // This will undo the acquisition of resources along any early exit path:
    auto deleter = [](ExportFFmpeg *This) {
@@ -282,7 +282,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    const auto path = mName.GetFullPath();
    if ((mEncFormatDesc = av_guess_format(shortname, OSINPUT(path), NULL)) == NULL)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "FFmpeg : ERROR - Can't determine format description for file \"%s\".")
             .Format( path ),
@@ -295,7 +295,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    mEncFormatCtx.reset(avformat_alloc_context());
    if (!mEncFormatCtx)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FFmpeg : ERROR - Can't allocate output format context."),
          XO("FFmpeg Error"),
          wxOK|wxCENTER|wxICON_EXCLAMATION);
@@ -307,10 +307,10 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
 
    memcpy(mEncFormatCtx->filename, OSINPUT(path), strlen(OSINPUT(path))+1);
 
-   // At the moment Audacity can export only one audio stream
+   // At the moment Sneedacity can export only one audio stream
    if ((mEncAudioStream = avformat_new_stream(mEncFormatCtx.get(), NULL)) == NULL)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FFmpeg : ERROR - Can't add audio stream to output file \"%s\".")
             .Format( path ),
          XO("FFmpeg Error"),
@@ -338,7 +338,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    {
       if ((err = ufile_fopen(&mEncFormatCtx->pb, path, AVIO_FLAG_WRITE)) < 0)
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d.")
                .Format( path, err ),
             XO("FFmpeg Error"),
@@ -367,7 +367,7 @@ bool ExportFFmpeg::Init(const char *shortname, AudacityProject *project, const T
    // Write headers to the output file.
    if ((err = avformat_write_header(mEncFormatCtx.get(), NULL)) < 0)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d.")
             .Format( path, err ),
          XO("FFmpeg Error"),
@@ -413,7 +413,7 @@ static int set_dict_int(AVDictionary **dict, const char *key, int val)
    return av_dict_set(dict, key, val_str, 0);
 }
 
-bool ExportFFmpeg::InitCodecs(AudacityProject *project)
+bool ExportFFmpeg::InitCodecs(SneedacityProject *project)
 {
    const auto &settings = ProjectSettings::Get( *project );
    AVCodec *codec = NULL;
@@ -525,7 +525,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    if (mEncAudioCodecCtx->codec_id == AV_CODEC_ID_AC3)
    {
       // As of Jan 4, 2011, the default AC3 encoder only accept SAMPLE_FMT_FLT samples.
-      // But, currently, Audacity only supports SAMPLE_FMT_S16.  So, for now, look for the
+      // But, currently, Sneedacity only supports SAMPLE_FMT_S16.  So, for now, look for the
       // "older" AC3 codec.  this is not a proper solution, but will suffice until other
       // encoders no longer support SAMPLE_FMT_S16.
       codec = avcodec_find_encoder_by_name("ac3_fixed");
@@ -539,7 +539,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    // Is the required audio codec compiled into libavcodec?
    if (codec == NULL)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
 "FFmpeg cannot find audio codec 0x%x.\nSupport for this codec is probably not compiled in.")
@@ -628,7 +628,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
          errmsg = Verbatim(buf);
       }
 
-      AudacityMessageBox(
+      SneedacityMessageBox(
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
          XO("Can't open audio codec \"%s\" (0x%x)\n\n%s")
          .Format(codec->name, mEncAudioCodecCtx->codec_id, errmsg),
@@ -653,7 +653,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    mEncAudioFifoOutBuf.reset(static_cast<int16_t*>(av_malloc(mEncAudioFifoOutBufSiz)));
    if (!mEncAudioFifoOutBuf)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."),
          XO("FFmpeg Error"),
          wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -687,7 +687,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       buffer_size = av_samples_get_buffer_size(NULL, avctx->channels, frame->nb_samples,
                                               avctx->sample_fmt, 0);
       if (buffer_size < 0) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("FFmpeg : ERROR - Could not get sample buffer size"),
             XO("FFmpeg Error"),
             wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -696,7 +696,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       }
       samples.reset(static_cast<uint8_t*>(av_malloc(buffer_size)));
       if (!samples) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("FFmpeg : ERROR - Could not allocate bytes for samples buffer"),
             XO("FFmpeg Error"),
             wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -707,7 +707,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
       ret = avcodec_fill_audio_frame(frame.get(), avctx->channels, avctx->sample_fmt,
                                   samples.get(), buffer_size, 0);
       if (ret < 0) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("FFmpeg : ERROR - Could not setup audio frame"),
             XO("FFmpeg Error"),
             wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -758,7 +758,7 @@ static int encode_audio(AVCodecContext *avctx, AVPacket *pkt, int16_t *audio_sam
 
    ret = avcodec_encode_audio2(avctx, pkt, frame.get(), &got_output);
    if (ret < 0) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FFmpeg : ERROR - encoding frame failed"),
          XO("FFmpeg Error"),
          wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -788,7 +788,7 @@ bool ExportFFmpeg::Finalize()
          const int nAudioFrameSizeOut = default_frame_size * mEncAudioCodecCtx->channels * sizeof(int16_t);
 
          if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz || nFifoBytes > mEncAudioFifoOutBufSiz) {
-            AudacityMessageBox(
+            SneedacityMessageBox(
                XO("FFmpeg : ERROR - Too much remaining data."),
                XO("FFmpeg Error"),
                wxOK | wxCENTER | wxICON_EXCLAMATION
@@ -853,7 +853,7 @@ bool ExportFFmpeg::Finalize()
 
       if (av_interleaved_write_frame(mEncFormatCtx.get(), &pkt) != 0)
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("FFmpeg : ERROR - Couldn't write last audio frame to output file."),
             XO("FFmpeg Error"),
             wxOK | wxCENTER | wxICON_EXCLAMATION
@@ -915,7 +915,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
    }
 
    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSiz) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("FFmpeg : ERROR - nAudioFrameSizeOut too large."),
          XO("FFmpeg Error"),
          wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -936,7 +936,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
          default_frame_size);
       if (ret < 0)
       {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("FFmpeg : ERROR - Can't encode audio frame."),
             XO("FFmpeg Error"),
             wxOK|wxCENTER|wxICON_EXCLAMATION
@@ -966,7 +966,7 @@ bool ExportFFmpeg::EncodeAudioFrame(int16_t *pFrame, size_t frameSize)
 }
 
 
-ProgressResult ExportFFmpeg::Export(AudacityProject *project,
+ProgressResult ExportFFmpeg::Export(SneedacityProject *project,
    std::unique_ptr<ProgressDialog> &pDialog,
    unsigned channels, const wxFileNameWrapper &fName,
    bool selectionOnly, double t0, double t1,
@@ -979,7 +979,7 @@ ProgressResult ExportFFmpeg::Export(AudacityProject *project,
    mSubFormat = AdjustFormatIndex(subformat);
    if (channels > ExportFFmpegOptions::fmts[mSubFormat].maxchannels)
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "Attempted to export %d channels, but maximum number of channels for selected output format is %d")
             .Format(

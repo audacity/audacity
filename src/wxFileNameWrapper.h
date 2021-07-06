@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 wxFileNameWrapper.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WXFILENAMEWRAPPER__
-#define __AUDACITY_WXFILENAMEWRAPPER__
+#ifndef __SNEEDACITY_WXFILENAMEWRAPPER__
+#define __SNEEDACITY_WXFILENAMEWRAPPER__
 
 class wxArrayString;
 

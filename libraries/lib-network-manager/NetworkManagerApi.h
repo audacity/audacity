@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file NetworkManagerApi.h
  @brief Declare macros for the Network Manager library DLL API

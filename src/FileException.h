@@ -7,14 +7,14 @@
 
 */
 
-#ifndef __AUDACITY_FILE_EXCEPTION__
-#define __AUDACITY_FILE_EXCEPTION__
+#ifndef __SNEEDACITY_FILE_EXCEPTION__
+#define __SNEEDACITY_FILE_EXCEPTION__
 
-#include "AudacityException.h"
+#include "SneedacityException.h"
 #include <wx/filename.h> // wxFileName member variable
 
 //! Thrown for failure of file or database operations in deeply nested places
-class AUDACITY_DLL_API FileException /* not final */
+class SNEEDACITY_DLL_API FileException /* not final */
    : public MessageBoxException
 {
 public:

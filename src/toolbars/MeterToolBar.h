@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MeterToolbar.h
 
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_METER_TOOLBAR__
-#define __AUDACITY_METER_TOOLBAR__
+#ifndef __SNEEDACITY_METER_TOOLBAR__
+#define __SNEEDACITY_METER_TOOLBAR__
 
 #include "ToolBar.h"
 
@@ -21,7 +21,7 @@ class wxGridBagSizer;
 class wxSizeEvent;
 class wxWindow;
 
-class AudacityProject;
+class SneedacityProject;
 class MeterPanel;
 
 
@@ -33,7 +33,7 @@ class MeterToolBar final : public ToolBar {
 
  public:
 
-   MeterToolBar(AudacityProject &project, int type);
+   MeterToolBar(SneedacityProject &project, int type);
    virtual ~MeterToolBar();
 
    void Create(wxWindow *parent) override;

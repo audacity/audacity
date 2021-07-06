@@ -14,7 +14,7 @@ endif()
 set( host "alphamanual.audacityteam.org" )
 set( src "https://${host}/man" )
 set( dst "${_DEST}/help/manual" )
-set( script_dir "${topdir}/scripts/mw2html_audacity" )
+set( script_dir "${topdir}/scripts/mw2html_sneedacity" )
 set( script "mw2html.py" )
 set( out_dir "${_INTDIR}" )
 set( out "${out_dir}/${host}/index.html" )
@@ -51,10 +51,10 @@ endif()
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
       install( DIRECTORY "${dst}" OPTIONAL
-               DESTINATION "${_DATADIR}/audacity/help" )
-      install( FILES "${_SRCDIR}/audacity.1"
+               DESTINATION "${_DATADIR}/sneedacity/help" )
+      install( FILES "${_SRCDIR}/sneedacity.1"
                DESTINATION "${_MANDIR}/man1" )
-      install( FILES "${_SRCDIR}/audacity.appdata.xml"
+      install( FILES "${_SRCDIR}/sneedacity.appdata.xml"
                DESTINATION "${_DATADIR}/metainfo" )
    endif()
 endif()

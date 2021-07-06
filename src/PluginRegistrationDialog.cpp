@@ -9,11 +9,11 @@
 **********************************************************************/
 #include "PluginRegistrationDialog.h"
 
-#include "audacity/EffectInterface.h"
+#include "sneedacity/EffectInterface.h"
 #include "ModuleManager.h"
 #include "PluginManager.h"
 #include "ShuttleGui.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -942,7 +942,7 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                }
             }
             if (!errMsgs.empty())
-               AudacityMessageBox(
+               SneedacityMessageBox(
                   XO("Effect or Command at %s failed to register:\n%s")
                      .Format( path, errMsgs ) );
          }

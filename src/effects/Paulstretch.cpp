@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Paulstretch.cpp
 
@@ -30,7 +30,7 @@
 #include "../ShuttleGui.h"
 #include "../FFT.h"
 #include "../widgets/valnum.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../Prefs.h"
 
 #include "../WaveTrack.h"
@@ -244,7 +244,7 @@ void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
 
 size_t EffectPaulstretch::GetBufferSize(double rate)
 {
-   // Audacity's fft requires a power of 2
+   // Sneedacity's fft requires a power of 2
    float tmp = rate * mTime_resolution / 2.0;
    tmp = log(tmp) / log(2.0);
    tmp = pow(2.0, floor(tmp + 0.5));

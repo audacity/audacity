@@ -1,6 +1,6 @@
 /***************************************************************************
 
-   Audacity: A Digtial Audio Editor
+   Sneedacity: A Digtial Audio Editor
 
    VoiceKey.h: a class implementing a voice key
 
@@ -8,15 +8,15 @@
    Distributed under the terms of the GPL Version 2 or later.
 
 ***************************************************************************/
-#ifndef __AUDACITY_VOICEKEY__
-#define __AUDACITY_VOICEKEY__
+#ifndef __SNEEDACITY_VOICEKEY__
+#define __SNEEDACITY_VOICEKEY__
 
 
 #ifndef M_PI
 #define	M_PI		3.14159265358979323846  /* pi */
 #endif
 
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 
 class WaveTrack;
 

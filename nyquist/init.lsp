@@ -12,7 +12,7 @@
 
 ;; "_" (UNDERSCORE) - translation function
 ;;
-;; Third party plug-ins are not translated by gettext in Audacity, but may include a
+;; Third party plug-ins are not translated by gettext in Sneedacity, but may include a
 ;; list of translations named *locale*. The format of *locale* must be:
 ;; (LIST (language-list) [(language-list) ...]) 
 ;; Each language-list is an a-list in the form:
@@ -25,7 +25,7 @@
   (when (boundp '*locale*)
     (when (not (listp *locale*))
           (error "bad argument type" *locale*))
-    (let* ((cc (get '*audacity* 'language))
+    (let* ((cc (get '*sneedacity* 'language))
            (translations (second (assoc cc *locale* :test 'string-equal))))
       (if translations
           (let ((translation (second (assoc txt translations :test 'string=))))
@@ -53,9 +53,9 @@
 
 (defun aud-get-info (str)
   ;;; Return "GetInfo: type=type" as Lisp list, or throw error
-  ;;; Audacity 2.3.0 does not fail if type is not recognised, it 
+  ;;; Sneedacity 2.3.0 does not fail if type is not recognised, it 
   ;;; falls back to a default, so test for valid types.
-  ;;; 'Commands+' is not supported in Audacity 2.3.0
+  ;;; 'Commands+' is not supported in Sneedacity 2.3.0
   (let (type
         info
         (types '("Commands" "Menus" "Preferences"

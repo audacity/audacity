@@ -1,15 +1,15 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   CrossFade.h
 
- (c) 2005 The Audacity Team
+ (c) 2005 The Sneedacity Team
   Licensed under the GPL version 2.0
 
 **********************************************************************/
-#ifndef __AUDACITY_CROSSFADE__
-#define __AUDACITY_CROSSFADE__
+#ifndef __SNEEDACITY_CROSSFADE__
+#define __SNEEDACITY_CROSSFADE__
 
 /// This defines a crossfader class that
 /// accepts a list of WaveClips and can do a mini-mixing

@@ -76,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="SET dest=%AUDACITY_DIR%\win\$(ConfigurationName)\modules&#x0D;&#x0A;IF NOT EXIST &quot;%dest%&quot; mkdir &quot;%dest%&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%dest%&quot;&#x0D;&#x0A;"
+				CommandLine="SET dest=%SNEEDACITY_DIR%\win\$(ConfigurationName)\modules&#x0D;&#x0A;IF NOT EXIST &quot;%dest%&quot; mkdir &quot;%dest%&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%dest%&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="SET dest=%AUDACITY_DIR%\win\$(ConfigurationName)\modules&#x0D;&#x0A;IF NOT EXIST &quot;%dest%&quot; mkdir &quot;%dest%&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%dest%&quot;&#x0D;&#x0A;"
+				CommandLine="SET dest=%SNEEDACITY_DIR%\win\$(ConfigurationName)\modules&#x0D;&#x0A;IF NOT EXIST &quot;%dest%&quot; mkdir &quot;%dest%&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;%dest%&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

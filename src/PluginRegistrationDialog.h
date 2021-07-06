@@ -1,14 +1,14 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PluginRegistrationDialog.h
 
   Paul Licameli split from PluginManager.cpp
 
 **********************************************************************/
-#ifndef __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
-#define __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
+#ifndef __SNEEDACITY_PLUGIN_REGISTRATION_DIALOG__
+#define __SNEEDACITY_PLUGIN_REGISTRATION_DIALOG__
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 #include <vector>

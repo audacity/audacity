@@ -30,7 +30,7 @@
 #include "../prefs/QualitySettings.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 #include <wx/combobox.h>
@@ -46,7 +46,7 @@
 namespace {
 
 void DoMixAndRender
-(AudacityProject &project, bool toNewTrack)
+(SneedacityProject &project, bool toNewTrack)
 {
    const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
@@ -153,7 +153,7 @@ void DoMixAndRender
    }
 }
 
-void DoPanTracks(AudacityProject &project, float PanValue)
+void DoPanTracks(SneedacityProject &project, float PanValue)
 {
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -197,7 +197,7 @@ static const std::vector< ComponentInterfaceSymbol >
 const size_t kAlignLabelsCount(){ return alignLabels().size(); }
 
 void DoAlign
-(AudacityProject &project, int index, bool moveSel)
+(SneedacityProject &project, int index, bool moveSel)
 {
    auto &tracks = TrackList::Get( project );
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -347,10 +347,10 @@ void DoAlign
 // Write timing data to a file; useful for calibrating AUDIO_WORK_UNIT,
 // MIDI_WORK_UNIT, MATRIX_WORK_UNIT, and SMOOTHING_WORK_UNIT coefficients
 // Data is written to timing-data.txt; look in
-//     audacity-src/win/Release/modules/
+//     sneedacity-src/win/Release/modules/
 #define COLLECT_TIMING_DATA
 
-// Audacity Score Align Progress class -- progress reports come here
+// Sneedacity Score Align Progress class -- progress reports come here
 class ASAProgress final : public SAProgress {
  private:
    float mTotalWork;
@@ -484,11 +484,11 @@ long mixer_process(void *mixer, float **buffer, long n)
 #endif // EXPERIMENTAL_SCOREALIGN
 
 enum{
-   kAudacitySortByTime = (1 << 1),
-   kAudacitySortByName = (1 << 2),
+   kSneedacitySortByTime = (1 << 1),
+   kSneedacitySortByName = (1 << 2),
 };
 
-void DoSortTracks( AudacityProject &project, int flags )
+void DoSortTracks( SneedacityProject &project, int flags )
 {
    auto GetTime = [](const Track *t) {
       return t->TypeSwitch< double >(
@@ -531,7 +531,7 @@ void DoSortTracks( AudacityProject &project, int flags )
          for (ndx = 0; ndx < size;) {
             Track &arrTrack = **arr[ndx].first;
             auto channels = TrackList::Channels(&arrTrack);
-            if(flags & kAudacitySortByName) {
+            if(flags & kSneedacitySortByName) {
                //do case insensitive sort - cmpNoCase returns less than zero if
                // the string is 'less than' its argument
                //also if we have case insensitive equality, then we need to sort
@@ -546,7 +546,7 @@ void DoSortTracks( AudacityProject &project, int flags )
                   break;
             }
             //sort by time otherwise
-            else if(flags & kAudacitySortByTime) {
+            else if(flags & kSneedacitySortByTime) {
                auto time1 = TrackList::Channels(track.get()).min( GetTime );
 
                //get candidate's (from sorted array) time
@@ -565,7 +565,7 @@ void DoSortTracks( AudacityProject &project, int flags )
    tracks.Permute(arr);
 }
 
-void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
+void SetTrackGain(SneedacityProject &project, WaveTrack * wt, LWSlider * slider)
 {
    wxASSERT(wt);
    float newValue = slider->Get();
@@ -579,7 +579,7 @@ void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    TrackPanel::Get( project ).RefreshTrack(wt);
 }
 
-void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
+void SetTrackPan(SneedacityProject &project, WaveTrack * wt, LWSlider * slider)
 {
    wxASSERT(wt);
    float newValue = slider->Get();
@@ -681,9 +681,9 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    if ( *tracks.Any<TimeTrack>().begin() ) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
-"This version of Audacity only allows one time track for each project window.") );
+"This version of Sneedacity only allows one time track for each project window.") );
       return;
    }
 
@@ -790,7 +790,7 @@ void OnResample(const CommandContext &context)
          break;
       }
 
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("The entered value is invalid"),
          XO("Error"),
          wxICON_ERROR,
@@ -955,7 +955,7 @@ void OnScoreAlign(const CommandContext &context)
    if(numWaveTracksSelected == 0 ||
       numNoteTracksSelected != 1 ||
       numOtherTracksSelected != 0){
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Please select at least one audio track and one MIDI track.") );
       return;
    }
@@ -1026,7 +1026,7 @@ void OnScoreAlign(const CommandContext &context)
 
    if (result == SA_SUCCESS) {
       tracks->Replace(nt, holder);
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.")
             .Format(
                params.mMidiStart, params.mMidiEnd,
@@ -1034,7 +1034,7 @@ void OnScoreAlign(const CommandContext &context)
       ProjectHistory::Get( project )
          .PushState(XO("Sync MIDI with Audio"), XO("Sync MIDI with Audio"));
    } else if (result == SA_TOOSHORT) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.")
             .Format(
@@ -1046,7 +1046,7 @@ void OnScoreAlign(const CommandContext &context)
       return; // no message when user cancels alignment
    } else {
       //project.OnUndo(); // recover any changes to note track
-      AudacityMessageBox( XO("Internal error reported by alignment process.") );
+      SneedacityMessageBox( XO("Internal error reported by alignment process.") );
    }
 }
 #endif /* EXPERIMENTAL_SCOREALIGN */
@@ -1054,7 +1054,7 @@ void OnScoreAlign(const CommandContext &context)
 void OnSortTime(const CommandContext &context)
 {
    auto &project = context.project;
-   DoSortTracks(project, kAudacitySortByTime);
+   DoSortTracks(project, kSneedacitySortByTime);
 
    ProjectHistory::Get( project )
       .PushState(XO("Tracks sorted by time"), XO("Sort by Time"));
@@ -1063,7 +1063,7 @@ void OnSortTime(const CommandContext &context)
 void OnSortName(const CommandContext &context)
 {
    auto &project = context.project;
-   DoSortTracks(project, kAudacitySortByName);
+   DoSortTracks(project, kSneedacitySortByName);
 
    ProjectHistory::Get( project )
       .PushState(XO("Tracks sorted by name"), XO("Sort by Name"));
@@ -1275,9 +1275,9 @@ void OnTrackMoveBottom(const CommandContext &context)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static TrackActions::Handler instance;
    return instance;
 };
@@ -1318,7 +1318,7 @@ BaseItemSharedPtr TracksMenu()
             // Stereo to Mono is an oddball command that is also subject to control
             // by the plug-in manager, as if an effect.  Decide whether to show or
             // hide it.
-            [](AudacityProject&) -> BaseItemPtr {
+            [](SneedacityProject&) -> BaseItemPtr {
                const PluginID ID =
                   EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
                const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);

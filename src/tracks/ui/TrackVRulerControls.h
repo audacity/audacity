@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TrackVRulerControls.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_VRULER_CONTROLS__
-#define __AUDACITY_TRACK_VRULER_CONTROLS__
+#ifndef __SNEEDACITY_TRACK_VRULER_CONTROLS__
+#define __SNEEDACITY_TRACK_VRULER_CONTROLS__
 
 #include "CommonTrackPanelCell.h"
 
@@ -19,7 +19,7 @@ class wxDC;
 
 const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
 
-class AUDACITY_DLL_API TrackVRulerControls /* not final */
+class SNEEDACITY_DLL_API TrackVRulerControls /* not final */
    : public CommonTrackPanelCell
    , public std::enable_shared_from_this< TrackVRulerControls >
 {
@@ -35,7 +35,7 @@ public:
    // Define a default hit test method, just for message and cursor
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *pProject) override;
+       const SneedacityProject *pProject) override;
 
    // Helpers for handle classes' TrackPanelDrawable implementations
    static void DrawZooming

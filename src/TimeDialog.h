@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimeDialog.h
 
@@ -8,19 +8,19 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TimeDialog__
-#define __AUDACITY_TimeDialog__
+#ifndef __SNEEDACITY_TimeDialog__
+#define __SNEEDACITY_TimeDialog__
 
 #include <wx/defs.h>
 
-#include "audacity/ComponentInterface.h" // member variable
+#include "sneedacity/ComponentInterface.h" // member variable
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 class NumericTextCtrl;
 class ShuttleGui;
 
-class AUDACITY_DLL_API TimeDialog final : public wxDialogWrapper
+class SNEEDACITY_DLL_API TimeDialog final : public wxDialogWrapper
 {
  public:
 

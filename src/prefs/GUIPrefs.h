@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   GUIPrefs.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_GUI_PREFS__
-#define __AUDACITY_GUI_PREFS__
+#ifndef __SNEEDACITY_GUI_PREFS__
+#define __SNEEDACITY_GUI_PREFS__
 
 #include <wx/defs.h>
 
@@ -22,7 +22,7 @@ class ShuttleGui;
 
 #define GUI_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("GUI") }
 
-class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
+class SNEEDACITY_DLL_API GUIPrefs final : public PrefsPanel
 {
  public:
    GUIPrefs(wxWindow * parent, wxWindowID winid);
@@ -55,12 +55,12 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
    int mDefaultRangeIndex;
 };
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 int ShowClippingPrefsID();
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 int ShowTrackNameInWaveformPrefsID();
 
-extern AUDACITY_DLL_API ChoiceSetting
+extern SNEEDACITY_DLL_API ChoiceSetting
      GUIManualLocation
 ;
 

@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LoadLV2.h
 
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 *********************************************************************/
@@ -31,9 +31,9 @@
 #include "lv2/uri-map/uri-map.h"
 #include "lv2/units/units.h"
 
-#include "audacity/ModuleInterface.h"
-#include "audacity/EffectInterface.h"
-#include "audacity/PluginInterface.h"
+#include "sneedacity/ModuleInterface.h"
+#include "sneedacity/EffectInterface.h"
+#include "sneedacity/PluginInterface.h"
 
 #include "lv2_external_ui.h"
 

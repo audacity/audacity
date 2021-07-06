@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Languages.cpp
 
@@ -64,11 +64,11 @@ static void FindFilesInPathList(const wxString & pattern,
 static bool TranslationExists(const FilePaths &pathList, wxString code)
 {
    FilePaths results;
-   FindFilesInPathList(code + L"/audacity.mo", pathList, results);
+   FindFilesInPathList(code + L"/sneedacity.mo", pathList, results);
 #if defined(__WXMAC__)
-   FindFilesInPathList(code + L".lproj/audacity.mo", pathList, results);
+   FindFilesInPathList(code + L".lproj/sneedacity.mo", pathList, results);
 #endif
-   FindFilesInPathList(code + L"/LC_MESSAGES/audacity.mo", pathList, results);
+   FindFilesInPathList(code + L"/LC_MESSAGES/sneedacity.mo", pathList, results);
    return (results.size() > 0);
 }
 
@@ -283,7 +283,7 @@ void GetLanguages( FilePaths pathList,
       }
    }
 
-   // JKC: Adding language for simplified audacity.
+   // JKC: Adding language for simplified sneedacity.
    {
       wxString code;
       code = wxT("en-simple");
@@ -363,7 +363,7 @@ wxString SetLang( const FilePaths &pathList, const wxString & lang )
    sLocale->AddCatalog(wxT("wxstd"));
 
    // Must match TranslationExists() in Languages.cpp
-   sLocale->AddCatalog("audacity");
+   sLocale->AddCatalog("sneedacity");
 
    // Initialize internationalisation (number formats etc.)
    //
@@ -374,7 +374,7 @@ wxString SetLang( const FilePaths &pathList, const wxString & lang )
 
    using future1 = decltype(
       // The file of unused strings is part of the source tree scanned by
-      // xgettext when compiling the catalog template audacity.pot.
+      // xgettext when compiling the catalog template sneedacity.pot.
       // Including it here doesn't change that but does make the C++ compiler
       // check for correct syntax, but also generate no object code for them.
 #include "FutureStrings.h"

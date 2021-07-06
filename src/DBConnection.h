@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 @file DBConnection.h
 @brief Declare DBConnection, which maintains database connection and associated status and background thread
@@ -9,8 +9,8 @@ Paul Licameli -- split from ProjectFileIO.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_DB_CONNECTION__
-#define __AUDACITY_DB_CONNECTION__
+#ifndef __SNEEDACITY_DB_CONNECTION__
+#define __SNEEDACITY_DB_CONNECTION__
 
 #include <atomic>
 #include <condition_variable>
@@ -26,7 +26,7 @@ Paul Licameli -- split from ProjectFileIO.h
 struct sqlite3;
 struct sqlite3_stmt;
 class wxString;
-class AudacityProject;
+class SneedacityProject;
 
 struct DBConnectionErrors
 {
@@ -44,7 +44,7 @@ public:
    using CheckpointFailureCallback = std::function<void()>;
 
    DBConnection(
-      const std::weak_ptr<AudacityProject> &pProject,
+      const std::weak_ptr<SneedacityProject> &pProject,
       const std::shared_ptr<DBConnectionErrors> &pErrors,
       CheckpointFailureCallback callback);
    ~DBConnection();
@@ -104,7 +104,7 @@ private:
    static int CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages);
 
 private:
-   std::weak_ptr<AudacityProject> mpProject;
+   std::weak_ptr<SneedacityProject> mpProject;
    sqlite3 *mDB;
    sqlite3 *mCheckpointDB;
 
@@ -132,7 +132,7 @@ private:
     Commit() must not be called again after one successful call.
     An exception is thrown from the constructor if the transaction cannot open.
  */
-class AUDACITY_DLL_API TransactionScope
+class SNEEDACITY_DLL_API TransactionScope
 {
 public:
    TransactionScope(DBConnection &connection, const char *name);
@@ -161,8 +161,8 @@ class ConnectionPtr final
    , public std::enable_shared_from_this< ConnectionPtr >
 {
 public:
-   static ConnectionPtr &Get( AudacityProject &project );
-   static const ConnectionPtr &Get( const AudacityProject &project );
+   static ConnectionPtr &Get( SneedacityProject &project );
+   static const ConnectionPtr &Get( const SneedacityProject &project );
 
    ~ConnectionPtr() override;
 

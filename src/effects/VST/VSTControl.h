@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   VSTControl.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef AUDACITY_VSTCONTROL_H
-#define AUDACITY_VSTCONTROL_H
+#ifndef SNEEDACITY_VSTCONTROL_H
+#define SNEEDACITY_VSTCONTROL_H
 
 #include <wx/control.h> // to inherit
 

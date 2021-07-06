@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   RecordingPrefs.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_RECORDING_PREFS__
-#define __AUDACITY_RECORDING_PREFS__
+#ifndef __SNEEDACITY_RECORDING_PREFS__
+#define __SNEEDACITY_RECORDING_PREFS__
 
 
 

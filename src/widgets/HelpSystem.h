@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   HelpSystem.h
 
@@ -18,8 +18,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_HELPSYSTEM__
-#define __AUDACITY_HELPSYSTEM__
+#ifndef __SNEEDACITY_HELPSYSTEM__
+#define __SNEEDACITY_HELPSYSTEM__
 
 
 
@@ -27,16 +27,16 @@
 #include "wxPanelWrapper.h" // to inherit
 #include "../HelpText.h"
 
-class AudacityProject;
+class SneedacityProject;
 
 /** @brief Class which contains static methods and data needed for implementing
  * help buttons
  *
  * This class should be the only place in the codebase where the location of
- * the online copy of the Audacity manual is stored, so that it can be 
+ * the online copy of the Sneedacity manual is stored, so that it can be 
  * changed if required
  */
-class AUDACITY_DLL_API HelpSystem
+class SNEEDACITY_DLL_API HelpSystem
 {
 public:
    /// Displays cuttable information in a text ctrl, with an OK button.
@@ -79,7 +79,7 @@ public:
                      bool bModal = false,
                      bool alwaysDefaultBrowser = false);
 
-   /// Displays a page from the Audacity manual  in your browser, if
+   /// Displays a page from the Sneedacity manual  in your browser, if
    /// it's available locally, OR else links to the internet.
    /// @param parent Parent window for the dialog
    /// @param PageName The name of the manual page to display as it is in
@@ -116,13 +116,13 @@ class ShuttleGui;
 
 #include "HtmlWindow.h" // to inherit
 
-AUDACITY_DLL_API void OpenInDefaultBrowser(const URLString& link);
+SNEEDACITY_DLL_API void OpenInDefaultBrowser(const URLString& link);
 
 
 /// \brief An HtmlWindow that handles linked clicked - usually the
 /// link will go to our own local copy of the manual, but it could
 /// launch a new browser window.
-class AUDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
+class SNEEDACITY_DLL_API LinkingHtmlWindow final : public HtmlWindow
 {
  public:
    LinkingHtmlWindow(wxWindow *parent, wxWindowID id = -1,
@@ -156,4 +156,4 @@ public:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_HELPSYSTEM__
+#endif // __SNEEDACITY_HELPSYSTEM__

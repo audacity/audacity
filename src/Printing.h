@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Printing.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PRINTING__
-#define __AUDACITY_PRINTING__
+#ifndef __SNEEDACITY_PRINTING__
+#define __SNEEDACITY_PRINTING__
 
 #include <wx/defs.h>
 
@@ -23,5 +23,5 @@ void HandlePrint(
    wxWindow *parent, const wxString &name, TrackList *tracks,
    TrackPanel &panel);
 
-#endif // __AUDACITY_PRINTING__
+#endif // __SNEEDACITY_PRINTING__
 

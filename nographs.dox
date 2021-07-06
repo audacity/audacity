@@ -2,7 +2,7 @@
 
 ## First include a complete generated configuration, plus some macros
 
-@INCLUDE = audacity.dox.in
+@INCLUDE = sneedacity.dox.in
 
 ## uncomment these lines to enable graph generation and make them include hyperlinks,
 ## but no graphs result unless later lines are edited too:

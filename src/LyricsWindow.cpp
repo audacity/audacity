@@ -24,16 +24,16 @@
 #include <wx/settings.h>
 
 #ifdef __WXMSW__
-   #include "../images/AudacityLogo.xpm"
+   #include "../images/SneedacityLogo.xpm"
 #else
-   #include "../images/AudacityLogo48x48.xpm"
+   #include "../images/SneedacityLogo48x48.xpm"
 #endif
 
 #ifdef __WXMAC__
    #include <Carbon/Carbon.h>
 #endif
 
-#define AudacityKaraokeTitle XO("Sneedacity Karaoke%s")
+#define SneedacityKaraokeTitle XO("Sneedacity Karaoke%s")
 
 enum {
    kID_RadioButton_BouncingBall = 10101,
@@ -48,7 +48,7 @@ END_EVENT_TABLE()
 
 const wxSize gSize = wxSize(LYRICS_DEFAULT_WIDTH, LYRICS_DEFAULT_HEIGHT);
 
-LyricsWindow::LyricsWindow(AudacityProject *parent)
+LyricsWindow::LyricsWindow(SneedacityProject *parent)
    : wxFrame( &GetProjectFrame( *parent ), -1, wxString{},
             wxPoint(100, 300), gSize,
             //v Bug in wxFRAME_FLOAT_ON_PARENT:
@@ -77,9 +77,9 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
 #if !defined(__WXMAC__) && !defined(__WXX11__)
    {
 #ifdef __WXMSW__
-      wxIcon ic{ wxICON(AudacityLogo) };
+      wxIcon ic{ wxICON(SneedacityLogo) };
 #else
-      wxIcon ic{wxICON(AudacityLogo48x48)};
+      wxIcon ic{wxICON(SneedacityLogo48x48)};
 #endif
       SetIcon(ic);
    }
@@ -182,7 +182,7 @@ void LyricsWindow::SetWindowTitle()
       name.Prepend(wxT(" - "));
    }
 
-   SetTitle(AudacityKaraokeTitle.Format(name).Translation());
+   SetTitle(SneedacityKaraokeTitle.Format(name).Translation());
 }
 
 void LyricsWindow::UpdatePrefs()
@@ -197,8 +197,8 @@ void LyricsWindow::UpdatePrefs()
 namespace {
 
 // Lyrics window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
-   []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
+SneedacityProject::AttachedWindows::RegisteredFactory sLyricsWindowKey{
+   []( SneedacityProject &parent ) -> wxWeakRef< wxWindow > {
       return safenew LyricsWindow( &parent );
    }
 };
@@ -215,9 +215,9 @@ struct Handler : CommandHandlerObject {
    }
 };
 
-CommandHandlerObject &findCommandHandler(AudacityProject &) {
+CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static Handler instance;
    return instance;
 }

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ZoomHandle.cpp
 
@@ -40,7 +40,7 @@ ZoomHandle::ZoomHandle()
 {}
 
 HitTestPreview ZoomHandle::HitPreview
-   (const wxMouseState &state, const AudacityProject *WXUNUSED(pProject))
+   (const wxMouseState &state, const SneedacityProject *WXUNUSED(pProject))
 {
    static auto zoomInCursor =
       ::MakeCursor(wxCURSOR_MAGNIFIER, ZoomInCursorXpm, 19, 15);
@@ -84,7 +84,7 @@ ZoomHandle::~ZoomHandle()
 }
 
 UIHandle::Result ZoomHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, SneedacityProject *)
 {
    const wxMouseEvent &event = evt.event;
    if (event.ButtonDown() || event.LeftDClick()) {
@@ -97,7 +97,7 @@ UIHandle::Result ZoomHandle::Click
 }
 
 UIHandle::Result ZoomHandle::Drag
-(const TrackPanelMouseEvent &evt, AudacityProject *)
+(const TrackPanelMouseEvent &evt, SneedacityProject *)
 {
    const wxMouseEvent &event = evt.event;
    const int left = mRect.GetLeft();
@@ -118,13 +118,13 @@ UIHandle::Result ZoomHandle::Drag
 }
 
 HitTestPreview ZoomHandle::Preview
-(const TrackPanelMouseState &st, AudacityProject *pProject)
+(const TrackPanelMouseState &st, SneedacityProject *pProject)
 {
    return HitPreview(st.state, pProject);
 }
 
 UIHandle::Result ZoomHandle::Release
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject,
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject,
  wxWindow *)
 {
    const wxMouseEvent &event = evt.event;
@@ -178,7 +178,7 @@ UIHandle::Result ZoomHandle::Release
    return RefreshAll | FixScrollbars;
 }
 
-UIHandle::Result ZoomHandle::Cancel(AudacityProject*)
+UIHandle::Result ZoomHandle::Cancel(SneedacityProject*)
 {
    // Cancel is implemented!  And there is no initial state to restore,
    // so just return a code.

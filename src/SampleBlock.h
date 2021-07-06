@@ -1,21 +1,21 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SampleBlock.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SAMPLE_BLOCK__
-#define __AUDACITY_SAMPLE_BLOCK__
+#ifndef __SNEEDACITY_SAMPLE_BLOCK__
+#define __SNEEDACITY_SAMPLE_BLOCK__
 
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 
 #include <functional>
 #include <memory>
 #include <unordered_set>
 
-class AudacityProject;
+class SneedacityProject;
 class ProjectFileIO;
 class XMLWriter;
 
@@ -24,7 +24,7 @@ using SampleBlockPtr = std::shared_ptr<SampleBlock>;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 using SampleBlockFactoryFactory =
-   std::function< SampleBlockFactoryPtr( AudacityProject& ) >;
+   std::function< SampleBlockFactoryPtr( SneedacityProject& ) >;
 
 using SampleBlockID = long long;
 
@@ -112,7 +112,7 @@ public:
       SampleBlockFactoryFactory newFactory );
 
    // Invoke the installed factory (throw an exception if none was installed)
-   static SampleBlockFactoryPtr New( AudacityProject &project );
+   static SampleBlockFactoryPtr New( SneedacityProject &project );
 
    virtual ~SampleBlockFactory();
 

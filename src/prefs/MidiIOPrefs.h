@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudioIOPrefs.h
 
@@ -15,8 +15,8 @@ class ShuttleGui;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
-#ifndef __AUDACITY_MIDI_IO_PREFS__
-#define __AUDACITY_MIDI_IO_PREFS__
+#ifndef __SNEEDACITY_MIDI_IO_PREFS__
+#define __SNEEDACITY_MIDI_IO_PREFS__
 
 #include <wx/defs.h>
 

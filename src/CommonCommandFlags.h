@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 CommonCommandFlags.h
 
@@ -8,26 +8,26 @@ Paul Licameli split from Menus.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COMMON_COMMAND_FLAGS__
-#define __AUDACITY_COMMON_COMMAND_FLAGS__
+#ifndef __SNEEDACITY_COMMON_COMMAND_FLAGS__
+#define __SNEEDACITY_COMMON_COMMAND_FLAGS__
 
 
 
 #include "commands/CommandFlag.h"
 
-AUDACITY_DLL_API
-bool EditableTracksSelectedPred( const AudacityProject &project );
+SNEEDACITY_DLL_API
+bool EditableTracksSelectedPred( const SneedacityProject &project );
 
-AUDACITY_DLL_API
-bool AudioIOBusyPred( const AudacityProject &project );
+SNEEDACITY_DLL_API
+bool AudioIOBusyPred( const SneedacityProject &project );
 
-AUDACITY_DLL_API
-bool TimeSelectedPred( const AudacityProject &project );
+SNEEDACITY_DLL_API
+bool TimeSelectedPred( const SneedacityProject &project );
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 const CommandFlagOptions &cutCopyOptions();
 
-extern AUDACITY_DLL_API const ReservedCommandFlag
+extern SNEEDACITY_DLL_API const ReservedCommandFlag
    &AudioIONotBusyFlag(),
    &StereoRequiredFlag(),  //lda
    &NoiseReductionTimeSelectedFlag(),
@@ -38,11 +38,11 @@ extern AUDACITY_DLL_API const ReservedCommandFlag
    &AnyTracksSelectedFlag(),
    &TrackPanelHasFocus();  //lll
 
-extern AUDACITY_DLL_API const ReservedCommandFlag
+extern SNEEDACITY_DLL_API const ReservedCommandFlag
    &AudioIOBusyFlag(), // lll
    &CaptureNotBusyFlag();
 
-extern AUDACITY_DLL_API const ReservedCommandFlag
+extern SNEEDACITY_DLL_API const ReservedCommandFlag
    &LabelTracksExistFlag(),
    &UnsavedChangesFlag(),
    &UndoAvailableFlag(),

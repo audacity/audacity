@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TimeTrackVRulerControls.cpp
 
@@ -40,7 +40,7 @@ namespace {
 
 std::vector<UIHandlePtr> TimeTrackVRulerControls::HitTest(
    const TrackPanelMouseState &st,
-   const AudacityProject *pProject)
+   const SneedacityProject *pProject)
 {
    std::vector<UIHandlePtr> results;
 

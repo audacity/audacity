@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxwidgets
 
    James Crook
@@ -19,7 +19,7 @@
 #include "Command.h"
 #include "CommandType.h"
 
-class DragCommand : public AudacityCommand
+class DragCommand : public SneedacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -31,7 +31,7 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   // AudacityCommand overrides
+   // SneedacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#move_mouse";}
 
    bool Apply(const CommandContext & context) override;

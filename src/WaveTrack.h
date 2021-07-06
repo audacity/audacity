@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WaveTrack.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WAVETRACK__
-#define __AUDACITY_WAVETRACK__
+#ifndef __SNEEDACITY_WAVETRACK__
+#define __SNEEDACITY_WAVETRACK__
 
 #include "Track.h"
 
@@ -65,7 +65,7 @@ using Regions = std::vector < Region >;
 
 class Envelope;
 
-class AUDACITY_DLL_API WaveTrack final : public PlayableTrack {
+class SNEEDACITY_DLL_API WaveTrack final : public PlayableTrack {
 public:
 
    //
@@ -563,7 +563,7 @@ private:
       std::shared_ptr<WaveClip> pClip;
    };
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto( SneedacityProject & ) const override;
 
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;
@@ -621,7 +621,7 @@ private:
 //! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
 /*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).
  */
-class AUDACITY_DLL_API WaveTrackCache {
+class SNEEDACITY_DLL_API WaveTrackCache {
 public:
    WaveTrackCache()
       : mBufferSize(0)
@@ -694,14 +694,14 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
 
-class AUDACITY_DLL_API WaveTrackFactory final
+class SNEEDACITY_DLL_API WaveTrackFactory final
    : public ClientData::Base
 {
  public:
-   static WaveTrackFactory &Get( AudacityProject &project );
-   static const WaveTrackFactory &Get( const AudacityProject &project );
-   static WaveTrackFactory &Reset( AudacityProject &project );
-   static void Destroy( AudacityProject &project );
+   static WaveTrackFactory &Get( SneedacityProject &project );
+   static const WaveTrackFactory &Get( const SneedacityProject &project );
+   static WaveTrackFactory &Reset( SneedacityProject &project );
+   static void Destroy( SneedacityProject &project );
 
    WaveTrackFactory( const ProjectSettings &settings,
       const SampleBlockFactoryPtr &pFactory)
@@ -725,4 +725,4 @@ class AUDACITY_DLL_API WaveTrackFactory final
       double rate = 0);
 };
 
-#endif // __AUDACITY_WAVETRACK__
+#endif // __SNEEDACITY_WAVETRACK__

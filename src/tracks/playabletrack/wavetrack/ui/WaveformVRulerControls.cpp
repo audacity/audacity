@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformVRulerControls.cpp
 
@@ -26,7 +26,7 @@ WaveformVRulerControls::~WaveformVRulerControls() = default;
 
 std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
    const TrackPanelMouseState &st,
-   const AudacityProject *pProject)
+   const SneedacityProject *pProject)
 {
    std::vector<UIHandlePtr> results;
 
@@ -47,7 +47,7 @@ std::vector<UIHandlePtr> WaveformVRulerControls::HitTest(
 }
 
 unsigned WaveformVRulerControls::HandleWheelRotation(
-   const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+   const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    const auto pTrack = FindTrack();
@@ -58,7 +58,7 @@ unsigned WaveformVRulerControls::HandleWheelRotation(
 }
 
 unsigned WaveformVRulerControls::DoHandleWheelRotation(
-   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack *wt)
+   const TrackPanelMouseEvent &evt, SneedacityProject *pProject, WaveTrack *wt)
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;

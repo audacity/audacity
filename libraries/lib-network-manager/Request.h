@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file Request.h
  @brief Declare a class for constructing HTTP requests.
@@ -19,7 +19,7 @@
 #include "HeadersList.h"
 #include "CookiesList.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

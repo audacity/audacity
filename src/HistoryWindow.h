@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   HistoryWindow.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_HISTORY_WINDOW__
-#define __AUDACITY_HISTORY_WINDOW__
+#ifndef __SNEEDACITY_HISTORY_WINDOW__
+#define __SNEEDACITY_HISTORY_WINDOW__
 
 #include "Prefs.h"
 #include "widgets/wxPanelWrapper.h" // to inherit
@@ -19,7 +19,7 @@ class wxListCtrl;
 class wxListEvent;
 class wxSpinCtrl;
 class wxTextCtrl;
-class AudacityProject;
+class SneedacityProject;
 class ShuttleGui;
 class UndoManager;
 
@@ -28,7 +28,7 @@ class HistoryDialog final : public wxDialogWrapper,
 {
 
  public:
-   HistoryDialog(AudacityProject * parent, UndoManager *manager);
+   HistoryDialog(SneedacityProject * parent, UndoManager *manager);
 
    void UpdateDisplay(wxEvent &e);
    
@@ -54,7 +54,7 @@ class HistoryDialog final : public wxDialogWrapper,
    // PrefsListener implementation
    void UpdatePrefs() override;
 
-   AudacityProject   *mProject;
+   SneedacityProject   *mProject;
    UndoManager       *mManager;
    wxListCtrl        *mList;
    wxTextCtrl        *mTotal;

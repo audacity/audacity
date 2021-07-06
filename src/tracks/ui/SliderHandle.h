@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SliderHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SLIDER_HANDLE__
-#define __AUDACITY_SLIDER_HANDLE__
+#ifndef __SNEEDACITY_SLIDER_HANDLE__
+#define __SNEEDACITY_SLIDER_HANDLE__
 
 #include "../../UIHandle.h"
 
@@ -19,12 +19,12 @@ class LWSlider;
 class Track;
 class TranslatableString;
 
-class AUDACITY_DLL_API SliderHandle /* not final */ : public UIHandle
+class SNEEDACITY_DLL_API SliderHandle /* not final */ : public UIHandle
 {
    SliderHandle(const SliderHandle&) = delete;
 
 public:
-   using SliderFn = LWSlider *(*)( AudacityProject*, const wxRect&, Track* );
+   using SliderFn = LWSlider *(*)( SneedacityProject*, const wxRect&, Track* );
 
    explicit SliderHandle
       ( SliderFn sliderFn, const wxRect &rect,
@@ -43,39 +43,39 @@ protected:
    // change.
    // Subclass can decide to refresh other things and the results will be ORed.
    virtual float GetValue() = 0;
-   virtual Result SetValue(AudacityProject *pProject, float newValue) = 0;
+   virtual Result SetValue(SneedacityProject *pProject, float newValue) = 0;
    virtual Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject) = 0;
+      (const wxMouseEvent &event, SneedacityProject *pProject) = 0;
 
    // Define a message for the status bar and tooltip.
    virtual TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &project) const = 0;
+      const wxMouseState &state, SneedacityProject &project) const = 0;
  
-   void Enter(bool forward, AudacityProject *) override;
+   void Enter(bool forward, SneedacityProject *) override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject)
       final override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject)
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject)
       final override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       final override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) final override;
 
-   Result Cancel(AudacityProject *pProject) final override;
+   Result Cancel(SneedacityProject *pProject) final override;
 
    // Derived class is expected to set these two before Click():
    std::weak_ptr<Track> mpTrack;
    wxRect mRect{};
    SliderFn mSliderFn;
-   LWSlider *GetSlider( AudacityProject *pProject );
+   LWSlider *GetSlider( SneedacityProject *pProject );
 
    float mStartingValue {};
 

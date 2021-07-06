@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FileDialog.h
 
@@ -19,7 +19,7 @@ custom controls.
 
 #include <wx/filedlg.h> // to inherit
 
-class AUDACITY_DLL_API FileDialogBase : public wxFileDialogBase
+class SNEEDACITY_DLL_API FileDialogBase : public wxFileDialogBase
 {
 public:
    FileDialogBase();

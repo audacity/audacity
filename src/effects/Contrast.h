@@ -1,13 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Contrast.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_CONTRAST_DIALOG__
-#define __AUDACITY_CONTRAST_DIALOG__
+#ifndef __SNEEDACITY_CONTRAST_DIALOG__
+#define __SNEEDACITY_CONTRAST_DIALOG__
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 

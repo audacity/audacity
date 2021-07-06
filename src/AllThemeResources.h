@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AllThemeResources.h
 
   James Crook
 
-  Audacity is free software.
+  Sneedacity is free software.
   License: GPL v2 - see LICENSE.txt
 
 ********************************************************************//**
@@ -14,7 +14,7 @@
 \file AllThemeResources.h
 
 This file contains definitions of all images, cursors, colours, fonts
-and grids used by Audacity.
+and grids used by Sneedacity.
 
 This will be split up into separate include files to reduce the amount
 of recompilation on a change.
@@ -30,7 +30,7 @@ To add an image, you give its size and name like so:
 
 If you do this and run the program the image will be black to start
 with, but you can go into ThemePrefs and load it (load components)
-from there.  Audacity will look for a file called "Pause.png".
+from there.  Sneedacity will look for a file called "Pause.png".
 
  - Now save into ImageCache.
  - From here on you can get the image by loading ImageCache.
@@ -243,7 +243,7 @@ from there.  Audacity will look for a file called "Pause.png".
 #define LOGOWITHNAME_HEIGHT 200
 
    SET_THEME_FLAGS( resFlagNewLine );
-   DEFINE_IMAGE( bmpAudacityLogo48x48, wxImage( 48, 48 ), wxT("AudacityLogo48x48"));
+   DEFINE_IMAGE( bmpSneedacityLogo48x48, wxImage( 48, 48 ), wxT("SneedacityLogo48x48"));
 
 
    DEFINE_COLOUR( clrBlank,      wxColour( 64,  64,  64), wxT("Blank"));

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   StereoToMono.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_STEREO_TO_MONO__
-#define __AUDACITY_EFFECT_STEREO_TO_MONO__
+#ifndef __SNEEDACITY_EFFECT_STEREO_TO_MONO__
+#define __SNEEDACITY_EFFECT_STEREO_TO_MONO__
 
 #include "Effect.h"
 

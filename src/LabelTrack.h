@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LabelTrack.h
 
@@ -19,14 +19,14 @@
 
 class wxTextFile;
 
-class AudacityProject;
+class SneedacityProject;
 class NotifyingSelectedRegion;
 class TimeWarper;
 
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
 
-class AUDACITY_DLL_API LabelStruct
+class SNEEDACITY_DLL_API LabelStruct
 {
 public:
    LabelStruct() = default;
@@ -82,7 +82,7 @@ public:
 
 using LabelArray = std::vector<LabelStruct>;
 
-class AUDACITY_DLL_API LabelTrack final
+class SNEEDACITY_DLL_API LabelTrack final
    : public Track
    , public wxEvtHandler
 {
@@ -155,7 +155,7 @@ public:
    int FindNextLabel(const SelectedRegion& currentSelection);
    int FindPrevLabel(const SelectedRegion& currentSelection);
 
-   Track::Holder PasteInto( AudacityProject & ) const override;
+   Track::Holder PasteInto( SneedacityProject & ) const override;
 
    struct IntervalData final : Track::IntervalData {
       size_t index;
@@ -211,18 +211,18 @@ struct LabelTrackEvent : TrackListEvent
 };
 
 // Posted when a label is added.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_LABELTRACK_ADDITION, LabelTrackEvent);
 
 // Posted when a label is deleted.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_LABELTRACK_DELETION, LabelTrackEvent);
 
 // Posted when a label is repositioned in the sequence of labels.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
 
 // Posted when the track is selected or unselected.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 #endif

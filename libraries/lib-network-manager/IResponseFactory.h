@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file IResponse.h
  @brief Declare an interface for HTTP response factory.
@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

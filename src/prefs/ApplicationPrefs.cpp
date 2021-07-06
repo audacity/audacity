@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ApplicationPrefs.cpp
 
@@ -81,7 +81,7 @@ bool ApplicationPrefs::Commit()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "Application",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ApplicationPrefs(parent, winid);

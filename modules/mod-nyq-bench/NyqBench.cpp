@@ -32,10 +32,10 @@
 #include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "effects/nyquist/Nyquist.h"
-#include "../images/AudacityLogo.xpm"
+#include "../images/SneedacityLogo.xpm"
 #include "../../src/commands/CommandContext.h"
 #include "../../src/commands/CommandManager.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 
 #include "NyqBench.h"
 
@@ -95,7 +95,7 @@ See the example in this file.  It has several cases/options in it.
 */
 
 namespace {
-CommandHandlerObject &findme(AudacityProject&)
+CommandHandlerObject &findme(SneedacityProject&)
 {
    return *NyqBench::GetBench();
 }
@@ -122,7 +122,7 @@ extern "C"
 
    extern int DLL_API ModuleDispatch(ModuleDispatchTypes type);
    // ModuleDispatch
-   // is called by Audacity to initialize/terminate the module
+   // is called by Sneedacity to initialize/terminate the module
    int ModuleDispatch(ModuleDispatchTypes type){
       switch (type){
          case ModuleInitialize:
@@ -671,7 +671,7 @@ NyqBench::NyqBench(wxWindow * parent)
    mShowCode = (gPrefs->Read(wxT("NyqBench/ShowScript"), true) != 0);
    mShowOutput = (gPrefs->Read(wxT("NyqBench/ShowOutput"), true) != 0);
 
-   SetIcon(wxICON(AudacityLogo));
+   SetIcon(wxICON(SneedacityLogo));
    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -1032,7 +1032,7 @@ void NyqBench::OnSave(wxCommandEvent & e)
 
    if (!mScript->SaveFile(mPath.GetFullPath()))
    {
-      AudacityMessageBox(XO("Script was not saved."),
+      SneedacityMessageBox(XO("Script was not saved."),
                    XO("Warning"),
                    wxICON_EXCLAMATION,
                    this);
@@ -1062,7 +1062,7 @@ void NyqBench::OnSaveAs(wxCommandEvent & e)
 
    if (!mScript->SaveFile(mPath.GetFullPath()))
    {
-      AudacityMessageBox(XO("Script was not saved."),
+      SneedacityMessageBox(XO("Script was not saved."),
                    XO("Warning"),
                    wxICON_EXCLAMATION,
                    this);
@@ -1336,7 +1336,7 @@ void NyqBench::OnGo(wxCommandEvent & e)
    mEffect->SetCommand(mScript->GetValue());
    mEffect->RedirectOutput();
 
-   AudacityProject *p = GetActiveProject();
+   SneedacityProject *p = GetActiveProject();
    wxASSERT(p != NULL);
 
    if (p) {
@@ -1371,7 +1371,7 @@ void NyqBench::OnAbout(wxCommandEvent & e)
    i.AddArtist(_("Tango Icon Gallery (toolbar icons)"));
    i.AddDeveloper(_("Leland Lucius"));
    i.SetCopyright(_("(C) 2009 by Leland Lucius"));
-   i.SetDescription(_("External Audacity module which provides a simple IDE for writing effects."));
+   i.SetDescription(_("External Sneedacity module which provides a simple IDE for writing effects."));
    i.SetName(_("Nyquist Effect Workbench"));
    i.SetVersion(__TDATE__);
 
@@ -1439,7 +1439,7 @@ void NyqBench::OnFindDialog(wxFindDialogEvent & e)
    }
 
    if (pos == wxString::npos) {
-      AudacityMessageBox(XO("No matches found"),
+      SneedacityMessageBox(XO("No matches found"),
                    XO("Nyquist Effect Workbench"),
                    wxOK | wxCENTER,
                    e.GetDialog());
@@ -1528,7 +1528,7 @@ void NyqBench::OnViewUpdate(wxUpdateUIEvent & e)
 
 void NyqBench::OnRunUpdate(wxUpdateUIEvent & e)
 {
-   AudacityProject *p = GetActiveProject();
+   SneedacityProject *p = GetActiveProject();
    wxToolBar *tbar = GetToolBar();
    wxMenuBar *mbar = GetMenuBar();
 
@@ -1577,7 +1577,7 @@ bool NyqBench::Validate()
 {
    if (mScript->GetLastPosition() > 0 && mScript->IsModified()) {
       int ans;
-      ans = AudacityMessageBox(XO("Code has been modified. Are you sure?"),
+      ans = SneedacityMessageBox(XO("Code has been modified. Are you sure?"),
                          XO("Warning"),
                          wxYES_NO | wxICON_QUESTION,
                          this);
@@ -1720,7 +1720,7 @@ void NyqBench::LoadFile()
 }
 
 //----------------------------------------------------------------------------
-// Connects Audacity menu item to an action in this dll.
+// Connects Sneedacity menu item to an action in this dll.
 // Only one action implemented so far.
 //----------------------------------------------------------------------------
 void NyqBench::ShowNyqBench(const CommandContext &)

@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CurlStringList.h
  @brief Declare a RAII wrapper for the curl_slist.
@@ -14,7 +14,7 @@
 
 struct curl_slist;
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

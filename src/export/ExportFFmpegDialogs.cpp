@@ -1,10 +1,10 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
+   Sneedacity: A Digital Audio Editor
 
    ExportFFmpegDialogs.cpp
 
-   Audacity(R) is copyright (c) 1999-2010 Audacity Team.
+   Sneedacity(R) is copyright (c) 1999-2010 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    LRN
@@ -62,7 +62,7 @@
 
 #include "../Mix.h"
 #include "../Tags.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
 #include "Export.h"
@@ -958,7 +958,7 @@ bool FFmpegPresets::OverwriteIsOk( wxString &name )
    if (preset)
    {
       auto query = XO("Overwrite preset '%s'?").Format(name);
-      int action = AudacityMessageBox(
+      int action = SneedacityMessageBox(
          query,
          XO("Confirm Overwrite"),
          wxYES_NO | wxCENTRE);
@@ -982,7 +982,7 @@ bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       lb = dynamic_cast<wxListBox*>(wnd);
       if (lb->GetSelection() < 0)
       {
-         AudacityMessageBox( XO("Please select format before saving a profile") );
+         SneedacityMessageBox( XO("Please select format before saving a profile") );
          return false;
       }
       format = lb->GetStringSelection();
@@ -992,7 +992,7 @@ bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
       if (lb->GetSelection() < 0)
       {
          /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
-         AudacityMessageBox( XO("Please select codec before saving a profile") );
+         SneedacityMessageBox( XO("Please select codec before saving a profile") );
          return false;
       }
       codec = lb->GetStringSelection();
@@ -1067,7 +1067,7 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    FFmpegPreset *preset = FindPreset(name);
    if (!preset)
    {
-      AudacityMessageBox( XO("Preset '%s' does not exist." ).Format(name));
+      SneedacityMessageBox( XO("Preset '%s' does not exist." ).Format(name));
       return;
    }
 
@@ -1169,7 +1169,7 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             if (mPreset)
             {
                auto query = XO("Replace preset '%s'?").Format( value );
-               int action = AudacityMessageBox(
+               int action = SneedacityMessageBox(
                   query,
                   XO("Confirm Overwrite"),
                   wxYES_NO | wxCANCEL | wxCENTRE);
@@ -1250,15 +1250,15 @@ void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
    xmlFile.Write(wxT("standalone=\"no\" "));
    xmlFile.Write(wxT("?>\n"));
 
-   wxString dtdName = wxT("-//audacityffmpegpreset-1.0.0//DTD//EN");
+   wxString dtdName = wxT("-//sneedacityffmpegpreset-1.0.0//DTD//EN");
    wxString dtdURI =
-      wxT("http://audacity.sourceforge.net/xml/audacityffmpegpreset-1.0.0.dtd");
+      wxT("http://sneedacity.sourceforge.net/xml/sneedacityffmpegpreset-1.0.0.dtd");
 
    xmlFile.Write(wxT("<!DOCTYPE "));
    xmlFile.Write(wxT("project "));
    xmlFile.Write(wxT("PUBLIC "));
-   xmlFile.Write(wxT("\"-//audacityffmpegpreset-1.0.0//DTD//EN\" "));
-   xmlFile.Write(wxT("\"http://audacity.sourceforge.net/xml/audacityffmpegpreset-1.0.0.dtd\" "));
+   xmlFile.Write(wxT("\"-//sneedacityffmpegpreset-1.0.0//DTD//EN\" "));
+   xmlFile.Write(wxT("\"http://sneedacity.sourceforge.net/xml/sneedacityffmpegpreset-1.0.0.dtd\" "));
    xmlFile.Write(wxT(">\n"));
 }
 
@@ -2198,12 +2198,12 @@ void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
    wxString presetname = preset->GetValue();
    if (presetname.empty())
    {
-      AudacityMessageBox( XO("You can't delete a preset without name") );
+      SneedacityMessageBox( XO("You can't delete a preset without name") );
       return;
    }
 
    auto query = XO("Delete preset '%s'?").Format( presetname );
-   int action = AudacityMessageBox(
+   int action = SneedacityMessageBox(
       query,
       XO("Confirm Deletion"),
       wxYES_NO | wxCENTRE);
@@ -2232,7 +2232,7 @@ bool ExportFFmpegOptions::SavePreset(bool bCheckForOverwrite)
    wxString name = preset->GetValue();
    if (name.empty())
    {
-      AudacityMessageBox( XO("You can't save a preset without a name") );
+      SneedacityMessageBox( XO("You can't save a preset without a name") );
       return false;
    }
    if( bCheckForOverwrite && !mPresets->OverwriteIsOk(name))
@@ -2313,7 +2313,7 @@ void ExportFFmpegOptions::OnExportPresets(wxCommandEvent& WXUNUSED(event))
    mPresets->GetPresetList( presets);
    if( presets.Count() < 1)
    {
-      AudacityMessageBox( XO("No presets to export") );
+      SneedacityMessageBox( XO("No presets to export") );
       return;
    }
 
@@ -2399,7 +2399,7 @@ bool ExportFFmpegOptions::ReportIfBadCombination()
    if( bFound )
       return false;
 
-   AudacityMessageBox(
+   SneedacityMessageBox(
       /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       XO("Format %s is not compatible with codec %s.")
          .Format( *selfmt, *selcdc ),

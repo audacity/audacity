@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   KeyConfigPrefs.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_KEY_CONFIG_PREFS__
-#define __AUDACITY_KEY_CONFIG_PREFS__
+#ifndef __SNEEDACITY_KEY_CONFIG_PREFS__
+#define __SNEEDACITY_KEY_CONFIG_PREFS__
 
 class CommandManager;
 class ShuttleGui;
@@ -33,7 +33,7 @@ class KeyConfigPrefs final : public PrefsPanel
 {
 public:
    KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
-      AudacityProject *pProject,
+      SneedacityProject *pProject,
       const CommandID &name);
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
@@ -93,7 +93,7 @@ private:
    wxRadioButton *mViewByName;
    wxRadioButton *mViewByKey;
 
-   AudacityProject *mProject{};
+   SneedacityProject *mProject{};
 
    CommandManager *mManager;
    int mCommandSelected;

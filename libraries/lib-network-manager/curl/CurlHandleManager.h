@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CurlHandleManager.h
  @brief Declare a class responsible for reuse of CURL hanldes.
@@ -23,7 +23,7 @@
 #include "../CookiesList.h"
 #include "../HeadersList.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

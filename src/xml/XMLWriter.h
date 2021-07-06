@@ -1,14 +1,14 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   XMLWriter.h
 
   Leland Lucius
 
 **********************************************************************/
-#ifndef __AUDACITY_XML_XML_FILE_WRITER__
-#define __AUDACITY_XML_XML_FILE_WRITER__
+#ifndef __SNEEDACITY_XML_XML_FILE_WRITER__
+#define __SNEEDACITY_XML_XML_FILE_WRITER__
 
 #include <vector>
 #include <wx/ffile.h> // to inherit
@@ -20,7 +20,7 @@
 ///
 /// XMLWriter
 ///
-class AUDACITY_DLL_API XMLWriter /* not final */ {
+class SNEEDACITY_DLL_API XMLWriter /* not final */ {
 
  public:
 
@@ -78,7 +78,7 @@ class AUDACITY_DLL_API XMLWriter /* not final */ {
 /// If the construction and all operations are inside a GuardedCall or event
 /// handler, then the default delayed handler action in case of exceptions will
 /// notify the user of problems.
-class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
+class SNEEDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
 
  public:
 

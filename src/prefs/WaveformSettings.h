@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformSettings.h
 
@@ -8,19 +8,19 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WAVEFORM_SETTINGS__
-#define __AUDACITY_WAVEFORM_SETTINGS__
+#ifndef __SNEEDACITY_WAVEFORM_SETTINGS__
+#define __SNEEDACITY_WAVEFORM_SETTINGS__
 
 #include "../Prefs.h"
 
 class EnumValueSymbols;
 
-class AUDACITY_DLL_API WaveformSettings : public PrefsListener
+class SNEEDACITY_DLL_API WaveformSettings : public PrefsListener
 {
 public:
 
    // Singleton for settings that are not per-track
-   class AUDACITY_DLL_API Globals
+   class SNEEDACITY_DLL_API Globals
    {
    public:
       static Globals &Get();

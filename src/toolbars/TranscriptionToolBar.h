@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
 
   TranscriptionToolBar.h
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRANSCRIPTION_TOOLBAR__
-#define __AUDACITY_TRANSCRIPTION_TOOLBAR__
+#ifndef __SNEEDACITY_TRANSCRIPTION_TOOLBAR__
+#define __SNEEDACITY_TRANSCRIPTION_TOOLBAR__
 
 #include "ToolBar.h"
 
@@ -26,7 +26,7 @@ class wxKeyEvent;
 
 class AButton;
 class ASlider;
-class AudacityProject;
+class SneedacityProject;
 class BoundedEnvelope;
 class WaveTrack;
 
@@ -63,11 +63,11 @@ class TranscriptionToolBar final : public ToolBar {
 
  public:
 
-   TranscriptionToolBar( AudacityProject &project );
+   TranscriptionToolBar( SneedacityProject &project );
    virtual ~TranscriptionToolBar();
 
-   static TranscriptionToolBar &Get( AudacityProject &project );
-   static const TranscriptionToolBar &Get( const AudacityProject &project );
+   static TranscriptionToolBar &Get( SneedacityProject &project );
+   static const TranscriptionToolBar &Get( const SneedacityProject &project );
 
    void Create(wxWindow *parent) override;
 

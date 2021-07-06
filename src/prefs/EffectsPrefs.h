@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   EffectsPrefs.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECTS_PREFS__
-#define __AUDACITY_EFFECTS_PREFS__
+#ifndef __SNEEDACITY_EFFECTS_PREFS__
+#define __SNEEDACITY_EFFECTS_PREFS__
 
 #include <wx/defs.h>
 
@@ -38,5 +38,5 @@ class EffectsPrefs final : public PrefsPanel
    void Populate();
 };
 
-AUDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
+SNEEDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
 #endif

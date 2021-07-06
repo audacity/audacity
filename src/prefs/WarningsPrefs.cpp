@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WarningsPrefs.cpp
 
@@ -104,7 +104,7 @@ bool WarningsPrefs::Commit()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "Warnings",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew WarningsPrefs(parent, winid);

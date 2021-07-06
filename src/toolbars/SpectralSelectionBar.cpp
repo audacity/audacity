@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 SpectralSelectionBar.cpp
 
@@ -93,7 +93,7 @@ END_EVENT_TABLE()
 static const wxString preferencePath
 (wxT("/GUI/Toolbars/SpectralSelection/CenterAndWidthChoice"));
 
-SpectralSelectionBar::SpectralSelectionBar( AudacityProject &project )
+SpectralSelectionBar::SpectralSelectionBar( SneedacityProject &project )
 : ToolBar( project,
    SpectralSelectionBarID, XO("Spectral Selection"), wxT("SpectralSelection") )
 , mListener(NULL), mbCenterAndWidth(true)
@@ -108,16 +108,16 @@ SpectralSelectionBar::~SpectralSelectionBar()
    // Do nothing, sizer deletes the controls
 }
 
-SpectralSelectionBar &SpectralSelectionBar::Get( AudacityProject &project )
+SpectralSelectionBar &SpectralSelectionBar::Get( SneedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
    return *static_cast<SpectralSelectionBar*>(
       toolManager.GetToolBar(SpectralSelectionBarID) );
 }
 
-const SpectralSelectionBar &SpectralSelectionBar::Get( const AudacityProject &project )
+const SpectralSelectionBar &SpectralSelectionBar::Get( const SneedacityProject &project )
 {
-   return Get( const_cast<AudacityProject&>( project )) ;
+   return Get( const_cast<SneedacityProject&>( project )) ;
 }
 
 void SpectralSelectionBar::Create(wxWindow * parent)
@@ -485,7 +485,7 @@ void SpectralSelectionBar::SetBandwidthSelectionFormatName(const NumericFormatSy
 }
 
 static RegisteredToolbarFactory factory{ SpectralSelectionBarID,
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       return ToolBar::Holder{ safenew SpectralSelectionBar{ project } }; }
 };
 

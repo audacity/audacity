@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExtImportPrefs.cpp
 
@@ -24,7 +24,7 @@
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
 #include "../import/Import.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/Grid.h"
 
 #define EXTIMPORT_MIME_SUPPORT 0
@@ -545,12 +545,12 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
       {
          if (!askedAboutSpaces)
          {
-            fixSpaces = AudacityMessageBox(
+            fixSpaces = SneedacityMessageBox(
                XO(
 "There are space characters (spaces, newlines, tabs or linefeeds) in one of \
 the items. They are likely to break the pattern matching. Unless you know \
 what you are doing, it is recommended to trim spaces. Do you want \
-Audacity to trim spaces for you?"),
+Sneedacity to trim spaces for you?"),
                XO("Spaces detected"),
                wxYES_NO);
             askedAboutSpaces = true;
@@ -638,7 +638,7 @@ void ExtImportPrefs::OnDelRule(wxCommandEvent& WXUNUSED(event))
       return;
    auto &items = Importer::Get().GetImportItems();
 
-   int msgres = AudacityMessageBox (
+   int msgres = SneedacityMessageBox (
       XO("Do you really want to delete selected rule?"),
       XO("Rule deletion confirmation"),
       wxYES_NO,
@@ -852,7 +852,7 @@ void ExtImportPrefsDropTarget::OnLeave()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "ExtImport",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ExtImportPrefs(parent, winid);

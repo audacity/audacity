@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Distortion.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_DISTORTION__
-#define __AUDACITY_EFFECT_DISTORTION__
+#ifndef __SNEEDACITY_EFFECT_DISTORTION__
+#define __SNEEDACITY_EFFECT_DISTORTION__
 
 #include <queue>
 

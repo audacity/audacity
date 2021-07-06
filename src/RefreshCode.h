@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 RefreshCode.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_REFRESH_CODE__
-#define __AUDACITY_REFRESH_CODE__
+#ifndef __SNEEDACITY_REFRESH_CODE__
+#define __SNEEDACITY_REFRESH_CODE__
 
 /// Namespace containing an enum 'what to do on a refresh?'
 namespace RefreshCode

@@ -1,6 +1,6 @@
 //
 //  Overlay.cpp
-//  Audacity
+//  Sneedacity
 //
 //  Created by Paul Licameli on 5/7/16.
 //

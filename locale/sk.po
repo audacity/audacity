@@ -1,10 +1,10 @@
 # Copyright (C) YEAR Sneedacity Development Team
 # This file is distributed under the same license as Sneedacity.
-# Sneedacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
+# Sneedacity Team <sneedacity-translation@lists.sourceforge.net>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2020-09-10 10:55+0200\n"
 "Last-Translator: Jozef Matta <jozef.m923@gmail.com>\n"
@@ -340,7 +340,7 @@ msgstr "Nyquist skripty (*.ny)|*.ny|Lisp skripty (*.lsp)|*.lsp|Všetky súbory|*
 msgid "Script was not saved."
 msgstr "Skript nebol uložený."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -749,7 +749,7 @@ msgid "Credits"
 msgstr "Spolupracovali"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
+msgid "DarkSneedacity Customisation"
 msgstr "Prispôsobenie tmavého Sneedacity"
 
 #. i18n-hint: The program's name substitutes for %s
@@ -826,7 +826,7 @@ msgstr "Povolené"
 msgid "Disabled"
 msgstr "Zakázané"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "The Build"
@@ -863,7 +863,7 @@ msgstr "Typ zostavy:"
 msgid "Compiler:"
 msgstr "Kompilátor:"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 msgid "Installation Prefix:"
 msgstr "Predčíslie inštalácie:"
@@ -872,7 +872,7 @@ msgstr "Predčíslie inštalácie:"
 msgid "Settings folder:"
 msgstr "Nastavenia priečinka:"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "Základné knižnice"
@@ -1081,16 +1081,16 @@ msgstr ""
 msgid "Error"
 msgstr "Chyba"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "Zlyhalo odstránenie %s"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "Zlyhanie!"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1102,11 +1102,11 @@ msgstr ""
 "Toto je jednorázová otázka, po 'inštalácii' kde sa žiada súhlas s vynulovaní "
 "predvolieb."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "Vynulovať predvoľby Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1117,45 +1117,45 @@ msgstr ""
 "\n"
 "Záznam bol odstránený zo zoznamu nedávnych súborov."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Veľkosť bloku musí byť medzi 256 až 100000000\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Spúšťa sa Sneedacity..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&Nový"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&Otvoriť..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "Otvoriť &nedávne..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "&O programe Sneedacity..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&Predvoľby..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&Súbor"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
 "Sneedacity needs a place where automatic cleanup programs won't delete the "
@@ -1167,7 +1167,7 @@ msgstr ""
 "súbory.\n"
 "Prosím zadajte správny priečinok v dialógu predvolieb."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1175,7 +1175,7 @@ msgstr ""
 "Sneedacity nenašlo umiestnenie pre uloženie dočasných súborov.\n"
 "Prosím zadajte správny priečinok v dialógu predvolieb."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
@@ -1183,7 +1183,7 @@ msgstr ""
 "Sneedacity sa teraz vypne. Spustite, prosím, Sneedacity znovu pre použitie "
 "nového dočasného priečinka."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -1193,7 +1193,7 @@ msgstr ""
 "stratu údajov alebo pád vášho systému.\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1201,19 +1201,19 @@ msgstr ""
 "Sneedacity nemôže zamknúť priečinok pre dočasné súbory.\n"
 "Je možné, že tento priečinok práve používa iná kópia Sneedacity.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "Stále ešte chcete spustiť Sneedacity?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "Chyba uzamykania dočasného priečinka"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "Systém rozpoznal ďalšiu spustenú kópiu Sneedacity.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -1221,11 +1221,11 @@ msgstr ""
 "Použite príkazy Nový alebo Otvoriť v aktuálne spustenom Sneedacity\n"
 "procese pre otvorenie viacero projektov súčasne.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity je už spustené"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1233,11 +1233,11 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Startup Failure"
 msgstr "Zlyhanie pri spustení Sneedacity"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1245,7 +1245,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1253,7 +1253,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1261,7 +1261,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1269,38 +1269,38 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr "Počas spúšťania sa vyskytla neodstrániteľná chyba"
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "nastaví maximálnu veľkosť bloku disku v bajtoch"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "this help message"
 msgstr "táto pomocná správa"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "run self diagnostics"
 msgstr "spustí vlastnú diagnostiku"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "display Sneedacity version"
 msgstr "zobrazí verziu Sneedacity"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "audio or project file name"
 msgstr "audio alebo súbor názvu projektu"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
@@ -1313,21 +1313,21 @@ msgstr ""
 "\n"
 "Vykonať asociáciu, aby ich bolo možné otvárať dvojklikom?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "Projektové súbory Sneedacity"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr "Správa"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, fuzzy
 msgid "Sneedacity Configuration Error"
 msgstr "Prispôsobenie tmavého Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1344,48 +1344,48 @@ msgid ""
 "state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Nápoveda"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Sneedacity"
 msgstr "Ukončiť Sneedacity"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
 msgstr "Záznamy Sneedacity"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 msgid "&Save..."
 msgstr "&Uložiť..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "&Zmazať"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&Zavrieť"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "záznam.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Save log to:"
 msgstr "Uložiť záznam do:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "Nemožno uložiť záznam do súboru: %s"
@@ -3921,7 +3921,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Vypnúť detekciu výpadkov"
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -5895,12 +5895,12 @@ msgstr "Na rozšírenie oblasti vyrezania nie je k dispozícii dostatok priestor
 msgid "This operation cannot be done until importation of %s completes."
 msgstr "Túto operáciu nie je možné vykonať, kým sa neskončí import %s."
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Sneedacity"
 msgstr "Sneedacity"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5912,13 +5912,13 @@ msgstr ""
 "\n"
 "%s"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid "Applying %s..."
 msgstr "Aplikácia %s..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5927,7 +5927,7 @@ msgstr "Aplikácia %s..."
 msgid "%s: %s"
 msgstr "%s: %s"
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr "Zlyhanie"
 
@@ -24079,14 +24079,14 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "This screen can be viewed at any time by clicking the <i>Help</i> menu, "
 #~ "then <i>Show Welcome Message</i>. For a detailed guide to all the "
 #~ "Sneedacity menus and controls, click  <i>Help</i> menu then <i>Index</i>, "
-#~ "or download our <a href=\"http://audacity.sourceforge.net/help/"
+#~ "or download our <a href=\"http://sneedacity.sourceforge.net/help/"
 #~ "documentation/manual_1.4.pdf\">full Manual</a> in PDF format.</p>"
 #~ msgstr ""
 #~ "Túto obrazovku si môžete pozrieť kedykoľvek kliknutím na <i> Pomoc </i> "
 #~ "menu, potom <i> Zobraziť uvítaciu správu </i>. Pre podrobný návod na "
 #~ "všetky Sneedacity menu a ovládacie prvky, kliknite na tlačidlo <i> Pomoc</"
 #~ "i> menu potom <i> Index </i>, alebo si stiahnute  <a href=\"http://"
-#~ "audacity.sourceforge.net /help/documentation/manual_1.4.pdf\"> plný "
+#~ "sneedacity.sourceforge.net /help/documentation/manual_1.4.pdf\"> plný "
 #~ "manuál </a> vo formáte PDF. </p> "
 
 #~ msgid ""
@@ -24136,7 +24136,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "<i>Device Toolbar</i>.<br> 3) [[inputlevel|Adjust input level]] using the "
 #~ "right-hand slider on the <i>Mixer Toolbar</i>. Correct adjustment of "
 #~ "level before recording is essential to avoid noise or distortion. </p><p> "
-#~ "More help at: \"Recording\" <a href=\"http://audacity.sourceforge.net/"
+#~ "More help at: \"Recording\" <a href=\"http://sneedacity.sourceforge.net/"
 #~ "help/faq\">FAQs</a>, our Tutorial <a href=\"http://www.audacityteam.org/"
 #~ "manual/index.php?title=Tutorial_-_Your_First_Recording\"> Your First "
 #~ "Recording</a> in the <a href=\"http://www.audacityteam.org/manual/index."
@@ -24157,7 +24157,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "[[ inputlevel | Upravte vstupnú úroveň]] pomocou pravého jazdca na <i> "
 #~ "Mixážny panel nástrojov</i>. Správne nastavenie úrovne pred nahrávaním je "
 #~ "dôležité, aby nedochádzalo k rušeniu alebo skresleniu. </p> <p> Ďalšie "
-#~ "informácie na : \"Nahrávanie \"<a href=\"http://audacity.sourceforge.net/"
+#~ "informácie na : \"Nahrávanie \"<a href=\"http://sneedacity.sourceforge.net/"
 #~ "help/faq\"> Často kladené otázky </a>, našich  príručkách   <a href="
 #~ "\"http://www.audacityteam.org/manual/index.php?title=Tutorial_-"
 #~ "_Your_First_Recording\"> Vaše prvé nahrávky </a>,<a href=\"http://www."
@@ -24206,7 +24206,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "can choose the input source at Apple Audio MIDI Setup. <br><i><b>Note:</"
 #~ "b> many USB or Firewire recording devices don't have a choice of inputs, "
 #~ "so this step is not necessary. If in doubt, see the documentation for "
-#~ "your device. </i></p><p> <b>Tip:</b> To <a href=\"http://audacity."
+#~ "your device. </i></p><p> <b>Tip:</b> To <a href=\"http://sneedacity."
 #~ "sourceforge.net/help/faq?s=recording&i=streaming\">record audio playing "
 #~ "on the computer</a>, Windows and Linux users can choose the \"Stereo Mix"
 #~ "\", \"Wave Out\", \"Sum\" or comparable input source. </p><p> Back to "
@@ -24224,7 +24224,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "<br> <i> <b> Poznámka: </b> mnoho USB alebo Firewire nahrávacích "
 #~ "zariadení nemá výber vstupov, takže tento krok nie je potrebný. Ak máte "
 #~ "pochybnosti, pozrite sa na dokumentáciu pre vaše zariadenie. </i> </p> "
-#~ "<p> <b> Tip: </b>Pre <a href=\"http://audacity.sourceforge.net/help/faq?"
+#~ "<p> <b> Tip: </b>Pre <a href=\"http://sneedacity.sourceforge.net/help/faq?"
 #~ "s=recording&i=streaming\"> nahrávanie audia, ktorý sa prehráva na "
 #~ "počítači </a>,si Windows a Linux užívatelia môžu zvoliť  \"Stereo Mix "
 #~ "\",  \"Wave Out \", \"Sum \" alebo porovnateľný vstupný zdroj. </p> <p> "
@@ -24370,7 +24370,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "protected, burn it to an audio CD in the program licensed to play it, "
 #~ "then extract the CD track to WAV or AIFF using iTunes or (on Windows) <a "
 #~ "href=\"http://cdexos.sourceforge.net/?q=download\">CDex</a> or Windows "
-#~ "Media Player 11. You could also <a href=\"http://audacity.sourceforge.net/"
+#~ "Media Player 11. You could also <a href=\"http://sneedacity.sourceforge.net/"
 #~ "help/faq?s=recording&amp;i=streaming\">record</a> the CD to your "
 #~ "computer. <i>To export to an unsupported format, export to WAV or AIFF "
 #~ "and convert it to the desired format in iTunes or <a href=\"http://www."
@@ -24391,7 +24391,7 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 #~ "prehrávanie, potom extrahovať CD stopy do WAV alebo AIFF alebo pomocou "
 #~ "iTunes (pre Windows) <a href=\"http://cdexos.sourceforge.net /?q=download"
 #~ "\"> CDex </a> alebo Windows Media Player 11. Môžete tiež <a href=\"http://"
-#~ "audacity.sourceforge.net/help/faq?s=recording&i=streaming\"> zaznamenať </"
+#~ "sneedacity.sourceforge.net/help/faq?s=recording&i=streaming\"> zaznamenať </"
 #~ "a> CD do počítača. <i> pre exportovanie  nepodporovaného formátu ho "
 #~ "exportujte do WAV alebo AIFF a premeňte ho na požadovaný formát v iTunes "
 #~ "alebo <a href=\"http://www.erightsoft.com/SUPER.html#Dnload\"> SUPER </"
@@ -24889,14 +24889,14 @@ msgstr "Chyba.~%Požadovaná stereo stopa."
 
 #~ msgid ""
 #~ "<p>You don't appear to have Sneedacity help files on your machine. Either "
-#~ "<a href=\"http://audacity.sourceforge.net/help/documentation\">download</"
+#~ "<a href=\"http://sneedacity.sourceforge.net/help/documentation\">download</"
 #~ "a> the help files and then access them again from Sneedacity by clicking "
-#~ "<i>Help</i> then <i>Index</i>, or click <a href=\"http://www.audacityteam."
+#~ "<i>Help</i> then <i>Index</i>, or click <a href=\"http://www.sneedacityteam."
 #~ "org/manual/index.php?title=Main_Page\">here</a> to read the full Manual "
 #~ "online."
 #~ msgstr ""
 #~ "<p>Zdá sa, že súbory s nápovedou k Sneedacity nie sú na vašom počítači. "
-#~ "Môžete buď <a href=\"http://audacity.sourceforge.net/help/documentation"
+#~ "Môžete buď <a href=\"http://sneedacity.sourceforge.net/help/documentation"
 #~ "\">stiahnuť</a> nápovedu a potom sa ku nej dostať z menu <i>Nápoveda</i>, "
 #~ "<i>Obsah</i>, alebo kliknite <a href=\"http://www.audacityteam.org/manual/"
 #~ "index.php?title=Main_Page\">sem</a> a môžete si prečítať celý manuál on-"

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   RingBuffer.h
 
@@ -8,8 +8,8 @@
 
 *******************************************************************/
 
-#ifndef __AUDACITY_RING_BUFFER__
-#define __AUDACITY_RING_BUFFER__
+#ifndef __SNEEDACITY_RING_BUFFER__
+#define __SNEEDACITY_RING_BUFFER__
 
 #include "SampleFormat.h"
 #include <atomic>
@@ -52,4 +52,4 @@ class RingBuffer final : public NonInterferingBase {
    SampleBuffer  mBuffer;
 };
 
-#endif /*  __AUDACITY_RING_BUFFER__ */
+#endif /*  __SNEEDACITY_RING_BUFFER__ */

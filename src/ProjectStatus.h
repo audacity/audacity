@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectStatus.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_STATUS__
-#define __AUDACITY_PROJECT_STATUS__
+#ifndef __SNEEDACITY_PROJECT_STATUS__
+#define __SNEEDACITY_PROJECT_STATUS__
 #endif
 
 #include <utility>
@@ -18,7 +18,7 @@ Paul Licameli
 #include "ClientData.h" // to inherit
 #include "Prefs.h"
 
-class AudacityProject;
+class SneedacityProject;
 class wxWindow;
 
 enum StatusBarField : int {
@@ -31,18 +31,18 @@ enum StatusBarField : int {
 
 // Type of event emitted by the project when its status message is set
 // GetInt() identifies the intended field of the status bar
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_PROJECT_STATUS_UPDATE, wxCommandEvent);
 
-class AUDACITY_DLL_API ProjectStatus final
+class SNEEDACITY_DLL_API ProjectStatus final
    : public ClientData::Base
    , public PrefsListener
 {
 public:
-   static ProjectStatus &Get( AudacityProject &project );
-   static const ProjectStatus &Get( const AudacityProject &project );
+   static ProjectStatus &Get( SneedacityProject &project );
+   static const ProjectStatus &Get( const SneedacityProject &project );
 
-   explicit ProjectStatus( AudacityProject &project );
+   explicit ProjectStatus( SneedacityProject &project );
    ProjectStatus( const ProjectStatus & ) = delete;
    ProjectStatus &operator= ( const ProjectStatus & ) = delete;
    ~ProjectStatus() override;
@@ -52,12 +52,12 @@ public:
    // be wide enough to contain any of those strings plus the margin.
    using StatusWidthResult = std::pair< std::vector<TranslatableString>, unsigned >;
    using StatusWidthFunction = std::function<
-      StatusWidthResult( const AudacityProject &, StatusBarField )
+      StatusWidthResult( const SneedacityProject &, StatusBarField )
    >;
    using StatusWidthFunctions = std::vector< StatusWidthFunction >;
 
    // Typically a static instance of this struct is used.
-   struct AUDACITY_DLL_API RegisteredStatusWidthFunction
+   struct SNEEDACITY_DLL_API RegisteredStatusWidthFunction
    {
       explicit
       RegisteredStatusWidthFunction( const StatusWidthFunction &function );
@@ -73,6 +73,6 @@ public:
    void UpdatePrefs() override;
 
 private:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
    TranslatableString mLastStatusMessages[ nStatusBarFields ];
 };

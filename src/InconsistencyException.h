@@ -6,10 +6,10 @@
 
 */
 
-#ifndef __AUDACITY_INCONSISTENCY_EXCEPTION__
-#define __AUDACITY_INCONSISTENCY_EXCEPTION__
+#ifndef __SNEEDACITY_INCONSISTENCY_EXCEPTION__
+#define __SNEEDACITY_INCONSISTENCY_EXCEPTION__
 
-#include "AudacityException.h"
+#include "SneedacityException.h"
 
 //! Exception that should be impossible in production, thrown only from provably unreachable places
 /*!  Some errors that formerly were assertion violations now throw exceptions,
@@ -20,7 +20,7 @@
   The error message identifies source file and line number, possibly the function too (depending on
   the compiler), and suggests that the user inform the development team.
  */
-class AUDACITY_DLL_API InconsistencyException final : public MessageBoxException
+class SNEEDACITY_DLL_API InconsistencyException final : public MessageBoxException
 {
 public:
    InconsistencyException () 

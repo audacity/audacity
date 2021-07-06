@@ -1,6 +1,6 @@
 /**********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  TrackPanelResizerCell.h
 
@@ -8,8 +8,8 @@
 
  **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_PANEL_RESIZER_CELL__
-#define __AUDACITY_TRACK_PANEL_RESIZER_CELL__
+#ifndef __SNEEDACITY_TRACK_PANEL_RESIZER_CELL__
+#define __SNEEDACITY_TRACK_PANEL_RESIZER_CELL__
 
 #include "ClientData.h" // to inherit
 #include "tracks/ui/CommonTrackPanelCell.h" // to inherit
@@ -33,7 +33,7 @@ public:
    TrackPanelResizerCell( const std::shared_ptr<Track> &pTrack );
 
    std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *) override;
+      (const TrackPanelMouseState &, const SneedacityProject *) override;
 
 protected:
    std::shared_ptr<Track> DoFindTrack() override;

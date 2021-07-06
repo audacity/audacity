@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ErrorDialog.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ERRORDIALOG__
-#define __AUDACITY_ERRORDIALOG__
+#ifndef __SNEEDACITY_ERRORDIALOG__
+#define __SNEEDACITY_ERRORDIALOG__
 
 
 
@@ -19,7 +19,7 @@
 #include <wx/msgdlg.h> // to inherit
 #include "wxPanelWrapper.h" // to inherit
 
-class AudacityProject;
+class SneedacityProject;
 class wxCollapsiblePaneEvent;
 
 class ErrorDialog /* not final */ : public wxDialogWrapper
@@ -47,7 +47,7 @@ private:
 };
 
 /// Displays an error dialog with a button that offers help
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void ShowErrorDialog(wxWindow *parent,
                      const TranslatableString &dlogTitle,
                      const TranslatableString &message,
@@ -56,7 +56,7 @@ void ShowErrorDialog(wxWindow *parent,
                      const std::wstring &log = {});
 
 /// Displays an error dialog, possibly allowing to send error report.
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void ShowExceptionDialog(
    wxWindow* parent, const TranslatableString& dlogTitle,
    const TranslatableString& message, const wxString& helpPage,
@@ -73,14 +73,14 @@ void ShowModelessErrorDialog(wxWindow *parent,
 #include <wx/textdlg.h> // to inherit
 
 /**************************************************************************//**
-\class AudacityTextEntryDialog
+\class SneedacityTextEntryDialog
 \brief Wrap wxTextEntryDialog so that caption IS translatable.
 ********************************************************************************/
-class AUDACITY_DLL_API AudacityTextEntryDialog
+class SNEEDACITY_DLL_API SneedacityTextEntryDialog
    : public wxTabTraversalWrapper< wxTextEntryDialog >
 {
 public:
-    AudacityTextEntryDialog(
+    SneedacityTextEntryDialog(
          wxWindow *parent,
          const TranslatableString& message,
          const TranslatableString& caption, // don't use = wxGetTextFromUserPromptStr,
@@ -99,4 +99,4 @@ private:
    bool mSetInsertionPointEnd{};
 };
 
-#endif // __AUDACITY_ERRORDIALOG__
+#endif // __SNEEDACITY_ERRORDIALOG__

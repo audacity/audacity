@@ -49,9 +49,9 @@ hold information about one contributor to Sneedacity.
 
 // DA: Logo for About box.
 #ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
+#include "../images/DarkSneedacityLogoWithName.xpm"
 #else
-#include "../images/AudacityLogoWithName.xpm"
+#include "../images/SneedacityLogoWithName.xpm"
 #endif
 
 // Notice this is a "system include".  This is on purpose and only until
@@ -69,7 +69,7 @@ hold information about one contributor to Sneedacity.
 #endif
 
 #ifdef REV_LONG
-#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
+#define REV_IDENT wxString( "[[https://github.com/sneedacity/sneedacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
 #else
 #define REV_IDENT (XO("No revision identifier was provided").Translation())
 #endif
@@ -307,7 +307,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
    ShuttleGui S( this, eIsCreating );
    S.StartNotebook();
    {
-      PopulateAudacityPage( S );
+      PopulateSneedacityPage( S );
       PopulateInformationPage( S );
       PopulateLicensePage( S );
    }
@@ -323,7 +323,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
 #define ABOUT_DIALOG_WIDTH 506
 
-void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
+void AboutDialog::PopulateSneedacityPage( ShuttleGui & S )
 {
    CreateCreditsList();
 
@@ -396,8 +396,8 @@ visit our %s.")
 #ifdef EXPERIMENTAL_DA
       #undef _
       #define _(s) wxGetTranslation((s))
-      << wxT("<h3>DarkAudacity ")
-      << wxString(AUDACITY_VERSION_STRING)
+      << wxT("<h3>DarkSneedacity ")
+      << wxString(SNEEDACITY_VERSION_STRING)
       << wxT("</center></h3>")
       << wxT("Customised version of the Sneedacity free, open source, cross-platform software " )
       << wxT("for recording and editing sounds.")
@@ -408,7 +408,7 @@ visit our %s.")
       << XO("<h3>")
       << ProgramName
       << wxT(" ")
-      << wxString(AUDACITY_VERSION_STRING)
+      << wxString(SNEEDACITY_VERSION_STRING)
       << wxT("</center></h3>")
       /* i18n-hint: The program's name substitutes for %s */
       << XO("%s the free, open source, cross-platform software for recording and editing sounds.")
@@ -427,7 +427,7 @@ visit our %s.")
 // DA: Customisation credit
 #ifdef EXPERIMENTAL_DA
       << wxT("<p><b>")
-      << XO("DarkAudacity Customisation")
+      << XO("DarkSneedacity Customisation")
       << wxT("</b><br>")
       << wxT("James Crook, art, coding &amp; design<br>")
 #endif
@@ -486,7 +486,7 @@ visit our %s.")
 
 // DA: Link for DA url too
 #ifdef EXPERIMENTAL_DA
-      << wxT("<br>DarkAudacity website: [[http://www.darkaudacity.com/|https://www.darkaudacity.com/]]")
+      << wxT("<br>DarkSneedacity website: [[http://www.darksneedacity.com/|https://www.darksneedacity.com/]]")
 #else
       << wxT("<p><br>&nbsp; &nbsp; ")
       /* i18n-hint Sneedacity's name substitutes for first and third %s,
@@ -511,8 +511,8 @@ visit our %s.")
    auto pPage = S.StartNotebookPage( ProgramName );
    S.StartVerticalLay(1);
    {
-      //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
-      wxBitmap logo(AudacityLogoWithName_xpm); //v
+      //v For now, change to SneedacityLogoWithName via old-fashioned way, not Theme.
+      wxBitmap logo(SneedacityLogoWithName_xpm); //v
 
       // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
       // our source, but this allows us to tweak the size - if we want to.
@@ -531,8 +531,8 @@ visit our %s.")
       icon =
          safenew wxStaticBitmap(S.GetParent(), -1,
          //*logo, //v
-         //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
-         //v theTheme.Bitmap(bmpAudacityLogoWithName),
+         //v theTheme.Bitmap(bmpSneedacityLogo), wxPoint(93, 10), wxSize(215, 190));
+         //v theTheme.Bitmap(bmpSneedacityLogoWithName),
          RescaledBitmap,
          wxDefaultPosition,
          wxSize((int)(LOGOWITHNAME_WIDTH*fScale), (int)(LOGOWITHNAME_HEIGHT*fScale)));
@@ -582,7 +582,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
  
    informationStr
       << wxT("<h3>")
-   /* i18n-hint: Information about when audacity was compiled follows */
+   /* i18n-hint: Information about when sneedacity was compiled follows */
       << XO("The Build")
       << wxT("</h3>\n<table>"); // start build info table
 
@@ -626,7 +626,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    // Install prefix
 #ifdef __WXGTK__
-   /* i18n-hint: The directory audacity is installed into (on *nix systems) */
+   /* i18n-hint: The directory sneedacity is installed into (on *nix systems) */
    AddBuildinfoRow(&informationStr, XO("Installation Prefix:"), \
          wxT(INSTALL_PREFIX));
 #endif
@@ -640,7 +640,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    informationStr
       << wxT("<h3>")
-      /* i18n-hint: Libraries that are essential to audacity */
+      /* i18n-hint: Libraries that are essential to sneedacity */
       << XO("Core Libraries")
       << wxT("</h3>\n<table>");  // start table of core libraries
 

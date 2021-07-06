@@ -1,15 +1,15 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectFileIO.h
 
-Paul Licameli split from AudacityProject.h
+Paul Licameli split from SneedacityProject.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_FILE_IO__
-#define __AUDACITY_PROJECT_FILE_IO__
+#ifndef __SNEEDACITY_PROJECT_FILE_IO__
+#define __SNEEDACITY_PROJECT_FILE_IO__
 
 #include <memory>
 #include <unordered_set>
@@ -23,7 +23,7 @@ struct sqlite3_context;
 struct sqlite3_stmt;
 struct sqlite3_value;
 
-class AudacityProject;
+class SneedacityProject;
 class DBConnection;
 struct DBConnectionErrors;
 class ProjectSerializer;
@@ -42,17 +42,17 @@ using BlockIDs = std::unordered_set<SampleBlockID>;
 
 // An event processed by the project in the main thread after a checkpoint
 // failure was detected in a worker thread
-wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT( SNEEDACITY_DLL_API,
                           EVT_CHECKPOINT_FAILURE, wxCommandEvent );
 
 // An event processed by the project in the main thread after failure to
 // reconnect to the database, after temporary close and attempted file movement
-wxDECLARE_EXPORTED_EVENT( AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT( SNEEDACITY_DLL_API,
                           EVT_RECONNECTION_FAILURE, wxCommandEvent );
 
 ///\brief Object associated with a project that manages reading and writing
-/// of Audacity project file formats, and autosave
-class AUDACITY_DLL_API ProjectFileIO final
+/// of Sneedacity project file formats, and autosave
+class SNEEDACITY_DLL_API ProjectFileIO final
    : public ClientData::Base
    , public XMLTagHandler
    , private PrefsListener
@@ -63,10 +63,10 @@ public:
    // class.  Reinvocations have no effect.  Return value is true for success.
    static bool InitializeSQL();
 
-   static ProjectFileIO &Get( AudacityProject &project );
-   static const ProjectFileIO &Get( const AudacityProject &project );
+   static ProjectFileIO &Get( SneedacityProject &project );
+   static const ProjectFileIO &Get( const SneedacityProject &project );
 
-   explicit ProjectFileIO( AudacityProject &project );
+   explicit ProjectFileIO( SneedacityProject &project );
 
    ProjectFileIO( const ProjectFileIO & ) PROHIBITED;
    ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
@@ -282,7 +282,7 @@ private:
    Connection &CurrConn();
 
    // non-static data members
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    std::shared_ptr<DBConnectionErrors> mpErrors;
 
@@ -314,7 +314,7 @@ class wxTopLevelWindow;
 // TitleRestorer restores project window titles to what they were, in its destructor.
 class TitleRestorer{
 public:
-   TitleRestorer( wxTopLevelWindow &window, AudacityProject &project );
+   TitleRestorer( wxTopLevelWindow &window, SneedacityProject &project );
    ~TitleRestorer();
    wxString sProjNumber;
    wxString sProjName;
@@ -323,21 +323,21 @@ public:
 
 // This event is emitted by the project when there is a change
 // in its title
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_PROJECT_TITLE_CHANGE, wxCommandEvent);
 
 //! Makes a temporary project that doesn't display on the screen
-class AUDACITY_DLL_API InvisibleTemporaryProject
+class SNEEDACITY_DLL_API InvisibleTemporaryProject
 {
 public:
    InvisibleTemporaryProject();
    ~InvisibleTemporaryProject();
-   AudacityProject &Project()
+   SneedacityProject &Project()
    {
       return *mpProject;
    }
 private:
-   std::shared_ptr<AudacityProject> mpProject;
+   std::shared_ptr<SneedacityProject> mpProject;
 };
 
 #endif

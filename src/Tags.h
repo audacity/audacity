@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Tags.h
 
@@ -22,12 +22,12 @@
   useful for streaming.
 
   Use of this functionality requires that libid3tag be compiled in
-  with Audacity.
+  with Sneedacity.
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TAGS__
-#define __AUDACITY_TAGS__
+#ifndef __SNEEDACITY_TAGS__
+#define __SNEEDACITY_TAGS__
 
 
 
@@ -49,7 +49,7 @@ class wxGridCellStringRenderer;
 class wxGridEvent;
 class wxTextCtrl;
 
-class AudacityProject;
+class SneedacityProject;
 class Grid;
 class ShuttleGui;
 class TagsEditorDialog;
@@ -67,7 +67,7 @@ using TagMap = std::unordered_map< wxString, wxString >;
 #define TAG_SOFTWARE wxT("Software")
 #define TAG_COPYRIGHT wxT("Copyright")
 
-class AUDACITY_DLL_API Tags final
+class SNEEDACITY_DLL_API Tags final
    : public XMLTagHandler
    , public std::enable_shared_from_this< Tags >
    , public ClientData::Base
@@ -75,11 +75,11 @@ class AUDACITY_DLL_API Tags final
 
  public:
 
-   static Tags &Get( AudacityProject &project );
-   static const Tags &Get( const AudacityProject &project );
+   static Tags &Get( SneedacityProject &project );
+   static const Tags &Get( const SneedacityProject &project );
    // Returns reference to *tags
    static Tags &Set(
-      AudacityProject &project, const std::shared_ptr<Tags> &tags );
+      SneedacityProject &project, const std::shared_ptr<Tags> &tags );
 
    Tags();  // constructor
    Tags( const Tags& ) = default;

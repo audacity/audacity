@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Reverse.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_REVERSE__
-#define __AUDACITY_EFFECT_REVERSE__
+#ifndef __SNEEDACITY_EFFECT_REVERSE__
+#define __SNEEDACITY_EFFECT_REVERSE__
 
 #include "Effect.h"
 

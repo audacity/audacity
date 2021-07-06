@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExportMultiple.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EXPORT_MULTIPLE__
-#define __AUDACITY_EXPORT_MULTIPLE__
+#ifndef __SNEEDACITY_EXPORT_MULTIPLE__
+#define __SNEEDACITY_EXPORT_MULTIPLE__
 
 #include "Export.h"
 #include "../wxFileNameWrapper.h" // member variable
@@ -23,17 +23,17 @@ class wxSimplebook;
 class wxStaticText;
 class wxTextCtrl;
 
-class AudacityProject;
+class SneedacityProject;
 class LabelTrack;
 class SelectionState;
 class ShuttleGui;
 class Track;
 
-class AUDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
+class SNEEDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
 {
 public:
 
-   ExportMultipleDialog(AudacityProject *parent);
+   ExportMultipleDialog(SneedacityProject *parent);
    virtual ~ExportMultipleDialog();
 
    int ShowModal();
@@ -106,7 +106,7 @@ private:
    Exporter mExporter;
    std::vector<ExportPlugin*> mPlugins;   /**< Array of references to available exporter
                                    plug-ins */
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
    TrackList *mTracks;           /**< The list of tracks in the project that is
                                    being exported */
    const LabelTrack *mLabels;

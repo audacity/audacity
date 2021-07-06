@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Meter.h
 
@@ -13,8 +13,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_METER__
-#define __AUDACITY_METER__
+#ifndef __SNEEDACITY_METER__
+#define __SNEEDACITY_METER__
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/brush.h> // member variable
@@ -26,7 +26,7 @@
 #include "MeterPanelBase.h" // to inherit
 #include "Ruler.h" // member variable
 
-class AudacityProject;
+class SneedacityProject;
 
 // Increase this when we add support for multichannel meters
 // (most of the code is already there)
@@ -92,7 +92,7 @@ class MeterAx;
 \brief MeterPanel is a panel that paints the meter used for monitoring
 or playback.
 ************************************************************************/
-class AUDACITY_DLL_API MeterPanel final
+class SNEEDACITY_DLL_API MeterPanel final
    : public MeterPanelBase, private PrefsListener
 {
    DECLARE_DYNAMIC_CLASS(MeterPanel)
@@ -110,7 +110,7 @@ class AUDACITY_DLL_API MeterPanel final
    };
 
 
-   MeterPanel(AudacityProject *,
+   MeterPanel(SneedacityProject *,
          wxWindow* parent, wxWindowID id,
          bool isInput,
          const wxPoint& pos = wxDefaultPosition,
@@ -226,7 +226,7 @@ class AUDACITY_DLL_API MeterPanel final
 
    wxString Key(const wxString & key) const;
 
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
    MeterUpdateQueue mQueue;
    wxTimer          mTimer;
 
@@ -296,4 +296,4 @@ class AUDACITY_DLL_API MeterPanel final
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_METER__
+#endif // __SNEEDACITY_METER__

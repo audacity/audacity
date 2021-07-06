@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   MultiFormatReader.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MULTIFORMATREADER_H__
-#define __AUDACITY_MULTIFORMATREADER_H__
+#ifndef __SNEEDACITY_MULTIFORMATREADER_H__
+#define __SNEEDACITY_MULTIFORMATREADER_H__
 
 #include <stdio.h>
 #include <stdint.h>

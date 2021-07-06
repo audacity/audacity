@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file NetworkManager.h
  @brief Declare a class for preforming HTTP requests.
@@ -15,7 +15,7 @@
 
 #include "NetworkManagerApi.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

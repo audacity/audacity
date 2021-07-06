@@ -36,7 +36,7 @@ used throughout Sneedacity into this one place.
 #include "Internat.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "widgets/FileDialog/FileDialog.h"
 
 #if defined(__WXMAC__) || defined(__WXGTK__)
@@ -53,7 +53,7 @@ const FileNames::FileType
      FileNames::AllFiles{ XO("All files"), { wxT("") } }
      /* i18n-hint an Sneedacity project is the state of the program, stored as
      files that can be reopened to resume the session later */
-   , FileNames::AudacityProjects{ XO("AUP3 project files"), { wxT("aup3") }, true }
+   , FileNames::SneedacityProjects{ XO("AUP3 project files"), { wxT("aup3") }, true }
    , FileNames::DynamicLibraries{
 #if defined(__WXMSW__)
       XO("Dynamically Linked Libraries"), { wxT("dll") }, true
@@ -221,7 +221,7 @@ wxString FileNames::LowerCaseAppNameInPath( const wxString & dirIn){
    if( dir.EndsWith( "Sneedacity" ) )
    {
       int nChars = dir.length() - wxString( "Sneedacity" ).length();
-      dir = dir.Left( nChars ) + "audacity";
+      dir = dir.Left( nChars ) + "sneedacity";
    }
    return dir;
 }
@@ -230,8 +230,8 @@ FilePath FileNames::DataDir()
 {
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
    //       between wxStandardPaths and wxConfig under Linux.  The latter
-   //       creates a normal file as "$HOME/.audacity", while the former
-   //       expects the ".audacity" portion to be a directory.
+   //       creates a normal file as "$HOME/.sneedacity", while the former
+   //       expects the ".sneedacity" portion to be a directory.
    if (gDataDir.empty())
    {
       // If there is a directory "Portable Settings" relative to the
@@ -282,7 +282,7 @@ FilePath FileNames::HtmlHelpDir()
    //for mac this puts us within the .app: Sneedacity.app/Contents/SharedSupport/
    return wxFileName( exePath.GetPath()+wxT("/help/manual"), wxEmptyString ).GetFullPath();
 #else
-   //linux goes into /*prefix*/share/audacity/
+   //linux goes into /*prefix*/share/sneedacity/
    //windows (probably) goes into the dir containing the .exe
    wxString dataDir = FileNames::LowerCaseAppNameInPath( wxStandardPaths::Get().GetDataDir());
    return wxFileName( dataDir+wxT("/help/manual"), wxEmptyString ).GetFullPath();
@@ -342,7 +342,7 @@ FilePath FileNames::BaseDir()
    // the "Debug" directory in debug builds.
    baseDir = PlatformCompatibility::GetExecutablePath();
 #else
-   // Linux goes into /*prefix*/share/audacity/
+   // Linux goes into /*prefix*/share/sneedacity/
    baseDir = FileNames::LowerCaseAppNameInPath(wxStandardPaths::Get().GetPluginsDir());
 #endif
 
@@ -607,16 +607,16 @@ bool FileNames::IsMidi(const FilePath &fName)
       extension.IsSameAs(wxT("mid"), false);
 }
 
-static FilePaths sAudacityPathList;
+static FilePaths sSneedacityPathList;
 
-const FilePaths &FileNames::AudacityPathList()
+const FilePaths &FileNames::SneedacityPathList()
 {
-   return sAudacityPathList;
+   return sSneedacityPathList;
 }
 
-void FileNames::SetAudacityPathList( FilePaths list )
+void FileNames::SetSneedacityPathList( FilePaths list )
 {
-   sAudacityPathList = std::move( list );
+   sSneedacityPathList = std::move( list );
 }
 
 // static
@@ -691,7 +691,7 @@ char *FileNames::VerifyFilename(const wxString &s, bool input)
       wxFileName ff(name);
       FileExtension ext;
       while ((char *) (const char *)name.mb_str() == NULL) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO(
 "The specified filename could not be converted due to Unicode character use."));
 

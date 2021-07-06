@@ -1,11 +1,11 @@
 #!/usr/bin/env perl
 
-# Test script for communicating with audacity via mod-script-pipe
-# Audacity should be running first, with the scripting plugin loaded.
+# Test script for communicating with sneedacity via mod-script-pipe
+# Sneedacity should be running first, with the scripting plugin loaded.
 #
 # Note that currently, some menu commands require the project to be focused for
 # them to work.  Further information and a list of known problems is available
-# on the 'Scripting' page of the Audacity wiki.
+# on the 'Scripting' page of the Sneedacity wiki.
 
 use strict;
 use warnings;
@@ -26,19 +26,19 @@ our $FromSrvName;
 # For timing
 our $t0;
 
-# TODO: Maybe get the pipe names from audacity?
+# TODO: Maybe get the pipe names from sneedacity?
 if ($^O eq 'MSWin32') {
    $Name = 'Srv';
    $ToSrvName = '\\\\.\\pipe\\To'.$Name.'Pipe';
    $FromSrvName = '\\\\.\\pipe\\From'.$Name.'Pipe';
 } elsif ($^O eq 'linux') {
    $UID = $<;
-   $ToSrvName = '/tmp/audacity_script_pipe.to.'.$UID;
-   $FromSrvName = '/tmp/audacity_script_pipe.from.'.$UID;
+   $ToSrvName = '/tmp/sneedacity_script_pipe.to.'.$UID;
+   $FromSrvName = '/tmp/sneedacity_script_pipe.from.'.$UID;
 } elsif ($^O eq 'darwin') {
    $UID = $<;
-   $ToSrvName = '/tmp/audacity_script_pipe.to.'.$UID;
-   $FromSrvName = '/tmp/audacity_script_pipe.from.'.$UID;
+   $ToSrvName = '/tmp/sneedacity_script_pipe.to.'.$UID;
+   $FromSrvName = '/tmp/sneedacity_script_pipe.from.'.$UID;
 }
 
 # Open pipes
@@ -353,7 +353,7 @@ sub testClearAndPasters{
 
    # Since there aren't proper generator commands yet, we use the preferences
    # to control the duration.
-   # This preferences is not read in Audacity 2.2.x where duration
+   # This preferences is not read in Sneedacity 2.2.x where duration
    # is read from pluginsettings.cfg
    my $origDuration = getPref("/CsPresets/NoiseGen_Duration");
    setPref("/CsPresets/NoiseGen_Duration", $len);
@@ -397,7 +397,7 @@ sub testClearAndPasters{
 #  Effect testing                                                             #
 ###############################################################################
 
-# A list of effects to test (could be got from Audacity in future)
+# A list of effects to test (could be got from Sneedacity in future)
 sub getEffects{
 
    # (These ones will need special handling)
@@ -432,7 +432,7 @@ sub getEffects{
 }
 
 # Create a chirp for an effect to be applied to.
-# The duration setting does not work in Audacity 2.2.x where duration
+# The duration setting does not work in Sneedacity 2.2.x where duration
 # is read from pluginsettings.cfg
 sub generateBase{
    my $genCmd = "Chirp";

@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2018 Sneedacity Team
    License: wxWidgets
 
    James Crook
@@ -26,7 +26,7 @@ channel.
 class wxMenuBar;
 class wxPoint;
 
-class GetInfoCommand : public AudacityCommand
+class GetInfoCommand : public SneedacityCommand
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -37,7 +37,7 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   // AudacityCommand overrides
+   // SneedacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#get_info";}
    bool Apply(const CommandContext &context) override;
    bool ApplyInner(const CommandContext &context);

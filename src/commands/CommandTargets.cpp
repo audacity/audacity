@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2009 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2009 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -29,7 +29,7 @@ capture the more lengthy output from some commands.
 #include <wx/string.h>
 #include <wx/textctrl.h>
 #include "../ShuttleGui.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/wxPanelWrapper.h"
 
 #include <locale>
@@ -254,7 +254,7 @@ void BriefCommandMessageTarget::EndField(){
 void MessageBoxTarget::Update(const wxString &message)
 {
    // Should these messages be localized?
-   AudacityMessageBox( Verbatim( message ) );
+   SneedacityMessageBox( Verbatim( message ) );
 }
 
 
@@ -302,7 +302,7 @@ BriefCommandOutputTargets::~BriefCommandOutputTargets()
 
 
 
-class AUDACITY_DLL_API LongMessageDialog /* not final */ : public wxDialogWrapper
+class SNEEDACITY_DLL_API LongMessageDialog /* not final */ : public wxDialogWrapper
 {
 public:
    // constructors and destructors

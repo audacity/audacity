@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 Equalization48x.h
 
@@ -8,15 +8,15 @@ Intrinsics (SSE/AVX) and Threaded Equalization
 
 ***********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_EQUALIZATION48X__
-#define __AUDACITY_EFFECT_EQUALIZATION48X__
+#ifndef __SNEEDACITY_EFFECT_EQUALIZATION48X__
+#define __SNEEDACITY_EFFECT_EQUALIZATION48X__
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 
 #include <memory>
 
 #include <wx/thread.h> // to inherit
-#include <audacity/Types.h>
+#include <sneedacity/Types.h>
 class WaveTrack;
 using fft_type = float;
 

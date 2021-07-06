@@ -1,6 +1,6 @@
 /**********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  PlayableTrackControls.cpp
 
@@ -8,15 +8,15 @@
 
  **********************************************************************/
 
-#ifndef __AUDACITY_PLAYABLE_TRACK_CONTROLS__
-#define __AUDACITY_PLAYABLE_TRACK_CONTROLS__
+#ifndef __SNEEDACITY_PLAYABLE_TRACK_CONTROLS__
+#define __SNEEDACITY_PLAYABLE_TRACK_CONTROLS__
 
 #include "../../ui/CommonTrackControls.h"
 
 class wxRect;
 class Track;
 
-class AUDACITY_DLL_API PlayableTrackControls /* not final */
+class SNEEDACITY_DLL_API PlayableTrackControls /* not final */
    : public CommonTrackControls
 {
 public:

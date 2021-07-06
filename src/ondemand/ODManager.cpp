@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2010 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2010 Sneedacity Team
    File License: wxWidgets
 
    Michael Chinen
@@ -14,7 +14,7 @@ ODTask requests and internals.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Sneedacity.h"
 #include "ODManager.h"
 
 #include "ODTask.h"
@@ -170,7 +170,7 @@ ODManager::~ODManager()
    mTerminateMutex.Unlock();
 
    //This while loop waits for ODTasks to finish and the DELETE removes all tasks from the Queue.
-   //This function is called from the main audacity event thread, so there should not be more requests for pMan
+   //This function is called from the main sneedacity event thread, so there should not be more requests for pMan
    mTerminatedMutex.Lock();
    while (!mTerminated)
    {

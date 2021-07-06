@@ -29,7 +29,7 @@ AC_CONFIG_AUX_DIR(autotools)
 AC_CONFIG_MACRO_DIR([autotools/m4])
 dnl set up automake
 AM_INIT_AUTOMAKE([-Wall foreign])
-dnl Audacity policy: don't enable automatic rebuild of configure et al if 
+dnl Sneedacity policy: don't enable automatic rebuild of configure et al if 
 dnl sources change
 AM_MAINTAINER_MODE([enabled])
 
@@ -59,7 +59,7 @@ dnl can be created correctly
 AC_PREFIX_DEFAULT(/usr/local)
 if [[ $prefix = "NONE" ]] ; then
   AC_DEFINE(INSTALL_PREFIX, "/usr/local",
-      [define as prefix where Audacity is installed])
+      [define as prefix where Sneedacity is installed])
 else
   AC_DEFINE_UNQUOTED(INSTALL_PREFIX, "$prefix")
 fi

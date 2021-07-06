@@ -19,7 +19,7 @@
    #elif _DLL
       #define SCRIPT_PIPE_DLL_API _declspec(dllimport)
    #else
-      #define AUDACITY_DLL_API
+      #define SNEEDACITY_DLL_API
    #endif
 #endif //_MSC_VER
 

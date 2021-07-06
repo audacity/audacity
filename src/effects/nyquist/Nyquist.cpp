@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Nyquist.cpp
 
@@ -69,7 +69,7 @@ effects from this one class.
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "../../widgets/SneedacityMessageBox.h"
 #include "../../Prefs.h"
 #include "../../wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
@@ -221,7 +221,7 @@ VendorSymbol NyquistEffect::GetVendor()
 {
    if (mIsPrompt)
    {
-      return XO("Audacity");
+      return XO("Sneedacity");
    }
 
    return mAuthor;
@@ -557,7 +557,7 @@ bool NyquistEffect::Init()
       mVersion = 4;
    }
 
-   // As of Audacity 2.1.2 rc1, 'spectral' effects are allowed only if
+   // As of Sneedacity 2.1.2 rc1, 'spectral' effects are allowed only if
    // the selected track(s) are in a spectrogram view, and there is at
    // least one frequency bound and Spectral Selection is enabled for the
    // selected track(s) - (but don't apply to Nyquist Prompt).
@@ -700,12 +700,12 @@ bool NyquistEffect::Process()
 
       mProps = wxEmptyString;
 
-      mProps += wxString::Format(wxT("(putprop '*AUDACITY* (list %d %d %d) 'VERSION)\n"), AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION);
+      mProps += wxString::Format(wxT("(putprop '*SNEEDACITY* (list %d %d %d) 'VERSION)\n"), SNEEDACITY_VERSION, SNEEDACITY_RELEASE, SNEEDACITY_REVISION);
       wxString lang = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
       lang = (lang.empty())
-         ? Languages::GetSystemLanguageCode(FileNames::AudacityPathList())
+         ? Languages::GetSystemLanguageCode(FileNames::SneedacityPathList())
          : lang;
-      mProps += wxString::Format(wxT("(putprop '*AUDACITY* \"%s\" 'LANGUAGE)\n"), lang);
+      mProps += wxString::Format(wxT("(putprop '*SNEEDACITY* \"%s\" 'LANGUAGE)\n"), lang);
 
       mProps += wxString::Format(wxT("(setf *DECIMAL-SEPARATOR* #\\%c)\n"), wxNumberFormatter::GetDecimalSeparator());
 
@@ -1188,11 +1188,11 @@ bool NyquistEffect::ProcessOne()
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'INDEX)\n"), ++mTrackIndex);
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'NAME)\n"), EscapeString(mCurTrack[0]->GetName()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* \"%s\" 'TYPE)\n"), type);
-      // Note: "View" property may change when Audacity's choice of track views has stabilized.
+      // Note: "View" property may change when Sneedacity's choice of track views has stabilized.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'VIEW)\n"), view);
       cmd += wxString::Format(wxT("(putprop '*TRACK* %d 'CHANNELS)\n"), mCurNumChannels);
 
-      //NOTE: Audacity 2.1.3 True if spectral selection is enabled regardless of track view.
+      //NOTE: Sneedacity 2.1.3 True if spectral selection is enabled regardless of track view.
       cmd += wxString::Format(wxT("(putprop '*TRACK* %s 'SPECTRAL-EDIT-ENABLED)\n"), spectralEditp);
 
       auto channels = TrackList::Channels( mCurTrack[0] );
@@ -1379,7 +1379,7 @@ bool NyquistEffect::ProcessOne()
       // error will be raised when we try to return the value of aud:result
       // which is unbound
       cmd += wxT("(setf aud:result nil)\n");
-      cmd += wxT("(sal-compile-audacity \"") + str + wxT("\" t t nil)\n");
+      cmd += wxT("(sal-compile-sneedacity \"") + str + wxT("\" t t nil)\n");
       // Capture the value returned by main (saved in aud:result), but
       // set aud:result to nil so sound results can be evaluated without
       // retaining audio in memory
@@ -1411,7 +1411,7 @@ bool NyquistEffect::ProcessOne()
          mName.Translation(), output);
    }
 
-   // Audacity has no idea how long Nyquist processing will take, but
+   // Sneedacity has no idea how long Nyquist processing will take, but
    // can monitor audio being returned.
    // Anything other than audio should be returned almost instantly
    // so notify the user that process has completed (bug 558)
@@ -1645,7 +1645,7 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
         // invalid UTF-8 string, convert as Latin-1
         str = _("[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]");
        // TODO: internationalization of strings from Nyquist effects, at least
-       // from those shipped with Audacity
+       // from those shipped with Sneedacity
         str += LAT1CTOWX(nyqString);
     }
     return str;
@@ -2049,7 +2049,7 @@ bool NyquistEffect::Parse(
          // This is an unsupported plug-in version
          mOK = false;
          mInitError = XO(
-"This version of Audacity does not support Nyquist plug-in version %ld")
+"This version of Sneedacity does not support Nyquist plug-in version %ld")
             .Format( v );
          return true;
       }
@@ -2144,7 +2144,7 @@ bool NyquistEffect::Parse(
       return true;
    }
 
-   // Page name in Audacity development manual
+   // Page name in Sneedacity development manual
    if (len >= 2 && tokens[0] == wxT("manpage")) {
       // do not translate
       mManPage = UnQuote(tokens[1], false);
@@ -2233,14 +2233,14 @@ bool NyquistEffect::Parse(
                str.Printf(wxT("Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
                         tokens[3], mFileName.GetFullPath());
 
-               // Too disturbing to show alert before Audacity frame is up.
+               // Too disturbing to show alert before Sneedacity frame is up.
                //    Effect::MessageBox(
                //       str,
                //       wxOK | wxICON_EXCLAMATION,
                //       XO("Nyquist Warning") );
 
-               // Note that the AudacityApp's mLogger has not yet been created,
-               // so this brings up an alert box, but after the Audacity frame is up.
+               // Note that the SneedacityApp's mLogger has not yet been created,
+               // so this brings up an alert box, but after the Sneedacity frame is up.
                wxLogWarning(str);
                return true;
             }
@@ -2323,7 +2323,7 @@ bool NyquistEffect::ParseProgram(wxInputStream & stream)
    mControls.clear();
    mCategories.clear();
    mIsSpectral = false;
-   mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Audacity manual.
+   mManPage = wxEmptyString; // If not wxEmptyString, must be a page in the Sneedacity manual.
    mHelpFile = wxEmptyString; // If not wxEmptyString, must be a valid HTML help file.
    mHelpFileExists = false;
    mDebug = false;
@@ -2555,7 +2555,7 @@ void NyquistEffect::OSCallback()
    //       really necessary on Linux and Windows.
    //
    //       However, on the Mac, the spinning cursor appears during longer
-   //       Nyquist processing and that may cause the user to think Audacity
+   //       Nyquist processing and that may cause the user to think Sneedacity
    //       has crashed or hung.  In addition, yielding or not on the Mac
    //       doesn't seem to make much of a difference in execution time.
    //
@@ -2567,12 +2567,12 @@ void NyquistEffect::OSCallback()
 
 FilePaths NyquistEffect::GetNyquistSearchPath()
 {
-   const auto &audacityPathList = FileNames::AudacityPathList();
+   const auto &sneedacityPathList = FileNames::SneedacityPathList();
    FilePaths pathList;
 
-   for (size_t i = 0; i < audacityPathList.size(); i++)
+   for (size_t i = 0; i < sneedacityPathList.size(); i++)
    {
-      wxString prefix = audacityPathList[i] + wxFILE_SEP_PATH;
+      wxString prefix = sneedacityPathList[i] + wxFILE_SEP_PATH;
       FileNames::AddUniquePathToPathList(prefix + wxT("nyquist"), pathList);
       FileNames::AddUniquePathToPathList(prefix + wxT("plugins"), pathList);
       FileNames::AddUniquePathToPathList(prefix + wxT("plug-ins"), pathList);

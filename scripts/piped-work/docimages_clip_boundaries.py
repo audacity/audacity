@@ -1,7 +1,7 @@
 # docimages_clip_boundariess.py
 # Sends commands to get images for the manual.
 # Images for clip boundary manipulation, per that chapter in the manual
-# Make sure Audacity is running first and that mod-script-pipe is enabled
+# Make sure Sneedacity is running first and that mod-script-pipe is enabled
 # before running this script.
 
 #load and run the common core.

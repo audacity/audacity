@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   DevicePrefs.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_DEVICE_PREFS__
-#define __AUDACITY_DEVICE_PREFS__
+#ifndef __SNEEDACITY_DEVICE_PREFS__
+#define __SNEEDACITY_DEVICE_PREFS__
 
 #include <wx/defs.h>
 

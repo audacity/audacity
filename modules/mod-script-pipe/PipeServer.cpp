@@ -114,7 +114,7 @@ void PipeServer()
 #include <unistd.h>
 #include <string.h>
 
-const char fifotmpl[] = "/tmp/audacity_script_pipe.%s.%d";
+const char fifotmpl[] = "/tmp/sneedacity_script_pipe.%s.%d";
 
 const int nBuff = 1024;
 

@@ -41,6 +41,6 @@ $control dur (_ "Duration (60s max)") time "" 1 0.0 60
       (if (> max-peak 0)
           (scale (/ 0.8 max-peak) pluck-sound)
           pluck-sound)))
-  ;; If previewing   give Audacity a bit of silence, else return null string.
+  ;; If previewing   give Sneedacity a bit of silence, else return null string.
   ((get '*track* 'view) "")
   (t (s-rest 0.1)))

@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CurlStringList.cpp
  @brief Define a RAII wrapper for the curl_slist.
@@ -13,7 +13,7 @@
 #include <curl/curl.h>
 
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

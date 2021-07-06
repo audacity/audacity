@@ -1524,7 +1524,7 @@ void WaveClip::Clear(double t0, double t1)
 }
 
 /*! @excsafety{Weak}
--- This WaveClip remains destructible in case of AudacityException.
+-- This WaveClip remains destructible in case of SneedacityException.
 But some cutlines may be deleted */
 void WaveClip::ClearAndAddCutLine(double t0, double t1)
 {

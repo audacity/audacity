@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Reverb_libSoX.h
   Stereo reverberation effect from libSoX,
-  adapted for Audacity
+  adapted for Sneedacity
 
   Copyright (c) 2007-2013 robs@users.sourceforge.net
   Licence: LGPL v2.1

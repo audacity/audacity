@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Nyquist.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_NYQUIST__
-#define __AUDACITY_EFFECT_NYQUIST__
+#ifndef __SNEEDACITY_EFFECT_NYQUIST__
+#define __SNEEDACITY_EFFECT_NYQUIST__
 
 #include "../Effect.h"
 #include "../../FileNames.h"
@@ -61,7 +61,7 @@ public:
 };
 
 
-class AUDACITY_DLL_API NyquistEffect final : public Effect
+class SNEEDACITY_DLL_API NyquistEffect final : public Effect
 {
 public:
 
@@ -230,7 +230,7 @@ private:
    TranslatableString mInfo;
    TranslatableString mAuthor;
    // Version number of the specific plug-in (not to be confused with mVersion)
-   // For shipped plug-ins this will be the same as the Audacity release version
+   // For shipped plug-ins this will be the same as the Sneedacity release version
    // when the plug-in was last modified.
    TranslatableString mReleaseVersion;
    TranslatableString mCopyright;

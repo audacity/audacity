@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FileIO.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_FILEIO__
-#define __AUDACITY_FILEIO__
+#ifndef __SNEEDACITY_FILEIO__
+#define __SNEEDACITY_FILEIO__
 
 #include <memory>
 
@@ -18,7 +18,7 @@ class wxOutputStream;
 class wxFFileOutputStream;
 class wxFileNameWrapper;
 
-class AUDACITY_DLL_API FileIO
+class SNEEDACITY_DLL_API FileIO
 {
  public:
    typedef enum FileIOMode

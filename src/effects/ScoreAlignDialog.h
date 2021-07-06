@@ -1,13 +1,13 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ScoreAlignDialog.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SCORE_ALIGN_DIALOG__
-#define __AUDACITY_SCORE_ALIGN_DIALOG__
+#ifndef __SNEEDACITY_SCORE_ALIGN_DIALOG__
+#define __SNEEDACITY_SCORE_ALIGN_DIALOG__
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 

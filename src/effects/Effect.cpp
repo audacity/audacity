@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Effect.cpp
 
@@ -11,7 +11,7 @@
 *******************************************************************//**
 
 \class Effect
-\brief Base class for many of the effects in Audacity.
+\brief Base class for many of the effects in Sneedacity.
 
 *//*******************************************************************/
 
@@ -43,7 +43,7 @@
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 
 #include <unordered_map>
@@ -166,7 +166,7 @@ VendorSymbol Effect::GetVendor()
       return mClient->GetVendor();
    }
 
-   return XO("Audacity");
+   return XO("Sneedacity");
 }
 
 wxString Effect::GetVersion()
@@ -176,7 +176,7 @@ wxString Effect::GetVersion()
       return mClient->GetVersion();
    }
 
-   return AUDACITY_VERSION_STRING;
+   return SNEEDACITY_VERSION_STRING;
 }
 
 TranslatableString Effect::GetDescription()
@@ -198,7 +198,7 @@ EffectFamilySymbol Effect::GetFamily()
 
    // Unusually, the internal and visible strings differ for the built-in
    // effect family.
-   return { wxT("Audacity"), XO("Built-in") };
+   return { wxT("Sneedacity"), XO("Built-in") };
 }
 
 bool Effect::IsInteractive()
@@ -696,7 +696,7 @@ void Effect::ExportPresets()
    wxFFile f(path, wxT("wb"));
    if (!f.IsOpened())
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Could not open file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
@@ -707,7 +707,7 @@ void Effect::ExportPresets()
    f.Write(params);
    if (f.Error())
    {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO("Error writing to file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
@@ -1222,7 +1222,7 @@ bool Effect::DoEffect(double projectRate,
    mTracks = list;
 
    // This is for performance purposes only, no additional recovery implied
-   auto &pProject = *const_cast<AudacityProject*>(FindProject()); // how to remove this const_cast?
+   auto &pProject = *const_cast<SneedacityProject*>(FindProject()); // how to remove this const_cast?
    auto &pIO = ProjectFileIO::Get(pProject);
    TransactionScope trans(pIO.GetConnection(), "Effect");
 
@@ -1373,7 +1373,7 @@ bool Effect::Process()
    bool bGoodResult = true;
 
    // It's possible that the number of channels the effect expects changed based on
-   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   // the parameters (the Sneedacity Reverb effect does when the stereo width is 0).
    mNumAudioIn = GetAudioInCount();
    mNumAudioOut = GetAudioOutCount();
 
@@ -1711,7 +1711,7 @@ bool Effect::ProcessTrack(int count,
       {
          processed = ProcessBlock(inBufPos.get(), outBufPos.get(), curBlockSize);
       }
-      catch( const AudacityException & WXUNUSED(e) )
+      catch( const SneedacityException & WXUNUSED(e) )
       {
          // PRL: Bug 437:
          // Pass this along to our application-level handler
@@ -2074,7 +2074,7 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
    mOMap.clear();
 
    mOutputTracks = TrackList::Create(
-      const_cast<AudacityProject*>( FindProject() ) // how to remove this const_cast?
+      const_cast<SneedacityProject*>( FindProject() ) // how to remove this const_cast?
   );
 
    auto trackRange = mTracks->Any() +
@@ -2268,7 +2268,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    nEffectsDone++;
 }
 
-const AudacityProject *Effect::FindProject() const
+const SneedacityProject *Effect::FindProject() const
 {
    if (!inputTracks())
       return nullptr;
@@ -2481,6 +2481,6 @@ int Effect::MessageBox( const TranslatableString& message,
    auto title = titleStr.empty()
       ? GetName()
       : XO("%s: %s").Format( GetName(), titleStr );
-   return AudacityMessageBox( message, title, style, mUIParent );
+   return SneedacityMessageBox( message, title, style, mUIParent );
 }
 

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Matrix.h
 
@@ -23,8 +23,8 @@
 
 *//*******************************************************************/
 
-#ifndef __AUDACITY_MATRIX__
-#define __AUDACITY_MATRIX__
+#ifndef __SNEEDACITY_MATRIX__
+#define __SNEEDACITY_MATRIX__
 
 #include "SampleFormat.h"
 
@@ -110,4 +110,4 @@ Matrix MatrixConcatenateCols(const Matrix& left, const Matrix& right);
 
 bool InvertMatrix(const Matrix& M, Matrix& Minv);
 
-#endif // __AUDACITY_MATRIX__
+#endif // __SNEEDACITY_MATRIX__

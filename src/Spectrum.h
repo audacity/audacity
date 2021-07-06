@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Spectrum.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECTRUM__
-#define __AUDACITY_SPECTRUM__
+#ifndef __SNEEDACITY_SPECTRUM__
+#define __SNEEDACITY_SPECTRUM__
 
 #include "FFT.h"
 
@@ -21,7 +21,7 @@
   calculates windowSize/2 frequency samples
 */
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 bool ComputeSpectrum(const float * data, size_t width, size_t windowSize,
                      double rate, float *out, bool autocorrelation,
                      int windowFunc = eWinFuncHann);

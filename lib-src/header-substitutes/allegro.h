@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
 // Indirectly include Allegro header so that we can disable warnings about unused parameters
-// when compiling Audacity itself.
+// when compiling Sneedacity itself.
 
 #ifdef _MSC_VER
 // If this is compiled with MSVC (Visual Studio)

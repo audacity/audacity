@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   WarningsPrefs.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WARNINGS_PREFS__
-#define __AUDACITY_WARNINGS_PREFS__
+#ifndef __SNEEDACITY_WARNINGS_PREFS__
+#define __SNEEDACITY_WARNINGS_PREFS__
 
 #include <wx/defs.h>
 

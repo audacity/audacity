@@ -1,12 +1,12 @@
 # Sneedacity Strings for Translation.
 # Copyright (C) YEAR Sneedacity Development Team
-# This file is distributed under the same license as the audacity package.
+# This file is distributed under the same license as the sneedacity package.
 # Sneedacity Team <EMAIL@ADDRESS>, YEAR.
 # அருண் குமார் - Arun Kumar <thangam.arunx@gmail.com>, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
-"Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
+"Project-Id-Version: sneedacity 3.0.3\n"
+"Report-Msgid-Bugs-To: sneedacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
@@ -351,7 +351,7 @@ msgstr ""
 msgid "Script was not saved."
 msgstr ""
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/SneedacityLogger.cpp
 #: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
@@ -712,12 +712,12 @@ msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"Sneedacity ஆனது உலகளாவிய ஒரு <a href=\"http://audacity.sourceforge.net/"
+"Sneedacity ஆனது உலகளாவிய ஒரு <a href=\"http://sneedacity.sourceforge.net/"
 "community/developers\">அணியினால்</a> உருவாக்கப்பட்ட இலவச  மென்பொருள் ஆகும். நாங்கள் "
 "எமது செயத்திட்டதை செய்தற்காக <a href=\"http://code.google.com\">Google Code</a> "
 "மற்றும் <a href=\"http://sourceforge.net\">SourceForge</a> இற்கும் நன்றி "
 "செலுத்துகிறோம். Sneedacity ஆனது Windows, Mac, மற்றும் GNU/Linux (ஏனைய Unix சார்ந்த "
-"கணினிகளுக்கும்) <a href=\"http://audacity.sourceforge.net/download/\">இங்கே  "
+"கணினிகளுக்கும்) <a href=\"http://sneedacity.sourceforge.net/download/\">இங்கே  "
 "கிடைக்கும்</a>."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
@@ -787,7 +787,7 @@ msgid "Credits"
 msgstr "நன்றிகள்"
 
 #: src/AboutDialog.cpp
-msgid "DarkAudacity Customisation"
+msgid "DarkSneedacity Customisation"
 msgstr ""
 
 #. i18n-hint: The program's name substitutes for %s
@@ -867,7 +867,7 @@ msgstr "செயல்படுத்த பட்டுள்ளது"
 msgid "Disabled"
 msgstr "முடக்கி விடப்படுள்ளது"
 
-#. i18n-hint: Information about when audacity was compiled follows
+#. i18n-hint: Information about when sneedacity was compiled follows
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "The Build"
@@ -907,7 +907,7 @@ msgstr "கட்டிய வகை:"
 msgid "Compiler:"
 msgstr "அழுத்தி"
 
-#. i18n-hint: The directory audacity is installed into (on *nix systems)
+#. i18n-hint: The directory sneedacity is installed into (on *nix systems)
 #: src/AboutDialog.cpp
 #, fuzzy
 msgid "Installation Prefix:"
@@ -918,7 +918,7 @@ msgstr "நிறுவப்பட்டும் கோப்பகம்:"
 msgid "Settings folder:"
 msgstr "அடைவு அமைவுகள்"
 
-#. i18n-hint: Libraries that are essential to audacity
+#. i18n-hint: Libraries that are essential to sneedacity
 #: src/AboutDialog.cpp
 msgid "Core Libraries"
 msgstr "முக்கிய நூலகங்கள்"
@@ -1137,16 +1137,16 @@ msgstr ""
 msgid "Error"
 msgstr "வழு."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
 msgstr "%s இனை நீக்க முடியாதுள்ளது"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Failed!"
 msgstr "தோல்வி"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Reset Preferences?\n"
 "\n"
@@ -1157,11 +1157,11 @@ msgstr ""
 "\n"
 "இதனை மீள மாற்ற முடியாது, 'நிறுவிய' பின் எங்குசேமிப்பீர்கள்?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Reset Sneedacity Preferences"
 msgstr "Sneedacity விருப்பங்களை மீட்டமைக்க"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, c-format
 msgid ""
 "%s could not be found.\n"
@@ -1172,45 +1172,45 @@ msgstr ""
 "\n"
 "இது அண்மைய கோப்புகளில் இருந்து நீக்கபட்டு விட்டது."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "SQLite library failed to initialize.  Sneedacity cannot continue."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is starting up..."
 msgstr "Sneedacity துவங்குகிறது..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
-#: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
 msgid "&New"
 msgstr "&புதிய"
 
 #. i18n-hint: (verb)
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&Open..."
 msgstr "&திற...."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Open &Recent..."
 msgstr "&அண்மையில் திறந்த..."
 
-#: src/AudacityApp.cpp src/menus/HelpMenus.cpp
+#: src/SneedacityApp.cpp src/menus/HelpMenus.cpp
 msgid "&About Sneedacity..."
 msgstr "Sneedacity &பற்றி..."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "&Preferences..."
 msgstr "&முன்னுரிமைகள்..."
 
-#: src/AudacityApp.cpp src/menus/FileMenus.cpp
+#: src/SneedacityApp.cpp src/menus/FileMenus.cpp
 msgid "&File"
 msgstr "&கோப்பு"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity could not find a safe place to store temporary files.\n"
@@ -1221,7 +1221,7 @@ msgstr ""
 "தற்காலிக கோப்புகளை சேமிக்க ஒரு கோப்பகத்தை தெரிய முடியவில்லை.\n"
 "தயவு செய்து பொருத்தமான கோப்பகத்தை விருப்பங்கள் பட்டியலில் தெரியவும்."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity could not find a place to store temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
@@ -1229,7 +1229,7 @@ msgstr ""
 "தற்காலிக கோப்புகளை சேமிக்க ஒரு கோப்பகத்தை தெரிய முடியவில்லை.\n"
 "தயவு செய்து பொருத்தமான கோப்பகத்தை விருப்பங்கள் பட்டியலில் தெரியவும்."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity is now going to exit. Please launch Sneedacity again to use the new "
 "temporary directory."
@@ -1237,7 +1237,7 @@ msgstr ""
 "Sneedacity ஆனது தற்போது மூடப்படவுள்ளது. தயவு செய்து மறுபடியும் தொடங்கவும் புதிய "
 "திறக்க. தற்காலிக கோப்பகம்."
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Running two copies of Sneedacity simultaneously may cause\n"
 "data loss or cause your system to crash.\n"
@@ -1247,7 +1247,7 @@ msgstr ""
 "தகவல் இழப்பு அல்லது கட்டகத்தைக் நிலைகுழைய வைக்கலாம்.\n"
 "\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Sneedacity was not able to lock the temporary files directory.\n"
 "This folder may be in use by another copy of Sneedacity.\n"
@@ -1255,19 +1255,19 @@ msgstr ""
 "தற்காலிக கோப்புகளின் கோப்பகத்தை Sneedacity இனாலபூட்ட இயலவில்லை.\n"
 "Sneedacity இன் இன்னொரு பிரதியால் பாவிக்கப்படலாம்.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Do you still want to start Sneedacity?"
 msgstr "Sneedacity இனை ஆரம்பிக்க விரும்புகிறீர்களா?"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Error Locking Temporary Folder"
 msgstr "தற்காலிக கோப்பகத்தை பூட்டுவதில் வழு"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "The system has detected that another copy of Sneedacity is running.\n"
 msgstr "Sneedacity இன் மற்றுமொரு பிரதியானது இயங்கிகொண்டு இருக்குறது.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Use the New or Open commands in the currently running Sneedacity\n"
 "process to open multiple projects simultaneously.\n"
@@ -1275,11 +1275,11 @@ msgstr ""
 "தற்போது இயங்கும்  Sneedacity இல் புதிய அல்லது திறக்க கட்டளைகளை உபயோகிக்கவும்.\n"
 "ஒரே நேரத்தில் பல செயத்திட்டங்களை திறக்க முனைகிறது.\n"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity is already running"
 msgstr "Sneedacity முன்னரே பாவனையில் உள்ளது"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
@@ -1287,12 +1287,12 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "Sneedacity Startup Failure"
 msgstr "Sneedacity செயற்திட்ட கோப்புகள்"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to create semaphores.\n"
 "\n"
@@ -1300,7 +1300,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire lock semaphore.\n"
 "\n"
@@ -1308,7 +1308,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "Unable to acquire server semaphore.\n"
 "\n"
@@ -1316,7 +1316,7 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid ""
 "The Sneedacity IPC server failed to initialize.\n"
 "\n"
@@ -1324,43 +1324,43 @@ msgid ""
 "and a reboot may be required."
 msgstr ""
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "An unrecoverable error has occurred during startup"
 msgstr ""
 
 #. i18n-hint: This controls the number of bytes that Sneedacity will
 #. *           use when writing files to the disk
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "set max disk block size in bytes"
 msgstr "\t-blocksize nnn (set max disk block size in bytes)"
 
 #. i18n-hint: This displays a list of available options
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "this help message"
 msgstr "\t-help (இச்செய்தி)"
 
 #. i18n-hint: This runs a set of automatic tests on Sneedacity itself
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "run self diagnostics"
 msgstr "\t-test (சுய பரிசோதனைச் செய்)"
 
 #. i18n-hint: This displays the Sneedacity version
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "display Sneedacity version"
 msgstr "\t-version (Sneedacity பதிப்பை பாண்பி)"
 
 #. i18n-hint: This is a list of one or more files that Sneedacity
 #. *           should open upon startup
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid "audio or project file name"
 msgstr "திட்ட கோப்பினை திறக்க முடியாதுள்ளது"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 #, fuzzy
 msgid ""
 "Sneedacity project (.aup3) files are not currently \n"
@@ -1373,21 +1373,21 @@ msgstr ""
 "\n"
 "தொடர்புடையதாக்குவதன் மூலம் இரட்டை சொடுக்கில் திறக்கலாம்"
 
-#: src/AudacityApp.cpp
+#: src/SneedacityApp.cpp
 msgid "Sneedacity Project Files"
 msgstr "Sneedacity செயற்திட்ட கோப்புகள்"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
+#: src/SneedacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/SneedacityMessageBox.cpp
 msgid "Message"
 msgstr ""
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, fuzzy
 msgid "Sneedacity Configuration Error"
 msgstr "விதியை அழிப்பதை உறுதி செய்தல்"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 #, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
@@ -1404,50 +1404,50 @@ msgid ""
 "state which will be recovered the next time you open it."
 msgstr ""
 
-#: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
+#: src/SneedacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
 #: src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "உதவி"
 
-#: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/SneedacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid "&Quit Sneedacity"
 msgstr "Sneedacity வெளியேறவும்"
 
-#: src/AudacityFileConfig.cpp
+#: src/SneedacityFileConfig.cpp
 msgid "&Retry"
 msgstr ""
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "Sneedacity Log"
 msgstr "Sneedacity பதிவுகள்"
 
-#: src/AudacityLogger.cpp src/Tags.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp
 #, fuzzy
 msgid "&Save..."
 msgstr "&சேமி..."
 
 #. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/SneedacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Cl&ear"
 msgstr "துடை"
 
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/SneedacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Close"
 msgstr "&மூடு"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 msgid "log.txt"
 msgstr "log.txt"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, fuzzy
 msgid "Save log to:"
 msgstr "பதிவுகளைச் சேமிக்க:"
 
-#: src/AudacityLogger.cpp
+#: src/SneedacityLogger.cpp
 #, fuzzy, c-format
 msgid "Couldn't save log to file: %s"
 msgstr "பதிவை கோப்பில் சேமிக்க முடியவில்லை:"
@@ -2678,7 +2678,7 @@ msgstr "FFmpeg யை இடங்குறி"
 #, c-format
 msgid "Sneedacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr ""
-"Audacityக்கு ஒலிக் கோப்பை FFmpeg ஊடக ஏற்றுமதி மற்றும் இறக்குமதி செய்ய '%s' கோப்பு "
+"Sneedacityக்கு ஒலிக் கோப்பை FFmpeg ஊடக ஏற்றுமதி மற்றும் இறக்குமதி செய்ய '%s' கோப்பு "
 "தேவை."
 
 #: src/FFmpeg.cpp
@@ -3969,7 +3969,7 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr ""
 
-#. i18n-hint: The audacity project file is XML and has 'tags' in it,
+#. i18n-hint: The sneedacity project file is XML and has 'tags' in it,
 #. rather like html tags <something>some stuff</something>.
 #. This error message is about the tags that hold the sequence information.
 #. The error message is confusing to users in English, and could just say
@@ -5933,13 +5933,13 @@ msgstr ""
 msgid "This operation cannot be done until importation of %s completes."
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Sneedacity"
 msgstr "Sneedacity பதிவுகள்"
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, c-format
 msgid ""
 "%s: Could not load settings below. Default settings will be used.\n"
@@ -5947,13 +5947,13 @@ msgid ""
 "%s"
 msgstr ""
 
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #, fuzzy, c-format
 msgid "Applying %s..."
 msgstr "நிறைவேற்றபடுகிறது....."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
-#: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
+#: src/commands/SneedacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -5962,7 +5962,7 @@ msgstr "நிறைவேற்றபடுகிறது....."
 msgid "%s: %s"
 msgstr ""
 
-#: src/commands/AudacityCommand.h
+#: src/commands/SneedacityCommand.h
 msgid "FAIL"
 msgstr ""
 
@@ -11943,7 +11943,7 @@ msgstr "லேமின் அமைவிடம்"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid "Sneedacity needs the file %s to create MP3s."
-msgstr "MP3களை உருவாக்குவதற்கு audacity இற்கு %s கோப்புகள் தேவை"
+msgstr "MP3களை உருவாக்குவதற்கு sneedacity இற்கு %s கோப்புகள் தேவை"
 
 #: src/export/ExportMP3.cpp
 #, c-format

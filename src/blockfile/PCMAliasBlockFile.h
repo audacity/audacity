@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PCMAliasBlockFile.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PCMALIASBLOCKFILE__
-#define __AUDACITY_PCMALIASBLOCKFILE__
+#ifndef __SNEEDACITY_PCMALIASBLOCKFILE__
+#define __SNEEDACITY_PCMALIASBLOCKFILE__
 
 #include "../BlockFile.h"
 

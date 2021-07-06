@@ -1,6 +1,6 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  @file FutureStrings.h
  
@@ -12,7 +12,7 @@
 /*
 This file contains strings and comments put into the source code tree for the
 string freeze of a release, but while not yet in feature freeze.  This allows
-the translation catalog template, locale/audacity.pot, to stabilize long enough
+the translation catalog template, locale/sneedacity.pot, to stabilize long enough
 in advance of the release, that translators have enough opportunity to update
 the language-specific catalogs.
 
@@ -97,18 +97,18 @@ Some example strings are also given first, to document the syntax.
 #endif
 
 // Update version dialog
-XC("Update Audacity", "update dialog"),
+XC("Update Sneedacity", "update dialog"),
 XC("&Skip", "update dialog"),
 XC("&Install update", "update dialog"),
 XC("Changelog", "update dialog"),
 XC("Read more on GitHub", "update dialog"),
 XC("Error checking for update", "update dialog"),
-XC("Unable to connect to Audacity update server.", "update dialog"),
+XC("Unable to connect to Sneedacity update server.", "update dialog"),
 XC("Update data was corrupted.", "update dialog"),
 XC("Error downloading update.", "update dialog"),
-XC("Can't open the Audacity download link.", "update dialog"),
+XC("Can't open the Sneedacity download link.", "update dialog"),
 // i18n-hint Substitution of version number for %s.
-XC("Audacity %s is available!", "update dialog"),
+XC("Sneedacity %s is available!", "update dialog"),
 
 // For after 3.0.3
 

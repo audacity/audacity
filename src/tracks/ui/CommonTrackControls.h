@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 CommonTrackControls.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from TrackControls.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COMMON_TRACK_CONTROLS__
-#define __AUDACITY_COMMON_TRACK_CONTROLS__
+#ifndef __SNEEDACITY_COMMON_TRACK_CONTROLS__
+#define __SNEEDACITY_COMMON_TRACK_CONTROLS__
 
 #include "TrackControls.h" // to inherit
 
@@ -23,7 +23,7 @@ class TrackSelectHandle;
 namespace TrackInfo{ struct TCPLine; }
 using TCPLines = std::vector< TrackInfo::TCPLine >;
 
-class AUDACITY_DLL_API CommonTrackControls /* not final */ : public TrackControls
+class SNEEDACITY_DLL_API CommonTrackControls /* not final */ : public TrackControls
 {
 public:
    using TrackControls::TrackControls;
@@ -33,7 +33,7 @@ public:
    struct InitMenuData
    {
    public:
-      AudacityProject &project;
+      SneedacityProject &project;
       Track *pTrack;
       wxWindow *pParent;
       unsigned result;
@@ -51,11 +51,11 @@ protected:
    // still marked pure virtual
    virtual std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
-       const AudacityProject *) override = 0;
+       const SneedacityProject *) override = 0;
 
    unsigned DoContextMenu
       (const wxRect &rect, wxWindow *pParent, wxPoint *pPosition,
-       AudacityProject *pProject) override;
+       SneedacityProject *pProject) override;
    virtual PopupMenuTable *GetMenuExtension(Track *pTrack) = 0;
 
    // TrackPanelDrawable implementation

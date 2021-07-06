@@ -96,7 +96,7 @@ void ZoomInfo::SetZoom(double pixelsPerSecond)
    // still quite close together.
    if( zoom > (gMaxZoom * 0.06  ))
    {
-      AudacityProject * project = GetActiveProject();
+      SneedacityProject * project = GetActiveProject();
       if( project )
          project->OnSnapToOff();
    }

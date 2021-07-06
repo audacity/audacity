@@ -23,7 +23,7 @@ information.
 #include "sndfile.h"
 #include "Internat.h"
 #include "MemoryX.h"
-#include "widgets/AudacityMessageBox.h"
+#include "widgets/SneedacityMessageBox.h"
 #include "Prefs.h"
 
 #ifndef SNDFILE_1
@@ -340,7 +340,7 @@ int SFFileCloser::operator() (SNDFILE *sf) const
    if (err) {
       char buffer[1000];
       sf_error_str(sf, buffer, 1000);
-      AudacityMessageBox(
+      SneedacityMessageBox(
          /* i18n-hint: %s will be the error message from the libsndfile software library */
          XO( "Error (file may not have been written): %s" )
             // Not attempting to localize error messages

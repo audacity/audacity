@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SoundTouchEffect.h
 
@@ -16,8 +16,8 @@
 
 #if USE_SOUNDTOUCH
 
-#ifndef __AUDACITY_EFFECT_SOUNDTOUCH__
-#define __AUDACITY_EFFECT_SOUNDTOUCH__
+#ifndef __SNEEDACITY_EFFECT_SOUNDTOUCH__
+#define __SNEEDACITY_EFFECT_SOUNDTOUCH__
 
 #include "Effect.h"
 

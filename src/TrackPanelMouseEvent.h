@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TrackPanelMouseEvent.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_PANEL_MOUSE_EVENT__
-#define __AUDACITY_TRACK_PANEL_MOUSE_EVENT__
+#ifndef __SNEEDACITY_TRACK_PANEL_MOUSE_EVENT__
+#define __SNEEDACITY_TRACK_PANEL_MOUSE_EVENT__
 
 class wxMouseEvent;
 class wxMouseState;

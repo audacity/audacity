@@ -48,7 +48,7 @@ foreach( source ${SOURCES} )
    endif()
 
    set( po "${_SRCDIR}/${source}" )
-   set( mo "${dst}/audacity.mo" )
+   set( mo "${dst}/sneedacity.mo" )
 
    add_custom_command(
       DEPENDS

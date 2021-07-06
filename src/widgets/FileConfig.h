@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   FileConfig.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WIDGETS_FILECONFIG__
-#define __AUDACITY_WIDGETS_FILECONFIG__
+#ifndef __SNEEDACITY_WIDGETS_FILECONFIG__
+#define __SNEEDACITY_WIDGETS_FILECONFIG__
 
 #include <memory>
 
@@ -47,7 +47,7 @@ public:
    virtual bool DeleteGroup(const wxString& key) wxOVERRIDE;
    virtual bool DeleteAll() wxOVERRIDE;
 
-   // Set and Get values of the version major/minor/micro keys in audacity.cfg when Audacity first opens
+   // Set and Get values of the version major/minor/micro keys in sneedacity.cfg when Sneedacity first opens
    void SetVersionKeysInit( int major, int minor, int micro)
    {
       mVersionMajorKeyInit = major;
@@ -90,8 +90,8 @@ private:
 
    std::unique_ptr<wxFileConfig> mConfig;
 
-   // values of the version major/minor/micro keys in audacity.cfg
-   // when Audacity first opens
+   // values of the version major/minor/micro keys in sneedacity.cfg
+   // when Sneedacity first opens
    int mVersionMajorKeyInit{};
    int mVersionMinorKeyInit{};
    int mVersionMicroKeyInit{};

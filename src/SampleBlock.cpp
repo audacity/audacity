@@ -28,7 +28,7 @@ SampleBlockFactoryFactory SampleBlockFactory::RegisterFactoryFactory(
    return result;
 }
 
-SampleBlockFactoryPtr SampleBlockFactory::New( AudacityProject &project )
+SampleBlockFactoryPtr SampleBlockFactory::New( SneedacityProject &project )
 {
    auto &factory = installedFactory();
    if ( ! factory )

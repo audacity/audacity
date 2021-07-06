@@ -30,5 +30,5 @@
 #endif
 #include "Cursors32/SubViewsCursor.xpm"
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 std::unique_ptr<wxCursor> MakeCursor(int WXUNUSED(CursorId), const char * const pXpm[36], int HotX, int HotY);

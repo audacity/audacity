@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   SplashDialog.h
 
@@ -8,21 +8,21 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPLASH_DLG__
-#define __AUDACITY_SPLASH_DLG__
+#ifndef __SNEEDACITY_SPLASH_DLG__
+#define __SNEEDACITY_SPLASH_DLG__
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 class wxBitmap;
 class ShuttleGui;
-class AudacityProject;
+class SneedacityProject;
 class HtmlWindow;
 
 class SplashDialog final : public wxDialogWrapper {
    DECLARE_DYNAMIC_CLASS(SplashDialog)
 public:
 
-   static void DoHelpWelcome( AudacityProject &project );
+   static void DoHelpWelcome( SneedacityProject &project );
 
    SplashDialog(wxWindow * parent);
    virtual ~ SplashDialog();

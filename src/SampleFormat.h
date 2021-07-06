@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   @file SampleFormat.h
 
@@ -8,15 +8,15 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SAMPLE_FORMAT__
-#define __AUDACITY_SAMPLE_FORMAT__
+#ifndef __SNEEDACITY_SAMPLE_FORMAT__
+#define __SNEEDACITY_SAMPLE_FORMAT__
 
 
 
 #include "MemoryX.h"
 #include <wx/defs.h>
 
-#include "audacity/Types.h"
+#include "sneedacity/Types.h"
 #include "Dither.h"
 
 //
@@ -24,10 +24,10 @@
 //
 
 //! These global variables are assigned at application startup or after change of preferences.
-extern AUDACITY_DLL_API DitherType gLowQualityDither, gHighQualityDither;
+extern SNEEDACITY_DLL_API DitherType gLowQualityDither, gHighQualityDither;
 
 #if 0
-// Moved to audacity/types.h
+// Moved to sneedacity/types.h
 typedef enum {
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
@@ -48,7 +48,7 @@ typedef enum {
 #define SAMPLE_SIZE_DISK(SampleFormat) (((SampleFormat) == int24Sample) ? \
    size_t{ 3 } : SAMPLE_SIZE(SampleFormat) )
 
-AUDACITY_DLL_API TranslatableString GetSampleFormatStr(sampleFormat format);
+SNEEDACITY_DLL_API TranslatableString GetSampleFormatStr(sampleFormat format);
 
 //
 // Allocating/Freeing Samples
@@ -128,7 +128,7 @@ private:
 // Copying, Converting and Clearing Samples
 //
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 //! Copy samples from any format into the widest format, which is 32 bit float, with no dithering
 /*!
  @param src address of source samples
@@ -141,7 +141,7 @@ AUDACITY_DLL_API
 void SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
     float *dst, size_t len, size_t srcStride = 1, size_t dstStride = 1);
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 //! Copy samples from any format to any other format; apply dithering only if narrowing the format
 /*!
  @copydetails SamplesToFloats()
@@ -153,11 +153,11 @@ void CopySamples(constSamplePtr src, sampleFormat srcFormat,
    DitherType ditherType = gHighQualityDither, //!< default is loaded from a global variable
    unsigned int srcStride=1, unsigned int dstStride=1);
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void      ClearSamples(samplePtr buffer, sampleFormat format,
                        size_t start, size_t len);
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void      ReverseSamples(samplePtr buffer, sampleFormat format,
                          int start, int len);
 
@@ -166,7 +166,7 @@ void      ReverseSamples(samplePtr buffer, sampleFormat format,
 // are set in preferences.
 //
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void      InitDitherers();
 
 // These are so commonly done for processing samples in floating point form in memory,

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ProjectFileIORegistry.h
 
@@ -8,12 +8,12 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_FILE_IO_REGISTRY__
-#define __AUDACITY_PROJECT_FILE_IO_REGISTRY__
+#ifndef __SNEEDACITY_PROJECT_FILE_IO_REGISTRY__
+#define __SNEEDACITY_PROJECT_FILE_IO_REGISTRY__
 
 #include <functional>
 
-class AudacityProject;
+class SneedacityProject;
 class XMLTagHandler;
 class wxString;
 
@@ -21,10 +21,10 @@ namespace ProjectFileIORegistry {
 
 // Type of functions returning objects that interpret a part of the saved XML
 using TagHandlerFactory =
-   std::function< XMLTagHandler *( AudacityProject & ) >;
+   std::function< XMLTagHandler *( SneedacityProject & ) >;
 
 // Typically statically constructed
-struct AUDACITY_DLL_API Entry{
+struct SNEEDACITY_DLL_API Entry{
    Entry( const wxString &tag, const TagHandlerFactory &factory );
 };
 

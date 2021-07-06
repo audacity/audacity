@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   BatchPrefs.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_BATCH_PREFS__
-#define __AUDACITY_BATCH_PREFS__
+#ifndef __SNEEDACITY_BATCH_PREFS__
+#define __SNEEDACITY_BATCH_PREFS__
 
 #include <wx/defs.h>
 

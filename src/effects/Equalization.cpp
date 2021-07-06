@@ -1,6 +1,6 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
+   Sneedacity: A Digital Audio Editor
 
    EffectEqualization.cpp
 
@@ -30,7 +30,7 @@
 
    The filter is applied using overlap/add of Hann windows.
 
-   Clone of the FFT Filter effect, no longer part of Audacity.
+   Clone of the FFT Filter effect, no longer part of Sneedacity.
 
 *//****************************************************************//**
 
@@ -1614,8 +1614,8 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
    //
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
    //       between wxStandardPaths and wxConfig under Linux.  The latter
-   //       creates a normal file as "$HOME/.audacity", while the former
-   //       expects the ".audacity" portion to be a directory.
+   //       creates a normal file as "$HOME/.sneedacity", while the former
+   //       expects the ".sneedacity" portion to be a directory.
    // MJS:  I don't know what the above means, or if I have broken it.
    wxFileName fn;
 
@@ -1696,7 +1696,7 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 }
 
 //
-// Update presets to match Audacity version.
+// Update presets to match Sneedacity version.
 //
 void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
 {
@@ -1852,8 +1852,8 @@ void EffectEqualization::SaveCurves(const wxString &fileName)
       //
       // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
       //       between wxStandardPaths and wxConfig under Linux.  The latter
-      //       creates a normal file as "$HOME/.audacity", while the former
-      //       expects the ".audacity" portion to be a directory.
+      //       creates a normal file as "$HOME/.sneedacity", while the former
+      //       expects the ".sneedacity" portion to be a directory.
       fn = wxFileName( FileNames::DataDir(), wxT("EQCurves.xml") );
 
       // If the directory doesn't exist...
@@ -3566,7 +3566,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
       {   // Show the dialog and bail if the user cancels
          bad = false;
          // build the dialog
-         AudacityTextEntryDialog dlg( this,
+         SneedacityTextEntryDialog dlg( this,
             XO("Rename '%s' to...").Format( mEditCurves[ item ].Name ),
             XO("Rename...") );
          dlg.SetTextValidator( wxFILTER_EXCLUDE_CHAR_LIST );

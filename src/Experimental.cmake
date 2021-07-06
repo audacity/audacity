@@ -1,6 +1,6 @@
 #[[
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Experimental.cmake
 
@@ -14,7 +14,7 @@
 
   JKC: This file solves a problem of how to avoid forking the
   code base when working on NEW features e.g:
-    - Additional displays in Audacity
+    - Additional displays in Sneedacity
     - Modular architecture.
   Add options in here for the NEW features, and make your code
   conditional on them with #ifdef.
@@ -50,7 +50,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # feature to link audio tracks to a label track
    SYNC_LOCK
 
-   # DA: Enables dark audacity theme and customisations.
+   # DA: Enables dark sneedacity theme and customisations.
    #DA
 
    # Define this so that sync-lock tiles shine through spectrogram.
@@ -142,8 +142,8 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # to enable.
    MODULE_PREFS
 
-   # Define to allow realtime processing in Audacity effects that have been converted.
-   REALTIME_AUDACITY_EFFECTS
+   # Define to allow realtime processing in Sneedacity effects that have been converted.
+   REALTIME_SNEEDACITY_EFFECTS
 
    # Define to include the effects rack (such as it is).
    #EFFECTS_RACK

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ImportFFmpeg.cpp
 
@@ -157,7 +157,7 @@ static const auto exts = {
 class FFmpegImportFileHandle;
 
 /// A representative of FFmpeg loader in
-/// the Audacity import plugin list
+/// the Sneedacity import plugin list
 class FFmpegImportPlugin final : public ImportPlugin
 {
 public:
@@ -173,7 +173,7 @@ public:
 
    ///! Probes the file and opens it if appropriate
    std::unique_ptr<ImportFileHandle> Open(
-      const FilePath &Filename, AudacityProject*) override;
+      const FilePath &Filename, SneedacityProject*) override;
 };
 
 ///! Does actual import, returned by FFmpegImportPlugin::Open
@@ -216,12 +216,12 @@ public:
 
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
-   ///\ tags - Audacity tags object
+   ///\ tags - Sneedacity tags object
    void WriteMetadata(Tags *tags);
 
    ///! Retrieves metadata from FFmpeg and converts to wxString
    ///\param avf - file context
-   ///\ tags - Audacity tags object
+   ///\ tags - Sneedacity tags object
    ///\ tag - name of tag to set
    ///\ name - name of metadata item to retrieve
    void GetMetadata(Tags &tags, const wxChar *tag, const char *name);
@@ -276,7 +276,7 @@ TranslatableString FFmpegImportPlugin::GetPluginFormatDescription()
 }
 
 std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
-   const FilePath &filename, AudacityProject*)
+   const FilePath &filename, SneedacityProject*)
 {
    auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
 
@@ -284,11 +284,11 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
    wxString extension = filename.AfterLast(wxT('.'));
    if (SupportsExtension(extension))
    {
-      //Audacity is trying to load something that is declared as
+      //Sneedacity is trying to load something that is declared as
       //officially supported by this plugin.
       //If we don't have FFmpeg configured - tell the user about it.
       //Since this will be happening often, use disableable "FFmpeg not found" dialog
-      //insdead of usual AudacityMessageBox()
+      //insdead of usual SneedacityMessageBox()
       bool newsession = false;
       gPrefs->Read(wxT("/NewImportingSession"), &newsession);
       if (!FFmpegLibsInst()->ValidLibsLoaded())

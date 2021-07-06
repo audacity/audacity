@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectSelectionManager.cpp
 
@@ -8,26 +8,26 @@ Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_SELECTION_MANAGER__
-#define __AUDACITY_PROJECT_SELECTION_MANAGER__
+#ifndef __SNEEDACITY_PROJECT_SELECTION_MANAGER__
+#define __SNEEDACITY_PROJECT_SELECTION_MANAGER__
 
 #include "ClientData.h" // to inherit
 #include "toolbars/SelectionBarListener.h" // to inherit
 #include "toolbars/SpectralSelectionBarListener.h" // to inherit
 
-class AudacityProject;
+class SneedacityProject;
 
-class AUDACITY_DLL_API ProjectSelectionManager final
+class SNEEDACITY_DLL_API ProjectSelectionManager final
    : public ClientData::Base
    , public SelectionBarListener
    , public SpectralSelectionBarListener
    , public TimeToolBarListener
 {
 public:
-   static ProjectSelectionManager &Get( AudacityProject &project );
-   static const ProjectSelectionManager &Get( const AudacityProject &project );
+   static ProjectSelectionManager &Get( SneedacityProject &project );
+   static const ProjectSelectionManager &Get( const SneedacityProject &project );
 
-   explicit ProjectSelectionManager( AudacityProject &project );
+   explicit ProjectSelectionManager( SneedacityProject &project );
    ProjectSelectionManager( const ProjectSelectionManager & ) PROHIBITED;
    ProjectSelectionManager &operator=(
       const ProjectSelectionManager & ) PROHIBITED;
@@ -58,7 +58,7 @@ public:
 private:
    bool SnapSelection();
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 };
 
 #endif

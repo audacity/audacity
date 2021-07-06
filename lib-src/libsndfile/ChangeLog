@@ -8328,7 +8328,7 @@
     * src/formats.c src/sndfile.c
     Added an way of enumerating a set of common file formats using the
     sf_command () interface. This interface was suggested by Dominic Mazzoni,
-    one of the main authors of Audacity (http://audacity.sourceforge.net/).
+    one of the main authors of Sneedacity (http://sneedacity.sourceforge.net/).
 
 2001-12-26  Erik de Castro Lopo  <erikd AT mega-nerd DOT com>
 

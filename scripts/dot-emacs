@@ -1,16 +1,16 @@
 ;;
 ;; The following commands should be added to your .emacs file to support
-;; Audacity's recommended indentation style.
+;; Sneedacity's recommended indentation style.
 ;;
 
-(defun audacity-c++-indent-setup ()
+(defun sneedacity-c++-indent-setup ()
   ; Set basic offset to 3 spaces
   (setq c-basic-offset 3)
   ; Don't ever insert tabs when auto-formatting files.  Use only spaces.
   (setq indent-tabs-mode nil))
 
-(add-hook 'c++-mode-hook 'audacity-c++-indent-setup)
-(add-hook 'c-mode-hook 'audacity-c++-indent-setup)
+(add-hook 'c++-mode-hook 'sneedacity-c++-indent-setup)
+(add-hook 'c-mode-hook 'sneedacity-c++-indent-setup)
 
 ;;
 ;; Other items you may wish to add to your .emacs file

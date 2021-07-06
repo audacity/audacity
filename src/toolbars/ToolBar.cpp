@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ToolBar.cpp
 
@@ -327,7 +327,7 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolBar::ToolBar( AudacityProject &project,
+ToolBar::ToolBar( SneedacityProject &project,
                   int type,
                   const TranslatableString &label,
                   const wxString &section,
@@ -365,7 +365,7 @@ ToolBar::~ToolBar()
 TranslatableString ToolBar::GetTitle()
 {
    /* i18n-hint: %s will be replaced by the name of the kind of toolbar.*/
-   return XO("Audacity %s Toolbar").Format( GetLabel() );
+   return XO("Sneedacity %s Toolbar").Format( GetLabel() );
 }
 
 //
@@ -895,7 +895,7 @@ void ToolBar::MakeAlternateImages(AButton &button, int idx,
 }
 
 void ToolBar::SetButtonToolTip
-(AudacityProject &theProject,
+(SneedacityProject &theProject,
  AButton &button, const ComponentInterfaceSymbol commands[], size_t nCommands)
 {
    TranslatableString result;

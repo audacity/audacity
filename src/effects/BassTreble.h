@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2016 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2016 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    BassTreble.h (two shelf filters)
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_BASS_TREBLE__
-#define __AUDACITY_EFFECT_BASS_TREBLE__
+#ifndef __SNEEDACITY_EFFECT_BASS_TREBLE__
+#define __SNEEDACITY_EFFECT_BASS_TREBLE__
 
 #include "Effect.h"
 

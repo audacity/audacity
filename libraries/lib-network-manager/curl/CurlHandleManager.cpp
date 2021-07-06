@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file CurlHandleManager.cpp
  @brief Define a class responsible for reuse of CURL hanldes.
@@ -15,7 +15,7 @@
 
 #include <wx/platinfo.h>
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {
@@ -225,10 +225,10 @@ CurlHandleManager::CurlHandleManager ()
 {
     std::ostringstream ss;
 
-    ss << "Audacity/" << 
-        AUDACITY_VERSION << "." << 
-        AUDACITY_RELEASE << "." << 
-        AUDACITY_REVISION << 
+    ss << "Sneedacity/" << 
+        SNEEDACITY_VERSION << "." << 
+        SNEEDACITY_RELEASE << "." << 
+        SNEEDACITY_REVISION << 
         " (";
 
     GetOSString (ss, wxPlatformInfo::Get ());

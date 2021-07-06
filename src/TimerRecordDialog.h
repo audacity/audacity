@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimerRecordDialog.h
 
@@ -13,8 +13,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIMERRECORD_DIALOG__
-#define __AUDACITY_TIMERRECORD_DIALOG__
+#ifndef __SNEEDACITY_TIMERRECORD_DIALOG__
+#define __SNEEDACITY_TIMERRECORD_DIALOG__
 
 #include <wx/textctrl.h> // to inherit
 #include <wx/timer.h> // member variable
@@ -50,13 +50,13 @@ enum {
 #endif
 };
 
-class AudacityProject;
+class SneedacityProject;
 
 class TimerRecordDialog final : public wxDialogWrapper
 {
 public:
    TimerRecordDialog(
-      wxWindow* parent, AudacityProject &project, bool bAlreadySaved);
+      wxWindow* parent, SneedacityProject &project, bool bAlreadySaved);
    ~TimerRecordDialog();
 
    void OnTimer(wxTimerEvent& event);
@@ -103,7 +103,7 @@ private:
    ProgressResult PreActionDelay(int iActionIndex, TimerRecordCompletedActions eCompletedActions);
 
 private:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    wxDateTime m_DateTime_Start;
    wxDateTime m_DateTime_End;

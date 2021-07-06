@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 LabelTrackControls.cpp
 
@@ -30,7 +30,7 @@ LabelTrackControls::~LabelTrackControls()
 
 std::vector<UIHandlePtr> LabelTrackControls::HitTest
 (const TrackPanelMouseState & state,
- const AudacityProject *pProject)
+ const SneedacityProject *pProject)
 {
    return CommonTrackControls::HitTest(state, pProject);
 }

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PrefsDialog.h
 
@@ -9,15 +9,15 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PREFS_DIALOG__
-#define __AUDACITY_PREFS_DIALOG__
+#ifndef __SNEEDACITY_PREFS_DIALOG__
+#define __SNEEDACITY_PREFS_DIALOG__
 
 #include <functional>
 #include <vector>
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include "PrefsPanel.h"
 
-class AudacityProject;
+class SneedacityProject;
 class wxTreebook;
 class wxTreeEvent;
 class ShuttleGui;
@@ -28,13 +28,13 @@ class ShuttleGui;
 #define CONST const
 #endif
 
-class AudacityProject;
+class SneedacityProject;
 
-class AUDACITY_DLL_API PrefsDialog /* not final */ : public wxDialogWrapper
+class SNEEDACITY_DLL_API PrefsDialog /* not final */ : public wxDialogWrapper
 {
  public:
    PrefsDialog(wxWindow * parent,
-      AudacityProject *pProject, // may be null
+      SneedacityProject *pProject, // may be null
       const TranslatableString &titlePrefix = XO("Preferences:"),
       PrefsPanel::Factories &factories =
          PrefsPanel::DefaultFactories());
@@ -77,11 +77,11 @@ private:
 
 // This adds code appropriate only to the original use of PrefsDialog for
 // global settings -- not its reuses elsewhere as in View Settings
-class AUDACITY_DLL_API GlobalPrefsDialog final : public PrefsDialog
+class SNEEDACITY_DLL_API GlobalPrefsDialog final : public PrefsDialog
 {
 public:
    GlobalPrefsDialog(
-      wxWindow * parent, AudacityProject *pProject,
+      wxWindow * parent, SneedacityProject *pProject,
       PrefsPanel::Factories &factories =
          PrefsPanel::DefaultFactories());
    virtual ~GlobalPrefsDialog();
@@ -89,7 +89,7 @@ public:
    void SavePreferredPage() override;
 };
 
-class AudacityProject;
-void AUDACITY_DLL_API DoReloadPreferences( AudacityProject &project );
+class SneedacityProject;
+void SNEEDACITY_DLL_API DoReloadPreferences( SneedacityProject &project );
 
 #endif

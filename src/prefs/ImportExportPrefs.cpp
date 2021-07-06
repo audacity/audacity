@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportExportPrefs.cpp
 
@@ -181,7 +181,7 @@ bool ImportExportPrefs::Commit()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "ImportExport",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew ImportExportPrefs(parent, winid);

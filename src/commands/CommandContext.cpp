@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2017 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2017 Sneedacity Team
    License: wxwidgets
 
    Dan Horgan
@@ -32,7 +32,7 @@ messaging from a command back to its invoker.
 #include "CommandTargets.h"
 
 CommandContext::CommandContext(
-      AudacityProject &p
+      SneedacityProject &p
       , const wxEvent *e
       , int ii
       , const CommandParameter &param
@@ -47,7 +47,7 @@ CommandContext::CommandContext(
 }
    
 CommandContext::CommandContext(
-      AudacityProject &p,
+      SneedacityProject &p,
       std::unique_ptr<CommandOutputTargets> target)
       : project{ p }
       // Revisit and use std_unique pointer for pOutput??

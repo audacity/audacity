@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportRaw.h
 
@@ -8,12 +8,12 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_IMPORT_RAW__
-#define __AUDACITY_IMPORT_RAW__
+#ifndef __SNEEDACITY_IMPORT_RAW__
+#define __SNEEDACITY_IMPORT_RAW__
 
 #include <memory>
 
-class AudacityProject;
+class SneedacityProject;
 class WaveTrackFactory;
 class WaveTrack;
 class wxString;
@@ -27,7 +27,7 @@ using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
 using TrackHolders = std::vector< NewChannelGroup >;
 
 
-void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
+void ImportRaw(const SneedacityProject &project, wxWindow *parent, const wxString &fileName,
    WaveTrackFactory *trackFactory, TrackHolders &outTracks);
 
 #endif

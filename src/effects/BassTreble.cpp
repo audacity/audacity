@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity: A Digital Audio Editor
-   Audacity(R) is copyright (c) 1999-2016 Audacity Team.
+   Sneedacity: A Digital Audio Editor
+   Sneedacity(R) is copyright (c) 1999-2016 Sneedacity Team.
    License: GPL v2.  See License.txt.
 
    BassTreble.cpp
@@ -112,7 +112,7 @@ EffectType EffectBassTreble::GetType()
 
 bool EffectBassTreble::SupportsRealtime()
 {
-#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
+#if defined(EXPERIMENTAL_REALTIME_SNEEDACITY_EFFECTS)
    return true;
 #else
    return false;

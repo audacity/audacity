@@ -2,7 +2,7 @@
 # Sends commands to get images for the manual.
 # Execs all the docimage scripts.
 
-# Make sure Audacity is running first and that mod-script-pipe is enabled
+# Make sure Sneedacity is running first and that mod-script-pipe is enabled
 # before running this script.
 
 import time

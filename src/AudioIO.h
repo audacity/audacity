@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   AudioIO.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_AUDIO_IO__
-#define __AUDACITY_AUDIO_IO__
+#ifndef __SNEEDACITY_AUDIO_IO__
+#define __SNEEDACITY_AUDIO_IO__
 
 
 
@@ -51,7 +51,7 @@ class Resample;
 class AudioThread;
 class SelectedRegion;
 
-class AudacityProject;
+class SneedacityProject;
 
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
@@ -66,11 +66,11 @@ bool ValidateDeviceNames();
 #define MAX_MIDI_BUFFER_SIZE 5000
 #define DEFAULT_SYNTH_LATENCY 5
 
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_AUDIOIO_CAPTURE, wxCommandEvent);
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
                          EVT_AUDIOIO_MONITOR, wxCommandEvent);
 
 // PRL:
@@ -117,10 +117,10 @@ struct TransportTracks {
  * structure, which tells us how long we have been playing / recording
  * @param statusFlags PortAudio stream status flags
  * @param userData pointer to user-defined data structure. Provided for
- * flexibility by PortAudio, but not used by Audacity - the data is stored in
+ * flexibility by PortAudio, but not used by Sneedacity - the data is stored in
  * the AudioIO class instead.
  */
-int audacityAudioCallback(
+int sneedacityAudioCallback(
    const void *inputBuffer, void *outputBuffer,
    unsigned long framesPerBuffer,
    const PaStreamCallbackTimeInfo *timeInfo,
@@ -228,7 +228,7 @@ void MessageBuffer<Data>::Write( Data &&data )
    mSlots[idx].mBusy.store( false, std::memory_order_release );
 }
 
-class AUDACITY_DLL_API AudioIoCallback /* not final */
+class SNEEDACITY_DLL_API AudioIoCallback /* not final */
    : public AudioIOBase
 {
 public:
@@ -548,7 +548,7 @@ public:
    // Used only for testing purposes in alpha builds
    bool mSimulateRecordingErrors{ false };
 
-   // Whether to check the error code passed to audacityAudioCallback to
+   // Whether to check the error code passed to sneedacityAudioCallback to
    // detect more dropouts
    bool mDetectUpstreamDropouts{ true };
 
@@ -580,7 +580,7 @@ protected:
    PlaybackSchedule mPlaybackSchedule;
 };
 
-class AUDACITY_DLL_API AudioIO final
+class SNEEDACITY_DLL_API AudioIO final
    : public AudioIoCallback
 {
 
@@ -642,7 +642,7 @@ public:
    wxString LastPaErrorString();
 
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
-   AudacityProject *GetOwningProject() const { return mOwningProject; }
+   SneedacityProject *GetOwningProject() const { return mOwningProject; }
 
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
@@ -703,13 +703,13 @@ public:
       double AILAGetLastDecisionTime();
    #endif
 
-   bool IsAvailable(AudacityProject *projecT) const;
+   bool IsAvailable(SneedacityProject *projecT) const;
 
    /** \brief Return a valid sample rate that is supported by the current I/O
    * device(s).
    *
    * The return from this function is used to determine the sample rate that
-   * audacity actually runs the audio I/O stream at. if there is no suitable
+   * sneedacity actually runs the audio I/O stream at. if there is no suitable
    * rate available from the hardware, it returns 0.
    * The sampleRate argument gives the desired sample rate (the rate of the
    * audio to be handled, i.e. the currently Project Rate).

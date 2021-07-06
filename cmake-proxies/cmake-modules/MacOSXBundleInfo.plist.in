@@ -13,13 +13,13 @@
 				<string>aup</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityProject.icns</string>
+			<string>SneedacityProject.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-audacity-project</string>
+				<string>application/x-sneedacity-project</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Audacity Project</string>
+			<string>Sneedacity Project</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>auDp</string>
@@ -36,7 +36,7 @@
 				<string>wave</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityWAV.icns</string>
+			<string>SneedacityWAV.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>audio/wav</string>
@@ -62,7 +62,7 @@
 				<string>aifc</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityAIFF.icns</string>
+			<string>SneedacityAIFF.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>audio/aiff</string>
@@ -84,7 +84,7 @@
 				<string>au</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityAU.icns</string>
+			<string>SneedacityAU.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>audio/au</string>
@@ -106,7 +106,7 @@
 				<string>mp3</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityMP3.icns</string>
+			<string>SneedacityMP3.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>audio/mpeg</string>
@@ -138,7 +138,7 @@
 				<string>ogg</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityOGG.icns</string>
+			<string>SneedacityOGG.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>audio/ogg</string>
@@ -168,7 +168,7 @@
 				<string>flac</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>AudacityFLAC.icns</string>
+			<string>SneedacityFLAC.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>audio/flac</string>
@@ -206,25 +206,25 @@
 	<key>CFBundleExecutable</key>
 	<string>Wrapper</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
+	<string>Sneedacity version ${SNEEDACITY_INFO_VERSION}</string>
 	<key>CFBundleIconFile</key>
-	<string>Audacity.icns</string>
+	<string>Sneedacity.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.audacityteam.audacity</string>
+	<string>org.sneedacityteam.sneedacity</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>Version ${AUDACITY_INFO_VERSION}</string>
+	<string>Version ${SNEEDACITY_INFO_VERSION}</string>
 	<key>CFBundleName</key>
-	<string>Audacity</string>
+	<string>Sneedacity</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>${AUDACITY_INFO_VERSION}</string>
+	<string>${SNEEDACITY_INFO_VERSION}</string>
 	<key>CFBundleSignature</key>
 	<string>auDy</string>
 	<key>CFBundleVersion</key>
-	<string>${AUDACITY_INFO_VERSION}</string>
+	<string>${SNEEDACITY_INFO_VERSION}</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.music</string>
 	<key>NSHighResolutionCapable</key>
@@ -232,9 +232,9 @@
    <key>NSRequiresAquaSystemAppearance</key>
    <true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
+	<string>Sneedacity version ${SNEEDACITY_INFO_VERSION}</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Audacity requires access to the microphone only if you intend to record from it.</string>
+	<string>Sneedacity requires access to the microphone only if you intend to record from it.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

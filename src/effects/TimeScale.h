@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimeScale.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_TIMESCALE__
-#define __AUDACITY_EFFECT_TIMESCALE__
+#ifndef __SNEEDACITY_EFFECT_TIMESCALE__
+#define __SNEEDACITY_EFFECT_TIMESCALE__
 
 
 
@@ -105,6 +105,6 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-#endif // __AUDACITY_EFFECT_TIMESCALE
+#endif // __SNEEDACITY_EFFECT_TIMESCALE
 
 #endif // USE_SBSMS

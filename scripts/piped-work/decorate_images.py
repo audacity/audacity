@@ -7,8 +7,8 @@ import glob
 import os
 
 # Edit these to your image source and image destination paths.
-src = "C:/OpenSourceGit/AudacityTeamTools/wit-html/trim_me"
-dest = "C:/OpenSourceGit/AudacityTeamTools/wit-html/processed"
+src = "C:/OpenSourceGit/SneedacityTeamTools/wit-html/trim_me"
+dest = "C:/OpenSourceGit/SneedacityTeamTools/wit-html/processed"
 
 # from https://en.wikibooks.org/wiki/Python_Imaging_Library/Drop_Shadows
 def makeShadow(image, iterations, border, offset, backgroundColour, shadowColour):
@@ -80,4 +80,4 @@ for filename in glob.iglob(src + '/*.png'):
     process_one(name)
 
 
-#process_one( 'C:/OpenSourceGit/AudacityTeamTools/wit-html/trim_3/AfterChirp.png' )
+#process_one( 'C:/OpenSourceGit/SneedacityTeamTools/wit-html/trim_3/AfterChirp.png' )

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LadspaEffect.h
 
@@ -18,9 +18,9 @@ class NumericTextCtrl;
 #include <wx/dynlib.h> // member variable
 #include <wx/event.h> // to inherit
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ModuleInterface.h"
-#include "audacity/PluginInterface.h"
+#include "sneedacity/EffectInterface.h"
+#include "sneedacity/ModuleInterface.h"
+#include "sneedacity/PluginInterface.h"
 
 #include "ladspa.h"
 #include "../../SampleFormat.h"

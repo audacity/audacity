@@ -1,22 +1,22 @@
-Audacity(R): free, open source, cross-platform audio software for 
+Sneedacity(R): free, open source, cross-platform audio software for 
 multi-track recording and editing: https://www.audacityteam.org/ . 
 
-User support is provided on Audacity Forum:
+User support is provided on Sneedacity Forum:
 https://forum.audacityteam.org/ .
 
-We welcome feedback on Audacity, suggestions for new or improved features, 
+We welcome feedback on Sneedacity, suggestions for new or improved features, 
 and bug reports. Please visit 
 https://forum.audacityteam.org/viewforum.php?f=25 .
 
-Audacity is copyright (c) 1999-2021 by Audacity Team. This copyright 
-notice applies to all documents in the Audacity source code archive, 
+Sneedacity is copyright (c) 1999-2021 by Sneedacity Team. This copyright 
+notice applies to all documents in the Sneedacity source code archive, 
 except as otherwise noted (mostly in the lib-src subdirectories). 
-"Audacity" is a registered trademark. 
+"Sneedacity" is a registered trademark. 
 
-The Audacity documentation is licensed under the Creative Commons
+The Sneedacity documentation is licensed under the Creative Commons
 Attribution 3.0 license: https://creativecommons.org/licenses/by/3.0/legalcode .
 
-Compilation instructions for Audacity are provided in the source code:
+Compilation instructions for Sneedacity are provided in the source code:
 * Windows: win\build.txt
 * macOS: mac/build.txt
 * GNU/Linux: linux/build.txt 
@@ -25,9 +25,9 @@ You can ask for help with compilation problems at:
 https://forum.audacityteam.org/viewforum.php?f=19 .
 
 If you want to suggest some simple text change in our code, please submit a 
-pull request on https://github.com/audacity/audacity/pulls . It's usually 
-best to discuss functional code changes with us first on audacity-devel: 
-https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
+pull request on https://github.com/sneedacity/sneedacity/pulls . It's usually 
+best to discuss functional code changes with us first on sneedacity-devel: 
+https://lists.sourceforge.net/lists/listinfo/sneedacity-devel . 
 
 Version 3.0.3
 
@@ -69,14 +69,14 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
 
 Improvements
 
- * More information to help Audacity developers is now provided 
+ * More information to help Sneedacity developers is now provided 
    with most error reports.
  * Manage Macros dialog is now clearer about how to save and
    close the dialog, thanks to changes in buttons.
  * In MP3 export we removed a legacy option for a slower encoding
    that is no better than the faster one.
 
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.2
+See also: https://wiki.audacityteam.org/wiki/New_features_in_Sneedacity_3.0.2
 
 
 Bug Fixes
@@ -96,10 +96,10 @@ Bug Fixes
  * 2703 - Mac: EGAT preview dialog is hidden behind the EGAT dialog
  * 2704 - Mac: Stop button in EGATs with Preview does nor stop the preview
  * 2706 - Win: Vocal Reduction and Isolation most options fail
- * 2707 - Opened projects not being removed from "audacity.cfg"
+ * 2707 - Opened projects not being removed from "sneedacity.cfg"
  * 2708 - Nyquist effects fail silently with One hour plus stereo
  * 2709 - Mac: Missing sub-menu check marks in French
- * 2710 - Compressor with audio before T=0 crashes Audacity
+ * 2710 - Compressor with audio before T=0 crashes Sneedacity
  * 2714 - (Japanese & Korean) "Unable to parse project information"
  * 2716 - Cleared "Recent Files" are restored on next launch
  * 2718 - Failed to execute a project file command (on server)
@@ -116,9 +116,9 @@ See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2
 
 We have two significant bugs we would like help in tracking down:
 
-1) Audacity may occasionally report "Failed to open the project 
+1) Sneedacity may occasionally report "Failed to open the project 
    database".  We don't think this is causing people to lose data.
-2) Audacity may offer to 'recover' a project at start up, when
+2) Sneedacity may offer to 'recover' a project at start up, when
    there is nothing to recover.
 
 If there are repeatable steps to make these bugs happen, this
@@ -137,14 +137,14 @@ our web site at:
 
   https://www.audacityteam.org/download/source
 
-Audacity is built upon other free libraries; some of these libraries may have
-come with Audacity in the lib-src directory.  Others you are expected to install
-first if you want Audacity to have certain capabilities.  Most of these libraries
+Sneedacity is built upon other free libraries; some of these libraries may have
+come with Sneedacity in the lib-src directory.  Others you are expected to install
+first if you want Sneedacity to have certain capabilities.  Most of these libraries
 are not distributed under the terms of the GPL, but rather some other free,
 GPL-compatible license.  Specifically:
 
   expat: BSD-like license.
-    Provides XML parsing.  Included with Audacity.
+    Provides XML parsing.  Included with Sneedacity.
 
   FFmpeg: GPL or LGPL (according to how you obtain/configure it)
     Provides decoding/encoding of additional formats. Optional separate
@@ -166,21 +166,21 @@ GPL-compatible license.  Specifically:
 
   libnyquist: BSD-like license.
     Functional language for manipulating audio; available
-    within Audacity for effects processing.
+    within Sneedacity for effects processing.
 
   libogg: BSD-like license.
     Optional separate download, along with libvorbis.
 
   libsndfile: LGPL
     Reads and writes uncompressed PCM audio files.
-    Included with Audacity.
+    Included with Sneedacity.
 
   libsoxr: LGPL
     The SoX Resampler library performs one-dimensional sample-rate conversion.
 
   libvamp: new-style BSD
     Plug-in interface and support library for audio analysis plug-ins.
-    Included with Audacity.
+    Included with Sneedacity.
 
   libvorbis: BSD-like license.
     Decodes and encodes Ogg Vorbis files.  Optional
@@ -190,18 +190,18 @@ GPL-compatible license.  Specifically:
     sord, sratom, and suil libraries to support LV2 plug-ins. 
 
   portsmf: BSD-like license.
-    library for reading and writing midi files. Included with Audacity
+    library for reading and writing midi files. Included with Sneedacity
 
   sbsms: GPL v2
-    Pitch and tempo changing library. Included in Audacity
+    Pitch and tempo changing library. Included in Sneedacity
 
   SoundTouch: LGPL
     Changes tempo without changing pitch and vice versa.
-    Included in audacity
+    Included in sneedacity
 
   SQLite: Public Domain
     Small and fast SQL database engine.
-    Included in audacity
+    Included in sneedacity
 
   Twolame: LGPL
     Encodes MPEG I layer 2 audio (used in DVDs and Radio). Optional separate

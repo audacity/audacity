@@ -1,15 +1,15 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectSettings.h
 
-Paul Licameli split from AudacityProject.h
+Paul Licameli split from SneedacityProject.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_SETTINGS__
-#define __AUDACITY_PROJECT_SETTINGS__
+#ifndef __SNEEDACITY_PROJECT_SETTINGS__
+#define __SNEEDACITY_PROJECT_SETTINGS__
 
 #include <atomic>
 #include <wx/event.h> // to declare custom event type
@@ -17,10 +17,10 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 
-class AudacityProject;
+class SneedacityProject;
 
 // Sent to the project when certain settings change
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
 enum
@@ -47,13 +47,13 @@ enum {
 
 ///\brief Holds various per-project settings values, including the sample rate,
 /// and sends events to the project when certain values change
-class AUDACITY_DLL_API ProjectSettings final
+class SNEEDACITY_DLL_API ProjectSettings final
    : public ClientData::Base
    , private PrefsListener
 {
 public:
-   static ProjectSettings &Get( AudacityProject &project );
-   static const ProjectSettings &Get( const AudacityProject &project );
+   static ProjectSettings &Get( SneedacityProject &project );
+   static const ProjectSettings &Get( const SneedacityProject &project );
    
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
@@ -61,7 +61,7 @@ public:
       ChangedProjectRate
    };
 
-   explicit ProjectSettings( AudacityProject &project );
+   explicit ProjectSettings( SneedacityProject &project );
    ProjectSettings( const ProjectSettings & ) PROHIBITED;
    ProjectSettings &operator=( const ProjectSettings & ) PROHIBITED;
 
@@ -121,7 +121,7 @@ public:
 private:
    void UpdatePrefs() override;
 
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    NumericFormatSymbol mSelectionFormat;
    NumericFormatSymbol mFrequencySelectionFormatName;

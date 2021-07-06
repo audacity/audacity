@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
 
   ToolsToolBar.h
@@ -11,8 +11,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TOOLS_TOOLBAR__
-#define __AUDACITY_TOOLS_TOOLBAR__
+#ifndef __SNEEDACITY_TOOLS_TOOLBAR__
+#define __SNEEDACITY_TOOLS_TOOLBAR__
 
 #include <wx/defs.h>
 
@@ -25,7 +25,7 @@ class wxImage;
 class wxWindow;
 
 class AButton;
-class AudacityProject;
+class SneedacityProject;
 
 // Code duplication warning: these apparently need to be in the
 // same order as the enum in ToolsToolBar.cpp
@@ -36,11 +36,11 @@ class ToolsToolBar final : public ToolBar {
 
  public:
 
-   ToolsToolBar( AudacityProject &project );
+   ToolsToolBar( SneedacityProject &project );
    virtual ~ToolsToolBar();
 
-   static ToolsToolBar &Get( AudacityProject &project );
-   static const ToolsToolBar &Get( const AudacityProject &project );
+   static ToolsToolBar &Get( SneedacityProject &project );
+   static const ToolsToolBar &Get( const SneedacityProject &project );
 
    void UpdatePrefs() override;
 

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TimeToolBar.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIME_TOOLBAR__
-#define __AUDACITY_TIME_TOOLBAR__
+#ifndef __SNEEDACITY_TIME_TOOLBAR__
+#define __SNEEDACITY_TIME_TOOLBAR__
 
 #include <wx/defs.h>
 
@@ -22,11 +22,11 @@ class TimeToolBarListener;
 class TimeToolBar final : public ToolBar
 {
 public:
-   TimeToolBar(AudacityProject &project);
+   TimeToolBar(SneedacityProject &project);
    virtual ~TimeToolBar();
    
-   static TimeToolBar &Get(AudacityProject &project);
-   static const TimeToolBar &Get(const AudacityProject &project);
+   static TimeToolBar &Get(SneedacityProject &project);
+   static const TimeToolBar &Get(const SneedacityProject &project);
    
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};

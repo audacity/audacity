@@ -29,7 +29,7 @@
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -163,7 +163,7 @@ void RecordAndWait(const CommandContext &context, bool altAppearance)
 /// and pops the play button up.  Then, if nothing is now
 /// playing, it pushes the play button down and enables
 /// the stop button.
-bool MakeReadyToPlay(AudacityProject &project)
+bool MakeReadyToPlay(SneedacityProject &project)
 {
    auto &toolbar = ControlToolBar::Get( project );
    wxCommandEvent evt;
@@ -246,7 +246,7 @@ void DoStartPlaying(const CommandContext &context, bool looping = false)
    }
 }
 
-void DoMoveToLabel(AudacityProject &project, bool next)
+void DoMoveToLabel(SneedacityProject &project, bool next)
 {
    auto &tracks = TrackList::Get( project );
    auto &trackFocus = TrackFocus::Get( project );
@@ -366,7 +366,7 @@ void OnTimerRecord(const CommandContext &context)
    // it is now safer to disable Timer Recording when there is more than
    // one open project.
    if (AllProjects{}.size() > 1) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "Timer Recording cannot be used with more than one open project.\n\nPlease close any additional projects and try again."),
          XO("Timer Recording"),
@@ -380,7 +380,7 @@ void OnTimerRecord(const CommandContext &context)
    // is used in Timer Recording.
    if ((undoManager.UnsavedChanges()) &&
        (TrackList::Get( project ).Any() || settings.EmptyCanBeDirty())) {
-      AudacityMessageBox(
+      SneedacityMessageBox(
          XO(
 "Timer Recording cannot be used while you have unsaved changes.\n\nPlease save or close this project and try again."),
          XO("Timer Recording"),
@@ -398,7 +398,7 @@ void OnTimerRecord(const CommandContext &context)
    const bool allSameRate{ selectedTracks.allSameRate };
 
    if (!allSameRate) {
-      AudacityMessageBox(XO("The tracks selected "
+      SneedacityMessageBox(XO("The tracks selected "
          "for recording must all have the same sampling rate"),
          XO("Mismatched Sampling Rates"),
          wxICON_ERROR | wxCENTRE);
@@ -409,9 +409,9 @@ void OnTimerRecord(const CommandContext &context)
    const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
    if (existingTracks.empty()) {
       if (numberOfSelected > 0 && rateOfSelected != settings.GetRate()) {
-         AudacityMessageBox(XO(
+         SneedacityMessageBox(XO(
             "Too few tracks are selected for recording at this sample rate.\n"
-            "(Audacity requires two channels at the same sample rate for\n"
+            "(Sneedacity requires two channels at the same sample rate for\n"
             "each stereo track)"),
             XO("Too Few Compatible Tracks Selected"),
             wxICON_ERROR | wxCENTRE);
@@ -496,7 +496,7 @@ void OnTimerRecord(const CommandContext &context)
 #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
 void OnPunchAndRoll(const CommandContext &context)
 {
-   AudacityProject &project = context.project;
+   SneedacityProject &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = GetProjectFrame( project );
 
@@ -517,7 +517,7 @@ void OnPunchAndRoll(const CommandContext &context)
    const bool allSameRate{ selectedTracks.allSameRate };
 
    if (!allSameRate) {
-      AudacityMessageBox(XO("The tracks selected "
+      SneedacityMessageBox(XO("The tracks selected "
          "for recording must all have the same sampling rate"),
          XO("Mismatched Sampling Rates"),
          wxICON_ERROR | wxCENTRE);
@@ -658,7 +658,7 @@ void OnRescanDevices(const CommandContext &WXUNUSED(context) )
 
 void OnSoundActivated(const CommandContext &context)
 {
-   AudacityProject &project = context.project;
+   SneedacityProject &project = context.project;
 
    SoundActivatedRecordDialog dialog( &GetProjectFrame( project ) /* parent */ );
    dialog.ShowModal();
@@ -1036,9 +1036,9 @@ void OnStopSelect(const CommandContext &context)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static TransportActions::Handler instance;
    return instance;
 };
@@ -1083,7 +1083,7 @@ BaseItemSharedPtr TransportMenu()
             // it records below, if normal record records below, it records beside.
             // TODO: Do 'the right thing' with other options like TimerRecord.
             // Delayed evaluation in case gPrefs is not yet defined
-            [](const AudacityProject&)
+            [](const SneedacityProject&)
             { return Command( wxT("Record2ndChoice"),
                // Our first choice is bound to R (by default)
                // and gets the prime position.
@@ -1146,7 +1146,7 @@ BaseItemSharedPtr TransportMenu()
                   // Switching of scrolling on and off is permitted
                   // even during transport
                   AlwaysEnabledFlag,
-                  Options{}.CheckTest([](const AudacityProject&){
+                  Options{}.CheckTest([](const SneedacityProject&){
                      return TracksPrefs::GetPinnedHeadPreference(); } ) ),
 
                Command( wxT("Overdub"), XXO("&Overdub (on/off)"),

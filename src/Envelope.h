@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Envelope.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_ENVELOPE__
-#define __AUDACITY_ENVELOPE__
+#ifndef __SNEEDACITY_ENVELOPE__
+#define __SNEEDACITY_ENVELOPE__
 
 #include <stdlib.h>
 #include <algorithm>
@@ -68,7 +68,7 @@ private:
 typedef std::vector<EnvPoint> EnvArray;
 struct TrackPanelDrawingContext;
 
-class AUDACITY_DLL_API Envelope /* not final */ : public XMLTagHandler {
+class SNEEDACITY_DLL_API Envelope /* not final */ : public XMLTagHandler {
 public:
    // Envelope can define a piecewise linear function, or piecewise exponential.
    Envelope(bool exponential, double minValue, double maxValue, double defaultValue);

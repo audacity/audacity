@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectWindowBase.h
 
@@ -8,12 +8,12 @@ Paul Licameli split from ProjectWindow.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_WINDOW_BASE__
-#define __AUDACITY_PROJECT_WINDOW_BASE__
+#ifndef __SNEEDACITY_PROJECT_WINDOW_BASE__
+#define __SNEEDACITY_PROJECT_WINDOW_BASE__
 
 #include <wx/frame.h> // to inherit
 
-class AudacityProject;
+class SneedacityProject;
 
 ///\brief A top-level window associated with a project
 class ProjectWindowBase /* not final */ : public wxFrame
@@ -22,19 +22,19 @@ public:
    explicit ProjectWindowBase(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
-      AudacityProject &project );
+      SneedacityProject &project );
 
    ~ProjectWindowBase() override;
 
-   AudacityProject &GetProject() { return mProject; }
-   const AudacityProject &GetProject() const { return mProject; }
+   SneedacityProject &GetProject() { return mProject; }
+   const SneedacityProject &GetProject() const { return mProject; }
 
 protected:
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 };
 
-AUDACITY_DLL_API AudacityProject *FindProjectFromWindow( wxWindow *pWindow );
-const AudacityProject *FindProjectFromWindow( const wxWindow *pWindow );
+SNEEDACITY_DLL_API SneedacityProject *FindProjectFromWindow( wxWindow *pWindow );
+const SneedacityProject *FindProjectFromWindow( const wxWindow *pWindow );
 
 #endif
 

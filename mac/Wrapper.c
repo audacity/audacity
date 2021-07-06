@@ -1,10 +1,10 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Wrapper.c
 
-  Audacity(R) is copyright (c) 2020-2020 Audacity Team.
+  Sneedacity(R) is copyright (c) 2020-2020 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 *******************************************************************//**
@@ -28,20 +28,20 @@ executable.
 #include <string.h>
 #include <unistd.h>
 
-static const char audacity[] = "Audacity";
+static const char sneedacity[] = "Sneedacity";
 extern char **environ;
 
 int main(int argc, char *argv[])
 {
    size_t len = strlen(argv[0]);
-   char *path = alloca(len + sizeof(audacity)); // not precise, but we don't need it to be
+   char *path = alloca(len + sizeof(sneedacity)); // not precise, but we don't need it to be
 
    strcpy(path, argv[0]);
 
    char *slash = strrchr(path, '/');
    if (slash)
    {
-      strcpy(++slash, audacity);
+      strcpy(++slash, sneedacity);
    }
 
    unsetenv("DYLD_LIBRARY_PATH");

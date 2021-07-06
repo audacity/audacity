@@ -1,6 +1,6 @@
 /*!********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 @file ClientDataHelpers.h
 @brief Some implementation details for ClientData
@@ -9,8 +9,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_CLIENT_DATA_HELPERS__
-#define __AUDACITY_CLIENT_DATA_HELPERS__
+#ifndef __SNEEDACITY_CLIENT_DATA_HELPERS__
+#define __SNEEDACITY_CLIENT_DATA_HELPERS__
 
 #include <memory>
 #include <mutex>

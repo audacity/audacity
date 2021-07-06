@@ -1,6 +1,6 @@
 /*!********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  @file HeadersList.h
  @brief Declare HTTP headers list class.
@@ -15,7 +15,7 @@
 
 #include "NetworkManagerApi.h"
 
-namespace audacity
+namespace sneedacity
 {
 namespace network_manager
 {

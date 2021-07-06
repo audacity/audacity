@@ -249,7 +249,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
 }
 
 int FindClipBoundaries
-(AudacityProject &project,
+(SneedacityProject &project,
  double time, bool next, std::vector<FoundClipBoundary>& finalResults)
 {
    auto &tracks = TrackList::Get( project );
@@ -371,7 +371,7 @@ TranslatableString ClipBoundaryMessage(
    return message;
 }
 
-void DoSelectClipBoundary(AudacityProject &project, bool next)
+void DoSelectClipBoundary(SneedacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
@@ -396,7 +396,7 @@ void DoSelectClipBoundary(AudacityProject &project, bool next)
 }
 
 FoundClip FindNextClip
-(AudacityProject &project, const WaveTrack* wt, double t0, double t1)
+(SneedacityProject &project, const WaveTrack* wt, double t0, double t1)
 {
    (void)project;//Compiler food.
 
@@ -436,7 +436,7 @@ FoundClip FindNextClip
 }
 
 FoundClip FindPrevClip
-(AudacityProject &project, const WaveTrack* wt, double t0, double t1)
+(SneedacityProject &project, const WaveTrack* wt, double t0, double t1)
 {
    (void)project;//Compiler food.
 
@@ -478,7 +478,7 @@ FoundClip FindPrevClip
 }
 
 int FindClips
-(AudacityProject &project,
+(SneedacityProject &project,
  double t0, double t1, bool next, std::vector<FoundClip>& finalResults)
 {
    auto &tracks = TrackList::Get( project );
@@ -555,7 +555,7 @@ int FindClips
    return nTracksSearched; // can be used for screen reader messages if required
 }
 
-void DoSelectClip(AudacityProject &project, bool next)
+void DoSelectClip(SneedacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
@@ -603,7 +603,7 @@ void DoSelectClip(AudacityProject &project, bool next)
 }
 
 void DoCursorClipBoundary
-(AudacityProject &project, bool next)
+(SneedacityProject &project, bool next)
 {
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &trackFocus = TrackFocus::Get( project );
@@ -627,7 +627,7 @@ void DoCursorClipBoundary
 }
 
 // This function returns the amount moved.  Possibly 0.0.
-double DoClipMove( AudacityProject &project, Track *track,
+double DoClipMove( SneedacityProject &project, Track *track,
      TrackList &trackList, bool syncLocked, bool right )
 {
    auto &viewInfo = ViewInfo::Get(project);
@@ -680,7 +680,7 @@ double DoClipMove( AudacityProject &project, Track *track,
 }
 
 void DoClipLeftOrRight
-(AudacityProject &project, bool right, bool keyUp )
+(SneedacityProject &project, bool right, bool keyUp )
 {
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -709,7 +709,7 @@ void DoClipLeftOrRight
       // The following use of the UndoPush flags is so that both a single
       // keypress (keydown, then keyup), and holding down a key
       // (multiple keydowns followed by a keyup) result in a single
-      // entry in Audacity's history dialog.
+      // entry in Sneedacity's history dialog.
       ProjectHistory::Get( project )
          .PushState(message, XO("Time-Shift"), UndoPush::CONSOLIDATE);
    }
@@ -758,14 +758,14 @@ void OnSelectNextClip(const CommandContext &context)
 
 void OnCursorPrevClipBoundary(const CommandContext &context)
 {
-   AudacityProject &project = context.project;
+   SneedacityProject &project = context.project;
 
    DoCursorClipBoundary(project, false);
 }
 
 void OnCursorNextClipBoundary(const CommandContext &context)
 {
-   AudacityProject &project = context.project;
+   SneedacityProject &project = context.project;
    
    DoCursorClipBoundary(project, true);
 }
@@ -800,9 +800,9 @@ void OnClipRight(const CommandContext &context)
 
 } // namespace
 
-static CommandHandlerObject &findCommandHandler(AudacityProject &) {
+static CommandHandlerObject &findCommandHandler(SneedacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with
-   // AudacityProject.
+   // SneedacityProject.
    static ClipActions::Handler instance;
    return instance;
 };

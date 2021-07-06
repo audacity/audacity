@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Export.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EXPORT__
-#define __AUDACITY_EXPORT__
+#ifndef __SNEEDACITY_EXPORT__
+#define __SNEEDACITY_EXPORT__
 
 #include <functional>
 #include <vector>
@@ -27,7 +27,7 @@ class wxFileCtrlEvent;
 class wxMemoryDC;
 class wxSimplebook;
 class wxStaticText;
-class AudacityProject;
+class SneedacityProject;
 class WaveTrack;
 class Tags;
 class TrackList;
@@ -39,7 +39,7 @@ using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 enum class ProgressResult : unsigned;
 class wxFileNameWrapper;
 
-class AUDACITY_DLL_API FormatInfo
+class SNEEDACITY_DLL_API FormatInfo
 {
    public:
       FormatInfo() {}
@@ -61,7 +61,7 @@ class AUDACITY_DLL_API FormatInfo
 //----------------------------------------------------------------------------
 // ExportPlugin
 //----------------------------------------------------------------------------
-class AUDACITY_DLL_API ExportPlugin /* not final */
+class SNEEDACITY_DLL_API ExportPlugin /* not final */
 {
 public:
 
@@ -122,7 +122,7 @@ public:
     * responsible for alerting the user.  Otherwise ProgressResult::Success or
     * ProgressResult::Stopped
     */
-   virtual ProgressResult Export(AudacityProject *project,
+   virtual ProgressResult Export(SneedacityProject *project,
                        std::unique_ptr<ProgressDialog> &pDialog,
                        unsigned channels,
                        const wxFileNameWrapper &fName,
@@ -158,10 +158,10 @@ using ExportPluginArray = std::vector < std::unique_ptr< ExportPlugin > > ;
 //----------------------------------------------------------------------------
 
 // For a file suffix change from the options.
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-   AUDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
+wxDECLARE_EXPORTED_EVENT(SNEEDACITY_DLL_API,
+   SNEEDACITY_FILE_SUFFIX_EVENT, wxCommandEvent);
 
-class  AUDACITY_DLL_API Exporter final : public wxEvtHandler
+class  SNEEDACITY_DLL_API Exporter final : public wxEvtHandler
 {
 public:
 
@@ -173,18 +173,18 @@ public:
    // Register factories, not plugin objects themselves, which allows them
    // to have some fresh state variables each time export begins again
    // and to compute translated strings for the current locale
-   struct AUDACITY_DLL_API RegisteredExportPlugin{
+   struct SNEEDACITY_DLL_API RegisteredExportPlugin{
       RegisteredExportPlugin(
          const Identifier &id, // an internal string naming the plug-in
          const ExportPluginFactory&,
          const Registry::Placement &placement = { wxEmptyString, {} } );
    };
 
-   static bool DoEditMetadata(AudacityProject &project,
+   static bool DoEditMetadata(SneedacityProject &project,
       const TranslatableString &title,
       const TranslatableString &shortUndoDescription, bool force);
 
-   Exporter( AudacityProject &project );
+   Exporter( SneedacityProject &project );
    virtual ~Exporter();
 
    void SetFileDialogTitle( const TranslatableString & DialogTitle );
@@ -232,7 +232,7 @@ private:
    FileExtension mFormatName;
    FileDialogWrapper *mDialog;
    TranslatableString mFileDialogTitle;
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
    std::unique_ptr<MixerSpec> mMixerSpec;
 
    ExportPluginArray mPlugins;
@@ -323,17 +323,17 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
-AUDACITY_DLL_API TranslatableString AudacityExportCaptionStr();
-AUDACITY_DLL_API TranslatableString AudacityExportMessageStr();
+SNEEDACITY_DLL_API TranslatableString SneedacityExportCaptionStr();
+SNEEDACITY_DLL_API TranslatableString SneedacityExportMessageStr();
 
 /// We have many Export errors that are essentially anonymous
 /// and are distinguished only by an error code number.
 /// Rather than repeat the code, we have it just once.
-AUDACITY_DLL_API void ShowExportErrorDialog(wxString ErrorCode,
-   TranslatableString message = AudacityExportMessageStr(),
-   const TranslatableString& caption = AudacityExportCaptionStr());
+SNEEDACITY_DLL_API void ShowExportErrorDialog(wxString ErrorCode,
+   TranslatableString message = SneedacityExportMessageStr(),
+   const TranslatableString& caption = SneedacityExportCaptionStr());
 
-AUDACITY_DLL_API
+SNEEDACITY_DLL_API
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName);
 
 #endif

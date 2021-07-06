@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ToolManager.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TOOLMANAGER__
-#define __AUDACITY_TOOLMANAGER__
+#ifndef __SNEEDACITY_TOOLMANAGER__
+#define __SNEEDACITY_TOOLMANAGER__
 
 #include <functional>
 
@@ -39,7 +39,7 @@ class wxTimer;
 class wxTimerEvent;
 class wxWindow;
 
-class AudacityProject;
+class SneedacityProject;
 class ProjectWindow;
 class ToolFrame;
 
@@ -47,7 +47,7 @@ class ToolFrame;
 /// class ToolManager
 ////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API ToolManager final
+class SNEEDACITY_DLL_API ToolManager final
    : public wxEvtHandler
    , public wxEventFilter
    , public ClientData::Base
@@ -58,10 +58,10 @@ class AUDACITY_DLL_API ToolManager final
    using GetTopPanelHook = std::function< wxWindow*( wxWindow& ) >;
    static GetTopPanelHook SetGetTopPanelHook( const GetTopPanelHook& );
 
-   static ToolManager &Get( AudacityProject &project );
-   static const ToolManager &Get( const AudacityProject &project );
+   static ToolManager &Get( SneedacityProject &project );
+   static const ToolManager &Get( const SneedacityProject &project );
 
-   ToolManager( AudacityProject *parent );
+   ToolManager( SneedacityProject *parent );
    ToolManager( const ToolManager & ) PROHIBITED;
    ToolManager &operator=( const ToolManager & ) PROHIBITED;
    ~ToolManager();
@@ -114,7 +114,7 @@ class AUDACITY_DLL_API ToolManager final
    void WriteConfig();
    void Updated();
 
-   AudacityProject *mParent;
+   SneedacityProject *mParent;
    wxWindowRef mLastFocus{};
 
    ToolFrame *mDragWindow;
@@ -166,7 +166,7 @@ class ToolFrame final : public wxFrame
 {
 public:
 
-   ToolFrame( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
+   ToolFrame( SneedacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
 
    ~ToolFrame();
 
@@ -205,7 +205,7 @@ public:
 
 private:
 
-   AudacityProject *const mParent;
+   SneedacityProject *const mParent;
    ToolManager *mManager;
    ToolBar *mBar;
    wxSize mMinSize;
@@ -221,7 +221,7 @@ public:
 
 // Construct a static instance of this class to add a menu item that shows and
 // hides a toolbar
-struct AUDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
+struct SNEEDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
    AttachedToolBarMenuItem(
       ToolBarID id, const CommandID &name, const TranslatableString &label_in,
       const Registry::OrderingHint &hint = {},

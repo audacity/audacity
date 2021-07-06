@@ -1,6 +1,6 @@
 /**********************************************************************
 
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
 
  TrackPanelDrawingContext.h
 
@@ -8,8 +8,8 @@
 
  **********************************************************************/
 
-#ifndef __AUDACITY_TRACK_PANEL_DRAWING_CONTEXT__
-#define __AUDACITY_TRACK_PANEL_DRAWING_CONTEXT__
+#ifndef __SNEEDACITY_TRACK_PANEL_DRAWING_CONTEXT__
+#define __SNEEDACITY_TRACK_PANEL_DRAWING_CONTEXT__
 
 #include <memory>
 

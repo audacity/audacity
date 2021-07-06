@@ -37,7 +37,7 @@
 
 *//*****************************************************************//**
 
-\class TrackPanel::AudacityTimer
+\class TrackPanel::SneedacityTimer
 \brief Timer class dedicated to informing the TrackPanel that it
 is time to refresh some aspect of the screen.
 
@@ -195,8 +195,8 @@ std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const
 
 namespace{
 
-AudacityProject::AttachedWindows::RegisteredFactory sKey{
-   []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
+SneedacityProject::AttachedWindows::RegisteredFactory sKey{
+   []( SneedacityProject &project ) -> wxWeakRef< wxWindow > {
       auto &ruler = AdornedRulerPanel::Get( project );
       auto &viewInfo = ViewInfo::Get( project );
       auto &window = ProjectWindow::Get( project );
@@ -219,17 +219,17 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
 
 }
 
-TrackPanel &TrackPanel::Get( AudacityProject &project )
+TrackPanel &TrackPanel::Get( SneedacityProject &project )
 {
    return project.AttachedWindows::Get< TrackPanel >( sKey );
 }
 
-const TrackPanel &TrackPanel::Get( const AudacityProject &project )
+const TrackPanel &TrackPanel::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
-void TrackPanel::Destroy( AudacityProject &project )
+void TrackPanel::Destroy( SneedacityProject &project )
 {
    auto *pPanel = project.AttachedWindows::Find( sKey );
    if (pPanel) {
@@ -247,7 +247,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        const wxSize & size,
                        const std::shared_ptr<TrackList> &tracks,
                        ViewInfo * viewInfo,
-                       AudacityProject * project,
+                       SneedacityProject * project,
                        AdornedRulerPanel * ruler)
    : CellularPanel(parent, id, pos, size, viewInfo,
                    wxWANTS_CHARS | wxNO_BORDER),
@@ -339,9 +339,9 @@ void TrackPanel::UpdatePrefs()
    Refresh();
 }
 
-/// Gets the pointer to the AudacityProject that
+/// Gets the pointer to the SneedacityProject that
 /// goes with this track panel.
-AudacityProject * TrackPanel::GetProject() const
+SneedacityProject * TrackPanel::GetProject() const
 {
    //JKC casting away constness here.
    //Do it in two stages in case 'this' is not a wxWindow.
@@ -394,7 +394,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 {
    mTimeCount++;
 
-   AudacityProject *const p = GetProject();
+   SneedacityProject *const p = GetProject();
    auto &window = ProjectWindow::Get( *p );
 
    auto &projectAudioIO = ProjectAudioIO::Get( *p );
@@ -608,7 +608,7 @@ void TrackPanel::HandlePageDownKey()
 
 bool TrackPanel::IsAudioActive()
 {
-   AudacityProject *p = GetProject();
+   SneedacityProject *p = GetProject();
    return ProjectAudioIO::Get( *p ).IsAudioActive();
 }
 
@@ -1160,7 +1160,7 @@ void DrawTrackName(
 
 struct EmptyCell final : CommonTrackPanelCell {
    std::vector< UIHandlePtr > HitTest(
-      const TrackPanelMouseState &, const AudacityProject *) override
+      const TrackPanelMouseState &, const SneedacityProject *) override
    { return {}; }
    virtual std::shared_ptr< Track > DoFindTrack() override { return {}; }
    static std::shared_ptr<EmptyCell> Instance()
@@ -1523,7 +1523,7 @@ void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
    }
 }
 
-IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
+IsVisibleTrack::IsVisibleTrack(SneedacityProject *project)
    : mPanelRect {
         wxPoint{ 0, ViewInfo::Get( *project ).vpos },
         wxSize{

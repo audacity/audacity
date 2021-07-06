@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODDecodeTask
 
   Created by Michael Chinen (mchinen) on 8/10/08.
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -16,7 +16,7 @@ updating the ODDecodeBlockFile and the GUI of the newly available data.
 
 *//*******************************************************************/
 
-#include "../Audacity.h"
+#include "../Sneedacity.h"
 #include "ODDecodeTask.h"
 
 #include "../blockfile/ODDecodeBlockFile.h"

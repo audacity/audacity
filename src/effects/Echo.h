@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   Echo.h
 
@@ -9,8 +9,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_ECHO__
-#define __AUDACITY_EFFECT_ECHO__
+#ifndef __SNEEDACITY_EFFECT_ECHO__
+#define __SNEEDACITY_EFFECT_ECHO__
 
 #include "Effect.h"
 
@@ -61,4 +61,4 @@ private:
    size_t histLen;
 };
 
-#endif // __AUDACITY_EFFECT_ECHO__
+#endif // __SNEEDACITY_EFFECT_ECHO__

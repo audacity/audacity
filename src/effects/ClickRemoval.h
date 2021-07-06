@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ClickRemoval.h
 
@@ -8,13 +8,13 @@
 
   (Structure largely stolen from NoiseRemoval.h by Dominic Mazzoni)
 
-  This file is intended to become part of Audacity.  You may modify and/or
-  distribute it under the same terms as Audacity itself.
+  This file is intended to become part of Sneedacity.  You may modify and/or
+  distribute it under the same terms as Sneedacity itself.
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECT_CLICK_REMOVAL__
-#define __AUDACITY_EFFECT_CLICK_REMOVAL__
+#ifndef __SNEEDACITY_EFFECT_CLICK_REMOVAL__
+#define __SNEEDACITY_EFFECT_CLICK_REMOVAL__
 
 #include "Effect.h"
 

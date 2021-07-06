@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ModulePrefs.h
 
@@ -10,8 +10,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_MODULE_PREFS__
-#define __AUDACITY_MODULE_PREFS__
+#ifndef __SNEEDACITY_MODULE_PREFS__
+#define __SNEEDACITY_MODULE_PREFS__
 
 #include <wx/defs.h>
 

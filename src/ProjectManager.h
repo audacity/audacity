@@ -1,15 +1,15 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 ProjectManager.h
 
-Paul Licameli split from AudacityProject.h
+Paul Licameli split from SneedacityProject.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_MANAGER__
-#define __AUDACITY_PROJECT_MANAGER__
+#ifndef __SNEEDACITY_PROJECT_MANAGER__
+#define __SNEEDACITY_PROJECT_MANAGER__
 
 #include <memory>
 
@@ -20,34 +20,34 @@ Paul Licameli split from AudacityProject.h
 class wxTimer;
 class wxTimerEvent;
 
-class AudacityProject;
+class SneedacityProject;
 struct AudioIOStartStreamOptions;
 
 ///\brief Object associated with a project for high-level management of the
 /// project's lifetime, including creation, destruction, opening from file,
 /// importing, pushing undo states, and reverting to saved states
-class AUDACITY_DLL_API ProjectManager final
+class SNEEDACITY_DLL_API ProjectManager final
    : public wxEvtHandler
    , public ClientData::Base
 {
 public:
-   static ProjectManager &Get( AudacityProject &project );
-   static const ProjectManager &Get( const AudacityProject &project );
+   static ProjectManager &Get( SneedacityProject &project );
+   static const ProjectManager &Get( const SneedacityProject &project );
 
-   explicit ProjectManager( AudacityProject &project );
+   explicit ProjectManager( SneedacityProject &project );
    ProjectManager( const ProjectManager & ) PROHIBITED;
    ProjectManager &operator=( const ProjectManager & ) PROHIBITED;
    ~ProjectManager() override;
 
    // This is the factory for projects:
-   static AudacityProject *New();
+   static SneedacityProject *New();
 
    // The function that imports files can act as a factory too, and for that
    // reason remains in this class, not in ProjectFileManager
-   static void OpenFiles(AudacityProject *proj);
+   static void OpenFiles(SneedacityProject *proj);
 
    //! False when it is unsafe to overwrite proj with contents of an .aup3 file
-   static bool SafeToOpenProjectInto(AudacityProject &proj);
+   static bool SafeToOpenProjectInto(SneedacityProject &proj);
 
    //! Callable object that supplies the `chooser` argument of ProjectFileManager::OpenFile
    /*!
@@ -65,7 +65,7 @@ public:
        @param reuseNonemptyProject if true, may reuse the given project when nonempty,
        but only if importing (not for a project file)
        */
-      ProjectChooser( AudacityProject *pProject, bool reuseNonemptyProject )
+      ProjectChooser( SneedacityProject *pProject, bool reuseNonemptyProject )
          : mpGivenProject{ pProject }
          , mReuseNonemptyProject{ reuseNonemptyProject }
       {}
@@ -74,27 +74,27 @@ public:
       //! Destroy any fresh project, or rollback the existing project, unless committed
       ~ProjectChooser();
       //! May create a fresh project
-      AudacityProject &operator() ( bool openingProjectFile );
+      SneedacityProject &operator() ( bool openingProjectFile );
       //! Commit the creation of any fresh project or changes to the existing project
       void Commit();
 
    private:
-      AudacityProject *mpGivenProject;
-      AudacityProject *mpUsedProject = nullptr;
+      SneedacityProject *mpGivenProject;
+      SneedacityProject *mpUsedProject = nullptr;
       bool mReuseNonemptyProject;
    };
 
-   //! Open a file into an AudacityProject, returning the project, or nullptr for failure
+   //! Open a file into an SneedacityProject, returning the project, or nullptr for failure
    /*!
     If an exception escapes this function, no projects are created.
     @param pGivenProject if not null, a project that may be reused
-    @param fileNameArg path to the file to open; not always an Audacity project file, may be an import
+    @param fileNameArg path to the file to open; not always an Sneedacity project file, may be an import
     @param addtohistory whether to add .aup3 files to the MRU list (but always done for imports)
     @param reuseNonemptyProject if true, may reuse the given project when nonempty,
        but only if importing (not for a project file)
     */
-   static AudacityProject *OpenProject(
-      AudacityProject *pGivenProject,
+   static SneedacityProject *OpenProject(
+      SneedacityProject *pGivenProject,
       const FilePath &fileNameArg, bool addtohistory, bool reuseNonemptyProject);
 
    void ResetProjectToEmpty();
@@ -119,7 +119,7 @@ private:
    void RestartTimer();
 
    // non-static data members
-   AudacityProject &mProject;
+   SneedacityProject &mProject;
 
    std::unique_ptr<wxTimer> mTimer;
 

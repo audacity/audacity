@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 CutlineHandle.cpp
 
@@ -29,7 +29,7 @@ CutlineHandle::CutlineHandle
 {
 }
 
-void CutlineHandle::Enter(bool, AudacityProject *)
+void CutlineHandle::Enter(bool, SneedacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
@@ -96,7 +96,7 @@ namespace
 UIHandlePtr CutlineHandle::HitTest
 (std::weak_ptr<CutlineHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject,
+ const SneedacityProject *pProject,
  const std::shared_ptr<WaveTrack> &pTrack)
 {
    auto &viewInfo = ViewInfo::Get( *pProject );
@@ -117,7 +117,7 @@ CutlineHandle::~CutlineHandle()
 }
 
 UIHandle::Result CutlineHandle::Click
-(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
+(const TrackPanelMouseEvent &evt, SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
@@ -198,13 +198,13 @@ UIHandle::Result CutlineHandle::Click
 }
 
 UIHandle::Result CutlineHandle::Drag
-(const TrackPanelMouseEvent &, AudacityProject *)
+(const TrackPanelMouseEvent &, SneedacityProject *)
 {
    return RefreshCode::RefreshNone;
 }
 
 HitTestPreview CutlineHandle::Preview
-(const TrackPanelMouseState &, AudacityProject *pProject)
+(const TrackPanelMouseState &, SneedacityProject *pProject)
 {
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    auto bCutline = (mLocation.typ == WaveTrackLocation::locationCutLine);
@@ -212,7 +212,7 @@ HitTestPreview CutlineHandle::Preview
 }
 
 UIHandle::Result CutlineHandle::Release
-(const TrackPanelMouseEvent &, AudacityProject *pProject, wxWindow *)
+(const TrackPanelMouseEvent &, SneedacityProject *pProject, wxWindow *)
 {
    UIHandle::Result result = RefreshCode::RefreshNone;
 
@@ -238,13 +238,13 @@ UIHandle::Result CutlineHandle::Release
    return result;
 }
 
-UIHandle::Result CutlineHandle::Cancel(AudacityProject *pProject)
+UIHandle::Result CutlineHandle::Cancel(SneedacityProject *pProject)
 {
    using namespace RefreshCode;
    UIHandle::Result result = RefreshCell;
    ProjectHistory::Get( *pProject ).RollbackState();
    if (mOperation == Expand) {
-      AudacityProject &project = *pProject;
+      SneedacityProject &project = *pProject;
       auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
       selectedRegion.setTimes( mStartTime, mEndTime );
    }

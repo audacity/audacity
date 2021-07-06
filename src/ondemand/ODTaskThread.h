@@ -1,11 +1,11 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ODTaskThread.h
 
   Created by Michael Chinen (mchinen) on 6/8/08
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
+  Sneedacity(R) is copyright (c) 1999-2008 Sneedacity Team.
   License: GPL v2.  See License.txt.
 
 ******************************************************************//**
@@ -19,10 +19,10 @@
 
 
 
-#ifndef __AUDACITY_ODTASKTHREAD__
-#define __AUDACITY_ODTASKTHREAD__
+#ifndef __SNEEDACITY_ODTASKTHREAD__
+#define __SNEEDACITY_ODTASKTHREAD__
 
-#include "../Audacity.h"	// contains the set-up of AUDACITY_DLL_API
+#include "../Sneedacity.h"	// contains the set-up of SNEEDACITY_DLL_API
 
 #include <wx/thread.h> // to inherit
 
@@ -85,7 +85,7 @@ protected:
 
 
 //a wrapper for wxMutex.
-class AUDACITY_DLL_API ODLock final : public wxMutex
+class SNEEDACITY_DLL_API ODLock final : public wxMutex
 {
 public:
    ///Constructs a ODTaskThread
@@ -149,5 +149,5 @@ public:
    ODLocker &operator= (const ODLocker &that) PROHIBITED;
 };
 
-#endif //__AUDACITY_ODTASKTHREAD__
+#endif //__SNEEDACITY_ODTASKTHREAD__
 

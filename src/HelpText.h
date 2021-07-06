@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   HelpText.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_HELP_TEXT__
-#define __AUDACITY_HELP_TEXT__
+#ifndef __SNEEDACITY_HELP_TEXT__
+#define __SNEEDACITY_HELP_TEXT__
 
 class TranslatableString;
 class wxString;
@@ -19,12 +19,12 @@ struct URLStringTag;
 //! Distinct type for URLs
 using URLString = TaggedIdentifier< URLStringTag >;
 
-AUDACITY_DLL_API  wxString HelpText( const wxString & Key );
-AUDACITY_DLL_API TranslatableString TitleText( const wxString & Key );
+SNEEDACITY_DLL_API  wxString HelpText( const wxString & Key );
+SNEEDACITY_DLL_API TranslatableString TitleText( const wxString & Key );
 
-extern AUDACITY_DLL_API const wxString VerCheckArgs();
-extern AUDACITY_DLL_API const URLString VerCheckUrl();
-extern AUDACITY_DLL_API const wxString VerCheckHtml();
-extern AUDACITY_DLL_API wxString FormatHtmlText( const wxString & Text );
+extern SNEEDACITY_DLL_API const wxString VerCheckArgs();
+extern SNEEDACITY_DLL_API const URLString VerCheckUrl();
+extern SNEEDACITY_DLL_API const wxString VerCheckHtml();
+extern SNEEDACITY_DLL_API wxString FormatHtmlText( const wxString & Text );
 
 #endif

@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PlatformCompatibility.h
 
@@ -17,12 +17,12 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_COMPATIBILITY__
-#define __AUDACITY_COMPATIBILITY__
+#ifndef __SNEEDACITY_COMPATIBILITY__
+#define __SNEEDACITY_COMPATIBILITY__
 
 #include "Identifier.h"
 
-class AUDACITY_DLL_API PlatformCompatibility
+class SNEEDACITY_DLL_API PlatformCompatibility
 {
 public:
    //
@@ -34,8 +34,8 @@ public:
    static FilePath GetLongFileName(const FilePath& shortFileName);
 
    //
-   // Get filename and path of executable (e.g. "/usr/bin/audacity" on
-   // Linux or "C:\Program Files\Audacity\Audacity.exe" on Windows)
+   // Get filename and path of executable (e.g. "/usr/bin/sneedacity" on
+   // Linux or "C:\Program Files\Sneedacity\Sneedacity.exe" on Windows)
    // This string is unchanging
    //
    static const FilePath &GetExecutablePath();

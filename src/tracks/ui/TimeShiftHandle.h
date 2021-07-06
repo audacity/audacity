@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 TimeShiftHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_TIMESHIFT_HANDLE__
-#define __AUDACITY_TIMESHIFT_HANDLE__
+#ifndef __SNEEDACITY_TIMESHIFT_HANDLE__
+#define __SNEEDACITY_TIMESHIFT_HANDLE__
 
 #include <functional>
 #include <unordered_map>
@@ -28,7 +28,7 @@ class TrackInterval;
 class ViewInfo;
 
 //! Abstract base class for policies to manipulate a track type with the Time Shift tool
-class AUDACITY_DLL_API TrackShifter {
+class SNEEDACITY_DLL_API TrackShifter {
 public:
    TrackShifter();
    TrackShifter(const TrackShifter&) PROHIBITED;
@@ -195,11 +195,11 @@ private:
 
 struct MakeTrackShifterTag;
 using MakeTrackShifter = AttachedVirtualFunction<
-   MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track, AudacityProject&>;
+   MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track, SneedacityProject&>;
 
 class ViewInfo;
 
-struct AUDACITY_DLL_API ClipMoveState {
+struct SNEEDACITY_DLL_API ClipMoveState {
    ClipMoveState() = default;
 
    ClipMoveState(const ClipMoveState&) PROHIBITED;
@@ -212,7 +212,7 @@ struct AUDACITY_DLL_API ClipMoveState {
    
    //! Will associate a TrackShifter with each track in the list
    void Init(
-      AudacityProject &project,
+      SneedacityProject &project,
       Track &capturedTrack, //<! pHit if not null associates with this track
       TrackShifter::HitTestResult hitTestResult, //!< must not be `Miss`
       std::unique_ptr<TrackShifter> pHit, /*!<
@@ -251,11 +251,11 @@ struct AUDACITY_DLL_API ClipMoveState {
    }
 };
 
-class AUDACITY_DLL_API TimeShiftHandle final : public UIHandle
+class SNEEDACITY_DLL_API TimeShiftHandle final : public UIHandle
 {
    TimeShiftHandle(const TimeShiftHandle&) = delete;
    static HitTestPreview HitPreview
-      (const AudacityProject *pProject, bool unsafe);
+      (const SneedacityProject *pProject, bool unsafe);
 
 public:
    explicit TimeShiftHandle
@@ -284,23 +284,23 @@ public:
 
    virtual ~TimeShiftHandle();
 
-   void Enter(bool forward, AudacityProject *) override;
+   void Enter(bool forward, SneedacityProject *) override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(SneedacityProject *pProject) override;
 
    bool StopsOnKeystroke() override { return true; }
 

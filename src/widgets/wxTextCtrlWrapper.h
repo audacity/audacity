@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   wxTextCtrlWrapper.h
 
@@ -8,8 +8,8 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WXTEXTCTRLWRAPPER__
-#define __AUDACITY_WXTEXTCTRLWRAPPER__
+#ifndef __SNEEDACITY_WXTEXTCTRLWRAPPER__
+#define __SNEEDACITY_WXTEXTCTRLWRAPPER__
 
 
 
@@ -72,4 +72,4 @@ private:
    bool mReadOnly;
 };
 
-#endif // __AUDACITY_WXTEXTCTRLWRAPPER__
+#endif // __SNEEDACITY_WXTEXTCTRLWRAPPER__

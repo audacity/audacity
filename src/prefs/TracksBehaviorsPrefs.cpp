@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   TracksBehaviorsPrefs.cpp
 
@@ -131,7 +131,7 @@ bool TracksBehaviorsPrefs::Commit()
 
 namespace{
 PrefsPanel::Registration sAttachment{ "TracksBehaviors",
-   [](wxWindow *parent, wxWindowID winid, AudacityProject *)
+   [](wxWindow *parent, wxWindowID winid, SneedacityProject *)
    {
       wxASSERT(parent); // to justify safenew
       return safenew TracksBehaviorsPrefs(parent, winid);

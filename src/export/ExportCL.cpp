@@ -1,12 +1,12 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ExportCL.cpp
 
   Joshua Haberman
 
-  This code allows Audacity to export data by piping it to an external
+  This code allows Sneedacity to export data by piping it to an external
   program.
 
 **********************************************************************/
@@ -37,7 +37,7 @@
 #include "../Track.h"
 #include "../float_cast.h"
 #include "../widgets/FileHistory.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/Warning.h"
 #include "../wxFileNameWrapper.h"
@@ -280,7 +280,7 @@ public:
    // Required
    void OptionsCreate(ShuttleGui &S, int format) override;
 
-   ProgressResult Export(AudacityProject *project,
+   ProgressResult Export(SneedacityProject *project,
                          std::unique_ptr<ProgressDialog> &pDialog,
                          unsigned channels,
                          const wxFileNameWrapper &fName,
@@ -309,8 +309,8 @@ private:
       ExtendPath()
       {
          // Give Windows a chance at finding lame command in the default location.
-         wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Audacity"),
-                             wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity")};
+         wxString paths[] = {wxT("HKEY_LOCAL_MACHINE\\Software\\Lame for Sneedacity"),
+                             wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Sneedacity")};
          wxString npath;
          wxRegKey reg;
 
@@ -354,7 +354,7 @@ ExportCL::ExportCL()
    SetDescription(XO("(external program)"),0);
 }
 
-ProgressResult ExportCL::Export(AudacityProject *project,
+ProgressResult ExportCL::Export(SneedacityProject *project,
                                 std::unique_ptr<ProgressDialog> &pDialog,
                                 unsigned channels,
                                 const wxFileNameWrapper &fName,
@@ -385,7 +385,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
    rc = wxExecute(mCmd, wxEXEC_ASYNC, &process);
    if (!rc) {
-      AudacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
+      SneedacityMessageBox( XO("Cannot export audio to %s").Format( path ) );
       process.Detach();
       process.CloseOutput();
 
@@ -753,7 +753,7 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    // Just verify the given path exists if it is absolute.
    if (cmd.IsAbsolute()) {
       if (!cmd.Exists()) {
-         AudacityMessageBox(
+         SneedacityMessageBox(
             XO("\"%s\" couldn't be found.").Format(cmd.GetFullPath()),
             XO("Warning"),
             wxOK | wxICON_EXCLAMATION);
@@ -776,7 +776,7 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
 #endif
 
    if (path.empty()) {
-      int action = AudacityMessageBox(
+      int action = SneedacityMessageBox(
          XO("Unable to locate \"%s\" in your path.").Format(cmd.GetFullPath()),
          XO("Warning"),
          wxOK | wxICON_EXCLAMATION);

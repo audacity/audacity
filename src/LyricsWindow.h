@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LyricsWindow.h
 
@@ -9,14 +9,14 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LYRICS_WINDOW__
-#define __AUDACITY_LYRICS_WINDOW__
+#ifndef __SNEEDACITY_LYRICS_WINDOW__
+#define __SNEEDACITY_LYRICS_WINDOW__
 
 #include <wx/frame.h> // to inherit
 
 #include "Prefs.h"
 
-class AudacityProject;
+class SneedacityProject;
 class LyricsPanel;
 
 class LyricsWindow final : public wxFrame,
@@ -24,7 +24,7 @@ class LyricsWindow final : public wxFrame,
 {
 
  public:
-   LyricsWindow(AudacityProject* parent);
+   LyricsWindow(SneedacityProject* parent);
 
    LyricsPanel *GetLyricsPanel() { return mLyricsPanel; };
 
@@ -40,7 +40,7 @@ class LyricsWindow final : public wxFrame,
    // PrefsListener implementation
    void UpdatePrefs() override;
 
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
    LyricsPanel *mLyricsPanel;
 
  public:

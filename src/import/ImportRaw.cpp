@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportRaw.cpp
 
@@ -96,7 +96,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 // This function leaves outTracks empty as an indication of error,
 // but may also throw FileException to make use of the application's
 // user visible error reporting.
-void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
+void ImportRaw(const SneedacityProject &project, wxWindow *parent, const wxString &fileName,
               WaveTrackFactory *trackFactory, TrackHolders &outTracks)
 {
    outTracks.clear();
@@ -480,7 +480,7 @@ void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       mPercent = 100.0;
    if (mRate < 100.0)
       mRate = 100.0;
-   // Highest preset sample rate supported in Audacity 2.3.0 is 384 kHz
+   // Highest preset sample rate supported in Sneedacity 2.3.0 is 384 kHz
    if (mRate > 384000.0)
       mRate = 384000.0;
 

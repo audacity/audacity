@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   LangChoice.h
 
@@ -12,12 +12,12 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_LANG_CHOICE__
-#define __AUDACITY_LANG_CHOICE__
+#ifndef __SNEEDACITY_LANG_CHOICE__
+#define __SNEEDACITY_LANG_CHOICE__
 
 class wxString;
 class wxWindow;
 
 wxString ChooseLanguage(wxWindow *parent);
 
-#endif // __AUDACITY_LANG_CHOICE__
+#endif // __SNEEDACITY_LANG_CHOICE__

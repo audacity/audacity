@@ -66,7 +66,7 @@ using std::max;
 
 static ProjectFileIORegistry::Entry registerFactory{
    wxT( "wavetrack" ),
-   []( AudacityProject &project ){
+   []( SneedacityProject &project ){
       auto &trackFactory = WaveTrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
       auto result = tracks.Add(trackFactory.NewWaveTrack());
@@ -333,7 +333,7 @@ static Container MakeIntervals(const std::vector<WaveClipHolder> &clips)
    return result;
 }
 
-Track::Holder WaveTrack::PasteInto( AudacityProject &project ) const
+Track::Holder WaveTrack::PasteInto( SneedacityProject &project ) const
 {
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
@@ -745,7 +745,7 @@ void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSetting
 // be pasted with visible split lines.  Normally, effects do not
 // want these extra lines, so they may be merged out.
 //
-/*! @excsafety{Weak} -- This WaveTrack remains destructible in case of AudacityException.
+/*! @excsafety{Weak} -- This WaveTrack remains destructible in case of SneedacityException.
 But some of its cutline clips may have been destroyed. */
 void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                               double t1, // End of time to clear
@@ -1769,7 +1769,7 @@ bool WaveTrack::CloseLock()
    return true;
 }
 
-AUDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
+SNEEDACITY_DLL_API sampleCount WaveTrack::TimeToLongSamples(double t0) const
 {
    return sampleCount( floor(t0 * mRate + 0.5) );
 }
@@ -2790,34 +2790,34 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
 
 #include "Project.h"
 #include "SampleBlock.h"
-static auto TrackFactoryFactory = []( AudacityProject &project ) {
+static auto TrackFactoryFactory = []( SneedacityProject &project ) {
    return std::make_shared< WaveTrackFactory >(
       ProjectSettings::Get( project ),
       SampleBlockFactory::New( project ) );
 };
 
-static const AudacityProject::AttachedObjects::RegisteredFactory key2{
+static const SneedacityProject::AttachedObjects::RegisteredFactory key2{
    TrackFactoryFactory
 };
 
-WaveTrackFactory &WaveTrackFactory::Get( AudacityProject &project )
+WaveTrackFactory &WaveTrackFactory::Get( SneedacityProject &project )
 {
    return project.AttachedObjects::Get< WaveTrackFactory >( key2 );
 }
 
-const WaveTrackFactory &WaveTrackFactory::Get( const AudacityProject &project )
+const WaveTrackFactory &WaveTrackFactory::Get( const SneedacityProject &project )
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+   return Get( const_cast< SneedacityProject & >( project ) );
 }
 
-WaveTrackFactory &WaveTrackFactory::Reset( AudacityProject &project )
+WaveTrackFactory &WaveTrackFactory::Reset( SneedacityProject &project )
 {
    auto result = TrackFactoryFactory( project );
    project.AttachedObjects::Assign( key2, result );
    return *result;
 }
 
-void WaveTrackFactory::Destroy( AudacityProject &project )
+void WaveTrackFactory::Destroy( SneedacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
 }

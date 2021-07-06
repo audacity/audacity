@@ -7,9 +7,9 @@ set -euxo pipefail
 cd build
 
 if [[ "${OSTYPE}" == msys* && ${GIT_BRANCH} == release* ]]; then # Windows
-    cmake --build . --target innosetup --config "${AUDACITY_BUILD_TYPE}"
+    cmake --build . --target innosetup --config "${SNEEDACITY_BUILD_TYPE}"
 else
-    cpack -C "${AUDACITY_BUILD_TYPE}" --verbose
+    cpack -C "${SNEEDACITY_BUILD_TYPE}" --verbose
 fi
 
 # Remove the temporary directory

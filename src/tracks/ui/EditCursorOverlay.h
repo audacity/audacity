@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 EditCursorOverlay.h
 
@@ -8,14 +8,14 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-#ifndef __AUDACITY_EDIT_CURSOR_OVERLAY__
-#define __AUDACITY_EDIT_CURSOR_OVERLAY__
+#ifndef __SNEEDACITY_EDIT_CURSOR_OVERLAY__
+#define __SNEEDACITY_EDIT_CURSOR_OVERLAY__
 
 #include <memory>
 #include "../../ClientData.h" // to inherit
 #include "../../widgets/Overlay.h" // to inherit
 
-class AudacityProject;
+class SneedacityProject;
 
 class EditCursorOverlay final
    : public Overlay
@@ -23,14 +23,14 @@ class EditCursorOverlay final
 {
 public:
    explicit
-   EditCursorOverlay(AudacityProject *project, bool isMaster = true);
+   EditCursorOverlay(SneedacityProject *project, bool isMaster = true);
 
 private:
    unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
-   AudacityProject *mProject;
+   SneedacityProject *mProject;
    bool mIsMaster;
    std::shared_ptr<EditCursorOverlay> mPartner;
 

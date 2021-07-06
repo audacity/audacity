@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   VampEffect.cpp
 
@@ -38,7 +38,7 @@
 
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/AudacityMessageBox.h"
+#include "../../widgets/SneedacityMessageBox.h"
 
 #include "../../LabelTrack.h"
 #include "../../WaveTrack.h"

@@ -1,7 +1,7 @@
 /**********************************************************************
 
-   Audacity - A Digital Audio Editor
-   Copyright 1999-2018 Audacity Team
+   Sneedacity - A Digital Audio Editor
+   Copyright 1999-2018 Sneedacity Team
    File License: wxWidgets
 
    Dan Horgan
@@ -25,7 +25,7 @@ class wxString;
 typedef int(*tpExecScriptServerFunc)(wxString * pIn, wxString * pOut);
 typedef int(*tpRegScriptServerFunc)(tpExecScriptServerFunc pFn);
 
-class AUDACITY_DLL_API ScriptCommandRelay
+class SNEEDACITY_DLL_API ScriptCommandRelay
 {
 public:
    static void StartScriptServer(tpRegScriptServerFunc scriptFn);

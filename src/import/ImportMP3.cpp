@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   ImportMP3.cpp
 
@@ -12,7 +12,7 @@
 \class MP3ImportFileHandle
 \brief An ImportFileHandle for MP3 data
 
-  Audacity has finally moved to using a single mp3 library on all
+  Sneedacity has finally moved to using a single mp3 library on all
   platforms! It is the high performance, beautifully written libmad
   (mpeg audio decoder). Finally there is harmony in the mp3 universe.
 
@@ -65,7 +65,7 @@ static Importer::RegisteredUnusableImportPlugin registered
 #include "../Prefs.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
-#include "../widgets/AudacityMessageBox.h"
+#include "../widgets/SneedacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
 // PRL:  include these last,
@@ -97,7 +97,7 @@ public:
 
    wxString GetPluginStringID() override;
    TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename, AudacityProject*) override;
+   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename, SneedacityProject*) override;
 };
 
 using NewChannelGroup = std::vector< std::shared_ptr<WaveTrack> >;
@@ -195,7 +195,7 @@ TranslatableString MP3ImportPlugin::GetPluginFormatDescription()
 }
 
 std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(
-   const FilePath &Filename, AudacityProject *)
+   const FilePath &Filename, SneedacityProject *)
 {
    auto handle = std::make_unique<MP3ImportFileHandle>(Filename);
 
@@ -1100,7 +1100,7 @@ enum mad_flow MP3ImportFileHandle::ErrorCB(struct mad_stream *stream,
    // Let the user know about the error
    ShowErrorDialog(
       nullptr,
-      AudacityMessageBoxCaptionStr(),
+      SneedacityMessageBoxCaptionStr(),
       XO("Import failed\n\nThis is likely caused by a malformed MP3.\n\n"), 
       "Opening_malformed_MP3_files");
    return MAD_FLOW_BREAK;

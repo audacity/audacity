@@ -1,6 +1,6 @@
 /**********************************************************************
 
-Audacity: A Digital Audio Editor
+Sneedacity: A Digital Audio Editor
 
 WaveformVZoomHandle.h
 
@@ -8,8 +8,8 @@ Paul Licameli split from WaveTrackVZoomHandle.h
 
 **********************************************************************/
 
-#ifndef __AUDACITY_WAVEFORM_VZOOM_HANDLE__
-#define __AUDACITY_WAVEFORM_VZOOM_HANDLE__
+#ifndef __SNEEDACITY_WAVEFORM_VZOOM_HANDLE__
+#define __SNEEDACITY_WAVEFORM_VZOOM_HANDLE__
 
 #include "../../../../UIHandle.h" // to inherit
 #include "WaveTrackViewConstants.h"
@@ -27,7 +27,7 @@ public:
    WaveformVZoomHandle &operator=(const WaveformVZoomHandle&) = default;
 
    static void DoZoom(
-      AudacityProject *pProject, WaveTrack *pTrack,
+      SneedacityProject *pProject, WaveTrack *pTrack,
       WaveTrackViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);
@@ -36,23 +36,23 @@ public:
 
    std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
 
-   void Enter( bool forward, AudacityProject * ) override;
+   void Enter( bool forward, SneedacityProject * ) override;
 
    Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject) override;
 
    HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
+      (const TrackPanelMouseState &state, SneedacityProject *pProject)
       override;
 
    Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
+      (const TrackPanelMouseEvent &event, SneedacityProject *pProject,
        wxWindow *pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+   Result Cancel(SneedacityProject *pProject) override;
 
 private:
 

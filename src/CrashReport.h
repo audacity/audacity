@@ -1,16 +1,16 @@
 /**********************************************************************
  
- Audacity: A Digital Audio Editor
+ Sneedacity: A Digital Audio Editor
  
  CrashReport.h
  
  Paul Licameli
- split from AudacityApp.h
+ split from SneedacityApp.h
  
  **********************************************************************/
 
-#ifndef __AUDACITY_CRASH_REPORT__
-#define __AUDACITY_CRASH_REPORT__
+#ifndef __SNEEDACITY_CRASH_REPORT__
+#define __SNEEDACITY_CRASH_REPORT__
 
 #undef HAS_CRASH_REPORT
 
@@ -26,7 +26,7 @@
 
    namespace CrashReport
    {
-      AUDACITY_DLL_API
+      SNEEDACITY_DLL_API
       void Generate(wxDebugReport::Context ctx);
    }
 #endif

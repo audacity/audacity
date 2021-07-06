@@ -1,15 +1,15 @@
 /**********************************************************************
 
   FFT3.h -- FFT routines, based on the following but renamed with "3"
-  to avoid naming problems. This early implementation from Audacity has
-  been upated and the current Audacity version imports wxChar, but if I
+  to avoid naming problems. This early implementation from Sneedacity has
+  been upated and the current Sneedacity version imports wxChar, but if I
   adapt the latest code into the scorealign library, then scorealign
   will depend upon wxWindows. On the other hand, if I don't update to
   the latest, then there are name conflicts when scorealign is used
-  within Audacity. For now, at least, I'm just renaming functions, 
+  within Sneedacity. For now, at least, I'm just renaming functions, 
   which has no real impact on scorealign (other than function names
   with the mystery "3" appended), but will result in duplicated code
-  in Audacity. -RBD
+  in Sneedacity. -RBD
 
   FFT.h
 

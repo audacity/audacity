@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  Sneedacity: A Digital Audio Editor
 
   PCMAliasBlockFile.cpp
 
@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "../Audacity.h"
+#include "../Sneedacity.h"
 #include "PCMAliasBlockFile.h"
 
 #include <wx/file.h>
