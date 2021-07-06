@@ -6,7 +6,6 @@ set( LIBRARIES
    lib-string-utils
    lib-strings
    lib-utility
-   lib-uuid
 )
 
 foreach( LIBRARY ${LIBRARIES} )
