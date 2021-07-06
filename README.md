@@ -1,4 +1,4 @@
-![Sneedacity](https://i.kym-cdn.com/photos/images/original/001/400/965/729.gif)
+![Sneedacity](https://i.ibb.co/ZcCxtsB/sneeddabphones.gif)
 =========================
 
 **Sneedacity** is an easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. Sneedacity is open source software licensed under GPL, version 2 or later.
