@@ -148,6 +148,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
                )
             );
             dragtarget1->SetPrefs (this);
+            dropRuleTable = dragtarget1;
 
             RuleTable->EnableDragCell (true);
             fillRuleTable = true;
@@ -170,6 +171,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
                )
             );
             dragtarget2->SetPrefs (this);
+            dropPluginList = dragtarget2;
 
             auto &items = Importer::Get().GetImportItems();
             {
@@ -374,13 +376,16 @@ void ExtImportPrefs::SwapRows (int row1, int row2)
 
 void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& WXUNUSED(event))
 {
-   wxDropSource dragSource(this);
+   extImpWxDropSource dragSource(this);
+   dragSource.SourceTable = dropPluginList;
+   dragSource.CurrentTable = dropPluginList;
    dragtext2->SetText(wxT(""));
    dragSource.SetData(*dragtext2);
    mDragFocus = PluginList;
    if( mDragFocus == NULL )
       return;
-   wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
+   mDropSource = &dragSource;
+   wxDragResult result = mDropSource->DoDragDrop(wxDrag_DefaultMove);
    mDragFocus = NULL;
    switch (result)
    {
@@ -699,10 +704,13 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    RuleTable->SelectRow (row, false);
    RuleTable->SetGridCursor (row, 0);
 
-   wxDropSource dragSource(this);
+   extImpWxDropSource dragSource(this);
+   dragSource.SourceTable = dropRuleTable;
+   dragSource.CurrentTable = dropRuleTable;
    dragtext1->SetText(wxT(""));
    dragSource.SetData(*dragtext1);
    mDragFocus = RuleTable;
+   mDropSource = &dragSource;
    wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
    mDragFocus = NULL;
    switch (result)
@@ -736,6 +744,10 @@ void ExtImportPrefsDropTarget::SetPrefs (ExtImportPrefs *prefs)
 wxDragResult ExtImportPrefsDropTarget::OnData(wxCoord  WXUNUSED(x), wxCoord  WXUNUSED(y),
       wxDragResult def)
 {
+   if (mPrefs != NULL) {
+      extImpWxDropSource* dropSource = GetPrefs()->GetDropSource();
+      dropSource->SetCurrentTable(this);
+   }
    return def;
 }
 
@@ -766,6 +778,9 @@ bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
 {
    if (mPrefs == NULL)
       return false;
+   extImpWxDropSource* dropSource = GetPrefs()->GetDropSource();
+   dropSource->SetCurrentTable(this);
+   if (dropSource->GiveFeedback(wxDragNone)) return wxDragNone;
    wxListCtrl *PluginList = mPrefs->GetPluginList();
    Grid *RuleTable = mPrefs->GetRuleTable();
    if (mPrefs->GetDragFocus() == RuleTable)
@@ -792,6 +807,11 @@ bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
 wxDragResult ExtImportPrefsDropTarget::OnEnter(wxCoord x, wxCoord y,
       wxDragResult def)
 {
+   if (mPrefs != NULL) {
+      extImpWxDropSource* dropSource = GetPrefs()->GetDropSource();
+      dropSource->SetCurrentTable(this);
+      if (dropSource->GiveFeedback(wxDragNone)) return wxDragNone;
+   }
    return OnDragOver(x, y, def);
 }
 
@@ -800,6 +820,9 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
 {
    if (mPrefs == NULL)
       return wxDragNone;
+   extImpWxDropSource* dropSource = GetPrefs()->GetDropSource();
+   dropSource->SetCurrentTable(this);
+   if (dropSource->GiveFeedback(wxDragNone)) return wxDragNone;
    wxListCtrl *PluginList = mPrefs->GetPluginList();
    Grid *RuleTable = mPrefs->GetRuleTable();
    if (mPrefs->GetDragFocus() == RuleTable)
@@ -848,6 +871,10 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
 
 void ExtImportPrefsDropTarget::OnLeave()
 {
+   if (mPrefs != NULL) {
+      extImpWxDropSource* dropSource = GetPrefs()->GetDropSource();
+      dropSource->SetCurrentTable(this);
+   }
 }
 
 namespace{
