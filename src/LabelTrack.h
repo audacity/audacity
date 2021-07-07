@@ -45,6 +45,7 @@ public:
 
    struct BadFormatException {};
    static LabelStruct Import(wxTextFile &file, int &index);
+   static bool GetHHMMSS(wxString token, double* t0);
 
    void Export(wxTextFile &file) const;
 
