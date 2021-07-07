@@ -2479,7 +2479,7 @@ int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /*
    // be in ascending blockid sequence.
    do
    {
-      // Acces the top stack frame
+      // Access the top stack frame
       page &pg = stack.back();
 
       // Read the page from the sqlite_dbpage table if it hasn't yet been loaded

@@ -1847,7 +1847,7 @@ pattern argument (by default).
     (expr-set-attr (event-expression event) attr value)))
 
 
-;; EVENT-REMOVE-ATTR -- new event without atttribute value pair
+;; EVENT-REMOVE-ATTR -- new event without attribute value pair
 (defun event-remove-attr (event attr)
   (event-set-expression
      event

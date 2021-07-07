@@ -1429,7 +1429,7 @@ loop
 ;;
 ;; Time transformation: the envelope is not warped; the start time and
 ;; stop times are warped to global time.  Then the value of *SUSTAIN* at
-;; the beginning of the envelope is used to determing absolute duration.
+;; the beginning of the envelope is used to determining absolute duration.
 ;; Since PWL is ultimately called to create the envelope, we must use
 ;; ABS-ENV to prevent any further transforms inside PWL.  We use
 ;; (AT global-start ...) inside ABS-ENV so that the final result has 
@@ -1525,7 +1525,7 @@ loop
            ;; they are computed, so no samples will accumulate. But wait! The
            ;; 2nd SEQ expression with S-REST can reference s and sound because
            ;; (due to macro magic) a closure is constructed to hold them until
-           ;; the 2nd SEQ expression is evaluted. It's almost as though s and
+           ;; the 2nd SEQ expression is evaluated. It's almost as though s and
            ;; sound are back to being global variables. Since the closure does
            ;; not actually use either s or sound, we can clear them (we are
            ;; still in the same environment as the closures packed inside SEQ,

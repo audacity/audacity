@@ -92,7 +92,7 @@ public:
         }
         if (atoms) delete [] atoms;
     }
-    // insert/lookup an atttribute
+    // insert/lookup an attribute
     Alg_attribute insert_attribute(Alg_attribute attr);
     // insert/lookup attribute by name (without prefixed type)
     Alg_attribute insert_string(const char *name);

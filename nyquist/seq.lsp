@@ -32,7 +32,7 @@
 ; Other considerations are that SEQ can handle multi-channel sounds, but
 ; we don't know to call the snd_multiseq primitive until the first
 ; SEQ expression is evaluated. Also, there's no real "NIL" for the end
-; of a sequence, so we need serveral special cases: (1) The sequences
+; of a sequence, so we need several special cases: (1) The sequences
 ; is empty at the top level, so return silence, (2) There is one
 ; expression, so just evaluate it, (3) there are 2 expressions, so 
 ; return the first followed by the second, (4) there are more than

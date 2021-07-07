@@ -99,7 +99,7 @@ void alpassvc_nn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             register sample_type *yptr;
             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             delaysamp = (sample_type) *delaysnd_ptr_reg++ * delay_scale_factor_reg;
@@ -227,7 +227,7 @@ void alpassvc_ni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             }
             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             delaysamp = (sample_type) 
@@ -362,7 +362,7 @@ void alpassvc_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             register sample_type *yptr;
             /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             delaysamp = (sample_type) delaysnd_val * delay_scale_factor_reg;

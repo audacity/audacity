@@ -178,7 +178,7 @@ void ODComputeSummaryTask::CalculatePercentComplete()
 }
 
 ///creates the order of the wavetrack to load.
-///by default left to right, or frome the point the user has clicked.
+///by default left to right, or from the point the user has clicked.
 void ODComputeSummaryTask::Update()
 {
    std::vector< std::weak_ptr< ODPCMAliasBlockFile > > tempBlocks;
