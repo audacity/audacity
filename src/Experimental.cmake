@@ -175,10 +175,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # scrolling past zero is enabled. Perhaps that lessens confusion.
    TWO_TONE_TIME_RULER
 
-   #Define to include crash reporting, if available in wxWidgets build
-   #This flag is used only in CrashReport.h; elsewhere use HAS_CRASH_REPORT
-   CRASH_REPORT
-
    # Paul Licameli (PRL) 31 May 2015
    # Zero-padding factor for spectrograms can smooth the display of spectrograms by
    # interpolating in frequency domain.
