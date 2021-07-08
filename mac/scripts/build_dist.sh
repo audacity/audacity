@@ -205,7 +205,7 @@ cp "${SRCROOT}/Resources/Audacity-DMG-background.png" "${DMG}/.background"
 ATTACHED=$(hdiutil info | awk "/\/Volumes\/${VOL}/{print \$1}")
 if [ -n "${ATTACHED}" ]
 then
-   hdiutil detach "${ATTACHED}"
+   #hdiutil detach "${ATTACHED}"
 fi
 
 # Create and mount the image
