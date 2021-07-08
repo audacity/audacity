@@ -39,10 +39,6 @@
 #include "../Prefs.h"
 #include "HelpSystem.h"
 
-#ifdef HAS_SENTRY_REPORTING
-#   include "ErrorReportDialog.h"
-#endif
-
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
    EVT_COLLAPSIBLEPANE_CHANGED( wxID_ANY, ErrorDialog::OnPane )
    EVT_BUTTON( wxID_OK, ErrorDialog::OnOk)
@@ -169,13 +165,8 @@ void ShowExceptionDialog(
    const TranslatableString& message, const wxString& helpPage, bool Close,
    const wxString& log)
 {
-#ifndef HAS_SENTRY_REPORTING
    ShowErrorDialog(parent, dlogTitle, message, helpPage, Close,
       audacity::ToWString(log));
-#else
-   ShowErrorReportDialog(parent, dlogTitle, message, helpPage,
-      audacity::ToWString(log));
-#endif // !HAS_SENTRY_REPORTING
 }
 
 // unused.
