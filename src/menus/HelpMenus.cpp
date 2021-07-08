@@ -531,8 +531,7 @@ BaseItemSharedPtr HelpMenu()
       #endif
             Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
                AlwaysEnabledFlag ),
-      #endif
-
+              
       #ifdef IS_ALPHA
             // alpha-only items don't need to internationalize, so use
             // Verbatim for labels
