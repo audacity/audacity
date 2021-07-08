@@ -16,7 +16,6 @@
 
 
 #include "ApplicationPrefs.h"
-#include "update/UpdateManager.h"
 
 #include <wx/defs.h>
 
