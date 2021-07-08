@@ -13,7 +13,7 @@ function gh_export()
     export -- "$@" && printf "%s\n" "$@" >> "${GITHUB_ENV}"
 }
 
-repository_root="$(cd "$(dirname "${BASH_SOURCE}")/../.."; echo "${PWD}")"
+repository_root="$(cd "$(dirname "${BASH_SOURCE}")/.."; echo "${PWD}/${GITHUB_ACTOR}")"
 
 gh_export GIT_HASH="$(git show -s --format='%H')"
 gh_export GIT_HASH_SHORT="$(git show -s --format='%h')"
