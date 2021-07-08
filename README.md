@@ -1,7 +1,7 @@
 [![Audacity](https://forum.audacityteam.org/styles/prosilver/theme/images/Audacity-logo_75px_trans_forum.png)](https://www.audacityteam.org) 
 =========================
 
-[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. Audacity is open source software licensed under GPL, version 2 or later.
+**OpenAudacity** is an easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. Audacity is open source software licensed under GPL, version 2 or later.
 
 - **Recording** from any real, or virtual audio device that is available to the host system.
 - **Export / Import** a wide range of audio formats, extendible with FFmpeg.
@@ -16,7 +16,7 @@
 
 ## Getting Started
 
-For end users, the latest Windows and macOS release version of Audacity is available from the [Audacity website](https://www.audacityteam.org/download/).
+For end users, the latest Windows and macOS release version of OpenAudacity is available in our GitHub release
 Help with using Audacity is available from the [Audacity Forum](https://forum.audacityteam.org/).
 
 Build instructions are available [here](BUILDING.md).
