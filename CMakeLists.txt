@@ -166,10 +166,6 @@ include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
 
-set_from_env(SENTRY_DSN_KEY)
-set_from_env(SENTRY_HOST)
-set_from_env(SENTRY_PROJECT)
-
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
    set( IS_64BIT ON )
