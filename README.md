@@ -19,7 +19,7 @@ OpenAudacity
 ## Getting Started
 
 For end users, the latest Windows and macOS release version of OpenAudacity is available in our GitHub release
-Help with using Audacity is available from the [Audacity Forum](https://forum.audacityteam.org/).
+and pre-fork binaries are located at [Audacity's Github release page](https://github.com/audacity/audacity/releases)
 
 Build instructions are available [here](BUILDING.md).
 
