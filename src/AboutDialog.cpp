@@ -576,8 +576,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
    informationStr
       << wxT("<h2><center>")
       << XO("Build Information")
-      << wxT("</center></h2>\n")
-      << VerCheckHtml();
+      << wxT("<h2><center>");
  
    informationStr
       << wxT("<h3>")
