@@ -80,11 +80,6 @@ jobs:
 
     - name: Configure
       env:
-        # Error reporing
-        SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
-        SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
-        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        CRASH_REPORT_URL: ${{ secrets.CRASH_REPORT_URL }}
         # Apple code signing
         APPLE_CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
         APPLE_NOTARIZATION_USER_NAME: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
@@ -99,11 +94,6 @@ jobs:
     - name: Upload debug symbols
       if: startsWith(github.ref, 'refs/heads/release-')
       env:
-        SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG_SLUG: ${{ secrets.SENTRY_ORG_SLUG }}
-        SENTRY_PROJECT_SLUG: ${{ secrets.SENTRY_PROJECT_SLUG }}
-        #this is required to run sentry's get-cli script on platforms where 'sudo' is not available
         INSTALL_DIR: ${{ github.workspace }}
       run: |
         exec bash "scripts/ci/upload_debug_symbols.sh"
