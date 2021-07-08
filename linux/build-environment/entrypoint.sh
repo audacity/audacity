@@ -4,7 +4,7 @@ conan --version
 
 if [ ! -d "audacity" ]
 then
-    git clone https://github.com/audacity/audacity
+    git clone https://github.com/Morales-Research-Corporation/OpenAudacity
 fi
 
 mkdir -p build
@@ -28,7 +28,7 @@ cmake_options=(
     -Daudacity_use_mad=system # This library has bugs, that are fixed in *local* version
     -Daudacity_use_nyquist=local # This library is not available
     -Daudacity_use_vamp=local # The dev package for this library is not available
-    -Daudacity_use_ogg=system 
+    -Daudacity_use_ogg=system
     -Daudacity_use_vorbis=system
     -Daudacity_use_flac=system
     -Daudacity_use_lv2=system
@@ -38,7 +38,6 @@ cmake_options=(
     -Daudacity_use_sbsms=local # We prefer using the latest version of sbsms
     -Daudacity_use_soundtouch=system
     -Daudacity_use_twolame=system
-    -Daudacity_has_networking=yes 
     -Daudacity_use_curl=system
 )
 
