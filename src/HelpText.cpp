@@ -219,11 +219,7 @@ static wxString HelpTextBuiltIn( const wxString & Key )
       wxStringOutputStream o;
       wxTextOutputStream s(o);
       s
-#if defined(IS_ALPHA) || defined(IS_BETA)
-         << wxT("<hr><center><h3>")
-         << XO("Get the Official Released Version of Audacity")
-         << wxT("</h3></center>")
-         << VerCheckHtml()
+
 #ifdef IS_ALPHA
          << alphamsg
 #else
@@ -384,31 +380,4 @@ const wxString VerCheckArgs(){
    result += wxString("&Time=") + wxString( __DATE__ ) + wxString( __TIME__ );
    result.Replace(" ","");
    return result;
-}
-
-// Text of hyperlink to check versions.
-const wxString VerCheckHtml()
-{
-   wxStringOutputStream o;
-   wxTextOutputStream s(o);
-   s
-      << "<center>[["
-      << VerCheckUrl().GET()
-      << "|"
-      << XO("Check Online")
-      << "]]</center>\n";
-   return o.GetString();
-}
-
-// Url with Version check args attached.
-const URLString VerCheckUrl()
-{
-   //The version we intend to use for live Audacity.
-#define VER_CHECK_URL "https://www.audacityteam.org/download/?"
-//For testing of our scriptlet.
-//#define VER_CHECK_URL "http://www.audacityteam.org/slug/?"
-//For testing locally
-//#define VER_CHECK_URL "http://localhost:63342/WorkingDocs/demos/download.html?"
-
-   return wxString( wxT(VER_CHECK_URL)) +VerCheckArgs();
 }
