@@ -1,5 +1,5 @@
-[![Audacity](https://forum.audacityteam.org/styles/prosilver/theme/images/Audacity-logo_75px_trans_forum.png)](https://www.audacityteam.org) 
-=========================
+OpenAudacity
+=============================
 
 [![CMake Build](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml/badge.svg)](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml)
 
