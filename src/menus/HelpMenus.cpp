@@ -432,7 +432,7 @@ void OnMenuTree(const CommandContext &context)
 
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
-   ::OpenInDefaultBrowser( VerCheckUrl());
+   ::OpenInDefaultBrowser("https://github.com/Morales-Research-Corporation/OpenAudacity/releases");
 }
 
 void OnAbout(const CommandContext &context)
@@ -561,13 +561,7 @@ BaseItemSharedPtr HelpMenu()
       ,
 #endif
 
-         // DA: Does not fully support update checking.
-   #ifndef EXPERIMENTAL_DA
-         Command( wxT("Updates"), XXO("&Check for Updates..."),
-            FN(OnCheckForUpdates),
-            AlwaysEnabledFlag ),
-   #endif
-         Command( wxT("About"), XXO("&About Audacity..."), FN(OnAbout),
+         Command( wxT("About"), XXO("&About OpenAudacity..."), FN(OnAbout),
             AlwaysEnabledFlag )
       )
    ) ) };
