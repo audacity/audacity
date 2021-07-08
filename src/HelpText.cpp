@@ -230,7 +230,6 @@ static wxString HelpTextBuiltIn( const wxString & Key )
 "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>")
          << XO(
 "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>")
-#endif
 
 // DA: Support methods text.
 #ifdef EXPERIMENTAL_DA
