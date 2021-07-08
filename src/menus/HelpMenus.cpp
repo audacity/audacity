@@ -9,7 +9,6 @@
 #include "../AudacityLogger.h"
 #include "../AudioIOBase.h"
 #include "../CommonCommandFlags.h"
-#include "../CrashReport.h" // for HAS_CRASH_REPORT
 #include "../FileNames.h"
 #include "../HelpText.h"
 #include "../Menus.h"
@@ -348,17 +347,6 @@ void OnShowLog( const CommandContext &context )
    }
 }
 
-#if defined(HAS_CRASH_REPORT)
-void OnCrashReport(const CommandContext &WXUNUSED(context) )
-{
-// Change to "1" to test a real crash
-#if 0
-   char *p = 0;
-   *p = 1234;
-#endif
-   CrashReport::Generate(wxDebugReport::Context_Current);
-}
-#endif
 
 #ifdef IS_ALPHA
 void OnSegfault(const CommandContext &)
@@ -543,9 +531,6 @@ BaseItemSharedPtr HelpMenu()
       #endif
             Command( wxT("Log"), XXO("Show &Log..."), FN(OnShowLog),
                AlwaysEnabledFlag ),
-      #if defined(HAS_CRASH_REPORT)
-            Command( wxT("CrashReport"), XXO("&Generate Support Data..."),
-               FN(OnCrashReport), AlwaysEnabledFlag )
       #endif
 
       #ifdef IS_ALPHA
