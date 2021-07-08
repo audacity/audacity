@@ -208,10 +208,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
    message( STATUS )
 
-   if(${_OPT}has_crashreports)
-      set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
-   endif()
-
 endif()
 
 # Try to get the current commit information
@@ -480,9 +476,6 @@ add_subdirectory( "cmake-proxies" )
 resolve_conan_dependencies()
 
 add_subdirectory( "help" )
-if(${_OPT}has_crashreports)
-add_subdirectory( "crashreports" )
-endif()
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
