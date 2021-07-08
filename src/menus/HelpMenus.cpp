@@ -534,7 +534,6 @@ BaseItemSharedPtr HelpMenu()
       #endif
 
       #ifdef IS_ALPHA
-            ,
             // alpha-only items don't need to internationalize, so use
             // Verbatim for labels
 
