@@ -116,23 +116,6 @@ add_conan_lib(
    ALWAYS_ALLOW_CONAN_FALLBACK
 )
 
-if( ${_OPT}has_networking )
-
-   add_conan_lib(
-      CURL
-      libcurl/7.75.0
-      REQUIRED
-      OPTION_NAME curl
-      PKG_CONFIG "libcurl >= 7.68.0"
-      INTERFACE_NAME CURL::libcurl
-      FIND_PACKAGE_OPTIONS
-      CONAN_OPTIONS
-         libcurl:with_ssl=${curl_ssl}
-         libcurl:shared=True
-   )
-
-endif()
-
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    add_conan_lib(
       libuuid
