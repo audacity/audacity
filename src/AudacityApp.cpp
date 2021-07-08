@@ -110,11 +110,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "tracks/ui/Scrubbing.h"
 #include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
-#include "update/UpdateManager.h"
-
-#ifdef HAS_NETWORKING
-#include "NetworkManager.h"
-#endif
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
 #include "prefs/KeyConfigPrefs.h"
@@ -1456,10 +1451,6 @@ bool AudacityApp::InitPart2()
       SplashDialog::DoHelpWelcome(*project);
    }
 
-#if defined(HAVE_UPDATES_CHECK)
-   UpdateManager::Start();
-#endif
-
    #ifdef USE_FFMPEG
    FFmpegStartup();
    #endif
@@ -2208,10 +2199,6 @@ int AudacityApp::OnExit()
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
-
-#ifdef HAS_NETWORKING
-   audacity::network_manager::NetworkManager::GetInstance().Terminate();
-#endif
 
    return 0;
 }
