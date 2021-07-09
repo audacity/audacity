@@ -1,8 +1,8 @@
-* To install or reinstall Audacity, drag the "Audacity.app" icon in the
+* To install or reinstall OpenAudacity, drag the "OpenAudacity.app" icon in the
    DMG window to the /Applications folder icon on the right. Alternatively,
-   drag the "Audacity.app" icon to any other location of your choosing. 
+   drag the "OpenAudacity.app" icon to any other location of your choosing. 
 
-* Do not double-click the "Audacity" icon in the DMG to launch Audacity 
+* Do not double-click the "OpenAudacity" icon in the DMG to launch OpenAudacity 
    from there. 
    
 * If you still have an "Audacity" installation folder for a version before 
