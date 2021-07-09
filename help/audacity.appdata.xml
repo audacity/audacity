@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <id>org.audacityteam.Audacity</id>
-  <launchable type="desktop-id">audacity.desktop</launchable>
-  <project_license>GPL-2.0 and CC-BY-3.0</project_license>
+  <id>org.moralesresearchcorp.OpenAudacity</id>
+  <launchable type="desktop-id">openaudacity.desktop</launchable>
+  <project_license>GPL-3.0 and MIT</project_license>
   <metadata_license>CC0-1.0</metadata_license>
-  <name>Audacity</name>
+  <name>OpenAudacity</name>
   <summary>Record and edit audio files</summary>
   <description>
-    <p>Audacity® is a free, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.</p>
-    <p>You can use Audacity to:</p>
+    <p>OpenAudacity is a open-source, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. The interface is translated into many languages.</p>
+    <p>You can use OpenAudacity to:</p>
     <ul>
       <li>Record live audio</li>
       <li>Convert tapes and records into digital recordings or CDs</li>
@@ -23,8 +23,8 @@
     <category>Audio</category>
   </categories>
   <content_rating type="oars-1.1" />
-  <url type="homepage">https://www.audacityteam.org/</url>
-  <url type="bugtracker">https://bugzilla.audacityteam.org/</url>
+  <url type="homepage">https://github.com/moralesresearch/OpenAudacity</url>
+  <url type="bugtracker">https://github.com/moralesresearch/OpenAudacity/issues</url>
   <url type="faq">https://manual.audacityteam.org/man/faq.html</url>
   <url type="help">https://manual.audacityteam.org/</url>
   <url type="translate">https://www.audacityteam.org/community/translators/</url>
@@ -36,11 +36,11 @@
       <image type="source">https://www.audacityteam.org/wp-content/uploads/2015/11/Audacity-2-2-0-on-Linux.png</image>
     </screenshot>
   </screenshots>
-  <update_contact>audacity-devel@lists.sourceforge.net</update_contact>
+  <update_contact>abdon.morales13_2022@outlook.com</update_contact>
   <releases>
     <release version="2.3.0" date="2018-09-29">
      <description>
-        <p>New features in Audacity 2.3.0:</p>
+        <p>New features in OpenAudacity 2.3.0:</p>
         <ul>
           <li>New feature – Punch and Roll Recording.</li>
           <li>Pinned-play-head can now be repositioned by dragging.</li>
