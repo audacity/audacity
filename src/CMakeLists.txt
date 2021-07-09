@@ -597,8 +597,12 @@ list( APPEND SOURCES
          effects/deeplearning/EffectDeepLearning.cpp
          effects/deeplearning/EffectDeepLearning.h
 
+         effects/Labeler.h
+         effects/Labeler.cpp
          effects/SourceSep.h
          effects/SourceSep.cpp
+
+         
       >
 
       # Export
