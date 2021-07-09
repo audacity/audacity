@@ -107,7 +107,7 @@ VERSION=`awk '/^#define+ AUDACITY_VERSION / {print $3}' ${SRCROOT}/../src/Audaci
 RELEASE=`awk '/^#define+ AUDACITY_RELEASE / {print $3}' ${SRCROOT}/../src/Audacity.h`
 REVISION=`awk '/^#define+ AUDACITY_REVISION / {print $3}' ${SRCROOT}/../src/Audacity.h`
 VERSION=$VERSION.$RELEASE.$REVISION
-IDENT=$(plist "${DSTROOT}/Audacity.app/Contents/Info.plist" "CFBundleIdentifier")
+IDENT=$(plist "${DSTROOT}/OpenAudacity.app/Contents/Info.plist" "CFBundleIdentifier")
 
 #
 # This depends on a file in the builders HOME directory called ".audacity_signing" that
@@ -124,7 +124,7 @@ IDENT=$(plist "${DSTROOT}/Audacity.app/Contents/Info.plist" "CFBundleIdentifier"
 #   https://support.apple.com/guide/keychain-access/add-a-password-to-a-keychain-kyca1120/mac
 #
 # You generate the app-specific password in your Apple developer account and you must specify
-# "org.audacityteam.audacity" as the application identifier.
+# "org.moralesresearchcorp.openaudacity" as the application identifier.
 #
 SIGNING=
 if [ -r ~/.audacity_signing ]
@@ -158,7 +158,7 @@ then
                   --options runtime \
                   --entitlements "${SRCROOT}/Audacity.entitlements" \
                   --sign "${CODESIGN_APP_IDENTITY}" \
-                  ${DSTROOT}/Audacity.app/Contents/modules/*
+                  ${DSTROOT}/OpenAudacity.app/Contents/modules/*
 
    xcrun codesign --verbose \
                   --timestamp \
@@ -166,7 +166,7 @@ then
                   --options runtime \
                   --entitlements "${SRCROOT}/Audacity.entitlements" \
                   --sign "${CODESIGN_APP_IDENTITY}" \
-                  ${DSTROOT}/Audacity.app/Contents/plug-ins/*
+                  ${DSTROOT}/OpenAudacity.app/Contents/plug-ins/*
 
    xcrun codesign --verbose \
                   --deep \
@@ -175,10 +175,10 @@ then
                   --options runtime \
                   --entitlements "${SRCROOT}/Audacity.entitlements" \
                   --sign "${CODESIGN_APP_IDENTITY}" \
-                  ${DSTROOT}/Audacity.app
+                  ${DSTROOT}/OpenAudacity.app
 
    # Create the ZIP archive for notarization
-   xcrun ditto -c -k --keepParent "${DSTROOT}/Audacity.app" "${DSTROOT}.zip" 
+   xcrun ditto -c -k --keepParent "${DSTROOT}/OpenAudacity.app" "${DSTROOT}.zip" 
 
    # Send it off for notarization
    notarize "${DSTROOT}.zip"
@@ -187,7 +187,7 @@ then
    rm "${DSTROOT}.zip"
 
    # Staple the app
-   stapler staple "${DSTROOT}/Audacity.app"
+   stapler staple "${DSTROOT}/OpenAudacity.app"
 fi
 
 # Create structure
@@ -278,7 +278,7 @@ fi
 
 # Create zip version
 rm -rf "${DMG}/.background"
-rm -rf "${DMG}/Audacity.app/Contents/help"
+rm -rf "${DMG}/OpenAudacity.app/Contents/help"
 zip -r9 "${DMG}.zip" "${DMG}"
 
 # Cleanup

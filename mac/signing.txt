@@ -11,7 +11,7 @@ with the following:
       CODESIGN_APP_IDENTITY="Developer ID Application:"
 
 2) You need to create an application specific password in your Developer
-   account. Make sure you use "org.audacityteam.audacity" as the app ID
+   account. Make sure you use "org.moralesresearchcorp.openaudacity" as the app ID
    when following these instructions:
 
       https://support.apple.com/en-us/HT204397
@@ -26,7 +26,7 @@ with the following:
    eyes.
 
 4) Build the Release version of Audacity. You can follow the cmake_build.txt
-   instructions in this folder. Once complete, you should find "Audacity.app"
+   instructions in this folder. Once complete, you should find "OpenAudacity.app"
    in:
 
       audacity/bld/bin/Release

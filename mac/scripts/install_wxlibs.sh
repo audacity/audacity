@@ -38,7 +38,7 @@ update_paths()
 }
 
 # For testing
-# BUILT_PRODUCTS_DIR=/tmp/Audacity.app/Contents
+# BUILT_PRODUCTS_DIR=/tmp/OpenAudacity.app/Contents
 # EXECUTABLE_PATH=MacOS/audacity
 # FRAMEWORKS_FOLDER_PATH=Frameworks
 
@@ -47,7 +47,7 @@ LIBPATH="${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 
 mkdir -p "${LIBPATH}"
 
-echo "Updating Audacity executable"
+echo "Updating OpenAudacity executable"
 
 for lib in $(otool -L "${EXEPATH}" | awk '/libwx.*dylib /{print $1}')
 do
