@@ -1,4 +1,4 @@
-OpenAudacity
+[![OpenAudacity](https://github.com/moralesresearch/OpenAudacity/blob/master/images/audacity.svg)]
 =============================
 
 [![CMake Build](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml/badge.svg)](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml)
