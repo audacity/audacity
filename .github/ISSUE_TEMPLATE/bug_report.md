@@ -22,7 +22,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional information (please complete the following information):**
  - OS: [e.g. Mac High Sierra, Ubuntu 18.04, Windows 10]
- - Version [e.g. Audacity 2.5.1]
+ - Version [e.g. OpenAudacity 2.5.1]
  - (if relevant) Sound Device [e.g. Windows WASAPI, USB Sound card]
 
 **Additional context**
