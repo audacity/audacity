@@ -136,10 +136,10 @@ then
    fi
 fi
 
-VOL="Audacity $VERSION"
-DMG="audacity-macos-$VERSION"
+VOL="OpenAudacity $VERSION"
+DMG="openaudacity-macos-$VERSION"
 
-echo "Audacity has been installed to: ${DSTROOT}"
+echo "OpenAudacity has been installed to: ${DSTROOT}"
 cd "${DSTROOT}/.."
 
 # Make sure we have consistent ownership and permissions
