@@ -24,8 +24,8 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")
    install( CODE "set( APPLE_NOTARIZATION_USER_NAME \"${APPLE_NOTARIZATION_USER_NAME}\" )" )
    install( CODE "set( APPLE_NOTARIZATION_PASSWORD \"${APPLE_NOTARIZATION_PASSWORD}\" )" )
 
-   install( CODE "set( APP_IDENTIFIER \"org.audacityteam.audacity\" )" )
-   install( CODE "get_filename_component( APP_LOCATION \${CMAKE_INSTALL_PREFIX}/Audacity.app ABSOLUTE )" )
+   install( CODE "set( APP_IDENTIFIER \"org.moralesresearchcorp.openaudacity\" )" )
+   install( CODE "get_filename_component( APP_LOCATION \${CMAKE_INSTALL_PREFIX}/OpenAudacity.app ABSOLUTE )" )
    install( CODE "set( APPLE_CODESIGN_ENTITLEMENTS ${CMAKE_SOURCE_DIR}/mac/Audacity.entitlements )")
 
    install( SCRIPT "scripts/build/macOS/SignMacos.cmake" )
