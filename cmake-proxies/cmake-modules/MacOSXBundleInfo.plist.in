@@ -210,7 +210,7 @@
 	<key>CFBundleIconFile</key>
 	<string>Audacity.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.audacityteam.audacity</string>
+	<string>org.moralesresearchcorp.openaudacity</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
