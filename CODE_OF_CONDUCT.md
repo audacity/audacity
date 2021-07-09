@@ -1,4 +1,4 @@
-# Contributor Covenant Code of Conduct
+# Code of Conduct for the OpenAudacity project
 
 ## Our Pledge
 
