@@ -24,3 +24,5 @@ and pre-fork binaries are located at [Audacity's Github release page](https://gi
 Build instructions are available [here](BUILDING.md).
 
 More information for developers is available from the [Audacity Wiki](https://wiki.audacityteam.org/wiki/For_Developers).
+
+Prebuilt binaries for the current release of OpenAudacity is located [here](https://github.com/moralesresearch/OpenAudacity/releases)
