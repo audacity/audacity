@@ -23,10 +23,15 @@ using TimeFreqBinsMap = std::map<long long, std::set<wxInt64>>;
 class SpectralData{
 private:
    double mSampleRate;
+   long long mStartT = std::numeric_limits<long long>::max();
+   long long mEndT = 0;
 
 public:
     SpectralData(double sr)
-    :mSampleRate(sr){}
+    :mSampleRate(sr)
+    ,mStartT(std::numeric_limits<long long>::max())
+    ,mEndT( 0 )
+    {}
     SpectralData(const SpectralData& src) = delete;
 
    TimeFreqBinsMap dataBuffer;
@@ -38,8 +43,22 @@ public:
       return mSampleRate;
    }
 
+   long long GetStartT() const{
+      return mStartT;
+   }
+
+   long long GetEndT() const{
+      return mEndT;
+   }
+
    // The double time points is quantized into long long
    void addTimeFreqData(long long ll_sc, wxInt64 freq){
+      if(ll_sc > mEndT)
+         mEndT = ll_sc;
+
+      if(ll_sc < mStartT)
+         mStartT = ll_sc;
+
       if(dataBuffer.find(ll_sc) == dataBuffer.end())
          dataBuffer[ll_sc] = std::set<wxInt64>{ freq };
       else
@@ -52,6 +71,13 @@ public:
             dataBuf[ll_sc].erase(freq);
          }
       }
+   }
+
+   void clearAllData(){
+      // DataBuffer should be clear when the user release cursor
+      dataHistory.clear();
+      mStartT = std::numeric_limits<long long>::max();
+      mEndT = 0;
    }
 
    // Using long long from the sample count, this function to convert it back to double time point
