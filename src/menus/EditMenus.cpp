@@ -11,6 +11,7 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
+#include "../SpectralDataManager.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../UndoManager.h"
@@ -138,29 +139,15 @@ namespace EditActions {
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
-
 void OnApply(const CommandContext &context){
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
-   int applyCount = 0;
-   for ( auto wt : tracks.Any< WaveTrack >() ) {
-      auto &trackView = TrackView::Get(*wt);
+   int applyCount = SpectralDataManager::ProcessTracks(tracks);
 
-      if(auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&trackView)){
-         for(const auto &subViewPtr : waveTrackViewPtr->GetAllSubViews()){
-            if(!subViewPtr->IsSpectral())
-               continue;
-            auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
-            auto sData = sView->GetSpectralData();
-            applyCount += static_cast<int>(sData->dataHistory.size());
-            sData->clearAllData();
-            trackPanel.Refresh(false);
-         }
-      }
-   }
-   if(applyCount != 0){
+   if(applyCount){
+      trackPanel.Refresh(false);
       AudacityMessageBox(XO("Effect applied to %d selection(s).").Format(applyCount));
       ProjectHistory::Get( project ).PushState(
             XO( "Applied effect to selection" ),
