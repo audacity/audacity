@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="102mm"
+   height="16mm"
+   viewBox="0 0 102 16"
    version="1.1"
    id="svg5"
    inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
-   sodipodi:docname="logo.svg"
+   sodipodi:docname="audacity.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,10 +24,10 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.67081229"
-     inkscape:cx="201.24855"
+     inkscape:cx="-27.578505"
      inkscape:cy="560.51448"
      inkscape:window-width="1792"
-     inkscape:window-height="984"
+     inkscape:window-height="988"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
@@ -36,15 +36,15 @@
      id="defs2">
     <rect
        x="181.86906"
-       y="187.83198"
+       y="187.83199"
        width="287.71088"
-       height="68.573575"
+       height="68.573578"
        id="rect10763" />
     <rect
        x="19.37949"
-       y="190.81344"
-       width="162.48957"
-       height="71.555039"
+       y="190.81345"
+       width="162.48956"
+       height="71.555038"
        id="rect3939" />
   </defs>
   <g
@@ -53,28 +53,28 @@
      id="layer1">
     <text
        xml:space="preserve"
-       transform="scale(0.26458333)"
+       transform="matrix(0.26458333,0,0,0.26458333,-5.5219123,-51.669323)"
        id="text3937"
-       style="font-style:normal;font-weight:bold;font-size:56.00000071px;line-height:1.25;font-family:Rockwell;white-space:pre;shape-inside:url(#rect3939);fill:#000000;fill-opacity:1;stroke:none;-inkscape-font-specification:'Rockwell Bold';font-stretch:normal;font-variant:normal"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:56px;line-height:1.25;font-family:Rockwell;-inkscape-font-specification:'Rockwell Bold';white-space:pre;shape-inside:url(#rect3939);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="19.378906"
          y="240.182"
-         id="tspan15614">Open</tspan></text>
+         id="tspan33">Open</tspan></text>
     <rect
        id="rect8991"
-       width="76.123505"
-       height="18.143425"
-       x="48.119522"
-       y="49.697212"
-       style="stroke-width:0.264583;fill:#b3b3b3" />
+       width="58.768921"
+       height="15.776891"
+       x="42.992031"
+       y="1.0604159e-06"
+       style="fill:#b3b3b3;stroke-width:0.216784" />
     <text
        xml:space="preserve"
-       transform="matrix(0.26458333,0,0,0.26458333,3.5498008,0.78884462)"
+       transform="matrix(0.21624559,0,0,0.26458333,5.8497411,-50.091634)"
        id="text10761"
        style="font-style:normal;font-weight:normal;font-size:53.3333px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect10763);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="181.86914"
          y="236.48962"
-         id="tspan15618"><tspan
+         id="tspan37"><tspan
            style="font-family:Silom;-inkscape-font-specification:Silom;fill:#0000ff"
-           id="tspan15616">Audacity</tspan></tspan></text>
+           id="tspan35">Audacity</tspan></tspan></text>
   </g>
 </svg>
