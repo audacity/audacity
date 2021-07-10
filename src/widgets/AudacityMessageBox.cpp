@@ -10,8 +10,3 @@
 
 #include "AudacityMessageBox.h"
 #include "Internat.h"
-
-TranslatableString AudacityMessageBoxCaptionStr()
-{
-   return XO("Message");
-}

@@ -14,7 +14,6 @@
 
 #include <wx/atomic.h>
 
-#include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 
 AudacityException::~AudacityException()
@@ -80,10 +79,11 @@ void MessageBoxException::DelayedHandlerAction()
          if (exceptionType != ExceptionType::Internal
              && ErrorHelpUrl().IsEmpty()) {
             // We show BadEnvironment and BadUserAction in a similar way
-            ::AudacityMessageBox(
+            ShowMessageBox(
                ErrorMessage(),
-                (caption.empty() ? AudacityMessageBoxCaptionStr() : caption),
-               wxICON_ERROR);
+               MessageBoxOptions{}
+                  .Caption(caption.empty() ? DefaultCaption() : caption)
+                  .IconStyle(Icon::Error) );
          }
          else {
             using namespace BasicUI;
