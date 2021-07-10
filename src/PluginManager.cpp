@@ -475,7 +475,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    // Add the "Audacity" plug-ins directory
    wxFileName ff = PlatformCompatibility::GetExecutablePath();
 #if defined(__WXMAC__)
-   // Path ends for example in "Audacity.app/Contents/MacOSX"
+   // Path ends for example in "OpenAudacity.app/Contents/MacOSX"
    //ff.RemoveLastDir();
    //ff.RemoveLastDir();
    // just remove the MacOSX part.

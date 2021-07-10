@@ -1,4 +1,4 @@
-﻿;   Audacity: A Digital Audio Editor
+;   Audacity: A Digital Audio Editor
 ;   Audacity(R) is copyright (c) 1999-2021 Audacity Team.
 ;   License: GPL v2.  See License.txt.
 ;
@@ -8,7 +8,7 @@
 
 ; This requires that the ISS Preprocessor be installed
 
-#define AppExe "Package\audacity.exe" 
+#define AppExe "Package\openaudacity.exe" 
 #define AppMajor ""
 #define AppMinor ""
 #define AppRev ""
@@ -23,7 +23,7 @@ Filename: "{app}\unins*.*";
 
 [Setup]
 ; compiler-related directives
-OutputBaseFilename=audacity-win-{#AppVersion}-@INSTALLER_SUFFIX@
+OutputBaseFilename=openaudacity-win-{#AppVersion}-@INSTALLER_SUFFIX@
 
 WizardImageFile=".\audacity_InnoWizardImage.bmp"
 WizardSmallImageFile=".\audacity_InnoWizardSmallImage.bmp"
@@ -36,17 +36,17 @@ SolidCompression=yes
 DisableWelcomePage=no
 
 AppName={#AppName}
-AppVerName=Audacity {#AppVersion}
+AppVerName=OpenAudacity {#AppVersion}
 ; Specify AppVersion as well, so it appears in the Add/Remove Programs entry. 
 AppVersion={#AppVersion}
-AppPublisher="Audacity Team"
-AppPublisherURL=http://audacityteam.org
-AppSupportURL=http://audacityteam.org
-AppUpdatesURL=http://audacityteam.org
+AppPublisher="Morales Research Corporation"
+AppPublisherURL=https://github.com/moralesresearch/OpenAudacity
+AppSupportURL=https://github.com/moralesresearch/OpenAudacity
+AppUpdatesURL=https://github.com/moralesresearch/OpenAudacity
 ChangesAssociations=yes
 @INSTALLER_X64_MODE@
 
-DefaultDirName={commonpf}\Audacity
+DefaultDirName={commonpf}\OpenAudacity
 
 VersionInfoProductName={#AppName}
 VersionInfoProductTextVersion={#GetFileProductVersion(AppExe)}
@@ -61,7 +61,7 @@ DisableDirPage=no
 ; Always warn if dir exists, because we'll overwrite previous Audacity.
 DirExistsWarning=yes
 DisableProgramGroupPage=yes
-UninstallDisplayIcon="{app}\audacity.exe"
+UninstallDisplayIcon="{app}\openaudacity.exe"
 
 ; No longer force them to accept the license, just display it.   LicenseFile=..\LICENSE.txt
 InfoBeforeFile=".\audacity_InnoWizard_InfoBefore.rtf"
@@ -115,8 +115,8 @@ Source: "Package\plug-ins\*"; DestDir: "{app}\Plug-Ins\"; Flags: ignoreversion
 Source: "Package\modules\*"; DestDir: "{app}\modules\"; Flags: ignoreversion recursesubdirs
 
 [Icons]
-Name: "{commonprograms}\Audacity"; Filename: "{app}\audacity.exe"
-Name: "{commondesktop}\Audacity"; Filename: "{app}\audacity.exe"; Tasks: desktopicon
+Name: "{commonprograms}\OpenAudacity"; Filename: "{app}\openaudacity.exe"
+Name: "{commondesktop}\OpenAudacity"; Filename: "{app}\openaudacity.exe"; Tasks: desktopicon
 
 [InstallDelete]
 ; Get rid of Audacity 1.0.0 stuff that's no longer used.
@@ -139,11 +139,11 @@ Type: filesandordirs; Name: "{app}\help"
 ; Don't want to do this because user may have stored their own.
 ;   Type: filesandordirs; Name: "{app}\vst"
 
-; We've switched from a folder in the start menu to just the Audacity.exe at the top level.
+; We've switched from a folder in the start menu to just the OpenAudacity.exe at the top level.
 ; Get rid of 1.0.0 folder and its icons.
-Type: files; Name: "{commonprograms}\Audacity\audacity.exe"
-Type: files; Name: "{commonprograms}\Audacity\unins000.exe"
-Type: dirifempty; Name: "{commonprograms}\Audacity"
+Type: files; Name: "{commonprograms}\OpenAudacity\openaudacity.exe"
+Type: files; Name: "{commonprograms}\OpenAudacity\unins000.exe"
+Type: dirifempty; Name: "{commonprograms}\OpenAudacity"
 
 ;Get rid of previous uninstall item
 Type: files; Name: "{app}\unins*.*"
@@ -180,17 +180,17 @@ Type: files; Name: "{app}\Plug-Ins\clicktrack.ny"
 ; Root: HKCR; Subkey: ".AUP"; ValueType: string; ValueData: "Audacity.Project"; Flags: createvalueifdoesntexist uninsdeletekey; Tasks: associate_aup
 Root: HKCR; Subkey: ".AUP"; ValueType: string; ValueData: "Audacity.Project"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: ".AUP3"; ValueType: string; ValueData: "Audacity.Project"; Flags: createvalueifdoesntexist uninsdeletekey;
-Root: HKCR; Subkey: "Audacity.Project\OpenWithList\audacity.exe"; Flags: createvalueifdoesntexist uninsdeletekey;
+Root: HKCR; Subkey: "Audacity.Project\OpenWithList\openaudacity.exe"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project"; ValueType: string; ValueData: "Audacity Project File"; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\shell"; ValueType: string; ValueData: ""; Flags: createvalueifdoesntexist uninsdeletekey;
 Root: HKCR; Subkey: "Audacity.Project\shell\open"; Flags: createvalueifdoesntexist uninsdeletekey;
-Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; ValueData: """{app}\audacity.exe"" ""%1"""; Flags: uninsdeletekey;
+Root: HKCR; Subkey: "Audacity.Project\shell\open\command"; ValueType: string; ValueData: """{app}\openaudacity.exe"" ""%1"""; Flags: uninsdeletekey;
 
 ;The following would allow a following 'help' installer to know where to put the 'help' files.
 ;Root: HKCR; Subkey: "Audacity.Project\Path";  ValueType: string; ValueData: {app}; Flags: createvalueifdoesntexist uninsdeletekey;
 
 [Run]
-Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\openaudacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flags: nowait postinstall skipifsilent
 
 [Languages]
 ; NOTE: "0" in locale name will be translated to "@" when read by Audacity.
