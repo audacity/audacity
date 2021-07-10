@@ -38,6 +38,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
+#include "../FileNames.h"
 
 using namespace FileNames;
 using namespace TempDirectory;
@@ -267,22 +268,6 @@ void DirectoriesPrefs::PopulateOrExchange(ShuttleGui &S)
    S.EndScroller();
 }
 
-bool WritableLocationCheck(const FilePath &path)
-{
-   bool Status = wxFileName ::IsDirWritable(path);
-   if (!Status)
-   {
-      AudacityMessageBox(
-         XO("Directory %s does not have write permissions")
-            .Format(path),
-         XO("Error"),
-            wxOK | wxICON_ERROR);
-      return true;
-   }
-
-   return false;
-}
-
 void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
 {
    wxString oldTemp = gPrefs->Read(PreferenceKey(Operation::Open, PathType::_None),
@@ -311,7 +296,7 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
          return;
       }
 
-      if (WritableLocationCheck(dlog.GetPath())) 
+      if (!FileNames::WritableLocationCheck(dlog.GetPath()))
       {
          return;
       }
@@ -392,7 +377,7 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       }
    }
 
-   if (WritableLocationCheck(dlog.GetPath())) 
+   if (!FileNames::WritableLocationCheck(dlog.GetPath()))
    {
       return;
    }
