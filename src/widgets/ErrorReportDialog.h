@@ -37,8 +37,8 @@ class ErrorReportDialog final : public wxDialogWrapper
 public:
    ErrorReportDialog(
       wxWindow* parent, const TranslatableString& dlogTitle,
-      const TranslatableString& message, const wxString& helpUrl,
-      const wxString& log, const bool modal = true);
+      const TranslatableString& message, const ManualPageID& helpUrl,
+      const wxString& log, const bool modal);
 
    ~ErrorReportDialog();
 
@@ -50,7 +50,7 @@ private:
 
    std::unique_ptr<audacity::sentry::Report> mReport;
 
-   wxString mHelpUrl;
+   ManualPageID mHelpUrl;
 
    wxTextCtrl* mCommentsControl;
 
