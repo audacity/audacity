@@ -2,7 +2,7 @@
 =============================
 
 [![CMake Build](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml/badge.svg)](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml)
-[![License](https://badgen.net/badge/license/GPLv3 and MIT/blue)](LICENSE)
+[![License](https://badgen.net/badge/license/GPLv3/blue)](LICENSE)
 [![Open issues](https://badgen.net/github/open-issues/moralesresearch/OpenAudacity)](https://github.com/moralesresearch/OpenAudacity/issues)
 
 
