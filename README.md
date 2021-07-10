@@ -2,6 +2,9 @@
 =============================
 
 [![CMake Build](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml/badge.svg)](https://github.com/Morales-Research-Corporation/OpenAudacity/actions/workflows/cmake_build.yml)
+[![License](https://badgen.net/badge/license/GPLv3/blue)](LICENSE)
+[![Open issues](https://badgen.net/github/open-issues/moralesresearch/OpenAudacity)](https://github.com/moralesresearch/OpenAudacity/issues)
+
 
 **OpenAudacity** is an open-source, easy-to-use, multi-track audio editor and recorder for Windows, Mac OS X, GNU/Linux and other operating systems. Audacity is open source software licensed under GPL, version 2 or later.
 
