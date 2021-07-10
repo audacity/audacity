@@ -131,7 +131,7 @@ endif()
 set( _OPT "audacity_" )
 
 # Our very own project
-project( Audacity )
+project( OpenAudacity )
 
 # Load our functions/macros
 include( AudacityFunctions )
@@ -276,8 +276,8 @@ set( _DEST "${_DESTDIR}" )
 set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
 set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
-set( _PKGLIB "${_LIBDIR}/audacity" )
-set( _PKGDATA "${_DATADIR}/audacity/" )
+set( _PKGLIB "${_LIBDIR}/openaudacity" )
+set( _PKGDATA "${_DATADIR}/openaudacity/" )
 set( _MANDIR "${CMAKE_INSTALL_MANDIR}" )
 set( _MODDIR "${_DEST}/modules" )
 set( _EXEDIR "${_DEST}" )
@@ -442,9 +442,9 @@ endif()
 
 # Define Audacity's name
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows" )
-   set( AUDACITY_NAME "Audacity" )
+   set( AUDACITY_NAME "OpenAudacity" )
 else()
-   set( AUDACITY_NAME "audacity" )
+   set( AUDACITY_NAME "openaudacity" )
 endif()
 
 # Create short and full version strings
