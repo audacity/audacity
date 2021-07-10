@@ -65,11 +65,13 @@ void wxWidgetsBasicUI::DoShowErrorDialog(
 #endif
       }
       case ErrorDialogType::ModelessError: {
-         modal = false;
-         // ensure it has some parent.
-         if( !parent )
+         if (!parent)
             parent = wxTheApp->GetTopWindow();
-         wxASSERT(parent);
+         // To be nonmodal, either it needs a parent, to avoid leaks, or it must
+         // guarantee eventual deletion of itself.  There might be no top window
+         // on MacOS.  Let's just force it to be modal in that case.
+         if (parent)
+            modal = false;
          break;
       }
       default:
