@@ -1129,7 +1129,7 @@ if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
       TARGET
          ${TARGET}
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity.exe"
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/OpenAudacity.exe"
                           -D DST="${_EXEDIR}"
                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
@@ -1214,7 +1214,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       TARGET
          ${TARGET}
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/Audacity"
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/OpenAudacity"
                           -D DST="${_PKGLIB}"
                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
@@ -1276,14 +1276,14 @@ else()
    endif()
 
    # Create the desktop file
-   configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
+   configure_file( audacity.desktop.in ${_INTDIR}/openaudacity.desktop )
 
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
          ${TARGET}
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/audacity"
+         ${CMAKE_COMMAND} -D SRC="${_EXEDIR}/openaudacity"
                           -D DST="${_DEST}/${_PKGLIB}"
                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
@@ -1358,7 +1358,7 @@ else()
                DESTINATION "${_LIBDIR}"
                USE_SOURCE_PERMISSIONS
                FILES_MATCHING PATTERN "*.so*" )
-      install( FILES "${_INTDIR}/audacity.desktop"
+      install( FILES "${_INTDIR}/openaudacity.desktop"
                DESTINATION "${_DATADIR}/applications" )
       install( FILES "${topdir}/LICENSE" "${topdir}/README.md"
                DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )

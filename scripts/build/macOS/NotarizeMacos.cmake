@@ -1,8 +1,8 @@
 # CMake script to sign macOS build
 # Arguments:
 # APP_IDENTIFIER - app identifier
-# APP_LOCATION - the path to Audacity.app
-# DMG_LOCATION - the path to Audaicty dmg package
+# APP_LOCATION - the path to OpenAudacity.app
+# DMG_LOCATION - the path to OpenAudacity dmg package
 # APPLE_NOTARIZATION_USER_NAME - notarization user name
 # APPLE_NOTARIZATION_PASSWORD - notarization password
 

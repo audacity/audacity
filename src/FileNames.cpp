@@ -239,7 +239,7 @@ FilePath FileNames::DataDir()
       // the prefs are stored in the user data dir provided by the OS.
       wxFileName exePath(PlatformCompatibility::GetExecutablePath());
 #if defined(__WXMAC__)
-      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      // Path ends for example in "OpenAudacity.app/Contents/MacOSX"
       //exePath.RemoveLastDir();
       //exePath.RemoveLastDir();
       // just remove the MacOSX part.
@@ -273,13 +273,13 @@ FilePath FileNames::HtmlHelpDir()
 {
 #if defined(__WXMAC__)
    wxFileName exePath(PlatformCompatibility::GetExecutablePath());
-      // Path ends for example in "Audacity.app/Contents/MacOSX"
+      // Path ends for example in "OpenAudacity.app/Contents/MacOSX"
       //exePath.RemoveLastDir();
       //exePath.RemoveLastDir();
       // just remove the MacOSX part.
       exePath.RemoveLastDir();
 
-   //for mac this puts us within the .app: Audacity.app/Contents/SharedSupport/
+   //for mac this puts us within the .app: OpenAudacity.app/Contents/SharedSupport/
    return wxFileName( exePath.GetPath()+wxT("/help/manual"), wxEmptyString ).GetFullPath();
 #else
    //linux goes into /*prefix*/share/audacity/
@@ -332,7 +332,7 @@ FilePath FileNames::BaseDir()
 #if defined(__WXMAC__)
    baseDir = PlatformCompatibility::GetExecutablePath();
 
-   // Path ends for example in "Audacity.app/Contents/MacOSX"
+   // Path ends for example in "OpenAudacity.app/Contents/MacOSX"
    //baseDir.RemoveLastDir();
    //baseDir.RemoveLastDir();
    // just remove the MacOSX part.
