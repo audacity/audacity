@@ -246,7 +246,7 @@ macro( resolve_conan_dependencies )
         OPTIONS ${CONAN_PACKAGE_OPTIONS}
     ")
 
-    if(MSVC OR XCODE)
+    if(MSVC OR XCODE AND NOT DEFINED CMAKE_BUILD_TYPE)
         foreach(TYPE ${CMAKE_CONFIGURATION_TYPES})
             _conan_install(${TYPE})
         endforeach()
