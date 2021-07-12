@@ -163,9 +163,9 @@ endif ()
 
 addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
 if (USE_PORTMIXER AND use_portaudio STREQUAL "system")
-   message(FATAL_ERROR "OpenAudacity's use of PortMixer requires using the vendored fork of PortAudio.\n")
-            "${_OPT}use_portaudio=local is required if ${_OPT}use_portmixer=local\n"
-            "Alternatively set ${_OPT}use_portmixer=off to keep ${_OPT}use_portaudio=system")
+  message(FATAL_ERROR "Tenacity's use of PortMixer requires using the vendored fork of PortAudio.\n"
+          "${_OPT}use_portaudio=local is required if ${_OPT}use_portmixer=local\n"
+          "Alternatively set ${_OPT}use_portmixer=off to keep ${_OPT}use_portaudio=system")
 endif()
 if (NOT USE_PORTMIXER AND
    "EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT" IN_LIST
