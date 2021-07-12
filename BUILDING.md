@@ -113,7 +113,7 @@ Alternatively, you can use **CLion**. If you chose to do so, open the directory 
 At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon hardware but **mad** and **id3tag** should be disabled:
 
 ```
-cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
+cmake -GXCode -T buildsystem=1 -Duse_mad="off" -Duse_id3tag=off ../openaudacity
 ```
 
 ## Linux & Other OS
@@ -127,7 +127,7 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 2. Configure OpenAudacity using CMake:
    ```
    $ mkdir build && cd build
-   $ cmake -G "Unix Makefiles" -Daudacity_use_ffmpeg=loaded ../audacity
+   $ cmake -G "Unix Makefiles" -Duse_ffmpeg=loaded ../openaudacity
    ```
    By default, Debug build will be configured. To change that, pass `-DCMAKE_BUILD_TYPE=Release` to CMake.
 
@@ -163,10 +163,10 @@ On Linux it is possible to build OpenAudacity using (almost) only the libraries 
 ```
 $ mkdir build && cd build
 $ cmake -G "Unix Makefiles" \
-        -Daudacity_use_ffmpeg=loaded \
-        -Daudacity_lib_preference=system \
-        -Daudacity_obey_system_dependencies=On \
-         ../audacity
+        -Duse_ffmpeg=loaded \
+        -Dlib_preference=system \
+        -Dobey_system_dependencies=On \
+         ../openaudacity
 ```
 
 There are a few cases when the local library build is preferred:

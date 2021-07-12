@@ -127,8 +127,9 @@ if( CCACHE_PROGRAM )
    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
 endif()
 
-# Define option() prefix
-set( _OPT "audacity_" )
+# Audacity sets this 'audacity_' to prefix all CMake options which is not needed and this is not Audacity.
+# Keep this CMake variable here instead of removing it from the rest of the CMake code to minimize merge conflicts with Audacity.
+set( _OPT "" )
 
 # Our very own project
 project( OpenAudacity )
