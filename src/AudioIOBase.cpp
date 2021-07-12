@@ -21,6 +21,8 @@ Paul Licameli split from AudioIO.cpp
 #include "Prefs.h"
 #include "widgets/MeterPanelBase.h"
 
+#include "portaudio.h"
+
 #if USE_PORTMIXER
 #include "portmixer.h"
 #endif
