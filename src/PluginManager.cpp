@@ -886,6 +886,9 @@ void PluginManager::Load()
    if (!registry.HasGroup(REGROOT))
    {
       // Must start over
+      // This DeleteAll affects pluginregistry.cfg only, not audacity.cfg
+      // That is, the memory of on/off states of effect (and generator,
+      // analyzer, and tool) plug-ins
       registry.DeleteAll();
       registry.Flush();
       return;
@@ -1223,7 +1226,7 @@ void PluginManager::Save()
       {}, {}, FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
-   // Clear it out
+   // Clear pluginregistry.cfg (not audacity.cfg)
    registry.DeleteAll();
 
    // Write the version string

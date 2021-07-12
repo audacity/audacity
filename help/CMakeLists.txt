@@ -45,7 +45,11 @@ if( ${_OPT}package_manual )
       )                                               \
    ")
 
-   install( DIRECTORY "${out_dir}/${host}/" DESTINATION "help/manual" )
+   if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
+      install( DIRECTORY "${out_dir}/${host}/" DESTINATION "${_APPDIR}/help/manual" )
+   elseif( "${CMAKE_GENERATOR}" MATCHES "Visual Studio*" )
+      install( DIRECTORY "${out_dir}/${host}/" DESTINATION "help/manual" )
+   endif()
 endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )

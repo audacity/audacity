@@ -70,8 +70,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Update Audacity"));
    {
-      S.TieCheckBox(XO("&Check for Updates"),
-          UpdatesCheckingSettings::DefaultUpdatesCheckingFlag);
+      S.TieCheckBox(XO("&Check for Updates"), DefaultUpdatesCheckingFlag);
    }
    S.EndStatic();
    S.EndScroller();

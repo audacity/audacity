@@ -648,6 +648,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
       return preset;
    }
 
+   // This cleans a config "file" backed by a string in memory.
    eap.DeleteAll();
    
    eap.Write(wxT("Use Preset"), preset);
