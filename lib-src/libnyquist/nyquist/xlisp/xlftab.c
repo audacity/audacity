@@ -277,7 +277,9 @@ FUNDEF init_funtab[] = {
 /* end of functions specific to xldmem.c */
 
 {	"TYPE-OF",			S, xtype		}, /* 194 */
-{	"EXIT",				S, xexit		}, /* 195 */
+/* See Audacity bug 379 */
+/* {	"EXIT",				S, xexit		}, */
+{	NULL,				S, xexit		}, /* 195 */
 #ifdef PEEK_AND_POKE
 {	"PEEK",				S, xpeek		}, /* 196 */
 {	"POKE",				S, xpoke		}, /* 197 */
