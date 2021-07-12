@@ -140,7 +140,7 @@ set_conan_vars_to_parent()
 #       directory          option      symbol      req   chk   version
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
-addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
+addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "portaudio-2.0 >= 19" )
 addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.32.0" )
 
 # Optional libraries
@@ -162,6 +162,11 @@ endif ()
 
 
 addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
+if (USE_PORTMIXER AND use_portaudio STREQUAL "system")
+  message(FATAL_ERROR "Tenacity's use of PortMixer requires using the vendored fork of PortAudio.\n"
+          "${_OPT}use_portaudio=local is required if ${_OPT}use_portmixer=local\n"
+          "Alternatively set ${_OPT}use_portmixer=off to keep ${_OPT}use_portaudio=system")
+endif()
 if (NOT USE_PORTMIXER AND
    "EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT" IN_LIST
       EXPERIMENTAL_OPTIONS_LIST )
