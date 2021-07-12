@@ -87,6 +87,7 @@ add_conan_lib(
    REQUIRED
    INTERFACE_NAME libmp3lame::libmp3lame
    PKG_CONFIG "lame >= 3.100"
+   ALLOW_FIND_PACKAGE
 )
 
 add_conan_lib(
@@ -113,14 +114,14 @@ else()
    set ( curl_ssl "openssl" )
 endif ()
 
-add_conan_lib(
-   ThreadPool
-   threadpool/20140926
-   REQUIRED
-   ALWAYS_ALLOW_CONAN_FALLBACK
-)
-
 if( ${_OPT}has_networking )
+
+   add_conan_lib(
+      ThreadPool
+      threadpool/20140926
+      REQUIRED
+      ALWAYS_ALLOW_CONAN_FALLBACK
+   )
 
    add_conan_lib(
       CURL
@@ -148,11 +149,13 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    )
 endif()
 
-add_conan_lib(
-   RapidJSON
-   rapidjson/1.1.0
-   REQUIRED
-)
+if( ${_OPT}has_sentry_reporting )
+   add_conan_lib(
+      RapidJSON
+      rapidjson/1.1.0
+      REQUIRED
+   )
+endif()
 
 set_conan_vars_to_parent()
 
