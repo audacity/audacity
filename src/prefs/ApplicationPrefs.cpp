@@ -19,6 +19,7 @@
 #include "update/UpdateManager.h"
 
 #include <wx/defs.h>
+#include <wx/hyperlink.h>
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
@@ -68,12 +69,46 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(XO("Update Audacity"));
+   /* i18n-hint: Title for the update notifications panel in the preferences dialog. */
+   S.StartStatic(XO("Update notifications"));
    {
+      /* i18n-hint: Check-box title that configures periodic updates checking. */
       S.TieCheckBox(
-          XO("&Check for Updates...").Stripped(TranslatableString::Ellipses | TranslatableString::MenuCodes),
-          DefaultUpdatesCheckingFlag);
+         XXC("&Check for updates", "application preferences"),
+         DefaultUpdatesCheckingFlag);
+
+      S.StartVerticalLay();
+      {
+         S.AddFixedText(XO(
+            "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."),
+            false, 470);
+
+         S.StartHorizontalLay(wxALIGN_LEFT);
+         {
+            S.SetBorder(0);
+
+            S.AddSpace(2, 0);
+
+            /* i18n-hint: The first part of "See our Privacy Policy for more info". Trailing space is required. */
+            S.AddFixedText(XO("See "));
+
+            S.AddWindow(
+               safenew wxHyperlinkCtrl(
+                  /* i18n-hint: The second part of "See our Privacy Policy for more info". */
+                  S.GetParent(), wxID_ANY, XO("our Privacy Policy").Translation(),
+                  "https://www.audacityteam.org/about/desktop-privacy-notice/"));
+
+            /* i18n-hint: The last part of "See our Privacy Policy for more info". Leading space is required. */
+            S.AddFixedText(XO(" for more info."));
+
+            S.SetBorder(2);
+         }
+         S.EndHorizontalLay();
+      }
+
+      S.EndVerticalLay();
    }
+
    S.EndStatic();
    S.EndScroller();
 }
