@@ -407,7 +407,7 @@ int CurlResponse::CurlProgressCallback(
        clientp->mDownloadProgressCallback(dlnow, dltotal);
 
     if (ultotal > 0 && clientp->mUploadProgressCallback)
-       clientp->mUploadProgressCallback(dlnow, dltotal);
+       clientp->mUploadProgressCallback(ulnow, ultotal);
 
     return CURLE_OK;
 }
