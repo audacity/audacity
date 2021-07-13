@@ -1,6 +1,6 @@
 /**********************************************************************
 
-  Audacity: A Digital Audio Editor
+  OpenAudacity
 
   AboutDialog.cpp
 
