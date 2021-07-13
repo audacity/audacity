@@ -37,3 +37,5 @@ Build instructions are available [here](BUILDING.md).
 More information for developers is available from the [Audacity Wiki](https://wiki.audacityteam.org/wiki/For_Developers).
 
 Prebuilt binaries for the current release of OpenAudacity is located [here](https://github.com/moralesresearch/OpenAudacity/releases)
+
+Submit issues at [Jira](https://moralesresearchcorp.atlassian.net/jira/software/c/projects/OP/issues/)
