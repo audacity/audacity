@@ -750,6 +750,7 @@ ToolBarConfiguration::Position
             // Choose a position always, if there is a bar to displace.
             // Else, only if the fit is possible.
             if (ct || (sz.x <= rectIn.width && sz.y <= rectIn.height)) {
+#if 0 //#2724-Double Height Toolbars[see also pos+=wxPoint(5,20)in ToolManager]
                // May choose current or previous.
                if (ct &&
                    (sz.y < rectIn.height ||
@@ -760,6 +761,7 @@ ToolBarConfiguration::Position
                   // in the upper half of the box.
                   usedPrev = true, result = prevPosition, result.adopt = false;
                else
+#endif
                   result = position;
             }
             // Now wait until the other callback below to discover x and y
