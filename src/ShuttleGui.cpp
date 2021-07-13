@@ -113,7 +113,7 @@ for registering for changes.
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
-#include "../include/audacity/ComponentInterface.h"
+#include "ComponentInterface.h"
 #include "widgets/ReadOnlyText.h"
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/wxTextCtrlWrapper.h"

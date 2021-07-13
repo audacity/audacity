@@ -20,8 +20,8 @@
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
-#include "../include/audacity/ComponentInterface.h"
-#include "../include/audacity/EffectAutomationParameters.h" // for command automation
+#include "ComponentInterface.h"
+#include "EffectAutomationParameters.h" // for command automation
 
 #include "../Registrar.h"
 

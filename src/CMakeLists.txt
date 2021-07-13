@@ -1006,14 +1006,7 @@ list( APPEND SOURCES
 #
 #
 list( APPEND HEADERS
-   ../include/audacity/EffectInterface.h
    ../include/audacity/Types.h
-   ../include/audacity/ConfigInterface.h
-   ../include/audacity/ModuleInterface.h
-   ../include/audacity/PluginInterface.h
-   ../include/audacity/ComponentInterface.h
-   ../include/audacity/EffectAutomationParameters.h
-   ../include/audacity/ImporterInterface.h
 )
 
 #
