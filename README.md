@@ -19,6 +19,14 @@
 - **Accessibility** for VI users.
 - **Analysis and visualization** tools to analyze audio, or other signal data.
 
+## Why did this project fork audacity/audacity?
+
+You can find more information on the causes of the fork here:
+
+- [**Privacy policy which may violate the original project's GPL license**](https://github.com/audacity/audacity/issues/1213)
+- [**Contributor's License Agreement (CLA) which may violate the same GPL license**](https://github.com/audacity/audacity/discussions/932)
+- [**Attempts at adding telemetry using Google services for data collection**](https://github.com/audacity/audacity/pull/835)
+
 ## Getting Started
 
 For end users, the latest Windows and macOS release version of OpenAudacity is available in our GitHub release
