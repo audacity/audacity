@@ -174,6 +174,8 @@ list( APPEND SOURCES
       Legacy.cpp
       Legacy.h
       LightThemeAsCeeCode.h
+      LogWindow.cpp
+      LogWindow.h
       Lyrics.cpp
       Lyrics.h
       LyricsWindow.cpp
