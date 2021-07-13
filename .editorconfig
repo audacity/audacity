@@ -1,0 +1,18 @@
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+end_of_line = lf
+insert_final_newline = true
+
+# 4-wide spaces
+[*.{c,h,cpp,hpp}]
+indent_style = space
+indent_size = 4
+
+# use tabs for Makefile
+[Makefile]
+indent_style = tab
