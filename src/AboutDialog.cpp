@@ -132,7 +132,6 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-   AddCredit(wxT("James Crook"), developerFormat, roleTeamMember);
    AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleTeamMember);
    AddCredit(wxT("Steve Daulton"), roleTeamMember);
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
@@ -157,6 +156,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Matt Brubeck"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Arturo \"Buanzo\" Busleiman"), sysAdminFormat, roleEmeritusTeam);
    AddCredit(wxT("Michael Chinen"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("James Crook"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Al Dimond"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Benjamin Drung"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Joshua Haberman"), developerFormat, roleEmeritusTeam);
