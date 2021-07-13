@@ -411,14 +411,30 @@ void FileDialog::MSWOnSelChange(HWND hDlg, LPOPENFILENAME pOfn)
       return;
    }
 
-   wxChar path[wxMAXPATH];
-   int result = CommDlg_OpenSave_GetFilePath(::GetParent(hDlg), path, WXSIZEOF(path));
-   if (result < 0 || result > WXSIZEOF(path))
+   UINT lenReqd = CommDlg_OpenSave_GetFolderPath(::GetParent(hDlg), NULL, 0) + 2;
+   lenReqd += CommDlg_OpenSave_GetSpec(::GetParent(hDlg), 0, 0) + 2;
+   if (lenReqd > pOfn->nMaxFile)
+   {
+       // Must realloc.
+       fileNameBuffer = (wxChar*)realloc(fileNameBuffer, lenReqd * sizeof(wxChar));
+       szFileNameBufferChars = lenReqd;
+
+       pOfn->lpstrFile = fileNameBuffer;
+       pOfn->nMaxFile = lenReqd;
+
+       UINT lenUsed = CommDlg_OpenSave_GetFolderPath(::GetParent(hDlg), pOfn->lpstrFile, pOfn->nMaxFile);
+       CommDlg_OpenSave_GetSpec(::GetParent(hDlg), pOfn->lpstrFile + lenUsed, pOfn->nMaxFile - lenUsed);
+   }
+
+   // Contrary to the documentation, this returns 1 in multiselect mode if more than 258 characters are involved,
+   // regardless of the buffer size. By resizing the actual return buffer above, we still get the full file list returned.
+   int result = CommDlg_OpenSave_GetFilePath(::GetParent(hDlg), fileNameBuffer, szFileNameBufferChars);
+   if (result < 0 || result > szFileNameBufferChars)
    {
       return;
    }
 
-   m_path = path;
+   m_path = fileNameBuffer;
    m_fileName = wxFileNameFromPath(m_path);
    m_dir = wxPathOnly(m_path);
 
@@ -659,6 +675,15 @@ void FileDialog::ParseFilter(int index)
 // FileDialog
 // ----------------------------------------------------------------------------
 
+FileDialog::~FileDialog()
+{
+    if (fileNameBuffer != nullptr)
+    {
+        free(fileNameBuffer);
+    }
+}
+
+
 FileDialog::FileDialog()
 :   FileDialogBase()
 {
@@ -696,6 +721,9 @@ void FileDialog::Init()
    // already at the requested size.. (when centering)
    gs_rectDialog.x =
    gs_rectDialog.y = 0;
+
+   szFileNameBufferChars = (wxMAXPATH + 1);
+   fileNameBuffer = (wxChar *)malloc(sizeof(wxChar) * szFileNameBufferChars);
 }
 
 void FileDialog::GetPaths(wxArrayString& paths) const
@@ -900,7 +928,6 @@ int FileDialog::ShowModal()
    if (!hWnd && wxTheApp->GetTopWindow())
       hWnd = (HWND) wxTheApp->GetTopWindow()->GetHWND();
    
-   static wxChar fileNameBuffer [ wxMAXPATH ];           // the file-name
    wxChar        titleBuffer    [ wxMAXFILE+1+wxMAXEXT ];  // the file-name, without path
    
    *fileNameBuffer = wxT('\0');
@@ -1052,7 +1079,7 @@ int FileDialog::ShowModal()
    wxStrlcpy(fileNameBuffer, m_fileName.c_str(), WXSIZEOF(fileNameBuffer));
    
    of.lpstrFile = fileNameBuffer;  // holds returned filename
-   of.nMaxFile  = wxMAXPATH;
+   of.nMaxFile  = szFileNameBufferChars;
    
    // we must set the default extension because otherwise Windows would check
    // for the existing of a wrong file with wxOVERWRITE_PROMPT (i.e. if the

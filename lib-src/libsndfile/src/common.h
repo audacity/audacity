@@ -354,10 +354,9 @@ typedef struct
 	void 			*handle, *hsaved ;
 
 	int				use_wchar ;
-#else
+#endif
 	/* These fields can only be used in src/file_io.c. */
 	int 			filedes, savedes ;
-#endif
 
 	int				do_not_close_descriptor ;
 	int				mode ;			/* Open mode : SFM_READ, SFM_WRITE or SFM_RDWR. */

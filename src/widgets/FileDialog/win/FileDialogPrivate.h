@@ -35,6 +35,7 @@ public:
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& sz = wxDefaultSize,
       const wxString& name = wxFileDialogNameStr);
+   ~FileDialog();
 
    virtual void GetPaths(wxArrayString& paths) const;
    virtual void GetFilenames(wxArrayString& files) const;
@@ -83,6 +84,8 @@ private:
 
 private:
    wxArrayString m_fileNames;
+   wxChar *fileNameBuffer;
+   size_t szFileNameBufferChars;
 
    // remember if our SetPosition() or Centre() (which requires special
    // treatment) was called
