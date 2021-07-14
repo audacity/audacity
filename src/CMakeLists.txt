@@ -995,6 +995,8 @@ list( APPEND SOURCES
           update/UpdateDataParser.cpp
           update/UpdateManager.h
           update/UpdateManager.cpp
+          update/UpdateNoticeDialog.h
+          update/UpdateNoticeDialog.cpp
           update/UpdatePopupDialog.h
           update/UpdatePopupDialog.cpp
           prefs/ApplicationPrefs.h
