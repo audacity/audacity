@@ -418,6 +418,11 @@ bool DirectoriesPrefs::Validate()
    }
    else {
       /* If the directory already exists, make sure it is writable */
+      if (!FileNames::WritableLocationCheck(mTempText->GetValue()) ||
+          !FileNames::WritableLocationCheck(mMacrosText->GetValue()))
+      {
+          return false;
+      }
       wxLogNull logNo;
       Temp.AppendDir(wxT("canicreate"));
       path =  Temp.GetPath();
