@@ -28,7 +28,9 @@ extern AUDACITY_DLL_API DitherType gLowQualityDither, gHighQualityDither;
 
 #if 0
 // Moved to audacity/types.h
-typedef enum {
+// PRL:  it will be moved back here ultimately
+//! The ordering of these values with operator < agrees with the order of increasing bit width
+enum class sampleFormat : unsigned {
    int16Sample = 0x00020001,
    int24Sample = 0x00040001,
    floatSample = 0x0004000F
@@ -49,6 +51,42 @@ typedef enum {
    size_t{ 3 } : SAMPLE_SIZE(SampleFormat) )
 
 AUDACITY_DLL_API TranslatableString GetSampleFormatStr(sampleFormat format);
+
+//! Two sample formats, remembering format of original source and describing stored format
+/*! Useful when imported data are stored temporarily in a wider format but should be exported bit-perfect
+ without dither if to the original format again
+ 
+ @invariant `Effective() <= Stored()`
+ */
+class SampleFormats final {
+public:
+   /*! Construct sampleFormats, but may change effective to satisfy the invariant */
+   SampleFormats(
+      sampleFormat effective, //!< How much real information in each sample
+      sampleFormat stored     //!< The form used for storage
+   )
+      : m_Effective{ std::min( effective, stored ) }
+      , m_Stored{ stored }
+   {}
+
+   sampleFormat Effective() const { return m_Effective; }
+   sampleFormat Stored() const { return m_Stored; }
+
+   //! Update the effective format, for insertion of more samples into the sequence
+   /*! `GetEffective()` will not necessarily equal the given value, because the invariant will be preserved,
+    and also `GetEffective()` will never become narrower than before:  if any material in the sequence had
+    a wider format, assume that the whole sequence still requires dithering to lesser formats than that.
+    */
+   void UpdateEffective(sampleFormat effective)
+   {
+      if (effective > m_Effective)
+         m_Effective = std::min(effective, m_Stored);
+   }
+
+private:
+   sampleFormat m_Effective;
+   sampleFormat m_Stored;
+};
 
 //
 // Allocating/Freeing Samples

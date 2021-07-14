@@ -744,7 +744,7 @@ void SqliteSampleBlock::Commit(Sizes sizes)
    // Bind statement parameters
    // Might return SQLITE_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
-   if (sqlite3_bind_int(stmt, 1, mSampleFormat) ||
+   if (sqlite3_bind_int(stmt, 1, static_cast<int>(mSampleFormat)) ||
        sqlite3_bind_double(stmt, 2, mSumMin) ||
        sqlite3_bind_double(stmt, 3, mSumMax) ||
        sqlite3_bind_double(stmt, 4, mSumRms) ||

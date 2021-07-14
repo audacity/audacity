@@ -332,7 +332,8 @@ ProgressResult OggImportFileHandle::Import(
                iter2->get()->Append((char *)(mainBuffer.get() + c),
                int16Sample,
                samplesRead,
-               mVorbisFile->vi[bitstream].channels);
+               mVorbisFile->vi[bitstream].channels,
+               int16Sample);
          }
 
          samplesSinceLastCallback += samplesRead;

@@ -72,7 +72,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Constructor / Destructor / Duplicator
    //
 
-   Sequence(const SampleBlockFactoryPtr &pFactory, sampleFormat format);
+   Sequence(const SampleBlockFactoryPtr &pFactory, SampleFormats formats);
 
    Sequence(const Sequence &orig, const SampleBlockFactoryPtr &pFactory);
 
@@ -90,10 +90,16 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
 
-   // Note that len is not size_t, because nullptr may be passed for buffer, in
-   // which case, silence is inserted, possibly a large amount.
+   //! Pass nullptr to set silence
+   /*! Note that len is not size_t, because nullptr may be passed for buffer, in
+      which case, silence is inserted, possibly a large amount. */
+   /*! @excsafety{Strong} */
    void SetSamples(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, sampleCount len);
+      sampleCount start, sampleCount len,
+      sampleFormat effectiveFormat /*!<
+         New samples, if later narrowed, but to min(effectiveFormat, format) or more, need no dithering
+      */
+   );
 
    // where is input, assumed to be nondecreasing, and its size is len + 1.
    // min, max, rms, bl are outputs, and their lengths are len.
@@ -110,19 +116,39 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // as in this, then block contents must be copied.
    std::unique_ptr<Sequence> Copy( const SampleBlockFactoryPtr &pFactory,
       sampleCount s0, sampleCount s1) const;
+   /*! @excsafety{Strong} */
    void Paste(sampleCount s0, const Sequence *src);
 
    size_t GetIdealAppendLen() const;
-   void Append(constSamplePtr buffer, sampleFormat format, size_t len);
 
-   //! Append data, not coalescing blocks, returning a pointer to the new block.
+   /*!
+       Samples may be retained in a memory buffer, pending Flush()
+   
+       @return true if at least one sample block was added
+       @excsafety{Strong}
+    */
+   bool Append(
+      constSamplePtr buffer, sampleFormat format, size_t len, size_t stride,
+      sampleFormat effectiveFormat /*!<
+         New samples, if later narrowed, but to min(effectiveFormat, format) or more, need no dithering
+      */
+   );
+
+   void Flush();
+
+   //! Append data, not coalescing blocks, returning a pointer to the new block.  No dithering applied.
+   /*! @excsafety{Strong} */
    SeqBlock::SampleBlockPtr AppendNewBlock(
       constSamplePtr buffer, sampleFormat format, size_t len);
    //! Append a complete block, not coalescing
+   /*! @excsafety{Strong} */
    void AppendSharedBlock(const SeqBlock::SampleBlockPtr &pBlock);
+   /*! @excsafety{Strong} */
    void Delete(sampleCount start, sampleCount len);
 
+   /*! @excsafety{Strong} */
    void SetSilence(sampleCount s0, sampleCount len);
+   /*! @excsafety{Strong} */
    void InsertSilence(sampleCount s0, sampleCount len);
 
    const SampleBlockFactoryPtr &GetFactory() { return mpFactory; }
@@ -149,10 +175,11 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Manipulating Sample Format
    //
 
-   sampleFormat GetSampleFormat() const;
+   SampleFormats GetSampleFormats() const;
 
-   // Return true iff there is a change
-   bool ConvertToSampleFormat(sampleFormat format, 
+   //! @return whether there was a change
+   /*! @excsafety{Strong} */
+   bool ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
    //
@@ -167,7 +194,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Getting block size and alignment information
    //
 
-   // This returns a possibly large or negative value
+   //! @return possibly a large or negative value
    sampleCount GetBlockStart(sampleCount position) const;
 
    // These return a nonnegative number of samples meant to size a memory buffer
@@ -182,6 +209,9 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    BlockArray &GetBlockArray() { return mBlock; }
    const BlockArray &GetBlockArray() const { return mBlock; }
+
+   size_t GetAppendBufferLen() const { return mAppendBufferLen; }
+   constSamplePtr GetAppendBuffer() const { return mAppendBuffer.ptr(); }
 
  private:
 
@@ -198,13 +228,17 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    SampleBlockFactoryPtr mpFactory;
 
    BlockArray    mBlock;
-   sampleFormat  mSampleFormat;
+   SampleFormats  mSampleFormats;
 
    // Not size_t!  May need to be large:
    sampleCount   mNumSamples{ 0 };
 
    size_t   mMinSamples; // min samples per block
    size_t   mMaxSamples; // max samples per block
+
+   SampleBuffer  mAppendBuffer {};
+   size_t        mAppendBufferLen { 0 };
+   sampleFormat  mAppendEffectiveFormat{ narrowestSampleFormat };
 
    bool          mErrorOpening{ false };
 
@@ -214,6 +248,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
 
    int FindBlock(sampleCount pos) const;
 
+   /*! @excsafety{Strong} */
    SeqBlock::SampleBlockPtr DoAppend(
       constSamplePtr buffer, sampleFormat format, size_t len, bool coalesce);
 

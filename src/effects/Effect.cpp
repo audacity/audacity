@@ -1357,6 +1357,11 @@ int Effect::GetPass()
    return mPass;
 }
 
+bool Effect::NeedsDither()
+{
+   return true;
+}
+
 bool Effect::InitPass1()
 {
    return true;
@@ -1623,6 +1628,11 @@ bool Effect::ProcessTrack(int count,
          genRight = right->EmptyCopy();
    }
 
+   const bool needsDither = NeedsDither();
+   // This affects processors only, not generators:
+   const auto effectiveFormat =
+      needsDither ? widestSampleFormat : narrowestSampleFormat;
+
    // Call the effect until we run out of input or delayed samples
    while (inputRemaining != 0 || delayRemaining != 0)
    {
@@ -1795,16 +1805,19 @@ bool Effect::ProcessTrack(int count,
          if (isProcessor)
          {
             // Write them out
-            left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+            left->Set((samplePtr) outBuffer[0].get(), floatSample,
+               outPos, outputBufferCnt, effectiveFormat);
             if (right)
             {
                if (chans >= 2)
                {
-                  right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[1].get(), floatSample,
+                     outPos, outputBufferCnt, effectiveFormat);
                }
                else
                {
-                  right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+                  right->Set((samplePtr) outBuffer[0].get(), floatSample,
+                     outPos, outputBufferCnt, effectiveFormat);
                }
             }
          }
@@ -1855,16 +1868,19 @@ bool Effect::ProcessTrack(int count,
    {
       if (isProcessor)
       {
-         left->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+         left->Set((samplePtr) outBuffer[0].get(), floatSample,
+            outPos, outputBufferCnt, effectiveFormat);
          if (right)
          {
             if (chans >= 2)
             {
-               right->Set((samplePtr) outBuffer[1].get(), floatSample, outPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[1].get(), floatSample,
+                  outPos, outputBufferCnt, effectiveFormat);
             }
             else
             {
-               right->Set((samplePtr) outBuffer[0].get(), floatSample, outPos, outputBufferCnt);
+               right->Set((samplePtr) outBuffer[0].get(), floatSample,
+                  outPos, outputBufferCnt, effectiveFormat);
             }
          }
       }

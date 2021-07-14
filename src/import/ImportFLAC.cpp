@@ -252,12 +252,14 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
 
             iter->get()->Append((samplePtr)tmp.get(),
                      int16Sample,
-                     frame->header.blocksize);
+                     frame->header.blocksize, 1,
+                     int16Sample);
          }
          else {
             iter->get()->Append((samplePtr)buffer[chn],
                      int24Sample,
-                     frame->header.blocksize);
+                     frame->header.blocksize, 1,
+                     int24Sample);
          }
       }
 

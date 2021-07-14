@@ -229,7 +229,12 @@ private:
     * @return true if at least one complete block was created
     */
    bool Append(constSamplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride=1);
+      size_t len, unsigned int stride = 1,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         New samples, if later narrowed, but to min(effectiveFormat, format) or more, need no dithering;
+         by default, ask for dither whenever narrowing at all
+      */
+   );
    /// Flush must be called after last Append
    void Flush();
 
@@ -281,7 +286,12 @@ private:
       sampleCount * pNumWithinClips = nullptr) const;
 
    void Set(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len);
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat /*!<
+         New samples, if later narrowed, but to min(effectiveFormat, format) or more, need no dithering;
+         by default, ask for dither whenever narrowing at all
+      */
+   );
 
    // Fetch envelope values corresponding to uniformly separated sample times
    // starting at the given time.

@@ -53,6 +53,11 @@ Envelope::~Envelope()
 {
 }
 
+bool Envelope::IsTrivial() const
+{
+   return mDefaultValue == 1.0 && mEnv.empty();
+}
+
 bool Envelope::ConsistencyCheck()
 {
    bool consistent = true;

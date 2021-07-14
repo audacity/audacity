@@ -82,3 +82,8 @@ size_t EffectInvert::ProcessBlock(float **inBlock, float **outBlock, size_t bloc
 
    return blockLen;
 }
+
+bool EffectInvert::NeedsDither()
+{
+   return false;
+}

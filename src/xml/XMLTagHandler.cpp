@@ -180,8 +180,9 @@ bool XMLValueChecker::IsValidVisibleChannels(const int nValue)
 }
 #endif
 
-bool XMLValueChecker::IsValidSampleFormat(const int nValue)
+bool XMLValueChecker::IsValidSampleFormat(const int iValue)
 {
+   auto nValue = static_cast<sampleFormat>(iValue);
    return (nValue == int16Sample) || (nValue == int24Sample) || (nValue == floatSample);
 }
 

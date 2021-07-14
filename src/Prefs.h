@@ -361,9 +361,7 @@ public:
       const wxString &oldKey = {}
    )
       : EnumSettingBase{
-         key, symbols, defaultSymbol,
-         { values.begin(), values.end() },
-         oldKey
+         key, symbols, defaultSymbol, ConvertValues(values), oldKey
       }
    {}
 
@@ -383,6 +381,16 @@ public:
    bool WriteEnum( Enum value )
    { return WriteInt( static_cast<int>( value ) ); }
 
+private:
+   std::vector<int> ConvertValues( const std::vector< Enum > &values)
+   {
+      // To convert scoped enums.  This would be easier with std::ranges
+      std::vector<int> result;
+      result.reserve(values.size());
+      for (auto value : values)
+         result.push_back(static_cast<int>(value));
+      return result;
+   }
 };
 
 // An event emitted by the application when the Preference dialog commits

@@ -303,6 +303,10 @@ protected:
    virtual bool InitPass2();
    virtual int GetPass();
 
+   //! Called only in default implementations of Process() and ProcessPass() for processors, not generators
+   /*! If true (default behavior), then ProcessBlock() results require dither if later rendered to fewer bits */
+   virtual bool NeedsDither();
+
    // clean up any temporary memory, needed only per invocation of the
    // effect, after either successful or failed or exception-aborted processing.
    // Invoked inside a "finally" block so it must be no-throw.

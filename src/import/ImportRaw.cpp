@@ -100,7 +100,6 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
               WaveTrackFactory *trackFactory, TrackHolders &outTracks)
 {
    outTracks.clear();
-   int encoding = 0; // Guess Format
    sf_count_t offset = 0;
    double rate = 44100.0;
    double percent = 100.0;
@@ -110,23 +109,24 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    {
       SF_INFO sndInfo;
       unsigned numChannels = 0;
+      int guessEncoding = 0;
 
       try {
          // Yes, FormatClassifier currently handles filenames in UTF8 format only, that's
          // a TODO ...
          FormatClassifier theClassifier(fileName.utf8_str());
-         encoding = theClassifier.GetResultFormatLibSndfile();
+         guessEncoding = theClassifier.GetResultFormatLibSndfile();
          numChannels = theClassifier.GetResultChannels();
          offset = 0;
       } catch (...) {
          // Something went wrong in FormatClassifier, use defaults instead.
-         encoding = 0;
+         guessEncoding = 0;
       }
 
-      if (encoding <= 0) {
+      if (guessEncoding <= 0) {
          // Unable to guess.  Use mono, 16-bit samples with CPU endianness
          // as the default.
-         encoding = SF_FORMAT_RAW | SF_ENDIAN_CPU | SF_FORMAT_PCM_16;
+         guessEncoding = SF_FORMAT_RAW | SF_ENDIAN_CPU | SF_FORMAT_PCM_16;
          numChannels = 1;
          offset = 0;
       }
@@ -134,12 +134,12 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       rate = ProjectSettings::Get( project ).GetRate();
 
       numChannels = std::max(1u, numChannels);
-      ImportRawDialog dlog(parent, encoding, numChannels, (int)offset, rate);
+      ImportRawDialog dlog(parent, guessEncoding, numChannels, (int)offset, rate);
       dlog.ShowModal();
       if (!dlog.GetReturnCode())
          return;
 
-      encoding = dlog.mEncoding;
+      const int encoding = dlog.mEncoding;
       numChannels = dlog.mChannels;
       rate = dlog.mRate;
       offset = (sf_count_t)dlog.mOffset;
@@ -193,7 +193,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       // the quality of the original file.
       //
 
-      auto format = ImportFileHandle::ChooseFormat(
+      const auto format = ImportFileHandle::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
       results.resize(1);
@@ -257,7 +257,10 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
                      ((float *)srcbuffer.ptr())[numChannels*j+c];
                }
 
-               iter->get()->Append(buffer.ptr(), (format == int16Sample)?int16Sample:floatSample, block);
+               iter->get()->Append(
+                  buffer.ptr(),
+                  (format == int16Sample) ? int16Sample : floatSample, block, 1,
+                  sf_subtype_to_effective_format(encoding));
             }
             framescompleted += block;
          }

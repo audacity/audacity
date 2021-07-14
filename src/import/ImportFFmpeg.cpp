@@ -697,7 +697,9 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
    auto iter2 = iter->begin();
    for (size_t chn=0; chn < nChannels; ++iter2, ++chn)
    {
-      iter2->get()->Append((samplePtr)tmp[chn].get(), sc->m_osamplefmt, index);
+      iter2->get()->Append(
+         (samplePtr)tmp[chn].get(), sc->m_osamplefmt, index, 1,
+         sc->m_osamplefmt);
    }
 
    // Try to update the progress indicator (and see if user wants to cancel)

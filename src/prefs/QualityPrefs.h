@@ -20,7 +20,7 @@
 class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
-enum sampleFormat : unsigned;
+enum class sampleFormat : unsigned;
 enum DitherType : unsigned;
 
 #define QUALITY_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Quality") }

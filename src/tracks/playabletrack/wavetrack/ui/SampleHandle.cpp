@@ -287,8 +287,11 @@ UIHandle::Result SampleHandle::Click
                (1 - prob);
       }
       //Set the sample to the point of the mouse event
+      // Don't require dithering later
       mClickedTrack->Set((samplePtr)newSampleRegion.get(), floatSample,
-         mClickedStartSample - SMOOTHING_BRUSH_RADIUS, 1 + 2 * SMOOTHING_BRUSH_RADIUS);
+         mClickedStartSample - SMOOTHING_BRUSH_RADIUS,
+         1 + 2 * SMOOTHING_BRUSH_RADIUS,
+         narrowestSampleFormat);
 
       // mLastDragSampleValue will not be used
    }
@@ -303,7 +306,10 @@ UIHandle::Result SampleHandle::Click
       const float newLevel = FindSampleEditingLevel(event, viewInfo, t0);
 
       //Set the sample to the point of the mouse event
-      mClickedTrack->Set((samplePtr)&newLevel, floatSample, mClickedStartSample, 1);
+      // Don't require dithering later
+      mClickedTrack->Set(
+         (samplePtr)&newLevel, floatSample, mClickedStartSample, 1,
+         narrowestSampleFormat);
 
       mLastDragSampleValue = newLevel;
    }
@@ -376,7 +382,9 @@ UIHandle::Result SampleHandle::Drag
    // overflow size_t:
    const auto size = ( end - start + 1 ).as_size_t();
    if (size == 1) {
-      mClickedTrack->Set((samplePtr)&newLevel, floatSample, start, size);
+      // Don't require dithering later
+      mClickedTrack->Set(
+         (samplePtr)&newLevel, floatSample, start, size, narrowestSampleFormat);
    }
    else {
       std::vector<float> values(size);
@@ -388,7 +396,9 @@ UIHandle::Result SampleHandle::Drag
             (ii - mLastDragSample).as_float() /
              (s0 - mLastDragSample).as_float();
       }
-      mClickedTrack->Set((samplePtr)&values[0], floatSample, start, size);
+      // Don't require dithering later
+      mClickedTrack->Set(
+         (samplePtr)&values[0], floatSample, start, size, narrowestSampleFormat);
    }
 
    //Update the member data structures.

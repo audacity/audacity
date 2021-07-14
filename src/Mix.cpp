@@ -32,8 +32,10 @@
 
 #include "Envelope.h"
 #include "WaveTrack.h"
+#include "WaveClip.h"
 #include "Prefs.h"
 #include "Resample.h"
+#include "Sequence.h"
 #include "TimeTrack.h"
 #include "float_cast.h"
 
@@ -258,6 +260,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    , mFormat{ outFormat }
    , mRate{ outRate }
 
+   , mEffectiveFormat{ floatSample }
    , mMayThrow{ mayThrow }
 {
    mHighQuality = highQuality;
@@ -342,6 +345,9 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
 
    const auto envLen = std::max(mQueueMaxLen, mInterleavedBufferSize);
    mEnvValues.reinit(envLen);
+
+   // Decide once at construction time
+   std::tie(mNeedsDither, mEffectiveFormat) = NeedsDither(inputTracks);
 }
 
 Mixer::~Mixer()
@@ -354,6 +360,54 @@ void Mixer::MakeResamplers()
       mResample[i] = std::make_unique<Resample>(mHighQuality, mMinFactor[i], mMaxFactor[i]);
 }
 
+std::pair<bool, sampleFormat>
+Mixer::NeedsDither(const WaveTrackConstArray &inputTracks) const
+{
+   auto defaultAnswer = std::make_pair(true, mFormat);
+   // Many possible disqualifiers for the avoidance of dither
+   if (mbVariableRates)
+      // We will call MixVariableRates(), so we need nontrivial resampling
+      return defaultAnswer;
+
+   auto widestEffectiveFormat = narrowestSampleFormat;
+   for (const auto &pTrack : inputTracks) {
+      auto &track = *pTrack;
+      if (track.GetRate() != mRate)
+         // Also leads to MixVariableRates(), needs nontrivial resampling
+         return defaultAnswer;
+      if (mApplyTrackGains) {
+         /// TODO: more-than-two-channels
+         for (auto c : {0, 1}) {
+            const auto gain = track.GetChannelGain(c);
+            if (!(gain == 0.0 || gain == 1.0))
+               // Fractional gain may be applied even in MixSameRate
+               return defaultAnswer;
+         }
+      }
+      // Examine all clips.  (This ignores the time bounds for the mixer.
+      // If it did not, we might avoid dither in more cases.  But if we fix
+      // that, remember that some mixers change their time bounds after
+      // construction, as when scrubbing.)
+      for (const auto &pClip : track.GetClips()) {
+         auto &clip = *pClip;
+         if (!clip.GetEnvelope()->IsTrivial())
+            // Varying or non-unit gain may be applied even in MixSameRate
+            return defaultAnswer;
+         auto effectiveFormat =
+            clip.GetSequence()->GetSampleFormats().Effective();
+         if (effectiveFormat > mFormat)
+            // Real, not just nominal, precision loss would happen in at
+            // least one clip
+            return defaultAnswer;
+         widestEffectiveFormat =
+            std::max(widestEffectiveFormat, effectiveFormat);
+      }
+   }
+
+   // We can avoid dither
+   return { false, widestEffectiveFormat };
+}
+
 void Mixer::Clear()
 {
    for (unsigned int c = 0; c < mNumBuffers; c++) {
@@ -362,7 +416,7 @@ void Mixer::Clear()
 }
 
 void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
-                samplePtr src, SampleBuffer *dests,
+                constSamplePtr src, SampleBuffer *dests,
                 int len, bool interleaved)
 {
    for (unsigned int c = 0; c < numChannels; c++) {
@@ -568,6 +622,10 @@ size_t Mixer::MixVariableRates(int *channelFlags, WaveTrackCache &cache,
 size_t Mixer::MixSameRate(int *channelFlags, WaveTrackCache &cache,
                                sampleCount *pos)
 {
+   // This function fetches samples from the input tracks, whatever their
+   // formats, as floats; then sums them into temporary buffers.  It may also
+   // apply gain values as stored in the tracks, or apply envelope values.
+
    const WaveTrack *const track = cache.GetTrack().get();
    const double t = ( *pos ).as_double() / track->GetRate();
    const double trackEndTime = track->GetEndTime();
@@ -668,6 +726,10 @@ size_t Mixer::Process(size_t maxToProcess)
             break;
          }
       }
+
+      // One of MixVariableRates or MixSameRate assigns into mTemp[*][*] which
+      // are the sources for the CopySample calls, and they copy into
+      // mBuffer[*][*]
       if (mbVariableRates || track->GetRate() != mRate)
          maxOut = std::max(maxOut,
             MixVariableRates(channelFlags.get(), mInputTrack[i],
@@ -685,6 +747,9 @@ size_t Mixer::Process(size_t maxToProcess)
          // forwards (the usual)
          mTime = std::min(std::max(t, mTime), mT1);
    }
+   auto ditherType = mNeedsDither
+      ? (mHighQuality ? gHighQualityDither : gLowQualityDither)
+      : DitherType::none;
    if(mInterleaved) {
       for(size_t c=0; c<mNumChannels; c++) {
          CopySamples(mTemp[0].ptr() + (c * SAMPLE_SIZE(floatSample)),
@@ -692,7 +757,7 @@ size_t Mixer::Process(size_t maxToProcess)
             mBuffer[0].ptr() + (c * SAMPLE_SIZE(mFormat)),
             mFormat,
             maxOut,
-            mHighQuality ? gHighQualityDither : gLowQualityDither,
+            ditherType,
             mNumChannels,
             mNumChannels);
       }
@@ -704,7 +769,7 @@ size_t Mixer::Process(size_t maxToProcess)
             mBuffer[c].ptr(),
             mFormat,
             maxOut,
-            mHighQuality ? gHighQualityDither : gLowQualityDither);
+            ditherType);
       }
    }
    // MB: this doesn't take warping into account, replaced with code based on mSamplePos
@@ -721,6 +786,11 @@ samplePtr Mixer::GetBuffer()
 samplePtr Mixer::GetBuffer(int channel)
 {
    return mBuffer[channel].ptr();
+}
+
+sampleFormat Mixer::EffectiveFormat() const
+{
+   return mEffectiveFormat;
 }
 
 double Mixer::MixGetCurrentTime()

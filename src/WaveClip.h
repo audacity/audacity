@@ -237,7 +237,11 @@ public:
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
    void SetSamples(constSamplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len);
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat /*!<
+         New samples, if later narrowed, but to min(effectiveFormat, format) or more, need no dithering
+      */
+   );
 
    Envelope* GetEnvelope() { return mEnvelope.get(); }
    const Envelope* GetEnvelope() const { return mEnvelope.get(); }
@@ -275,7 +279,7 @@ public:
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
    std::shared_ptr<SampleBlock> AppendNewBlock(
       samplePtr buffer, sampleFormat format, size_t len);
 
@@ -285,7 +289,11 @@ public:
    /// You must call Flush after the last Append
    /// @return true if at least one complete block was created
    bool Append(constSamplePtr buffer, sampleFormat format,
-               size_t len, unsigned int stride);
+      size_t len, unsigned int stride,
+      sampleFormat effectiveFormat /*!<
+         New samples, if later narrowed, but to min(effectiveFormat, format) or more, need no dithering
+      */
+   );
    /// Flush must be called after last Append
    void Flush();
 
@@ -353,6 +361,10 @@ public:
    // used by commands which interact with clips using the keyboard
    bool SharesBoundaryWithNextClip(const WaveClip* next) const;
 
+private:
+   size_t GetAppendBufferLen() const;
+   constSamplePtr GetAppendBuffer() const;
+
 public:
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
    mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
@@ -368,8 +380,6 @@ protected:
 
    mutable std::unique_ptr<WaveCache> mWaveCache;
    mutable std::unique_ptr<SpecCache> mSpecCache;
-   SampleBuffer  mAppendBuffer {};
-   size_t        mAppendBufferLen { 0 };
 
    // Cut Lines are nothing more than ordinary wave clips, with the
    // offset relative to the start of the clip.

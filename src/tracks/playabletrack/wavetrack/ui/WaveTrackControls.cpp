@@ -172,7 +172,7 @@ struct FormatMenuTable :  PopupMenuTable
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   static int IdOfFormat(int format);
+   static int IdOfFormat(sampleFormat format);
 
    void OnFormatChange(wxCommandEvent & event);
 };
@@ -206,7 +206,7 @@ BEGIN_POPUP_MENU(FormatMenuTable)
 END_POPUP_MENU()
 
 /// Converts a format enumeration to a wxWidgets menu item Id.
-int FormatMenuTable::IdOfFormat(int format)
+int FormatMenuTable::IdOfFormat(sampleFormat format)
 {
    switch (format) {
    case int16Sample:

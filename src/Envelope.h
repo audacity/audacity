@@ -82,6 +82,8 @@ public:
 
    virtual ~Envelope();
 
+   bool IsTrivial() const;
+
    /** \brief Get many envelope points for pixel columns at once,
     * but don't assume uniform time per pixel.
    */
