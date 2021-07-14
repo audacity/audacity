@@ -892,6 +892,10 @@ list( APPEND SOURCES
       tracks/ui/ZoomHandle.cpp
       tracks/ui/ZoomHandle.h
 
+      # ui helpers
+      ui/AccessibleLinksFormatter.h
+      ui/AccessibleLinksFormatter.cpp
+
       # Widgets
 
       widgets/AButton.cpp
