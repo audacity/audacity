@@ -38,6 +38,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
+#include "../FileNames.h"
 
 using namespace FileNames;
 using namespace TempDirectory;
@@ -295,6 +296,11 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
          return;
       }
 
+      if (!FileNames::WritableLocationCheck(dlog.GetPath()))
+      {
+         return;
+      }
+
       // Append an "audacity_temp" directory to this path if necessary (the
       // default, the existing pref (as stored in the control), and any path
       // ending in a directory with the same name as what we'd add should be OK
@@ -369,6 +375,11 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       {
          return;
       }
+   }
+
+   if (!FileNames::WritableLocationCheck(dlog.GetPath()))
+   {
+      return;
    }
 
    tc->SetValue(dlog.GetPath());
