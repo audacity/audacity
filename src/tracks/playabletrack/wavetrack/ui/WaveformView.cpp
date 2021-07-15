@@ -670,7 +670,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
                                    const WaveClip *clip,
                                    const wxRect & rect,
                                    bool dB,
-                                   bool muted)
+                                   bool muted,
+                                   bool selected)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -900,7 +901,12 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    if (h == 0.0 && tOffset < 0.0) {
       TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
    }
-   params.DrawClipEdges( dc, rect );
+   {
+      //increase virtual view size by px to hide edges that should not be visible
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect.Inflate(1, 0), 1);
+      if (!clipRect.IsEmpty())
+          TrackArt::DrawClipEdges(dc, clipRect, selected);
+   }
 }
 
 void DrawTimeSlider( TrackPanelDrawingContext &context,
@@ -967,7 +973,8 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
 //#include "tracks/ui/TimeShiftHandle.h"
 void WaveformView::DoDraw(TrackPanelDrawingContext &context,
                                const WaveTrack *track,
-                               const wxRect & rect,
+                               const WaveClip* selectedClip,
+                               const wxRect& rect,
                                bool muted)
 {
    auto &dc = context.dc;
@@ -988,10 +995,11 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
-   for (const auto &clip: track->GetClips())
+   for (const auto& clip : track->GetClips())
+   {
       DrawClipWaveform(context, track, clip.get(), rect,
-                       dB, muted);
-
+         dB, muted, clip.get() == selectedClip);
+   }
    DrawBoldBoundaries( context, track, rect );
 
    const auto drawSliders = artist->drawSliders;
@@ -1028,13 +1036,17 @@ void WaveformView::Draw(
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
       
-      DoDraw(context, wt.get(), rect, muted);
+      auto waveTrackView = GetWaveTrackView().lock();
+      wxASSERT(waveTrackView.use_count());
+
+      auto selectedClip = waveTrackView->GetSelectedClip().lock();
+      DoDraw(context, wt.get(), selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   CommonTrackView::Draw( context, rect, iPass );
+   WaveTrackSubView::Draw( context, rect, iPass );
 }
 
 static const WaveTrackSubViews::RegisteredFactory key{
