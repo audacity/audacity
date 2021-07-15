@@ -144,12 +144,12 @@ torch::Tensor EffectDeepLearning::BuildMultichannelTensor(WaveTrack *leader, flo
          BuildMonoTensor(channel, buffer, start, len).clone()
       );
 
-   return torch::stack(channelStack);
+   return torch::cat(channelStack, 0);
 }
 
-torch::Tensor EffectDeepLearning::ForwardPass(torch::Tensor input)
+torch::jit::IValue EffectDeepLearning::ForwardPass(torch::Tensor input)
 {
-   torch::Tensor output;
+   torch::jit::IValue output;
    try
    {
       output = mModel->Forward(input);
@@ -160,8 +160,6 @@ torch::Tensor EffectDeepLearning::ForwardPass(torch::Tensor input)
       Effect::MessageBox(XO("An error occurred during the forward pass"),
          wxOK | wxICON_ERROR
       );
-
-      output = torch::zeros_like(input);
    }
    return output;
 }

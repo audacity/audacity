@@ -21,6 +21,7 @@ TODO: add a more thorough description
 
 #include "Labeler.h"
 
+#include <cstddef>
 #include <string>
 #include <wx/stattext.h>
 
@@ -75,15 +76,11 @@ EffectType EffectLabeler::GetType() { return EffectTypeProcess; }
 bool EffectLabeler::ProcessOne(WaveTrack *leader, double tStart, double tEnd) {
   if (leader == NULL)
     return false;
-  // create a label track for the labeler to write labels to
-  wxString labelTrackName(leader->GetName());
 
-  std::cout << "DEBUG INFO HERE \n";
-  std::cout << labelTrackName.std::to_string();
-  AddAnalysisTrack(labelTrackName);
+  wxString labelTrackName(leader->GetName() + " Labels");
+  std::shared_ptr<AddedAnalysisTrack> labelTrack =
+      AddAnalysisTrack(labelTrackName);
 
-  // keep track of the sample format and rate,
-  // we want to convert all output tracks to this
   sampleFormat origFmt = leader->GetSampleFormat();
   int origRate = leader->GetRate();
 
@@ -101,30 +98,28 @@ bool EffectLabeler::ProcessOne(WaveTrack *leader, double tStart, double tEnd) {
     torch::Tensor input =
         BuildMultichannelTensor(leader, buffer.get(), samplePos, blockSize)
             .sum(0, true, torch::kFloat);
-
     // resample!
     input = mModel->Resample(input, origRate, mModel->GetSampleRate());
 
     // forward pass!
-    torch::Tensor output = ForwardPass(input);
+    torch::jit::IValue output = ForwardPass(input);
 
-    // resample back
-    output = mModel->Resample(output, mModel->GetSampleRate(), origRate);
+    // split forward pass output into output tensor and timestamps
+    auto [modelOutput, timestamps] = mModel->ToTimestamps(output);
 
     // write the block's label to the label track
     double blockStart = leader->LongSamplesToTime(samplePos);
     sampleCount blockEndSamples = samplePos + (sampleCount)blockSize;
     double blockEnd = leader->LongSamplesToTime(blockEndSamples);
 
-
-    //TensorToLabelTrack(output, sourceTracks[idx], blockStart, blockEnd);
+    TensorToLabelTrack(modelOutput, labelTrack, blockStart, blockEnd, timestamps);
 
     // Update the Progress meter
     double tPos = leader->LongSamplesToTime(samplePos);
     if (TrackProgress(mCurrentTrackNum, (tPos - tStart) / (tEnd - tStart)))
       return false;
   }
-
+  labelTrack->Commit();
   return true;
 }
 
@@ -230,10 +225,17 @@ void EffectLabeler::OnLoadButton(wxCommandEvent &WXUNUSED(event)) {
   // attempt load deep learning model
   // TODO: what's the fallback when the model doesn't load?
   wxString descStr;
-  if (!mModel->Load(path.ToStdString()))
+  if (!mModel->Load(path.ToStdString())) {
     descStr = wxString("error loading model :(");
-  else
+  } else {
     descStr = wxString("loaded model succesfully!");
+    std::vector<std::string> classList = mModel->GetLabels();
+
+    for (size_t i = 0; i < classList.size(); i++) {
+      std::cout << classList[i];
+      mClasses.emplace_back(wxString(classList[i]));
+    }
+  }
 
   mDescription->SetLabel(descStr);
   mDescription->SetName(descStr);
@@ -241,21 +243,24 @@ void EffectLabeler::OnLoadButton(wxCommandEvent &WXUNUSED(event)) {
   UpdateMetadataFields();
 }
 
-// void EffectLabeler::TensorToLabelTrack(torch::Tensor output, LabelTrack track,
-//                                        double tStart, double tEnd) {
-//   // TODO: exception: input audio should be shape (1, samples)
-//   if (!(output.size(0) == 1))
-//     throw std::exception();
+void EffectLabeler::TensorToLabelTrack(
+    torch::Tensor output, std::shared_ptr<AddedAnalysisTrack> labelTrack,
+    double tStart, double tEnd, torch::Tensor timestamps) {
+  // TODO: add an internal check to make sure dim-1 of output nad timestamps
+  // match
+  timestamps += tStart;
+  for (int i = 0; i < output.size(0); i++) {
+    double tStartCurrLabel = timestamps[i][0].item().to<double>();
+    double tEndCurrLabel = (timestamps[i][1].item().to<double>() > tEnd)
+                               ? tEnd
+                               : timestamps[i][1].item().to<double>();
 
-//   // get the data pointer
-//   float *data = output.contiguous().data_ptr<float>();
-//   size_t outputLen = output.size(-1);
+    // finding the corresponding class for times
+    torch::Tensor currentProbits = output[i];
+    wxString classLabel =
+        mClasses[torch::argmax(currentProbits).item().to<int>()];
 
-//   // modify the label track at tStart to tEnd with the label that's predicted by the model
-//   try {
-    
-//   } catch (const std::exception &e) {
-//     Effect::MessageBox(XO("Error copying tensor data to output track"),
-//                        wxOK | wxICON_ERROR);
-//   }
-// }
+    SelectedRegion blockRegion = SelectedRegion(tStartCurrLabel, tEndCurrLabel);
+    labelTrack->get()->AddLabel(blockRegion, classLabel);
+  }
+}

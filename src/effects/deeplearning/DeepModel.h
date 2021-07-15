@@ -21,8 +21,7 @@ TODO: add a more thorough description
 */
 /*******************************************************************/
 
-#ifndef __AUDACITY_EFFECT_DEEPMODEL__
-#define __AUDACITY_EFFECT_DEEPMODEL__
+#pragma once
 
 #include <torch/script.h>
 #include <torch/torch.h>
@@ -30,6 +29,8 @@ TODO: add a more thorough description
 #include <rapidjson/document.h>
 #include <rapidjson/schema.h>
 #include "rapidjson/prettywriter.h" 
+
+using TensorWithTimestamps = std::tuple<torch::Tensor, torch::Tensor>;
 
 class DeepModel
 {
@@ -62,7 +63,8 @@ public:
    int GetSampleRate(){return mSampleRate;}
 
    torch::Tensor Resample(const torch::Tensor &waveform, int sampleRateIn, int sampleRateOut);
-   torch::Tensor Forward(const torch::Tensor &waveform);
+   torch::jit::IValue Forward(const torch::Tensor &waveform);
+   torch::Tensor ToTensor(const torch::jit::IValue &output);
+   TensorWithTimestamps ToTimestamps(const torch::jit::IValue &output);
 };
 
-#endif

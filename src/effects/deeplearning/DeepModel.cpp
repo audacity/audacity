@@ -4,6 +4,7 @@
 #include <torch/torch.h>
 
 #include <rapidjson/document.h>
+#include <tuple>
 #include "../../WaveTrack.h"
 #include "../../WaveClip.h"
 
@@ -98,10 +99,7 @@ std::string DeepModel::QueryMetadata(const char *key)
    return std::string(output);
 }
 
-std::vector<std::string> DeepModel::GetLabels()
-{
-   assert(mMetadata.HasMember("n_src"));
-   assert(mMetadata["n_src"].GetInt() == mMetadata["labels"].Size());
+std::vector<std::string> DeepModel::GetLabels(){
 
    // iterate through the labels and collect
    std::vector<std::string> labels;
@@ -132,7 +130,7 @@ torch::Tensor DeepModel::Resample(const torch::Tensor &waveform, int sampleRateI
 }
 
 // forward pass through the model!
-torch::Tensor DeepModel::Forward(const torch::Tensor &waveform)
+torch::jit::IValue DeepModel::Forward(const torch::Tensor &waveform)
 {
    torch::NoGradGuard no_grad;
    if (!mLoaded) throw std::exception(); //TODO
@@ -144,10 +142,25 @@ torch::Tensor DeepModel::Forward(const torch::Tensor &waveform)
    std::vector<torch::jit::IValue> inputs = {waveform};
 
    // forward pass!
-   auto tensorOutput = mModel.forward(inputs).toTensor();
-
-   // make tensor contiguous to return to track
-   tensorOutput = tensorOutput.contiguous();
-
+   torch::jit::IValue tensorOutput = mModel.forward(inputs);
+   
    return tensorOutput;
+}
+
+torch::Tensor DeepModel::ToTensor(const torch::jit::IValue &output)
+{
+   return output.toTensor().contiguous();
+}
+
+// forward pass through the model!
+TensorWithTimestamps DeepModel::ToTimestamps(const torch::jit::IValue &output)
+{
+   // forward pass!
+   auto tupleOutput = output.toTuple();
+
+   // seperate the tuple into its components
+   torch::Tensor modelOutput = tupleOutput->elements()[0].toTensor();
+   torch::Tensor timestamps = tupleOutput->elements()[1].toTensor();
+
+   return TensorWithTimestamps(modelOutput, timestamps);
 }

@@ -117,8 +117,9 @@ bool EffectSourceSep::ProcessOne(WaveTrack *leader,
       input = mModel->Resample(input, origRate, mModel->GetSampleRate());
 
       // forward pass!
-      torch::Tensor output = ForwardPass(input);
-      
+      torch::jit::IValue temp = ForwardPass(input);
+      torch::Tensor output = mModel->ToTensor(output);
+
       // resample back
       output = mModel->Resample(output, mModel->GetSampleRate(), origRate);
 

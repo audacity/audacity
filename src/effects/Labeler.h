@@ -11,13 +11,19 @@
 ******************************************************************/
 /**
 
-\class Labeler
-\brief Labeler is an effect for labeling audio components in a track
+\file Labeler
+\brief Labeler is an effect for labeling audio components in a track. 
 
-TODO: add more desc
+******************************************************************/
+/**
 
-*/
-/*******************************************************************/
+
+\class EffectLabeler
+\breif A labeler which uses a deep learning model to output probits and
+time sereies data to add labels to an audio track.
+
+
+//*******************************************************************/
 
 #ifndef __AUDACITY_EFFECT_DEEPLEARNING__
 #define __AUDACITY_EFFECT_DEEPLEARNING__
@@ -48,21 +54,12 @@ public:
 
    EffectType GetType() override;
 
-   // EffectClientInterface implementation
-
-   // TODO: may not need these
-   // bool DefineParams(ShuttleParams &S) override;
-   // bool GetAutomationParameters(CommandParameters &parms) override;
-   // bool SetAutomationParameters(CommandParameters &parms) override;
-
    // Effect implementation
    bool ProcessOne(WaveTrack * track, double tStart, double tEnd) override;
 
    void PopulateOrExchange(ShuttleGui &S) override;
    void PopulateMetadata(ShuttleGui &S);
    void AddMetadataEntry(ShuttleGui &S, std::string desc, std::string key);
-   // bool TransferDataToWindow() override;
-   // bool TransferDataFromWindow() override;
 
 private:
    // handlers
@@ -77,11 +74,12 @@ private:
 
    wxButton *mLoadModelBtn;
    wxStaticText *mDescription;
+   std::vector<wxString> mClasses;
 
    std::map<std::string, wxStaticText*> mMetadataFields;
    void UpdateMetadataFields();
-   void TensorToLabelTrack(torch::Tensor output, WaveTrack::Holder track, 
-                                   double tStart, double tEnd);
+   void TensorToLabelTrack(torch::Tensor output, std::shared_ptr<AddedAnalysisTrack> labelTrack, 
+                                   double tStart, double tEnd, torch::Tensor timestamps);
    DECLARE_EVENT_TABLE()
 };
 

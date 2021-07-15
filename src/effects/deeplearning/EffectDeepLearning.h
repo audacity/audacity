@@ -58,7 +58,7 @@ protected:
                                          sampleCount start, size_t len);
 
    // wraps the forward pass in an exception
-   torch::Tensor ForwardPass(torch::Tensor input); 
+   torch::jit::IValue ForwardPass(torch::Tensor input); 
 
    // writes an output tensor to a track
    // tensor should be shape (1, samples)
