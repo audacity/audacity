@@ -235,7 +235,9 @@ struct AUDACITY_DLL_API ClipMoveState {
 
    std::shared_ptr<Track> mCapturedTrack;
 
+   bool initialized{ false };
    bool movingSelection {};
+   bool wasMoved{ false };
    double hSlideAmount {};
    ShifterMap shifters;
    wxInt64 snapLeft { -1 }, snapRight { -1 };
@@ -244,6 +246,8 @@ struct AUDACITY_DLL_API ClipMoveState {
 
    void clear()
    {
+      initialized = false;
+      wasMoved = false;
       movingSelection = false;
       hSlideAmount = 0;
       shifters.clear();
@@ -252,7 +256,7 @@ struct AUDACITY_DLL_API ClipMoveState {
    }
 };
 
-class AUDACITY_DLL_API TimeShiftHandle final : public UIHandle
+class AUDACITY_DLL_API TimeShiftHandle : public UIHandle
 {
    TimeShiftHandle(const TimeShiftHandle&) = delete;
    static HitTestPreview HitPreview
@@ -265,7 +269,6 @@ public:
    TimeShiftHandle &operator=(TimeShiftHandle&&) = default;
 
    bool IsGripHit() const { return mGripHit; }
-   std::shared_ptr<Track> GetTrack() const = delete;
 
    // Try to move clips from one track to another, before also moving
    // by some horizontal amount, which may be slightly adjusted to fit the
@@ -305,6 +308,12 @@ public:
 
    bool StopsOnKeystroke() override { return true; }
 
+   bool Clicked() const;
+
+protected:
+   std::shared_ptr<Track> GetTrack() const;
+   //There were attempt to move clip/track horizontally, or to move it vertically
+   bool WasMoved() const;
 private:
    // TrackPanelDrawable implementation
    void Draw(
