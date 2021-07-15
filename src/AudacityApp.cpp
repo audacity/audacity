@@ -2236,16 +2236,16 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
+#ifdef HAS_NETWORKING
+   audacity::network_manager::NetworkManager::GetInstance().Terminate();
+#endif
+
    AudioIO::Deinit();
 
    MenuTable::DestroyRegistry();
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
-
-#ifdef HAS_NETWORKING
-   audacity::network_manager::NetworkManager::GetInstance().Terminate();
-#endif
 
    return 0;
 }
