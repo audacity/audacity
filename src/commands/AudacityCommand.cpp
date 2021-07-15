@@ -69,7 +69,6 @@ AudacityCommand::AudacityCommand()
    mProgress = NULL;
    mUIParent = NULL;
    mUIDialog = NULL;
-   mUIDebug = false;
    mIsBatch = false;
    mNeedsInit = true;
 }

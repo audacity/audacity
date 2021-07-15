@@ -1006,9 +1006,8 @@ bool EffectUIHost::Initialize()
             this->SetAcceleratorTable(accel);
          }
 
-         if (mEffect.mUIDebug) {
+         if (mEffect.EnablesDebug())
             buttons |= eDebugButton;
-         }
 
          S.AddStandardButtons(buttons, bar);
       }

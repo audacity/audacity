@@ -291,7 +291,6 @@ protected:
    virtual bool TransferDataFromWindow() /* not override */;
    virtual bool EnableApply(bool enable = true);
    virtual bool EnablePreview(bool enable = true);
-   virtual void EnableDebug(bool enable = true);
 
    // No more virtuals!
 
@@ -484,8 +483,6 @@ private:
    NumericFormatSymbol mDurationFormat;
 
    bool mIsPreview;
-
-   bool mUIDebug;
 
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;

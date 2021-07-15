@@ -9,6 +9,11 @@
 
 EffectDefinitionInterface::~EffectDefinitionInterface() = default;
 
+bool EffectDefinitionInterface::EnablesDebug()
+{
+   return false;
+}
+
 EffectClientInterface::~EffectClientInterface() = default;
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

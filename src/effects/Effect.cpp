@@ -108,8 +108,6 @@ Effect::Effect()
    mBlockSize = 0;
    mNumChannels = 0;
 
-   mUIDebug = false;
-
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
@@ -1858,11 +1856,6 @@ bool Effect::EnablePreview(bool enable)
    }
 
    return enable;
-}
-
-void Effect::EnableDebug(bool enable)
-{
-   mUIDebug = enable;
 }
 
 void Effect::SetLinearEffectFlag(bool linearEffectFlag)

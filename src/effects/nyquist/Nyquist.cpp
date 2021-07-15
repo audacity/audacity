@@ -1071,8 +1071,11 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
    {
       BuildEffectWindow(S);
    }
+}
 
-   EnableDebug(mDebugButton);
+bool NyquistEffect::EnablesDebug()
+{
+   return mDebugButton;
 }
 
 bool NyquistEffect::TransferDataToWindow()

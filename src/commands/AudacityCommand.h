@@ -130,7 +130,6 @@ protected:
 
 private:
    bool mIsBatch;
-   bool mUIDebug;
    bool mNeedsInit;
 };
 

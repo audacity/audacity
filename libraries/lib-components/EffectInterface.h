@@ -98,6 +98,9 @@ public:
 
    // Can the effect be used without the UI.
    virtual bool SupportsAutomation() = 0;
+
+   //! Whether the effect dialog should have a Debug button; default, always false.
+   virtual bool EnablesDebug();
 };
 
 class wxDialog;

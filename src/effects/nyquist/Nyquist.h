@@ -89,6 +89,7 @@ public:
    EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
+   bool EnablesDebug() override;
 
    // EffectClientInterface implementation
 
