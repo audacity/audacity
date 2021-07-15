@@ -63,7 +63,8 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
    //      // WXMAC doesn't support wxFRAME_FLOAT_ON_PARENT, so we do
    //      SetWindowClass((WindowRef) MacGetWindowRef(), kFloatingWindowClass);
    //   #endif
-   mProject = parent;
+   auto pProject = parent->shared_from_this();
+   mProject = pProject;
 
    SetWindowTitle();
    auto titleChanged = [&](wxCommandEvent &evt)
@@ -135,7 +136,7 @@ LyricsWindow::LyricsWindow(AudacityProject *parent)
    //}
 
    // Events from the project don't propagate directly to this other frame, so...
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
+   pProject->Bind(EVT_TRACK_PANEL_TIMER,
       &LyricsWindow::OnTimer,
       this);
    Center();
@@ -158,16 +159,18 @@ void LyricsWindow::OnStyle_Highlight(wxCommandEvent & WXUNUSED(event))
 
 void LyricsWindow::OnTimer(wxCommandEvent &event)
 {
-   if (ProjectAudioIO::Get( *mProject ).IsAudioActive())
-   {
-      auto gAudioIO = AudioIO::Get();
-      GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
-   }
-   else
-   {
-      // Reset lyrics display.
-      const auto &selectedRegion = ViewInfo::Get( *mProject ).selectedRegion;
-      GetLyricsPanel()->Update(selectedRegion.t0());
+   if (auto pProject = mProject.lock()) {
+      if (ProjectAudioIO::Get( *pProject ).IsAudioActive())
+      {
+         auto gAudioIO = AudioIO::Get();
+         GetLyricsPanel()->Update(gAudioIO->GetStreamTime());
+      }
+      else
+      {
+         // Reset lyrics display.
+         const auto &selectedRegion = ViewInfo::Get( *pProject ).selectedRegion;
+         GetLyricsPanel()->Update(selectedRegion.t0());
+      }
    }
 
    // Let other listeners get the notification
@@ -176,10 +179,11 @@ void LyricsWindow::OnTimer(wxCommandEvent &event)
 
 void LyricsWindow::SetWindowTitle()
 {
-   wxString name = mProject->GetProjectName();
-   if (!name.empty())
-   {
-      name.Prepend(wxT(" - "));
+   wxString name;
+   if (auto pProject = mProject.lock()) {
+      name = pProject->GetProjectName();
+      if (!name.empty())
+         name.Prepend(wxT(" - "));
    }
 
    SetTitle(AudacityKaraokeTitle.Format(name).Translation());
