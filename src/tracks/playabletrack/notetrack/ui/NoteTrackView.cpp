@@ -27,6 +27,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ViewInfo.h"
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
+#include "NoteTrackAffordanceControls.h"
 
 #include <wx/dc.h>
 
@@ -74,6 +75,11 @@ std::shared_ptr<TrackVRulerControls> NoteTrackView::DoGetVRulerControls()
 
 #define TIME_TO_X(t) (zoomInfo.TimeToPosition((t), rect.x))
 #define X_TO_TIME(xx) (zoomInfo.PositionToTime((xx), rect.x))
+
+std::shared_ptr<CommonTrackCell> NoteTrackView::DoGetAffordanceControls()
+{
+   return std::make_shared<NoteTrackAffordanceControls>(DoFindTrack());
+}
 
 namespace {
 
@@ -352,7 +358,8 @@ window and draw out-of-bounds notes here instead.
 void DrawNoteTrack(TrackPanelDrawingContext &context,
                                 const NoteTrack *track,
                                 const wxRect & rect,
-                                bool muted)
+                                bool muted,
+                                bool selected)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -377,11 +384,6 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    // out-of-bounds notes
    int numPitches = (rect.height) / data.GetPitchHeight(1);
    if (numPitches < 0) numPitches = 0; // cannot be negative
-
-#ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
-   TrackArt::DrawBackgroundWithSelection(context, rect, track,
-         AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
-#endif
 
    // Background comes in 4 colors, that are now themed.
    //   214, 214,214 -- unselected white keys
@@ -704,6 +706,14 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
       TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
    }
 
+   //draw clip edges
+   {
+      int left = TIME_TO_X(track->GetOffset());
+      int right = TIME_TO_X(track->GetOffset() + track->GetSeq().get_real_dur());
+
+      TrackArt::DrawClipEdges(dc, wxRect(left, rect.GetTop(), right - left + 1, rect.GetHeight()), selected);
+   }
+
    dc.DestroyClippingRegion();
    SonifyEndNoteForeground();
 }
@@ -723,7 +733,17 @@ void NoteTrackView::Draw(
       const auto hasSolo = artist->hasSolo;
       muted = (hasSolo || nt->GetMute()) && !nt->GetSolo();
 #endif
-      DrawNoteTrack( context, nt.get(), rect, muted );
+
+#ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
+      TrackArt::DrawBackgroundWithSelection(context, rect, nt.get(), AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
+#endif
+      bool selected{ false };
+      if (auto affordance = std::dynamic_pointer_cast<NoteTrackAffordanceControls>(GetAffordanceControls()))
+      {
+         selected = affordance->IsSelected();
+      }
+
+      DrawNoteTrack(context, nt.get(), rect, muted, selected);
    }
    CommonTrackView::Draw( context, rect, iPass );
 }
