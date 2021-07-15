@@ -475,7 +475,9 @@ void KeyConfigPrefs::OnShow(wxShowEvent & event)
 {
    event.Skip();
 
-   if (event.IsShown())
+   // This is required to prevent a crash if Preferences 
+   // were opened without a project.
+   if (event.IsShown() && mView != nullptr)
    {
       mView->Refresh();
    }

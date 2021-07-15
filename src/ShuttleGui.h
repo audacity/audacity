@@ -256,7 +256,7 @@ public:
    void AddPrompt(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddUnits(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
-   wxWindow * AddWindow(wxWindow * pWindow);
+   wxWindow * AddWindow(wxWindow* pWindow, int PositionFlags = wxALIGN_CENTRE);
    wxSlider * AddSlider(
       const TranslatableString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const TranslatableString &Prompt, int pos, int Max);
@@ -348,10 +348,14 @@ public:
 //   and create the appropriate widget.
    void StartHorizontalLay(int PositionFlags=wxALIGN_CENTRE, int iProp=1);
    void EndHorizontalLay();
+
    void StartVerticalLay(int iProp=1);
    void StartVerticalLay(int PositionFlags, int iProp);
-
    void EndVerticalLay();
+
+   void StartWrapLay(int PositionFlags=wxEXPAND, int iProp = 0);
+   void EndWrapLay();
+
    wxScrolledWindow * StartScroller(int iStyle=0);
    void EndScroller();
    wxPanel * StartPanel(int iStyle=0);
@@ -483,6 +487,7 @@ public:
       const int min);
 //-- End of variants.
    void SetBorder( int Border ) {miBorder = Border;};
+   int GetBorder() const noexcept;
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );

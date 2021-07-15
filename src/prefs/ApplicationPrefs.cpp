@@ -19,9 +19,12 @@
 #include "update/UpdateManager.h"
 
 #include <wx/defs.h>
+#include <wx/hyperlink.h>
 
 #include "../Prefs.h"
 #include "../ShuttleGui.h"
+
+#include "ui/AccessibleLinksFormatter.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -68,10 +71,34 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   S.StartStatic(XO("Update Audacity"));
+   /* i18n-hint: Title for the update notifications panel in the preferences dialog. */
+   S.StartStatic(XO("Update notifications"));
    {
-      S.TieCheckBox(XO("&Check for Updates"), DefaultUpdatesCheckingFlag);
+      S.TieCheckBox(
+         /* i18n-hint: Check-box title that configures periodic updates checking. */
+         XXC("&Check for updates", "application preferences"),
+         DefaultUpdatesCheckingFlag);
+
+      S.StartVerticalLay();
+      {
+         S.AddFixedText(XO(
+            "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."),
+            false, 470);
+
+         /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+         AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
+
+         privacyPolicy.FormatLink(
+            /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
+            wxT("%s"), XO("our Privacy Policy"),
+            "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+         privacyPolicy.Populate(S);
+      }
+
+      S.EndVerticalLay();
    }
+
    S.EndStatic();
    S.EndScroller();
 }
