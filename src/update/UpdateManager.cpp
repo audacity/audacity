@@ -8,7 +8,9 @@
  **********************************************************************/
 
 #include "UpdateManager.h"
+
 #include "UpdatePopupDialog.h"
+#include "UpdateNoticeDialog.h"
 
 #include "AudioIO.h"
 #include "NetworkManager.h"
@@ -25,6 +27,9 @@
 #include <cstdint>
 
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
+
+static BoolSetting
+   prefUpdatesNoticeShown(wxT("/Update/UpdateNoticeShown"), false);
 
 
 using Clock = std::chrono::system_clock;
@@ -51,10 +56,27 @@ void UpdateManager::Start()
     auto& instance = GetInstance();
 
     static std::once_flag flag;
+
     std::call_once(flag, [&instance] {
         instance.mTimer.SetOwner(&instance, ID_TIMER);
         instance.mTimer.StartOnce(1);
         });
+
+    // Show the dialog only once. 
+    if (!prefUpdatesNoticeShown.Read())
+    {
+       // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
+       // action, so check, if the updates were previously disabled as well.
+       if (DefaultUpdatesCheckingFlag.Read())
+       {
+          UpdateNoticeDialog notice(nullptr);
+
+          notice.ShowModal();
+       }
+
+       prefUpdatesNoticeShown.Write(true);
+       gPrefs->Flush();
+    }
 }
 
 VersionPatch UpdateManager::GetVersionPatch() const
