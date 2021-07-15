@@ -88,6 +88,7 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
             AccessibleLinksFormatter preferencesMessage(thirdParagraph);
             
             preferencesMessage.FormatLink(
+               // i18n-hint: a page in the Preferences dialog; use same name
                wxT("%s"), XO("Preferences > Application"), [this]() {
                   GlobalPrefsDialog dialog(this /* parent */, nullptr);
 

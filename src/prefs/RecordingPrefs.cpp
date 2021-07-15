@@ -41,7 +41,8 @@ BEGIN_EVENT_TABLE(RecordingPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, XO("Recording")) // XC("Recording", "preference")
+// i18n-hint: modifier as in "Recording preferences", not progressive verb
+:  PrefsPanel(parent, winid, XC("Recording", "preference"))
 {
    gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &mUseCustomTrackName, false);
    mOldNameChoice = mUseCustomTrackName;

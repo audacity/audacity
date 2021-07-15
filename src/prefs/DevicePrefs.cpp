@@ -162,8 +162,8 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   // XC("Recording", "preference")
-   S.StartStatic(XO("Recording"));
+   // i18n-hint: modifier as in "Recording preferences", not progressive verb
+   S.StartStatic(XC("Recording", "preference"));
    {
       S.StartMultiColumn(2);
       {
