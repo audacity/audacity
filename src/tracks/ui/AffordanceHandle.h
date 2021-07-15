@@ -19,6 +19,7 @@ public:
  
     static UIHandlePtr HitAnywhere(std::weak_ptr<AffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack);
 
+    void Enter(bool forward, AudacityProject* pProject) override;
     HitTestPreview Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject) override;
 
     AffordanceHandle(const std::shared_ptr<Track>& track);

@@ -51,6 +51,12 @@ HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe,
     };
 }
 
+void AffordanceHandle::Enter(bool forward, AudacityProject* pProject)
+{
+    SetChangeHighlight(RefreshCode::RefreshCell | RefreshCode::RefreshLatestCell);
+    TimeShiftHandle::Enter(forward, pProject);
+}
+
 HitTestPreview AffordanceHandle::Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject)
 {
     const bool unsafe = ProjectAudioIO::Get(*pProject).IsAudioActive();
@@ -60,7 +66,6 @@ HitTestPreview AffordanceHandle::Preview(const TrackPanelMouseState& mouseState,
 AffordanceHandle::AffordanceHandle(const std::shared_ptr<Track>& track)
     : TimeShiftHandle(track, false)
 {
-    SetChangeHighlight(RefreshCode::RefreshCell | RefreshCode::RefreshLatestCell);
 }
 
 UIHandle::Result AffordanceHandle::Click(const TrackPanelMouseEvent& evt, AudacityProject* pProject)
