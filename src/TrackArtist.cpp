@@ -56,6 +56,9 @@ audio tracks.
 
 #include <wx/dc.h>
 
+//Thickness of the clip frame outline, shown when clip is dragged
+static constexpr int ClipSelectionStrokeSize{ 1 };//px
+
 TrackArtist::TrackArtist( TrackPanel *parent_ )
    : parent( parent_ )
 {
@@ -260,6 +263,60 @@ void TrackArtist::UpdatePrefs()
    SetColours(0);
 }
 
+void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight, bool selected)
+{
+   if (selected)
+   {
+      wxRect strokeRect{
+         rect.x - ClipSelectionStrokeSize,
+         rect.y,
+         rect.width + ClipSelectionStrokeSize * 2,
+         rect.height + ClipFrameRadius };
+      dc.SetBrush(*wxTRANSPARENT_BRUSH);
+      AColor::UseThemeColour(&dc, clrClipAffordanceStroke, clrClipAffordanceStroke);
+      dc.DrawRoundedRectangle(strokeRect, ClipFrameRadius);
+   }
+   AColor::UseThemeColour(&dc, highlight ? clrClipAffordanceActiveBrush : clrClipAffordanceInactiveBrush, clrClipAffordanceOutlinePen);
+   dc.DrawRoundedRectangle(wxRect(rect.x, rect.y + ClipSelectionStrokeSize, rect.width, rect.height + ClipFrameRadius), ClipFrameRadius);
+}
+
+void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
+{
+   dc.SetBrush(*wxTRANSPARENT_BRUSH);
+   {
+      AColor::UseThemeColour(&dc, -1, clrClipAffordanceOutlinePen);
+      AColor::Line(dc,
+         clipRect.GetLeft(), clipRect.GetTop(),
+         clipRect.GetLeft(), clipRect.GetBottom());
+      AColor::Line(dc,
+         clipRect.GetRight(), clipRect.GetTop(),
+         clipRect.GetRight(), clipRect.GetBottom());
+   }
+   if(selected)
+   {
+      if constexpr (ClipSelectionStrokeSize == 1)
+      {
+         AColor::UseThemeColour(&dc, -1, clrClipAffordanceStroke);
+         AColor::Line(dc,
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetTop(),
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetBottom());
+         AColor::Line(dc,
+            clipRect.GetRight() + ClipSelectionStrokeSize, clipRect.GetTop(),
+            clipRect.GetRight() + ClipSelectionStrokeSize, clipRect.GetBottom());
+      }
+      else if constexpr (ClipSelectionStrokeSize > 1)
+      {
+         AColor::UseThemeColour(&dc, clrClipAffordanceStroke, clrClipAffordanceStroke);
+         dc.DrawRectangle(wxRect(
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetTop(),
+            ClipSelectionStrokeSize, clipRect.GetHeight()));
+         dc.DrawRectangle(wxRect(
+            clipRect.GetRight() + 1, clipRect.GetTop(),
+            ClipSelectionStrokeSize, clipRect.GetHeight()));
+      }
+   }
+}
+
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
 //
 // AWD: now that the tiles don't link together, we're drawing a tilted grid, at
@@ -459,6 +516,25 @@ void TrackArt::DrawBackgroundWithSelection(
       // Track not selected; just draw background
       dc->SetBrush(unselBrush);
       dc->DrawRectangle(rect);
+   }
+}
+
+void TrackArt::DrawCursor(TrackPanelDrawingContext& context,
+   const wxRect& rect, const Track* track)
+{
+   const auto dc = &context.dc;
+   const auto artist = TrackArtist::Get(context);
+   const auto& selectedRegion = *artist->pSelectedRegion;
+   
+   if (selectedRegion.isPoint())
+   {
+       const auto& zoomInfo = *artist->pZoomInfo;
+       auto x = static_cast<int>(zoomInfo.TimeToPosition(selectedRegion.t0(), rect.x));
+       if (x >= rect.GetLeft() && x <= rect.GetRight())
+       {
+          AColor::CursorColor(dc);
+          AColor::Line(*dc, x, rect.GetTop(), x, rect.GetBottom());
+       }
    }
 }
 
