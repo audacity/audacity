@@ -101,6 +101,7 @@ private:
 // See big pictorial comment in TrackPanel.cpp for explanation of these numbers
 enum : int {
    // constants related to y coordinates in the track panel
+   kAffordancesAreaHeight = 20,
    kTopInset = 4,
    kTopMargin = kTopInset + kBorderThickness,
    kBottomMargin = kShadowThickness + kBorderThickness,
