@@ -98,34 +98,11 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
    if (!onScreen)
       return;
 
-   auto &trackPanel = TrackPanel::Get( *mProject );
-   if (auto tp = dynamic_cast<TrackPanel*>(&panel)) {
-      wxASSERT(mIsMaster);
-      AColor::CursorColor(&dc);
-
-      // Draw cursor in all selected tracks
-      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
-         if (!pTrackView)
-            return;
-         const auto pTrack = pTrackView->FindTrack();
-         if (pTrack->GetSelected() ||
-             TrackFocus::Get( *mProject ).IsFocused( pTrack.get() ))
-         {
-            // AColor::Line includes both endpoints so use GetBottom()
-            AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
-            // ^^^ The whole point of this routine.
-
-         }
-      } );
-   }
-   else if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
+   if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
       dc.SetPen(*wxBLACK_PEN);
       // AColor::Line includes both endpoints so use GetBottom()
       auto rect = ruler->GetInnerRect();
       AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
    }
-   else
-      wxASSERT(false);
 }
