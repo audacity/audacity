@@ -1,8 +1,19 @@
+#include "FFT.h"
 #include "SpectralDataManager.h"
+#include "WaveTrack.h"
 
 SpectralDataManager::SpectralDataManager()= default;
 
 SpectralDataManager::~SpectralDataManager()= default;
+
+struct SpectralDataManager::Setting{
+   eWindowFunctions mInWindowType = eWinFuncHann;
+   eWindowFunctions mOutWindowType = eWinFuncHann;
+   size_t mWindowSize = 2048;
+   unsigned mStepsPerWindow = 4;
+   bool mLeadingPadding = true;
+   bool mTrailingPadding = true;
+};
 
 int SpectralDataManager::ProcessTracks(TrackList &tracks){
    int applyCount = 0;
@@ -104,6 +115,10 @@ bool SpectralDataManager::Worker::ApplyEffectToSelection() {
                int targetBin = static_cast<int>(dtargetBin);
                record.mRealFFTs[targetBin] = 0;
                record.mImagFFTs[targetBin] = 0;
+               record.mRealFFTs[targetBin - 1] = 0;
+               record.mImagFFTs[targetBin - 1] = 0;
+               record.mRealFFTs[targetBin + 1] = 0;
+               record.mImagFFTs[targetBin + 1] = 0;
             }
          }
       }

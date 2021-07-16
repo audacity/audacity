@@ -12,15 +12,6 @@ private:
    struct Setting;
 };
 
-struct SpectralDataManager::Setting{
-   eWindowFunctions mInWindowType = eWinFuncHann;
-   eWindowFunctions mOutWindowType = eWinFuncHann;
-   size_t mWindowSize = 2048;
-   unsigned mStepsPerWindow = 4;
-   bool mLeadingPadding = true;
-   bool mTrailingPadding = true;
-};
-
 class SpectralDataManager::Worker
       : public TrackSpectrumTransformer{
 public:
