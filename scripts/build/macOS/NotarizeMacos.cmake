@@ -2,7 +2,7 @@
 # Arguments:
 # APP_IDENTIFIER - app identifier
 # APP_LOCATION - the path to Audacity.app
-# DMG_LOCATION - the path to Audaicty dmg package
+# DMG_LOCATION - the path to Audacity dmg package
 # APPLE_NOTARIZATION_USER_NAME - notarization user name
 # APPLE_NOTARIZATION_PASSWORD - notarization password
 
