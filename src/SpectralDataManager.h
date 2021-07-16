@@ -2,6 +2,7 @@
 #include "./SpectrumTransformer.h"
 #include "./effects/Effect.h"
 #include "./tracks/playabletrack/wavetrack/ui/SpectrumView.h"
+#include "./tracks/ui/TrackView.h"
 
 class SpectralDataManager{
 public:

@@ -10,7 +10,7 @@ int SpectralDataManager::ProcessTracks(TrackList &tracks){
    Worker worker(setting);
 
    for ( auto wt : tracks.Any< WaveTrack >() ) {
-      auto &trackView = WaveTrackView::Get(*wt);
+      auto &trackView = TrackView::Get(*wt);
       if(auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&trackView)){
          for(const auto &subViewPtr : waveTrackViewPtr->GetAllSubViews()){
             // Iterate only the SpectrumView for spectral data
