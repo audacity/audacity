@@ -81,6 +81,8 @@ public:
 
    static WaveTrackView &Get( WaveTrack &track );
    static const WaveTrackView &Get( const WaveTrack &track );
+   static WaveTrackView *Find( WaveTrack *pTrack );
+   static const WaveTrackView *Find( const WaveTrack *pTrack );
 
    explicit
    WaveTrackView( const std::shared_ptr<Track> &pTrack );

@@ -778,6 +778,16 @@ const WaveTrackView &WaveTrackView::Get( const WaveTrack &track )
    return Get( const_cast<WaveTrack&>( track ) );
 }
 
+WaveTrackView *WaveTrackView::Find( WaveTrack *pTrack )
+{
+   return static_cast< WaveTrackView* >( TrackView::Find( pTrack ) );
+}
+
+const WaveTrackView *WaveTrackView::Find( const WaveTrack *pTrack )
+{
+   return Find( const_cast<WaveTrack*>( pTrack ) );
+}
+
 WaveTrackView::WaveTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {
