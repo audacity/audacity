@@ -455,8 +455,9 @@ private:
    }
    
    // Create NEW clip and add it to this track. Returns a pointer
-   // to the newly created clip.
-   WaveClip* CreateClip();
+   // to the newly created clip. Optionally initial offset may be
+   // provided
+   WaveClip* CreateClip(double offset = .0);
 
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
