@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-06-09 11:26+0000\n"
+"PO-Revision-Date: 2021-07-16 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "Language: pl\n"
@@ -851,7 +851,7 @@ msgstr "Ekstremalna obsługa zmiany wysokości i tempa"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr ""
+msgstr "Informacje prawne"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -861,24 +861,24 @@ msgstr "Licencja GPL"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "PRIVACY POLICY"
-msgstr ""
+msgstr "POLITYKA PRYWATNOŚCI"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr ""
+msgstr "Sprawdzanie aktualizacji aplikacji i raportowanie błędów wymagają dostępu do sieci. Te funkcje są opcjonalne."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
 #, fuzzy, c-format
 msgid "See %s for more info."
-msgstr "Wybierz jeden lub więcej plików"
+msgstr "Zobacz %s, aby uzyskać więcej informacji."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr ""
+msgstr "naszą Politykę Prywatności"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -2664,7 +2664,7 @@ msgstr "Podaj nową nazwę pliku:"
 #: src/FileNames.cpp
 #, fuzzy, c-format
 msgid "Directory %s does not have write permissions"
-msgstr "Katalog %s nie istnieje. Utworzyć go?"
+msgstr "Katalog %s nie ma uprawnień do zapisu"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -11290,7 +11290,7 @@ msgstr "Średnia, 145-185 kbps"
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane"
-msgstr "Obłąkana"
+msgstr "Najlepsza"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
@@ -14798,23 +14798,23 @@ msgstr "%s %2.0f%% ukończone. Kliknij, aby zmienić punkt centralny."
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgid "Preferences for Application"
-msgstr "Ustawienia jakości"
+msgstr "Ustawienia aplikacji"
 
 #. i18n-hint: Title for the update notifications panel in the preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Powiadomienia o aktualizacjach"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "&Sprawdź aktualizacje..."
+msgstr "&Sprawdź aktualizacje"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Sprawdzanie aktualizacji aplikacji wymaga dostępu do sieci. Aby chronić Twoją prywatność, Audacity nie przechowuje żadnych danych osobowych."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15028,7 +15028,7 @@ msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do zrestartowania pr
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
-msgstr "Uaktualnienie katalogu tymczasowego"
+msgstr "Aktualizacja katalogu tymczasowego"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
@@ -17984,31 +17984,31 @@ msgstr "Nie można otworzyć linku pobierania Audacity."
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "Sprawdzanie aktualizacji aplikacji"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr ""
+msgstr "Aby być na bieżąco, otrzymasz powiadomienie w aplikacji za każdym razem, gdy będzie dostępna do pobrania nowa wersja Audacity."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr ""
+msgstr "Aby chronić Twoją prywatność, Audacity nie gromadzi żadnych danych osobowych. Jednak sprawdzanie aktualizacji aplikacji wymaga dostępu do sieci."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr ""
+msgstr "Sprawdzanie aktualizacji aplikacji możesz wyłączyć w dowolnym momencie w %s."
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
+msgstr "Aktualizacje aplikacji"
 
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/UpdateNoticeDialog.cpp
 #, fuzzy
 msgid "Preferences > Application"
-msgstr "Ustawienia jakości"
+msgstr "Ustawienia > Aplikacja"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
