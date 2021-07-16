@@ -179,8 +179,6 @@ void WaveTrack::Reinit(const WaveTrack &orig)
       else
          mpWaveformSettings.reset();
    }
-
-   this->SetOffset(orig.GetOffset());
 }
 
 void WaveTrack::Merge(const Track &orig)
@@ -2143,18 +2141,18 @@ Sequence* WaveTrack::GetSequenceAtTime(double time)
       return NULL;
 }
 
-WaveClip* WaveTrack::CreateClip()
+WaveClip* WaveTrack::CreateClip(double offset)
 {
-   mClips.push_back(std::make_unique<WaveClip>(mpFactory, mFormat, mRate, GetWaveColorIndex()));
-   return mClips.back().get();
+   mClips.emplace_back(std::make_shared<WaveClip>(mpFactory, mFormat, mRate, GetWaveColorIndex()));
+   auto clip = mClips.back().get();
+   clip->SetOffset(offset);
+   return clip;
 }
 
 WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.empty()) {
-      WaveClip *clip = CreateClip();
-      clip->SetOffset(mOffset);
-      return clip;
+      return CreateClip(mOffset);
    }
    else
       return mClips.back().get();
@@ -2164,9 +2162,7 @@ WaveClip* WaveTrack::NewestOrNewClip()
 WaveClip* WaveTrack::RightmostOrNewClip()
 {
    if (mClips.empty()) {
-      WaveClip *clip = CreateClip();
-      clip->SetOffset(mOffset);
-      return clip;
+      return CreateClip(mOffset);
    }
    else
    {
