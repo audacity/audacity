@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-06-07 08:17-0400\n"
-"PO-Revision-Date: 2021-06-09 11:26+0000\n"
+"PO-Revision-Date: 2021-07-15 07:24+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -11016,7 +11016,7 @@ msgstr "Średnia, 145-185 kbps"
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane"
-msgstr "Obłąkana"
+msgstr "Najlepsza"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
@@ -14632,7 +14632,7 @@ msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do zrestartowania pr
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
-msgstr "Uaktualnienie katalogu tymczasowego"
+msgstr "Aktualizacja katalogu tymczasowego"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
