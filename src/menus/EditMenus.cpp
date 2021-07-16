@@ -11,6 +11,7 @@
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
+#include "../SpectralDataManager.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../UndoManager.h"
@@ -24,6 +25,9 @@
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
+#include "../tracks/playabletrack/wavetrack/ui/SpectrumView.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
 // private helper classes and functions
 namespace {
@@ -135,6 +139,22 @@ namespace EditActions {
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
+void OnApply(const CommandContext &context){
+   auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+
+   int applyCount = SpectralDataManager::ProcessTracks(tracks);
+
+   if(applyCount){
+      trackPanel.Refresh(false);
+      AudacityMessageBox(XO("Effect applied to %d selection(s).").Format(applyCount));
+      ProjectHistory::Get( project ).PushState(
+            XO( "Applied effect to selection" ),
+            XO( "Applied effect to selection" ) );
+      ProjectHistory::Get( project ).ModifyState(true);
+   }
+}
 
 void OnUndo(const CommandContext &context)
 {
@@ -1030,6 +1050,10 @@ BaseItemSharedPtr EditMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Edit"), XXO("&Edit"),
       Section( "UndoRedo",
+#ifdef EXPERIMENTAL_BRUSH_TOOL
+         Command( wxT("Apply"), XXO("&Apply"), FN(OnApply),
+            AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Shift+Z") ),
+#endif
          Command( wxT("Undo"), XXO("&Undo"), FN(OnUndo),
             AudioIONotBusyFlag() | UndoAvailableFlag(), wxT("Ctrl+Z") ),
 

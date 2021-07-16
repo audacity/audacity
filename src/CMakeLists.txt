@@ -276,10 +276,14 @@ list( APPEND SOURCES
       Snap.h
       SoundActivatedRecord.cpp
       SoundActivatedRecord.h
+      SpectralDataManager.h
+      SpectralDataManager.cpp
       Spectrum.cpp
       Spectrum.h
       SpectrumAnalyst.cpp
       SpectrumAnalyst.h
+      SpectrumTransformer.cpp
+      SpectrumTransformer.h
       SplashDialog.cpp
       SplashDialog.h
       SqliteSampleBlock.cpp
@@ -863,6 +867,8 @@ list( APPEND SOURCES
       tracks/ui/AffordanceHandle.h
       tracks/ui/BackgroundCell.cpp
       tracks/ui/BackgroundCell.h
+      tracks/ui/BrushHandle.cpp
+      tracks/ui/BrushHandle.h
       tracks/ui/ButtonHandle.cpp
       tracks/ui/ButtonHandle.h
       tracks/ui/CommonTrackControls.cpp

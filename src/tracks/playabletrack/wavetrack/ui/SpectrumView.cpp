@@ -15,6 +15,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 
+#include "../../../ui/BrushHandle.h"
+
 #include "../../../../AColor.h"
 #include "../../../../Prefs.h"
 #include "../../../../NumberScale.h"
@@ -24,9 +26,13 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
+#include "../../../../ProjectSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
+
+class BrushHandle;
+class SpectralData;
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
@@ -34,6 +40,11 @@ static WaveTrackSubView::Type sType{
 };
 
 static WaveTrackSubViewType::RegisteredType reg{ sType };
+
+SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
+}
 
 SpectrumView::~SpectrumView() = default;
 
@@ -47,6 +58,17 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   std::vector<UIHandlePtr> results;
+
+#ifdef EXPERIMENTAL_BRUSH_TOOL
+   if(currentTool == ToolCodes::brushTool){
+      const auto result = BrushHandle::HitTest(mBrushHandle, state,
+                                               pProject, shared_from_this(),
+                                               mpSpectralData);
+      results.push_back(result);
+      return results;
+   }
+#endif
 
    return WaveTrackSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt
@@ -86,6 +108,19 @@ auto SpectrumView::SubViewType() const -> const Type &
 std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
 {
    return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
+}
+
+std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
+   return mpSpectralData;
+}
+
+void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
+   if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
+      pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
+      pDest->mpSpectralData->dataHistory = mpSpectralData->dataHistory;
+      pDest->mpSpectralData->dataBuffer = mpSpectralData->dataBuffer;
+      pDest->mpSpectralData->coordHistory = mpSpectralData->coordHistory;
+   }
 }
 
 namespace
@@ -169,11 +204,13 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
+
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
-                                   const wxRect & rect,
-                                   bool selected)
+                                   const wxRect &rect,
+                                   const std::shared_ptr<SpectralData> &mpSpectralData,
+                                   bool onBrushTool)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -529,8 +566,36 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-   for (int xx = 0; xx < mid.width; ++xx) {
 
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+   std::vector<std::pair<int, int>> selectedCoords;
+
+   mpSpectralData->dataHistory.push_back(mpSpectralData->dataBuffer);
+   for(const auto &spectralDataMap: mpSpectralData->dataHistory) {
+      for(const auto &spectralData: spectralDataMap){
+         double timePt = mpSpectralData->scToTimeDouble(spectralData.first);
+         int convertedX = zoomInfo.TimeToPosition(timePt, 0);
+
+         for(const wxInt64 &freqVal: spectralData.second){
+            const float p = numberScale.ValueToPosition(freqVal);
+            int convertedY = mid.height - wxInt64((1.0 - p) * rect.height);
+            selectedCoords.push_back(std::make_pair(convertedX, convertedY));
+         }
+      }
+   }
+   mpSpectralData->dataHistory.pop_back();
+//   std::sort( selectedCoords.begin(), selectedCoords.end(),
+//              []( const auto &p1, const auto &p2 ){
+//                 return ( p1.first < p2.first ||
+//                          ( !( p2.first > p1.first ) && p1.second < p2.second ) );
+//              } );
+//
+//   for(auto pairss: selectedCoords) {
+//      std::cout << pairss.first << ", " << pairss.second << std::endl;
+//   }
+//   auto coordIter = selectedCoords.begin();
+
+   for (int xx = 0; xx < mid.width; ++xx) {
       int correctedX = xx + leftOffset - hiddenLeftOffset;
 
       // in fisheye mode the time scale has changed, so the row values aren't cached
@@ -555,7 +620,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
       maybeSelected = maybeSelected || (xx == selectedX);
-
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
@@ -571,6 +635,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+//         if (coordIter != selectedCoords.end() && xx == coordIter->first && yy == coordIter->second) {
+//            selected =
+//                  ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
+//                                 (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+//            coordIter++;
+//         }
 
          const float value = uncached
             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
@@ -598,6 +668,39 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          data[px] = bv;
       } // each yy
    } // each xx
+   if(onBrushTool) {
+      for(std::pair<int, int> coord : selectedCoords) {
+         int xx = coord.first;
+         int correctedX = xx + leftOffset - hiddenLeftOffset;
+         int yy = coord.second;
+
+         float* uncached;
+         if (!zoomInfo.InFisheye(xx, -leftOffset)) {
+            uncached = 0;
+         }
+         else {
+            int specIndex = (xx - fisheyeLeft) * nBins;
+            wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
+            uncached = &specCache.freq[specIndex];
+         }
+         const float bin     = bins[yy];
+         const float nextBin = bins[yy+1];
+         auto selected =
+               ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
+                              (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+
+         const float value = uncached
+                             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
+                             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
+         unsigned char rv, gv, bv;
+         GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
+
+         int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
+         data[px++] = rv;
+         data[px++] = gv;
+         data[px] = bv;
+      }
+   }
 
    wxBitmap converted = wxBitmap(image);
 
@@ -631,8 +734,10 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
       context, rect, track, blankSelectedBrush, blankBrush );
 
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
-   for (const auto &clip: track->GetClips())
-      DrawClipSpectrum( context, cache, clip.get(), rect, clip.get() == selectedClip );
+   for (const auto &clip: track->GetClips()){
+      DrawClipSpectrum( context, cache, clip.get(), rect,
+                        mpSpectralData, true);
+   }
 
    DrawBoldBoundaries( context, track, rect );
 }

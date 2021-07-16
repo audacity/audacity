@@ -520,6 +520,35 @@ void ControlToolBar::SetStop()
    EnableDisableButtons();
 }
 
+#include "../SpectrumTransformer.h"
+namespace
+{
+
+auto BandPasser(size_t windowSize, double rate, double freqLo, double freqHi)
+   -> SpectrumTransformer::WindowProcessor
+{
+   auto bin = rate / windowSize;
+   size_t spectrumSize = (1 + windowSize / 2);
+   return [
+      spectrumSize,
+      mBinLo = size_t(freqLo < 0 ? 0 : floor(freqLo / bin)),
+      mBinHi = size_t(freqHi < 0 ? spectrumSize : ceil(freqHi / bin))
+   ](SpectrumTransformer &transformer){
+      SpectrumTransformer::Window &window = transformer.Latest();
+      if (0 < mBinLo)
+         window.mRealFFTs[0] = 0;
+      for (size_t ii = 1; ii < mBinLo; ++ii)
+         window.mRealFFTs[ii] = window.mImagFFTs[ii] = 0;
+      for (size_t ii = mBinHi; ii < spectrumSize - 1; ++ii)
+         window.mRealFFTs[ii] = window.mImagFFTs[ii] = 0;
+      if (mBinHi < spectrumSize)
+         window.mImagFFTs[0] = 0;
+      return true;
+   };
+}
+
+}
+
 void ControlToolBar::OnKeyEvent(wxKeyEvent & event)
 {
    // PRL: is this handler really ever reached?  Is the ControlToolBar ever
