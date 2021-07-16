@@ -6706,7 +6706,7 @@ msgstr "от (Гц)"
 
 #: src/effects/ChangePitch.cpp
 msgid "f&rom"
-msgstr "&от"
+msgstr "о&т"
 
 #: src/effects/ChangePitch.cpp
 msgid "to (Hz)"
