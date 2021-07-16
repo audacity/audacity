@@ -81,13 +81,13 @@ add_conan_lib(
       libjpeg-turbo:SIMD=False 
 )
 
-add_conan_lib(
-   libmp3lame
-   libmp3lame/3.100
-   REQUIRED
-   INTERFACE_NAME libmp3lame::libmp3lame
-   PKG_CONFIG "lame >= 3.100"
-)
+#add_conan_lib(
+#   libmp3lame
+#   libmp3lame/3.100
+#   REQUIRED
+#   INTERFACE_NAME libmp3lame::libmp3lame
+#   PKG_CONFIG "lame >= 3.100"
+#)
 
 add_conan_lib(
    libid3tag
@@ -98,12 +98,12 @@ add_conan_lib(
       libid3tag:zlib=${id3tag_zlib}
 )
 
-add_conan_lib(
-   libmad
-   libmad/0.15.2b@audacity/stable
-   OPTION_NAME libmad
-   PKG_CONFIG "mad >= 0.15.1b"
-)
+#add_conan_lib(
+#   libmad
+#   libmad/0.15.2b@audacity/stable
+#   OPTION_NAME libmad
+#   PKG_CONFIG "mad >= 0.15.1b"
+#)
 
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( curl_ssl "darwinssl" )

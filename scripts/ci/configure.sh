@@ -15,6 +15,8 @@ cmake_args=(
     -D audacity_has_updates_check=yes
     -D CMAKE_BUILD_TYPE="${AUDACITY_BUILD_TYPE}"
     -D CMAKE_INSTALL_PREFIX="${AUDACITY_INSTALL_PREFIX}"
+    -D CONAN_ARCH_LABEL="${CONAN_ARCH_LABEL}"
+    -A "${CMAKE_ARCH_LABEL}"
 )
 
 if [[ "${AUDACITY_CMAKE_GENERATOR}" == "Visual Studio"* ]]; then
@@ -22,11 +24,6 @@ if [[ "${AUDACITY_CMAKE_GENERATOR}" == "Visual Studio"* ]]; then
         # skip unneeded configurations
         -D CMAKE_CONFIGURATION_TYPES="${AUDACITY_BUILD_TYPE}"
     )
-    case "${AUDACITY_ARCH_LABEL}" in
-    32bit)  cmake_args+=( -A Win32 ) ;;
-    64bit)  cmake_args+=( -A x64 ) ;;
-    *)      echo >&2 "$0: Unrecognised arch label '${AUDACITY_ARCH_LABEL}'" ; exit 1 ;;
-    esac
 elif [[ "${AUDACITY_CMAKE_GENERATOR}" == Xcode* ]]; then
     cmake_args+=(
         # skip unneeded configurations

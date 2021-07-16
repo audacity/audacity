@@ -14,7 +14,8 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     env:
       AUDACITY_CMAKE_GENERATOR: ${{ matrix.config.generator }}
-      AUDACITY_ARCH_LABEL: ${{ matrix.config.arch }}
+      CMAKE_ARCH_LABEL: ${{ matrix.config.cmake-arch }}
+      CONAN_ARCH_LABEL: ${{ matrix.config.conan-arch }}
       # Windows codesigning
       # This variables will be used by all the steps
       WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
@@ -29,22 +30,38 @@ jobs:
 
         - name: Ubuntu_18.04
           os: ubuntu-18.04
-          arch: x86_64 # as reported by `arch` or `uname -m`
+          cmake-arch: ""
+          conan-arch: x86_64
           generator: Unix Makefiles
 
-        - name: macOS_Intel
+        - name: macOS_x86_64
           os: macos-latest
-          arch: Intel # as reported by Apple menu > About This Mac
+          cmake-arch: ""
+          conan-arch: x86_64
           generator: Xcode
 
-        - name: Windows_32bit
+        - name: macOS_armv8
+          os: macos-latest
+          cmake-arch: ""
+          conan-arch: armv8
+          generator: Xcode
+
+        - name: Windows_x86
           os: windows-latest
-          arch: 32bit # as reported by Windows Settings > System > About
+          cmake-arch: Win32
+          conan-arch: x86
           generator: Visual Studio 16 2019
 
-        - name: Windows_64bit
+        - name: Windows_x86_64
           os: windows-latest
-          arch: 64bit # as reported by Windows Settings > System > About
+          cmake-arch: x64
+          conan-arch: x86_64
+          generator: Visual Studio 16 2019
+
+        - name: Windows_armv8
+          os: windows-latest
+          cmake-arch: ARM64
+          conan-arch: armv8
           generator: Visual Studio 16 2019
 
     steps:

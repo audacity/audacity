@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version="@CPACK_PACKAGE_NAME@ v@CPACK_PACKAGE_VERSION@ @CPACK_AUDACITY_ARCH_LABEL@"
+version="@CPACK_PACKAGE_NAME@ v@CPACK_PACKAGE_VERSION@ @CPACK_CONAN_ARCH_LABEL@"
 
 export LC_ALL=C # Using `sort` a lot. Order depends on locale so override it.
 

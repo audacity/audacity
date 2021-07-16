@@ -136,7 +136,8 @@ project( Audacity )
 # Load our functions/macros
 include( AudacityFunctions )
 
-set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
+set_from_env(CMAKE_ARCH_LABEL)
+set_from_env(CONAN_ARCH_LABEL)
 
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
