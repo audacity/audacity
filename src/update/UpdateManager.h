@@ -53,6 +53,7 @@ private:
 
     std::unique_ptr<wxGenericProgressDialog> mProgressDialog;
 
+    std::string mAudacityInstallerPath;
     std::ofstream mAudacityInstaller;
 
 public:

@@ -140,6 +140,14 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
                         {
                             mAudacityInstaller.close();
                         }
+
+                        const wxPlatformInfo& info = wxPlatformInfo::Get();
+                        if ((info.GetOperatingSystemId() & wxOS_WINDOWS) ||
+                            info.GetOperatingSystemId() & wxOS_MAC)
+                        {
+                            if (wxFileName(mAudacityInstallerPath).Exists())
+                                wxTheApp->CallAfter([this] { wxExecute(mAudacityInstallerPath, wxEXEC_ASYNC); });
+                        }
                         }
                     );
 
@@ -167,12 +175,14 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
                                 else if(info.GetOperatingSystemId() & wxOS_MAC)
                                     audacityPatchFilename += ".dmg";
 
-                                auto audacityInstallerPath = wxFileName(
+                                mAudacityInstallerPath = wxFileName(
                                     wxStandardPaths::Get().GetUserDir(wxStandardPaths::Dir_Downloads)
                                     + FileNames::GetPathSeparator()
-                                    + audacityPatchFilename);
+                                    + audacityPatchFilename)
+                                    .GetFullPath()
+                                    .ToStdString();
 
-                                mAudacityInstaller.open(audacityInstallerPath.GetFullPath().ToStdString(), std::ios::binary);
+                                mAudacityInstaller.open(mAudacityInstallerPath, std::ios::binary);
                                 
                                 });
 
