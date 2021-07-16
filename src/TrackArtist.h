@@ -38,6 +38,14 @@ class ZoomInfo;
 
 namespace TrackArt {
 
+   static constexpr int ClipFrameRadius{ 6 };
+
+   AUDACITY_DLL_API
+   void DrawClipAffordance(wxDC& dc, const wxRect& affordanceRect, bool highlight = false, bool selected = false);
+
+   AUDACITY_DLL_API
+   void DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected = false);
+
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
    AUDACITY_DLL_API
    void DrawSyncLockTiles(
@@ -49,6 +57,10 @@ namespace TrackArt {
          const wxRect &rect, const Track *track,
          const wxBrush &selBrush, const wxBrush &unselBrush,
          bool useSelection = true);
+
+   AUDACITY_DLL_API
+   void DrawCursor(TrackPanelDrawingContext& context,
+        const wxRect& rect, const Track* track);
 
    AUDACITY_DLL_API
    void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,

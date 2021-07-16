@@ -23,9 +23,10 @@ public:
    NoteTrackView( const std::shared_ptr<Track> &pTrack );
    ~NoteTrackView() override;
 
-   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
-
 private:
+   std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
+   std::shared_ptr<CommonTrackCell> DoGetAffordanceControls() override;
+
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,
        const AudacityProject *pProject, int currentTool, bool bMultiTool)

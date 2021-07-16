@@ -796,6 +796,8 @@ list( APPEND SOURCES
       tracks/labeltrack/ui/LabelTrackVRulerControls.h
       tracks/labeltrack/ui/LabelTrackView.cpp
       tracks/labeltrack/ui/LabelTrackView.h
+      tracks/playabletrack/notetrack/ui/NoteTrackAffordanceControls.h
+      tracks/playabletrack/notetrack/ui/NoteTrackAffordanceControls.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h
       tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
@@ -825,6 +827,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
@@ -855,6 +859,8 @@ list( APPEND SOURCES
 
       # Tracks UI
 
+      tracks/ui/AffordanceHandle.cpp
+      tracks/ui/AffordanceHandle.h
       tracks/ui/BackgroundCell.cpp
       tracks/ui/BackgroundCell.h
       tracks/ui/ButtonHandle.cpp

@@ -60,7 +60,7 @@ public:
          iLabel =
             LabelTrackView::OverATextBox(*mpTrack, pParams->xx, pParams->yy);
       if (iLabel == -1)
-         iLabel = LabelTrackView::Get(*mpTrack).GetSelectedIndex(mProject);
+         iLabel = LabelTrackView::Get(*mpTrack).GetNavigationIndex(mProject);
       if (iLabel != -1) {
          UnfixIntervals([&](const auto &myInterval){
             return GetIndex( myInterval ) == iLabel;
