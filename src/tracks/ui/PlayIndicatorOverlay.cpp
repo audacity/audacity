@@ -100,24 +100,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
    if(auto tp = dynamic_cast<TrackPanel*>(&panel)) {
       wxASSERT(mIsMaster);
 
-      // Draw indicator in all visible tracks
-      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
-         if (pTrackView) pTrackView->FindTrack()->TypeSwitch(
-            [](LabelTrack *) {
-               // Don't draw the indicator in label tracks
-            },
-            [&](Track *) {
-               // Draw the NEW indicator in its NEW location
-               // AColor::Line includes both endpoints so use GetBottom()
-               AColor::Line(dc,
-                            mLastIndicatorX,
-                            rect.GetTop(),
-                            mLastIndicatorX,
-                            rect.GetBottom());
-            }
-         );
-      } );
+      AColor::Line(dc, mLastIndicatorX, tp->GetRect().GetTop(), mLastIndicatorX, tp->GetRect().GetBottom());
    }
    else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
