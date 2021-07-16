@@ -10,10 +10,10 @@ int SpectralDataManager::ProcessTracks(TrackList &tracks){
    Worker worker(setting);
 
    for ( auto wt : tracks.Any< WaveTrack >() ) {
-      auto &trackView = TrackView::Get(*wt);
-
+      auto &trackView = WaveTrackView::Get(*wt);
       if(auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&trackView)){
          for(const auto &subViewPtr : waveTrackViewPtr->GetAllSubViews()){
+            // Iterate only the SpectrumView for spectral data
             if(!subViewPtr->IsSpectral())
                continue;
             auto sView = std::static_pointer_cast<SpectrumView>(subViewPtr).get();
@@ -56,6 +56,7 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
 {
    mpSpectralData = pSpectralData;
    auto &dataHistory = mpSpectralData->dataHistory;
+   // To keep track of the start and end sampleCount when sliding window
    mStartSample = mpSpectralData->GetStartT();
    mEndSample = mStartSample + mWindowSize;
 
@@ -92,7 +93,9 @@ bool SpectralDataManager::Worker::Processor(SpectrumTransformer &transformer)
 bool SpectralDataManager::Worker::ApplyEffectToSelection() {
    auto &record = NthWindow(0);
    auto nyquist = mpSpectralData->GetSR() / 2;
-
+//   float min_real = *std::min_element(record.mRealFFTs.begin(), record.mRealFFTs.end());
+//   float min_imag = *std::min_element(record.mImagFFTs.begin(), record.mImagFFTs.end());
+   // For every brush stroke, check for the data that's selected within current window
    for(const auto &spectralDataMap: mpSpectralData->dataHistory){
       for(const auto &data: spectralDataMap){
          long long sc = data.first;
@@ -104,6 +107,10 @@ bool SpectralDataManager::Worker::ApplyEffectToSelection() {
                int targetBin = static_cast<int>(dtargetBin);
                record.mRealFFTs[targetBin] = 0;
                record.mImagFFTs[targetBin] = 0;
+               record.mRealFFTs[targetBin+1] = 0;
+               record.mImagFFTs[targetBin+1] = 0;
+               record.mRealFFTs[targetBin-1] = 0;
+               record.mImagFFTs[targetBin-1] = 0;
             }
          }
       }

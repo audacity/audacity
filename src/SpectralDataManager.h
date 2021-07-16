@@ -1,6 +1,7 @@
-#include <tracks/playabletrack/wavetrack/ui/SpectrumView.h>
-#include <effects/Effect.h>
+#include "./FFT.h"
 #include "./SpectrumTransformer.h"
+#include "./effects/Effect.h"
+#include "./tracks/playabletrack/wavetrack/ui/SpectrumView.h"
 
 class SpectralDataManager{
 public:
