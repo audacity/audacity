@@ -626,8 +626,7 @@ msgstr "forum"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"Polskie tłumaczenie Audacity: Grzegorz \"Gootector\" Pruchniakowski.\n"
-"Pozostali tłumacze (nieaktywni): Michał Trzebiatowski, Patryk Małachowski, Aron Płotnikowski i Łukasz Wojniłowicz."
+"Polskie tłumaczenie Audacity: Grzegorz \"Gootector\" Pruchniakowski."
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -878,7 +877,7 @@ msgstr "Zobacz %s, aby uzyskać więcej informacji."
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr "naszą Politykę Prywatności"
+msgstr "naszą Politykę prywatności"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -4555,7 +4554,7 @@ msgid_plural "%d hours"
 msgstr[0] "%d godzina"
 msgstr[1] "%d godziny"
 msgstr[2] "%d godzin"
-msgstr[3] "%d godzin"
+msgstr[3] "%d godziny"
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -4564,7 +4563,7 @@ msgid_plural "%d minutes"
 msgstr[0] "%d minuta"
 msgstr[1] "%d minuty"
 msgstr[2] "%d minut"
-msgstr[3] "%d minut"
+msgstr[3] "%d minuty"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
@@ -12619,9 +12618,9 @@ msgstr "%s prawo"
 msgid "%s %d of %d clip %s"
 msgid_plural "%s %d of %d clips %s"
 msgstr[0] "%s %d z %d klip %s"
-msgstr[1] "%s %d z %d klip %s"
-msgstr[2] "%s %d z %d klip %s"
-msgstr[3] "%s %d z %d klipów %s"
+msgstr[1] "%s %d z %d klipy %s"
+msgstr[2] "%s %d z %d klipów %s"
+msgstr[3] "%s %d z %d klipy %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -12645,9 +12644,9 @@ msgstr "koniec"
 msgid "%s %d and %s %d of %d clip %s"
 msgid_plural "%s %d and %s %d of %d clips %s"
 msgstr[0] "%s %d i %s %d z %d klip %s"
-msgstr[1] "%s %d i %s %d z %d klip %s"
-msgstr[2] "%s %d i %s %d z %d klip %s"
-msgstr[3] "%s %d i %s %d z %d klipów %s"
+msgstr[1] "%s %d i %s %d z %d klipy %s"
+msgstr[2] "%s %d i %s %d z %d klipów %s"
+msgstr[3] "%s %d i %s %d z %d klipy %s"
 
 #. i18n-hint:
 #. first number identifies one of a sequence of clips,
@@ -12658,9 +12657,9 @@ msgstr[3] "%s %d i %s %d z %d klipów %s"
 msgid "%d of %d clip %s"
 msgid_plural "%d of %d clips %s"
 msgstr[0] "%d z %d klip %s"
-msgstr[1] "%d z %d klip %s"
-msgstr[2] "%d z %d klip %s"
-msgstr[3] "%d z %d klipów %s"
+msgstr[1] "%d z %d klipy %s"
+msgstr[2] "%d z %d klipów %s"
+msgstr[3] "%d z %d klipy %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -18622,26 +18621,24 @@ msgstr "Potwierdź zamknięcie"
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, fuzzy, c-format
 msgid "Unable to write files to directory: %s."
-msgstr "Nie można wczytać pliku preseta z \"%s\""
+msgstr "Nie można zapisać plików do katalogu: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr ""
+msgstr "Sprawdź, czy katalog istnieje, ma niezbędne uprawnienia, a dysk nie jest pełny."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, fuzzy, c-format
 msgid "You can change the directory in %s."
-msgstr ""
-"Nie udało się utworzyć katalogu:\n"
-"%s"
+msgstr "Możesz zmienić katalog w %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, fuzzy
 msgid "Preferences > Directories"
-msgstr "Ustawienia katalogów"
+msgstr "Ustawienia > Katalogi"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
