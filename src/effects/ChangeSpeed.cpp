@@ -123,9 +123,9 @@ TranslatableString EffectChangeSpeed::GetDescription()
    return XO("Changes the speed of a track, also changing its pitch");
 }
 
-wxString EffectChangeSpeed::ManualPage()
+ManualPageID EffectChangeSpeed::ManualPage()
 {
-   return wxT("Change_Speed");
+   return L"Change_Speed";
 }
 
 

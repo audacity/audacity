@@ -972,7 +972,7 @@ void TagsEditorDialog::OnDontShow( wxCommandEvent & Evt )
 
 void TagsEditorDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Metadata_Editor"), true);
+   HelpSystem::ShowHelp(this, L"Metadata_Editor", true);
 }
 
 bool TagsEditorDialog::TransferDataFromWindow()

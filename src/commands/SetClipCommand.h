@@ -31,7 +31,7 @@ public:
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_I#set_clip");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_clip";}
    bool ApplyInner( const CommandContext & context, Track * t ) override;
 
 public:

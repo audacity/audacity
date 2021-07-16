@@ -38,7 +38,7 @@ public:
    bool ApplyInner(const CommandContext & context);
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#help");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#help";}
 public:
    wxString mCommandName;
 };
@@ -58,7 +58,7 @@ public:
       return true;
    };
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#comment");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#comment";}
 public:
    wxString mComment;
 };

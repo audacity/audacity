@@ -20,8 +20,8 @@
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
-#include "../include/audacity/ComponentInterface.h"
-#include "../include/audacity/EffectAutomationParameters.h" // for command automation
+#include "ComponentInterface.h"
+#include "EffectAutomationParameters.h" // for command automation
 
 #include "../Registrar.h"
 
@@ -65,7 +65,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    {wxFAIL_MSG( "Implement a Description for this command");return XO("FAIL");};
 
    // Name of page in the Audacity alpha manual
-   virtual wxString ManualPage(){ return wxEmptyString;};
+   virtual ManualPageID ManualPage(){ return {}; }
    virtual bool IsBatchProcessing(){ return mIsBatch;}
    virtual void SetBatchProcessing(bool start){ mIsBatch = start;};
    

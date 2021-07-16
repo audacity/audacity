@@ -124,6 +124,7 @@ private:
 
    void DoDraw( TrackPanelDrawingContext &context,
       const WaveTrack *track,
+      const WaveClip* selectedClip,
       const wxRect & rect );
 
    std::vector<UIHandlePtr> DetailedHitTest(

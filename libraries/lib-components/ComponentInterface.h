@@ -43,71 +43,11 @@
 #define __AUDACITY_COMPONENT_INTERFACE_H__
 
 #include "Identifier.h"
-#include "audacity/Types.h"
+#include "Internat.h"
 #include <wx/string.h> // member variables
 
-STRINGS_API const wxString& GetCustomTranslation(const wxString& str1 );
-
-/**************************************************************************//**
-
-\brief ComponentInterfaceSymbol pairs a persistent string identifier used internally
-with an optional, different string as msgid for lookup in a translation catalog.
-\details  If there is need to change a msgid in a later version of the
-program, change the constructor call to supply a second argument but leave the
-first the same, so that compatibility of older configuration files containing
-that internal string is not broken.
-********************************************************************************/
-class ComponentInterfaceSymbol
-{
-public:
-   ComponentInterfaceSymbol() = default;
-   
-   // Allows implicit construction from a msgid re-used as an internal string
-   ComponentInterfaceSymbol( const TranslatableString &msgid )
-      : mInternal{ msgid.MSGID().GET(), }, mMsgid{ msgid }
-   {}
-
-   // Allows implicit construction from an internal string re-used as a msgid
-   ComponentInterfaceSymbol( const wxString &internal )
-      : mInternal{ internal }, mMsgid{ internal, {} }
-   {}
-
-   // Allows implicit construction from an internal string re-used as a msgid
-   ComponentInterfaceSymbol( const wxChar *msgid )
-      : mInternal{ msgid }, mMsgid{ msgid, {} }
-   {}
-
-   // Two-argument version distinguishes internal from translatable string
-   // such as when the first squeezes spaces out
-   ComponentInterfaceSymbol( const Identifier &internal,
-                         const TranslatableString &msgid )
-      : mInternal{ internal.GET() }
-      // Do not permit non-empty msgid with empty internal
-      , mMsgid{ internal.empty() ? TranslatableString{} : msgid }
-   {}
-
-   const wxString &Internal() const { return mInternal; }
-   const TranslatableString &Msgid() const { return mMsgid; }
-   const TranslatableString Stripped() const { return mMsgid.Stripped(); }
-   const wxString Translation() const { return mMsgid.Translation(); }
-   const wxString StrippedTranslation() const
-      { return Stripped().Translation(); }
-
-   bool empty() const { return mInternal.empty(); }
-
-   friend inline bool operator == (
-      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
-   { return a.mInternal == b.mInternal; }
-
-   friend inline bool operator != (
-      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
-   { return !( a == b ); }
-
-private:
-   wxString mInternal;
-   TranslatableString mMsgid;
-};
-
+class ComponentInterfaceSymbol;
+using VendorSymbol = ComponentInterfaceSymbol;
 
 class ShuttleParams;
 
@@ -118,10 +58,10 @@ plugins.  It is what makes a class a plug-in.  Additionally it provides an
 optional parameter definitions function, for those components such as commands,
 effects and (soon) preference pagess that define parameters.
 ********************************************************************************/
-class AUDACITY_DLL_API ComponentInterface /* not final */
+class COMPONENTS_API ComponentInterface /* not final */
 {
 public:
-   virtual ~ComponentInterface() {};
+   virtual ~ComponentInterface();
 
    // These should return an untranslated value
    virtual PluginPath GetPath() = 0;

@@ -714,7 +714,7 @@ void AColor::PreComputeGradient() {
          gradient_pre[selected][1][i][2] = (unsigned char) (255 * b);
       }
 
-      // colorScheme 2: Grayscale
+      // colorScheme 3: Inverse Grayscale
       for (int i = 0; i < gradientSteps; i++) {
          float r, g, b;
          float value = float(i) / gradientSteps;
@@ -743,12 +743,12 @@ void AColor::PreComputeGradient() {
             b = 1.0f;
             break;
          }
-         gradient_pre[selected][2][i][0] = (unsigned char)(255 * r);
-         gradient_pre[selected][2][i][1] = (unsigned char)(255 * g);
-         gradient_pre[selected][2][i][2] = (unsigned char)(255 * b);
+         gradient_pre[selected][3][i][0] = (unsigned char)(255 * r);
+         gradient_pre[selected][3][i][1] = (unsigned char)(255 * g);
+         gradient_pre[selected][3][i][2] = (unsigned char)(255 * b);
       }
 
-      // colorScheme 3: Inv. Grayscale (=Old grayscale)
+      // colorScheme 2: Grayscale (=Old grayscale)
       for (int i = 0; i<gradientSteps; i++) {
          float r, g, b;
          float value = float(i)/gradientSteps;
@@ -781,9 +781,9 @@ void AColor::PreComputeGradient() {
             b = 1.0f;
             break;
          }
-         gradient_pre[selected][3][i][0] = (unsigned char) (255 * r);
-         gradient_pre[selected][3][i][1] = (unsigned char) (255 * g);
-         gradient_pre[selected][3][i][2] = (unsigned char) (255 * b);
+         gradient_pre[selected][2][i][0] = (unsigned char) (255 * r);
+         gradient_pre[selected][2][i][1] = (unsigned char) (255 * g);
+         gradient_pre[selected][2][i][2] = (unsigned char) (255 * b);
       }
    }
 }

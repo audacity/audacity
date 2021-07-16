@@ -1,5 +1,3 @@
-
-
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../Prefs.h"

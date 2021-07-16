@@ -56,6 +56,11 @@ public:
 
 	void setRequestFinishedCallback (RequestCallback callback) override;
 
+	//! Set the download progress callback
+    virtual void setDownloadProgressCallback(ProgressCallback callback) override;
+   //! Set the upload progress callback
+    virtual void setUploadProgressCallback(ProgressCallback callback) override;
+
 	uint64_t getBytesAvailable () const noexcept override;
 	uint64_t readData (void* buffer, uint64_t maxBytesCount) override;
 
@@ -71,6 +76,8 @@ private:
 	mutable std::mutex mCallbackMutex;
     RequestCallback mOnDataReceivedCallback;
     RequestCallback mRequestFinishedCallback;
+    ProgressCallback mDownloadProgressCallback;
+    ProgressCallback mUploadProgressCallback;
 
 	mutable std::mutex mHeadersMutex;
 	HeadersList mResponseHeaders;
@@ -92,6 +99,10 @@ private:
 
     static size_t WriteCallback (const uint8_t* ptr, size_t size, size_t nmemb, CurlResponse* userdata) noexcept;
     static size_t HeaderCallback (const char* buffer, size_t size, size_t nitems, CurlResponse* userdata) noexcept;
+    static int CurlProgressCallback(
+       CurlResponse* clientp, curl_off_t dltotal, curl_off_t dlnow,
+       curl_off_t ultotal,
+       curl_off_t ulnow) noexcept;
 };
 
 }

@@ -194,19 +194,11 @@ bool BuiltinCommandsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return mCommands.find( path ) != mCommands.end();
 }
 
-ComponentInterface *BuiltinCommandsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+BuiltinCommandsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return Instantiate(path).release();
-}
-
-void BuiltinCommandsModule::DeleteInstance(ComponentInterface *instance)
-{
-   // Releases the resource.
-   std::unique_ptr < AudacityCommand > {
-      dynamic_cast<AudacityCommand *>(instance)
-   };
+   return Instantiate(path);
 }
 
 // ============================================================================

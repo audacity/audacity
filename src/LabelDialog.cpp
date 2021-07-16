@@ -285,7 +285,7 @@ void LabelDialog::PopulateOrExchange( ShuttleGui & S )
 
 void LabelDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetHelpPageName();
+   const auto &page = GetHelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 

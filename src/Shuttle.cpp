@@ -65,7 +65,7 @@ preferences.
 #include <wx/radiobut.h>
 #include <wx/button.h>
 
-#include "../include/audacity/EffectAutomationParameters.h" // for command automation
+#include "EffectAutomationParameters.h" // for command automation
 
 #include "WrappedType.h"
 //#include "effects/Effect.h"

@@ -22,7 +22,6 @@ class wxCommandEvent;
 class AudacityProject;
 class CommandContext;
 class CommandManager;
-class PluginDescriptor;
 class Track;
 class TrackList;
 class ViewInfo;

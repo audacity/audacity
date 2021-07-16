@@ -78,9 +78,9 @@ TranslatableString EffectNormalize::GetDescription()
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-wxString EffectNormalize::ManualPage()
+ManualPageID EffectNormalize::ManualPage()
 {
-   return wxT("Normalize");
+   return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation

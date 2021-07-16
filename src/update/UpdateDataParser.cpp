@@ -56,23 +56,41 @@ bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
         return true;
     }
 
-    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWindowsTag]) == 0)
+    const wxPlatformInfo& info = wxPlatformInfo::Get();
+
+    constexpr bool is32Bit = sizeof(void*) == 4;
+    constexpr bool is64Bit = sizeof(void*) == 8;
+
+    if (is32Bit)
     {
-        if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_WINDOWS)
-            mXmlParsingState = XmlParsedTags::kOsTag;
-        return true;
+       if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWin32Tag]) == 0)
+       {
+          if (info.GetOperatingSystemId() & wxOS_WINDOWS)
+             mXmlParsingState = XmlParsedTags::kOsTag;
+          return true;
+       }
+    }
+
+    if (is64Bit)
+    {
+       if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWin64Tag]) == 0)
+       {
+          if (info.GetOperatingSystemId() & wxOS_WINDOWS)
+             mXmlParsingState = XmlParsedTags::kOsTag;
+          return true;
+       }
     }
 
     if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kMacosTag]) == 0)
     {
-        if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_MAC)
+        if (info.GetOperatingSystemId() & wxOS_MAC)
             mXmlParsingState = XmlParsedTags::kOsTag;
         return true;
     }
 
     if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinuxTag]) == 0)
     {
-        if (wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_UNIX_LINUX)
+        if (info.GetOperatingSystemId() & wxOS_UNIX_LINUX)
             mXmlParsingState = XmlParsedTags::kOsTag;
         return true;
     }

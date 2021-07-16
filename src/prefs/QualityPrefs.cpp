@@ -57,7 +57,7 @@ TranslatableString QualityPrefs::GetDescription()
    return XO("Preferences for Quality");
 }
 
-wxString QualityPrefs::HelpPageName()
+ManualPageID QualityPrefs::HelpPageName()
 {
    return "Quality_Preferences";
 }

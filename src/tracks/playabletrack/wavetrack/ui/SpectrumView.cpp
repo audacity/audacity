@@ -712,13 +712,19 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views
-   params.DrawClipEdges( dc, rect );
+   {
+      //increase virtual view size by px to hide edges that should not be visible
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect.Inflate(1, 0), 1);
+      if (!clipRect.IsEmpty())
+         TrackArt::DrawClipEdges(dc, clipRect, selected);
+   }
 }
 
 }
 
-void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
-                                const WaveTrack *track,
+void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
+                                const WaveTrack* track,
+                                const WaveClip* selectedClip,
                                 const wxRect & rect )
 {
    const auto artist = TrackArtist::Get( context );
@@ -759,14 +765,18 @@ void SpectrumView::Draw(
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
+
+      auto waveTrackView = GetWaveTrackView().lock();
+      wxASSERT(waveTrackView.use_count());
       
-      DoDraw( context, wt.get(), rect );
+      auto seletedClip = waveTrackView->GetSelectedClip().lock();
+      DoDraw( context, wt.get(), seletedClip.get(), rect );
       
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   CommonTrackView::Draw( context, rect, iPass );
+   WaveTrackSubView::Draw( context, rect, iPass );
 }
 
 static const WaveTrackSubViews::RegisteredFactory key{

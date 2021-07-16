@@ -33,7 +33,7 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
 
    static bool GetPinnedHeadPreference();
    static void SetPinnedHeadPreference(bool value, bool flush = false);

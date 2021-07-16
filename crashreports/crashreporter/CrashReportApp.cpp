@@ -246,7 +246,7 @@ namespace
     {
         static constexpr int MaxUserCommentLength = 2000;
 
-        auto frame = new wxFrame(
+        auto dialog = new wxDialog(
             nullptr, 
             wxID_ANY, 
             _("Problem Report for Audacity"),
@@ -254,83 +254,89 @@ namespace
             wxDefaultSize, 
             wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)//disable frame resize
         );
-        frame->SetOwnBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_FRAMEBK));
         
+        //fixes focus issue with Windows build-in screen reader, but breaks VoiceOver
+#if defined(__WXMSW__)
+        dialog->SetFocus();
+#endif
+
         auto mainLayout = new wxBoxSizer(wxVERTICAL);
-        
-        auto headerText = new wxStaticText(frame, wxID_ANY, header);
-        headerText->SetFont(wxFont(wxFontInfo().Bold()));
 
         auto headerLayout = new wxBoxSizer(wxHORIZONTAL);
-        headerLayout->Add(new wxStaticBitmap(frame, wxID_ANY, wxIcon(warning)));
+        headerLayout->Add(new wxStaticBitmap(dialog, wxID_ANY, wxIcon(warning)));
         headerLayout->AddSpacer(5);
+
+        auto headerText = new wxStaticText(dialog, wxID_ANY, header);
+        headerText->SetFont(wxFont(wxFontInfo().Bold()));
         headerLayout->Add(headerText, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
+
+        mainLayout->Add(headerLayout, wxSizerFlags().Border(wxALL));
+        if (onSend != nullptr)
+        {
+            mainLayout->AddSpacer(5);
+            mainLayout->Add(new wxStaticText(dialog, wxID_ANY, _("Click \"Send\" to submit the report to Audacity. This information is collected anonymously.")), wxSizerFlags().Border(wxALL));
+        }
+        mainLayout->AddSpacer(10);
+        mainLayout->Add(new wxStaticText(dialog, wxID_ANY, _("Problem details")), wxSizerFlags().Border(wxALL));
+
+        auto dumpTextCtrl = new wxTextCtrl(dialog, wxID_ANY, dump, wxDefaultPosition, wxSize(500, 300), wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_DONTWRAP);
+        dumpTextCtrl->SetFont(wxFont(wxFontInfo().Family(wxFONTFAMILY_TELETYPE)));
+        dumpTextCtrl->ShowPosition(0);//scroll to top
+        mainLayout->Add(dumpTextCtrl, wxSizerFlags().Border(wxALL).Expand());
 
         auto buttonsLayout = new wxBoxSizer(wxHORIZONTAL);
         
         wxTextCtrl* commentCtrl = nullptr;
         if (onSend != nullptr)
         {
-            commentCtrl = new wxTextCtrl(frame, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(500, 100), wxTE_MULTILINE);
+            mainLayout->AddSpacer(10);
+            mainLayout->Add(new wxStaticText(dialog, wxID_ANY, _("Comments")), wxSizerFlags().Border(wxALL));
+
+            commentCtrl = new wxTextCtrl(dialog, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(500, 100), wxTE_MULTILINE);
             commentCtrl->SetMaxLength(MaxUserCommentLength);
+
+            mainLayout->Add(commentCtrl, wxSizerFlags().Border(wxALL).Expand());
         }
 
-        if (onSend != nullptr)
+        if (onSend != nullptr && commentCtrl != nullptr)
         {
-            auto okButton = new wxButton(frame, wxID_ANY, XC("&Don't send", "crash reporter button"));
-            auto sendButton = new wxButton(frame, wxID_ANY, XC("&Send", "crash reporter button"));
+            auto dontSendButton = new wxButton(dialog, wxID_ANY, XC("&Don't send", "crash reporter button"));
+            auto sendButton = new wxButton(dialog, wxID_ANY, XC("&Send", "crash reporter button"));
 
-            okButton->Bind(wxEVT_BUTTON, [frame](wxCommandEvent&)
+            dontSendButton->Bind(wxEVT_BUTTON, [dialog](wxCommandEvent&)
                 {
-                    frame->Close(true);
+                    dialog->Close(true);
                 });
-            sendButton->Bind(wxEVT_BUTTON, [frame, commentCtrl, onSend](wxCommandEvent&)
+            sendButton->Bind(wxEVT_BUTTON, [dialog, commentCtrl, onSend](wxCommandEvent&)
                 { 
                     if (onSend(commentCtrl->GetValue()))
                     {
-                        frame->Close(true);
+                        dialog->Close(true);
                     }
                 });
 
-            buttonsLayout->Add(okButton);
+            buttonsLayout->Add(dontSendButton);
             buttonsLayout->AddSpacer(5);
             buttonsLayout->Add(sendButton);
         }
         else
         {
-            auto okButton = new wxButton(frame, wxID_OK, wxT("OK"));
-            okButton->Bind(wxEVT_BUTTON, [frame](wxCommandEvent&)
+            auto okButton = new wxButton(dialog, wxID_OK, wxT("OK"));
+            okButton->Bind(wxEVT_BUTTON, [dialog](wxCommandEvent&)
                 {
-                    frame->Close(true);
+                    dialog->Close(true);
                 });
             buttonsLayout->Add(okButton);
         }
 
-        mainLayout->Add(headerLayout, wxSizerFlags().Border(wxALL));
-        if (onSend != nullptr)
-        {
-            mainLayout->AddSpacer(5);
-            mainLayout->Add(new wxStaticText(frame, wxID_ANY, _("Click \"Send\" to submit the report to Audacity. This information is collected anonymously.")), wxSizerFlags().Border(wxALL));
-        }
-        mainLayout->AddSpacer(10);
-        mainLayout->Add(new wxStaticText(frame, wxID_ANY, _("Problem details")), wxSizerFlags().Border(wxALL));
-        
-        auto dumpTextCtrl = new wxTextCtrl(frame, wxID_ANY, dump, wxDefaultPosition, wxSize(500, 300), wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_DONTWRAP);
-        dumpTextCtrl->SetFont(wxFont(wxFontInfo().Family(wxFONTFAMILY_TELETYPE)));
-        dumpTextCtrl->ShowPosition(0);//scroll to top
-        mainLayout->Add(dumpTextCtrl, wxSizerFlags().Border(wxALL).Expand());
-
-        if (onSend != nullptr)
-        {
-            mainLayout->AddSpacer(10);
-            mainLayout->Add(new wxStaticText(frame, wxID_ANY, _("Comments")), wxSizerFlags().Border(wxALL));
-            mainLayout->Add(commentCtrl, wxSizerFlags().Border(wxALL).Expand());
-        }
-
         mainLayout->Add(buttonsLayout, wxSizerFlags().Border(wxALL).Align(wxALIGN_RIGHT));
-        frame->SetSizerAndFit(mainLayout);
+        dialog->SetSizerAndFit(mainLayout);
 
-        frame->Show(true);
+        dialog->Bind(wxEVT_CLOSE_WINDOW, [dialog](wxCloseEvent&) {
+            dialog->Destroy();
+        });
+            
+        dialog->Show(true);
     }
 }
 
@@ -386,7 +392,6 @@ void CrashReportApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     static const wxCmdLineEntryDesc cmdLineEntryDesc[] =
     {
-         { wxCMD_LINE_SWITCH, "h", "help", "Display help on the command line parameters", wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
          { wxCMD_LINE_SWITCH, "s", "silent", "Send without displaying the confirmation dialog" },
          { wxCMD_LINE_OPTION, "u", "url", "Crash report server URL", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
          { wxCMD_LINE_OPTION, "a", "args", "A set of arguments to send", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },

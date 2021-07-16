@@ -51,7 +51,7 @@ TranslatableString ModulePrefs::GetDescription()
    return XO("Preferences for Module");
 }
 
-wxString ModulePrefs::HelpPageName()
+ManualPageID ModulePrefs::HelpPageName()
 {
    return "Modules_Preferences";
 }

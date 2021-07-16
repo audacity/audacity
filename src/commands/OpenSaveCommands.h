@@ -40,7 +40,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#open_project");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#open_project";}
 public:
    wxString mFileName;
    bool mbAddToHistory;
@@ -60,7 +60,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#save_project");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#save_project";}
 public:
    wxString mFileName;
    bool mbAddToHistory;
@@ -80,7 +80,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#save_copy");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#save_copy";}
 public:
    wxString mFileName;
 };
@@ -98,7 +98,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#save_log");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#save_log";}
 public:
    wxString mFileName;
 };
@@ -116,7 +116,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#Clear_log");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#Clear_log";}
 public:
    wxString mFileName;
 };

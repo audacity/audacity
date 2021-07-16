@@ -44,10 +44,10 @@
 
 #include <functional>
 
-#include "Identifier.h"
-#include "audacity/ComponentInterface.h"
-#include "audacity/ConfigInterface.h"
-#include "audacity/EffectAutomationParameters.h" // for command automation
+#include "ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
+#include "ConfigInterface.h"
+#include "EffectAutomationParameters.h" // for command automation
 
 class ShuttleGui;
 
@@ -62,6 +62,8 @@ typedef enum EffectType : int
 } EffectType;
 
 
+using EffectFamilySymbol = ComponentInterfaceSymbol;
+
 /*************************************************************************************//**
 
 \class EffectDefinitionInterface 
@@ -70,15 +72,15 @@ typedef enum EffectType : int
 flag-functions for interactivity, play-preview and whether the effect can run without a GUI.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
+class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
-   virtual ~EffectDefinitionInterface() {};
+   virtual ~EffectDefinitionInterface();
 
    // Type determines how it behaves.
    virtual EffectType GetType() = 0;
    // Classification determines which menu it appears in.
-   virtual EffectType GetClassification() { return GetType();};
+   virtual EffectType GetClassification() { return GetType();}
 
    virtual EffectFamilySymbol GetFamily() = 0;
 
@@ -115,10 +117,10 @@ virtual (abstract) functions to get presets and actually apply the effect.  It u
 ConfigClientInterface to add Getters/setters for private and shared configs. 
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectHostInterface  /* not final */ : public ConfigClientInterface
+class COMPONENTS_API EffectHostInterface  /* not final */ : public ConfigClientInterface
 {
 public:
-   virtual ~EffectHostInterface() {};
+   virtual ~EffectHostInterface();
 
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
@@ -131,6 +133,45 @@ public:
    virtual RegistryPath GetFactoryDefaultsGroup() = 0;
 };
 
+class sampleCount;
+
+// ----------------------------------------------------------------------------
+// Supported channel assignments
+// ----------------------------------------------------------------------------
+
+typedef enum
+{
+   // Use to mark end of list
+   ChannelNameEOL = -1,
+   // The default channel assignment
+   ChannelNameMono,
+   // From this point, the channels follow the 22.2 surround sound format
+   ChannelNameFrontLeft,
+   ChannelNameFrontRight,
+   ChannelNameFrontCenter,
+   ChannelNameLowFrequency1,
+   ChannelNameBackLeft,
+   ChannelNameBackRight,
+   ChannelNameFrontLeftCenter,
+   ChannelNameFrontRightCenter,
+   ChannelNameBackCenter,
+   ChannelNameLowFrequency2,
+   ChannelNameSideLeft,
+   ChannelNameSideRight,
+   ChannelNameTopFrontLeft,
+   ChannelNameTopFrontRight,
+   ChannelNameTopFrontCenter,
+   ChannelNameTopCenter,
+   ChannelNameTopBackLeft,
+   ChannelNameTopBackRight,
+   ChannelNameTopSideLeft,
+   ChannelNameTopSideRight,
+   ChannelNameTopBackCenter,
+   ChannelNameBottomFrontCenter,
+   ChannelNameBottomFrontLeft,
+   ChannelNameBottomFrontRight,
+} ChannelName, *ChannelNames;
+
 /*************************************************************************************//**
 
 \class EffectClientInterface 
@@ -140,7 +181,7 @@ Effect into a plug-in command.  It has functions for realtime that are not part 
 AudacityCommand.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
+class COMPONENTS_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
 {
 public:
    using EffectDialogFactory = std::function<
@@ -148,7 +189,7 @@ public:
          EffectHostInterface*, EffectUIClientInterface* )
    >;
 
-   virtual ~EffectClientInterface() {};
+   virtual ~EffectClientInterface();
 
    virtual bool SetHost(EffectHostInterface *host) = 0;
 
@@ -212,10 +253,10 @@ can call SetHostUI passing in a pointer to an EffectUIHostInterface.  It contain
 functionality and is provided, apparently, for type checking.  Since only EffectUIHost
 uses it, EffectUIHost could be used instead.
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIHostInterface
+class COMPONENTS_API EffectUIHostInterface
 {
 public:
-   virtual ~EffectUIHostInterface() {};
+   virtual ~EffectUIHostInterface();
 };
 
 /*************************************************************************************//**
@@ -226,10 +267,10 @@ public:
 values.  It can import and export presets.
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIClientInterface /* not final */
+class COMPONENTS_API EffectUIClientInterface /* not final */
 {
 public:
-   virtual ~EffectUIClientInterface() {};
+   virtual ~EffectUIClientInterface();
 
    virtual void SetHostUI(EffectUIHostInterface *host) = 0;
    virtual bool IsGraphicalUI() = 0;
@@ -244,26 +285,6 @@ public:
 
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
-};
-
-
-/*************************************************************************************//**
-
-\class EffectManagerInterface
-
-\brief UNUSED.  EffectManagerInterface provides a single function to find files matching 
-a pattern in a list.
-
-*******************************************************************************************/
-class AUDACITY_DLL_API EffectManagerInterface
-{
-public:
-   virtual ~EffectManagerInterface() {};
-
-   virtual void FindFilesInPathList(const wxString & pattern,
-                                    const FilePaths & pathList,
-                                    FilePaths & files,
-                                    int searchFlags) = 0;
 };
 
 #endif // __AUDACITY_EFFECTINTERFACE_H__
