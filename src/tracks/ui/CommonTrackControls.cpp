@@ -203,7 +203,7 @@ public:
    //bool Apply(const CommandContext & context) override;
 
    // Provide an override, if we want the help button.
-   // wxString ManualPage() override {return wxT("");};
+   // ManualPageID ManualPage() override {return {};}
 public:
    wxString mName;
 };

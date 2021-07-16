@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 #include <wx/frame.h>
+#include "CodeConversions.h"
 #include "Legacy.h"
 #include "PlatformCompatibility.h"
 #include "Project.h"
@@ -776,7 +777,7 @@ bool ProjectFileManager::OpenNewProject()
          XO("Error opening a new empty project"), 
          "FAQ:Errors_opening_a_new_empty_project",
          true, 
-         projectFileIO.GetLastLog());
+         audacity::ToWString(projectFileIO.GetLastLog()));
    }
    return bOK;
 }
@@ -1362,7 +1363,7 @@ public:
 
    void OnGetURL(wxCommandEvent &WXUNUSED(evt))
    {
-      HelpSystem::ShowHelp(this, wxT("File_Menu:_Compact_Project"), true);
+      HelpSystem::ShowHelp(this, L"File_Menu:_Compact_Project", true);
    }
 };
 }

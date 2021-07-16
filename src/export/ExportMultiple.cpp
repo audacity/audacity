@@ -574,7 +574,7 @@ void ExportMultipleDialog::OnCancel(wxCommandEvent& WXUNUSED(event))
 
 void ExportMultipleDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Export_Multiple"), true);
+   HelpSystem::ShowHelp(this, L"Export_Multiple", true);
 }
 
 void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))

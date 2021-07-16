@@ -56,12 +56,12 @@ EffectManager::~EffectManager()
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
-const PluginID & EffectManager::RegisterEffect(Effect *f)
+const PluginID & EffectManager::RegisterEffect(std::unique_ptr<Effect> uEffect)
 {
-   const PluginID & ID = PluginManager::Get().RegisterPlugin(f, PluginTypeEffect);
-
-   mEffects[ID] = f;
-
+   auto pEffect = uEffect.get();
+   const PluginID & ID =
+      PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
+   mEffects[ID] = pEffect;
    return ID;
 }
 
@@ -135,7 +135,7 @@ TranslatableString EffectManager::GetCommandDescription(const PluginID & ID)
    return {};
 }
 
-wxString EffectManager::GetCommandUrl(const PluginID & ID)
+ManualPageID EffectManager::GetCommandUrl(const PluginID & ID)
 {
    Effect* pEff = GetEffect(ID);
    if( pEff )
@@ -190,7 +190,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
       S.EndArray();
       S.EndField();
    }
-   S.AddItem( GetCommandUrl( ID ), "url" );
+   // use GET() to expose some details to macro programming users
+   S.AddItem( GetCommandUrl( ID ).GET(), "url" );
    // The tip is a translated string!
    S.AddItem( GetCommandTip( ID ).Translation(), "tip" );
    S.EndStruct();
@@ -647,6 +648,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
       return preset;
    }
 
+   // This cleans a config "file" backed by a string in memory.
    eap.DeleteAll();
    
    eap.Write(wxT("Use Preset"), preset);
@@ -826,15 +828,12 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
 
    PluginManager & pm = PluginManager::Get();
    // Effects OR Generic commands...
-   const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
-   while (plug)
-   {
-      if (GetCommandIdentifier(plug->GetID()) == strTarget)
-      {
-         return plug->GetID();
-      }
-      plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
+   for (auto &plug
+        : pm.PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand)) {
+      auto &ID = plug.GetID();
+      if (GetCommandIdentifier(ID) == strTarget)
+         return ID;
    }
-   return empty;;
+   return empty;
 }
 

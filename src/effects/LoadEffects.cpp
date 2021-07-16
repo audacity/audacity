@@ -191,19 +191,11 @@ bool BuiltinEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return mEffects.find( path ) != mEffects.end();
 }
 
-ComponentInterface *BuiltinEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+BuiltinEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return Instantiate(path).release();
-}
-
-void BuiltinEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   // Releases the resource.
-   std::unique_ptr < Effect > {
-      dynamic_cast<Effect *>(instance)
-   };
+   return Instantiate(path);
 }
 
 // ============================================================================

@@ -35,7 +35,7 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
-   wxString ManualPage() override;
+   ManualPageID ManualPage() override;
 
    // EffectDefinitionInterface implementation
 

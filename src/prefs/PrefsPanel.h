@@ -29,7 +29,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 
 #include <functional>
 #include "../widgets/wxPanelWrapper.h" // to inherit
-#include "../include/audacity/ComponentInterface.h"
+#include "ComponentInterface.h"
 #include "../Registry.h"
 
 /* A few constants for an attempt at semi-uniformity */
@@ -115,9 +115,9 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    virtual bool ShowsPreviewButton();
    virtual void PopulateOrExchange( ShuttleGui & WXUNUSED(S) ){};
 
-   // If not empty string, the Help button is added below the panel
-   // Default returns empty string.
-   virtual wxString HelpPageName();
+   //! If not empty string, the Help button is added below the panel
+   /*! Default returns empty string. */
+   virtual ManualPageID HelpPageName();
 
    virtual void Cancel();
 };

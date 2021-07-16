@@ -330,7 +330,8 @@ bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return wxFileName::FileExists(realPath);
 }
 
-ComponentInterface *LadspaEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+LadspaEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -339,16 +340,7 @@ ComponentInterface *LadspaEffectsModule::CreateInstance(const PluginPath & path)
    long index;
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
-
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew LadspaEffect(realPath, (int)index);
-}
-
-void LadspaEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < LadspaEffect > {
-      dynamic_cast<LadspaEffect *>(instance)
-   };
+   return std::make_unique<LadspaEffect>(realPath, (int)index);
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()

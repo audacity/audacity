@@ -30,7 +30,7 @@ class AUDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
 
    static const wxChar *ScrollingPreferenceKey();
    static inline bool ScrollingPreferenceDefault() { return false; }

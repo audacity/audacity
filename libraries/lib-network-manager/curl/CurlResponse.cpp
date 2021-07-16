@@ -203,6 +203,18 @@ void CurlResponse::setRequestFinishedCallback (RequestCallback callback)
         mRequestFinishedCallback (this);
 }
 
+void CurlResponse::setDownloadProgressCallback(ProgressCallback callback)
+{
+    std::lock_guard<std::mutex> callbackLock(mCallbackMutex);
+    mDownloadProgressCallback = std::move(callback);
+}
+
+void CurlResponse::setUploadProgressCallback(ProgressCallback callback)
+{
+    std::lock_guard<std::mutex> callbackLock(mCallbackMutex);
+    mUploadProgressCallback = std::move(callback);
+}
+
 uint64_t CurlResponse::getBytesAvailable () const noexcept
 {
     std::lock_guard<std::mutex> lock (mDataBufferMutex);
@@ -241,8 +253,13 @@ void CurlResponse::perform (const void* ptr, size_t size)
     handle.setOption (CURLOPT_HEADERFUNCTION, HeaderCallback);
     handle.setOption (CURLOPT_HEADERDATA, this);
 
+    handle.setOption (CURLOPT_XFERINFOFUNCTION, CurlProgressCallback);
+    handle.setOption (CURLOPT_XFERINFODATA, this);
+
     handle.setOption (CURLOPT_FOLLOWLOCATION, mRequest.getMaxRedirects () == 0 ? 0 : 1);
     handle.setOption (CURLOPT_MAXREDIRS, mRequest.getMaxRedirects ());
+
+    handle.setOption (CURLOPT_NOPROGRESS, 0L);
 
     handle.setOption (CURLOPT_CONNECTTIMEOUT_MS, 
         std::chrono::duration_cast<std::chrono::milliseconds> (mRequest.getTimeout()).count ()
@@ -301,6 +318,8 @@ void CurlResponse::perform (const void* ptr, size_t size)
 
     mRequestFinishedCallback = {};
     mOnDataReceivedCallback = {};
+    mDownloadProgressCallback = {};
+    mUploadProgressCallback = {};
 }
 
 
@@ -376,6 +395,21 @@ size_t CurlResponse::HeaderCallback (const char* buffer, size_t size, size_t nit
     }
 
     return size;
+}
+
+int CurlResponse::CurlProgressCallback(
+   CurlResponse* clientp, curl_off_t dltotal, curl_off_t dlnow,
+   curl_off_t ultotal, curl_off_t ulnow) noexcept
+{
+    std::lock_guard<std::mutex> callbackLock(clientp->mCallbackMutex);
+
+    if (dltotal > 0 && clientp->mDownloadProgressCallback)
+       clientp->mDownloadProgressCallback(dlnow, dltotal);
+
+    if (ultotal > 0 && clientp->mUploadProgressCallback)
+       clientp->mUploadProgressCallback(ulnow, ultotal);
+
+    return CURLE_OK;
 }
 
 }

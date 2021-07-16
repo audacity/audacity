@@ -82,7 +82,7 @@ TranslatableString MousePrefs::GetDescription()
    return XO("Preferences for Mouse");
 }
 
-wxString MousePrefs::HelpPageName()
+ManualPageID MousePrefs::HelpPageName()
 {
    return "Mouse_Preferences";
 }

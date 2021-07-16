@@ -56,7 +56,7 @@ TranslatableString GUIPrefs::GetDescription()
    return XO("Preferences for GUI");
 }
 
-wxString GUIPrefs::HelpPageName()
+ManualPageID GUIPrefs::HelpPageName()
 {
    return "Interface_Preferences";
 }

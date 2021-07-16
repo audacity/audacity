@@ -28,21 +28,23 @@ hold information about one contributor to Audacity.
 
 #include "AboutDialog.h"
 
-
-
 #include <wx/dialog.h>
 #include <wx/html/htmlwin.h>
 #include <wx/button.h>
+#include <wx/hyperlink.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/intl.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
 
 #include "FileNames.h"
 #include "HelpText.h"
 #include "ShuttleGui.h"
 #include "widgets/HelpSystem.h"
+#include "ui/AccessibleLinksFormatter.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"
@@ -72,6 +74,10 @@ hold information about one contributor to Audacity.
 #define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
 #else
 #define REV_IDENT (XO("No revision identifier was provided").Translation())
+#endif
+
+#if defined(HAS_SENTRY_REPORTING) || defined(HAVE_UPDATES_CHECK) || defined(USE_BREAKPAD)
+#define HAS_PRIVACY_POLICY
 #endif
 
 // To substitute into many other translatable strings
@@ -128,12 +134,12 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-   AddCredit(wxT("James Crook"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleTeamMember);
-   AddCredit(wxT("Steve Daulton"), roleTeamMember);
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Jouni Helminen"), roleTeamMember);
+   AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
 
@@ -149,11 +155,15 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Matt Brubeck"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Arturo \"Buanzo\" Busleiman"), sysAdminFormat, roleEmeritusTeam);
    AddCredit(wxT("Michael Chinen"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("James Crook"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Roger Dannenberg"), coFounderFormat, roleEmeritusTeam);
+   AddCredit(wxT("Steve Daulton"), roleEmeritusTeam);
    AddCredit(wxT("Al Dimond"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Benjamin Drung"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Joshua Haberman"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleEmeritusTeam);
    AddCredit(wxT("Leland Lucius"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Dominic Mazzoni"), coFounderFormat, roleEmeritusTeam);
    AddCredit(wxT("Markus Meyer"), developerFormat, roleEmeritusTeam);
@@ -316,6 +326,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
       .Prop(0)
       .AddButton(XXO("OK"), wxALIGN_CENTER, true);
 
+   Layout();
    Fit();
    this->Centre();
 }
@@ -401,7 +412,7 @@ visit our %s.")
       << wxT("Customised version of the Audacity free, open source, cross-platform software " )
       << wxT("for recording and editing sounds.")
       << wxT("<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2021 Audacity Team.<br>")
-      << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark of Dominic Mazzoni.<br><br>")
+      << wxT("&nbsp; &nbsp; The name <b>Audacity</b> is a registered trademark.<br><br>")
 
 #else
       << XO("<h3>")
@@ -518,9 +529,9 @@ visit our %s.")
       // It also makes it easier to revert to full size if we decide to.
       const float fScale = 0.5f;// smaller size.
       wxImage RescaledImage(logo.ConvertToImage());
-      wxColour MainColour( 
-         RescaledImage.GetRed(1,1), 
-         RescaledImage.GetGreen(1,1), 
+      wxColour MainColour(
+         RescaledImage.GetRed(1,1),
+         RescaledImage.GetGreen(1,1),
          RescaledImage.GetBlue(1,1));
       pPage->SetBackgroundColour(MainColour);
       // wxIMAGE_QUALITY_HIGH not supported by wxWidgets 2.6.1, or we would use it here.
@@ -551,6 +562,7 @@ visit our %s.")
    S.EndVerticalLay();
    S.EndNotebookPage();
 }
+
 
 /** \brief: Fills out the "Information" tab of the preferences dialogue
  *
@@ -823,14 +835,56 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 }
 
 
+static const wxString GPL_TEXT();
+
 void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 {
-   S.StartNotebookPage( XO("GPL License") );
-   S.StartVerticalLay(1);
-   HtmlWindow *html = safenew LinkingHtmlWindow(S.GetParent(), -1,
-                                         wxDefaultPosition,
-                                         wxSize(ABOUT_DIALOG_WIDTH, 264),
-                                         wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
+#if defined(HAS_PRIVACY_POLICY)
+   S.StartNotebookPage(XC("Legal", "about dialog"));
+#else
+   S.StartNotebookPage(XO("GPL License"));
+#endif
+   
+#if defined(HAS_PRIVACY_POLICY)
+   S.Prop(0).StartPanel();
+   {
+      S.AddSpace(0, 8);
+      /* i18n-hint: For "About Audacity...": Title for Privacy Policy section */
+      S.AddVariableText(XC("PRIVACY POLICY", "about dialog"), true);
+
+      S.AddFixedText(
+         XO("App update checking and error reporting require network access. "
+            "These features are optional."));
+
+      /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+      AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
+
+      privacyPolicy.FormatLink(
+         /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
+         wxT("%s"), XO("our Privacy Policy"),
+         "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+      privacyPolicy.Populate(S);
+   }
+   S.EndPanel();
+
+   S.AddSpace(0, 8);
+#endif
+
+   S.Prop(1).StartPanel();
+   {
+      HtmlWindow* html = safenew LinkingHtmlWindow(
+         S.GetParent(), -1, wxDefaultPosition, wxSize(ABOUT_DIALOG_WIDTH, 264),
+         wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
+
+      html->SetPage(FormatHtmlText(GPL_TEXT()));
+
+      S.Prop(1).Position(wxEXPAND).AddWindow( html );
+   }
+   S.EndPanel();
+
+   S.EndNotebookPage();
+}
 
 // I tried using <pre> here to get a monospaced font,
 // as is normally used for the GPL.
@@ -838,7 +892,9 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 // better proportionally spaced.
 //
 // The GPL is not to be translated....
-   wxString PageText= FormatHtmlText(
+   
+
+const wxString GPL_TEXT() { return
 wxT("		    <center>GNU GENERAL PUBLIC LICENSE\n</center>")
 wxT("		       <center>Version 2, June 1991\n</center>")
 wxT("<p><p>")
@@ -1120,16 +1176,7 @@ wxT("OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\n
 wxT("TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\n")
 wxT("YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\n")
 wxT("PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\n")
-wxT("POSSIBILITY OF SUCH DAMAGES.\n"));
-
-   html->SetPage( PageText );
-
-   S.Prop(1)
-      .Position( wxEXPAND )
-      .AddWindow( html );
-
-   S.EndVerticalLay();
-   S.EndNotebookPage();
+wxT("POSSIBILITY OF SUCH DAMAGES.\n");
 }
 
 void AboutDialog::AddCredit( const wxString &name, Role role )

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_LOAD_COMMANDS__
 #define __AUDACITY_LOAD_COMMANDS__
 
-#include "audacity/ModuleInterface.h"
+#include "ModuleInterface.h"
 
 #include <functional>
 #include <memory>
@@ -69,8 +69,8 @@ public:
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const PluginPath & path) override;
-   void DeleteInstance(ComponentInterface *instance) override;
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) override;
 
 private:
    // BuiltinEffectModule implementation

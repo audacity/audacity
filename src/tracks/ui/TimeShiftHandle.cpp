@@ -34,6 +34,21 @@ TimeShiftHandle::TimeShiftHandle
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
+std::shared_ptr<Track> TimeShiftHandle::GetTrack() const
+{
+   return mClipMoveState.mCapturedTrack;
+}
+
+bool TimeShiftHandle::WasMoved() const
+{
+    return mDidSlideVertically || (mClipMoveState.initialized && mClipMoveState.wasMoved);
+}
+
+bool TimeShiftHandle::Clicked() const
+{
+   return mClipMoveState.initialized;
+}
+
 void TimeShiftHandle::Enter(bool, AudacityProject *)
 {
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -275,6 +290,8 @@ void ClipMoveState::Init(
 {
    shifters.clear();
 
+   initialized = true;
+
    auto &state = *this;
    state.mCapturedTrack = capturedTrack.SharedPointer();
 
@@ -426,6 +443,9 @@ double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
    // finally, here is where clips are moved
    if ( desiredSlideAmount != 0.0 )
       state.DoHorizontalOffset( desiredSlideAmount );
+
+   //attempt to move a clip is counted to
+   wasMoved = true;
 
    return (state.hSlideAmount = desiredSlideAmount);
 }

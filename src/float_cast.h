@@ -106,16 +106,39 @@
 
 		return intgr ;
 	}
-#elif (defined (WIN32) || defined (_WIN32)) && defined(_M_3X64)
+#elif (defined (WIN32) || defined (_WIN32)) && defined(_M_X64)
 
 	#include <math.h>
 	#include <immintrin.h>
+	#include <emmintrin.h>
 
-	__inline long int
-	lrintf (float flt)
+	#ifdef _MSC_VER
+		#pragma function(lrint, lrintf)
+	#endif
+
+	__inline 
+	long int lrint(double flt)
 	{
-		return _mm_cvt_ss2si(_mm_set_ss(flt));
+       return _mm_cvtsd_si32(_mm_set_sd(flt));
+    }
+
+	__inline 
+	long int lrintf (float flt)
+	{
+		return _mm_cvtss_si32(_mm_set_ss(flt));
 	}
+
+	__inline 
+	long long int llrint(double flt)
+    {
+        return _mm_cvtsd_si64(_mm_set_sd(flt));
+    }
+
+    __inline 
+    long long int llrintf(float flt)
+    {
+       return _mm_cvtss_si64(_mm_set_ss(flt));
+    }
 
 #elif (HAVE_LRINT && HAVE_LRINTF)
 
@@ -146,6 +169,6 @@
    #include	<math.h>
 
    #define	lrint(dbl)		((int)rint(dbl))
-	#define	lrintf(flt)		((int)rint(flt))
+   #define	lrintf(flt)		((int)rint(flt))
 
 #endif

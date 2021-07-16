@@ -37,7 +37,7 @@ public:
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides
-   wxString ManualPage() override {return wxT("Extra_Menu:_Scriptables_II#message");};
+   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#message";}
 public:
    wxString mMessage;
 };

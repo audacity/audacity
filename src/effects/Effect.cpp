@@ -1168,14 +1168,14 @@ bool Effect::HasFactoryDefaults()
    return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
 }
 
-wxString Effect::ManualPage()
+ManualPageID Effect::ManualPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
-wxString Effect::HelpPage()
+FilePath Effect::HelpPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
 void Effect::SetUIFlags(unsigned flags) {

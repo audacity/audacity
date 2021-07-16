@@ -7,6 +7,7 @@ set( LIBRARIES
    lib-strings
    lib-utility
    lib-uuid
+   lib-components
 )
 
 if ( ${_OPT}has_networking )

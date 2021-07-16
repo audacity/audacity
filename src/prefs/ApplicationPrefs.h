@@ -27,7 +27,7 @@ class ApplicationPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
 
  private:
    void Populate();

@@ -656,7 +656,7 @@ void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetCurrentPanel()->HelpPageName();
+   const auto &page = GetCurrentPanel()->HelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 
@@ -782,6 +782,11 @@ void PrefsDialog::SelectPageByName(const wxString &pageName)
       for (size_t i = 0; i < n; i++) {
          if (mCategories->GetPageText(i) == pageName) {
             mCategories->SetSelection(i);
+            // This covers the case, when ShowModal is called 
+            // after selecting the page.
+            // ShowModal will select the page previously used by 
+            // user
+            SavePreferredPage();
             return;
          }
       }

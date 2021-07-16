@@ -11,6 +11,6 @@ curl -sL https://sentry.io/get-cli/ | bash
 
 SYMBOLS=$(find debug | xargs)
 
-${INSTALL_DIR}/sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} --url ${SENTRY_HOST} upload-dif \
+${INSTALL_DIR}/sentry-cli --auth-token ${SENTRY_AUTH_TOKEN} --url https://${SENTRY_HOST} upload-dif \
     --org ${SENTRY_ORG_SLUG} \
     --project ${SENTRY_PROJECT_SLUG} ${SYMBOLS}

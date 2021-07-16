@@ -44,10 +44,15 @@ enum class NetworkError
     HTTPError
 };
 
+
+//! Interface, that provides access to the data from the HTTP response
 class NETWORK_MANAGER_API IResponse
 {
 public:
     using RequestCallback = std::function<void (IResponse*)>;
+    //! Called when download or upload progress changes. Expected can be zero when
+    //! transfer encoding does not allow to calculate the size
+    using ProgressCallback = std::function<void(int64_t current, int64_t expected)>;
 
     virtual ~IResponse () = default;
 
@@ -73,6 +78,11 @@ public:
 
     virtual void setOnDataReceivedCallback (RequestCallback callback) = 0;
     virtual void setRequestFinishedCallback (RequestCallback callback) = 0;
+
+    //! Set the download progress callback
+    virtual void setDownloadProgressCallback(ProgressCallback callback) = 0;
+    //! Set the upload progress callback
+    virtual void setUploadProgressCallback(ProgressCallback callback) = 0;
 
     // The total bytes available to read by readData
     virtual uint64_t getBytesAvailable () const noexcept = 0;

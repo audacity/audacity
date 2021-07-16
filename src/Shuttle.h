@@ -11,7 +11,8 @@
 #ifndef __AUDACITY_SHUTTLE__
 #define __AUDACITY_SHUTTLE__
 
-#include "../include/audacity/ComponentInterface.h"
+#include "ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
 
 class ComponentInterfaceSymbol;
 class WrappedType;

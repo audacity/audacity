@@ -182,7 +182,7 @@ void SpectrogramSettings::ColorSchemeEnumSetting::Migrate(wxString &value)
    // Migrate old grayscale option to Color scheme choice
    bool isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
    if (isGrayscale && !gPrefs->Read(wxT("/Spectrum/ColorScheme"), &value)) {
-      value = GetColorSchemeNames().at(csInvGrayscale).Internal();
+      value = GetColorSchemeNames().at(csGrayscale).Internal();
       Write(value);
       gPrefs->Flush();
    }

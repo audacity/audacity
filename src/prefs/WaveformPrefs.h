@@ -30,7 +30,7 @@ public:
    virtual ~WaveformPrefs();
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
 
    bool Commit() override;
    bool ShowsPreviewButton() override;
