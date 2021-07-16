@@ -470,7 +470,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "prefs/RecordingPrefs.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "BasicUI.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -1461,10 +1461,12 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
                                   captureFormat);
 
    if (!success) {
+      using namespace BasicUI;
       auto msg = XO("Error opening recording device.\nError code: %s")
          .Format( Get()->LastPaErrorString() );
-      ShowExceptionDialog( FindProjectFrame( mOwningProject ),
-         XO("Error"), msg, wxT("Error_opening_sound_device"));
+      ShowErrorDialog( *ProjectFramePlacement( mOwningProject ),
+         XO("Error"), msg, wxT("Error_opening_sound_device"),
+         ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       return;
    }
 

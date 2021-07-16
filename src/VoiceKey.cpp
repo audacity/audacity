@@ -31,7 +31,7 @@ or "OFF" point
 
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/wxPanelWrapper.h"
 
 using std::cout;
 using std::endl;

@@ -13,6 +13,7 @@
 
 
 #include "Identifier.h"
+#include "BasicUI.h"
 class TranslatableString;
 class wxWindow;
 
@@ -30,7 +31,7 @@ namespace TempDirectory
 
    AUDACITY_DLL_API bool FATFilesystemDenied(const FilePath &path,
                             const TranslatableString &msg,
-                            wxWindow *window = nullptr);
+                            const BasicUI::WindowPlacement &placement = {});
 };
 
 #endif

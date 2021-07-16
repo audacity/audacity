@@ -26,6 +26,7 @@
 #include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
+#include "widgets/wxWidgetsBasicUI.h"
 #include "../DBConnection.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
@@ -44,7 +45,6 @@
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 
 #include <unordered_map>
 
@@ -2468,9 +2468,12 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         ShowExceptionDialog(FocusDialog, XO("Error"),
-                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("Error_opening_sound_device"));
+         using namespace BasicUI;
+         ShowErrorDialog(
+            wxWidgetsWindowPlacement{ FocusDialog }, XO("Error"),
+            XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+            wxT("Error_opening_sound_device"),
+            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       }
    }
 }

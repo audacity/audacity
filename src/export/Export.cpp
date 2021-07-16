@@ -52,6 +52,7 @@
 #include "../widgets/FileDialog/FileDialog.h"
 
 #include "../src/AllThemeResources.h"
+#include "BasicUI.h"
 #include "../Mix.h"
 #include "../Prefs.h"
 #include "../prefs/ImportExportPrefs.h"
@@ -70,7 +71,6 @@
 #include "../FileNames.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ProgressDialog.h"
-#include "../widgets/ErrorDialog.h"
 #include "../wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------
@@ -1519,16 +1519,17 @@ void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message,
    const TranslatableString& caption)
 {
-   ShowExceptionDialog(nullptr,
-                  caption,
-                  message.Format( ErrorCode ),
-                  "Error:_Unable_to_export" // URL.
-                  );
+   using namespace BasicUI;
+   ShowErrorDialog( {},
+      caption,
+      message.Format( ErrorCode ),
+      "Error:_Unable_to_export", // URL.
+      ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
 }
 
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)
 {
-   ShowErrorDialog(nullptr,
+   BasicUI::ShowErrorDialog( {},
       XO("Warning"),
       FileException::WriteFailureMessage(fileName),
       "Error:_Disk_full_or_not_writable"

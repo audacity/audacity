@@ -38,7 +38,6 @@ function.
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
 #include "../wxFileNameWrapper.h"
 

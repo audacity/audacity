@@ -93,7 +93,6 @@
 #include "../FileNames.h"
 #include "../Envelope.h"
 #include "../EnvelopeEditor.h"
-#include "../widgets/ErrorDialog.h"
 #include "../FFT.h"
 #include "../Prefs.h"
 #include "../Project.h"
@@ -103,6 +102,7 @@
 #include "../ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
+#include "../widgets/AudacityTextEntryDialog.h"
 #include "../xml/XMLFileReader.h"
 #include "../AllThemeResources.h"
 #include "../float_cast.h"
@@ -1830,7 +1830,8 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
       // LLL:  Is there really a need for an error message at all???
       //auto errorMessage = XO("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s")
       //   .Format( FileNames::DataDir() );
-      //ShowErrorDialog(mUIParent, XO("EQCurves.xml and EQDefaultCurves.xml missing"),
+      //BasicUI::ShowErrorDialog( wxWidgetsWindowPlacement{ mUIParent },
+      //   XO("EQCurves.xml and EQDefaultCurves.xml missing"),
       //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
 
       // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped

@@ -73,6 +73,7 @@ can't be.
 #include <wx/settings.h>
 
 #include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
+#include "BasicUI.h"
 #include "FileNames.h"
 #include "Prefs.h"
 #include "ImageManipulation.h"
@@ -1144,16 +1145,19 @@ void ThemeBase::SaveComponents()
       }
    }
 
+   using namespace BasicUI;
+
    if (n > 0)
    {
       auto result =
-         AudacityMessageBox(
+         ShowMessageBox(
             XO(
 "Some required files in:\n  %s\nwere already present. Overwrite?")
                .Format( FileNames::ThemeComponentsDir() ),
-            AudacityMessageBoxCaptionStr(),
-            wxYES_NO | wxNO_DEFAULT);
-      if(result == wxNO)
+            MessageBoxOptions{}
+               .ButtonStyle(Button::YesNo)
+               .DefaultIsNo());
+      if (result == MessageBoxResult::No)
          return;
    }
 
