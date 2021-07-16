@@ -21,6 +21,7 @@
 #include <wx/utils.h>
 #include <wx/frame.h>
 #include <wx/app.h>
+#include <wx/stdpaths.h>
 
 #include <mutex>
 #include <cstdint>
@@ -130,6 +131,71 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
 
                 if (code == wxID_YES)
                 {
+                    const audacity::network_manager::Request downloadRequest(mVersionPatch.download.ToStdString());
+                    auto downloadResponse = audacity::network_manager::NetworkManager::GetInstance().doGet(downloadRequest);
+
+                    downloadResponse->setRequestFinishedCallback([downloadResponse, this](audacity::network_manager::IResponse*) {
+                        mProgressDialog.reset();
+                        if (mAudacityInstaller.is_open())
+                        {
+                            mAudacityInstaller.close();
+                        }
+                        }
+                    );
+
+                    downloadResponse->setDownloadProgressCallback(
+                        [downloadResponse, this](int64_t current, int64_t expected) {
+
+                            static std::once_flag progressInitFlag;
+                            std::call_once(progressInitFlag, [this] {
+                                const auto title = XO("Audacity update")
+                                    .Translation();
+
+                                auto audacityPatchFilename = wxFileName(mVersionPatch.download).GetName();
+                                const auto message = XO("Downloading %s")
+                                    .Format(audacityPatchFilename)
+                                    .Translation();
+
+                                mProgressDialog.reset(new wxGenericProgressDialog(title, message,
+                                    1000000,    // range
+                                    nullptr,    // parent
+                                    wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH));
+
+                                const wxPlatformInfo& info = wxPlatformInfo::Get();
+                                if (info.GetOperatingSystemId() & wxOS_WINDOWS)
+                                    audacityPatchFilename += ".exe";
+                                else if(info.GetOperatingSystemId() & wxOS_MAC)
+                                    audacityPatchFilename += ".dmg";
+
+                                auto audacityInstallerPath = wxFileName(
+                                    wxStandardPaths::Get().GetUserDir(wxStandardPaths::Dir_Downloads)
+                                    + FileNames::GetPathSeparator()
+                                    + audacityPatchFilename);
+
+                                mAudacityInstaller.open(audacityInstallerPath.GetFullPath().ToStdString(), std::ios::binary);
+                                
+                                });
+
+                            mProgressDialog->Pulse();
+                        }
+                    );
+
+                    downloadResponse->setOnDataReceivedCallback([downloadResponse, this](audacity::network_manager::IResponse*) {
+                        if (downloadResponse->getError() == audacity::network_manager::NetworkError::NoError)
+                        {
+                            std::vector<char> buffer(downloadResponse->getBytesAvailable());
+
+                            size_t bytes = downloadResponse->readData(buffer.data(), buffer.size());
+                            //NOTE need add error checkpoints: if (bytes != downloadResponse->getBytesAvailable())
+
+                            if (mAudacityInstaller.is_open())
+                            {
+                                mAudacityInstaller.write(buffer.data(), buffer.size());
+                            }
+                        }
+                        }
+                    );
+
                     if (!wxLaunchDefaultBrowser(mVersionPatch.download))
                     {
                         ShowErrorDialog( {},

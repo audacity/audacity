@@ -17,6 +17,10 @@
 #include <wx/string.h>
 #include <wx/event.h>
 #include <wx/timer.h>
+#include <wx/progdlg.h>
+
+#include <iostream>
+#include <fstream>
 
 /// A class that managing of updates.
 /**
@@ -46,6 +50,10 @@ private:
 
     /// Scheduling update time for avoiding multiplying update notifications.
     bool IsTimeForUpdatesChecking();
+
+    std::unique_ptr<wxGenericProgressDialog> mProgressDialog;
+
+    std::ofstream mAudacityInstaller;
 
 public:
     DECLARE_EVENT_TABLE()
