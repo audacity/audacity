@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the audacity package.
 # 
 # Translators:
-# Kaya Zeren <kayazeren@gmail.com>, 2020-2021
+# Kaya Zeren <kayazeren@gmail.com>, 2011-2021
 # Serkan ÖNDER <serkanonder0@gmail.com>, 2021
 # Yaşar Çiv <yasarciv@protonmail.com>, 2019-2020
 msgid ""
@@ -19,6 +19,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, c-format
+msgid "Exception code 0x%x"
+msgstr "Hata kodu 0x%x"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown exception"
+msgstr "Hata bilinmiyor"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown error"
+msgstr "Hata bilinmiyor"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Problem Report for Audacity"
+msgstr "Audacity için sorun bildirimi"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+"Bildirimi Audacity ekibine göndermek için \"Gönder\" üzerine tıklayın. "
+"Toplanan bilgiler anonim tutulur."
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr "Sorun ayrıntıları"
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "Yorumlar"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "&Gönderilmesin"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "&Gönderilsin"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Failed to send crash report"
+msgstr "Çökme bildirimi gönderilemedi"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -54,145 +108,6 @@ msgstr "Sade"
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
 msgstr "Sistem"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem Report for Audacity"
-msgstr "Audacity için Sorun Bildirimi"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid ""
-"Click \"Send\" to submit the report to Audacity. This information is "
-"collected anonymously."
-msgstr "Bildirimi Audacity ekibine göndermek için \"Gönder\" üzerine tıklayın. Toplanan bilgiler anonim tutulur."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem details"
-msgstr "Sorun ayrıntıları"
-
-#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Yorumlar"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr "&Gönder"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr "&Gönderme"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgid "Exception code 0x%x"
-msgstr "Hata kodu 0x%x"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown exception"
-msgstr "Hata bilinmiyor"
-
-#. i18n-hint C++ programming assertion
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown assertion"
-msgstr "İddia bilinmiyor"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown error"
-msgstr "Hata bilinmiyor"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Failed to send crash report"
-msgstr "Kilitlenme raporu gönderilemedi"
-
-#. i18n-hint Scheme refers to a color scheme for spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Sche&me"
-msgstr "Şe&ma"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (default)"
-msgstr "Renk (varsayılan)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Renk (klasik)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Gri tonlamalı"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Ters gri tonlamalı"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update Audacity"
-msgstr "Audacity uygulamasını güncelle"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Skip"
-msgstr "A&tla"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr "&Güncellemeyi kur"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Changelog"
-msgstr "Değişim günlüğü"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Read more on GitHub"
-msgstr "GitHub üzerinden bilgi alın"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Error checking for update"
-msgstr "Güncelleme denetlenirken sorun çıktı"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Unable to connect to Audacity update server."
-msgstr "Audacity güncelleme sunucusu ile bağlantı kurulamadı."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update data was corrupted."
-msgstr "Güncelleme verileri bozuk."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "Güncelleme indirilirken sorun çıktı."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Can't open the Audacity download link."
-msgstr "Audacity indirme bağlantısı açılamadı."
-
-#. i18n-hint Substitution of version number for %s.
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgctxt "update dialog"
-msgid "Audacity %s is available!"
-msgstr "Audacity %s yayınlanmış!"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
@@ -381,7 +296,7 @@ msgstr "Kod değiştirildi. Emin misiniz?"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
-msgstr "Başlıksız"
+msgstr "Adsız"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench - "
@@ -1099,14 +1014,16 @@ msgstr ""
 "Daha ileri bölge kilitlenemiyor\n"
 "projenin sonu."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Sorun"
@@ -1396,7 +1313,7 @@ msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Yardım"
 
@@ -4638,14 +4555,6 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "Projenin kopyası kaydedilirken sorun çıktı"
 
-#: src/ProjectFileManager.cpp
-msgid "Can't open new empty project"
-msgstr "Yeni ve boş bir proje açılamadı"
-
-#: src/ProjectFileManager.cpp
-msgid "Error opening a new empty project"
-msgstr "Yeni ve boş bir proje açılırken sorun çıktı"
-
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Bir ya da daha fazla dosya seçin"
@@ -4658,12 +4567,6 @@ msgstr "%s başka bir pencerede zaten açık."
 #: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
 msgid "Error Opening Project"
 msgstr "Proje açılırken sorun çıktı"
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr "Proje FAT olarak biçimlendirilmiş bir sürücü üzerinde.\nProjeyi açabilmek için başka bir sürücüye kopyalayın."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4701,6 +4604,14 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Opening File or Project"
 msgstr "Dosya ya da proje açılırken sorun çıktı"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+"Proje FAT olarak biçimlendirilmiş bir sürücü üzerinde.\n"
+"Projeyi açabilmek için başka bir sürücüye kopyalayın."
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -5183,7 +5094,7 @@ msgstr "Etkinleşme düzeyi (dB):"
 msgid "Welcome to Audacity!"
 msgstr "Audacity uygulamasına hoş geldiniz!"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Bu pencere açılışta bir daha görüntülenmesin"
 
@@ -6111,7 +6022,8 @@ msgstr "Sürükle"
 msgid "Panel"
 msgstr "Pano"
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "Uygulama"
 
@@ -6773,9 +6685,11 @@ msgstr "Spektral ayarlar kullanılsın"
 msgid "Spectral Select"
 msgstr "Spektral seçim"
 
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Gray Scale"
-msgstr "Gri Ölçek"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "Şe&ma"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -10800,7 +10714,7 @@ msgstr "Ses komut satırı kodlayıcısı kullanılarak dışa aktarılıyor"
 msgid "Command Output"
 msgstr "Komut çıktısı"
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&Tamam"
 
@@ -14912,10 +14826,10 @@ msgstr "Oynatılıyor"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Kayıt"
 
@@ -15277,6 +15191,30 @@ msgstr "Dalga şekli çözülüyor"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f %% tamamlandı. Görev odaklanma noktasını değiştirmek için tıklayın."
 
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Preferences for Application"
+msgstr "Uygulama ayarları"
+
+#. i18n-hint: Title for the update notifications panel in the preferences
+#. dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr "Güncelleme bildirimleri"
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "&Güncelleme denetimi"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr ""
+"Uygulama güncelleme denetimi özelliği için ağ erişimi gereklidir. Audacity, "
+"kiisel gizliliğinizi korumak için herhangi bir kişisel bilgiyi kaydetmez."
+
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Yığın"
@@ -15325,6 +15263,13 @@ msgstr "Oynatma"
 msgid "&Device:"
 msgstr "Ay&gıt:"
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+msgctxt "preference"
+msgid "Recording"
+msgstr "Kayıt"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "Aygı&t:"
@@ -15368,6 +15313,7 @@ msgstr "2 (çift kanallı)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "Klasörler"
 
@@ -15764,7 +15710,7 @@ msgstr "Sistem ve Audacity teması karıştırı&lsın"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr "Sağdan Sola Yazılan dillerde genellikle Soldan Sağa görünümler kullanılsın"
+msgstr "Sağdan sola yazılan dillerde genellikle soldan sağa görünümler kullanılsın"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
@@ -16647,6 +16593,30 @@ msgstr "ERB (eşdeğer dikdörtgen bant genişliği)"
 msgid "Period"
 msgstr "Aralık"
 
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Renk (varsayılan)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Renk (klasik)"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Gri tonlamalı"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Ters gri tonlamalı"
+
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
 msgstr "Frekanslar"
@@ -16729,10 +16699,6 @@ msgstr "&Aralık (dB):"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
 msgstr "&Yüksek güçlendirme (dB/dec):"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
-msgstr "&Gri Tonlamalı"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
@@ -17164,7 +17130,8 @@ msgstr "Dalga şekli dB a&ralığı:"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
 msgstr "Durduruldu"
@@ -18430,6 +18397,100 @@ msgstr ""
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Sol=Yakınlaştır, Sağ=Uzaklaştır, Orta=Normal"
 
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Güncelleme denetlenirken sorun çıktı"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr "Audacity güncelleme sunucusu ile bağlantı kurulamadı."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "Güncelleme verileri bozuk."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Güncelleme indirilirken sorun çıktı."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr "Audacity indirme bağlantısı açılamadı."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr "Uygulama güncelleme denetimi"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there "
+"is a new version of Audacity available to download."
+msgstr ""
+"Güncel kalmanız amacıyla yeni bir Audacity sürümü yayınlandığında uygulama "
+"içinde bir bildirim görüntülenecek."
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal "
+"information. However, app update checking does require network access."
+msgstr ""
+"Audacity, kişisel gizliliğinizi korumak için herhangi bir kişisel bilgi "
+"toplamaz. Bununla birlikte, uygulama güncelleme denetimi özelliği için ağ erişimi "
+"gereklidir."
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr "Uygulama güncelleme denetimini istediğiniz zaman %s kapatabilirsiniz."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr "Uygulama güncellemeleri"
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Preferences > Application"
+msgstr "Ayarlar > Uygulama"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Audacity uygulamasını güncelle"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "A&tla"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "&Güncellemeyi kur"
+
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s yayınlanmış!"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Değişiklik günlüğü"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "GitHub üzerinden bilgi alın"
+
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
 msgstr "(devre dışı)"
@@ -19018,6 +19079,33 @@ msgstr "Kapatmak istediğinize emin misiniz?"
 #: src/widgets/ProgressDialog.cpp
 msgid "Confirm Close"
 msgstr "Kapatmayı onayla"
+
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "Dosyalar klasöre yazılamadı: %s."
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr ""
+"Lütfen klasörün var ve gerekli izinlere sahip olduğunu ve sürücüde boş alan "
+"olduğunu denetleyin."
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "You can change the directory in %s."
+msgstr "%s içindeki klasörü değiştirebilirsiniz."
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
+#. page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Preferences > Directories"
+msgstr "Ayarlar > Klasörler"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
