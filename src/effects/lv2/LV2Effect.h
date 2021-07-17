@@ -315,7 +315,6 @@ public:
    // EffectUIClientInterface implementation
 
    bool SetHost(EffectHostInterface *host) override;
-   void SetHostUI(EffectUIHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -508,7 +507,6 @@ private:
 
    wxDialog *mDialog;
    wxWindow *mParent;
-   EffectUIHostInterface *mUIHost;
 
    bool mUseGUI;
 

@@ -32,7 +32,6 @@ class ShuttleGui;
 class AudacityCommand;
 class AudacityProject;
 class CommandContext;
-class EffectUIHostInterface;
 class ProgressDialog;
 
 
@@ -72,7 +71,6 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    virtual bool Apply(const CommandContext & WXUNUSED(context) ) {return false;};
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false);
-   virtual void SetHostUI(EffectUIHostInterface * WXUNUSED(host)){;};
 
    wxDialog *CreateUI(wxWindow *parent, AudacityCommand *client);
 

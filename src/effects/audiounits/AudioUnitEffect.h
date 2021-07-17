@@ -113,7 +113,6 @@ public:
    // EffectUIClientInterface implementation
 
    bool SetHost(EffectHostInterface *host) override;
-   void SetHostUI(EffectUIHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -201,7 +200,6 @@ private:
    ArrayOf<AudioBufferList> mInputList;
    ArrayOf<AudioBufferList> mOutputList;
 
-   EffectUIHostInterface *mUIHost;
    wxWindow *mParent;
    wxDialog *mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"

@@ -105,9 +105,6 @@ public:
 class wxDialog;
 class wxWindow;
 
-// Incomplete type not defined in libraries -- TODO clean that up:
-class EffectUIHostInterface;
-
 class EffectUIClientInterface;
 
 // Incomplete type not defined in libraries -- TODO clean that up:
@@ -238,7 +235,7 @@ public:
    ) = 0;
 
    virtual bool SetHost(EffectHostInterface *host) = 0;
-   virtual void SetHostUI(EffectUIHostInterface *host) = 0;
+
    virtual bool IsGraphicalUI() = 0;
    virtual bool PopulateUI(ShuttleGui &S) = 0;
    virtual bool ValidateUI() = 0;

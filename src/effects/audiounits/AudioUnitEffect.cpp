@@ -849,7 +849,6 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    mInteractive = false;
    mIsGraphical = false;
 
-   mUIHost = NULL;
    mDialog = NULL;
    mParent = NULL;
 
@@ -1721,11 +1720,6 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
-{
-   mUIHost = host;
-}
-
 bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
 {
    // OSStatus result;
@@ -1847,7 +1841,6 @@ bool AudioUnitEffect::CloseUI()
    }
 #endif
 
-   mUIHost = NULL;
    mParent = NULL;
    mDialog = NULL;
 

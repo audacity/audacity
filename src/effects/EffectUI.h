@@ -118,8 +118,7 @@ class Effect;
 class wxCheckBox;
 
 //
-class EffectUIHost final : public wxDialogWrapper,
-                     public EffectUIHostInterface
+class EffectUIHost final : public wxDialogWrapper
 {
 public:
    // constructors and destructors

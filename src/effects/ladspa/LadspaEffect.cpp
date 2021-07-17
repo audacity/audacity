@@ -1188,11 +1188,6 @@ bool LadspaEffect::LoadFactoryDefaults()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-void LadspaEffect::SetHostUI(EffectUIHostInterface *host)
-{
-   mUIHost = host;
-}
-
 bool LadspaEffect::PopulateUI(ShuttleGui &S)
 {
    auto parent = S.GetParent();
@@ -1545,7 +1540,6 @@ bool LadspaEffect::CloseUI()
    mFields.reset();
    mLabels.reset();
 
-   mUIHost = NULL;
    mParent = NULL;
    mDialog = NULL;
 

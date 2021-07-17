@@ -112,7 +112,6 @@ public:
    // EffectUIClientInterface implementation
 
    bool SetHost(EffectHostInterface *host) override;
-   void SetHostUI(EffectUIHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -180,8 +179,6 @@ private:
 
    // Realtime processing
    std::vector<LADSPA_Handle> mSlaves;
-
-   EffectUIHostInterface *mUIHost;
 
    NumericTextCtrl *mDuration;
    wxDialog *mDialog;

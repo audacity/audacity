@@ -156,7 +156,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   void SetHostUI(EffectUIHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) final;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;

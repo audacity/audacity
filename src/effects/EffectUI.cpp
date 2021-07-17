@@ -753,7 +753,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mEnabled = true;
    
    mPlayPos = 0.0;
-   mClient->SetHostUI(this);
 }
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
@@ -787,7 +786,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    mEnabled = true;
    
    mPlayPos = 0.0;
-   mClient->SetHostUI(this);
 }
 
 
