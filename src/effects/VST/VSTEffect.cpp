@@ -1602,7 +1602,7 @@ bool VSTEffect::RealtimeProcessEnd()
 /// provided by the effect, so it will not work with all effects since they don't
 /// all provide the information (kn0ck0ut is one).
 ///
-bool VSTEffect::ShowClientInterface(
+int VSTEffect::ShowClientInterface(
    wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
    //   mProcessLevel = 1;      // in GUI thread
@@ -1623,10 +1623,10 @@ bool VSTEffect::ShowClientInterface(
    if (SupportsRealtime() && !forceModal)
    {
       mDialog->Show();
-      return false;
+      return 0;
    }
 
-   return mDialog->ShowModal() != 0;
+   return mDialog->ShowModal();
 }
 
 bool VSTEffect::GetAutomationParameters(CommandParameters & parms)

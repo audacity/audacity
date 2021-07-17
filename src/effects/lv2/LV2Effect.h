@@ -307,7 +307,7 @@ public:
    size_t RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowClientInterface(
+   int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;

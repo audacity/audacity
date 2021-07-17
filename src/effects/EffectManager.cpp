@@ -319,7 +319,7 @@ bool EffectManager::PromptUser(
    {
       //! Show the effect dialog, only so that the user can choose settings.
       result = effect->ShowHostInterface(
-         parent, factory, effect->IsBatchProcessing() );
+         parent, factory, effect->IsBatchProcessing() ) != 0;
       return result;
    }
 

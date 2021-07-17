@@ -98,7 +98,7 @@ public:
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowClientInterface(
+   int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;

@@ -143,7 +143,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowClientInterface(
+   int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
@@ -190,7 +190,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectUIHostInterface implementation
 
-   bool ShowHostInterface( wxWindow &parent,
+   int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
 
    // Effect implementation
@@ -446,7 +446,6 @@ protected:
    //! This weak pointer may be the same as the above, or null
    wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
-   int            mUIResultID;
    unsigned       mUIFlags;
 
    sampleCount    mSampleCnt;

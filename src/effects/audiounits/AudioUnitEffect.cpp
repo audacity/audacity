@@ -1469,7 +1469,7 @@ bool AudioUnitEffect::RealtimeProcessEnd()
    return true;
 }
 
-bool AudioUnitEffect::ShowClientInterface(
+int AudioUnitEffect::ShowClientInterface(
    wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
@@ -1477,10 +1477,10 @@ bool AudioUnitEffect::ShowClientInterface(
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      return false;
+      return 0;
    }
 
-   return mDialog->ShowModal() != 0;
+   return mDialog->ShowModal();
 }
 
 bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)

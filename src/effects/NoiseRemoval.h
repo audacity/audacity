@@ -51,7 +51,7 @@ public:
 
    // Effect implementation
 
-   bool ShowHostInterface( wxWindow &parent,
+   int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
    bool Init() override;
    bool CheckWhetherSkipEffect() override;

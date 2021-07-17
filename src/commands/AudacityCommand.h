@@ -127,7 +127,6 @@ protected:
    // UI
    wxDialog       *mUIDialog;
    wxWindow       *mUIParent;
-   int             mUIResultID;
 
 private:
    bool mIsBatch;

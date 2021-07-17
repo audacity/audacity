@@ -102,7 +102,7 @@ public:
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
-   bool ShowHostInterface( wxWindow &parent,
+   int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;

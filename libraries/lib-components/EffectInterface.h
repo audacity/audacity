@@ -223,10 +223,10 @@ public:
    virtual ~EffectUIClientInterface();
 
    /*!
-    @return true if destructive effect processing should proceed; if false,
-    there may be a non-modal dialog still opened
+    @return 0 if destructive effect processing should not proceed (and there
+    may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
-   virtual bool ShowClientInterface(
+   virtual int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
 

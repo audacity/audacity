@@ -1457,7 +1457,7 @@ bool LV2Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool LV2Effect::ShowClientInterface(
+int LV2Effect::ShowClientInterface(
    wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
@@ -1475,10 +1475,10 @@ bool LV2Effect::ShowClientInterface(
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      return false;
+      return 0;
    }
 
-   return mDialog->ShowModal() != 0;
+   return mDialog->ShowModal();
 }
 
 bool LV2Effect::GetAutomationParameters(CommandParameters &parms)

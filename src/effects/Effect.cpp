@@ -478,7 +478,7 @@ bool Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool Effect::ShowClientInterface(
+int Effect::ShowClientInterface(
    wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
@@ -489,24 +489,24 @@ bool Effect::ShowClientInterface(
 
    auto hook = GetVetoDialogHook();
    if( hook && hook( mUIDialog ) )
-      return false;
+      return 0;
 
    if( SupportsRealtime() && !forceModal )
    {
       mUIDialog->Show();
       // Return false to bypass effect processing
-      return false;
+      return 0;
    }
 
-   return mUIDialog->ShowModal() != 0;
+   return mUIDialog->ShowModal();
 }
 
-bool Effect::ShowHostInterface(wxWindow &parent,
+int Effect::ShowHostInterface(wxWindow &parent,
    const EffectDialogFactory &factory, bool forceModal)
 {
    if (!IsInteractive())
       // Effect without UI just proceeds quietly to apply it destructively.
-      return true;
+      return wxID_APPLY;
 
    if (mHostUIDialog)
    {
@@ -514,7 +514,7 @@ bool Effect::ShowHostInterface(wxWindow &parent,
       // nothing else.
       if ( mHostUIDialog->Close(true) )
          mHostUIDialog = nullptr;
-      return false;
+      return 0;
    }
 
    // Create the dialog
@@ -526,7 +526,7 @@ bool Effect::ShowHostInterface(wxWindow &parent,
    const auto client = mClient ? mClient : this;
    mHostUIDialog = factory(parent, *this, *client);
    if (!mHostUIDialog)
-      return false;
+      return 0;
 
    // Let the client show the dialog and decide whether to keep it open
    auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);

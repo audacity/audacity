@@ -1126,13 +1126,11 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
    
-   mEffect.mUIResultID = evt.GetId();
-   
    if (IsModal())
    {
       mDismissed = true;
       
-      EndModal(true);
+      EndModal(evt.GetId());
       
       Close();
       
@@ -1155,10 +1153,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
 void EffectUIHost::DoCancel()
 {
    if (!mDismissed) {
-      mEffect.mUIResultID = wxID_CANCEL;
-      
       if (IsModal())
-         EndModal(false);
+         EndModal(0);
       else
          Hide();
       
@@ -1188,7 +1184,6 @@ void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 void EffectUIHost::OnDebug(wxCommandEvent & evt)
 {
    OnApply(evt);
-   mEffect.mUIResultID = evt.GetId();
 }
 
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
@@ -2059,7 +2054,7 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // been corrected in wx3.
    if (FindWindow(wxID_OK)->IsEnabled() && Validate() && TransferDataFromWindow())
    {
-      EndModal(true);
+      EndModal(wxID_OK);
    }
 
    return;

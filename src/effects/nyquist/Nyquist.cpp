@@ -1009,10 +1009,10 @@ finish:
    return success;
 }
 
-bool NyquistEffect::ShowHostInterface(
+int NyquistEffect::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
-   bool res = true;
+   int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
       res = Effect::ShowHostInterface(parent, factory, forceModal);
@@ -1020,7 +1020,7 @@ bool NyquistEffect::ShowHostInterface(
 
 
    // Remember if the user clicked debug
-   mDebug = (mUIResultID == eDebugID);
+   mDebug = (res == eDebugID);
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
@@ -1052,7 +1052,7 @@ bool NyquistEffect::ShowHostInterface(
    else
    {
       effect.SetCommand(mInputCmd);
-      effect.mDebug = (mUIResultID == eDebugID);
+      effect.mDebug = (res == eDebugID);
       res = Delegate(effect, parent, factory);
       mT0 = effect.mT0;
       mT1 = effect.mT1;
