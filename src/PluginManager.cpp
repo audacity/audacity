@@ -1550,6 +1550,11 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
    }
 }
 
+PluginID PluginManager::GetID(ModuleInterface *module)
+{
+   return ModuleManager::GetID(module);
+}
+
 PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
