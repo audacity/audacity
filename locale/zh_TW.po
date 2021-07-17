@@ -4,10 +4,10 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# Hank Lu <hankbox@gmail.com>, 2021
 # Quence Lin <qqq89513@yahoo.com.tw>, 2021
 # Arith Hsu <arithmandar@gmail.com>, 2021
 # Walter Cheuk <wwycheuk@gmail.com>, 2021
-# Hank Lu <hankbox@gmail.com>, 2021
 # Paval Shalamitski <yehekim@gmail.com>, 2021
 # Hiunn-hué <hiunnhue108@ymail.com>, 2021
 # Jesse Lin <jesselin.com@gmail.com>, 2021
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-11 08:17+0000\n"
-"PO-Revision-Date: 2020-11-02 10:15+0000\n"
+"POT-Creation-Date: 2021-07-15 12:48-0400\n"
+"PO-Revision-Date: 2021-07-16 08:57+0000\n"
 "Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/klyok/teams/690/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -27,153 +27,57 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: libraries/lib-strings/FutureStrings.h
-msgid "Problem Report for Audacity"
-msgstr "將問題回報給Audacity"
-
-#: libraries/lib-strings/FutureStrings.h
-msgid ""
-"Click \"Send\" to submit the report to Audacity. This information is "
-"collected anonymously."
-msgstr "按下送出將問題送出給Audacity。此資訊以匿名方式被收集。"
-
-#: libraries/lib-strings/FutureStrings.h src/widgets/ErrorReportDialog.cpp
-msgid "Problem details"
-msgstr "問題細節"
-
-#: libraries/lib-strings/FutureStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/ErrorReportDialog.cpp
-msgid "Comments"
-msgstr "備註意見"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr "送出 (&S)"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr "不要送出 (&D)"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/FutureStrings.h
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
 #, c-format
 msgid "Exception code 0x%x"
 msgstr "例外判斷碼： 0x%x"
 
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/FutureStrings.h
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Unknown exception"
 msgstr "未知例外"
 
-#. i18n-hint C++ programming assertion
-#: libraries/lib-strings/FutureStrings.h
-msgid "Unknown assertion"
-msgstr "未知申告"
-
-#: libraries/lib-strings/FutureStrings.h
+#: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Unknown error"
 msgstr "未知錯誤"
 
-#: libraries/lib-strings/FutureStrings.h
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Problem Report for Audacity"
+msgstr "將程式問題回報給 Audacity"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr "按下提交後將問題送出給 Audacity。此資訊以匿名方式被收集。"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr "問題細節"
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "備註意見"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "不回報錯誤訊息 (&D)"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "提交給Audacity  (&S)"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Failed to send crash report"
-msgstr "在送出當機報告時候發生錯誤"
-
-#. i18n-hint Scheme refers to a color scheme for spectrogram colors
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "spectrum prefs"
-msgid "Sche&me"
-msgstr "Scheme 基模 (&m)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (default)"
-msgstr "彩色（預設值）"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "彩色（經典）"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "灰度(&Y)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "反轉灰階(&L)"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Update Audacity"
-msgstr "更新 Audacity"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "&Skip"
-msgstr "略過(&S)"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr "安裝更新(&I)"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Changelog"
-msgstr "修改記錄"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Read more on GitHub"
-msgstr "更多資訊請閱讀 GitHub"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Error checking for update"
-msgstr "檢查更新檔案時發生錯誤"
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Unable to connect to Audacity update server."
-msgstr "無法連結到Audacity的更新主機."
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Update data was corrupted."
-msgstr "更新檔案可能是無效或已損壞."
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "下載更新檔案的時候發生錯誤."
-
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "update dialog"
-msgid "Can't open the Audacity download link."
-msgstr "無法打開Audacity下載連結."
-
-#. i18n-hint Substitution of version number for %s.
-#: libraries/lib-strings/FutureStrings.h
-#, c-format
-msgctxt "update dialog"
-msgid "Audacity %s is available!"
-msgstr "新版本 Audacity %s  已經出來了!"
-
-#. i18n-hint comment to be moved
-#. to one of them (one is enough)
-#. i18n-hint: modifier as in "Recording preferences", not progressive verb
-#: libraries/lib-strings/FutureStrings.h
-msgctxt "preference"
-msgid "Recording"
-msgstr "錄製"
+msgstr "送出當機報告時候發生錯誤"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -280,7 +184,7 @@ msgstr "跳至(&G)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select &Font..."
-msgstr "選擇字型(&F)..."
+msgstr "字型選擇 (&F)..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Vertically"
@@ -364,7 +268,7 @@ msgstr "「尋找」對話方塊"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
-msgstr "Harvey Lubin（LOGO）"
+msgstr "Harvey Lubin (logo)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
@@ -389,7 +293,7 @@ msgstr "Nyquist 效果工作檯"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
-msgstr "未找到相符項"
+msgstr "找不到相符項目"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
@@ -766,7 +670,7 @@ msgstr "<h3>"
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
-msgstr "%s 是款免費、開源且跨平台的錄音及編輯音訊軟體。"
+msgstr "%s 是款免費、開源且跨平台的聲音編輯軟體。"
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -839,7 +743,7 @@ msgstr "%s 名稱是註冊商標。"
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
-msgstr "組建資訊"
+msgstr "程式組建資訊"
 
 #: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
@@ -906,7 +810,7 @@ msgstr "跨平臺 GUI 函式庫"
 
 #: src/AboutDialog.cpp
 msgid "Audio playback and recording"
-msgstr "音訊播放和錄製"
+msgstr "聲音播放和錄製"
 
 #: src/AboutDialog.cpp
 msgid "Sample rate conversion"
@@ -978,8 +882,39 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "極端音高和拍速變更支援"
 
 #: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "Legal"
+msgstr "法律聲明"
+
+#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "GPL 授權"
+
+#. i18n-hint: For "About Audacity...": Title for Privacy Policy section
+#: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "PRIVACY POLICY"
+msgstr "隱私權政策"
+
+#: src/AboutDialog.cpp
+msgid ""
+"App update checking and error reporting require network access. These "
+"features are optional."
+msgstr "應用程式更新檢查以及錯誤回報機制需要網路的存取，這些功能都可以選擇性關閉。"
+
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "See %s for more info."
+msgstr "更多資訊請參閱 %s"
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
+#. "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "our Privacy Policy"
+msgstr "我們的隱私權政策"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1086,14 +1021,16 @@ msgstr ""
 "不能鎖定超出\n"
 "專案終點的區域。"
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "錯誤"
@@ -2784,6 +2721,11 @@ msgstr "由於使用 Unicode 字元，指定的檔案名稱無法轉換。"
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "指定新的檔案名稱："
+
+#: src/FileNames.cpp
+#, c-format
+msgid "Directory %s does not have write permissions"
+msgstr "不具有寫入資料夾 %s的權限"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -4567,14 +4509,6 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "另存專案時發生錯誤"
 
-#: src/ProjectFileManager.cpp
-msgid "Can't open new empty project"
-msgstr "無法開啟新的空白專案檔案"
-
-#: src/ProjectFileManager.cpp
-msgid "Error opening a new empty project"
-msgstr "在開啟新的空白專案的時候發生錯誤"
-
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "選擇一個或多個檔案"
@@ -5110,7 +5044,7 @@ msgstr "啟動強度 (分貝)："
 msgid "Welcome to Audacity!"
 msgstr "歡迎使用 Audacity！"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "啟動時不再顯示本視窗"
 
@@ -6026,9 +5960,10 @@ msgstr "拖動"
 msgid "Panel"
 msgstr "面板"
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "Application"
-msgstr "應用"
+msgstr "附屬應用"
 
 #: src/commands/DragCommand.cpp
 msgid "Track 0"
@@ -6688,9 +6623,11 @@ msgstr "使用頻譜偏好設定"
 msgid "Spectral Select"
 msgstr "頻譜選擇"
 
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Gray Scale"
-msgstr "灰度比例"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "繪製樣式  (&m)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -7902,7 +7839,7 @@ msgstr "正在準備預覽"
 
 #: src/effects/Effect.cpp
 msgid "Previewing"
-msgstr "正在預覽"
+msgstr "正在預覽中"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or
@@ -10654,7 +10591,7 @@ msgstr "使用命令列編碼器匯出音訊"
 msgid "Command Output"
 msgstr "指令輸出"
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "確定(&O)"
 
@@ -11579,7 +11516,7 @@ msgstr "最高，320 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
-msgstr "極高，220-260 kbps"
+msgstr "高等，220-260 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
@@ -11596,7 +11533,7 @@ msgstr "最高"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
-msgstr "極高"
+msgstr "高等"
 
 #: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
@@ -12901,7 +12838,7 @@ msgstr "匯入(&I)"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
-msgstr "資料大小無效。無法匯入音訊"
+msgstr "因資料大小錯誤。無法匯入音訊"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -13141,7 +13078,7 @@ msgstr "分離"
 
 #: src/menus/EditMenus.cpp
 msgid "Metadata Tags"
-msgstr "後設資料標記"
+msgstr "詮釋資料標記"
 
 #: src/menus/EditMenus.cpp
 msgid "&Edit"
@@ -13211,7 +13148,7 @@ msgstr "合併(&J)"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "Detac&h at Silences"
-msgstr "靜音處分離(&H)"
+msgstr "分離靜音處(&H)"
 
 #: src/menus/EditMenus.cpp
 msgid "&Metadata..."
@@ -13239,27 +13176,27 @@ msgstr "混音器(&X)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Ad&just Playback Volume..."
-msgstr "調整播放音量(&J)..."
+msgstr "播放音量調整(&J)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Increase Playback Volume"
-msgstr "提高播放音量(&I)"
+msgstr "播放音量提高(&I)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Decrease Playback Volume"
-msgstr "降低播放音量(&D)"
+msgstr "播放音量降低(&D)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Adj&ust Recording Volume..."
-msgstr "調整錄音音量(&U)..."
+msgstr "錄音音量調整(&U)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "I&ncrease Recording Volume"
-msgstr "提高錄音音量(&N)"
+msgstr "錄音音量提高(&N)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "D&ecrease Recording Volume"
-msgstr "降低錄音音量(&E)"
+msgstr "錄音音量降低(&E)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "De&vice"
@@ -13267,19 +13204,19 @@ msgstr "裝置(&V)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Recording Device..."
-msgstr "變更錄音裝置(&R)..."
+msgstr "錄音裝置變更(&R)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Playback Device..."
-msgstr "變更播放裝置(&P)..."
+msgstr "播放裝置變更(&P)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Audio &Host..."
-msgstr "變更音訊通訊介面(&H)..."
+msgstr "音訊通訊介面變更(&H)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Recording Cha&nnels..."
-msgstr "變更輸入聲道(&N)..."
+msgstr "輸入聲道變更(&N)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Full Screen (on/off)"
@@ -13296,7 +13233,7 @@ msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
-msgstr "匯出選擇的音訊"
+msgstr "匯出所選擇的音訊"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/menus/FileMenus.cpp
@@ -13396,15 +13333,15 @@ msgstr "匯出(&E)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
-msgstr "匯出為 MP&3"
+msgstr "匯出為 MP3  (&3)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as &WAV"
-msgstr "匯出為 &WAV"
+msgstr "匯出為 WAV (&W)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
-msgstr "匯出為 &OGG"
+msgstr "匯出為 OGG (&O)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
@@ -13420,11 +13357,11 @@ msgstr "匯出標籤(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Multiple..."
-msgstr "匯出多個檔案(&M)..."
+msgstr "匯出成多個檔案(&M)..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export MI&DI..."
-msgstr "匯出 MI&DI..."
+msgstr "匯出 MIDI... (&D)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
@@ -13436,7 +13373,7 @@ msgstr "標籤(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&MIDI..."
-msgstr "&MIDI..."
+msgstr "MIDI... (&M)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
@@ -13488,11 +13425,11 @@ msgstr "快速修正"
 
 #: src/menus/HelpMenus.cpp
 msgid "Nothing to do"
-msgstr "沒有事情可以做"
+msgstr "沒有可被執行的項目"
 
 #: src/menus/HelpMenus.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr "找不到可以快速修正的問題"
+msgstr "找不到可被快速修正的問題"
 
 #: src/menus/HelpMenus.cpp
 msgid "Clocks on the Tracks"
@@ -13517,10 +13454,6 @@ msgstr "音訊裝置資訊"
 #: src/menus/HelpMenus.cpp
 msgid "MIDI Device Info"
 msgstr "MIDI 裝置資訊"
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree"
-msgstr "選單樹"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
@@ -13754,11 +13687,11 @@ msgstr "分割(&T)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split"
-msgstr "標籤分割"
+msgstr "將標籤處分割"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Join"
-msgstr "標籤合併"
+msgstr "將標籤處合併"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
@@ -14405,7 +14338,7 @@ msgstr "已對齊/移動至首尾相接"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned end to end"
-msgstr "已首尾相接對齊"
+msgstr "已頭尾相接對齊"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align/Move End to End"
@@ -14413,7 +14346,7 @@ msgstr "首尾相接對齊/移動"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align End to End"
-msgstr "首尾相接對齊"
+msgstr "頭尾相接對齊"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved together"
@@ -14445,7 +14378,7 @@ msgstr "已調整增益"
 
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
-msgstr "已調整平移"
+msgstr "已調整左右聲道平移"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new audio track"
@@ -14567,7 +14500,7 @@ msgstr "混音(&X)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix Stereo Down to &Mono"
-msgstr "將立體聲混合為單聲道(&M)"
+msgstr "將立體聲轉換成單聲道(&M)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x and Render"
@@ -14741,9 +14674,8 @@ msgstr "正在播放"
 #. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "錄製"
 
@@ -14799,7 +14731,7 @@ msgstr "請選擇剪輯內的時間。"
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
 msgid "Tra&nsport"
-msgstr "播錄(&N)"
+msgstr "播放錄音(&N)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pl&aying"
@@ -14816,24 +14748,24 @@ msgstr "播放/停止和設定游標(&S)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Loop Play"
-msgstr "循環播放(&L)"
+msgstr "循環播放 (&L)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
-msgstr "暫停(&P)"
+msgstr "暫停 (&P)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Recording"
-msgstr "錄製(&R)"
+msgstr "錄製中 (&R)"
 
 #. i18n-hint: (verb)
 #: src/menus/TransportMenus.cpp
 msgid "&Record"
-msgstr "錄製(&R)"
+msgstr "錄製 (&R)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Append Record"
-msgstr "附加錄製(&A)"
+msgstr "附加錄製 (&A)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Record &New Track"
@@ -14845,7 +14777,7 @@ msgstr "預約錄製(&T)..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
-msgstr "Punch and Rol&l Record"
+msgstr "接續選取區域後錄音"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pla&y Region"
@@ -14885,7 +14817,7 @@ msgstr "疊錄 (開啟/關閉)(&O)"
 
 #: src/menus/TransportMenus.cpp
 msgid "So&ftware Playthrough (on/off)"
-msgstr "軟體監播 (開啟/關閉)(&F)"
+msgstr "軟體監播 (開/關)(&F)"
 
 #: src/menus/TransportMenus.cpp
 msgid "A&utomated Recording Level Adjustment (on/off)"
@@ -14893,53 +14825,53 @@ msgstr "輸入強度自動調整 (開啟/關閉)(&U)"
 
 #: src/menus/TransportMenus.cpp
 msgid "T&ransport"
-msgstr "播錄(&R)"
+msgstr "播錄 (&R)"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Pl&ay"
-msgstr "播放(&A)"
+msgstr "播放 (&A)"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Sto&p"
-msgstr "停止(&P)"
+msgstr "停止 (&P)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &One Second"
-msgstr "播放一秒(&O)"
+msgstr "播放一秒 (&O)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play to &Selection"
-msgstr "播放至選擇選圍(&S)"
+msgstr "播放至選擇選圍 (&S)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &Before Selection Start"
-msgstr "播放至選取部分起點前(&B)"
+msgstr "從選取區域 起點 前播放 (&B)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Af&ter Selection Start"
-msgstr "於選取部分起點後播放(&T)"
+msgstr "從選取區域 起點 後播放 (&T)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Be&fore Selection End"
-msgstr "播放至選取部分終點前(&F)"
+msgstr "從選取區域 終點 前播放 (&F)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Aft&er Selection End"
-msgstr "於選取部分終點後播放(&E)"
+msgstr "從選取區域 終點 後播放 (&E)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Before a&nd After Selection Start"
-msgstr "播放選區起點前後(&N)"
+msgstr "播放選取區域 起點的前後片段 (&N)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Before an&d After Selection End"
-msgstr "播放選區終點前後(&D)"
+msgstr "播放選取區域 終點的前後片段 (&D)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "播放裁切區域預覽(&I)"
+msgstr "播放裁切預覽 (忽略選取區)  (&u)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Play-at-Speed"
@@ -14952,11 +14884,11 @@ msgstr "以正常速度播放(&A)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Loop Play-at-Speed"
-msgstr "以指定速度循環播放(&L)"
+msgstr "以指定速度循環播放 (&L)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "以指定速度播放剪下預覽(&U)"
+msgstr "以指定速度播放 裁切預覽 (忽略選取區)   (&u)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Ad&just Playback Speed..."
@@ -15099,6 +15031,28 @@ msgstr "正在解碼波形"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% 已完成。點選以變更工作焦點。"
 
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Preferences for Application"
+msgstr "偏好設定"
+
+#. i18n-hint: Title for the update notifications panel in the preferences
+#. dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr "更新提醒設定"
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "檢查更新 (&C)"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr "程式更新需要使用到網路，為了維護你的隱私，AUDACITY並沒有收集任何個人資訊。"
+
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "批次"
@@ -15147,6 +15101,13 @@ msgstr "播放"
 msgid "&Device:"
 msgstr "裝置(&D)："
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+msgctxt "preference"
+msgid "Recording"
+msgstr "錄製"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "裝置(&V)："
@@ -15190,6 +15151,7 @@ msgstr "2 (立體聲)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "目錄"
 
@@ -16207,7 +16169,7 @@ msgstr "播放偏好設定"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
-msgstr "效果預覽"
+msgstr "預覽效果"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
@@ -16216,7 +16178,7 @@ msgstr "長度(&L)："
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "裁切區域預覽"
+msgstr "播放裁切預覽 (忽略選取區) "
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -16458,6 +16420,30 @@ msgstr "等效矩形頻寬（ERB）"
 msgid "Period"
 msgstr "週期"
 
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "彩色（預設值）"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "彩色（經典）"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "灰度(&Y)"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "反轉灰階(&L)"
+
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
 msgstr "頻率"
@@ -16540,10 +16526,6 @@ msgstr "範圍 (dB)(&R)："
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
 msgstr "高增強 (&b) (dB/dec)"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
-msgstr "灰度(&Y)"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
@@ -17663,7 +17645,7 @@ msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
 msgstr ""
-"要變更頻譜圖設定，\n"
+"要變更頻譜圖設定前，\n"
 " 請先停止任何播放或錄製。"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -18236,6 +18218,95 @@ msgstr "拖動以縮放到區域內，右鍵點選以縮小"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "左鍵=放大，右鍵=縮小，中鍵=正常"
 
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "檢查更新檔案時發生錯誤"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr "無法連結到Audacity的更新主機."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "更新檔案可能是無效或已損壞."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "下載更新檔案的時候發生錯誤."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr "無法打開Audacity下載連結."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr "檢查程式更新"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there "
+"is a new version of Audacity available to download."
+msgstr "為了確保應用程式保持在最新版本的的狀況，你會在Audacity 新版本釋出的時候收到提醒。"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal "
+"information. However, app update checking does require network access."
+msgstr "為了保護您的隱私，Audacity 並不會蒐集任何個人資訊，但檢查是否有新版本的程式將會需要網路連線"
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr "你可以在%s關閉程式更新檢查。"
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr "程式更新"
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Preferences > Application"
+msgstr "偏好設定 > 附屬應用"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "更新 Audacity"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "略過(&S)"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "安裝更新(&I)"
+
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "新版本 Audacity %s  已經出來了!"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "修改記錄"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "更多資訊請閱讀 GitHub"
+
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
 msgstr "(已停用)"
@@ -18265,20 +18336,6 @@ msgstr "右"
 #, c-format
 msgid "%.2fx"
 msgstr "%.2fx"
-
-#: src/widgets/ErrorReportDialog.cpp
-msgid ""
-"Click \"Send\" to submit report to Audacity. This information is collected "
-"anonymously."
-msgstr "按下送出將問題送出給Audacity。此資訊以匿名方式被收集。"
-
-#: src/widgets/ErrorReportDialog.cpp
-msgid "Don't send"
-msgstr "不要送出 (&D)"
-
-#: src/widgets/ErrorReportDialog.cpp
-msgid "Send"
-msgstr "送出 (&S)"
 
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -18839,6 +18896,31 @@ msgstr "確定要關閉嗎？"
 msgid "Confirm Close"
 msgstr "確認關閉"
 
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "無法寫入檔案到  %s 目錄"
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr "請檢查指定的目錄是否存在並且有足夠的儲存空間，並且有足夠的存取權限"
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "You can change the directory in %s."
+msgstr "你可以在 %s 修改目錄設定"
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
+#. page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Preferences > Directories"
+msgstr "偏好設定 > 目錄"
+
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "不再顯示本警告"
@@ -19242,7 +19324,7 @@ msgstr "錯誤。~%選取部分無效。~%選擇了多於 2 個音訊剪輯。"
 #, lisp-format
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "錯誤。~%選取部分無效。~%選取部分的開首或結尾有空白。"
+msgstr "錯誤。~%選取部分無效。~ %E選取部分的開首或結尾有空白。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format

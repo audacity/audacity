@@ -44,8 +44,11 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/ErrorDialog.h"
 #include "widgets/FileHistory.h"
+#include "widgets/UnwritableLocationErrorDialog.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
+
+#include "HelpText.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{
    []( AudacityProject &parent ){
@@ -771,13 +774,10 @@ bool ProjectFileManager::OpenNewProject()
    bool bOK = OpenProject();
    if( !bOK )
    {
-      ShowExceptionDialog(
-         nullptr,
-         XO("Can't open new empty project"),
-         XO("Error opening a new empty project"), 
-         "FAQ:Errors_opening_a_new_empty_project",
-         true, 
-         audacity::ToWString(projectFileIO.GetLastLog()));
+       auto tmpdir = wxFileName(TempDirectory::UnsavedProjectFileName()).GetPath();
+
+       UnwritableLocationErrorDialog dlg(nullptr, tmpdir);
+       dlg.ShowModal();
    }
    return bOK;
 }

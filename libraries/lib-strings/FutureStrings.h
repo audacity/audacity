@@ -95,25 +95,3 @@ Some example strings are also given first, to document the syntax.
 
 // //////////////////////////////////////////////// End examples
 #endif
-
-// Update version dialog
-XC("Update Audacity", "update dialog"),
-XC("&Skip", "update dialog"),
-XC("&Install update", "update dialog"),
-XC("Changelog", "update dialog"),
-XC("Read more on GitHub", "update dialog"),
-XC("Error checking for update", "update dialog"),
-XC("Unable to connect to Audacity update server.", "update dialog"),
-XC("Update data was corrupted.", "update dialog"),
-XC("Error downloading update.", "update dialog"),
-XC("Can't open the Audacity download link.", "update dialog"),
-// i18n-hint Substitution of version number for %s.
-XC("Audacity %s is available!", "update dialog"),
-
-// For after 3.0.3
-
-// See three occurrences of this XC in comments elsewhere;
-// to be uncommented, replacing an XO; and the i18n-hint comment to be moved
-// to one of them (one is enough)
-// i18n-hint: modifier as in "Recording preferences", not progressive verb
-XC("Recording", "preference"),

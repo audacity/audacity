@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-07 08:17-0400\n"
+"POT-Creation-Date: 2021-07-15 12:48-0400\n"
 "PO-Revision-Date: 2018-03-29 22:12+0100\n"
 "Last-Translator: Zygimantus <zygimantus@gmail.com>\n"
 "Language-Team: Sharunas <Sharunas55387@hotmail.com>\n"
@@ -16,9 +16,62 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
-"%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,-1,997,-1,-1,-1,-1\n"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Unknown exception"
+msgstr "Nežinomas komandinės eilutės jungtukas %s\n"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Unknown error"
+msgstr "Nežinomas"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "&Nuostatos..."
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "Komentarai"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "Nepavyksta skaityti išankstinės nuostatos failo."
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -55,157 +108,6 @@ msgstr "Stiprinama"
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
 msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Problem Report for Audacity"
-msgstr "&Nuostatos..."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid ""
-"Click \"Send\" to submit the report to Audacity. This information is "
-"collected anonymously."
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem details"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Komentarai"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr ""
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgid "Exception code 0x%x"
-msgstr ""
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Unknown exception"
-msgstr "Nežinomas komandinės eilutės jungtukas %s\n"
-
-#. i18n-hint C++ programming assertion
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Unknown assertion"
-msgstr "Nežinomas"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Unknown error"
-msgstr "Nežinomas"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Failed to send crash report"
-msgstr "Nepavyksta skaityti išankstinės nuostatos failo."
-
-#. i18n-hint Scheme refers to a color scheme for spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Sche&me"
-msgstr ""
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (default)"
-msgstr "256 - įprastas"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr ""
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Skalė"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Linijinis"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Update Audacity"
-msgstr "Išeiti iš Audacity"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Skip"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Changelog"
-msgstr "Kanalas"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Read more on GitHub"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Error checking for update"
-msgstr "Klaida bandant iššifruoti failą"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Unable to connect to Audacity update server."
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update data was corrupted."
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "Klaida Užkraunant Metaduomenis"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Can't open the Audacity download link."
-msgstr ""
-
-#. i18n-hint Substitution of version number for %s.
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
-msgctxt "update dialog"
-msgid "Audacity %s is available!"
-msgstr "Audacity Pirmasis paleidimas"
 
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
@@ -377,11 +279,8 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr ""
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-"Išorinis Audacity modulis kuris leidžia naudotis paprasta kūrimo programa "
-"efektų kūrimui."
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "Išorinis Audacity modulis kuris leidžia naudotis paprasta kūrimo programa efektų kūrimui."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -680,14 +579,8 @@ msgstr "OK"
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid ""
-"%s is a free program written by a worldwide team of %s. %s is %s for "
-"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr ""
-"Audacity yra nemokama programa sukurta pasaulinio masto komandos [[http://"
-"www.audacityteam.org/about/credits|volunteers]]. Audacity pritaikyta "
-"[[http://www.audacityteam.org/download|available]] Windows, Mac ir GNU/Linux "
-"(ir kitoms Unix sistemoms)."
+msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "Audacity yra nemokama programa sukurta pasaulinio masto komandos [[http://www.audacityteam.org/about/credits|volunteers]]. Audacity pritaikyta [[http://www.audacityteam.org/download|available]] Windows, Mac ir GNU/Linux (ir kitoms Unix sistemoms)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
@@ -703,14 +596,8 @@ msgstr "Peržiūra negalima"
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid ""
-"If you find a bug or have a suggestion for us, please write, in English, to "
-"our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr ""
-"Radus klaidą arba turint pasiūlymų mums, prašome mums rašyti angliškai mūsų "
-"forume [[http://forum.audacityteam.org/|forum]]. Ieškant pagalbos arba "
-"naudingų patarimų apsilankykite mūsų [[http://wiki.audacityteam.org/|wiki]] "
-"arba [[http://forum.audacityteam.org/|forum]]."
+msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+msgstr "Radus klaidą arba turint pasiūlymų mums, prašome mums rašyti angliškai mūsų forume [[http://forum.audacityteam.org/|forum]]. Ieškant pagalbos arba naudingų patarimų apsilankykite mūsų [[http://wiki.audacityteam.org/|wiki]] arba [[http://forum.audacityteam.org/|forum]]."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
@@ -740,8 +627,7 @@ msgstr ""
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr ""
-"Lithuanian translation by Šarūnas Gliebus ir Aurimas Liaukevičius (Jimmy Leo)"
+msgstr "Lithuanian translation by Šarūnas Gliebus ir Aurimas Liaukevičius (Jimmy Leo)"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -750,12 +636,8 @@ msgstr ""
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid ""
-"%s the free, open source, cross-platform software for recording and editing "
-"sounds."
-msgstr ""
-"Audicity yra nemokama, atviros programinės įrangos, pritaikyta įvairioms "
-"platformoms, garsų įrašinėjimui ir koregavimui programa."
+msgid "%s the free, open source, cross-platform software for recording and editing sounds."
+msgstr "Audicity yra nemokama, atviros programinės įrangos, pritaikyta įvairioms platformoms, garsų įrašinėjimui ir koregavimui programa."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -795,9 +677,7 @@ msgstr ""
 #  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "Translators"
-msgstr ""
-"Lithuanian translation by Šarūnas Gliebus and Aurimas Liaukevičius (Jimmy "
-"Leo)"
+msgstr "Lithuanian translation by Šarūnas Gliebus and Aurimas Liaukevičius (Jimmy Leo)"
 
 #: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
 msgid "Libraries"
@@ -830,9 +710,7 @@ msgstr ""
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "The name %s is a registered trademark."
-msgstr ""
-"&nbsp; &nbsp; Pavadinimas: <b>Audacity</b>yra registruotas prekyženklis "
-"kurio savininkas yra: Dominic Mazzoni.<br><br>"
+msgstr "&nbsp; &nbsp; Pavadinimas: <b>Audacity</b>yra registruotas prekyženklis kurio savininkas yra: Dominic Mazzoni.<br><br>"
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -977,8 +855,36 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "Ypatingo Aukštumo ir Tempo Pokyčių palaikymas"
 
 #: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "Legal"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "GPL Licenzija"
+
+#. i18n-hint: For "About Audacity...": Title for Privacy Policy section
+#: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "PRIVACY POLICY"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "App update checking and error reporting require network access. These features are optional."
+msgstr ""
+
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "See %s for more info."
+msgstr "Pasirinkite vieną ar daugiau failų"
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "our Privacy Policy"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1096,14 +1002,16 @@ msgstr ""
 "Neįmanoma prirakinti regiono toliau nei\n"
 "projekto pabaigoje."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Klaida"
@@ -1121,13 +1029,11 @@ msgstr "Nepavyko!"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr ""
 "Perrinkti Nuostatas?\n"
 "\n"
-"Tai yra vienkartinis klausimas, po 'instaliavimo' kur jūs pasirinkote "
-"perrinkti Nuostatas."
+"Tai yra vienkartinis klausimas, po 'instaliavimo' kur jūs pasirinkote perrinkti Nuostatas."
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
@@ -1185,13 +1091,11 @@ msgstr "&Failas"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity neranda saugios vietos laikiniems failams laikyti.\n"
-"Audacity reikalauja vietos kur automatinės valymo programos negalėtu "
-"ištrinti laikinų failų.\n"
+"Audacity reikalauja vietos kur automatinės valymo programos negalėtu ištrinti laikinų failų.\n"
 "Prašome įvesti tinkama vietą nuostatų dialoge."
 
 #: src/AudacityApp.cpp
@@ -1203,12 +1107,8 @@ msgstr ""
 "Prašau įrašyti ją Nuostatų dialoge."
 
 #: src/AudacityApp.cpp
-msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
-"temporary directory."
-msgstr ""
-"Audacity dabar išsijungs. Prašome paleisti Audacity dar karta kad galima "
-"būtų naudoti nauja laikinąja vietą."
+msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgstr "Audacity dabar išsijungs. Prašome paleisti Audacity dar karta kad galima būtų naudoti nauja laikinąja vietą."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1245,8 +1145,7 @@ msgid ""
 "Use the New or Open commands in the currently running Audacity\n"
 "process to open multiple projects simultaneously.\n"
 msgstr ""
-"Naudokite Naujas arba Atidaryti komandas šioje paleistoje Audacity "
-"programoje\n"
+"Naudokite Naujas arba Atidaryti komandas šioje paleistoje Audacity programoje\n"
 "norint atidaryti kelis projektus vienu metu.\n"
 
 #: src/AudacityApp.cpp
@@ -1362,19 +1261,16 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk "
-"is full or you do not have write permissions to the file. More information "
-"can be obtained by clicking the help button below.\n"
+"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. More information can be obtained by clicking the help button below.\n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
-"state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Pagalba"
 
@@ -1472,12 +1368,8 @@ msgid "Out of memory!"
 msgstr "Neužtenka atminties!"
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too high."
-msgstr ""
-"Automatinis Įrašo Lygio Taisymas sustojo. Nepavyko labiau sulyginti. Jis vis "
-"dar per aukštas."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "Automatinis Įrašo Lygio Taisymas sustojo. Nepavyko labiau sulyginti. Jis vis dar per aukštas."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1485,12 +1377,8 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "Automatinis Įrašo Lygio Taisymas pamažino garsumą iki %f."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too low."
-msgstr ""
-"Automatinis Įrašo Lygio Taisymas sustojo. Nepavyko labiau sulyginti. Jis vis "
-"dar per žemas."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "Automatinis Įrašo Lygio Taisymas sustojo. Nepavyko labiau sulyginti. Jis vis dar per žemas."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1498,29 +1386,17 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "Automatinis Įrašo Lygio Taisymas pakėlė garsumą iki %.2f."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"Automatinis Įrašo Lygio Taisymas sustojo. Analizės skaičiaus riba buvo "
-"pasiekta neradus tinkamo garsumo. Vis dar per aukštas."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "Automatinis Įrašo Lygio Taisymas sustojo. Analizės skaičiaus riba buvo pasiekta neradus tinkamo garsumo. Vis dar per aukštas."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"Automatinis Įrašo Lygio Taisymas sustojo. Analizės skaičiaus riba buvo "
-"pasiekta neradus tinkamo garsumo. Vis dar per žemas."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "Automatinis Įrašo Lygio Taisymas sustojo. Analizės skaičiaus riba buvo pasiekta neradus tinkamo garsumo. Vis dar per žemas."
 
 #: src/AudioIO.cpp
 #, c-format
-msgid ""
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
-"volume."
-msgstr ""
-"Automatinis Įrašo Lygio Taisymas sustojo. %.2f atrodo kaip tinkamiausias "
-"garsumas."
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr "Automatinis Įrašo Lygio Taisymas sustojo. %.2f atrodo kaip tinkamiausias garsumas."
 
 #: src/AudioIOBase.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -1714,13 +1590,11 @@ msgstr "Automatinis Išsijungimo Atkūrimas"
 #: src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
-"run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Kai kurie projektai nebuvo išsaugoti tinkamai paskutini kartai kai Audacity "
-"buvo paleista.\n"
+"Kai kurie projektai nebuvo išsaugoti tinkamai paskutini kartai kai Audacity buvo paleista.\n"
 "Laimei šie projektai gali būti automatiškai atkurti:"
 
 #: src/AutoRecoveryDialog.cpp
@@ -2279,22 +2153,14 @@ msgstr ""
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
-msgstr ""
-"Pasirinkite garsą kad %s galėtų jį naudoti (pavyzdžiui, Cmd + A norint "
-"pasirinkti viską) tada bandykite dar kartą."
+msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+msgstr "Pasirinkite garsą kad %s galėtų jį naudoti (pavyzdžiui, Cmd + A norint pasirinkti viską) tada bandykite dar kartą."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
-msgstr ""
-"Pasirinkite garsą kad %s galėtų jį naudoti (pavyzdžiui, Ctrl + A norint "
-"pasirinkti viską) tada bandykite dar kartą."
+msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+msgstr "Pasirinkite garsą kad %s galėtų jį naudoti (pavyzdžiui, Ctrl + A norint pasirinkti viską) tada bandykite dar kartą."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -2306,11 +2172,9 @@ msgstr "Nėra jokio pasirinkto garso"
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise "
-"profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to "
-"change\n"
+"2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 
@@ -2429,8 +2293,7 @@ msgid ""
 "Copying these files into your project will remove this dependency.\n"
 "This is safer, but needs more disk space."
 msgstr ""
-"Jeigu kopijuosite šiuos failus į savo projektą jūs pašalinsit šį "
-"priklausomumą.\n"
+"Jeigu kopijuosite šiuos failus į savo projektą jūs pašalinsit šį priklausomumą.\n"
 "Tai yra saugiau, tačiau reikalauja daugiau vietos diske."
 
 #: src/Dependencies.cpp
@@ -2442,8 +2305,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Failas rodomas kaip MISSING buvo perkeltas arba ištrintas ir negali būti "
-"nukopijuotas.\n"
+"Failas rodomas kaip MISSING buvo perkeltas arba ištrintas ir negali būti nukopijuotas.\n"
 "Grąžinkite juos į jų pradinę vietą norint nukopijuoti į projektą."
 
 #: src/Dependencies.cpp
@@ -2521,28 +2383,21 @@ msgid "Missing"
 msgstr "Trūkstami Failai"
 
 #: src/Dependencies.cpp
-msgid ""
-"If you proceed, your project will not be saved to disk. Is this what you "
-"want?"
-msgstr ""
-"Jeigu tesite, jūsų projektas nebus išsaugotas į diską. Ar jūs to norite?"
+msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
+msgstr "Jeigu tesite, jūsų projektas nebus išsaugotas į diską. Ar jūs to norite?"
 
 #: src/Dependencies.cpp
 #, fuzzy
 msgid ""
-"Your project is self-contained; it does not depend on any external audio "
-"files. \n"
+"Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
-"Jūsų projektas yra savarankiškas ir nepriklauso nuo jokių išorinių garso "
-"failų.\n"
+"Jūsų projektas yra savarankiškas ir nepriklauso nuo jokių išorinių garso failų.\n"
 "\n"
-"Pakeitus projektą, kad jis turėtų išorinių priklausomybių importuotiems "
-"failams, projektas taps nebe savarankišku. Ir išsaugojus nenukopijavus tų "
-"failų jūs galite prarasti duomenis."
+"Pakeitus projektą, kad jis turėtų išorinių priklausomybių importuotiems failams, projektas taps nebe savarankišku. Ir išsaugojus nenukopijavus tų failų jūs galite prarasti duomenis."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2629,10 +2484,8 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg buvo pakeistas Nuostatose ir sėkmingai užkrautas "
-"anksčiau,                         \n"
-"bet šį karta Audacity nepavyko jų užkrauti "
-"paleidžiant.                         \n"
+"FFmpeg buvo pakeistas Nuostatose ir sėkmingai užkrautas anksčiau,                         \n"
+"bet šį karta Audacity nepavyko jų užkrauti paleidžiant.                         \n"
 "\n"
 "Turite eiti į Nuostatos > Bibliotekos ir perkonfigūruoti."
 
@@ -2651,9 +2504,7 @@ msgstr "Surasti FFmpeg"
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr ""
-"Audacity reikalauja failo '%s', kad galėtų importuoti ir eksportuoti garsą "
-"per FFmpeg."
+msgstr "Audacity reikalauja failo '%s', kad galėtų importuoti ir eksportuoti garsą per FFmpeg."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -2825,14 +2676,17 @@ msgid "%s files"
 msgstr "Pervadinti failai:"
 
 #: src/FileNames.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
-msgstr ""
-"Įvestas failo pavadinimas negali būti konvertuotas del Unicode naudojimo."
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "Įvestas failo pavadinimas negali būti konvertuotas del Unicode naudojimo."
 
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "Patikslinkite Naują Failo Pavadinimą:"
+
+#: src/FileNames.cpp
+#, fuzzy, c-format
+msgid "Directory %s does not have write permissions"
+msgstr "Vieta %s neegzistuoja. Ar sukurti?"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2952,15 +2806,11 @@ msgstr "&Kartoti..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
-msgstr ""
-"Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio "
-"dažnio."
+msgstr "Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio dažnio."
 
 #: src/FreqWindow.cpp
 #, fuzzy, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
 msgstr "Per daug audio pasirinkta. Tik %.1f sekundės bus išanalizuotos."
 
 #: src/FreqWindow.cpp
@@ -3083,38 +2933,25 @@ msgid "No Local Help"
 msgstr "Jokios Vietinės Pagalbos"
 
 #: src/HelpText.cpp
-msgid ""
-"<br><br>The version of Audacity you are using is an <b>Alpha test version</"
-"b>."
-msgstr ""
-"<br><br>Audacity versija kuria naudojate yra <b>Alfa testavimo versija</b>."
+msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+msgstr "<br><br>Audacity versija kuria naudojate yra <b>Alfa testavimo versija</b>."
 
 #: src/HelpText.cpp
-msgid ""
-"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr ""
-"<br><br>Audacity versija kuria naudojate yra <b>Beta testavimo versija</b>."
+msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgstr "<br><br>Audacity versija kuria naudojate yra <b>Beta testavimo versija</b>."
 
 #: src/HelpText.cpp
 msgid "Get the Official Released Version of Audacity"
 msgstr "Gauti Oficialiai Paleista Audacity Versiją"
 
 #: src/HelpText.cpp
-msgid ""
-"We strongly recommend that you use our latest stable released version, which "
-"has full documentation and support.<br><br>"
-msgstr ""
-"Mes rekomenduojame, kad jūs naudotumėte mūsų naujausią stabilią versiją, "
-"kuri turi pilną dokumentacija ir paramą.<br><br>"
+msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
+msgstr "Mes rekomenduojame, kad jūs naudotumėte mūsų naujausią stabilią versiją, kuri turi pilną dokumentacija ir paramą.<br><br>"
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"You can help us get Audacity ready for release by joining our [[https://www."
-"audacityteam.org/community/|community]].<hr><br><br>"
-msgstr ""
-"Jūs galite mums padėti paruošti Audacity išleidimui prisijungiant prie mūsų "
-"[[http://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr "Jūs galite mums padėti paruošti Audacity išleidimui prisijungiant prie mūsų [[http://www.audacityteam.org/community/|community]].<hr><br><br>"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -3127,92 +2964,43 @@ msgstr "Yra daugiau paramos būdų:"
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
-"audacityteam.org/quick_help.html|view online]]"
-msgstr ""
-" [[file:quick_help.html|Quick Help]] - jeigu nebuvo įrašyta lokaliai, "
-"[[http://manual.audacityteam.org/quick_help.html|view online]]"
+msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+msgstr " [[file:quick_help.html|Quick Help]] - jeigu nebuvo įrašyta lokaliai, [[http://manual.audacityteam.org/quick_help.html|view online]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
-"audacityteam.org/|view online]]"
-msgstr ""
-" [[file:index.html|Manual]] - jeigu nebuvo įrašyta lokaliai, [[http://manual."
-"audacityteam.org/|view online]]"
+msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
+msgstr " [[file:index.html|Manual]] - jeigu nebuvo įrašyta lokaliai, [[http://manual.audacityteam.org/|view online]]"
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
-"online."
-msgstr ""
-" [[http://forum.audacityteam.org/|Forum]] - rašykite savo klausimus "
-"tiesiogiai, čia."
+msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+msgstr " [[http://forum.audacityteam.org/|Forum]] - rašykite savo klausimus tiesiogiai, čia."
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
-"tips, tricks, extra tutorials and effects plug-ins."
-msgstr ""
-"Daugiau:</b> Apsilankykite mūsų wiki [[http://wiki.audacityteam.org/index."
-"php|Wiki]] norint pamatyti naudingų patarimų, daugiau pamokų ir efektų "
-"papildinių."
+msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
+msgstr "Daugiau:</b> Apsilankykite mūsų wiki [[http://wiki.audacityteam.org/index.php|Wiki]] norint pamatyti naudingų patarimų, daugiau pamokų ir efektų papildinių."
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
-"WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[https://manual."
-"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
-"library]] to your computer."
-msgstr ""
-"Audacity gali importuoti neapsaugotus failus daugeliu formatų (tokiu kaip "
-"M4A ir WMA, suspaustus WAV failus iš nešiojamu įrašinėjimo aparatų ir garso "
-"iš video failų) jeigu atsisiūsite ir įsirašysite pasirinktiną biblioteką "
-"[[http://manual.audacityteam.org/man/faq_opening_and_saving_files."
-"html#foreign| FFmpeg library]] į savo kompiuterį."
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
+msgstr "Audacity gali importuoti neapsaugotus failus daugeliu formatų (tokiu kaip M4A ir WMA, suspaustus WAV failus iš nešiojamu įrašinėjimo aparatų ir garso iš video failų) jeigu atsisiūsite ir įsirašysite pasirinktiną biblioteką [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] į savo kompiuterį."
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
-"CDs]]."
-msgstr ""
-"Taip pat galite skaityti mūsų importavimo pagalbą [[http://manual."
-"audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI files]] ir "
-"takelius iš [[http://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr "Taip pat galite skaityti mūsų importavimo pagalbą [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI files]] ir takelius iš [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
 
 #: src/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]].<br><br>To always view the Manual online, change \"Location of "
-"Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"Žinynas nėra įrašytas. Prašome [[*URL*|skaityti žinyną internete]]."
-"<br><br>Norint visada skaityti Žinyną internete, pakeiskite \"Žinyno vieta\" "
-"Nuostatose į \"Iš Interneto\"."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "Žinynas nėra įrašytas. Prašome [[*URL*|skaityti žinyną internete]].<br><br>Norint visada skaityti Žinyną internete, pakeiskite \"Žinyno vieta\" Nuostatose į \"Iš Interneto\"."
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
-"download the Manual]].<br><br>To always view the Manual online, change "
-"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"Žinynas nėra įrašytas. Prašome [[*URL*|skaityti žinyną internete]] arba "
-"[[http://manual.audacityteam.org/man/unzipping_the_manual.html| atsisiųsti "
-"žinyną]].<br><br>Norint visada skaityti Žinyną internete, pakeiskite "
-"\"Žinyno vieta\" Nuostatose į \"Iš Interneto\"."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "Žinynas nėra įrašytas. Prašome [[*URL*|skaityti žinyną internete]] arba [[http://manual.audacityteam.org/man/unzipping_the_manual.html| atsisiųsti žinyną]].<br><br>Norint visada skaityti Žinyną internete, pakeiskite \"Žinyno vieta\" Nuostatose į \"Iš Interneto\"."
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -3397,12 +3185,8 @@ msgstr "Pasirinkite Kurią Kalbą Audacity naudoti:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid ""
-"The language you have chosen, %s (%s), is not the same as the system "
-"language, %s (%s)."
-msgstr ""
-"Kalba kurią pasirinkote %s (%s), yra ne tokia pati kaip sistemos kalba %s "
-"(%s)."
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
+msgstr "Kalba kurią pasirinkote %s (%s), yra ne tokia pati kaip sistemos kalba %s (%s)."
 
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
@@ -3459,8 +3243,7 @@ msgid ""
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
 "Buvo problema su jūsų praeitu veiksmu. Jeigu manote,\n"
-"kad tai yra klaida, prašome pranešti mums kurioje tikslioje vietoje tai "
-"įvyko."
+"kad tai yra klaida, prašome pranešti mums kurioje tikslioje vietoje tai įvyko."
 
 #: src/Menus.cpp
 msgid "Disallowed"
@@ -3761,9 +3544,7 @@ msgstr "Įjungti naujus papildinius"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-"Pasirinkite efektai, spustelėkite Naudoti arba Nenaudoti klavišą, tada "
-"spauskit OK."
+msgstr "Pasirinkite efektai, spustelėkite Naudoti arba Nenaudoti klavišą, tada spauskit OK."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -3936,15 +3717,12 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "Klaida atidarant garso prietaisą.\n"
-"Pabandykite pakeisti garso šeimininką, grojimo prietaisą ir projekto šablono "
-"dažnį."
+"Pabandykite pakeisti garso šeimininką, grojimo prietaisą ir projekto šablono dažnį."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 #, fuzzy
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr ""
-"Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio "
-"dažnio."
+msgstr "Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio dažnio."
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
@@ -3986,8 +3764,7 @@ msgid ""
 "\n"
 "You are saving directly to a slow external storage device\n"
 msgstr ""
-"Įrašytas garsas buvo prarastas etiketėmis pažymėtose vietose. Kas galėjo tai "
-"sukelti:\n"
+"Įrašytas garsas buvo prarastas etiketėmis pažymėtose vietose. Kas galėjo tai sukelti:\n"
 "\n"
 "Kitos aplikacijos naudoja daugiau procesoriaus laiko negu Audacity\n"
 "\n"
@@ -4011,14 +3788,8 @@ msgid "Close project immediately with no changes"
 msgstr "Uždaryti projektą tuoj pat be jokių pasikeitimų"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project immediately"
-"\" on further error alerts."
-msgstr ""
-"Tęsti su taisymais minėtais registre ir ieškoti daugiau klaidų. Tai išsaugos "
-"projektą dabartinėje būklėje nebent pasirinksite \"Uždaryti projektą tuoj pat"
-"\" su tolesniais klaidų įspėjimais."
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "Tęsti su taisymais minėtais registre ir ieškoti daugiau klaidų. Tai išsaugos projektą dabartinėje būklėje nebent pasirinksite \"Uždaryti projektą tuoj pat\" su tolesniais klaidų įspėjimais."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -4069,9 +3840,7 @@ msgstr "Naudoti trūkstamus garso failus kaip tylą (tik šioje sesijoje)"
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)."
-msgstr ""
-"Pakeisti trūkstamus garso failus tyla (nuolatinis pasikeitimas galiojantis "
-"tuoj pat)."
+msgstr "Pakeisti trūkstamus garso failus tyla (nuolatinis pasikeitimas galiojantis tuoj pat)."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Aliased File(s)"
@@ -4137,9 +3906,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr ""
-"Pakeisti trūkstamus garsus su tyla (nuolatinis pasikeitimas galiojantis tuoj "
-"pat)"
+msgstr "Pakeisti trūkstamus garsus su tyla (nuolatinis pasikeitimas galiojantis tuoj pat)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
@@ -4164,9 +3931,7 @@ msgstr "Tęsti netrinant; ignoruoti papildomus failus šioje sesijoje"
 
 #: src/ProjectFSCK.cpp
 msgid "Delete orphan files (permanent immediately)"
-msgstr ""
-"Ištrinti niekam nepriklausančius failus (nuolatinis pokytis galiojantis tuoj "
-"pat)"
+msgstr "Ištrinti niekam nepriklausančius failus (nuolatinis pokytis galiojantis tuoj pat)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Orphan Block File(s)"
@@ -4190,11 +3955,9 @@ msgid ""
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
 msgstr ""
-"Projekto patikra aptiko ne atitinkančių failų atliekant automatinį "
-"atkūrimą.\n"
+"Projekto patikra aptiko ne atitinkančių failų atliekant automatinį atkūrimą.\n"
 "\n"
-"Pasirinkite 'Rodyti Registrą...' Pagalbos meniu pasirinktyje norint pamatyti "
-"plačiau."
+"Pasirinkite 'Rodyti Registrą...' Pagalbos meniu pasirinktyje norint pamatyti plačiau."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
@@ -4420,12 +4183,10 @@ msgstr "(Grąžintas)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
-"open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "Šis failas buvo išsaugotas naudojant Audacity %s.\n"
-"Jūs naudojatės Audacity %s. Jums gali reikėti atnaujinti į naujesnę versija "
-"norint atidaryti šį failą."
+"Jūs naudojatės Audacity %s. Jums gali reikėti atnaujinti į naujesnę versija norint atidaryti šį failą."
 
 #: src/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -4451,9 +4212,7 @@ msgid "Unable to parse project information."
 msgstr "Nepavyksta skaityti išankstinės nuostatos failo."
 
 #: src/ProjectFileIO.cpp
-msgid ""
-"The project's database failed to reopen, possibly because of limited space "
-"on the storage device."
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4499,8 +4258,7 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Kai kurie projektai nebuvo išsaugoti tinkamai paskutini kartai kai Audacity "
-"buvo paleista.\n"
+"Kai kurie projektai nebuvo išsaugoti tinkamai paskutini kartai kai Audacity buvo paleista.\n"
 "Laimei šie projektai gali būti automatiškai atkurti:"
 
 #: src/ProjectFileManager.cpp
@@ -4557,9 +4315,7 @@ msgid ""
 msgstr ""
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"The project exceeds the maximum size of 4GB when writing to a FAT32 "
-"formatted filesystem."
+msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr ""
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
@@ -4569,8 +4325,7 @@ msgstr "Išsaugotas %s"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite "
-"another project.\n"
+"The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
 "Projektas nebuvo išsaugotas nes failo pavadinimas perrašytų kitą projektą.\n"
@@ -4587,8 +4342,7 @@ msgid ""
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
 "'Išsaugoti Projektą' yra Audacity projektui, ne garso failui.\n"
-"Garso failui kurį atidarinėsite su kitomis programomis naudokite "
-"'Eksportuoti'.\n"
+"Garso failui kurį atidarinėsite su kitomis programomis naudokite 'Eksportuoti'.\n"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -4612,8 +4366,7 @@ msgstr "Perrašyti egzistuojančius failus"
 #: src/ProjectFileManager.cpp
 #, fuzzy
 msgid ""
-"The project was not saved because the selected project is open in another "
-"window.\n"
+"The project was not saved because the selected project is open in another window.\n"
 "Please try again and select an original name."
 msgstr ""
 "Projektas nebuvo išsaugotas nes failo pavadinimas perrašytų kitą projektą.\n"
@@ -4638,16 +4391,6 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "Klaida Saugojant Projektą"
 
-#: src/ProjectFileManager.cpp
-#, fuzzy
-msgid "Can't open new empty project"
-msgstr "Nepavyksta atidaryti projekto failo"
-
-#: src/ProjectFileManager.cpp
-#, fuzzy
-msgid "Error opening a new empty project"
-msgstr "Klaida Atidarant Failą arba Projektą"
-
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Pasirinkite vieną ar daugiau failų"
@@ -4660,12 +4403,6 @@ msgstr "%s jau atidarytas kitame lange."
 #: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
 msgid "Error Opening Project"
 msgstr "Klaida Atidarinėjant Projektą"
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4706,6 +4443,12 @@ msgid "Error Opening File or Project"
 msgstr "Klaida Atidarant Failą arba Projektą"
 
 #: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+
+#: src/ProjectFileManager.cpp
 msgid "Project was recovered"
 msgstr "Projektas buvo grąžintas"
 
@@ -4743,13 +4486,11 @@ msgstr "&Išsaugoti projektą"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes "
-"within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be "
-"discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
@@ -4862,8 +4603,7 @@ msgstr ""
 
 #: src/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
 msgstr ""
 
 #: src/Registry.cpp
@@ -5183,7 +4923,7 @@ msgstr "Aktyvacijos garsumas (dB):"
 msgid "Welcome to Audacity!"
 msgstr "Sveiki atvykę į Audacity!"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Nerodykite man to daugiau tik užkrovus"
 
@@ -5218,9 +4958,7 @@ msgstr "Žanras"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr ""
-"Naudokite strėlyčių klavišus (arba ENTER klavišą po redagavimo) norint "
-"keliauti per laukelius."
+msgstr "Naudokite strėlyčių klavišus (arba ENTER klavišą po redagavimo) norint keliauti per laukelius."
 
 #: src/Tags.cpp
 msgid "Tag"
@@ -5541,16 +5279,14 @@ msgstr "Klaida Automatiniame Eksportavime"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, "
-"based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"Gali būti kad nebeturite pakankamai laisvos vietos diske, kad užbaigtumėt šį "
-"Laikmačio Įrašą, pagal jūsų dabartines nuostatas.\n"
+"Gali būti kad nebeturite pakankamai laisvos vietos diske, kad užbaigtumėt šį Laikmačio Įrašą, pagal jūsų dabartines nuostatas.\n"
 "\n"
 "Ar norite tęsti?\n"
 "\n"
@@ -5863,9 +5599,7 @@ msgstr "Pasirinkimas Įjungtas"
 
 #: src/TrackPanelResizeHandle.cpp
 #, fuzzy
-msgid ""
-"Click and drag to adjust relative size of stereo tracks, double-click to "
-"make heights equal"
+msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
 msgstr "Spauskite ir temkite santykiniam stereo takelio dydižiui pakeisti."
 
 #: src/TrackPanelResizeHandle.cpp
@@ -5976,8 +5710,7 @@ msgstr "Nėra pakankamai galimos vietos, kad galėtumėt įklijuoti pasirinkimą
 
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to expand the cut line"
-msgstr ""
-"Nėra pakankamai galimos vietos, kad galėtumėt išplėsti iškirpimo liniją"
+msgstr "Nėra pakankamai galimos vietos, kad galėtumėt išplėsti iškirpimo liniją"
 
 #: src/blockfile/NotYetAvailableException.cpp
 #, c-format
@@ -5996,8 +5729,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s: Nepavyko užkrauti nuostatų aprašytų žemiau. Bus naudojamos numatytosios "
-"nuostatos.\n"
+"%s: Nepavyko užkrauti nuostatų aprašytų žemiau. Bus naudojamos numatytosios nuostatos.\n"
 "\n"
 "%s"
 
@@ -6056,10 +5788,7 @@ msgid ""
 msgstr ""
 
 #: src/commands/CommandManager.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
 msgstr ""
 
 #: src/commands/CommandManager.cpp
@@ -6105,7 +5834,8 @@ msgstr "Kairysis-Tempimas"
 msgid "Panel"
 msgstr ""
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 #, fuzzy
 msgid "Application"
 msgstr "Garso stiprinimas dB"
@@ -6873,10 +6603,11 @@ msgstr "Naudotojų Nuostatos"
 msgid "Spectral Select"
 msgstr "Spektro Pasirinkimas"
 
-#: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
-msgid "Gray Scale"
-msgstr "Skalė"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -6919,34 +6650,22 @@ msgid "Auto Duck"
 msgstr ""
 
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
-"specified \"control\" track reaches a particular level"
-msgstr ""
-"Sumažina garsumą vieno arba daugiau takelių kai garsumas tam tikro takelio "
-"pasiekia tam tikrą aukštį"
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Sumažina garsumą vieno arba daugiau takelių kai garsumas tam tikro takelio pasiekia tam tikrą aukštį"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process "
-"audio tracks."
-msgstr ""
-"Jūs pasirinkote takelį kuris neturi garso. AutoDuck gali naudoti tik garso "
-"takelius."
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Jūs pasirinkote takelį kuris neturi garso. AutoDuck gali naudoti tik garso takelius."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Auto Duck needs a control track which must be placed below the selected "
-"track(s)."
-msgstr ""
-"Auto Duck reikalauja pagrindinio takelio kuris turi būti žemiau pasirinkto "
-"takelio."
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Auto Duck reikalauja pagrindinio takelio kuris turi būti žemiau pasirinkto takelio."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -7335,8 +7054,7 @@ msgstr ""
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr ""
-"Spustelėjimo Šalinimas yra sukurtas šalinti spustelėjimus garso takeliuose"
+msgstr "Spustelėjimo Šalinimas yra sukurtas šalinti spustelėjimus garso takeliuose"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -7520,12 +7238,8 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid ""
-"Contrast Analyzer, for measuring RMS volume differences between two "
-"selections of audio."
-msgstr ""
-"Kontrasto Analizuotojas yra RMS garsumo skirtumo matavimui tarp dviejų "
-"pasirinktų garsų."
+msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
+msgstr "Kontrasto Analizuotojas yra RMS garsumo skirtumo matavimui tarp dviejų pasirinktų garsų."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -8015,12 +7729,8 @@ msgid "DTMF Tones"
 msgstr ""
 
 #: src/effects/DtmfGen.cpp
-msgid ""
-"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
-"keypad on telephones"
-msgstr ""
-"Generuoja dvigubą tona ir dauginį dažnį (DTMF) tonai kaip tie kurie buvo "
-"sukurti telefono klaviatūros"
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Generuoja dvigubą tona ir dauginį dažnį (DTMF) tonai kaip tie kurie buvo sukurti telefono klaviatūros"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -8522,8 +8232,7 @@ msgstr "Diskantas"
 #: src/effects/Equalization.cpp
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
-"then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 
 #: src/effects/Equalization.cpp
@@ -8532,11 +8241,8 @@ msgstr ""
 
 #: src/effects/Equalization.cpp
 #, fuzzy
-msgid ""
-"To apply Equalization, all selected tracks must have the same sample rate."
-msgstr ""
-"Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio "
-"dažnio."
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio dažnio."
 
 #: src/effects/Equalization.cpp
 #, fuzzy
@@ -9084,14 +8790,10 @@ msgstr ""
 #: src/effects/NoiseReduction.cpp
 #, fuzzy
 msgid "All noise profile data must have the same sample rate."
-msgstr ""
-"Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio "
-"dažnio."
+msgstr "Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio dažnio."
 
 #: src/effects/NoiseReduction.cpp
-msgid ""
-"The sample rate of the noise profile must match that of the sound to be "
-"processed."
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
 msgstr ""
 
 #: src/effects/NoiseReduction.cpp
@@ -9509,8 +9211,7 @@ msgstr ""
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged "
-"audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
@@ -9697,9 +9398,7 @@ msgstr ""
 #: src/effects/ScienFilter.cpp
 #, fuzzy
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr ""
-"Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio "
-"dažnio."
+msgstr "Kad galėčiau nupiešti grafiką, visi pasirinkti takeliai turi būti to pačio dažnio."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -9988,15 +9687,11 @@ msgid "Truncate Silence"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"Automatically reduces the length of passages where the volume is below a "
-"specified level"
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"When truncating independently, there may only be one selected audio track in "
-"each Sync-Locked Track Group."
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
@@ -10053,11 +9748,7 @@ msgid "Buffer Size"
 msgstr "Buferio dydis"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
-msgid ""
-"The buffer size controls the number of samples sent to the effect on each "
-"iteration. Smaller values will cause slower processing and some effects "
-"require 8192 samples or less to work properly. However most effects can "
-"accept large buffers and using them will greatly reduce processing time."
+msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
@@ -10071,11 +9762,7 @@ msgid "Latency Compensation"
 msgstr "Klavišų Kombinacija"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid ""
-"As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST effects."
+msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -10088,10 +9775,7 @@ msgid "Graphical Mode"
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -10174,9 +9858,7 @@ msgid "Wahwah"
 msgstr "VachVach"
 
 #: src/effects/Wahwah.cpp
-msgid ""
-"Rapid tone quality variations, like that guitar sound so popular in the "
-"1970's"
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr ""
 
 #: src/effects/Wahwah.cpp
@@ -10225,12 +9907,7 @@ msgid "Audio Unit Effect Options"
 msgstr "Efektų nustatymai"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid ""
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
-"that small silences have been inserted into the audio. Enabling this option "
-"will provide that compensation, but it may not work for all Audio Unit "
-"effects."
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -10239,11 +9916,7 @@ msgid "User Interface"
 msgstr "Interfeisas"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid ""
-"Select \"Full\" to use the graphical interface if supplied by the Audio "
-"Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
-"to take effect."
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -10406,11 +10079,7 @@ msgid "LADSPA Effect Options"
 msgstr "Efektų nustatymai"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid ""
-"As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
-"small silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all LADSPA effects."
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
@@ -10446,18 +10115,11 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid ""
-"As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this setting will "
-"provide that compensation, but it may not work for all LV2 effects."
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid ""
-"LV2 effects can have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10544,11 +10206,8 @@ msgid "Nyquist Error"
 msgstr "Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr ""
-"Atsiprašau, bet negaliu pritaikyti efekto stereo takeliams, kurių takeliai "
-"nesutampa."
+msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+msgstr "Atsiprašau, bet negaliu pritaikyti efekto stereo takeliams, kurių takeliai nesutampa."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10622,8 +10281,7 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist Negrąžino audio.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -10739,9 +10397,7 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr ""
 
 #: src/effects/vamp/VampEffect.cpp
-msgid ""
-"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
-"channels of the track do not match."
+msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
 msgstr ""
 
 #: src/effects/vamp/VampEffect.cpp
@@ -10802,8 +10458,7 @@ msgstr "Ar tikrai norite eksportuoti failą kaip \"%s\"?\n"
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
 "\n"
-"Normally these files end in \".%s\", and some programs will not open files "
-"with nonstandard extensions.\n"
+"Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
@@ -10823,22 +10478,17 @@ msgstr ""
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Your tracks will be mixed down and exported as one mono file."
-msgstr ""
-"Jūsų eksportuojamo failo takeliai bus sujungti į dviejų stereo kanalų failą."
+msgstr "Jūsų eksportuojamo failo takeliai bus sujungti į dviejų stereo kanalų failą."
 
 #: src/export/Export.cpp
 #, fuzzy
 msgid "Your tracks will be mixed down and exported as one stereo file."
-msgstr ""
-"Jūsų eksportuojamo failo takeliai bus sujungti į dviejų stereo kanalų failą."
+msgstr "Jūsų eksportuojamo failo takeliai bus sujungti į dviejų stereo kanalų failą."
 
 #: src/export/Export.cpp
 #, fuzzy
-msgid ""
-"Your tracks will be mixed down to one exported file according to the encoder "
-"settings."
-msgstr ""
-"Jūsų eksportuojamo failo takeliai bus sujungti į dviejų stereo kanalų failą."
+msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
+msgstr "Jūsų eksportuojamo failo takeliai bus sujungti į dviejų stereo kanalų failą."
 
 #: src/export/Export.cpp
 msgid "Advanced Mixing Options"
@@ -10893,9 +10543,7 @@ msgstr ""
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
-msgid ""
-"Data will be piped to standard in. \"%f\" uses the file name in the export "
-"window."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr ""
 
 #. i18n-hint files that can be run as programs
@@ -10934,7 +10582,7 @@ msgstr "Pasirinktas audio eksportuojamas naudojant komandinės eilutės dekoder�
 msgid "Command Output"
 msgstr ""
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -10988,14 +10636,12 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
@@ -11061,9 +10707,7 @@ msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected "
-"output format is %d"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr ""
 
 #: src/export/ExportFFmpeg.cpp
@@ -11395,9 +11039,7 @@ msgid "Codec:"
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid ""
-"Not all formats and codecs are compatible. Nor are all option combinations "
-"compatible with all codecs."
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr ""
 
 #: src/export/ExportFFmpegDialogs.cpp
@@ -11910,8 +11552,7 @@ msgstr "Kur galėčiau rasi  %s?"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 
@@ -12228,8 +11869,7 @@ msgstr ""
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than "
-"4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 
@@ -12317,10 +11957,8 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
-"files. \n"
-"You may be able to open it in a text editor and download the actual audio "
-"files."
+"Audacity cannot open this file because it only contains links to other files. \n"
+"You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 
 #. i18n-hint: %s will be the filename
@@ -12337,10 +11975,8 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
-"file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV "
-"or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 
 #. i18n-hint: %s will be the filename
@@ -12380,8 +12016,7 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 
@@ -12526,9 +12161,7 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Nepavyko rasti projekto duomenų aplanko: \"%s\""
 
 #: src/import/ImportAUP.cpp
-msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
-"include MIDI support, bypassing track."
+msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 
 #: src/import/ImportAUP.cpp
@@ -12537,9 +12170,7 @@ msgid "Project Import"
 msgstr "&Projekto Pradžia"
 
 #: src/import/ImportAUP.cpp
-msgid ""
-"The active project already has a time track and one was encountered in the "
-"project being imported, bypassing imported time track."
+msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr ""
 
 #: src/import/ImportAUP.cpp
@@ -12620,8 +12251,7 @@ msgstr ""
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
-msgid ""
-"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr ""
 
 #: src/import/ImportFLAC.cpp
@@ -12691,8 +12321,7 @@ msgstr "Neteisinga LOF failo trukmė."
 #: src/import/ImportLOF.cpp
 #, fuzzy
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr ""
-"MIDI takeliai negali pasidengti tarpusavyje, tai gali tik audio takeliai."
+msgstr "MIDI takeliai negali pasidengti tarpusavyje, tai gali tik audio takeliai."
 
 #  i18n-hint: You do not need to translate "LOF"
 #  i18n-hint: You do not need to translate "LOF"
@@ -13292,8 +12921,7 @@ msgstr "Tyla"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr ""
-"Apkarpykite pasirinktus garso takelius iš %.2f sekundžių į %.2f sekundžių"
+msgstr "Apkarpykite pasirinktus garso takelius iš %.2f sekundžių į %.2f sekundžių"
 
 #: src/menus/EditMenus.cpp
 msgid "Trim Audio"
@@ -13735,10 +13363,6 @@ msgstr "Garso Prietaiso Informacija"
 msgid "MIDI Device Info"
 msgstr "MIDI Prietaiso Informacija"
 
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree"
-msgstr ""
-
 #  i18n-hint: The name of the Help menu
 #  i18n-hint: The name of the Help menu
 #: src/menus/HelpMenus.cpp
@@ -13786,10 +13410,6 @@ msgstr "Rodyti &Registrą..."
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "&Generuoti Paramos Duomenis..."
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree..."
-msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -14761,10 +14381,8 @@ msgid "Created new label track"
 msgstr "Sukurtas naujas pavadinimo takelis"
 
 #: src/menus/TrackMenus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Ši Audacity versija leidžia tik viena laiko takelį per vieną projekto langą."
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr "Ši Audacity versija leidžia tik viena laiko takelį per vieną projekto langą."
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new time track"
@@ -14800,12 +14418,8 @@ msgstr "Prašome pasirinkti garso takelį."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Išlyginimas baigtas: MIDI nuo %.2f iki %.2f sekundžių, Garsas nuo %.2f iki "
-"%.2f sekundžių."
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "Išlyginimas baigtas: MIDI nuo %.2f iki %.2f sekundžių, Garsas nuo %.2f iki %.2f sekundžių."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -14813,12 +14427,8 @@ msgstr "Sinchronizuoti MIDI su Garsu"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Išlyginimo klaida: įvestis per trumpa: MIDI nuo %.2f iki %.2f sekundžių, "
-"Garsas nuo %.2f iki %.2f sekundžių."
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "Išlyginimo klaida: įvestis per trumpa: MIDI nuo %.2f iki %.2f sekundžių, Garsas nuo %.2f iki %.2f sekundžių."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -15055,17 +14665,18 @@ msgid "Move Focused Track to &Bottom"
 msgstr "Perkelti fokusuotą takelį į pačią &apačią"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 #, fuzzy
 msgid "Playing"
 msgstr "Pritaikomas Fazeris"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Įrašymas"
 
@@ -15092,8 +14703,7 @@ msgid ""
 "\n"
 "Please close any additional projects and try again."
 msgstr ""
-"Laikmačio Įrašinėjimas negali būti naudojamas su daugiau nei vienu atviru "
-"projektu.\n"
+"Laikmačio Įrašinėjimas negali būti naudojamas su daugiau nei vienu atviru projektu.\n"
 "\n"
 "Prašome uždaryti visus kitus projektus ir bandyti dar kartą."
 
@@ -15103,8 +14713,7 @@ msgid ""
 "\n"
 "Please save or close this project and try again."
 msgstr ""
-"Laikmačio Įrašinėjimas negali būti naudojamas kol turite neišsaugotų "
-"pokyčių.\n"
+"Laikmačio Įrašinėjimas negali būti naudojamas kol turite neišsaugotų pokyčių.\n"
 "\n"
 "Prašome išsaugoti arba uždaryti ši projektą ir bandyti dar kartą."
 
@@ -15451,6 +15060,27 @@ msgstr ""
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr ""
 
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgid "Preferences for Application"
+msgstr "&Nuostatos..."
+
+#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr ""
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "&Tikrinti ar yra Atnaujinimų..."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgstr ""
+
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr ""
@@ -15502,6 +15132,14 @@ msgstr "Atkūrimas"
 msgid "&Device:"
 msgstr "&Prietaisas:"
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+#, fuzzy
+msgctxt "preference"
+msgid "Recording"
+msgstr "Įrašymas"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "Pr&ietaisas:"
@@ -15546,6 +15184,7 @@ msgstr "2 (Stereo)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "Vietos"
 
@@ -15661,9 +15300,7 @@ msgid "Directory %s is not writable"
 msgstr "Vieta yra %s neįrašoma"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
-"restarted"
+msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "Laikinos vietos keitimas bus priimtas tik perkrovus Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15828,11 +15465,7 @@ msgid "Unused filters:"
 msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid ""
-"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
-"the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
-"to trim spaces for you?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
 msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp
@@ -16128,9 +15761,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr ""
-"Pasirinkite XML failą kuriame laikote Audacity klavetūros sparčuosius "
-"klavišus..."
+msgstr "Pasirinkite XML failą kuriame laikote Audacity klavetūros sparčuosius klavišus..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -16139,8 +15770,7 @@ msgstr "Klaida Importuojant Klaviatūros Trumpinius"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
-"and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
 
@@ -16152,8 +15782,7 @@ msgstr "Įkelti %d spartieji klavišai\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have "
-"their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -16311,16 +15940,13 @@ msgstr "&Nuostatos..."
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
-"Manual\n"
+"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
 "and know what you are doing."
 msgstr ""
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
-"starts."
+msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
 msgstr ""
 
 #. i18n-hint preserve the leading spaces
@@ -16837,6 +16463,33 @@ msgstr ""
 msgid "Period"
 msgstr ""
 
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "256 - įprastas"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr ""
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Skalė"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Linijinis"
+
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
 msgstr "Dažniai"
@@ -16924,10 +16577,6 @@ msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
-msgstr ""
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
 msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp
@@ -17061,22 +16710,18 @@ msgstr ""
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images "
-"and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity.\n"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently "
-"affected, even\n"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
 msgstr ""
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each "
-"image, but is\n"
+"Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
 
@@ -17382,7 +17027,8 @@ msgid "Waveform dB &range:"
 msgstr "Bangos Forma (dB)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 #, fuzzy
 msgid "Stopped"
@@ -18006,12 +17652,8 @@ msgstr "Oktava žemiau"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 #, fuzzy
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"Paspauskite verikaliam Priartinimui, Shift-Paspaudimas — Tolinimui, Temkite "
-"konkrečios vietos apibraukimui."
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "Paspauskite verikaliam Priartinimui, Shift-Paspaudimas — Tolinimui, Temkite konkrečios vietos apibraukimui."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -18361,8 +18003,7 @@ msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 #, fuzzy
-msgid ""
-"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr "Spauskite ir temkite santykiniam stereo takelio dydižiui pakeisti."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
@@ -18738,6 +18379,96 @@ msgstr "Apibraukite Regiono Priartinimui, Dešinysis-Paspaudimas — Patolinimui
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Kairys=Priartinti, Dešinysis=Tolinti, Vidurinis=Normaus"
+
+#: src/update/UpdateManager.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Klaida bandant iššifruoti failą"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: src/update/UpdateManager.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Klaida Užkraunant Metaduomenis"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr ""
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr ""
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Preferences > Application"
+msgstr "&Nuostatos..."
+
+#: src/update/UpdatePopupDialog.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Išeiti iš Audacity"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity Pirmasis paleidimas"
+
+#: src/update/UpdatePopupDialog.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Kanalas"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
 
 #: src/widgets/AButton.cpp
 #, fuzzy
@@ -19328,6 +19059,31 @@ msgstr "Ar tikrai norite uždaryti?"
 msgid "Confirm Close"
 msgstr "Patvirtinti"
 
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "Nepavyksta skaityti išankstinės nuostatos failo."
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
+msgstr ""
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy, c-format
+msgid "You can change the directory in %s."
+msgstr ""
+"Nepavyko sukurti vietos:\n"
+"  %s."
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy
+msgid "Preferences > Directories"
+msgstr "Grąžinti Projektus"
+
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Daugiau nerodyti šio perspėjimo"
@@ -19504,8 +19260,7 @@ msgstr "Linijinis dažnis"
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 
@@ -19726,8 +19481,7 @@ msgid "Benjamin Schwartz and Steve Daulton"
 msgstr ""
 
 #: plug-ins/clipfix.ny
-msgid ""
-"Licensing confirmed under terms of the GNU General Public License version 2"
+msgid "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr ""
 
 #: plug-ins/clipfix.ny
@@ -20127,8 +19881,7 @@ msgid "Label Sounds"
 msgstr "Pavadinimo Redagavimas"
 
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-msgid ""
-"Released under terms of the GNU General Public License version 2 or later."
+msgid "Released under terms of the GNU General Public License version 2 or later."
 msgstr ""
 
 #: plug-ins/label-sounds.ny
@@ -20218,16 +19971,12 @@ msgstr "Pasirinkimas privalo būti didesnis nei %d šablonai."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid ""
-"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
-"duration'."
+msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
 msgstr ""
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid ""
-"Labelling regions between sounds requires~%at least two sounds.~%Only one "
-"sound detected."
+msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
 msgstr ""
 
 #: plug-ins/limiter.ny
@@ -20844,8 +20593,7 @@ msgstr ""
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
@@ -20858,10 +20606,8 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
 
@@ -21204,9 +20950,7 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
-msgid ""
-"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
-"This means:~%~a~%"
+msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
@@ -21218,28 +20962,24 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
+" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
-msgid ""
-" - A fairly good value, at least stereo in average and not too wide spread."
+msgid " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used "
-"reverb."
+"                However, the center extraction depends also on the used reverb."
 msgstr ""
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
 
@@ -21254,8 +20994,7 @@ msgstr ""
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between "
-"the speakers.\n"
+"                  to spread the signal over the physical distance between the speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 
@@ -21325,6 +21064,22 @@ msgid "Error.~%Stereo track required."
 msgstr ""
 
 #, fuzzy
+#~ msgid "Unknown assertion"
+#~ msgstr "Nežinomas"
+
+#, fuzzy
+#~ msgid "Can't open new empty project"
+#~ msgstr "Nepavyksta atidaryti projekto failo"
+
+#, fuzzy
+#~ msgid "Error opening a new empty project"
+#~ msgstr "Klaida Atidarant Failą arba Projektą"
+
+#, fuzzy
+#~ msgid "Gray Scale"
+#~ msgstr "Skalė"
+
+#, fuzzy
 #~ msgid "Free Space"
 #~ msgstr "Laisva Vieta:"
 
@@ -21344,24 +21099,20 @@ msgstr ""
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
-#~ "It is possible they were moved, deleted, or the drive they were on was "
-#~ "unmounted.\n"
+#~ "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
 #~ "Silence is being substituted for the affected audio.\n"
 #~ "The first detected missing file is:\n"
 #~ "%s\n"
 #~ "There may be additional missing files.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
-#~ "locations of the missing files."
+#~ "Choose Help > Diagnostics > Check Dependencies to view a list of locations of the missing files."
 #~ msgstr ""
 #~ "Vienas arba daugiau išorinių failų buvo nerastas.\n"
-#~ "Gali būti, kad jie buvo perkelti, ištrinti arba diskas kuriame jie buvo "
-#~ "talpinami buvo atjungtas.\n"
+#~ "Gali būti, kad jie buvo perkelti, ištrinti arba diskas kuriame jie buvo talpinami buvo atjungtas.\n"
 #~ "Pažeistiems garsams bus naudojama tyla.\n"
 #~ "Pirmas nustatytas trūkstamas failas yra:\n"
 #~ "%s\n"
 #~ "Gali būti ir daugiau trūkstamų failų.\n"
-#~ "Paspauskite ant Pagalba > Diagnoze > Tikrinti Priklausomybes norint "
-#~ "pamatyti sąrašą trūkstamų failų buvimo vietas."
+#~ "Paspauskite ant Pagalba > Diagnoze > Tikrinti Priklausomybes norint pamatyti sąrašą trūkstamų failų buvimo vietas."
 
 #~ msgid "Files Missing"
 #~ msgstr "Trūkstami Failai"
@@ -21433,19 +21184,13 @@ msgstr ""
 #~ msgstr "Komanda %s dar nėra įdiegta"
 
 #~ msgid ""
-#~ "Your project is currently self-contained; it does not depend on any "
-#~ "external audio files. \n"
+#~ "Your project is currently self-contained; it does not depend on any external audio files. \n"
 #~ "\n"
-#~ "If you change the project to a state that has external dependencies on "
-#~ "imported files, it will no longer be self-contained. If you then Save "
-#~ "without copying those files in, you may lose data."
+#~ "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
 #~ msgstr ""
-#~ "Jūsų projektas yra savarankiškas ir nepriklauso nuo jokių išorinių garso "
-#~ "failų.\n"
+#~ "Jūsų projektas yra savarankiškas ir nepriklauso nuo jokių išorinių garso failų.\n"
 #~ "\n"
-#~ "Pakeitus projektą, kad jis turėtų išorinių priklausomybių importuotiems "
-#~ "failams, projektas taps nebe savarankišku. Ir išsaugojus nenukopijavus tų "
-#~ "failų jūs galite prarasti duomenis."
+#~ "Pakeitus projektą, kad jis turėtų išorinių priklausomybių importuotiems failams, projektas taps nebe savarankišku. Ir išsaugojus nenukopijavus tų failų jūs galite prarasti duomenis."
 
 #~ msgid "Cleaning project temporary files"
 #~ msgstr "Valomi laikinieji projekto failai"
@@ -21496,19 +21241,16 @@ msgstr ""
 #~ "Audacity can try to open and save this file, but saving it in this \n"
 #~ "version will then prevent any 1.2 or earlier version opening it. \n"
 #~ "\n"
-#~ "Audacity might corrupt the file in opening it, so you should back it up "
-#~ "first. \n"
+#~ "Audacity might corrupt the file in opening it, so you should back it up first. \n"
 #~ "\n"
 #~ "Open this file now?"
 #~ msgstr ""
 #~ "Failas buvo išsaugotas Audacity %s versijos. Formatas buvo pakeistas. \n"
 #~ "\n"
-#~ "Audacity gali bandyti atidaryti ir išsaugoti šį failą, bet saugojant jį "
-#~ "šioje \n"
+#~ "Audacity gali bandyti atidaryti ir išsaugoti šį failą, bet saugojant jį šioje \n"
 #~ "versijoje nebus įmanoma 1.2 arba ankstesnei versijai jo atidaryti. \n"
 #~ "\n"
-#~ "Audacity gali sugadinti failą jį atidarinėjant, todėl jūs turėtumėt jį "
-#~ "dubliuoti pirmiausia. \n"
+#~ "Audacity gali sugadinti failą jį atidarinėjant, todėl jūs turėtumėt jį dubliuoti pirmiausia. \n"
 #~ "\n"
 #~ "Ar norite atidaryti šį failą dabar?"
 
@@ -21544,24 +21286,19 @@ msgstr ""
 
 #, fuzzy
 #~ msgid ""
-#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-#~ "file.\n"
+#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n"
 #~ "For an audio file that will open in other apps, use 'Export'.\n"
 #~ "\n"
 #~ "Lossless copies of project are a good way to backup your project, \n"
 #~ "with no loss of quality, but the projects are large.\n"
 #~ msgstr ""
-#~ "'Išsaugoti Suspaustą Projektą' yra naudojama Audacity projektui, o ne "
-#~ "garso failui.\n"
-#~ "Garso failui kuris bus atidaromas kitomis programomis naudokite "
-#~ "'Eksportuoti'.\n"
+#~ "'Išsaugoti Suspaustą Projektą' yra naudojama Audacity projektui, o ne garso failui.\n"
+#~ "Garso failui kuris bus atidaromas kitomis programomis naudokite 'Eksportuoti'.\n"
 #~ "\n"
-#~ "Suspausti projekto failai yra puikus būdas perkelti jūsų projektus į "
-#~ "internetą, \n"
+#~ "Suspausti projekto failai yra puikus būdas perkelti jūsų projektus į internetą, \n"
 #~ "tačiau yra tikimybė kokybės kritimui.\n"
 #~ "\n"
-#~ "Norint atidaryti suspaustą projektą užtrunka ilgiau nei įprastą nes jis "
-#~ "importuoja \n"
+#~ "Norint atidaryti suspaustą projektą užtrunka ilgiau nei įprastą nes jis importuoja \n"
 #~ "kiekvieną suspausta takelį.\n"
 
 #, fuzzy
@@ -21570,53 +21307,35 @@ msgstr ""
 
 #, fuzzy
 #~ msgid ""
-#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
-#~ "audio file.\n"
+#~ "'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n"
 #~ "For an audio file that will open in other apps, use 'Export'.\n"
 #~ "\n"
-#~ "Compressed project files are a good way to transmit your project "
-#~ "online, \n"
+#~ "Compressed project files are a good way to transmit your project online, \n"
 #~ "but they have some loss of fidelity.\n"
 #~ msgstr ""
-#~ "'Išsaugoti Suspaustą Projektą' yra naudojama Audacity projektui, o ne "
-#~ "garso failui.\n"
-#~ "Garso failui kuris bus atidaromas kitomis programomis naudokite "
-#~ "'Eksportuoti'.\n"
+#~ "'Išsaugoti Suspaustą Projektą' yra naudojama Audacity projektui, o ne garso failui.\n"
+#~ "Garso failui kuris bus atidaromas kitomis programomis naudokite 'Eksportuoti'.\n"
 #~ "\n"
-#~ "Suspausti projekto failai yra puikus būdas perkelti jūsų projektus į "
-#~ "internetą, \n"
+#~ "Suspausti projekto failai yra puikus būdas perkelti jūsų projektus į internetą, \n"
 #~ "tačiau yra tikimybė kokybės kritimui.\n"
 #~ "\n"
-#~ "Norint atidaryti suspaustą projektą užtrunka ilgiau nei įprastą nes jis "
-#~ "importuoja \n"
+#~ "Norint atidaryti suspaustą projektą užtrunka ilgiau nei įprastą nes jis importuoja \n"
 #~ "kiekvieną suspausta takelį.\n"
 
-#~ msgid ""
-#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
-#~ "format."
-#~ msgstr ""
-#~ "Audacity nesugebėjo konvertuoti Audacity 1.0 projekto į naują formatą."
+#~ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
+#~ msgstr "Audacity nesugebėjo konvertuoti Audacity 1.0 projekto į naują formatą."
 
 #~ msgid "Could not remove old auto save file"
 #~ msgstr "Nepavyko panaikinti seno automatiškai išsaugoto failo"
 
 #~ msgid "On-demand import and waveform calculation complete."
-#~ msgstr ""
-#~ "Pagal pageidavimą importavimas ir garso formos apskaičiavimas pabaigtas."
+#~ msgstr "Pagal pageidavimą importavimas ir garso formos apskaičiavimas pabaigtas."
 
-#~ msgid ""
-#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
-#~ "%2.0f%% complete."
-#~ msgstr ""
-#~ "Importavimas baigtas. Paleidžiama pagal %d pageidavimą garso formų "
-#~ "apskaičiavimus. Išviso jau %2.0f%% pabaigta."
+#~ msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
+#~ msgstr "Importavimas baigtas. Paleidžiama pagal %d pageidavimą garso formų apskaičiavimus. Išviso jau %2.0f%% pabaigta."
 
-#~ msgid ""
-#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
-#~ "complete."
-#~ msgstr ""
-#~ "Importavimas pabaigtas. Paleidžiamas pagal pageidavimą garso formos "
-#~ "apskaičiavimas. %2.0f%% jau įvykdyta."
+#~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
+#~ msgstr "Importavimas pabaigtas. Paleidžiamas pagal pageidavimą garso formos apskaičiavimas. %2.0f%% jau įvykdyta."
 
 #, fuzzy
 #~ msgid "Compress"
@@ -21644,10 +21363,6 @@ msgstr ""
 
 #~ msgid "Chec&k Dependencies..."
 #~ msgstr "Tikrint&i Priklausomybes..."
-
-#, fuzzy
-#~ msgid "Preferences for Projects"
-#~ msgstr "Grąžinti Projektus"
 
 #, fuzzy
 #~ msgid "Silence Finder"
@@ -21679,24 +21394,18 @@ msgstr ""
 #~ msgstr "<h3>Audacity "
 
 #, fuzzy
-#~ msgid ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-#~ msgstr ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> Programos autorinės "
-#~ "teisės &copy; 1999-2017 Audacity Team.<br>"
+#~ msgid "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>"
+#~ msgstr "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> Programos autorinės teisės &copy; 1999-2017 Audacity Team.<br>"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir in DirManager::MakeBlockFilePath nepavyko."
 
 #~ msgid ""
 #~ "Audacity found an orphan block file: %s. \n"
-#~ "Please consider saving and reloading the project to perform a complete "
-#~ "project check."
+#~ "Please consider saving and reloading the project to perform a complete project check."
 #~ msgstr ""
 #~ "Audacity rado niekam nepriklausantį failą: %s. \n"
-#~ "Prašome apsvarstyti išsaugojimą ir projekto perkrovimą, kad būtų atliktas "
-#~ "pilnas projekto patikrinimas."
+#~ "Prašome apsvarstyti išsaugojimą ir projekto perkrovimą, kad būtų atliktas pilnas projekto patikrinimas."
 
 #~ msgid "Unable to open/create test file."
 #~ msgstr "Neįmanoma atidaryti/sukurti testavimo failo."
@@ -21726,15 +21435,11 @@ msgstr ""
 #~ msgstr "GB"
 
 #, fuzzy
-#~ msgid ""
-#~ "The module \"%s\" does not provide a version string. It will not be "
-#~ "loaded."
+#~ msgid "The module \"%s\" does not provide a version string. It will not be loaded."
 #~ msgstr "%s modulis nesuteikia versijos linijos.  Nebus pakrauta."
 
 #, fuzzy
-#~ msgid ""
-#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-#~ "loaded."
+#~ msgid "The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."
 #~ msgstr "%s modulis vienodintas su Audacity versija %s.  Nebus pakrauta."
 
 #, fuzzy
@@ -21746,35 +21451,23 @@ msgstr ""
 #~ "Nebus pakrauta."
 
 #, fuzzy
-#~ msgid ""
-#~ "The module \"%s\" does not provide any of the required functions. It will "
-#~ "not be loaded."
+#~ msgid "The module \"%s\" does not provide any of the required functions. It will not be loaded."
 #~ msgstr "%s modulis nesuteikia versijos linijos.  Nebus pakrauta."
 
 #~ msgid "   Project check replaced missing aliased file(s) with silence."
 #~ msgstr "   Projekto patikra sukeitė trūkstamus pervadintus failus su tyla."
 
 #~ msgid "   Project check regenerated missing alias summary file(s)."
-#~ msgstr ""
-#~ "   Projekto patikra grąžino trūkstamus pervadintus apibendrintus failus."
+#~ msgstr "   Projekto patikra grąžino trūkstamus pervadintus apibendrintus failus."
 
-#~ msgid ""
-#~ "   Project check replaced missing audio data block file(s) with silence."
+#~ msgid "   Project check replaced missing audio data block file(s) with silence."
 #~ msgstr "   Projekto patikra pakeitė trūkstamus garso duomenų failus tyla."
 
-#~ msgid ""
-#~ "   Project check ignored orphan block file(s). They will be deleted when "
-#~ "project is saved."
-#~ msgstr ""
-#~ "   Projekto patikra ignoravo niekam nepriklausančius failus. Jie bus "
-#~ "ištrinti kai projektas bus išsaugotas."
+#~ msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
+#~ msgstr "   Projekto patikra ignoravo niekam nepriklausančius failus. Jie bus ištrinti kai projektas bus išsaugotas."
 
-#~ msgid ""
-#~ "Project check found file inconsistencies inspecting the loaded project "
-#~ "data."
-#~ msgstr ""
-#~ "Projekto patikra aptiko ne atitinkančių failų tikrinant užkrautus "
-#~ "projekto duomenis."
+#~ msgid "Project check found file inconsistencies inspecting the loaded project data."
+#~ msgstr "Projekto patikra aptiko ne atitinkančių failų tikrinant užkrautus projekto duomenis."
 
 #, fuzzy
 #~ msgid "Presets (*.txt)|*.txt|All files|*"
@@ -21819,22 +21512,14 @@ msgstr ""
 #~ msgid "Disable dragging selection"
 #~ msgstr "Paversti apibraukimą tyla"
 
-#~ msgid ""
-#~ "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
-#~ "dll|All Files|*"
-#~ msgstr ""
-#~ "Tik avformat.dll|*avformat*.dll|Dinamiškai Nurodytų Bibliotekų (*.dll)|*."
-#~ "dll|Visi Failai|*"
+#~ msgid "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*"
+#~ msgstr "Tik avformat.dll|*avformat*.dll|Dinamiškai Nurodytų Bibliotekų (*.dll)|*.dll|Visi Failai|*"
 
 #~ msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 #~ msgstr "Dinaminės Bibliotekos (*.dylib)|*.dylib|Visi Failai (*)|*"
 
-#~ msgid ""
-#~ "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|"
-#~ "*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "Tik libavformat.so|libavformat*.so*|Dinamiškai Nurodytos Bibliotekos(*."
-#~ "so*)|*.so*|Visi Failai (*)|*"
+#~ msgid "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
+#~ msgstr "Tik libavformat.so|libavformat*.so*|Dinamiškai Nurodytos Bibliotekos(*.so*)|*.so*|Visi Failai (*)|*"
 
 #, fuzzy
 #~ msgid "Add to History:"
@@ -21856,36 +21541,22 @@ msgstr ""
 #~ msgstr "XML failai(*.xml)|*.xml|Visi Failai (*.*)|*.*"
 
 #, fuzzy
-#~ msgid ""
-#~ "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-#~ "All Files|*"
-#~ msgstr ""
-#~ "Tik lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-#~ "Visi Failai (*.*)|*"
+#~ msgid "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*"
+#~ msgstr "Tik lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|Visi Failai (*.*)|*"
 
 #, fuzzy
-#~ msgid ""
-#~ "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*."
-#~ "dylib)|*.dylib|All Files (*)|*"
+#~ msgid "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 #~ msgstr "Dinaminės Bibliotekos (*.dylib)|*.dylib|Visi Failai (*)|*"
 
 #, fuzzy
-#~ msgid ""
-#~ "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*."
-#~ "so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "Tik libmp3lame.so|libmp3lame.so|Primary Shared Object files (*.so)|*.so|"
-#~ "Extended Libraries (*.so*)|*.so*|Visi Failai (*)|*"
+#~ msgid "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
+#~ msgstr "Tik libmp3lame.so|libmp3lame.so|Primary Shared Object files (*.so)|*.so|Extended Libraries (*.so*)|*.so*|Visi Failai (*)|*"
 
 #~ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 #~ msgstr "MIDI failas (*.mid)|*.mid|Allegro failas (*.gro)|*.gro"
 
-#~ msgid ""
-#~ "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files "
-#~ "(*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-#~ msgstr ""
-#~ "MIDI ir Alegro failai (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI failai "
-#~ "(*.mid;*.midi)|*.mid;*.midi|Alegro failai(*.gro)|*.gro|Visi failai|*"
+#~ msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+#~ msgstr "MIDI ir Alegro failai (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI failai (*.mid;*.midi)|*.mid;*.midi|Alegro failai(*.gro)|*.gro|Visi failai|*"
 
 #~ msgid "F&ocus"
 #~ msgstr "Fo&kusavimas"
@@ -22002,17 +21673,13 @@ msgstr ""
 #~ msgstr "&Dešinė"
 
 #~ msgid ""
-#~ "Latency Correction setting has caused the recorded audio to be hidden "
-#~ "before zero.\n"
+#~ "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 #~ "Audacity has brought it back to start at zero.\n"
-#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
-#~ "to the right place."
+#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
 #~ msgstr ""
-#~ "Gaišties laiko Taisymo nustatymas pavertė įrašyta garsą tapti paslėptu "
-#~ "prieš nulį.\n"
+#~ "Gaišties laiko Taisymo nustatymas pavertė įrašyta garsą tapti paslėptu prieš nulį.\n"
 #~ "Audacity grąžino jo pradžią į nulį.\n"
-#~ "Jums gali prireikti panaudoti Laiko Keitimo Įrankį (<---> arba F5) norint "
-#~ "nutempti takelį i pageidaujamą vietą."
+#~ "Jums gali prireikti panaudoti Laiko Keitimo Įrankį (<---> arba F5) norint nutempti takelį i pageidaujamą vietą."
 
 #~ msgid "Latency problem"
 #~ msgstr "Gaišties laiko problema"
@@ -22038,27 +21705,14 @@ msgstr ""
 #~ msgid "<br><br>DarkAudacity is based on Audacity:"
 #~ msgstr "<br><br>DarkAudacity yra pagal Audacity:"
 
-#~ msgid ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences "
-#~ "between them."
-#~ msgstr ""
-#~ " [[http://www.darkaudacity.com|www.darkaudacity.com]] spauskite, kad "
-#~ "rastumėt skirtumus tarp jų."
+#~ msgid " [[http://www.darkaudacity.com|www.darkaudacity.com]] - for differences between them."
+#~ msgstr " [[http://www.darkaudacity.com|www.darkaudacity.com]] spauskite, kad rastumėt skirtumus tarp jų."
 
-#~ msgid ""
-#~ " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for "
-#~ "help using DarkAudacity."
-#~ msgstr ""
-#~ " siųsti elektroninį laišką į [[mailto:james@audacityteam.org|"
-#~ "james@audacityteam.org]], kad galėtume suteikti pagalba naudojantis "
-#~ "DarkAudacity."
+#~ msgid " email to [[mailto:james@audacityteam.org|james@audacityteam.org]] - for help using DarkAudacity."
+#~ msgstr " siųsti elektroninį laišką į [[mailto:james@audacityteam.org|james@audacityteam.org]], kad galėtume suteikti pagalba naudojantis DarkAudacity."
 
-#~ msgid ""
-#~ " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting "
-#~ "started with DarkAudacity."
-#~ msgstr ""
-#~ " keliaukite į [[http://www.darkaudacity.com/video.html|Tutorials]], kad "
-#~ "gautumėt pagalba pradedant naudotis DarkAudacity."
+#~ msgid " [[http://www.darkaudacity.com/video.html|Tutorials]] - for getting started with DarkAudacity."
+#~ msgstr " keliaukite į [[http://www.darkaudacity.com/video.html|Tutorials]], kad gautumėt pagalba pradedant naudotis DarkAudacity."
 
 #~ msgid "Insert &After"
 #~ msgstr "Įkelti &Po"
@@ -22093,19 +21747,14 @@ msgstr ""
 #~ msgid "items?"
 #~ msgstr "daiktai?"
 
-#~ msgid ""
-#~ "Your tracks will be mixed down to a single mono channel in the exported "
-#~ "file."
-#~ msgstr ""
-#~ "Jūsų eksportuojamo failo takeliai bus sujungti į vieną mono kanalo failą."
+#~ msgid "Your tracks will be mixed down to a single mono channel in the exported file."
+#~ msgstr "Jūsų eksportuojamo failo takeliai bus sujungti į vieną mono kanalo failą."
 
 #, fuzzy
 #~ msgid ""
 #~ "Error opening sound device.\n"
 #~ "Try changing the audio host, recording device and the project sample rate."
-#~ msgstr ""
-#~ "Klaida atidarinėjant garso tvarkykles. Prašau pasitikrinkite išvesties "
-#~ "įrenginio nuostatas ir projekto modelio dažnį."
+#~ msgstr "Klaida atidarinėjant garso tvarkykles. Prašau pasitikrinkite išvesties įrenginio nuostatas ir projekto modelio dažnį."
 
 #, fuzzy
 #~ msgid "Slider Recording"
@@ -22173,8 +21822,7 @@ msgstr ""
 #~ msgstr "Įrašymas"
 
 #~ msgid "Exporting the entire project using command-line encoder"
-#~ msgstr ""
-#~ "Visas projektas eksportuojamas naudojantis komandinės eilutės dekoderį"
+#~ msgstr "Visas projektas eksportuojamas naudojantis komandinės eilutės dekoderį"
 
 #~ msgid "Exporting the entire project as Ogg Vorbis"
 #~ msgstr "Visas projektas eksportuojamas kaip Ogg Vorbis"
@@ -22200,12 +21848,8 @@ msgstr ""
 #~ msgstr "į Apibraukimo Pabaigą"
 
 #, fuzzy
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Paspauskite verikaliam Priartinimui, Shift-Paspaudimas — Tolinimui, "
-#~ "Temkite konkrečios vietos apibraukimui."
+#~ msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
+#~ msgstr "Paspauskite verikaliam Priartinimui, Shift-Paspaudimas — Tolinimui, Temkite konkrečios vietos apibraukimui."
 
 #~ msgid "up"
 #~ msgstr "viršun"
@@ -22553,8 +22197,7 @@ msgstr ""
 #~ msgstr "Pritaikomas Dinaminis Dažnio Kompresorius..."
 
 #~ msgid "Applied effect: %s delay = %f seconds, decay factor = %f"
-#~ msgstr ""
-#~ "Priimtas efektas: %s uždelsimas = %f sekundės, nykimo faktorius = %f"
+#~ msgstr "Priimtas efektas: %s uždelsimas = %f sekundės, nykimo faktorius = %f"
 
 #~ msgid "Echo..."
 #~ msgstr "Aidas..."
@@ -22584,17 +22227,11 @@ msgstr ""
 #~ msgstr "Normalizuoti..."
 
 #, fuzzy
-#~ msgid ""
-#~ "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
-#~ msgstr ""
-#~ "Priimtas efektas: %s uždelsimas = %f sekundės, nykimo faktorius = %f"
+#~ msgid "Applied effect: %s stretch factor = %f times, time resolution = %f seconds"
+#~ msgstr "Priimtas efektas: %s uždelsimas = %f sekundės, nykimo faktorius = %f"
 
-#~ msgid ""
-#~ "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start "
-#~ "phase = %.0f deg, depth = %d, feedback = %.0f%%"
-#~ msgstr ""
-#~ "Priimtas efektas: %s %d stadijos, %.0f%% wet, dažnis = %.1f Hz, pradžios "
-#~ "fazė= %.0f deg, gylis= %d, atsakomoji reakcija= %.0f%%"
+#~ msgid "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start phase = %.0f deg, depth = %d, feedback = %.0f%%"
+#~ msgstr "Priimtas efektas: %s %d stadijos, %.0f%% wet, dažnis = %.1f Hz, pradžios fazė= %.0f deg, gylis= %d, atsakomoji reakcija= %.0f%%"
 
 #~ msgid "Phaser..."
 #~ msgstr "Fazeris..."
@@ -22616,12 +22253,8 @@ msgstr ""
 #~ msgid "Buffer Delay Compensation"
 #~ msgstr "Klavišų Kombinacija"
 
-#~ msgid ""
-#~ "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = "
-#~ "%.0f%%, resonance = %.1f, frequency offset = %.0f%%"
-#~ msgstr ""
-#~ "Priimtas efektas: %s dažnis= %.1f Hz, pradžios fazė = %.0f deg, gylis= "
-#~ "%.0f%%, rezonansas= %.1f, dažnio ofsetas= %.0f%%"
+#~ msgid "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = %.0f%%, resonance = %.1f, frequency offset = %.0f%%"
+#~ msgstr "Priimtas efektas: %s dažnis= %.1f Hz, pradžios fazė = %.0f deg, gylis= %.0f%%, rezonansas= %.1f, dažnio ofsetas= %.0f%%"
 
 #~ msgid "Wahwah..."
 #~ msgstr "VachVach..."
