@@ -476,7 +476,7 @@ int EffectNoiseReduction::Settings::PromptUser
 
    const auto returnCode = dlog.GetReturnCode();
    if (!returnCode)
-      return false;
+      return 0;
 
    *this = dlog.GetTempSettings();
    mDoProfile = (returnCode == 1);
