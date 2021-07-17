@@ -13,6 +13,7 @@
 #define __AUDACITY_LYRICS_WINDOW__
 
 #include <wx/frame.h> // to inherit
+#include <memory>
 
 #include "Prefs.h"
 
@@ -40,7 +41,7 @@ class LyricsWindow final : public wxFrame,
    // PrefsListener implementation
    void UpdatePrefs() override;
 
-   AudacityProject *mProject;
+   std::weak_ptr<AudacityProject> mProject;
    LyricsPanel *mLyricsPanel;
 
  public:
