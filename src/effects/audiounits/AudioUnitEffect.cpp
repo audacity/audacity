@@ -912,7 +912,7 @@ TranslatableString AudioUnitEffect::GetDescription()
 }
 
 // ============================================================================
-// EffectComponentInterface implementation
+// EffectDefinitionInterface implementation
 // ============================================================================
 
 EffectType AudioUnitEffect::GetType()

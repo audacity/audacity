@@ -205,7 +205,7 @@ bool EffectManager::IsHidden(const PluginID & ID)
 
    if (effect)
    {
-      return effect->IsHidden();
+      return effect->IsHiddenFromMenus();
    }
 
    return false;

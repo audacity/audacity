@@ -46,12 +46,12 @@ public:
 
    EffectType GetType() override;
    bool SupportsAutomation() override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectClientInterface implementation
 
    bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
 

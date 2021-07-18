@@ -39,6 +39,8 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectClientInterface implementation
 
@@ -46,8 +48,6 @@ public:
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
 
    // Effect implementation
 

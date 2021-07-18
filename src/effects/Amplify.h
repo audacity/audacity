@@ -40,6 +40,9 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool LoadFactoryDefaults() override;
 
    // EffectClientInterface implementation
 
@@ -47,9 +50,6 @@ public:
    unsigned GetAudioOutCount() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-   bool LoadFactoryDefaults() override;
 
    // Effect implementation
 

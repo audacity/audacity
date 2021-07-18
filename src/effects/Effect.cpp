@@ -996,16 +996,6 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    return TransferDataToWindow();
 }
 
-ManualPageID Effect::ManualPage()
-{
-   return {};
-}
-
-FilePath Effect::HelpPage()
-{
-   return {};
-}
-
 unsigned Effect::TestUIFlags(unsigned mask) {
    return mask & mUIFlags;
 }
@@ -2101,11 +2091,6 @@ void Effect::CountWaveTracks()
 double Effect::CalcPreviewInputLength(double previewLength)
 {
    return previewLength;
-}
-
-bool Effect::IsHidden()
-{
-   return false;
 }
 
 void Effect::Preview(bool dryOnly)

@@ -56,7 +56,7 @@ public:
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
 
-   // EffectComponentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    EffectFamilySymbol GetFamily() override;
@@ -65,6 +65,16 @@ public:
    bool IsLegacy() override;
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
+
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
+
+   RegistryPaths GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryDefaults() override;
 
    // EffectClientInterface implementation
 
@@ -99,16 +109,6 @@ public:
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
-
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
-
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
-   RegistryPaths GetFactoryPresets() override;
 
    // EffectUIClientInterface implementation
 

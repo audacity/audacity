@@ -111,6 +111,16 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
 
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
+
+   RegistryPaths GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryDefaults() override;
+
    // EffectClientInterface implementation
 
    bool SetHost(EffectHostInterface *host) override;
@@ -147,15 +157,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
-
-   RegistryPaths GetFactoryPresets() override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
 
    // EffectUIClientInterface implementation
 
@@ -208,11 +209,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual bool GetAutomationParametersAsString(wxString & parms);
    virtual bool SetAutomationParametersFromString(const wxString & parms);
 
-   // Name of page in the Audacity alpha manual
-   virtual ManualPageID ManualPage();
-   // Fully qualified local help file name
-   virtual FilePath HelpPage();
-
    virtual bool IsBatchProcessing();
    virtual void SetBatchProcessing(bool start);
 
@@ -229,8 +225,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool Delegate( Effect &delegate,
       wxWindow &parent, const EffectDialogFactory &factory );
-
-   virtual bool IsHidden();
 
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.

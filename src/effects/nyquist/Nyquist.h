@@ -91,11 +91,12 @@ public:
    bool IsDefault() override;
    bool EnablesDebug() override;
 
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+
    // EffectClientInterface implementation
 
    bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
    int SetLispVarsFromParameters(CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation
