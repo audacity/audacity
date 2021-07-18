@@ -23,7 +23,6 @@
 
 #include <wx/defs.h>
 #include <wx/sizer.h>
-#include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
@@ -669,8 +668,8 @@ void Effect::ExportPresets()
 {
    wxString params;
    GetAutomationParametersAsString(params);
-   wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
-   params =  commandId + ":" + params;
+   auto commandId = GetSquashedName(GetSymbol().Internal());
+   params =  commandId.GET() + ":" + params;
 
    auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Export Effect Parameters"),
@@ -735,7 +734,7 @@ void Effect::ImportPresets()
          wxString ident = params.BeforeFirst(':');
          params = params.AfterFirst(':');
 
-         wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
+         auto commandId = GetSquashedName(GetSymbol().Internal());
 
          if (ident != commandId) {
             // effect identifiers are a sensible length!
@@ -762,30 +761,6 @@ void Effect::ImportPresets()
 
    //SetWindowTitle();
 
-}
-
-CommandID Effect::GetSquashedName(wxString name)
-{
-   // Get rid of leading and trailing white space
-   name.Trim(true).Trim(false);
-
-   if (name.empty())
-   {
-      return name;
-   }
-
-   wxStringTokenizer st(name, wxT(" "));
-   wxString id;
-
-   // CamelCase the name
-   while (st.HasMoreTokens())
-   {
-      wxString tok = st.GetNextToken();
-
-      id += tok.Left(1).MakeUpper() + tok.Mid(1).MakeLower();
-   }
-
-   return id;
 }
 
 bool Effect::HasOptions()

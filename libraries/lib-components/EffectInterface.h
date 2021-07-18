@@ -73,6 +73,9 @@ parameters.
 class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
+   //! A utility that strips spaces and CamelCases a name.
+   static Identifier GetSquashedName(const Identifier &ident);
+
    virtual ~EffectDefinitionInterface();
 
    //! Type determines how it behaves.
