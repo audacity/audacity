@@ -296,7 +296,7 @@ bool NyquistEffect::IsDefault()
    return mIsPrompt;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool NyquistEffect::DefineParams( ShuttleParams & S )
 {
    // For now we assume Nyquist can do get and set better than DefineParams can,

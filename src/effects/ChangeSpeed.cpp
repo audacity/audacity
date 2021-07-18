@@ -137,7 +137,7 @@ EffectType EffectChangeSpeed::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( m_PercentChange, Percentage );
    return true;

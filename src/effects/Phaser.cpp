@@ -136,7 +136,7 @@ bool EffectPhaser::SupportsRealtime()
 #endif
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectPhaser::GetAudioInCount()
 {

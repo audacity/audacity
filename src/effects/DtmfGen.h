@@ -42,7 +42,7 @@ public:
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;

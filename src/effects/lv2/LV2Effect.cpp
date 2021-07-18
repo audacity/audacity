@@ -518,7 +518,7 @@ bool LV2Effect::SupportsAutomation()
 }
 
 // ============================================================================
-// EffectClientInterface Implementation
+// EffectProcessor Implementation
 // ============================================================================
 bool LV2Effect::SetHost(EffectHostInterface *host)
 {

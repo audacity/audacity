@@ -246,7 +246,7 @@ bool Effect::SupportsAutomation()
    return true;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 bool Effect::SetHost(EffectHostInterface *host)
 {

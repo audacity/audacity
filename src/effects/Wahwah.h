@@ -57,7 +57,7 @@ public:
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;

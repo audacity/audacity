@@ -1009,7 +1009,7 @@ bool AudioUnitEffect::SupportsAutomation()
 }
 
 // ============================================================================
-// EffectClientInterface Implementation
+// EffectProcessor Implementation
 // ============================================================================
 
 bool AudioUnitEffect::SetHost(EffectHostInterface *host)

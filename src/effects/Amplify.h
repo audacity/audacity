@@ -44,7 +44,7 @@ public:
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;

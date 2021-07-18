@@ -49,7 +49,7 @@ public:
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    bool DefineParams( ShuttleParams & S ) override;
 

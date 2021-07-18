@@ -67,7 +67,7 @@ bool EffectFade::IsInteractive()
    return false;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectFade::GetAudioInCount()
 {

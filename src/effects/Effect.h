@@ -121,7 +121,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    bool SetHost(EffectHostInterface *host) override;
    
@@ -262,6 +262,10 @@ protected:
    virtual bool CheckWhetherSkipEffect() { return false; }
 
    // Actually do the effect here.
+   /*! If Process() is not overridden, it uses ProcessInitialize(),
+    ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
+    and also GetLatency() to determine how many leading output samples to
+    discard and how many extra samples to produce. */
    virtual bool Process();
    virtual bool ProcessPass();
    virtual bool InitPass1();

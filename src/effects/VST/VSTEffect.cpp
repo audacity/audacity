@@ -1303,7 +1303,7 @@ bool VSTEffect::SupportsAutomation()
 }
 
 // ============================================================================
-// EffectClientInterface Implementation
+// EffectProcessor Implementation
 // ============================================================================
 
 bool VSTEffect::SetHost(EffectHostInterface *host)

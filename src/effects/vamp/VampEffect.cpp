@@ -138,7 +138,7 @@ bool VampEffect::IsDefault()
 }
 
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned VampEffect::GetAudioInCount()
 {

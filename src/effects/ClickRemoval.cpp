@@ -105,7 +105,7 @@ EffectType EffectClickRemoval::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectClickRemoval::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mThresholdLevel, Threshold );
    S.SHUTTLE_PARAM( mClickWidth, Width );

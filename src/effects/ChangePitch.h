@@ -55,7 +55,7 @@ public:
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    bool DefineParams( ShuttleParams & S ) override;
 

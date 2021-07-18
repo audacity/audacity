@@ -288,7 +288,7 @@ public:
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;

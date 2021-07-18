@@ -61,6 +61,6 @@ bool EffectDefinitionInterface::IsHiddenFromMenus()
 //   return false;
 //}
 
-EffectClientInterface::~EffectClientInterface() = default;
+EffectProcessor::~EffectProcessor() = default;
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

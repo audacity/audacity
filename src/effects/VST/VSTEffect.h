@@ -86,7 +86,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffect is an Audacity EffectClientInterface that forwards actual 
+/// VSTEffect is an Audacity EffectProcessor that forwards actual 
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ class VSTEffect final : public wxEvtHandler,
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;

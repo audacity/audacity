@@ -62,7 +62,7 @@ bool EffectStereoToMono::IsInteractive()
    return false;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectStereoToMono::GetAudioInCount()
 {

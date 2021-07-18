@@ -190,17 +190,18 @@ typedef enum
 
 /*************************************************************************************//**
 
-\class EffectClientInterface 
+\class EffectProcessor 
 
 \brief EffectClientInterface provides the ident interface to Effect, and is what makes
-Effect into a plug-in command.  It has functions for realtime that are not part of 
+Effect into a plug-in command.  It has functions for effect calculations that are not part of
 AudacityCommand.
 
 *******************************************************************************************/
-class COMPONENTS_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
+class COMPONENTS_API EffectProcessor  /* not final */
+   : public EffectDefinitionInterface
 {
 public:
-   virtual ~EffectClientInterface();
+   virtual ~EffectProcessor();
 
    virtual unsigned GetAudioInCount() = 0;
    virtual unsigned GetAudioOutCount() = 0;
@@ -213,12 +214,18 @@ public:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
    virtual size_t GetBlockSize() const = 0;
 
+   //! Called for destructive, non-realtime effect computation
    virtual sampleCount GetLatency() = 0;
    virtual size_t GetTailSize() = 0;
 
+   //! Called for destructive, non-realtime effect computation
    virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
+
+   //! Called for destructive, non-realtime effect computation
    // This may be called during stack unwinding:
    virtual bool ProcessFinalize() /* noexcept */ = 0;
+
+   //! Called for destructive, non-realtime effect computation
    virtual size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) = 0;
 
    virtual bool RealtimeInitialize() = 0;
@@ -240,7 +247,7 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
-   : public EffectClientInterface
+   : public EffectProcessor
 {
 public:
    virtual ~EffectUIClientInterface();

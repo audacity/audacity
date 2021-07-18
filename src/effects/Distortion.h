@@ -76,7 +76,7 @@ public:
    RegistryPaths GetFactoryPresets() override;
    bool LoadFactoryPreset(int id) override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;

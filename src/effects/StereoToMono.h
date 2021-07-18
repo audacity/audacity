@@ -31,7 +31,7 @@ public:
    EffectType GetType() override;
    bool IsInteractive() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
