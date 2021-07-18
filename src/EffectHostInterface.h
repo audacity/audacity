@@ -55,6 +55,11 @@ using EffectDialogFactory = std::function<
       EffectHostInterface&, EffectUIClientInterface& )
 >;
 
+class TrackList;
+class WaveTrackFactory;
+class NotifyingSelectedRegion;
+class EffectProcessor;
+
 /*************************************************************************************//**
 
 \class EffectUIHostInterface
@@ -74,6 +79,26 @@ public:
       wxWindow &parent, const EffectDialogFactory &factory,
       bool forceModal = false
    ) = 0;
+
+   virtual void Preview(bool dryOnly) = 0;
+   virtual bool GetAutomationParametersAsString(wxString & parms) = 0;
+   virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
+   virtual bool IsBatchProcessing() = 0;
+   virtual void SetBatchProcessing(bool start) = 0;
+   // Returns true on success.  Will only operate on tracks that
+   // have the "selected" flag set to true, which is consistent with
+   // Audacity's standard UI.
+   // Create a user interface only if the supplied function is not null.
+   virtual bool DoEffect( double projectRate, TrackList *list,
+      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      unsigned flags,
+      // Prompt the user for input only if these arguments are both not null.
+      wxWindow *pParent = nullptr,
+      const EffectDialogFactory &dialogFactory = {} ) = 0;
+   virtual bool Startup(EffectUIClientInterface *client) = 0;
+
+   virtual bool TransferDataToWindow() = 0;
+   virtual bool TransferDataFromWindow() = 0;
 };
 
 #endif
