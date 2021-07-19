@@ -55,6 +55,8 @@ class AudacityProject;
 class TimerRecordDialog final : public wxDialogWrapper
 {
 public:
+   using ProgressResult = BasicUI::ProgressResult;
+
    TimerRecordDialog(
       wxWindow* parent, AudacityProject &project, bool bAlreadySaved);
    ~TimerRecordDialog();

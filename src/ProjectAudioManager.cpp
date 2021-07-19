@@ -17,6 +17,7 @@ Paul Licameli split from ProjectManager.cpp
 #include <wx/statusbr.h>
 
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "CommonCommandFlags.h"
 #include "LabelTrack.h"
 #include "Menus.h"
@@ -35,7 +36,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "prefs/TracksPrefs.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/Warning.h"
 #include "widgets/AudacityMessageBox.h"
@@ -263,10 +263,13 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          // handler!  Easy fix, just delay the user alert instead.
          auto &window = GetProjectFrame( mProject );
          window.CallAfter( [&]{
-         // Show error message if stream could not be opened
-         ShowExceptionDialog(&window, XO("Error"),
-                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("Error_opening_sound_device"));
+            using namespace BasicUI;
+            // Show error message if stream could not be opened
+            ShowErrorDialog( *ProjectFramePlacement(&mProject),
+               XO("Error"),
+               XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+               wxT("Error_opening_sound_device"),
+               ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
          });
       }
    }
@@ -751,8 +754,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Show error message if stream could not be opened
          auto msg = XO("Error opening recording device.\nError code: %s")
             .Format( gAudioIO->LastPaErrorString() );
-         ShowExceptionDialog(&GetProjectFrame( mProject ),
-            XO("Error"), msg, wxT("Error_opening_sound_device"));
+         using namespace BasicUI;
+         ShowErrorDialog( *ProjectFramePlacement(&mProject),
+            XO("Error"), msg, wxT("Error_opening_sound_device"),
+            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       }
    }
 

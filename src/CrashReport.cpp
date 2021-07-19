@@ -13,8 +13,6 @@
 #include <atomic>
 #include <thread>
 
-#include <wx/progdlg.h>
-
 #if defined(__WXMSW__)
 #include <wx/evtloop.h>
 #endif
@@ -22,13 +20,14 @@
 #include "wxFileNameWrapper.h"
 #include "AudacityLogger.h"
 #include "AudioIOBase.h"
+#include "BasicUI.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "Languages.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "prefs/GUIPrefs.h"
-#include "widgets/ErrorDialog.h"
+#include "widgets/AudacityTextEntryDialog.h"
 
 namespace CrashReport {
 
@@ -44,11 +43,10 @@ void Generate(wxDebugReport::Context ctx)
 
    {
       // Provides a progress dialog with indeterminate mode
-      wxGenericProgressDialog pd(XO("Audacity Support Data").Translation(),
-                                 XO("This may take several seconds").Translation(),
-                                 300000,     // range
-                                 nullptr,    // parent
-                                 wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+      using namespace BasicUI;
+      auto pd = MakeGenericProgress({},
+         XO("Audacity Support Data"), XO("This may take several seconds"));
+      wxASSERT(pd);
 
       std::atomic_bool done = {false};
       auto thread = std::thread([&]
@@ -87,7 +85,7 @@ void Generate(wxDebugReport::Context ctx)
       while (!done)
       {
          wxMilliSleep(50);
-         pd.Pulse();
+         pd->Pulse();
       }
       thread.join();
    }

@@ -37,8 +37,8 @@ class ErrorReportDialog final : public wxDialogWrapper
 public:
    ErrorReportDialog(
       wxWindow* parent, const TranslatableString& dlogTitle,
-      const TranslatableString& message, const wxString& helpUrl,
-      const wxString& log, const bool modal = true);
+      const TranslatableString& message, const ManualPageID& helpUrl,
+      const wxString& log, const bool modal);
 
    ~ErrorReportDialog();
 
@@ -50,7 +50,7 @@ private:
 
    std::unique_ptr<audacity::sentry::Report> mReport;
 
-   wxString mHelpUrl;
+   ManualPageID mHelpUrl;
 
    wxTextCtrl* mCommentsControl;
 
@@ -58,12 +58,5 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
-
-/// Displays an error dialog that allows to send the error report
-AUDACITY_DLL_API
-void ShowErrorReportDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage = {},
-   const wxString& log = {});
 
 #endif // __AUDACITY_SENTRYERRORDIALOG__

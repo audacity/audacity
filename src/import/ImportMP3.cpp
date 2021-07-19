@@ -31,8 +31,8 @@
 #include <wx/defs.h>
 
 #include "Import.h"
+#include "BasicUI.h"
 #include "ImportPlugin.h"
-#include "../widgets/ErrorDialog.h"
 #include "../Project.h"
 
 #define DESC XO("MP3 files")
@@ -1098,10 +1098,10 @@ enum mad_flow MP3ImportFileHandle::ErrorCB(struct mad_stream *stream,
    }
 
    // Let the user know about the error
-   ShowErrorDialog(
-      nullptr,
-      AudacityMessageBoxCaptionStr(),
-      XO("Import failed\n\nThis is likely caused by a malformed MP3.\n\n"), 
+   using namespace BasicUI;
+   ShowErrorDialog( {},
+      DefaultCaption(),
+      XO("Import failed\n\nThis is likely caused by a malformed MP3.\n\n"),
       "Opening_malformed_MP3_files");
    return MAD_FLOW_BREAK;
 }
