@@ -22,6 +22,40 @@
 #include "../../../ui/AffordanceHandle.h"
 #include "WaveTrackView.h"//need only ClipParameters
 
+#include "../../../../ProjectHistory.h"
+#include "../../../../SelectionState.h"
+#include "../../../../RefreshCode.h"
+
+class WaveTrackAffordanceHandle final : public AffordanceHandle
+{
+public:
+    WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track) : AffordanceHandle(track) { }
+
+    static UIHandlePtr HitAnywhere(std::weak_ptr<AffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack)
+    {
+        auto result = std::static_pointer_cast<AffordanceHandle>(std::make_shared<WaveTrackAffordanceHandle>(pTrack));
+        result = AssignUIHandlePtr(holder, result);
+        return result;
+    }
+
+    UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* pProject) override
+    {
+        const auto track = std::dynamic_pointer_cast<WaveTrack>(TrackList::Get(*pProject).Lock<Track>(GetTrack()));
+
+        auto& viewInfo = ViewInfo::Get(*pProject);
+
+        auto time = viewInfo.PositionToTime(event.event.m_x, event.rect.x);
+        
+        WaveClip* const selectedClip = track->GetClipAtTime(time);
+        if (selectedClip) {
+            viewInfo.selectedRegion.setTimes(selectedClip->GetOffset(), selectedClip->GetEndTime());
+        }
+
+        ProjectHistory::Get(*pProject).ModifyState(false);
+
+        return RefreshCode::RefreshAll | RefreshCode::Cancelled;
+    }
+};
 
 WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack)
     : CommonTrackCell(pTrack)
@@ -50,7 +84,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
         if (affordanceRect.Contains(px, py))
         {
-            results.push_back(AffordanceHandle::HitAnywhere(mAffordanceHandle, track));
+            results.push_back(WaveTrackAffordanceHandle::HitAnywhere(mAffordanceHandle, track));
             mFocusClip = clip;
             break;
         }
