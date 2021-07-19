@@ -174,6 +174,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectHostInterface implementation
 
+   EffectDefinitionInterface &GetDefinition() override;
    double GetDefaultDuration() override;
    double GetDuration() override;
    NumericFormatSymbol GetDurationFormat() override;

@@ -122,6 +122,8 @@ class COMPONENTS_API EffectHostInterface  /* not final */ : public ConfigClientI
 public:
    virtual ~EffectHostInterface();
 
+   virtual EffectDefinitionInterface &GetDefinition() = 0;
+
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
    virtual NumericFormatSymbol GetDurationFormat() = 0;

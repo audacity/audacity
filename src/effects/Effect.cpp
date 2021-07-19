@@ -808,6 +808,11 @@ void Effect::ShowOptions()
 
 // EffectHostInterface implementation
 
+EffectDefinitionInterface &Effect::GetDefinition()
+{
+   return mClient ? *mClient : *this;
+}
+
 double Effect::GetDefaultDuration()
 {
    return 30.0;
