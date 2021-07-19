@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-07-16 00:00+0000\n"
+"PO-Revision-Date: 2021-07-19 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "Language: pl\n"
@@ -14166,7 +14166,7 @@ msgstr "Ta wersja Audacity pozwala tylko na jedną ścieżkę czasową dla każd
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new time track"
-msgstr "Utworzono nową ścieżkę"
+msgstr "Utworzono nową ścieżkę czasową"
 
 #: src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -15130,7 +15130,7 @@ msgstr "Rozszerzony import"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Preferences for ExtImport"
-msgstr "Ustawienia eksport/import"
+msgstr "Ustawienia rozsz. importu"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
@@ -15198,7 +15198,7 @@ msgstr "Zasada potwierdzania przy usuwaniu"
 
 #: src/prefs/ExtImportPrefs.h
 msgid "Ext Import"
-msgstr "Eksport Import"
+msgstr "Rozsz. import"
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
@@ -17684,7 +17684,7 @@ msgstr "Ustaw zakres"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to linear"
-msgstr "Ustaw wyświetlanie ścieżki czasu na liniową"
+msgstr "Ustaw wyświetlanie ścieżki czasowej na liniową"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set Display"
@@ -17692,11 +17692,11 @@ msgstr "Ustaw wyświetlanie"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to logarithmic"
-msgstr "Ustaw wyświetlanie ścieżki czasu na logarytmiczną"
+msgstr "Ustaw wyświetlanie ścieżki czasowej na logarytmiczną"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track interpolation to linear"
-msgstr "Ustaw interpolację ścieżki czasu na liniową"
+msgstr "Ustaw interpolację ścieżki czasowej na liniową"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set Interpolation"
@@ -17704,7 +17704,7 @@ msgstr "Ustaw interpolację"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track interpolation to logarithmic"
-msgstr "Ustaw interpolację ścieżki czasu na logarytmiczną"
+msgstr "Ustaw interpolację ścieżki czasowej na logarytmiczną"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "&Linear scale"
