@@ -781,9 +781,12 @@ VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent, EffectHostInte
 {
    mHost = host;
 
-   mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), mBufferSize, 8192);
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseGUI"), mUseGUI, true);
+   mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("BufferSize"),
+      mBufferSize, 8192);
+   mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
+      mUseLatency, true);
+   mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseGUI"),
+      mUseGUI, true);
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -876,9 +879,12 @@ void VSTEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mHost->SetSharedConfig(wxT("Options"), wxT("BufferSize"), mBufferSize);
-   mHost->SetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency);
-   mHost->SetSharedConfig(wxT("Options"), wxT("UseGUI"), mUseGUI);
+   mHost->SetConfig(PluginSettings::Shared, wxT("Options"),
+      wxT("BufferSize"), mBufferSize);
+   mHost->SetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
+      mUseLatency);
+   mHost->SetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseGUI"),
+      mUseGUI);
 
    EndModal(wxID_OK);
 }
@@ -1313,18 +1319,23 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
    if (mHost)
    {
       int userBlockSize;
-      mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), userBlockSize, 8192);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+         wxT("BufferSize"), userBlockSize, 8192);
       mUserBlockSize = std::max( 1, userBlockSize );
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
 
       mBlockSize = mUserBlockSize;
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+      mHost->GetConfig(PluginSettings::Private,
+         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         false);
       if (!haveDefaults)
       {
          SaveParameters(mHost->GetFactoryDefaultsGroup());
-         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+         mHost->SetConfig(PluginSettings::Private,
+            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
       LoadParameters(mHost->GetCurrentSettingsGroup());
@@ -1761,7 +1772,7 @@ bool VSTEffect::PopulateUI(ShuttleGui &S)
    mParent->PushEventHandler(this);
 
    // Determine if the VST editor is supposed to be used or not
-   mHost->GetSharedConfig(wxT("Options"),
+   mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
                           wxT("UseGUI"),
                           mGui,
                           true);
@@ -1985,9 +1996,11 @@ void VSTEffect::ShowOptions()
    {
       // Reinitialize configuration settings
       int userBlockSize;
-      mHost->GetSharedConfig(wxT("Options"), wxT("BufferSize"), userBlockSize, 8192);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+         wxT("BufferSize"), userBlockSize, 8192);
       mUserBlockSize = std::max( 1, userBlockSize );
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
    }
 }
 
@@ -2321,9 +2334,12 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
    wxString value;
 
    VstPatchChunkInfo info = {1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, ""};
-   mHost->GetPrivateConfig(group, wxT("UniqueID"), info.pluginUniqueID, info.pluginUniqueID);
-   mHost->GetPrivateConfig(group, wxT("Version"), info.pluginVersion, info.pluginVersion);
-   mHost->GetPrivateConfig(group, wxT("Elements"), info.numElements, info.numElements);
+   mHost->GetConfig(PluginSettings::Private, group, wxT("UniqueID"),
+      info.pluginUniqueID, info.pluginUniqueID);
+   mHost->GetConfig(PluginSettings::Private, group, wxT("Version"),
+      info.pluginVersion, info.pluginVersion);
+   mHost->GetConfig(PluginSettings::Private, group, wxT("Elements"),
+      info.numElements, info.numElements);
 
    if ((info.pluginUniqueID != mAEffect->uniqueID) ||
        (info.pluginVersion != mAEffect->version) ||
@@ -2332,7 +2348,8 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
       return false;
    }
 
-   if (mHost->GetPrivateConfig(group, wxT("Chunk"), value, wxEmptyString))
+   if (mHost->GetConfig(PluginSettings::Private, group, wxT("Chunk"), value,
+      wxEmptyString))
    {
       ArrayOf<char> buf{ value.length() / 4 * 3 };
 
@@ -2346,7 +2363,8 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
    }
 
    wxString parms;
-   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
+   if (!mHost->GetConfig(PluginSettings::Private, group, wxT("Parameters"),
+      parms, wxEmptyString))
    {
       return false;
    }
@@ -2362,9 +2380,12 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
 
 bool VSTEffect::SaveParameters(const RegistryPath & group)
 {
-   mHost->SetPrivateConfig(group, wxT("UniqueID"), mAEffect->uniqueID);
-   mHost->SetPrivateConfig(group, wxT("Version"), mAEffect->version);
-   mHost->SetPrivateConfig(group, wxT("Elements"), mAEffect->numParams);
+   mHost->SetConfig(PluginSettings::Private, group, wxT("UniqueID"),
+      mAEffect->uniqueID);
+   mHost->SetConfig(PluginSettings::Private, group, wxT("Version"),
+      mAEffect->version);
+   mHost->SetConfig(PluginSettings::Private, group, wxT("Elements"),
+      mAEffect->numParams);
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
@@ -2375,7 +2396,8 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
          return false;
       }
 
-      mHost->SetPrivateConfig(group, wxT("Chunk"), VSTEffect::b64encode(chunk, clen));
+      mHost->SetConfig(PluginSettings::Private, group, wxT("Chunk"),
+         VSTEffect::b64encode(chunk, clen));
       return true;
    }
 
@@ -2391,7 +2413,8 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
       return false;
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
+   return mHost->SetConfig(PluginSettings::Private,
+      group, wxT("Parameters"), parms);
 }
 
 void VSTEffect::OnTimer()

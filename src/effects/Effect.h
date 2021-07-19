@@ -187,41 +187,40 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // ConfigClientInterface implementation
 
-   bool HasSharedConfigGroup(const RegistryPath & group) override;
-   bool GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths &subgroups) override;
+   bool HasConfigGroup(
+      ConfigurationType type, const RegistryPath & group) override;
+   bool GetConfigSubgroups(
+      ConfigurationType type, const RegistryPath & group,
+      RegistryPaths & subgroups) override;
 
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = {}) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, wxString & value,
+      const wxString & defval = {}) override;
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, int & value, int defval = 0) override;
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, bool & value, bool defval = false) override;
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, float & value, float defval = 0.0f) override;
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, double & value, double defval = 0.0) override;
 
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const int & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const float & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const double & value) override;
+   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const wxString & value) override;
+   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const int & value) override;
+   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const bool & value) override;
+   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const float & value) override;
+   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const double & value) override;
 
-   bool RemoveSharedConfigSubgroup(const RegistryPath & group) override;
-   bool RemoveSharedConfig(const RegistryPath & group, const RegistryPath & key) override;
-
-   bool HasPrivateConfigGroup(const RegistryPath & group) override;
-   bool GetPrivateConfigSubgroups(const RegistryPath & group, RegistryPaths &paths) override;
-
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = {}) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
-
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const int & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const float & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const double & value) override;
-
-   bool RemovePrivateConfigSubgroup(const RegistryPath & group) override;
-   bool RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key) override;
+   bool RemoveConfigSubgroup(
+      ConfigurationType type, const RegistryPath & group) override;
+   bool RemoveConfig(
+      ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key) override;
 
    // Effect implementation
 

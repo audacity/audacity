@@ -523,11 +523,13 @@ AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, Ef
 {
    mHost = host;
 
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+   mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
+      mUseLatency, true);
 
    // Expect one of three string values from the config file
    wxString uiType;
-   mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), uiType, wxT("Full"));
+   mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UIType"),
+      uiType, wxT("Full"));
 
    // Get the localization of the string for display to the user
    mUIType = TranslatableString{ uiType, {} };
@@ -618,8 +620,10 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // un-translate the type
    auto uiType = mUIType.MSGID().GET();
 
-   mHost->SetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency);
-   mHost->SetSharedConfig(wxT("Options"), wxT("UIType"), uiType);
+   mHost->SetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
+      mUseLatency);
+   mHost->SetConfig(PluginSettings::Shared, wxT("Options"), wxT("UIType"),
+      uiType);
 
    EndModal(wxID_OK);
 }
@@ -775,7 +779,8 @@ TranslatableString AudioUnitEffectImportDialog::Import(
 
    // And write it to the config
    wxString group = mEffect->mHost->GetUserPresetsGroup(name);
-   if (!mEffect->mHost->SetPrivateConfig(group, PRESET_KEY, parms))
+   if (!mEffect->mHost->SetConfig(PluginSettings::Private, group, PRESET_KEY,
+      parms))
    {
       return XO("Unable to store preset in config file");
    }
@@ -1036,15 +1041,19 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-      mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UIType"),
+         mUIType, wxT("Full"));
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+      mHost->GetConfig(PluginSettings::Private,
+         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
          SavePreset(mHost->GetFactoryDefaultsGroup());
-         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+         mHost->SetConfig(PluginSettings::Private,
+            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
       LoadPreset(mHost->GetCurrentSettingsGroup());
@@ -1946,8 +1955,10 @@ void AudioUnitEffect::ShowOptions()
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-      mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UIType"),
+         mUIType, wxT("Full"));
    }
 }
 
@@ -1960,7 +1971,8 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    wxString parms;
 
    // Attempt to load old preset parameters and resave using new method
-   if (mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
+   if (mHost->GetConfig(PluginSettings::Private, group, wxT("Parameters"),
+      parms, wxEmptyString))
    {
       CommandParameters eap;
       if (eap.SetParameters(parms))
@@ -1969,7 +1981,8 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
          {
             if (SavePreset(group))
             {
-               mHost->RemovePrivateConfig(group, wxT("Parameters"));
+               mHost->RemoveConfig(PluginSettings::Private,
+                  group, wxT("Parameters"));
             }
          }
       }
@@ -1977,7 +1990,8 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    }
 
    // Retrieve the preset
-   if (!mHost->GetPrivateConfig(group, PRESET_KEY, parms, wxEmptyString))
+   if (!mHost->GetConfig(PluginSettings::Private, group, PRESET_KEY, parms,
+      wxEmptyString))
    {
       // Commented "CurrentSettings" gets tried a lot and useless messages appear
       // in the log
@@ -2102,7 +2116,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group)
       wxString parms = wxBase64Encode(CFDataGetBytePtr(data.get()), length);
 
       // And write it to the config
-      if (!mHost->SetPrivateConfig(group, PRESET_KEY, parms))
+      if (!mHost->SetConfig(PluginSettings::Private, group, PRESET_KEY, parms))
       {
          return false;
       }

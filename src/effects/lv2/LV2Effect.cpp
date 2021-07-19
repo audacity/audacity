@@ -222,9 +222,12 @@ LV2EffectSettingsDialog::LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *ef
 {
    mEffect = effect;
 
-   mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize, 8192);
-   mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
-   mEffect->mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
+   mEffect->mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+      wxT("BufferSize"), mBufferSize, 8192);
+   mEffect->mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+      wxT("UseLatency"), mUseLatency, true);
+   mEffect->mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+      wxT("UseGUI"), mUseGUI, true);
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -325,9 +328,12 @@ void LV2EffectSettingsDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mEffect->mHost->SetSharedConfig(wxT("Settings"), wxT("BufferSize"), mBufferSize);
-   mEffect->mHost->SetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency);
-   mEffect->mHost->SetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI);
+   mEffect->mHost->SetConfig(PluginSettings::Shared, wxT("Settings"),
+      wxT("BufferSize"), mBufferSize);
+   mEffect->mHost->SetConfig(PluginSettings::Shared, wxT("Settings"),
+      wxT("UseLatency"), mUseLatency);
+   mEffect->mHost->SetConfig(PluginSettings::Shared, wxT("Settings"),
+      wxT("UseGUI"), mUseGUI);
 
    EndModal(wxID_OK);
 }
@@ -932,19 +938,25 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    if (mHost)
    {
       int userBlockSize;
-      mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), userBlockSize, 8192);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+         wxT("BufferSize"), userBlockSize, 8192);
       mUserBlockSize = std::max(1, userBlockSize);
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseGUI"), mUseGUI, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+         wxT("UseLatency"), mUseLatency, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
+         mUseGUI, true);
 
       mBlockSize = mUserBlockSize;
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+      mHost->GetConfig(PluginSettings::Private,
+         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         false);
       if (!haveDefaults)
       {
          SaveParameters(mHost->GetFactoryDefaultsGroup());
-         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+         mHost->SetConfig(PluginSettings::Private,
+            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
       LoadParameters(mHost->GetCurrentSettingsGroup());
@@ -1573,7 +1585,7 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
    }
 
    // Determine if the GUI editor is supposed to be used or not
-   mHost->GetSharedConfig(wxT("Settings"),
+   mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
                           wxT("UseGUI"),
                           mUseGUI,
                           true);
@@ -1790,9 +1802,11 @@ void LV2Effect::ShowOptions()
    {
       // Reinitialize configuration settings
       int userBlockSize;
-      mHost->GetSharedConfig(wxT("Settings"), wxT("BufferSize"), userBlockSize, DEFAULT_BLOCKSIZE);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+         wxT("BufferSize"), userBlockSize, DEFAULT_BLOCKSIZE);
       mUserBlockSize = std::max(1, userBlockSize);
-      mHost->GetSharedConfig(wxT("Settings"), wxT("UseLatency"), mUseLatency, true);
+      mHost->GetConfig(PluginSettings::Shared, wxT("Settings"),
+         wxT("UseLatency"), mUseLatency, true);
    }
 }
 
@@ -1803,7 +1817,8 @@ void LV2Effect::ShowOptions()
 bool LV2Effect::LoadParameters(const RegistryPath &group)
 {
    wxString parms;
-   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
+   if (!mHost->GetConfig(PluginSettings::Private, group, wxT("Parameters"),
+      parms, wxEmptyString))
    {
       return false;
    }
@@ -1831,7 +1846,8 @@ bool LV2Effect::SaveParameters(const RegistryPath &group)
       return false;
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
+   return mHost->SetConfig(PluginSettings::Private, group, wxT("Parameters"),
+      parms);
 }
 
 size_t LV2Effect::AddOption(LV2_URID key, uint32_t size, LV2_URID type, const void *value)

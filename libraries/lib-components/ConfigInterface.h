@@ -45,6 +45,14 @@
 #include "Identifier.h"
 #include <vector>
 
+namespace PluginSettings {
+
+enum ConfigurationType : unsigned {
+   Shared, Private
+};
+
+}
+
 /*************************************************************************************//**
 
 \class ConfigClientInterface
@@ -57,43 +65,44 @@ with a Shuttle.
 class COMPONENTS_API ConfigClientInterface /* not final */
 {
 public:
+   using ConfigurationType = PluginSettings::ConfigurationType;
+
    virtual ~ConfigClientInterface();
 
-   virtual bool HasSharedConfigGroup(const RegistryPath & group) = 0;
-   virtual bool GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths & subgroups) = 0;
+   virtual bool HasConfigGroup(
+      ConfigurationType type, const RegistryPath & group) = 0;
+   virtual bool GetConfigSubgroups(
+      ConfigurationType type, const RegistryPath & group,
+      RegistryPaths & subgroups) = 0;
 
-   virtual bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval) = 0;
-   virtual bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval) = 0;
-   virtual bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval) = 0;
-   virtual bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval) = 0;
-   virtual bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval) = 0;
+   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, wxString & value,
+      const wxString & defval = {}) = 0;
+   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, int & value, int defval = 0) = 0;
+   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, bool & value, bool defval = false) = 0;
+   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, float & value, float defval = 0.0f) = 0;
+   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, double & value, double defval = 0.0) = 0;
 
-   virtual bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) = 0;
-   virtual bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const int & value) = 0;
-   virtual bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) = 0;
-   virtual bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const float & value) = 0;
-   virtual bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const double & value) = 0;
+   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const wxString & value) = 0;
+   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const int & value) = 0;
+   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const bool & value) = 0;
+   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const float & value) = 0;
+   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const double & value) = 0;
 
-   virtual bool RemoveSharedConfigSubgroup(const RegistryPath & group) = 0;
-   virtual bool RemoveSharedConfig(const RegistryPath & group, const RegistryPath & key) = 0;
-
-   virtual bool HasPrivateConfigGroup(const RegistryPath & group) = 0;
-   virtual bool GetPrivateConfigSubgroups(const RegistryPath & group, RegistryPaths &subgroups) = 0;
-
-   virtual bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval) = 0;
-   virtual bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval) = 0;
-   virtual bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval) = 0;
-   virtual bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval) = 0;
-   virtual bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval) = 0;
-
-   virtual bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) = 0;
-   virtual bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const int & value) = 0;
-   virtual bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) = 0;
-   virtual bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const float & value) = 0;
-   virtual bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const double & value) = 0;
-
-   virtual bool RemovePrivateConfigSubgroup(const RegistryPath & group) = 0;
-   virtual bool RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key) = 0;
+   virtual bool RemoveConfigSubgroup(
+      ConfigurationType type, const RegistryPath & group) = 0;
+   virtual bool RemoveConfig(
+      ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key) = 0;
 };
 
 #endif // __AUDACITY_CONFIGINTERFACE_H__
