@@ -206,10 +206,10 @@ bool EffectChangeSpeed::Startup()
          mFromVinyl = kVinyl_33AndAThird;
       }
 
-      SetConfig(PluginSettings::Private,
+      SetConfig(GetDefinition(), PluginSettings::Private,
          GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
-      SetConfig(PluginSettings::Private, GetCurrentSettingsGroup(),
-         wxT("VinylChoice"), mFromVinyl);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -296,12 +296,14 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 {
    {
       wxString formatId;
-      GetConfig(PluginSettings::Private, GetCurrentSettingsGroup(),
+      GetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
          NumericConverter::TIME, formatId );
    }
-   GetConfig(PluginSettings::Private, GetCurrentSettingsGroup(),
+   GetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(),
       wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    S.SetBorder(5);
@@ -460,9 +462,9 @@ bool EffectChangeSpeed::TransferDataFromWindow()
    }
    m_PercentChange = exactPercent;
 
-   SetConfig(PluginSettings::Private,
+   SetConfig(GetDefinition(), PluginSettings::Private,
       GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
-   SetConfig(PluginSettings::Private,
+   SetConfig(GetDefinition(), PluginSettings::Private,
       GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
    return true;
@@ -667,8 +669,8 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
    mToVinyl = mpChoice_ToVinyl->GetSelection();
    // Use this as the 'preferred' choice.
    if (mFromVinyl != kVinyl_NA) {
-      SetConfig(PluginSettings::Private, GetCurrentSettingsGroup(),
-         wxT("VinylChoice"), mFromVinyl);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
    // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
@@ -778,7 +780,7 @@ void EffectChangeSpeed::Update_Vinyl()
             mpChoice_ToVinyl->SetSelection(mpChoice_FromVinyl->GetSelection());
          } else {
             // Use the last saved option.
-            GetConfig(PluginSettings::Private,
+            GetConfig(GetDefinition(), PluginSettings::Private,
                GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
             mpChoice_FromVinyl->SetSelection(mFromVinyl);
             mpChoice_ToVinyl->SetSelection(mFromVinyl);

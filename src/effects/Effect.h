@@ -188,9 +188,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // ConfigClientInterface implementation
 
-   bool HasConfigGroup(
+   bool HasConfigGroup( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group) override;
-   bool GetConfigSubgroups(
+   bool GetConfigSubgroups( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group,
       RegistryPaths & subgroups) override;
 
@@ -201,9 +201,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool SetConfigValue(ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key, ConfigConstReference value) override;
 
-   bool RemoveConfigSubgroup(
+   bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group) override;
-   bool RemoveConfig(
+   bool RemoveConfig( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key) override;
 

@@ -396,7 +396,8 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
+   LadspaEffectOptionsDialog(wxWindow * parent,
+      EffectHostInterface &host, EffectDefinitionInterface &effect);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -404,7 +405,8 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface *mHost;
+   EffectHostInterface &mHost;
+   EffectDefinitionInterface &mEffect;
    bool mUseLatency;
 
    DECLARE_EVENT_TABLE()
@@ -414,12 +416,14 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
+LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent,
+   EffectHostInterface &host, EffectDefinitionInterface &effect)
+: wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
+, mHost{ host }
+, mEffect{ effect }
 {
-   mHost = host;
-
-   mHost->GetConfig(PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
+   mHost.GetConfig(mEffect,
+      PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
       mUseLatency, true);
 
    ShuttleGui S(this, eIsCreating);
@@ -477,7 +481,7 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mHost->SetConfig(PluginSettings::Shared, wxT("Options"),
+   mHost.SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency);
 
    EndModal(wxID_OK);
@@ -866,17 +870,17 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
 
       bool haveDefaults;
-      mHost->GetConfig(PluginSettings::Private,
+      mHost->GetConfig(*this, PluginSettings::Private,
          mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
          SaveParameters(mHost->GetFactoryDefaultsGroup());
-         mHost->SetConfig(PluginSettings::Private,
+         mHost->SetConfig(*this, PluginSettings::Private,
             mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
@@ -1567,11 +1571,11 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mParent, mHost);
+   LadspaEffectOptionsDialog dlg(mParent, *mHost, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration options
-      mHost->GetConfig(PluginSettings::Shared, wxT("Options"),
+      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
    }
 }
@@ -1630,7 +1634,7 @@ void LadspaEffect::Unload()
 bool LadspaEffect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
-   if (!mHost->GetConfig(PluginSettings::Private, group, wxT("Parameters"),
+   if (!mHost->GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
       parms, wxEmptyString))
    {
       return false;
@@ -1659,7 +1663,7 @@ bool LadspaEffect::SaveParameters(const RegistryPath & group)
       return false;
    }
 
-   return mHost->SetConfig(PluginSettings::Private,
+   return mHost->SetConfig(*this, PluginSettings::Private,
       group, wxT("Parameters"), parms);
 }
 

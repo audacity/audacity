@@ -1556,7 +1556,8 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
                                 wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)
    {
-      mEffect->RemoveConfigSubgroup(PluginSettings::Private,
+      mEffect->RemoveConfigSubgroup(mEffect->GetDefinition(),
+         PluginSettings::Private,
          mEffect->GetUserPresetsGroup(preset));
    }
    
@@ -1791,7 +1792,8 @@ void EffectUIHost::LoadUserPresets()
    mUserPresets.clear();
    
    if( mEffect )
-      mEffect->GetConfigSubgroups(PluginSettings::Private,
+      mEffect->GetConfigSubgroups(mEffect->GetDefinition(),
+         PluginSettings::Private,
          mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
    
    std::sort( mUserPresets.begin(), mUserPresets.end() );

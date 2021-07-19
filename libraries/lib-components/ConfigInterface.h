@@ -49,6 +49,8 @@
 #include <variant>
 #include <vector>
 
+class EffectDefinitionInterface;
+
 namespace PluginSettings {
 
 enum ConfigurationType : unsigned {
@@ -95,39 +97,43 @@ public:
 
    virtual ~ConfigClientInterface();
 
-   virtual bool HasConfigGroup(
+   virtual bool HasConfigGroup( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group) = 0;
-   virtual bool GetConfigSubgroups(
+   virtual bool GetConfigSubgroups( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group,
       RegistryPaths & subgroups) = 0;
 
    // GetConfig with default value
    template<typename Value>
-   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+   bool GetConfig( EffectDefinitionInterface &,
+      ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key, Value &var, Value defval)
    { return GetConfigValue(type, group, key,
       std::ref(var), std::cref(defval)); }
 
    // GetConfig with implicitly converted default value
    template<typename Value, typename ConvertibleToValue>
-   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+   bool GetConfig( EffectDefinitionInterface &ident,
+      ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key, Value &var, ConvertibleToValue defval)
-   { return GetConfig(type, group, key, var, static_cast<Value>(defval)); }
+   { return GetConfig(ident, type, group, key, var, static_cast<Value>(defval)); }
 
    // GetConfig with default value assumed to be Value{}
    template<typename Value>
-   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+   bool GetConfig( EffectDefinitionInterface &ident,
+      ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key, Value &var)
-   { return GetConfig(type, group, key, var, Value{}); }
+   { return GetConfig(ident, type, group, key, var, Value{}); }
 
    template<typename Value>
-   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+   bool SetConfig( EffectDefinitionInterface &,
+      ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key, const Value &value)
    { return SetConfigValue(type, group, key, std::cref(value)); }
 
-   virtual bool RemoveConfigSubgroup(
+   virtual bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group) = 0;
-   virtual bool RemoveConfig(
+   virtual bool RemoveConfig( EffectDefinitionInterface &ident,
       ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key) = 0;
 

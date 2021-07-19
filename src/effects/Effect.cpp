@@ -559,7 +559,8 @@ bool Effect::LoadUserPreset(const RegistryPath & name)
    }
 
    wxString parms;
-   if (!GetConfig(PluginSettings::Private, name, wxT("Parameters"), parms))
+   if (!GetConfig(GetDefinition(), PluginSettings::Private,
+      name, wxT("Parameters"), parms))
    {
       return false;
    }
@@ -580,7 +581,8 @@ bool Effect::SaveUserPreset(const RegistryPath & name)
       return false;
    }
 
-   return SetConfig(PluginSettings::Private, name, wxT("Parameters"), parms);
+   return SetConfig(GetDefinition(), PluginSettings::Private,
+      name, wxT("Parameters"), parms);
 }
 
 RegistryPaths Effect::GetFactoryPresets()
@@ -849,8 +851,8 @@ void Effect::SetDuration(double seconds)
 
    if (GetType() == EffectTypeGenerate)
    {
-      SetConfig(PluginSettings::Private, GetCurrentSettingsGroup(),
-         wxT("LastUsedDuration"), seconds);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
    }
 
    mDuration = seconds;
@@ -885,13 +887,15 @@ wxString Effect::GetSavedStateGroup()
 }
 
 // ConfigClientInterface implementation
-bool Effect::HasConfigGroup(PluginSettings::ConfigurationType type,
+bool Effect::HasConfigGroup( EffectDefinitionInterface &,
+   PluginSettings::ConfigurationType type,
    const RegistryPath & group)
 {
    return PluginManager::Get().HasConfigGroup(type, GetID(), group);
 }
 
-bool Effect::GetConfigSubgroups(PluginSettings::ConfigurationType type,
+bool Effect::GetConfigSubgroups( EffectDefinitionInterface &,
+   PluginSettings::ConfigurationType type,
    const RegistryPath & group, RegistryPaths &subgroups)
 {
    return PluginManager::Get().GetConfigSubgroups(
@@ -913,13 +917,15 @@ bool Effect::SetConfigValue(ConfigurationType type,
    return PluginManager::Get().SetConfigValue(type, GetID(), group, key, value);
 }
 
-bool Effect::RemoveConfigSubgroup(PluginSettings::ConfigurationType type,
+bool Effect::RemoveConfigSubgroup( EffectDefinitionInterface &,
+      PluginSettings::ConfigurationType type,
    const RegistryPath & group)
 {
    return PluginManager::Get().RemoveConfigSubgroup(type, GetID(), group);
 }
 
-bool Effect::RemoveConfig(PluginSettings::ConfigurationType type,
+bool Effect::RemoveConfig( EffectDefinitionInterface &,
+   PluginSettings::ConfigurationType type,
    const RegistryPath & group, const RegistryPath & key)
 {
    return PluginManager::Get().RemoveConfig(type, GetID(), group, key);
@@ -954,12 +960,12 @@ bool Effect::Startup(EffectClientInterface *client)
    mNumAudioOut = GetAudioOutCount();
 
    bool haveDefaults;
-   GetConfig(PluginSettings::Private, GetFactoryDefaultsGroup(),
+   GetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
       SaveUserPreset(GetFactoryDefaultsGroup());
-      SetConfig(PluginSettings::Private, GetFactoryDefaultsGroup(),
+      SetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
    LoadUserPreset(GetCurrentSettingsGroup());
@@ -1060,7 +1066,7 @@ RegistryPaths Effect::GetUserPresets()
 {
    RegistryPaths presets;
 
-   GetConfigSubgroups(PluginSettings::Private,
+   GetConfigSubgroups(GetDefinition(), PluginSettings::Private,
       GetUserPresetsGroup(wxEmptyString), presets);
 
    std::sort( presets.begin(), presets.end() );
@@ -1070,12 +1076,14 @@ RegistryPaths Effect::GetUserPresets()
 
 bool Effect::HasCurrentSettings()
 {
-   return HasConfigGroup(PluginSettings::Private, GetCurrentSettingsGroup());
+   return HasConfigGroup(GetDefinition(),
+      PluginSettings::Private, GetCurrentSettingsGroup());
 }
 
 bool Effect::HasFactoryDefaults()
 {
-   return HasConfigGroup(PluginSettings::Private, GetFactoryDefaultsGroup());
+   return HasConfigGroup(GetDefinition(),
+      PluginSettings::Private, GetFactoryDefaultsGroup());
 }
 
 ManualPageID Effect::ManualPage()
@@ -1144,7 +1152,8 @@ bool Effect::DoEffect(double projectRate,
    mDuration = 0.0;
    if (GetType() == EffectTypeGenerate)
    {
-      GetConfig(PluginSettings::Private, GetCurrentSettingsGroup(),
+      GetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(),
          wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
    }
 
