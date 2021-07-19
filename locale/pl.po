@@ -18627,15 +18627,13 @@ msgstr "Nie można zapisać plików do katalogu: %s."
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr ""
+msgstr "Sprawdź, czy katalog istnieje, ma niezbędne uprawnienia, a dysk nie jest pełny."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, fuzzy, c-format
 msgid "You can change the directory in %s."
-msgstr ""
-"Nie udało się utworzyć katalogu:\n"
-"%s"
+msgstr "Możesz zmienić katalog w %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
