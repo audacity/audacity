@@ -74,9 +74,9 @@ jobs:
         cache-name: cache-conan-modules
       with:
         path: ${{ env.CONAN_USER_HOME }}
-        key: host-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
+        key: host-3-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
         restore-keys: |
-          host-${{ matrix.config.name }}-
+          host-3-${{ matrix.config.name }}-
 
     - name: Configure
       env:

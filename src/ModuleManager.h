@@ -66,7 +66,6 @@ using ModuleInterfaceHandle = std::unique_ptr<
 
 typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
-using PluginIDs = wxArrayString;
 
 class AUDACITY_DLL_API ModuleManager final
 {

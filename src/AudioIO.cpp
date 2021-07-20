@@ -470,7 +470,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "prefs/RecordingPrefs.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "BasicUI.h"
 
 #ifdef EXPERIMENTAL_MIDI_OUT
 
@@ -1461,10 +1461,12 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
                                   captureFormat);
 
    if (!success) {
+      using namespace BasicUI;
       auto msg = XO("Error opening recording device.\nError code: %s")
          .Format( Get()->LastPaErrorString() );
-      ShowExceptionDialog( FindProjectFrame( mOwningProject ),
-         XO("Error"), msg, wxT("Error_opening_sound_device"));
+      ShowErrorDialog( *ProjectFramePlacement( mOwningProject ),
+         XO("Error"), msg, wxT("Error_opening_sound_device"),
+         ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       return;
    }
 
@@ -1821,6 +1823,44 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    commit = true;
    return mStreamToken;
+}
+
+void AudioIO::DelayActions(bool recording)
+{
+   mDelayingActions = recording;
+}
+
+bool AudioIO::DelayingActions() const
+{
+   return mDelayingActions || (mPortStreamV19 && mNumCaptureChannels > 0);
+}
+
+void AudioIO::CallAfterRecording(PostRecordingAction action)
+{
+   if (!action)
+      return;
+
+   {
+      std::lock_guard<std::mutex> guard{ mPostRecordingActionMutex };
+      if (mPostRecordingAction) {
+         // Enqueue it, even if perhaps not still recording,
+         // but it wasn't cleared yet
+         mPostRecordingAction = [
+            prevAction = std::move(mPostRecordingAction),
+            nextAction = std::move(action)
+         ]{ prevAction(); nextAction(); };
+         return;
+      }
+      else if (DelayingActions()) {
+         mPostRecordingAction = std::move(action);
+         return;
+      }
+   }
+
+   // Don't delay it except until idle time.
+   // (Recording might start between now and then, but won't go far before
+   // the action is done.  So the system isn't bulletproof yet.)
+   wxTheApp->CallAfter(std::move(action));
 }
 
 bool AudioIO::AllocateBuffers(
@@ -2415,6 +2455,21 @@ void AudioIO::StopStream()
 
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
+
+   wxTheApp->CallAfter([this]{
+      if (mPortStreamV19 && mNumCaptureChannels > 0)
+         // Recording was restarted between StopStream and idle time
+         // So the actions can keep waiting
+         return;
+      // In case some other thread was waiting on the mutex too:
+      std::this_thread::yield();
+      std::lock_guard<std::mutex> guard{ mPostRecordingActionMutex };
+      if (mPostRecordingAction) {
+         mPostRecordingAction();
+         mPostRecordingAction = {};
+      }
+      DelayActions(false);
+   });
 
    //
    // Only set token to 0 after we're totally finished with everything

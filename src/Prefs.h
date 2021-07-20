@@ -38,7 +38,8 @@
 
 #include <functional>
 
-#include "../include/audacity/ComponentInterface.h"
+#include "ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
 #include "wxArrayStringEx.h"
 #include "widgets/FileConfig.h"
 
@@ -48,6 +49,12 @@
 class wxFileName;
 
 void InitPreferences( std::unique_ptr<FileConfig> uPrefs );
+//! Call this to reset preferences to an (almost)-"new" default state
+/*!
+ There is at least one exception to that: user preferences we want to make
+ more "sticky."  Notably, whether automatic update checking is preferred.
+ */
+void ResetPreferences();
 void FinishPreferences();
 
 extern AUDACITY_DLL_API FileConfig *gPrefs;
@@ -422,5 +429,8 @@ struct AUDACITY_DLL_API PreferenceInitializer {
 
    static void ReinitializeAll();
 };
+
+// Special extra-sticky settings
+extern AUDACITY_DLL_API BoolSetting DefaultUpdatesCheckingFlag;
 
 #endif

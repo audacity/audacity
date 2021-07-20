@@ -12,9 +12,10 @@
 
 #include "Project.h"
 
+#include "FileNames.h"
 #include "KeyboardCapture.h"
 #include "TempDirectory.h"
-#include "./widgets/ErrorDialog.h"
+#include "widgets/wxWidgetsBasicUI.h"
 
 #include <wx/display.h>
 #include <wx/filename.h>
@@ -134,7 +135,7 @@ AudacityProject::AudacityProject()
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
          auto volume = FileNames::AbbreviatePath( path );
          /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
-         ShowErrorDialog(nullptr, 
+         BasicUI::ShowErrorDialog( {},
             XO("Warning"),
             XO("There is very little free disk space left on %s\n"
                "Please select a bigger temporary directory location in\n"
@@ -197,6 +198,15 @@ AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project 
    if ( !ptr )
       THROW_INCONSISTENCY_EXCEPTION;
    return *ptr;
+}
+
+std::unique_ptr<const BasicUI::WindowPlacement>
+ProjectFramePlacement( AudacityProject *project )
+{
+   if (!project)
+      return std::make_unique<BasicUI::WindowPlacement>();
+   return std::make_unique<wxWidgetsWindowPlacement>(
+      &GetProjectFrame(*project));
 }
 
 AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project )

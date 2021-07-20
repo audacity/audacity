@@ -393,7 +393,7 @@ void OnResetConfig(const CommandContext &context)
    menuManager.mLastAnalyzer = "";
    menuManager.mLastTool = "";
 
-   gPrefs->DeleteAll();
+   ResetPreferences();
 
    // Directory will be reset on next restart.
    FileNames::UpdateDefaultPath(FileNames::Operation::Temp, TempDirectory::DefaultTempDir());

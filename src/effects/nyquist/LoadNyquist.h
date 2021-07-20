@@ -8,9 +8,9 @@
 
 **********************************************************************/
 
-#include "audacity/ModuleInterface.h"
-#include "audacity/EffectInterface.h"
-#include "audacity/PluginInterface.h"
+#include "ModuleInterface.h"
+#include "EffectInterface.h"
+#include "PluginInterface.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //

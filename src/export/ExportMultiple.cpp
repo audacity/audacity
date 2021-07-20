@@ -49,7 +49,7 @@
 #include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityTextEntryDialog.h"
 #include "../widgets/ProgressDialog.h"
 
 

@@ -46,7 +46,7 @@ END_EVENT_TABLE()
 
 ErrorReportDialog::ErrorReportDialog(
    wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpUrl,
+   const TranslatableString& message, const ManualPageID& helpUrl,
    const wxString& log, const bool modal)
     : wxDialogWrapper(
          parent, wxID_ANY, dlogTitle, wxDefaultPosition, wxDefaultSize,
@@ -198,24 +198,14 @@ void ErrorReportDialog::OnDontSend(wxCommandEvent& event)
 
 void ErrorReportDialog::OnHelp(wxCommandEvent& event)
 {
-   if (mHelpUrl.StartsWith(wxT("innerlink:")))
+   const auto &helpUrl = mHelpUrl.GET();
+   if (helpUrl.StartsWith(wxT("innerlink:")))
    {
       HelpSystem::ShowHtmlText(
-         this, TitleText(mHelpUrl.Mid(10)), HelpText(mHelpUrl.Mid(10)), false,
+         this, TitleText(helpUrl.Mid(10)), HelpText(helpUrl.Mid(10)), false,
          true);
       return;
    }
 
    HelpSystem::ShowHelp(this, mHelpUrl, false);
-}
-
-void ShowErrorReportDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage,
-   const wxString& log)
-{
-   ErrorReportDialog dlog(parent, dlogTitle, message, helpPage, log);
-
-   dlog.CentreOnParent();
-   dlog.ShowModal();
 }

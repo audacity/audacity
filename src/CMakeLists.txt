@@ -796,6 +796,8 @@ list( APPEND SOURCES
       tracks/labeltrack/ui/LabelTrackVRulerControls.h
       tracks/labeltrack/ui/LabelTrackView.cpp
       tracks/labeltrack/ui/LabelTrackView.h
+      tracks/playabletrack/notetrack/ui/NoteTrackAffordanceControls.h
+      tracks/playabletrack/notetrack/ui/NoteTrackAffordanceControls.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h
       tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
@@ -825,6 +827,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
@@ -855,6 +859,8 @@ list( APPEND SOURCES
 
       # Tracks UI
 
+      tracks/ui/AffordanceHandle.cpp
+      tracks/ui/AffordanceHandle.h
       tracks/ui/BackgroundCell.cpp
       tracks/ui/BackgroundCell.h
       tracks/ui/ButtonHandle.cpp
@@ -894,6 +900,10 @@ list( APPEND SOURCES
       tracks/ui/ZoomHandle.cpp
       tracks/ui/ZoomHandle.h
 
+      # ui helpers
+      ui/AccessibleLinksFormatter.h
+      ui/AccessibleLinksFormatter.cpp
+
       # Widgets
 
       widgets/AButton.cpp
@@ -904,6 +914,8 @@ list( APPEND SOURCES
       widgets/AttachableScrollBar.h
       widgets/AudacityMessageBox.cpp
       widgets/AudacityMessageBox.h
+      widgets/AudacityTextEntryDialog.cpp
+      widgets/AudacityTextEntryDialog.h
       widgets/BackedPanel.cpp
       widgets/BackedPanel.h
       widgets/ErrorDialog.cpp
@@ -963,6 +975,8 @@ list( APPEND SOURCES
          widgets/ErrorReportDialog.cpp
          widgets/ErrorReportDialog.h
       >
+      widgets/UnwritableLocationErrorDialog.cpp
+      widgets/UnwritableLocationErrorDialog.h
       widgets/Warning.cpp
       widgets/Warning.h
       widgets/WindowAccessible.cpp
@@ -974,6 +988,8 @@ list( APPEND SOURCES
       widgets/wxPanelWrapper.cpp
       widgets/wxPanelWrapper.h
       widgets/wxTextCtrlWrapper.h
+      widgets/wxWidgetsBasicUI.cpp
+      widgets/wxWidgetsBasicUI.h
 
       # XML handling
       xml/XMLFileReader.cpp
@@ -993,6 +1009,8 @@ list( APPEND SOURCES
           update/UpdateDataParser.cpp
           update/UpdateManager.h
           update/UpdateManager.cpp
+          update/UpdateNoticeDialog.h
+          update/UpdateNoticeDialog.cpp
           update/UpdatePopupDialog.h
           update/UpdatePopupDialog.cpp
           prefs/ApplicationPrefs.h
@@ -1006,14 +1024,7 @@ list( APPEND SOURCES
 #
 #
 list( APPEND HEADERS
-   ../include/audacity/EffectInterface.h
    ../include/audacity/Types.h
-   ../include/audacity/ConfigInterface.h
-   ../include/audacity/ModuleInterface.h
-   ../include/audacity/PluginInterface.h
-   ../include/audacity/ComponentInterface.h
-   ../include/audacity/EffectAutomationParameters.h
-   ../include/audacity/ImporterInterface.h
 )
 
 #
@@ -1055,7 +1066,7 @@ list( APPEND DEFINES
          __STDC_CONSTANT_MACROS
          STRICT
       >
-      $<$<BOOL:${USE_UPDATE_CHECK}>:
+      $<$<BOOL:${${_OPT}has_updates_check}>:
           HAVE_UPDATES_CHECK
       >
 )
@@ -1375,6 +1386,7 @@ if( "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
       USE_SOURCE_PERMISSIONS
       PATTERN "*.pdb" EXCLUDE
       PATTERN "*.ilk" EXCLUDE
+      PATTERN "*.dSYM" EXCLUDE
    )
 else()
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )

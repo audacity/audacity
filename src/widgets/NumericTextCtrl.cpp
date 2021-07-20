@@ -168,7 +168,7 @@ different formats.
 
 #include "NumericTextCtrl.h"
 
-#include "Identifier.h"
+#include "audacity/Types.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"

@@ -112,6 +112,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "widgets/FileConfig.h"
 #include "widgets/FileHistory.h"
 #include "update/UpdateManager.h"
+#include "widgets/wxWidgetsBasicUI.h"
 
 #ifdef HAS_NETWORKING
 #include "NetworkManager.h"
@@ -241,7 +242,7 @@ void PopulatePreferences()
          wxYES_NO, NULL);
       if (action == wxYES)   // reset
       {
-         gPrefs->DeleteAll();
+         ResetPreferences();
          writeLang = true;
       }
    }
@@ -1056,6 +1057,12 @@ bool AudacityApp::OnInit()
 
    // Ensure we have an event loop during initialization
    wxEventLoopGuarantor eventLoop;
+
+   // Inject basic GUI services behind the facade
+   {
+      static wxWidgetsBasicUI uiServices;
+      (void)BasicUI::Install(&uiServices);
+   }
 
    // Fire up SQLite
    if ( !ProjectFileIO::InitializeSQL() )
@@ -2236,16 +2243,16 @@ int AudacityApp::OnExit()
 
    DeinitFFT();
 
+#ifdef HAS_NETWORKING
+   audacity::network_manager::NetworkManager::GetInstance().Terminate();
+#endif
+
    AudioIO::Deinit();
 
    MenuTable::DestroyRegistry();
 
    // Terminate the PluginManager (must be done before deleting the locale)
    PluginManager::Get().Terminate();
-
-#ifdef HAS_NETWORKING
-   audacity::network_manager::NetworkManager::GetInstance().Terminate();
-#endif
 
    return 0;
 }

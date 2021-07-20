@@ -18,10 +18,6 @@
 #include <wx/event.h>
 #include <wx/timer.h>
 
-namespace UpdatesCheckingSettings {
-    extern AUDACITY_DLL_API BoolSetting DefaultUpdatesCheckingFlag;
-}
-
 /// A class that managing of updates.
 /**
     Opt-in request and show update dialog by the scheduled time.
@@ -31,13 +27,12 @@ namespace UpdatesCheckingSettings {
 class UpdateManager final : public wxEvtHandler
 {
 public:
-    UpdateManager();
-    ~UpdateManager();
+    UpdateManager() = default;
 
     static UpdateManager& GetInstance();
     static void Start();
 
-    void GetUpdates();
+    void GetUpdates(bool ignoreNetworkErrors);
 
     VersionPatch GetVersionPatch() const;
 
@@ -46,7 +41,6 @@ private:
     VersionPatch mVersionPatch;
 
     wxTimer mTimer;
-    const int mUpdateCheckingInterval;
 
     void OnTimer(wxTimerEvent& event);
 

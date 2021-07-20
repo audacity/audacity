@@ -16,6 +16,9 @@
 
 #include <wx/bitmap.h> // member variables
 
+#include "Identifier.h"
+#include "PluginInterface.h"
+
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
 #include <vector>
@@ -102,8 +105,8 @@ private:
 
 #endif
 
-#include "audacity/EffectInterface.h"
-#include "../widgets/wxPanelWrapper.h" // to inherit
+#include "EffectInterface.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 #include "../SelectedRegion.h"
 

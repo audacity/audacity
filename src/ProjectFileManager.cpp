@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 #include <wx/frame.h>
+#include "BasicUI.h"
 #include "CodeConversions.h"
 #include "Legacy.h"
 #include "PlatformCompatibility.h"
@@ -42,10 +43,12 @@ Paul Licameli split from AudacityProject.cpp
 #include "import/ImportMIDI.h"
 #include "toolbars/SelectionBar.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/FileHistory.h"
+#include "widgets/UnwritableLocationErrorDialog.h"
 #include "widgets/Warning.h"
 #include "xml/XMLFileReader.h"
+
+#include "HelpText.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sFileManagerKey{
    []( AudacityProject &parent ){
@@ -299,8 +302,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       {
          if (freeSpace.GetValue() <= fileSize.GetValue())
          {
-            ShowErrorDialog(
-               &window,
+            BasicUI::ShowErrorDialog( *ProjectFramePlacement( &proj ),
                XO("Insufficient Disk Space"),
                XO("The project size exceeds the available free space on the target disk.\n\n"
                   "Please select a different disk with more free space."),
@@ -326,8 +328,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    {
       if (wxFileName::GetSize(projectFileIO.GetFileName()) > UINT32_MAX)
       {
-         ShowErrorDialog(
-            &window,
+         BasicUI::ShowErrorDialog( *ProjectFramePlacement( &proj ),
             XO("Error Saving Project"),
             XO("The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."),
             "Error:_Unsuitable_drive"
@@ -341,13 +342,14 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
    {
       // Show this error only if we didn't fail reconnection in SaveProject
       // REVIEW: Could HasConnection() be true but SaveProject() still have failed?
-      if (!projectFileIO.HasConnection())
-         ShowExceptionDialog(
-            &window,
+      if (!projectFileIO.HasConnection()) {
+         using namespace BasicUI;
+         ShowErrorDialog( *ProjectFramePlacement( &proj ),
             XO("Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
-            "Error:_Disk_full_or_not_writable"
-            );
+            "Error:_Disk_full_or_not_writable",
+            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
+      }
       return false;
    }
 
@@ -641,8 +643,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       {
          if (freeSpace.GetValue() <= fileSize.GetValue())
          {
-            ShowErrorDialog(
-               &window,
+            BasicUI::ShowErrorDialog( *ProjectFramePlacement( &project ),
                XO("Insufficient Disk Space"),
                XO("The project size exceeds the available free space on the target disk.\n\n"
                   "Please select a different disk with more free space."),
@@ -657,8 +658,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       {
          if (fileSize > UINT32_MAX)
          {
-            ShowErrorDialog(
-               &window,
+            BasicUI::ShowErrorDialog( *ProjectFramePlacement( &project ),
                XO("Error Saving Project"),
                XO("The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."),
                "Error:_Unsuitable_drive"
@@ -771,13 +771,10 @@ bool ProjectFileManager::OpenNewProject()
    bool bOK = OpenProject();
    if( !bOK )
    {
-      ShowExceptionDialog(
-         nullptr,
-         XO("Can't open new empty project"),
-         XO("Error opening a new empty project"), 
-         "FAQ:Errors_opening_a_new_empty_project",
-         true, 
-         audacity::ToWString(projectFileIO.GetLastLog()));
+       auto tmpdir = wxFileName(TempDirectory::UnsavedProjectFileName()).GetPath();
+
+       UnwritableLocationErrorDialog dlg(nullptr, tmpdir);
+       dlg.ShowModal();
    }
    return bOK;
 }
@@ -1056,8 +1053,7 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
 
       wxLogError(wxT("Could not parse file \"%s\". \nError: %s"), fileName, errorStr.Debug());
 
-      projectFileIO.ShowError(
-         &window,
+      projectFileIO.ShowError( *ProjectFramePlacement(&project),
          XO("Error Opening Project"),
          errorStr,
          results.helpUrl);
@@ -1236,8 +1232,9 @@ bool ProjectFileManager::Import(
          }
 
          // Additional help via a Help button links to the manual.
-         ShowErrorDialog(&GetProjectFrame( project ),XO("Error Importing"),
-                         errorMessage, wxT("Importing_Audio"));
+         ShowErrorDialog( *ProjectFramePlacement(&project),
+            XO("Error Importing"),
+            errorMessage, wxT("Importing_Audio"));
       }
 
       return false;
@@ -1257,7 +1254,8 @@ bool ProjectFileManager::Import(
 #ifndef EXPERIMENTAL_IMPORT_AUP3
       // Handle AUP3 ("project") files specially
       if (fileName.AfterLast('.').IsSameAs(wxT("aup3"), false)) {
-         ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
+         BasicUI::ShowErrorDialog( *ProjectFramePlacement(&project),
+            XO("Error Importing"),
             XO( "Cannot import AUP3 format.  Use File > Open instead"),
             wxT("File_Menu"));
          return false;
@@ -1271,8 +1269,8 @@ bool ProjectFileManager::Import(
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
-         ShowErrorDialog(&GetProjectFrame( project ), XO("Error Importing"),
-                         errorMessage, wxT("Importing_Audio"));
+         BasicUI::ShowErrorDialog( *ProjectFramePlacement(&project),
+            XO("Error Importing"), errorMessage, wxT("Importing_Audio"));
       }
       if (!success)
          return false;

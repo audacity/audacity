@@ -113,7 +113,9 @@ for registering for changes.
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
-#include "../include/audacity/ComponentInterface.h"
+#include <wx/wrapsizer.h>
+
+#include "ComponentInterface.h"
 #include "widgets/ReadOnlyText.h"
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/wxTextCtrlWrapper.h"
@@ -190,6 +192,11 @@ void ShuttleGuiBase::ResetId()
    miIdNext = 3000;
 }
 
+
+int ShuttleGuiBase::GetBorder() const noexcept
+{
+   return miBorder;
+}
 
 /// Used to modify an already placed FlexGridSizer to make a column stretchy.
 void ShuttleGuiBase::SetStretchyCol( int i )
@@ -289,13 +296,13 @@ void ShuttleGuiBase::AddTitle(const TranslatableString &Prompt, int wrapWidth)
 
 /// Very generic 'Add' function.  We can add anything we like.
 /// Useful for unique controls
-wxWindow * ShuttleGuiBase::AddWindow(wxWindow * pWindow)
+wxWindow* ShuttleGuiBase::AddWindow(wxWindow* pWindow, int PositionFlags)
 {
    if( mShuttleMode != eIsCreating )
       return pWindow;
    mpWind = pWindow;
    SetProportions( 0 );
-   UpdateSizersCore(false, wxALIGN_CENTRE | wxALL);
+   UpdateSizersCore(false, PositionFlags | wxALL);
    return pWindow;
 }
 
@@ -1197,6 +1204,25 @@ void ShuttleGuiBase::EndVerticalLay()
 {
    if( mShuttleMode != eIsCreating )
       return;
+   PopSizer();
+}
+
+void ShuttleGuiBase::StartWrapLay(int PositionFlags, int iProp)
+{
+   if (mShuttleMode != eIsCreating)
+      return;
+
+   miSizerProp = iProp;
+   mpSubSizer = std::make_unique<wxWrapSizer>(wxHORIZONTAL, 0);
+
+   UpdateSizersCore(false, PositionFlags | wxALL);
+}
+
+void ShuttleGuiBase::EndWrapLay()
+{
+   if (mShuttleMode != eIsCreating)
+      return;
+
    PopSizer();
 }
 

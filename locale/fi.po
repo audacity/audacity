@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-07 08:17-0400\n"
+"POT-Creation-Date: 2021-07-15 12:48-0400\n"
 "PO-Revision-Date: 2021-06-09 22:01+0300\n"
 "Last-Translator: Sampo Hippeläinen\n"
 "Language-Team: fi\n"
@@ -12,6 +12,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, c-format
+msgid "Exception code 0x%x"
+msgstr "Poikkeuskoodi 0x%x"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown exception"
+msgstr "Tuntematon poikkeus"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown error"
+msgstr "Tuntematon virhe"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Problem Report for Audacity"
+msgstr "Audacityn ongelmailmoitus"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
+msgstr "Napsauta \"Lähetä\" lähettääksesi tämän ilmoituksen Audacitylle. Tiedot kerätään anonyymisti."
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr "Ongelman tiedot"
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "Kommentit"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "&Älä lähetä"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "&Lähetä"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Failed to send crash report"
+msgstr "Vikailmoituksen lähetys epäonnistui"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -47,147 +97,6 @@ msgstr "Yksinkertaistettu"
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
 msgstr "Järjestelmä"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem Report for Audacity"
-msgstr "Audacityn ongelmailmoitus"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid ""
-"Click \"Send\" to submit the report to Audacity. This information is "
-"collected anonymously."
-msgstr ""
-"Napsauta \"Lähetä\" lähettääksesi tämän ilmoituksen Audacitylle. Tiedot "
-"kerätään anonyymisti."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem details"
-msgstr "Ongelman tiedot"
-
-#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Kommentit"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr "&Lähetä"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr "&Älä lähetä"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgid "Exception code 0x%x"
-msgstr "Poikkeuskoodi 0x%x"
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown exception"
-msgstr "Tuntematon poikkeus"
-
-#. i18n-hint C++ programming assertion
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown assertion"
-msgstr "Tuntematon varmistus"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown error"
-msgstr "Tuntematon virhe"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Failed to send crash report"
-msgstr "Vikailmoituksen lähetys epäonnistui"
-
-#. i18n-hint Scheme refers to a color scheme for spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Sche&me"
-msgstr "Tee&ma"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (default)"
-msgstr "Väri (oletus)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Klassinen"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Harmaasävy"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Käänteinen harmaasävy"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update Audacity"
-msgstr "Päivitä Audacity"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Skip"
-msgstr "&Ohita"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr "&Asenna päivitys"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Changelog"
-msgstr "Muokkausloki"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Read more on GitHub"
-msgstr "Lue lisää GitHubissa"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Error checking for update"
-msgstr "Päivitysten tarkistus epäonnistui"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Unable to connect to Audacity update server."
-msgstr "Ei voitu yhdistää Audacity-päivityspalvelimelle."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update data was corrupted."
-msgstr "Päivitys on vioittunut."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "Päivityksen lataus epäonnistui."
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Can't open the Audacity download link."
-msgstr "Audacityn latauslinkkiä ei voitu avata."
-
-#. i18n-hint Substitution of version number for %s.
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgctxt "update dialog"
-msgid "Audacity %s is available!"
-msgstr "Audacity %s on saatavilla!"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
@@ -317,8 +226,7 @@ msgstr "Lataa Nyquist-skripti"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
-"Nyquist-skriptit (*.ny)|*.ny|Lisp-skriptit (*.lsp)|*.lsp|Kaikki tiedostot|*"
+msgstr "Nyquist-skriptit (*.ny)|*.ny|Lisp-skriptit (*.lsp)|*.lsp|Kaikki tiedostot|*"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
@@ -358,11 +266,8 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 Leland Lucius"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-"Ulkoinen Audacity-moduuli, joka tarjoaa yksinkertaisen integroidun "
-"kehitysympäristön tehosteiden kirjoitukseen."
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "Ulkoinen Audacity-moduuli, joka tarjoaa yksinkertaisen integroidun kehitysympäristön tehosteiden kirjoitukseen."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -660,14 +565,8 @@ msgstr "OK"
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"%s is a free program written by a worldwide team of %s. %s is %s for "
-"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr ""
-"%s on ilmainen ohjelma, jonka on kirjoittanut maailmanlaajuinen tiimi "
-"[[https://www.audacityteam.org/about/credits|%s]]. %s on %s [[https://www."
-"audacityteam.org/download|available]] Windowsille, Macille ja GNU/Linuxille "
-"(ja muille Unixin kaltaisille järjestelmille)."
+msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "%s on ilmainen ohjelma, jonka on kirjoittanut maailmanlaajuinen tiimi [[https://www.audacityteam.org/about/credits|%s]]. %s on %s [[https://www.audacityteam.org/download|available]] Windowsille, Macille ja GNU/Linuxille (ja muille Unixin kaltaisille järjestelmille)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
@@ -682,14 +581,8 @@ msgstr "saatavilla"
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"If you find a bug or have a suggestion for us, please write, in English, to "
-"our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr ""
-"Jos löydät vian tai sinulla on ehdotus meille, kirjoita englanniksi "
-"[[https://forum.audacityteam.org/|%s]]. Jos tarvitset apua, tutustu "
-"[[https://wiki.audacityteam.org/|%s]] vinkkeihin ja temppuihin tai käy "
-"[[https://forum.audacityteam.org/|%s]]."
+msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+msgstr "Jos löydät vian tai sinulla on ehdotus meille, kirjoita englanniksi [[https://forum.audacityteam.org/|%s]]. Jos tarvitset apua, tutustu [[https://wiki.audacityteam.org/|%s]] vinkkeihin ja temppuihin tai käy [[https://forum.audacityteam.org/|%s]]."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
@@ -715,9 +608,7 @@ msgstr "palstallamme"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr ""
-"suomennos: Petri Vuorio, Elias Julkunen, Tomi Toivio & Ilkka Mäkelä, Heino "
-"Keränen, upd 05-2020 VeikkoM, Sampo Hippeläinen"
+msgstr "suomennos: Petri Vuorio, Elias Julkunen, Tomi Toivio & Ilkka Mäkelä, Heino Keränen, upd 05-2020 VeikkoM, Sampo Hippeläinen"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -726,12 +617,8 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"%s the free, open source, cross-platform software for recording and editing "
-"sounds."
-msgstr ""
-"%s on ilmainen, avoimen lähdekoodin, järjestelmäriippumaton ohjelmisto äänen "
-"nauhoitukseen ja editointiin."
+msgid "%s the free, open source, cross-platform software for recording and editing sounds."
+msgstr "%s on ilmainen, avoimen lähdekoodin, järjestelmäriippumaton ohjelmisto äänen nauhoitukseen ja editointiin."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -755,8 +642,7 @@ msgstr "Emeritus:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr ""
-"Arvostetut %s-tiimin jäsenet, jotka eivät ole tällä hetkellä aktiivisia"
+msgstr "Arvostetut %s-tiimin jäsenet, jotka eivät ole tällä hetkellä aktiivisia"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -944,8 +830,36 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "Erityisen sävelkorkeuden ja tempomuutoksen tuki"
 
 #: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "Legal"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "GPL-lisenssi"
+
+#. i18n-hint: For "About Audacity...": Title for Privacy Policy section
+#: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "PRIVACY POLICY"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "App update checking and error reporting require network access. These features are optional."
+msgstr ""
+
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "See %s for more info."
+msgstr "Valitse yksi tai useampi tiedosto"
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "our Privacy Policy"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1057,14 +971,16 @@ msgstr ""
 "Et voi lukita aluetta projektin\n"
 "lopun jälkeen."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Virhe"
@@ -1082,13 +998,11 @@ msgstr "Epäonnistui!"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr ""
 "Palautetaanko oletusasetukset?\n"
 "\n"
-"Tämä on kertaluonteinen kysymys 'asennuksen' jälkeen, jossa pyysit "
-"oletusasetusten palauttamista."
+"Tämä on kertaluonteinen kysymys 'asennuksen' jälkeen, jossa pyysit oletusasetusten palauttamista."
 
 #: src/AudacityApp.cpp
 msgid "Reset Audacity Preferences"
@@ -1146,14 +1060,11 @@ msgstr "&Tiedosto"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
-"Audacity ei löytänyt turvallista paikkaa väliaikaisten tiedostojen "
-"tallentamiseen.\n"
-"Audacity tarvitsee paikan, josta automaattiset puhdistusohjelmat eivät "
-"poista väliaikaisia tiedostoja.\n"
+"Audacity ei löytänyt turvallista paikkaa väliaikaisten tiedostojen tallentamiseen.\n"
+"Audacity tarvitsee paikan, josta automaattiset puhdistusohjelmat eivät poista väliaikaisia tiedostoja.\n"
 "Anna sopiva hakemisto asetusikkunassa."
 
 #: src/AudacityApp.cpp
@@ -1165,12 +1076,8 @@ msgstr ""
 "Ole hyvä ja syötä kelvollinen hakemisto asetusikkunassa."
 
 #: src/AudacityApp.cpp
-msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
-"temporary directory."
-msgstr ""
-"Audacity on nyt sulkeutumassa. Audacityn uudelleenkäynnistys ottaa uuden "
-"tilapäishakemiston käyttöön."
+msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgstr "Audacity on nyt sulkeutumassa. Audacityn uudelleenkäynnistys ottaa uuden tilapäishakemiston käyttöön."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1346,31 +1253,25 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk "
-"is full or you do not have write permissions to the file. More information "
-"can be obtained by clicking the help button below.\n"
+"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. More information can be obtained by clicking the help button below.\n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
-"state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 "Seuraavaa määritystiedostoa ei voitu avata:\n"
 "\n"
 "\t%s\n"
 "\n"
-"Tähän voi johtaa useat eri asiat, mutta todennäköisimmin levysi on täynnä "
-"tai sinulla ei ole oikeuksia kirjoittaa tiedostoon. Alla olevasta "
-"ohjenapista löytää lisätietoja.\n"
+"Tähän voi johtaa useat eri asiat, mutta todennäköisimmin levysi on täynnä tai sinulla ei ole oikeuksia kirjoittaa tiedostoon. Alla olevasta ohjenapista löytää lisätietoja.\n"
 "\n"
 "Voit yrittää korjata ongelman ja painaa \"Yritä uudelleen\" jatkaaksesi.\n"
 "\n"
-"Jos päätät sulkea Audacityn, projekti saattaa jäädä keskeneräiseen tilaan ja "
-"Audacityn pitää palauttaa se ensi kerralla."
+"Jos päätät sulkea Audacityn, projekti saattaa jäädä keskeneräiseen tilaan ja Audacityn pitää palauttaa se ensi kerralla."
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Ohje"
 
@@ -1468,12 +1369,8 @@ msgid "Out of memory!"
 msgstr "Muisti loppu!"
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too high."
-msgstr ""
-"Automaattinen äänitystason säätö on pysähtynyt. Sitä ei ollut mahdollista "
-"optimoida enempää, on edelleen liian korkea."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "Automaattinen äänitystason säätö on pysähtynyt. Sitä ei ollut mahdollista optimoida enempää, on edelleen liian korkea."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1481,12 +1378,8 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "Automaattinen äänitystason säätö laski voimakkuuden arvoon %f."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too low."
-msgstr ""
-"Automaattinen äänitystason säätö on pysähtynyt. Sitä ei ollut mahdollista "
-"optimoida enempää, on edelleen liian matala."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "Automaattinen äänitystason säätö on pysähtynyt. Sitä ei ollut mahdollista optimoida enempää, on edelleen liian matala."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1494,31 +1387,17 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "Automaattinen äänitystason säätö nosti voimakkuuden arvoon %.2f."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"Automaattinen äänitystason säätö on pysähtynyt. Analyysien kokonaismäärä on "
-"ylitetty löytämättä hyväksyttävää äänenvoimakkuutta, on edelleen liian "
-"korkea."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "Automaattinen äänitystason säätö on pysähtynyt. Analyysien kokonaismäärä on ylitetty löytämättä hyväksyttävää äänenvoimakkuutta, on edelleen liian korkea."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"Automaattinen äänitystason säätö on pysähtynyt. Analyysien kokonaismäärä on "
-"ylitetty löytämättä hyväksyttävää äänenvoimakkuutta, on edelleen liian "
-"matala."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "Automaattinen äänitystason säätö on pysähtynyt. Analyysien kokonaismäärä on ylitetty löytämättä hyväksyttävää äänenvoimakkuutta, on edelleen liian matala."
 
 #: src/AudioIO.cpp
 #, c-format
-msgid ""
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
-"volume."
-msgstr ""
-"Automaattinen äänitystason säätö on pysähtynyt. %.2f tuntuu hyväksyttävältä "
-"arvolta."
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr "Automaattinen äänitystason säätö on pysähtynyt. %.2f tuntuu hyväksyttävältä arvolta."
 
 #: src/AudioIOBase.cpp
 msgid "Stream is active ... unable to gather information.\n"
@@ -1615,9 +1494,7 @@ msgstr "Kohteelle ei löytynyt '%s' toistolaitetta.\n"
 
 #: src/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
-"Vastavuoroisia näytteenottotaajuuksia ei voida tarkistaa ilman molempia "
-"laitteita.\n"
+msgstr "Vastavuoroisia näytteenottotaajuuksia ei voida tarkistaa ilman molempia laitteita.\n"
 
 #: src/AudioIOBase.cpp
 #, c-format
@@ -1704,16 +1581,13 @@ msgstr "Automaattinen kaatumispalautus"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
-"run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"Joitakin projekteja ei tallennettu oikein Audacityn viimeisen käyttökerran "
-"aikana, mutta ne voidaan palauttaa automaattisesti.\n"
+"Joitakin projekteja ei tallennettu oikein Audacityn viimeisen käyttökerran aikana, mutta ne voidaan palauttaa automaattisesti.\n"
 "\n"
-"Palautuksen jälkeen projektit tulee tallentaa, tai muuten niiden tiedot "
-"eivät välttämättä tallennu levylle."
+"Palautuksen jälkeen projektit tulee tallentaa, tai muuten niiden tiedot eivät välttämättä tallennu levylle."
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Recoverable &projects"
@@ -2245,22 +2119,14 @@ msgstr ""
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
-msgstr ""
-"Valitse käytettävä ääni toiminnolle  %s (esimerkiksi Komento + A, valitse "
-"kaikki) ja yritä sitten uudelleen."
+msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+msgstr "Valitse käytettävä ääni toiminnolle  %s (esimerkiksi Komento + A, valitse kaikki) ja yritä sitten uudelleen."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
-msgstr ""
-"Valitse käytettävä ääni toiminnolle %s (esimerkiksi Ctrl + A, valitse "
-"kaikki) ja yritä sitten uudelleen."
+msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+msgstr "Valitse käytettävä ääni toiminnolle %s (esimerkiksi Ctrl + A, valitse kaikki) ja yritä sitten uudelleen."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -2272,17 +2138,14 @@ msgstr "Ääntä ei ole valittu"
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise "
-"profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to "
-"change\n"
+"2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 "Valitse käytettävä ääni toiminnolle %s.\n"
 "\n"
-"1. Valitse ääntä, joka edustaa kohinaa ja käytä kohdetta %s saadaksesi "
-"\"kohinaprofiilin\".\n"
+"1. Valitse ääntä, joka edustaa kohinaa ja käytä kohdetta %s saadaksesi \"kohinaprofiilin\".\n"
 "\n"
 "2. Kun olet saanut kohinaprofiilisi, valitse ääni, jonka haluat muuttaa\n"
 "ja käytä kohdetta %s äänen muuttamiseen."
@@ -2336,8 +2199,7 @@ msgstr "Turvallisen tilan käyttöönotto epäonnistui pääyhteydessä kohteese
 #: src/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr ""
-"Turvallisen tilan käyttöönotto epäonnistui tarkistusyhteydessä kohteeseen %s"
+msgstr "Turvallisen tilan käyttöönotto epäonnistui tarkistusyhteydessä kohteeseen %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2419,8 +2281,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Puuttuviksi merkittyjä tiedostoja on siirretty tai poistettu, eikä niitä voi "
-"kopioida.\n"
+"Puuttuviksi merkittyjä tiedostoja on siirretty tai poistettu, eikä niitä voi kopioida.\n"
 "Palauta ne alkuperäiseen sijaintiinsa, jotta ne voidaan kopioida projektiin."
 
 #: src/Dependencies.cpp
@@ -2496,15 +2357,12 @@ msgid "Missing"
 msgstr "Puuttuu"
 
 #: src/Dependencies.cpp
-msgid ""
-"If you proceed, your project will not be saved to disk. Is this what you "
-"want?"
+msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "Jos jatkat, projektia ei tallenneta levylle. Tätäkö haluat?"
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is self-contained; it does not depend on any external audio "
-"files. \n"
+"Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
@@ -2619,8 +2477,7 @@ msgstr "Etsi FFmpeg"
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr ""
-"Audacity tarvitsee tiedoston '%s' äänen tuontiin ja vientiin FFmpeg:llä."
+msgstr "Audacity tarvitsee tiedoston '%s' äänen tuontiin ja vientiin FFmpeg:llä."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -2702,9 +2559,7 @@ msgstr "Audacity ei voinut lukea tiedostoa kohteessa %s."
 #: src/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr ""
-"Audacity kirjoitti tiedoston kohteessa %s, mutta sen nimeäminen uudelleen "
-"nimelle %s ei onnistunut."
+msgstr "Audacity kirjoitti tiedoston kohteessa %s, mutta sen nimeäminen uudelleen nimelle %s ei onnistunut."
 
 #: src/FileException.cpp
 #, c-format
@@ -2787,13 +2642,17 @@ msgid "%s files"
 msgstr "%s-tiedostot"
 
 #: src/FileNames.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
+msgid "The specified filename could not be converted due to Unicode character use."
 msgstr "Määritettyä tiedostonimeä ei voitu muuntaa Unicode-merkkien takia."
 
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "Määritä uusi tiedostonimi:"
+
+#: src/FileNames.cpp
+#, fuzzy, c-format
+msgid "Directory %s does not have write permissions"
+msgstr "Hakemistoa %s ei ole olemassa. Luodaanko se?"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2904,15 +2763,11 @@ msgstr "&Päivitä..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must be the same sample rate."
-msgstr ""
-"Kaikilla valituilla raidoilla on oltava sama näytetaajuus spektrin "
-"esittämiseen."
+msgstr "Kaikilla valituilla raidoilla on oltava sama näytetaajuus spektrin esittämiseen."
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
 msgstr "Liikaa ääntä valittu. Vain ensimmäiset %.1f sekuntia analysoidaan."
 
 #: src/FreqWindow.cpp
@@ -3035,14 +2890,11 @@ msgid "No Local Help"
 msgstr "Ei paikallista ohjetta"
 
 #: src/HelpText.cpp
-msgid ""
-"<br><br>The version of Audacity you are using is an <b>Alpha test version</"
-"b>."
+msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
 msgstr "<br><br>Käyttämäsi Audacity on <b>alpha-testiversio.</b>."
 
 #: src/HelpText.cpp
-msgid ""
-"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
 msgstr "<br><br>Käyttämäsi Audacity on <b>beta-testiversio.</b>."
 
 #: src/HelpText.cpp
@@ -3050,20 +2902,12 @@ msgid "Get the Official Released Version of Audacity"
 msgstr "Hanki Audacityn virallinen julkaisuversio"
 
 #: src/HelpText.cpp
-msgid ""
-"We strongly recommend that you use our latest stable released version, which "
-"has full documentation and support.<br><br>"
-msgstr ""
-"Suosittelemme, että käytät uusinta vakaata julkaistua versiotamme, jolle on "
-"täysi dokumentaatio ja tuki.<br><br>"
+msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
+msgstr "Suosittelemme, että käytät uusinta vakaata julkaistua versiotamme, jolle on täysi dokumentaatio ja tuki.<br><br>"
 
 #: src/HelpText.cpp
-msgid ""
-"You can help us get Audacity ready for release by joining our [[https://www."
-"audacityteam.org/community/|community]].<hr><br><br>"
-msgstr ""
-"Voit auttaa saamaan Audacityn valmiiksi julkaistavaksi liittymällä [[https://"
-"www.audacityteam.org/community/|yhteisöön]].<hr><br><br>"
+msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr "Voit auttaa saamaan Audacityn valmiiksi julkaistavaksi liittymällä [[https://www.audacityteam.org/community/|yhteisöön]].<hr><br><br>"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -3075,86 +2919,37 @@ msgstr "Tukimuotomme ovat seuraavat:"
 
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
-msgid ""
-"[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
-"audacityteam.org/quick_help.html|view online]]"
-msgstr ""
-"[[help:Quick_Help|Pikaohje]] - jos ei asennettuna paikallisesti, [[https://"
-"manual.audacityteam.org/quick_help.html|saatavilla verkossa]]"
+msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+msgstr "[[help:Quick_Help|Pikaohje]] - jos ei asennettuna paikallisesti, [[https://manual.audacityteam.org/quick_help.html|saatavilla verkossa]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
-msgid ""
-" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
-"audacityteam.org/|view online]]"
-msgstr ""
-" [[help:Main_Page|Käyttöohje]] - jos ei asennettuna paikallisesti, [[https://"
-"manual.audacityteam.org/|saatavilla verkossa]]"
+msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
+msgstr " [[help:Main_Page|Käyttöohje]] - jos ei asennettuna paikallisesti, [[https://manual.audacityteam.org/|saatavilla verkossa]]"
 
 #: src/HelpText.cpp
-msgid ""
-" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
-"online."
-msgstr ""
-" [[https://forum.audacityteam.org/|Keskustelupalsta]] - kysy suoraan "
-"verkossa."
+msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+msgstr " [[https://forum.audacityteam.org/|Keskustelupalsta]] - kysy suoraan verkossa."
 
 #: src/HelpText.cpp
-msgid ""
-"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
-"tips, tricks, extra tutorials and effects plug-ins."
-msgstr ""
-"Lisää:</b> Käy [[https://wiki.audacityteam.org/index.php|wikissämme]], josta "
-"löytyy vinkkejä, temppuja, ylimääräisiä opetusohjelmia ja "
-"tehostelaajennuksia."
+msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
+msgstr "Lisää:</b> Käy [[https://wiki.audacityteam.org/index.php|wikissämme]], josta löytyy vinkkejä, temppuja, ylimääräisiä opetusohjelmia ja tehostelaajennuksia."
 
 #: src/HelpText.cpp
-msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
-"WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[https://manual."
-"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
-"library]] to your computer."
-msgstr ""
-"Audacity voi tuoda suojaamattomia tiedostoja monista muista "
-"tiedostomuodoista (kuten M4A ja WMA, pakatut WAV-tiedostot kannettavista "
-"tallentimista ja ääntä videotiedostoista), jos lataat ja asennat valinnaisen "
-"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files."
-"html#foreign| FFmpeg-kirjaston]] tietokoneellesi."
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
+msgstr "Audacity voi tuoda suojaamattomia tiedostoja monista muista tiedostomuodoista (kuten M4A ja WMA, pakatut WAV-tiedostot kannettavista tallentimista ja ääntä videotiedostoista), jos lataat ja asennat valinnaisen [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg-kirjaston]] tietokoneellesi."
 
 #: src/HelpText.cpp
-msgid ""
-"You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
-"CDs]]."
-msgstr ""
-"Voit myös lukea ohjeemme [[https://manual.audacityteam.org/man/"
-"playing_and_recording.html#midi|MIDI-tiedostojen]] ja [[https://manual."
-"audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ääni-CD:eiden "
-"raitojen]] tuonnista."
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr "Voit myös lukea ohjeemme [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI-tiedostojen]] ja [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ääni-CD:eiden raitojen]] tuonnista."
 
 #: src/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]].<br><br>To always view the Manual online, change \"Location of "
-"Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"Käyttöohjetta ei näytä olevan asennettu. Ole hyvä ja [[*URL*|katso sitä "
-"verkossa]]. Jos haluat aina tarkastella sitä verkossa, vaihda \"Manuaalin "
-"sijainti\" käyttöliittymän asetuksista -> \"Verkosta\"."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "Käyttöohjetta ei näytä olevan asennettu. Ole hyvä ja [[*URL*|katso sitä verkossa]]. Jos haluat aina tarkastella sitä verkossa, vaihda \"Manuaalin sijainti\" käyttöliittymän asetuksista -> \"Verkosta\"."
 
 #: src/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
-"download the Manual]].<br><br>To always view the Manual online, change "
-"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"Käyttöohjetta ei näytä olevan asennettu. Ole hyvä ja [[*URL*|katso sitä  "
-"verkossa]] tai [[https://manual.audacityteam.org/man/unzipping_the_manual."
-"html| lataa se]].<br><br>Jos haluat aina tarkastella sitä verkossa, vaihda "
-"\"Manuaalin sijainti\" käyttöliittymän asetuksista -> \"Verkosta\"."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "Käyttöohjetta ei näytä olevan asennettu. Ole hyvä ja [[*URL*|katso sitä  verkossa]] tai [[https://manual.audacityteam.org/man/unzipping_the_manual.html| lataa se]].<br><br>Jos haluat aina tarkastella sitä verkossa, vaihda \"Manuaalin sijainti\" käyttöliittymän asetuksista -> \"Verkosta\"."
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -3333,11 +3128,8 @@ msgstr "Valitse Audacityn kieli:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid ""
-"The language you have chosen, %s (%s), is not the same as the system "
-"language, %s (%s)."
-msgstr ""
-"Valitsemasi kieli, %s (%s), ei ole sama kuin järjestelmän kieli, %s (%s)."
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
+msgstr "Valitsemasi kieli, %s (%s), ei ole sama kuin järjestelmän kieli, %s (%s)."
 
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
@@ -3696,9 +3488,7 @@ msgstr "Laajennusten hallinta"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-"Valitse tehosteet, napsauta Ota käyttöön tai Poista käytöstä -painiketta ja "
-"valitse sitten OK."
+msgstr "Valitse tehosteet, napsauta Ota käyttöön tai Poista käytöstä -painiketta ja valitse sitten OK."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -3872,9 +3662,7 @@ msgstr ""
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr ""
-"Kaikilla äänitystä varten valituilla raidoilla tulee olla sama "
-"näytteenottotaajuus"
+msgstr "Kaikilla äänitystä varten valituilla raidoilla tulee olla sama näytteenottotaajuus"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Mismatched Sampling Rates"
@@ -3943,14 +3731,8 @@ msgid "Close project immediately with no changes"
 msgstr "Sulje projekti välittömästi ilman muutoksia"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project immediately"
-"\" on further error alerts."
-msgstr ""
-"Jatkaa lokissa todettuja korjauksia ja tarkistaa, löytyykö muita virheitä. "
-"Tämä tallentaa projektin sen nykyisessä tilassaan, paitsi jos valitset "
-"\"Sulje projekti välittömästi\" tulevissa virheilmoituksissa."
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "Jatkaa lokissa todettuja korjauksia ja tarkistaa, löytyykö muita virheitä. Tämä tallentaa projektin sen nykyisessä tilassaan, paitsi jos valitset \"Sulje projekti välittömästi\" tulevissa virheilmoituksissa."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -4115,8 +3897,7 @@ msgid ""
 "\n"
 "Select 'Help > Diagnostics > Show Log...' to see details."
 msgstr ""
-"Projektin tarkistus löysi tiedoston epäjohdonmukaisuuksia automaattisen "
-"palautuksen aikana.\n"
+"Projektin tarkistus löysi tiedoston epäjohdonmukaisuuksia automaattisen palautuksen aikana.\n"
 "\n"
 "Valitse 'Ohje > Diagnostiikka > Näytä loki...' yksityiskohdat."
 
@@ -4221,8 +4002,7 @@ msgstr "Projektitiedostoa ei voitu alustaa"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: src/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
-"Ei voi lisätä 'inset'-funktiota (lohkojen tunnuksia ei voida tarkistaa)"
+msgstr "Ei voi lisätä 'inset'-funktiota (lohkojen tunnuksia ei voida tarkistaa)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: src/ProjectFileIO.cpp
@@ -4369,12 +4149,10 @@ msgstr "(Palautettu)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
-"open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "Tämän tiedoston on tallentanut Audacity %s.\n"
-"Käytät Audacityn versiota %s. Sinun tulee päivittää uudempi versio tiedoston "
-"avaamiseksi."
+"Käytät Audacityn versiota %s. Sinun tulee päivittää uudempi versio tiedoston avaamiseksi."
 
 #: src/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -4397,12 +4175,8 @@ msgid "Unable to parse project information."
 msgstr "Projektin tietoja ei voitu jäsentää."
 
 #: src/ProjectFileIO.cpp
-msgid ""
-"The project's database failed to reopen, possibly because of limited space "
-"on the storage device."
-msgstr ""
-"Projektin tietokantaa ei voitu avata uudelleen. Tallennuslaitteen tila voi "
-"olla vähissä."
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
+msgstr "Projektin tietokantaa ei voitu avata uudelleen. Tallennuslaitteen tila voi olla vähissä."
 
 #: src/ProjectFileIO.cpp
 msgid "Saving project"
@@ -4452,8 +4226,7 @@ msgid ""
 "\n"
 "It has been recovered to the last snapshot."
 msgstr ""
-"Tätä projektia ei tallennettu oikein Audacityn viimeisen käyttökerran "
-"aikana.\n"
+"Tätä projektia ei tallennettu oikein Audacityn viimeisen käyttökerran aikana.\n"
 "\n"
 "Se on palautettu viimeisimpään vedokseen."
 
@@ -4516,12 +4289,8 @@ msgstr ""
 "Valitse toinen levy, jolla on enemmän vapaata tilaa."
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"The project exceeds the maximum size of 4GB when writing to a FAT32 "
-"formatted filesystem."
-msgstr ""
-"Projektin koko ylittää 4 Gt:n rajan, joten sitä ei voi tallentaa FAT32-"
-"tiedostojärjestelmille."
+msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
+msgstr "Projektin koko ylittää 4 Gt:n rajan, joten sitä ei voi tallentaa FAT32-tiedostojärjestelmille."
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
 #, c-format
@@ -4530,12 +4299,10 @@ msgstr "%s tallennettu"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite "
-"another project.\n"
+"The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
-"Projektia ei tallennettu, koska tiedostonimi voisi päällekirjoittaa toisen "
-"projektin.\n"
+"Projektia ei tallennettu, koska tiedostonimi voisi päällekirjoittaa toisen projektin.\n"
 "Yritä uudelleen ja valitse alkuperäinen nimi."
 
 #: src/ProjectFileManager.cpp
@@ -4549,8 +4316,7 @@ msgid ""
 "For an audio file that will open in other apps, use 'Export'.\n"
 msgstr ""
 "'Tallenna projekti' tallentaa Audacity-projektin, ei äänitiedostoa.\n"
-"Jos haluat avata äänitiedoston muissa sovelluksissa, käytä \"Vie\" -"
-"toimintoa.\n"
+"Jos haluat avata äänitiedoston muissa sovelluksissa, käytä \"Vie\" -toimintoa.\n"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -4578,12 +4344,10 @@ msgstr "Projektin päällekirjoitusvaroitus"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the selected project is open in another "
-"window.\n"
+"The project was not saved because the selected project is open in another window.\n"
 "Please try again and select an original name."
 msgstr ""
-"Projektia ei tallennettu, koska valittu projekti on avoinna toisessa "
-"ikkunassa.\n"
+"Projektia ei tallennettu, koska valittu projekti on avoinna toisessa ikkunassa.\n"
 "Yritä uudelleen ja valitse jokin toinen nimi."
 
 #: src/ProjectFileManager.cpp
@@ -4603,14 +4367,6 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "Virhe tallennettaessa projektin kopiota"
 
-#: src/ProjectFileManager.cpp
-msgid "Can't open new empty project"
-msgstr "Uutta tyhjää projektia ei voitu avata"
-
-#: src/ProjectFileManager.cpp
-msgid "Error opening a new empty project"
-msgstr "Virhe uutta tyhjää projektia avattaessa"
-
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "Valitse yksi tai useampi tiedosto"
@@ -4623,14 +4379,6 @@ msgstr "%s on jo avoinna toisessa ikkunassa."
 #: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
 msgid "Error Opening Project"
 msgstr "Virhe projektia avatessa"
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr ""
-"Projekti on FAT-levyllä.\n"
-"Kopioi se toiselle levylle avataksesi."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4670,6 +4418,14 @@ msgid "Error Opening File or Project"
 msgstr "Virhe tiedoston tai projektin avauksessa"
 
 #: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+"Projekti on FAT-levyllä.\n"
+"Kopioi se toiselle levylle avataksesi."
+
+#: src/ProjectFileManager.cpp
 msgid "Project was recovered"
 msgstr "Projekti palautettiin"
 
@@ -4705,23 +4461,19 @@ msgstr "Tiivistä projekti"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes "
-"within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be "
-"discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
-"Projektin tiivistäminen vapauttaa levytilaa poistamalla siitä käyttämättömiä "
-"tavuja.\n"
+"Projektin tiivistäminen vapauttaa levytilaa poistamalla siitä käyttämättömiä tavuja.\n"
 "\n"
 "Vapaata levytilaa on tällä hetkellä %s ja projekti vie tilaa %s verran.\n"
 "\n"
-"Jos jatkat, kumoamishistoria ja leikepöydän sisältö menetetään, ja vapaata "
-"tilaa tulee noin %s verran lisää.\n"
+"Jos jatkat, kumoamishistoria ja leikepöydän sisältö menetetään, ja vapaata tilaa tulee noin %s verran lisää.\n"
 "\n"
 "Haluatko jatkaa?"
 
@@ -4831,11 +4583,8 @@ msgstr "Laajennusryhmä kohteessa %s yhdistettiin aiemmin määritettyyn ryhmä�
 
 #: src/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-"Laajennus kohteessa %s on ristiriidassa aiemmin määritellyn kohteen kanssa "
-"ja on hylätty"
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr "Laajennus kohteessa %s on ristiriidassa aiemmin määritellyn kohteen kanssa ja on hylätty"
 
 #: src/Registry.cpp
 #, c-format
@@ -5103,8 +4852,7 @@ msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
 msgstr ""
-"Jaksossa on lohkotiedosto, joka ylittää maksimimäärän %s näytettä lohkoa "
-"kohti.\n"
+"Jaksossa on lohkotiedosto, joka ylittää maksimimäärän %s näytettä lohkoa kohti.\n"
 "Katkaistaan tähän enimmäispituuteen."
 
 #: src/Sequence.cpp
@@ -5151,7 +4899,7 @@ msgstr "Aktivointitaso (dB):"
 msgid "Welcome to Audacity!"
 msgstr "Tervetuloa käyttämään Audacityä!"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Älä näytä tätä käynnistyksessä"
 
@@ -5185,9 +4933,7 @@ msgstr "Tyylilaji"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr ""
-"Liiku kenttien välillä nuolinäppäimillä (tai ENTER tallentaaksesi "
-"muokkauksen)."
+msgstr "Liiku kenttien välillä nuolinäppäimillä (tai ENTER tallentaaksesi muokkauksen)."
 
 #: src/Tags.cpp
 msgid "Tag"
@@ -5511,16 +5257,14 @@ msgstr "Virhe automaattisessa viennissä"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, "
-"based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"Levytila ei ehkä riitä tämän ajastetun tallennuksen suorittamiseen nykyisten "
-"asetusten perusteella.\n"
+"Levytila ei ehkä riitä tämän ajastetun tallennuksen suorittamiseen nykyisten asetusten perusteella.\n"
 "\n"
 "Haluatko jatkaa?\n"
 "\n"
@@ -5828,12 +5572,8 @@ msgid " Select On"
 msgstr " Valinta päällä"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid ""
-"Click and drag to adjust relative size of stereo tracks, double-click to "
-"make heights equal"
-msgstr ""
-"Säädä stereoraitojen suhteellista kokoa napsauttamalla ja vetämällä, "
-"kaksoisnapsautus asettaa yhtä suuret korkeudet"
+msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
+msgstr "Säädä stereoraitojen suhteellista kokoa napsauttamalla ja vetämällä, kaksoisnapsautus asettaa yhtä suuret korkeudet"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -6022,14 +5762,8 @@ msgstr ""
 "* %s, koska olet määrittänyt pikanäppäimen %s kohteelle %s"
 
 #: src/commands/CommandManager.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
-msgstr ""
-"Seuraavat komennot ovat poistaneet pikanäppäimensä, koska niiden "
-"oletuspikanäppäin on uusi tai muuttunut ja on sama, jonka olet määrittänyt "
-"toiselle komennolle."
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
+msgstr "Seuraavat komennot ovat poistaneet pikanäppäimensä, koska niiden oletuspikanäppäin on uusi tai muuttunut ja on sama, jonka olet määrittänyt toiselle komennolle."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -6071,7 +5805,8 @@ msgstr "Vedä"
 msgid "Panel"
 msgstr "Paneeli"
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "Sovellus"
 
@@ -6733,9 +6468,11 @@ msgstr "Käytä spektrisiä asetuksia"
 msgid "Spectral Select"
 msgstr "Spektrivalinta"
 
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Gray Scale"
-msgstr "Harmaasävy"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "Tee&ma"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -6774,34 +6511,22 @@ msgid "Auto Duck"
 msgstr "Automaattinen voimakkuuden lasku"
 
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
-"specified \"control\" track reaches a particular level"
-msgstr ""
-"Laskee yhden tai useamman raidan äänenvoimakkuutta aina, kun tietyn "
-"\"ohjausraidan\" äänenvoimakkuus saavuttaa tietyn tason"
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Laskee yhden tai useamman raidan äänenvoimakkuutta aina, kun tietyn \"ohjausraidan\" äänenvoimakkuus saavuttaa tietyn tason"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process "
-"audio tracks."
-msgstr ""
-"Valitsit raidan, joka ei sisällä ääntä. Automaattinen voimakkuuden lasku voi "
-"käsitellä vain ääniraitoja."
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Valitsit raidan, joka ei sisällä ääntä. Automaattinen voimakkuuden lasku voi käsitellä vain ääniraitoja."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Auto Duck needs a control track which must be placed below the selected "
-"track(s)."
-msgstr ""
-"Automaattinen voimakkuuden lasku tarvitsee ohjausraidan, joka on "
-"sijoitettava valittujen raitojen alapuolelle."
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Automaattinen voimakkuuden lasku tarvitsee ohjausraidan, joka on sijoitettava valittujen raitojen alapuolelle."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -7156,8 +6881,7 @@ msgstr "Naksausten poisto"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr ""
-"Naksauksen poistaminen on suunniteltu poistamaan ääniraitojen naksaukset"
+msgstr "Naksauksen poistaminen on suunniteltu poistamaan ääniraitojen naksaukset"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -7333,12 +7057,8 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid ""
-"Contrast Analyzer, for measuring RMS volume differences between two "
-"selections of audio."
-msgstr ""
-"Kontrastianalysaattori RMS-äänenvoimakkuuden erojen mittaamiseksi kahden "
-"äänivalinnan välillä."
+msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
+msgstr "Kontrastianalysaattori RMS-äänenvoimakkuuden erojen mittaamiseksi kahden äänivalinnan välillä."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -7821,12 +7541,8 @@ msgid "DTMF Tones"
 msgstr "DTMF-äänet"
 
 #: src/effects/DtmfGen.cpp
-msgid ""
-"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
-"keypad on telephones"
-msgstr ""
-"Tuottaa kaksisävyisiä monitaajuusääniä (DTMF), kuten puhelimissa olevan "
-"näppäimistöäänet"
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Tuottaa kaksisävyisiä monitaajuusääniä (DTMF), kuten puhelimissa olevan näppäimistöäänet"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -7945,8 +7661,7 @@ msgstr "%s: ei ole kelvollinen esiasetustiedosto.\n"
 #: src/effects/Effect.cpp
 #, c-format
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr ""
-"%s: on tarkoitettu eri tehosteille, generaattorille tai analysaattorille.\n"
+msgstr "%s: on tarkoitettu eri tehosteille, generaattorille tai analysaattorille.\n"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
@@ -8313,23 +8028,18 @@ msgstr "Diskantin leikkaus"
 #: src/effects/Equalization.cpp
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
-"then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 "Jos haluat käyttää tätä korjauskäyrää makrossa, valitse sille uusi nimi.\n"
-"Valitse 'Tallenna/hallitse käyriä...' -painiketta ja nimeä uudelleen "
-"\"nimetön\" käyrä, sitten käytä sitä."
+"Valitse 'Tallenna/hallitse käyriä...' -painiketta ja nimeä uudelleen \"nimetön\" käyrä, sitten käytä sitä."
 
 #: src/effects/Equalization.cpp
 msgid "Filter Curve EQ needs a different name"
 msgstr "Käyrätaajuuskorjain tarvitsee eri nimen"
 
 #: src/effects/Equalization.cpp
-msgid ""
-"To apply Equalization, all selected tracks must have the same sample rate."
-msgstr ""
-"Jotta taajuuskorjaus voidaan suorittaa, kaikilla valituilla raidoilla täytyy "
-"olla sama näytetaajuus."
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Jotta taajuuskorjaus voidaan suorittaa, kaikilla valituilla raidoilla täytyy olla sama näytetaajuus."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -8846,8 +8556,7 @@ msgstr "Kohinan vaimennus"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr ""
-"Poistaa taustaääniä, kuten puhaltimen ääntä, nauhan sihinää tai huminaa"
+msgstr "Poistaa taustaääniä, kuten puhaltimen ääntä, nauhan sihinää tai huminaa"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block are too few for the window types."
@@ -8859,9 +8568,7 @@ msgstr "Askeleiden määrä lohkoa kohden ei voi ylittää ikkunan kokoa."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Median method is not implemented for more than four steps per window."
-msgstr ""
-"Mediaanimenetelmää ei ole toteutettu enemmässä kuin neljässä askeleessa per "
-"ikkuna."
+msgstr "Mediaanimenetelmää ei ole toteutettu enemmässä kuin neljässä askeleessa per ikkuna."
 
 #: src/effects/NoiseReduction.cpp
 msgid "You must specify the same window size for steps 1 and 2."
@@ -8876,12 +8583,8 @@ msgid "All noise profile data must have the same sample rate."
 msgstr "Kaikissa kohinanpoistomalleissa on oltava sama näytteenottotaajuus."
 
 #: src/effects/NoiseReduction.cpp
-msgid ""
-"The sample rate of the noise profile must match that of the sound to be "
-"processed."
-msgstr ""
-"Kohinaprofiilin näytteenottotaajuuden on vastattava käsiteltävän äänen "
-"taajuutta."
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "Kohinaprofiilin näytteenottotaajuuden on vastattava käsiteltävän äänen taajuutta."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Selected noise profile is too short."
@@ -9064,8 +8767,7 @@ msgstr "Kohinan poisto"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr ""
-"Poistaa jatkuvaa taustaääniä, kuten puhaltimen, nauhan ääntä tai huminaa"
+msgstr "Poistaa jatkuvaa taustaääniä, kuten puhaltimen, nauhan ääntä tai huminaa"
 
 #: src/effects/NoiseRemoval.cpp
 msgid ""
@@ -9170,8 +8872,7 @@ msgstr "Paulstretch"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr ""
-"Paulstretch on vain äärimmäiselle aikavenytykselle tai pysäytystehosteelle"
+msgstr "Paulstretch on vain äärimmäiselle aikavenytykselle tai pysäytystehosteelle"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -9301,13 +9002,11 @@ msgstr "Asettaa yhden tai useamman raidan huippuamplitudin"
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged "
-"audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"Tätä korjaustoimintoa on tarkoitettu käytettäväksi vain hyvin lyhyihin "
-"vahingoittuneisiin äänen osiin (enintään 128 näytettä).\n"
+"Tätä korjaustoimintoa on tarkoitettu käytettäväksi vain hyvin lyhyihin vahingoittuneisiin äänen osiin (enintään 128 näytettä).\n"
 "\n"
 "Suurenna näkymää ja valitse vain sekunnin murto-osa korjattavaksesi."
 
@@ -9494,9 +9193,7 @@ msgstr "Suorittaa IIR-suodatuksen, joka emuloi analogisia suodattimia"
 
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr ""
-"Kaikilla valituilla raidoilla täytyy olla sama näytteenottotaajuus, jotta "
-"suodatinta voidaan käyttää."
+msgstr "Kaikilla valituilla raidoilla täytyy olla sama näytteenottotaajuus, jotta suodatinta voidaan käyttää."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -9771,20 +9468,12 @@ msgid "Truncate Silence"
 msgstr "Lyhennä hiljaisuus"
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"Automatically reduces the length of passages where the volume is below a "
-"specified level"
-msgstr ""
-"Lyhentää automaattisesti kappaleen osia, joissa äänenvoimakkuus on alle "
-"määrätyn rajan"
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "Lyhentää automaattisesti kappaleen osia, joissa äänenvoimakkuus on alle määrätyn rajan"
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"When truncating independently, there may only be one selected audio track in "
-"each Sync-Locked Track Group."
-msgstr ""
-"Kun katkaistaan itsenäisesti, kussakin tahtilukitussa raitaryhmässä voi olla "
-"vain yksi valittu ääniraita."
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "Kun katkaistaan itsenäisesti, kussakin tahtilukitussa raitaryhmässä voi olla vain yksi valittu ääniraita."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -9837,17 +9526,8 @@ msgid "Buffer Size"
 msgstr "Puskurin koko"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
-msgid ""
-"The buffer size controls the number of samples sent to the effect on each "
-"iteration. Smaller values will cause slower processing and some effects "
-"require 8192 samples or less to work properly. However most effects can "
-"accept large buffers and using them will greatly reduce processing time."
-msgstr ""
-"Puskurin koko määrittää kuhunkin iterointiin lähetettyjen näytteiden määrän. "
-"Pienemmät arvot johtavat hitaampaan käsittelyyn ja jotkut vaikutukset "
-"vaativat 8192 tai vähemmän näytteitä toimiakseen kunnolla. Useimmat "
-"tehosteet voivat kuitenkin hyväksyä suuria puskureita ja niiden käyttäminen "
-"vähentää huomattavasti käsittelyaikaa."
+msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
+msgstr "Puskurin koko määrittää kuhunkin iterointiin lähetettyjen näytteiden määrän. Pienemmät arvot johtavat hitaampaan käsittelyyn ja jotkut vaikutukset vaativat 8192 tai vähemmän näytteitä toimiakseen kunnolla. Useimmat tehosteet voivat kuitenkin hyväksyä suuria puskureita ja niiden käyttäminen vähentää huomattavasti käsittelyaikaa."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9859,16 +9539,8 @@ msgid "Latency Compensation"
 msgstr "Viiveenkorjaus"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid ""
-"As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST effects."
-msgstr ""
-"Joidenkin VST-tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
-"tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
-"korjaamaan viiveet, mutta se ei välttämättä toimi kaikille VST-tehosteille."
+msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
+msgstr "Joidenkin VST-tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille VST-tehosteille."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9880,14 +9552,8 @@ msgid "Graphical Mode"
 msgstr "Graafinen tila"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
-msgstr ""
-"Useimmilla VST-tehosteilla on graafinen käyttöliittymä parametriarvojen "
-"asettamiseen. Käytettävissä on myös vain teksti perusmenetelmä.  Avaa "
-"tehoste uudelleen, jotta tämä tulee voimaan."
+msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "Useimmilla VST-tehosteilla on graafinen käyttöliittymä parametriarvojen asettamiseen. Käytettävissä on myös vain teksti perusmenetelmä.  Avaa tehoste uudelleen, jotta tämä tulee voimaan."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -9967,12 +9633,8 @@ msgid "Wahwah"
 msgstr "Wah-wah"
 
 #: src/effects/Wahwah.cpp
-msgid ""
-"Rapid tone quality variations, like that guitar sound so popular in the "
-"1970's"
-msgstr ""
-"Nopeat äänenkorkeuden vaihtelut, kuten 1970-luvulla suositussa "
-"kitaratehosteessa"
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "Nopeat äänenkorkeuden vaihtelut, kuten 1970-luvulla suositussa kitaratehosteessa"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -10016,34 +9678,16 @@ msgid "Audio Unit Effect Options"
 msgstr "Audio Units -tehostevalinnat"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid ""
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
-"that small silences have been inserted into the audio. Enabling this option "
-"will provide that compensation, but it may not work for all Audio Unit "
-"effects."
-msgstr ""
-"Joidenkin Audio Units -tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
-"tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
-"korjaamaan viiveet, mutta se ei välttämättä toimi kaikille Audio Units -"
-"tehosteille."
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr "Joidenkin Audio Units -tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille Audio Units -tehosteille."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
 msgstr "Käyttöliittymä"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid ""
-"Select \"Full\" to use the graphical interface if supplied by the Audio "
-"Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
-"to take effect."
-msgstr ""
-"Valitse \"Täysi\", jos haluat käyttää graafista käyttöliittymää, jos Audio "
-"Units -tehoste toimittaa sen. Valitse \"Yleinen\", jos haluat käyttää "
-"yleistä käyttöliittymää. Valitse \"Perus\", jos haluat käyttää "
-"perustekstiliittymää. Avaa tehoste uudelleen, jotta tämä tulee voimaan."
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
+msgstr "Valitse \"Täysi\", jos haluat käyttää graafista käyttöliittymää, jos Audio Units -tehoste toimittaa sen. Valitse \"Yleinen\", jos haluat käyttää yleistä käyttöliittymää. Valitse \"Perus\", jos haluat käyttää perustekstiliittymää. Avaa tehoste uudelleen, jotta tämä tulee voimaan."
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -10196,17 +9840,8 @@ msgid "LADSPA Effect Options"
 msgstr "LADSPA-tehostevalinnat"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid ""
-"As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
-"small silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all LADSPA effects."
-msgstr ""
-"Joidenkin LADSPA-tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
-"tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
-"korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LADSPA-"
-"tehosteille."
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
+msgstr "Joidenkin LADSPA-tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LADSPA-tehosteille."
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
 #. appears in a following text box window; translate with appropriate punctuation
@@ -10238,26 +9873,12 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Puskurin koko (8 – %d) näytettä):"
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid ""
-"As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this setting will "
-"provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-"Joidenkin LV2-tehosteiden pitää käsittelyn takia viivästää äänen "
-"palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi "
-"tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii "
-"korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LV2-tehosteille."
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr "Joidenkin LV2-tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LV2-tehosteille."
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid ""
-"LV2 effects can have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
-msgstr ""
-"LV2-tehosteilla voi olla graafinen käyttöliittymä parametriarvojen "
-"asettamiseen. Käytettävissä on myös perustekstimenetelmä.  Avaa tehoste "
-"uudelleen, jotta tämä tulee voimaan."
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "LV2-tehosteilla voi olla graafinen käyttöliittymä parametriarvojen asettamiseen. Käytettävissä on myös perustekstimenetelmä.  Avaa tehoste uudelleen, jotta tämä tulee voimaan."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -10333,9 +9954,7 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr ""
-"virhe: Otsikossa määritetty tiedosto %s, mutta sitä ei löydy "
-"laajennuspolusta.\n"
+msgstr "virhe: Otsikossa määritetty tiedosto %s, mutta sitä ei löydy laajennuspolusta.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Audio selection required."
@@ -10346,10 +9965,8 @@ msgid "Nyquist Error"
 msgstr "Nyquist-virhe"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr ""
-"Sorry, tehostetta ei voi käyttää stereoraidoille, joilla raidat eivät täsmää."
+msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+msgstr "Sorry, tehostetta ei voi käyttää stereoraidoille, joilla raidat eivät täsmää."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10421,11 +10038,8 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist palautti tyhjän äänen.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr ""
-"[Varoitus: Nyquist palautti virheellisen UTF-8-merkkijonon, joka muunnettiin "
-"tässä Latin-1-muotoon]"
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Varoitus: Nyquist palautti virheellisen UTF-8-merkkijonon, joka muunnettiin tässä Latin-1-muotoon]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10545,12 +10159,8 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr "Huolehtii Audacityn Vamp-tehostetuesta"
 
 #: src/effects/vamp/VampEffect.cpp
-msgid ""
-"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
-"channels of the track do not match."
-msgstr ""
-"Vamp-laajennusta ei voida käyttää stereoraidoille, jossa kanavien "
-"yksittäiset raidat eivät täsmää."
+msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
+msgstr "Vamp-laajennusta ei voida käyttää stereoraidoille, jossa kanavien yksittäiset raidat eivät täsmää."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -10608,15 +10218,13 @@ msgstr "Haluatko varmasti viedä tiedoston nimellä \"%s\"?\n"
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
 "\n"
-"Normally these files end in \".%s\", and some programs will not open files "
-"with nonstandard extensions.\n"
+"Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
 "Olet viemässä tiedostoa %s nimellä \"%s\".\n"
 "\n"
-"Normaalisti nämä tiedostot käyttävät päätettä \".%s\"  Jotkin ohjelmat eivät "
-"avaa tiedostoja, jos niillä on väärä tiedostopääte.\n"
+"Normaalisti nämä tiedostot käyttävät päätettä \".%s\"  Jotkin ohjelmat eivät avaa tiedostoja, jos niillä on väärä tiedostopääte.\n"
 "\n"
 "Haluatko varmasti viedä tiedoston tällä nimellä?"
 
@@ -10638,12 +10246,8 @@ msgid "Your tracks will be mixed down and exported as one stereo file."
 msgstr "Raidat yhdistetään ja viedään yhtenä stereotiedostona."
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to one exported file according to the encoder "
-"settings."
-msgstr ""
-"Raidat yhdistetään yhteen vietävään tiedostoon enkooderin asetusten "
-"mukaisesti."
+msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
+msgstr "Raidat yhdistetään yhteen vietävään tiedostoon enkooderin asetusten mukaisesti."
 
 #: src/export/Export.cpp
 msgid "Advanced Mixing Options"
@@ -10699,12 +10303,8 @@ msgstr "Näytä tuloste"
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
-msgid ""
-"Data will be piped to standard in. \"%f\" uses the file name in the export "
-"window."
-msgstr ""
-"Tiedot siirretään putkella standardisyötteeseen. \"%f\" vastaa vienti-"
-"ikkunan tiedostonimeä."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
+msgstr "Tiedot siirretään putkella standardisyötteeseen. \"%f\" vastaa vienti-ikkunan tiedostonimeä."
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
@@ -10740,7 +10340,7 @@ msgstr "Viedään ääntä komentorivienkooderilla"
 msgid "Command Output"
 msgstr "Komennon tuloste"
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -10790,17 +10390,13 @@ msgstr "FFmpeg : VIRHE - Ei voitu lisätä äänivirtaa tulostiedostoon \"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr "FFmpeg : VIRHE - Tulostiedostoa \"%s\" ei voi avata. Virhekoodi on %d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr ""
-"FFmpeg : VIRHE - Otsikoita ei voi kirjoittaa lähtötiedostoon \"%s\". "
-"Virhekoodi on %d."
+msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr "FFmpeg : VIRHE - Otsikoita ei voi kirjoittaa lähtötiedostoon \"%s\". Virhekoodi on %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -10858,8 +10454,7 @@ msgstr "FFmpeg: VIRHE - Liikaa jäljellä olevia tietoja."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
-msgstr ""
-"FFmpeg: VIRHE - Tulostiedostoon ei voitu kirjoittaa viimeistä äänikehystä."
+msgstr "FFmpeg: VIRHE - Tulostiedostoon ei voitu kirjoittaa viimeistä äänikehystä."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
@@ -10871,12 +10466,8 @@ msgstr "FFmpeg: VIRHE - Äänikehystä ei voitu koodata."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected "
-"output format is %d"
-msgstr ""
-"Yritettiin viedä %d kanavaa, mutta kanavien enimmäismäärä valitulle "
-"lähtömuodolle on %d"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
+msgstr "Yritettiin viedä %d kanavaa, mutta kanavien enimmäismäärä valitulle lähtömuodolle on %d"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11195,12 +10786,8 @@ msgid "Codec:"
 msgstr "Koodekki:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid ""
-"Not all formats and codecs are compatible. Nor are all option combinations "
-"compatible with all codecs."
-msgstr ""
-"Kaikki muodot ja koodekit eivät ole yhteensopivia, eivätkä kaikki "
-"valintayhdistelmät ole yhteensopivia kaikkien koodekkien kanssa."
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr "Kaikki muodot ja koodekit eivät ole yhteensopivia, eivätkä kaikki valintayhdistelmät ole yhteensopivia kaikkien koodekkien kanssa."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -11258,10 +10845,8 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
-"Bittinopeus (bittiä sekunnissa) - vaikuttaa tuloksen tiedostokokoon ja "
-"laatuun\n"
-"Jotkin koodekit saattavat hyväksyä vain tiettyjä arvoja (128k, 192k, 256k "
-"jne.)\n"
+"Bittinopeus (bittiä sekunnissa) - vaikuttaa tuloksen tiedostokokoon ja laatuun\n"
+"Jotkin koodekit saattavat hyväksyä vain tiettyjä arvoja (128k, 192k, 256k jne.)\n"
 "0 - automaattinen\n"
 "Suositus - 192000"
 
@@ -11774,12 +11359,10 @@ msgstr "Missä on %s?"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
-"Olet linkittämässä kohteeseen lame_enc.dll v%d.%d. Tämä versio ei ole "
-"yhteensopiva Audacityn %d.%d.%d kanssa.\n"
+"Olet linkittämässä kohteeseen lame_enc.dll v%d.%d. Tämä versio ei ole yhteensopiva Audacityn %d.%d.%d kanssa.\n"
 "Lataa uusin versio \"LAME for Audacity\"."
 
 #: src/export/ExportMP3.cpp
@@ -12038,8 +11621,7 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"Merkki tai raita \"%s\" ei ole kelvollinen tiedostonimi. Et voi käyttää osaa "
-"\"%s\".\n"
+"Merkki tai raita \"%s\" ei ole kelvollinen tiedostonimi. Et voi käyttää osaa \"%s\".\n"
 "\n"
 "Korjausehdotus:"
 
@@ -12105,8 +11687,7 @@ msgstr "Muut pakkaamattomat tiedostot"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than "
-"4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 "Yritit viedä WAV- tai AIFF-tiedoston, joka olisi suurempi kuin 4 Gt.\n"
@@ -12209,14 +11790,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
-"files. \n"
-"You may be able to open it in a text editor and download the actual audio "
-"files."
+"Audacity cannot open this file because it only contains links to other files. \n"
+"You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 "\"%s\" on soittolistatiedosto. \n"
-"Audacity ei voi avata tätä tiedostoa, koska se sisältää vain linkkejä muihin "
-"tiedostoihin.\n"
+"Audacity ei voi avata tätä tiedostoa, koska se sisältää vain linkkejä muihin tiedostoihin.\n"
 "Voit ehkä avata sen tekstieditorissa ja avata sen viittaamat äänitiedostot."
 
 #. i18n-hint: %s will be the filename
@@ -12236,16 +11814,12 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
-"file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV "
-"or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" on Advanced Audio Coding t-iedosto. \n"
-"Ilman valinnaista FFmpeg-kirjastoa Audacity ei voi avata tämäntyyppistä "
-"tiedostoa.\n"
-"Muussa tapauksessa se on muunnettava tuetuksi äänimuodoksi, kuten WAV tai "
-"AIFF."
+"Ilman valinnaista FFmpeg-kirjastoa Audacity ei voi avata tämäntyyppistä tiedostoa.\n"
+"Muussa tapauksessa se on muunnettava tuetuksi äänimuodoksi, kuten WAV tai AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12296,8 +11870,7 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" on Musepack-äänitiedosto. \n"
@@ -12369,8 +11942,7 @@ msgid ""
 msgstr ""
 "Audacity ei tunnistanut tiedoston '%s' tyyppiä.\n"
 "\n"
-"%s Pakkaamattomille tiedostoille voit myös kokeilla Tiedosto > Tuo > "
-"Raakadata."
+"%s Pakkaamattomille tiedostoille voit myös kokeilla Tiedosto > Tuo > Raakadata."
 
 #: src/import/Import.cpp
 msgid ""
@@ -12475,24 +12047,16 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Projektin datakansiota \"%s\" ei löytynyt."
 
 #: src/import/ImportAUP.cpp
-msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
-"include MIDI support, bypassing track."
-msgstr ""
-"Projektitiedostossa on MIDI-raitoja, mutta tämä koontiversio Audacitysta ei "
-"tue niitä, joten ne ohitetaan."
+msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
+msgstr "Projektitiedostossa on MIDI-raitoja, mutta tämä koontiversio Audacitysta ei tue niitä, joten ne ohitetaan."
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
 msgstr "Projektin tuonti"
 
 #: src/import/ImportAUP.cpp
-msgid ""
-"The active project already has a time track and one was encountered in the "
-"project being imported, bypassing imported time track."
-msgstr ""
-"Projektissa on jo aikaraita ja tuotavasta projektista löytyi sellainen; "
-"tuotava aikaraita ohitetaan."
+msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
+msgstr "Projektissa on jo aikaraita ja tuotavasta projektista löytyi sellainen; tuotava aikaraita ohitetaan."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -12581,11 +12145,8 @@ msgstr "FFmpeg-yhteensopivat tiedostot"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
-msgid ""
-"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr ""
-"Indeksi[%02x] Koodekki[%s], Kieli[%s], Bittinopeus[%s], Kanavat[%d], "
-"Kesto[%d]"
+msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "Indeksi[%02x] Koodekki[%s], Kieli[%s], Bittinopeus[%s], Kanavat[%d], Kesto[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -13637,10 +13198,6 @@ msgid "MIDI Device Info"
 msgstr "MIDI-laitteen tiedot"
 
 #: src/menus/HelpMenus.cpp
-msgid "Menu Tree"
-msgstr "Valikkopuu"
-
-#: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
 msgstr "&Pikakorjaus..."
 
@@ -13679,10 +13236,6 @@ msgstr "Näytä &loki..."
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "&Luo tukitiedot..."
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree..."
-msgstr "Valikkopuu..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -14587,11 +14140,8 @@ msgid "Created new label track"
 msgstr "Luotiin uusi merkkiraita"
 
 #: src/menus/TrackMenus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Tämä Audacityn versio sallii vain yhden aikaraidan kussakin projekti-"
-"ikkunassa."
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr "Tämä Audacityn versio sallii vain yhden aikaraidan kussakin projekti-ikkunassa."
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new time track"
@@ -14626,9 +14176,7 @@ msgstr "Valitse vähintään yksi ääniraita ja yksi MIDI-raita."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "Tasaus valmistui: MIDI %.2f -> %.2f sek, Ääni %.2f -> %.2f sek."
 
 #: src/menus/TrackMenus.cpp
@@ -14637,12 +14185,8 @@ msgstr "Tahdista MIDI äänen kanssa"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Tasausvirhe: tuonti liian lyhyt: MIDI kohdasta %.2f -> %.2f sek, Ääni "
-"kohdasta %.2f -> %.2f sek."
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "Tasausvirhe: tuonti liian lyhyt: MIDI kohdasta %.2f -> %.2f sek, Ääni kohdasta %.2f -> %.2f sek."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -14857,16 +14401,17 @@ msgid "Move Focused Track to &Bottom"
 msgstr "Siirrä kohdistettu raita &alimmaksi"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Toistetaan"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Äänitetään"
 
@@ -14893,8 +14438,7 @@ msgid ""
 "\n"
 "Please close any additional projects and try again."
 msgstr ""
-"Ajastettua äänitystä ei voi käyttää useamman kuin yhden avoimen projektin "
-"kanssa.\n"
+"Ajastettua äänitystä ei voi käyttää useamman kuin yhden avoimen projektin kanssa.\n"
 "\n"
 "Sulje mahdolliset lisäprojektit ja yritä uudelleen."
 
@@ -14904,8 +14448,7 @@ msgid ""
 "\n"
 "Please save or close this project and try again."
 msgstr ""
-"Ajastettua äänitystä ei voi käyttää, kun sinulla on tallentamattomia "
-"muutoksia.\n"
+"Ajastettua äänitystä ei voi käyttää, kun sinulla on tallentamattomia muutoksia.\n"
 "\n"
 "Tallenna tai sulje tämä projekti ja yritä uudelleen."
 
@@ -15230,6 +14773,27 @@ msgstr "Aaltomuodon dekoodaus"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% valmis. Muuta tehtävän painopistettä napsauttamalla tätä."
 
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgid "Preferences for Application"
+msgstr "Laatuasetukset"
+
+#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr ""
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "&Tarkista päivitykset..."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgstr ""
+
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "Erä"
@@ -15278,6 +14842,14 @@ msgstr "Toisto"
 msgid "&Device:"
 msgstr "&Laite:"
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+#, fuzzy
+msgctxt "preference"
+msgid "Recording"
+msgstr "Äänitetään"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "L&aite:"
@@ -15321,6 +14893,7 @@ msgstr "2 (stereo)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "Hakemistot"
 
@@ -15428,12 +15001,8 @@ msgid "Directory %s is not writable"
 msgstr "Hakemisto %s ei ole kirjoitettava"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
-"restarted"
-msgstr ""
-"Väliaikaiskansion muutos tulee voimaan vasta, kun Audacity käynnistetään "
-"uudelleen"
+msgid "Changes to temporary directory will not take effect until Audacity is restarted"
+msgstr "Väliaikaiskansion muutos tulee voimaan vasta, kun Audacity käynnistetään uudelleen"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -15522,8 +15091,7 @@ msgstr "Tarkista päivitetyt liitännäiset Audacityn käynnistyessä"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Rescan plugins next time Audacity is started"
-msgstr ""
-"Tarkista laajennukset uudelleen kun Audacity käynnistetään seuraavan kerran"
+msgstr "Tarkista laajennukset uudelleen kun Audacity käynnistetään seuraavan kerran"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -15592,16 +15160,8 @@ msgid "Unused filters:"
 msgstr "Käyttämättömät suodattimet:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid ""
-"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
-"the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
-"to trim spaces for you?"
-msgstr ""
-"Jossakin kohteista on välilyöntejä (välilyönti, rivinvaihto, sarkainmerkki "
-"tai rivinsiirto), jotka aiheuttavat ongelmia hahmontunnistuksessa. Jos et "
-"ole varma, niiden poistamista suositellaan. Haluatko Audacityn tekevän niin "
-"puolestasi?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr "Jossakin kohteista on välilyöntejä (välilyönti, rivinvaihto, sarkainmerkki tai rivinsiirto), jotka aiheuttavat ongelmia hahmontunnistuksessa. Jos et ole varma, niiden poistamista suositellaan. Haluatko Audacityn tekevän niin puolestasi?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15898,12 +15458,10 @@ msgstr "Virhe tuotaessa pikanäppäimiä"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
-"and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
-"Pikanäppäintiedosto sisältää samat pikanäppäimet toiminnoille \"%s\" ja \"%s"
-"\",\n"
+"Pikanäppäintiedosto sisältää samat pikanäppäimet toiminnoille \"%s\" ja \"%s\",\n"
 "mitä ei sallita. Mitään ei tuoda."
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -15914,12 +15472,10 @@ msgstr "Ladattiin %d pikanäppäintä\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have "
-"their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"Seuraavia komentoja ei mainita tuodussa tiedostossa. Niiden pikanäppäimet on "
-"poistettu, koska ne ovat ristiriidassa muiden uusien pikanäppäinten kanssa:\n"
+"Seuraavia komentoja ei mainita tuodussa tiedostossa. Niiden pikanäppäimet on poistettu, koska ne ovat ristiriidassa muiden uusien pikanäppäinten kanssa:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -16085,28 +15641,21 @@ msgstr "Moduulin asetukset"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
-"Manual\n"
+"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
 "and know what you are doing."
 msgstr ""
-"Nämä ovat kokeellisia moduuleja. Ota ne käyttöön vain, jos olet lukenut "
-"Audacity-käyttöohjeet\n"
+"Nämä ovat kokeellisia moduuleja. Ota ne käyttöön vain, jos olet lukenut Audacity-käyttöohjeet\n"
 "ja tiedät, mitä olet tekemässä."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
-"starts."
-msgstr ""
-"  'Kysy' tarkoittaa: Audacity kysyy, haluatko ladata moduulin joka kerta "
-"ohjelman käynnistyessä."
+msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+msgstr "  'Kysy' tarkoittaa: Audacity kysyy, haluatko ladata moduulin joka kerta ohjelman käynnistyessä."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr ""
-"  'Virhe' tarkoittaa: Audacity arvelee moduulin olevan rikki eikä käytä sitä."
+msgstr "  'Virhe' tarkoittaa: Audacity arvelee moduulin olevan rikki eikä käytä sitä."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -16593,6 +16142,30 @@ msgstr "ERB"
 msgid "Period"
 msgstr "Aikaväli"
 
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Väri (oletus)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Klassinen"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Harmaasävy"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Käänteinen harmaasävy"
+
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
 msgstr "Taajuudet"
@@ -16675,10 +16248,6 @@ msgstr "&Määrä (dB):"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
 msgstr "Korkea&tehostus (dB/dek):"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
-msgstr "Harmaa&sävy"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
@@ -16805,39 +16374,30 @@ msgstr "Tiedot"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images "
-"and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity.\n"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently "
-"affected, even\n"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
 msgstr ""
 "Teematuki on kokeellinen ominaisuus.\n"
 "\n"
-"Jos haluat kokeilla sitä, napsauta \"Tallenna teemavälimuisti\", sitten etsi "
-"ImageCacheVxx.png\n"
-"-tiedostot ja muokkaa niissä olevia kuvia sekä värejä käyttäen "
-"kuvankäsittelyohjelmaa, kuten Gimp.\n"
+"Jos haluat kokeilla sitä, napsauta \"Tallenna teemavälimuisti\", sitten etsi ImageCacheVxx.png\n"
+"-tiedostot ja muokkaa niissä olevia kuvia sekä värejä käyttäen kuvankäsittelyohjelmaa, kuten Gimp.\n"
 "\n"
-"Lataa muutetut kuvat ja värit takaisin Audacityyn napsauttamalla \"Lataa "
-"teemavälimuisti\".\n"
+"Lataa muutetut kuvat ja värit takaisin Audacityyn napsauttamalla \"Lataa teemavälimuisti\".\n"
 "\n"
-"(Tämä vaikuttaa tällä hetkellä vain siirtotyökaluriviin ja aaltoraidan "
-"väreihin, vaikka\n"
+"(Tämä vaikuttaa tällä hetkellä vain siirtotyökaluriviin ja aaltoraidan väreihin, vaikka\n"
 "kuvatiedosto näyttää myös muita kuvakkeita.)"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each "
-"image, but is\n"
+"Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
-"Yksittäisten teematiedostojen tallentaminen ja lataaminen käyttää erillistä "
-"tiedostoa kullekin kuvalle, mutta\n"
+"Yksittäisten teematiedostojen tallentaminen ja lataaminen käyttää erillistä tiedostoa kullekin kuvalle, mutta\n"
 "muuten sama ajatus."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -17116,7 +16676,8 @@ msgid "Waveform dB &range:"
 msgstr "Aaltomuodon dB-&alue:"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
 msgstr "Pysäytetty"
@@ -17695,12 +17256,8 @@ msgstr "Oktaa&vi alas"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"Napsautus lähentää pystysuunnassa. Vaihto + napsautus loitontaa. Raahaaminen "
-"määrittää suurennusalueen."
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "Napsautus lähentää pystysuunnassa. Vaihto + napsautus loitontaa. Raahaaminen määrittää suurennusalueen."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -17779,9 +17336,7 @@ msgstr "Napsautus ja raahaus muokkaa näytteitä"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr ""
-"Jos haluat käyttää piirtotyökalua, sinun tulee lähentää näkymää kunnes näet "
-"yksittäiset näytteet."
+msgstr "Jos haluat käyttää piirtotyökalua, sinun tulee lähentää näkymää kunnes näet yksittäiset näytteet."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -18035,11 +17590,8 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% oikea"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-msgid ""
-"Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr ""
-"Säädä alinäkymien kokoa napsauttamalla ja raahaamalla, jaa ne tasaisesti "
-"kaksoisnapsauttamalla"
+msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr "Säädä alinäkymien kokoa napsauttamalla ja raahaamalla, jaa ne tasaisesti kaksoisnapsauttamalla"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18256,8 +17808,7 @@ msgstr "Napsautus ja raahaus siirtää valinnan ylätaajuutta."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr ""
-"Napsautus ja raahaus siirtää valinnan keskitaajuuden huippuun spektrissä."
+msgstr "Napsautus ja raahaus siirtää valinnan keskitaajuuden huippuun spektrissä."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -18347,9 +17898,7 @@ msgstr "Ctrl + napsautus"
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr ""
-"%s valitsee raidan tai poistaa valinnan. Muuta raitojen järjestystä "
-"raahaamalla ylös- tai alaspäin."
+msgstr "%s valitsee raidan tai poistaa valinnan. Muuta raitojen järjestystä raahaamalla ylös- tai alaspäin."
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -18383,6 +17932,92 @@ msgstr "Raahaaminen lähentää alueeseen, oikea napsautus loitontaa"
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Vasen=lähennä, oikea=loitonna, keskipainike=normaaliksi"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Päivitysten tarkistus epäonnistui"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr "Ei voitu yhdistää Audacity-päivityspalvelimelle."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "Päivitys on vioittunut."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Päivityksen lataus epäonnistui."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr "Audacityn latauslinkkiä ei voitu avata."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr ""
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr ""
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Preferences > Application"
+msgstr "Laatuasetukset"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Päivitä Audacity"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&Ohita"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "&Asenna päivitys"
+
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s on saatavilla!"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Muokkausloki"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "Lue lisää GitHubissa"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
@@ -18960,6 +18595,31 @@ msgstr "Haluatko varmasti sulkea?"
 msgid "Confirm Close"
 msgstr "Vahvista sulkeminen"
 
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "Esiasetusta ei voi lukea kohteesta \"%s\""
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
+msgstr ""
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy, c-format
+msgid "You can change the directory in %s."
+msgstr ""
+"Ei voitu luoda hakemistoa:\n"
+"  %s"
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy
+msgid "Preferences > Directories"
+msgstr "Hakemistojen asetukset"
+
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Älä näytä tätä varoitusta uudelleen"
@@ -19135,8 +18795,7 @@ msgstr "~aKeskitaajuuden on oltava yli 0 Hz."
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 "~aTaajuusvalinta on liian korkea raidan näytteenottotaajuudelle.~%~\n"
@@ -19335,8 +18994,7 @@ msgid "Benjamin Schwartz and Steve Daulton"
 msgstr "Benjamin Schwartz ja Steve Daulton"
 
 #: plug-ins/clipfix.ny
-msgid ""
-"Licensing confirmed under terms of the GNU General Public License version 2"
+msgid "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr "Gnu General Public License -version 2 ehtojen mukainen lisensointi"
 
 #: plug-ins/clipfix.ny
@@ -19368,8 +19026,7 @@ msgstr "Virhe.~%Virheellinen valinta.~%Tyhjä tila valinnan alussa/lopussa."
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
-"Virhe.~%Leikkeiden ristihäivytystä voidaan käyttää vain yhdessä raidassa."
+msgstr "Virhe.~%Leikkeiden ristihäivytystä voidaan käyttää vain yhdessä raidassa."
 
 #: plug-ins/crossfadetracks.ny
 msgid "Crossfade Tracks"
@@ -19687,8 +19344,7 @@ msgid ""
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
 msgstr ""
-"Virhe:~%~%Taajuus (~a Hz) on liian korkea raidan näytteenottotaajuudelle."
-"~%~%~\n"
+"Virhe:~%~%Taajuus (~a Hz) on liian korkea raidan näytteenottotaajuudelle.~%~%~\n"
 "                   Raidan näytteenottotaajuus on ~a Hz~%~\n"
 "                   Taajuuden on oltava pienempi kuin ~a Hz."
 
@@ -19698,11 +19354,8 @@ msgid "Label Sounds"
 msgstr "Merkitse äänet"
 
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-msgid ""
-"Released under terms of the GNU General Public License version 2 or later."
-msgstr ""
-"Julkaistu GNU General Public License -version 2 tai uudemman ehtojen "
-"mukaisesti."
+msgid "Released under terms of the GNU General Public License version 2 or later."
+msgstr "Julkaistu GNU General Public License -version 2 tai uudemman ehtojen mukaisesti."
 
 #: plug-ins/label-sounds.ny
 msgid "Threshold level (dB)"
@@ -19773,8 +19426,7 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr ""
-"Liian monta hiljaista kohtaa.~%Vain ensimmäiset 10000 merkkiä lisätään."
+msgstr "Liian monta hiljaista kohtaa.~%Vain ensimmäiset 10000 merkkiä lisätään."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -19784,21 +19436,13 @@ msgstr "Virhe.~%Valinnan tulee olla alle ~a."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid ""
-"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
-"duration'."
-msgstr ""
-"Ääniä ei löytynyt.ˇ%Yritä vähentää kynnysarvoa tai hiljaisuuden lyhintä "
-"kestoa."
+msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
+msgstr "Ääniä ei löytynyt.ˇ%Yritä vähentää kynnysarvoa tai hiljaisuuden lyhintä kestoa."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid ""
-"Labelling regions between sounds requires~%at least two sounds.~%Only one "
-"sound detected."
-msgstr ""
-"Äänien välisten alueiden merkitseminen vaatii~%vahintään kaksi ääntä.~%Niitä "
-"havaittiin vain yksi."
+msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
+msgstr "Äänien välisten alueiden merkitseminen vaatii~%vahintään kaksi ääntä.~%Niitä havaittiin vain yksi."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -19986,8 +19630,7 @@ msgid ""
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Virhe:~%~%Taajuus (~a Hz) on liian korkea raidan näytteenottotaajuudelle."
-"~%~%~\n"
+"Virhe:~%~%Taajuus (~a Hz) on liian korkea raidan näytteenottotaajuudelle.~%~%~\n"
 "                   Raidan näytteenottotaajuus on ~a Hz~%~\n"
 "                   Taajuuden on oltava pienempi kuin ~a Hz."
 
@@ -20046,8 +19689,7 @@ msgstr "Varoitus.~%Joidenkin tiedostojen kopioiminen epäonnistui:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr ""
-"Laajennukset asennettu.~%(Ota käyttöön tehosteiden hallintaohjelmalla):"
+msgstr "Laajennukset asennettu.~%(Ota käyttöön tehosteiden hallintaohjelmalla):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20148,9 +19790,7 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr ""
-"Aseta 'Palkkien määrä' -arvoksi nolla, jos haluat ottaa rytmiraidan keston "
-"käyttöön."
+msgstr "Aseta 'Palkkien määrä' -arvoksi nolla, jos haluat ottaa rytmiraidan keston käyttöön."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -20373,11 +20013,8 @@ msgstr "Näytteenottotaajuus: ~a Hz.  Näytearvot ~a asteikolla. %~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr ""
-"~a   ~a~%~aNäytteenottotaajuus: ~a Hz.~%Käsitelty pituus: ~a näytettä ~a "
-"sekuntia.~a"
+msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr "~a   ~a~%~aNäytteenottotaajuus: ~a Hz.~%Käsitelty pituus: ~a näytettä ~a sekuntia.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20391,16 +20028,12 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
-"~a~%Näytteenottotaajuus: ~a Hz. Näytearvot ~a asteikolla. ~a.~%~aKäsitelty "
-"pituus: ~a ~\n"
-"                  näytteet, ~a sekuntia.~%Huippuamplitudi: ~a (lineaarinen) "
-"~a dB.  Painottamaton RMS: ~a dB.~%~\n"
+"~a~%Näytteenottotaajuus: ~a Hz. Näytearvot ~a asteikolla. ~a.~%~aKäsitelty pituus: ~a ~\n"
+"                  näytteet, ~a sekuntia.~%Huippuamplitudi: ~a (lineaarinen) ~a dB.  Painottamaton RMS: ~a dB.~%~\n"
 "                  Tasajännitetaso: ~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -20436,8 +20069,7 @@ msgstr "<b>Näytteenottotaajuus:</b> &nbsp;&nbsp;~a Hz."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
-msgstr ""
-"<b>Huippuamplitudi:</b> &nbsp;&nbsp;~a (lineaarinen) &nbsp;&nbsp;~a dB."
+msgstr "<b>Huippuamplitudi:</b> &nbsp;&nbsp;~a (lineaarinen) &nbsp;&nbsp;~a dB."
 
 #. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
@@ -20732,12 +20364,8 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
-msgid ""
-"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
-"This means:~%~a~%"
-msgstr ""
-"Panorointi: ~a~%Vasen ja oikea kanava korreloivat noin ~a %. Tämä tarkoittaa:"
-"~%~a~%"
+msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
+msgstr "Panorointi: ~a~%Vasen ja oikea kanava korreloivat noin ~a %. Tämä tarkoittaa:~%~a~%"
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20747,44 +20375,36 @@ msgid ""
 msgstr ""
 " - Nämä kaksi kanavaa ovat identtiset eli kaksoismono.\n"
 "                Keskusta ei voi poistaa.\n"
-"                Mahdollinen jäljellä oleva ero voi johtua häviöllisestä "
-"koodauksesta."
+"                Mahdollinen jäljellä oleva ero voi johtua häviöllisestä koodauksesta."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
+" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
-" - Nämä kaksi kanavaa suhtautuvat vahvasti toisiinsa, eli lähes mono tai "
-"erittäin panoroitu.\n"
+" - Nämä kaksi kanavaa suhtautuvat vahvasti toisiinsa, eli lähes mono tai erittäin panoroitu.\n"
 "              Siten keskuksen poisto todennäköisesti toimii huonosti."
 
 #: plug-ins/vocalrediso.ny
-msgid ""
-" - A fairly good value, at least stereo in average and not too wide spread."
+msgid " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr " - Melko hyvä arvo, ainakin stereot keskimäärin, ei liian leveä."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used "
-"reverb."
+"                However, the center extraction depends also on the used reverb."
 msgstr ""
 " - Ihanteellinen arvo stereolle.\n"
-"               Keskuksen poistaminen kuitenkin riippuu myös käytetystä "
-"jälkikaiusta."
+"               Keskuksen poistaminen kuitenkin riippuu myös käytetystä jälkikaiusta."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
 " - Kaksi kanavaa eivät ole läheskään toisiinsa suhdassa.\n"
-"              Joko sinulla on vain kohinaa tai kappale on masteroitu "
-"epätasapainoisesti.\n"
+"              Joko sinulla on vain kohinaa tai kappale on masteroitu epätasapainoisesti.\n"
 "             Keskierotus voi silti olla hyvä."
 
 #: plug-ins/vocalrediso.ny
@@ -20801,14 +20421,12 @@ msgstr ""
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between "
-"the speakers.\n"
+"                  to spread the signal over the physical distance between the speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 " - Nämä kaksi kanavaa ovat lähes identtiset.\n"
 "                  Ilmeisesti pseudostereotehostusta on käytetty\n"
-"                  signaalin leventämiseen kaiuttimien välisen fyysisen "
-"etäisyyden poikki.\n"
+"                  signaalin leventämiseen kaiuttimien välisen fyysisen etäisyyden poikki.\n"
 "                  Keskuksen poistolta ei tulisi odottaa liikoja."
 
 #: plug-ins/vocalrediso.ny
@@ -20868,6 +20486,27 @@ msgstr "Ryöppytaajuus (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Virhe.~%Stereoraita vaaditaan."
 
+#~ msgid "Unknown assertion"
+#~ msgstr "Tuntematon varmistus"
+
+#~ msgid "Can't open new empty project"
+#~ msgstr "Uutta tyhjää projektia ei voitu avata"
+
+#~ msgid "Error opening a new empty project"
+#~ msgstr "Virhe uutta tyhjää projektia avattaessa"
+
+#~ msgid "Gray Scale"
+#~ msgstr "Harmaasävy"
+
+#~ msgid "Menu Tree"
+#~ msgstr "Valikkopuu"
+
+#~ msgid "Menu Tree..."
+#~ msgstr "Valikkopuu..."
+
+#~ msgid "Gra&yscale"
+#~ msgstr "Harmaa&sävy"
+
 #~ msgid "Fast"
 #~ msgstr "Nopea"
 
@@ -20903,24 +20542,20 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
-#~ "It is possible they were moved, deleted, or the drive they were on was "
-#~ "unmounted.\n"
+#~ "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
 #~ "Silence is being substituted for the affected audio.\n"
 #~ "The first detected missing file is:\n"
 #~ "%s\n"
 #~ "There may be additional missing files.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
-#~ "locations of the missing files."
+#~ "Choose Help > Diagnostics > Check Dependencies to view a list of locations of the missing files."
 #~ msgstr ""
 #~ "Ainakin yksi ulkoinen äänitiedosto puuttuu.\n"
-#~ "On mahdollista, että ne siirrettiin, poistettiin tai asema, jossa ne "
-#~ "olivat, poistettiin käytöstä.\n"
+#~ "On mahdollista, että ne siirrettiin, poistettiin tai asema, jossa ne olivat, poistettiin käytöstä.\n"
 #~ "Hiljaisuus korvaa vaurioituneen äänen.\n"
 #~ "Ensimmäinen havaittu puuttuva tiedosto on:\n"
 #~ "%s\n"
 #~ "Puuttuvia tiedostoja saattaa olla enemmänkin.\n"
-#~ "Valitse Ohje > Diagnostiikka > Tarkista riippuvuudet, jos haluat "
-#~ "tarkastella puuttuvien tiedostojen sijaintiluetteloa."
+#~ "Valitse Ohje > Diagnostiikka > Tarkista riippuvuudet, jos haluat tarkastella puuttuvien tiedostojen sijaintiluetteloa."
 
 #~ msgid "Files Missing"
 #~ msgstr "Tiedostoja puuttuu"
@@ -20990,19 +20625,13 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Komentoa %s ei ole vielä toteutettu"
 
 #~ msgid ""
-#~ "Your project is currently self-contained; it does not depend on any "
-#~ "external audio files. \n"
+#~ "Your project is currently self-contained; it does not depend on any external audio files. \n"
 #~ "\n"
-#~ "If you change the project to a state that has external dependencies on "
-#~ "imported files, it will no longer be self-contained. If you then Save "
-#~ "without copying those files in, you may lose data."
+#~ "If you change the project to a state that has external dependencies on imported files, it will no longer be self-contained. If you then Save without copying those files in, you may lose data."
 #~ msgstr ""
-#~ "Projektisi on tällä hetkellä itsenäinen; se ei ole riippuvainen mistään "
-#~ "ulkoisista äänitiedostoista. \n"
+#~ "Projektisi on tällä hetkellä itsenäinen; se ei ole riippuvainen mistään ulkoisista äänitiedostoista. \n"
 #~ "\n"
-#~ "Jos muutat projektin tilaan, jolla on ulkoisia riippuvuuksia tuotuihin "
-#~ "tiedostoihin, se ei ole enää itsenäinen. Jos sitten tallennat projektin "
-#~ "kopioimatta näitä tiedostoja, saatat menettää tietoja."
+#~ "Jos muutat projektin tilaan, jolla on ulkoisia riippuvuuksia tuotuihin tiedostoihin, se ei ole enää itsenäinen. Jos sitten tallennat projektin kopioimatta näitä tiedostoja, saatat menettää tietoja."
 
 #~ msgid "Cleaning project temporary files"
 #~ msgstr "Siivotaan projektin väliaikaistiedostoja"
@@ -21043,10 +20672,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Reclaimable Space"
 #~ msgstr "Takaisin saatava tila"
 
-#~ msgid ""
-#~ "Audacity cannot start because the settings file at %s is not writable."
-#~ msgstr ""
-#~ "Audacityä ei voi käynnistää, koska asetustiedostoon %s ei voi kirjoittaa."
+#~ msgid "Audacity cannot start because the settings file at %s is not writable."
+#~ msgstr "Audacityä ei voi käynnistää, koska asetustiedostoon %s ei voi kirjoittaa."
 
 #~ msgid ""
 #~ "This file was saved by Audacity version %s. The format has changed. \n"
@@ -21054,20 +20681,16 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "Audacity can try to open and save this file, but saving it in this \n"
 #~ "version will then prevent any 1.2 or earlier version opening it. \n"
 #~ "\n"
-#~ "Audacity might corrupt the file in opening it, so you should back it up "
-#~ "first. \n"
+#~ "Audacity might corrupt the file in opening it, so you should back it up first. \n"
 #~ "\n"
 #~ "Open this file now?"
 #~ msgstr ""
-#~ "Tämä tiedosto oli tallennettu Audacityn versiolla %s. Tiedostomuoto on "
-#~ "sittemmin muuttunut. \n"
+#~ "Tämä tiedosto oli tallennettu Audacityn versiolla %s. Tiedostomuoto on sittemmin muuttunut. \n"
 #~ "\n"
-#~ "Audacity voi yrittää avata ja tallentaa tämän tiedoston, mutta "
-#~ "tallentaminen \n"
+#~ "Audacity voi yrittää avata ja tallentaa tämän tiedoston, mutta tallentaminen \n"
 #~ "tässä versiossa voi estää versiota 1.2 tai aiempaa avaamasta sitä. \n"
 #~ "\n"
-#~ "Audacity voi rikkoa tiedoston sitä avatessa, joten se kannattaa "
-#~ "varmuuskopioida ensin. \n"
+#~ "Audacity voi rikkoa tiedoston sitä avatessa, joten se kannattaa varmuuskopioida ensin. \n"
 #~ "\n"
 #~ "Avataanko tämä tiedosto nyt?"
 
@@ -21101,48 +20724,36 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "hakemisto \"%s\" ennen tämännimisen projektin tallentamista."
 
 #~ msgid ""
-#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-#~ "file.\n"
+#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n"
 #~ "For an audio file that will open in other apps, use 'Export'.\n"
 #~ "\n"
 #~ "Lossless copies of project are a good way to backup your project, \n"
 #~ "with no loss of quality, but the projects are large.\n"
 #~ msgstr ""
-#~ "'Tallenna projektista häviötön kopio' tallentaa Audacity-projektin, ei "
-#~ "äänitiedostoa.\n"
-#~ "Jos haluat avata äänitiedoston muissa sovelluksissa, käytä \"Vie\" -"
-#~ "toimintoa.\n"
+#~ "'Tallenna projektista häviötön kopio' tallentaa Audacity-projektin, ei äänitiedostoa.\n"
+#~ "Jos haluat avata äänitiedoston muissa sovelluksissa, käytä \"Vie\" -toimintoa.\n"
 #~ "\n"
-#~ "Häviöttömät projektitiedostokopiot ovat hyvä tapa välittää projekti "
-#~ "verkossa. \n"
+#~ "Häviöttömät projektitiedostokopiot ovat hyvä tapa välittää projekti verkossa. \n"
 #~ "Äänenlaatu ei kärsi, mutta projekti on suurikokoinen.\n"
 
 #~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
 #~ msgstr "%sTallenna projektin \"%s\" pakattu kopio nimellä..."
 
 #~ msgid ""
-#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
-#~ "audio file.\n"
+#~ "'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n"
 #~ "For an audio file that will open in other apps, use 'Export'.\n"
 #~ "\n"
-#~ "Compressed project files are a good way to transmit your project "
-#~ "online, \n"
+#~ "Compressed project files are a good way to transmit your project online, \n"
 #~ "but they have some loss of fidelity.\n"
 #~ msgstr ""
-#~ "'Tallenna projektista pakattu kopio' tallentaa Audacity-projektin, ei "
-#~ "äänitiedostoa.\n"
-#~ "Jos haluat avata äänitiedoston muissa sovelluksissa, käytä \"Vie\" -"
-#~ "toimintoa.\n"
+#~ "'Tallenna projektista pakattu kopio' tallentaa Audacity-projektin, ei äänitiedostoa.\n"
+#~ "Jos haluat avata äänitiedoston muissa sovelluksissa, käytä \"Vie\" -toimintoa.\n"
 #~ "\n"
 #~ "Pakatut projektitiedostot ovat hyvä tapa välittää projekti verkossa, \n"
 #~ "mutta äänenlaatu tosin hieman kärsii.\n"
 
-#~ msgid ""
-#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
-#~ "format."
-#~ msgstr ""
-#~ "Audacity ei kyennyt muuntamaan Audacity 1.0:n projektia uuteen "
-#~ "projektimuotoon."
+#~ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
+#~ msgstr "Audacity ei kyennyt muuntamaan Audacity 1.0:n projektia uuteen projektimuotoon."
 
 #~ msgid "Could not remove old auto save file"
 #~ msgstr "Vanhan automaattitallennustiedoston poisto epäonnistui"
@@ -21150,19 +20761,11 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "On-demand import and waveform calculation complete."
 #~ msgstr "Reaaliaikainen tuonti ja aaltomuodon laskenta valmis."
 
-#~ msgid ""
-#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
-#~ "%2.0f%% complete."
-#~ msgstr ""
-#~ "Tuonti valmis. Suoritetaan %d reaaliaikaista aaltomuodon laskentaa. "
-#~ "Kaikkiaan %2.0f%% valmiina."
+#~ msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
+#~ msgstr "Tuonti valmis. Suoritetaan %d reaaliaikaista aaltomuodon laskentaa. Kaikkiaan %2.0f%% valmiina."
 
-#~ msgid ""
-#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
-#~ "complete."
-#~ msgstr ""
-#~ "Tuonti valmis. Suoritetaan reaaliaikaista aaltomuodon laskentaa. %2.0f%% "
-#~ "valmiina."
+#~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
+#~ msgstr "Tuonti valmis. Suoritetaan reaaliaikaista aaltomuodon laskentaa. %2.0f%% valmiina."
 
 #~ msgid "Compress"
 #~ msgstr "Pakkaa"
@@ -21175,17 +20778,13 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 
 #~ msgid ""
 #~ "You are attempting to overwrite an aliased file that is missing.\n"
-#~ "The file cannot be written because the path is needed to restore the "
-#~ "original audio to the project.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of "
-#~ "all missing files.\n"
+#~ "The file cannot be written because the path is needed to restore the original audio to the project.\n"
+#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n"
 #~ "If you still wish to export, please choose a different filename or folder."
 #~ msgstr ""
 #~ "Yrität korvata puuttuvaa alias-tiedostoa.\n"
-#~ "Tiedostoa ei voi kirjoittaa, koska polku tarvitaan alkuperäisen äänen "
-#~ "palauttamiseen projektiin.\n"
-#~ "Valitse Ohje > Diagnostiikka > Tarkista riippuvuudet, jos haluat "
-#~ "tarkastella kaikkien puuttuvien tiedostojen sijainteja.\n"
+#~ "Tiedostoa ei voi kirjoittaa, koska polku tarvitaan alkuperäisen äänen palauttamiseen projektiin.\n"
+#~ "Valitse Ohje > Diagnostiikka > Tarkista riippuvuudet, jos haluat tarkastella kaikkien puuttuvien tiedostojen sijainteja.\n"
 #~ "Jos haluat edelleen viedä, valitse toinen tiedostonimi tai kansio."
 
 #~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
@@ -21208,13 +20807,9 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "%s"
 
 #~ msgid ""
-#~ "When importing uncompressed audio files you can either copy them into the "
-#~ "project, or read them directly from their current location (without "
-#~ "copying).\n"
+#~ "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
 #~ "\n"
-#~ msgstr ""
-#~ "Kun tuot pakkaamattomia äänitiedostoja, voit joko kopioida ne projektiin "
-#~ "tai lukea ne suoraan niiden nykyisestä sijainnista (kopioimatta).\n"
+#~ msgstr "Kun tuot pakkaamattomia äänitiedostoja, voit joko kopioida ne projektiin tai lukea ne suoraan niiden nykyisestä sijainnista (kopioimatta).\n"
 
 #~ msgid ""
 #~ "Your current preference is set to copy in.\n"
@@ -21227,20 +20822,13 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Nykyinen asetuksesi on määritetty lukemaan suoraan.\n"
 
 #~ msgid ""
-#~ "Reading the files directly allows you to play or edit them almost "
-#~ "immediately. This is less safe than copying in, because you must retain "
-#~ "the files with their original names in their original locations.\n"
-#~ "Help > Diagnostics > Check Dependencies will show the original names and "
-#~ "locations of any files that you are reading directly.\n"
+#~ "Reading the files directly allows you to play or edit them almost immediately. This is less safe than copying in, because you must retain the files with their original names in their original locations.\n"
+#~ "Help > Diagnostics > Check Dependencies will show the original names and locations of any files that you are reading directly.\n"
 #~ "\n"
 #~ "How do you want to import the current file(s)?"
 #~ msgstr ""
-#~ "Tiedostojen lukeminen suoraan mahdollistaa toiston tai muokkaamisen lähes "
-#~ "välittömästi. Se ei kuitenkaan ole yhtä turvallista kuin kopioiminen, "
-#~ "koska sinun on säilytettävä tiedostot, joiden alkuperäiset nimet ovat "
-#~ "alkuperäisissä sijainneissa.\n"
-#~ "Ohje > Diagnostiikka > Tarkista riippuvuudet näyttää kaikkien suoraan "
-#~ "lukemasi tiedostojen alkuperäiset nimet ja sijainnit.\n"
+#~ "Tiedostojen lukeminen suoraan mahdollistaa toiston tai muokkaamisen lähes välittömästi. Se ei kuitenkaan ole yhtä turvallista kuin kopioiminen, koska sinun on säilytettävä tiedostot, joiden alkuperäiset nimet ovat alkuperäisissä sijainneissa.\n"
+#~ "Ohje > Diagnostiikka > Tarkista riippuvuudet näyttää kaikkien suoraan lukemasi tiedostojen alkuperäiset nimet ja sijainnit.\n"
 #~ "\n"
 #~ "Miten haluat tuoda nykyiset tiedostot?"
 
@@ -21281,20 +20869,16 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Äänivälimuisti"
 
 #~ msgid "Play and/or record using &RAM (useful for slow drives)"
-#~ msgstr ""
-#~ "Toista ja/tai äänitä käyttämällä keskusmuistia (käte&vä hitaille "
-#~ "laitteille)"
+#~ msgstr "Toista ja/tai äänitä käyttämällä keskusmuistia (käte&vä hitaille laitteille)"
 
 #~ msgid "Mi&nimum Free Memory (MB):"
 #~ msgstr "Vapaata muistia vaaditaan (Mt):"
 
 #~ msgid ""
-#~ "If the available system memory falls below this value, audio will no "
-#~ "longer\n"
+#~ "If the available system memory falls below this value, audio will no longer\n"
 #~ "be cached in memory and will be written to disk."
 #~ msgstr ""
-#~ "Jos käytettävissä oleva järjestelmämuisti jää tämän arvon alapuolelle, "
-#~ "ääntä ei enää\n"
+#~ "Jos käytettävissä oleva järjestelmämuisti jää tämän arvon alapuolelle, ääntä ei enää\n"
 #~ "tallenneta välimuistiin, vaan se kirjoitetaan levylle."
 
 #~ msgid "When importing audio files"
@@ -21313,9 +20897,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Kun tallennat projektin, joka riippuu muista äänitiedostoista"
 
 #~ msgid "&Low disk space at launch or new project"
-#~ msgstr ""
-#~ "Jos käynnistettäessä tai uuden projektin yhteydessä on &vähän levytilaa "
-#~ "jäljellä"
+#~ msgstr "Jos käynnistettäessä tai uuden projektin yhteydessä on &vähän levytilaa jäljellä"
 
 #~ msgid "&Importing uncompressed audio files"
 #~ msgstr "&Pakkaamattomia äänitiedostoja tuodessa"
@@ -21395,24 +20977,18 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Audacity Team Members"
 #~ msgstr "Audacity-tiimin jäsenet"
 
-#~ msgid ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-#~ msgstr ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
+#~ msgid "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>"
+#~ msgstr "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>"
 
 #~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
 #~ msgstr "mkdir komennossa DirManager::MakeBlockFilePath epäonnistui."
 
 #~ msgid ""
 #~ "Audacity found an orphan block file: %s. \n"
-#~ "Please consider saving and reloading the project to perform a complete "
-#~ "project check."
+#~ "Please consider saving and reloading the project to perform a complete project check."
 #~ msgstr ""
 #~ "Audacity löysi orvon lohkotiedoston: %s. \n"
-#~ "Harkitse projektin tallennusta ja uudelleen lataamista suorittaaksesi "
-#~ "koko projektin tarkistus."
+#~ "Harkitse projektin tallennusta ja uudelleen lataamista suorittaaksesi koko projektin tarkistus."
 
 #~ msgid "Unable to open/create test file."
 #~ msgstr "Testitiedostoa ei voida avata/luoda."
@@ -21444,16 +21020,11 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Unable to load the module \"%s\". Error: %s"
 #~ msgstr "Moduulia \"%s\" ei voi ladata. Virhe: %s"
 
-#~ msgid ""
-#~ "The module \"%s\" does not provide a version string. It will not be "
-#~ "loaded."
+#~ msgid "The module \"%s\" does not provide a version string. It will not be loaded."
 #~ msgstr "Moduuli \"%s\" ei tarjoa version merkkijonoa. Sitä ei ladata."
 
-#~ msgid ""
-#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-#~ "loaded."
-#~ msgstr ""
-#~ "Moduuli %s on yhteensopiva Audacity-version \"%s\" kanssa. Sitä ei ladata."
+#~ msgid "The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."
+#~ msgstr "Moduuli %s on yhteensopiva Audacity-version \"%s\" kanssa. Sitä ei ladata."
 
 #~ msgid ""
 #~ "The module \"%s\" failed to initialize.\n"
@@ -21463,37 +21034,23 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "\n"
 #~ "Sitä ei ladata."
 
-#~ msgid ""
-#~ "The module \"%s\" does not provide any of the required functions. It will "
-#~ "not be loaded."
+#~ msgid "The module \"%s\" does not provide any of the required functions. It will not be loaded."
 #~ msgstr "Moduulissa \"%s\" ei ole tarvittavia funktioita. Sitä ei ladata."
 
 #~ msgid "   Project check replaced missing aliased file(s) with silence."
-#~ msgstr ""
-#~ "   Projektin tarkistus korvasi puuttuvat alias-tiedostot hiljaisuudella."
+#~ msgstr "   Projektin tarkistus korvasi puuttuvat alias-tiedostot hiljaisuudella."
 
 #~ msgid "   Project check regenerated missing alias summary file(s)."
-#~ msgstr ""
-#~ "   Projektin tarkistus uudisti puuttuvat alias-tiivistelmätiedostot."
+#~ msgstr "   Projektin tarkistus uudisti puuttuvat alias-tiivistelmätiedostot."
 
-#~ msgid ""
-#~ "   Project check replaced missing audio data block file(s) with silence."
-#~ msgstr ""
-#~ "   Projektin tarkistus korvasi puuttuvat audion lohkotiedostot "
-#~ "hiljaisuudella."
+#~ msgid "   Project check replaced missing audio data block file(s) with silence."
+#~ msgstr "   Projektin tarkistus korvasi puuttuvat audion lohkotiedostot hiljaisuudella."
 
-#~ msgid ""
-#~ "   Project check ignored orphan block file(s). They will be deleted when "
-#~ "project is saved."
-#~ msgstr ""
-#~ "   Projektin tarkistus ohitti orvot lohkotiedostot. Ne poistetaan, kun "
-#~ "projekti on tallennettu."
+#~ msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
+#~ msgstr "   Projektin tarkistus ohitti orvot lohkotiedostot. Ne poistetaan, kun projekti on tallennettu."
 
-#~ msgid ""
-#~ "Project check found file inconsistencies inspecting the loaded project "
-#~ "data."
-#~ msgstr ""
-#~ "Projektin tarkistus löysi epäjohdonmukaisuuksia ladatussa projektidatassa."
+#~ msgid "Project check found file inconsistencies inspecting the loaded project data."
+#~ msgstr "Projektin tarkistus löysi epäjohdonmukaisuuksia ladatussa projektidatassa."
 
 #~ msgid "Presets (*.txt)|*.txt|All files|*"
 #~ msgstr "Esimääritykset (*.txt)|*.txt| Kaikki tiedostot|*"
@@ -21527,8 +21084,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 #~ "Control not created."
 #~ msgstr ""
-#~ "Virheellinen Nyquist-'ohjain' tyyppimääritys: '%s' laajennustiedostossa "
-#~ "%s.\n"
+#~ "Virheellinen Nyquist-'ohjain' tyyppimääritys: '%s' laajennustiedostossa %s.\n"
 #~ "Ohjausobjektia ei luotu."
 
 #~ msgid ""
@@ -21616,22 +21172,14 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Enable Scrub Ruler"
 #~ msgstr "Salli leikkausviivat"
 
-#~ msgid ""
-#~ "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
-#~ "dll|All Files|*"
-#~ msgstr ""
-#~ "Vain avformat.dll|*avformat*.dll|Dynaamisesti likitetyt kirjastot (*.dll)|"
-#~ "*.dll|Kaikki tiedostot|*"
+#~ msgid "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*"
+#~ msgstr "Vain avformat.dll|*avformat*.dll|Dynaamisesti likitetyt kirjastot (*.dll)|*.dll|Kaikki tiedostot|*"
 
 #~ msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 #~ msgstr "Dynaamiset kirjastot (*.dylib)|*.dylib|Kaikki tiedostot (*)|*"
 
-#~ msgid ""
-#~ "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|"
-#~ "*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "Vain libavformat.so|libavformat*.so*|Dynaamisesti likitetyt kirjastot (*."
-#~ "so*)|*.so*|All Files (*)|*"
+#~ msgid "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
+#~ msgstr "Vain libavformat.so|libavformat*.so*|Dynaamisesti likitetyt kirjastot (*.so*)|*.so*|All Files (*)|*"
 
 #, fuzzy
 #~ msgid "Add to History:"
@@ -21668,8 +21216,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr " Tämä effekti aktivoituu kun avaat sen uudelleen ."
 
 #~ msgid " Select \"Generic\" to use the system supplied generic interface."
-#~ msgstr ""
-#~ " Valitse \"Generic\" käytettäessä järjestelmän geneeristä rajapintaa."
+#~ msgstr " Valitse \"Generic\" käytettäessä järjestelmän geneeristä rajapintaa."
 
 #, fuzzy
 #~ msgid " Select \"Basic\" for a basic text-only interface."
@@ -21678,12 +21225,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Enabling this setting will provide that compensation, but it may "
 #~ msgstr "Tämän asetuksen salliminen tarjoaa korvausta, mutta se voi "
 
-#~ msgid ""
-#~ "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|"
-#~ "*.txt|All files|*"
-#~ msgstr ""
-#~ "Nyquist-skriptit (*.ny)|*.ny|Lisp-skriptit (*.lsp)|*.lsp|Tekstitiedostot "
-#~ "(*.txt)|*.txt|Kaikki tiedostot|*"
+#~ msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"
+#~ msgstr "Nyquist-skriptit (*.ny)|*.ny|Lisp-skriptit (*.lsp)|*.lsp|Tekstitiedostot (*.txt)|*.txt|Kaikki tiedostot|*"
 
 #~ msgid "%i kbps"
 #~ msgstr "%i kbps"
@@ -21695,46 +21238,24 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "%s kbps"
 #~ msgstr "%i kbps"
 
-#~ msgid ""
-#~ "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-#~ "All Files|*"
-#~ msgstr ""
-#~ "Vain lame_enc.dll|lame_enc.dll|Dynaamiset kirjastot (*.dll)|*.dll|Kaikki "
-#~ "tiedostot|*"
+#~ msgid "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*"
+#~ msgstr "Vain lame_enc.dll|lame_enc.dll|Dynaamiset kirjastot (*.dll)|*.dll|Kaikki tiedostot|*"
 
 #, fuzzy
-#~ msgid ""
-#~ "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*."
-#~ "dylib)|*.dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "Vain libmp3lame.dylib|libmp3lame.dylib|Dynaamiset kirjastot (*.dylib)|*."
-#~ "dylib|Kaikki tiedostot (*)|*"
+#~ msgid "Only libmp3lame64bit.dylib|libmp3lame64bit.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+#~ msgstr "Vain libmp3lame.dylib|libmp3lame.dylib|Dynaamiset kirjastot (*.dylib)|*.dylib|Kaikki tiedostot (*)|*"
 
-#~ msgid ""
-#~ "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*."
-#~ "dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "Vain libmp3lame.dylib|libmp3lame.dylib|Dynaamiset kirjastot (*.dylib)|*."
-#~ "dylib|Kaikki tiedostot (*)|*"
+#~ msgid "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+#~ msgstr "Vain libmp3lame.dylib|libmp3lame.dylib|Dynaamiset kirjastot (*.dylib)|*.dylib|Kaikki tiedostot (*)|*"
 
-#~ msgid ""
-#~ "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*."
-#~ "so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "Vain libmp3lame.so.0|libmp3lame.so.0|Ensisijaisesti jaetut "
-#~ "objektitiedostot (*.so)|*.so|Laajennetut kirjastot (*.so*)|*.so*|Kaikki "
-#~ "tiedostot (*)|*"
+#~ msgid "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
+#~ msgstr "Vain libmp3lame.so.0|libmp3lame.so.0|Ensisijaisesti jaetut objektitiedostot (*.so)|*.so|Laajennetut kirjastot (*.so*)|*.so*|Kaikki tiedostot (*)|*"
 
 #~ msgid "MIDI file (*.mid)|*.mid|Allegro file (*.gro)|*.gro"
 #~ msgstr "MIDI-tiedosto (*.mid)|*.mid|Allegro-tiedosto (*.gro)|*.gro"
 
-#~ msgid ""
-#~ "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files "
-#~ "(*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-#~ msgstr ""
-#~ "MIDI ja Allegro-tiedostot (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI-"
-#~ "tiedostot (*.mid;*.midi)|*.mid;*.midi|Allegro-tiedostot (*.gro)|*.gro|"
-#~ "Kaikki tiedostot|*"
+#~ msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+#~ msgstr "MIDI ja Allegro-tiedostot (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI-tiedostot (*.mid;*.midi)|*.mid;*.midi|Allegro-tiedostot (*.gro)|*.gro|Kaikki tiedostot|*"
 
 #~ msgid "Waveform (dB)"
 #~ msgstr "Aaltomuoto (dB)"
@@ -21854,17 +21375,13 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Oikea"
 
 #~ msgid ""
-#~ "Latency Correction setting has caused the recorded audio to be hidden "
-#~ "before zero.\n"
+#~ "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 #~ "Audacity has brought it back to start at zero.\n"
-#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
-#~ "to the right place."
+#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
 #~ msgstr ""
-#~ "Latenssin korjausasetus on aiheuttanut että äänitetty audio on piilotettu "
-#~ "ennen nollaa.\n"
+#~ "Latenssin korjausasetus on aiheuttanut että äänitetty audio on piilotettu ennen nollaa.\n"
 #~ "Audacity on tuonut sen takaisin alkamaan nollasta.\n"
-#~ "Saatat joutua käyttämään Aikakorjaustyökalua (<---> tai F5) raidan "
-#~ "siirtämiseksi oikeaan paikkaan."
+#~ "Saatat joutua käyttämään Aikakorjaustyökalua (<---> tai F5) raidan siirtämiseksi oikeaan paikkaan."
 
 #~ msgid "Latency problem"
 #~ msgstr "Lantessiongelma"
@@ -21946,9 +21463,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Time Scale"
 #~ msgstr "Aikaskaala"
 
-#~ msgid ""
-#~ "Your tracks will be mixed down to a single mono channel in the exported "
-#~ "file."
+#~ msgid "Your tracks will be mixed down to a single mono channel in the exported file."
 #~ msgstr "Viedyssä tiedostossa raitasi miksataan yhdeksi monokanavaksi."
 
 #~ msgid "kbps"
@@ -21968,9 +21483,7 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid ""
 #~ "Error opening sound device.\n"
 #~ "Try changing the audio host, recording device and the project sample rate."
-#~ msgstr ""
-#~ "Äänilaitteen avausvirhe. Tarkista tallennuslaitteen asetukset ja "
-#~ "projektin näytteenottotaajuus."
+#~ msgstr "Äänilaitteen avausvirhe. Tarkista tallennuslaitteen asetukset ja projektin näytteenottotaajuus."
 
 #~ msgid "Slider Recording"
 #~ msgstr "Äänitys"
@@ -22139,12 +21652,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Show length and end time"
 #~ msgstr "Edustan lopetusaika"
 
-#~ msgid ""
-#~ "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a "
-#~ "particular zoom region."
-#~ msgstr ""
-#~ "Napsautus lähentää pystysuunnassa. Vaihto + napsautus loitontaa. "
-#~ "Vetäminen määrittää suurennusalueen."
+#~ msgid "Click to verticaly zoom in, Shift-click to zoom out, Drag to create a particular zoom region."
+#~ msgstr "Napsautus lähentää pystysuunnassa. Vaihto + napsautus loitontaa. Vetäminen määrittää suurennusalueen."
 
 #~ msgid "up"
 #~ msgstr "ylös"
@@ -22223,12 +21732,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgstr "Raskain"
 
 #, fuzzy
-#~ msgid ""
-#~ "A simple, combined compressor and limiter effect for reducing the dynamic "
-#~ "range of audio"
-#~ msgstr ""
-#~ "Leveler on yksinkertainen, yhdistetty pakkaus- ja rajoitinefekti, joka "
-#~ "pienentää äänen dynaamista aluetta"
+#~ msgid "A simple, combined compressor and limiter effect for reducing the dynamic range of audio"
+#~ msgstr "Leveler on yksinkertainen, yhdistetty pakkaus- ja rajoitinefekti, joka pienentää äänen dynaamista aluetta"
 
 #~ msgid "Degree of Leveling:"
 #~ msgstr "Tasoitusaste:"
@@ -22495,12 +22000,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Welcome to Audacity "
 #~ msgstr "Tervetuloa käyttämään Audacityä"
 
-#~ msgid ""
-#~ " For even quicker answers, all the online resources above are "
-#~ "<b>searchable</b>."
-#~ msgstr ""
-#~ " Entistäkin nopeampia vastauksia, kaikki verkkoaineistot ovat "
-#~ "<b>haettavissa</b>."
+#~ msgid " For even quicker answers, all the online resources above are <b>searchable</b>."
+#~ msgstr " Entistäkin nopeampia vastauksia, kaikki verkkoaineistot ovat <b>haettavissa</b>."
 
 #~ msgid "Edit Metadata"
 #~ msgstr "Muokkaa metatietoja"
@@ -22576,12 +22077,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ "Valinta on liian lyhyt.\n"
 #~ "Sen on oltava paljon pidempi kuin aikaresoluution."
 
-#~ msgid ""
-#~ "Generates four different types of tone waveform while allowing starting "
-#~ "and ending amplitude and frequency"
-#~ msgstr ""
-#~ "Generoi neljää erityyppistä aaltomuodon sävyä samalla aloittaen ja "
-#~ "lopettaen amplitudin ja taajuuden"
+#~ msgid "Generates four different types of tone waveform while allowing starting and ending amplitude and frequency"
+#~ msgstr "Generoi neljää erityyppistä aaltomuodon sävyä samalla aloittaen ja lopettaen amplitudin ja taajuuden"
 
 #~ msgid "Generates four different types of tone waveform"
 #~ msgstr "Luo neljä erityyppistä aaltomuodon sävyä"
@@ -22771,11 +22268,8 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Your file will be exported as a \"%s\" file\n"
 #~ msgstr "Tiedosto viedään \"%s\" tiedostoksi\n"
 
-#~ msgid ""
-#~ "If you need more control over the export format please use the \"%s\" "
-#~ "format."
-#~ msgstr ""
-#~ "Jos tarvitset enemmän asetuksia vientimuodolle, käytä \"%s\" muotoa."
+#~ msgid "If you need more control over the export format please use the \"%s\" format."
+#~ msgstr "Jos tarvitset enemmän asetuksia vientimuodolle, käytä \"%s\" muotoa."
 
 #~ msgid "Ctrl-Left-Drag"
 #~ msgstr "Ctrl + vasen-veto"
@@ -22815,22 +22309,14 @@ msgstr "Virhe.~%Stereoraita vaaditaan."
 #~ msgid "Applied effect: %s %.2f semitones"
 #~ msgstr "Käytetty efektiä: %s %.2f puolisävelaskelta"
 
-#~ msgid ""
-#~ "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start "
-#~ "phase = %.0f deg, depth = %d, feedback = %.0f%%"
-#~ msgstr ""
-#~ "Käytetty efektiä: %s %d vaihetta, %.0f%% efektiä, taajuus = %.1f Hz, "
-#~ "aloitusvaihe = %.0f°, syvyys = %d, takaisinsyöttö = %.0f%%"
+#~ msgid "Applied effect: %s %d stages, %.0f%% wet, frequency = %.1f Hz, start phase = %.0f deg, depth = %d, feedback = %.0f%%"
+#~ msgstr "Käytetty efektiä: %s %d vaihetta, %.0f%% efektiä, taajuus = %.1f Hz, aloitusvaihe = %.0f°, syvyys = %d, takaisinsyöttö = %.0f%%"
 
 #~ msgid "Applied effect: %s delay = %f seconds, decay factor = %f"
 #~ msgstr "Käytetty efektiä: %s viive = %f sekuntia, vaimenemiskerroin = %f"
 
-#~ msgid ""
-#~ "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = "
-#~ "%.0f%%, resonance = %.1f, frequency offset = %.0f%%"
-#~ msgstr ""
-#~ "Käytetty efektiä: %s taajuus = %.1f Hz, aloitusvaihe = %.0f°, syvyys = "
-#~ "%.0f%%, resonanssi = %.1f, taajuussiirtymä = %.0f%%"
+#~ msgid "Applied effect: %s frequency = %.1f Hz, start phase = %.0f deg, depth = %.0f%%, resonance = %.1f, frequency offset = %.0f%%"
+#~ msgstr "Käytetty efektiä: %s taajuus = %.1f Hz, aloitusvaihe = %.0f°, syvyys = %.0f%%, resonanssi = %.1f, taajuussiirtymä = %.0f%%"
 
 #~ msgid "Applied effect: Generate Silence, %.6lf seconds"
 #~ msgstr "Käytetty efektiä: Luo hiljaisuutta, %.6lf sekuntia"

@@ -30,6 +30,7 @@
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/textctrl.h>
 #include <wx/artprov.h>
 
 #include "../AllThemeResources.h"
@@ -38,10 +39,6 @@
 #include "../HelpText.h"
 #include "../Prefs.h"
 #include "HelpSystem.h"
-
-#ifdef HAS_SENTRY_REPORTING
-#   include "ErrorReportDialog.h"
-#endif
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
    EVT_COLLAPSIBLEPANE_CHANGED( wxID_ANY, ErrorDialog::OnPane )
@@ -149,69 +146,4 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    //OpenInDefaultBrowser( dhelpURL );
    if(dClose)
       EndModal(true);
-}
-
-void ShowErrorDialog(wxWindow *parent,
-                     const TranslatableString &dlogTitle,
-                     const TranslatableString &message,
-                     const ManualPageID &helpPage,
-                     const bool Close,
-                     const std::wstring &log)
-{
-   ErrorDialog dlog(parent, dlogTitle, message, helpPage, log, Close);
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-}
-
-
-void ShowExceptionDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage, bool Close,
-   const wxString& log)
-{
-#ifndef HAS_SENTRY_REPORTING
-   ShowErrorDialog(parent, dlogTitle, message, helpPage, Close,
-      audacity::ToWString(log));
-#else
-   ShowErrorReportDialog(parent, dlogTitle, message, helpPage,
-      audacity::ToWString(log));
-#endif // !HAS_SENTRY_REPORTING
-}
-
-// unused.
-void ShowModelessErrorDialog(wxWindow *parent,
-                             const TranslatableString &dlogTitle,
-                             const TranslatableString &message,
-                             const ManualPageID &helpPage,
-                             const bool Close,
-                             const std::wstring &log)
-{
-   // ensure it has some parent.
-   if( !parent )
-      parent = wxTheApp->GetTopWindow();
-   wxASSERT(parent);
-   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpPage, log, Close, false);
-   dlog->CentreOnParent();
-   dlog->Show();
-   // ANSWER-ME: Vigilant Sentry flagged this method as not deleting dlog, so 
-   // is this actually a mem leak.
-   // PRL: answer is that the parent window guarantees destruction of the dialog
-   // but in practice Destroy() in OnOK does that
-}
-
-void AudacityTextEntryDialog::SetInsertionPointEnd()
-{
-   mSetInsertionPointEnd = true;
-}
-
-bool AudacityTextEntryDialog::Show(bool show)
-{
-   bool ret = wxTabTraversalWrapper< wxTextEntryDialog >::Show(show);
-
-   if (show && mSetInsertionPointEnd) {
-      // m_textctrl is protected member of wxTextEntryDialog
-      m_textctrl->SetInsertionPointEnd();
-   }
-
-   return ret;
 }

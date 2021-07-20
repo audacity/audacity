@@ -418,6 +418,10 @@ bool DirectoriesPrefs::Validate()
    }
    else {
       /* If the directory already exists, make sure it is writable */
+      if (!FileNames::WritableLocationCheck(mTempText->GetValue()))
+      {
+          return false;
+      }
       wxLogNull logNo;
       Temp.AppendDir(wxT("canicreate"));
       path =  Temp.GetPath();
@@ -441,6 +445,19 @@ bool DirectoriesPrefs::Validate()
 "Changes to temporary directory will not take effect until Audacity is restarted"),
          XO("Temp Directory Update"),
          wxOK | wxCENTRE | wxICON_INFORMATION);
+   }
+
+   const wxString macroPathString = mMacrosText->GetValue();
+
+   if (!macroPathString.empty())
+   {
+      const wxFileName macroPath { macroPathString };
+
+      if (macroPath.DirExists())
+      {
+         if (!FileNames::WritableLocationCheck(macroPathString))
+            return false;
+      }
    }
 
    return true;

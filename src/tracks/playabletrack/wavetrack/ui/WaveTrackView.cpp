@@ -38,7 +38,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/ButtonHandle.h"
 #include "../../../../TrackInfo.h"
 
+#include "WaveTrackAffordanceControls.h"
+
 namespace {
+
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
@@ -760,6 +763,11 @@ void WaveTrackSubView::DrawBoldBoundaries(
    }
 }
 
+std::weak_ptr<WaveTrackView> WaveTrackSubView::GetWaveTrackView() const
+{
+   return mwWaveTrackView;
+}
+
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
 {
    return static_cast< WaveTrackView& >( TrackView::Get( track ) );
@@ -1018,6 +1026,11 @@ WaveTrackView::GetAllSubViews()
    return results;
 }
 
+std::shared_ptr<CommonTrackCell> WaveTrackView::DoGetAffordanceControls()
+{
+   return std::make_shared<WaveTrackAffordanceControls>(FindTrack());
+}
+
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
    BuildSubViews();
@@ -1229,20 +1242,23 @@ ClipParameters::ClipParameters
    }
 }
 
-void ClipParameters::DrawClipEdges( wxDC &dc, const wxRect &rect ) const
+wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, int clipOffsetX)
 {
-   // Draw clip edges
-   dc.SetPen(*wxGREY_PEN);
-   if (tpre < 0) {
-      AColor::Line(dc,
-                   mid.x - 1, mid.y,
-                   mid.x - 1, mid.y + rect.height);
-   }
-   if (tpost > t1) {
-      AColor::Line(dc,
-                   mid.x + mid.width, mid.y,
-                   mid.x + mid.width, mid.y + rect.height);
-   }
+    auto srs = 1. / static_cast<double>(clip.GetRate());
+    //to prevent overlap left and right most samples with frame border
+    auto margin = .25 * srs;
+    auto edgeLeft = static_cast<wxInt64>(viewRect.GetLeft());
+    auto edgeRight = static_cast<wxInt64>(viewRect.GetRight());
+    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetOffset() - margin, viewRect.x + clipOffsetX, true), edgeLeft, edgeRight);
+    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetEndTime() - srs + margin, viewRect.x + clipOffsetX, true), edgeLeft, edgeRight);
+    if (right - left > 0)
+    {
+        //after clamping we can expect that left and right 
+        //are small enough to be put into int
+        return wxRect(static_cast<int>(left), viewRect.y, static_cast<int>(right - left), viewRect.height);
+    }
+    //off the screen
+    return wxRect();
 }
 
 void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
@@ -1252,6 +1268,17 @@ void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
    WaveTrackSubViews::ForEach( [&parent](WaveTrackSubView &subView){
       subView.Reparent( parent );
    } );
+   if (mpAffordanceCellControl)
+      mpAffordanceCellControl->Reparent(parent);
+}
+
+std::weak_ptr<WaveClip> WaveTrackView::GetSelectedClip()
+{
+   if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(GetAffordanceControls()))
+   {
+      return affordance->GetSelectedClip();
+   }
+   return {};
 }
 
 void WaveTrackView::BuildSubViews() const

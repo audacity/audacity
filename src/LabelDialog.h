@@ -15,7 +15,7 @@
 #include <wx/defs.h>
 
 #include "widgets/wxPanelWrapper.h" // to inherit
-#include "audacity/ComponentInterface.h" // member variable
+#include "ComponentInterface.h" // member variable
 
 class wxArrayString;
 class wxGridEvent;

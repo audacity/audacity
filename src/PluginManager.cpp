@@ -28,7 +28,7 @@ for shared and private configs - which need to move out.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
-#include "audacity/ModuleInterface.h"
+#include "ModuleInterface.h"
 
 #include "AudacityFileConfig.h"
 #include "Internat.h" // for macro XO
@@ -432,18 +432,6 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Effect
 
    plug.SetEnabled(true);
    plug.SetValid(true);
-
-   return plug.GetID();
-}
-
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ImporterInterface *importer)
-{
-   PluginDescriptor & plug = CreatePlugin(GetID(importer), importer, PluginTypeImporter);
-
-   plug.SetProviderID(PluginManager::GetID(provider));
-
-   plug.SetImporterIdentifier(importer->GetPluginStringID());
-   plug.SetImporterExtensions(importer->GetSupportedExtensions());
 
    return plug.GetID();
 }
@@ -886,6 +874,9 @@ void PluginManager::Load()
    if (!registry.HasGroup(REGROOT))
    {
       // Must start over
+      // This DeleteAll affects pluginregistry.cfg only, not audacity.cfg
+      // That is, the memory of on/off states of effect (and generator,
+      // analyzer, and tool) plug-ins
       registry.DeleteAll();
       registry.Flush();
       return;
@@ -1223,7 +1214,7 @@ void PluginManager::Save()
       {}, {}, FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
-   // Clear it out
+   // Clear pluginregistry.cfg (not audacity.cfg)
    registry.DeleteAll();
 
    // Write the version string
@@ -1559,6 +1550,11 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
    }
 }
 
+PluginID PluginManager::GetID(ModuleInterface *module)
+{
+   return ModuleManager::GetID(module);
+}
+
 PluginID PluginManager::GetID(ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
@@ -1577,16 +1573,6 @@ PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
                            effect->GetVendor().Internal(),
                            effect->GetSymbol().Internal(),
                            effect->GetPath());
-}
-
-PluginID PluginManager::GetID(ImporterInterface *importer)
-{
-   return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                           GetPluginTypeString(PluginTypeImporter),
-                           wxEmptyString,
-                           importer->GetVendor().Internal(),
-                           importer->GetSymbol().Internal(),
-                           importer->GetPath());
 }
 
 // This string persists in configuration files
