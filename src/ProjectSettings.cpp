@@ -67,6 +67,7 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
    gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
 }
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
+, mCurrentBrushRadius ( 5 )
 {
    int intRate = 0;
    bool wasDefined = QualitySettings::DefaultSampleRate.Read( &intRate );
@@ -187,6 +188,12 @@ void ProjectSettings::SetSnapTo(int snap)
 int ProjectSettings::GetSnapTo() const
 {
    return mSnapTo;
+}
+
+// Move it to source file, to trigger event
+void ProjectSettings::SetTool(int tool) {
+   mCurrentTool = tool;
+   Notify( mProject, ChangedTool );
 }
 
 bool ProjectSettings::IsSyncLocked() const

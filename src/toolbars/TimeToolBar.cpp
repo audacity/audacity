@@ -264,7 +264,7 @@ void TimeToolBar::SetResizingLimits()
 // Called when the project settings change
 void TimeToolBar::OnSettingsChanged(wxCommandEvent &evt)
 {
-   evt.Skip(false);
+   evt.Skip();
 
    if (evt.GetInt() == ProjectSettings::ChangedProjectRate && mAudioTime)
    {

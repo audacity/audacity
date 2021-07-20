@@ -37,7 +37,8 @@ public:
       (const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
        const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-       const std::shared_ptr<SpectralData> &mpSpectralData);
+       const std::shared_ptr<SpectralData> &mpSpectralData,
+       const int brushRadius);
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
@@ -104,6 +105,7 @@ private:
    long long mSampleCountUpperBound, mSampleCountLowerBound;
    wxInt64 mFreqUpperBound, mFreqLowerBound;
    int mMostRecentX{ -1 }, mMostRecentY{ -1 };
+   int mBrushRadius;
 
    bool mbCtrlDown;
 

@@ -162,9 +162,10 @@ UIHandlePtr BrushHandle::HitTest
    }
 
    const auto &viewInfo = ViewInfo::Get( *pProject );
+   const auto &projectSettings = ProjectSettings::Get( *pProject );
    auto result = std::make_shared<BrushHandle>(
-         pTrackView, oldUseSnap, TrackList::Get( *pProject ),
-         st, viewInfo, mpData, projectSettings.GetBrushRadius()
+      pTrackView, oldUseSnap, TrackList::Get( *pProject ),
+      st, viewInfo, mpData, projectSettings.GetBrushRadius()
    );
 
    result = AssignUIHandlePtr(holder, result);
@@ -214,7 +215,8 @@ BrushHandle::BrushHandle
 ( const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
   const TrackList &trackList,
   const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-  const std::shared_ptr<SpectralData> &mpSpectralData)
+  const std::shared_ptr<SpectralData> &mpSpectralData,
+  const int brushRadius)
    : mpView{ pTrackView }
    , mpSpectralData(mpSpectralData)
    , mSnapManager{ std::make_shared<SnapManager>(
@@ -336,7 +338,7 @@ UIHandle::Result BrushHandle::Drag
    if(!mpSpectralData->coordHistory.empty()){
       int x0 = mpSpectralData->coordHistory.back().first;
       int y0 = mpSpectralData->coordHistory.back().second;
-      int wd = 10;
+      int wd = mBrushRadius * 2;
 
       int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
       int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1;
@@ -433,6 +435,12 @@ void BrushHandle::Draw(
 {
    if ( iPass == TrackArtist::PassTracks ) {
       auto& dc = context.dc;
+      wxPoint coord;
+      coord.x = mMostRecentX;
+      coord.y = mMostRecentY;
+      dc.SetBrush( *wxTRANSPARENT_BRUSH );
+      dc.SetPen( *wxYELLOW_PEN );
+      dc.DrawCircle(coord, mBrushRadius);
    }
 }
 
