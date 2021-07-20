@@ -1273,10 +1273,12 @@ struct VRulersAndChannels final : TrackPanelGroup {
 //Simply fills area using specified brush and outlines borders
 class EmptyPanelRect final : public CommonTrackPanelCell
 {
+   //Required to keep selection behaviour similar to others
+   std::shared_ptr<Track> mTrack;
    int mFillBrushName;
 public:
-   explicit EmptyPanelRect(int fillBrushName)
-      : mFillBrushName(fillBrushName)
+   explicit EmptyPanelRect(const std::shared_ptr<Track>& track, int fillBrushName)
+      : mTrack(track), mFillBrushName(fillBrushName)
    {
    }
 
@@ -1296,7 +1298,7 @@ public:
 
    std::shared_ptr<Track> DoFindTrack() override
    {
-       return {};
+       return mTrack;
    }
 
    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject)
@@ -1342,8 +1344,11 @@ struct ChannelGroup final : TrackPanelGroup {
          auto &view = TrackView::Get( *channel );
          if (auto affordance = view.GetAffordanceControls())
          {
+            auto panelRect = std::make_shared<EmptyPanelRect>(
+               channel->shared_from_this(),
+               channel->GetSelected() ? clrTrackInfoSelected : clrTrackInfo);
             Refinement hgroup {
-               std::make_pair(rect.GetLeft() + 1, std::make_shared<EmptyPanelRect>(channel->GetSelected() ? clrTrackInfoSelected : clrTrackInfo)),
+               std::make_pair(rect.GetLeft() + 1, panelRect),
                std::make_pair(mLeftOffset, affordance)
             };
             refinement.emplace_back(yy, std::make_shared<HorizontalGroup>(hgroup));

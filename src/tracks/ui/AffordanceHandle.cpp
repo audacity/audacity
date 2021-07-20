@@ -15,20 +15,11 @@
 #include "../../RefreshCode.h"
 #include "../../ViewInfo.h"
 #include "../../SelectionState.h"
-#include "../../ProjectSettings.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../WaveClip.h"
-#include "../../ProjectHistory.h"
 #include "../../Track.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
-
-UIHandlePtr AffordanceHandle::HitAnywhere(std::weak_ptr<AffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack)
-{
-    auto result = std::make_shared<AffordanceHandle>(pTrack);
-    result = AssignUIHandlePtr(holder, result);
-    return result;
-}
 
 HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
 {
@@ -51,6 +42,12 @@ HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe,
     };
 }
 
+void AffordanceHandle::Enter(bool forward, AudacityProject* pProject)
+{
+    SetChangeHighlight(RefreshCode::RefreshCell | RefreshCode::RefreshLatestCell);
+    TimeShiftHandle::Enter(forward, pProject);
+}
+
 HitTestPreview AffordanceHandle::Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject)
 {
     const bool unsafe = ProjectAudioIO::Get(*pProject).IsAudioActive();
@@ -60,7 +57,6 @@ HitTestPreview AffordanceHandle::Preview(const TrackPanelMouseState& mouseState,
 AffordanceHandle::AffordanceHandle(const std::shared_ptr<Track>& track)
     : TimeShiftHandle(track, false)
 {
-    SetChangeHighlight(RefreshCode::RefreshCell | RefreshCode::RefreshLatestCell);
 }
 
 UIHandle::Result AffordanceHandle::Click(const TrackPanelMouseEvent& evt, AudacityProject* pProject)
@@ -75,42 +71,14 @@ UIHandle::Result AffordanceHandle::Release(const TrackPanelMouseEvent& event, Au
     //Clip was not moved
     if (!TimeShiftHandle::WasMoved())
     {
-        //almost the same behaviour as provided by SelectHandle
-        auto& viewInfo = ViewInfo::Get(*pProject);
-        const auto& settings = ProjectSettings::Get(*pProject);
-
-        const auto sTrack = TrackList::Get(*pProject).Lock<Track>(GetTrack());
-        const auto pTrack = sTrack.get();
+        const auto track = TrackList::Get(*pProject).Lock<Track>(GetTrack());
 
         auto& selectionState = SelectionState::Get(*pProject);
-
         auto& trackList = TrackList::Get(*pProject);
-
-        // Deselect all other tracks and select this one.
         selectionState.SelectNone(trackList);
-        selectionState.SelectTrack(*pTrack, true, true);
+        selectionState.SelectTrack(*track, true, true);
 
-        pTrack->TypeSwitch(
-            [&](WaveTrack* wt)
-            {
-                auto time = viewInfo.PositionToTime(event.event.m_x, event.rect.x);
-                WaveClip* const selectedClip = wt->GetClipAtTime(time);
-                if (selectedClip) {
-                    viewInfo.selectedRegion.setTimes(
-                        selectedClip->GetOffset(), selectedClip->GetEndTime());
-                }
-            },
-            [&](Track* track)
-            {
-                // Default behavior: select whole track
-                SelectionState::SelectTrackLength(viewInfo, *track, settings.IsSyncLocked());
-            }
-        );
-
-        ProjectHistory::Get(*pProject).ModifyState(false);
-
-        // Do not start a drag
-        result |= RefreshCode::RefreshAll | RefreshCode::Cancelled;
+        result |= SelectAt(event, pProject);
     }
     return result;
 }

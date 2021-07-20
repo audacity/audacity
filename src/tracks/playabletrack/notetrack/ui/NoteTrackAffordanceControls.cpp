@@ -24,6 +24,37 @@
 #include "../lib-src/header-substitutes/allegro.h"
 
 
+#include "../../../../ProjectHistory.h"
+#include "../../../../SelectionState.h"
+#include "../../../../ProjectSettings.h"
+#include "../../../../RefreshCode.h"
+
+class NoteTrackAffordanceHandle final : public AffordanceHandle
+{
+public:
+    NoteTrackAffordanceHandle(const std::shared_ptr<Track>& track) : AffordanceHandle(track) { }
+
+    static UIHandlePtr HitAnywhere(std::weak_ptr<AffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack)
+    {
+        auto result = std::static_pointer_cast<AffordanceHandle>(std::make_shared<NoteTrackAffordanceHandle>(pTrack));
+        result = AssignUIHandlePtr(holder, result);
+        return result;
+    }
+
+    UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* pProject) override
+    {
+        auto& viewInfo = ViewInfo::Get(*pProject);
+        const auto& settings = ProjectSettings::Get(*pProject);
+        const auto track = TrackList::Get(*pProject).Lock<Track>(GetTrack());
+
+        SelectionState::SelectTrackLength(viewInfo, *track, settings.IsSyncLocked());
+
+        ProjectHistory::Get(*pProject).ModifyState(false);
+
+        return RefreshCode::RefreshAll | RefreshCode::Cancelled;
+    }
+};
+
 NoteTrackAffordanceControls::NoteTrackAffordanceControls(const std::shared_ptr<Track>& pTrack)
     : CommonTrackCell(pTrack)
 {
@@ -50,7 +81,7 @@ std::vector<UIHandlePtr> NoteTrackAffordanceControls::HitTest(const TrackPanelMo
     if (px >= headerRect.GetLeft() && px <= headerRect.GetRight() &&
         py >= headerRect.GetTop() && py <= headerRect.GetBottom())
     {
-        results.push_back(AffordanceHandle::HitAnywhere(mAffordanceHandle, track));
+        results.push_back(NoteTrackAffordanceHandle::HitAnywhere(mAffordanceHandle, track));
     }
 
     return results;
