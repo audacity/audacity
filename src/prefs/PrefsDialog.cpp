@@ -766,7 +766,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    //      so AudacityProject::UpdatePrefs() or any of the routines it calls must
    //      not cause MenuCreator::RebuildMenuBar() to be executed.
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{ EVT_PREFS_UPDATE });
+   PrefsListener::Broadcast();
 
    if( IsModal() )
       EndModal(true);

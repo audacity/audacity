@@ -29,8 +29,6 @@
 #ifndef __AUDACITY_PREFS__
 #define __AUDACITY_PREFS__
 
-
-
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place
 // the second part (after the r) indicates the number of times the prefs have been reset within the same version
@@ -385,15 +383,20 @@ public:
 
 };
 
-// An event emitted by the application when the Preference dialog commits
-// changes
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-   EVT_PREFS_UPDATE, wxCommandEvent);
-
-// Invoke UpdatePrefs() when Preference dialog commits changes.
+//! A listener notified of changes in preferences
 class AUDACITY_DLL_API PrefsListener
 {
 public:
+   //! Call this static function to notify all PrefsListener objects
+   /*!
+    @param id when positive, passed to UpdateSelectedPrefs() of all listeners,
+    meant to indicate that only a certain subset of preferences have changed;
+    else their UpdatePrefs() methods are called.  (That is supposed to happen
+    when the user OK's changes in the Preferences dialog.)
+    Callbacks are delayed, in the main thread, using BasicUI::CallAfter
+    */
+   static void Broadcast(int id = 0);
+
    PrefsListener();
    virtual ~PrefsListener();
 

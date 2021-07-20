@@ -1932,8 +1932,7 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 
    gPrefs->Flush();
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, ViewInfo::UpdateScrollPrefsID() });
+   PrefsListener::Broadcast(ViewInfo::UpdateScrollPrefsID());
 }
 
 

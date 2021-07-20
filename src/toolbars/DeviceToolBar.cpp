@@ -681,8 +681,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       gAudioIO->HandleDeviceChange();
    }
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, DeviceToolbarPrefsID() });
+   PrefsListener::Broadcast(DeviceToolbarPrefsID());
 }
 
 void DeviceToolBar::ShowInputDialog()
