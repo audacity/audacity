@@ -26,7 +26,8 @@ class wxListBox;
 class wxWindow;
 
 #include "ConfigInterface.h"
-#include "EffectInterface.h"
+#include "EffectHostInterface.h" // to inherit
+#include "EffectInterface.h" // to inherit
 #include "PluginInterface.h"
 
 #include "SampleCount.h"

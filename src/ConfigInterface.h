@@ -90,7 +90,7 @@ differentiates between private and shared config.  It should probably be replace
 with a Shuttle.
 
 *******************************************************************************************/
-class COMPONENTS_API ConfigClientInterface /* not final */
+class AUDACITY_DLL_API ConfigClientInterface /* not final */
 {
 public:
    using ConfigurationType = PluginSettings::ConfigurationType;

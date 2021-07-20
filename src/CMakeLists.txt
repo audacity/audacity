@@ -119,12 +119,16 @@ list( APPEND SOURCES
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
+      ConfigInterface.cpp
+      ConfigInterface.h
       CrashReport.cpp
       CrashReport.h
       DBConnection.cpp
       DBConnection.h
       Diags.cpp
       Diags.h
+      EffectHostInterface.cpp
+      EffectHostInterface.h
       Envelope.cpp
       Envelope.h
       EnvelopeEditor.cpp
@@ -184,6 +188,8 @@ list( APPEND SOURCES
       PitchName.h
       PlaybackSchedule.cpp
       PlaybackSchedule.h
+      PluginInterface.cpp
+      PluginInterface.h
       PluginManager.cpp
       PluginManager.h
       PluginRegistrationDialog.cpp

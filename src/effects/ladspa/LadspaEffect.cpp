@@ -54,6 +54,7 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
+#include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"

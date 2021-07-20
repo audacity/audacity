@@ -46,14 +46,13 @@
 #include "EffectInterface.h"
 #include "ComponentInterface.h"
 #include "Identifier.h"
+#include "ModuleInterface.h"
 
 class ModuleInterface;
-using PluginID = wxString;
-using PluginIDs = wxArrayString;
 
 namespace PluginSettings { enum ConfigurationType : unsigned; }
 
-class COMPONENTS_API PluginManagerInterface /* not final */
+class AUDACITY_DLL_API PluginManagerInterface /* not final */
 {
 public:
    using ConfigurationType = PluginSettings::ConfigurationType;

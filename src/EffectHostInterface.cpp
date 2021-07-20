@@ -1,18 +1,14 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  @file EffectInterface.cpp
+  @file EffectHostInterface.cpp
+
+  Paul Licameli split from EffectInterface.cpp
 
 **********************************************************************/
-#include "EffectInterface.h"
-
-EffectDefinitionInterface::~EffectDefinitionInterface() = default;
+#include "EffectHostInterface.h"
 
 EffectHostInterface::~EffectHostInterface() = default;
 
-EffectClientInterface::~EffectClientInterface() = default;
-
 EffectUIHostInterface::~EffectUIHostInterface() = default;
-
-EffectUIClientInterface::~EffectUIClientInterface() = default;

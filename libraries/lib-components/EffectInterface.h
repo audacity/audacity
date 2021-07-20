@@ -46,7 +46,6 @@
 
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
-#include "ConfigInterface.h"
 #include "EffectAutomationParameters.h" // for command automation
 
 class ShuttleGui;
@@ -105,35 +104,14 @@ public:
 
 class wxDialog;
 class wxWindow;
+
+// Incomplete type not defined in libraries -- TODO clean that up:
 class EffectUIHostInterface;
+
 class EffectUIClientInterface;
 
-/*************************************************************************************//**
-
-\class EffectHostInterface 
-
-\brief EffectHostInterface is a decorator of a EffectUIClientInterface.  It adds 
-virtual (abstract) functions to get presets and actually apply the effect.  It uses
-ConfigClientInterface to add Getters/setters for private and shared configs. 
-
-*******************************************************************************************/
-class COMPONENTS_API EffectHostInterface  /* not final */ : public ConfigClientInterface
-{
-public:
-   virtual ~EffectHostInterface();
-
-   virtual EffectDefinitionInterface &GetDefinition() = 0;
-
-   virtual double GetDefaultDuration() = 0;
-   virtual double GetDuration() = 0;
-   virtual NumericFormatSymbol GetDurationFormat() = 0;
-   virtual void SetDuration(double seconds) = 0;
-
-   // Preset handling
-   virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
-   virtual RegistryPath GetCurrentSettingsGroup() = 0;
-   virtual RegistryPath GetFactoryDefaultsGroup() = 0;
-};
+// Incomplete type not defined in libraries -- TODO clean that up:
+class EffectHostInterface;
 
 class sampleCount;
 
@@ -244,21 +222,6 @@ public:
    virtual RegistryPaths GetFactoryPresets() = 0;
    virtual bool LoadFactoryPreset(int id) = 0;
    virtual bool LoadFactoryDefaults() = 0;
-};
-
-/*************************************************************************************//**
-
-\class EffectUIHostInterface
-
-\brief EffectUIHostInterface has nothing in it.  It is provided so that an Effect
-can call SetHostUI passing in a pointer to an EffectUIHostInterface.  It contains no 
-functionality and is provided, apparently, for type checking.  Since only EffectUIHost
-uses it, EffectUIHost could be used instead.
-*******************************************************************************************/
-class COMPONENTS_API EffectUIHostInterface
-{
-public:
-   virtual ~EffectUIHostInterface();
 };
 
 /*************************************************************************************//**
