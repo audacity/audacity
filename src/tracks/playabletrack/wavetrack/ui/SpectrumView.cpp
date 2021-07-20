@@ -44,6 +44,7 @@ static WaveTrackSubViewType::RegisteredType reg{ sType };
 SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
    auto wt = static_cast<WaveTrack*>( FindTrack().get() );
    mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
+   mOnBrushTool = false;
 }
 
 SpectrumView::~SpectrumView() = default;
@@ -663,7 +664,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          data[px] = bv;
       } // each yy
    } // each xx
-   if(onBrushTool) {
+   if(true) {
       for(std::pair<int, int> coord : selectedCoords) {
          int xx = coord.first;
          int correctedX = xx + leftOffset - hiddenLeftOffset;
@@ -731,7 +732,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips()){
       DrawClipSpectrum( context, cache, clip.get(), rect,
-                        mpSpectralData, true, clip.get() == selectedClip);
+                        mpSpectralData, mOnBrushTool, clip.get() == selectedClip);
    }
 
    DrawBoldBoundaries( context, track, rect );

@@ -117,6 +117,7 @@ public:
 private:
     std::weak_ptr<BrushHandle> mBrushHandle;
     std::shared_ptr<SpectralData> mpSpectralData;
+    bool mOnBrushTool;
 
    // TrackPanelDrawable implementation
    void Draw(
@@ -135,9 +136,6 @@ private:
 
 protected:
    void DoSetMinimized( bool minimized ) override;
-
-private:
-   bool mOnBrushTool = false;
 };
 
 #endif

@@ -137,7 +137,6 @@ namespace EditActions {
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
-
 void OnUndo(const CommandContext &context)
 {
    auto &project = context.project;
