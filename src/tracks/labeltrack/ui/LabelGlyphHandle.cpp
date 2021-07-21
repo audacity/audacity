@@ -19,6 +19,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UndoManager.h"
 #include "../../../ViewInfo.h"
+#include "../../../SelectionState.h"
+#include "../../../ProjectAudioIO.h"
+#include "../../../tracks/ui/TimeShiftHandle.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>
@@ -125,18 +128,21 @@ LabelGlyphHandle::~LabelGlyphHandle()
 void LabelGlyphHandle::HandleGlyphClick
 (LabelTrackHit &hit, const wxMouseEvent & evt,
  const wxRect & r, const ZoomInfo &zoomInfo,
- NotifyingSelectedRegion &WXUNUSED(newSel))
+ NotifyingSelectedRegion &newSel)
 {
    if (evt.ButtonDown())
    {
       //OverGlyph sets mMouseOverLabel to be the chosen label.
       const auto pTrack = mpLT;
       LabelTrackView::OverGlyph(*pTrack, hit, evt.m_x, evt.m_y);
+
       hit.mIsAdjustingLabel = evt.Button(wxMOUSE_BTN_LEFT) &&
          ( hit.mEdge & 3 ) != 0;
 
       if (hit.mIsAdjustingLabel)
       {
+         auto& view = LabelTrackView::Get(*pTrack);
+         view.ResetTextSelection();
 
          double t = 0.0;
          
@@ -204,6 +210,8 @@ UIHandle::Result LabelGlyphHandle::Click
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
+   auto& selectionState = SelectionState::Get(*pProject);
+   auto& tracks = TrackList::Get(*pProject);
 
    auto &viewInfo = ViewInfo::Get( *pProject );
    HandleGlyphClick(
@@ -310,6 +318,47 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
          pTrack->SetLabel( hit.mMouseOverLabelRight, labelStruct );
       }
 
+      if (hit.mMouseOverLabel >= 0)
+      {
+          auto labelStruct = mLabels[hit.mMouseOverLabel];
+          if (!labelStruct.updated)
+          {
+              //happens on click over bar between handles (without moving a cursor)
+              newSel = labelStruct.selectedRegion;
+
+              // IF the user clicked a label, THEN select all other tracks by Label
+              // do nothing if at least one other track is selected
+              auto& selectionState = SelectionState::Get(project);
+              auto& tracks = TrackList::Get(project);
+
+              bool done = tracks.Selected().any_of(
+                  [&](const Track* track) { return track != static_cast<Track*>(pTrack.get()); }
+              );
+
+              if (!done) {
+                  //otherwise, select all tracks
+                  for (auto t : tracks.Any())
+                      selectionState.SelectTrack(*t, true, true);
+              }
+
+              // Do this after, for its effect on TrackPanel's memory of last selected
+              // track (which affects shift-click actions)
+              selectionState.SelectTrack(*pTrack.get(), true, true);
+
+              // PRL: bug1659 -- make selection change undo correctly
+              updated = !ProjectAudioIO::Get(project).IsAudioActive();
+              
+              auto& view = LabelTrackView::Get(*pTrack);
+              view.SetNavigationIndex(hit.mMouseOverLabel);
+          }
+          else
+          {
+              labelStruct.updated = false;
+              pTrack->SetLabel(hit.mMouseOverLabel, labelStruct);
+              updated = true;
+          }
+      }
+
       hit.mIsAdjustingLabel = false;
       hit.mMouseOverLabelLeft  = -1;
       hit.mMouseOverLabelRight = -1;
@@ -350,12 +399,15 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       }
 
       const auto &view = LabelTrackView::Get( *pTrack );
-      if( view.HasSelection( project ) )
+      auto navigationIndex = view.GetNavigationIndex(project);
+      if(navigationIndex != -1 &&
+          (navigationIndex == hit.mMouseOverLabel ||
+              navigationIndex == hit.mMouseOverLabelLeft ||
+              navigationIndex == hit.mMouseOverLabelRight))
       {
-         auto selIndex = view.GetSelectedIndex( project );
          //Set the selection region to be equal to
          //the NEW size of the label.
-         newSel = mLabels[ selIndex ].selectedRegion;
+         newSel = mLabels[navigationIndex].selectedRegion;
       }
       pTrack->SortLabels();
    }
