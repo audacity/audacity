@@ -621,6 +621,10 @@ namespace {
       TrackList &trackList, Track &capturedTrack, Track &track,
       ClipMoveState &state)
    {
+      if (state.shifters.empty())
+         // Shift + Dragging hasn't yet supported vertical movement
+         return false;
+
       // Accumulate new pairs for the correspondence, and merge them
       // into the given correspondence only on success
       Correspondence newPairs;

@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-06-10 20:28+0200\n"
+"PO-Revision-Date: 2021-07-17 10:17+0200\n"
 "Last-Translator: jhuffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
@@ -856,7 +856,7 @@ msgstr "Unterstützung für extreme Änderung von Tonhöhe und Tempo"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr ""
+msgstr "Rechtliches"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -866,24 +866,24 @@ msgstr "GPL-Lizenz"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "PRIVACY POLICY"
-msgstr ""
+msgstr "DATENSCHUTZ-BESTIMMUNGEN"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr ""
+msgstr "Für die Überprüfung auf App-Aktualisierungen und die Fehlerberichterstattung ist Netzwerkzugriff erforderlich. Diese Funktionen sind optional."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "See %s for more info."
-msgstr "Eine oder mehrere Dateien wählen"
+msgstr "Lesen Sie %s für weitere Informationen."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr ""
+msgstr "unsere Datenschutz-Bestimmungen"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -2675,9 +2675,9 @@ msgid "Specify New Filename:"
 msgstr "Neuen Dateinamen auswählen:"
 
 #: src/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Directory %s does not have write permissions"
-msgstr "Verzeichnis %s existiert nicht. Anlegen?"
+msgstr "Verzeichnis %s hat keine Schreibberechtigungen"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -4019,7 +4019,7 @@ msgid ""
 msgstr ""
 "Dieses Projekt wurde mit einer neueren Version von Audacity erstellt.\n"
 "\n"
-"Sie müssen upgraden, um es öffnen zu können"
+"Sie müssen upgraden, um es öffnen zu können."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -14802,25 +14802,23 @@ msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% erledigt. Klicken um Fokus der Aufgabe zu ändern."
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "Preferences for Application"
-msgstr "Einstellungen für Qualität"
+msgstr "Einstellungen für Anwendung"
 
 #. i18n-hint: Title for the update notifications panel in the preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Aktualisierungsbenachrichtigungen"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "Auf Aktualisierungen &prüfen..."
+msgstr "Auf Aktualisierungen &prüfen"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Für die Überprüfung auf App-Aktualisierungen ist Netzwerkzugriff erforderlich. Um Ihre Privatsphäre zu schützen, speichert Audacity keine persönlichen Informationen."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -14873,7 +14871,6 @@ msgstr "&Gerät:"
 #. i18n-hint: modifier as in "Recording preferences", not progressive verb
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h
-#, fuzzy
 msgctxt "preference"
 msgid "Recording"
 msgstr "Aufnahme"
@@ -17990,31 +17987,30 @@ msgstr "Der Download-Link von Audacity kann nicht geöffnet werden."
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "Prüfen auf App-Aktualisierungen"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr ""
+msgstr "Um aktuell zu bleiben, erhalten Sie eine Benachrichtigung in der App, sobald eine neue Version von Audacity zum Download bereit steht."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr ""
+msgstr "Um Ihre Privatsphäre zu schützen, sammelt Audacity keine persönlichen Informationen. Das Prüfen auf App-Aktualisierungen erfordert jedoch Netzwerkzugriff."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr ""
+msgstr "Sie können die Überprüfung auf App-Aktualisierungen jederzeit in %s abschalten."
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
+msgstr "App-Aktualisierungen"
 
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Preferences > Application"
-msgstr "Einstellungen für Qualität"
+msgstr "Einstellungen > Anwendung"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -18626,28 +18622,25 @@ msgstr "Schließen bestätigen"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to write files to directory: %s."
-msgstr "Konnte die Voreinstellung von \"%s\" nicht lesen"
+msgstr "Konnte keine Dateien in das Verzeichnis %s schreiben."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr ""
+msgstr "Bitte überprüfen Sie, ob das Verzeichnis existiert, die notwendigen Berechtigungen hat und das Laufwerk nicht voll ist."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can change the directory in %s."
-msgstr ""
-"Das Verzeichnis konnte nicht erstellt werden:\n"
-"  %s"
+msgstr "Sie können das Verzeichnis unter %s ändern."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy
 msgid "Preferences > Directories"
-msgstr "Einstellungen für Verzeichnisse"
+msgstr "Einstellungen > Verzeichnisse"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"

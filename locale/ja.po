@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-06-16 02:35+0900\n"
+"PO-Revision-Date: 2021-07-20 03:20+0900\n"
 "Last-Translator: Phroneris <phroneris@gmail.com>\n"
 "Language-Team: Atsushi YOSHIDA, Phroneris\n"
 "Language: ja\n"
@@ -17,10 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Poedit-Bookmarks: 3966,3790,511,2745,1188,718,1435,-1,-1,-1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-SearchPath-0: .\n"
 
 #. i18n-hint C++ programming assertion
 #: crashreports/crashreporter/CrashReportApp.cpp
@@ -44,7 +41,7 @@ msgstr "Audacity の障害を報告"
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
 msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
-msgstr "Audacity へ障害報告を提出するには、[送信] をクリックしてください。情報は匿名で収集されます。"
+msgstr "Audacity の障害報告にご協力いただける場合、[送信] をクリックしてください。この情報は匿名で収集されます。"
 
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
@@ -320,7 +317,6 @@ msgstr "新規スクリプト"
 msgid "Open"
 msgstr "開く"
 
-#  i18n-hint: This is the name of the menu item on Mac OS X only
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "スクリプトを開く"
@@ -558,7 +554,7 @@ msgstr "Nyquist プラグイン: %s"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
-msgstr "Web 開発: %s"
+msgstr "ウェブ開発: %s"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -571,7 +567,6 @@ msgstr "グラフィック: %s"
 msgid "%s (incorporating %s, %s, %s, %s and %s)"
 msgstr "%s (%s、%s、%s、%s、%s)"
 
-# ja: 独自アクセスキー
 #. i18n-hint: information about the program
 #: src/AboutDialog.cpp
 #, c-format
@@ -641,7 +636,7 @@ msgstr ""
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s the free, open source, cross-platform software for recording and editing sounds."
-msgstr "%s は、録音と音声編集のために開発された<br>無料 &amp; オープンソース &amp; クロスプラットフォームなソフトウェアです。"
+msgstr "%s は、録音と音声編集のために開発された、<br>無料 &amp; オープンソース &amp; クロスプラットフォームなソフトウェアです。"
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -717,7 +712,7 @@ msgstr "%s の名称は登録商標です。"
 msgid "Build Information"
 msgstr "ビルド情報"
 
-# ja: 「無効」と見分けやすくするためにあえて文字数を増やす
+# ja: 「無効」と見分けやすくするために、あえて文字数を増やす。
 #: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "有効です"
@@ -857,7 +852,7 @@ msgstr "急激なピッチとテンポの変化のサポート"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr ""
+msgstr "法的要件"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -867,24 +862,24 @@ msgstr "GPL ライセンス"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "PRIVACY POLICY"
-msgstr ""
+msgstr "プライバシーポリシー"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr ""
+msgstr "更新確認と障害報告には、ネットワーク接続が必要です。これらの機能のご利用はあくまで任意です。"
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "See %s for more info."
-msgstr "1 個以上のファイルを選択してください"
+msgstr "詳細については、%sをご覧ください。"
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr ""
+msgstr "プライバシーポリシー"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1039,7 +1034,7 @@ msgstr ""
 msgid "Reset Audacity Preferences"
 msgstr "Audacity の環境設定をリセット"
 
-# ja: 文字列だけ見ると「（既に）削除されています」かと思っちゃうが、これは見つからなかったファイルについて「（今）削除しました」という意味。
+# ja: 原文の文字列だけ見ると「（既に）削除されています」かと思っちゃうが、これは見つからなかったファイルについて「（今）削除しました」という意味。
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -1658,7 +1653,7 @@ msgid ""
 msgstr ""
 "選択したプロジェクトを破棄してもよろしいですか？\n"
 "\n"
-"[はい] を選ぶと、すべてのプロジェクトは即座に、永久に削除されます。"
+"[はい] を選ぶと、すべてのプロジェクトは即座に、永続的に削除されます。"
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -2154,19 +2149,19 @@ msgid ""
 msgstr ""
 "「%s」の実行対象となる音声を最初に選択してください。\n"
 "\n"
-"Ctrl+A で全ての音声が選択できます。"
+"Ctrl+A ですべての音声を選択できます。"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "%s に利用させる音声を選択してやり直してください (例えば Cmd+A で全選択)。"
+msgstr "%s に利用させる音声を選択してやり直してください (例えば Cmd+A ですべて選択)。"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "%s に利用させる音声を選択してやり直してください (例えば Ctrl+A で全選択)。"
+msgstr "%s に利用させる音声を選択してやり直してください (例えば Ctrl+A ですべて選択)。"
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -2699,9 +2694,9 @@ msgid "Specify New Filename:"
 msgstr "新しいファイル名を指定してください:"
 
 #: src/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Directory %s does not have write permissions"
-msgstr "ディレクトリ %s はありません。作成しますか？"
+msgstr "ディレクトリ %s には書き込み権限がありません"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2731,7 +2726,7 @@ msgstr "強調自己相関"
 msgid "Cepstrum"
 msgstr "ケプストラム"
 
-# ja: これは [解析]→[スペクトル表示] で使われているが、"window" 無しのものも [環境設定]→[トラック]→[スペクトログラム] で使われているため、「窓」という語を元の各メニュー項目の方に付けてこちらには付けない
+# ja: これは [解析]→[スペクトル表示] で使われているが、"window" 無しのものも [環境設定]→[トラック]→[スペクトログラム] で使われているため、「窓」という語を元の各メニュー項目の方に付けてこちらには付けない。
 #. i18n-hint: This refers to a "window function",
 #. * such as Hann or Rectangular, used in the
 #. * Frequency analyze dialog box.
@@ -3666,7 +3661,7 @@ msgstr ""
 "登録失敗:\n"
 "%s"
 
-# ja: 本当は「この」「これらの」を使い分けたい
+# ja: 本当は「この」「これらの」を使い分けたい。
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: src/PluginManager.cpp
@@ -3798,7 +3793,7 @@ msgid "Inspecting project file data"
 msgstr "プロジェクトファイルを精査しています"
 
 # ja: この辺りの文字列、そもそも `#if 0` の中にあるし使われてないのでは？
-# ja: 「方法」は次の3個
+# ja: 「方法」は次の3個：
 # ・"Close project immediately with no changes"
 # ・"Treat missing audio as silence (this session only)"
 # ・"Replace missing audio with silence (permanent immediately)."
@@ -3842,7 +3837,7 @@ msgstr "欠落した音声を無音として扱う (このセッションのみ)
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)."
-msgstr "欠落した音声を無音で置換 (恒久的に今すぐ)"
+msgstr "欠落した音声を無音で置換 (即座に、永続的に)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Aliased File(s)"
@@ -3909,7 +3904,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "欠落した音声を無音で置換 (恒久的に今すぐ)"
+msgstr "欠落した音声を無音で置換 (即座に、永続的に)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
@@ -3934,7 +3929,7 @@ msgstr "削除せずに続行 (このセッションでは余計なファイル�
 
 #: src/ProjectFSCK.cpp
 msgid "Delete orphan files (permanent immediately)"
-msgstr "無用なファイルの削除 (恒久的に今すぐ)"
+msgstr "無用なファイルを削除 (即座に、永続的に)"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Orphan Block File(s)"
@@ -4745,19 +4740,19 @@ msgstr "部分的に取り込む"
 
 #: src/Screenshot.cpp
 msgid "All Toolbars"
-msgstr "全ツールバー"
+msgstr "すべてのツールバー"
 
 #: src/Screenshot.cpp
 msgid "All Effects"
-msgstr "全エフェクト"
+msgstr "すべてのエフェクト"
 
 #: src/Screenshot.cpp
 msgid "All Scriptables"
-msgstr "全スクリプト用機能"
+msgstr "すべてのスクリプト用機能"
 
 #: src/Screenshot.cpp
 msgid "All Preferences"
-msgstr "全環境設定"
+msgstr "すべての環境設定"
 
 #: src/Screenshot.cpp
 msgid "SelectionBar"
@@ -4849,7 +4844,7 @@ msgstr "最初のトラック"
 
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 msgid "Second Track"
-msgstr "2 番目トラック"
+msgstr "2 本目のトラック"
 
 #: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
 msgid "Scale"
@@ -5817,7 +5812,7 @@ msgstr "閾値:"
 msgid "Compares a range on two tracks."
 msgstr "2 本のトラックのレンジを比較します。"
 
-# ja: デモはデモなのであえて翻訳しない
+# ja: デモはデモなのであえて翻訳しない。
 #: src/commands/Demo.cpp
 msgid "Demo"
 msgstr "Demo"
@@ -5917,7 +5912,7 @@ msgstr "エンベロープ"
 msgid "Labels"
 msgstr "ラベル"
 
-# ja: 正直訳しようがないけど訳さないのも浮くし、まあこんなもんか
+# ja: 正直訳しようがないけど訳さないのも浮くし、まあこんなもんか…。
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
 msgstr "ボックス"
@@ -6150,15 +6145,15 @@ msgstr "トラックパネル"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "First Two Tracks"
-msgstr "最初の 2 トラック"
+msgstr "最初の 2 本のトラック"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "First Three Tracks"
-msgstr "最初の 3 トラック"
+msgstr "最初の 3 本のトラック"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "First Four Tracks"
-msgstr "最初の 4 トラック"
+msgstr "最初の 4 本のトラック"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Tracks Plus"
@@ -6170,11 +6165,11 @@ msgstr "最初のトラックと周辺"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "All Tracks"
-msgstr "全トラック"
+msgstr "すべてのトラック"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "All Tracks Plus"
-msgstr "全トラックと周辺"
+msgstr "すべてのトラックと周辺"
 
 #: src/commands/ScreenshotCommand.cpp
 msgid "Blue"
@@ -7330,7 +7325,7 @@ msgstr "WCAG 2.0 Success Criteria 1.4.7: 不合格"
 msgid "Data gathered"
 msgstr "データ収集日時"
 
-# ja: 2番目の "%s" は、Audacityの言語設定が日本語だと「4月」、英語だと「April」のようになる
+# ja: 2番目の "%s" は、Audacityの言語設定が日本語だと「4月」、英語だと「April」のようになる。
 #. i18n-hint: day of month, month, year, hour, minute, second
 #: src/effects/Contrast.cpp
 #, c-format
@@ -8953,12 +8948,12 @@ msgstr "処理なし...\n"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr "ステレオ対の 1 番目のトラックを解析中: %s"
+msgstr "ステレオ対の 1 本目のトラックを解析中: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr "ステレオ対の 2 番目のトラックを解析中: %s"
+msgstr "ステレオ対の 2 本目のトラックを解析中: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
@@ -8968,12 +8963,12 @@ msgstr "ステレオチャンネルを個別処理中: %s"
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing first track of stereo pair: %s"
-msgstr "ステレオ対の 1 番目のトラックを処理中: %s"
+msgstr "ステレオ対の 1 本目のトラックを処理中: %s"
 
 #: src/effects/Normalize.cpp
 #, c-format
 msgid "Processing second track of stereo pair: %s"
-msgstr "ステレオ対の 2 番目のトラックを処理中: %s"
+msgstr "ステレオ対の 2 本目のトラックを処理中: %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
@@ -8992,7 +8987,7 @@ msgid "N&ormalize stereo channels independently"
 msgstr "ステレオチャンネルごとにノーマライズ(&O)"
 
 # ja: 独自アクセスキー
-# ja: 連続的伸縮は「伸縮」なのに対しこちらは「ストレッチ」なので、特別に同じグループになるようまとめる
+# ja: 連続的伸縮は「伸縮」なのに対しこちらは「ストレッチ」なので、特別に同じグループになるようまとめる。
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
 msgstr "伸縮: Paul ストレッチ(&S)"
@@ -9372,23 +9367,29 @@ msgstr "阻止域最小減衰(&T):"
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "阻止域最小減衰 (dB) (&T)"
 
+# ja: ソースの出現は 2010/09/19、前任者による翻訳は 2011/02/06 と結構古いが、結局今まで本格実装に至っていないため、機能の把握や正しい翻訳の検討が困難。
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Align MIDI to Audio"
 msgstr "MIDI を音声に同期"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Frame Period:"
 msgstr "フレーム長:"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Frame Period"
 msgstr "フレーム長"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Window Size:"
 msgstr "ウィンドウサイズ:"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Window Size"
 msgstr "ウィンドウサイズ"
 
@@ -9398,14 +9399,17 @@ msgid "Force Final Alignment"
 msgstr "強制最終アラインメント"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Ignore Silence at Beginnings and Endings"
 msgstr "最初と最後の無音部分を無視"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Silence Threshold:"
 msgstr "無音のスレッショルド:"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Silence Threshold"
 msgstr "無音のスレッショルド"
 
@@ -9414,6 +9418,7 @@ msgstr "無音のスレッショルド"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Presmooth Time:"
 msgstr "プリスムース時間:"
 
@@ -9422,6 +9427,7 @@ msgstr "プリスムース時間:"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Presmooth Time"
 msgstr "プリスムース時間"
 
@@ -9430,6 +9436,7 @@ msgstr "プリスムース時間"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Line Time:"
 msgstr "ライン時間:"
 
@@ -9438,10 +9445,12 @@ msgstr "ライン時間:"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Line Time"
 msgstr "ライン時間"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Smooth Time:"
 msgstr "スムーズ時間:"
 
@@ -9450,19 +9459,22 @@ msgstr "スムーズ時間:"
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Smooth Time"
 msgstr "スムーズ時間"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Use Defaults"
 msgstr "デフォルト"
 
 #: src/effects/ScoreAlignDialog.cpp
+#, fuzzy
 msgid "Restore Defaults"
 msgstr "デフォルトに復旧"
 
 #: src/effects/ScoreAlignDialog.cpp
-#, c-format
+#, fuzzy, c-format
 msgid "%.3f"
 msgstr "%.3f"
 
@@ -9498,7 +9510,7 @@ msgid "Mixing down to mono"
 msgstr "モノラルにミックスダウンしています"
 
 # ja: 独自アクセスキー
-# ja: Paul ストレッチは「ストレッチ」なのに対しこちらは「伸縮」なので、特別に同じグループになるようまとめる
+# ja: Paul ストレッチは「ストレッチ」なのに対しこちらは「伸縮」なので、特別に同じグループになるようまとめる。
 #: src/effects/TimeScale.cpp
 msgid "Sliding Stretch"
 msgstr "伸縮: 連続的伸縮(&H)"
@@ -9623,7 +9635,7 @@ msgstr "音量が設定値より低い場合に自動的に切り詰めます"
 msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
 msgstr "別々に切り詰める場合、トラックの同期ロックグループごとに 1 本のトラックしか選択することはできません。"
 
-# ja: [解析] > [無音の検出] との区別のために、「の」を削除
+# ja: [解析] > [無音の検出] との区別のために、「の」を削除。
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
 msgstr "無音検出"
@@ -12353,7 +12365,7 @@ msgstr "GStreamer 取り込み機能"
 
 #: src/import/ImportGStreamer.cpp
 msgid "Unable to set stream state to paused."
-msgstr "ストリーム状態を pause に設定できません。"
+msgstr "ストリーム状態を paused に設定できません。"
 
 #: src/import/ImportGStreamer.cpp
 #, c-format
@@ -13229,7 +13241,7 @@ msgstr "MIDI ファイル"
 msgid "Allegro files"
 msgstr "Allegro ファイル"
 
-# ja: 開発者向け。翻訳不要
+# ja: 開発者向け。翻訳不要。
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Dangerous Reset..."
@@ -13894,11 +13906,11 @@ msgstr "トラック(&T)"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Tracks"
-msgstr "全トラック(&T)"
+msgstr "すべてのトラック(&T)"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "同期ロックした全トラック(&S)"
+msgstr "同期ロックしたすべてのトラック(&S)"
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
@@ -14455,11 +14467,11 @@ msgstr "ミュート/非ミュート(&U)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Mute All Tracks"
-msgstr "全トラックをミュート(&M)"
+msgstr "すべてのトラックをミュート(&M)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Unmute All Tracks"
-msgstr "全トラックをミュート解除(&U)"
+msgstr "すべてのトラックをミュート解除(&U)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mut&e Tracks"
@@ -14598,7 +14610,7 @@ msgstr "フォーカスしたトラックを最下段へ移動(&B)"
 #. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
-msgstr "再生中"
+msgstr "再生"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -14896,11 +14908,11 @@ msgstr "高さに合わせる(&H)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Collapse All Tracks"
-msgstr "全てのトラックを縮小(&C)"
+msgstr "すべてのトラックを縮小(&C)"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xpand Collapsed Tracks"
-msgstr "全てのトラックを展開(&X)"
+msgstr "すべてのトラックを展開(&X)"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sk&ip to"
@@ -14948,13 +14960,13 @@ msgstr "最小化(&M)"
 #. * windows un-hidden
 #: src/menus/WindowMenus.cpp
 msgid "&Bring All to Front"
-msgstr "全てを最前面に(&B)"
+msgstr "すべてを最前面に(&B)"
 
 #. i18n-hint: Shrink all project windows to icons on the Macintosh
 #. tooldock
 #: src/menus/WindowMenus.cpp
 msgid "Minimize All Projects"
-msgstr "全てのプロジェクトを最小化"
+msgstr "すべてのプロジェクトを最小化"
 
 #: src/ondemand/ODComputeSummaryTask.h
 msgid "Import complete. Calculating waveform"
@@ -14970,25 +14982,23 @@ msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% 完了。処理ポイントを変更するにはクリック。"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "Preferences for Application"
-msgstr "品質の環境設定"
+msgstr "アプリケーションの環境設定"
 
 #. i18n-hint: Title for the update notifications panel in the preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "更新通知"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "更新の確認(&C)..."
+msgstr "更新を確認する(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "アプリケーションの更新の確認には、ネットワーク接続が必要です。プライバシー保護のため、Audacity が個人情報を保管することはありません。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15041,7 +15051,6 @@ msgstr "デバイス(&D):"
 #. i18n-hint: modifier as in "Recording preferences", not progressive verb
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h
-#, fuzzy
 msgctxt "preference"
 msgid "Recording"
 msgstr "録音"
@@ -16928,7 +16937,7 @@ msgstr "%s 一時停止中。"
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
 msgid "%s."
-msgstr "%s。"
+msgstr "%s中。"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. with the big buttons on it (play record etc)
@@ -18165,31 +18174,30 @@ msgstr "Audacity のダウンロードリンクを開けません。"
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "アプリケーションの更新確認について"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr ""
+msgstr "アプリケーションを最新に保つため、新しいバージョンの Audacity がダウンロード可能になるたびに、アプリ内通知を受信することができます。"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr ""
+msgstr "ご利用者様のプライバシーを守るため、Audacity は個人情報の収集を行いません。とはいえ、更新の確認にはネットワーク接続が必要です。"
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr ""
+msgstr "更新確認機能は、%s からいつでも停止することができます。"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
+msgstr "アプリケーションの更新"
 
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Preferences > Application"
-msgstr "品質の環境設定"
+msgstr "[環境設定] > [アプリケーション]"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -18665,7 +18673,7 @@ msgstr "CDDA フレーム (75fps)"
 msgid "01000,01000 frames|75"
 msgstr "0100万010000フレーム|75"
 
-# ja: 元の「010,01000>0100 Hz」では万の位が扱えないので不足すぎると思うが、勝手に桁数を増やすわけにもいかないのでとりあえずこれで
+# ja: 元の「010,01000>0100 Hz」では万の位が扱えないので不足すぎると思うが、勝手に桁数を増やすわけにもいかないのでとりあえずこれで。
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #. * The decimal separator is specified using '<' if your language uses a ',' or
@@ -18802,28 +18810,25 @@ msgstr "閉じる確認"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to write files to directory: %s."
-msgstr "「%s」からプリセットファイルを読み込めません"
+msgstr "ファイルをディレクトリに書き込めません: %s"
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr ""
+msgstr "ディレクトリが存在すること、必要な権限を有すること、ドライブに空き容量があることを確認してください。"
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can change the directory in %s."
-msgstr ""
-"ディレクトリを作成できませんでした:\n"
-"  %s"
+msgstr "ディレクトリ設定は、%s から変更することができます。"
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy
 msgid "Preferences > Directories"
-msgstr "ディレクトリの環境設定"
+msgstr "[環境設定] > [ディレクトリ]"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"

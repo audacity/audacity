@@ -26,6 +26,7 @@
 #include <wx/textctrl.h>
 #include <wx/bmpbuttn.h>
 
+#include "ui/AccessibleLinksFormatter.h"
 #include "AllThemeResources.h"
 #include "Theme.h"
 #include "HelpText.h"
@@ -37,6 +38,7 @@
 #include "CodeConversions.h"
 
 constexpr int MaxUserCommentLength = 2000;
+constexpr bool ErrorReportDialogHasUserComment = false;
 
 BEGIN_EVENT_TABLE(ErrorReportDialog, wxDialogWrapper)
     EVT_BUTTON(wxID_YES, ErrorReportDialog::OnSend)
@@ -123,18 +125,34 @@ ErrorReportDialog::ErrorReportDialog(
 
          S.AddSpace(0, 20);
 
-         S.AddVariableText(XO("Comments"))->SetFont(textFont);
+         if constexpr (ErrorReportDialogHasUserComment)
+         {
+            S.AddVariableText(XO("Comments"))->SetFont(textFont);
 
-         S.AddSpace(0, 6);
+            S.AddSpace(0, 6);
 
-         mCommentsControl = S.Style(wxTE_MULTILINE)
-                               .MinSize(wxSize(0, 76))
-                               .Name(XO("Comments"))
-                               .AddTextBox({}, {}, 0);
+            mCommentsControl = S.Style(wxTE_MULTILINE)
+                                  .MinSize(wxSize(0, 76))
+                                  .Name(XO("Comments"))
+                                  .AddTextBox({}, {}, 0);
 
-         mCommentsControl->SetMaxLength(MaxUserCommentLength);
+            mCommentsControl->SetMaxLength(MaxUserCommentLength);
 
-         S.AddSpace(0, 20);
+            S.AddSpace(0, 20);
+         }
+
+         /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+         AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
+
+         privacyPolicy.FormatLink(
+            /* i18n-hint: Title of hyperlink to the privacy policy. This is an
+               object of "See". */
+            wxT("%s"), XO("our Privacy Policy"),
+            "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+         privacyPolicy.Populate(S);
+
+		 S.AddSpace(0, 20);
 
          S.StartHorizontalLay(wxEXPAND);
          {
