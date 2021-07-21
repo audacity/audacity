@@ -57,6 +57,7 @@ void LabelTrackHit::OnLabelPermuted( LabelTrackEvent &e )
    
    update( mMouseOverLabelLeft );
    update( mMouseOverLabelRight );
+   update( mMouseOverLabel );
 }
 
 LabelGlyphHandle::LabelGlyphHandle
@@ -136,14 +137,11 @@ void LabelGlyphHandle::HandleGlyphClick
 
       if (hit.mIsAdjustingLabel)
       {
-         double t = 0.0;
-         // We move if we hit the centre, we adjust one edge if we hit a chevron.
-         // This is if we are moving just one edge.
-         hit.mbIsMoving = (hit.mEdge & 4)!=0;
-
          // No to the above!  We initially expect to be moving just one edge.
          hit.mbIsMoving = false;
 
+         double t = 0.0;
+         
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays
@@ -189,6 +187,10 @@ void LabelGlyphHandle::HandleGlyphClick
          else if( hit.mMouseOverLabelLeft >=0)
          {
             t = mLabels[ hit.mMouseOverLabelLeft ].getT0();
+         }
+         else if (hit.mMouseOverLabel >= 0)
+         {
+            t = mLabels[hit.mMouseOverLabel].getT0();
          }
          mxMouseDisplacement = zoomInfo.TimeToPosition(t, r.x) - evt.m_x;
       }
@@ -300,16 +302,16 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
    const auto &mLabels = pTrack->GetLabels();
    if(evt.LeftUp())
    {
-      bool lupd = false, rupd = false;
+      bool updated = false;
       if( hit.mMouseOverLabelLeft >= 0 ) {
          auto labelStruct = mLabels[ hit.mMouseOverLabelLeft ];
-         lupd = labelStruct.updated;
+         updated |= labelStruct.updated;
          labelStruct.updated = false;
          pTrack->SetLabel( hit.mMouseOverLabelLeft, labelStruct );
       }
       if( hit.mMouseOverLabelRight >= 0 ) {
          auto labelStruct = mLabels[ hit.mMouseOverLabelRight ];
-         rupd = labelStruct.updated;
+         updated |= labelStruct.updated;
          labelStruct.updated = false;
          pTrack->SetLabel( hit.mMouseOverLabelRight, labelStruct );
       }
@@ -317,7 +319,8 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       hit.mIsAdjustingLabel = false;
       hit.mMouseOverLabelLeft  = -1;
       hit.mMouseOverLabelRight = -1;
-      return lupd || rupd;
+      hit.mMouseOverLabel = -1;
+      return updated;
    }
 
    if(evt.Dragging())
@@ -328,24 +331,26 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       //      to allow scrolling while dragging labels
       int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width);
 
-      // If exactly one edge is selected we allow swapping
-      bool bAllowSwapping =
-         ( hit.mMouseOverLabelLeft >=0 ) !=
-         ( hit.mMouseOverLabelRight >= 0);
+      double fNewX = zoomInfo.PositionToTime(x, 0);
+      // Moving the whole ranged label
+      if (hit.mMouseOverLabel != -1)
+      {
+         MayMoveLabel(hit.mMouseOverLabel, -1, fNewX);
+      }
       // If we're on the 'dot' and nowe're moving,
       // Though shift-down inverts that.
       // and if both edges the same, then we're always moving the label.
-      bool bLabelMoving = hit.mbIsMoving;
-      bLabelMoving ^= evt.ShiftDown();
-      bLabelMoving |= ( hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight );
-      double fNewX = zoomInfo.PositionToTime(x, 0);
-      if( bLabelMoving )
+      else if((hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight) || evt.ShiftDown())
       {
          MayMoveLabel( hit.mMouseOverLabelLeft,  -1, fNewX );
          MayMoveLabel( hit.mMouseOverLabelRight, +1, fNewX );
       }
       else
       {
+         // If exactly one edge is selected we allow swapping
+         bool bAllowSwapping =
+            (hit.mMouseOverLabelLeft >= 0) !=
+            (hit.mMouseOverLabelRight >= 0);
          MayAdjustLabel( hit, hit.mMouseOverLabelLeft,  -1, bAllowSwapping, fNewX );
          MayAdjustLabel( hit, hit.mMouseOverLabelRight, +1, bAllowSwapping, fNewX );
       }
