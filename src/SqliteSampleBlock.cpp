@@ -19,6 +19,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "SampleBlock.h" // to inherit
 
 #include "SentryHelper.h"
+#include <wx/log.h>
 
 class SqliteSampleBlockFactory;
 

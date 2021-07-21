@@ -29,6 +29,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../prefs/ThemePrefs.h"
 
 #include <mutex>
+#include <wx/app.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////////

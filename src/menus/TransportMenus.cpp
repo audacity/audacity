@@ -34,6 +34,7 @@
 #include "../widgets/ProgressDialog.h"
 
 #include <float.h>
+#include <wx/app.h>
 
 // private helper classes and functions
 namespace {

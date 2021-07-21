@@ -6,7 +6,6 @@
 
 */
 
-
 #include "UserException.h"
 
 UserException::~UserException()

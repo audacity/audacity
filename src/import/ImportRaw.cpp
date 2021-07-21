@@ -31,7 +31,7 @@ and sample size to help you importing data of an unknown format.
 #include "../Prefs.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
-#include "../UserException.h"
+#include "UserException.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
 

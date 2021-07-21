@@ -24,6 +24,7 @@ small calculations of rectangles.
 
 #include "LoadCommands.h"
 #include "../Project.h"
+#include <wx/app.h>
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>

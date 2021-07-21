@@ -20,6 +20,7 @@ It forwards the actual work of doing the commands to the ScreenshotCommand.
 #include "commands/ScreenshotCommand.h"
 #include "commands/CommandTargets.h"
 #include "commands/CommandContext.h"
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/event.h>
 #include <wx/frame.h>

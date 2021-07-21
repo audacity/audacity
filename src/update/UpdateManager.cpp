@@ -18,9 +18,9 @@
 #include "IResponse.h"
 #include "Request.h"
 
-#include <wx/platinfo.h>
 #include <wx/utils.h>
 #include <wx/frame.h>
+#include <wx/app.h>
 
 #include <mutex>
 #include <cstdint>

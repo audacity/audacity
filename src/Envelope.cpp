@@ -38,6 +38,7 @@ a draggable point type.
 #include <wx/pen.h>
 #include <wx/textfile.h>
 #include <wx/log.h>
+#include <wx/utils.h>
 
 static const double VALUE_TOLERANCE = 0.001;
 

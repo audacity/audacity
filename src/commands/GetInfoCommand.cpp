@@ -48,6 +48,7 @@ This class now lists
 #include "../ShuttleGui.h"
 
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/menu.h>
 
 const ComponentInterfaceSymbol GetInfoCommand::Symbol

@@ -660,6 +660,7 @@ private:
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>

@@ -19,6 +19,7 @@
 #include <gtk/gtk.h>
 #endif
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/eventfilter.h>
 #include <wx/toplevel.h>

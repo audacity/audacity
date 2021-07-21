@@ -24,6 +24,7 @@ function.
 #include "../FFmpeg.h"
 
 #include <wx/choice.h>
+#include <wx/log.h>
 #include <wx/intl.h>
 #include <wx/timer.h>
 #include <wx/string.h>

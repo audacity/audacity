@@ -24,6 +24,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
+#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>

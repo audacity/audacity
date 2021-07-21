@@ -36,6 +36,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "UserException.h"
 #include "Identifier.h"
 
+#include <wx/app.h>
 #include <wx/combobox.h>
 #include <wx/frame.h>
 #include <wx/sizer.h>

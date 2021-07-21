@@ -28,8 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackInfo.h"
 
-
-
+#include <wx/app.h>
 #include <wx/dc.h>
 #include <wx/frame.h>
 

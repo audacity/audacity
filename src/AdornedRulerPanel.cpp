@@ -21,8 +21,7 @@
 
 #include "AdornedRulerPanel.h"
 
-
-
+#include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/tooltip.h>
 

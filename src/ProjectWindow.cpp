@@ -33,6 +33,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/WindowAccessible.h"
 
+#include <wx/app.h>
 #include <wx/display.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>

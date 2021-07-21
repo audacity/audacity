@@ -20,6 +20,7 @@
 #include "../effects/EffectUI.h"
 #endif
 
+#include <wx/app.h>
 #include <wx/scrolbar.h>
 
 // private helper classes and functions

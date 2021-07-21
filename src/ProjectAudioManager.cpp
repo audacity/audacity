@@ -11,8 +11,7 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "ProjectAudioManager.h"
 
-
-
+#include <wx/app.h>
 #include <wx/frame.h>
 #include <wx/statusbr.h>
 
