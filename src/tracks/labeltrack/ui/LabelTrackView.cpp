@@ -677,9 +677,9 @@ void LabelTrackView::DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r)
 void LabelTrackView::DrawHighlight( wxDC & dc, const LabelStruct &ls,
    int xPos1, int xPos2, int charHeight)
 {
-   wxPen curPen = dc.GetPen();
-   curPen.SetColour(wxString(wxT("BLUE")));
    const int yFrameHeight = mTextHeight + TextFramePadding * 2;
+   
+   dc.SetPen(*wxTRANSPARENT_PEN);
    wxBrush curBrush = dc.GetBrush();
    curBrush.SetColour(wxString(wxT("BLUE")));
    auto top = ls.y + TextFrameYOffset - (LabelBarHeight + yFrameHeight) / 2 + (yFrameHeight - charHeight) / 2;
