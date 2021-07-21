@@ -83,62 +83,63 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
 
    const int borderSize = S.GetBorder();
 
-   S.Prop(0).StartInvisiblePanel();
-   S.StartWrapLay();
+   S.StartHorizontalLay(wxEXPAND);
    {
-      size_t currentPosition = 0;
-        
       S.SetBorder(0);
+      S.AddSpace(borderSize);
 
-      if (borderSize > 0)
-         S.AddSpace(borderSize);
-
-      for (const ProcessedArgument& processedArgument : processedArguments)
+      S.StartWrapLay(wxEXPAND, 1);
       {
-         const FormatArgument* argument = processedArgument.Argument;
+         size_t currentPosition = 0;
 
-         // Add everything between currentPosition and PlaceholderPosition
-
-         if (currentPosition != processedArgument.PlaceholderPosition)
+         for (const ProcessedArgument& processedArgument : processedArguments)
          {
-            const size_t substrLength =
-               processedArgument.PlaceholderPosition - currentPosition;
+            const FormatArgument* argument = processedArgument.Argument;
 
-            S.Prop(0).AddFixedText(
-               Verbatim(translated.substr(currentPosition, substrLength)));
+            // Add everything between currentPosition and PlaceholderPosition
+
+            if (currentPosition != processedArgument.PlaceholderPosition)
+            {
+               const size_t substrLength =
+                  processedArgument.PlaceholderPosition - currentPosition;
+
+               S.Prop(0).AddFixedText(
+                  Verbatim(translated.substr(currentPosition, substrLength)));
+            }
+
+            // Add hyperlink
+
+            wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
+               S.GetParent(), wxID_ANY, argument->Value.Translation(),
+               argument->TargetURL);
+
+            if (argument->Handler)
+            {
+               hyperlink->Bind(
+                  wxEVT_HYPERLINK, [handler = argument->Handler](wxHyperlinkEvent& evt) { 
+                    handler(); 
+               });
+            }
+
+            S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+
+            // Update the currentPostion to the first symbol after the
+            // Placeholder
+
+            currentPosition = OffsetPosition(
+               processedArgument.PlaceholderPosition,
+               argument->Placeholder.Length());
+
+            if (currentPosition >= translated.Length())
+               break;
          }
 
-         // Add hyperlink
-
-         wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
-            S.GetParent(), wxID_ANY, argument->Value.Translation(),
-            argument->TargetURL);
-
-         if (argument->Handler)
-         {
-            hyperlink->Bind(
-               wxEVT_HYPERLINK, [handler = argument->Handler](wxHyperlinkEvent& evt) { 
-                  handler();
-            });
-         }
-
-         S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
-
-         // Update the currentPostion to the first symbol after the Placeholder
-
-         currentPosition = OffsetPosition(
-            processedArgument.PlaceholderPosition,
-            argument->Placeholder.Length());
-
-         if (currentPosition >= translated.Length())
-            break;
+         if (currentPosition < translated.Length())
+            S.AddFixedText(Verbatim(translated.substr(currentPosition)));
       }
-
-      if (currentPosition < translated.Length())
-         S.AddFixedText(Verbatim(translated.substr(currentPosition)));
+      S.EndWrapLay();
    }
-   S.EndWrapLay();
-   S.EndInvisiblePanel();
+   S.EndHorizontalLay();
 
    S.SetBorder(borderSize);
 }

@@ -73,6 +73,8 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
 
             S.AddFixedText(secondParagraph, false, 500);
 
+            S.AddSpace(0, 8);
+
             /* i18n-hint: %s will be replaced with "our Privacy Policy" */
             AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
             
@@ -82,8 +84,6 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
                "https://www.audacityteam.org/about/desktop-privacy-notice/");
 
             privacyPolicy.Populate(S);
-
-            S.AddSpace(0, 8);
 
             AccessibleLinksFormatter preferencesMessage(thirdParagraph);
             
