@@ -45,6 +45,10 @@ class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
 
 public:
    enum : int { DefaultFontSize = 0 }; //system preferred
+   static constexpr int TextFramePadding { 2 };
+   static constexpr int TextFrameYOffset { -1 };
+   static constexpr int LabelBarHeight { 6 }; 
+
    explicit
    LabelTrackView( const std::shared_ptr<Track> &pTrack );
    ~LabelTrackView() override;
@@ -211,8 +215,10 @@ private:
    static void DrawLines( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawGlyphs( wxDC & dc, const LabelStruct &ls, const wxRect & r,
       int GlyphLeft, int GlyphRight);
+   static int GetTextFrameHeight();
    static void DrawText( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawTextBox( wxDC & dc, const LabelStruct &ls, const wxRect & r);
+   static void DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r);
    static void DrawHighlight(
       wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
 
