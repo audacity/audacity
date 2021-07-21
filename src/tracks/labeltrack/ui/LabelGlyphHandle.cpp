@@ -137,8 +137,6 @@ void LabelGlyphHandle::HandleGlyphClick
 
       if (hit.mIsAdjustingLabel)
       {
-         // No to the above!  We initially expect to be moving just one edge.
-         hit.mbIsMoving = false;
 
          double t = 0.0;
          
@@ -168,11 +166,14 @@ void LabelGlyphHandle::HandleGlyphClick
             // If we're on a boundary between two different labels, 
             // then it's an adjust.
             // In both cases the two points coalesce.
-            hit.mbIsMoving = (hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight);
-
+            // 
+            // NOTE: seems that it's not neccessary that hitting the both
+            // left and right handles mean that we're dealing with a point, 
+            // but the range will be turned into a point on click
+            bool isPointLabel = hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight;
             // Except!  We don't coalesce if both ends are from the same label and
             // we have deliberately chosen to preserve length, by holding shift down.
-            if (!(hit.mbIsMoving && evt.ShiftDown()))
+            if (!(isPointLabel && evt.ShiftDown()))
             {
                MayAdjustLabel(hit, hit.mMouseOverLabelLeft, -1, false, t);
                MayAdjustLabel(hit, hit.mMouseOverLabelRight, 1, false, t);
@@ -217,13 +218,6 @@ UIHandle::Result LabelGlyphHandle::Click
    else
       // redraw the track.
       result |= RefreshCode::RefreshCell;
-
-   // handle shift+ctrl down
-   /*if (event.ShiftDown()) { // && event.ControlDown()) {
-      lTrack->SetHighlightedByKey(true);
-      Refresh(false);
-      return;
-   }*/
 
    return result;
 }

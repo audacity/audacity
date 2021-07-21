@@ -39,7 +39,6 @@ struct LabelTrackHit
    int mMouseOverLabel{ -1 };        /// Keeps track of which (ranged) label the mouse is currently over.
    int mMouseOverLabelLeft{ -1 };    /// Keeps track of which left label the mouse is currently over.
    int mMouseOverLabelRight{ -1 };   /// Keeps track of which right label the mouse is currently over.
-   bool mbIsMoving {};
    bool mIsAdjustingLabel {};
 
    std::shared_ptr<LabelTrack> mpLT {};
