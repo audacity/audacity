@@ -236,8 +236,13 @@ wxFont LabelTrackView::GetFont(const wxString &faceName, int size)
       encoding = wxFONTENCODING_DEFAULT;
    else
       encoding = wxFONTENCODING_SYSTEM;
-   return wxFont(size, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-                 wxFONTWEIGHT_NORMAL, false, faceName, encoding);
+   
+   auto fontInfo = size == 0 ? wxFontInfo() : wxFontInfo(size);
+   fontInfo
+      .Encoding(encoding)
+      .FaceName(faceName);
+
+   return wxFont(fontInfo);
 }
 
 void LabelTrackView::ResetFont()

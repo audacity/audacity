@@ -44,8 +44,7 @@ class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
 public:
-   enum : int { DefaultFontSize = 12 };
-   
+   enum : int { DefaultFontSize = 0 }; //system preferred
    explicit
    LabelTrackView( const std::shared_ptr<Track> &pTrack );
    ~LabelTrackView() override;
