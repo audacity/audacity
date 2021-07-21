@@ -886,62 +886,7 @@ wxString Effect::GetSavedStateGroup()
    return wxT("SavedState");
 }
 
-// ConfigClientInterface implementation
-bool Effect::HasConfigGroup( EffectDefinitionInterface &,
-   PluginSettings::ConfigurationType type,
-   const RegistryPath & group)
-{
-   return PluginManager::Get().HasConfigGroup(type, GetID(), group);
-}
-
-bool Effect::GetConfigSubgroups( EffectDefinitionInterface &,
-   PluginSettings::ConfigurationType type,
-   const RegistryPath & group, RegistryPaths &subgroups)
-{
-   return PluginManager::Get().GetConfigSubgroups(
-      type, GetID(), group, subgroups);
-}
-
-bool Effect::GetConfigValue(ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key,
-   ConfigReference var, ConfigConstReference defval)
-{
-   return PluginManager::Get()
-      .GetConfigValue(type, GetID(), group, key, var, defval);
-}
-
-bool Effect::SetConfigValue(ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key,
-   ConfigConstReference value)
-{
-   return PluginManager::Get().SetConfigValue(type, GetID(), group, key, value);
-}
-
-bool Effect::RemoveConfigSubgroup( EffectDefinitionInterface &,
-      PluginSettings::ConfigurationType type,
-   const RegistryPath & group)
-{
-   return PluginManager::Get().RemoveConfigSubgroup(type, GetID(), group);
-}
-
-bool Effect::RemoveConfig( EffectDefinitionInterface &,
-   PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key)
-{
-   return PluginManager::Get().RemoveConfig(type, GetID(), group, key);
-}
-
 // Effect implementation
-
-PluginID Effect::GetID()
-{
-   if (mClient)
-   {
-      return PluginManager::GetID(mClient);
-   }
-
-   return PluginManager::GetID(this);
-}
 
 bool Effect::Startup(EffectClientInterface *client)
 {

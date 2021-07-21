@@ -57,8 +57,6 @@ enum ConfigurationType : unsigned {
    Shared, Private
 };
 
-}
-
 //! Supported types for settings
 using ConfigValueTypes = std::tuple<
      wxString
@@ -81,69 +79,59 @@ using ConfigReference =
 using ConfigConstReference =
    ConfigReferenceGenerator<true, ConfigValueTypes>::type;
 
-/*************************************************************************************//**
+AUDACITY_DLL_API bool HasConfigGroup( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group);
+AUDACITY_DLL_API bool GetConfigSubgroups( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   RegistryPaths & subgroups);
 
-\class ConfigClientInterface
+AUDACITY_DLL_API bool GetConfigValue( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, ConfigReference var, ConfigConstReference value);
 
-\brief ConfigClientInterface is an unholy get/set configuration class, which 
-differentiates between private and shared config.  It should probably be replaced 
-with a Shuttle.
 
-*******************************************************************************************/
-class AUDACITY_DLL_API ConfigClientInterface /* not final */
+// GetConfig with default value
+template<typename Value>
+inline bool GetConfig( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, Value &var, const Value &defval)
+{ return GetConfigValue(ident, type, group, key,
+   std::ref(var), std::cref(defval)); }
+
+// GetConfig with implicitly converted default value
+template<typename Value, typename ConvertibleToValue>
+inline bool GetConfig( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, Value &var, ConvertibleToValue defval)
+{ return GetConfig(ident, type, group, key, var, static_cast<Value>(defval)); }
+
+// GetConfig with default value assumed to be Value{}
+template <typename Value>
+inline bool GetConfig( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, Value &var)
 {
-public:
-   using ConfigurationType = PluginSettings::ConfigurationType;
+   return GetConfig(ident, type, group, key, var, Value{});
+}
 
-   virtual ~ConfigClientInterface();
+AUDACITY_DLL_API bool SetConfigValue( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, ConfigConstReference value);
 
-   virtual bool HasConfigGroup( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group) = 0;
-   virtual bool GetConfigSubgroups( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group,
-      RegistryPaths & subgroups) = 0;
+template <typename Value>
+inline bool SetConfig( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key, const Value &value)
+{
+   return SetConfigValue(ident, type, group, key, std::cref(value));
+}
 
-   // GetConfig with default value
-   template<typename Value>
-   bool GetConfig( EffectDefinitionInterface &,
-      ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, Value &var, Value defval)
-   { return GetConfigValue(type, group, key,
-      std::ref(var), std::cref(defval)); }
+AUDACITY_DLL_API bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group);
+AUDACITY_DLL_API bool RemoveConfig( EffectDefinitionInterface &ident,
+   ConfigurationType type, const RegistryPath & group,
+   const RegistryPath & key);
 
-   // GetConfig with implicitly converted default value
-   template<typename Value, typename ConvertibleToValue>
-   bool GetConfig( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, Value &var, ConvertibleToValue defval)
-   { return GetConfig(ident, type, group, key, var, static_cast<Value>(defval)); }
-
-   // GetConfig with default value assumed to be Value{}
-   template<typename Value>
-   bool GetConfig( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, Value &var)
-   { return GetConfig(ident, type, group, key, var, Value{}); }
-
-   template<typename Value>
-   bool SetConfig( EffectDefinitionInterface &,
-      ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, const Value &value)
-   { return SetConfigValue(type, group, key, std::cref(value)); }
-
-   virtual bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group) = 0;
-   virtual bool RemoveConfig( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key) = 0;
-
-protected:
-   //! @pre var and defval wrap references to the same type (ignoring const)
-   virtual bool GetConfigValue(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key,
-      ConfigReference var, ConfigConstReference defval) = 0;
-   virtual bool SetConfigValue(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, ConfigConstReference value) = 0;
-};
+}
 
 #endif // __AUDACITY_CONFIGINTERFACE_H__

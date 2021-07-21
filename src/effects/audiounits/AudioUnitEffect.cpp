@@ -527,12 +527,12 @@ AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent,
 , mHost{ host }
 , mEffect{ effect }
 {
-   mHost.GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
 
    // Expect one of three string values from the config file
    wxString uiType;
-   mHost.GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("UIType"), uiType, wxT("Full"));
 
    // Get the localization of the string for display to the user
@@ -624,9 +624,9 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // un-translate the type
    auto uiType = mUIType.MSGID().GET();
 
-   mHost.SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency);
-   mHost.SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("UIType"), uiType);
 
    EndModal(wxID_OK);
@@ -783,7 +783,7 @@ TranslatableString AudioUnitEffectImportDialog::Import(
 
    // And write it to the config
    wxString group = mEffect->mHost->GetUserPresetsGroup(name);
-   if (!mEffect->mHost->SetConfig(*mEffect,
+   if (!SetConfig(*mEffect,
       PluginSettings::Private, group, PRESET_KEY,
       parms))
    {
@@ -1046,18 +1046,18 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UIType"), mUIType, wxT("Full"));
 
       bool haveDefaults;
-      mHost->GetConfig(*this, PluginSettings::Private,
+      GetConfig(*this, PluginSettings::Private,
          mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
          SavePreset(mHost->GetFactoryDefaultsGroup());
-         mHost->SetConfig(*this, PluginSettings::Private,
+         SetConfig(*this, PluginSettings::Private,
             mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
@@ -1960,9 +1960,9 @@ void AudioUnitEffect::ShowOptions()
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UIType"), mUIType, wxT("Full"));
    }
 }
@@ -1976,7 +1976,7 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    wxString parms;
 
    // Attempt to load old preset parameters and resave using new method
-   if (mHost->GetConfig(*this,
+   if (GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"),
       parms, wxEmptyString))
    {
@@ -1987,7 +1987,7 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
          {
             if (SavePreset(group))
             {
-               mHost->RemoveConfig(*this, PluginSettings::Private,
+               RemoveConfig(*this, PluginSettings::Private,
                   group, wxT("Parameters"));
             }
          }
@@ -1996,7 +1996,7 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    }
 
    // Retrieve the preset
-   if (!mHost->GetConfig(*this,
+   if (!GetConfig(*this,
       PluginSettings::Private, group, PRESET_KEY, parms,
       wxEmptyString))
    {
@@ -2123,7 +2123,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group)
       wxString parms = wxBase64Encode(CFDataGetBytePtr(data.get()), length);
 
       // And write it to the config
-      if (!mHost->SetConfig(*this,
+      if (!SetConfig(*this,
          PluginSettings::Private, group, PRESET_KEY, parms))
       {
          return false;

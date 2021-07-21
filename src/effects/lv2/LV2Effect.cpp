@@ -223,11 +223,11 @@ LV2EffectSettingsDialog::LV2EffectSettingsDialog(
 :  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
 , mEffect{ effect }
 {
-   mEffect.mHost->GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
       wxT("BufferSize"), mBufferSize, 8192);
-   mEffect.mHost->GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
       wxT("UseLatency"), mUseLatency, true);
-   mEffect.mHost->GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
       wxT("UseGUI"), mUseGUI, true);
 
    ShuttleGui S(this, eIsCreating);
@@ -329,11 +329,11 @@ void LV2EffectSettingsDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mEffect.mHost->SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
       wxT("BufferSize"), mBufferSize);
-   mEffect.mHost->SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
       wxT("UseLatency"), mUseLatency);
-   mEffect.mHost->SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
       wxT("UseGUI"), mUseGUI);
 
    EndModal(wxID_OK);
@@ -939,24 +939,24 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    if (mHost)
    {
       int userBlockSize;
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
          wxT("BufferSize"), userBlockSize, 8192);
       mUserBlockSize = std::max(1, userBlockSize);
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
          wxT("UseLatency"), mUseLatency, true);
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
          mUseGUI, true);
 
       mBlockSize = mUserBlockSize;
 
       bool haveDefaults;
-      mHost->GetConfig(*this, PluginSettings::Private,
+      GetConfig(*this, PluginSettings::Private,
          mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
          SaveParameters(mHost->GetFactoryDefaultsGroup());
-         mHost->SetConfig(*this, PluginSettings::Private,
+         SetConfig(*this, PluginSettings::Private,
             mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
@@ -1586,7 +1586,7 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
    }
 
    // Determine if the GUI editor is supposed to be used or not
-   mHost->GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
                           wxT("UseGUI"),
                           mUseGUI,
                           true);
@@ -1803,10 +1803,10 @@ void LV2Effect::ShowOptions()
    {
       // Reinitialize configuration settings
       int userBlockSize;
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
          wxT("BufferSize"), userBlockSize, DEFAULT_BLOCKSIZE);
       mUserBlockSize = std::max(1, userBlockSize);
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
          wxT("UseLatency"), mUseLatency, true);
    }
 }
@@ -1818,7 +1818,7 @@ void LV2Effect::ShowOptions()
 bool LV2Effect::LoadParameters(const RegistryPath &group)
 {
    wxString parms;
-   if (!mHost->GetConfig(*this,
+   if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
    {
       return false;
@@ -1847,7 +1847,7 @@ bool LV2Effect::SaveParameters(const RegistryPath &group)
       return false;
    }
 
-   return mHost->SetConfig(*this,
+   return SetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 

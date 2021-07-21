@@ -423,7 +423,7 @@ LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent,
 , mHost{ host }
 , mEffect{ effect }
 {
-   mHost.GetConfig(mEffect,
+   GetConfig(mEffect,
       PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
       mUseLatency, true);
 
@@ -482,7 +482,7 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mHost.SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency);
 
    EndModal(wxID_OK);
@@ -871,17 +871,17 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
 
       bool haveDefaults;
-      mHost->GetConfig(*this, PluginSettings::Private,
+      GetConfig(*this, PluginSettings::Private,
          mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
          SaveParameters(mHost->GetFactoryDefaultsGroup());
-         mHost->SetConfig(*this, PluginSettings::Private,
+         SetConfig(*this, PluginSettings::Private,
             mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
@@ -1576,7 +1576,7 @@ void LadspaEffect::ShowOptions()
    if (dlg.ShowModal())
    {
       // Reinitialize configuration options
-      mHost->GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
    }
 }
@@ -1635,7 +1635,7 @@ void LadspaEffect::Unload()
 bool LadspaEffect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
-   if (!mHost->GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
+   if (!GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
       parms, wxEmptyString))
    {
       return false;
@@ -1664,7 +1664,7 @@ bool LadspaEffect::SaveParameters(const RegistryPath & group)
       return false;
    }
 
-   return mHost->SetConfig(*this, PluginSettings::Private,
+   return SetConfig(*this, PluginSettings::Private,
       group, wxT("Parameters"), parms);
 }
 

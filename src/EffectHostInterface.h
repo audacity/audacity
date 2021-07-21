@@ -26,8 +26,7 @@ virtual (abstract) functions to get presets and actually apply the effect.  It u
 ConfigClientInterface to add Getters/setters for private and shared configs. 
 
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectHostInterface  /* not final */
-   : public ConfigClientInterface
+class AUDACITY_DLL_API EffectHostInterface
 {
 public:
    virtual ~EffectHostInterface();

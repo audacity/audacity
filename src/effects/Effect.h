@@ -187,32 +187,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    RegistryPath GetFactoryDefaultsGroup() override;
    virtual wxString GetSavedStateGroup() /* not override? */;
 
-   // ConfigClientInterface implementation
-
-   bool HasConfigGroup( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group) override;
-   bool GetConfigSubgroups( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group,
-      RegistryPaths & subgroups) override;
-
-   bool GetConfigValue(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key,
-      ConfigReference var, ConfigConstReference defval) override;
-
-   bool SetConfigValue(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, ConfigConstReference value) override;
-
-   bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group) override;
-   bool RemoveConfig( EffectDefinitionInterface &ident,
-      ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key) override;
-
    // Effect implementation
 
    // NEW virtuals
-   virtual PluginID GetID();
-
    virtual bool Startup(EffectClientInterface *client);
    virtual bool Startup();
 
