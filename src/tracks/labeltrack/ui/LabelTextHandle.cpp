@@ -70,34 +70,21 @@ LabelTextHandle::~LabelTextHandle()
 {
 }
 
-void LabelTextHandle::HandleTextClick(AudacityProject &
-#if defined(__WXGTK__) && (HAVE_GTK)
-                                                       project
-#endif
-                                                              ,
-   const wxMouseEvent & evt,
-   const wxRect & r, const ZoomInfo &zoomInfo,
-   NotifyingSelectedRegion &newSel)
+void LabelTextHandle::HandleTextClick(AudacityProject &project, const wxMouseEvent & evt)
 {
    auto pTrack = mpLT.lock();
    if (!pTrack)
       return;
 
    auto &view = LabelTrackView::Get( *pTrack );
-   static_cast<void>(r);//compiler food.
-   static_cast<void>(zoomInfo);//compiler food.
    if (evt.ButtonDown())
    {
       const auto selIndex = LabelTrackView::OverATextBox( *pTrack, evt.m_x, evt.m_y );
-      view.SetSelectedIndex( selIndex );
       if ( selIndex != -1 ) {
-         const auto &mLabels = pTrack->GetLabels();
-         const auto &labelStruct = mLabels[ selIndex ];
-         newSel = labelStruct.selectedRegion;
-
          if (evt.LeftDown()) {
+            mRightDragging = false;
             // Find the NEW drag end
-            auto position = view.FindCursorPosition( evt.m_x );
+            auto position = view.FindCursorPosition(selIndex, evt.m_x );
 
             // Anchor shift-drag at the farther end of the previous highlight
             // that is farther from the click, on Mac, for consistency with
@@ -118,13 +105,18 @@ void LabelTextHandle::HandleTextClick(AudacityProject &
             else
                initial = position;
 
-            view.SetTextHighlight( initial, position );
-            mRightDragging = false;
+            view.SetTextSelection(selIndex, initial, position );
          }
          else
+         {
+            if (!view.IsTextSelected(project))
+            {
+               auto position = view.FindCursorPosition(selIndex, evt.m_x);
+               view.SetTextSelection(selIndex, position, position);
+            }
             // Actually this might be right or middle down
             mRightDragging = true;
-
+         }
          // Middle click on GTK: paste from primary selection
 #if defined(__WXGTK__) && (HAVE_GTK)
          if (evt.MiddleDown()) {
@@ -132,7 +124,7 @@ void LabelTextHandle::HandleTextClick(AudacityProject &
             // case PasteSelectedText() will start a NEW label at the click
             // location
             if (!LabelTrackView::OverTextBox(&labelStruct, evt.m_x, evt.m_y))
-               view.SetSelectedIndex( -1 );
+               view.ResetTextSelection();
             double t = zoomInfo.PositionToTime(evt.m_x, r.x);
             newSel = SelectedRegion(t, t);
          }
@@ -158,41 +150,10 @@ UIHandle::Result LabelTextHandle::Click
 
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
-   auto &selectionState = SelectionState::Get( *pProject );
-   auto &tracks = TrackList::Get( *pProject );
-   mChanger =
-      std::make_shared< SelectionStateChanger >( selectionState, tracks );
-
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   mSelectedRegion = viewInfo.selectedRegion;
-   HandleTextClick( *pProject,
-      event, evt.rect, viewInfo, viewInfo.selectedRegion );
-
-   {
-      // IF the user clicked a label, THEN select all other tracks by Label
-
-      //do nothing if at least one other track is selected
-      bool done = tracks.Selected().any_of(
-         [&](const Track *pTrack){ return pTrack != pLT.get(); }
-      );
-
-      if (!done) {
-         //otherwise, select all tracks
-         for (auto t : tracks.Any())
-            selectionState.SelectTrack( *t, true, true );
-      }
-
-      // Do this after, for its effect on TrackPanel's memory of last selected
-      // track (which affects shift-click actions)
-      selectionState.SelectTrack( *pLT, true, true );
-   }
-
-   // PRL: bug1659 -- make selection change undo correctly
-   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   if (!unsafe)
-      ProjectHistory::Get( *pProject ).ModifyState(false);
+   HandleTextClick(*pProject, event);
 
    return result | RefreshCode::RefreshCell;
 }
@@ -228,19 +189,19 @@ void LabelTextHandle::HandleTextDragRelease(
 
    if(evt.Dragging())
    {
-      if (!mRightDragging)
+      auto index = view.GetTextEditIndex(project);
+      if (!mRightDragging && index != -1)
          // Update drag end
-         view.SetCurrentCursorPosition(
-            view.FindCursorPosition( evt.m_x ) );
-
+         view.SetCurrentCursorPosition(view.FindCursorPosition(index, evt.m_x ));
       return;
    }
 
-   if (evt.RightUp()) {
-      const auto selIndex = view.GetSelectedIndex( project );
-      if ( selIndex != -1 &&
-         LabelTrackView::OverTextBox(
-            pTrack->GetLabel( selIndex ), evt.m_x, evt.m_y ) ) {
+   if (evt.RightUp())
+   {
+      auto index = view.GetTextEditIndex(project);
+      if(index != -1 &&
+         LabelTrackView::OverTextBox(pTrack->GetLabel(index), evt.m_x, evt.m_y)) 
+      {
          // popup menu for editing
          // TODO: handle context menus via CellularPanel?
          view.ShowContextMenu( project );
@@ -269,10 +230,9 @@ UIHandle::Result LabelTextHandle::Drag
          mLabelTrackStartYPos = event.m_y;
 
          auto pView = pLT ? &LabelTrackView::Get( *pLT ) : nullptr;
-         if (pLT &&
-            (pView->GetSelectedIndex( project ) != -1) &&
+         if (pLT && (pView->GetTextEditIndex( project ) != -1) &&
              LabelTrackView::OverTextBox(
-               pLT->GetLabel(pView->GetSelectedIndex( project )),
+               pLT->GetLabel(pView->GetTextEditIndex( project )),
                mLabelTrackStartXPos,
                mLabelTrackStartYPos))
             mLabelTrackStartYPos = -1;
@@ -301,11 +261,6 @@ UIHandle::Result LabelTextHandle::Release
    // Only selected a part of a text string and changed track selectedness.
    // No undoable effects.
 
-   if (mChanger) {
-      mChanger->Commit();
-      mChanger.reset();
-   }
-
    const wxMouseEvent &event = evt.event;
    auto pLT = TrackList::Get( *pProject ).Lock(mpLT);
    if (pLT)
@@ -320,11 +275,6 @@ UIHandle::Result LabelTextHandle::Release
 
 UIHandle::Result LabelTextHandle::Cancel( AudacityProject *pProject )
 {
-   // Restore the selection states of tracks
-   // Note that we are also relying on LabelDefaultClickHandle::Cancel
-   // to restore the selection state of the labels in the tracks.
-   auto &viewInfo = ViewInfo::Get( *pProject );
-   viewInfo.selectedRegion = mSelectedRegion;
    auto result = LabelDefaultClickHandle::Cancel( pProject );
    return result | RefreshCode::RefreshAll;
 }

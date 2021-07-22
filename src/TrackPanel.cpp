@@ -1372,6 +1372,34 @@ struct ChannelGroup final : TrackPanelGroup {
 
       return { Axis::Y, std::move( refinement ) };
    }
+
+   void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override
+   {
+      TrackPanelGroup::Draw(context, rect, iPass);
+      if (iPass == TrackArtist::PassFocus && mpTrack->IsSelected())
+      {
+         const auto channels = TrackList::Channels(mpTrack.get());
+         const auto pLast = *channels.rbegin();
+         wxCoord yy = rect.GetTop();
+         for (auto channel : channels)
+         {
+            auto& view = TrackView::Get(*channel);
+            auto height = view.GetHeight();
+            if (auto affordance = view.GetAffordanceControls())
+            {
+               height += kAffordancesAreaHeight;
+            }
+            auto trackRect = wxRect(
+               mLeftOffset,
+               yy,
+               rect.GetRight() - mLeftOffset,
+               height - kSeparatorThickness);
+            TrackArt::DrawCursor(context, trackRect, mpTrack.get());
+            yy += height;
+         }
+      }
+   }
+
    std::shared_ptr< Track > mpTrack;
    wxCoord mLeftOffset;
 };

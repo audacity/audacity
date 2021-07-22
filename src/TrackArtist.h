@@ -59,6 +59,10 @@ namespace TrackArt {
          bool useSelection = true);
 
    AUDACITY_DLL_API
+   void DrawCursor(TrackPanelDrawingContext& context,
+        const wxRect& rect, const Track* track);
+
+   AUDACITY_DLL_API
    void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,
                                        const wxRect & rect );
 }
