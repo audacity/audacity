@@ -199,7 +199,8 @@ void ErrorReportDialog::OnSend(wxCommandEvent& event)
 {
    Disable();
 
-   mReport->AddUserComment(audacity::ToUTF8(mCommentsControl->GetValue()));
+   if (mCommentsControl != nullptr)
+      mReport->AddUserComment(audacity::ToUTF8(mCommentsControl->GetValue()));
 
    mReport->Send(
       [this](int code, std::string body) { 

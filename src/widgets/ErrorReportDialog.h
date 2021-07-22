@@ -52,7 +52,7 @@ private:
 
    wxString mHelpUrl;
 
-   wxTextCtrl* mCommentsControl;
+   wxTextCtrl* mCommentsControl { nullptr };
 
    bool mIsModal;
 
