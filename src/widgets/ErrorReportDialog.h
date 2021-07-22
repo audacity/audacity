@@ -52,7 +52,7 @@ private:
 
    ManualPageID mHelpUrl;
 
-   wxTextCtrl* mCommentsControl;
+   wxTextCtrl* mCommentsControl { nullptr };
 
    bool mIsModal;
 
