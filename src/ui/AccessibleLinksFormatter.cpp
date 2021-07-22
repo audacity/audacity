@@ -15,8 +15,11 @@
 #include <unordered_map>
 #include <algorithm>
 
+#ifndef __WXGTK__
 #include <wx/hyperlink.h>
-
+#else
+#include <wx/stattext.h>
+#endif
 
 namespace
 {    
@@ -108,7 +111,7 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
             }
 
             // Add hyperlink
-
+#ifndef __WXGTK__
             wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
                S.GetParent(), wxID_ANY, argument->Value.Translation(),
                argument->TargetURL);
@@ -122,7 +125,18 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
             }
 
             S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+#else
+            wxStaticText* hyperlink = S.AddVariableText(argument->Value);
 
+            hyperlink->SetFont(hyperlink->GetFont().Underlined());
+            hyperlink->SetCursor(wxCURSOR_HAND);
+            hyperlink->Bind(wxEVT_LEFT_UP, [handler = argument->Handler, url = argument->TargetURL](wxEvent&) {
+                if (handler)
+                    handler();
+                else if (!url.empty())
+                    wxLaunchDefaultBrowser(url);
+            });
+#endif
             // Update the currentPostion to the first symbol after the
             // Placeholder
 
