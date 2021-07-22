@@ -871,7 +871,7 @@ msgstr "Проверка обновлений приложения и отчёт
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
-msgstr "Смотрите %s, чтобы узнать больше."
+msgstr "Ознакомьтесь с %s, чтобы узнать больше."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
