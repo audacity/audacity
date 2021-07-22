@@ -13,6 +13,7 @@
 
 #include <audacity/Types.h>
 #include "Prefs.h" // for EnumSetting
+#include "SampleFormat.h"
 
 class IntSetting;
 

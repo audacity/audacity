@@ -10,7 +10,7 @@
 #ifndef __AUDACITY_DITHER_H__
 #define __AUDACITY_DITHER_H__
 
-#include "audacity/Types.h" // for samplePtr
+#include "SampleFormat.h"
 
 template< typename Enum > class EnumSetting;
 
@@ -19,13 +19,14 @@ template< typename Enum > class EnumSetting;
 enum DitherType : unsigned {
    none = 0, rectangle = 1, triangle = 2, shaped = 3 };
 
-class Dither
+class MATH_API Dither
 {
 public:
     static DitherType FastDitherChoice();
     static DitherType BestDitherChoice();
 
-    static AUDACITY_DLL_API EnumSetting< DitherType > FastSetting, BestSetting;
+    static EnumSetting< DitherType > FastSetting;
+    static EnumSetting< DitherType > BestSetting;
 
     /// Default constructor
     Dither();

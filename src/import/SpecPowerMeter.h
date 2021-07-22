@@ -12,7 +12,7 @@
 #define __AUDACITY_SPECPOWERMETER_H_
 
 #include <cstddef>
-#include "../SampleFormat.h"
+#include "SampleFormat.h"
 
 class SpecPowerCalculation
 {

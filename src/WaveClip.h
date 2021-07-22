@@ -25,6 +25,7 @@
 class BlockArray;
 class Envelope;
 class ProgressDialog;
+class sampleCount;
 class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;

@@ -18,7 +18,7 @@
 #include "SampleFormat.h"
 #include "xml/XMLTagHandler.h"
 
-#include "Identifier.h"
+#include "SampleCount.h"
 
 class SampleBlock;
 class SampleBlockFactory;

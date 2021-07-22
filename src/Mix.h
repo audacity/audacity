@@ -20,9 +20,11 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
+#include "audacity/Types.h"
 #include "SampleFormat.h"
 #include <vector>
 
+class sampleCount;
 class Resample;
 class BoundedEnvelope;
 class WaveTrackFactory;
