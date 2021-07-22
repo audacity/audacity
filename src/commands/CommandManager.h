@@ -20,7 +20,7 @@
 
 #include "Keyboard.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Registry.h"
 
 #include <vector>

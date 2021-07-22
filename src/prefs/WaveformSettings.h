@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_WAVEFORM_SETTINGS__
 #define __AUDACITY_WAVEFORM_SETTINGS__
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 class EnumValueSymbols;
 

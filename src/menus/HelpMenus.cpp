@@ -13,7 +13,7 @@
 #include "../FileNames.h"
 #include "../HelpText.h"
 #include "../Menus.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
 #include "../ShuttleGui.h"

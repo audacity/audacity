@@ -39,7 +39,7 @@
 #include <wx/intl.h>
 #include <wx/listctrl.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 // The numbers of the columns of the mList.

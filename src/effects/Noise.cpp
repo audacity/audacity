@@ -24,7 +24,7 @@
 #include <wx/textctrl.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"

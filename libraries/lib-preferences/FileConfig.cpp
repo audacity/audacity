@@ -8,17 +8,7 @@
 
 **********************************************************************/
 
-
-
 #include <errno.h>
-
-#include <wx/defs.h>
-#include <wx/app.h>
-#include <wx/bmpbuttn.h>
-#include <wx/button.h>
-#include <wx/filefn.h>
-#include <wx/fileconf.h>
-#include <wx/sizer.h>
 #include <wx/wfstream.h>
 
 #include "FileConfig.h"

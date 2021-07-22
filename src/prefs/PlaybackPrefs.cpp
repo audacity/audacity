@@ -25,7 +25,7 @@
 #include <wx/textctrl.h>
 
 #include "../ShuttleGui.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Playback"))

@@ -6,7 +6,7 @@
 #include "../DeviceManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"

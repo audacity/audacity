@@ -37,7 +37,7 @@
 #include "CodeConversions.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)

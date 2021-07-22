@@ -22,7 +22,7 @@ Paul Licameli
 #include <algorithm>
 
 #include "../FFT.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 #include <cmath>
 

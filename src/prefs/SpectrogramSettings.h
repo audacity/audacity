@@ -11,7 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../SampleFormat.h"
 #include "../RealFFTf.h"
 

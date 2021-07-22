@@ -42,7 +42,7 @@
 #include "../AudioIOBase.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ShuttleGui.h"
 #include "../widgets/Grabber.h"
@@ -681,8 +681,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       gAudioIO->HandleDeviceChange();
    }
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, DeviceToolbarPrefsID() });
+   PrefsListener::Broadcast(DeviceToolbarPrefsID());
 }
 
 void DeviceToolBar::ShowInputDialog()

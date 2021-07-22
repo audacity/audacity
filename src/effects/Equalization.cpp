@@ -95,7 +95,7 @@
 #include "../Envelope.h"
 #include "../EnvelopeEditor.h"
 #include "../FFT.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
 #include "../TrackArtist.h"

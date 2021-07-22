@@ -7,7 +7,7 @@
 #include "../Menus.h"
 #include "../PluginManager.h"
 #include "../PluginRegistrationDialog.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"

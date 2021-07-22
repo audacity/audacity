@@ -50,7 +50,6 @@
 *//*******************************************************************/
 
 
-
 #include "Prefs.h"
 
 #include <wx/defs.h>
@@ -61,7 +60,7 @@
 
 #include "Internat.h"
 #include "MemoryX.h"
-#include <memory>
+#include "BasicUI.h"
 
 BoolSetting DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
@@ -71,20 +70,39 @@ std::unique_ptr<FileConfig> ugPrefs {};
 FileConfig *gPrefs = nullptr;
 int gMenusDirty = 0;
 
-wxDEFINE_EVENT(EVT_PREFS_UPDATE, wxCommandEvent);
+struct MyEvent : wxEvent
+{
+public:
+   explicit MyEvent(int id) : mId{id} {}
+   virtual wxEvent *Clone() const override { return new MyEvent{mId}; }
+   int mId;
+};
+
+wxDECLARE_EVENT(EVT_PREFS_UPDATE, MyEvent);
+wxDEFINE_EVENT(EVT_PREFS_UPDATE, MyEvent);
 
 struct PrefsListener::Impl : wxEvtHandler
 {
    Impl( PrefsListener &owner );
    ~Impl();
-   void OnEvent(wxCommandEvent&);
+   void OnEvent(wxEvent&);
    PrefsListener &mOwner;
 };
+
+static wxEvtHandler hub;
+
+void PrefsListener::Broadcast(int id)
+{
+   BasicUI::CallAfter([id]{
+      MyEvent event{ id };
+      hub.ProcessEvent(event);
+   });
+}
 
 PrefsListener::Impl::Impl( PrefsListener &owner )
    : mOwner{ owner }
 {
-   wxTheApp->Bind(EVT_PREFS_UPDATE, &PrefsListener::Impl::OnEvent, this);
+   hub.Bind(EVT_PREFS_UPDATE, &PrefsListener::Impl::OnEvent, this);
 }
 
 PrefsListener::Impl::~Impl()
@@ -104,7 +122,7 @@ void PrefsListener::UpdateSelectedPrefs( int )
 {
 }
 
-void PrefsListener::Impl::OnEvent( wxCommandEvent &evt )
+void PrefsListener::Impl::OnEvent( wxEvent &evt )
 {
    evt.Skip();
    auto id = evt.GetId();

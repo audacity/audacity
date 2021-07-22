@@ -109,7 +109,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "prefs/DirectoriesPrefs.h"
 #include "prefs/GUIPrefs.h"
 #include "tracks/ui/Scrubbing.h"
-#include "widgets/FileConfig.h"
+#include "FileConfig.h"
 #include "widgets/FileHistory.h"
 #include "update/UpdateManager.h"
 #include "widgets/wxWidgetsBasicUI.h"

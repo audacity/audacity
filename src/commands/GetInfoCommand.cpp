@@ -192,7 +192,7 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
    return true;
 }
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 namespace {
 

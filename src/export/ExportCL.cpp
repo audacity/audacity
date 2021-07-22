@@ -31,7 +31,7 @@
 #include "Export.h"
 
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"

@@ -30,7 +30,7 @@
 #include "../FileIO.h"
 #include "../ProjectSettings.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "../Tags.h"

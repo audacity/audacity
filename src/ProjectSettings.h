@@ -16,6 +16,7 @@ Paul Licameli split from AudacityProject.h
 
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
+#include "audacity/Types.h"
 
 class AudacityProject;
 

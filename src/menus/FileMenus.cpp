@@ -4,7 +4,7 @@
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"

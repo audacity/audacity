@@ -26,7 +26,7 @@
 #include "../FileNames.h"
 #include "Languages.h"
 #include "../Theme.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "GUISettings.h"

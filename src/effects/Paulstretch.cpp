@@ -31,7 +31,7 @@
 #include "../FFT.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 #include "../WaveTrack.h"
 
