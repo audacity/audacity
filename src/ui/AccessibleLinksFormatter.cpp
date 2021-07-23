@@ -14,10 +14,11 @@
 
 #include <unordered_map>
 #include <algorithm>
+#include <memory>
 
-#ifndef __WXGTK__
 #include <wx/hyperlink.h>
-#else
+
+#ifdef __WXGTK__
 #include <wx/stattext.h>
 #endif
 
@@ -72,6 +73,16 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
       S.AddFixedText(mMessage);
       return;
    }
+
+#ifdef __WXGTK__
+   // Non empty label is required, as wxHyperlinkCtrl would assert otherwise
+   std::unique_ptr<wxHyperlinkCtrl> tempHyperlink
+       = std::make_unique<wxHyperlinkCtrl>(S.GetParent(), wxID_ANY, wxT("temp"), wxString());
+
+   const wxColour hyperlinkColour = tempHyperlink->GetNormalColour();
+
+   tempHyperlink.reset();
+#endif
 
    wxString translated = mMessage.Translation();
 
@@ -129,7 +140,9 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
             wxStaticText* hyperlink = S.AddVariableText(argument->Value);
 
             hyperlink->SetFont(hyperlink->GetFont().Underlined());
+            hyperlink->SetForegroundColour(hyperlinkColour);
             hyperlink->SetCursor(wxCURSOR_HAND);
+
             hyperlink->Bind(wxEVT_LEFT_UP, [handler = argument->Handler, url = argument->TargetURL](wxEvent&) {
                 if (handler)
                     handler();
