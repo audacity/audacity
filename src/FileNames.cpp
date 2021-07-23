@@ -32,6 +32,7 @@ used throughout Audacity into this one place.
 #include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/stdpaths.h>
+#include "BasicUI.h"
 #include "Prefs.h"
 #include "Internat.h"
 #include "PlatformCompatibility.h"
@@ -722,11 +723,14 @@ bool FileNames::WritableLocationCheck(const FilePath& path)
 
     if (!status)
     {
-        AudacityMessageBox(
-            XO("Directory %s does not have write permissions")
-            .Format(path),
-            XO("Error"),
-            wxOK | wxICON_ERROR);
+        using namespace BasicUI;
+        ShowMessageBox(
+            XO("Directory %s does not have write permissions").Format(path),
+            MessageBoxOptions{}
+                .Caption(XO("Error"))
+                .IconStyle(Icon::Error)
+                .ButtonStyle(Button::Ok)
+        );
     }
 
     return status;
