@@ -11,10 +11,7 @@
 #ifndef __AUDACITY_LOGGER__
 #define __AUDACITY_LOGGER__
 
-
-
-
-
+#include <functional>
 #include "MemoryX.h"
 #include "Prefs.h"
 #include <wx/log.h> // to inherit
@@ -24,8 +21,7 @@ class wxFrame;
 class wxTextCtrl;
 
 class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
-                             public wxLog,
-                             public PrefsListener
+                             public wxLog
 {
  public:
 
@@ -41,8 +37,21 @@ class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
 
    wxString GetLog(int count = 0);
 
+   //! Get all the accumulated text since program start or last ClearLog()
+   const wxString &GetBuffer() const { return mBuffer; }
+
  protected:
    void Flush()  override;
+
+   //! Type of function called by Flush
+   /*! @return true if flush completed
+    */
+   using Listener = std::function< bool() >;
+
+   //! Set the unique listener, returning any previous one
+   Listener SetListener(Listener listener);
+
+protected:
    void DoLogText(const wxString & msg) override;
 
  private:
@@ -53,9 +62,7 @@ class AUDACITY_DLL_API AudacityLogger final : public wxEvtHandler,
    void OnClear(wxCommandEvent & e);
    void OnSave(wxCommandEvent & e);
 
-   // PrefsListener implementation
-   void UpdatePrefs() override;
-
+   Listener mListener;
    wxString mBuffer;
    bool mUpdated;
 };

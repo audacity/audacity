@@ -25,6 +25,7 @@ Provides thread-safe logging based on the wxWidgets log facility.
 #include "ShuttleGui.h"
 
 #include <mutex>
+#include <optional>
 #include <wx/filedlg.h>
 #include <wx/log.h>
 #include <wx/ffile.h>
@@ -60,6 +61,15 @@ enum
 namespace {
 Destroy_ptr<wxFrame> sFrame;
 wxWeakRef<wxTextCtrl> sText;
+
+struct LogWindowUpdater : public PrefsListener
+{
+   // PrefsListener implementation
+   void UpdatePrefs() override;
+};
+// Unique PrefsListener can't be statically constructed before the application
+// object initializes, so use Optional
+std::optional<LogWindowUpdater> pUpdater;
 }
 
 AudacityLogger *AudacityLogger::Get()
@@ -89,11 +99,15 @@ AudacityLogger::~AudacityLogger()  = default;
 
 void AudacityLogger::Flush()
 {
-   if (mUpdated && sFrame && sFrame->IsShown()) {
+   if (mUpdated && mListener && mListener())
       mUpdated = false;
-      if (sText)
-         sText->ChangeValue(mBuffer);
-   }
+}
+
+auto AudacityLogger::SetListener(Listener listener) -> Listener
+{
+   auto result = std::move(mListener);
+   mListener = std::move(listener);
+   return result;
 }
 
 void AudacityLogger::DoLogText(const wxString & str)
@@ -245,6 +259,21 @@ void AudacityLogger::Show(bool show)
    sFrame->Show();
 
    Flush();
+
+   // Also create the listeners
+   if (!pUpdater)
+      pUpdater.emplace();
+
+   SetListener([]{
+      if (auto pLogger = AudacityLogger::Get()) {
+         if (sFrame && sFrame->IsShown()) {
+            if (sText)
+               sText->ChangeValue(pLogger->GetBuffer());
+            return true;
+         }
+      }
+      return false;
+   });
 }
 
 wxString AudacityLogger::GetLog(int count)
@@ -315,16 +344,17 @@ void AudacityLogger::OnSave(wxCommandEvent & WXUNUSED(e))
    }
 }
 
-void AudacityLogger::UpdatePrefs()
+void LogWindowUpdater::UpdatePrefs()
 {
+   //! Re-create the non-modal window in case of change of preferred language
    if (sFrame) {
       bool shown = sFrame->IsShown();
       if (shown) {
-         Show(false);
+         AudacityLogger::Get()->Show(false);
       }
       sFrame.reset();
       if (shown) {
-         Show(true);
+         AudacityLogger::Get()->Show(true);
       }
    }
 }
