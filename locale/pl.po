@@ -869,7 +869,7 @@ msgstr "Sprawdzanie aktualizacji aplikacji i raportowanie błędów wymagają do
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "See %s for more info."
 msgstr "Zobacz %s, aby uzyskać więcej informacji."
 
@@ -2661,7 +2661,7 @@ msgid "Specify New Filename:"
 msgstr "Podaj nową nazwę pliku:"
 
 #: src/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Directory %s does not have write permissions"
 msgstr "Katalog %s nie ma uprawnień do zapisu"
 
@@ -14795,7 +14795,6 @@ msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% ukończone. Kliknij, aby zmienić punkt centralny."
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "Preferences for Application"
 msgstr "Ustawienia aplikacji"
 
@@ -14806,7 +14805,6 @@ msgstr "Powiadomienia o aktualizacjach"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Check for updates"
 msgstr "&Sprawdź aktualizacje"
@@ -14866,7 +14864,6 @@ msgstr "&Urządzenie:"
 #. i18n-hint: modifier as in "Recording preferences", not progressive verb
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h
-#, fuzzy
 msgctxt "preference"
 msgid "Recording"
 msgstr "Nagrywanie"
@@ -18005,7 +18002,6 @@ msgstr "Aktualizacje aplikacji"
 
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Preferences > Application"
 msgstr "Ustawienia > Aplikacja"
 
@@ -18619,7 +18615,7 @@ msgstr "Potwierdź zamknięcie"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to write files to directory: %s."
 msgstr "Nie można zapisać plików do katalogu: %s."
 
@@ -18630,13 +18626,12 @@ msgstr "Sprawdź, czy katalog istnieje, ma niezbędne uprawnienia, a dysk nie je
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can change the directory in %s."
 msgstr "Możesz zmienić katalog w %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy
 msgid "Preferences > Directories"
 msgstr "Ustawienia > Katalogi"
 
