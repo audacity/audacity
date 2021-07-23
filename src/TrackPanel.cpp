@@ -711,6 +711,14 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    }
 }
 
+enum {
+    kContextMenuItemID_AddMonoTrack = wxID_LAST + 1,
+    kContextMenuItemID_AddStereoTrack,
+    kContextMenuItemID_AddLabelTrack,
+    kContextMenuItemID_ExportProject,
+    kContextMenuItemID_SelectAll
+};
+
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
    if (event.LeftDown()) {
@@ -723,7 +731,6 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       mTimer.Start(kTimerInterval, FALSE);
    }
 
-
    if (event.ButtonUp()) {
       //EnsureVisible should be called after processing the up-click.
       this->CallAfter( [this, event]{
@@ -735,9 +742,60 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          }
       } );
    }
+    
+    if(event.RightDown())
+    {
+        wxWindow *parent = wxWindow::FindFocus();
+        if(!parent)
+           parent = &GetProjectFrame( *GetProject() );
+        
+        if(parent)
+        {
+            wxMenu contextMenu;
+            contextMenu.Bind(wxEVT_MENU,
+               [this]( wxCommandEvent &event ){
+                  OnContextMenu( /*GetProject(),*/ event ); }
+            );
+            
+            contextMenu.Append(kContextMenuItemID_AddMonoTrack, XO("Add mono track").Translation());
+            contextMenu.Append(kContextMenuItemID_AddStereoTrack, XO("Add stereo track").Translation());
+            contextMenu.Append(kContextMenuItemID_AddLabelTrack, XO("Add label track").Translation());
+            contextMenu.AppendSeparator();
+            contextMenu.Append(kContextMenuItemID_ExportProject, XO("Export project\tCtrl+E").Translation());
+            contextMenu.AppendSeparator();
+            contextMenu.Append(kContextMenuItemID_SelectAll, XO("Select All\tCtrl+A").Translation());
+            
+            parent->PopupMenu(&contextMenu);
+        }
+    }
 
    // Must also fall through to base class handler
    event.Skip();
+}
+
+#include "SelectUtilities.h"
+
+void TrackPanel::OnContextMenu(/*AudacityProject &project, */ wxCommandEvent& event)
+{
+    switch(event.GetId())
+    {
+        case kContextMenuItemID_AddMonoTrack:
+            break;
+            
+        case kContextMenuItemID_AddStereoTrack:
+            break;
+            
+        case kContextMenuItemID_AddLabelTrack:
+            break;
+            
+        case kContextMenuItemID_ExportProject:
+            break;
+            
+        case kContextMenuItemID_SelectAll:
+            
+            this->CallAfter([this]{ SelectUtilities::DoSelectAll(*GetProject()); });
+            break;
+    }
 }
 
 double TrackPanel::GetMostRecentXPos()
