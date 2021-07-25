@@ -21,8 +21,7 @@
 
 #include "AdornedRulerPanel.h"
 
-
-
+#include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/tooltip.h>
 
@@ -1933,8 +1932,7 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 
    gPrefs->Flush();
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, ViewInfo::UpdateScrollPrefsID() });
+   PrefsListener::Broadcast(ViewInfo::UpdateScrollPrefsID());
 }
 
 

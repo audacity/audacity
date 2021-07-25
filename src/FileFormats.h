@@ -13,8 +13,8 @@
 
 
 
-#include "audacity/Types.h"
 #include "Identifier.h"
+#include "SampleFormat.h"
 
 //#include <mutex>
 #include <memory>

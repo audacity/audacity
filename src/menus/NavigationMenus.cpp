@@ -1,7 +1,7 @@
 
 
 #include "../CommonCommandFlags.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"

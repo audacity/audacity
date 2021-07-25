@@ -72,7 +72,6 @@ UIHandle::Result LabelDefaultClickHandle::Click
          if (pLT != &TrackView::Get( *lt )) {
             auto &view = LabelTrackView::Get( *lt );
             view.ResetFlags();
-            view.SetSelectedIndex( -1 );
          }
       }
    }

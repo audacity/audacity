@@ -35,6 +35,7 @@
 #include <wx/filename.h>
 
 #include "FileNames.h"
+#include "SampleFormat.h"
 
 // Length check.  Is in part about not supplying malicious strings to file functions.
 bool XMLValueChecker::IsGoodString(const wxString & str)

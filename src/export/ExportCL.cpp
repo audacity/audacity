@@ -31,11 +31,11 @@
 #include "Export.h"
 
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../float_cast.h"
+#include "float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"

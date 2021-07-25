@@ -7,7 +7,7 @@
 #include "../Menus.h"
 #include "../PluginManager.h"
 #include "../PluginRegistrationDialog.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -24,6 +24,8 @@
 #include "../effects/RealtimeEffectManager.h"
 #include "../prefs/EffectsPrefs.h"
 #include "../prefs/PrefsDialog.h"
+
+#include <wx/log.h>
 
 // private helper classes and functions
 namespace {

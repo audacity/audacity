@@ -63,6 +63,7 @@ class TranslatableString;
  * input array, and that NumSamples must be a power of two.
  */
 
+MATH_API
 void PowerSpectrum(size_t NumSamples, const float *In, float *Out);
 
 /*
@@ -72,7 +73,7 @@ void PowerSpectrum(size_t NumSamples, const float *In, float *Out);
  * NumSamples must be a power of two.
  */
 
-AUDACITY_DLL_API
+MATH_API
 void RealFFT(size_t NumSamples,
              const float *RealIn, float *RealOut, float *ImagOut);
 
@@ -81,7 +82,7 @@ void RealFFT(size_t NumSamples,
  * so the output is purely real.  NumSamples must be a power of
  * two.
  */
-AUDACITY_DLL_API
+MATH_API
 void InverseRealFFT(size_t NumSamples,
 		    const float *RealIn, const float *ImagIn, float *RealOut);
 
@@ -91,7 +92,7 @@ void InverseRealFFT(size_t NumSamples,
  * inverse transform as well.
  */
 
-AUDACITY_DLL_API
+MATH_API
 void FFT(size_t NumSamples,
          bool InverseTransform,
          const float *RealIn, const float *ImagIn, float *RealOut, float *ImagOut);
@@ -120,7 +121,7 @@ enum eWindowFunctions
    eWinFuncCount
 };
 
-AUDACITY_DLL_API
+MATH_API
 void WindowFunc(int whichFunction, size_t NumSamples, float *data);
 
 /*
@@ -129,7 +130,7 @@ void WindowFunc(int whichFunction, size_t NumSamples, float *data);
  * otherwise about (NumSamples - 1) / 2
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
-AUDACITY_DLL_API
+MATH_API
 void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *data);
 
 /*
@@ -139,21 +140,21 @@ void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float
  * otherwise about (NumSamples - 1) / 2
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
-AUDACITY_DLL_API
+MATH_API
 void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *data);
 
 /*
  * Returns the name of the windowing function (for UI display)
  */
 
-AUDACITY_DLL_API const TranslatableString WindowFuncName(int whichFunction);
+MATH_API const TranslatableString WindowFuncName(int whichFunction);
 
 /*
  * Returns the number of windowing functions supported
  */
 
-AUDACITY_DLL_API int NumWindowFuncs();
+MATH_API int NumWindowFuncs();
 
-void DeinitFFT();
+MATH_API void DeinitFFT();
 
 #endif

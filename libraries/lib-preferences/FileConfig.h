@@ -18,7 +18,7 @@
 
 #include "Identifier.h"
 
-class FileConfig : public wxConfigBase
+class PREFERENCES_API FileConfig : public wxConfigBase
 {
 public:
    FileConfig(const wxString& appName = wxEmptyString,

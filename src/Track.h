@@ -19,6 +19,7 @@
 #include <vector>
 #include <list>
 #include <functional>
+#include <wx/event.h> // to inherit wxCommandEvent
 #include <wx/longlong.h>
 
 #include "ClientData.h"

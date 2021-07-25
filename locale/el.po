@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-06-12 13:36+0300\n"
+"PO-Revision-Date: 2021-07-17 12:32+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -842,7 +842,7 @@ msgstr "Υποστήριξη ακραίας αλλαγής τόνου και ρ�
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr ""
+msgstr "Νομικά"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -852,24 +852,24 @@ msgstr "Άδεια GPL"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "PRIVACY POLICY"
-msgstr ""
+msgstr "ΠΟΛΙΤΙΚΗ ΑΠΟΡΡΗΤΟΥ"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr ""
+msgstr "Ο έλεγχος ενημέρωσης της εφαρμογής και η αναφορά σφαλμάτων απαιτούν πρόσβαση στο διαδίκτυο. Αυτά τα χαρακτηριστικά είναι προαιρετικά."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "See %s for more info."
-msgstr "Επέλεξε ένα ή περισσότερα αρχεία"
+msgstr "Δείτε το% s για περισσότερες πληροφορίες."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
 #: src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr ""
+msgstr "η πολιτική απορρήτου μας"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -2655,9 +2655,9 @@ msgid "Specify New Filename:"
 msgstr "Ορίστε ένα νέο όνομα αρχείου:"
 
 #: src/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Directory %s does not have write permissions"
-msgstr "Ο φάκελος %s δεν υπάρχει. Να δημιουργηθεί;"
+msgstr "Ο κατάλογος% s δεν έχει δικαιώματα εγγραφής"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -14813,25 +14813,23 @@ msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "Ολοκληρώθηκε το %s %2.0f%%. Πατήστε για να αλλάξετε εργασία εστιακού σημείου."
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "Preferences for Application"
-msgstr "Προτιμήσεις για"
+msgstr "Προτιμήσεις για την εφαρμογή"
 
 #. i18n-hint: Title for the update notifications panel in the preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Ειδοποιήσει ενημέρωσης"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "Έ&λεγχος για ενημερώσεις..."
+msgstr "Έ&λεγχος για ενημερώσεις"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Ο έλεγχος ενημέρωσης της εφαρμογής απαιτεί πρόσβαση στο διαδίκτυο. Προκειμένου να προστατευθεί το απόρρητό σας, το Audacity δεν αποθηκεύει προσωπικές πληροφορίες."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -14884,7 +14882,6 @@ msgstr "&Συσκευή:"
 #. i18n-hint: modifier as in "Recording preferences", not progressive verb
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h
-#, fuzzy
 msgctxt "preference"
 msgid "Recording"
 msgstr "Ηχογράφηση"
@@ -18000,31 +17997,30 @@ msgstr "Αδυναμία ανοίγματος του συνδέσμου λήψη
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "Έλεγχος ενημέρωσης εφαρμογής"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr ""
+msgstr "Για να μείνετε ενημερωμένοι, θα λαμβάνετε μια ειδοποίηση στην εφαρμογή όποτε υπάρχει μια νέα έκδοση του Audacity διαθέσιμη για λήψη."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr ""
+msgstr "Προκειμένου να προστατευθεί το απόρρητό σας, το Audacity δεν συλλέγει προσωπικές πληροφορίες. Ωστόσο, ο έλεγχος ενημερώσεων της εφαρμογής απαιτεί πρόσβαση στο διαδίκτυο."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr ""
+msgstr "Μπορείτε να απενεργοποιήσετε τον έλεγχο ενημέρωσης της εφαρμογής ανά πάσα στιγμή στο %s."
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
+msgstr "Ενημερώσεις εφαρμογής"
 
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Preferences > Application"
-msgstr "Προτιμήσεις για"
+msgstr "Προτιμήσεις > Εφαρμογή"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -18638,28 +18634,25 @@ msgstr "Επιβεβαίωση κλεισίματος"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to write files to directory: %s."
-msgstr "Αδύνατη η ανάγνωση της προρύθμισης από το \"%s\""
+msgstr "Αδύνατη η εγγραφή αρχείων στον κατάλογο: % s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr ""
+msgstr "Βεβαιωθείτε ότι ο κατάλογος υπάρχει, έχει τα απαραίτητα δικαιώματα και ότι η μονάδα δεν είναι πλήρης."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can change the directory in %s."
-msgstr ""
-"Αδυναμία δημιουργίας του φακέλου:\n"
-"  %s"
+msgstr "Μπορείτε να αλλάξετε τον κατάλογο σε % s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy
 msgid "Preferences > Directories"
-msgstr "Προτιμήσεις καταλόγων"
+msgstr "Προτιμήσεις > Κατάλογοι"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"

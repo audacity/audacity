@@ -46,6 +46,7 @@
 
 #include "../FFmpeg.h"
 
+#include <wx/app.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/intl.h>

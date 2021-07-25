@@ -48,6 +48,7 @@ This class now lists
 #include "../ShuttleGui.h"
 
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/menu.h>
 
 const ComponentInterfaceSymbol GetInfoCommand::Symbol
@@ -191,7 +192,7 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
    return true;
 }
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 namespace {
 

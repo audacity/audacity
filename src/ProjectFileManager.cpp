@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #endif
 
 #include <wx/frame.h>
+#include <wx/log.h>
 #include "BasicUI.h"
 #include "CodeConversions.h"
 #include "Legacy.h"

@@ -153,6 +153,7 @@ extern "C" {
 #include "Prefs.h"
 
 #include "Identifier.h"
+#include "SampleFormat.h"
 
 class wxDynamicLibrary;
 

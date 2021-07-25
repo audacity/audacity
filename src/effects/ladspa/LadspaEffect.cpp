@@ -24,6 +24,7 @@ effects from this one class.
 
 
 #include "LadspaEffect.h"       // This class's header file
+#include "SampleCount.h"
 
 #include <float.h>
 

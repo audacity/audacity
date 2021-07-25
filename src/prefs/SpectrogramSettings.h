@@ -11,9 +11,9 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
-#include "../Prefs.h"
-#include "../SampleFormat.h"
-#include "../RealFFTf.h"
+#include "Prefs.h"
+#include "SampleFormat.h"
+#include "RealFFTf.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 

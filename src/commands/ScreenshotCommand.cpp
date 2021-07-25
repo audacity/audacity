@@ -24,6 +24,7 @@ small calculations of rectangles.
 
 #include "LoadCommands.h"
 #include "../Project.h"
+#include <wx/app.h>
 #include <wx/toplevel.h>
 #include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
@@ -36,7 +37,7 @@ small calculations of rectangles.
 #include "../TrackPanel.h"
 #include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectWindow.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

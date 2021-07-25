@@ -4,7 +4,7 @@
 #include "../FileNames.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Printing.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
@@ -32,6 +32,7 @@
 #include "../import/ImportMIDI.h"
 #endif // USE_MIDI
 
+#include <wx/app.h>
 #include <wx/menu.h>
 
 // private helper classes and functions

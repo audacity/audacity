@@ -23,6 +23,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include <wx/defs.h>
 #include <wx/datetime.h>
 #include <wx/dir.h>
+#include <wx/log.h>
 #include <wx/textfile.h>
 #include <wx/time.h>
 

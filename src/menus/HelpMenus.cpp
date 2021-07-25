@@ -1,5 +1,5 @@
 
-
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>
 #include <wx/frame.h>
@@ -13,7 +13,7 @@
 #include "../FileNames.h"
 #include "../HelpText.h"
 #include "../Menus.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectSelectionManager.h"
 #include "../ShuttleGui.h"

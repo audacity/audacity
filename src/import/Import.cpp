@@ -55,7 +55,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include "../Project.h"
 #include "../WaveTrack.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 #include "../widgets/ProgressDialog.h"
 

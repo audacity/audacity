@@ -69,6 +69,7 @@
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/listctrl.h>
+#include <wx/log.h>
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/choice.h>
@@ -93,8 +94,8 @@
 #include "../FileNames.h"
 #include "../Envelope.h"
 #include "../EnvelopeEditor.h"
-#include "../FFT.h"
-#include "../Prefs.h"
+#include "FFT.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../Theme.h"
 #include "../TrackArtist.h"
@@ -105,7 +106,7 @@
 #include "../widgets/AudacityTextEntryDialog.h"
 #include "../xml/XMLFileReader.h"
 #include "../AllThemeResources.h"
-#include "../float_cast.h"
+#include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

@@ -88,8 +88,6 @@ list( APPEND SOURCES
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
-      AudacityException.cpp
-      AudacityException.h
       AudacityFileConfig.cpp
       AudacityFileConfig.h
       AudacityHeaders.cpp
@@ -131,14 +129,10 @@ list( APPEND SOURCES
       DeviceManager.h
       Diags.cpp
       Diags.h
-      Dither.cpp
-      Dither.h
       Envelope.cpp
       Envelope.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
-      FFT.cpp
-      FFT.h
       FFmpeg.cpp
       FFmpeg.h
       FileException.cpp
@@ -159,10 +153,6 @@ list( APPEND SOURCES
       HitTestResult.h
       ImageManipulation.cpp
       ImageManipulation.h
-      InconsistencyException.cpp
-      InconsistencyException.h
-      InterpolateAudio.cpp
-      InterpolateAudio.h
       KeyboardCapture.cpp
       KeyboardCapture.h
       LabelDialog.cpp
@@ -179,8 +169,6 @@ list( APPEND SOURCES
       LyricsWindow.cpp
       LyricsWindow.h
       MacroMagic.h
-      Matrix.cpp
-      Matrix.h
       Menus.cpp
       Menus.h
       Mix.cpp
@@ -204,8 +192,6 @@ list( APPEND SOURCES
       PluginManager.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
-      Prefs.cpp
-      Prefs.h
       Printing.cpp
       Printing.h
       Profiler.cpp
@@ -238,22 +224,14 @@ list( APPEND SOURCES
       ProjectWindow.h
       ProjectWindowBase.cpp
       ProjectWindowBase.h
-      RealFFTf.cpp
-      RealFFTf.h
-      RealFFTf48x.cpp
-      RealFFTf48x.h
       RefreshCode.h
       Registrar.h
       Registry.cpp
       Registry.h
-      Resample.cpp
-      Resample.h
       RingBuffer.cpp
       RingBuffer.h
       SampleBlock.cpp
       SampleBlock.h
-      SampleFormat.cpp
-      SampleFormat.h
       Screenshot.cpp
       Screenshot.h
       SelectUtilities.cpp
@@ -276,8 +254,6 @@ list( APPEND SOURCES
       Snap.h
       SoundActivatedRecord.cpp
       SoundActivatedRecord.h
-      Spectrum.cpp
-      Spectrum.h
       SpectrumAnalyst.cpp
       SpectrumAnalyst.h
       SplashDialog.cpp
@@ -325,8 +301,6 @@ list( APPEND SOURCES
       UIHandle.h
       UndoManager.cpp
       UndoManager.h
-      UserException.cpp
-      UserException.h
       ViewInfo.cpp
       ViewInfo.h
       VoiceKey.cpp
@@ -340,7 +314,6 @@ list( APPEND SOURCES
       WrappedType.h
       ZoomInfo.cpp
       ZoomInfo.h
-      float_cast.h
       wxFileNameWrapper.h
 
       # Commands
@@ -922,8 +895,6 @@ list( APPEND SOURCES
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
       widgets/ExpandingToolBar.h
-      widgets/FileConfig.cpp
-      widgets/FileConfig.h
       widgets/FileDialog/FileDialog.cpp
       widgets/FileDialog/FileDialog.h
       $<$<BOOL:${wxIS_WIN}>:
@@ -1101,7 +1072,6 @@ list( APPEND LIBRARIES
       expat::expat
       libmp3lame::libmp3lame
       libsndfile
-      libsoxr
       portaudio-v19
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
@@ -1362,8 +1332,8 @@ target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_options( ${TARGET} PRIVATE ${LDFLAGS} )
-target_link_libraries( ${TARGET} ${LIBRARIES} )
 target_link_libraries( ${TARGET} PUBLIC ${AUDACITY_LIBRARIES} )
+target_link_libraries( ${TARGET} ${LIBRARIES} )
 
 if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.16" AND NOT CCACHE_PROGRAM )
    if( ${_OPT}use_pch )

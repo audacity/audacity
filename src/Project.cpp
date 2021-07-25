@@ -17,6 +17,7 @@
 #include "TempDirectory.h"
 #include "widgets/wxWidgetsBasicUI.h"
 
+#include <wx/app.h>
 #include <wx/display.h>
 #include <wx/filename.h>
 #include <wx/frame.h>

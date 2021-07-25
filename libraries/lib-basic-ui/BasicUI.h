@@ -219,7 +219,7 @@ BASIC_UI_API Services *Install(Services *pInstance);
  are yet installed, the action is not lost, but may be dispatched by Yield().
  The action may itself invoke CallAfter to enqueue other actions.
  */
-void CallAfter(Action action);
+BASIC_UI_API void CallAfter(Action action);
 
 //! Dispatch waiting events, including actions enqueued by CallAfter
 /*! This function must be called by the main thread.  Actions enqueued by
@@ -227,7 +227,7 @@ void CallAfter(Action action);
  they were enqueued, unless an exception thrown by one of them stops the
  dispatching.
  */
-void Yield();
+BASIC_UI_API void Yield();
 
 //! Show an error dialog with a link to the manual for further help
 inline void ShowErrorDialog(

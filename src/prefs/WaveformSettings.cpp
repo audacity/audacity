@@ -23,7 +23,7 @@ Paul Licameli
 #include <algorithm>
 #include <wx/intl.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 
 WaveformSettings::Globals::Globals()

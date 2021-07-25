@@ -55,7 +55,7 @@ a graph for EffectScienFilter.
 #include "../AColor.h"
 #include "../AllThemeResources.h"
 #include "../PlatformCompatibility.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

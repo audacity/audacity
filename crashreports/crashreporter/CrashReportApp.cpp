@@ -8,6 +8,8 @@
 #include <wx/artprov.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
+#include <wx/wrapsizer.h>
+#include <wx/hyperlink.h>
 
 #include "google_breakpad/processor/basic_source_line_resolver.h"
 #include "google_breakpad/processor/minidump_processor.h"
@@ -90,6 +92,8 @@ namespace
 }
 
 #endif
+
+constexpr bool CrashReportAppHasUserComment = false;
 
 IMPLEMENT_APP(CrashReportApp);
 namespace
@@ -287,7 +291,8 @@ namespace
         auto buttonsLayout = new wxBoxSizer(wxHORIZONTAL);
         
         wxTextCtrl* commentCtrl = nullptr;
-        if (onSend != nullptr)
+
+        if (onSend != nullptr && CrashReportAppHasUserComment)
         {
             mainLayout->AddSpacer(10);
             mainLayout->Add(new wxStaticText(dialog, wxID_ANY, _("Comments")), wxSizerFlags().Border(wxALL));
@@ -298,8 +303,45 @@ namespace
             mainLayout->Add(commentCtrl, wxSizerFlags().Border(wxALL).Expand());
         }
 
-        if (onSend != nullptr && commentCtrl != nullptr)
+        if (onSend != nullptr)
         {
+            /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+            const wxString translatedText = _("See %s for more info.");
+
+            /* i18n-hint: Title of hyperlink to the privacy policy. This is an
+               object of "See". */
+            const wxString translatedLink = _("our Privacy Policy");
+
+            const size_t placeholderPosition = translatedText.Find(wxT("%s"));
+
+            if (placeholderPosition != wxString::npos)
+            {
+                auto privacyPolicyLayout = new wxWrapSizer();
+
+                privacyPolicyLayout->Add(
+                   new wxStaticText(dialog, wxID_ANY, translatedText.substr(0, placeholderPosition)),
+                   wxSizerFlags().Proportion(0).Border(wxUP | wxDOWN));
+
+                privacyPolicyLayout->Add(
+                   new wxHyperlinkCtrl(
+                      dialog, wxID_ANY, translatedLink,
+                      "https://www.audacityteam.org/about/desktop-privacy-notice/"),
+                   wxSizerFlags().Proportion(0).Border(wxUP | wxDOWN));
+
+                if (placeholderPosition + 2 < translatedText.Length())
+                {
+                   privacyPolicyLayout->Add(
+                      new wxStaticText(
+                         dialog, wxID_ANY,
+                         translatedText.substr(placeholderPosition + 2)),
+                      wxSizerFlags().Proportion(1).Border(wxUP | wxDOWN));
+                }
+
+                mainLayout->Add(
+                   privacyPolicyLayout, wxSizerFlags().Border(wxALL));
+            }
+
+
             auto dontSendButton = new wxButton(dialog, wxID_ANY, XC("&Don't send", "crash reporter button"));
             auto sendButton = new wxButton(dialog, wxID_ANY, XC("&Send", "crash reporter button"));
 
@@ -308,8 +350,13 @@ namespace
                     dialog->Close(true);
                 });
             sendButton->Bind(wxEVT_BUTTON, [dialog, commentCtrl, onSend](wxCommandEvent&)
-                { 
-                    if (onSend(commentCtrl->GetValue()))
+                {
+                    const wxString comment =
+                        commentCtrl != nullptr ? 
+                            commentCtrl->GetValue() : 
+                            wxString {};
+
+                    if (onSend(comment))
                     {
                         dialog->Close(true);
                     }

@@ -49,7 +49,7 @@
 #include "Export.h"
 #include "../FileIO.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"

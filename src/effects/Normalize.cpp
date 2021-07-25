@@ -26,7 +26,7 @@
 #include <wx/stattext.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

@@ -3,7 +3,7 @@
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
@@ -346,7 +346,7 @@ void OnPasteNewLabel(const CommandContext &context)
       // Unselect the last label, so we'll have just one active label when
       // we're done
       if (plt)
-         LabelTrackView::Get( *plt ).SetSelectedIndex( -1 );
+         LabelTrackView::Get( *plt ).ResetTextSelection();
 
       // Add a NEW label, paste into it
       // Paul L:  copy whatever defines the selected region, not just times

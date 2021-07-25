@@ -40,6 +40,7 @@ using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 #include <wx/event.h> // to declare custom event types
 
+#include "SampleCount.h"
 #include "SampleFormat.h"
 
 class wxArrayString;

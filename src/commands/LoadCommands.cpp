@@ -18,7 +18,7 @@ modelled on BuiltinEffectsModule
 #include "AudacityCommand.h"
 #include "ModuleManager.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 
 namespace {
 bool sInitialized = false;

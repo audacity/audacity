@@ -519,3 +519,22 @@ void TrackArt::DrawBackgroundWithSelection(
    }
 }
 
+void TrackArt::DrawCursor(TrackPanelDrawingContext& context,
+   const wxRect& rect, const Track* track)
+{
+   const auto dc = &context.dc;
+   const auto artist = TrackArtist::Get(context);
+   const auto& selectedRegion = *artist->pSelectedRegion;
+   
+   if (selectedRegion.isPoint())
+   {
+       const auto& zoomInfo = *artist->pZoomInfo;
+       auto x = static_cast<int>(zoomInfo.TimeToPosition(selectedRegion.t0(), rect.x));
+       if (x >= rect.GetLeft() && x <= rect.GetRight())
+       {
+          AColor::CursorColor(dc);
+          AColor::Line(*dc, x, rect.GetTop(), x, rect.GetBottom());
+       }
+   }
+}
+

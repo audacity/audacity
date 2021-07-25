@@ -16,6 +16,7 @@ Paul Licameli split from ProjectManager.h
 
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
+#include <wx/event.h> // to declare custom event type
 
 constexpr int RATE_NOT_SELECTED{ -1 };
 

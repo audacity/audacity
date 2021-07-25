@@ -12,6 +12,7 @@
 
 #include <wx/defs.h>
 
+#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
@@ -23,9 +24,10 @@
 
 #include "sndfile.h"
 
+#include "Dither.h"
 #include "../FileFormats.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectSettings.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"

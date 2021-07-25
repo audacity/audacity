@@ -67,7 +67,7 @@
 #include "../Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectStatus.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
 
@@ -2103,8 +2103,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
       // Currently, there are 2 playback meters and 2 record meters and any number of 
       // mixerboard meters, so we have to send out an preferences updated message to
       // ensure they all update themselves.
-      wxTheApp->AddPendingEvent(wxCommandEvent{
-         EVT_PREFS_UPDATE, MeterPrefsID() });
+      PrefsListener::Broadcast(MeterPrefsID());
    }
 }
 

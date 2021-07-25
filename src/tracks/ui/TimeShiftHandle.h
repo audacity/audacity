@@ -27,6 +27,7 @@ class Track;
 class TrackInterval;
 
 class ViewInfo;
+class wxMouseState;
 
 //! Abstract base class for policies to manipulate a track type with the Time Shift tool
 class AUDACITY_DLL_API TrackShifter {

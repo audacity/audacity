@@ -35,8 +35,6 @@
 **		long int lrint  (double x) ;
 */
 
-
-
 /*	The presence of the required functions are detected during the configure
 **	process and the values HAVE_LRINT and HAVE_LRINTF are set accordingly in
 **	the config.h file.

@@ -53,7 +53,7 @@ in which buttons can be placed.
 #include "../commands/CommandManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 ////////////////////////////////////////////////////////////
 /// ToolBarResizer

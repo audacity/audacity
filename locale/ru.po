@@ -1587,7 +1587,7 @@ msgstr "Не найдено устройство проигрывания MIDI �
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
-msgstr "Автовосстановление после сбоя"
+msgstr "Восстановление после сбоя"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
@@ -1616,11 +1616,11 @@ msgstr "Имя"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Discard Selected"
-msgstr "О&тменить выбор"
+msgstr "&Удалить выбранные"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Recover Selected"
-msgstr "&Восстановить выбор"
+msgstr "&Восстановить выбранные"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Skip"
@@ -17975,11 +17975,11 @@ msgstr "Не удаётся открыть ссылку для загрузки 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr "Поиск обновлений приложения"
+msgstr "Проверка обновлений приложения"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Чтобы быть в курсе событий, вы будете получать уведомления в приложении всякий раз, когда будет доступна для загрузки новая версия Audacity."
+msgstr "Чтобы всегда использовать самую последнюю версию приложения, вы будете получать уведомления в приложении всякий раз, когда будет доступна новая версия Audacity."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
@@ -17993,17 +17993,17 @@ msgstr "Вы можете отключить проверку обновлени
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr "П&роверить обновления"
+msgstr "Проверка обновлений"
 
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
-msgstr "Настройни > Приложение"
+msgstr "Настройки > Приложение"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Обновить  Audacity"
+msgstr "Обновление  Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"

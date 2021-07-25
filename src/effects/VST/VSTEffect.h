@@ -16,7 +16,7 @@
 #include "ModuleInterface.h"
 #include "PluginInterface.h"
 
-#include "../../SampleFormat.h"
+#include "SampleFormat.h"
 #include "../../xml/XMLTagHandler.h"
 
 class wxSizerItem;

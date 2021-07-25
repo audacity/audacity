@@ -32,7 +32,7 @@
 #include <wx/filename.h>
 #include <wx/utils.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../TempDirectory.h"
 #include "../widgets/AudacityMessageBox.h"

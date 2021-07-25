@@ -9,7 +9,6 @@
 
 ***********************************************************************/
 
-
 #include "AudacityException.h"
 
 #include <wx/atomic.h>
@@ -18,6 +17,21 @@
 
 AudacityException::~AudacityException()
 {
+}
+
+void AudacityException::EnqueueAction(
+   std::exception_ptr pException,
+   std::function<void(AudacityException*)> delayedHandler)
+{
+   BasicUI::CallAfter( [
+      pException = std::move(pException), delayedHandler = std::move(delayedHandler)
+   ] {
+      try {
+         std::rethrow_exception(pException);
+      }
+      catch( AudacityException &e )
+         { delayedHandler( &e ); }
+   } );
 }
 
 wxAtomicInt sOutstandingMessages {};

@@ -29,7 +29,7 @@
 #if defined(USE_MIDI)
 #include "../NoteTrack.h"
 #endif
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
@@ -59,6 +59,7 @@ static const auto exts = {wxT("aup")};
 #include <wx/ffile.h>
 #include <wx/file.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/string.h>
 #include <wx/utils.h>
 

@@ -43,7 +43,7 @@
 #include "../ShuttleGui.h"
 #include "../Theme.h"
 #include "../HelpText.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../wxFileNameWrapper.h"
 #include "../prefs/GUIPrefs.h"
 

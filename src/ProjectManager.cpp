@@ -46,6 +46,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/FileHistory.h"
 #include "widgets/WindowAccessible.h"
 
+#include <wx/app.h>
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
 #include <wx/scrolbar.h>

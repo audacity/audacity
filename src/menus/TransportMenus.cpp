@@ -6,7 +6,7 @@
 #include "../DeviceManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
@@ -34,6 +34,7 @@
 #include "../widgets/ProgressDialog.h"
 
 #include <float.h>
+#include <wx/app.h>
 
 // private helper classes and functions
 namespace {

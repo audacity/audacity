@@ -426,7 +426,7 @@ bool LabelDialog::TransferDataFromWindow()
 
       // Add the label to it
       lt->AddLabel(rd.selectedRegion, rd.title);
-      LabelTrackView::Get( *lt ).SetSelectedIndex( -1 );
+      LabelTrackView::Get( *lt ).ResetTextSelection();
    }
 
    return true;

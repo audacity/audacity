@@ -13,8 +13,8 @@ Paul Licameli split from class WaveTrack
 
 #include "../../../ui/CommonTrackView.h"
 #include "../../../../ClientData.h"
+#include "SampleCount.h"
 namespace WaveTrackViewConstants{ enum Display : int; }
-#include "audacity/Types.h"
 struct WaveTrackSubViewType;
 
 class CutlineHandle;
@@ -22,6 +22,8 @@ class TranslatableString;
 class WaveTrack;
 class WaveTrackView;
 class WaveClip;
+
+class wxDC;
 
 class AUDACITY_DLL_API WaveTrackSubView : public CommonTrackView
 {

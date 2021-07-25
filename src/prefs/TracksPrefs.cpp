@@ -23,7 +23,7 @@
 //#include <algorithm>
 //#include <wx/defs.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
