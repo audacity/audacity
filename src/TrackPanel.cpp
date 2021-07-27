@@ -719,6 +719,12 @@ enum {
     kContextMenuItemID_ExportProject,
     kContextMenuItemID_SelectAll,
     // On track area clicked.
+    kContextMenuItemID_Cut,
+    kContextMenuItemID_Copy,
+    kContextMenuItemID_Paste,
+    kContextMenuItemID_Split,
+    kContextMenuItemID_Mute,
+    kContextMenuItemID_Rename
 };
 
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
@@ -754,18 +760,36 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
         if(parent)
         {
             wxMenu contextMenu;
-            contextMenu.Bind(wxEVT_MENU,
-               [this]( wxCommandEvent &event ){
-                  OnContextMenu( /*GetProject(),*/ event ); }
-            );
             
-            contextMenu.Append(kContextMenuItemID_AddMonoTrack, XO("Add mono track").Translation());
-            contextMenu.Append(kContextMenuItemID_AddStereoTrack, XO("Add stereo track").Translation());
-            contextMenu.Append(kContextMenuItemID_AddLabelTrack, XO("Add label track").Translation());
-            contextMenu.AppendSeparator();
-            contextMenu.Append(kContextMenuItemID_ExportProject, XO("Export project\tCtrl+E").Translation());
-            contextMenu.AppendSeparator();
-            contextMenu.Append(kContextMenuItemID_SelectAll, XO("Select All\tCtrl+A").Translation());
+            // Get cursor position area: on track or non track (empty area).
+            const auto track = FindTrack (FindCell(event.m_x, event.m_y).pCell.get());
+            if(track)
+            {
+                contextMenu.Append(kContextMenuItemID_Cut, XO("Cut\tCtrl+X").Translation());
+                contextMenu.Append(kContextMenuItemID_Copy, XO("Copy\tCtrl+C").Translation());
+                contextMenu.Append(kContextMenuItemID_Paste, XO("Paste\tCtrl+V").Translation());
+                contextMenu.AppendSeparator();
+                contextMenu.Append(kContextMenuItemID_Split, XO("Split clip\tCtrl+I").Translation());
+                contextMenu.Append(kContextMenuItemID_Mute, XO("Mute/unmute track\tAlt+Ctrl+U").Translation());
+                contextMenu.AppendSeparator();
+                contextMenu.Append(kContextMenuItemID_Rename, XO("Rename clip\tShift+Ctrl+R").Translation());
+                
+                contextMenu.Bind(wxEVT_MENU,
+                   [this]( wxCommandEvent& event ){ OnTrackAreaContextMenu(event); }
+                );
+            } else {
+                contextMenu.Append(kContextMenuItemID_AddMonoTrack, XO("Add mono track").Translation());
+                contextMenu.Append(kContextMenuItemID_AddStereoTrack, XO("Add stereo track").Translation());
+                contextMenu.Append(kContextMenuItemID_AddLabelTrack, XO("Add label track").Translation());
+                contextMenu.AppendSeparator();
+                contextMenu.Append(kContextMenuItemID_ExportProject, XO("Export project\tCtrl+E").Translation());
+                contextMenu.AppendSeparator();
+                contextMenu.Append(kContextMenuItemID_SelectAll, XO("Select All\tCtrl+A").Translation());
+                
+                contextMenu.Bind(wxEVT_MENU,
+                   [this]( wxCommandEvent& event ){ OnEmptyAreaContextMenu(event); }
+                );
+            }
             
             parent->PopupMenu(&contextMenu);
         }
@@ -779,7 +803,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 #include "commands/CommandContext.h"
 #include "menus/TrackMenus.h"
 
-void TrackPanel::OnContextMenu(/*AudacityProject &project, */ wxCommandEvent& event)
+void TrackPanel::OnEmptyAreaContextMenu(wxCommandEvent& event)
 {
     switch(event.GetId())
     {
@@ -806,6 +830,30 @@ void TrackPanel::OnContextMenu(/*AudacityProject &project, */ wxCommandEvent& ev
             
         case kContextMenuItemID_SelectAll:
             this->CallAfter([this]{ SelectUtilities::DoSelectAll(*GetProject()); });
+            break;
+    }
+}
+
+void TrackPanel::OnTrackAreaContextMenu(wxCommandEvent& event)
+{
+    switch(event.GetId())
+    {
+        case kContextMenuItemID_Cut:
+            break;
+            
+        case kContextMenuItemID_Copy:
+            break;
+            
+        case kContextMenuItemID_Paste:
+            break;
+            
+        case kContextMenuItemID_Split:
+            break;
+            
+        case kContextMenuItemID_Mute:
+            break;
+            
+        case kContextMenuItemID_Rename:
             break;
     }
 }

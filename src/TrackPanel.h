@@ -84,7 +84,8 @@ class AUDACITY_DLL_API TrackPanel final
 
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
-    void OnContextMenu(/*AudacityProject &project, */wxCommandEvent& event);
+   void OnEmptyAreaContextMenu(wxCommandEvent& event);
+   void OnTrackAreaContextMenu(wxCommandEvent& event);
    void OnKeyDown(wxKeyEvent & event);
 
    void OnTrackListResizing(TrackListEvent & event);
