@@ -10,6 +10,8 @@
 #include "SampleCount.h"
 
 #include <algorithm>
+#include <limits>
+
 #include <wx/debug.h>
 
 size_t sampleCount::as_size_t() const {
