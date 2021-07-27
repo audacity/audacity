@@ -1,4 +1,4 @@
-
+#include "TrackMenus.h"
 
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -595,13 +595,7 @@ void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
 
 }
 
-namespace TrackActions {
-
-// Menu handler functions
-
-struct Handler : CommandHandlerObject {
-
-void OnNewWaveTrack(const CommandContext &context)
+void TrackActions::Handler::OnNewWaveTrack(const CommandContext &context)
 {
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
@@ -625,7 +619,7 @@ void OnNewWaveTrack(const CommandContext &context)
    t->EnsureVisible();
 }
 
-void OnNewStereoTrack(const CommandContext &context)
+void TrackActions::Handler::OnNewStereoTrack(const CommandContext &context)
 {
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
@@ -653,7 +647,7 @@ void OnNewStereoTrack(const CommandContext &context)
    left->EnsureVisible();
 }
 
-void OnNewLabelTrack(const CommandContext &context)
+void TrackActions::Handler::OnNewLabelTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -673,7 +667,7 @@ void OnNewLabelTrack(const CommandContext &context)
    t->EnsureVisible();
 }
 
-void OnNewTimeTrack(const CommandContext &context)
+void TrackActions::Handler::OnNewTimeTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -700,7 +694,7 @@ void OnNewTimeTrack(const CommandContext &context)
    t->EnsureVisible();
 }
 
-void OnStereoToMono(const CommandContext &context)
+void TrackActions::Handler::OnStereoToMono(const CommandContext &context)
 {
    EffectUI::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
@@ -708,19 +702,19 @@ void OnStereoToMono(const CommandContext &context)
       EffectManager::kConfigured);
 }
 
-void OnMixAndRender(const CommandContext &context)
+void TrackActions::Handler::OnMixAndRender(const CommandContext &context)
 {
    auto &project = context.project;
    DoMixAndRender(project, false);
 }
 
-void OnMixAndRenderToNewTrack(const CommandContext &context)
+void TrackActions::Handler::OnMixAndRenderToNewTrack(const CommandContext &context)
 {
    auto &project = context.project;
    DoMixAndRender(project, true);
 }
 
-void OnResample(const CommandContext &context)
+void TrackActions::Handler::OnResample(const CommandContext &context)
 {
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
@@ -827,12 +821,12 @@ void OnResample(const CommandContext &context)
    window.FinishAutoScroll();
 }
 
-void OnRemoveTracks(const CommandContext &context)
+void TrackActions::Handler::OnRemoveTracks(const CommandContext &context)
 {
    TrackUtilities::DoRemoveTracks( context.project );
 }
 
-static void MuteTracks(const CommandContext &context, bool mute, bool selected)
+void TrackActions::Handler::MuteTracks(const CommandContext &context, bool mute, bool selected)
 {
    auto &project = context.project;
    const auto &settings = ProjectSettings::Get( project );
@@ -853,45 +847,45 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    ProjectHistory::Get( project ).ModifyState(true);
 }
 
-void OnMuteAllTracks(const CommandContext &context)
+void TrackActions::Handler::OnMuteAllTracks(const CommandContext &context)
 {
    MuteTracks(context, true, false);
 }
 
-void OnUnmuteAllTracks(const CommandContext &context)
+void TrackActions::Handler::OnUnmuteAllTracks(const CommandContext &context)
 {
    MuteTracks(context, false, false);
 }
 
-void OnMuteSelectedTracks(const CommandContext &context)
+void TrackActions::Handler::OnMuteSelectedTracks(const CommandContext &context)
 {
    MuteTracks(context, true, true);
 }
 
-void OnUnmuteSelectedTracks(const CommandContext &context)
+void TrackActions::Handler::OnUnmuteSelectedTracks(const CommandContext &context)
 {
    MuteTracks(context, false, true);
 }
 
-void OnPanLeft(const CommandContext &context)
+void TrackActions::Handler::OnPanLeft(const CommandContext &context)
 {
    auto &project = context.project;
    DoPanTracks( project, -1.0);
 }
 
-void OnPanRight(const CommandContext &context)
+void TrackActions::Handler::OnPanRight(const CommandContext &context)
 {
    auto &project = context.project;
    DoPanTracks( project, 1.0);
 }
 
-void OnPanCenter(const CommandContext &context)
+void TrackActions::Handler::OnPanCenter(const CommandContext &context)
 {
    auto &project = context.project;
    DoPanTracks( project, 0.0);
 }
 
-void OnAlignNoSync(const CommandContext &context)
+void TrackActions::Handler::OnAlignNoSync(const CommandContext &context)
 {
    auto &project = context.project;
 
@@ -899,7 +893,7 @@ void OnAlignNoSync(const CommandContext &context)
       context.index + kAlignLabelsCount(), false);
 }
 
-void OnAlign(const CommandContext &context)
+void TrackActions::Handler::OnAlign(const CommandContext &context)
 {
    auto &project = context.project;
 
@@ -916,7 +910,7 @@ void OnAlignMoveSel(int index)
 }
 */
 
-void OnMoveSelectionWithTracks(const CommandContext &WXUNUSED(context) )
+void TrackActions::Handler::OnMoveSelectionWithTracks(const CommandContext &WXUNUSED(context) )
 {
    bool bMoveWith;
    gPrefs->Read(wxT("/GUI/MoveSelectionWithTracks"), &bMoveWith, false);
@@ -926,7 +920,7 @@ void OnMoveSelectionWithTracks(const CommandContext &WXUNUSED(context) )
 }
 
 #ifdef EXPERIMENTAL_SCOREALIGN
-void OnScoreAlign(const CommandContext &context)
+void TrackActions::Handler::OnScoreAlign(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -1051,7 +1045,7 @@ void OnScoreAlign(const CommandContext &context)
 }
 #endif /* EXPERIMENTAL_SCOREALIGN */
 
-void OnSortTime(const CommandContext &context)
+void TrackActions::Handler::OnSortTime(const CommandContext &context)
 {
    auto &project = context.project;
    DoSortTracks(project, kAudacitySortByTime);
@@ -1060,7 +1054,7 @@ void OnSortTime(const CommandContext &context)
       .PushState(XO("Tracks sorted by time"), XO("Sort by Time"));
 }
 
-void OnSortName(const CommandContext &context)
+void TrackActions::Handler::OnSortName(const CommandContext &context)
 {
    auto &project = context.project;
    DoSortTracks(project, kAudacitySortByName);
@@ -1069,7 +1063,7 @@ void OnSortName(const CommandContext &context)
       .PushState(XO("Tracks sorted by name"), XO("Sort by Name"));
 }
 
-void OnSyncLock(const CommandContext &context)
+void TrackActions::Handler::OnSyncLock(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1087,7 +1081,7 @@ void OnSyncLock(const CommandContext &context)
 
 ///The following methods operate controls on specified tracks,
 ///This will pop up the track panning dialog for specified track
-void OnTrackPan(const CommandContext &context)
+void TrackActions::Handler::OnTrackPan(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1100,7 +1094,7 @@ void OnTrackPan(const CommandContext &context)
    });
 }
 
-void OnTrackPanLeft(const CommandContext &context)
+void TrackActions::Handler::OnTrackPanLeft(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1113,7 +1107,7 @@ void OnTrackPanLeft(const CommandContext &context)
    });
 }
 
-void OnTrackPanRight(const CommandContext &context)
+void TrackActions::Handler::OnTrackPanRight(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1126,7 +1120,7 @@ void OnTrackPanRight(const CommandContext &context)
    });
 }
 
-void OnTrackGain(const CommandContext &context)
+void TrackActions::Handler::OnTrackGain(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1140,7 +1134,7 @@ void OnTrackGain(const CommandContext &context)
    });
 }
 
-void OnTrackGainInc(const CommandContext &context)
+void TrackActions::Handler::OnTrackGainInc(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1153,7 +1147,7 @@ void OnTrackGainInc(const CommandContext &context)
    });
 }
 
-void OnTrackGainDec(const CommandContext &context)
+void TrackActions::Handler::OnTrackGainDec(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1166,7 +1160,7 @@ void OnTrackGainDec(const CommandContext &context)
    });
 }
 
-void OnTrackMenu(const CommandContext &context)
+void TrackActions::Handler::OnTrackMenu(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1174,7 +1168,7 @@ void OnTrackMenu(const CommandContext &context)
    trackPanel.OnTrackMenu();
 }
 
-void OnTrackMute(const CommandContext &context)
+void TrackActions::Handler::OnTrackMute(const CommandContext &context)
 {
    auto &project = context.project;
 
@@ -1184,7 +1178,7 @@ void OnTrackMute(const CommandContext &context)
    });
 }
 
-void OnTrackSolo(const CommandContext &context)
+void TrackActions::Handler::OnTrackSolo(const CommandContext &context)
 {
    auto &project = context.project;
 
@@ -1194,7 +1188,7 @@ void OnTrackSolo(const CommandContext &context)
    });
 }
 
-void OnTrackClose(const CommandContext &context)
+void TrackActions::Handler::OnTrackClose(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1219,7 +1213,7 @@ void OnTrackClose(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-void OnTrackMoveUp(const CommandContext &context)
+void TrackActions::Handler::OnTrackMoveUp(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1232,7 +1226,7 @@ void OnTrackMoveUp(const CommandContext &context)
    }
 }
 
-void OnTrackMoveDown(const CommandContext &context)
+void TrackActions::Handler::OnTrackMoveDown(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1245,7 +1239,7 @@ void OnTrackMoveDown(const CommandContext &context)
    }
 }
 
-void OnTrackMoveTop(const CommandContext &context)
+void TrackActions::Handler::OnTrackMoveTop(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1258,7 +1252,7 @@ void OnTrackMoveTop(const CommandContext &context)
    }
 }
 
-void OnTrackMoveBottom(const CommandContext &context)
+void TrackActions::Handler::OnTrackMoveBottom(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackPanel = TrackPanel::Get( project );
@@ -1270,10 +1264,6 @@ void OnTrackMoveBottom(const CommandContext &context)
       trackPanel.Refresh(false);
    }
 }
-
-}; // struct Handler
-
-} // namespace
 
 static CommandHandlerObject &findCommandHandler(AudacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with

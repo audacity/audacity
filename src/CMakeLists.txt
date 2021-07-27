@@ -652,6 +652,7 @@ list( APPEND SOURCES
       menus/SelectMenus.cpp
       menus/ToolbarMenus.cpp
       menus/TrackMenus.cpp
+      menus/TrackMenus.h
       menus/TransportMenus.cpp
       menus/ViewMenus.cpp
       menus/WindowMenus.cpp

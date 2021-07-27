@@ -712,11 +712,13 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 }
 
 enum {
+    // On empty area clicked.
     kContextMenuItemID_AddMonoTrack = wxID_LAST + 1,
     kContextMenuItemID_AddStereoTrack,
     kContextMenuItemID_AddLabelTrack,
     kContextMenuItemID_ExportProject,
-    kContextMenuItemID_SelectAll
+    kContextMenuItemID_SelectAll,
+    // On track area clicked.
 };
 
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
@@ -747,7 +749,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
     {
         wxWindow *parent = wxWindow::FindFocus();
         if(!parent)
-           parent = &GetProjectFrame( *GetProject() );
+           parent = &GetProjectFrame(*GetProject());
         
         if(parent)
         {
@@ -774,25 +776,35 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 }
 
 #include "SelectUtilities.h"
+#include "commands/CommandContext.h"
+#include "menus/TrackMenus.h"
 
 void TrackPanel::OnContextMenu(/*AudacityProject &project, */ wxCommandEvent& event)
 {
     switch(event.GetId())
     {
         case kContextMenuItemID_AddMonoTrack:
+            this->CallAfter([this]{
+                TrackActions::Handler().OnNewWaveTrack(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_AddStereoTrack:
+            this->CallAfter([this]{
+                TrackActions::Handler().OnNewStereoTrack(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_AddLabelTrack:
+            this->CallAfter([this]{
+                TrackActions::Handler().OnNewLabelTrack(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_ExportProject:
             break;
             
         case kContextMenuItemID_SelectAll:
-            
             this->CallAfter([this]{ SelectUtilities::DoSelectAll(*GetProject()); });
             break;
     }
