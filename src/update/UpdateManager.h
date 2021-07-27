@@ -13,6 +13,7 @@
 #include "UpdateDataParser.h"
 
 #include "Prefs.h"
+#include "BasicUI.h"
 
 #include <wx/string.h>
 #include <wx/event.h>
@@ -51,7 +52,7 @@ private:
     /// Scheduling update time for avoiding multiplying update notifications.
     bool IsTimeForUpdatesChecking();
 
-    std::unique_ptr<wxGenericProgressDialog> mProgressDialog;
+    std::unique_ptr<BasicUI::GenericProgressDialog> mProgressDialog;
 
     std::string mAudacityInstallerPath;
     std::ofstream mAudacityInstaller;
