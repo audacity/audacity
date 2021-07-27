@@ -99,8 +99,10 @@ private:
    std::shared_ptr<SnapManager> mSnapManager;
    SnapResults mSnapStart, mSnapEnd;
    bool mUseSnap{ true };
-   bool mFreqSnapping { false };
-   double mFreqSnappingRatio { 0.1 };
+   bool mFreqSnapping { true };
+   // Example: For window size of 1024, with ratio 0.01
+   // It searches for (+-) 1024*0.01 = 10 bins
+   double mFreqSnappingRatio { 0.01 };
 
    long long mSampleCountUpperBound, mSampleCountLowerBound;
    wxInt64 mFreqUpperBound, mFreqLowerBound;

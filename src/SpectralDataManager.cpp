@@ -1,3 +1,4 @@
+#include <iostream>
 #include "FFT.h"
 #include "SpectralDataManager.h"
 #include "WaveTrack.h"
@@ -42,6 +43,17 @@ int SpectralDataManager::ProcessTracks(TrackList &tracks){
    return applyCount;
 }
 
+wxInt64 SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
+                                                      long long int startSC,
+                                                      double threshold,
+                                                      wxInt64 targetFreq)
+{
+   Setting setting;
+   Worker worker(setting);
+
+   return worker.ProcessSnapping(wt, startSC, threshold, targetFreq);
+}
+
 SpectralDataManager::Worker::Worker(const Setting &setting)
 :TrackSpectrumTransformer{ true, setting.mInWindowType, setting.mOutWindowType,
                            setting.mWindowSize, setting.mStepsPerWindow,
@@ -66,14 +78,70 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
                                           const std::shared_ptr<SpectralData>& pSpectralData)
 {
    mpSpectralData = pSpectralData;
-   auto &dataHistory = mpSpectralData->dataHistory;
    mStartSample = mpSpectralData->GetStartT();
    mEndSample = mStartSample + mWindowSize;
+   mWindowCount = 0;
 
    if (!TrackSpectrumTransformer::Process( Processor, wt, 1,
                                            mpSpectralData->GetStartT(),
                                            mpSpectralData->GetEndT() - mpSpectralData->GetStartT()))
       return false;
+
+   return true;
+}
+
+wxInt64 SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
+                                                  long long startSC,
+                                                  double threshold,
+                                                  wxInt64 targetFreq)
+{
+   mSnapThreshold = threshold;
+   mSnapTargetFreq = targetFreq;
+   mSnapSamplingRate = wt->GetRate();
+   // The calculated frequency peak will be stored in mReturnFreq
+   if (!TrackSpectrumTransformer::Process( SnappingProcessor, wt,
+                                           1, startSC, 2048))
+      return 0;
+
+   return mSnapReturnFreq;
+}
+
+bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transformer) {
+   auto &worker = static_cast<Worker &>(transformer);
+   // Compute power spectrum in the newest window
+   {
+      MyWindow &record = worker.NthWindow(0);
+      float *pSpectrum = &record.mSpectrums[0];
+      const double dc = record.mRealFFTs[0];
+      *pSpectrum++ = dc * dc;
+      float *pReal = &record.mRealFFTs[1], *pImag = &record.mImagFFTs[1];
+      for (size_t nn = worker.mSpectrumSize - 2; nn--;) {
+         const double re = *pReal++, im = *pImag++;
+         *pSpectrum++ = re * re + im * im;
+      }
+      const double nyquist = record.mImagFFTs[0];
+      *pSpectrum = nyquist * nyquist;
+
+      const double &sr = worker.mSnapSamplingRate;
+      const double nyquistRate = sr / 2;
+      const double &threshold = worker.mSnapThreshold;
+      const double &spectrumSize = worker.mSpectrumSize;
+      const wxInt64 &targetFreq = worker.mSnapTargetFreq;
+
+      int targetBin = targetFreq / nyquistRate * spectrumSize;
+      int binBound = spectrumSize * threshold;
+      float maxValue = std::numeric_limits<float>::min();
+
+      // Skip the first and last bin
+      for(int i = -binBound; i < binBound; i++){
+         int idx = targetBin + i;
+         if(record.mSpectrums[idx] > maxValue){
+            maxValue = record.mSpectrums[idx];
+            // Update the return frequency
+            worker.mSnapReturnFreq = idx / spectrumSize * nyquistRate;
+         }
+      }
+   }
 
    return true;
 }
