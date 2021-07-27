@@ -24,6 +24,7 @@ Edward Hui
 #include "../../RefreshCode.h"
 #include "../../SelectUtilities.h"
 #include "../../SelectionState.h"
+#include "../../SpectralDataManager.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
@@ -38,6 +39,7 @@ Edward Hui
 
 #include <tgmath.h>
 #include <wx/event.h>
+#include <iostream>
 
 // Only for definition of SonifyBeginModifyState:
 //#include "../../NoteTrack.h"
@@ -212,15 +214,13 @@ UIHandle::Result BrushHandle::NeedChangeHighlight
 }
 
 BrushHandle::BrushHandle
-( const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
-  const TrackList &trackList,
-  const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-  const std::shared_ptr<SpectralData> &mpSpectralData,
-  const int brushRadius)
-   : mpView{ pTrackView }
-   , mpSpectralData(mpSpectralData)
-   , mSnapManager{ std::make_shared<SnapManager>(
-      *trackList.GetOwner(), trackList, viewInfo) }
+      ( const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
+        const TrackList &trackList,
+        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
+        const std::shared_ptr<SpectralData> &mpSpectralData,
+        const int brushRadius)
+      : mpView{ pTrackView }
+      , mpSpectralData(mpSpectralData)
 {
    const wxMouseState &state = st.state;
    auto pTrack = pTrackView->FindTrack().get();
@@ -318,8 +318,8 @@ UIHandle::Result BrushHandle::Drag
    wxMouseEvent &event = evt.event;
    const auto sTrack = TrackList::Get( *pProject ).Lock( FindTrack() );
    const auto pTrack = sTrack.get();
-   const WaveTrack *const wt =
-         static_cast<const WaveTrack*>(pTrack);
+   WaveTrack *const wt =
+         static_cast<WaveTrack*>(pTrack);
    auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
 
@@ -365,6 +365,20 @@ UIHandle::Result BrushHandle::Drag
          int xm = x0, ym = y0;
          int r = mBrushRadius;
          int cx = -r, cy = 0, cerr = 2 - 2 * r;
+
+         if(mFreqSnapping){
+            // Correct the y coord (snap to highest energy freq. bin)
+            long long startSC = posToLongLong(xm);
+            wxInt64 targetFreq = PositionToFrequency(wt, 0, ym+cy, mRect.y, mRect.height);
+            if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
+               wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
+                                                                               startSC,
+                                                                               mFreqSnappingRatio,
+                                                                               targetFreq);
+               ym = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
+            }
+         }
+
          do {
             posFreq = PositionToFrequency(wt, 0, ym+cy, mRect.y, mRect.height);
             HandleTimeFreqData(posToLongLong(xm-cx), posFreq);
