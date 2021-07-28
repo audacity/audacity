@@ -92,6 +92,7 @@ ln -sf share/icons/hicolor/scalable/apps/audacity.svg "${appdir}/.DirIcon"
 export LD_LIBRARY_PATH="${appdir}/usr/lib/audacity:${LD_LIBRARY_PATH-}"
 
 linuxdeploy --appdir "${appdir}" # add all shared library dependencies
+rm "${appdir}/lib/libatk-1.0.so.0"
 
 #============================================================================
 # Build AppImage

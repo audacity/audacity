@@ -1,4 +1,10 @@
-if( ${_OPT}use_wxwidgets STREQUAL "system" ) 
+if( ${_OPT}use_wxwidgets STREQUAL "system" OR NOT ${_OPT}conan_enabled )
+    # DV: find_package will be scoped, as FindwxWidgets.cmake is rather outdated.
+    # Still - let's perform the sanity check first.
+    if( NOT wxWidgets_FOUND )
+        find_package( wxWidgets REQUIRED COMPONENTS adv base core html qa xml net )
+    endif()
+
     if( NOT TARGET wxwidgets::wxwidgets )
         add_library( wxwidgets::wxwidgets INTERFACE IMPORTED GLOBAL)
     endif()
@@ -73,6 +79,8 @@ if( ${_OPT}use_wxwidgets STREQUAL "system" )
     )
 
     set( toolkit "${wxWidgets_LIBRARIES}" )
+
+    message(STATUS "Trying to retrieve GTK version from ${toolkit}")
 
     if( "${toolkit}" MATCHES ".*gtk2.*" )
         set( gtk gtk+-2.0 )

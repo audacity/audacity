@@ -14,9 +14,13 @@
 
 #include <unordered_map>
 #include <algorithm>
+#include <memory>
 
 #include <wx/hyperlink.h>
 
+#ifdef __WXGTK__
+#include <wx/stattext.h>
+#endif
 
 namespace
 {    
@@ -70,6 +74,16 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
       return;
    }
 
+#ifdef __WXGTK__
+   // Non empty label is required, as wxHyperlinkCtrl would assert otherwise
+   std::unique_ptr<wxHyperlinkCtrl> tempHyperlink
+       = std::make_unique<wxHyperlinkCtrl>(S.GetParent(), wxID_ANY, wxT("temp"), wxString());
+
+   const wxColour hyperlinkColour = tempHyperlink->GetNormalColour();
+
+   tempHyperlink.reset();
+#endif
+
    wxString translated = mMessage.Translation();
 
    std::vector<ProcessedArgument> processedArguments =
@@ -108,7 +122,7 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
             }
 
             // Add hyperlink
-
+#ifndef __WXGTK__
             wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
                S.GetParent(), wxID_ANY, argument->Value.Translation(),
                argument->TargetURL);
@@ -122,7 +136,20 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
             }
 
             S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+#else
+            wxStaticText* hyperlink = S.AddVariableText(argument->Value);
 
+            hyperlink->SetFont(hyperlink->GetFont().Underlined());
+            hyperlink->SetForegroundColour(hyperlinkColour);
+            hyperlink->SetCursor(wxCURSOR_HAND);
+
+            hyperlink->Bind(wxEVT_LEFT_UP, [handler = argument->Handler, url = argument->TargetURL](wxEvent&) {
+                if (handler)
+                    handler();
+                else if (!url.empty())
+                    wxLaunchDefaultBrowser(url);
+            });
+#endif
             // Update the currentPostion to the first symbol after the
             // Placeholder
 

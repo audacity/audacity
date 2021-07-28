@@ -139,6 +139,12 @@ include( AudacityFunctions )
 set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
+cmd_option( ${_OPT}conan_enabled
+            "Use Conan package manager for 3d party dependencies" 
+            On
+)
+
+# Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
             "local"
@@ -322,7 +328,7 @@ set( _EXEDIR "${_DEST}" )
 # Setup RPATH handling
 set( CMAKE_BUILD_RPATH "${_DEST}/${_PKGLIB}" )
 set( CMAKE_BUILD_WITH_INSTALL_RPATH FALSE )
-set( CMAKE_INSTALL_RPATH "${_PREFIX}/${_PKGLIB}" )
+set( CMAKE_INSTALL_RPATH "$ORIGIN/../${_PKGLIB}" )
 set( CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE )
 
 # Adjust them for the Mac
@@ -510,7 +516,7 @@ resolve_conan_dependencies()
 
 add_subdirectory( "help" )
 if(${_OPT}has_crashreports)
-add_subdirectory( "crashreports" )
+   add_subdirectory( "crashreports" )
 endif()
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )

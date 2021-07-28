@@ -39,6 +39,7 @@ static const auto thirdParagraph =
 
 BEGIN_EVENT_TABLE(UpdateNoticeDialog, wxDialogWrapper)
     EVT_BUTTON(wxID_OK, UpdateNoticeDialog::OnOk)
+    EVT_SIZE(UpdateNoticeDialog::OnSize)
 END_EVENT_TABLE()
 
 IMPLEMENT_CLASS(UpdateNoticeDialog, wxDialogWrapper)
@@ -55,7 +56,7 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
    {
       S.AddSpace(0, 16);
 
-      S.StartHorizontalLay();
+      S.StartHorizontalLay(wxEXPAND, 0);
       {
          S.AddSpace(24, 0);
 
@@ -104,7 +105,7 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
       }
       S.EndHorizontalLay();
 
-      S.StartHorizontalLay(wxEXPAND, 0);
+      S.StartHorizontalLay(wxEXPAND);
       {
          S.AddSpace(1, 0, 1);
 
@@ -117,12 +118,19 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
 
    S.EndVerticalLay();
 
-   Layout();
    Fit();
+   Layout();
+
    Center();
 }
 
 void UpdateNoticeDialog::OnOk(wxCommandEvent&)
 {
    EndModal(wxOK);
+}
+
+void UpdateNoticeDialog::OnSize(wxSizeEvent&)
+{
+    Fit();
+    Layout();
 }
