@@ -281,7 +281,7 @@ def usage_helper(reply):
     To send a command, provide the scripting id {command name}.
     Commands sent without parameters use default values set in Audacity.
 
-    To include custom parameters, the scripting id must be followed by a colon ':',
+    To include custom parameters, follow scripting id with a colon ':',
     then spacing each parameter key/value in the following form {key="Value"}.
 
     Note: Quotes around values must be double.
@@ -309,7 +309,6 @@ def usage_helper(reply):
 def command_helper(reply, message):
     """Returns available commands in readable format, prompts for additional command info"""
     # check if message beginning indicates JSON
-    firstchar = reply[0]
     if reply[0] != "[" and reply[0] != "{":
         print(reply)
         return
