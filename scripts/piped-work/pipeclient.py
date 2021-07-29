@@ -251,60 +251,6 @@ def bool_from_string(strval):
     raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def usage_helper(reply):
-    """Returns instructions for command-line usage"""
-    reply ="""
-    ===============================
-    Interactive command-line
-    ===============================
-    Usability assistance:
-    The following contains shortcut commands for easier access to essential
-    information needed to use this terminal with greater confidence.  
-    
-    View options are intended for readability for new users exploring the
-    commands available through the mod-script-pipe.
-
-    Terminal shortcut commands:
-    'H' : view this usage help message
-    'C' : view 'Commands' list (option to view individual usage requirements)
-    'M' : view 'Menus' list (option to view individual usage requirements)
-    'Q' : exit program
-    
-    A full detailed list of scripting commands and parameters can be found at:
-
-    https://manual.audacityteam.org/man/scripting_reference.html
-
-    
-    ==================
-    Command-line Usage
-    ==================
-    To send a command, provide the scripting id {command name}.
-    Commands sent without parameters use default values set in Audacity.
-
-    To include custom parameters, follow scripting id with a colon ':',
-    then spacing each parameter key/value in the following form {key="Value"}.
-
-    Note: Quotes around values must be double.
-    Note: Key values are case-sensitive, commands and keys are not.
-
-    Command General Form:
-    {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ... 
-
-    Example
-    -------
-        > Help
-
-        This example sends the 'Help' scripting command using
-        defaults (Command="Help" Format="JSON"). 
-        
-
-        > Help: Command="Amplify" Format="Brief"
-        
-        This example sends the 'Help' scipting command for the 
-        command 'Amplify', returning it in "Brief" format.
-    """
-    print(reply)
-
 
 def command_helper(reply, message):
     """Returns available commands in readable format, prompts for additional command info"""
@@ -379,7 +325,57 @@ def command_info(command):
 
 
 def main():
-    """Interactive command-line for PipeClient"""
+    """Interactive command-line for PipeClient
+    ===============================
+    Interactive command-line
+    ===============================
+    Usability assistance:
+    The following contains shortcut commands for easier access to essential
+    information needed to use this terminal with greater confidence.  
+    
+    View options are intended for readability for new users exploring the
+    commands available through the mod-script-pipe.
+
+    Terminal shortcut commands:
+    'H' : view this usage help message
+    'C' : view 'Commands' list (option to view individual usage requirements)
+    'M' : view 'Menus' list (option to view individual usage requirements)
+    'Q' : exit program
+    
+    A full detailed list of scripting commands and parameters can be found at:
+
+    https://manual.audacityteam.org/man/scripting_reference.html
+
+    
+    ==================
+    Command-line Usage
+    ==================
+    To send a command, provide the scripting id {command name}.
+    Commands sent without parameters use default values set in Audacity.
+
+    To include custom parameters, follow scripting id with a colon ':',
+    then spacing each parameter key/value in the following form {key="Value"}.
+
+    Note: Quotes around values must be double.
+    Note: Key values are case-sensitive, commands and keys are not.
+
+    Command General Form:
+    {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ... 
+
+    Example
+    -------
+        > Help
+
+        This example sends the 'Help' scripting command using
+        defaults (Command="Help" Format="JSON"). 
+        
+
+        > Help: Command="Amplify" Format="Brief"
+        
+        This example sends the 'Help' scipting command for the 
+        command 'Amplify', returning it in "Brief" format.
+
+    """
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--timeout', type=float, metavar='', default=10,
@@ -404,12 +400,13 @@ def main():
             message = input("\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
         else:
             message = input(
-                "\nEnter command or 'Q' to quit:\n> ")
+                "\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
         start = time.time()
         if message.upper() == 'Q':
             sys.exit(0)
         elif message.upper() == 'H':
-            usage_helper(reply)
+            print(main.__doc__)
+            #usage_helper(reply)
         elif message == '':
             pass
         else:
