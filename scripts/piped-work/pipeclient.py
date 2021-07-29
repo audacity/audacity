@@ -251,59 +251,6 @@ def bool_from_string(strval):
     raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def main():
-    """Interactive command-line for PipeClient"""
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--timeout', type=float, metavar='', default=10,
-                        help="timeout for reply in seconds (default: 10")
-    parser.add_argument('-s', '--show-time', metavar='True/False',
-                        nargs='?', type=bool_from_string,
-                        const='t', default='t', dest='show',
-                        help='show command execution time (default: True)')
-    parser.add_argument('-d', '--docs', action='store_true',
-                        help='show documentation and exit')
-    args = parser.parse_args()
-
-    if args.docs:
-        print(__doc__)
-        sys.exit(0)
-
-    client = PipeClient()
-    view_commands_options = {"C": "Commands", "M": "Menus"}
-    while True:
-        reply = ''
-        if sys.version_info[0] < 3:
-            message = input("\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
-        else:
-            message = input(
-                "\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
-        start = time.time()
-        if message.upper() == 'Q':
-            sys.exit(0)
-        elif message.upper() == 'H':
-            usage_helper(reply)
-        elif message == '':
-            pass
-        else:
-            command_list = False
-            if message.upper() in view_commands_options:
-                category = view_commands_options[message.upper()]
-                command_list = True
-                message = 'GetInfo: Type="{type}" Format="JSON"'.format(type=category)
-            client.write(message, timer=args.show)
-            while reply == '':
-                time.sleep(0.1)  # allow time for reply
-                if time.time() - start > args.timeout:
-                    reply = 'PipeClient: Reply timed-out.'
-                else:
-                    reply = client.read()
-            if command_list:
-                command_helper(reply, message)
-            else:
-                print(reply)
-
-
 def usage_helper(reply):
     """Returns instructions for command-line usage"""
     reply ="""
@@ -431,6 +378,59 @@ def command_info(command):
     reply += params
     return reply
 
+
+def main():
+    """Interactive command-line for PipeClient"""
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--timeout', type=float, metavar='', default=10,
+                        help="timeout for reply in seconds (default: 10")
+    parser.add_argument('-s', '--show-time', metavar='True/False',
+                        nargs='?', type=bool_from_string,
+                        const='t', default='t', dest='show',
+                        help='show command execution time (default: True)')
+    parser.add_argument('-d', '--docs', action='store_true',
+                        help='show documentation and exit')
+    args = parser.parse_args()
+
+    if args.docs:
+        print(__doc__)
+        sys.exit(0)
+
+    client = PipeClient()
+    view_commands_options = {"C": "Commands", "M": "Menus"}
+    while True:
+        reply = ''
+        if sys.version_info[0] < 3:
+            message = input("\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
+        else:
+            message = input(
+                "\nEnter command or 'Q' to quit:\n> ")
+        start = time.time()
+        if message.upper() == 'Q':
+            sys.exit(0)
+        elif message.upper() == 'H':
+            usage_helper(reply)
+        elif message == '':
+            pass
+        else:
+            command_list = False
+            if message.upper() in view_commands_options:
+                category = view_commands_options[message.upper()]
+                command_list = True
+                message = 'GetInfo: Type="{type}" Format="JSON"'.format(type=category)
+            client.write(message, timer=args.show)
+            while reply == '':
+                time.sleep(0.1)  # allow time for reply
+                if time.time() - start > args.timeout:
+                    reply = 'PipeClient: Reply timed-out.'
+                else:
+                    reply = client.read()
+            if command_list:
+                command_helper(reply, message)
+            else:
+                print(reply)
+                
 
 if __name__ == '__main__':
     main()
