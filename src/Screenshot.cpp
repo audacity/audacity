@@ -802,7 +802,7 @@ void ScreenshotBigDialog::OnShortTracks(wxCommandEvent & WXUNUSED(event))
 {
    for (auto t : TrackList::Get( mContext.project ).Any<WaveTrack>()) {
       auto &view = TrackView::Get( *t );
-      view.SetHeight( view.GetMinimizedHeight() );
+      view.SetHeight( view.GetMinimumHeight() );
    }
 
    ProjectWindow::Get( mContext.project ).RedrawProject();

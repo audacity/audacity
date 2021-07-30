@@ -71,9 +71,10 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    int width, height;
    dc->GetSize(&width, &height);
 
-   int rulerScreenHeight = 40;
-   int screenTotalHeight =
-      TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
+   const int rulerScreenHeight = 40;
+   int screenTotalHeight = rulerScreenHeight;
+   for (auto t : *mTracks)
+      screenTotalHeight += TrackView::Get(*t).GetHeight();
 
    double scale = height / (double)screenTotalHeight;
 

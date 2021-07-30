@@ -25,6 +25,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "TrackInfo.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
@@ -1014,7 +1015,7 @@ void ProjectWindow::FixScrollbars()
    bool refresh = false;
    bool rescroll = false;
 
-   int totalHeight = TrackView::GetTotalHeight( tracks ) + 32;
+   int totalHeight = TrackInfo::MeasureTotalTracksHeight(tracks) + 36;
 
    auto panelWidth = viewInfo.GetTracksUsableWidth();
    auto panelHeight = viewInfo.GetHeight();

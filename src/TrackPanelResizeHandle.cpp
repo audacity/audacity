@@ -166,10 +166,10 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       (mInitialUpperTrackHeight + delta * (1.0 - proportion));
 
       //make sure neither track is smaller than its minimum height
-      if (newTrackHeight < view.GetMinimizedHeight())
-         newTrackHeight = view.GetMinimizedHeight();
-      if (newUpperTrackHeight < prevView.GetMinimizedHeight())
-         newUpperTrackHeight = prevView.GetMinimizedHeight();
+      if (newTrackHeight < view.GetMinimumHeight())
+         newTrackHeight = view.GetMinimumHeight();
+      if (newUpperTrackHeight < prevView.GetMinimumHeight())
+         newUpperTrackHeight = prevView.GetMinimumHeight();
 
       view.SetHeight(newTrackHeight);
       prevView.SetHeight(newUpperTrackHeight);
@@ -183,15 +183,15 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       int newTrackHeight = mInitialTrackHeight - delta;
 
       // make sure neither track is smaller than its minimum height
-      if (newTrackHeight < nextView.GetMinimizedHeight()) {
-         newTrackHeight = nextView.GetMinimizedHeight();
+      if (newTrackHeight < nextView.GetMinimumHeight()) {
+         newTrackHeight = nextView.GetMinimumHeight();
          newUpperTrackHeight =
-         mInitialUpperTrackHeight + mInitialTrackHeight - nextView.GetMinimizedHeight();
+         mInitialUpperTrackHeight + mInitialTrackHeight - nextView.GetMinimumHeight();
       }
-      if (newUpperTrackHeight < view.GetMinimizedHeight()) {
-         newUpperTrackHeight = view.GetMinimizedHeight();
+      if (newUpperTrackHeight < view.GetMinimumHeight()) {
+         newUpperTrackHeight = view.GetMinimumHeight();
          newTrackHeight =
-         mInitialUpperTrackHeight + mInitialTrackHeight - view.GetMinimizedHeight();
+         mInitialUpperTrackHeight + mInitialTrackHeight - view.GetMinimumHeight();
       }
 
       view.SetHeight(newUpperTrackHeight);
@@ -200,8 +200,8 @@ UIHandle::Result TrackPanelResizeHandle::Drag
 
    auto doResize = [&] {
       int newTrackHeight = mInitialTrackHeight + delta;
-      if (newTrackHeight < view.GetMinimizedHeight())
-         newTrackHeight = view.GetMinimizedHeight();
+      if (newTrackHeight < view.GetMinimumHeight())
+         newTrackHeight = view.GetMinimumHeight();
       view.SetHeight(newTrackHeight);
    };
 

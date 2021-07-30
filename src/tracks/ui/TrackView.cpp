@@ -10,6 +10,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackView.h"
 #include "../../Track.h"
+#include "../../ViewInfo.h"
 
 #include "../../ClientData.h"
 #include "../../Project.h"
@@ -171,7 +172,7 @@ int TrackView::GetActualHeight() const
 int TrackView::GetHeight() const
 {
    if ( GetMinimized() )
-      return GetMinimizedHeight();
+      return GetMinimumHeight();
 
    return mHeight;
 }
@@ -224,18 +225,24 @@ struct TrackPositioner final : ClientData::Base, wxEvtHandler
    {
       e.Skip();
 
-      auto iter =
-         TrackList::Get( mProject ).Find( e.mpTrack.lock().get() );
-      if ( !*iter )
+      auto& tracks = TrackList::Get(mProject);
+
+      auto iter = tracks.Find( e.mpTrack.lock().get() );
+      if (iter == tracks.end())
          return;
 
-      auto prev = iter;
-      auto yy = TrackView::GetCumulativeHeight( *--prev );
-
+      auto yy = 0;
+      if (iter == tracks.begin())
+          yy = kTopMargin;
+      else
+          yy = TrackView::Get(**iter.advance(-1)).GetBottom() + kSeparatorThickness;
+      
       while( auto pTrack = *iter ) {
          auto &view = TrackView::Get( *pTrack );
-         view.SetY( yy );
-         yy += view.GetHeight();
+         if (view.GetAffordanceControls())
+             yy += kAffordancesAreaHeight;
+         view.SetTop( yy );
+         yy += view.GetHeight() + kSeparatorThickness;
          ++iter;
       }
    }

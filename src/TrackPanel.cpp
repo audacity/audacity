@@ -61,6 +61,7 @@ is time to refresh some aspect of the screen.
 #include "Theme.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
+#include "TrackInfo.h"
 //#define DEBUG_DRAW_TIMING 1
 
 #include "UndoManager.h"
@@ -947,14 +948,10 @@ void TrackPanel::OnEnsureVisible(TrackListEvent & e)
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();
 
-   int trackTop = 0;
-   int trackHeight =0;
-
    for (auto it : GetTracks()->Leaders()) {
-      trackTop += trackHeight;
-
       auto channels = TrackList::Channels(it);
-      trackHeight = channels.sum( TrackView::GetTrackHeight );
+      auto trackTop = TrackInfo::GetTrackChannelTop(*it);
+      auto trackHeight = TrackInfo::MeasureTrackGroupHeight(*it);
 
       //We have found the track we want to ensure is visible.
       if (channels.contains(t)) {
@@ -987,17 +984,7 @@ void TrackPanel::OnEnsureVisible(TrackListEvent & e)
 // 1.0 scrolls to bottom.
 void TrackPanel::VerticalScroll( float fracPosition){
 
-   int trackTop = 0;
-   int trackHeight = 0;
-
-   auto tracks = GetTracks();
-
-   auto range = tracks->Leaders();
-   if (!range.empty()) {
-      trackHeight = TrackView::GetChannelGroupHeight( *range.rbegin() );
-      --range.second;
-   }
-   trackTop = range.sum( TrackView::GetChannelGroupHeight );
+   auto tracksHeight = TrackInfo::MeasureTotalTracksHeight(*GetTracks());
 
    int delta;
    
@@ -1005,7 +992,7 @@ void TrackPanel::VerticalScroll( float fracPosition){
    int width, height;
    GetSize(&width, &height);
 
-   delta = (fracPosition * (trackTop + trackHeight - height)) - mViewInfo->vpos + mViewInfo->scrollStep;
+   delta = (fracPosition * (tracksHeight - height)) - mViewInfo->vpos + mViewInfo->scrollStep;
    //wxLogDebug( "Scroll down by %i pixels", delta );
    delta /= mViewInfo->scrollStep;
    mListener->TP_ScrollUpDown(delta);
@@ -1356,7 +1343,7 @@ struct ChannelGroup final : TrackPanelGroup {
 
          auto height = view.GetHeight();
          rect.SetTop( yy );
-         rect.SetHeight( height - kSeparatorThickness );
+         rect.SetHeight( height );
          refinement.emplace_back( yy,
             std::make_shared< VRulersAndChannels >(
                channel->shared_from_this(),
@@ -1364,9 +1351,8 @@ struct ChannelGroup final : TrackPanelGroup {
                mLeftOffset ) );
          if ( channel != pLast ) {
             yy += height;
-            refinement.emplace_back(
-               yy - kSeparatorThickness,
-               TrackPanelResizerCell::Get( *channel ).shared_from_this() );
+            refinement.emplace_back(yy, TrackPanelResizerCell::Get( *channel ).shared_from_this() );
+            yy += kSeparatorThickness;
          }
       }
 
@@ -1386,16 +1372,14 @@ struct ChannelGroup final : TrackPanelGroup {
             auto& view = TrackView::Get(*channel);
             auto height = view.GetHeight();
             if (auto affordance = view.GetAffordanceControls())
-            {
-               height += kAffordancesAreaHeight;
-            }
+               yy += kAffordancesAreaHeight;
             auto trackRect = wxRect(
                mLeftOffset,
                yy,
                rect.GetRight() - mLeftOffset,
-               height - kSeparatorThickness);
+               height);
             TrackArt::DrawCursor(context, trackRect, mpTrack.get());
-            yy += height;
+            yy += height + kSeparatorThickness;
          }
       }
    }
@@ -1538,13 +1522,15 @@ struct Subgroup final : TrackPanelGroup {
 
       for ( const auto leader : tracks.Leaders() ) {
          wxCoord height = 0;
-         for ( auto channel : TrackList::Channels( leader ) ) {
+         auto channels = TrackList::Channels(leader);
+         for ( auto channel : channels ) {
             auto &view = TrackView::Get( *channel );
             height += view.GetHeight();
 
             if (view.GetAffordanceControls())
                height += kAffordancesAreaHeight;
          }
+         height += kSeparatorThickness * (static_cast<int>(channels.size()));
          refinement.emplace_back( yy,
             std::make_shared< ResizingChannelGroup >(
                leader->SharedPointer(), viewInfo.GetLeftOffset() )

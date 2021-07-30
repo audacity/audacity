@@ -879,8 +879,8 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
          channel->SetPanFromChannelType();
 
       //make sure no channel is smaller than its minimum height
-      if (view.GetHeight() < view.GetMinimizedHeight())
-         view.SetHeight(view.GetMinimizedHeight());
+      if (view.GetHeight() < view.GetMinimumHeight())
+         view.SetHeight(view.GetMinimumHeight());
       totalHeight += view.GetHeight();
       ++nChannels;
    }

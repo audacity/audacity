@@ -20,6 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../SelectUtilities.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../Track.h"
+#include "../../TrackInfo.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>
@@ -225,17 +226,16 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
 
    if (tracks.CanMoveUp(mpTrack.get()))
       mMoveUpThreshold =
-         event.m_y -
-            TrackView::GetChannelGroupHeight(
-               * -- tracks.FindLeader( mpTrack.get() ) );
+         event.m_y - TrackInfo::MeasureTrackGroupHeight(
+               ** -- tracks.FindLeader( mpTrack.get() ) );
    else
       mMoveUpThreshold = INT_MIN;
 
    if (tracks.CanMoveDown(mpTrack.get()))
       mMoveDownThreshold =
          event.m_y +
-            TrackView::GetChannelGroupHeight(
-               * ++ tracks.FindLeader( mpTrack.get() ) );
+            TrackInfo::MeasureTrackGroupHeight(
+               ** ++ tracks.FindLeader( mpTrack.get() ) );
    else
       mMoveDownThreshold = INT_MAX;
 }
