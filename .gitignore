@@ -208,3 +208,4 @@ win/xaudacity.ico
 *.dll
 
 .idea/
+.vscode/
