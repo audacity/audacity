@@ -50,13 +50,17 @@ public:
    void SetMinimized( bool minimized );
 
    int GetY() const { return mY; }
-   int GetActualHeight() const { return mHeight; }
    virtual int GetMinimizedHeight() const = 0;
+   int GetTop() const;
+   int GetBottom() const;
+   int GetActualHeight() const;
    int GetHeight() const;
 
    void SetY(int y) { DoSetY( y ); }
    //Returns minimum allowed TrackView height
    virtual int GetMinimumHeight() const = 0;
+
+   void SetTop(int y);
    void SetHeight(int height);
 
    // Return another, associated TrackPanelCell object that implements the

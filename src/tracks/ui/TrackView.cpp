@@ -153,12 +153,32 @@ void TrackView::DoSetY(int y)
    mY = y;
 }
 
+int TrackView::GetTop() const
+{
+    return mY;
+}
+
+int TrackView::GetBottom() const
+{
+    return GetTop() + GetHeight() - 1;
+}
+
+int TrackView::GetActualHeight() const
+{
+    return mHeight;
+}
+
 int TrackView::GetHeight() const
 {
    if ( GetMinimized() )
       return GetMinimizedHeight();
 
    return mHeight;
+}
+
+void TrackView::SetTop(int y)
+{
+    DoSetY(y);
 }
 
 void TrackView::SetHeight(int h)
