@@ -27,6 +27,8 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
+   int GetMinimumHeight() const override;
+
 private:
    std::vector<UIHandlePtr> DetailedHitTest
       (const TrackPanelMouseState &state,

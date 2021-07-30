@@ -30,6 +30,7 @@ public:
 
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
 
+   int GetMinimumHeight() const override;
 
 private:
    // TrackPanelDrawable implementation

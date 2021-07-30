@@ -23,6 +23,8 @@ public:
    NoteTrackView( const std::shared_ptr<Track> &pTrack );
    ~NoteTrackView() override;
 
+   int GetMinimumHeight() const override;
+
 private:
    std::shared_ptr<TrackVRulerControls> DoGetVRulerControls() override;
    std::shared_ptr<CommonTrackCell> DoGetAffordanceControls() override;

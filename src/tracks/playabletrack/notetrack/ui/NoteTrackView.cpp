@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../ViewInfo.h"
+#include "../../../../TrackInfo.h"
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
 #include "NoteTrackAffordanceControls.h"
@@ -746,5 +747,9 @@ void NoteTrackView::Draw(
       DrawNoteTrack(context, nt.get(), rect, muted, selected);
    }
    CommonTrackView::Draw( context, rect, iPass );
+}
+int NoteTrackView::GetMinimumHeight() const
+{
+    return TrackInfo::MinimumTrackHeight() - kAffordancesAreaHeight;
 }
 #endif

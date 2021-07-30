@@ -55,6 +55,8 @@ public:
    int GetHeight() const;
 
    void SetY(int y) { DoSetY( y ); }
+   //Returns minimum allowed TrackView height
+   virtual int GetMinimumHeight() const = 0;
    void SetHeight(int height);
 
    // Return another, associated TrackPanelCell object that implements the

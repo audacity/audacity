@@ -29,6 +29,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
+#include "../../../../TrackInfo.h"
 #include "../../../../prefs/WaveformSettings.h"
 
 #include <wx/graphics.h>
@@ -1047,6 +1048,11 @@ void WaveformView::Draw(
 #endif
    }
    WaveTrackSubView::Draw( context, rect, iPass );
+}
+
+int WaveformView::GetMinimumHeight() const
+{
+   return 0;
 }
 
 static const WaveTrackSubViews::RegisteredFactory key{

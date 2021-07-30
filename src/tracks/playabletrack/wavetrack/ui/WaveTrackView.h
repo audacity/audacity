@@ -160,6 +160,8 @@ protected:
    mutable wxCoord mLastHeight{};
 
    bool mMultiView{ false };
+   int GetMinimumHeight() const override;
+
 };
 
 // Helper for drawing routines

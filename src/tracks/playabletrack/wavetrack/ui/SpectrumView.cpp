@@ -23,6 +23,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
+#include "../../../../TrackInfo.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 
 #include <wx/dcmemory.h>
@@ -672,6 +673,11 @@ void SpectrumView::Draw(
 #endif
    }
    WaveTrackSubView::Draw( context, rect, iPass );
+}
+
+int SpectrumView::GetMinimumHeight() const
+{
+   return 0;
 }
 
 static const WaveTrackSubViews::RegisteredFactory key{

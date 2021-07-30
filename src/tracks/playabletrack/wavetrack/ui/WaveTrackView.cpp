@@ -1042,6 +1042,11 @@ void WaveTrackView::DoSetMinimized( bool minimized )
    } );
 }
 
+int WaveTrackView::GetMinimumHeight() const
+{
+   return TrackInfo::MinimumTrackHeight() - kAffordancesAreaHeight;
+}
+
 using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
 template<> template<> auto DoGetWaveTrackView::Implementation() -> Function {
    return [](WaveTrack &track) {

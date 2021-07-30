@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../ViewInfo.h"
 #include "../../../widgets/Ruler.h"
+#include "../../../TrackInfo.h"
 
 #include "../../ui/EnvelopeHandle.h"
 
@@ -160,4 +161,9 @@ void TimeTrackView::Draw(
       DrawTimeTrack( context, *tt, tt->GetRuler(), rect );
    }
    CommonTrackView::Draw( context, rect, iPass );
+}
+
+int TimeTrackView::GetMinimumHeight() const
+{
+    return TrackInfo::MinimumTrackHeight();
 }

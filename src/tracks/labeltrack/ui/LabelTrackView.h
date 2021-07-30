@@ -232,6 +232,8 @@ public:
    void SetNavigationIndex(int index);
    int GetNavigationIndex(AudacityProject& project) const;
 
+   int GetMinimumHeight() const override;
+
 private:
 
    // TrackPanelDrawable implementation

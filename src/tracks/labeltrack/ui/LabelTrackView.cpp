@@ -32,6 +32,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UndoManager.h"
 #include "../../../ViewInfo.h"
+#include "../../../TrackInfo.h"
 #include "../../../widgets/AudacityTextEntryDialog.h"
 
 #include <wx/clipbrd.h>
@@ -1035,6 +1036,11 @@ void LabelTrackView::calculateFontHeight(wxDC & dc)
    // body of the characters.
    const int CursorExtraHeight=2;
    mFontHeight += CursorExtraHeight - (charLeading+charDescent);
+}
+
+int LabelTrackView::GetMinimumHeight() const
+{
+    return TrackInfo::MinimumTrackHeight();
 }
 
 bool LabelTrackView::IsValidIndex(const Index& index, AudacityProject& project) const

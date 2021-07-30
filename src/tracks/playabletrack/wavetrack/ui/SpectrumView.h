@@ -36,6 +36,8 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
+   int GetMinimumHeight() const;
+
    static void DoDraw( TrackPanelDrawingContext &context,
       const WaveTrack *track,
       const WaveClip* selectedClip,
