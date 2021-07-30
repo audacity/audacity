@@ -30,6 +30,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
+#include "SelectFile.h"
 #include "SelectUtilities.h"
 #include "SelectionState.h"
 #include "Tags.h"
@@ -451,7 +452,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
       if (bPrompt) {
          // JKC: I removed 'wxFD_OVERWRITE_PROMPT' because we are checking
          // for overwrite ourselves later, and we disallow it.
-         fName = FileNames::SelectFile(FileNames::Operation::Save,
+         fName = SelectFile(FileNames::Operation::Save,
             title,
             filename.GetPath(),
             filename.GetFullName(),
@@ -591,7 +592,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
          // Previously we disallowed overwrite because we would have had 
          // to DELETE the many smaller files too, or prompt to move them.
          // Maybe we could allow it now that we have aup3 format?
-         fName = FileNames::SelectFile(FileNames::Operation::Export,
+         fName = SelectFile(FileNames::Operation::Export,
                                        title,
                                        filename.GetPath(),
                                        filename.GetFullName(),

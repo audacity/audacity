@@ -39,6 +39,7 @@
 #include "Import.h"
 #include "ImportPlugin.h"
 
+#include "../SelectFile.h"
 #include "../Tags.h"
 #include "../widgets/ProgressDialog.h"
 

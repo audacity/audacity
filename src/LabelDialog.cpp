@@ -34,6 +34,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindow.h"
+#include "SelectFile.h"
 #include "ViewInfo.h"
 #include "tracks/labeltrack/ui/LabelTrackView.h"
 #include "widgets/AudacityMessageBox.h"
@@ -631,7 +632,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
 {
    // Ask user for a filename
    wxString fileName =
-       FileNames::SelectFile(FileNames::Operation::Open,
+       SelectFile(FileNames::Operation::Open,
          XO("Select a text file containing labels"),
          wxEmptyString,     // Path
          wxT(""),       // Name
@@ -680,7 +681,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    // Extract the actual name.
    wxString fName = mTrackNames[mTrackNames.size() - 1].AfterFirst(wxT('-')).Mid(1);
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Labels As:"),
       wxEmptyString,
       fName,

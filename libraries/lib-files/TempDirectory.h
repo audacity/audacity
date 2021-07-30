@@ -12,24 +12,26 @@
 #define __AUDACITY_TEMP_DIRECTORY__
 
 
-#include "Identifier.h"
 #include "BasicUI.h"
+
 class TranslatableString;
 class wxWindow;
 
+#include "Identifier.h"
+
 namespace TempDirectory
 {
-   AUDACITY_DLL_API wxString TempDir();
-   AUDACITY_DLL_API void ResetTempDir();
+   FILES_API wxString TempDir();
+   FILES_API void ResetTempDir();
 
-   AUDACITY_DLL_API const FilePath &DefaultTempDir();
-   AUDACITY_DLL_API void SetDefaultTempDir( const FilePath &tempDir );
-   AUDACITY_DLL_API bool IsTempDirectoryNameOK( const FilePath & Name );
+   FILES_API const FilePath &DefaultTempDir();
+   FILES_API void SetDefaultTempDir( const FilePath &tempDir );
+   FILES_API bool IsTempDirectoryNameOK( const FilePath & Name );
 
    // Create a filename for an unsaved/temporary project file
-   AUDACITY_DLL_API wxString UnsavedProjectFileName();
+   FILES_API wxString UnsavedProjectFileName();
 
-   AUDACITY_DLL_API bool FATFilesystemDenied(const FilePath &path,
+   FILES_API bool FATFilesystemDenied(const FilePath &path,
                             const TranslatableString &msg,
                             const BasicUI::WindowPlacement &placement = {});
 };

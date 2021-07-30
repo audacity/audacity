@@ -158,7 +158,7 @@ public:
 };
 
 #include "FileDialog/FileDialog.h"
-#include "../FileNames.h" // for FileTypes
+#include "FileNames.h" // for FileTypes
 
 class AUDACITY_DLL_API FileDialogWrapper
    : public wxTabTraversalWrapper<FileDialog>

@@ -68,10 +68,10 @@
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"
 #include "../AColor.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------
 // ExportPlugin
