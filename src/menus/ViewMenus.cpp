@@ -127,33 +127,44 @@ void DoZoomFitV(AudacityProject &project)
    auto &tracks = TrackList::Get( project );
 
    // Only nonminimized audio tracks will be resized
-   auto range = tracks.Any<AudioTrack>()
+   auto resizableTracks = tracks.Any<AudioTrack>()
       - [](const Track *pTrack){
          return TrackView::Get( *pTrack ).GetMinimized(); };
-   auto count = range.size();
-   if (count == 0)
+
+   // Bug 2803: Cast to int, because otherwise the result of 
+   // division will be unsigned too, and will be a very large number
+   // if height will be negative!
+   auto resizableTracksCount = static_cast<int>(resizableTracks.size());
+
+   if (resizableTracksCount == 0)
       return;
 
    // Find total height to apportion
-   auto height = viewInfo.GetHeight();
-   height -= 28;
+   auto height = viewInfo.GetHeight() - 28;
+   height -= static_cast<int>(tracks.size() - 1) * kSeparatorThickness 
+       + kTopMargin + kBottomMargin;
    
-   // The height of minimized and non-audio tracks cannot be apportioned
-   height -=
-      tracks.Any().sum( TrackView::GetTrackHeight )
-         - range.sum( TrackView::GetTrackHeight );
-   
+   for (auto t : tracks)
+   {
+      auto isAudioTrack = dynamic_cast<AudioTrack*>(t) != nullptr;
+      // The height of minimized and non-audio tracks cannot be apportioned
+      if (!isAudioTrack)
+         height -= TrackInfo::MeasureTrackChannelHeight(*t);
+      else
+         height -= TrackInfo::MeasureTrackChannelMinimumHeight(*t);
+   }
+
    // Give each resized track the average of the remaining height
-   // Bug 2803: Cast count to int, because otherwise the result of 
-   // division will be unsigned too, and will be a very large number 
-   // if height was negative!
-   height = height / (int)count;
    // Use max() so that we don't set a negative height when there is
    // not enough room.
-   height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
-   for (auto t : range)
-      TrackView::Get( *t ).SetHeight(height);
+   auto h = std::max(0, height / resizableTracksCount);
+   
+   for (auto t : resizableTracks)
+   {
+      auto& view = TrackView::Get(*t);
+      view.SetHeight(view.GetMinimumHeight() + h);
+   }
 }
 }
 
