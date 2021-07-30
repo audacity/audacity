@@ -1118,11 +1118,10 @@ bool AudacityApp::OnInit()
                        "widget_class \"*GtkCombo*\" style \"audacity\"");
 #endif
 
-   const auto &appName = FileNames::AppName;
-   wxTheApp->SetAppName(appName);
+   wxTheApp->SetAppName(AppName);
    // Explicitly set since OSX will use it for the "Quit" menu item
-   wxTheApp->SetAppDisplayName(appName);
-   wxTheApp->SetVendorName(appName);
+   wxTheApp->SetAppDisplayName(AppName);
+   wxTheApp->SetVendorName(AppName);
 
    ::wxInitAllImageHandlers();
 

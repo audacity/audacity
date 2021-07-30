@@ -34,6 +34,7 @@ used throughout Audacity into this one place.
 #include "BasicUI.h"
 #include "Prefs.h"
 #include "Internat.h"
+#include "ModuleConstants.h"
 #include "PlatformCompatibility.h"
 #include "wxFileNameWrapper.h"
 
@@ -765,13 +766,3 @@ wxString FileNames::AbbreviatePath( const wxFileName &fileName )
 #endif
    return target;
 }
-
-// We want Audacity with a capital 'A'
-// DA: App name
-const wxString FileNames::AppName =
-#ifndef EXPERIMENTAL_DA
-   L"Audacity"
-#else
-   L"DarkAudacity"
-#endif
-;
