@@ -192,3 +192,16 @@ To find system packages, we rely on `pkg-config`. There are several packages tha
 
 Conan can be disabled completely using `-Daudacity_conan_enabled=Off` during the configuration. 
 This option implies `-Daudacity_obey_system_dependencies=On` and disables `local` for packages that are managed with Conan. 
+
+### Disabling pre-built binaries downloads for Conan
+
+It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configration. This option will trigger rebuild every
+time CMake configuration changes.
+
+### Reducing Conan cache size
+
+In order to reduce the space used by Conan cache, please run:
+
+```
+$ conan remove "*" --src --builds --force
+```
