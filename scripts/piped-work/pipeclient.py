@@ -283,8 +283,9 @@ class PipeTerminal():
 
     def start(self):
         """
+        ==========================
         Using PipeClient Terminal:
-
+        ==========================
         Prompts user for Audacity Scripting commands
 
         To send a command, provide the scripting id {command name}.
@@ -292,6 +293,9 @@ class PipeTerminal():
 
         To include custom parameters, follow scripting id with a colon ':',
         then spacing each parameter key/value in the following form {key="Value"}.
+
+        Command General Form:
+        {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ... 
 
         Note: Quotes around values must be double.
         Note: Key values are case-sensitive, commands and keys are not.
@@ -326,6 +330,27 @@ class PipeTerminal():
 
     def view_commands(self, category):
         """
+        =====================
+        Usability assistance:
+        =====================
+        In Addition to Audacity scripting commands, the terminal includes
+        built-in commands to view list of possible commands by category.  
+
+        The built-in view commands aim to provide easier access to essential
+        information needed to use this terminal with greater confidence.  
+    
+        View options are intended for readability for new users exploring the
+        commands available through the mod-script-pipe.
+
+        Example: 
+        --------
+        'Menus': returns information of menu script commands
+        (Terminal shortcut-command 'M')
+        
+        'Commands': returns information of command script commands
+        (Terminal shortcut-command 'C')
+
+
         Returning a list of scripting commands by category
         Prompts user to optionally enter a command for additional
         usage information.
@@ -423,22 +448,12 @@ class PipeTerminal():
 
     def help(self):
         """
-        Usability assistance:
-        
-        In Addition to Audacity scripting commands, the terminal includes
-        built-in commands to assist with usability.  
-
-        The built-in commands aim to provide easier access to essential
-        information needed to use this terminal with greater confidence.  
-    
-        View options are intended for readability for new users exploring the
-        commands available through the mod-script-pipe.
-
+        Prints docstrings from methods to explain usability
         """
         print("PipeClient Terminal 'Help' Command:")
         print(self.__doc__)
         print(self.start.__doc__)
-        print(self.help.__doc__)
+        print(self.view_commands.__doc__)
 
     def quit(self):
         """Quit pipeclient terminal"""
