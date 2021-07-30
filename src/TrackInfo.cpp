@@ -204,6 +204,51 @@ unsigned TrackInfo::MinimumTrackHeight()
    return height + kTopMargin + kBottomMargin + 1;
 }
 
+int TrackInfo::MeasureTotalTracksHeight(TrackList& tracks)
+{
+   if (!tracks.empty())
+   {
+       auto& view = TrackView::Get(*tracks.back().get());
+       return view.GetBottom() + kBottomMargin;
+   }
+   return 0;
+}
+
+int TrackInfo::MeasureTrackChannelHeight(Track& track)
+{
+    auto& view = TrackView::Get(track);
+    if (view.GetAffordanceControls())
+        return view.GetHeight() + kAffordancesAreaHeight;
+    return view.GetHeight();
+}
+
+int TrackInfo::MeasureTrackGroupHeight(Track& track)
+{
+    auto channels = TrackList::Channels(&track);
+    auto height = static_cast<int>(channels.size() - 1) * kSeparatorThickness;
+    for (auto c : TrackList::Channels(&track))
+    {
+        height += MeasureTrackChannelHeight(*c);
+    }
+    return height;
+}
+
+int TrackInfo::MeasureTrackChannelMinimumHeight(Track& track)
+{
+   auto& view = TrackView::Get(track);
+   if (view.GetAffordanceControls())
+      return view.GetMinimumHeight() + kAffordancesAreaHeight;
+   return view.GetMinimumHeight();
+}
+
+int TrackInfo::GetTrackChannelTop(Track& track)
+{
+   auto& view = TrackView::Get(track);
+   if (view.GetAffordanceControls())
+      return view.GetTop() - kAffordancesAreaHeight;
+   return view.GetTop();
+}
+
 bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
                  int allowance ) {
    auto limit = CalcBottomItemY

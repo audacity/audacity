@@ -24,6 +24,7 @@ class wxWindow;
 class ButtonHandle;
 class LWSlider;
 class Track;
+class TrackList;
 struct TrackPanelDrawingContext;
 
 static const int TitleSoloBorderOverlap = 1;
@@ -32,6 +33,19 @@ namespace TrackInfo
 {
    AUDACITY_DLL_API
    unsigned MinimumTrackHeight();
+
+   //!Returns total height of all tracks in the project
+   AUDACITY_DLL_API int MeasureTotalTracksHeight(TrackList& tracks);
+
+   //!Returns height of a single channel
+   AUDACITY_DLL_API int MeasureTrackChannelHeight(Track& track);
+   //!Returns height of a group of linked channels, to which track belongs to
+   AUDACITY_DLL_API int MeasureTrackGroupHeight(Track& track);
+   //!Returns track channel minimum allowed height
+   AUDACITY_DLL_API int MeasureTrackChannelMinimumHeight(Track& track);
+
+   //!Returns top Y coordinate of the channel
+   AUDACITY_DLL_API int GetTrackChannelTop(Track& track);
 
    struct TCPLine {
       enum : unsigned {
