@@ -64,6 +64,7 @@ the mouse around.
 
 #include <math.h>
 
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "AColor.h"
 #include "CommonCommandFlags.h"
@@ -1055,7 +1056,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString fName = _("spectrum.txt");
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Spectral Data As:"),
       wxEmptyString,
       fName,

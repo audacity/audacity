@@ -21,6 +21,7 @@ License: GPL v2.  See License.txt.
 #include "FFmpeg.h"
 
 #include "FileNames.h"
+#include "SelectFile.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
 
@@ -522,7 +523,7 @@ public:
       "Where would I find the file '%s'?" instead if you want. */
       auto question = XO("Where is '%s'?").Format( mName );
 
-      wxString path = FileNames::SelectFile(FileNames::Operation::_None,
+      wxString path = SelectFile(FileNames::Operation::_None,
          question,
          mLibPath.GetPath(),
          mLibPath.GetFullName(),

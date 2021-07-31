@@ -67,7 +67,7 @@
 #include "../ProjectWindow.h"
 #include "../Track.h"
 #include "../widgets/AButton.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 
 #include "../tracks/ui/Scrubbing.h"
 #include "../toolbars/ToolManager.h"

@@ -12,7 +12,7 @@
 #define __AUDACITY_EFFECT_NYQUIST__
 
 #include "../Effect.h"
-#include "../../FileNames.h"
+#include "FileNames.h"
 
 #include "nyx.h"
 

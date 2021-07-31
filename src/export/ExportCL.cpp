@@ -27,11 +27,12 @@
 #include <wx/msw/registry.h> // for wxRegKey
 #endif
 
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "Export.h"
 
 #include "../Mix.h"
 #include "Prefs.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
@@ -40,7 +41,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/Warning.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -187,7 +188,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
    type = { XO("Executables"), { ext } };
 #endif
 
-   path = FileNames::SelectFile(FileNames::Operation::Open,
+   path = SelectFile(FileNames::Operation::Open,
       XO("Find path to command"),
       wxEmptyString,
       wxEmptyString,

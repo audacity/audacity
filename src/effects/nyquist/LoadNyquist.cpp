@@ -16,7 +16,7 @@
 
 #include "Nyquist.h"
 
-#include "../../FileNames.h"
+#include "FileNames.h"
 #include "../../PluginManager.h"
 #include "../../ModuleManager.h"
 

@@ -22,7 +22,7 @@
 
 #include "Identifier.h"
 
-class AUDACITY_DLL_API PlatformCompatibility
+class FILES_API PlatformCompatibility
 {
 public:
    //

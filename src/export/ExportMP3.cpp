@@ -79,19 +79,20 @@
 #include <wx/utils.h>
 #include <wx/window.h>
 
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "float_cast.h"
 #include "../Mix.h"
 #include "Prefs.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 
@@ -658,7 +659,7 @@ public:
        * "Where would I find the file %s" instead if you want. */
       auto question = XO("Where is %s?").Format( mName );
 
-      wxString path = FileNames::SelectFile(FileNames::Operation::_None,
+      wxString path = SelectFile(FileNames::Operation::_None,
          question,
             mLibPath.GetPath(),
             mLibPath.GetName(),

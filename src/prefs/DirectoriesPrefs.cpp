@@ -34,11 +34,11 @@
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../TempDirectory.h"
+#include "TempDirectory.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ReadOnlyText.h"
 #include "../widgets/wxTextCtrlWrapper.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 
 using namespace FileNames;
 using namespace TempDirectory;

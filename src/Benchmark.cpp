@@ -44,6 +44,7 @@ of sample block storage.
 #include "ViewInfo.h"
 
 #include "FileNames.h"
+#include "SelectFile.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h"
 
@@ -272,7 +273,7 @@ void BenchmarkDialog::OnSave( wxCommandEvent & WXUNUSED(event))
    leave untranslated file extension .txt */
    auto fName = XO("benchmark.txt").Translation();
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Benchmark Data as:"),
       wxEmptyString,
       fName,
