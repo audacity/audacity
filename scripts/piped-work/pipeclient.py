@@ -472,6 +472,7 @@ class PipeTerminal():
         print(self.__doc__)
         print(self.start.__doc__)
         print(self.view_commands.__doc__)
+        return ''
 
     def quit(self):
         """Quit pipeclient terminal"""
