@@ -333,7 +333,9 @@ class PipeTerminal():
                 reply = self._builtIn[message.upper()]()
             else:
                 reply = self.get_reply(message)
-            print(reply)
+            # if reply returned, print reply
+            if reply != None:
+                print(reply)
 
     def view_commands(self, category):
         """
@@ -472,7 +474,6 @@ class PipeTerminal():
         print(self.__doc__)
         print(self.start.__doc__)
         print(self.view_commands.__doc__)
-        return ''
 
     def quit(self):
         """Quit pipeclient terminal"""
