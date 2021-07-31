@@ -77,6 +77,7 @@ import errno
 import argparse
 import json
 from functools import partial
+from string import Template
 
 
 if sys.version_info[0] < 3 and sys.version_info[1] < 7:
@@ -251,20 +252,24 @@ def bool_from_string(strval):
         return False
     raise argparse.ArgumentTypeError('Boolean value expected.')
 
+
 class PipeTerminal():
     """
     ===============================
     PipeClient Interactive Terminal
     ===============================
-    
+
     Command General Form:
-    {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ... 
+    {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ...
 
     Terminal built-in commands:
         'H' : view usage help message
-        'C' : view 'Commands' list (option to view individual usage requirements)
-        'M' : view 'Menus' list (option to view individual usage requirements)
+        'C' : view 'Commands' list
+        'M' : view 'Menus' list
         'Q' : exit program
+
+    (Built-in view commands also provide the option to view individual
+    usage requirements)
 
     A full detailed list of scripting commands and parameters can be found at:
 
@@ -276,10 +281,10 @@ class PipeTerminal():
         self.timeout = timeout
         self.show = show
         self.client = PipeClient()
-        self._builtIn = {"C": partial(self.view_commands, "Commands"), 
-                        "M": partial(self.view_commands, "Menus"), 
-                        "H": self.help, 
-                        "Q": self.quit}
+        self._builtIn = {"C": partial(self.view_commands, "Commands"),
+                         "M": partial(self.view_commands, "Menus"),
+                         "H": self.help,
+                         "Q": self.quit}
 
     def start(self):
         """
@@ -292,10 +297,11 @@ class PipeTerminal():
         Commands sent without parameters use default values set in Audacity.
 
         To include custom parameters, follow scripting id with a colon ':',
-        then spacing each parameter key/value in the following form {key="Value"}.
+        then spacing each parameter key/value in the following form
+        {key="Value"} with quotes around the value, not key.
 
         Command General Form:
-        {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ... 
+        {Command Name}: {param1key}="{Value1}" {param2key}="{Value2}" ...
 
         Note: Quotes around values must be double.
         Note: Key values are case-sensitive, commands and keys are not.
@@ -305,19 +311,20 @@ class PipeTerminal():
         > Help
 
         This example sends the 'Help' scripting command using
-        defaults (Command="Help" Format="JSON"). 
-        
+        defaults (Command="Help" Format="JSON").
+
 
         > Help: Command="Amplify" Format="Brief"
-        
-        This example sends the 'Help' scipting command for the 
+
+        This example sends the 'Help' scipting command for the
         command 'Amplify', returning it in "Brief" format.
         """
         print(self.__doc__)
         while True:
             # check if python version
             if sys.version_info[0] < 3:
-                message = raw_input("\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
+                message = raw_input("\nEnter command, "
+                                    "'H' for usage help, or 'Q' to quit:\n> ")
             else:
                 message = input(
                     "\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
@@ -334,19 +341,19 @@ class PipeTerminal():
         Usability assistance:
         =====================
         In Addition to Audacity scripting commands, the terminal includes
-        built-in commands to view list of possible commands by category.  
+        built-in commands to view list of possible commands by category.
 
         The built-in view commands aim to provide easier access to essential
-        information needed to use this terminal with greater confidence.  
-    
+        information needed to use this terminal with greater confidence.
+
         View options are intended for readability for new users exploring the
         commands available through the mod-script-pipe.
 
-        Example: 
+        Example:
         --------
         'Menus': returns information of menu script commands
         (Terminal shortcut-command 'M')
-        
+
         'Commands': returns information of command script commands
         (Terminal shortcut-command 'C')
 
@@ -377,13 +384,13 @@ class PipeTerminal():
         Formats the pipeclient reply of available scripting commands,
         printing them in readable format.
 
-        Prompts user with the option to view additional usability 
+        Prompts user with the option to view additional usability
         information for provided command.
         """
         # check if message beginning indicates JSON
         if reply[0] != "[" and reply[0] != "{":
             return reply
-        # clean string for JSON conversion 
+        # clean string for JSON conversion
         reply = reply.replace('\n', '')
         reply = reply.replace('\\', '/')
         reply = reply.replace('/"', "'")
@@ -405,16 +412,16 @@ class PipeTerminal():
             if "id" in command:
                 command_ids.append(command["id"])
         command_ids.sort()
-        row = [] 
-        for command in command_ids:  
-                row.append(command)     
-                if len(row) == 2:
-                    reply += str('{:<40s}{:<40s}\n'.format(row[0], row[1])) 
-                    row = []
+        row = []
+        for command in command_ids:
+            row.append(command)
+            if len(row) == 2:
+                reply += str('{:<40s}{:<40s}\n'.format(row[0], row[1]))
+                row = []
         print(reply)
-        # prompt user for lookup info for command usage, a not match performs no lookup 
+        # prompt user for lookup info for command usage,
+        # Empty string or a no match performs no lookup
         command_id = input("Lookup a particular command: ")
-        command_found = False
         for command in commands:
             if "id" in command:
                 if command["id"].upper() == command_id.upper():
@@ -424,26 +431,37 @@ class PipeTerminal():
 
     def command_info(self, command):
         """Returns lookup info for particular command"""
-        reply = ''
-        reply += '==================================\n'
-        reply += 'Command {title} \n'.format(title='Name: ' + command["name"] if "name" in command else 'Label: ' + command["label"])
-        reply += '{info}'.format(info=command["tip"]+'\n' if "tip" in command else '')
-        reply += '{accel}'.format(accel='Audacity shortkey: ' + command["accel"] + '\n' if "accel" in command else '')
-        reply += '{depth}'.format(depth='depth: ' + str(command["depth"]) + ' ' if "depth" in command else '')
-        reply += '{flags}'.format(flags='flags: ' + str(command["flags"]) + ' ' if "flags" in command else '')
-    
-        reply += '{id}'.format(id='\n\nTo Use:\n> ' + command["id"] if "id" in command else '')
-        if "params" not in command:
-            params = "\n\nParameters: None"
+        # Parse together command info depending on type of command
+        if "name" in command:
+            name = 'Name: ' + command["name"]
         else:
-            params = ':'
+            name = 'Label: ' + command["label"]
+        info = command["tip"] if 'tip' in command else ''
+        accel = "depth" + command["accel"] if 'accel' in command else ''
+        depth = str(command["depth"]) if 'depth' in command else ''
+        flags = str(command["flags"]) if 'flags' in command else ''
+        id = command["id"] if 'id' in command else ''
+        if "params" in command:
+            usage = f'{id}:'
+            params = "\n\nParameters:\n"
             for param in command["params"]:
-                params += ' {key}="{type}"'.format(key=param["key"],type=param["type"])    
-            params += "\n\nParameters:\n"
-            for param in command["params"]:
-                params += '\t{key} - Default({default})'.format(key=param["key"], default=str(param["default"]))
-                params += '{enum}\n'.format(enum=str(param["enum"] if param["type"] == 'enum' else ''))
-        reply += params
+                key = param["key"]
+                type = param["type"]
+                default = str(param["default"])
+                enum = str(param["enum"] if param["type"] == 'enum' else '')
+                usage += f' {key}="{type}"'
+                params += f'{key} - Default({default}){enum}\n'
+        else:
+            usage = '{id}'
+            params = "\n\nParameters: None"
+        # set up format of command information
+        reply = f'==================================\n' \
+                f'Command {name}\n' \
+                f'{info}\n' \
+                f'Audacity shortkey: {accel}\n' \
+                f'{depth} {flags}\n\n' \
+                f'To Use:\n> {usage}' \
+                f'{params}'
         return reply
 
     def help(self):
@@ -458,6 +476,7 @@ class PipeTerminal():
     def quit(self):
         """Quit pipeclient terminal"""
         sys.exit(0)
+
 
 def main():
     """Interactive command-line for PipeClient"""
@@ -479,7 +498,7 @@ def main():
 
     terminal = PipeTerminal(args.timeout, args.show)
     terminal.start()
-        
+
 
 if __name__ == '__main__':
     main()
