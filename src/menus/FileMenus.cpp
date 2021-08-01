@@ -66,7 +66,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
       // or we use the default documents folder - just as for exports.
       FilePath pathName = FileNames::FindDefaultPath(FileNames::Operation::MacrosOut);
 
-      if (!FileNames::WritableLocationCheck(pathName))
+      if (!FileNames::WritableLocationCheck(pathName, XO("Cannot proceed to export.")))
       {
           return;
       }
