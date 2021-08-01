@@ -296,7 +296,8 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
          return;
       }
 
-      if (!FileNames::WritableLocationCheck(dlog.GetPath()))
+      //Checks if the temporary directory has write permissions(via Browse Button)
+      if (!FileNames::WritableLocationCheck(dlog.GetPath(), XO("Cannot set the preference.")))
       {
          return;
       }
@@ -377,12 +378,44 @@ void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
       }
    }
 
-   if (!FileNames::WritableLocationCheck(dlog.GetPath()))
+   //Checks if the location for Open,Save.Import,Export and Macro Output has write permissions(Browse Buttons)
+   if (!FileNames::WritableLocationCheck(dlog.GetPath(), XO("Cannot set the preference.")))
    {
       return;
    }
 
    tc->SetValue(dlog.GetPath());
+}
+
+// Offers the user a dialog with an option to create a directory if it does not exist.
+// message is the explanation given to the user to show for which case is the directory creation is prompted.
+bool CreateDirectory(const wxString pathString, const TranslatableString & message) {
+   const wxFileName path { pathString };
+   int ans = AudacityMessageBox(
+      message +
+      XO("\nDirectory %s does not exist. Create it?")
+         .Format( pathString ),
+      XO("Warning"),
+      wxYES_NO | wxCENTRE | wxICON_EXCLAMATION);
+
+   if (ans != wxYES) {
+      return false;
+   }
+
+   if (!path.Mkdir(0755, wxPATH_MKDIR_FULL)) {
+      /* wxWidgets throws up a decent looking dialog */
+      using namespace BasicUI;
+        ShowMessageBox(
+            XO("Directory creation failed.") + 
+            XO("\n%s").Format(message),
+            MessageBoxOptions{}
+                .Caption(XO("Error"))
+                .IconStyle(Icon::Error)
+                .ButtonStyle(Button::Ok)
+        );
+      return false;
+   }
+   return true;
 }
 
 bool DirectoriesPrefs::Validate()
@@ -401,26 +434,15 @@ bool DirectoriesPrefs::Validate()
    }
 
    if (!Temp.DirExists()) {
-      int ans = AudacityMessageBox(
-         XO("Directory %s does not exist. Create it?")
-            .Format( path ),
-         XO("New Temporary Directory"),
-         wxYES_NO | wxCENTRE | wxICON_EXCLAMATION);
-
-      if (ans != wxYES) {
+      if(CreateDirectory(path, XO("'Temporary Directory' cannot be set.")) == false)
          return false;
-      }
-
-      if (!Temp.Mkdir(0755, wxPATH_MKDIR_FULL)) {
-         /* wxWidgets throws up a decent looking dialog */
-         return false;
-      }
    }
    else {
       /* If the directory already exists, make sure it is writable */
-      if (!FileNames::WritableLocationCheck(mTempText->GetValue()))
+      if (!FileNames::WritableLocationCheck(mTempText->GetValue(), 
+                                          XO("'Temporary files' directory cannot be set.")))
       {
-          return false;
+         return false;
       }
       wxLogNull logNo;
       Temp.AppendDir(wxT("canicreate"));
@@ -447,18 +469,42 @@ bool DirectoriesPrefs::Validate()
          wxOK | wxCENTRE | wxICON_INFORMATION);
    }
 
+   const wxString openPathString = mOpenText->GetValue();
+   const wxString savePathString = mSaveText->GetValue();
+   const wxString importPathString = mImportText->GetValue();
+   const wxString exportPathString = mExportText->GetValue();
    const wxString macroPathString = mMacrosText->GetValue();
+   //error messages if the directories could not be set.
+   const std::initializer_list<TranslatableString> messagesPreference{
+      XO("'Open' directory cannot be set.") ,
+      XO("'Save' directory cannot be set.") ,
+      XO("'Import' directory cannot be set.") ,
+      XO("'Export' directory cannot be set.") ,
+      XO("'Macro Output' directory cannot be set.") ,
+   };
 
-   if (!macroPathString.empty())
-   {
-      const wxFileName macroPath { macroPathString };
-
-      if (macroPath.DirExists())
-      {
-         if (!FileNames::WritableLocationCheck(macroPathString))
-            return false;
+   //flag for checking if at least one directory write protected 
+   //will not be 0 if any of the paths are not writable
+   int flag = 0;
+   //id for indexing error messages to the initializer_list.
+   int id = 0;
+   //Checks if the location for Open,Save,Import,Export and Macro Output has write permissions(When OK is clicked)
+   for (auto &string : { openPathString, savePathString, importPathString, exportPathString, macroPathString} ) {
+      const wxFileName currentPath { string };
+      const auto & message = *(messagesPreference.begin() + id);
+      if(!string.empty()){
+         if (currentPath.DirExists()){
+            if(!FileNames::WritableLocationCheck(string, message))
+               flag++;
+         }
+         else {
+            return CreateDirectory(string, message);
+         }
       }
+      id++;
    }
+   if (flag != 0)
+      return false;
 
    return true;
 }
