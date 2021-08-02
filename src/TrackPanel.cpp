@@ -711,22 +711,6 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    }
 }
 
-enum {
-    // On empty area clicked.
-    kContextMenuItemID_AddMonoTrack = wxID_LAST + 1,
-    kContextMenuItemID_AddStereoTrack,
-    kContextMenuItemID_AddLabelTrack,
-    kContextMenuItemID_ExportProject,
-    kContextMenuItemID_SelectAll,
-    // On track area clicked.
-    kContextMenuItemID_Cut,
-    kContextMenuItemID_Copy,
-    kContextMenuItemID_Paste,
-    kContextMenuItemID_Split,
-    kContextMenuItemID_Mute,
-    kContextMenuItemID_Rename
-};
-
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
    if (event.LeftDown()) {
@@ -751,6 +735,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       } );
    }
     
+    // Processing user right click event for show a context menu.
     if(event.RightDown())
     {
         wxWindow *parent = wxWindow::FindFocus();
@@ -759,39 +744,33 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
         
         if(parent)
         {
-            wxMenu contextMenu;
+            std::unique_ptr<wxMenu> contextMenu;
             
-            // Get cursor position area: on track or non track (empty area).
+            auto project = GetProject();
+            const auto commandManager = project ? &CommandManager::Get( *project ) : nullptr;
+            
+            // Get cursor position area: over track or outside track.
             const auto track = FindTrack (FindCell(event.m_x, event.m_y).pCell.get());
+            // Make context menu on over track.
             if(track)
             {
-                contextMenu.Append(kContextMenuItemID_Cut, XO("Cut\tCtrl+X").Translation());
-                contextMenu.Append(kContextMenuItemID_Copy, XO("Copy\tCtrl+C").Translation());
-                contextMenu.Append(kContextMenuItemID_Paste, XO("Paste\tCtrl+V").Translation());
-                contextMenu.AppendSeparator();
-                contextMenu.Append(kContextMenuItemID_Split, XO("Split clip\tCtrl+I").Translation());
-                contextMenu.Append(kContextMenuItemID_Mute, XO("Mute/unmute track\tAlt+Ctrl+U").Translation());
-                contextMenu.AppendSeparator();
-                contextMenu.Append(kContextMenuItemID_Rename, XO("Rename clip\tShift+Ctrl+R").Translation());
+                contextMenu.reset(new AudacityOverTrackContextMenu(commandManager));
                 
-                contextMenu.Bind(wxEVT_MENU,
-                   [this]( wxCommandEvent& event ){ OnTrackAreaContextMenu(event); }
+                contextMenu->Bind(wxEVT_MENU,
+                   [this]( wxCommandEvent& event ){ OnOverTrackContextMenu(event); }
                 );
-            } else {
-                contextMenu.Append(kContextMenuItemID_AddMonoTrack, XO("Add mono track").Translation());
-                contextMenu.Append(kContextMenuItemID_AddStereoTrack, XO("Add stereo track").Translation());
-                contextMenu.Append(kContextMenuItemID_AddLabelTrack, XO("Add label track").Translation());
-                contextMenu.AppendSeparator();
-                contextMenu.Append(kContextMenuItemID_ExportProject, XO("Export project\tCtrl+E").Translation());
-                contextMenu.AppendSeparator();
-                contextMenu.Append(kContextMenuItemID_SelectAll, XO("Select All\tCtrl+A").Translation());
+            }
+            // Make context menu of outside track area.
+            else
+            {
+                contextMenu.reset(new AudacityOutsideTrackContextMenu(commandManager));
                 
-                contextMenu.Bind(wxEVT_MENU,
-                   [this]( wxCommandEvent& event ){ OnEmptyAreaContextMenu(event); }
+                contextMenu->Bind(wxEVT_MENU,
+                   [this]( wxCommandEvent& event ){ OnOutsideTrackContextMenu(event); }
                 );
             }
             
-            parent->PopupMenu(&contextMenu);
+            parent->PopupMenu(contextMenu.get());
         }
     }
 
@@ -799,65 +778,60 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
    event.Skip();
 }
 
-#include "SelectUtilities.h"
-#include "commands/CommandContext.h"
-#include "menus/TrackMenus.h"
-#include "menus/EditMenus.h"
-
-void TrackPanel::OnEmptyAreaContextMenu(wxCommandEvent& event)
+void TrackPanel::OnOutsideTrackContextMenu(wxCommandEvent& event)
 {
     switch(event.GetId())
     {
-        case kContextMenuItemID_AddMonoTrack:
+        case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_AddMonoTrack:
             this->CallAfter([this]{
                 TrackActions::Handler().OnNewWaveTrack(CommandContext{*GetProject()});
             });
             break;
             
-        case kContextMenuItemID_AddStereoTrack:
+        case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_AddStereoTrack:
             this->CallAfter([this]{
                 TrackActions::Handler().OnNewStereoTrack(CommandContext{*GetProject()});
             });
             break;
             
-        case kContextMenuItemID_AddLabelTrack:
+        case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_AddLabelTrack:
             this->CallAfter([this]{
                 TrackActions::Handler().OnNewLabelTrack(CommandContext{*GetProject()});
             });
             break;
             
-        case kContextMenuItemID_ExportProject:
+        case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_ExportProject:
             break;
             
-        case kContextMenuItemID_SelectAll:
+        case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_SelectAll:
             this->CallAfter([this]{ SelectUtilities::DoSelectAll(*GetProject()); });
             break;
     }
 }
 
-void TrackPanel::OnTrackAreaContextMenu(wxCommandEvent& event)
+void TrackPanel::OnOverTrackContextMenu(wxCommandEvent& event)
 {
     switch(event.GetId())
     {
-        case kContextMenuItemID_Cut:
+        case AudacityOverTrackContextMenu::MenuItemID::kItemID_Cut:
             this->CallAfter([this]{
                 EditActions::Handler().OnCut(CommandContext{*GetProject()});
             });
             break;
             
-        case kContextMenuItemID_Copy:
+        case AudacityOverTrackContextMenu::MenuItemID::kItemID_Copy:
             this->CallAfter([this]{
                 EditActions::Handler().OnCopy(CommandContext{*GetProject()});
             });
             break;
             
-        case kContextMenuItemID_Paste:
+        case AudacityOverTrackContextMenu::MenuItemID::kItemID_Paste:
             this->CallAfter([this]{
                 EditActions::Handler().OnPaste(CommandContext{*GetProject()});
             });
             break;
             
-        case kContextMenuItemID_Split:
+        case AudacityOverTrackContextMenu::MenuItemID::kItemID_Split:
             this->CallAfter([this]{
                 EditActions::Handler().OnSplit(CommandContext{*GetProject()});
             });
@@ -867,9 +841,6 @@ void TrackPanel::OnTrackAreaContextMenu(wxCommandEvent& event)
             this->CallAfter([this] {
                 TrackActions::Handler().OnTrackMute(CommandContext{*GetProject()});
             });
-            break;
-            
-        case kContextMenuItemID_Rename:
             break;
     }
 }
