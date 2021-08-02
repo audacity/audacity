@@ -89,8 +89,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    wxTextCtrl *mPercentText;
    wxComboBox *mRateText;
 
-   int         mNumEncodings;
-   ArrayOf<int> mEncodingSubtype;
+   std::vector<int> mEncodingSubtype;
 
    wxString mFileName;
 
@@ -269,6 +268,24 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    }
 }
 
+
+// Get endian choice from SF_FORMAT
+static int getEndianChoice(int sfFormat) {
+   switch (sfFormat & SF_FORMAT_ENDMASK)
+   {
+      default:
+      case SF_ENDIAN_FILE:
+         return 0;
+      case SF_ENDIAN_LITTLE:
+         return 1;
+      case SF_ENDIAN_BIG:
+         return 2;
+      case SF_ENDIAN_CPU:
+         return 3;
+   }
+}
+
+
 //
 // ImportRawDialog
 //
@@ -293,30 +310,23 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent, const wxString & fileName)
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
    mFileName(fileName)
 {
-   wxASSERT(mChannels >= 1);
+   wxASSERT(0 < mChannels && mChannels <= 16);
 
    SetName();
 
    // Append filename at window title
    wxFileName wfn{ fileName };
-   wxDialog::SetTitle(GetTitle() + ": " + wfn.GetFullName());
+   wxString windowTitle = XO("%s: %s").Format(GetTitle(), wfn.GetFullName()).Translation();
+   wxDialog::SetTitle(windowTitle);
 
    ShuttleGui S(this, eIsCreating);
    TranslatableStrings encodings;
-   int num;
-   int selection;
-   int endian;
-   int i;
 
-   num = sf_num_encodings();
-   mNumEncodings = 0;
-   mEncodingSubtype.reinit(static_cast<size_t>(num));
+   int num = sf_num_encodings();
 
-   selection = 0;
-   for (i=0; i<num; i++) {
-      SF_INFO info;
-
-      memset(&info, 0, sizeof(SF_INFO));
+   int selection = 0;
+   for (int i = 0; i < num; i++) {
+      SF_INFO info = { 0 };
 
       int subtype = sf_encoding_index_to_subtype(i);
       info.format = SF_FORMAT_RAW + SF_ENDIAN_LITTLE + subtype;
@@ -324,13 +334,11 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent, const wxString & fileName)
       info.samplerate = 44100;
 
       if (sf_format_check(&info)) {
-         mEncodingSubtype[mNumEncodings] = subtype;
+         mEncodingSubtype.push_back(subtype);
          encodings.push_back( Verbatim( sf_encoding_index_name(i) ) );
 
          if ((mEncoding & SF_FORMAT_SUBMASK) == subtype)
-            selection = mNumEncodings;
-
-         mNumEncodings++;
+            selection = mEncodingSubtype.size() - 1;
       }
    }
 
@@ -349,28 +357,13 @@ ImportRawDialog::ImportRawDialog(wxWindow * parent, const wxString & fileName)
       XO("Default endianness") ,
    };
 
-   switch (mEncoding & (SF_FORMAT_ENDMASK))
-   {
-      default:
-      case SF_ENDIAN_FILE:
-         endian = 0;
-         break;
-      case SF_ENDIAN_LITTLE:
-         endian = 1;
-         break;
-      case SF_ENDIAN_BIG:
-         endian = 2;
-         break;
-      case SF_ENDIAN_CPU:
-         endian = 3;
-         break;
-   }
+   int endian = getEndianChoice(mEncoding);
 
    TranslatableStrings chans{
       XO("1 Channel (Mono)") ,
       XO("2 Channels (Stereo)") ,
    };
-   for (i=2; i<16; i++) {
+   for (int i = 2; i < 16; i++) {
       chans.push_back( XO("%d Channels").Format( i + 1 ) );
    }
 
@@ -506,31 +499,11 @@ void ImportRawDialog::OnDetect(wxCommandEvent & event)
    }
 
    int selection = 0;
-   for (int i = 0; i < mNumEncodings; i++) {
-      int subtype = mEncodingSubtype[i];
-      if ((mEncoding & SF_FORMAT_SUBMASK) == subtype) {
-         selection = i;
-         break;
-      }
-   }
+   auto iter = std::find(mEncodingSubtype.begin(), mEncodingSubtype.end(), mEncoding & SF_FORMAT_SUBMASK);
+   if (iter != mEncodingSubtype.end())   // subtype found
+       selection = std::distance(mEncodingSubtype.begin(), iter);
 
-   int endian = 0;
-   switch (mEncoding & SF_FORMAT_ENDMASK)
-   {
-      default:
-      case SF_ENDIAN_FILE:
-         endian = 0;
-         break;
-      case SF_ENDIAN_LITTLE:
-         endian = 1;
-         break;
-      case SF_ENDIAN_BIG:
-         endian = 2;
-         break;
-      case SF_ENDIAN_CPU:
-         endian = 3;
-         break;
-   }
+   int endian = getEndianChoice(mEncoding);
 
    mEncodingChoice->SetSelection(selection);
    mEndianChoice->SetSelection(endian);
