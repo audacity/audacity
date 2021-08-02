@@ -44,6 +44,7 @@ pushd temp
     conan config home
     conan config init
     conan config set storage.download_cache="$CONAN_USER_HOME/download_cache"
+    conan profile update settings.compiler.libcxx=libstdc++11 default
 
     # Configure Audacity so we can collect the required
     # packages.
