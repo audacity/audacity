@@ -30,7 +30,8 @@ HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe,
     static auto handClosedCursor =
         MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
     // i18n-hint Appears on hovering mouse over clip affordance
-    auto message = XO("Click and drag to move a clip in time, or click to select");
+    auto message = XO("Drag clips to reposition them."\
+        " Hold Shift and drag to move all clips on the same track.");
 
     if (unsafe)
         return { message, &*disabledCursor };
