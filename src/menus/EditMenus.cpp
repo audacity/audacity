@@ -1,3 +1,4 @@
+#include "EditMenus.h"
 
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
@@ -130,13 +131,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
 
 }
 
-namespace EditActions {
-
-// Menu handler functions
-
-struct Handler : CommandHandlerObject {
-
-void OnUndo(const CommandContext &context)
+void EditActions::Handler::OnUndo(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -167,7 +162,7 @@ void OnUndo(const CommandContext &context)
    }
 }
 
-void OnRedo(const CommandContext &context)
+void EditActions::Handler::OnRedo(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -197,7 +192,7 @@ void OnRedo(const CommandContext &context)
    }
 }
 
-void OnCut(const CommandContext &context)
+void EditActions::Handler::OnCut(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -286,7 +281,7 @@ void OnCut(const CommandContext &context)
    ruler.DrawOverlays( true );
 }
 
-void OnDelete(const CommandContext &context)
+void EditActions::Handler::OnDelete(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -311,8 +306,7 @@ void OnDelete(const CommandContext &context)
       XO("Delete"));
 }
 
-
-void OnCopy(const CommandContext &context)
+void EditActions::Handler::OnCopy(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -349,7 +343,7 @@ void OnCopy(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-void OnPaste(const CommandContext &context)
+void EditActions::Handler::OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -611,7 +605,7 @@ void OnPaste(const CommandContext &context)
    }
 }
 
-void OnDuplicate(const CommandContext &context)
+void EditActions::Handler::OnDuplicate(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -641,7 +635,7 @@ void OnDuplicate(const CommandContext &context)
       .PushState(XO("Duplicated"), XO("Duplicate"));
 }
 
-void OnSplitCut(const CommandContext &context)
+void EditActions::Handler::OnSplitCut(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -684,7 +678,7 @@ void OnSplitCut(const CommandContext &context)
       .PushState(XO("Split-cut to the clipboard"), XO("Split Cut"));
 }
 
-void OnSplitDelete(const CommandContext &context)
+void EditActions::Handler::OnSplitDelete(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -709,7 +703,7 @@ void OnSplitDelete(const CommandContext &context)
       XO("Split Delete"));
 }
 
-void OnSilence(const CommandContext &context)
+void EditActions::Handler::OnSilence(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -725,7 +719,7 @@ void OnSilence(const CommandContext &context)
       XC("Silence", "command"));
 }
 
-void OnTrim(const CommandContext &context)
+void EditActions::Handler::OnTrim(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -749,7 +743,7 @@ void OnTrim(const CommandContext &context)
       XO("Trim Audio"));
 }
 
-void OnSplit(const CommandContext &context)
+void EditActions::Handler::OnSplit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -810,7 +804,7 @@ void OnSplit(const CommandContext &context)
 #endif
 }
 
-void OnSplitNew(const CommandContext &context)
+void EditActions::Handler::OnSplitNew(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -861,7 +855,7 @@ void OnSplitNew(const CommandContext &context)
       .PushState(XO("Split to new track"), XO("Split New"));
 }
 
-void OnJoin(const CommandContext &context)
+void EditActions::Handler::OnJoin(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -878,7 +872,7 @@ void OnJoin(const CommandContext &context)
       XO("Join"));
 }
 
-void OnDisjoin(const CommandContext &context)
+void EditActions::Handler::OnDisjoin(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -895,14 +889,14 @@ void OnDisjoin(const CommandContext &context)
       XO("Detach"));
 }
 
-void OnEditMetadata(const CommandContext &context)
+void EditActions::Handler::OnEditMetadata(const CommandContext &context)
 {
    auto &project = context.project;
    (void)Exporter::DoEditMetadata( project,
       XO("Edit Metadata Tags"), XO("Metadata Tags"), true);
 }
 
-void OnPreferences(const CommandContext &context)
+void EditActions::Handler::OnPreferences(const CommandContext &context)
 {
    auto &project = context.project;
 
@@ -957,10 +951,6 @@ void OnPasteOver(const CommandContext &context)
    return;
 }
 #endif
-
-}; // struct Handler
-
-} // namespace
 
 static CommandHandlerObject &findCommandHandler(AudacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with

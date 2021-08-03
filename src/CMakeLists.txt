@@ -643,6 +643,7 @@ list( APPEND SOURCES
 
       menus/ClipMenus.cpp
       menus/EditMenus.cpp
+      menus/EditMenus.h
       menus/ExtraMenus.cpp
       menus/FileMenus.cpp
       menus/HelpMenus.cpp

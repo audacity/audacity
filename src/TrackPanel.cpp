@@ -802,6 +802,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 #include "SelectUtilities.h"
 #include "commands/CommandContext.h"
 #include "menus/TrackMenus.h"
+#include "menus/EditMenus.h"
 
 void TrackPanel::OnEmptyAreaContextMenu(wxCommandEvent& event)
 {
@@ -839,18 +840,33 @@ void TrackPanel::OnTrackAreaContextMenu(wxCommandEvent& event)
     switch(event.GetId())
     {
         case kContextMenuItemID_Cut:
+            this->CallAfter([this]{
+                EditActions::Handler().OnCut(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_Copy:
+            this->CallAfter([this]{
+                EditActions::Handler().OnCopy(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_Paste:
+            this->CallAfter([this]{
+                EditActions::Handler().OnPaste(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_Split:
+            this->CallAfter([this]{
+                EditActions::Handler().OnSplit(CommandContext{*GetProject()});
+            });
             break;
             
-        case kContextMenuItemID_Mute:
+        case AudacityOverTrackContextMenu::MenuItemID::kItemID_Mute:
+            this->CallAfter([this] {
+                TrackActions::Handler().OnTrackMute(CommandContext{*GetProject()});
+            });
             break;
             
         case kContextMenuItemID_Rename:
