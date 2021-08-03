@@ -9,6 +9,12 @@ if( ${_OPT}conan_enabled )
     )
 endif()
 
+if ( ${_OPT}conan_allow_prebuilt_binaries )
+    set ( CONAN_BUILD_MODE BUILD missing )
+else()
+    set( CONAN_BUILD_MODE BUILD all )
+endif()
+
 set( CONAN_BUILD_REQUIRES )
 set( CONAN_REQUIRES )
 set( CONAN_PACKAGE_OPTIONS )
@@ -253,7 +259,7 @@ function ( _conan_install build_type )
 
 
     conan_cmake_install(PATH_OR_REFERENCE .
-        BUILD missing
+        ${CONAN_BUILD_MODE}
         SETTINGS ${settings}
     )
 endfunction()
