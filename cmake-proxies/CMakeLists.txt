@@ -94,7 +94,7 @@ add_conan_lib(
    libid3tag
    libid3tag/0.15.2b@audacity/stable
    OPTION_NAME libid3tag
-   PKG_CONFIG "id3tag >= 0.15.1b"
+   PKG_CONFIG "id3tag >= 0.15.0b" # Ubuntu has broken PC file
    CONAN_OPTIONS
       libid3tag:zlib=${id3tag_zlib}
 )
@@ -103,7 +103,7 @@ add_conan_lib(
    libmad
    libmad/0.15.2b@audacity/stable
    OPTION_NAME libmad
-   PKG_CONFIG "mad >= 0.15.1b"
+   PKG_CONFIG "mad >= 0.15.0b" # Ubuntu has broken PC file
 )
 
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
@@ -164,7 +164,7 @@ set_conan_vars_to_parent()
 #       directory          option      symbol      req   chk   version
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
 addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
-addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.32.0" )
+addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.1" )
 
 # Optional libraries
 #
@@ -177,7 +177,8 @@ addlib( libvorbis          vorbis      LIBVORBIS   NO    YES   "vorbis >= 1.3.3"
 addlib( libflac            flac        LIBFLAC     NO    YES   "flac >= 1.3.1" "flac++ >= 1.3.1" )
 addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6" "lv2 >= 1.16.0" "serd-0 >= 0.30.2" "sord-0 >= 0.16.4" "sratom-0 >= 0.6.4" "suil-0 >= 0.10.6" )
 
-addlib( portmidi           midi        MIDI        NO    YES   "portmidi >= 0.1" )
+addlib( portmidi           midi        MIDI        NO    YES   "PortMidi" )
+
 if (NOT USE_MIDI AND
    "EXPERIMENTAL_MIDI_OUT" IN_LIST EXPERIMENTAL_OPTIONS_LIST )
    message(FATAL_ERROR "EXPERIMENTAL_MIDI_OUT requires USE_MIDI")
