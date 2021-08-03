@@ -26,7 +26,7 @@ struct Handler : CommandHandlerObject {
     void OnPanCenter(const CommandContext &context);
     void OnAlignNoSync(const CommandContext &context);
     void OnAlign(const CommandContext &context);
-    void OnMoveSelectionWithTracks(const CommandContext &WXUNUSED(context) );
+    void OnMoveSelectionWithTracks(const CommandContext&);
 #ifdef EXPERIMENTAL_SCOREALIGN
     void OnScoreAlign(const CommandContext &context);
 #endif /* EXPERIMENTAL_SCOREALIGN */

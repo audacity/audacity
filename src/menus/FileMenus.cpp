@@ -1,5 +1,4 @@
 
-
 #include "../CommonCommandFlags.h"
 #include "FileNames.h"
 #include "../LabelTrack.h"
@@ -28,6 +27,8 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/wxPanelWrapper.h"
+
+#include "FileMenus.h"
 
 #ifdef USE_MIDI
 #include "../import/ImportMIDI.h"
@@ -170,16 +171,12 @@ void DoImport(const CommandContext &context, bool isRaw)
 
 // Menu handler functions
 
-namespace FileActions {
-
-struct Handler : CommandHandlerObject {
-
-void OnNew(const CommandContext & )
+void FileActions::Handler::OnNew(const CommandContext & )
 {
    ( void ) ProjectManager::New();
 }
 
-void OnOpen(const CommandContext &context )
+void FileActions::Handler::OnOpen(const CommandContext &context )
 {
    auto &project = context.project;
    ProjectManager::OpenFiles(&project);
@@ -190,13 +187,13 @@ void OnOpen(const CommandContext &context )
 // It does not test for unsaved changes.
 // It is not in the menus by default.  Its main purpose is/was for 
 // developers checking functionality of ResetProjectToEmpty().
-void OnProjectReset(const CommandContext &context)
+void FileActions::Handler::OnProjectReset(const CommandContext &context)
 {
    auto &project = context.project;
    ProjectManager::Get( project ).ResetProjectToEmpty();
 }
 
-void OnClose(const CommandContext &context )
+void FileActions::Handler::OnClose(const CommandContext &context )
 {
    auto &project = context.project;
    auto &window = ProjectWindow::Get( project );
@@ -204,57 +201,57 @@ void OnClose(const CommandContext &context )
    window.Close();
 }
 
-void OnCompact(const CommandContext &context)
+void FileActions::Handler::OnCompact(const CommandContext &context)
 {
    ProjectFileManager::Get(context.project).Compact();
 }
 
-void OnSave(const CommandContext &context )
+void FileActions::Handler::OnSave(const CommandContext &context )
 {
    auto &project = context.project;
    auto &projectFileManager = ProjectFileManager::Get( project );
    projectFileManager.Save();
 }
 
-void OnSaveAs(const CommandContext &context )
+void FileActions::Handler::OnSaveAs(const CommandContext &context )
 {
    auto &project = context.project;
    auto &projectFileManager = ProjectFileManager::Get( project );
    projectFileManager.SaveAs();
 }
 
-void OnSaveCopy(const CommandContext &context )
+void FileActions::Handler::OnSaveCopy(const CommandContext &context )
 {
    auto &project = context.project;
    auto &projectFileManager = ProjectFileManager::Get( project );
    projectFileManager.SaveCopy();
 }
 
-void OnExportMp3(const CommandContext &context)
+void FileActions::Handler::OnExportMp3(const CommandContext &context)
 {
    auto &project = context.project;
    DoExport(project, "MP3");
 }
 
-void OnExportWav(const CommandContext &context)
+void FileActions::Handler::OnExportWav(const CommandContext &context)
 {
    auto &project = context.project;
    DoExport(project, "WAV");
 }
 
-void OnExportOgg(const CommandContext &context)
+void FileActions::Handler::OnExportOgg(const CommandContext &context)
 {
    auto &project = context.project;
    DoExport(project, "OGG");
 }
 
-void OnExportAudio(const CommandContext &context)
+void FileActions::Handler::OnExportAudio(const CommandContext &context)
 {
    auto &project = context.project;
    DoExport(project, "");
 }
 
-void OnExportSelection(const CommandContext &context)
+void FileActions::Handler::OnExportSelection(const CommandContext &context)
 {
    auto &project = context.project;
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
@@ -265,7 +262,7 @@ void OnExportSelection(const CommandContext &context)
       selectedRegion.t1());
 }
 
-void OnExportLabels(const CommandContext &context)
+void FileActions::Handler::OnExportLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -327,7 +324,7 @@ void OnExportLabels(const CommandContext &context)
    f.Close();
 }
 
-void OnExportMultiple(const CommandContext &context)
+void FileActions::Handler::OnExportMultiple(const CommandContext &context)
 {
    auto &project = context.project;
    ExportMultipleDialog em(&project);
@@ -336,7 +333,7 @@ void OnExportMultiple(const CommandContext &context)
 }
 
 #ifdef USE_MIDI
-void OnExportMIDI(const CommandContext &context)
+void FileActions::Handler::OnExportMIDI(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
@@ -423,12 +420,12 @@ void OnExportMIDI(const CommandContext &context)
 }
 #endif // USE_MIDI
 
-void OnImport(const CommandContext &context)
+void FileActions::Handler::OnImport(const CommandContext &context)
 {
    DoImport(context, false);
 }
 
-void OnImportLabels(const CommandContext &context)
+void FileActions::Handler::OnImportLabels(const CommandContext &context)
 {
    auto &project = context.project;
    auto &trackFactory = WaveTrackFactory::Get( project );
@@ -475,7 +472,7 @@ void OnImportLabels(const CommandContext &context)
 }
 
 #ifdef USE_MIDI
-void OnImportMIDI(const CommandContext &context)
+void FileActions::Handler::OnImportMIDI(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = GetProjectFrame( project );
@@ -502,19 +499,19 @@ void OnImportMIDI(const CommandContext &context)
 }
 #endif
 
-void OnImportRaw(const CommandContext &context)
+void FileActions::Handler::OnImportRaw(const CommandContext &context)
 {
    DoImport(context, true);
 }
 
-void OnPageSetup(const CommandContext &context)
+void FileActions::Handler::OnPageSetup(const CommandContext &context)
 {
    auto &project = context.project;
    auto &window = GetProjectFrame( project );
    HandlePageSetup(&window);
 }
 
-void OnPrint(const CommandContext &context)
+void FileActions::Handler::OnPrint(const CommandContext &context)
 {
    auto &project = context.project;
    auto name = project.GetProjectName();
@@ -523,21 +520,17 @@ void OnPrint(const CommandContext &context)
    HandlePrint(&window, name, &tracks, TrackPanel::Get( project ));
 }
 
-void OnExit(const CommandContext &WXUNUSED(context) )
+void FileActions::Handler::OnExit(const CommandContext &WXUNUSED(context) )
 {
    // Simulate the application Exit menu item
    wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
    wxTheApp->AddPendingEvent( evt );
 }
 
-void OnExportFLAC(const CommandContext &context)
+void FileActions::Handler::OnExportFLAC(const CommandContext &context)
 {
    DoExport(context.project, "FLAC");
 }
-
-}; // struct Handler
-
-} // namespace
 
 static CommandHandlerObject &findCommandHandler(AudacityProject &) {
    // Handler is not stateful.  Doesn't need a factory registered with

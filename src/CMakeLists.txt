@@ -646,6 +646,7 @@ list( APPEND SOURCES
       menus/EditMenus.h
       menus/ExtraMenus.cpp
       menus/FileMenus.cpp
+      menus/FileMenus.h
       menus/HelpMenus.cpp
       menus/LabelMenus.cpp
       menus/NavigationMenus.cpp

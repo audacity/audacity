@@ -35,6 +35,7 @@
 #include "SelectUtilities.h"
 #include "menus/TrackMenus.h"
 #include "menus/EditMenus.h"
+#include "menus/FileMenus.h"
 
 class wxRect;
 

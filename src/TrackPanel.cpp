@@ -801,6 +801,9 @@ void TrackPanel::OnOutsideTrackContextMenu(wxCommandEvent& event)
             break;
             
         case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_ExportProject:
+            this->CallAfter([this]{
+                FileActions::Handler().OnExportAudio(CommandContext{*GetProject()});
+            });
             break;
             
         case AudacityOutsideTrackContextMenu::MenuItemID::kItemID_SelectAll:

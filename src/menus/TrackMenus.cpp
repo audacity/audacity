@@ -1,4 +1,3 @@
-#include "TrackMenus.h"
 
 #include "../CommonCommandFlags.h"
 #include "../LabelTrack.h"
@@ -41,6 +40,8 @@
 #include "scorealign.h"
 #include "scorealign-glue.h"
 #endif /* EXPERIMENTAL_SCOREALIGN */
+
+#include "TrackMenus.h"
 
 // private helper classes and functions
 namespace {

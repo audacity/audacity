@@ -1,4 +1,3 @@
-#include "EditMenus.h"
 
 #include "../AdornedRulerPanel.h"
 #include "../Clipboard.h"
@@ -25,6 +24,8 @@
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
+
+#include "EditMenus.h"
 
 // private helper classes and functions
 namespace {
