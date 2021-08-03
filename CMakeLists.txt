@@ -144,6 +144,11 @@ cmd_option( ${_OPT}conan_enabled
             On
 )
 
+cmd_option( ${_OPT}conan_allow_prebuilt_binaries 
+            "Allow using the compiled dependencies from the cache or remotes"
+            On
+)
+
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"
