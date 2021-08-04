@@ -26,6 +26,8 @@
 
 #include <cstdint>
 
+#define UPDATE_LOCAL_TESTING 0
+
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 
 static BoolSetting
@@ -35,7 +37,11 @@ using Clock = std::chrono::system_clock;
 using TimePoint = Clock::time_point;
 using Duration = TimePoint::duration;
 
+#if UPDATE_LOCAL_TESTING == 1
+constexpr Duration updatesCheckInterval = std::chrono::minutes(2);
+#else
 constexpr Duration updatesCheckInterval = std::chrono::hours(12);
+#endif
 
 enum { ID_TIMER = wxID_HIGHEST + 1 };
 
@@ -135,7 +141,9 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
            return;
         }
 
+#if UPDATE_LOCAL_TESTING == 0
         if (mVersionPatch.version > CurrentBuildVersion())
+#endif
         {
             gAudioIO->CallAfterRecording([this, ignoreNetworkErrors] {
                 UpdatePopupDialog dlg(nullptr, mVersionPatch);
@@ -236,10 +244,12 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
                 }
             });
         }
+#if UPDATE_LOCAL_TESTING == 0
         else // mVersionPatch.version > CurrentBuildVersion()
         {
             mOnProgress = false;
         }
+#endif
     });
 }
 
@@ -247,7 +257,9 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
     bool updatesCheckingEnabled = DefaultUpdatesCheckingFlag.Read();
 
+#if UPDATE_LOCAL_TESTING == 0
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
+#endif
     {
         GetUpdates(true);
     }
