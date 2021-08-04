@@ -56,6 +56,7 @@ enum kWaveforms
    kSquare,
    kSawtooth,
    kSquareNoAlias,
+   kTriangle,
    nWaveforms
 };
 
@@ -64,7 +65,8 @@ static const EnumValueSymbol kWaveStrings[nWaveforms] =
    { XO("Sine") },
    { XO("Square") },
    { XO("Sawtooth") },
-   { XO("Square, no alias") }
+   { XO("Square, no alias") },
+   { XO("Triangle") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -224,6 +226,16 @@ size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, 
          break;
       case kSawtooth:
          f = (2.0 * modf(mPositionInCycles / mSampleRate + 0.5, &throwaway)) - 1.0;
+         break;
+      case kTriangle:
+         f = modf(mPositionInCycles / mSampleRate, &throwaway);
+         if(f < 0.25) {
+             f *= 4.0;
+         } else if(f > 0.75) {
+             f = (f - 1.0) * 4.0;
+         } else { /* f >= 0.25 || f <= 0.75 */
+             f = (0.5 - f) * 4.0;
+         }
          break;
       case kSquareNoAlias:    // Good down to 110Hz @ 44100Hz sampling.
          //do fundamental (k=1) outside loop
