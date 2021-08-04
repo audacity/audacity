@@ -81,6 +81,7 @@ is time to refresh some aspect of the screen.
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackVRulerControls.h"
+#include "tracks/ui/TrackChannelSeparatorCell.h"
 
 //This loads the appropriate set of cursors, depending on platform.
 #include "../images/Cursors.h"
@@ -1349,10 +1350,12 @@ struct ChannelGroup final : TrackPanelGroup {
                channel->shared_from_this(),
                TrackView::Get( *channel ).GetSubViews( rect ),
                mLeftOffset ) );
-         if ( channel != pLast ) {
-            yy += height;
-            refinement.emplace_back(yy, TrackPanelResizerCell::Get( *channel ).shared_from_this() );
-            yy += kSeparatorThickness;
+         yy += height;
+         if (channel != pLast)
+         {
+             auto separator = view.GetChannelSeparatorControl();
+             refinement.emplace_back(yy, separator);
+             yy += separator->GetHeight();
          }
       }
 
@@ -1379,7 +1382,7 @@ struct ChannelGroup final : TrackPanelGroup {
                rect.GetRight() - mLeftOffset,
                height);
             TrackArt::DrawCursor(context, trackRect, mpTrack.get());
-            yy += height + kSeparatorThickness;
+            yy += height + view.GetChannelSeparatorControl()->GetHeight();
          }
       }
    }
@@ -1523,14 +1526,20 @@ struct Subgroup final : TrackPanelGroup {
       for ( const auto leader : tracks.Leaders() ) {
          wxCoord height = 0;
          auto channels = TrackList::Channels(leader);
+         auto last = *channels.rbegin();
          for ( auto channel : channels ) {
             auto &view = TrackView::Get( *channel );
             height += view.GetHeight();
 
             if (view.GetAffordanceControls())
                height += kAffordancesAreaHeight;
+            if (channel != last)
+            {
+                auto separator = view.GetChannelSeparatorControl();
+                height += separator->GetHeight();
+            }
          }
-         height += kSeparatorThickness * (static_cast<int>(channels.size()));
+         height += kSeparatorThickness;
          refinement.emplace_back( yy,
             std::make_shared< ResizingChannelGroup >(
                leader->SharedPointer(), viewInfo.GetLeftOffset() )

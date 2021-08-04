@@ -13,6 +13,7 @@ Paul Licameli split from class Track
 
 #include <memory>
 #include "CommonTrackPanelCell.h" // to inherit
+#include "TrackChannelSeparatorCell.h"
 
 class Track;
 class TrackList;
@@ -71,6 +72,8 @@ public:
    // by default returns nullptr, meaning that track has no drag controls area
    std::shared_ptr<CommonTrackCell> GetAffordanceControls();
 
+   // Returns a cell to be used as a channel separator.
+   virtual std::shared_ptr<TrackChannelSeparatorCell> GetChannelSeparatorControl();
 
    void WriteXMLAttributes( XMLWriter & ) const override;
    bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;

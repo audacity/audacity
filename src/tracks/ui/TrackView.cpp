@@ -17,6 +17,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../xml/XMLTagHandler.h"
 #include "../../xml/XMLWriter.h"
 
+#include "TrackPanelResizerCell.h"
+
 TrackView::TrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackCell{ pTrack }
 {
@@ -84,6 +86,11 @@ void TrackView::SetMinimized(bool isMinimized)
    auto leader = *TrackList::Channels( FindTrack().get() ).begin();
    if ( leader )
       leader->AdjustPositions();
+}
+
+std::shared_ptr<TrackChannelSeparatorCell> TrackView::GetChannelSeparatorControl()
+{
+   return TrackPanelResizerCell::Get(*FindTrack().get()).shared_from_this();
 }
 
 void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
@@ -225,25 +232,27 @@ struct TrackPositioner final : ClientData::Base, wxEvtHandler
    {
       e.Skip();
 
-      auto& tracks = TrackList::Get(mProject);
+      auto leaders = TrackList::Get(mProject).Leaders();
 
-      auto iter = tracks.Find( e.mpTrack.lock().get() );
-      if (iter == tracks.end())
-         return;
-
-      auto yy = 0;
-      if (iter == tracks.begin())
-          yy = kTopMargin;
-      else
-          yy = TrackView::Get(**iter.advance(-1)).GetBottom() + kSeparatorThickness;
-      
-      while( auto pTrack = *iter ) {
-         auto &view = TrackView::Get( *pTrack );
-         if (view.GetAffordanceControls())
-             yy += kAffordancesAreaHeight;
-         view.SetTop( yy );
-         yy += view.GetHeight() + kSeparatorThickness;
-         ++iter;
+      auto yy = 0 + kTopMargin;
+      for (auto leader : leaders)
+      {
+          auto channels = TrackList::Channels(leader);
+          auto last = *channels.rbegin();
+          for (auto channel : channels)
+          {
+              auto& view = TrackView::Get(*channel);
+              if (view.GetAffordanceControls())
+                  yy += kAffordancesAreaHeight;
+              view.SetTop(yy);
+              yy += view.GetHeight();
+              if (channel != last)
+              {
+                  if (auto separator = view.GetChannelSeparatorControl())
+                      yy += separator->GetHeight();
+              }
+          }
+          yy += kSeparatorThickness;
       }
    }
 };

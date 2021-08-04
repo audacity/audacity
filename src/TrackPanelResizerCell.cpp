@@ -44,6 +44,11 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
    return results;
 }
 
+int TrackPanelResizerCell::GetHeight()
+{
+    return kSeparatorThickness;
+}
+
 std::shared_ptr<Track> TrackPanelResizerCell::DoFindTrack()
 {
    return mwTrack.lock();

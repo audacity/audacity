@@ -141,17 +141,17 @@ void DoZoomFitV(AudacityProject &project)
 
    // Find total height to apportion
    auto height = viewInfo.GetHeight() - 28;
-   height -= static_cast<int>(tracks.size() - 1) * kSeparatorThickness 
+   height -= static_cast<int>(tracks.Leaders().size() - 1) * kSeparatorThickness
        + kTopMargin + kBottomMargin;
    
-   for (auto t : tracks)
+   for (auto leader : tracks.Leaders())
    {
-      auto isAudioTrack = dynamic_cast<AudioTrack*>(t) != nullptr;
+      auto isAudioTrack = dynamic_cast<AudioTrack*>(leader) != nullptr;
       // The height of minimized and non-audio tracks cannot be apportioned
       if (!isAudioTrack)
-         height -= TrackInfo::MeasureTrackChannelHeight(*t);
+         height -= TrackInfo::MeasureTrackGroupHeight(*leader);
       else
-         height -= TrackInfo::MeasureTrackChannelMinimumHeight(*t);
+         height -= TrackInfo::MeasureTrackGroupMinimumHeight(*leader);
    }
 
    // Give each resized track the average of the remaining height

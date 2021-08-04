@@ -12,13 +12,13 @@
 #define __AUDACITY_TRACK_PANEL_RESIZER_CELL__
 
 #include "ClientData.h" // to inherit
-#include "tracks/ui/CommonTrackPanelCell.h" // to inherit
+#include "tracks/ui/TrackChannelSeparatorCell.h" // to inherit
 
 class Track;
 class TrackPanelResizeHandle;
 
 class TrackPanelResizerCell
-   : public CommonTrackPanelCell
+   : public TrackChannelSeparatorCell
    , public std::enable_shared_from_this< TrackPanelResizerCell >
    , public ClientData::Base
 {
@@ -34,6 +34,8 @@ public:
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const AudacityProject *) override;
+
+   int GetHeight() override;
 
 protected:
    std::shared_ptr<Track> DoFindTrack() override;

@@ -225,10 +225,19 @@ int TrackInfo::MeasureTrackChannelHeight(Track& track)
 int TrackInfo::MeasureTrackGroupHeight(Track& track)
 {
     auto channels = TrackList::Channels(&track);
-    auto height = static_cast<int>(channels.size() - 1) * kSeparatorThickness;
-    for (auto c : TrackList::Channels(&track))
+    auto last = *channels.rbegin();
+    auto height = 0;
+    for (auto channel : channels)
     {
-        height += MeasureTrackChannelHeight(*c);
+        auto& view = TrackView::Get(track);
+        if (view.GetAffordanceControls())
+            height += kAffordancesAreaHeight;
+        height += view.GetHeight();
+        if (channel != last)
+        {
+            auto separator = view.GetChannelSeparatorControl();
+            height += separator->GetHeight();
+        }
     }
     return height;
 }
@@ -239,6 +248,26 @@ int TrackInfo::MeasureTrackChannelMinimumHeight(Track& track)
    if (view.GetAffordanceControls())
       return view.GetMinimumHeight() + kAffordancesAreaHeight;
    return view.GetMinimumHeight();
+}
+
+AUDACITY_DLL_API int TrackInfo::MeasureTrackGroupMinimumHeight(Track& track)
+{
+    auto channels = TrackList::Channels(&track);
+    auto last = *channels.rbegin();
+    auto height = 0;
+    for (auto channel : channels)
+    {
+        auto& view = TrackView::Get(track);
+        if (view.GetAffordanceControls())
+            height += kAffordancesAreaHeight;
+        height += view.GetMinimumHeight();
+        if (channel != last)
+        {
+            auto separator = view.GetChannelSeparatorControl();
+            height += separator->GetHeight();
+        }
+    }
+    return height;
 }
 
 int TrackInfo::GetTrackChannelTop(Track& track)

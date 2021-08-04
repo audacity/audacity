@@ -862,6 +862,7 @@ list( APPEND SOURCES
       tracks/ui/TimeShiftHandle.h
       tracks/ui/TrackButtonHandles.cpp
       tracks/ui/TrackButtonHandles.h
+      tracks/ui/TrackChannelSeparatorCell.h
       tracks/ui/TrackControls.cpp
       tracks/ui/TrackControls.h
       tracks/ui/TrackSelectHandle.cpp

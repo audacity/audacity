@@ -44,6 +44,8 @@ namespace TrackInfo
    //!Returns track channel minimum allowed height
    AUDACITY_DLL_API int MeasureTrackChannelMinimumHeight(Track& track);
 
+   AUDACITY_DLL_API int MeasureTrackGroupMinimumHeight(Track& track);
+
    //!Returns top Y coordinate of the channel
    AUDACITY_DLL_API int GetTrackChannelTop(Track& track);
 
