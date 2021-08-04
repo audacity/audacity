@@ -70,15 +70,17 @@ std::unique_ptr<FileConfig> ugPrefs {};
 FileConfig *gPrefs = nullptr;
 int gMenusDirty = 0;
 
+struct MyEvent;
+wxDECLARE_EVENT(EVT_PREFS_UPDATE, MyEvent);
+
 struct MyEvent : wxEvent
 {
 public:
-   explicit MyEvent(int id) : mId{id} {}
+   explicit MyEvent(int id) : wxEvent{ 0, EVT_PREFS_UPDATE }, mId{id} {}
    virtual wxEvent *Clone() const override { return new MyEvent{mId}; }
    int mId;
 };
 
-wxDECLARE_EVENT(EVT_PREFS_UPDATE, MyEvent);
 wxDEFINE_EVENT(EVT_PREFS_UPDATE, MyEvent);
 
 struct PrefsListener::Impl : wxEvtHandler
@@ -89,20 +91,24 @@ struct PrefsListener::Impl : wxEvtHandler
    PrefsListener &mOwner;
 };
 
-static wxEvtHandler hub;
+static wxEvtHandler &hub()
+{
+   static wxEvtHandler theHub;
+   return theHub;
+}
 
 void PrefsListener::Broadcast(int id)
 {
    BasicUI::CallAfter([id]{
       MyEvent event{ id };
-      hub.ProcessEvent(event);
+      hub().ProcessEvent(event);
    });
 }
 
 PrefsListener::Impl::Impl( PrefsListener &owner )
    : mOwner{ owner }
 {
-   hub.Bind(EVT_PREFS_UPDATE, &PrefsListener::Impl::OnEvent, this);
+   hub().Bind(EVT_PREFS_UPDATE, &PrefsListener::Impl::OnEvent, this);
 }
 
 PrefsListener::Impl::~Impl()
