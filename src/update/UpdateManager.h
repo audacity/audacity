@@ -22,7 +22,8 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <mutex>
+ 
 /// A class that managing of updates.
 /**
     Opt-in request and show update dialog by the scheduled time.
@@ -52,11 +53,13 @@ private:
     /// Scheduling update time for avoiding multiplying update notifications.
     bool IsTimeForUpdatesChecking();
 
-    std::unique_ptr<BasicUI::GenericProgressDialog> mProgressDialog;
+    std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 
     std::string mAudacityInstallerPath;
     std::ofstream mAudacityInstaller;
-
+    
+    std::mutex mUpdateMutex;
+    bool mOnProgress{ false };
 public:
     DECLARE_EVENT_TABLE()
 };
