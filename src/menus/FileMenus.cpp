@@ -671,7 +671,7 @@ BaseItemSharedPtr FileMenu()
          ),
 
          Menu( wxT("Import"), XXO("&Import"),
-            Command( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport),
+            Command( wxT("ImportAudio"), XXO("&Audio..."), FN(OnImport), wxT("Ctrl+I")
                AudioIONotBusyFlag(), wxT("Ctrl+Shift+I") ),
             Command( wxT("ImportLabels"), XXO("&Labels..."), FN(OnImportLabels),
                AudioIONotBusyFlag() ),
