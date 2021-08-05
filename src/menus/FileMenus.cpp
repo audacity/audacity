@@ -698,7 +698,7 @@ BaseItemSharedPtr FileMenu()
          // and put it in the Audacity menu for us based on its ID.
          /* i18n-hint: (verb) It's item on a menu. */
          Command( wxT("Exit"), XXO("E&xit"), FN(OnExit),
-            AlwaysEnabledFlag, wxT("Ctrl+Q") )
+            AlwaysEnabledFlag, wxT("Ctrl+Q"), wxT("Ctrl+E") )
       )
    ) ) };
    return menu;
