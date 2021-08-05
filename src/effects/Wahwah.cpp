@@ -33,7 +33,7 @@
 
 enum
 {
-   ID_Freq = 10000,
+   ID_Freq = 12000,
    ID_Phase,
    ID_Depth,
    ID_Res,
