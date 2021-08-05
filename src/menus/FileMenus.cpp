@@ -685,7 +685,7 @@ BaseItemSharedPtr FileMenu()
       ),
 
       Section( "Print",
-         Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), FN(OnPageSetup),
+         Command( wxT("PageSetup"), XXO("Pa&ge Setup..."), FN(OnPageSetup), wxT("Ctrl+P")
             AudioIONotBusyFlag() | TracksExistFlag() ),
          /* i18n-hint: (verb) It's item on a menu. */
          Command( wxT("Print"), XXO("&Print..."), FN(OnPrint),
