@@ -657,7 +657,7 @@ BaseItemSharedPtr FileMenu()
                AudioIONotBusyFlag() | TimeSelectedFlag() | WaveTracksSelectedFlag() ),
 
             Command( wxT("ExportLabels"), XXO("Export &Labels..."),
-               FN(OnExportLabels),
+               FN(OnExportLabels), wxT("Ctrl+E+Shift"),
                AudioIONotBusyFlag() | LabelTracksExistFlag() ),
             // Enable Export audio commands only when there are audio tracks.
             Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
