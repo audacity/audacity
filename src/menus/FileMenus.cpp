@@ -662,7 +662,7 @@ BaseItemSharedPtr FileMenu()
             // Enable Export audio commands only when there are audio tracks.
             Command( wxT("ExportMultiple"), XXO("Export &Multiple..."),
                FN(OnExportMultiple),
-               AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+L") )
+               AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+L"), wxT("Ctrl+M") )
    #if defined(USE_MIDI)
             ,
             Command( wxT("ExportMIDI"), XXO("Export MI&DI..."), FN(OnExportMIDI),
