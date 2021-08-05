@@ -4,8 +4,6 @@ LABEL maintainer="d.vedenko@audacityteam.org"
 LABEL description="A build environment to check the builds for Arch package maintainers"
 LABEL version="3.0"
 
-RUN pacman -Syu --noconfirm
-
 COPY ["dependencies.sh", "/dependencies.sh"]
 RUN ./dependencies.sh
 

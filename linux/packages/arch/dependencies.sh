@@ -22,7 +22,8 @@ deps=(
    libsndfile 
    jack
    lilv 
-   lv2 
+   lv2
+   portaudio
    portsmf
    portmidi
    suil
@@ -37,6 +38,6 @@ deps=(
    ffmpeg
 )
 
-pacman -S --noconfirm \
+pacman -Syu --noconfirm \
    "${build_deps[@]}" \
    "${deps[@]}" 
