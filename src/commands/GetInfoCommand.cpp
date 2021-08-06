@@ -695,80 +695,20 @@ void GetInfoCommand::ExploreAdornments( const CommandContext &context,
 }
 
 void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
-   wxPoint P, wxWindow * pWin, int WXUNUSED(Id), int depth )
+   wxPoint P, int depth )
 {
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
-   auto &viewInfo = ViewInfo::Get( *pProj );
-
-   wxRect trackRect = pWin->GetRect();
-
-   for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
-      auto &view = TrackView::Get( *t );
-      trackRect.y = view.GetY() - viewInfo.vpos;
-      trackRect.height = view.GetHeight();
-
-#if 0
-      // Work in progress on getting the TCP button positions and sizes.
-      wxRect rect = trackRect;
-      Track *l = t->GetLink();
-
-      if (t->GetLinked()) {
-         rect.height += l->GetHeight();
-      }
-
-      switch (t->GetKind()) {
-         case Track::Wave:
-         {
-            break;
-         }
-#ifdef USE_MIDI
-         case Track::Note:
-         {
-            break;
-         }
-#endif // USE_MIDI
-         case Track::Label:
-            break;
-         case Track::Time:
-            break;
-      }
-      {
-         // Start with whole track rect
-         wxRect R = trackRect;
-
-         // Now exclude left, right, and top insets
-         R.x += kLeftInset;
-         R.y += kTopInset;
-         R.width -= kLeftInset * 2;
-         R.height -= kTopInset;
-
-         int labelw = viewInfo.GetLabelWidth();
-         //int vrul = viewInfo.GetVRulerOffset();
-         bool bIsWave = true;
-         //mTrackInfo.DrawBackground(dc, R, t->GetSelected(), bIsWave, labelw, vrul);
-
-
-         for (Overlay * pOverlay : pTP->mOverlays) {
-            auto R2(pOverlay->GetRectangle(trackRect.GetSize()).first);
-            context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-               depth, R2.GetLeft(), R2.GetTop(), R2.GetRight(), R2.GetBottom(), "Otherthing" )); 
-         }
-      }
-#endif
-
-      // The VRuler.
-      {  
-         wxRect R = trackRect;
-         R.x += viewInfo.GetVRulerOffset();
-         R.y += kTopMargin;
-         R.width = viewInfo.GetVRulerWidth();
-         R.height -= (kTopMargin + kBottomMargin);
+   wxRect panelRect{ {}, tp.GetSize() };
+   for ( auto t : TrackList::Get( *pProj ).Any() ) {
+      auto rulers = tp.FindRulerRects(t);
+      for (auto &R : rulers) {
+         if (!R.Intersects(panelRect))
+            continue;
          R.SetPosition( R.GetPosition() + P );
-
          context.StartStruct();
          context.AddItem( depth, "depth" );
-         context.AddItem( "VRuler", "label" ); 
+         context.AddItem( "VRuler", "label" );
          context.StartField("box");
          context.StartArray();
          context.AddItem( R.GetLeft() );
@@ -791,7 +731,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
    if( pWin->GetName() == "Track Panel" )
    {
       wxRect R = pWin->GetScreenRect();
-      ExploreTrackPanel(  context, R.GetPosition()-P, pWin, Id, depth );
+      ExploreTrackPanel(  context, R.GetPosition()-P, depth );
       return;
    }
    wxWindowList list = pWin->GetChildren();

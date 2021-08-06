@@ -1627,6 +1627,18 @@ wxRect TrackPanel::FindFocusedTrackRect( const Track * target )
    return rect;
 }
 
+std::vector<wxRect> TrackPanel::FindRulerRects( const Track *target )
+{
+   std::vector<wxRect> results;
+   if (target)
+      VisitCells( [&]( const wxRect &rect, TrackPanelCell &visited ) {
+         if (auto pRuler = dynamic_cast<const TrackVRulerControls*>(&visited);
+             pRuler && pRuler->FindTrack().get() == target)
+            results.push_back(rect);
+      } );
+   return results;
+}
+
 TrackPanelCell *TrackPanel::GetFocusedCell()
 {
    auto pTrack = TrackFocus::Get( *GetProject() ).Get();
@@ -1649,28 +1661,4 @@ void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
    if (cell) {
       Refresh( false );
    }
-}
-
-IsVisibleTrack::IsVisibleTrack(AudacityProject *project)
-   : mPanelRect {
-        wxPoint{ 0, ViewInfo::Get( *project ).vpos },
-        wxSize{
-           ViewInfo::Get( *project ).GetTracksUsableWidth(),
-           ViewInfo::Get( *project ).GetHeight()
-        }
-     }
-{}
-
-bool IsVisibleTrack::operator () (const Track *pTrack) const
-{
-   // Need to return true if this track or a later channel intersects
-   // the view
-   return
-   TrackList::Channels(pTrack).StartingWith(pTrack).any_of(
-      [this]( const Track *pT ) {
-         auto &view = TrackView::Get( *pT );
-         wxRect r(0, view.GetY(), 1, view.GetHeight());
-         return r.Intersects(mPanelRect);
-      }
-   );
 }

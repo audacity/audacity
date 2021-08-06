@@ -149,6 +149,13 @@ public:
    */
    wxRect FindFocusedTrackRect( const Track * target );
 
+   /*!
+    @return extents of the vertical rulers of one channel, top to bottom.
+    (There may be multiple sub-views, each with a ruler.)
+    If target is nullptr, returns an empty vector.
+    */
+   std::vector<wxRect> FindRulerRects( const Track * target );
+
 protected:
    // Get the root object defining a recursive subdivision of the panel's
    // area into cells
@@ -220,16 +227,6 @@ protected:
        unsigned refreshResult) override;
 
    void UpdateStatusMessage( const TranslatableString &status ) override;
-};
-
-// A predicate class
-struct AUDACITY_DLL_API IsVisibleTrack
-{
-   IsVisibleTrack(AudacityProject *project);
-
-   bool operator () (const Track *pTrack) const;
-
-   wxRect mPanelRect;
 };
 
 #endif
