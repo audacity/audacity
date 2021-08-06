@@ -1253,19 +1253,16 @@ void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
 }
 
 using DoGetWaveTrackControls = DoGetControls::Override< WaveTrack >;
-template<> template<> auto DoGetWaveTrackControls::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackControls) {
    return [](WaveTrack &track) {
       return std::make_shared<WaveTrackControls>( track.SharedPointer() );
    };
 }
-static DoGetWaveTrackControls registerDoGetWaveTrackControls;
 
 using GetDefaultWaveTrackHeight = GetDefaultTrackHeight::Override< WaveTrack >;
-template<> template<>
-auto GetDefaultWaveTrackHeight::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultWaveTrackHeight) {
    return [](WaveTrack &) {
       return WaveTrackControls::DefaultWaveTrackHeight();
    };
 }
-static GetDefaultWaveTrackHeight registerGetDefaultWaveTrackHeight;
 

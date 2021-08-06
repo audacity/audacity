@@ -84,7 +84,6 @@ list( APPEND SOURCES
       AdornedRulerPanel.h
       AllThemeResources.cpp
       AllThemeResources.h
-      AttachedVirtualFunction.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -110,8 +109,6 @@ list( APPEND SOURCES
       CellularPanel.cpp
       CellularPanel.h
       ClassicThemeAsCeeCode.h
-      ClientData.h
-      ClientDataHelpers.h
       Clipboard.cpp
       Clipboard.h
       CommonCommandFlags.cpp
@@ -217,9 +214,6 @@ list( APPEND SOURCES
       ProjectWindowBase.cpp
       ProjectWindowBase.h
       RefreshCode.h
-      Registrar.h
-      Registry.cpp
-      Registry.h
       RingBuffer.cpp
       RingBuffer.h
       SampleBlock.cpp

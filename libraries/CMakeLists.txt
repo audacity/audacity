@@ -13,6 +13,7 @@ set( LIBRARIES
    lib-preferences
    lib-math
    lib-files
+   lib-registries
 )
 
 if ( ${_OPT}has_networking )

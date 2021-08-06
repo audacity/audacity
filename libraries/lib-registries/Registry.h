@@ -56,7 +56,7 @@ namespace Registry {
    // Most items in the table will be the large ones describing commands, so the
    // waste of space in unions for separators and sub-menus should not be
    // large.
-   struct AUDACITY_DLL_API BaseItem {
+   struct REGISTRIES_API BaseItem {
       // declare at least one virtual function so dynamic_cast will work
       explicit
       BaseItem( const Identifier &internalName )
@@ -79,7 +79,7 @@ namespace Registry {
    // static tables of items to be computed once and reused
    // The name of the delegate is significant for path calculations, but the
    // SharedItem's ordering hint is used if the delegate has none
-   struct AUDACITY_DLL_API SharedItem final : BaseItem {
+   struct REGISTRIES_API SharedItem final : BaseItem {
       explicit SharedItem( const BaseItemSharedPtr &ptr_ )
          : BaseItem{ wxEmptyString }
          , ptr{ ptr_ }
@@ -97,7 +97,7 @@ namespace Registry {
    // the ComputedItem is visited
    // The name of the substitute is significant for path calculations, but the
    // ComputedItem's ordering hint is used if the substitute has none
-   struct AUDACITY_DLL_API ComputedItem final : BaseItem {
+   struct REGISTRIES_API ComputedItem final : BaseItem {
       // The type of functions that generate descriptions of items.
       // Return type is a shared_ptr to let the function decide whether to
       // recycle the object or rebuild it on demand each time.
@@ -117,13 +117,13 @@ namespace Registry {
    };
 
    // Common abstract base class for items that are not groups
-   struct AUDACITY_DLL_API SingleItem : BaseItem {
+   struct REGISTRIES_API SingleItem : BaseItem {
       using BaseItem::BaseItem;
       ~SingleItem() override = 0;
    };
 
    // Common abstract base class for items that group other items
-   struct AUDACITY_DLL_API GroupItem : BaseItem {
+   struct REGISTRIES_API GroupItem : BaseItem {
       using BaseItem::BaseItem;
 
       // Construction from an internal name and a previously built-up
@@ -231,14 +231,14 @@ namespace Registry {
    // The sequence of calls to RegisterItem has no significance for
    // determining the visitation ordering.  When sequence is important, register
    // a GroupItem.
-   AUDACITY_DLL_API
+   REGISTRIES_API
    void RegisterItem( GroupItem &registry, const Placement &placement,
       BaseItemPtr pItem );
    
    // Define actions to be done in Visit.
    // Default implementations do nothing
    // The supplied path does not include the name of the item
-   class AUDACITY_DLL_API Visitor
+   class REGISTRIES_API Visitor
    {
    public:
       virtual ~Visitor();
@@ -257,7 +257,7 @@ namespace Registry {
    // seen in the registry for the first time is placed somehere, and that
    // ordering should be kept the same thereafter in later runs (which may add
    // yet other previously unknown items).
-   void Visit(
+   REGISTRIES_API void Visit(
       Visitor &visitor,
       BaseItem *pTopItem,
       const GroupItem *pRegistry = nullptr );
@@ -269,7 +269,7 @@ namespace Registry {
    // registry of plug-ins, and something must be done to preserve old
    // behavior.  It can be done in the central place using string literal
    // identifiers only, not requiring static compilation or linkage dependency.
-   struct AUDACITY_DLL_API
+   struct REGISTRIES_API
    OrderingPreferenceInitializer : PreferenceInitializer {
       using Literal = const wxChar *;
       using Pair = std::pair< Literal, Literal >;

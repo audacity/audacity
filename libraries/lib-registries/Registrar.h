@@ -29,7 +29,7 @@ class LoadableModule;
 class ComponentInterface;
 class Effect;
 
-class AUDACITY_DLL_API Registrar 
+class REGISTRIES_API Registrar 
 {
 public:
    Registrar(){

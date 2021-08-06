@@ -60,12 +60,11 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest
 }
 
 using DoGetNoteTrackView = DoGetView::Override< NoteTrack >;
-template<> template<> auto DoGetNoteTrackView::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackView) {
    return [](NoteTrack &track) {
       return std::make_shared<NoteTrackView>( track.SharedPointer() );
    };
 }
-static DoGetNoteTrackView registerDoGetNoteTrackView;
 
 std::shared_ptr<TrackVRulerControls> NoteTrackView::DoGetVRulerControls()
 {

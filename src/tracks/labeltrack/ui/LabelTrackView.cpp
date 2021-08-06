@@ -2290,12 +2290,11 @@ int LabelTrackView::DialogForLabelName(
 }
 
 using DoGetLabelTrackView = DoGetView::Override< LabelTrack >;
-template<> template<> auto DoGetLabelTrackView::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetLabelTrackView) {
    return [](LabelTrack &track) {
       return std::make_shared<LabelTrackView>( track.SharedPointer() );
    };
 }
-static DoGetLabelTrackView registerDoGetLabelTrackView;
 
 std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
 {

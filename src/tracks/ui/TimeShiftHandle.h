@@ -15,7 +15,7 @@ Paul Licameli
 #include <unordered_map>
 #include <vector>
 
-#include "../../AttachedVirtualFunction.h"
+#include "AttachedVirtualFunction.h"
 #include "../../UIHandle.h"
 
 class SnapManager;
@@ -198,6 +198,7 @@ private:
 struct MakeTrackShifterTag;
 using MakeTrackShifter = AttachedVirtualFunction<
    MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track, AudacityProject&>;
+DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, MakeTrackShifter);
 
 class ViewInfo;
 
