@@ -12,7 +12,7 @@
 
 #include "Scrubbing.h"
 #include "../../widgets/Overlay.h"
-#include "../../ClientData.h"
+#include "ClientData.h"
 #include "../../AdornedRulerPanel.h"
 #include "../../Project.h"
 #include "../../ProjectWindow.h"

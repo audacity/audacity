@@ -272,12 +272,11 @@ bool CoarseTrackShifter::SyncLocks()
    return false;
 }
 
-template<> auto MakeTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL(MakeTrackShifter) {
    return [](Track &track, AudacityProject&) {
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
-static MakeTrackShifter registerMakeTrackShifter;
 
 void ClipMoveState::Init(
    AudacityProject &project,

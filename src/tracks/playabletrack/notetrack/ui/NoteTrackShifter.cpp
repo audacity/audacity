@@ -54,9 +54,8 @@ private:
 };
 
 using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;
-template<> template<> auto MakeNoteTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeNoteTrackShifter) {
    return [](NoteTrack &track, AudacityProject&) {
       return std::make_unique<NoteTrackShifter>(track);
    };
 }
-static MakeNoteTrackShifter registerMakeNoteTrackShifter;

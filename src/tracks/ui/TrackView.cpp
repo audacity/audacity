@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../Track.h"
 
-#include "../../ClientData.h"
+#include "ClientData.h"
 #include "../../Project.h"
 #include "../../xml/XMLTagHandler.h"
 #include "../../xml/XMLWriter.h"
@@ -229,12 +229,10 @@ static const AudacityProject::AttachedObjects::RegisteredFactory key{
 
 }
 
-template<> auto DoGetView::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL(DoGetView) {
    return nullptr;
 }
-static DoGetView registerDoGetView;
 
-template<> auto GetDefaultTrackHeight::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL(GetDefaultTrackHeight) {
    return nullptr;
 }
-static GetDefaultTrackHeight registerGetDefaultTrackHeight;

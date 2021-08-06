@@ -14,7 +14,7 @@ Paul Licameli split from Menus.cpp
 
 #include <wx/log.h>
 
-#include "widgets/AudacityMessageBox.h"
+#include "BasicUI.h"
 
 namespace {
 
@@ -174,7 +174,7 @@ using Path = std::vector< Identifier >;
         wxLogDebug( msg.Translation() );
 #ifdef IS_ALPHA
         // user-visible message
-        AudacityMessageBox( msg );
+        BasicUI::ShowMessageBox( msg );
 #endif
      }
    }

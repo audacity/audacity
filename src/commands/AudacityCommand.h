@@ -23,7 +23,7 @@
 #include "ComponentInterface.h"
 #include "EffectAutomationParameters.h" // for command automation
 
-#include "../Registrar.h"
+#include "Registrar.h"
 
 class ShuttleGui;
 
