@@ -37,6 +37,9 @@ class BackgroundHandle : public UIHandle
 public:
    BackgroundHandle() {}
 
+   BackgroundHandle(BackgroundHandle&&) = default;
+   BackgroundHandle& operator=(BackgroundHandle&&) = default;
+
    static HitTestPreview HitPreview()
    {
       static wxCursor arrowCursor{ wxCURSOR_ARROW };
@@ -108,12 +111,8 @@ std::vector<UIHandlePtr> BackgroundCell::HitTest
 (const TrackPanelMouseState &,
  const AudacityProject *)
 {
-   std::vector<UIHandlePtr> results;
-   auto result = mHandle.lock();
-   if (!result)
-      result = std::make_shared<BackgroundHandle>();
-   results.push_back(result);
-   return results;
+   auto result = AssignUIHandlePtr(mHandle, std::make_shared<BackgroundHandle>());
+   return { result };
 }
 
 std::shared_ptr<Track> BackgroundCell::DoFindTrack()
