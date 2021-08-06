@@ -747,7 +747,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 double TrackPanel::GetMostRecentXPos()
 {
    return mViewInfo->PositionToTime(
-      MostRecentXCoord(), mViewInfo->GetLabelWidth());
+      MostRecentXCoord(), mViewInfo->GetLeftOffset());
 }
 
 void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
