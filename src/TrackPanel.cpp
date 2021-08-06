@@ -26,7 +26,7 @@
   TrackInfo class to draw the controls area on the left of a track,
   and the TrackArtist class to draw the actual waveforms.
 
-  Note that in some of the older code here, e.g., GetLabelWidth(),
+  Note that in some of the older code here,
   "Label" means the TrackInfo plus the vertical ruler.
   Confusing relative to LabelTrack labels.
 
@@ -117,8 +117,8 @@ controls, and is a constant.
 GetVRulerWidth() is variable -- all tracks have the same ruler width at any
 time, but that width may be adjusted when tracks change their vertical scales.
 
-GetLabelWidth() counts columns up to and including the VRuler.
-GetLeftOffset() is yet one more -- it counts the "one pixel" column.
+GetLeftOffset() counts columns up to and including the VRuler and one more,
+the "one pixel" column.
 
 Cell for label has a rectangle that OMITS left, top, and bottom
 margins
