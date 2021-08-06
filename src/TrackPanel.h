@@ -135,9 +135,19 @@ protected:
 public:
    void MakeParentRedrawScrollbars();
 
-   // Rectangle includes track control panel, and the vertical ruler, and
-   // the proper track area of all channels, and the separators between them.
+   /*!
+    @return includes track control panel, and the vertical ruler, and
+    the proper track area of all channels, and the separators between them.
+    If target is nullptr, returns empty rectangle.
+   */
    wxRect FindTrackRect( const Track * target );
+
+   /*!
+    @return includes what's in `FindTrackRect(target)` and the focus ring
+    area around it.
+    If target is nullptr, returns empty rectangle.
+   */
+   wxRect FindFocusedTrackRect( const Track * target );
 
 protected:
    // Get the root object defining a recursive subdivision of the panel's

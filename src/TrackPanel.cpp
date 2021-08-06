@@ -1589,7 +1589,7 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
 {
    auto leader = *GetTracks()->FindLeader( target );
    if (!leader) {
-      return { 0, 0, 0, 0 };
+      return {};
    }
 
    return CellularPanel::FindRect( [&] ( TrackPanelNode &node ) {
@@ -1597,6 +1597,34 @@ wxRect TrackPanel::FindTrackRect( const Track * target )
          return pGroup->mpTrack.get() == leader;
       return false;
    } );
+}
+
+wxRect TrackPanel::FindFocusedTrackRect( const Track * target )
+{
+   auto rect = FindTrackRect(target);
+   if (rect != wxRect{}) {
+      // Enlarge horizontally.
+      // PRL:  perhaps it's one pixel too much each side, including some gray
+      // beyond the yellow?
+      rect.x = 0;
+      GetClientSize(&rect.width, nullptr);
+
+      // Enlarge vertically, enough to enclose the yellow focus border pixels
+      // The the outermost ring of gray pixels is included on three sides
+      // but not the top (should that be fixed?)
+
+      // (Note that TrackPanel paints its focus over the "top margin" of the
+      // rectangle allotted to the track, according to TrackView::GetY() and
+      // TrackView::GetHeight(), but also over the margin of the next track.)
+
+      rect.height += kBottomMargin;
+      int dy = kTopMargin - 1;
+      rect.Inflate( 0, dy );
+
+      // Note that this rectangle does not coincide with any one of
+      // the nodes in the subdivision.
+   }
+   return rect;
 }
 
 TrackPanelCell *TrackPanel::GetFocusedCell()
