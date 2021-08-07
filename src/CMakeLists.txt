@@ -276,6 +276,7 @@ list( APPEND SOURCES
       TrackPanelAx.h
       TrackPanelCell.cpp
       TrackPanelCell.h
+      TrackPanelConstants.h
       TrackPanelDrawable.cpp
       TrackPanelDrawable.h
       TrackPanelDrawingContext.h

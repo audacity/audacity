@@ -45,6 +45,7 @@ is time to refresh some aspect of the screen.
 
 
 #include "TrackPanel.h"
+#include "TrackPanelConstants.h"
 
 #include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -89,6 +90,8 @@ is time to refresh some aspect of the screen.
 #include <wx/dc.h>
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
+
+static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 
 /**
 
@@ -1363,7 +1366,7 @@ struct ChannelGroup final : TrackPanelGroup {
 
          auto height = view.GetHeight();
          rect.SetTop( yy );
-         rect.SetHeight( height - kSeparatorThickness );
+         rect.SetHeight( height - kChannelSeparatorThickness );
          refinement.emplace_back( yy,
             std::make_shared< VRulersAndChannels >(
                channel->shared_from_this(),
@@ -1372,7 +1375,7 @@ struct ChannelGroup final : TrackPanelGroup {
          if ( channel != pLast ) {
             yy += height;
             refinement.emplace_back(
-               yy - kSeparatorThickness,
+               yy - kChannelSeparatorThickness,
                TrackPanelResizerCell::Get( *channel ).shared_from_this() );
          }
       }
@@ -1400,7 +1403,7 @@ struct ChannelGroup final : TrackPanelGroup {
                mLeftOffset,
                yy,
                rect.GetRight() - mLeftOffset,
-               height - kSeparatorThickness);
+               height - kChannelSeparatorThickness);
             TrackArt::DrawCursor(context, trackRect, mpTrack.get());
             yy += height;
          }
@@ -1520,7 +1523,7 @@ struct ResizingChannelGroup final : TrackPanelGroup {
    { return { Axis::Y, Refinement{
       { rect.GetTop(),
          std::make_shared< LabeledChannelGroup >( mpTrack, mLeftOffset ) },
-      { rect.GetTop() + rect.GetHeight() - kSeparatorThickness,
+      { rect.GetTop() + rect.GetHeight() - kTrackSeparatorThickness,
          TrackPanelResizerCell::Get(
             **TrackList::Channels( mpTrack.get() ).rbegin() ).shared_from_this()
       }
