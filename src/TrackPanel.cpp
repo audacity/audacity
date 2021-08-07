@@ -751,23 +751,30 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    if (!trk)
       return;
 
+   // Always move to the first channel of the group, and use only
+   // the sum of channel heights, not the height of any channel alone!
    trk = *GetTracks()->FindLeader(trk);
    auto &view = TrackView::Get( *trk );
    auto height =
-      TrackList::Channels(trk).sum( TrackView::GetTrackHeight )
-      - kTopInset - kShadowThickness;
+      TrackList::Channels(trk).sum( TrackView::GetTrackHeight );
 
-   // subtract insets and shadows from the rectangle, but not border
+   // Set rectangle top according to the scrolling position, `vpos`
+   // Subtract the inset (above) and shadow (below) from the height of the
+   // rectangle, but not the border
    // This matters because some separators do paint over the border
-   wxRect rect(kLeftInset,
-            -mViewInfo->vpos + view.GetY() + kTopInset,
-            GetRect().GetWidth() - kLeftInset - kRightInset - kShadowThickness,
-            height);
+   const auto top =
+      -mViewInfo->vpos + view.GetCumulativeHeightBefore() + kTopInset;
+   height -= (kTopInset + kShadowThickness);
+
+   // Width also subtracts insets (left and right) plus shadow (right)
+   const auto left = kLeftInset;
+   const auto width = GetRect().GetWidth()
+      - (kLeftInset + kRightInset + kShadowThickness);
+
+   wxRect rect(left, top, width, height);
 
    if( refreshbacking )
-   {
       mRefreshBacking = true;
-   }
 
    Refresh( false, &rect );
 }

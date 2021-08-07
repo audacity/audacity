@@ -41,7 +41,7 @@ int TrackView::GetCumulativeHeight( const Track *pTrack )
    if ( !pTrack )
       return 0;
    auto &view = Get( *pTrack );
-   return view.GetY() + view.GetHeight();
+   return view.GetCumulativeHeightBefore() + view.GetHeight();
 }
 
 int TrackView::GetTotalHeight( const TrackList &list )
@@ -179,8 +179,10 @@ std::shared_ptr<CommonTrackCell> TrackView::DoGetAffordanceControls()
 
 namespace {
 
-// Attach an object to each project.  It receives track list events and updates
-// track Y coordinates
+/*!
+ Attached to each project, it receives track list events and maintains the
+ cache of cumulative track view heights for use by TrackPanel.
+ */
 struct TrackPositioner final : ClientData::Base, wxEvtHandler
 {
    AudacityProject &mProject;
@@ -214,7 +216,7 @@ struct TrackPositioner final : ClientData::Base, wxEvtHandler
 
       while( auto pTrack = *iter ) {
          auto &view = TrackView::Get( *pTrack );
-         view.SetY( yy );
+         view.SetCumulativeHeightBefore( yy );
          yy += view.GetHeight();
          ++iter;
       }

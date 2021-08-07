@@ -49,16 +49,24 @@ public:
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );
 
-   int GetY() const { return mY; }
+   //! @return cached sum of `GetHeight()` of all preceding tracks
+   int GetCumulativeHeightBefore() const { return mY; }
 
    //! @return height of the track when expanded
    int GetExpandedHeight() const { return mHeight; }
 
    //! @return height of the track when collapsed
    virtual int GetMinimizedHeight() const = 0;
+
+   //! @return height of the track as it now appears, expanded or collapsed
+   /*!
+    Total "height" of channels of a track includes padding areas above and
+    below it.
+   */
    int GetHeight() const;
 
-   void SetY(int y) { DoSetY( y ); }
+   //! Set cached value dependent on position within the track list
+   void SetCumulativeHeightBefore(int y) { DoSetY( y ); }
 
    /*! Sets height for expanded state.
     Does not expand a track if it is now collapsed.
