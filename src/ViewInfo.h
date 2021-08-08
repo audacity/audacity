@@ -99,14 +99,17 @@ private:
 };
 
 // See big pictorial comment in TrackPanel.cpp for explanation of these numbers
+//! constants related to y coordinates in the track panel
 enum : int {
-   // constants related to y coordinates in the track panel
+   kVerticalPadding = 7, /*!< Width of padding below each channel group */
    kAffordancesAreaHeight = 20,
    kTopInset = 4,
    kTopMargin = kTopInset + kBorderThickness,
    kBottomMargin = kShadowThickness + kBorderThickness,
    kSeparatorThickness = kBottomMargin + kTopMargin,
 };
+
+static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 
 enum : int {
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
