@@ -870,6 +870,52 @@ std::shared_ptr< TrackPanelCell > TrackPanel::GetBackgroundCell()
    return mpBackground;
 }
 
+namespace {
+std::vector<int> FindAdjustedChannelHeights( Track &t )
+{
+   auto channels = TrackList::Channels(&t);
+   wxASSERT(!channels.empty());
+
+   // Collect heights, and count affordances
+   int nAffordances = 0;
+   int totalHeight = 0;
+   std::vector<int> oldHeights;
+   for (auto channel : channels) {
+      auto &view = TrackView::Get( *channel );
+      const auto height = view.GetHeight();
+      totalHeight += height;
+      oldHeights.push_back( height );
+      if (view.GetAffordanceControls())
+         ++nAffordances;
+   }
+
+   // Allocate results
+   auto nChannels = static_cast<int>(oldHeights.size());
+   std::vector<int> results;
+   results.reserve(nChannels);
+
+   // Now reallocate the channel heights for the presence of affordances
+   // and separators
+   auto availableHeight = totalHeight
+      - nAffordances * kAffordancesAreaHeight
+      - (nChannels - 1) * kChannelSeparatorThickness
+      - kTrackSeparatorThickness;
+   int cumulativeOldHeight = 0;
+   int cumulativeNewHeight = 0;
+   for (const auto &oldHeight : oldHeights) {
+      // Preserve the porportions among the stored heights
+      cumulativeOldHeight += oldHeight;
+      const auto newHeight =
+         cumulativeOldHeight * availableHeight / totalHeight
+            - cumulativeNewHeight;
+      cumulativeNewHeight += newHeight;
+      results.push_back(newHeight);
+   }
+
+   return results;
+}
+}
+
 void TrackPanel::UpdateVRulers()
 {
    for (auto t : GetTracks()->Any< WaveTrack >())
@@ -892,15 +938,17 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
    if (!t)
       return;
 
+   auto heights = FindAdjustedChannelHeights(*t);
+
    wxRect rect(mViewInfo->GetVRulerOffset(),
             0,
             mViewInfo->GetVRulerWidth(),
             0);
 
-
+   auto pHeight = heights.begin();
    for (auto channel : TrackList::Channels(t)) {
       auto &view = TrackView::Get( *channel );
-      const auto height = view.GetHeight() - (kTopMargin + kBottomMargin);
+      const auto height = *pHeight++;
       rect.SetHeight( height );
       const auto subViews = view.GetSubViews( rect );
       if (subViews.empty())
@@ -1078,7 +1126,11 @@ void DrawTrackName(
    // Tracks more than kTranslucentHeight will have maximum translucency for shields.
    const int kOpaqueHeight = 44;
    const int kTranslucentHeight = 124;
+
+   // PRL:  to do:  reexamine this strange use of TrackView::GetHeight,
+   // ultimately to compute an opacity
    int h = TrackView::Get( *t ).GetHeight();
+
    // f codes the opacity as a number between 0.0 and 1.0
    float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
    // kOpaque is the shield's alpha for tracks that are not tall
@@ -1334,7 +1386,7 @@ struct HorizontalGroup final : TrackPanelGroup {
 };
 
 
-// optional affordance area, and n channels with vertical rulers,
+// optional affordance areas, and n channels with vertical rulers,
 // alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
 struct ChannelGroup final : TrackPanelGroup {
@@ -1348,7 +1400,9 @@ struct ChannelGroup final : TrackPanelGroup {
       const auto channels = TrackList::Channels( mpTrack.get() );
       const auto pLast = *channels.rbegin();
       wxCoord yy = rect.GetTop();
-      for ( auto channel : channels ) 
+      auto heights = FindAdjustedChannelHeights(*mpTrack);
+      auto pHeight = heights.begin();
+      for ( auto channel : channels )
       {
          auto &view = TrackView::Get( *channel );
          if (auto affordance = view.GetAffordanceControls())
@@ -1364,7 +1418,7 @@ struct ChannelGroup final : TrackPanelGroup {
             yy += kAffordancesAreaHeight;
          }
 
-         auto height = view.GetHeight();
+         auto height = *pHeight++;
          rect.SetTop( yy );
          rect.SetHeight( height - kChannelSeparatorThickness );
          refinement.emplace_back( yy,
@@ -1391,10 +1445,12 @@ struct ChannelGroup final : TrackPanelGroup {
          const auto channels = TrackList::Channels(mpTrack.get());
          const auto pLast = *channels.rbegin();
          wxCoord yy = rect.GetTop();
+         auto heights = FindAdjustedChannelHeights(*mpTrack);
+         auto pHeight = heights.begin();
          for (auto channel : channels)
          {
             auto& view = TrackView::Get(*channel);
-            auto height = view.GetHeight();
+            auto height = *pHeight++;
             if (auto affordance = view.GetAffordanceControls())
             {
                height += kAffordancesAreaHeight;
@@ -1551,9 +1607,6 @@ struct Subgroup final : TrackPanelGroup {
          for ( auto channel : TrackList::Channels( leader ) ) {
             auto &view = TrackView::Get( *channel );
             height += view.GetHeight();
-
-            if (view.GetAffordanceControls())
-               height += kAffordancesAreaHeight;
          }
          refinement.emplace_back( yy,
             std::make_shared< ResizingChannelGroup >(

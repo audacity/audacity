@@ -53,15 +53,21 @@ public:
    int GetCumulativeHeightBefore() const { return mY; }
 
    //! @return height of the track when expanded
+   /*! See other comments for GetHeight */
    int GetExpandedHeight() const { return mHeight; }
 
    //! @return height of the track when collapsed
+   /*! See other comments for GetHeight */
    virtual int GetMinimizedHeight() const = 0;
 
    //! @return height of the track as it now appears, expanded or collapsed
    /*!
     Total "height" of channels of a track includes padding areas above and
-    below it.
+    below it, and is pixel-accurate for the channel group.
+    The "heights" of channels within a group determine the proportions of
+    heights of the track data shown -- but the actual total pixel heights
+    may differ when other fixed-height adornments and paddings are added,
+    according to other rules for allocation of height.
    */
    int GetHeight() const;
 
@@ -70,6 +76,7 @@ public:
 
    /*! Sets height for expanded state.
     Does not expand a track if it is now collapsed.
+    See other comments for GetHeight
     */
    void SetExpandedHeight(int height);
 
