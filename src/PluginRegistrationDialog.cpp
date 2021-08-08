@@ -339,7 +339,7 @@ enum
 {
    STATE_Enabled,
    STATE_Disabled,
-   STATE_New,
+   STATE_New, // NOTE: delete it later, because it logic issue, not GUI.
 
    STATE_COUNT
 };
@@ -349,7 +349,6 @@ enum
    ID_ShowAll = 10000,
    ID_ShowEnabled,
    ID_ShowDisabled,
-   ID_ShowNew,
    ID_List,
    ID_ClearAll,
    ID_SelectAll,
@@ -377,7 +376,6 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_RADIOBUTTON(ID_ShowAll, PluginRegistrationDialog::OnChangedVisibility)
    EVT_RADIOBUTTON(ID_ShowEnabled, PluginRegistrationDialog::OnChangedVisibility)
    EVT_RADIOBUTTON(ID_ShowDisabled, PluginRegistrationDialog::OnChangedVisibility)
-   EVT_RADIOBUTTON(ID_ShowNew, PluginRegistrationDialog::OnChangedVisibility)
 END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
@@ -467,16 +465,6 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                   .Name(XO("Show enabled"))
                   /* i18n-hint: Radio button to show just the currently enabled effects */
                   .AddRadioButtonToGroup(XXO("E&nabled"));
-#if wxUSE_ACCESSIBILITY
-               // so that name can be set on a standard control
-               rb->SetAccessible(safenew WindowAccessible(rb));
-#endif
-
-               rb = S.Id(ID_ShowNew)
-                  /* i18n-hint: Radio button to show just the newly discovered effects */
-                  .Name(XO("Show new"))
-                  /* i18n-hint: Radio button to show just the newly discovered effects */
-                  .AddRadioButtonToGroup(XXO("Ne&w"));
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
@@ -630,12 +618,6 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
       case ID_ShowAll:
          add = true;
          break;
-      case ID_ShowNew:
-         if (item.state == STATE_New)
-         {
-            add = true;
-         }
-         break;
       case ID_ShowEnabled:
          if (item.state == STATE_Enabled)
          {
@@ -700,8 +682,7 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
    {
       item->state = state;
    }
-   
-   if (mFilter == ID_ShowNew && item->state != STATE_New)
+   if (item->state != STATE_New)
    {
       mEffects->DeleteItem(i);
    }
