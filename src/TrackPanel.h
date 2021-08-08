@@ -31,6 +31,9 @@
 
 class wxRect;
 
+// All cells of the TrackPanel are subclasses of this
+class CommonTrackPanelCell;
+
 class SpectrumAnalyst;
 class Track;
 class TrackList;
@@ -177,8 +180,8 @@ public:
    // Set the object that performs catch-all event handling when the pointer
    // is not in any track or ruler or control panel.
    void SetBackgroundCell
-      (const std::shared_ptr< TrackPanelCell > &pCell);
-   std::shared_ptr< TrackPanelCell > GetBackgroundCell();
+      (const std::shared_ptr< CommonTrackPanelCell > &pCell);
+   std::shared_ptr< CommonTrackPanelCell > GetBackgroundCell();
 
 public:
 
@@ -218,7 +221,7 @@ protected:
 
  protected:
 
-   std::shared_ptr<TrackPanelCell> mpBackground;
+   std::shared_ptr<CommonTrackPanelCell> mpBackground;
 
    DECLARE_EVENT_TABLE()
 

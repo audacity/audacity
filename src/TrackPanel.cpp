@@ -51,6 +51,7 @@ is time to refresh some aspect of the screen.
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "AdornedRulerPanel.h"
+#include "tracks/ui/CommonTrackPanelCell.h"
 #include "KeyboardCapture.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -860,12 +861,12 @@ void TrackPanel::DrawTracks(wxDC * dc)
 }
 
 void TrackPanel::SetBackgroundCell
-(const std::shared_ptr< TrackPanelCell > &pCell)
+(const std::shared_ptr< CommonTrackPanelCell > &pCell)
 {
    mpBackground = pCell;
 }
 
-std::shared_ptr< TrackPanelCell > TrackPanel::GetBackgroundCell()
+std::shared_ptr< CommonTrackPanelCell > TrackPanel::GetBackgroundCell()
 {
    return mpBackground;
 }
