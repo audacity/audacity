@@ -50,12 +50,20 @@ public:
    void SetMinimized( bool minimized );
 
    int GetY() const { return mY; }
-   int GetActualHeight() const { return mHeight; }
+
+   //! @return height of the track when expanded
+   int GetExpandedHeight() const { return mHeight; }
+
+   //! @return height of the track when collapsed
    virtual int GetMinimizedHeight() const = 0;
    int GetHeight() const;
 
    void SetY(int y) { DoSetY( y ); }
-   void SetHeight(int height);
+
+   /*! Sets height for expanded state.
+    Does not expand a track if it is now collapsed.
+    */
+   void SetExpandedHeight(int height);
 
    // Return another, associated TrackPanelCell object that implements the
    // mouse actions for the vertical ruler
@@ -81,12 +89,14 @@ public:
 
    virtual void DoSetMinimized( bool isMinimized );
 
-protected:
+private:
 
    // No need yet to make this virtual
    void DoSetY(int y);
 
    void DoSetHeight(int h);
+
+protected:
 
    // Private factory to make appropriate object; class TrackView handles
    // memory management thereafter

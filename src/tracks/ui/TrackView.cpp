@@ -87,7 +87,7 @@ void TrackView::SetMinimized(bool isMinimized)
 
 void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
 {
-   xmlFile.WriteAttr(wxT("height"), GetActualHeight());
+   xmlFile.WriteAttr(wxT("height"), GetExpandedHeight());
    xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
 }
 
@@ -101,7 +101,7 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
       nValue = std::max( 40l, std::min( nValue, 1000l ));
-      SetHeight(nValue);
+      SetExpandedHeight(nValue);
       return true;
    }
    else if (!wxStrcmp(attr, wxT("minimized")) &&
@@ -161,7 +161,7 @@ int TrackView::GetHeight() const
    return mHeight;
 }
 
-void TrackView::SetHeight(int h)
+void TrackView::SetExpandedHeight(int h)
 {
    DoSetHeight(h);
    FindTrack()->AdjustPositions();
