@@ -1345,7 +1345,8 @@ public:
 
    ~EmptyPanelRect() { }
 
-   void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass)
+   void Draw(TrackPanelDrawingContext& context,
+      const wxRect& rect, unsigned iPass) override
    {
       if (iPass == TrackArtist::PassBackground)
       {
@@ -1362,7 +1363,8 @@ public:
        return mTrack;
    }
 
-   std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject)
+   std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state,
+      const AudacityProject* pProject) override
    {
       return {};
    }
