@@ -13,7 +13,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../UIHandle.h"
 #include "../../SelectedRegion.h"
-#include "../../Snap.h"
 
 #include <vector>
 #include <tracks/playabletrack/wavetrack/ui/SpectrumView.h>
@@ -34,7 +33,7 @@ class AUDACITY_DLL_API BrushHandle : public UIHandle
 
 public:
    explicit BrushHandle
-      (const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
+      (const std::shared_ptr<TrackView> &pTrackView,
        const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
        const std::shared_ptr<SpectralData> &mpSpectralData,
@@ -76,10 +75,6 @@ public:
 
    Result Cancel(AudacityProject*) override;
 
-   static UIHandle::Result NeedChangeHighlight
-      (const BrushHandle &oldState,
-       const BrushHandle &newState);
-
    std::shared_ptr<SpectralData> mpSpectralData;
 
 private:
@@ -94,11 +89,7 @@ private:
 
    std::weak_ptr<TrackView> mpView;
    wxRect mRect{};
-   SelectedRegion mInitialSelection{};
 
-   std::shared_ptr<SnapManager> mSnapManager;
-   SnapResults mSnapStart, mSnapEnd;
-   bool mUseSnap{ true };
    bool mFreqSnapping { true };
    // Example: For window size of 1024, with ratio 0.01
    // It searches for (+-) 1024*0.01 = 10 bins
