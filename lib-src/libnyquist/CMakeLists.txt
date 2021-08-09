@@ -296,7 +296,7 @@ list( APPEND OPTIONS
 list( APPEND LIBRARIES
    PRIVATE
       PortAudio::PortAudio
-      libsndfile
+      SndFile::sndfile
 )
 
 set_target_properties( ${TARGET} PROPERTIES FOLDER "lib-src" )
