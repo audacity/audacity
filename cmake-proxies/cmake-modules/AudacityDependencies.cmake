@@ -27,22 +27,22 @@ Add a Conan dependency
 
 Example usage:
 
-add_conan_lib( 
-  wxWdidget 
+add_conan_lib(
+  wxWdidget
   wxwidgets/3.1.3-audacity
   OPTION_NAME wxwidgets
   SYMBOL WXWIDGET
-  REQUIRED 
+  REQUIRED
   ALWAYS_ALLOW_CONAN_FALLBACK
   PKG_CONFIG "wxwidgets >= 3.1.3"
   FIND_PACKAGE_OPTIONS COMPONENTS adv base core html qa xml
   INTERFACE_NAME wxwidgets::wxwidgets
   HAS_ONLY_DEBUG_RELEASE
-  CONAN_OPTIONS 
+  CONAN_OPTIONS
        wxwidgets:shared=True
 )
 
-PKG_CONFIG accepts a list of possible package configurations. 
+PKG_CONFIG accepts a list of possible package configurations.
 add_conan_lib will iterate over it one by one until the library is found.
 ]]
 
@@ -61,7 +61,7 @@ function (add_conan_lib package conan_package_name )
     set( pkg_config_options )
     set( system_only ${${_OPT}obey_system_dependencies})
     set( interface_name "${package}::${package}")
-    
+
     # Parse function arguments
 
     foreach( opt IN LISTS options )
@@ -137,7 +137,7 @@ function (add_conan_lib package conan_package_name )
                 "${default}"
                 STRINGS ${sysopt} ${localopt} ${reqopt}
     )
-    
+
     # Early bail out
     if( ${option_name} STREQUAL "off" )
 
@@ -162,13 +162,13 @@ function (add_conan_lib package conan_package_name )
 
                 if( PKG_${package}_FOUND )
                     message( STATUS "Using '${package}' system library" )
-        
+
                     # Create the target interface library
                     add_library( ${interface_name} INTERFACE IMPORTED GLOBAL)
-            
+
                     # Retrieve the package information
                     get_package_interface( PKG_${package} )
-            
+
                     # And add it to our target
                     target_include_directories( ${interface_name} INTERFACE ${INCLUDES} )
                     target_link_libraries( ${interface_name} INTERFACE ${LIBRARIES} )
@@ -245,7 +245,7 @@ function ( _conan_install build_type )
         list( APPEND settings "os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}" )
         # This line is required to workaround the conan bug #8025
         # https://github.com/conan-io/conan/issues/8025
-        # Without it, libjpeg-turbo will fail to cross-compile on AppleSilicon macs 
+        # Without it, libjpeg-turbo will fail to cross-compile on AppleSilicon macs
         list( APPEND settings ENV "CONAN_CMAKE_SYSTEM_PROCESSOR=x86_64")
     endif()
 
@@ -266,7 +266,7 @@ endfunction()
 
 macro( resolve_conan_dependencies )
     if( ${_OPT}conan_enabled )
-        message(STATUS 
+        message(STATUS
         "Executing Conan: \
             REQUIRES ${CONAN_REQUIRES}
             GENERATORS cmake_find_package_multi
