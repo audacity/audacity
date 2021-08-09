@@ -5,7 +5,7 @@ add_conan_lib(
    PKG_CONFIG "zlib >= 1.2.11"
    INTERFACE_NAME ZLIB::ZLIB
    OPTION_NAME zlib
-   CONAN_OPTIONS 
+   CONAN_OPTIONS
       zlib:shared=True
 )
 
@@ -14,7 +14,7 @@ add_conan_lib(
    expat/2.2.9@audacity/stable
    REQUIRED
    PKG_CONFIG "expat >= 2.1.0"
-   CONAN_OPTIONS 
+   CONAN_OPTIONS
       expat:shared=True
 )
 
@@ -49,15 +49,15 @@ if (${_OPT}use_expat STREQUAL "system")
    set(wx_expat "sys")
 endif()
 
-add_conan_lib( 
-   wxWidgets 
-   wxwidgets/3.1.3.1-audacity 
-   REQUIRED 
+add_conan_lib(
+   wxWidgets
+   wxwidgets/3.1.3.1-audacity
+   REQUIRED
    ALWAYS_ALLOW_CONAN_FALLBACK
    OPTION_NAME wxwidgets
    FIND_PACKAGE_OPTIONS COMPONENTS adv base core html qa xml net
    INTERFACE_NAME wxwidgets::wxwidgets
-   CONAN_OPTIONS 
+   CONAN_OPTIONS
       wxwidgets:shared=True
       wxwidgets:zlib=${wx_zlib}
       wxwidgets:expat=${wx_expat}
@@ -78,7 +78,7 @@ add_conan_lib(
       wxwidgets:protocol=False
       # Building with SIMD requires a huge number of build dependencies
       # Probably this will be enabled in the future
-      libjpeg-turbo:SIMD=False 
+      libjpeg-turbo:SIMD=False
 )
 
 add_conan_lib(
@@ -107,6 +107,51 @@ add_conan_lib(
 )
 
 add_conan_lib(
+   Ogg
+   ogg/1.3.4
+   OPTION_NAME libogg
+   ALLOW_FIND_PACKAGE
+   CONAN_OPTIONS
+      ogg:shared=True
+)
+
+add_conan_lib(
+   FLAC
+   flac/1.3.3
+   OPTION_NAME libflac
+   ALLOW_FIND_PACKAGE
+   CONAN_OPTIONS
+      flac:shared=True
+)
+
+add_conan_lib(
+   Opus
+   opus/1.3.1
+   OPTION_NAME libopus
+   ALLOW_FIND_PACKAGE
+   CONAN_OPTIONS
+      opus:shared=True
+)
+
+add_conan_lib(
+   Vorbis
+   vorbis/1.3.7
+   OPTION_NAME libvorbis
+   ALLOW_FIND_PACKAGE
+   CONAN_OPTIONS
+      vorbis:shared=True
+)
+
+add_conan_lib(
+   SndFile
+   libsndfile/1.0.31
+   OPTION_NAME libsndfile
+   ALLOW_FIND_PACKAGE
+   CONAN_OPTIONS
+      libsndfile:shared=True
+)
+
+add_conan_lib(
    PortAudio
    portaudio/19.7.0
    OPTION_NAME portaudio
@@ -118,15 +163,14 @@ add_conan_lib(
       portaudio:with_wdmks=False
 )
 
-if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   set( curl_ssl "darwinssl" )
-elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-   set( curl_ssl "schannel")
-else()
-   set ( curl_ssl "openssl" )
-endif ()
-
 if( ${_OPT}has_networking )
+   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+      set( curl_ssl "darwinssl" )
+   elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      set( curl_ssl "schannel")
+   else()
+      set ( curl_ssl "openssl" )
+   endif ()
 
    add_conan_lib(
       ThreadPool
@@ -174,7 +218,6 @@ set_conan_vars_to_parent()
 # Required libraries
 #
 #       directory          option      symbol      req   chk   version
-addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
 addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.1" )
 
 # Optional libraries
@@ -182,9 +225,6 @@ addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.
 #       directory          option      symbol      req   chk   version
 addlib( ffmpeg             ffmpeg      FFMPEG      NO    NO    "libavcodec >= 51.53" "libavformat >= 52.12" "libavutil >= 52.66" )
 addlib( libvamp            vamp        VAMP        NO    YES   "vamp >= 2.5" "vamp-hostsdk >= 2.5" )
-addlib( libogg             ogg         LIBOGG      NO    YES   "ogg >= 1.3.1" )
-addlib( libvorbis          vorbis      LIBVORBIS   NO    YES   "vorbis >= 1.3.3" "vorbisenc >= 1.3.3" "vorbisfile >= 1.3.3" )
-addlib( libflac            flac        LIBFLAC     NO    YES   "flac >= 1.3.1" "flac++ >= 1.3.1" )
 addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6" "lv2 >= 1.16.0" "serd-0 >= 0.30.2" "sord-0 >= 0.16.4" "sratom-0 >= 0.6.4" "suil-0 >= 0.10.6" )
 
 addlib( portmidi           midi        MIDI        NO    YES   "PortMidi" )
