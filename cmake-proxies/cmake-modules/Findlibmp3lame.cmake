@@ -26,4 +26,10 @@ if( NOT libmp3lame_FOUND )
          message( FATAL_ERROR "Could not find libmp3lame")
       endif()
    endif()
+
+   mark_as_advanced(
+      libmp3lame_FOUND
+      libmp3lame_INCLUDE_DIR
+      libmp3lame_LIBRARIES
+   )
 endif()
