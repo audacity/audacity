@@ -51,7 +51,7 @@ wxInt64 SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
    Setting setting;
    Worker worker(setting);
 
-   return worker.ProcessSnapping(wt, startSC, threshold, targetFreq);
+   return worker.ProcessSnapping(wt, startSC, setting.mWindowSize, threshold, targetFreq);
 }
 
 SpectralDataManager::Worker::Worker(const Setting &setting)
@@ -92,6 +92,7 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
 
 wxInt64 SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
                                                   long long startSC,
+                                                  size_t winSize,
                                                   double threshold,
                                                   wxInt64 targetFreq)
 {
@@ -100,7 +101,7 @@ wxInt64 SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
    mSnapSamplingRate = wt->GetRate();
    // The calculated frequency peak will be stored in mReturnFreq
    if (!TrackSpectrumTransformer::Process( SnappingProcessor, wt,
-                                           1, startSC, 2048))
+                                           1, startSC, winSize))
       return 0;
 
    return mSnapReturnFreq;
