@@ -41,9 +41,6 @@ Edward Hui
 #include <wx/event.h>
 #include <iostream>
 
-// Only for definition of SonifyBeginModifyState:
-//#include "../../NoteTrack.h"
-
 enum {
    //This constant determines the size of the horizontal region (in pixels) around
    //the right and left selection bounds that can be used for horizontal selection adjusting
@@ -148,27 +145,11 @@ UIHandlePtr BrushHandle::HitTest
        const std::shared_ptr<TrackView> &pTrackView,
        const std::shared_ptr<SpectralData> &mpData)
 {
-   // This handle is a little special because there may be some state to
-   // preserve during movement before the click.
-   auto old = holder.lock();
-   bool oldUseSnap = true;
-   if (old) {
-      // It should not have started listening to timer events
-      if( old->mTimerHandler ) {
-         wxASSERT(false);
-         // Handle this eventuality anyway, don't leave a dangling back-pointer
-         // in the attached event handler.
-         old->mTimerHandler.reset();
-      }
-      oldUseSnap = old->mUseSnap;
-   }
-
    const auto &viewInfo = ViewInfo::Get( *pProject );
    const auto &projectSettings = ProjectSettings::Get( *pProject );
    auto result = std::make_shared<BrushHandle>(
-      pTrackView, oldUseSnap, TrackList::Get( *pProject ),
-      st, viewInfo, mpData, projectSettings.GetBrushRadius()
-   );
+      pTrackView, TrackList::Get( *pProject ),
+      st, viewInfo, mpData, projectSettings.GetBrushRadius());
 
    result = AssignUIHandlePtr(holder, result);
 
@@ -181,40 +162,11 @@ UIHandlePtr BrushHandle::HitTest
       return result;
    }
 
-   {
-      const wxRect &rect = st.rect;
-      wxInt64 leftSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t0(), rect.x);
-      wxInt64 rightSel = viewInfo.TimeToPosition(viewInfo.selectedRegion.t1(), rect.x);
-      // Something is wrong if right edge comes before left edge
-      wxASSERT(!(rightSel < leftSel));
-      static_cast<void>(leftSel); // Suppress unused variable warnings if not in debug-mode
-      static_cast<void>(rightSel);
-   }
-
    return result;
 }
 
-UIHandle::Result BrushHandle::NeedChangeHighlight
-      (const BrushHandle &oldState, const BrushHandle &newState)
-{
-   auto useSnap = oldState.mUseSnap;
-   // This is guaranteed when constructing the NEW handle:
-   wxASSERT( useSnap == newState.mUseSnap );
-   if (!useSnap)
-      return 0;
-
-   auto &oldSnapState = oldState.mSnapStart;
-   auto &newSnapState = newState.mSnapStart;
-   if ( oldSnapState.Snapped() == newSnapState.Snapped() &&
-        (!oldSnapState.Snapped() ||
-         oldSnapState.outCoord == newSnapState.outCoord) )
-      return 0;
-
-   return RefreshCode::RefreshAll;
-}
-
 BrushHandle::BrushHandle
-      ( const std::shared_ptr<TrackView> &pTrackView, bool useSnap,
+      ( const std::shared_ptr<TrackView> &pTrackView,
         const TrackList &trackList,
         const TrackPanelMouseState &st, const ViewInfo &viewInfo,
         const std::shared_ptr<SpectralData> &mpSpectralData,
