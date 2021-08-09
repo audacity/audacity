@@ -289,6 +289,7 @@ macro( resolve_conan_dependencies )
             message(STATUS "Resolving Conan library ${package}")
 
             find_package(${package} CONFIG)
+            mark_as_advanced(${package}_DIR)
 
             if (NOT ${package}_FOUND)
                 message( FATAL_ERROR "Failed to find the conan package ${package}" )
