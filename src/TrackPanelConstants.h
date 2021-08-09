@@ -21,7 +21,7 @@ enum : int {
    kTopMargin = kTopInset + kBorderThickness,
    kBottomMargin = kShadowThickness + kBorderThickness,
    kTrackSeparatorThickness = kBottomMargin + kTopMargin,
-   kChannelSeparatorThickness = kTrackSeparatorThickness,
+   kChannelSeparatorThickness = 1,
 };
 
 #endif
