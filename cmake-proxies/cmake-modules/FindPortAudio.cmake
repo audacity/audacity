@@ -28,4 +28,10 @@ if( NOT PortAudio_FOUND )
          message( FATAL_ERROR "Could not find PortAudio")
       endif()
    endif()
+
+   mark_as_advanced(
+      PortAudio_FOUND
+      PortAudio_INCLUDE_DIR
+      PortAudio_LIBRARIES
+   )
 endif()

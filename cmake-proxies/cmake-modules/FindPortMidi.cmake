@@ -28,4 +28,10 @@ if( NOT PortMidi_FOUND )
          message( FATAL_ERROR "Could not find PortMidi")
       endif()
    endif()
+
+   mark_as_advanced(
+      PortMidi_FOUND
+      PortMidi_INCLUDE_DIR
+      PortMidi_LIBRARIES
+   )
 endif()
