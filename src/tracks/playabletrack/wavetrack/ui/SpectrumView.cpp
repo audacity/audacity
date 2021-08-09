@@ -663,40 +663,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          data[px] = bv;
       } // each yy
    } // each xx
-   if(true) {
-      for(std::pair<int, int> coord : selectedCoords) {
-         int xx = coord.first;
-         int correctedX = xx + leftOffset - hiddenLeftOffset;
-         int yy = coord.second;
-
-         float* uncached;
-         if (!zoomInfo.InFisheye(xx, -leftOffset)) {
-            uncached = 0;
-         }
-         else {
-            int specIndex = (xx - fisheyeLeft) * nBins;
-            wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
-            uncached = &specCache.freq[specIndex];
-         }
-         const float bin     = bins[yy];
-         const float nextBin = bins[yy+1];
-         auto selected =
-               ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
-                              (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
-
-
-         const float value = uncached
-                             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
-                             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
-         unsigned char rv, gv, bv;
-         GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
-
-         int px = ((mid.height - 1 - yy) * mid.width + xx) * 3;
-         data[px++] = rv;
-         data[px++] = gv;
-         data[px] = bv;
-      }
-   }
 
    wxBitmap converted = wxBitmap(image);
 
