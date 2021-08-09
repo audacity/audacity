@@ -40,6 +40,7 @@ deps=(
    libvamp-hostsdk3v5
    libogg-dev
    libvorbis-dev
+   libopus-dev
    libflac-dev
    libflac++-dev
    lv2-dev

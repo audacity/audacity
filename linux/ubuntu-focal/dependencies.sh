@@ -51,6 +51,7 @@ apt_packages_full_deps=(
     libcurl4-openssl-dev
     libpng-dev
     libjpeg-turbo8-dev
+    libopus-dev
 )
 
 apt-get install -y --no-install-recommends \
