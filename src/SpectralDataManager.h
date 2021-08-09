@@ -38,7 +38,7 @@ public:
    };
 
    bool Process(WaveTrack* wt, const std::shared_ptr<SpectralData> &sDataPtr);
-   wxInt64 ProcessSnapping(WaveTrack *wt, long long int startSC,
+   wxInt64 ProcessSnapping(WaveTrack *wt, long long int startSC, size_t winSize,
                            double threshold, wxInt64 targetFreq);
 
 protected:
