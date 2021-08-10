@@ -359,6 +359,7 @@ enum
 enum
 {
    COL_Name,
+   COL_Version,
    COL_State,
    COL_Path,
 
@@ -478,7 +479,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .ConnectRoot(wxEVT_KEY_DOWN,
                       &PluginRegistrationDialog::OnListChar)
-            .AddListControlReportMode({ XO("Name"), XO("State"), XO("Path") });
+            .AddListControlReportMode({ XO("Name"), XO("Version"), XO("State"), XO("Path") });
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));
 #endif
@@ -519,6 +520,14 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       colWidths[COL_State] = wxMax(colWidths[COL_State], x + 4);  // 2 pixel margin on each side
    }
 
+    // Add width like as using standard version numbers, without extra information.
+    // Just sometimes it may be have a very long text with extra information using.
+    {
+        int x;
+        mEffects->GetTextExtent("000.000.000", &x, NULL);
+        colWidths[COL_Version] = wxMax(colWidths[COL_Version], x + 4);  // 2 pixel margin on each side
+    }
+
    PluginManager & pm = PluginManager::Get();
    for (auto &plug : pm.AllPlugins()) {
       PluginType plugType = plug.GetPluginType();
@@ -531,6 +540,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       item.path = path;
       item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
       item.valid = plug.IsValid();
+      item.version = plug.GetUntranslatedVersion();
 
       if (plugType == PluginTypeEffect)
       {
@@ -635,6 +645,7 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
       if (add)
       {
          mEffects->InsertItem(i, item.name);
+         mEffects->SetItem(i, COL_Version, item.version);
          mEffects->SetItem(i, COL_State, mStates[item.state]);
          mEffects->SetItem(i, COL_Path, item.path);
          mEffects->SetItemPtrData(i, (wxUIntPtr) &item);
@@ -700,6 +711,7 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
 #if wxUSE_ACCESSIBILITY
       mAx->SetSelected(i);
 #endif
+      mEffects->SetItem(i, COL_Version, item->version);
    }
 }
 
@@ -718,7 +730,7 @@ int PluginRegistrationDialog::SortCompare(ItemData *item1, ItemData *item2)
 
    wxString *str1;
    wxString *str2;
-
+    
    switch (mSortColumn)
    {
    case COL_Name:
@@ -732,6 +744,10 @@ int PluginRegistrationDialog::SortCompare(ItemData *item1, ItemData *item2)
    case COL_Path:
       str1 = &item1->path;
       str2 = &item2->path;
+      break;
+   case COL_Version:
+      str1 = &item1->version;
+      str2 = &item2->version;
       break;
    default:
       return 0;
