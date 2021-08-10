@@ -33,6 +33,7 @@ private:
       std::vector<PluginDescriptor*> plugs;
       wxString name;
       wxString version;
+      wxString type;
       PluginPath path;
       int state;
       bool valid;

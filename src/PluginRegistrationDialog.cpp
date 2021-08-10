@@ -359,6 +359,7 @@ enum
 enum
 {
    COL_Name,
+   COL_Type,
    COL_Version,
    COL_State,
    COL_Path,
@@ -479,7 +480,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .ConnectRoot(wxEVT_KEY_DOWN,
                       &PluginRegistrationDialog::OnListChar)
-            .AddListControlReportMode({ XO("Name"), XO("Version"), XO("State"), XO("Path") });
+            .AddListControlReportMode({ XO("Name"), XO("Type"), XO("Version"), XO("State"), XO("Path") });
 #if wxUSE_ACCESSIBILITY
          mEffects->SetAccessible(mAx = safenew CheckListAx(mEffects));
 #endif
@@ -541,6 +542,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       item.state = plug.IsEnabled() ? STATE_Enabled : STATE_Disabled;
       item.valid = plug.IsValid();
       item.version = plug.GetUntranslatedVersion();
+      item.type = plug.GetEffectFamily();
 
       if (plugType == PluginTypeEffect)
       {
@@ -569,6 +571,9 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          mLongestPath = item.path;
       }
       colWidths[COL_Path] = wxMax(colWidths[COL_Path], x);
+       
+      mEffects->GetTextExtent(item.type, &x, NULL);
+      colWidths[COL_Type] = wxMax(colWidths[COL_Type], x);
    }
 
    wxRect r = wxGetClientDisplayRect();
@@ -645,6 +650,7 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
       if (add)
       {
          mEffects->InsertItem(i, item.name);
+         mEffects->SetItem(i, COL_Type, item.type);
          mEffects->SetItem(i, COL_Version, item.version);
          mEffects->SetItem(i, COL_State, mStates[item.state]);
          mEffects->SetItem(i, COL_Path, item.path);
@@ -712,6 +718,7 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
       mAx->SetSelected(i);
 #endif
       mEffects->SetItem(i, COL_Version, item->version);
+      mEffects->SetItem(i, COL_Type, item->type);
    }
 }
 
@@ -748,6 +755,10 @@ int PluginRegistrationDialog::SortCompare(ItemData *item1, ItemData *item2)
    case COL_Version:
       str1 = &item1->version;
       str2 = &item2->version;
+      break;
+   case COL_Type:
+      str1 = &item1->type;
+      str2 = &item2->type;
       break;
    default:
       return 0;
