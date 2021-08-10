@@ -325,15 +325,17 @@ void CellularPanel::HandleMotion
 
       state.mLastCell = newCell;
 
-/* 
       // These lines caused P2 Bug 2617, repeated refreshing using all CPU.
       // Disabling them might be causing something to not refresh,
       // but so far I have not found a downside to disabling them.  JKC
 
+      // VS: https://github.com/audacity/audacity/issues/1363
+      // Extensive refresh request fixed by using std::move on 
+      // new envelope handle instance
       if (!oldCell && oldHandle != handle)
-         // Did not move cell to cell, but did change the target
-         refreshCode = updateFlags;
-*/
+          // Did not move cell to cell, but did change the target
+          refreshCode = updateFlags;
+
 
       if (handle && handle != oldHandle)
          handle->Enter(true, GetProject());
