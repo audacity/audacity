@@ -62,8 +62,11 @@ private:
    void OnClearAll(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnDisable(wxCommandEvent & evt);
+   void OnRescan(wxCommandEvent & evt);
 
 private:
+   void ScanPlugins(std::function<void(ItemData&)> iterationFinalayzer = {});
+
    EffectType mType;
    int mFilter;
 
