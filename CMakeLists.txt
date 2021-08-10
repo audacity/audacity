@@ -520,7 +520,7 @@ add_subdirectory( "cmake-proxies" )
 resolve_conan_dependencies()
 
 # This libraries have 3d party dependencies.
-# Moreover, portmixer is only available for as a part of
+# Moreover, portmixer is only available as a part of
 # Audacity source tree now.
 cmd_option( ${_OPT}use_portmixer "Build PortMixer support into Audacity" On)
 if( ${_OPT}use_portmixer )
