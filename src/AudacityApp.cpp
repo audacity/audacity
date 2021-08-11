@@ -82,6 +82,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "commands/AppCommandEvent.h"
 #include "widgets/ASlider.h"
 #include "FFmpeg.h"
+#include "Journal.h"
 //#include "LangChoice.h"
 #include "Languages.h"
 #include "Menus.h"
@@ -794,6 +795,8 @@ void AudacityApp::MacNewFile()
 #define kAudacityAppTimerID 0
 
 BEGIN_EVENT_TABLE(AudacityApp, wxApp)
+   EVT_IDLE( AudacityApp::OnIdle )
+
    EVT_QUERY_END_SESSION(AudacityApp::OnQueryEndSession)
    EVT_END_SESSION(AudacityApp::OnEndSession)
 
@@ -986,10 +989,9 @@ bool AudacityApp::OnExceptionInMainLoop()
 
       // Use CallAfter to delay this to the next pass of the event loop,
       // rather than risk doing it inside stack unwinding.
-      auto pProject = ::GetActiveProject();
+      auto pProject = ::GetActiveProject()->shared_from_this();
       auto pException = std::current_exception();
-      CallAfter( [=]      // Capture pException by value!
-      {
+      CallAfter( [pException, pProject] {
 
          // Restore the state of the project to what it was before the
          // failed operation
@@ -1361,7 +1363,7 @@ bool AudacityApp::InitPart2()
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
    // stuff to display the version string.
-   std::shared_ptr< wxCmdLineParser > parser{ ParseCommandLine().release() };
+   std::shared_ptr< wxCmdLineParser > parser{ ParseCommandLine() };
    if (!parser)
    {
       // Either user requested help or a parsing error occurred
@@ -1385,6 +1387,10 @@ bool AudacityApp::InitPart2()
 
       Sequence::SetMaxDiskBlockSize(lval);
    }
+
+   wxString fileName;
+   if (parser->Found(wxT("j"), &fileName))
+      Journal::SetInputFileName( fileName );
 
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **)AudacityLogoWithName_xpm);
@@ -1467,6 +1473,11 @@ bool AudacityApp::InitPart2()
 #endif //__WXMAC__
       temporarywindow.Show(false);
    }
+
+   // Must do this before creating the first project, else the early exit path
+   // may crash
+   if ( !Journal::Begin( FileNames::DataDir() ) )
+      return false;
 
    // Workaround Bug 1377 - Crash after Audacity starts and low disk space warning appears
    // The temporary splash window is closed AND cleaned up, before attempting to create
@@ -1594,6 +1605,32 @@ bool AudacityApp::InitPart2()
 #endif
 
    return TRUE;
+}
+
+int AudacityApp::OnRun()
+{
+   // Returns 0 to the command line if the run completed normally
+   auto result = wxApp::OnRun();
+   if (result == 0)
+      // If not otherwise abnormal, report any journal sync failure
+      result = Journal::GetExitCode();
+   return result;
+}
+
+void AudacityApp::OnIdle( wxIdleEvent &evt )
+{
+   evt.Skip();
+   try {
+      if ( Journal::Dispatch() )
+         evt.RequestMore();
+   }
+   catch( ... ) {
+      // Hmm, wxWidgets doesn't guard calls to the idle handler as for other
+      // events.  So replicate some of the try-catch logic here.
+      OnExceptionInMainLoop();
+      // Fall through and return, allowing delayed handler action of
+      // AudacityException to clean up
+   }
 }
 
 void AudacityApp::InitCommandHandler()
@@ -2145,6 +2182,14 @@ std::unique_ptr<wxCmdLineParser> AudacityApp::ParseCommandLine()
     *           use when writing files to the disk */
    parser->AddOption(wxT("b"), wxT("blocksize"), _("set max disk block size in bytes"),
                      wxCMD_LINE_VAL_NUMBER);
+
+   const auto journalOptionDescription =
+   /*i18n-hint: brief help message for Audacity's command-line options
+     A journal contains a sequence of user interface interactions to be repeated
+     "log," "trail," "trace" have somewhat similar meanings */
+      _("replay a journal file");
+
+   parser->AddOption(wxT("j"), wxT("journal"), journalOptionDescription);
 
    /*i18n-hint: This displays a list of available options */
    parser->AddSwitch(wxT("h"), wxT("help"), _("this help message"),
