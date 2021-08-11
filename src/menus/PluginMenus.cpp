@@ -4,6 +4,7 @@
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../CommonCommandFlags.h"
+#include "../Journal.h"
 #include "../Menus.h"
 #include "../PluginManager.h"
 #include "../PluginRegistrationDialog.h"
@@ -24,6 +25,7 @@
 #include "../effects/RealtimeEffectManager.h"
 #include "../prefs/EffectsPrefs.h"
 #include "../prefs/PrefsDialog.h"
+#include "../widgets/AudacityMessageBox.h"
 
 #include <wx/log.h>
 
@@ -596,6 +598,27 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
    setting = !setting;
 }
 
+void OnWriteJournal(const CommandContext &)
+{
+   auto OnMessage =
+      /* i18n-hint a "journal" is a text file that records
+       the user's interactions with the application */
+      XO("A journal will be recorded after Audacity restarts.");
+   auto OffMessage =
+      /* i18n-hint a "journal" is a text file that records
+       the user's interactions with the application */
+      XO("No journal will be recorded after Audacity restarts.");
+
+   using namespace Journal;
+   bool enabled = RecordEnabled();
+   if ( SetRecordEnabled(!enabled) )
+      enabled = !enabled;
+   if ( enabled )
+      AudacityMessageBox( OnMessage );
+   else
+      AudacityMessageBox( OffMessage );
+}
+
 void OnApplyMacroDirectly(const CommandContext &context )
 {
    const MacroID& Name = context.parameter.GET();
@@ -1135,6 +1158,21 @@ BaseItemSharedPtr ToolsMenu()
                   return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
       )
 #endif
+
+#if defined(IS_ALPHA) || defined(END_USER_JOURNALLING)
+      ,
+      Section( "",
+         Command( wxT("WriteJournal"),
+            /* i18n-hint a "journal" is a text file that records
+             the user's interactions with the application */
+            XXO("Write Journal"),
+            FN(OnWriteJournal),
+            AlwaysEnabledFlag,
+            Options{}.CheckTest( [](AudacityProject&){
+               return Journal::RecordEnabled(); } ) )
+      )
+#endif
+
    ) ) };
    return menu;
 }

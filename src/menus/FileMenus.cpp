@@ -527,7 +527,7 @@ void OnExit(const CommandContext &WXUNUSED(context) )
 {
    // Simulate the application Exit menu item
    wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
-   wxTheApp->AddPendingEvent( evt );
+   wxTheApp->ProcessEvent( evt );
 }
 
 void OnExportFLAC(const CommandContext &context)

@@ -142,6 +142,8 @@ list( APPEND SOURCES
       HitTestResult.h
       ImageManipulation.cpp
       ImageManipulation.h
+      Journal.cpp
+      Journal.h
       KeyboardCapture.cpp
       KeyboardCapture.h
       LabelDialog.cpp

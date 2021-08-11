@@ -29,7 +29,7 @@ enum class ExceptionType
 /*! Objects of this type can be thrown and caught in any thread, stored, and then used by the main
  thread in later idle time to explain the error condition to the user.
  */
-class AudacityException /* not final */
+class EXCEPTIONS_API AudacityException /* not final */
 {
 public:
    AudacityException() {}
@@ -38,7 +38,7 @@ public:
    //! Action to do in the main thread at idle time of the event loop.
    virtual void DelayedHandlerAction() = 0;
 
-   EXCEPTIONS_API static void EnqueueAction(
+   static void EnqueueAction(
       std::exception_ptr pException,
       std::function<void(AudacityException*)> delayedHandler);
 
