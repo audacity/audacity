@@ -57,7 +57,6 @@
 #endif
 
 #include "portaudio.h"
-#include "pa_unix_oss.h"
 
 #include "portmixer.h"
 #include "px_mixer.h"
@@ -146,6 +145,16 @@ static int open_mixer(PxDev *dev, int cmd)
    return FALSE;
 }
 
+const char* GetDeviceName(PaDeviceIndex device)
+{
+   const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo (device);
+
+   if (deviceInfo == NULL)
+      return NULL;
+
+   return deviceInfo->name;
+}
+
 int OpenMixer_Unix_OSS(px_mixer *Px, int index)
 {
    PxInfo *info;
@@ -163,7 +172,7 @@ int OpenMixer_Unix_OSS(px_mixer *Px, int index)
    info->playback.num = 0;   
    
    do {
-      info->capture.name = PaOSS_GetStreamInputDevice(Px->pa_stream);
+      info->capture.name = GetDeviceName(Px->input_device_index);
 
       if (info->capture.name) {
          if (!open_mixer(&info->capture, SOUND_MIXER_READ_RECMASK)) {
@@ -171,7 +180,7 @@ int OpenMixer_Unix_OSS(px_mixer *Px, int index)
          }
       }
       
-      info->playback.name = PaOSS_GetStreamOutputDevice(Px->pa_stream);
+      info->playback.name = GetDeviceName(Px->output_device_index);
       if (info->playback.name) {
          if (!open_mixer(&info->playback, SOUND_MIXER_READ_DEVMASK)) {
             break;

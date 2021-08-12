@@ -1061,7 +1061,7 @@ list( APPEND LIBRARIES
       expat::expat
       libmp3lame::libmp3lame
       libsndfile
-      portaudio-v19
+      PortAudio::PortAudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>

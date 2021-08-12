@@ -51,32 +51,16 @@
 #include "px_mixer.h"
 #include "px_win_common.h"
 
-const GUID FAR DSPROPSETID_DirectSoundDevice = 
+static const GUID DSPROPSETID_DirectSoundDevice = 
 {0x84624f82, 0x25ec, 0x11d1, {0xa4, 0xd8, 0x0, 0xc0, 0x4f, 0xc2, 0x8a, 0xca}};
 
-const GUID FAR CLSID_DirectSoundPrivate = 
+static const GUID CLSID_DirectSoundPrivate = 
 {0x11ab3ec0, 0x25ec, 0x11d1, {0xa4, 0xd8, 0x0, 0xc0, 0x4f, 0xc2, 0x8a, 0xca}};
 
+static const GUID DSIID_IKsPropertySet = 
+{0x31efac30, 0x515c, 0x11d0, {0xa9, 0xaa, 0x00, 0xaa, 0x00, 0x61, 0xbe, 0x93}};
+
 typedef HRESULT (CALLBACK *GCO) (REFCLSID, REFIID, LPVOID *);
-
-#if defined(_DEBUG)
-#include <stdio.h>
-static void dprintf(const char *format, ...)
-{
-   char buf[4096];
-   va_list args;
-   int cnt;
-
-   va_start(args, format);
-   cnt = _vsnprintf(buf, sizeof(buf) - 1, format, args);
-   va_end(args);
-
-   if (cnt > 0) {
-      buf[cnt] = '\0';
-      OutputDebugString(buf);
-   }
-}
-#endif
 
 // Apparently sometimes IKsPropertySet_Get succeeds and does not change
 // the value of WaveDeviceId.  So use a crazy device index (we cant use 
@@ -85,6 +69,7 @@ static void dprintf(const char *format, ...)
 // I suspect this happens with USB Devices.
 #define kImpossibleWaveID ((ULONG) -111)
 
+#if PX_PAWINDS_GETDEVICEGUID_EXISTS
 int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
 {
    DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_DATA desc;
@@ -100,8 +85,11 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
    UINT deviceOut = -1;
    int ret = FALSE;
 
-   guidIn = PaWinDS_GetStreamInputGUID(Px->pa_stream);
-   guidOut = PaWinDS_GetStreamOutputGUID(Px->pa_stream);
+   if (PaWinDS_GetDeviceGUID(Px->input_device_index, &guidIn) != paNoError)
+      guidIn = NULL;
+
+   if (PaWinDS_GetDeviceGUID(Px->output_device_index, &guidOut) != paNoError)
+      guidOut = NULL;
 
    do {
       hDsound = LoadLibraryA("dsound.dll");
@@ -123,7 +111,7 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
    
       hr = IClassFactory_CreateInstance(pcf,
                                         NULL,
-                                        &IID_IKsPropertySet,
+                                        &DSIID_IKsPropertySet,
                                         (void **)(&pps));
       if (hr || pps == NULL) {
          break;
@@ -193,3 +181,9 @@ int OpenMixer_Win_DirectSound(px_mixer *Px, int index)
 
    return ret;
 }
+#else
+int OpenMixer_Win_DirectSound(px_mixer* Px, int index)
+{
+   return FALSE;
+}
+#endif

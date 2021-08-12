@@ -143,7 +143,7 @@ static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo *info, std:
    FillHostDeviceInfo(&map, info, deviceIndex, 1);
 
 #ifdef USE_PORTMIXER
-   PxMixer *portMixer = Px_OpenMixer(stream, 0);
+   PxMixer *portMixer = Px_OpenMixer(stream, deviceIndex, -1, 0);
    if (!portMixer) {
       maps->push_back(map);
       return;

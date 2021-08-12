@@ -519,10 +519,27 @@ add_subdirectory( "cmake-proxies" )
 # Conan uses find_package and does not set GLOBAL flag
 resolve_conan_dependencies()
 
+# This libraries have 3d party dependencies.
+# Moreover, portmixer is only available for as a part of
+# Audacity source tree now.
+cmd_option( ${_OPT}use_portmixer "Build PortMixer support into Audacity" On)
+if( ${_OPT}use_portmixer )
+   set(USE_PORTMIXER Yes)
+   add_subdirectory( "lib-src/portmixer" )
+endif()
+
+cmd_option( ${_OPT}use_nyquist "Build Nyquist support into Audacity" On)
+if( ${_OPT}use_nyquist )
+   set(USE_NYQUIST Yes)
+   add_subdirectory( "lib-src/libnyquist" )
+endif()
+
 add_subdirectory( "help" )
+
 if(${_OPT}has_crashreports)
    add_subdirectory( "crashreports" )
 endif()
+
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )

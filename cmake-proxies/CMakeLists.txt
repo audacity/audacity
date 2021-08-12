@@ -106,6 +106,18 @@ add_conan_lib(
    PKG_CONFIG "mad >= 0.15.0b" # Ubuntu has broken PC file
 )
 
+add_conan_lib(
+   PortAudio
+   portaudio/19.7.0
+   OPTION_NAME portaudio
+   ALLOW_FIND_PACKAGE
+   INTERFACE_NAME PortAudio::PortAudio
+   CONAN_OPTIONS
+      portaudio:shared=True
+      # Audacity doesn't support WDM/KS (yet)
+      portaudio:with_wdmks=False
+)
+
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( curl_ssl "darwinssl" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
@@ -163,14 +175,12 @@ set_conan_vars_to_parent()
 #
 #       directory          option      symbol      req   chk   version
 addlib( libsndfile         sndfile     SNDFILE     YES   YES   "sndfile >= 1.0.28" )
-addlib( portaudio-v19      portaudio   PORTAUDIO   YES   YES   "" )
 addlib( sqlite             sqlite      SQLITE      YES   YES   "sqlite3 >= 3.31.1" )
 
 # Optional libraries
 #
 #       directory          option      symbol      req   chk   version
 addlib( ffmpeg             ffmpeg      FFMPEG      NO    NO    "libavcodec >= 51.53" "libavformat >= 52.12" "libavutil >= 52.66" )
-addlib( libnyquist         nyquist     NYQUIST     NO    YES   "" )
 addlib( libvamp            vamp        VAMP        NO    YES   "vamp >= 2.5" "vamp-hostsdk >= 2.5" )
 addlib( libogg             ogg         LIBOGG      NO    YES   "ogg >= 1.3.1" )
 addlib( libvorbis          vorbis      LIBVORBIS   NO    YES   "vorbis >= 1.3.3" "vorbisenc >= 1.3.3" "vorbisfile >= 1.3.3" )
@@ -182,14 +192,6 @@ addlib( portmidi           midi        MIDI        NO    YES   "PortMidi" )
 if (NOT USE_MIDI AND
    "EXPERIMENTAL_MIDI_OUT" IN_LIST EXPERIMENTAL_OPTIONS_LIST )
    message(FATAL_ERROR "EXPERIMENTAL_MIDI_OUT requires USE_MIDI")
-endif ()
-
-
-addlib( portmixer          portmixer   PORTMIXER   NO    YES   "" )
-if (NOT USE_PORTMIXER AND
-   "EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT" IN_LIST
-      EXPERIMENTAL_OPTIONS_LIST )
-   message(FATAL_ERROR "EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT requires USE_PORTMIXER")
 endif ()
 
 addlib( portsmf            portsmf     PORTSMF     NO    YES   "portSMF >= 0.1" )
