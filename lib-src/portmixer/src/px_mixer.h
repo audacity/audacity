@@ -64,8 +64,10 @@ struct px_mixer
    unsigned long magic;
    void *pa_stream;
    void *info;
+   
+   int input_device_index;
+   int output_device_index;
 
-   PxMixer (*OpenMixer) (void *pa_stream, int i);
    void (*CloseMixer) (px_mixer *Px);
 
    /*

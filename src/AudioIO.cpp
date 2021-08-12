@@ -488,9 +488,6 @@ time warp info and AudioIOListener and whether the playback is looped.
       #define THREAD_LATENCY 0 /* milliseconds */
    #endif
    #define ROUND(x) (int) ((x)+0.5)
-   //#include <string.h>
-//   #include "../lib-src/portmidi/pm_common/portmidi.h"
-   #include "../lib-src/portaudio-v19/src/common/pa_util.h"
    #include "NoteTrack.h"
 #endif
 
@@ -2313,12 +2310,23 @@ void AudioIO::StopStream()
      )
       return;
 
-   if( Pa_IsStreamStopped( mPortStreamV19 )
+   // DV: This code seems to be unnecessary.
+   // We do not leave mPortStreamV19 open in stopped 
+   // state. (Do we?)
+   // This breaks WASAPI backend, as it sets the `running`
+   // flag to `false` asynchronously. 
+   // Previously we have patched PortAudio and the patch
+   // was breaking IsStreamStopped() == !IsStreamActive()
+   // invariant.
+   /*
+   if (
+      Pa_IsStreamStopped(mPortStreamV19)
 #ifdef EXPERIMENTAL_MIDI_OUT
        && !mMidiStreamActive
 #endif
      )
       return;
+   */
 
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3,1,0)
    // Re-enable system sleep
@@ -2370,6 +2378,8 @@ void AudioIO::StopStream()
    // call StopStream if the callback brought us here, and AbortStream
    // if the user brought us here.
    //
+   // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
+   // at least for PortAudio 19.7.0+
 
    mAudioThreadFillBuffersLoopRunning = false;
 
@@ -2398,8 +2408,14 @@ void AudioIO::StopStream()
   #endif
 
    if (mPortStreamV19) {
-      Pa_AbortStream( mPortStreamV19 );
+      // DV: Pa_CloseStream will close Pa_AbortStream internally,
+      // but it doesn't hurt to do it ourselves.
+      // PA_AbortStream will silently fail if stream is stopped.
+      if (!Pa_IsStreamStopped( mPortStreamV19 ))
+        Pa_AbortStream( mPortStreamV19 );
+
       Pa_CloseStream( mPortStreamV19 );
+
       mPortStreamV19 = NULL;
    }
 
