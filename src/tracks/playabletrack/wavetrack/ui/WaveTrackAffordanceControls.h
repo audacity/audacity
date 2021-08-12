@@ -19,6 +19,7 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls : public CommonTrackCell
 {
     std::weak_ptr<WaveClip> mFocusClip;
     std::weak_ptr<AffordanceHandle> mAffordanceHandle;
+    std::weak_ptr<UIHandle> mResizeHandle;
 public:
     WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack);
 
