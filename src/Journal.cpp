@@ -14,6 +14,7 @@
 *//*******************************************************************/
 
 #include "Journal.h"
+#include "JournalEvents.h"
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
 
@@ -177,6 +178,14 @@ bool Begin( const FilePath &dataDir )
          Output({ VersionToken, VersionString() });
       }
    }
+
+   if ( !GetError() && IsRecording() )
+      // one time installation
+      Events::Watch();
+
+   if ( !GetError() && IsReplaying() )
+      // Be sure event types are registered for dispatch
+      Events::Initialize();
 
    return !GetError();
 }

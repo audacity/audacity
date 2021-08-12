@@ -18,5 +18,8 @@ namespace Events
 {
    //\brief Initialization, to be called after wxWidgets has initialized
    void Initialize();
+
+   //! Install the global event filter for recording
+   void Watch();
 }
 }

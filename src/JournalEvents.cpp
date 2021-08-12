@@ -9,6 +9,8 @@
 *********************************************************************/
 
 #include "JournalEvents.h"
+#include "JournalOutput.h"
+#include "JournalRegistry.h"
 #include "JournalWindowPaths.h"
 
 #include <map>
@@ -16,12 +18,14 @@
 #include <optional>
 #include <unordered_map>
 
+#include <wx/eventfilter.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 #include <wx/tglbtn.h>
 #include <wx/valgen.h>
 #include <wx/window.h>
 
+#include "AudacityException.h"
 #include "Identifier.h"
 #include "wxArrayStringEx.h"
 
@@ -54,11 +58,19 @@ static const ByTypeMap &ByType();
 using ByCodeMap = std::unordered_map< Code, const Type & >;
 static const ByCodeMap &ByCode();
 
+// This sub-object populates the journal system's dictionary for playback
+struct RegisteredEventType : RegisteredCommand {
+   static bool DispatchEvent( wxArrayStringEx fields );
+   explicit RegisteredEventType( Code code )
+   : RegisteredCommand{ code.GET(), DispatchEvent }
+   {}
+};
+
 /*!
 An entry in a catalog describing the types of events that are intercepted
 and recorded, and simulated when playing back.
 */
-struct Type {
+struct Type : RegisteredEventType {
 
    // Function that returns a list of parameters that, with the event type,
    // are sufficient to record an event to the journal and recreate it on
@@ -110,7 +122,8 @@ struct Type {
          Tag is deduced at compile time, the int value is fixed at runtime
       */
       const Code &code, SerialFn serialFn, DeserialFn deserialFn )
-      : type{ type }
+      : RegisteredEventType{ code }
+      , type{ type }
       , code{ code }
       , serializer{ makeSerializer<Tag>( std::move( serialFn ) ) }
       , deserializer{ checkDeserializer( type, std::move( deserialFn ) ) }
@@ -123,6 +136,35 @@ struct Type {
    Serializer serializer;
    Deserializer deserializer;
 };
+
+bool RegisteredEventType::DispatchEvent( wxArrayStringEx fields )
+{
+   bool handled = false;
+   if ( !fields.empty() ) {
+      auto &catalog = ByCode();
+      auto first = fields.begin();
+      if (auto iter = catalog.find( *first ); iter != catalog.end()) {
+         auto &type = iter->second;
+         fields.erase( first );
+         auto pEvent = type.deserializer( type.type, fields );
+         if ( pEvent ) {
+            // So far only dispatching command events.  Maybe other
+            // methods of dispatch will be appropriate for other types.
+            if ( auto pHandler = dynamic_cast<wxEvtHandler*>(
+               pEvent->GetEventObject() )
+            ) {
+               if (auto pWindow = dynamic_cast<wxWindow *>(pHandler))
+                  // Allow for the pushing and popping of event handlers
+                  // on windows
+                  pHandler = pWindow->GetEventHandler();
+               pHandler->SafelyProcessEvent( *pEvent );
+               handled = true;
+            }
+         }
+      }
+   }
+   return handled;
+}
 
 wxString WindowEventName( const wxEvent &event )
 {
@@ -280,7 +322,7 @@ static Type TextualCommandType( EventType type, const wxString &code ){
    return Type{ type, code, serialize, deserialize };
 };
 
-static const Types &TypeCatalog()
+const Types &TypeCatalog()
 {
    static Types result {
       NullaryCommandType( wxEVT_BUTTON, "Press" ),
@@ -327,11 +369,63 @@ static const ByCodeMap &ByCode()
    return result;
 }
 
+//! Singleton object listens to global wxEvent stream
+struct Watcher : wxEventFilter
+{
+   Watcher()
+   {
+      wxEvtHandler::AddFilter( this );
+   }
+
+   ~Watcher()
+   {
+      wxEvtHandler::RemoveFilter( this );
+   }
+
+   int FilterEvent( wxEvent &event ) override
+   {
+      if (!mWatching)
+         // Previously encountered error stopped recording of any more events
+         return Event_Skip;
+
+      static const auto &catalog = Events::ByType();
+      const auto type = event.GetEventType();
+      if (const auto iter = catalog.find(type); iter != catalog.end()) {
+         // Try to write a representation to the journal
+         const auto &info = iter->second;
+         auto pStrings = info.serializer(event);
+         if (!pStrings) {
+            // After one event of one of the interesting types fails to record,
+            // don't try again
+            mWatching = false;
+            throw SimpleMessageBoxException( ExceptionType::BadUserAction,
+               XO("Journal recording failed"));
+         }
+         else {
+            pStrings->insert(pStrings->begin(), info.code.GET());
+            Journal::Output(*pStrings);
+         }
+      }
+      else
+         // Just ignore this un-catalogued event type
+         ;
+
+      return Event_Skip;
+   }
+
+   bool mWatching{ true };
+};
+
 }
 
 void Initialize()
 {
    (void) TypeCatalog();
+}
+
+void Watch()
+{
+   static Watcher instance;
 }
 
 }

@@ -40,6 +40,8 @@ namespace Journal
 
    //\brief Initialize playback if a file name has been set, and initialize
    // output if recording is enabled.
+   // Must be called after wxWidgets initializes.
+   // Application initialization is late enough.
    // @param dataDir the output journal.txt will be in this directory, and the
    // input file, if it was relative, is made absolute with respect to it
    // @return true if successful
