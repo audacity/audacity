@@ -710,27 +710,7 @@ wxRect ScreenshotCommand::GetTracksRect(TrackPanel * panel){
 wxRect ScreenshotCommand::GetTrackRect( AudacityProject * pProj, TrackPanel * panel, int n){
    auto FindRectangle = []( TrackPanel &panel, Track &t )
    {
-      // This rectangle omits the focus ring about the track, and
-      // also within that, a narrow black border with a "shadow" below and
-      // to the right
-      wxRect rect = panel.FindTrackRect( &t );
-
-      // Enlarge horizontally.
-      // PRL:  perhaps it's one pixel too much each side, including some gray
-      // beyond the yellow?
-      rect.x = 0;
-      panel.GetClientSize(&rect.width, nullptr);
-
-      // Enlarge vertically, enough to enclose the yellow focus border pixels
-      // Omit the outermost ring of gray pixels
-
-      // (Note that TrackPanel paints its focus over the "top margin" of the
-      // rectangle allotted to the track, according to TrackView::GetY() and
-      // TrackView::GetHeight(), but also over the margin of the next track.)
-
-      rect.height += kBottomMargin;
-      int dy = kTopMargin - 1;
-      rect.Inflate( 0, dy );
+      wxRect rect = panel.FindFocusedTrackRect( &t );
 
       // Reposition it relative to parent of panel
       rect.SetPosition(

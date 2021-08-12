@@ -58,7 +58,7 @@ private:
 
    void ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth );
    void ExploreTrackPanel( const CommandContext & context,
-      wxPoint P, wxWindow * pWin, int Id, int depth );
+      wxPoint P, int depth );
    void ExploreAdornments( const CommandContext & context,
       wxPoint P, wxWindow * pWin, int Id, int depth );
    void ExploreWindows( const CommandContext & context,

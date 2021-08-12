@@ -102,6 +102,9 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       r.x = 0;
       r.y = 0;
       r.width = width;
+      // Note that the views as printed might not have the same proportional
+      // heights as displayed on the screen, because the fixed-sized separators
+      // are counted in those heights but not printed
       auto trackHeight = (int)(view.GetHeight() * scale);
       r.height = trackHeight;
 

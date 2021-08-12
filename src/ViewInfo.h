@@ -98,14 +98,8 @@ private:
    SelectedRegion mRegion;
 };
 
-// See big pictorial comment in TrackPanel.cpp for explanation of these numbers
 enum : int {
-   // constants related to y coordinates in the track panel
-   kAffordancesAreaHeight = 20,
-   kTopInset = 4,
-   kTopMargin = kTopInset + kBorderThickness,
-   kBottomMargin = kShadowThickness + kBorderThickness,
-   kSeparatorThickness = kBottomMargin + kTopMargin,
+   kVerticalPadding = 7, /*!< Width of padding below each channel group */
 };
 
 enum : int {

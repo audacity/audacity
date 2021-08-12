@@ -844,8 +844,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    view.SetMinimized(false);
    partnerView.SetMinimized(false);
    int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
-   view.SetHeight(AverageHeight);
-   partnerView.SetHeight(AverageHeight);
+   view.SetExpandedHeight(AverageHeight);
+   partnerView.SetExpandedHeight(AverageHeight);
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
 
@@ -880,7 +880,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
-         view.SetHeight(view.GetMinimizedHeight());
+         view.SetExpandedHeight(view.GetMinimizedHeight());
       totalHeight += view.GetHeight();
       ++nChannels;
    }
@@ -890,7 +890,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    for (auto channel : channels)
       // Make tracks the same height
-      TrackView::Get( *channel ).SetHeight( averageHeight );
+      TrackView::Get( *channel ).SetExpandedHeight( averageHeight );
 }
 
 /// Swap the left and right channels of a stero track...

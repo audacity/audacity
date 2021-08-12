@@ -41,7 +41,7 @@ int TrackView::GetCumulativeHeight( const Track *pTrack )
    if ( !pTrack )
       return 0;
    auto &view = Get( *pTrack );
-   return view.GetY() + view.GetHeight();
+   return view.GetCumulativeHeightBefore() + view.GetHeight();
 }
 
 int TrackView::GetTotalHeight( const TrackList &list )
@@ -87,7 +87,7 @@ void TrackView::SetMinimized(bool isMinimized)
 
 void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
 {
-   xmlFile.WriteAttr(wxT("height"), GetActualHeight());
+   xmlFile.WriteAttr(wxT("height"), GetExpandedHeight());
    xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
 }
 
@@ -101,7 +101,7 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
       nValue = std::max( 40l, std::min( nValue, 1000l ));
-      SetHeight(nValue);
+      SetExpandedHeight(nValue);
       return true;
    }
    else if (!wxStrcmp(attr, wxT("minimized")) &&
@@ -161,7 +161,7 @@ int TrackView::GetHeight() const
    return mHeight;
 }
 
-void TrackView::SetHeight(int h)
+void TrackView::SetExpandedHeight(int h)
 {
    DoSetHeight(h);
    FindTrack()->AdjustPositions();
@@ -179,8 +179,10 @@ std::shared_ptr<CommonTrackCell> TrackView::DoGetAffordanceControls()
 
 namespace {
 
-// Attach an object to each project.  It receives track list events and updates
-// track Y coordinates
+/*!
+ Attached to each project, it receives track list events and maintains the
+ cache of cumulative track view heights for use by TrackPanel.
+ */
 struct TrackPositioner final : ClientData::Base, wxEvtHandler
 {
    AudacityProject &mProject;
@@ -214,7 +216,7 @@ struct TrackPositioner final : ClientData::Base, wxEvtHandler
 
       while( auto pTrack = *iter ) {
          auto &view = TrackView::Get( *pTrack );
-         view.SetY( yy );
+         view.SetCumulativeHeightBefore( yy );
          yy += view.GetHeight();
          ++iter;
       }

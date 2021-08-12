@@ -74,7 +74,7 @@ void TrackPanelResizerCell::Draw(
             
             // Paint the left part of the background
             const auto artist = TrackArtist::Get( context );
-            auto labelw = artist->pZoomInfo->GetLabelWidth();
+            auto labelw = artist->pZoomInfo->GetLeftOffset() - 1;
             AColor::MediumTrackInfo( dc, pTrack->GetSelected() );
             dc->DrawRectangle(
                rect.GetX(), rect.GetY(), labelw, rect.GetHeight() );
