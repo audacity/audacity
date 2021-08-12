@@ -59,7 +59,7 @@ namespace Journal
    //\brief Type of a function that interprets a line of the input journal.
    // It may indicate failure either by throwing SyncException or returning
    // false (which will cause Journal::Dispatch to throw a SyncException)
-   using Dispatcher = std::function< bool(const wxArrayString &fields) >;
+   using Dispatcher = std::function< bool(const wxArrayStringEx &fields) >;
 
    //\brief Associates a dispatcher with a keyword in the default dictionary.
    // The keyword will also be the first field passed to the dispatcher.  This

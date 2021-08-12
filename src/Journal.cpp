@@ -27,6 +27,7 @@
 namespace {
 
 constexpr auto SeparatorCharacter = ',';
+constexpr auto EscapeCharacter = '\\';
 constexpr auto CommentCharacter = '#';
 
 wxString sFileNameIn;
@@ -70,7 +71,7 @@ wxArrayStringEx PeekTokens()
          if ( sLine.StartsWith( CommentCharacter ) )
             continue;
          
-         tokens = wxSplit( sLine, SeparatorCharacter );
+         tokens = wxSplit( sLine, SeparatorCharacter, EscapeCharacter );
          if ( tokens.empty() )
             // Ignore blank lines
             continue;
@@ -270,7 +271,7 @@ void Output( const wxString &string )
 void Output( const wxArrayString &strings )
 {
    if ( IsRecording() )
-      Output( ::wxJoin( strings, SeparatorCharacter ) );
+      Output( ::wxJoin( strings, SeparatorCharacter, EscapeCharacter ) );
 }
 
 void Output( std::initializer_list< const wxString > strings )
@@ -300,7 +301,7 @@ void Sync( const wxString &string )
 void Sync( const wxArrayString &strings )
 {
    if ( IsRecording() || IsReplaying() ) {
-      auto string = ::wxJoin( strings, SeparatorCharacter );
+      auto string = ::wxJoin( strings, SeparatorCharacter, EscapeCharacter );
       Sync( string );
    }
 }
