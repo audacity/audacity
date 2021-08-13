@@ -213,6 +213,15 @@ if( ${_OPT}has_sentry_reporting )
    )
 endif()
 
+add_conan_lib(
+   PortMidi
+   portmidi/r234
+   OPTION_NAME midi
+   ALLOW_FIND_PACKAGE
+   CONAN_OPTIONS
+      portmidi:shared=True
+)
+
 set_conan_vars_to_parent()
 
 # Required libraries
@@ -227,7 +236,7 @@ addlib( ffmpeg             ffmpeg      FFMPEG      NO    NO    "libavcodec >= 51
 addlib( libvamp            vamp        VAMP        NO    YES   "vamp >= 2.5" "vamp-hostsdk >= 2.5" )
 addlib( lv2                lv2         LV2         NO    YES   "lilv-0 >= 0.24.6" "lv2 >= 1.16.0" "serd-0 >= 0.30.2" "sord-0 >= 0.16.4" "sratom-0 >= 0.6.4" "suil-0 >= 0.10.6" )
 
-addlib( portmidi           midi        MIDI        NO    YES   "PortMidi" )
+#addlib( portmidi           midi        MIDI        NO    YES   "PortMidi" )
 
 if (NOT USE_MIDI AND
    "EXPERIMENTAL_MIDI_OUT" IN_LIST EXPERIMENTAL_OPTIONS_LIST )
