@@ -11,11 +11,11 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_BRUSH_HANDLE__
 #define __AUDACITY_BRUSH_HANDLE__
 
+#include <vector>
+#include "ProjectSettings.h"
+#include "tracks/playabletrack/wavetrack/ui/SpectrumView.h"
 #include "../../UIHandle.h"
 #include "../../SelectedRegion.h"
-
-#include <vector>
-#include <tracks/playabletrack/wavetrack/ui/SpectrumView.h>
 
 class SelectionStateChanger;
 class SnapManager;
@@ -36,8 +36,8 @@ public:
       (const std::shared_ptr<TrackView> &pTrackView,
        const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-       const std::shared_ptr<SpectralData> &mpSpectralData,
-       const int brushRadius);
+       const std::shared_ptr<SpectralData> &pSpectralData,
+       const ProjectSettings &pSettings);
 
    // This always hits, but details of the hit vary with mouse position and
    // key state.
@@ -90,11 +90,11 @@ private:
    std::weak_ptr<TrackView> mpView;
    wxRect mRect{};
 
-   bool mFreqSnapping { true };
    // Example: For window size of 1024, with ratio 0.01
    // It searches for (+-) 1024*0.01 = 10 bins
    double mFreqSnappingRatio { 0.01 };
 
+   bool mIsSmartSelection, mIsOvertones;
    long long mSampleCountUpperBound, mSampleCountLowerBound;
    wxInt64 mFreqUpperBound, mFreqLowerBound;
    int mMostRecentX{ -1 }, mMostRecentY{ -1 };

@@ -54,6 +54,8 @@ enum {
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
    EVT_BUTTON(ID_ON_APPLY, SpectralDataDialog::OnApply)
+   EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
+   EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
    EVT_SHOW(SpectralDataDialog::OnShow)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
    EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
@@ -248,4 +250,18 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
 void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent &event) {
    auto &projectSettings = ProjectSettings::Get( *mProject );
    projectSettings.SetBrushRadius(event.GetInt());
+}
+
+void SpectralDataDialog::OnCheckSmartSelection(wxCommandEvent &event){
+   int isSelected = event.GetInt();
+   wxASSERT(isSelected == 0 || isSelected == 1);
+   auto &projectSettings = ProjectSettings::Get( *mProject );
+   projectSettings.SetSmartSelection(isSelected);
+}
+
+void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
+   int isSelected = event.GetInt();
+   wxASSERT(isSelected == 0 || isSelected == 1);
+   auto &projectSettings = ProjectSettings::Get( *mProject );
+   projectSettings.SetOvertones(isSelected);
 }

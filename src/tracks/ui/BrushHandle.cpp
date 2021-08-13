@@ -146,10 +146,10 @@ UIHandlePtr BrushHandle::HitTest
        const std::shared_ptr<SpectralData> &mpData)
 {
    const auto &viewInfo = ViewInfo::Get( *pProject );
-   const auto &projectSettings = ProjectSettings::Get( *pProject );
+   auto &projectSettings = ProjectSettings::Get( *pProject );
    auto result = std::make_shared<BrushHandle>(
       pTrackView, TrackList::Get( *pProject ),
-      st, viewInfo, mpData, projectSettings.GetBrushRadius());
+      st, viewInfo, mpData, projectSettings);
 
    result = AssignUIHandlePtr(holder, result);
 
@@ -169,10 +169,10 @@ BrushHandle::BrushHandle
       ( const std::shared_ptr<TrackView> &pTrackView,
         const TrackList &trackList,
         const TrackPanelMouseState &st, const ViewInfo &viewInfo,
-        const std::shared_ptr<SpectralData> &mpSpectralData,
-        const int brushRadius)
+        const std::shared_ptr<SpectralData> &pSpectralData,
+        const ProjectSettings &pSettings)
       : mpView{ pTrackView }
-      , mpSpectralData(mpSpectralData)
+      , mpSpectralData(pSpectralData)
 {
    const wxMouseState &state = st.state;
    auto pTrack = pTrackView->FindTrack().get();
@@ -180,9 +180,11 @@ BrushHandle::BrushHandle
    double rate = mpSpectralData->GetSR();
 
    mRect = st.rect;
-   mBrushRadius = brushRadius;
+   mBrushRadius = pSettings.GetBrushRadius();
    mFreqUpperBound = wt->GetSpectrogramSettings().maxFreq - 1;
    mFreqLowerBound = wt->GetSpectrogramSettings().minFreq + 1;
+   mIsSmartSelection = pSettings.IsSmartSelection();
+   mIsOvertones = pSettings.IsOvertones();
    // Borrowed from TimeToLongSample
    mSampleCountLowerBound = floor( pTrack->GetStartTime() * rate + 0.5);
    mSampleCountUpperBound = floor( pTrack->GetEndTime() * rate + 0.5);
@@ -318,7 +320,7 @@ UIHandle::Result BrushHandle::Drag
          int r = mBrushRadius;
          int cx = -r, cy = 0, cerr = 2 - 2 * r;
 
-         if(mFreqSnapping){
+         if(mIsSmartSelection){
             // Correct the y coord (snap to highest energy freq. bin)
             long long startSC = posToLongLong(xm);
             wxInt64 targetFreq = PositionToFrequency(wt, 0, ym+cy, mRect.y, mRect.height);
