@@ -643,7 +643,7 @@ double DoClipMove( AudacityProject &project, Track *track,
       // Find the first channel that has a clip at time t0
       auto hitTestResult = TrackShifter::HitTestResult::Track;
       for (auto channel : TrackList::Channels(track) ) {
-         uShifter = MakeTrackShifter::Call( *track, project );
+         uShifter = MakeTrackShifter::Call( *channel, project );
          if ( (hitTestResult = uShifter->HitTest( t0, viewInfo )) ==
              TrackShifter::HitTestResult::Miss )
             uShifter.reset();
@@ -657,7 +657,7 @@ double DoClipMove( AudacityProject &project, Track *track,
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
-      state.Init( project, *track, hitTestResult, std::move( uShifter ),
+      state.Init( project, pShifter->GetTrack(), hitTestResult, std::move( uShifter ),
          t0, viewInfo, trackList, syncLocked );
 
       auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );
