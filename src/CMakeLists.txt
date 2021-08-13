@@ -2,6 +2,8 @@
 set( TARGET Audacity )
 set( TARGET_ROOT ${topdir}/src )
 
+include (CheckFunctionExists)
+
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
 # Allow modules to link against the Audacity executable
@@ -274,6 +276,7 @@ list( APPEND SOURCES
       TrackPanelAx.h
       TrackPanelCell.cpp
       TrackPanelCell.h
+      TrackPanelConstants.h
       TrackPanelDrawable.cpp
       TrackPanelDrawable.h
       TrackPanelDrawingContext.h
@@ -1058,16 +1061,20 @@ list( APPEND LIBRARIES
       wxwidgets::wxwidgets
       expat::expat
       libmp3lame::libmp3lame
-      libsndfile
-      portaudio-v19
+      SndFile::sndfile
+      PortAudio::PortAudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
       $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
-      $<$<BOOL:${USE_LIBFLAC}>:libflac>
+      $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
+      $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
-      $<$<BOOL:${USE_LIBOGG}>:libogg>
-      $<$<BOOL:${USE_LIBVORBIS}>:libvorbis>
+      $<$<BOOL:${USE_LIBOGG}>:Ogg::ogg>
+      $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbis>
+      $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisfile>
+      $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisenc>
+      $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
       $<$<BOOL:${USE_MIDI}>:portmidi>
@@ -1313,6 +1320,12 @@ source_group(
 import_symbol_define( import_symbol AUDACITY_DLL )
 export_symbol_define( export_symbol AUDACITY_DLL )
 list( APPEND DEFINES PRIVATE "${export_symbol}" INTERFACE "${import_symbol}" )
+
+# see AudioIO.cpp
+check_function_exists(clock_gettime HAVE_CLOCK_GETTIME)
+if(HAVE_CLOCK_GETTIME)
+   list( APPEND DEFINES HAVE_CLOCK_GETTIME )
+endif()
 
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )

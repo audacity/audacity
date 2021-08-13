@@ -98,9 +98,11 @@ public:
    int GetVRulerWidth() const { return mVRulerWidth; }
    void SetVRulerWidth( int width ) { mVRulerWidth = width; }
    int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
-   int GetLabelWidth() const { return GetVRulerOffset() + GetVRulerWidth(); }
-   int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
+   // The x-coordinate of the start of the displayed track data
+   int GetLeftOffset() const
+      { return GetVRulerOffset() + GetVRulerWidth() + 1; }
+   // The number of pixel columns for display of track data
    int GetTracksUsableWidth() const
    {
       return

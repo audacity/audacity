@@ -57,7 +57,7 @@ typedef float PxBalance; /* -1.0 (left) --> 1.0 (right) */
  audio device.  Pass 0 as the index for the first (default) mixer.
 */
 
-PxMixer *Px_OpenMixer( void *pa_stream, int i );
+PxMixer* Px_OpenMixer(PaStream* pa_stream, PaDeviceIndex inputDeviceIndex, PaDeviceIndex outputDeviceIndex, int i);
 
 /*
  Px_CloseMixer() closes a mixer opened using Px_OpenMixer and frees any

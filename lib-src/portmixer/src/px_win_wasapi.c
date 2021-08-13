@@ -38,43 +38,39 @@
 #define COBJMACROS
 
 #include <windows.h>
+#include <mmdeviceapi.h>
 
 #include "portaudio.h"
 #include "pa_win_wasapi.h"
 
 #include "portmixer.h"
 #include "px_mixer.h"
-#include "px_win_common.h"
 
-#if defined(_DEBUG)
-#include <stdio.h>
-static void dprintf(const char *format, ...)
+static const wchar_t* GetDeviceID(PaDeviceIndex index)
 {
-   char buf[4096];
-   va_list args;
-   int cnt;
+   const wchar_t* result = NULL;
 
-   va_start(args, format);
-   cnt = _vsnprintf(buf, sizeof(buf) - 1, format, args);
-   va_end(args);
+   if (index >= 0)
+   {
+      IMMDevice* immDevice;
+      PaWasapi_GetIMMDevice(index, &immDevice);
 
-   if (cnt > 0) {
-      buf[cnt] = '\0';
-      OutputDebugString(buf);
+      wchar_t* deviceID;
+
+      if (!FAILED(IMMDevice_GetId(immDevice, &deviceID)))
+      {
+         result = _wcsdup(deviceID);
+         CoTaskMemFree(deviceID);
+      }
    }
+
+   return result;
 }
-#endif
 
 int OpenMixer_Win_WASAPI(px_mixer *Px, int index)
 {
-   const wchar_t *deviceIn = PaWasapi_GetInputDeviceID(Px->pa_stream);
-   const wchar_t *deviceOut = PaWasapi_GetOutputDeviceID(Px->pa_stream);
-   int ret = FALSE;
+   const wchar_t* deviceIn = GetDeviceID(Px->input_device_index);
+   const wchar_t *deviceOut = GetDeviceID(Px->output_device_index);
 
-   if (open_ep_mixers_byid(Px, deviceIn, deviceOut))
-   {
-      ret = TRUE;
-   }
-
-   return ret;
+   return open_ep_mixers_byid(Px, deviceIn, deviceOut);
 }

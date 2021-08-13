@@ -211,7 +211,7 @@ void AudioIOBase::HandleDeviceChange()
 
    if (!error) {
       // Try portmixer for this stream
-      mPortMixer = Px_OpenMixer(stream, 0);
+      mPortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
       if (!mPortMixer) {
          Pa_CloseStream(stream);
          error = true;
@@ -227,7 +227,7 @@ void AudioIOBase::HandleDeviceChange()
                             nullptr, NULL);
 
       if (!error) {
-         mPortMixer = Px_OpenMixer(stream, 0);
+         mPortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
          if (!mPortMixer) {
             Pa_CloseStream(stream);
             error = true;
@@ -244,7 +244,7 @@ void AudioIOBase::HandleDeviceChange()
                             nullptr, NULL);
 
       if (!error) {
-         mPortMixer = Px_OpenMixer(stream, 0);
+         mPortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
          if (!mPortMixer) {
             Pa_CloseStream(stream);
             error = true;
@@ -873,7 +873,7 @@ wxString AudioIOBase::GetDeviceInfo()
          return o.GetString();
       }
 
-      PxMixer *PortMixer = Px_OpenMixer(stream, 0);
+      PxMixer *PortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
 
       if (!PortMixer) {
          s << XO("Unable to open Portmixer\n");

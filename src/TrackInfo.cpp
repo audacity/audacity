@@ -201,7 +201,7 @@ unsigned TrackInfo::MinimumTrackHeight()
       height += commonTrackTCPBottomLines.front().height;
    // + 1 prevents the top item from disappearing for want of enough space,
    // according to the rules in HideTopItem.
-   return height + kTopMargin + kBottomMargin + 1;
+   return height + kVerticalPadding + 1;
 }
 
 bool TrackInfo::HideTopItem( const wxRect &rect, const wxRect &subRect,
@@ -565,7 +565,7 @@ void TrackInfo::SetTrackInfoFont(wxDC * dc)
 unsigned TrackInfo::DefaultTrackHeight( const TCPLines &topLines )
 {
    int needed =
-      kTopMargin + kBottomMargin +
+      kVerticalPadding +
       totalTCPLines( topLines, true ) +
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max( needed, (int) TrackView::DefaultHeight );

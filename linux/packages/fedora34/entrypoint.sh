@@ -13,7 +13,6 @@ cmake_args=(
 
     -D audacity_use_pch=no
 
-    -D audacity_use_portaudio=local # System portaudio is not yet usable
     -D audacity_use_portsmf=local
     -D audacity_use_sbsms=local 
 )

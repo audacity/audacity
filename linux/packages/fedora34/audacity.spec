@@ -82,7 +82,6 @@ supports PulseAudio, OSS and ALSA under Linux.
     -D audacity_lib_preference=system \
     -D audacity_obey_system_dependencies=On \
     -D audacity_use_pch=no \
-    -D audacity_use_portaudio=local \
     -D audacity_use_portsmf=local \
     -D audacity_use_sbsms=local \
 

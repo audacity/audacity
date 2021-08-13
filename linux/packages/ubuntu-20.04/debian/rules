@@ -18,7 +18,6 @@ override_dh_auto_configure:
 	-Daudacity_obey_system_dependencies=On \
 	-Daudacity_use_pch=no \
 	-Daudacity_use_wxwidgets=local \
-	-Daudacity_use_portaudio=local \
 	-Daudacity_use_vamp=local \
 	-Daudacity_use_sbsms=local 
 
