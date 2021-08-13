@@ -98,6 +98,12 @@ public:
    void SetBrushRadius(int brushRadius) { mCurrentBrushRadius = brushRadius; }
    int GetBrushRadius() const { return mCurrentBrushRadius; }
 
+   void SetSmartSelection(bool isSelected) { mbSmartSelection = isSelected; }
+   bool IsSmartSelection() const { return mbSmartSelection; }
+
+   void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
+   bool IsOvertones() const { return mbOvertones; }
+
    // Speed play
    double GetPlaySpeed() const {
       return mPlaySpeed.load( std::memory_order_relaxed ); }
@@ -146,6 +152,8 @@ private:
 
    int mCurrentTool;
    int mCurrentBrushRadius;
+   bool mbSmartSelection { false };
+   bool mbOvertones { false };
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mShowId3Dialog{ true }; //lda

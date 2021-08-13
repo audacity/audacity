@@ -17,6 +17,7 @@
 #include "commands/CommandManagerWindowClasses.h"
 
 class wxButton;
+class wxCheckBox;
 class wxListCtrl;
 class wxListEvent;
 class wxSpinCtrl;
@@ -48,6 +49,8 @@ private:
    void OnCloseWindow(wxCloseEvent &event);
    void OnApply(wxCommandEvent &event);
    void OnBrushSizeSlider(wxCommandEvent &event);
+   void OnCheckSmartSelection(wxCommandEvent &event);
+   void OnCheckOvertones(wxCommandEvent &event);
 
    // PrefsListener implementation
    void UpdatePrefs() override;
