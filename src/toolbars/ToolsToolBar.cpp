@@ -199,7 +199,12 @@ void ToolsToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
+
+#ifdef EXPERIMENTAL_BRUSH_TOOL
    Add(mToolSizer = safenew wxGridSizer(2, 4, 1, 1));
+#else
+   Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
+#endif
 
    /* Tools */
    using namespace ToolCodes;
