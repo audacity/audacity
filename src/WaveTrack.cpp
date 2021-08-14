@@ -64,7 +64,7 @@ from the project that will own the track.
 
 using std::max;
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "wavetrack" ),
    []( AudacityProject &project ){
       auto &trackFactory = WaveTrackFactory::Get( project );

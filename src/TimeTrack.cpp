@@ -37,7 +37,7 @@
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "timetrack" ),
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );

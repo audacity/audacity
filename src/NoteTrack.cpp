@@ -109,7 +109,7 @@ SONFNS(AutoSave)
 
 
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );

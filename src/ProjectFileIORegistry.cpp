@@ -11,34 +11,27 @@
 #include "ProjectFileIORegistry.h"
 
 #include "Identifier.h"
-#include <unordered_map>
 #include <wx/string.h>
 
 
-namespace ProjectFileIORegistry {
-
-namespace {
-   using TagTable = std::unordered_map< wxString, TagHandlerFactory >;
-   static TagTable &sTagTable()
-   {
-      static TagTable theTable;
-      return theTable;
-   }
-}
-
-Entry::Entry(
-   const wxString &tag, const TagHandlerFactory &factory )
+ProjectFileIORegistry::
+ObjectReaderEntry::ObjectReaderEntry( const wxString &tag, ObjectAccessor fn )
 {
-   sTagTable()[ tag ] = factory;
+   Get().mTagTable[ tag ] = move(fn);
 }
 
-TagHandlerFactory Lookup( const wxString &tag )
+XMLTagHandler *ProjectFileIORegistry::CallObjectAccessor(
+   const wxString &tag, AudacityProject &project )
 {
-   const auto &table = sTagTable();
-   auto iter = table.find( tag );
-   if ( iter == table.end() )
-      return {};
-   return iter->second;
+   const auto &table = mTagTable;
+   if (auto iter = table.find( tag ); iter != table.end())
+      if (auto &fn = iter->second)
+         return fn(project);
+   return nullptr;
 }
 
+ProjectFileIORegistry &ProjectFileIORegistry::Get()
+{
+   static ProjectFileIORegistry instance;
+   return instance;
 }

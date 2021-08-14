@@ -1646,13 +1646,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
 {
    auto &project = mProject;
-   auto fn = ProjectFileIORegistry::Lookup(tag);
-   if (fn)
-   {
-      return fn(project);
-   }
-
-   return nullptr;
+   return ProjectFileIORegistry::Get().CallObjectAccessor(tag, project);
 }
 
 void ProjectFileIO::OnCheckpointFailure()
