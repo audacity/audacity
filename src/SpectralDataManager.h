@@ -1,6 +1,21 @@
-#include <tracks/playabletrack/wavetrack/ui/SpectrumView.h>
-#include <effects/Effect.h>
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  SpectralDataManager.h
+
+  Edward Hui
+
+*******************************************************************//*!
+
+\class SpectralDataManager
+\brief Performs the calculation for spectral editing
+
+*//*******************************************************************/
+
 #include "./SpectrumTransformer.h"
+#include "effects/Effect.h"
+#include "tracks/playabletrack/wavetrack/ui/SpectrumView.h"
 
 class SpectralDataManager{
 public:

@@ -1,3 +1,18 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  SpectralDataManager.cpp
+
+  Edward Hui
+
+*******************************************************************//*!
+
+\class SpectralDataManager
+\brief Performs the calculation for spectral editing
+
+*//*******************************************************************/
+
 #include <iostream>
 #include "FFT.h"
 #include "SpectralDataManager.h"
