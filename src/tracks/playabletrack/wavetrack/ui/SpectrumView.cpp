@@ -119,9 +119,7 @@ std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
 void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
    if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
       pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
-//      pDest->mpSpectralData->dataHistory = mpSpectralData->dataHistory;
-//      pDest->mpSpectralData->dataBuffer = mpSpectralData->dataBuffer;
-//      pDest->mpSpectralData->coordHistory = mpSpectralData->coordHistory;
+      pDest->mpSpectralData->CopyFrom(mpSpectralData);
    }
 }
 

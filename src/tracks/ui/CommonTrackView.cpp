@@ -15,7 +15,6 @@ Paul Licameli split from class TrackView
 #include "TrackControls.h"
 #include "ZoomHandle.h"
 #include "../ui/SelectHandle.h"
-#include "../ui/BrushHandle.h"
 #include "../../AColor.h"
 #include "../../ProjectSettings.h"
 #include "../../Track.h"

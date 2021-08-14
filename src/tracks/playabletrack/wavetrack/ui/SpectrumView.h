@@ -23,12 +23,13 @@ using TimeFreqBinsMap = std::map<long long, std::set<wxInt64>>;
 class SpectralData{
 private:
    double mSampleRate;
-   long long mStartT = std::numeric_limits<long long>::max();
-   long long mEndT = 0;
+   long long mStartT;
+   long long mEndT;
 
 public:
     SpectralData(double sr)
     :mSampleRate(sr)
+    // Set start and end in reverse for comparison during data addition
     ,mStartT(std::numeric_limits<long long>::max())
     ,mEndT( 0 )
     {}
@@ -38,6 +39,17 @@ public:
    std::vector<TimeFreqBinsMap> dataHistory;
    // TODO: replace with two pairs to save space
    std::vector<std::pair<int, int>> coordHistory;
+
+   // Abstracted the copy method for future extension
+   void CopyFrom(const std::shared_ptr<SpectralData> &src){
+      mStartT = src->GetStartT();
+      mEndT = src->GetEndT();
+
+      // std containers will perform deepcopy automatically
+      dataHistory = src->dataHistory;
+      dataBuffer = src->dataBuffer;
+      coordHistory = src->coordHistory;
+   }
 
    double GetSR() const{
       return mSampleRate;
@@ -95,12 +107,11 @@ public:
 
 class SpectrumView final : public WaveTrackSubView
 {
-   SpectrumView(WaveTrackView &waveTrackView, const SpectrumView &src) = delete;
    SpectrumView &operator=( const SpectrumView& ) = delete;
 
 public:
-   using WaveTrackSubView::WaveTrackSubView;
-   SpectrumView(WaveTrackView &waveTrackView);
+   SpectrumView(WaveTrackView &waveTrackView, const SpectrumView &src) = delete;
+   explicit SpectrumView(WaveTrackView &waveTrackView);
    ~SpectrumView() override;
 
    const Type &SubViewType() const override;
