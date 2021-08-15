@@ -70,6 +70,8 @@ struct State {
     float mBuffer[8 /* = BUF_SIZE */];
 } mState;
 
+using Ditherer = float (*)(State &, float);
+
 // This is supposed to produce white noise and no dc
 static inline float DITHER_NOISE()
 {
@@ -109,8 +111,8 @@ static inline float DITHER_NOISE()
 #define STORE_INT24(ptr, sample) IMPLEMENT_STORE((ptr), (sample), int, -8388608, 8388607)
 
 // Dither single float 'sample' and store it in pointer 'dst', using 'dither' as algorithm
-#define DITHER_TO_INT16(dither, dst, sample) STORE_INT16((dst), dither(mState, PROMOTE_TO_INT16(sample)))
-#define DITHER_TO_INT24(dither, dst, sample) STORE_INT24((dst), dither(mState, PROMOTE_TO_INT24(sample)))
+#define DITHER_TO_INT16(dither, dst, sample) STORE_INT16((dst), dither(state, PROMOTE_TO_INT16(sample)))
+#define DITHER_TO_INT24(dither, dst, sample) STORE_INT24((dst), dither(state, PROMOTE_TO_INT24(sample)))
 
 // Implement one single dither step
 #define DITHER_STEP(dither, store, load, dst, src) \
@@ -140,15 +142,18 @@ static inline float DITHER_NOISE()
 
 // Implement a dither. There are only 3 cases where we must dither,
 // in all other cases, no dithering is necessary.
-#define DITHER(dither, dst, dstFormat, dstStride, src, srcFormat, srcStride, len) \
-    do { if (srcFormat == int24Sample && dstFormat == int16Sample) \
-        DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
-    else if (srcFormat == floatSample && dstFormat == int16Sample) \
-        DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
-    else if (srcFormat == floatSample && dstFormat == int24Sample) \
-        DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len); \
-    else { wxASSERT(false); } \
-    } while (0)
+static inline void DITHER( Ditherer dither, State &state,
+   samplePtr dst, sampleFormat dstFormat, size_t dstStride,
+   constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
+{
+    if (srcFormat == int24Sample && dstFormat == int16Sample)
+        DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len);
+    else if (srcFormat == floatSample && dstFormat == int16Sample)
+        DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len);
+    else if (srcFormat == floatSample && dstFormat == int24Sample)
+        DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len);
+    else { wxASSERT(false); }
+}
 
 
 static inline float NoDither(State &, float sample);
@@ -278,18 +283,18 @@ void Dither::Apply(enum DitherType ditherType,
         switch (ditherType)
         {
         case DitherType::none:
-            DITHER(NoDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
+            DITHER(NoDither, mState, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case DitherType::rectangle:
-            DITHER(RectangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
+            DITHER(RectangleDither, mState, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case DitherType::triangle:
             Reset(); // reset dither filter for this NEW conversion
-            DITHER(TriangleDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
+            DITHER(TriangleDither, mState, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         case DitherType::shaped:
             Reset(); // reset dither filter for this NEW conversion
-            DITHER(ShapedDither, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
+            DITHER(ShapedDither, mState, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
         default:
             wxASSERT(false); // unknown dither algorithm
