@@ -137,24 +137,25 @@ static inline void DITHER_TO_INT24(Ditherer dither, State &state,
 }
 
 // Implement one single dither step
-#define DITHER_STEP(dither, store, load, dst, src) \
-    store(dither, state, (dst), load(src))
 
 // Implement a dithering loop
-// Note: The variable 'x' is needed for the STORE_... macros
-#define DITHER_LOOP(srcType, dstType, dither, store, load, dst, dstFormat, dstStride, src, srcFormat, srcStride, len) \
-    do { \
-       char *d; \
-       const char *s; \
-       unsigned int ii; \
-       for (d = (char*)dst, s = src, ii = 0; \
-            ii < len; \
-            ii++, d += SAMPLE_SIZE(dstFormat) * dstStride, \
-                 s += SAMPLE_SIZE(srcFormat) * srcStride) \
-          DITHER_STEP(dither, store, load, \
-              reinterpret_cast<dstType *>(d), \
-              reinterpret_cast<const srcType *>(s)); \
-   } while (0)
+template<typename srcType, typename dstType>
+static inline void DITHER_LOOP( Ditherer dither, State &state,
+    void (*store)(Ditherer, State &, dstType *, float),
+    float (*load)(const srcType *),
+    samplePtr dst, sampleFormat dstFormat, size_t dstStride,
+    constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
+{
+    char *d;
+    const char *s;
+    unsigned int ii;
+    for (d = (char*)dst, s = (char*)src, ii = 0;
+        ii < len;
+        ii++, d += SAMPLE_SIZE(dstFormat) * dstStride,
+        s += SAMPLE_SIZE(srcFormat) * srcStride) {
+            store(dither, state, reinterpret_cast<dstType *>(d), load(reinterpret_cast<const srcType *>(s)));
+        }
+}
 
 // Implement a dither. There are only 3 cases where we must dither,
 // in all other cases, no dithering is necessary.
@@ -163,13 +164,16 @@ static inline void DITHER( Ditherer dither, State &state,
    constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
 {
     if (srcFormat == int24Sample && dstFormat == int16Sample)
-        DITHER_LOOP(int, short, dither, DITHER_TO_INT16, FROM_INT24, dst,
+        DITHER_LOOP<int, short>(dither, state,
+            DITHER_TO_INT16, FROM_INT24, dst,
             int16Sample, dstStride, src, int24Sample, srcStride, len);
     else if (srcFormat == floatSample && dstFormat == int16Sample)
-        DITHER_LOOP(float, short, dither, DITHER_TO_INT16, FROM_FLOAT, dst,
+        DITHER_LOOP<float, short>(dither, state,
+            DITHER_TO_INT16, FROM_FLOAT, dst,
             int16Sample, dstStride, src, floatSample, srcStride, len);
     else if (srcFormat == floatSample && dstFormat == int24Sample)
-        DITHER_LOOP(float, int, dither, DITHER_TO_INT24, FROM_FLOAT, dst,
+        DITHER_LOOP<float, int>(dither, state,
+            DITHER_TO_INT24, FROM_FLOAT, dst,
             int24Sample, dstStride, src, floatSample, srcStride, len);
     else { wxASSERT(false); }
 }
