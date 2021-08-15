@@ -132,14 +132,6 @@ static inline float DITHER_NOISE()
           DITHER_STEP(dither, store, load, d, s); \
    } while (0)
 
-// Shortcuts to dithering loops
-#define DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len) \
-    DITHER_LOOP(dither, DITHER_TO_INT16, FROM_INT24, dst, int16Sample, dstStride, src, int24Sample, srcStride, len)
-#define DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len) \
-    DITHER_LOOP(dither, DITHER_TO_INT16, FROM_FLOAT, dst, int16Sample, dstStride, src, floatSample, srcStride, len)
-#define DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len) \
-    DITHER_LOOP(dither, DITHER_TO_INT24, FROM_FLOAT, dst, int24Sample, dstStride, src, floatSample, srcStride, len)
-
 // Implement a dither. There are only 3 cases where we must dither,
 // in all other cases, no dithering is necessary.
 static inline void DITHER( Ditherer dither, State &state,
@@ -147,11 +139,14 @@ static inline void DITHER( Ditherer dither, State &state,
    constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
 {
     if (srcFormat == int24Sample && dstFormat == int16Sample)
-        DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len);
+        DITHER_LOOP(dither, DITHER_TO_INT16, FROM_INT24, dst,
+            int16Sample, dstStride, src, int24Sample, srcStride, len);
     else if (srcFormat == floatSample && dstFormat == int16Sample)
-        DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len);
+        DITHER_LOOP(dither, DITHER_TO_INT16, FROM_FLOAT, dst,
+            int16Sample, dstStride, src, floatSample, srcStride, len);
     else if (srcFormat == floatSample && dstFormat == int24Sample)
-        DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len);
+        DITHER_LOOP(dither, DITHER_TO_INT24, FROM_FLOAT, dst,
+            int24Sample, dstStride, src, floatSample, srcStride, len);
     else { wxASSERT(false); }
 }
 
