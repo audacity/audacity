@@ -105,10 +105,6 @@ static inline float FROM_FLOAT(const float *ptr)
             *((float*)(ptr));
 }
 
-// Promote sample to range of specified type, keep it float, though
-#define PROMOTE_TO_INT16(sample) ((sample) * CONVERT_DIV16)
-#define PROMOTE_TO_INT24(sample) ((sample) * CONVERT_DIV24)
-
 // Store float sample 'sample' into pointer 'ptr', clip it, if necessary
 template<typename dst_type>
 static inline void IMPLEMENT_STORE(
@@ -123,16 +119,26 @@ static inline void IMPLEMENT_STORE(
         *ptr = static_cast<dst_type>(x);
 }
 
-#define STORE_INT16(ptr, sample) IMPLEMENT_STORE<short>((ptr), (sample), short(-32768), short(32767))
-#define STORE_INT24(ptr, sample) IMPLEMENT_STORE<int>((ptr), (sample), -8388608, 8388607)
+// Dither single float 'sample' and store it in pointer 'dst', using 'dither' as algorithm
+static inline void DITHER_TO_INT16(Ditherer dither, State &state,
+   short *dst, float sample)
+{
+    IMPLEMENT_STORE<short>(dst,
+        dither(state, sample * CONVERT_DIV16),
+        short(-32768), short(32767));
+}
 
 // Dither single float 'sample' and store it in pointer 'dst', using 'dither' as algorithm
-#define DITHER_TO_INT16(dither, dst, sample) STORE_INT16((dst), dither(state, PROMOTE_TO_INT16(sample)))
-#define DITHER_TO_INT24(dither, dst, sample) STORE_INT24((dst), dither(state, PROMOTE_TO_INT24(sample)))
+static inline void DITHER_TO_INT24(Ditherer dither, State &state,
+   int *dst, float sample)
+{
+    IMPLEMENT_STORE<int>(dst,
+        dither(state, sample * CONVERT_DIV24), -8388608, 8388607);
+}
 
 // Implement one single dither step
 #define DITHER_STEP(dither, store, load, dst, src) \
-    store(dither, (dst), load(src))
+    store(dither, state, (dst), load(src))
 
 // Implement a dithering loop
 // Note: The variable 'x' is needed for the STORE_... macros
