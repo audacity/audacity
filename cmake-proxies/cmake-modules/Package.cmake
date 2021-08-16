@@ -66,4 +66,20 @@ elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
    endif()
 endif()
 
+if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )
+   set( CPACK_SOURCE_GENERATOR "TGZ" )
+   set( CPACK_AUDACITY_BUILD_DIR "${CMAKE_BINARY_DIR}")
+
+   list( APPEND CPACK_PRE_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/CopySourceVariables.cmake" )
+
+   set(CPACK_SOURCE_IGNORE_FILES
+      "/.git"
+      "/.vscode"
+      "/.idea"
+      "/.*build.*"
+      "/conan-home"
+      "/\\\\.DS_Store"
+   )
+endif()
+
 include(CPack) # do this last
