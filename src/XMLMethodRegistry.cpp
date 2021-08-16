@@ -2,13 +2,13 @@
 
   Audacity: A Digital Audio Editor
 
-  ProjectFileIORegistry.cpp
+  XMLMethodRegistry.cpp
 
   Paul Licameli
 
 **********************************************************************/
 
-#include "ProjectFileIORegistry.h"
+#include "XMLMethodRegistry.h"
 
 #include "Identifier.h"
 #include <wx/string.h>
@@ -30,10 +30,4 @@ XMLTagHandler *XMLMethodRegistryBase::CallObjectAccessor(
       if (auto &fn = iter->second)
          return fn( p );
    return nullptr;
-}
-
-ProjectFileIORegistry &ProjectFileIORegistry::Get()
-{
-   static ProjectFileIORegistry instance;
-   return instance;
 }

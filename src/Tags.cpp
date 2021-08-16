@@ -47,7 +47,6 @@
 #include "FileNames.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectFileIORegistry.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "widgets/Grid.h"

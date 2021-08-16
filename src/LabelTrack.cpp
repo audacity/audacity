@@ -45,7 +45,7 @@ for drawing different aspects of the label and its text box.
 #include <wx/tokenzr.h>
 
 #include "Prefs.h"
-#include "ProjectFileIORegistry.h"
+#include "Project.h"
 #include "prefs/ImportExportPrefs.h"
 
 #include "effects/TimeWarper.h"

@@ -2,20 +2,19 @@
 
   Audacity: A Digital Audio Editor
 
-  ProjectFileIORegistry.h
+  XMLMethodRegistry.h
 
   Paul Licameli
 
 **********************************************************************/
 
-#ifndef __AUDACITY_PROJECT_FILE_IO_REGISTRY__
-#define __AUDACITY_PROJECT_FILE_IO_REGISTRY__
+#ifndef __AUDACITY_XML_METHOD_REGISTRY__
+#define __AUDACITY_XML_METHOD_REGISTRY__
 
 #include <wx/string.h>
 #include <functional>
 #include <unordered_map>
 
-class AudacityProject;
 class XMLTagHandler;
 
 //! Implementation helper for ProjectFileIORegistry.
@@ -35,7 +34,11 @@ protected:
    XMLTagHandler *CallObjectAccessor( const wxString &tag, void *p );
 };
 
-class AUDACITY_DLL_API ProjectFileIORegistry : public XMLMethodRegistryBase {
+/*! A class template of inline type-erasing wrapper functions, but one function
+ with linkage is also needed.  See the macros that help generate that function.
+*/
+template< typename Host >
+class XMLMethodRegistry : public XMLMethodRegistryBase {
 public:
 
    // Typically statically constructed
@@ -47,27 +50,40 @@ struct ObjectReaderEntry {
  lifetime, which is assumed to outlast the project loading procedure.
  */
       typename ObjectAccessor /*!< Often a lambda.
-         A function from AudacityProject& to XMLTagHandler */
+         A function from Host& to XMLTagHandler*, maybe returning null */
    >
    ObjectReaderEntry( const wxString &tag, ObjectAccessor fn )
    {
       // Remember the function, type-erased
       Get().Register( tag, [ fn = std::move(fn) ] (void *p) {
          // CallObjectAccessor will guarantee p is not null
-         return fn( *static_cast<AudacityProject *>(p) );
+         return fn( *static_cast<Host *>(p) );
       } );
    }
 };
 
 XMLTagHandler *CallObjectAccessor(
-   const wxString &tag, AudacityProject &project )
+   const wxString &tag, Host &host )
 {
-   return XMLMethodRegistryBase::CallObjectAccessor( tag, &project );
+   return XMLMethodRegistryBase::CallObjectAccessor( tag, &host );
 }
 
 //! Get the unique instance
-static ProjectFileIORegistry &Get();
+static XMLMethodRegistry &Get();
 
 };
+
+/*! Typically follows the `using` declaration of an XMLMethodRegistry
+   specialization; DECLSPEC is for linkage visibility */
+#define DECLARE_XML_METHOD_REGISTRY(DECLSPEC, Name) \
+   template<> auto DECLSPEC Name::Get() -> Name &;
+
+/*! Typically in the companion .cpp file */
+#define DEFINE_XML_METHOD_REGISTRY(Name)  \
+   template<> auto Name::Get() -> Name &  \
+   {                                      \
+      static Name registry;               \
+      return registry;                    \
+   }
 
 #endif

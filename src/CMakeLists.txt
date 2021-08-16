@@ -205,8 +205,6 @@ list( APPEND SOURCES
       ProjectAudioManager.h
       ProjectFileIO.cpp
       ProjectFileIO.h
-      ProjectFileIORegistry.cpp
-      ProjectFileIORegistry.h
       ProjectFileManager.cpp
       ProjectFileManager.h
       ProjectHistory.cpp
@@ -311,6 +309,8 @@ list( APPEND SOURCES
       WaveTrackLocation.h
       WrappedType.cpp
       WrappedType.h
+      XMLMethodRegistry.cpp
+      XMLMethodRegistry.h
       ZoomInfo.cpp
       ZoomInfo.h
 

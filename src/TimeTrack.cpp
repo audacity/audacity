@@ -26,7 +26,6 @@
 #include "Envelope.h"
 #include "Project.h"
 #include "ProjectSettings.h"
-#include "ProjectFileIORegistry.h"
 #include "ViewInfo.h"
 
 #include "tracks/ui/TrackView.h"
