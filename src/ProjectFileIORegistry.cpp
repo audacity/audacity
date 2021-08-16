@@ -13,20 +13,22 @@
 #include "Identifier.h"
 #include <wx/string.h>
 
+XMLMethodRegistryBase::XMLMethodRegistryBase() = default;
+XMLMethodRegistryBase::~XMLMethodRegistryBase() = default;
 
-ProjectFileIORegistry::
-ObjectReaderEntry::ObjectReaderEntry( const wxString &tag, ObjectAccessor fn )
+void XMLMethodRegistryBase::Register(
+   const wxString &tag, TypeErasedObjectAccessor accessor )
 {
-   Get().mTagTable[ tag ] = move(fn);
+   mTagTable[ tag ] = move( accessor );
 }
 
-XMLTagHandler *ProjectFileIORegistry::CallObjectAccessor(
-   const wxString &tag, AudacityProject &project )
+XMLTagHandler *XMLMethodRegistryBase::CallObjectAccessor(
+   const wxString &tag, void *p )
 {
    const auto &table = mTagTable;
    if (auto iter = table.find( tag ); iter != table.end())
       if (auto &fn = iter->second)
-         return fn(project);
+         return fn( p );
    return nullptr;
 }
 
