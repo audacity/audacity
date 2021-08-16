@@ -13,6 +13,7 @@
 
 *//*******************************************************************/
 
+#ifdef EXPERIMENTAL_BRUSH_TOOL
 
 #include "SpectralDataDialog.h"
 
@@ -265,3 +266,5 @@ void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
    auto &projectSettings = ProjectSettings::Get( *mProject );
    projectSettings.SetOvertones(isSelected);
 }
+
+#endif

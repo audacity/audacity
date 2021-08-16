@@ -7,7 +7,7 @@
   Edward Hui
 
 **********************************************************************/
-
+#ifdef EXPERIMENTAL_BRUSH_TOOL
 #ifndef __AUDACITY_SPECTRAL_DATA_DIALOG__
 #define __AUDACITY_SPECTRAL_DATA_DIALOG__
 
@@ -33,7 +33,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
 {
 
 public:
-   SpectralDataDialog(AudacityProject * parent);
+   explicit SpectralDataDialog(AudacityProject * parent);
 
    void UpdateDisplay(wxEvent &e);
 
@@ -76,4 +76,5 @@ public:
 private:
    AudacityProject *mProject;
 };
+#endif
 #endif
