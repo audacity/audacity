@@ -138,7 +138,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             
             auto selected = GetSelectedClip().lock() == clip;
             auto highlight = selected || affordanceRect.Contains(px, py);
-            TrackArt::DrawClipAffordance(context.dc, affordanceRect, highlight, selected);
+            TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
 
         }
         context.dc.DestroyClippingRegion();

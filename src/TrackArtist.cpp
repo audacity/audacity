@@ -54,6 +54,7 @@ audio tracks.
 #include "Decibels.h"
 #include "prefs/TracksPrefs.h"
 
+#include <wx/app.h>
 #include <wx/dc.h>
 
 //Thickness of the clip frame outline, shown when clip is dragged
@@ -239,6 +240,41 @@ void TrackArt::DrawNegativeOffsetTrackArrows(
                 rect.x + 6, rect.y + rect.height - 12);
 }
 
+wxString TrackArt::TruncateText(wxDC& dc, const wxString& text, const int maxWidth)
+{
+   static const wxString ellipsis = "\u2026";
+
+   if (dc.GetTextExtent(text).GetWidth() <= maxWidth)
+       return text;
+
+   auto left = 0;
+   //no need to check text + '...'
+   auto right = static_cast<int>(text.Length() - 2);
+
+   while (left <= right)
+   {
+      auto middle = (left + right) / 2;
+      auto str = text.SubString(0, middle).Trim() + ellipsis;
+      auto strWidth = dc.GetTextExtent(str).GetWidth();
+      if (strWidth < maxWidth)
+         //if left == right (== middle), then exit loop 
+         //with right equals to the last knwon index for which 
+         //strWidth < maxWidth
+         left = middle + 1;
+      else if (strWidth > maxWidth)
+         //if right == left (== middle), then exit loop with
+         //right equals to (left - 1), which is the last known
+         //index for which (strWidth < maxWidth) or -1
+         right = middle - 1;
+      else
+         return str;
+   }
+   if (right >= 0)
+      return text.SubString(0, right).Trim() + ellipsis;
+
+   return wxEmptyString;
+}
+
 
 #ifdef USE_MIDI
 #endif // USE_MIDI
@@ -263,7 +299,7 @@ void TrackArtist::UpdatePrefs()
    SetColours(0);
 }
 
-void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight, bool selected)
+void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
 {
    if (selected)
    {
@@ -276,8 +312,35 @@ void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight, 
       AColor::UseThemeColour(&dc, clrClipAffordanceStroke, clrClipAffordanceStroke);
       dc.DrawRoundedRectangle(strokeRect, ClipFrameRadius);
    }
+
    AColor::UseThemeColour(&dc, highlight ? clrClipAffordanceActiveBrush : clrClipAffordanceInactiveBrush, clrClipAffordanceOutlinePen);
    dc.DrawRoundedRectangle(wxRect(rect.x, rect.y + ClipSelectionStrokeSize, rect.width, rect.height + ClipFrameRadius), ClipFrameRadius);
+
+   if (!title.empty())
+   {
+      dc.SetTextBackground(wxTransparentColor);
+      dc.SetTextForeground(theTheme.Colour(clrClipAffordanceOutlinePen));
+      
+      dc.SetFont(wxFont(wxFontInfo()));
+
+      auto fontHeight = dc.GetFontMetrics().ascent + dc.GetFontMetrics().descent;
+      wxRect titleRect = wxRect(
+         rect.GetLeft() + ClipFrameRadius,
+         rect.GetTop() + (rect.GetHeight() - fontHeight) / 2,
+         rect.GetWidth() - ClipFrameRadius * 2,
+         fontHeight);
+
+      auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
+      if (!truncatedTitle.empty())
+      {
+          if (wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft)
+              dc.DrawText(truncatedTitle,
+                  titleRect.GetRight() - dc.GetTextExtent(truncatedTitle).GetWidth(),
+                  titleRect.GetTop());
+          else
+              dc.DrawText(truncatedTitle, titleRect.GetLeft(), titleRect.GetTop());
+      }
+   }
 }
 
 void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
