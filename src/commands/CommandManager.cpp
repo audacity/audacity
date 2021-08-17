@@ -93,6 +93,7 @@ CommandManager.  It holds the callback for one command.
 #include <wx/tokenzr.h>
 
 #include "../Journal.h"
+#include "../JournalRegistry.h"
 #include "../Menus.h"
 
 #include "../Project.h"

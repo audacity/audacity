@@ -11,7 +11,6 @@
 #ifndef __AUDACITY_JOURNAL__
 #define __AUDACITY_JOURNAL__
 
-#include <functional>
 #include <initializer_list>
 #include "Identifier.h"
 class wxArrayString;
@@ -55,19 +54,6 @@ namespace Journal
    // comments) and tokenize it.
    // Throws SyncException if no next line or not replaying
    wxArrayStringEx GetTokens();
-
-   //\brief Type of a function that interprets a line of the input journal.
-   // It may indicate failure either by throwing SyncException or returning
-   // false (which will cause Journal::Dispatch to throw a SyncException)
-   using Dispatcher = std::function< bool(const wxArrayStringEx &fields) >;
-
-   //\brief Associates a dispatcher with a keyword in the default dictionary.
-   // The keyword will also be the first field passed to the dispatcher.  This
-   // struct is meant for static construction
-   struct RegisteredCommand{
-      explicit RegisteredCommand(
-         const wxString &name, Dispatcher dispatcher );
-   };
 
    //\brief if playing back and commands remain, may execute one.
    // May throw SyncException if playing back but none remain, or if other error

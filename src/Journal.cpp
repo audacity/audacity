@@ -14,9 +14,9 @@
 *//*******************************************************************/
 
 #include "Journal.h"
+#include "JournalRegistry.h"
 
 #include <algorithm>
-#include <unordered_map>
 #include <wx/app.h>
 #include <wx/filename.h>
 #include <wx/textfile.h>
@@ -45,15 +45,6 @@ struct FlushingTextFile : wxTextFile {
 } sFileOut;
 
 BoolSetting JournalEnabled{ L"/Journal/Enabled", false };
-
-bool sError = false;
-
-using Dictionary = std::unordered_map< wxString, Journal::Dispatcher >;
-Dictionary &sDictionary()
-{
-   static Dictionary theDictionary;
-   return theDictionary;
-}
 
 inline void NextIn()
 {
@@ -123,7 +114,7 @@ namespace Journal {
 SyncException::SyncException()
 {
    // If the exception is ever constructed, cause nonzero program exit code
-   sError = true;
+   SetError();
 }
 
 SyncException::~SyncException() {}
@@ -164,28 +155,29 @@ void SetInputFileName(const wxString &path)
 
 bool Begin( const FilePath &dataDir )
 {
-   if ( !sError && !sFileNameIn.empty() ) {
+   if ( !GetError() && !sFileNameIn.empty() ) {
       wxFileName fName{ sFileNameIn };
       fName.MakeAbsolute( dataDir );
       const auto path = fName.GetFullPath();
       sFileIn.Open( path );
       if ( !sFileIn.IsOpened() )
-         sError = true;
+         SetError();
       else {
          sLine = sFileIn.GetFirstLine();
          sLineNumber = 0;
          
          auto tokens = PeekTokens();
          NextIn();
-         sError = !(
+         if( !(
             tokens.size() == 2 &&
             tokens[0] == VersionToken &&
             VersionCheck( tokens[1] )
-         );
+         ) )
+            SetError();
       }
    }
 
-   if ( !sError && RecordEnabled() ) {
+   if ( !GetError() && RecordEnabled() ) {
       wxFileName fName{ dataDir, "journal", "txt" };
       const auto path = fName.GetFullPath();
       sFileOut.Open( path );
@@ -196,7 +188,7 @@ bool Begin( const FilePath &dataDir )
          sFileOut.Open( path );
       }
       if ( !sFileOut.IsOpened() )
-         sError = true;
+         SetError();
       else {
          // Generate a header
          Comment( wxString::Format(
@@ -208,7 +200,7 @@ bool Begin( const FilePath &dataDir )
       }
    }
 
-   return !sError;
+   return !GetError();
 }
 
 wxArrayStringEx GetTokens()
@@ -221,22 +213,9 @@ wxArrayStringEx GetTokens()
    throw SyncException{};
 }
 
-RegisteredCommand::RegisteredCommand(
-   const wxString &name, Dispatcher dispatcher )
-{
-   if ( !sDictionary().insert( { name, dispatcher } ).second ) {
-      wxLogDebug( wxString::Format (
-         wxT("Duplicated registration of Journal command name %s"),
-         name
-      ) );
-      // Cause failure of startup of journalling and graceful exit
-      sError = true;
-   }
-}
-
 bool Dispatch()
 {
-   if ( sError )
+   if ( GetError() )
       // Don't repeatedly indicate error
       // Do nothing
       return false;
@@ -249,7 +228,7 @@ bool Dispatch()
    auto words = GetTokens();
 
    // Lookup dispatch function by the first field of the line
-   auto &table = sDictionary();
+   auto &table = GetDictionary();
    auto &name = words[0];
    auto iter = table.find( name );
    if ( iter == table.end() )
@@ -314,11 +293,11 @@ void Sync( std::initializer_list< const wxString > strings )
 int GetExitCode()
 {
    // Unconsumed commands remaining in the input file is also an error condition.
-   if( !sError && !PeekTokens().empty() ) {
+   if( !GetError() && !PeekTokens().empty() ) {
       NextIn();
-      sError = true;
+      SetError();
    }
-   if ( sError ) {
+   if ( GetError() ) {
       // Return nonzero
       // Returning the (1-based) line number at which the script failed is a
       // simple way to communicate that information to the test driver script.
